@@ -5603,6 +5603,146 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvkbs1e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.conforms_to'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1e (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs1f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.generator'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1f (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs1g_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.generating_type'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1g (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs1h_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.tagged_out'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1h (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs1i_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.standard_twin'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1i (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs1j_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.is_deep_equal'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1j (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs1k_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.deep_twin'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1k (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvkbs2a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.item'
 			-- built-in routine `a_feature' in class `a_class'.

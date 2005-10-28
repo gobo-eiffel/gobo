@@ -536,7 +536,10 @@ feature -- Processing
 		local
 			a_task: GEANT_TASK
 		do
-			if STRING_.same_string (a_xml_element.name, Se_task_name) then
+			if STRING_.same_string (a_xml_element.name, Gec_task_name) then
+					-- gec: Gobo Eiffel compilation
+				create {GEANT_GEC_TASK} a_task.make (project, a_xml_element)
+			elseif STRING_.same_string (a_xml_element.name, Se_task_name) then
 					-- se: SmartEiffel compilation
 				create {GEANT_SE_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Ise_task_name) then

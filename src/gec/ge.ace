@@ -1,0 +1,176 @@
+system
+
+	gec
+
+root
+
+	GEC: execute
+
+default
+
+	address_expression (no)
+	array_optimization (no)
+	assertion (no)
+	check_vape (yes)
+	cls_compliant (yes)
+	console_application (yes)
+	dead_code_removal (yes)
+	debug (no)
+	dotnet_naming_convention (no)
+	dynamic_runtime (no)
+	exception_trace (no)
+	il_verifiable (yes)
+	inlining (no)
+	inlining_size ("4")
+	line_generation (no)
+	msil_generation (no)
+	multithreaded (no)
+	profile (no)
+	msil_generation_type ("exe")
+	trace (no)
+
+cluster
+
+	gec: "${GOBO}/src/gec"
+	lx_lexical: "${GOBO}/library/lexical"
+	lx_automaton (lx_lexical): "$/automaton"
+	lx_error (lx_lexical): "$/error"
+	lx_generation (lx_lexical): "$/generation"
+	lx_lex (lx_lexical): "$/lex"
+	lx_regexp (lx_lexical): "$/regexp"
+	lx_scanner (lx_lexical): "$/scanner"
+	lx_skeleton (lx_lexical): "$/skeleton"
+	lx_support (lx_lexical): "$/support"
+	pr_parse: "${GOBO}/library/parse"
+	pr_error (pr_parse): "$/error"
+	pr_fsm (pr_parse): "$/fsm"
+	pr_generation (pr_parse): "$/generation"
+	pr_grammar (pr_parse): "$/grammar"
+	pr_parser (pr_parse): "$/parser"
+	pr_skeleton (pr_parse): "$/skeleton"
+	pr_support (pr_parse): "$/support"
+	pr_yacc (pr_parse): "$/yacc"
+	ut_utility: "${GOBO}/library/utility"
+	ut_error (ut_utility): "$/error"
+	ut_formatter (ut_utility): "$/formatter"
+	ut_command (ut_utility): "$/command"
+	ut_support (ut_utility): "$/support"
+	ut_transcoder (ut_utility): "$/transcoder"
+	ut_uri (ut_utility): "$/uri"
+	kl_kernel: "${GOBO}/library/kernel"
+	kl_basic (kl_kernel): "$/basic"
+	kl_elks (kl_kernel): "$/elks"
+	kl_io (kl_kernel): "$/io"
+	kl_misc (kl_kernel): "$/misc"
+	kl_unicode (kl_kernel): "$/unicode"
+	kl_support (kl_kernel): "$/support"
+	kl_spec (kl_kernel): "$/spec"
+	kl_spec_ge (kl_spec): "$/ge"
+	ds_structure: "${GOBO}/library/structure"
+	ds_container (ds_structure): "$/container"
+	ds_dispenser (ds_structure): "$/dispenser"
+	ds_list (ds_structure): "$/list"
+	ds_set (ds_structure): "$/set"
+	ds_sort (ds_structure): "$/sort"
+	ds_support (ds_structure): "$/support"
+	ds_table (ds_structure): "$/table"
+	et_tools: "${GOBO}/library/tools"
+	et_eiffel_eiffel (et_tools): "$/eiffel"
+	et_eiffel_ast (et_eiffel_eiffel): "$/ast"
+	et_eiffel_assertion (et_eiffel_ast): "$/assertion"
+	et_eiffel_class (et_eiffel_ast): "$/class"
+	et_eiffel_cluster (et_eiffel_ast): "$/cluster"
+	et_eiffel_constant (et_eiffel_ast): "$/constant"
+	et_eiffel_expression (et_eiffel_ast): "$/expression"
+	et_eiffel_feature (et_eiffel_ast): "$/feature"
+	et_eiffel_instruction (et_eiffel_ast): "$/instruction"
+	et_eiffel_misc (et_eiffel_ast): "$/misc"
+	et_eiffel_name (et_eiffel_ast): "$/name"
+	et_eiffel_type (et_eiffel_ast): "$/type"
+	et_eiffel_compilation (et_eiffel_eiffel): "$/compilation"
+	et_eiffel_dynamic (et_eiffel_eiffel): "$/dynamic"
+	et_eiffel_error (et_eiffel_eiffel): "$/error"
+	et_eiffel_generation (et_eiffel_eiffel): "$/generation"
+	et_eiffel_parser (et_eiffel_eiffel): "$/parser"
+	et_eiffel_processor (et_eiffel_eiffel): "$/processor"
+	et_lace_lace (et_tools): "$/lace"
+	et_lace_ast (et_lace_lace): "$/ast"
+	et_lace_error (et_lace_lace): "$/error"
+	et_lace_parser (et_lace_lace): "$/parser"
+	et_xace_xace (et_tools): "$/xace"
+	et_xace_ast (et_xace_xace): "$/ast"
+	et_xace_error (et_xace_xace): "$/error"
+	et_xace_generator (et_xace_xace): "$/generator"
+	et_xace_parser (et_xace_xace): "$/parser"
+	et_xace_support (et_xace_xace): "$/support"
+	et_xace_universe (et_xace_xace): "$/universe"
+	dp_pattern: "${GOBO}/library/pattern"
+	dp_bridge (dp_pattern): "$/bridge"
+	dp_command (dp_pattern): "$/command"
+	st_string: "${GOBO}/library/string"
+	st_collation (st_string): "$/collation"
+	st_support (st_string): "$/support"
+	st_formatter (st_string): "$/formatter"
+	st_general (st_formatter): "$/general"
+	st_parameter (st_formatter): "$/parameter"
+	ma_math: "${GOBO}/library/math"
+	ma_decimal (ma_math): "$/decimal"
+	dt_time: "${GOBO}/library/time"
+	dt_clock (dt_time): "$/clock"
+	dt_date (dt_time): "$/date"
+	dt_format (dt_time): "$/format"
+	dt_time_zone (dt_time): "$/time_zone"
+	ge: "${GOBO}/library"
+	rx_regexp: "${GOBO}/library/regexp"
+	rx_interface (rx_regexp): "$/interface"
+	rx_pcre (rx_regexp): "$/pcre"
+	rx_support (rx_regexp): "$/support"
+	xm_xml: "${GOBO}/library/xml"
+	xm_position (xm_xml): "$/position"
+	xm_source (xm_xml): "$/source"
+	xm_general (xm_xml): "$/general"
+	xm_event (xm_xml): "$/event"
+	xm_tree (xm_xml): "$/tree"
+	xm_formatter (xm_xml): "$/formatter"
+	xm_resolver (xm_xml): "$/resolver"
+	xm_resolver_interface (xm_resolver): "$/interface"
+	xm_catalog (xm_resolver): "$/catalog"
+	xm_simple (xm_resolver): "$/simple"
+	xm_uri (xm_resolver): "$/uri"
+	xm_parser (xm_xml): "$/parser"
+	xm_interface (xm_parser): "$/interface"
+	xm_eiffel (xm_parser): "$/eiffel"
+	xm_no_expat (xm_parser): "$/no_expat"
+	xm_xml_xpointer (xm_xml): "${GOBO}/library/xml/xpointer"
+	xm_xpointer_common (xm_xml_xpointer): "$/common"
+	xm_xpointer_event (xm_xml_xpointer): "$/event"
+	xm_xml_xslt: "${GOBO}/library/xml/xslt"
+	xm_pattern (xm_xml_xslt): "$/pattern"
+	xm_xslt_function (xm_xml_xslt): "$/function"
+	xm_instruction (xm_xml_xslt): "$/instruction"
+	xm_style (xm_xml_xslt): "$/style"
+	xm_tracing (xm_xml_xslt): "$/tracing"
+	xm_number (xm_xml_xslt): "$/number"
+	xm_xslt_sort (xm_xml_xslt): "$/sort"
+	xm_xslt_event (xm_xml_xslt): "$/event"
+	xm_runtime (xm_xml_xslt): "$/runtime"
+	xm_xslt_core (xm_xml_xslt): "$/core"
+	xm_xml_xpath: "${GOBO}/library/xml/xpath"
+	xm_data_model (xm_xml_xpath): "$/data_model"
+	xm_tinytree (xm_xml_xpath): "$/tinytree"
+	xm_xpath_tree (xm_xml_xpath): "$/tree"
+	xm_value (xm_xml_xpath): "$/value"
+	xm_expression (xm_xml_xpath): "$/expression"
+	xm_xpath_event (xm_xml_xpath): "$/event"
+	xm_function (xm_xml_xpath): "$/function"
+	xm_sort (xm_xml_xpath): "$/sort"
+	xm_stand_alone (xm_xml_xpath): "$/stand_alone"
+	xm_node_test (xm_xml_xpath): "$/node_test"
+	xm_type (xm_xml_xpath): "$/type"
+	xm_xpath_xpointer (xm_xml_xpath): "$/xpointer"
+	xm_core (xm_xml_xpath): "$/core"
+	fe_free_elks: "${GOBO}/library/free_elks"
+	fe_kernel (fe_free_elks): "$/kernel"
+	fe_fake (fe_free_elks): "$/fake"
+
+end

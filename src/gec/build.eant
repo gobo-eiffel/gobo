@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="gec" default="help">
+
+	<description>
+		description: "Eiffel Ant file for 'gec'"
+		system: "Gobo Eiffel Compiler"
+		copyright: "Copyright (c) 2005, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="gec"/>
+		<set name="system_dir" value="${GOBO}/src/${system}"/>
+	</target>
+
+</project>

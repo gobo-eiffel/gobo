@@ -1294,7 +1294,7 @@ feature -- Output
 		local
 			a_parameters: like formal_parameters
 		do
-			a_string.append_string (name.name)
+			a_string.append_string (name.upper_name)
 			a_parameters := formal_parameters
 			if a_parameters /= Void and then not a_parameters.is_empty then
 				a_string.append_character (' ')

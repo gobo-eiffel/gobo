@@ -4,11 +4,15 @@
 
 	<description>
 		description: "Xace file for the Eiffel compilers' kernel libraries"
-		copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
+
+	<cluster name="ge" location="${GOBO}/library" if="${GOBO_EIFFEL}=ge">
+		<mount location="${GOBO}/library/free_elks/library.xace"/>
+	</cluster>
 
 	<cluster name="ise" location="${ISE_EIFFEL}/library" if="${GOBO_EIFFEL}=ise">
 		<option name="abstract" value="true"/>

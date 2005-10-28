@@ -14,7 +14,16 @@ class ET_SIGNATURE_CHECKER
 
 inherit
 
-	ANY
+	ET_AST_NULL_PROCESSOR
+		redefine
+			make,
+			process_bit_feature,
+			process_bit_n,
+			process_class,
+			process_class_type,
+			process_generic_class_type,
+			process_tuple_type
+		end
 
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
@@ -27,34 +36,17 @@ feature {NONE} -- Initialization
 
 	make (a_universe: like universe) is
 			-- Create a new signature checker for features of classes in `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
 		do
 			universe := a_universe
 			current_class := a_universe.unknown_class
 			create parent_context.make_with_capacity (a_universe.any_class, 1)
-		ensure
-			universe_set: universe = a_universe
 		end
-
-feature -- Access
-
-	universe: ET_UNIVERSE
-			-- Surrounding universe
 
 feature -- Error handling
 
 	has_fatal_error: BOOLEAN
 			-- Has a fatal error occurred when checking
 			-- validity of last feature signature?
-
-	error_handler: ET_ERROR_HANDLER is
-			-- Error handler
-		do
-			Result := universe.error_handler
-		ensure
-			error_handler_not_void: Result /= Void
-		end
 
 feature -- Signature validity
 
@@ -80,14 +72,17 @@ feature -- Signature validity
 			current_class := a_class
 			if a_feature.is_redeclared then
 					-- Redeclaration.
-				a_redeclared_feature := a_feature.redeclared_feature
-				from
-					a_parent_feature := a_redeclared_feature.parent_feature
-				until
-					a_parent_feature = Void
-				loop
-					check_redeclared_signature_validity (a_redeclared_feature, a_parent_feature)
-					a_parent_feature := a_parent_feature.merged_feature
+				check_signature_vtct_validity (a_feature.flattened_feature)
+				if not has_fatal_error then
+					a_redeclared_feature := a_feature.redeclared_feature
+					from
+						a_parent_feature := a_redeclared_feature.parent_feature
+					until
+						a_parent_feature = Void
+					loop
+						check_redeclared_signature_validity (a_redeclared_feature, a_parent_feature)
+						a_parent_feature := a_parent_feature.merged_feature
+					end
 				end
 			elseif a_feature.is_inherited then
 				an_inherited_feature := a_feature.inherited_feature
@@ -123,6 +118,7 @@ feature -- Signature validity
 					end
 				end
 			else
+				check_signature_vtct_validity (a_feature.flattened_feature)
 				-- check_immediate_signature_validity (a_feature.flattened_feature)
 			end
 			if a_feature.is_adapted then
@@ -411,6 +407,142 @@ feature {NONE} -- Signature validity
 					i := i + 1
 				end
 			end
+		end
+
+feature {NONE} -- VTCT Validity checking
+
+	check_signature_vtct_validity (a_feature: ET_FEATURE) is
+			-- Check whether the types in the signature of `a_feature'
+			-- (declared in `current_class') are based on known classes.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_type: ET_TYPE
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+		do
+			l_type := a_feature.type
+			if l_type /= Void then
+				l_type.process (Current)
+			end
+			l_arguments := a_feature.arguments
+			if l_arguments /= Void then
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_type := l_arguments.formal_argument (i).type
+					l_type.process (Current)
+					i := i + 1
+				end
+			end
+		end
+
+	check_bit_feature_vtct_validity (a_type: ET_BIT_FEATURE) is
+			-- Check whether `a_type' is based on known classes.
+		require
+			a_type_not_void: a_type /= Void
+		do
+-- TODO: should we check whether class BIT is in the universe or not?
+			-- No validity rule to be checked.
+		end
+
+	check_bit_n_vtct_validity (a_type: ET_BIT_N) is
+			-- Check whether `a_type' is based on known classes.
+		require
+			a_type_not_void: a_type /= Void
+		do
+-- TODO: should we check whether class BIT is in the universe or not?
+			-- No validity rule to be checked.
+		end
+
+	check_class_type_vtct_validity (a_type: ET_CLASS_TYPE) is
+			-- Check whether `a_type' is based on known classes.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			i, nb: INTEGER
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			an_actual: ET_TYPE
+			a_class: ET_CLASS
+		do
+			a_class := a_type.direct_base_class (universe)
+			if a_class = universe.none_class then
+				-- OK.
+			else
+				if not a_class.is_preparsed then
+					a_class.process (universe.eiffel_parser)
+				end
+				if not a_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_vtct0a_error (current_class, a_type)
+				end
+				if a_type.is_generic then
+					an_actuals := a_type.actual_parameters
+					check a_type_generic: an_actuals /= Void end
+					nb := an_actuals.count
+					from i := 1 until i > nb loop
+						an_actual := an_actuals.type (i)
+						an_actual.process (Current)
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	check_tuple_type_vtct_validity (a_type: ET_TUPLE_TYPE) is
+			-- Check whether `a_type' is based on known classes.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			i, nb: INTEGER
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+-- TODO: should we check whether class TUPLE is in the universe or not?
+			a_parameters := a_type.actual_parameters
+			if a_parameters /= Void then
+				nb := a_parameters.count
+				from i := 1 until i > nb loop
+					a_parameters.type (i).process (Current)
+					i := i + 1
+				end
+			end
+		end
+
+feature {ET_AST_NODE} -- Type processing
+
+	process_bit_feature (a_type: ET_BIT_FEATURE) is
+			-- Process `a_type'.
+		do
+			check_bit_feature_vtct_validity (a_type)
+		end
+
+	process_bit_n (a_type: ET_BIT_N) is
+			-- Process `a_type'.
+		do
+			check_bit_n_vtct_validity (a_type)
+		end
+
+	process_class (a_type: ET_CLASS) is
+			-- Process `a_type'.
+		do
+			process_class_type (a_type)
+		end
+
+	process_class_type (a_type: ET_CLASS_TYPE) is
+			-- Process `a_type'.
+		do
+			check_class_type_vtct_validity (a_type)
+		end
+
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+			-- Process `a_type'.
+		do
+			process_class_type (a_type)
+		end
+
+	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+			-- Process `a_type'.
+		do
+			check_tuple_type_vtct_validity (a_type)
 		end
 
 feature {NONE} -- Error handling

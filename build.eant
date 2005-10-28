@@ -125,6 +125,8 @@
 		<geant file="../src/getest/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="clean" dir="bin"/>
+		<geant file="../src/gec/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/gec/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/gexslt/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
 		<geant file="build.eant" target="install" dir="example"/>

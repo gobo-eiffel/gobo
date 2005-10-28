@@ -30,11 +30,17 @@ create
 
 feature -- Access
 
-	default_system_output_filename: STRING is "ise.ace"
+	default_system_output_filename: STRING is
 			-- Name of generated Ace file
+		once
+			Result := "ise.ace"
+		end
 
-	default_library_output_filename: STRING is "ise.ace"
+	default_library_output_filename: STRING is
 			-- Name of generated library Ace file
+		once
+			Result := "ise.ace"
+		end
 
 feature -- Output
 

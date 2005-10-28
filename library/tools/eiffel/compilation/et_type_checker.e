@@ -617,6 +617,7 @@ feature {NONE} -- Validity checking
 			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			a_class_impl: ET_CLASS
 		do
+-- TODO: should we check whether class BIT is in the universe or not?
 			if a_type.constant = Void then
 					-- Not resolved yet.
 				a_class_impl := current_feature.implementation_class
@@ -679,6 +680,7 @@ feature {NONE} -- Validity checking
 		require
 			a_type_not_void: a_type /= Void
 		do
+-- TODO: should we check whether class BIT is in the universe or not?
 			-- The validity of the integer constant has
 			-- already been checked during the parsing.
 		end
@@ -917,6 +919,7 @@ feature {NONE} -- Validity checking
 			i, nb: INTEGER
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
+-- TODO: should we check whether class TUPLE is in the universe or not?
 			a_parameters := a_type.actual_parameters
 			if a_parameters /= Void then
 				nb := a_parameters.count

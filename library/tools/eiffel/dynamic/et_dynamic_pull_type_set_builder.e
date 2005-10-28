@@ -40,7 +40,12 @@ inherit
 			report_unqualified_call_agent,
 			report_unqualified_call_expression,
 			report_unqualified_call_instruction,
-			report_builtin_any_twin
+			report_builtin_any_twin,
+			report_builtin_any_standard_twin,
+			report_builtin_any_deep_twin,
+			report_builtin_any_generator,
+			report_builtin_any_generating_type,
+			report_builtin_any_tagged_out
 		end
 
 create
@@ -1801,6 +1806,148 @@ feature {NONE} -- Built-in features
 								l_dynamic_type_set.put_source (l_attachment, current_system)
 							end
 						end
+					end
+				end
+			end
+		end
+
+	report_builtin_any_standard_twin (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature ANY.standard_twin is being analyzed.
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_standard_twin)
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'standard_twin: like Current'.
+					set_fatal_error
+--					error_handler.report_gibgo_error
+				else
+					if not l_result_type_set.is_expanded then
+						create l_attachment.make (current_dynamic_type, current_dynamic_feature, current_dynamic_type)
+						l_result_type_set.put_source (l_attachment, current_system)
+					end
+				end
+			end
+		end
+
+	report_builtin_any_deep_twin (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature ANY.deep_twin is being analyzed.
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_deep_twin)
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'deep_twin: like Current'.
+					set_fatal_error
+--					error_handler.report_gibgo_error
+				else
+					if not l_result_type_set.is_expanded then
+						create l_attachment.make (current_dynamic_type, current_dynamic_feature, current_dynamic_type)
+						l_result_type_set.put_source (l_attachment, current_system)
+					end
+				end
+			end
+		end
+
+	report_builtin_any_generator (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature ANY.generator is being analyzed.
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_generator)
+				current_system.string_type.set_alive
+					-- Make sure that type SPECIAL[CHARACTER] (used in
+					-- feature 'area') is marked as alive.
+				current_system.special_character_type.set_alive
+					-- Make sure that type CHARACTER (used as actual generic type
+					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
+				current_system.character_type.set_alive
+					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
+				current_system.integer_type.set_alive
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'generator: STRING'.
+					set_fatal_error
+--					error_handler.report_gibgo_error
+				else
+					if not l_result_type_set.is_expanded then
+						create l_attachment.make (current_system.string_type, current_dynamic_feature, current_dynamic_type)
+						l_result_type_set.put_source (l_attachment, current_system)
+					end
+				end
+			end
+		end
+
+	report_builtin_any_generating_type (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature ANY.generating_type is being analyzed.
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_generating_type)
+				current_system.string_type.set_alive
+					-- Make sure that type SPECIAL[CHARACTER] (used in
+					-- feature 'area') is marked as alive.
+				current_system.special_character_type.set_alive
+					-- Make sure that type CHARACTER (used as actual generic type
+					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
+				current_system.character_type.set_alive
+					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
+				current_system.integer_type.set_alive
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'generating_type: STRING'.
+					set_fatal_error
+--					error_handler.report_gibgo_error
+				else
+					if not l_result_type_set.is_expanded then
+						create l_attachment.make (current_system.string_type, current_dynamic_feature, current_dynamic_type)
+						l_result_type_set.put_source (l_attachment, current_system)
+					end
+				end
+			end
+		end
+
+	report_builtin_any_tagged_out (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature ANY.tagged_out is being analyzed.
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_tagged_out)
+				current_system.string_type.set_alive
+					-- Make sure that type SPECIAL[CHARACTER] (used in
+					-- feature 'area') is marked as alive.
+				current_system.special_character_type.set_alive
+					-- Make sure that type CHARACTER (used as actual generic type
+					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
+				current_system.character_type.set_alive
+					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
+				current_system.integer_type.set_alive
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'tagged_out: STRING'.
+					set_fatal_error
+--					error_handler.report_gibgo_error
+				else
+					if not l_result_type_set.is_expanded then
+						create l_attachment.make (current_system.string_type, current_dynamic_feature, current_dynamic_type)
+						l_result_type_set.put_source (l_attachment, current_system)
 					end
 				end
 			end

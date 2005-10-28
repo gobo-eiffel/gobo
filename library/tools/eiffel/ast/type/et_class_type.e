@@ -585,7 +585,7 @@ feature -- Output
 				a_string.append_string (type_mark.text)
 				a_string.append_character (' ')
 			end
-			a_string.append_string (name.name)
+			a_string.append_string (name.upper_name)
 			a_parameters := actual_parameters
 			if a_parameters /= Void and then not a_parameters.is_empty then
 				a_string.append_character (' ')

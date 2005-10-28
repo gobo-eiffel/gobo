@@ -5,7 +5,7 @@ indexing
 		"Eiffel compiler used to compile this program"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,9 @@ feature -- Access
 	vendor: STRING is
 			-- Vendor of Eiffel compiler used to compiled this program
 		once
+#ifdef GE
+			Result := ge_vendor
+#else
 #ifdef ISE
 			Result := ise_vendor
 #endif
@@ -30,9 +33,13 @@ feature -- Access
 #ifdef VE
 			Result := ve_vendor
 #endif
+#endif
 		ensure
 			vendor_not_void: Result /= Void
 		end
+
+	ge_vendor: STRING is "ve"
+			-- Gobo Eiffel vendor
 
 	ise_vendor: STRING is "ise"
 			-- ISE Eiffel vendor
@@ -54,6 +61,14 @@ feature -- Access
 			-- Visual Eiffel vendor
 
 feature -- Status report
+
+	is_ge: BOOLEAN is
+			-- Has this program been compiled with Gobo Eiffel?
+		once
+			Result := (vendor = ge_vendor)
+		ensure
+			definition: Result = (vendor = ge_vendor)
+		end
 
 	is_ise: BOOLEAN is
 			-- Has this program been compiled with ISE Eiffel?

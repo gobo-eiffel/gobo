@@ -142,6 +142,13 @@ feature -- Built-in codes
 	builtin_any_standard_copy: INTEGER is 102
 	builtin_any_standard_is_equal: INTEGER is 103
 	builtin_any_same_type: INTEGER is 104
+	builtin_any_generating_type: INTEGER is 105
+	builtin_any_generator: INTEGER is 106
+	builtin_any_conforms_to: INTEGER is 107
+	builtin_any_is_deep_equal: INTEGER is 108
+	builtin_any_tagged_out: INTEGER is 109
+	builtin_any_standard_twin: INTEGER is 110
+	builtin_any_deep_twin: INTEGER is 111
 	builtin_special_make: INTEGER is 201
 	builtin_special_item: INTEGER is 202
 	builtin_special_put: INTEGER is 203

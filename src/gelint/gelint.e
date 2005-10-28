@@ -4,7 +4,7 @@ indexing
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,8 +19,6 @@ inherit
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_STANDARD_FILES
-
-	KL_IMPORTED_STRING_ROUTINES
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
@@ -63,20 +61,12 @@ feature -- Execution
 					Exceptions.die (0)
 				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--define=") then
 					defined_variables := arg.substring (10, arg.count)
-				elseif arg.is_equal ("--all_breaks") then
-					all_breaks := True
 				elseif arg.is_equal ("--verbose") then
 					is_verbose := True
 				elseif arg.is_equal ("--flat") then
 					is_flat := True
-				elseif arg.is_equal ("--compile") then
-					do_compile := True
-				elseif arg.is_equal ("--c_compile") then
-					do_c_compile := True
-				elseif arg.is_equal ("--push") then
-					push_dynamic_type_sets := True
-				elseif arg.is_equal ("--pull") then
-					pull_dynamic_type_sets := True
+				elseif arg.is_equal ("--cat") then
+					is_cat := True
 				elseif arg.is_equal ("--no_output") then
 					no_output := True
 				elseif arg.is_equal ("--void") then
@@ -162,13 +152,9 @@ feature -- Execution
 feature -- Status report
 
 	defined_variables: STRING
-	all_breaks: BOOLEAN
 	is_verbose: BOOLEAN
 	is_flat: BOOLEAN
-	do_compile: BOOLEAN
-	do_c_compile: BOOLEAN
-	push_dynamic_type_sets: BOOLEAN
-	pull_dynamic_type_sets: BOOLEAN
+	is_cat: BOOLEAN
 	no_output: BOOLEAN
 	void_feature: BOOLEAN
 			-- Command-line options
@@ -185,16 +171,10 @@ feature {NONE} -- Processing
 		require
 			a_universe_not_void: a_universe /= Void
 		local
-			an_ast_factory: ET_DECORATED_AST_FACTORY
 			a_null_error_handler: ET_NULL_ERROR_HANDLER
 			a_system: ET_SYSTEM
 			a_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 		do
-			if all_breaks then
-				create an_ast_factory.make
-				an_ast_factory.set_keep_all_breaks (True)
-				a_universe.set_ast_factory (an_ast_factory)
-			end
 			if no_output then
 				create a_null_error_handler.make_standard
 				a_universe.set_error_handler (a_null_error_handler)
@@ -215,20 +195,12 @@ feature {NONE} -- Processing
 			else
 				a_universe.set_use_void_keyword (True)
 			end
-			if do_compile then
+			if is_cat then
 				create a_system.make (a_universe)
-				if push_dynamic_type_sets then
-					create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} a_builder.make (a_system)
-					a_system.set_dynamic_type_set_builder (a_builder)
-				elseif pull_dynamic_type_sets then
-					create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_system)
-					a_system.set_dynamic_type_set_builder (a_builder)
-				else
-					create {ET_DYNAMIC_TYPE_BUILDER} a_builder.make (a_system)
-					a_system.set_dynamic_type_set_builder (a_builder)
-				end
-				a_system.set_c_code_generation (True)
-				a_system.set_c_code_compilation (do_c_compile)
+				create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_system)
+				a_system.set_dynamic_type_set_builder (a_builder)
+				a_system.set_c_code_generation (False)
+				a_system.set_c_code_compilation (False)
 				a_system.compile
 			else
 				a_universe.set_providers_enabled (True)
@@ -269,7 +241,7 @@ feature -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gepp usage message.
 		once
-			create Result.make ("[--verbose][--all_breaks][--define=variables][--void][--flat] filename")
+			create Result.make ("[--verbose][--define=variables][--void][--flat][--is_cat] ace_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

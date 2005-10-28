@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<project name="free_elks" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the FreeELKS Library"
+		library: "FreeELKS"
+		copyright: "Copyright (c) 2005, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the FreeELKS Library.
+		</description>
+		<!-- do nothing -->
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<ve clean="pattern" recursive="true"/>
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
+	</target>
+
+</project>

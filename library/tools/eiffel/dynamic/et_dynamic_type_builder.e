@@ -670,10 +670,24 @@ feature {NONE} -- Feature validity
 					inspect a_feature.builtin_code
 					when builtin_any_twin then
 						report_builtin_any_twin (a_feature)
+					when builtin_any_standard_twin then
+						report_builtin_any_standard_twin (a_feature)
+					when builtin_any_deep_twin then
+						report_builtin_any_deep_twin (a_feature)
 					when builtin_any_same_type then
 						report_builtin_any_same_type (a_feature)
+					when builtin_any_conforms_to then
+						report_builtin_any_conforms_to (a_feature)
 					when builtin_any_standard_is_equal then
 						report_builtin_any_standard_is_equal (a_feature)
+					when builtin_any_is_deep_equal then
+						report_builtin_any_is_deep_equal (a_feature)
+					when builtin_any_generator then
+						report_builtin_any_generator (a_feature)
+					when builtin_any_generating_type then
+						report_builtin_any_generating_type (a_feature)
+					when builtin_any_tagged_out then
+						report_builtin_any_tagged_out (a_feature)
 					when builtin_special_item then
 						report_builtin_special_item (a_feature)
 					when builtin_special_count then
@@ -1916,6 +1930,28 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_any_standard_twin (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.standard_twin' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_standard_twin)
+			end
+		end
+
+	report_builtin_any_deep_twin (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.deep_twin' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_deep_twin)
+			end
+		end
+
 	report_builtin_any_same_type (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'ANY.same_type' is being analyzed.
 		require
@@ -1924,6 +1960,18 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (builtin_any_same_type)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_any_conforms_to (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.conforms_to' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_conforms_to)
 				current_system.boolean_type.set_alive
 			end
 		end
@@ -1937,6 +1985,78 @@ feature {NONE} -- Built-in features
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (builtin_any_standard_is_equal)
 				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_any_is_deep_equal (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.is_deep_equal' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_is_deep_equal)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_any_generator (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.generator' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_generator)
+				current_system.string_type.set_alive
+					-- Make sure that type SPECIAL[CHARACTER] (used in
+					-- feature 'area') is marked as alive.
+				current_system.special_character_type.set_alive
+					-- Make sure that type CHARACTER (used as actual generic type
+					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
+				current_system.character_type.set_alive
+					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_any_generating_type (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.generating_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_generating_type)
+				current_system.string_type.set_alive
+					-- Make sure that type SPECIAL[CHARACTER] (used in
+					-- feature 'area') is marked as alive.
+				current_system.special_character_type.set_alive
+					-- Make sure that type CHARACTER (used as actual generic type
+					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
+				current_system.character_type.set_alive
+					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_any_tagged_out (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.tagged_out' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_tagged_out)
+				current_system.string_type.set_alive
+					-- Make sure that type SPECIAL[CHARACTER] (used in
+					-- feature 'area') is marked as alive.
+				current_system.special_character_type.set_alive
+					-- Make sure that type CHARACTER (used as actual generic type
+					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
+				current_system.character_type.set_alive
+					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
+				current_system.integer_type.set_alive
 			end
 		end
 

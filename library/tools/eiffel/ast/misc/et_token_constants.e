@@ -430,6 +430,14 @@ feature -- Feature names
 			code_feature_name_not_void: Result /= Void
 		end
 
+	conforms_to_feature_name: ET_FEATURE_NAME is
+			-- 'conforms_to' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (conforms_to_name)
+		ensure
+			conforms_to_feature_name_not_void: Result /= Void
+		end
+
 	copy_feature_name: ET_FEATURE_NAME is
 			-- 'copy' feature name
 		once
@@ -446,12 +454,36 @@ feature -- Feature names
 			count_feature_name_not_void: Result /= Void
 		end
 
+	deep_twin_feature_name: ET_FEATURE_NAME is
+			-- 'deep_twin' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (deep_twin_name)
+		ensure
+			deep_twin_feature_name_not_void: Result /= Void
+		end
+
 	default_create_feature_name: ET_FEATURE_NAME is
 			-- 'default_create' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (default_create_name)
 		ensure
 			default_create_feature_name_not_void: Result /= Void
+		end
+
+	generating_type_feature_name: ET_FEATURE_NAME is
+			-- 'generating_type' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (generating_type_name)
+		ensure
+			generating_type_feature_name_not_void: Result /= Void
+		end
+
+	generator_feature_name: ET_FEATURE_NAME is
+			-- 'generator' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (generator_name)
+		ensure
+			generator_feature_name_not_void: Result /= Void
 		end
 
 	infix_and_feature_name: ET_FEATURE_NAME is
@@ -649,6 +681,14 @@ feature -- Feature names
 			invariant_feature_name_not_void: Result /= Void
 		end
 
+	is_deep_equal_feature_name: ET_FEATURE_NAME is
+			-- 'is_deep_equal' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_deep_equal_name)
+		ensure
+			is_deep_equal_feature_name_not_void: Result /= Void
+		end
+
 	item_feature_name: ET_FEATURE_NAME is
 			-- 'item' feature name
 		once
@@ -757,6 +797,22 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (standard_is_equal_name)
 		ensure
 			standard_is_equal_feature_name_not_void: Result /= Void
+		end
+
+	standard_twin_feature_name: ET_FEATURE_NAME is
+			-- 'standard_twin' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (standard_twin_name)
+		ensure
+			standard_twin_feature_name_not_void: Result /= Void
+		end
+
+	tagged_out_feature_name: ET_FEATURE_NAME is
+			-- 'tagged_out' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (tagged_out_name)
+		ensure
+			tagged_out_feature_name_not_void: Result /= Void
 		end
 
 	to_character_feature_name: ET_FEATURE_NAME is
@@ -1448,7 +1504,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	void_keyword: ET_Void is
+	void_keyword: ET_VOID is
 			-- 'Void' keyword
 		once
 			create Result.make
@@ -1505,9 +1561,14 @@ feature -- Keyword and symbol names
 	bit_shift_left_name: STRING is "bit_shift_left"
 	call_name: STRING is "call"
 	code_name: STRING is "code"
+	conforms_to_name: STRING is "conforms_to"
 	copy_name: STRING is "copy"
 	count_name: STRING is "count"
+	deep_twin_name: STRING is "deep_twin"
 	default_create_name: STRING is "default_create"
+	generating_type_name: STRING is "generating_type"
+	generator_name: STRING is "generator"
+	is_deep_equal_name: STRING is "is_deep_equal"
 	item_name: STRING is "item"
 	last_result_name: STRING is "last_result"
 	lower_name: STRING is "lower"
@@ -1519,6 +1580,8 @@ feature -- Keyword and symbol names
 	set_operands_name: STRING is "set_operands"
 	standard_copy_name: STRING is "standard_copy"
 	standard_is_equal_name: STRING is "standard_is_equal"
+	standard_twin_name: STRING is "standard_twin"
+	tagged_out_name: STRING is "tagged_out"
 	to_character_name: STRING is "to_character"
 	twin_name: STRING is "twin"
 	upper_name: STRING is "upper"

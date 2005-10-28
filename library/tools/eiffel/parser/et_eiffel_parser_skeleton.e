@@ -1686,6 +1686,98 @@ feature {NONE} -- Built-in
 						set_fatal_error (a_class)
 						error_handler.report_gvkbs1d_error (a_class, a_feature)
 					end
+				elseif a_feature.name.same_feature_name (tokens.conforms_to_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_any_conforms_to)
+					l_formals := a_feature.arguments
+					if l_formals = Void or else l_formals.count /= 1 then
+							-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1e_error (a_class, a_feature)
+					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
+							-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1e_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+							-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1e_error (a_class, a_feature)
+					end
+				elseif a_feature.name.same_feature_name (tokens.generator_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_any_generator)
+					l_formals := a_feature.arguments
+					if l_formals /= Void and then l_formals.count /= 0 then
+							-- The signature should be 'generator: STRING'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1f_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
+							-- The signature should be 'generator: STRING'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1f_error (a_class, a_feature)
+					end
+				elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_any_generating_type)
+					l_formals := a_feature.arguments
+					if l_formals /= Void and then l_formals.count /= 0 then
+							-- The signature should be 'generating_type: STRING'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1g_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
+							-- The signature should be 'generating_type: STRING'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1g_error (a_class, a_feature)
+					end
+				elseif a_feature.name.same_feature_name (tokens.tagged_out_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_any_tagged_out)
+					l_formals := a_feature.arguments
+					if l_formals /= Void and then l_formals.count /= 0 then
+							-- The signature should be 'tagged_out: STRING'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1h_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
+							-- The signature should be 'tagged_out: STRING'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1h_error (a_class, a_feature)
+					end
+				elseif a_feature.name.same_feature_name (tokens.standard_twin_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_any_standard_twin)
+					l_formals := a_feature.arguments
+					if l_formals /= Void and then l_formals.count /= 0 then
+							-- The signature should be 'standard_twin: like Current'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1i_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+							-- The signature should be 'standard_twin: like Current'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1i_error (a_class, a_feature)
+					end
+				elseif a_feature.name.same_feature_name (tokens.is_deep_equal_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_any_is_deep_equal)
+					l_formals := a_feature.arguments
+					if l_formals = Void or else l_formals.count /= 1 then
+							-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1j_error (a_class, a_feature)
+					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+							-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1j_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+							-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1j_error (a_class, a_feature)
+					end
+				elseif a_feature.name.same_feature_name (tokens.deep_twin_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_any_deep_twin)
+					l_formals := a_feature.arguments
+					if l_formals /= Void and then l_formals.count /= 0 then
+							-- The signature should be 'deep_twin: like Current'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1k_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+							-- The signature should be 'deep_twin: like Current'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs1k_error (a_class, a_feature)
+					end
 				elseif a_feature.name.same_feature_name (tokens.standard_copy_feature_name) then
 						-- 'ANY.standard_copy' should be a procedure.
 					a_feature.set_builtin_code (tokens.builtin_any_standard_copy)
@@ -2209,6 +2301,41 @@ feature {NONE} -- Built-in
 					a_feature.set_builtin_code (tokens.builtin_any_same_type)
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs1d_error (a_class, a_feature)
+				elseif a_feature.name.same_feature_name (tokens.conforms_to_feature_name) then
+						-- 'ANY.conforms_to' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_any_conforms_to)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1e_error (a_class, a_feature)
+				elseif a_feature.name.same_feature_name (tokens.generator_feature_name) then
+						-- 'ANY.generator' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_any_generator)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1f_error (a_class, a_feature)
+				elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
+						-- 'ANY.generating_type' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_any_generating_type)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1g_error (a_class, a_feature)
+				elseif a_feature.name.same_feature_name (tokens.tagged_out_feature_name) then
+						-- 'ANY.tagged_out' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_any_tagged_out)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1h_error (a_class, a_feature)
+				elseif a_feature.name.same_feature_name (tokens.standard_twin_feature_name) then
+						-- 'ANY.standard_twin' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_any_standard_twin)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1i_error (a_class, a_feature)
+				elseif a_feature.name.same_feature_name (tokens.is_deep_equal_feature_name) then
+						-- 'ANY.is_deep_equal' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_any_is_deep_equal)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1j_error (a_class, a_feature)
+				elseif a_feature.name.same_feature_name (tokens.deep_twin_feature_name) then
+						-- 'ANY.deep_twin' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_any_deep_twin)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1k_error (a_class, a_feature)
 				else
 						-- Unknown built-in routine.
 					a_feature.set_builtin_code (tokens.builtin_unknown)

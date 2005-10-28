@@ -142,6 +142,7 @@
 		</description>
 
 		<geant file="build.eant" target="${target}" dir="geant"/>
+		<geant file="build.eant" target="${target}" dir="gec"/>
 		<geant file="build.eant" target="${target}" dir="gelex"/>
 		<geant file="build.eant" target="${target}" dir="gelint"/>
 		<geant file="build.eant" target="${target}" dir="gepp"/>

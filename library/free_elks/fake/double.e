@@ -1,0 +1,3 @@
+expanded class DOUBLE
+
+end

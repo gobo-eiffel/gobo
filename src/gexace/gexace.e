@@ -5,7 +5,7 @@ indexing
 		"Gobo Eiffel Xace"
 
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2005, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -224,7 +224,7 @@ feature {NONE} -- Command-line processing
 
 	process_compilers (a_command: GEXACE_BUILD_COMMAND; a_compiler: STRING) is
 			-- Process compiler name.
-			-- Possible values are: "ise", "se", "ve" or "xml".
+			-- Possible values are: "ge", "ise", "se", "ve" or "xml".
 			-- The variable GOBO_EIFFEL will automatically be defined
 			-- for the four first cases.
 		require
@@ -234,7 +234,11 @@ feature {NONE} -- Command-line processing
 			g: ET_XACE_GENERATOR
 			l_xml_generator: ET_XACE_XML_GENERATOR
 		do
-			if a_compiler.is_equal ("se") then
+			if a_compiler.is_equal ("ge") then
+				variables.force_last ("ge", "GOBO_EIFFEL")
+				create {ET_XACE_GE_GENERATOR} g.make (variables, error_handler)
+				a_command.generators.force_last (g)
+			elseif a_compiler.is_equal ("se") then
 				variables.force_last ("se", "GOBO_EIFFEL")
 				create {ET_XACE_SE_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
@@ -337,8 +341,8 @@ feature {NONE} -- Usage message
 			create Result.make ("[defines][options] command [xace-file]%N%
 				%%Tdefines:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose|--shallow%N%
-				%%Tcommand:  --system=(se|ise|ve|ve41|xml) [--output=<filename>]%N%
-				%%Tcommand:  --library=(se|ise|ve|ve41|xml) [--output=<filename>]%N%
+				%%Tcommand:  --system=(ge|se|ise|ve|ve41|xml) [--output=<filename>]%N%
+				%%Tcommand:  --library=(ge|se|ise|ve|ve41|xml) [--output=<filename>]%N%
 				%%Tcommand:  --validate")
 		ensure
 			usage_message_not_void: Result /= Void

@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel Kernel Library Tester"
-		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -22,6 +22,7 @@
 		<echo message="usage:"/>
 		<echo message="   geant install"/>
 		<echo message="   geant test"/>
+		<echo message="   geant test_ge"/>
 		<echo message="   geant test_ise"/>
 		<echo message="   geant test_se"/>
 		<echo message="   geant test_ve"/>
@@ -30,10 +31,12 @@
 		<echo message="   geant test_debug_se"/>
 		<echo message="   geant test_debug_ve"/>
 		<echo message="   geant compile"/>
+		<echo message="   geant compile_ge"/>
 		<echo message="   geant compile_ise"/>
 		<echo message="   geant compile_se"/>
 		<echo message="   geant compile_ve"/>
 		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ge"/>
 		<echo message="   geant compile_debug_ise"/>
 		<echo message="   geant compile_debug_se"/>
 		<echo message="   geant compile_debug_ve"/>
@@ -65,6 +68,16 @@
 			<define name="debug" value="true" if="${debug}"/>
 			<define name="full_test" value="true" if="${full_test}"/>
 		</getest>
+	</target>
+
+	<target name="test_ge" depend="init">
+		<description>
+			Test '${system}' with Gobo Eiffel.
+			Compile in debug mode if ${debug} is defined.
+		</description>
+
+		<set name="eiffel" value="ge"/>
+		<geant target="test"/>
 	</target>
 
 	<target name="test_ise" depend="init">
@@ -108,6 +121,16 @@
 		<geant target="test"/>
 	</target>
 
+	<target name="test_debug_ge" depend="init">
+		<description>
+			Test '${system}' with Gobo Eiffel in debug mode.
+		</description>
+
+		<set name="eiffel" value="ge"/>
+		<set name="debug" value="true"/>
+		<geant target="test"/>
+	</target>
+
 	<target name="test_debug_ise" depend="init">
 		<description>
 			Test '${system}' with ISE Eiffel in debug mode.
@@ -143,9 +166,11 @@
 			Remove intermediary generated files.
 		</description>
 
+		<gec clean="${system}"/>
 		<ise clean="${system}"/>
 		<se clean="${system}"/>
 		<ve clean="${system}" recursive="true"/>
+		<delete file="compile_ge.ace"/>
 		<delete file="compile_ise.ace"/>
 		<delete file="compile_se.ace"/>
 		<delete file="compile_ve.esd"/>

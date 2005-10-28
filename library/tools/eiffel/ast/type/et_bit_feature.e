@@ -112,7 +112,7 @@ feature -- Output
 			-- current type to `a_string'.
 		do
 			a_string.append_string (bit_space)
-			a_string.append_string (name.name)
+			a_string.append_string (name.lower_name)
 		end
 
 feature -- Processing

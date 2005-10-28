@@ -34,6 +34,15 @@ feature -- Attribute names and values
 
 feature -- Task names
 
+	Gec_task_name: STRING is
+			-- "gec" task name
+		once
+			Result := "gec"
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: Result.count > 0
+		end
+
 	Se_task_name: STRING is
 			-- "se" task name
 		once
