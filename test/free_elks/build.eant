@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="free_elks" default="help">
+
+	<description>
+		system: "FreeELKS Library Tester"
+		copyright: "Copyright (c) 2005, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+	</target>
+
+	<target name="init_system">
+		<set name="system" value="xfree_elks"/>
+		<set name="library" value="free_elks"/>
+		<set name="system_dir" value="${GOBO}/test/${library}"/>
+	</target>
+
+</project>
