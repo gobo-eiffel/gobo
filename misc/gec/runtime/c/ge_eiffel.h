@@ -25,6 +25,11 @@
 #include <windows.h>
 #endif
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+
 #ifdef _MSC_VER /* MSVC */
 typedef signed char int8_t;
 typedef signed short int16_t;

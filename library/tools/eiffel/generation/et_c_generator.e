@@ -190,9 +190,6 @@ feature -- Generation
 				old_file := current_file
 				current_file := a_file
 				generate_ids
-				header_file.put_line ("#include <stdlib.h>")
-				header_file.put_line ("#include <stdio.h>")
-				header_file.put_line ("#include <stdarg.h>")
 				include_runtime_c_file ("ge_eiffel.h", header_file)
 				header_file.put_new_line
 				print_types (header_file)

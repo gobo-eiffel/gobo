@@ -77,10 +77,7 @@ feature
 			Result := 2147483647
 		end
 
-	Minimum_integer: INTEGER is
-		do
-			Result := -2147483648
-		end
+	Minimum_integer: INTEGER is -2147483648
 
 	is_dotnet: BOOLEAN is
 		do
