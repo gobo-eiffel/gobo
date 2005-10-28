@@ -11124,16 +11124,6 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- report_gibax_error
-	-- report_gibga_error
-	-- report_gibgb_error
-	-- report_gibfr_error
-	-- report_gibhk_error
-	-- report_giaaj_error
-	-- report_gibgi_error
-	-- report_gibgn_error
-	-- report_gibgj_error
-	-- report_gibgk_error
 	-- report_gibgm_error
 	-- report_giabv_error
 	-- report_gibju_error

@@ -1824,7 +1824,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'standard_twin: like Current'.
 					set_fatal_error
---					error_handler.report_gibgo_error
+					error_handler.report_gibax_error
 				else
 					if not l_result_type_set.is_expanded then
 						create l_attachment.make (current_dynamic_type, current_dynamic_feature, current_dynamic_type)
@@ -1847,7 +1847,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'deep_twin: like Current'.
 					set_fatal_error
---					error_handler.report_gibgo_error
+					error_handler.report_gibga_error
 				else
 					if not l_result_type_set.is_expanded then
 						create l_attachment.make (current_dynamic_type, current_dynamic_feature, current_dynamic_type)
@@ -1879,7 +1879,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'generator: STRING'.
 					set_fatal_error
---					error_handler.report_gibgo_error
+					error_handler.report_gibgb_error
 				else
 					if not l_result_type_set.is_expanded then
 						create l_attachment.make (current_system.string_type, current_dynamic_feature, current_dynamic_type)
@@ -1911,7 +1911,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'generating_type: STRING'.
 					set_fatal_error
---					error_handler.report_gibgo_error
+					error_handler.report_gibfr_error
 				else
 					if not l_result_type_set.is_expanded then
 						create l_attachment.make (current_system.string_type, current_dynamic_feature, current_dynamic_type)
@@ -1943,7 +1943,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'tagged_out: STRING'.
 					set_fatal_error
---					error_handler.report_gibgo_error
+					error_handler.report_gibhk_error
 				else
 					if not l_result_type_set.is_expanded then
 						create l_attachment.make (current_system.string_type, current_dynamic_feature, current_dynamic_type)

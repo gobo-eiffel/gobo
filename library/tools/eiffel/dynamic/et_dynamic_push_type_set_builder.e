@@ -1271,7 +1271,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'standard_twin: like Current'.
 					set_fatal_error
---					error_handler.report_giaac_error
+					error_handler.report_giaaj_error
 				else
 					current_dynamic_type.put_target (l_result_type_set, current_system)
 				end
@@ -1290,7 +1290,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'deep_twin: like Current'.
 					set_fatal_error
---					error_handler.report_giaac_error
+					error_handler.report_gibgi_error
 				else
 					current_dynamic_type.put_target (l_result_type_set, current_system)
 				end
@@ -1318,7 +1318,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'generator: STRING'.
 					set_fatal_error
---					error_handler.report_giaac_error
+					error_handler.report_gibgn_error
 				else
 					current_dynamic_type.put_target (l_result_type_set, current_system)
 				end
@@ -1346,7 +1346,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'generating_type: STRING'.
 					set_fatal_error
---					error_handler.report_giaac_error
+					error_handler.report_gibgj_error
 				else
 					current_dynamic_type.put_target (l_result_type_set, current_system)
 				end
@@ -1374,7 +1374,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'tagged_out: STRING'.
 					set_fatal_error
---					error_handler.report_giaac_error
+					error_handler.report_gibgk_error
 				else
 					current_dynamic_type.put_target (l_result_type_set, current_system)
 				end
