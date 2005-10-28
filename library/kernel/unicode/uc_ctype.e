@@ -29,6 +29,7 @@ feature -- Status report
 
 	valid_code (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' a valid unicode?
+			-- Includes all non-characters.
 		do
 			Result := (a_code >= minimum_unicode_character_code and
 				a_code <= maximum_unicode_character_code)
@@ -38,6 +39,10 @@ feature -- Status report
 		end
 
 feature -- Access
+
+	-- N.B. These routines implement simple case mapping, and should only
+	--       be used on their own, by legacy implementations which cannot
+	--       handle strings which increase in length when case-mapped.
 
 	lower_code (a_code_point: INTEGER): INTEGER is
 			-- Code of lower-case character of character with code `a_code_point'

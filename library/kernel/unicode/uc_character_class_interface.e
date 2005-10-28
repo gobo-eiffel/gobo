@@ -33,7 +33,7 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			Result := character_class (a_code_point) = Uppercase_letter_category
+			Result := upper_case_property (a_code_point)
 		end
 
 	is_lower_case (a_code_point: INTEGER): BOOLEAN is
@@ -41,7 +41,7 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			Result := character_class (a_code_point) = Lowercase_letter_category
+			Result := lower_case_property (a_code_point)
 		end
 
 	is_title_case (a_code_point: INTEGER): BOOLEAN is
@@ -348,6 +348,31 @@ feature -- Access
 			Result := character_class (a_code_point) = Private_other_category
 		end
 
+	is_non_character (a_code_point: INTEGER): BOOLEAN is
+			-- Is `a_code_point' a non-character?
+		require
+			valid_code_point: is_valid_code_point (a_code_point)
+		do
+			Result := (64976 <= a_code_point and a_code_point <= 65007) or
+				a_code_point = 65534 or a_code_point = 65535 or
+				a_code_point = 131070 or a_code_point = 131071 or
+				a_code_point = 196606 or a_code_point = 196607 or
+				a_code_point = 262142 or a_code_point = 262143 or
+				a_code_point = 327678 or a_code_point = 327679 or
+				a_code_point = 393214 or a_code_point = 393215 or
+				a_code_point = 458750 or a_code_point = 458751 or
+				a_code_point = 524286 or a_code_point = 524287 or
+				a_code_point = 589822 or a_code_point = 589823 or
+				a_code_point = 655358 or a_code_point = 655359 or
+				a_code_point = 720894 or a_code_point = 720895 or
+				a_code_point = 786430 or a_code_point = 786431 or
+				a_code_point = 851966 or a_code_point = 851967 or
+				a_code_point = 917502 or a_code_point = 917503 or
+				a_code_point = 983038 or a_code_point = 983039 or
+				a_code_point = 1048574 or a_code_point = 1048575 or
+				a_code_point = 1114110 or a_code_point = 1114111
+		end
+
 	decimal_digit_value (a_code_point: INTEGER): INTEGER_8 is
 			-- Decimal digit value for `a_code_point'
 		require
@@ -366,8 +391,6 @@ feature -- Access
 			decimal_value_small_enough: Result <= 9
 		end
 
-feature {NONE} -- Implementation
-
 	character_class (a_code_point: INTEGER): INTEGER is
 			-- Character class for `a_code_point'
 		require
@@ -383,6 +406,36 @@ feature {NONE} -- Implementation
 		ensure
 			character_class_large_enough: Result >= Unassigned_other_category
 			character_class_small_enough: Result <= Private_other_category
+		end
+
+feature {NONE} -- Implementation
+
+	upper_case_property (a_code_point: INTEGER): BOOLEAN is
+			-- Does `a_code_point' have the upper case property?
+		require
+			valid_code_point: is_valid_code_point (a_code_point)
+		local
+			i, j, k, a_rem: INTEGER
+		do
+			i := a_code_point // (65536)
+			a_rem  := a_code_point \\ (65536)
+			j := a_rem // 256
+			k := a_rem \\ 256
+			Result := upper_case_properties.item (i).item (j).item (k + 1)
+		end
+
+	lower_case_property (a_code_point: INTEGER): BOOLEAN is
+			-- Does `a_code_point' have the lower case property?
+		require
+			valid_code_point: is_valid_code_point (a_code_point)
+		local
+			i, j, k, a_rem: INTEGER
+		do
+			i := a_code_point // (65536)
+			a_rem  := a_code_point \\ (65536)
+			j := a_rem // 256
+			k := a_rem \\ 256
+			Result := lower_case_properties.item (i).item (j).item (k + 1)
 		end
 
 	string_to_array8 (a_string: STRING): ARRAY [INTEGER_8] is
@@ -418,6 +471,22 @@ feature {NONE} -- Implementation
 		ensure
 			decimal_values_not_void: Result /= Void
 			-- no_void_decimal_value: not Result.has (Void)
+		end
+
+	upper_case_properties: ARRAY [ARRAY [ARRAY [BOOLEAN]]] is
+			-- Upper case property for each code point
+		deferred
+		ensure
+			upper_case_properties_not_void: Result /= Void
+			-- no_void_upper_case_property: not Result.has (Void)
+		end
+
+	lower_case_properties: ARRAY [ARRAY [ARRAY [BOOLEAN]]] is
+			-- Lower case property for each code point
+		deferred
+		ensure
+			lower_case_properties_not_void: Result /= Void
+			-- no_void_lower_case_property: not Result.has (Void)
 		end
 
 end

@@ -12,6 +12,10 @@ indexing
 
 deferred class XM_XSLT_OUTPUT_ENCODER
 
+inherit
+
+	XM_UNICODE_CHARACTERS_1_1
+
 feature -- Access
 
 	encoding: STRING
@@ -28,7 +32,7 @@ feature -- Status report
 	is_bad_character_code (a_code: INTEGER): BOOLEAN is
 		-- Is `a_code' not representable in `encoding'?
 		require
-			positive_character_code: a_code > 0
+		valid_character_code: is_char (a_code)
 		deferred
 		end
 

@@ -46,8 +46,13 @@ feature
 			-- Test `is_upper_case etc.'.
 		do
 			assert ("A is upper case", is_upper_case (65))
+			assert ("@ is not upper case", not is_upper_case (64))
 			assert ("a is not upper case", not is_upper_case (97))
+			assert ("Roman numeral I is upper case", is_upper_case (8544))
+			assert ("Roman numeral I is not Lu category", character_class (8544) /= Uppercase_letter_category)
 			assert ("a is lower case", is_lower_case (97))
+			assert ("Roman small numeral i is lower case", is_lower_case (8560))
+			assert ("Roman small numeral i is not Ll category",  character_class (8560) /= Lowercase_letter_category)
 			assert ("Dz-caron is title case", is_title_case (453))
 			assert ("Small modifier h is modifier letter", is_modifier_letter (688))
 			assert ("Aleph is other letter", is_other_letter (1488))

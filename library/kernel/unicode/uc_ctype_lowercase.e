@@ -1346,7 +1346,7 @@ feature {NONE} -- Implementation
 	lower_codes: ARRAY [ARRAY [ARRAY [INTEGER]]] is
 			-- Lower case code points for each code point
 		once
-			create Result.make (0, 15)
+			create Result.make (0, 16)
 			Result.put (lower_code_plane_1, 0)
 			Result.put (lower_code_plane_2, 1)
 			Result.put (empty_lower_code_plane, 2)
@@ -1363,6 +1363,7 @@ feature {NONE} -- Implementation
 			Result.put (empty_lower_code_plane, 13)
 			Result.put (empty_lower_code_plane, 14)
 			Result.put (empty_lower_code_plane, 15)
+			Result.put (empty_lower_code_plane, 16)
 		end
 
 end

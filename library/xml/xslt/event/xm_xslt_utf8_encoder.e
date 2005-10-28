@@ -19,6 +19,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	UC_CHARACTER_CLASS_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -43,8 +46,16 @@ feature -- Status report
 	is_bad_character_code (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' not representable in `encoding'?
 		do
-			-- All characters that are passed to this routine
-			--  are valid, as they have already passed an `is_char' test.
+			Result := False
+
+			-- The following code is not correct:
+			
+			-- Result := is_surrogate (a_code) or is_non_character (a_code)
+
+			-- The reasons for this are:
+			-- 1) Surrogates have already been eliminated as the code has passed an `is_char' test
+			-- 2) XML 1.1 discourages, but allows all the remaining non-characters
+
 		end
 
 feature -- Element change

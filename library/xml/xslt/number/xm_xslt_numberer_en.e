@@ -60,13 +60,13 @@ feature -- Access
 					if a_number.is_integer then
 						Result := alphabetic_number (a_number.to_integer, latin_upper_case_letters)
 					else
-						Result := converted_number (a_number, latin_hindu_arabic_digits, a_picture.count, a_group_size, a_group_separator, an_ordinal)
+						Result := converted_number (a_number, european_digits, a_picture.count, a_group_size, a_group_separator, an_ordinal)
 					end
 				when 97 then -- 'a' - Lower case ASCII letters
 					if a_number.is_integer then
 						Result := alphabetic_number (a_number.to_integer, latin_lower_case_letters)
 					else
-						Result := converted_number (a_number, latin_hindu_arabic_digits, a_picture.count, a_group_size, a_group_separator, an_ordinal)
+						Result := converted_number (a_number, european_digits, a_picture.count, a_group_size, a_group_separator, an_ordinal)
 					end
 				when 87 then -- 'W' -- Upper case words
 					if a_number.is_integer then
@@ -76,7 +76,7 @@ feature -- Access
 							Result := cased_words_number (a_number.to_integer, True, True)
 						end
 					else
-						Result := converted_number (a_number, latin_hindu_arabic_digits, 1, a_group_size, a_group_separator, an_ordinal)
+						Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
 					end
 				when 119 then -- 'w' -- Lower case words
 					if a_number.is_integer then
@@ -86,13 +86,13 @@ feature -- Access
 							Result := cased_words_number (a_number.to_integer, False, False)
 						end
 					else
-						Result := converted_number (a_number, latin_hindu_arabic_digits, 1, a_group_size, a_group_separator, an_ordinal)
+						Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
 					end	
 				else
 
 					-- Un-supported formatting token - use "1"
 
-					Result := converted_number (a_number, latin_hindu_arabic_digits, 1, a_group_size, a_group_separator, an_ordinal)
+					Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
 				end
 			else
 				if STRING_.same_string (a_picture, "Ww") then
@@ -103,13 +103,13 @@ feature -- Access
 							Result := cased_words_number (a_number.to_integer, True, False)
 						end
 					else
-						Result := converted_number (a_number, latin_hindu_arabic_digits, 1, a_group_size, a_group_separator, an_ordinal)
+						Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
 					end
 				else
 
 					-- Un-supported formatting token - use "1"
 
-					Result := converted_number (a_number, latin_hindu_arabic_digits, 1, a_group_size, a_group_separator, an_ordinal)
+					Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
 				end
 			end
 		end
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 	latin_lower_case_letters: STRING is "abcdefghijklmnopqrstuvwxyz"
 			-- Latin lower case alphabet
 
-	latin_hindu_arabic_digits: STRING is "0123456789"
+	european_digits: STRING is "0123456789"
 		-- "Arabic" numerals, for fallback to format "1"
 
 	roman_thousands: ARRAY [STRING] is

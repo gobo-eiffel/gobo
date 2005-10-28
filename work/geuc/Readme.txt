@@ -18,7 +18,8 @@ or some variant of that command.
 3) Save copies of the Unicode Character Database in $GOBO/work/geuc.
 The following files need to be imported:
 
- ftp://www.unicode.org/Public/UNIDATA
+ ftp://www.unicode.org/Public/UNIDATA/UnicodeData.txt
+ ftp://www.unicode.org/Public/UNIDATA/DerivedCoreProperties.txt
 
 Do NOT add these files to CVS.
 
@@ -54,7 +55,7 @@ then the above command line will generate
 
 UC_V410_CHARACTER_CLASS_ROUTINES
 
-6) Copy the generated classes to 
+6) Move the generated classes to 
 
 $GOBO/library/kernel/unicode
 

@@ -24,10 +24,11 @@ feature -- Access
 --			definition: Result = 0
 --		end
 
-	maximum_unicode_character_code: INTEGER is 1114109
-			-- Largest code for unicode characters
+	maximum_unicode_character_code: INTEGER is 1114111
+			-- Largest code for unicode characters (10FFFF);
+			-- Includes final two non-characters.
 --		ensure
---			definition: Result = 1114109
+--			definition: Result = 1114111
 --		end
 
 	minimum_ascii_character_code: INTEGER is 0
