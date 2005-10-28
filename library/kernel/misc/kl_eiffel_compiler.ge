@@ -38,7 +38,7 @@ feature -- Access
 			vendor_not_void: Result /= Void
 		end
 
-	ge_vendor: STRING is "ve"
+	ge_vendor: STRING is "ge"
 			-- Gobo Eiffel vendor
 
 	ise_vendor: STRING is "ise"
