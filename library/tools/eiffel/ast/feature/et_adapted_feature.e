@@ -80,7 +80,7 @@ feature -- Access
 			-- Alias name, if any
 		do
 			Result := parent_feature.alias_name
-		ensure then
+		ensure
 			definition: Result = parent_feature.alias_name
 		end
 
