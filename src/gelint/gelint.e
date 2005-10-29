@@ -241,7 +241,7 @@ feature -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gepp usage message.
 		once
-			create Result.make ("[--verbose][--define=variables][--void][--flat][--is_cat] ace_filename")
+			create Result.make ("[--verbose][--define=variables][--void][--flat][--cat] ace_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
