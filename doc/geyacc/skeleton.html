@@ -27,7 +27,7 @@ content="text/html; charset=iso-8859-1">
 
     <em>description</em>: <em>&quot;General parsers&quot;</em>
     <em>library</em>: <em>&quot;Gobo Eiffel Parse Library&quot;</em>
-    <em>copyright</em>:<em> &quot;Copyright (c) 1999-2003, Eric Bezault and others&quot;
+    <em>copyright</em>:<em> &quot;Copyright (c) 1999-2005, Eric Bezault and others&quot;
     license</em>:<em> &quot;Eiffel Forum License v2 (see forum.txt)&quot;</em>
 
 <em><strong>deferred class</strong></em> <em>YY_PARSER</em> [<em>G</em>]
@@ -49,6 +49,12 @@ content="text/html; charset=iso-8859-1">
     <a href="parser.html#syntax_error" name="syntax_error"><em>syntax_error</em></a>: <em>BOOLEAN</em>
             -- Has last parsing been unsuccesful?
 
+    <a href="actions.html#is_suspended" name="is_suspended"><em>is_suspended</em></a>: <em>BOOLEAN</em>
+            -- Has parsing been suspended?
+            -- The next call to <em>parse</em> will resume parsing in the state
+            -- where the parser was when it was suspended. Note that a call
+            -- to <em>abort</em> or <em>accept</em> will force <em>parse</em> to parse from scratch.
+
 <em><strong>feature</strong></em> -- Access
 
     <a href="actions.html#error_count" name="error_count"><em>error_count</em></a>: <em>INTEGER</em>
@@ -58,21 +64,8 @@ content="text/html; charset=iso-8859-1">
             -- error recovery occurred.)
         <em><strong>ensure</strong></em>
             <em>error_count_non_negative</em>: <em>Result</em> &gt;= <em>0</em>
-</pre>
 
-<pre><em><strong>feature</strong></em> -- Element change
-
-    <a href="actions.html#clear_all" name="clear_all"><em>clear_all</em></a>
-            -- Clear temporary objects so that they can be collected
-            -- by the garbage collector. (This routine is called by
-            -- <em>parse</em> before exiting. It can be redefined in descendants.)
-
-<em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Status report
-
-    <a href="actions.html#is_recovering" name="is_recovering"><em>is_recovering</em></a>: <em>BOOLEAN</em>
-            -- Is current parser recovering from a syntax error?
-
-<em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Basic operations
+<em><strong>feature</strong></em> -- Basic operations
 
     <a href="actions.html#accept" name="accept"><em>accept</em></a>
             -- Stop parsing successfully.
@@ -84,6 +77,21 @@ content="text/html; charset=iso-8859-1">
             -- Do not print error message.
         <em><strong>ensure</strong></em>
             <em>aborted</em>: <em>syntax_error</em>
+
+    <a href="actions.html#clear_all" name="clear_all"><em>clear_all</em></a>
+            -- Clear temporary objects so that they can be collected
+            -- by the garbage collector. (This routine is called by
+            -- <em>parse</em> before exiting. It can be redefined in descendants.)
+
+<em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Basic operations
+
+    <a href="actions.html#suspend" name="suspend"><em>suspend</em></a>
+            -- Suspend parsing.
+            -- The next call to <em>parse</em> will resume parsing in the state
+            -- where the parser was when it was suspended. Note that a call
+            -- to <em>abort</em> or <em>accept</em> will force <em>parse</em> to parse from scratch.
+        <em><strong>ensure</strong></em>
+            suspended: is_suspended
 
     <a href="actions.html#raise_error" name="raise_error"><em>raise_error</em></a>
             -- Raise a syntax error.
@@ -105,6 +113,11 @@ content="text/html; charset=iso-8859-1">
     <a href="actions.html#clear_token" name="clear_token"><em>clear_token</em></a>
             -- Clear the previous lookahead token.
             -- Used in error-recovery rule actions.
+<em><strong>
+feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Status report
+
+    <a href="actions.html#is_recovering" name="is_recovering"><em>is_recovering</em></a>: <em>BOOLEAN</em>
+            -- Is current parser recovering from a syntax error?
 
 <em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Scanning
 
@@ -127,7 +140,7 @@ content="text/html; charset=iso-8859-1">
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999-2003</b></font><font
+            <font size="2"><b>Copyright © 1999-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault and others</strong><br>
             <strong>mailto:</strong></font><a
@@ -136,7 +149,7 @@ content="text/html; charset=iso-8859-1">
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 9 March 2003</font><br>
+            <strong>Last Updated:</strong> 29 October 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

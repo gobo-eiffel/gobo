@@ -70,14 +70,25 @@ feature -- Parsing
 				-- ugly but fast parsing routine rather than a nice and
 				-- slow version. I hope you won't blame me for that! :-)
 			from
-				error_count := 0
-				yy_lookahead_needed := True
-				yyerrstatus := 0
-				yy_init_value_stacks
-				yyssp := -1
-				yystacksize := yyss.count
-				yy_parsing_status := yyContinue
-				yy_goto := yyNewstate
+				if yy_parsing_status = yySuspended then
+					yystacksize := yy_suspended_yystacksize
+					yystate := yy_suspended_yystate
+					yyn := yy_suspended_yyn
+					yychar1 := yy_suspended_yychar1
+					index := yy_suspended_index
+					yyss_top := yy_suspended_yyss_top
+					yy_goto := yy_suspended_yy_goto
+					yy_parsing_status := yyContinue
+				else
+					error_count := 0
+					yy_lookahead_needed := True
+					yyerrstatus := 0
+					yy_init_value_stacks
+					yyssp := -1
+					yystacksize := yyss.count
+					yy_parsing_status := yyContinue
+					yy_goto := yyNewstate
+				end
 			until
 				yy_parsing_status /= yyContinue
 			loop
@@ -124,7 +135,7 @@ feature -- Parsing
 								std.error.put_integer (last_token)
 								std.error.put_character ('%N')
 							end
-								-- Translate lexical token `last_token' into 
+								-- Translate lexical token `last_token' into
 								-- geyacc internal token code.
 							if last_token <= yyMax_token then
 								yychar1 := yytranslate.item (last_token)
@@ -160,7 +171,8 @@ feature -- Parsing
 								-- this state:
 								-- Negative => reduce, -`yyn' is rule number.
 								-- Positive => shift, `yyn' is new state.
-								-- New state is final state => don't bother to shift, just return success.
+								-- New state is final state => don't bother to
+								-- shift, just return success.
 								-- 0, or most negative number => error.
 							if yyn < 0 then
 								if yyn = yyFlag then
@@ -215,10 +227,11 @@ feature -- Parsing
 						std.error.put_character ('%N')
 					end
 					yy_do_action (yyn)
-					if yy_parsing_status = yyContinue then
+					inspect yy_parsing_status
+					when yyContinue then
 							-- Now "shift" the result of the reduction.
 							-- Determine what state that goes to,
-							-- based on the state we popped back to 
+							-- based on the state we popped back to
 							-- and the rule number reduced by.
 						yyn := yyr1.item (yyn)
 						yyss_top := yyss.item (yyssp)
@@ -233,11 +246,19 @@ feature -- Parsing
 							yystate := yydefgoto.item (index)
 						end
 						yy_goto := yyNewstate
-					elseif yy_parsing_status = yyError_raised then
+					when yySuspended then
+						yy_suspended_yystacksize := yystacksize
+						yy_suspended_yystate := yystate
+						yy_suspended_yyn := yyn
+						yy_suspended_yychar1 := yychar1
+						yy_suspended_index := index
+						yy_suspended_yyss_top := yyss_top
+						yy_suspended_yy_goto := yy_goto
+					when yyError_raised then
 							-- Handle error raised explicitly by an action.
 						yy_parsing_status := yyContinue
 						yy_goto := yyErrlab
-					-- else
+					else
 							-- Accepted or aborted.
 					end
 				when yyErrlab then
@@ -312,7 +333,9 @@ feature -- Parsing
 					end
 				end
 			end
-			yy_clear_all
+			if yy_parsing_status /= yySuspended then
+				yy_clear_all
+			end
 		rescue
 			debug ("GEYACC")
 				std.error.put_line ("Entering rescue clause of parser")
@@ -329,12 +352,34 @@ feature -- Status report
 			Result := yy_parsing_status /= yyAccepted
 		end
 
+	is_suspended: BOOLEAN is
+			-- Has parsing been suspended?
+			-- The next call to `parse' will resume parsing in the state
+			-- where the parser was when it was suspended. Note that a call
+			-- to `abort' or `accept' will force `parse' to parse from scratch.
+		do
+			Result := yy_parsing_status = yySuspended
+		end
+
 feature -- Access
 
 	error_count: INTEGER
 			-- Number of errors detected during last parsing
 
-feature -- Element change
+feature -- Basic operations
+
+	accept is
+			-- Stop parsing successfully.
+		do
+			yy_parsing_status := yyAccepted
+		end
+
+	abort is
+			-- Abort parsing.
+			-- Do not print error message.
+		do
+			yy_parsing_status := yyAborted
+		end
 
 	clear_all is
 			-- Clear temporary objects so that they can be collected
@@ -350,6 +395,58 @@ feature -- Element change
 			-- be collected by the garbage collector.
 		do
 			yy_clear_value_stacks
+		end
+
+feature {YY_PARSER_ACTION} -- Basic operations
+
+	suspend is
+			-- Suspend parsing.
+			-- The next call to `parse' will resume parsing in the state
+			-- where the parser was when it was suspended. Note that a call
+			-- to `abort' or `accept' will force `parse' to parse from scratch.
+		do
+			yy_parsing_status := yySuspended
+		end
+
+	raise_error is
+			-- Raise a syntax error.
+			-- Report error using the error action %error associated
+			-- with current parsing state or `report_error' by default,
+			-- and perform normal error recovery if possible.
+		do
+			yy_parsing_status := yyError_raised
+		end
+
+	recover is
+			-- Recover immediately after a parse error.
+		do
+			yyerrstatus := 0
+			yy_parsing_status := yyContinue
+		end
+
+	report_error (a_message: STRING) is
+			-- Print error message.
+			-- (This routine is called by default by `parse' when it
+			-- detects a syntax error and there is no error action
+			-- %error available. It can be redefined in descendants.)
+		do
+			std.error.put_string (a_message)
+			std.error.put_new_line
+		end
+
+	report_eof_expected_error is
+			-- Report that an end-of-file is expected.
+			-- (This routine is called by default by `parse' when it detects
+			-- such syntax error and can be redefined in descendants.)
+		do
+			report_error ("parse error")
+		end
+
+	clear_token is
+			-- Clear the previous lookahead token.
+			-- Used in error-recovery rule actions.
+		do
+			yy_lookahead_needed := True
 		end
 
 feature {YY_PARSER_ACTION} -- Status report
@@ -418,7 +515,7 @@ feature {YY_PARSER_ACTION} -- Status report
 							-- Negative => reduce, -`yyn' is rule number.
 							-- Positive => shift, `yyn' is new state.
 							-- New state is final state => don't bother to
-							--		shift, just return success.
+							-- shift, just return success.
 							-- 0, or most negative number => error.
 						if yyn < 0 then
 							if yyn /= yyFlag then
@@ -474,62 +571,6 @@ feature {YY_PARSER_ACTION} -- Access
 			end
 		ensure
 			expected_tokens_not_void: Result /= Void
-		end
-
-feature {YY_PARSER_ACTION} -- Element change
-
-	accept is
-			-- Stop parsing successfully.
-		do
-			yy_parsing_status := yyAccepted
-		end
-
-	abort is
-			-- Abort parsing.
-			-- Do not print error message.
-		do
-			yy_parsing_status := yyAborted
-		end
-
-	raise_error is
-			-- Raise a syntax error.
-			-- Report error using the error action %error associated
-			-- with current parsing state or `report_error' by default,
-			-- and perform normal error recovery if possible.
-		do
-			yy_parsing_status := yyError_raised
-		end
-
-	recover is
-			-- Recover immediately after a parse error.
-		do
-			yyerrstatus := 0
-			yy_parsing_status := yyContinue
-		end
-
-	report_error (a_message: STRING) is
-			-- Print error message.
-			-- (This routine is called by default by `parse' when it
-			-- detects a syntax error and there is no error action
-			-- %error available. It can be redefined in descendants.)
-		do
-			std.error.put_string (a_message)
-			std.error.put_new_line
-		end
-
-	report_eof_expected_error is
-			-- Report that an end-of-file is expected.
-			-- (This routine is called by default by `parse' when it detects
-			-- such syntax error and can be redefined in descendants.)
-		do
-			report_error ("parse error")
-		end
-
-	clear_token is
-			-- Clear the previous lookahead token.
-			-- Used in error-recovery rule actions.
-		do
-			yy_lookahead_needed := True
 		end
 
 feature {NONE} -- Tables
@@ -599,6 +640,18 @@ feature {NONE} -- Tables
 	yytypes2: SPECIAL [INTEGER]
 			-- Array indexed by internal token id (from 0 to yyNtbase-1)
 			-- containing the type id of the corresponding token
+
+feature {NONE} -- Suspended state
+
+	yy_suspended_yystacksize: INTEGER
+	yy_suspended_yystate: INTEGER
+	yy_suspended_yyn: INTEGER
+	yy_suspended_yychar1: INTEGER
+	yy_suspended_index: INTEGER
+	yy_suspended_yyss_top: INTEGER
+	yy_suspended_yy_goto: INTEGER
+			-- Local variables of `parse' to be remembered
+			-- when parsing has been suspended
 
 feature {NONE} -- Implementation
 
@@ -714,6 +767,7 @@ feature {NONE} -- Constants
 	yyAborted: INTEGER is 102
 	yyError_raised: INTEGER is 103
 	yyContinue: INTEGER is 104
+	yySuspended: INTEGER is 105
 			-- Parsing status
 
 	yyTerror: INTEGER is 1

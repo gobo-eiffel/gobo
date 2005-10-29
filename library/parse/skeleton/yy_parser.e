@@ -5,7 +5,7 @@ indexing
 		"General parsers"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,6 +39,14 @@ feature -- Status report
 		deferred
 		end
 
+	is_suspended: BOOLEAN is
+			-- Has parsing been suspended?
+			-- The next call to `parse' will resume parsing in the state
+			-- where the parser was when it was suspended. Note that a call
+			-- to `abort' or `accept' will force `parse' to parse from scratch.
+		deferred
+		end
+
 feature -- Access
 
 	error_count: INTEGER is
@@ -51,23 +59,7 @@ feature -- Access
 			error_count_non_negative: Result >= 0
 		end
 
-feature -- Element change
-
-	clear_all is
-			-- Clear temporary objects so that they can be collected
-			-- by the garbage collector. (This routine is called by
-			-- `parse' before exiting. It can be redefined in descendants.)
-		do
-		end
-
-feature {YY_PARSER_ACTION} -- Status report
-
-	is_recovering: BOOLEAN is
-			-- Is current parser recovering from a syntax error?
-		deferred
-		end
-
-feature {YY_PARSER_ACTION} -- Basic operations
+feature -- Basic operations
 
 	accept is
 			-- Stop parsing successfully.
@@ -82,6 +74,25 @@ feature {YY_PARSER_ACTION} -- Basic operations
 		deferred
 		ensure
 			aborted: syntax_error
+		end
+
+	clear_all is
+			-- Clear temporary objects so that they can be collected
+			-- by the garbage collector. (This routine is called by
+			-- `parse' before exiting. It can be redefined in descendants.)
+		do
+		end
+
+feature {YY_PARSER_ACTION} -- Basic operations
+
+	suspend is
+			-- Suspend parsing.
+			-- The next call to `parse' will resume parsing in the state
+			-- where the parser was when it was suspended. Note that a call
+			-- to `abort' or `accept' will force `parse' to parse from scratch.
+		deferred
+		ensure
+			suspended: is_suspended
 		end
 
 	raise_error is
@@ -108,6 +119,13 @@ feature {YY_PARSER_ACTION} -- Basic operations
 	clear_token is
 			-- Clear the previous lookahead token.
 			-- Used in error-recovery rule actions.
+		deferred
+		end
+
+feature {YY_PARSER_ACTION} -- Status report
+
+	is_recovering: BOOLEAN is
+			-- Is current parser recovering from a syntax error?
 		deferred
 		end
 

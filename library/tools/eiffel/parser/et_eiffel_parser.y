@@ -3334,14 +3334,25 @@ feature -- Parsing
 				-- ugly but fast parsing routine rather than a nice and
 				-- slow version. I hope you won't blame me for that! :-)
 			from
-				error_count := 0
-				yy_lookahead_needed := True
-				yyerrstatus := 0
-				yy_init_value_stacks
-				yyssp := -1
-				yystacksize := yyss.count
-				yy_parsing_status := yyContinue
-				yy_goto := yyNewstate
+				if yy_parsing_status = yySuspended then
+					yystacksize := yy_suspended_yystacksize
+					yystate := yy_suspended_yystate
+					yyn := yy_suspended_yyn
+					yychar1 := yy_suspended_yychar1
+					index := yy_suspended_index
+					yyss_top := yy_suspended_yyss_top
+					yy_goto := yy_suspended_yy_goto
+					yy_parsing_status := yyContinue
+				else
+					error_count := 0
+					yy_lookahead_needed := True
+					yyerrstatus := 0
+					yy_init_value_stacks
+					yyssp := -1
+					yystacksize := yyss.count
+					yy_parsing_status := yyContinue
+					yy_goto := yyNewstate
+				end
 			until
 				yy_parsing_status /= yyContinue
 			loop
@@ -3388,7 +3399,7 @@ feature -- Parsing
 								std.error.put_integer (last_token)
 								std.error.put_character ('%N')
 							end
-								-- Translate lexical token `last_token' into 
+								-- Translate lexical token `last_token' into
 								-- geyacc internal token code.
 							if last_token <= yyMax_token then
 								yychar1 := yytranslate.item (last_token)
@@ -3425,7 +3436,7 @@ feature -- Parsing
 								-- Negative => reduce, -`yyn' is rule number.
 								-- Positive => shift, `yyn' is new state.
 								-- New state is final state => don't bother to
-								--		shift, just return success.
+								-- shift, just return success.
 								-- 0, or most negative number => error.
 							if yyn < 0 then
 								if yyn = yyFlag then
@@ -3480,10 +3491,11 @@ feature -- Parsing
 						std.error.put_character ('%N')
 					end
 					yy_do_action (yyn)
-					if yy_parsing_status = yyContinue then
+					inspect yy_parsing_status
+					when yyContinue then
 							-- Now "shift" the result of the reduction.
 							-- Determine what state that goes to,
-							-- based on the state we popped back to 
+							-- based on the state we popped back to
 							-- and the rule number reduced by.
 						yyn := yyr1.item (yyn)
 						yyss_top := yyss.item (yyssp)
@@ -3498,11 +3510,19 @@ feature -- Parsing
 							yystate := yydefgoto.item (index)
 						end
 						yy_goto := yyNewstate
-					elseif yy_parsing_status = yyError_raised then
+					when yySuspended then
+						yy_suspended_yystacksize := yystacksize
+						yy_suspended_yystate := yystate
+						yy_suspended_yyn := yyn
+						yy_suspended_yychar1 := yychar1
+						yy_suspended_index := index
+						yy_suspended_yyss_top := yyss_top
+						yy_suspended_yy_goto := yy_goto
+					when yyError_raised then
 							-- Handle error raised explicitly by an action.
 						yy_parsing_status := yyContinue
 						yy_goto := yyErrlab
-					-- else
+					else
 							-- Accepted or aborted.
 					end
 				when yyErrlab then
@@ -3577,7 +3597,9 @@ feature -- Parsing
 					end
 				end
 			end
-			yy_clear_all
+			if yy_parsing_status /= yySuspended then
+				yy_clear_all
+			end
 		rescue
 			debug ("GEYACC")
 				std.error.put_line ("Entering rescue clause of parser")

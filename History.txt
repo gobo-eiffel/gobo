@@ -49,6 +49,15 @@ Version 3.5 - ????
 	  once and for all at the beginning of the application to avoid unexpected
 	  behaviors.
 
+	Gobo Eiffel Parse Library:
+
+	* Added feature `suspend' (and its associated feature `is_suspended')
+	  to YY_PARSER and its descendant YY_PARSER_SKELETON to be able to
+	  suspend the current parsing. The next call to `parse' will resume
+	  parsing in the state where the parser was when it was suspended.
+	  Note that a call to `abort' or `accept' will force `parse' to parse
+	  from scratch.
+
 	Gobo Eiffel Time Library:
 
 	* Added classes to parse and format XML Schema date, time and

@@ -55,11 +55,11 @@ only for special purposes.</p>
 <p>The Eiffel code in an action can refer to the semantic values
 of the components matched by the rule with the construct <font
 color="#0000FF"><tt>$N</tt></font>, which stands for the value of
-the <font size="2" face="Courier New">N</font><sup>th</sup> component. The
-semantic value for the grouping being constructed is <font
-color="#0000FF"><tt>$$</tt></font>. (<em>Geyacc</em> translates
-both of these constructs into array element references when it
-copies the actions into the generated parser class.)</p>
+the <font size="2" face="Courier New">N</font><sup>th</sup>
+component. The semantic value for the grouping being constructed
+is <font color="#0000FF"><tt>$$</tt></font>. (<em>Geyacc</em>
+translates both of these constructs into array element references
+when it copies the actions into the generated parser class.)</p>
 
 <p>Here is a typical example:</p>
 
@@ -164,15 +164,15 @@ be used in actions:</p>
 <dl>
     <dt><a href="skeleton.html#abort" name="abort"><font
         color="#008080"><em><tt>abort</tt></em></font></a></dt>
-    <dd>Stop the current parsing and set <a href="skeleton.html#syntax_error"><font
-        color="#008080"><em><tt>syntax_error</tt></em></font></a>
+    <dd>Stop the current parsing and set <a
+        href="skeleton.html#syntax_error"><font color="#008080"><em><tt>syntax_error</tt></em></font></a>
         to true.</dd>
     <dd>Do not report an error through <a href="#report_error"><font
         color="#008080"><em><tt>report_error</tt></em></font></a>.</dd>
     <dt><a href="skeleton.html#accept" name="accept"><font
         color="#008080"><em><tt>accept</tt></em></font></a></dt>
-    <dd>Stop the current parsing and set <a href="skeleton.html#syntax_error"><font
-        color="#008080"><em><tt>syntax_error</tt></em></font></a>
+    <dd>Stop the current parsing and set <a
+        href="skeleton.html#syntax_error"><font color="#008080"><em><tt>syntax_error</tt></em></font></a>
         to false.</dd>
     <dt><a href="skeleton.html#clear_token" name="clear_token"><font
         color="#008080"><em><tt>clear_token</tt></em></font></a></dt>
@@ -181,11 +181,10 @@ be used in actions:</p>
     <dt><a href="skeleton.html#clear_all" name="clear_all"><font
         color="#008080"><em><tt>clear_all</tt></em></font></a></dt>
     <dd>Clear temporary objects so that they can be collected by
-        the garbage collector. This routine is called by <a href="skeleton.html#parse"><font
-        color="#008080"><em><tt>parse</tt></em></font></a> before
-        exiting. It can be redefined in descendants. Clear
-        internal stacks by default (call to <font
-        color="#008080"><em><tt>clear_stacks</tt></em></font>).</dd>
+        the garbage collector. This routine is called by <a
+        href="skeleton.html#parse"><font color="#008080"><em><tt>parse</tt></em></font></a>
+        before exiting. It can be redefined in descendants. Clear
+        internal stacks by default (call to <font color="#008080"><em><tt>clear_stacks</tt></em></font>).</dd>
     <dt><a href="skeleton.html#error_count" name="error_count"><font
         color="#008080"><em><tt>error_count</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
@@ -193,9 +192,8 @@ be used in actions:</p>
         error, it increments <font color="#008080"><em><tt>error_count</tt></em></font>,
         which hence contains the number of syntax errors
         encountered so far during the current parsing. Even when <a
-        href="skeleton.html#parse"><font
-        color="#008080"><em><tt>parse</tt></em></font></a> returns
-        with <a href="skeleton.html#syntax_error"><font
+        href="skeleton.html#parse"><font color="#008080"><em><tt>parse</tt></em></font></a>
+        returns with <a href="skeleton.html#syntax_error"><font
         color="#008080"><em><tt>syntax_error</tt></em></font></a>
         set to false, <font color="#008080"><em><tt>error_count</tt></em></font>
         may have a non-zero value. This may indeed happen when <a
@@ -215,12 +213,26 @@ be used in actions:</p>
         has been kept up-to-date though). Normal parsing can be
         immediately resumed by calling <a href="#recover"><font
         color="#008080"><em><tt>recover</tt></em></font></a>.</dd>
+    <dt><a href="skeleton.html#is_suspended" name="is_suspended"><font
+        color="#008080"><em><tt>is_suspended</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> BOOLEAN</tt></em></font></dt>
+    <dd>Specify whether the parsing has been suspended. The next
+        call to <a href="skeleton.html#parse"><font
+        color="#008080"><em><tt>parse</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em></font>will resume
+        parsing in the state where the parser was when it was
+        suspended. Note that a call to <a href="#abort"><font
+        color="#008080"><em><tt>abort</tt></em></font></a> or <a
+        href="#accept"><font color="#008080"><em><tt>accept</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em></font>will force <a
+        href="skeleton.html#parse"><font color="#008080"><em><tt>parse</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em></font>to parse from
+        scratch.</dd>
     <dt><a href="skeleton.html#last_token" name="last_token"><font
         color="#008080"><em><tt>last_token</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
     <dd>Current look-ahead token. This token is returned by <a
-        href="#read_token"><font
-        color="#008080"><em><tt>read_token</tt></em></font></a><font
+        href="#read_token"><font color="#008080"><em><tt>read_token</tt></em></font></a><font
         color="#008080" size="2" face="Courier New"><em> </em></font>and
         can be discarded with <a href="#clear_token"><font
         color="#008080"><em><tt>clear_token</tt></em></font></a>
@@ -239,23 +251,23 @@ be used in actions:</p>
         href="error.html">error recovery</a> just as if the
         parser itself had detected an error; it also calls the
         error action <font color="#0000FF"><tt>%error</tt></font>
-        associated with current parsing state or <a href="#report_error"><font
-        color="#008080"><em><tt>report_error</tt></em></font></a> by
-        default.</dd>
+        associated with current parsing state or <a
+        href="#report_error"><font color="#008080"><em><tt>report_error</tt></em></font></a>
+        by default.</dd>
     <dt><a href="skeleton.html#read_token" name="read_token"><font
         color="#008080"><em><tt>read_token</tt></em></font></a></dt>
     <dd>The <a href="parser.html#lexical_analyzer">lexical
         analyzer</a> routine, <font color="#008080"><em><tt>read_token</tt></em></font>,
         recognizes tokens from the input stream and makes them
         available to the parser in <a href="#last_token"><font
-        color="#008080"><em><tt>last_token</tt></em></font></a>.
-        <font color="#008080"><em><tt>read_token</tt></em></font>
-        also updates the semantic value of the last token read in
-        feature <a href= "#last_value"><font
-        color="#008080"><em><tt>last_value</tt></em></font></a>.
+        color="#008080"><em><tt>last_token</tt></em></font></a>. <font
+        color="#008080"><em><tt>read_token</tt></em></font> also
+        updates the semantic value of the last token read in
+        feature <a href="#last_value"><font color="#008080"><em><tt>last_value</tt></em></font></a>.
         The routine <font color="#008080"><em><tt>read_token</tt></em></font>
-        is called by <a href="skeleton.html#parse"><font color="#008080"><em><tt>parse</tt></em></font></a>
-        when it needs a new token from the input stream.</dd>
+        is called by <a href="skeleton.html#parse"><font
+        color="#008080"><em><tt>parse</tt></em></font></a> when
+        it needs a new token from the input stream.</dd>
     <dt><a href="skeleton.html#recover" name="recover"><font
         color="#008080"><em><tt>recover</tt></em></font></a></dt>
     <dd>Resume generating error messages immediately for
@@ -269,9 +281,8 @@ be used in actions:</p>
         or <em>syntax error</em> whenever it reads a token which
         cannot satisfy any syntax rule. An action in the grammar
         can also explicitly proclaim an error by calling feature <a
-        href="#raise_error"><font
-        color="#008080"><em><tt>raise_error</tt></em></font></a>. The
-        <em>geyacc</em> parser expects to report the error by
+        href="#raise_error"><font color="#008080"><em><tt>raise_error</tt></em></font></a>.
+        The <em>geyacc</em> parser expects to report the error by
         calling the error action <font color="#0000FF"><tt>%error</tt></font>
         associated with current parsing state or the error
         reporting routine <font color="#008080"><em><tt>report_error</tt></em></font>
@@ -284,14 +295,27 @@ be used in actions:</p>
         color="#008080" size="2" face="Courier New"><em> </em></font>or
         the error action <font color="#0000FF"><tt>%error</tt></font>
         returns to <a href="skeleton.html#parse"><font
-        color="#008080"><em><tt>parse</tt></em></font></a>,
-        the latter will attempt <a href="error.html">error
-        recovery</a> if you have written suitable error recovery
-        grammar rules. If recovery is impossible, <a href="skeleton.html#parse"><font
-        color="#008080"><em><tt>parse</tt></em></font></a> will
-        immediately return and <a href="skeleton.html#syntax_error"><font
-        color="#008080"><em><tt>syntax_error</tt></em></font></a>
+        color="#008080"><em><tt>parse</tt></em></font></a>, the
+        latter will attempt <a href="error.html">error recovery</a>
+        if you have written suitable error recovery grammar
+        rules. If recovery is impossible, <a
+        href="skeleton.html#parse"><font color="#008080"><em><tt>parse</tt></em></font></a>
+        will immediately return and <a
+        href="skeleton.html#syntax_error"><font color="#008080"><em><tt>syntax_error</tt></em></font></a>
         will be set to true.</dd>
+    <dt><a href="skeleton.html#suspend" name="suspend"><font
+        color="#008080"><em><tt>suspend</tt></em></font></a></dt>
+    <dd>Suspend the current parsing. The next call to <a
+        href="skeleton.html#parse"><font color="#008080"><em><tt>parse</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em></font>will resume
+        parsing in the state where the parser was when it was
+        suspended. Note that a call to <a href="#abort"><font
+        color="#008080"><em><tt>abort</tt></em></font></a> or <a
+        href="#accept"><font color="#008080"><em><tt>accept</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em></font>will force <a
+        href="skeleton.html#parse"><font color="#008080"><em><tt>parse</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em></font>to parse from
+        scratch.</dd>
     <dt><a name="token_name"><font color="#008080"><em><tt>token_name</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_token</tt></em><tt>:</tt><em><tt>
         INTEGER</tt></em><tt>):</tt><em><tt> STRING</tt></em></font></dt>
@@ -568,7 +592,7 @@ does to implement mid-rule actions.</p>
             preview="
 $Date$
 $Revision$"
-            -->
+            --> 
         </address>
         </td>
         <td align="right" valign="top"><a
