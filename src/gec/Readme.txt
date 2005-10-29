@@ -18,7 +18,7 @@ To compile this program:
 
        gec <acefile>
 
-A more detailed documentation for gelint will be provided in
+A more detailed documentation for gec will be provided in
 future releases.
 
 --
