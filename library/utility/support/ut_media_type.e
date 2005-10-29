@@ -23,6 +23,9 @@ inherit
 
 	KL_IMPORTED_ANY_ROUTINES
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 create
 
 	make
@@ -42,7 +45,8 @@ feature {NONE} -- Initialization
 		do
 			type := a_type.as_lower
 			subtype := a_subtype.as_lower
-			create parameters.make (10)
+			create parameters.make_map (10)
+			parameters.set_key_equality_tester (string_equality_tester)
 		ensure
 			type_set: type.is_equal (a_type.as_lower)
 			subtype_set: subtype.is_equal (a_subtype.as_lower)
