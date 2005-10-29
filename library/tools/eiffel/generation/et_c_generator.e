@@ -4726,26 +4726,45 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
+-- TODO: should the object be duplicated, or should
+-- we just get a blank copy before calling `copy'?
 				print_indentation
-				if not current_type.is_expanded then
-					current_file.put_character ('*')
-				end
+				current_file.put_character ('(')
 				print_type_cast (current_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('R')
 				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('i')
+				current_file.put_character ('d')
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				if not current_type.is_expanded then
-					current_file.put_character ('*')
-				end
-				print_type_cast (current_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_character ('C')
-				current_file.put_character (')')
+				current_file.put_integer (current_type.id)
 				current_file.put_character (';')
 				current_file.put_new_line
+--				print_indentation
+--				if not current_type.is_expanded then
+--					current_file.put_character ('*')
+--				end
+--				print_type_cast (current_type, current_file)
+--				current_file.put_character ('(')
+--				current_file.put_character ('R')
+--				current_file.put_character (')')
+--				current_file.put_character (' ')
+--				current_file.put_character ('=')
+--				current_file.put_character (' ')
+--				if not current_type.is_expanded then
+--					current_file.put_character ('*')
+--				end
+--				print_type_cast (current_type, current_file)
+--				current_file.put_character ('(')
+--				current_file.put_character ('C')
+--				current_file.put_character (')')
+--				current_file.put_character (';')
+--				current_file.put_new_line
 				l_copy_feature := current_type.seeded_dynamic_procedure (universe.copy_seed, current_system)
 				if l_copy_feature = Void then
 						-- Internal error: this error should already have been reported during parsing.
