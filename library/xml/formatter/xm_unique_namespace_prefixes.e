@@ -26,7 +26,10 @@ inherit
 		
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-		
+
+	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 feature -- Node processor.
 
 	process_document (a_node: XM_DOCUMENT) is
@@ -176,8 +179,10 @@ feature {NONE} -- Implementation
 	make_namespaces is
 			-- Initialise namespace tables.
 		do
-			create namespaces.make_default
-			create prefixes.make_default
+			create namespaces.make_map_default
+			namespaces.set_key_equality_tester (string_equality_tester)
+			create prefixes.make_map_default
+			prefixes.set_key_equality_tester (string_equality_tester)
 		ensure
 			namespaces_not_void: namespaces /= Void
 			prefixes_not_void: prefixes /= Void
@@ -231,7 +236,8 @@ feature {NONE} -- Implementation
 		local
 			a_namespace: XM_NAMESPACE
 		once
-			create Result.make_default
+			create Result.make_map_default
+			Result.set_key_equality_tester (string_equality_tester)
 			create a_namespace.make (Xml_prefix, Xml_prefix_namespace)
 			Result.force_new (a_namespace, a_namespace.uri)
 			create a_namespace.make (Xmlns, Xmlns_namespace)

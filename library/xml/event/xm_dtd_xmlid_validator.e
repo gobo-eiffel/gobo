@@ -70,7 +70,7 @@ feature -- ID callbacks
 			a_set: DS_HASH_SET [STRING]
 		do
 			if id_attributes = Void then
-				create id_attributes.make_default
+				create id_attributes.make_map_default
 				id_attributes.set_key_equality_tester (string_equality_tester)
 			end
 			if not id_attributes.has (an_element_name) then
