@@ -468,7 +468,7 @@ feature -- Compilation
 		local
 			l_class: ET_CLASS
 			l_command: KL_SHELL_COMMAND
-			l_c_filename: STRING
+			l_base_name: STRING
 		do
 			l_class := universe.root_class
 			if l_class = universe.none_class then
@@ -480,14 +480,14 @@ feature -- Compilation
 						generate_c_code
 						if c_code_compilation then
 							if universe.system_name /= Void then
-								l_c_filename := universe.system_name + ".c"
+								l_base_name := universe.system_name
 							else
-								l_c_filename := l_class.name.name + ".c"
+								l_base_name := l_class.name.name
 							end
 							if operating_system.is_windows then
-								create l_command.make ("cl " + l_c_filename)
+								create l_command.make ("cl " + l_base_name + ".c")
 							else
-								create l_command.make ("gcc " + l_c_filename)
+								create l_command.make ("gcc " + l_base_name + ".c -o " + l_base_name)
 							end
 							l_command.execute
 						end
