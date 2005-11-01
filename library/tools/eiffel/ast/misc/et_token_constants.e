@@ -390,6 +390,14 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 feature -- Feature names
 
+	aliased_resized_area_feature_name: ET_FEATURE_NAME is
+			-- 'aliased_resized_area' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (aliased_resized_area_name)
+		ensure
+			aliased_resized_area_feature_name_not_void: Result /= Void
+		end
+
 	area_feature_name: ET_FEATURE_NAME is
 			-- 'area' feature name
 		once
@@ -468,6 +476,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (default_create_name)
 		ensure
 			default_create_feature_name_not_void: Result /= Void
+		end
+
+	element_size_feature_name: ET_FEATURE_NAME is
+			-- 'element_size' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (element_size_name)
+		ensure
+			element_size_feature_name_not_void: Result /= Void
 		end
 
 	generating_type_feature_name: ET_FEATURE_NAME is
@@ -1556,6 +1572,7 @@ feature -- Keyword and symbol names
 	capitalized_unknown_name: STRING is "*UNKNOWN*"
 		-- Eiffel class names
 
+	aliased_resized_area_name: STRING is "aliased_resized_area"
 	area_name: STRING is "area"
 	bit_or_name: STRING is "bit_or"
 	bit_shift_left_name: STRING is "bit_shift_left"
@@ -1566,6 +1583,7 @@ feature -- Keyword and symbol names
 	count_name: STRING is "count"
 	deep_twin_name: STRING is "deep_twin"
 	default_create_name: STRING is "default_create"
+	element_size_name: STRING is "element_size"
 	generating_type_name: STRING is "generating_type"
 	generator_name: STRING is "generator"
 	is_deep_equal_name: STRING is "is_deep_equal"

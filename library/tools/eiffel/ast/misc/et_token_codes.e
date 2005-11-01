@@ -153,6 +153,8 @@ feature -- Built-in codes
 	builtin_special_item: INTEGER is 202
 	builtin_special_put: INTEGER is 203
 	builtin_special_count: INTEGER is 204
+	builtin_special_element_size: INTEGER is 205
+	builtin_special_aliased_resized_area: INTEGER is 206
 	builtin_character_code: INTEGER is 301
 	builtin_character_lt: INTEGER is 302
 	builtin_character_gt: INTEGER is 303

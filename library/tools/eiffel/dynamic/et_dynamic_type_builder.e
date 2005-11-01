@@ -692,6 +692,10 @@ feature {NONE} -- Feature validity
 						report_builtin_special_item (a_feature)
 					when builtin_special_count then
 						report_builtin_special_count (a_feature)
+					when builtin_special_element_size then
+						report_builtin_special_element_size (a_feature)
+					when builtin_special_aliased_resized_area then
+						report_builtin_special_aliased_resized_area (a_feature)
 					when builtin_character_code then
 						report_builtin_character_code (a_feature)
 					when builtin_character_lt then
@@ -2102,6 +2106,29 @@ feature {NONE} -- Built-in features
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (builtin_special_count)
 				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_special_element_size (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'SPECIAL.element_size' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_special_element_size)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_special_aliased_resized_area (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'SPECIAL.aliased_resized_area' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_special_aliased_resized_area)
 			end
 		end
 

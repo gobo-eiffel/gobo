@@ -5823,6 +5823,46 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvkbs2e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.element_size'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs2_error (a_class) then
+				create an_error.make_gvkbs2e (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs2f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.aliased_resized_area'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs2_error (a_class) then
+				create an_error.make_gvkbs2f (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvkbs3a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.code'
 			-- built-in routine `a_feature' in class `a_class'.
@@ -11124,10 +11164,6 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- report_gibgm_error
-	-- report_giabv_error
-	-- report_gibju_error
-	-- report_gibjv_error
 	-- report_gibjw_error
 	-- report_gibhy_error
 	-- report_gibhx_error

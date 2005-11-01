@@ -45,7 +45,8 @@ inherit
 			report_builtin_any_deep_twin,
 			report_builtin_any_generator,
 			report_builtin_any_generating_type,
-			report_builtin_any_tagged_out
+			report_builtin_any_tagged_out,
+			report_builtin_special_aliased_resized_area
 		end
 
 create
@@ -1375,6 +1376,25 @@ feature {NONE} -- Built-in features
 						-- that the signature should be 'tagged_out: STRING'.
 					set_fatal_error
 					error_handler.report_gibgk_error
+				else
+					current_dynamic_type.put_target (l_result_type_set, current_system)
+				end
+			end
+		end
+
+	report_builtin_special_aliased_resized_area (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'SPECIAL.aliased_resized_area' is being analyzed.
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_special_aliased_resized_area)
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'aliased_resized_area (n: INTEGER): like Current'.
+					set_fatal_error
+					error_handler.report_gibju_error
 				else
 					current_dynamic_type.put_target (l_result_type_set, current_system)
 				end

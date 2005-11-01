@@ -659,6 +659,12 @@ feature {NONE} -- Feature generation
 						print_indentation_assign_to_result
 						print_builtin_special_count_call (current_type, Void, a_feature.name, Void)
 						print_semicolon_newline
+					when builtin_special_element_size then
+						print_indentation_assign_to_result
+						print_builtin_special_element_size_call (current_type, Void, a_feature.name, Void)
+						print_semicolon_newline
+					when builtin_special_aliased_resized_area then
+						print_builtin_special_aliased_resized_area_body (a_feature)
 					when builtin_character_code then
 						print_indentation_assign_to_result
 						print_builtin_character_code_call (current_type, Void, a_feature.name, Void)
@@ -3136,6 +3142,8 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							print_builtin_special_item_call (a_target_type, a_target, a_name, an_actuals)
 						when builtin_special_count then
 							print_builtin_special_count_call (a_target_type, a_target, a_name, an_actuals)
+						when builtin_special_element_size then
+							print_builtin_special_element_size_call (a_target_type, a_target, a_name, an_actuals)
 						when builtin_character_code then
 							print_builtin_character_code_call (a_target_type, a_target, a_name, an_actuals)
 						when builtin_character_lt then
@@ -3226,6 +3234,8 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 		local
 			i, nb: INTEGER
 			l_literal: STRING
+			l_negative: BOOLEAN
+			l_buffer: STRING
 		do
 			if a_constant.is_integer_8 then
 				print_type_cast (current_system.integer_8_type, current_file)
@@ -3251,6 +3261,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			current_file.put_character ('(')
 			if a_constant.is_negative then
 				current_file.put_character ('-')
+				l_negative := True
 			end
 			l_literal := a_constant.literal
 			nb := l_literal.count
@@ -3265,9 +3276,22 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			if i > nb then
 				current_file.put_character ('0')
 			else
-				from until i > nb loop
-					current_file.put_character (l_literal.item (i))
-					i := i + 1
+				if l_negative and (nb - i + 1) >= 10 then
+					create l_buffer.make (nb - i + 1)
+					from until i > nb loop
+						l_buffer.append_character (l_literal.item (i))
+						i := i + 1
+					end
+					if l_buffer.is_equal ("2147483648") then
+						current_file.put_string ("2147483647-1")
+					else
+						current_file.put_string (l_buffer)
+					end
+				else
+					from until i > nb loop
+						current_file.put_character (l_literal.item (i))
+						i := i + 1
+					end
 				end
 			end
 			current_file.put_character (')')
@@ -3469,6 +3493,8 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 		local
 			i, nb: INTEGER
 			l_literal: STRING
+			l_negative: BOOLEAN
+			l_buffer: STRING
 		do
 			if a_constant.is_integer_8 then
 				print_type_cast (current_system.integer_8_type, current_file)
@@ -3494,6 +3520,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			current_file.put_character ('(')
 			if a_constant.is_negative then
 				current_file.put_character ('-')
+				l_negative := True
 			end
 			l_literal := a_constant.literal
 			nb := l_literal.count
@@ -3508,11 +3535,26 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			if i > nb then
 				current_file.put_character ('0')
 			else
-				from until i > nb loop
-					if l_literal.item (i) /= '_' then
-						current_file.put_character (l_literal.item (i))
+				if l_negative and (nb - i + 1) >= 10 then
+					create l_buffer.make (nb - i + 1)
+					from until i > nb loop
+						if l_literal.item (i) /= '_' then
+							l_buffer.append_character (l_literal.item (i))
+						end
+						i := i + 1
 					end
-					i := i + 1
+					if l_buffer.is_equal ("2147483648") then
+						current_file.put_string ("2147483647-1")
+					else
+						current_file.put_string (l_buffer)
+					end
+				else
+					from until i > nb loop
+						if l_literal.item (i) /= '_' then
+							current_file.put_character (l_literal.item (i))
+						end
+						i := i + 1
+					end
 				end
 			end
 			current_file.put_character (')')
@@ -4647,7 +4689,8 @@ feature {NONE} -- Built-in feature generation
 					-- Copy items.
 -- TODO: should we rather call SPECIAL.copy?
 				print_indentation
-				current_file.put_string ("memcpy(")
+				current_file.put_string (c_memcpy)
+				current_file.put_character ('(')
 				current_file.put_character ('(')
 				print_type_cast (current_type, current_file)
 				current_file.put_character ('(')
@@ -4805,17 +4848,17 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				print_type_declaration (current_type, current_file)
+				print_type_declaration (l_special_type, current_file)
 				current_file.put_character (')')
 				current_file.put_string (c_gealloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
-				print_type_name (current_type, current_file)
+				print_type_name (l_special_type, current_file)
 				current_file.put_character (')')
 				current_file.put_character ('+')
 				current_file.put_character ('(')
-				print_type_cast (current_type, current_file)
+				print_type_cast (l_special_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('C')
 				current_file.put_character (')')
@@ -4833,20 +4876,20 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
-				if not current_type.is_expanded then
+				if not l_special_type.is_expanded then
 					current_file.put_character ('*')
 				end
-				print_type_cast (current_type, current_file)
+				print_type_cast (l_special_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('R')
 				current_file.put_character (')')
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				if not current_type.is_expanded then
+				if not l_special_type.is_expanded then
 					current_file.put_character ('*')
 				end
-				print_type_cast (current_type, current_file)
+				print_type_cast (l_special_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('C')
 				current_file.put_character (')')
@@ -4854,9 +4897,10 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_new_line
 					-- Copy items.
 				print_indentation
-				current_file.put_string ("memcpy(")
+				current_file.put_string (c_memcpy)
 				current_file.put_character ('(')
-				print_type_cast (current_type, current_file)
+				current_file.put_character ('(')
+				print_type_cast (l_special_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('R')
 				current_file.put_character (')')
@@ -4867,7 +4911,7 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character ('2')
 				current_file.put_character (',')
 				current_file.put_character ('(')
-				print_type_cast (current_type, current_file)
+				print_type_cast (l_special_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('C')
 				current_file.put_character (')')
@@ -4880,7 +4924,7 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character (' ')
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				print_type_cast (current_type, current_file)
+				print_type_cast (l_special_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('C')
 				current_file.put_character (')')
@@ -4961,9 +5005,36 @@ feature {NONE} -- Built-in feature generation
 		require
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_string: STRING
 		do
 -- TODO
-print ("ET_C_GENERATOR.print_builtin_any_tagged_out_body%N")
+			print_indentation
+			current_file.put_character ('R')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			l_string := current_type.base_type.to_text
+			current_file.put_string ("gems(%"")
+			print_escaped_string (l_string)
+			current_file.put_string ("%", ")
+			current_file.put_integer (l_string.count)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			l_special_type ?= current_type
+			if l_special_type /= Void then
+			elseif current_type = current_system.character_type then
+			elseif current_type = current_system.boolean_type then
+			elseif current_type = current_system.integer_8_type then
+			elseif current_type = current_system.integer_16_type then
+			elseif current_type = current_system.integer_type then
+			elseif current_type = current_system.integer_64_type then
+			elseif current_type = current_system.real_type then
+			elseif current_type = current_system.double_type then
+			elseif current_type = current_system.pointer_type then
+			else
+			end
 		end
 
 	print_builtin_any_is_deep_equal_body (a_feature: ET_EXTERNAL_ROUTINE) is
@@ -5174,14 +5245,10 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 		local
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 		do
-			l_special_type ?= a_target_type
 			if an_actuals = Void or else an_actuals.count /= 1 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
 				error_handler.report_gibix_error
-			elseif l_special_type /= Void then
--- TODO: compare items.
-print ("ET_C_GENERATOR.print_builtin_any_standard_is_equal_call - special%N")
 			elseif
 				a_target_type = current_system.character_type or
 				a_target_type = current_system.boolean_type or
@@ -5211,8 +5278,11 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_is_equal_call - special%N")
 			else
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
-				if not a_target_type.is_expanded then
-					current_file.put_character ('*')
+				current_file.put_character ('!')
+				current_file.put_string (c_memcmp)
+				current_file.put_character ('(')
+				if a_target_type.is_expanded then
+					current_file.put_character ('&')
 				end
 				print_type_cast (a_target_type, current_file)
 				current_file.put_character ('(')
@@ -5222,14 +5292,46 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_is_equal_call - special%N")
 					current_file.put_character ('C')
 				end
 				current_file.put_character (')')
-				current_file.put_character ('=')
-				current_file.put_character ('=')
-				if not a_target_type.is_expanded then
-					current_file.put_character ('*')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				if a_target_type.is_expanded then
+					current_file.put_character ('&')
 				end
 				print_type_cast (a_target_type, current_file)
 				current_file.put_character ('(')
 				print_expression (an_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_name (a_target_type, current_file)
+				current_file.put_character (')')
+				l_special_type ?= a_target_type
+				if l_special_type /= Void then
+					current_file.put_character ('+')
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_type_cast (l_special_type, current_file)
+					current_file.put_character ('(')
+					if a_target /= Void then
+						print_expression (a_target)
+					else
+						current_file.put_character ('C')
+					end
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character ('-')
+					current_file.put_character ('>')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+					current_file.put_character (')')
+					current_file.put_character ('*')
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_declaration (l_special_type.item_type_set.static_type, current_file)
+					current_file.put_character (')')
+				end
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -5252,8 +5354,108 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_is_equal_call - special%N")
 				set_fatal_error
 				error_handler.report_gibiy_error
 			elseif l_special_type /= Void then
+-- TODO: both objects have to be of the same type.
+				print_indentation
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				print_type_name (current_system.integer_type, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('n')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_type_cast (l_special_type, current_file)
+				current_file.put_character ('(')
+				print_expression (an_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('n')
+				current_file.put_character ('<')
+				current_file.put_character ('=')
+				current_file.put_character ('(')
+				print_type_cast (l_special_type, current_file)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					print_expression (a_target)
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_memcpy)
+				current_file.put_character ('(')
+				print_type_cast (l_special_type, current_file)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					print_expression (a_target)
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character (')')
+				current_file.put_character (',')
+				print_type_cast (l_special_type, current_file)
+				current_file.put_character ('(')
+				print_expression (an_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_name (l_special_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('+')
+				current_file.put_character ('n')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (l_special_type.item_type_set.static_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_character (' ')
+				current_file.put_string (c_else)
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
 -- TODO: what to do if Current is not large enough?
-print ("ET_C_GENERATOR.print_builtin_any_standard_copy_call - special%N")
+				current_file.put_string ("printf(%"Exception in SPECIAL.standard_copy: target not big enough\n%");")
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
 			elseif
 				a_target_type = current_system.character_type or
 				a_target_type = current_system.boolean_type or
@@ -5265,6 +5467,7 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy_call - special%N")
 				a_target_type = current_system.double_type or
 				a_target_type = current_system.pointer_type
 			then
+-- TODO: thins does not work because we copy onto a copy of the object.
 				current_file.put_character ('*')
 				current_file.put_character ('(')
 				print_type_name (a_target_type, current_file)
@@ -5425,6 +5628,205 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy_call - special%N")
 			current_file.put_character ('>')
 			current_file.put_character ('a')
 			current_file.put_character ('1')
+		end
+
+	print_builtin_special_element_size_call (a_target_type: ET_DYNAMIC_TYPE; a_target: ET_EXPRESSION;
+		a_name: ET_CALL_NAME; an_actuals: ET_ACTUAL_ARGUMENTS) is
+			-- Print call to built-in feature 'SPECIAL.element_size' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			a_name_not_void: a_name /= Void
+		local
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+		do
+			l_special_type ?= a_target_type
+			if l_special_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in can only be in class SPECIAL (and its descendants).
+				set_fatal_error
+				error_handler.report_gibgm_error
+			else
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (l_special_type.item_type_set.static_type, current_file)
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_special_aliased_resized_area_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'SPECIAL.aliased_resized_area' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+		do
+			l_special_type ?= current_type
+			if l_special_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in can only be in class SPECIAL (and its descendants).
+				set_fatal_error
+				error_handler.report_gibjv_error
+			else
+				print_indentation
+				print_type_declaration (current_system.integer_type, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('n')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_type_cast (l_special_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('C')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character ('>')
+				current_file.put_character ('n')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+					-- Need to allocate a new object.
+				print_indentation
+				current_file.put_character ('R')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_type_declaration (l_special_type, current_file)
+				current_file.put_character (')')
+				current_file.put_string (c_gealloc)
+				current_file.put_character ('(')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_name (l_special_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('+')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (l_special_type.item_type_set.static_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				if not l_special_type.is_expanded then
+					current_file.put_character ('*')
+				end
+				print_type_cast (l_special_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('R')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if not l_special_type.is_expanded then
+					current_file.put_character ('*')
+				end
+				print_type_cast (l_special_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('C')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Copy old items.
+				print_indentation
+				current_file.put_string (c_memcpy)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_type_cast (l_special_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('R')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('2')
+				current_file.put_character (',')
+				current_file.put_character ('(')
+				print_type_cast (l_special_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('C')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('2')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_character (' ')
+				current_file.put_character ('n')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (l_special_type.item_type_set.static_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+-- TODO: initialize new items when expanded.
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_character (' ')
+				current_file.put_string (c_else)
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_character ('R')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('C')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+					-- Set new count.
+				print_indentation
+				current_file.put_character ('(')
+				print_type_cast (l_special_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('R')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
 		end
 
 	print_builtin_character_code_call (a_target_type: ET_DYNAMIC_TYPE; a_target: ET_EXPRESSION;
@@ -6319,7 +6721,8 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 				-- Copy characters to 'area'.
 			print_indentation
-			current_file.put_string ("memcpy(")
+			current_file.put_string (c_memcpy)
+			current_file.put_character ('(')
 			current_file.put_character ('(')
 			print_type_cast (current_system.special_character_type, current_file)
 			current_file.put_character ('(')
@@ -6840,7 +7243,7 @@ feature {NONE} -- Malloc
 				current_file.put_character (' ')
 				current_file.put_character ('a')
 				current_file.put_character ('1')
--- TODO: initialize items.
+-- TODO: initialize items when expanded.
 			else
 				current_file.put_character (')')
 			end
@@ -7309,7 +7712,7 @@ feature {NONE} -- String generation
 			from i := 1 until i > nb loop
 				c := a_string.item (i)
 				inspect c
-				when ' ', '!', '#', '$', '&', '('..'[', ']'..'~' then
+				when ' ', '!', '#', '$', '&', '('..'>', '@'..'[', ']'..'~' then
 					current_file.put_character (c)
 				when '%N' then
 					current_file.put_character ('\')
@@ -7334,6 +7737,11 @@ feature {NONE} -- String generation
 				when '%"' then
 					current_file.put_character ('\')
 					current_file.put_character ('%"')
+				when '?' then
+						-- Make sure that ? is not recognized as
+						-- part of a trigraph sequence.
+					current_file.put_character ('\')
+					current_file.put_character ('?')
 				else
 					current_file.put_character ('\')
 					l_code := c.code
@@ -8085,6 +8493,8 @@ feature {NONE} -- Constants
 	c_int16_t: STRING is "int16_t"
 	c_int32_t: STRING is "int32_t"
 	c_int64_t: STRING is "int64_t"
+	c_memcmp: STRING is "memcmp"
+	c_memcpy: STRING is "memcpy"
 	c_return: STRING is "return"
 	c_sizeof: STRING is "sizeof"
 	c_struct: STRING is "struct"

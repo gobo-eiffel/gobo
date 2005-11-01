@@ -1818,6 +1818,34 @@ feature {NONE} -- Built-in
 						set_fatal_error (a_class)
 						error_handler.report_gvkbs2d_error (a_class, a_feature)
 					end
+				elseif a_feature.name.same_feature_name (tokens.element_size_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_special_element_size)
+					l_formals := a_feature.arguments
+					if l_formals /= Void and then l_formals.count /= 0 then
+							-- The signature should be 'element_size: INTEGER'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs2e_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+							-- The signature should be 'element_size: INTEGER'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs2e_error (a_class, a_feature)
+					end
+				elseif a_feature.name.same_feature_name (tokens.aliased_resized_area_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_special_aliased_resized_area)
+					l_formals := a_feature.arguments
+					if l_formals = Void or else l_formals.count /= 1 then
+							-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs2f_error (a_class, a_feature)
+					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+							-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs2f_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+							-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs2f_error (a_class, a_feature)
+					end
 				elseif a_feature.name.same_feature_name (tokens.make_feature_name) then
 						-- 'SPECIAL.make' should be a procedure.
 					a_feature.set_builtin_code (tokens.builtin_special_make)
@@ -2381,6 +2409,16 @@ feature {NONE} -- Built-in
 					a_feature.set_builtin_code (tokens.builtin_special_count)
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs2d_error (a_class, a_feature)
+				elseif a_feature.name.same_feature_name (tokens.element_size_feature_name) then
+						-- 'SPECIAL.element_size' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_special_element_size)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2e_error (a_class, a_feature)
+				elseif a_feature.name.same_feature_name (tokens.aliased_resized_area_feature_name) then
+						-- 'SPECIAL.aliased_resized_area' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_special_aliased_resized_area)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2f_error (a_class, a_feature)
 				else
 						-- Unknown built-in routine.
 					a_feature.set_builtin_code (tokens.builtin_unknown)

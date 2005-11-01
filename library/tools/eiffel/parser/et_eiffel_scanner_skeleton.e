@@ -473,6 +473,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_wide_character_name)
 			Result.force_new (-1, tokens.capitalized_unknown_name)
 				-- Feature names.
+			Result.force_new (-1, tokens.aliased_resized_area_name)
 			Result.force_new (-1, tokens.area_name)
 			Result.force_new (-1, tokens.bit_or_name)
 			Result.force_new (-1, tokens.bit_shift_left_name)
@@ -483,6 +484,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.count_name)
 			Result.force_new (-1, tokens.deep_twin_name)
 			Result.force_new (-1, tokens.default_create_name)
+			Result.force_new (-1, tokens.element_size_name)
 			Result.force_new (-1, tokens.generating_type_name)
 			Result.force_new (-1, tokens.generator_name)
 			Result.force_new (-1, tokens.is_deep_equal_name)
