@@ -4,12 +4,7 @@ inherit
 
 	INTEGER_REF
 		redefine
-			out
-		end
-
-	HASHABLE
-		undefine
-			out
+			out, hash_code
 		end
 
 feature

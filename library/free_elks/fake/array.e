@@ -4,7 +4,8 @@ inherit
 
 	TO_SPECIAL [G]
 		redefine
-			copy
+			copy,
+			put, valid_index, item
 		end
 
 create
@@ -24,7 +25,7 @@ feature
 			end
 		end
 
-	item (i: INTEGER): G is
+	item alias "[]" (i: INTEGER): G is
 		do
 			Result := area.item (i - lower)
 		end

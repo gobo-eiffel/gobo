@@ -14,4 +14,9 @@ feature
 			print ("EXCEPTIONS.raise called%N")
 		end
 
+	raise_retrieval_exception (s: STRING) is
+		do
+			print ("EXCEPTIONS.raise_retrieval_exception called%N")
+		end
+
 end

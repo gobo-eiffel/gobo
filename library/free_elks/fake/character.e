@@ -7,28 +7,13 @@ inherit
 			out
 		end
 
-	HASHABLE
-		undefine
-			out
-		end
-
 feature
-
-	code: INTEGER is
-		external
-			"built_in"
-		end
 
 	out: STRING is
 			-- Printable representation of character
 		do
 			create Result.make (1)
 			Result.append_character (Current)
-		end
-
-	hash_code: INTEGER is
-		do
-			Result := code
 		end
 
 	upper: CHARACTER is

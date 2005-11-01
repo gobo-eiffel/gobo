@@ -13,8 +13,12 @@ inherit
 		end
 
 	TO_SPECIAL [CHARACTER]
+		rename
+			item as item
 		undefine
 			out, copy, is_equal
+		redefine
+			put, valid_index, infix "@", item
 		end
 
 create
