@@ -19,14 +19,14 @@ feature -- Customization
 
 feature -- Access
 
-	frozen generator: STRING is
+	generator: STRING is
 			-- Name of current object's generating class
 			-- (base class of the type of which it is a direct instance)
 		external
 			"built_in"
 		end
 
- 	frozen generating_type: STRING is
+ 	generating_type: STRING is
 			-- Name of current object's generating type
 			-- (type of which it is a direct instance)
 		external
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Status report
 
-	frozen conforms_to (other: ANY): BOOLEAN is
+	conforms_to (other: ANY): BOOLEAN is
 			-- Does type of current object conform to type
 			-- of `other' (as per Eiffel: The Language, chapter 13)?
 		require
@@ -44,7 +44,7 @@ feature -- Status report
 			"built_in"
 		end
 
-	frozen same_type (other: ANY): BOOLEAN is
+	same_type (other: ANY): BOOLEAN is
 			-- Is type of current object identical to type of `other'?
 		require
 			other_not_void: other /= Void
@@ -116,6 +116,8 @@ feature -- Comparison
 
 	frozen is_deep_equal (other: like Current): BOOLEAN is
 			-- Are `Current' and `other' attached to isomorphic object structures?
+		require
+			other_not_void: other /= Void
 		external
 			"built_in"
 		ensure
