@@ -15,10 +15,22 @@ class ST_STRING_FORMATTER
 inherit
 
 	ST_PARAMETER_FORMATTER
+		redefine
+			reset_options
+		end
 
 create
 
 	make
+
+feature -- Initialization
+
+	reset_options is
+			-- Reset options to their default values.
+		do
+			precursor
+			set_width (0)
+		end
 
 feature -- Status report
 
@@ -52,16 +64,12 @@ feature -- Formatting
 		local
 			a_string: STRING
 		do
-			if a_parameter.is_empty then
-				-- Do nothing.
+			if precision > 0 and then precision < a_parameter.count then
+				a_string := a_parameter.substring (1, precision)
 			else
-				if precision > 0 and then precision < a_parameter.count then
-					a_string := a_parameter.substring (1, precision)
-				else
-					a_string := a_parameter
-				end
-				justify_format_to (a_string, a_stream)
+				a_string := a_parameter
 			end
+			justify_format_to (a_string, a_stream)
 		end
 
 end
