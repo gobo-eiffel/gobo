@@ -27,6 +27,7 @@
 		<echo message="   geant test_se"/>
 		<echo message="   geant test_ve"/>
 		<echo message="   geant test_debug"/>
+		<echo message="   geant test_debug_ge"/>
 		<echo message="   geant test_debug_ise"/>
 		<echo message="   geant test_debug_se"/>
 		<echo message="   geant test_debug_ve"/>
