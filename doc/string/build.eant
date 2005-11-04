@@ -28,6 +28,7 @@
 		<set name="previous" value="index"/>
 		<set name="current" value="index"/>
 		<geant target="xslt_and_shift" arguments="formatter/index"/>
+		<geant target="xslt_and_shift" arguments="unicode/index"/>
 
 		<set name="target" value="install"/>
 		<geant target="do_all"/>

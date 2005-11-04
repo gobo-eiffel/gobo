@@ -25,6 +25,12 @@ inherit
 		export {NONE} all end
 
 feature -- Status report
+	
+	is_bmp_code_point (a_code_point: INTEGER): BOOLEAN is
+			-- Does `a_code_point' lie within the BMP?
+		do
+			Result := a_code_point >= minimum_unicode_character_code and a_code_point <= maximum_bmp_character_code
+		end
 
 	valid_ascii_code (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' a valid ASCII code?

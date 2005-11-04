@@ -31,6 +31,12 @@ feature -- Access
 --			definition: Result = 1114111
 --		end
 
+	maximum_bmp_character_code: INTEGER is 65535
+			-- Largest code for unicode characters in Basic Multi-ligual Plane (FFFF);
+--		ensure
+--			definition: Result = 65535
+--		end
+	
 	minimum_ascii_character_code: INTEGER is 0
 			-- Smallest code for ASCII characters
 --		ensure
@@ -146,5 +152,56 @@ feature -- Access
 
 	Private_other_category: INTEGER is 29
 			-- Private-use character
+
+	Canonical_decomposition_mapping: INTEGER is 0
+			-- Decomposition mapping is canonical
+
+	Font_decomposition_mapping: INTEGER is 1
+			-- Decomposition mapping for font variant
+
+	No_break_decomposition_mapping: INTEGER is 2
+			-- Decomposition mapping for no-break variant
+
+	Initial_decomposition_mapping: INTEGER is 3
+			-- Decomposition mapping for Arabic initial presentation form
+
+	Medial_decomposition_mapping: INTEGER is 4
+			-- Decomposition mapping for Arabic medial presentation form
+
+	Final_decomposition_mapping: INTEGER is 5
+			-- Decomposition mapping for Arabic final presentation form
+
+	Isolated_decomposition_mapping: INTEGER is 6
+			-- Decomposition mapping for Arabic isolated presentation form
+
+	Encircled_decomposition_mapping: INTEGER is 7
+			-- Decomposition mapping for encircled form
+
+	Superscript_decomposition_mapping: INTEGER is 8
+			-- Decomposition mapping for superscript form
+
+	Subscript_decomposition_mapping: INTEGER is 9
+			-- Decomposition mapping for subscript form
+
+	Vertical_decomposition_mapping: INTEGER is 10
+			-- Decomposition mapping for vertical layout presentation form
+	
+	Wide_decomposition_mapping: INTEGER is 11
+			-- Decomposition mapping for wide (zenkaku) compatibility character
+	
+	Narrow_decomposition_mapping: INTEGER is 12
+			-- Decomposition mapping for narrow (hankaku) compatibility character
+		
+	Small_decomposition_mapping: INTEGER is 13
+			-- Decomposition mapping for small variant form (CNS compatibility)
+		
+	Square_decomposition_mapping: INTEGER is 14
+			-- Decomposition mapping for CJK squared font variant
+			
+	Fraction_decomposition_mapping: INTEGER is 15
+			-- Decomposition mapping for vulgar fraction form
+		
+	Compatibility_decomposition_mapping: INTEGER is 16
+			-- Decomposition mapping for unspecified compatibility character
 
 end

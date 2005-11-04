@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Unicode resources"
+
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/about">
+
+<chapterinfo>
+	<copyright>
+		<year>2005</year>
+		<holder>Colin Adams</holder>
+	</copyright>
+	<author>
+	  <firstname>Colin</firstname><surname>Adams</surname>
+	</author>
+	<email>colin-adams@users.sourceforge.net</email>
+	<date>4 November 2005</date>
+</chapterinfo>
+
+<title>Unicode resources</title>
+
+<para>
+  <itemizedlist>
+    <listitem>
+      <para>
+	The principle resource is the <ulink url="http://www.unicode.org/">Unicode Home Page</ulink>.
+	Within that page, the downloadable version (in PDF format) of the book <citetitle>The Unicode Standard</citetitle> 
+	explains most issues in exhaustive detail. Actually, it is a very good read if you are intereted
+	in writing systems of the world, even for the non-computer-literate reader.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+	The Unicode Standard does not document all of Unicode. There are also Standard Annexes.
+	The most important one for this topic is annex #15: 
+	<ulink url="http://www.unicode.org/reports/tr15/">Unicode Normalization Forms</ulink>.
+	Also of relevance to this library (but not yet implemented) is technical standard #10
+	<ulink url="http://www.unicode.org/reports/tr10/">Unicode Collation Algorithm</ulink>.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+</chapter>

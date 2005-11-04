@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test features of class UC_UNICODE_ROUTINES"
+		"Test features of classes UC_UNICODE_ROUTINES and UC_CHARACTER_CLASS_ROUTINES"
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -57,6 +57,9 @@ feature
 			assert ("Small modifier h is modifier letter", is_modifier_letter (688))
 			assert ("Aleph is other letter", is_other_letter (1488))
 			assert ("Aleph is a letter", is_letter (1488))
+			assert ("Aleph is alphabetic", is_alphabetic (1488))
+			assert ("MAI HAN_AKAT is alphabetic", is_alphabetic (3633))
+			assert ("MAI HAN_AKAT is not in letter categories", not is_letter (3633))
 			assert ("Variation selector-253 is a non-spacing mark", is_nonspacing_mark (917996))
 			assert ("SYLOTI NAGRI SIGN DVISVARA is a combining mark", is_combining_spacing_mark (43010))
 			assert ("COMBINING ENCLOSING UPWARD POINTING TRIANGLE is an enclosing mark", is_enclosing_mark (8420))
@@ -73,6 +76,7 @@ feature
 			assert ("RIGHT LOW PARAPHRASE BRACKET is an final quote", is_final_quote_punctuation (11805))
 			assert ("KATAKANA MIDDLE DOT is other punctuation", is_other_punctuation (12539))
 			assert ("KATAKANA MIDDLE DOT is punctuation", is_punctuation (12539))
+			assert ("GREEK PHI SYMBOL is maths symbol", is_math_symbol (981))
 			assert ("HEBREW LETTER ALTERNATIVE PLUS SIGN is maths symbol", is_math_symbol (64297))
 			assert ("RIAL SIGN is currency symbol", is_currency_symbol (65020))
 			assert ("FULLWIDTH CIRCUMFLEX ACCENT is modifier symbol", is_modifier_symbol (65342))

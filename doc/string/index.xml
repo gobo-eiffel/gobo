@@ -48,6 +48,15 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
+			<ulink url="unicode/index.html">Unicode</ulink>
+		</term>
+		<listitem><para>
+		  Normalizing Unicode strings
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
 			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
 			Instructions</ulink>
 		</term>

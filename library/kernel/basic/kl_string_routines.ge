@@ -219,7 +219,7 @@ feature -- Status report
 				Result := True
 				from i := 1 until i > nb loop
 					c := a_string.item (i)
-					if (c < '0' or c > '9') and then (c < 'a' or c > 'f') and then (c < 'A' or c > 'F') then
+					if (c < '0' or c > '9') and (c < 'a' or c > 'f') and (c < 'A' or c > 'F') then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -246,9 +246,9 @@ feature -- Status report
 				from i := 1 until i > nb loop
 					c := a_string.item (i)
 					if
-						(c < '0' or c > '9') and then (c < 'a' or c > 'z') and then (c < 'A' or c > 'Z')
-						and then c /= '+' and then c /= '/' and then c /= '='
-						and then c  /= ' ' and then c /= '%T' and then c /= '%R' and then c /= '%N'
+						(c < '0' or c > '9') and (c < 'a' or c > 'z') and (c < 'A' or c > 'Z')
+						and c /= '+' and c /= '/' and c /= '='
+						and c  /= ' ' and c /= '%T' and c /= '%R' and c /= '%N'
 					then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.

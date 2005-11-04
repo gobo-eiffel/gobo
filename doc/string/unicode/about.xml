@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"About Unicode normalization"
+
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/about">
+
+<chapterinfo>
+	<copyright>
+		<year>2005</year>
+		<holder>Colin Adams</holder>
+	</copyright>
+	<author>
+	  <firstname>Colin</firstname><surname>Adams</surname>
+	</author>
+	<email>colin-adams@users.sourceforge.net</email>
+	<date>4 November 2005</date>
+</chapterinfo>
+
+<title>About Unicode normalization</title>
+
+<para>
+  Unicode normalization is all about comparing strings for equality.
+</para>
+
+<section>
+  <title>But I know how to compare two strings</title>
+  <para>
+    But I already know how to compare two Unicode strings - I call 
+    <featurename>STRING_.same_string</featurename> or
+    <featurename>STRING_.same_case_insensitive</featurename>, so why do I need normalization?
+  </para>
+  <para>
+    The problem with <featurename>STRING_.same_string</featurename> is that it compares two
+    strings code-point by code-point, and assumes that if two code-points are the same, 
+    then the abstract characters they represent are the same. Well, that's true enough. 
+    But it also assumes that if two code-points are <emphasis>not</emphasis> the same, then
+    the abstract characters that they represent are not the same. This is a reasonable assumption
+    (ignoring surrogate code-points, which we can because we don't have a <classname>UC_UTF16_STRING</classname>
+    yet - and when we do, <featurename>STRING_.same_string</featurename> would have to take that into 
+    account when comparing a <classname>UC_UTF16_STRING</classname> with a <classname>UC_UTF8_STRING</classname>.)
+  </para>
+  <para>
+    The reason this assumption fails is due to history - Unicode has been designed for round-trip
+    compatibility with a number of legacy encodings, such as ISO-8859-1 (Latin-1). Latin-1 has a number of
+    accented characters. One example LATIN CAPITAL LETTER A WITH GRAVE, to give it it's Unicode name, which has
+    a code-point of 192.
+  </para>
+  <para>
+    Other encodings enable you to compose accented characters out of a combination of a base character
+    (in this case LATIN CAPITAL LETTER A at code-point 65 and COMBINING GRAVE ACCENT at code-point 768).
+    Now should these two possibilites within Unicode be considered the same abstract character or not?
+    In most cases, you will want to consider them the same, but <featurename>STRING_.same_string</featurename>
+    will consider them to be different, and so return <featurename>False</featurename> even if the strings 
+    differ in that one respect only.
+  </para>
+  <para>
+    There are other characters where the situation is not so clear. What about the character 
+    MATHEMATICAL BOLD CAPITAL A (code-point 119808)? Is this the same abstract character as
+    LATIN CAPITAL LETTER A with just a slight presentational difference, or are they two
+    distinct characters? This rather depends upon your application.
+  </para>
+</section>
+
+<section>
+  <title>Canonical and Compatibility compositions and decompositions</title>
+  <para>
+    Unicode answers these questions by giving you some choice in how they are answered.
+    The basic idea is you convert your strings so that the same kind of representation for
+    characters is used throughout, and then you can perform a binary comparison
+    (with <featurename>STRING_.same_string</featurename>, for instance). This process is called 
+    <emphasis role="definition">Normalization</emphasis>. But you have a choice of 
+    four different ways of performing the normalization, depending upon the requirements
+    of your application.
+  </para>
+  <para>
+    The basic choice you have to make is whether to represent your characters using composed forms
+    (such as LATIN CAPITAL LETTER A WITH GRAVE), or decomposed forms (such as LATIN CAPITAL LETTER A
+    followed by COMBINING GRAVE ACCENT).
+  </para>
+  <para>
+    The other choice you have to make is whether minor presentational variations such as
+    MATHEMATICAL BOLD CAPITAL A versus LATIN CAPITAL LETTER A are significant or not.
+    In this case, Unicode has a bias - such distinctions are assumed meaningful by default.
+    That is, decompositions of this kind (MATHEMATICAL BOLD CAPITAL A decomposes to
+    LATIN CAPITAL LETTER A) are labelled 
+    <emphasis role="definition">Compatibility</emphasis> decompositions, whereas decompositions
+    of the first kind (such as LATIN CAPITAL LETTER A WITH GRAVE decomposing to
+    LATIN CAPITAL LETTER A followed by COMBINING GRAVE ACCENT) are known as 
+    <emphasis role="definition">Canonical</emphasis> decompositions.
+    Note that all compositions are canonical - you cannot reverse a compatibility decomposition.
+  </para>
+</section>
+
+<section>
+  <title>The four normalization forms</title>
+  <para>
+    Accordingly, there are four <emphasis role="definition">Normalization forms</emphasis> defined
+    in Unicode (there are additional forms defined by the W3C's Character Model - see TODO):
+
+    <variablelist>
+ 
+      <varlistentry>
+	<term>NFD</term>
+	<listitem>
+	  <para>Normal Form Decomposition.</para>
+	  <para>This is obtained by replacing all composed characters by their canonical decompositions.</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>NFKD</term>
+	<listitem>
+	  <para>Normal Form Kompatibility Decomposition.</para>
+	  <para>
+	    This is obtained by replacing all composed characters by their decompositions, whether
+	    they are canonical or compatibility decompositions.
+	  </para>
+	</listitem>
+      </varlistentry>
+     
+      <varlistentry>
+	<term>NFC</term>
+	<listitem>
+	  <para>Normal Form Composition.</para>
+	  <para>
+	    This is obtained by replacing all composed characters by their canonical decompositions, and then
+	    in turn replacing all decomposed sequences by their canonical compositions.
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>NFKC</term>
+	<listitem>
+	  <para>Normal Form Kompatibility Composition.</para>
+	  <para>
+	    This is obtained by replacing all composed characters by their compatibility decompositions, and then
+	    in turn replacing all decomposed sequences by their canonical compositions.
+	  </para>
+	</listitem>
+      </varlistentry>
+    
+    </variablelist>
+
+  </para>
+  <para>
+    NFD and NFKD tend to be longer than NFC and NFKC. Note that a pure ASCII string
+    is unchanged by any of these transformations. Not so for a Latin-1 string, however.
+  </para>
+  <para>
+    Since compatibility decompositions tend to equate to presentational differences, these are most
+    naturally useful if you wish to do a case-insensitive comparison (since case is fundamentally a presentation
+    difference in itself). Note however, that simply converting to NFKC or NFKD does not fold
+    case differences. You have to further apply case folding to the resultant strings. (see TODO).
+  </para>
+</section>
+</chapter>

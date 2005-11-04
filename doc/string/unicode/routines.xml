@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Unicode normalization routines"
+
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/about">
+
+<chapterinfo>
+	<copyright>
+		<year>2005</year>
+		<holder>Colin Adams</holder>
+	</copyright>
+	<author>
+	  <firstname>Colin</firstname><surname>Adams</surname>
+	</author>
+	<email>colin-adams@users.sourceforge.net</email>
+	<date>4 November 2005</date>
+</chapterinfo>
+
+<title>Unicode normalization routines provided by the library</title>
+<section>
+  <title>Which class to choose</title>
+  <para>
+    You have the choice of using the latest version of Unicode that
+    is supported by the library, or you can choose a specific version.
+  </para>
+  <para>
+    You have the choice of inheriting the routines, or using them as
+    a client object. The latter is the only way to use more than one version of 
+    Unicode within a class, although this seems an unlikely requirement.
+  </para>
+  <para>
+    At the time I write this documentation, 4.1.0 is the latest version of
+    Unicode, and it is also the latest and only version supported by this library.
+    But 5.0.0 is currently in beta. So for the purposes of illustration, I shall assume
+    that 5.0.0 is now live, and that this library supports it.
+    Do you could inherit from one of the following:
+
+    <variablelist>
+ 
+      <varlistentry>
+	<term>ST_UNICODE_NORMALIZATION_ROUTINES</term>
+	<listitem>
+	  <para>
+	    This would give you direct access to routines for version 5.0.0 of Unicode,
+	    but when 5.1.0 was supported by the library, you would then get the 5.1.0 routines.
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>ST_UNICODE_V500_NORMALIZATION_ROUTINES</term>
+	<listitem>
+	  <para>
+	    This would also give you direct access to routines for version 5.0.0 of Unicode,
+	    but this would not change, even when the library was updated to support 5.1.0.
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>ST_UNICODE_V410_NORMALIZATION_ROUTINES</term>
+	<listitem>
+	  <para>
+	    This would give you direct access to routines for version 4.1.0 of Unicode,
+	    and this would not change, even when the library was updated.
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>ST_UNICODE_IMPORTED_NORMALIZATION_ROUTINES</term>
+	<listitem>
+	  <para>
+	    This would give you indirect access to routines for version 5.0.0 of Unicode, via
+	    <featurename>normalization</featurename>,
+	    but when 5.1.0 was supported by the library, you would then get indirect access 
+	    to the 5.1.0 routines via the same feature.
+	  </para>
+	</listitem>
+      </varlistentry>
+    
+      <varlistentry>
+	<term>ST_UNICODE_V500_IMPORTED_NORMALIZATION_ROUTINES</term>
+	<listitem>
+	  <para>
+	    This would give you indirect access to routines for version 5.0.0 of Unicode, via
+	    <featurename>normalization_v500</featurename>,
+	    but this would not change, even when the library was updated to support 5.1.0.
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>ST_UNICODE_V410_IMPORTED_NORMALIZATION_ROUTINES</term>
+	<listitem>
+	  <para>
+	    This would give you indirect access to routines for version 4.1.0 of Unicode, via
+	    <featurename>normalization_v410</featurename>.
+	  </para>
+	</listitem>
+      </varlistentry>
+    
+    </variablelist>
+
+  </para>
+
+  <para>
+    To use routines from both 5.0.0 and 4.1.0 versions of Unicode, you would import both of the
+    last two classes in the preceding list.
+  </para>
+
+</section>
+
+<section>
+  <title>The routines provided by the library</title>
+
+  <para>
+    All these classes provide access to the same set of routines, via inheritance from
+    <classname>ST_UNICODE_NORMALIZATION_INTERFACE</classname>. Note that ASCII and Latin-1
+    <classname>STRING</classname>s can be passed to all of these routines, as well as  
+    <classname>UC_UTF8_STRING</classname>s, as they all operate on code-points, accessed via the <featurename>item_code</featurename>
+    feature. By design, Unicode allocates the same code points to Latin-1 characters as the
+    ISO-8859-1 encoding does. Thus we keep compatibility.
+  </para>
+
+  <para>
+    The following routines are available to check if a <classname>STRING</classname> is
+    in the desired normalization form:
+   <itemizedlist>
+     <listitem><featurename>is_nfd_normalized_string (a_source: STRING): BOOLEAN</featurename></listitem>
+     <listitem><featurename>is_nfkd_normalized_string (a_source: STRING): BOOLEAN</featurename></listitem>
+     <listitem><featurename>is_nfc_normalized_string (a_source: STRING): BOOLEAN</featurename></listitem>
+     <listitem><featurename>is_nfkc_normalized_string (a_source: STRING): BOOLEAN</featurename></listitem>
+   </itemizedlist>
+  </para>
+
+  <para>
+    The following routines do not assume anything about the current normalization state of their argument.
+    If the argument is already in the desired normalization form, then the original object will be returned.
+    Otherwise a new object will be allocated and returned:
+  <itemizedlist>
+     <listitem><featurename>as_nfd_normalized_string (a_source: STRING): STRING</featurename></listitem>
+     <listitem><featurename>as_nfkd_normalized_string (a_source: STRING): STRING</featurename></listitem>
+   </itemizedlist>
+  </para>
+
+  <para>
+    The following routines require that their argument is <emphasis>not</emphasis> in the required normalization
+    form, and always allocate and return a new object:
+  <itemizedlist>
+     <listitem><featurename>to_nfd_normalized_string (a_source: STRING): STRING</featurename></listitem>
+     <listitem><featurename>to_nfkd_normalized_string (a_source: STRING): STRING</featurename></listitem>
+   </itemizedlist>
+  </para>
+
+  <para>
+    So when you desire to work with a decomposed form:
+    <orderedlist>
+     <listitem><para>If you know that your string is in the desired form, do nothing </para></listitem>
+     <listitem><para>
+       If you know that your string is <emphasis>not</emphasis> in the desired form,
+       call <featurename>to_nfd_normalized_string</featurename> or <featurename>to_nfkd_normalized_string</featurename></para>
+     </listitem>
+     <listitem><para>
+       Otherwise, call <featurename>as_nfd_normalized_string</featurename> or <featurename>as_nfkd_normalized_string</featurename>.
+       You can then test for object identity, if you wish to know whether normalization was actually required.</para>
+     </listitem>
+    </orderedlist>
+  </para>
+
+  <para>
+    The composing routines always allocate and return a new object, irrespective of the status of the argument::
+    <itemizedlist>
+      <listitem><featurename>to_nfc_normalized_string (a_source: STRING): STRING</featurename></listitem>
+      <listitem><featurename>to_nfkc_normalized_string (a_source: STRING): STRING</featurename></listitem>
+    </itemizedlist>
+  </para>
+
+ <para>
+   The Unicode Character Database tabulates a lot of properties for each code-point. Some of these are relevant for
+   the normalization process. There are three that in some circumstances might be of interest to an application. They are:
+     <itemizedlist>
+      <listitem><featurename>canonical_combining_class_property (a_code_point: INTEGER): INTEGER</featurename></listitem>
+      <listitem><featurename>decomposition_type_property (a_code_point: INTEGER): INTEGER</featurename></listitem>
+      <listitem><featurename>decomposition_mapping_property (a_code_point: INTEGER): DS_ARRAYED_LIST [INTEGER]</featurename></listitem>
+    </itemizedlist>
+ </para>
+
+ <para>
+    The canonical combining class determines how different parts of a character are overlayed when
+    displayed. 
+ </para>
+
+ <para>
+    The decomposition mapping lists the code-points in the decomposition of a code-point. The decomposition type
+    indicates whether a code point has a canonical decomposition, or if not, what <emphasis>type</emphasis> of
+    compatibility decomposition it has. The results of this routine are available as symbolic constants in 
+    <classname>UC_UNICODE_CONSTANTS</classname>. Note that if a code-point has no decomposition, then the result of
+    this routine will be <featurename>Canonical_decomposition_mapping</featurename>, so you must check
+    for a non-Void result from <featurename>decomposition_mapping_property</featurename> to confirm that
+    a code-point actually has a canonical decomposition.
+ </para>
+
+</section>
+
+</chapter>

@@ -63,6 +63,10 @@ Version 3.5 - ????
 	* Added classes to parse and format XML Schema date, time and
 	  date-time datatypes.
 
+	Gobo Eiffel String Library
+
+	* Added classes for normalizing Unicode strings.
+
 	Gobo Eiffel XSLT Library:
 
 	* This library is now sufficiently stable and mature to be

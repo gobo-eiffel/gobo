@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gobo Eiffel Unicode normalization routines"
+
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/index">
+
+<chapterinfo>
+	<copyright>
+		<year>2005</year>
+		<holder>Colin Adams</holder>
+	</copyright>
+	<author>
+	  <firstname>Colin</firstname><surname>Adams</surname>
+	</author>
+	<email>colin-adams@users.sourceforge.net</email>
+	<date>4 November 2005</date>
+</chapterinfo>
+
+<title>Gobo Eiffel Unicode normalization routines</title>
+
+<para>
+  
+</para>
+
+<para>
+This documentation is structured as follows:
+
+<blockquote>
+<variablelist>
+ 
+ <varlistentry>
+    <term>
+      <link linkend="about">About Unicode normalization</link>
+    </term>
+    <listitem><para>
+      What is Unicode normalization, and why might I want to use it?
+    </para></listitem>
+  </varlistentry>
+
+ <varlistentry>
+    <term>
+      <link linkend="routines">Gobo Eiffel normalization routines</link>
+    </term>
+    <listitem><para>
+      What normalization routines does the Gobo Eiffel string library provide, and how do I use them?
+    </para></listitem>
+  </varlistentry>
+ 
+  <varlistentry>
+    <term>
+      <link linkend="see_also">See Also</link>
+    </term>
+    <listitem><para>
+      Other resources.
+    </para></listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      <ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+      Instructions</ulink>
+    </term>
+    <listitem><para>
+      License agreement and downloading instructions.
+    </para></listitem>
+  </varlistentry>
+
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>

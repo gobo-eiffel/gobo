@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	title_code_plane_1_segment_1: ARRAY [INTEGER] is
+	title_code_plane_0_segment_0: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_2: ARRAY [INTEGER] is
+	title_code_plane_0_segment_1: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_3: ARRAY [INTEGER] is
+	title_code_plane_0_segment_2: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_4: ARRAY [INTEGER] is
+	title_code_plane_0_segment_3: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_5: ARRAY [INTEGER] is
+	title_code_plane_0_segment_4: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_6: ARRAY [INTEGER] is
+	title_code_plane_0_segment_5: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_31: ARRAY [INTEGER] is
+	title_code_plane_0_segment_30: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_32: ARRAY [INTEGER] is
+	title_code_plane_0_segment_31: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_34: ARRAY [INTEGER] is
+	title_code_plane_0_segment_33: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_37: ARRAY [INTEGER] is
+	title_code_plane_0_segment_36: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -408,7 +408,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_45: ARRAY [INTEGER] is
+	title_code_plane_0_segment_44: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_46: ARRAY [INTEGER] is
+	title_code_plane_0_segment_45: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -478,7 +478,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1_segment_256: ARRAY [INTEGER] is
+	title_code_plane_0_segment_255: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -513,16 +513,16 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_1: ARRAY [ARRAY [INTEGER]] is
+	title_code_plane_0: ARRAY [ARRAY [INTEGER]] is
 			-- Generated array plane
 		once
 			create Result.make (0, 255)
-			Result.put (title_code_plane_1_segment_1, 0)
-			Result.put (title_code_plane_1_segment_2, 1)
-			Result.put (title_code_plane_1_segment_3, 2)
-			Result.put (title_code_plane_1_segment_4, 3)
-			Result.put (title_code_plane_1_segment_5, 4)
-			Result.put (title_code_plane_1_segment_6, 5)
+			Result.put (title_code_plane_0_segment_0, 0)
+			Result.put (title_code_plane_0_segment_1, 1)
+			Result.put (title_code_plane_0_segment_2, 2)
+			Result.put (title_code_plane_0_segment_3, 3)
+			Result.put (title_code_plane_0_segment_4, 4)
+			Result.put (title_code_plane_0_segment_5, 5)
 			Result.put (empty_title_code_segment, 6)
 			Result.put (empty_title_code_segment, 7)
 			Result.put (empty_title_code_segment, 8)
@@ -547,13 +547,13 @@ feature {NONE} -- Implementation
 			Result.put (empty_title_code_segment, 27)
 			Result.put (empty_title_code_segment, 28)
 			Result.put (empty_title_code_segment, 29)
-			Result.put (title_code_plane_1_segment_31, 30)
-			Result.put (title_code_plane_1_segment_32, 31)
+			Result.put (title_code_plane_0_segment_30, 30)
+			Result.put (title_code_plane_0_segment_31, 31)
 			Result.put (empty_title_code_segment, 32)
-			Result.put (title_code_plane_1_segment_34, 33)
+			Result.put (title_code_plane_0_segment_33, 33)
 			Result.put (empty_title_code_segment, 34)
 			Result.put (empty_title_code_segment, 35)
-			Result.put (title_code_plane_1_segment_37, 36)
+			Result.put (title_code_plane_0_segment_36, 36)
 			Result.put (empty_title_code_segment, 37)
 			Result.put (empty_title_code_segment, 38)
 			Result.put (empty_title_code_segment, 39)
@@ -561,8 +561,8 @@ feature {NONE} -- Implementation
 			Result.put (empty_title_code_segment, 41)
 			Result.put (empty_title_code_segment, 42)
 			Result.put (empty_title_code_segment, 43)
-			Result.put (title_code_plane_1_segment_45, 44)
-			Result.put (title_code_plane_1_segment_46, 45)
+			Result.put (title_code_plane_0_segment_44, 44)
+			Result.put (title_code_plane_0_segment_45, 45)
 			Result.put (empty_title_code_segment, 46)
 			Result.put (empty_title_code_segment, 47)
 			Result.put (empty_title_code_segment, 48)
@@ -772,13 +772,13 @@ feature {NONE} -- Implementation
 			Result.put (empty_title_code_segment, 252)
 			Result.put (empty_title_code_segment, 253)
 			Result.put (empty_title_code_segment, 254)
-			Result.put (title_code_plane_1_segment_256, 255)
+			Result.put (title_code_plane_0_segment_255, 255)
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True -- all items are non-Void
 		end
 
-	title_code_plane_2_segment_5: ARRAY [INTEGER] is
+	title_code_plane_1_segment_4: ARRAY [INTEGER] is
 			-- Generated array segment
 		once
 			Result := <<
@@ -813,7 +813,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_code_plane_2: ARRAY [ARRAY [INTEGER]] is
+	title_code_plane_1: ARRAY [ARRAY [INTEGER]] is
 			-- Generated array plane
 		once
 			create Result.make (0, 255)
@@ -821,7 +821,7 @@ feature {NONE} -- Implementation
 			Result.put (empty_title_code_segment, 1)
 			Result.put (empty_title_code_segment, 2)
 			Result.put (empty_title_code_segment, 3)
-			Result.put (title_code_plane_2_segment_5, 4)
+			Result.put (title_code_plane_1_segment_4, 4)
 			Result.put (empty_title_code_segment, 5)
 			Result.put (empty_title_code_segment, 6)
 			Result.put (empty_title_code_segment, 7)
@@ -1347,8 +1347,8 @@ feature {NONE} -- Implementation
 			-- Title case code points for each code point
 		once
 			create Result.make (0, 16)
-			Result.put (title_code_plane_1, 0)
-			Result.put (title_code_plane_2, 1)
+			Result.put (title_code_plane_0, 0)
+			Result.put (title_code_plane_1, 1)
 			Result.put (empty_title_code_plane, 2)
 			Result.put (empty_title_code_plane, 3)
 			Result.put (empty_title_code_plane, 4)

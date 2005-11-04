@@ -14,6 +14,8 @@
 	<inherit>
 		<parent location="${GOBO}/misc/eiffel.eant">
 			<redefine target="init_system"/>
+			<redefine target="install"/>
+			<redefine target="other_clean"/>
 		</parent>
 	</inherit>
 
@@ -23,6 +25,34 @@
 	<target name="init_system">
 		<set name="system" value="geuc"/>
 		<set name="system_dir" value="${GOBO}/work/${system}"/>
+	</target>
+
+	<target name="install" depend="init">
+	  <description>
+	    Install generated files.
+	  </description>
+	  
+	  <move to_directory="${GOBO}/library/string/unicode">
+	    <fileset include="@(st_*.e)" />
+	  </move>
+	  <move to_directory="${GOBO}/library/kernel/unicode">
+	    <fileset include="@(uc_*.e)" />
+	  </move>
+
+	</target>
+
+	<target name="other_clean" depend="init">
+	  <description>
+	    Remove generated classes.
+	  </description>
+
+	  <delete>
+	    <fileset include="@(uc_*.e)" />
+	  </delete>
+	  <delete>
+	    <fileset include="@(st_*.e)" />
+	  </delete>
+
 	</target>
 
 </project>

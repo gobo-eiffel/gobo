@@ -25,7 +25,7 @@ feature -- Access
 	is_valid_code_point (a_code_point: INTEGER): BOOLEAN is
 			-- Is `a_code_point' a valid Unicode code point?
 		do
-			Result := a_code_point >= 0 and a_code_point <= maximum_unicode_character_code
+			Result := a_code_point >= minimum_unicode_character_code and a_code_point <= maximum_unicode_character_code
 		end
 
 	is_upper_case (a_code_point: INTEGER): BOOLEAN is
@@ -69,7 +69,7 @@ feature -- Access
 		end
 
 	is_letter (a_code_point: INTEGER): BOOLEAN is
-			-- Is `a_code_point' a letter?
+			-- Does `a_code_point' belong to the letter category?
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
@@ -83,6 +83,14 @@ feature -- Access
 			else
 				Result := False
 			end
+		end
+
+	is_alphabetic (a_code_point: INTEGER): BOOLEAN is
+			-- Does `a_code_point' posses the Alphabetic property?
+		require
+			valid_code_point: is_valid_code_point (a_code_point)
+		do
+			Result := alphabetic_property (a_code_point)
 		end
 
 	is_nonspacing_mark (a_code_point: INTEGER): BOOLEAN is
@@ -239,7 +247,7 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			Result := character_class (a_code_point) = Math_symbol_category
+			Result := math_property (a_code_point)
 		end
 
 	is_currency_symbol (a_code_point: INTEGER): BOOLEAN is
@@ -272,10 +280,10 @@ feature -- Access
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
 			inspect character_class (a_code_point)
-			when Math_symbol_category, Currency_symbol_category, Modifier_symbol_category, Other_symbol_category then
+			when Currency_symbol_category, Modifier_symbol_category, Other_symbol_category then
 				Result := True
 			else
-				Result := False
+				Result := is_math_symbol (a_code_point)
 			end
 		end
 
@@ -438,6 +446,34 @@ feature {NONE} -- Implementation
 			Result := lower_case_properties.item (i).item (j).item (k + 1)
 		end
 
+	alphabetic_property (a_code_point: INTEGER): BOOLEAN is
+			-- Does `a_code_point' have the alphabetic property?
+		require
+			valid_code_point: is_valid_code_point (a_code_point)
+		local
+			i, j, k, a_rem: INTEGER
+		do
+			i := a_code_point // (65536)
+			a_rem  := a_code_point \\ (65536)
+			j := a_rem // 256
+			k := a_rem \\ 256
+			Result := alphabetic_properties.item (i).item (j).item (k + 1)
+		end
+
+	math_property (a_code_point: INTEGER): BOOLEAN is
+			-- Does `a_code_point' have the math property?
+		require
+			valid_code_point: is_valid_code_point (a_code_point)
+		local
+			i, j, k, a_rem: INTEGER
+		do
+			i := a_code_point // (65536)
+			a_rem  := a_code_point \\ (65536)
+			j := a_rem // 256
+			k := a_rem \\ 256
+			Result := math_properties.item (i).item (j).item (k + 1)
+		end
+
 	string_to_array8 (a_string: STRING): ARRAY [INTEGER_8] is
 			-- Zero-indexed byte array interpretation of `a_string'
 		require
@@ -487,6 +523,22 @@ feature {NONE} -- Implementation
 		ensure
 			lower_case_properties_not_void: Result /= Void
 			-- no_void_lower_case_property: not Result.has (Void)
+		end
+
+	alphabetic_properties: ARRAY [ARRAY [ARRAY [BOOLEAN]]] is
+			-- Alphabetic property for each code point
+		deferred
+		ensure
+			alphabetic_properties_not_void: Result /= Void
+			-- no_void_alphabetic_property: not Result.has (Void)
+		end
+
+	math_properties: ARRAY [ARRAY [ARRAY [BOOLEAN]]] is
+			-- Math property for each code point
+		deferred
+		ensure
+			math_properties_not_void: Result /= Void
+			-- no_void_math_property: not Result.has (Void)
 		end
 
 end
