@@ -27,7 +27,13 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := first.hash_code // 2 + second.hash_code // 2
+			if first = Void and second = Void then
+				Result := 0
+			elseif first = Void then
+				Result := second.hash_code
+			else
+				Result := first.hash_code // 2 + second.hash_code // 2
+			end
 		end
 
 end
