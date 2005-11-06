@@ -218,7 +218,11 @@ feature -- Status report
 	is_attribute: BOOLEAN is
 			-- Is feature an attribute?
 		do
-			Result := static_feature.is_attribute
+			if not is_builtin then
+				Result := static_feature.is_attribute
+			elseif builtin_code = tokens.builtin_boolean_item then
+				Result := True
+			end
 		ensure
 			query: Result implies result_type_set /= Void
 		end
@@ -256,7 +260,9 @@ feature -- Status report
 	is_semistrict: BOOLEAN is
 			-- Is current feature semistrict?
 		do
-			if builtin_code = tokens.builtin_boolean_and_then then
+			if not is_builtin then
+				-- Result := False
+			elseif builtin_code = tokens.builtin_boolean_and_then then
 				Result := True
 			elseif builtin_code = tokens.builtin_boolean_or_else then
 				Result := True

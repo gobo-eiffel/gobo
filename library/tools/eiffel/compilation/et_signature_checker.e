@@ -189,7 +189,17 @@ feature {NONE} -- Signature validity
 				else
 					error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 				end
-			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+			elseif
+				not a_type.conforms_to_type (other_type, parent_context, current_class, universe) and then
+					-- The test below is useful in expanded types which contains for
+					-- example 'like Current' in the signature. In that case 'like Current'
+					-- in the context of the current expanded class does not conform to
+					-- 'like Current' in the context of the parent, but the types are
+					-- identical so we want to accept this particular case anyway.
+					-- Note that we won't need that trick anymore with ECMA Eiffel where
+					-- expanded types conforms to reference parents.
+				not a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
+			then
 				set_fatal_error
 				if a_feature.is_inherited then
 					a_parent_feature := a_feature.inherited_feature.flattened_parent
@@ -249,7 +259,17 @@ feature {NONE} -- Signature validity
 				from i := 1 until i > nb loop
 					a_type := an_arguments.formal_argument (i).type
 					other_type := other_arguments.formal_argument (i).type
-					if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+					if
+						not a_type.conforms_to_type (other_type, parent_context, current_class, universe) and then
+							-- The test below is useful in expanded types which contains for
+							-- example 'like Current' in the signature. In that case 'like Current'
+							-- in the context of the current expanded class does not conform to
+							-- 'like Current' in the context of the parent, but the types are
+							-- identical so we want to accept this particular case anyway.
+							-- Note that we won't need that trick anymore with ECMA Eiffel where
+							-- expanded types conforms to reference parents.
+						not a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
+					then
 						set_fatal_error
 						if a_feature.is_inherited then
 							a_parent_feature := a_feature.inherited_feature.flattened_parent
@@ -305,7 +325,17 @@ feature {NONE} -- Signature validity
 				else
 					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 				end
-			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+			elseif
+				not a_type.conforms_to_type (other_type, parent_context, current_class, universe) and then
+					-- The test below is useful in expanded types which contains for
+					-- example 'like Current' in the signature. In that case 'like Current'
+					-- in the context of the current expanded class does not conform to
+					-- 'like Current' in the context of the parent, but the types are
+					-- identical so we want to accept this particular case anyway.
+					-- Note that we won't need that trick anymore with ECMA Eiffel where
+					-- expanded types conforms to reference parents.
+				not a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
+			then
 				set_fatal_error
 				if a_feature.is_inherited then
 					a_parent_feature := a_feature.inherited_feature.flattened_parent
@@ -339,7 +369,17 @@ feature {NONE} -- Signature validity
 				from i := 1 until i > nb loop
 					a_type := an_arguments.formal_argument (i).type
 					other_type := other_arguments.formal_argument (i).type
-					if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+					if
+						not a_type.conforms_to_type (other_type, parent_context, current_class, universe) and then
+							-- The test below is useful in expanded types which contains for
+							-- example 'like Current' in the signature. In that case 'like Current'
+							-- in the context of the current expanded class does not conform to
+							-- 'like Current' in the context of the parent, but the types are
+							-- identical so we want to accept this particular case anyway.
+							-- Note that we won't need that trick anymore with ECMA Eiffel where
+							-- expanded types conforms to reference parents.
+						not a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
+					then
 						set_fatal_error
 						if a_feature.is_inherited then
 							a_parent_feature := a_feature.inherited_feature.flattened_parent

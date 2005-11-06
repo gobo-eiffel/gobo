@@ -496,6 +496,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.put_reference_name)
 			Result.force_new (-1, tokens.reference_item_name)
 			Result.force_new (-1, tokens.same_type_name)
+			Result.force_new (-1, tokens.set_item_name)
 			Result.force_new (-1, tokens.set_operands_name)
 			Result.force_new (-1, tokens.standard_copy_name)
 			Result.force_new (-1, tokens.standard_is_equal_name)

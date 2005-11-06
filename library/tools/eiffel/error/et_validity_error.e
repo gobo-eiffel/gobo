@@ -289,6 +289,8 @@ create
 	make_gvkbs5e,
 	make_gvkbs5f,
 	make_gvkbs5g,
+	make_gvkbs5h,
+	make_gvkbs5i,
 	make_gvkbu1a,
 	make_gvkfe1a,
 	make_gvkfe2a,
@@ -12236,6 +12238,86 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
+	make_gvkbs5h (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-5 error: wrong signature for 'BOOLEAN_REF.item'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs5h_template_code
+			etl_code := gvkbs5_etl_code
+			default_template := gvkbs5h_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs5i (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-5 error: wrong signature for 'BOOLEAN_REF.set_item'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs5i_template_code
+			etl_code := gvkbs5_etl_code
+			default_template := gvkbs5i_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
 	make_gvkbu1a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Create a new GVKBU-1 error: unknown built-in routine `a_feature'
 			-- in class `a_class'.
@@ -13032,13 +13114,15 @@ feature {NONE} -- Implementation
 	gvkbs4l_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %">%" (other: like Current): BOOLEAN'."
 	gvkbs4m_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"<=%" (other: like Current): BOOLEAN'."
 	gvkbs4n_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %">=%" (other: like Current): BOOLEAN'."
-	gvkbs5a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"and then%" (other: like Current): like Current'."
-	gvkbs5b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"or else%" (other: like Current): like Current'."
-	gvkbs5c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"implies%" (other: like Current): like Current'."
-	gvkbs5d_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"and%" (other: like Current): like Current'."
-	gvkbs5e_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"or%" (other: like Current): like Current'."
-	gvkbs5f_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"xor%" (other: like Current): like Current'."
+	gvkbs5a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"and then%" (other: like Current): BOOLEAN'."
+	gvkbs5b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"or else%" (other: like Current): BOOLEAN'."
+	gvkbs5c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"implies%" (other: like Current): BOOLEAN'."
+	gvkbs5d_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"and%" (other: like Current): BOOLEAN'."
+	gvkbs5e_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"or%" (other: like Current): BOOLEAN'."
+	gvkbs5f_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"xor%" (other: like Current): BOOLEAN'."
 	gvkbs5g_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'prefix %"not%": like Current'."
+	gvkbs5h_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'item: BOOLEAN'."
+	gvkbs5i_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'set_item (b: BOOLEAN)'."
 	gvkbu1a_default_template: STRING is "[$1] class $5: unknown built-in routine `$6' in class $5."
 	gvkfe1a_default_template: STRING is "[$1] class $5: feature `$6' is missing in kernel class $5."
 	gvkfe2a_default_template: STRING is "[$1] class $5: feature `$6' in kernel class $5 is not an attribute."
@@ -13446,6 +13530,8 @@ feature {NONE} -- Implementation
 	gvkbs5e_template_code: STRING is "gvkbs5e"
 	gvkbs5f_template_code: STRING is "gvkbs5f"
 	gvkbs5g_template_code: STRING is "gvkbs5g"
+	gvkbs5h_template_code: STRING is "gvkbs5h"
+	gvkbs5i_template_code: STRING is "gvkbs5i"
 	gvkbu1a_template_code: STRING is "gvkbu1a"
 	gvkfe1a_template_code: STRING is "gvkfe1a"
 	gvkfe2a_template_code: STRING is "gvkfe2a"

@@ -748,6 +748,8 @@ feature {NONE} -- Feature validity
 						report_builtin_boolean_implies (a_feature)
 					when builtin_boolean_xor then
 						report_builtin_boolean_xor (a_feature)
+					when builtin_boolean_item then
+						report_builtin_boolean_item (a_feature)
 					else
 							-- Internal error: invalid built-in feature.
 							-- Error already reported during parsing.
@@ -772,6 +774,8 @@ feature {NONE} -- Feature validity
 						report_builtin_special_make (a_feature)
 					when builtin_special_put then
 						report_builtin_special_put (a_feature)
+					when builtin_boolean_set_item then
+						report_builtin_boolean_set_item (a_feature)
 					else
 							-- Internal error: invalid built-in feature.
 							-- Error already reported during parsing.
@@ -2463,6 +2467,29 @@ feature {NONE} -- Built-in features
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (builtin_boolean_xor)
 				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_boolean_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'BOOLEAN_REF.item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_boolean_item)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_boolean_set_item (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'BOOLEAN_REF.set_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_boolean_set_item)
 			end
 		end
 

@@ -791,6 +791,14 @@ feature -- Feature names
 			same_type_feature_name_not_void: Result /= Void
 		end
 
+	set_item_feature_name: ET_FEATURE_NAME is
+			-- 'set_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_item_name)
+		ensure
+			set_item_feature_name_not_void: Result /= Void
+		end
+
 	set_operands_feature_name: ET_FEATURE_NAME is
 			-- 'set_operands' feature name
 		once
@@ -1595,6 +1603,7 @@ feature -- Keyword and symbol names
 	put_reference_name: STRING is "put_reference"
 	reference_item_name: STRING is "reference_item"
 	same_type_name: STRING is "same_type"
+	set_item_name: STRING is "set_item"
 	set_operands_name: STRING is "set_operands"
 	standard_copy_name: STRING is "standard_copy"
 	standard_is_equal_name: STRING is "standard_is_equal"

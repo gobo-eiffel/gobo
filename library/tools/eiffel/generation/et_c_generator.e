@@ -701,6 +701,10 @@ feature {NONE} -- Feature generation
 						print_indentation_assign_to_result
 						print_builtin_boolean_not_call (current_type, Void, a_feature.name, Void)
 						print_semicolon_newline
+					when builtin_boolean_item then
+						print_indentation_assign_to_result
+						print_builtin_boolean_item_call (current_feature, current_type, Void, a_feature.name, Void)
+						print_semicolon_newline
 					when builtin_integer_plus then
 						print_indentation_assign_to_result
 						print_builtin_integer_plus_call (current_type, Void, a_feature.name, internal_formal_arguments (1))
@@ -770,13 +774,17 @@ feature {NONE} -- Feature generation
 					when builtin_any_standard_copy then
 						print_indentation
 						print_builtin_any_standard_copy_call (current_type, Void, a_feature.name, internal_formal_arguments (1))
-						print_semicolon_newline
+						current_file.put_new_line
 					when builtin_special_make then
 						-- Do nothing: already done in `print_malloc_current'.
 					when builtin_special_put then
 						print_indentation
 						print_builtin_special_put_call (current_type, Void, a_feature.name, internal_formal_arguments (2))
-						print_semicolon_newline
+						current_file.put_new_line
+					when builtin_boolean_set_item then
+						print_indentation
+						print_builtin_boolean_set_item_call (current_type, Void, a_feature.name, internal_formal_arguments (1))
+						current_file.put_new_line
 					else
 							-- Unknown built-in feature.
 							-- This error should already have been reported during parsing.
@@ -2018,6 +2026,8 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 						print_builtin_any_standard_copy_call (a_target_type, a_target, a_name, an_actuals)
 					when builtin_special_put then
 						print_builtin_special_put_call (a_target_type, a_target, a_name, an_actuals)
+					when builtin_boolean_set_item then
+						print_builtin_boolean_set_item_call (a_target_type, a_target, a_name, an_actuals)
 					else
 						l_printed := False
 					end
@@ -2044,8 +2054,8 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 						end
 					end
 					current_file.put_character (')')
+					current_file.put_character (';')
 				end
-				current_file.put_character (';')
 			end
 		end
 
@@ -2355,8 +2365,8 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 print ("ET_C_GENERATOR.print_convert_expression%N")
 			a_convert_feature := an_expression.convert_feature
 			if a_convert_feature.is_convert_from then
-				an_actuals := an_expression.expression
 -- TODO.
+				an_actuals := an_expression.expression
 --				check_creation_expression_validity (current_target_type.named_type (universe),
 --					a_convert_feature.name, an_actuals)
 				print_expression (an_expression.expression)
@@ -3051,11 +3061,11 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 		local
 			l_query: ET_QUERY
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_attribute: ET_ATTRIBUTE
 			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			l_string_constant: ET_MANIFEST_STRING
 			l_once_feature: ET_FEATURE
 			l_unique_attribute: ET_UNIQUE_ATTRIBUTE
+			l_attribute: ET_ATTRIBUTE
 			l_seed: INTEGER
 			i, nb: INTEGER
 			l_printed: BOOLEAN
@@ -3196,6 +3206,8 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							print_builtin_boolean_implies_call (a_target_type, a_target, a_name, an_actuals)
 						when builtin_boolean_not then
 							print_builtin_boolean_not_call (a_target_type, a_target, a_name, an_actuals)
+						when builtin_boolean_item then
+							print_builtin_boolean_item_call (l_dynamic_feature, a_target_type, a_target, a_name, an_actuals)
 						else
 							l_printed := False
 						end
@@ -5489,6 +5501,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				current_file.put_character ('(')
 				print_expression (an_actuals.actual_argument (1))
 				current_file.put_character (')')
+				current_file.put_character (';')
 			else
 -- TODO: both objects have to be of the same type.
 				if not a_target_type.is_expanded then
@@ -5528,6 +5541,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				current_file.put_character ('(')
 				print_expression (an_actuals.actual_argument (1))
 				current_file.put_character (')')
+				current_file.put_character (';')
 			end
 		end
 
@@ -5602,6 +5616,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				current_file.put_character ('(')
 				print_expression (an_actuals.actual_argument (1))
 				current_file.put_character (')')
+				current_file.put_character (';')
 			end
 		end
 
@@ -6608,6 +6623,98 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			current_file.put_character (')')
 		end
 
+	print_builtin_boolean_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE;
+		a_target: ET_EXPRESSION; a_name: ET_CALL_NAME; an_actuals: ET_ACTUAL_ARGUMENTS) is
+			-- Print to `current_file' a call (static binding) to built-in
+			-- feature `a_feature' corresponding to 'BOOLEAN_REF.item'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_name_not_void: a_name /= Void
+		do
+			if a_target_type = current_system.boolean_type then
+					-- Current value.
+				if a_target /= Void then
+					print_expression (a_target)
+				else
+					current_file.put_character ('C')
+				end
+			else
+					-- Internal attribute.
+				if a_target /= Void then
+					print_attribute_name (a_feature, a_target, a_target_type)
+				else
+					print_current_attribute_name (a_feature)
+				end
+			end
+		end
+
+	print_builtin_boolean_set_item_call (a_target_type: ET_DYNAMIC_TYPE; a_target: ET_EXPRESSION;
+		a_name: ET_CALL_NAME; an_actuals: ET_ACTUAL_ARGUMENTS) is
+			-- Print call to built-in feature 'BOOLEAN_REF.set_item' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			a_name_not_void: a_name /= Void
+		local
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			l_item_attribute: ET_DYNAMIC_FEATURE
+			i, nb: INTEGER
+		do
+			if a_target_type = current_system.boolean_type then
+					-- Set current value.
+				current_file.put_character ('*')
+				current_file.put_character ('(')
+				current_file.put_character ('&')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_expression (an_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (';')
+			else
+				l_queries := a_target_type.queries
+				nb := l_queries.count
+				from i := 1 until i > nb loop
+					l_query := l_queries.item (i)
+					if l_query.builtin_code = builtin_boolean_item then
+						l_item_attribute := l_query
+						i := nb + 1
+					else
+						i := i + 1
+					end
+				end
+				if l_item_attribute /= Void then
+						-- Set the built-in attribute.
+					if a_target /= Void then
+						print_attribute_name (l_item_attribute, a_target, a_target_type)
+					else
+						print_current_attribute_name (l_item_attribute)
+					end
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_expression (an_actuals.actual_argument (1))
+					current_file.put_character (')')
+					current_file.put_character (';')
+				end
+			end
+		end
+
 feature {NONE} -- C function generation
 
 	print_main_function is
@@ -7198,33 +7305,73 @@ feature {NONE} -- Malloc
 			print_type_declaration (current_type, current_file)
 			current_file.put_character (' ')
 			current_file.put_character ('C')
-			current_file.put_character (';')
-			current_file.put_new_line
-			print_indentation
-			current_file.put_character ('C')
-			current_file.put_character (' ')
-			current_file.put_character ('=')
-			current_file.put_character (' ')
-			current_file.put_character ('(')
-			print_type_declaration (current_type, current_file)
-			current_file.put_character (')')
-			current_file.put_string (c_gealloc)
-			current_file.put_character ('(')
-			current_file.put_string (c_sizeof)
-			current_file.put_character ('(')
-			print_type_name (current_type, current_file)
-			current_file.put_character (')')
-			l_special_type ?= current_type
-			if l_special_type /= Void then
-				current_file.put_character ('+')
-				current_file.put_character ('a')
-				current_file.put_character ('1')
-				current_file.put_character ('*')
+			if
+				current_type = current_system.character_type or
+				current_type = current_system.boolean_type or
+				current_type = current_system.integer_8_type or
+				current_type = current_system.integer_16_type or
+				current_type = current_system.integer_type or
+				current_type = current_system.integer_64_type or
+				current_type = current_system.real_type or
+				current_type = current_system.double_type or
+				current_type = current_system.pointer_type
+			then
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (';')
+				current_file.put_new_line
+			else
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_character ('C')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_type_declaration (current_type, current_file)
+				current_file.put_character (')')
+				current_file.put_string (c_gealloc)
+				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
-				print_type_declaration (l_special_type.item_type_set.static_type, current_file)
+				print_type_name (current_type, current_file)
 				current_file.put_character (')')
-				current_file.put_character (')')
+				l_special_type ?= current_type
+				if l_special_type /= Void then
+					current_file.put_character ('+')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+					current_file.put_character ('*')
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_declaration (l_special_type.item_type_set.static_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_character ('(')
+					print_type_cast (current_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_character ('C')
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character ('-')
+					current_file.put_character ('>')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+-- TODO: initialize items when expanded.
+				else
+					current_file.put_character (')')
+				end
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
@@ -7236,36 +7383,15 @@ feature {NONE} -- Malloc
 				current_file.put_character (')')
 				current_file.put_character ('-')
 				current_file.put_character ('>')
-				current_file.put_character ('a')
-				current_file.put_character ('1')
+				current_file.put_character ('i')
+				current_file.put_character ('d')
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_character ('a')
-				current_file.put_character ('1')
--- TODO: initialize items when expanded.
-			else
-				current_file.put_character (')')
+				current_file.put_integer (current_type.id)
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
-			current_file.put_character (';')
-			current_file.put_new_line
-			print_indentation
-			current_file.put_character ('(')
-			print_type_cast (current_type, current_file)
-			current_file.put_character ('(')
-			current_file.put_character ('C')
-			current_file.put_character (')')
-			current_file.put_character (')')
-			current_file.put_character ('-')
-			current_file.put_character ('>')
-			current_file.put_character ('i')
-			current_file.put_character ('d')
-			current_file.put_character (' ')
-			current_file.put_character ('=')
-			current_file.put_character (' ')
-			current_file.put_integer (current_type.id)
-			current_file.put_character (';')
-			current_file.put_new_line
 		end
 
 feature {NONE} -- Type generation
@@ -7674,8 +7800,12 @@ feature {NONE} -- Attribute access generation
 			print_expression (a_target)
 			current_file.put_character (')')
 			current_file.put_character (')')
-			current_file.put_character ('-')
-			current_file.put_character ('>')
+			if a_type.is_expanded then
+				current_file.put_character ('.')
+			else
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+			end
 			current_file.put_character ('a')
 			current_file.put_integer (an_attribute.id)
 		end
@@ -7691,8 +7821,12 @@ feature {NONE} -- Attribute access generation
 			current_file.put_character ('C')
 			current_file.put_character (')')
 			current_file.put_character (')')
-			current_file.put_character ('-')
-			current_file.put_character ('>')
+			if current_type.is_expanded then
+				current_file.put_character ('.')
+			else
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+			end
 			current_file.put_character ('a')
 			current_file.put_integer (an_attribute.id)
 		end

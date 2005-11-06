@@ -181,6 +181,8 @@ feature -- Built-in codes
 	builtin_boolean_or: INTEGER is 505
 	builtin_boolean_xor: INTEGER is 506
 	builtin_boolean_not: INTEGER is 507
+	builtin_boolean_item: INTEGER is 508
+	builtin_boolean_set_item: INTEGER is 509
 	builtin_function_item: INTEGER is 1001
 	builtin_routine_call: INTEGER is 1101
 			-- Built-in feature codes
