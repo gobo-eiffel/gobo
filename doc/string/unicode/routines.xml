@@ -137,10 +137,10 @@
     The following routines are available to check if a <classname>STRING</classname> is
     in the desired normalization form:
    <itemizedlist>
-     <listitem><featurename>is_nfd_normalized_string (a_source: STRING): BOOLEAN</featurename></listitem>
-     <listitem><featurename>is_nfkd_normalized_string (a_source: STRING): BOOLEAN</featurename></listitem>
-     <listitem><featurename>is_nfc_normalized_string (a_source: STRING): BOOLEAN</featurename></listitem>
-     <listitem><featurename>is_nfkc_normalized_string (a_source: STRING): BOOLEAN</featurename></listitem>
+     <listitem><featurename>is_nfd (a_source: STRING): BOOLEAN</featurename></listitem>
+     <listitem><featurename>is_nfkd (a_source: STRING): BOOLEAN</featurename></listitem>
+     <listitem><featurename>is_nfc (a_source: STRING): BOOLEAN</featurename></listitem>
+     <listitem><featurename>is_nfkc (a_source: STRING): BOOLEAN</featurename></listitem>
    </itemizedlist>
   </para>
 
@@ -149,8 +149,8 @@
     If the argument is already in the desired normalization form, then the original object will be returned.
     Otherwise a new object will be allocated and returned:
   <itemizedlist>
-     <listitem><featurename>as_nfd_normalized_string (a_source: STRING): STRING</featurename></listitem>
-     <listitem><featurename>as_nfkd_normalized_string (a_source: STRING): STRING</featurename></listitem>
+     <listitem><featurename>as_nfd (a_source: STRING): STRING</featurename></listitem>
+     <listitem><featurename>as_nfkd (a_source: STRING): STRING</featurename></listitem>
    </itemizedlist>
   </para>
 
@@ -158,8 +158,8 @@
     The following routines require that their argument is <emphasis>not</emphasis> in the required normalization
     form, and always allocate and return a new object:
   <itemizedlist>
-     <listitem><featurename>to_nfd_normalized_string (a_source: STRING): STRING</featurename></listitem>
-     <listitem><featurename>to_nfkd_normalized_string (a_source: STRING): STRING</featurename></listitem>
+     <listitem><featurename>to_nfd (a_source: STRING): STRING</featurename></listitem>
+     <listitem><featurename>to_nfkd (a_source: STRING): STRING</featurename></listitem>
    </itemizedlist>
   </para>
 
@@ -169,10 +169,10 @@
      <listitem><para>If you know that your string is in the desired form, do nothing </para></listitem>
      <listitem><para>
        If you know that your string is <emphasis>not</emphasis> in the desired form,
-       call <featurename>to_nfd_normalized_string</featurename> or <featurename>to_nfkd_normalized_string</featurename></para>
+       call <featurename>to_nfd</featurename> or <featurename>to_nfkd</featurename></para>
      </listitem>
      <listitem><para>
-       Otherwise, call <featurename>as_nfd_normalized_string</featurename> or <featurename>as_nfkd_normalized_string</featurename>.
+       Otherwise, call <featurename>as_nfd</featurename> or <featurename>as_nfkd</featurename>.
        You can then test for object identity, if you wish to know whether normalization was actually required.</para>
      </listitem>
     </orderedlist>
@@ -181,8 +181,8 @@
   <para>
     The composing routines always allocate and return a new object, irrespective of the status of the argument::
     <itemizedlist>
-      <listitem><featurename>to_nfc_normalized_string (a_source: STRING): STRING</featurename></listitem>
-      <listitem><featurename>to_nfkc_normalized_string (a_source: STRING): STRING</featurename></listitem>
+      <listitem><featurename>to_nfc (a_source: STRING): STRING</featurename></listitem>
+      <listitem><featurename>to_nfkc (a_source: STRING): STRING</featurename></listitem>
     </itemizedlist>
   </para>
 
