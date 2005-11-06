@@ -34,7 +34,9 @@ inherit
 
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
-	
+
+	UC_IMPORTED_UNICODE_ROUTINES
+		
 feature -- Tests
 
 	test_codepoints_to_string is
@@ -105,6 +107,90 @@ feature -- Tests
 			assert ("Boolean value false", evaluated_items.item (1).is_boolean_value and then not evaluated_items.item (1).as_boolean_value.value)
 		end
 
+	test_normalize_unicode is
+			-- Test fn:normaize-unicode().
+		local
+			an_expression: STRING
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("normalize-unicode(())")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("Empty string", evaluated_items.item (1).is_string_value and then evaluated_items.item (1).as_string_value.string_value.is_empty)
+			an_evaluator.evaluate ("normalize-unicode('fred', ' fully-normalized')")
+			assert ("Normalization form not supported", an_evaluator.is_error and then STRING_.same_string (an_evaluator.error_value.code, "FOCH0003"))
+			an_evaluator.reset_errors
+			an_expression := STRING_.concat ("normalize-unicode('", raw_affin)
+			an_expression := STRING_.appended_string (an_expression, "', ' nFc ')")
+			an_evaluator.evaluate (an_expression)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("String value", evaluated_items.item (1).is_string_value)
+			assert_strings_equal ("Same string under NFC", raw_affin, evaluated_items.item (1).as_string_value.string_value)
+			an_expression := STRING_.concat ("normalize-unicode('", raw_affin)
+			an_expression := STRING_.appended_string (an_expression, "', ' nFd ')")
+			an_evaluator.evaluate (an_expression)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("String value", evaluated_items.item (1).is_string_value)
+			assert_strings_equal ("Decomposed string under NFD", decomposed_affin, evaluated_items.item (1).as_string_value.string_value)
+			an_expression := STRING_.concat ("normalize-unicode('", affin_with_ligature)
+			an_expression := STRING_.appended_string (an_expression, "', ' nFc ')")
+			an_evaluator.evaluate (an_expression)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("String value", evaluated_items.item (1).is_string_value)
+			assert_strings_equal ("Same string under NFC 2", affin_with_ligature, evaluated_items.item (1).as_string_value.string_value)
+			an_expression := STRING_.concat ("normalize-unicode('", affin_with_ligature)
+			an_expression := STRING_.appended_string (an_expression, "', ' nFD ')")
+			an_evaluator.evaluate (an_expression)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("String value", evaluated_items.item (1).is_string_value)
+			assert_strings_equal ("partially decomposed string under NFD", canonically_decomposed_affin_with_ligature, evaluated_items.item (1).as_string_value.string_value)
+			an_expression := STRING_.concat ("normalize-unicode('", raw_affin)
+			an_expression := STRING_.appended_string (an_expression, "', ' nFkc ')")
+			an_evaluator.evaluate (an_expression)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("String value", evaluated_items.item (1).is_string_value)
+			assert_strings_equal ("Same string under NFKC", raw_affin, evaluated_items.item (1).as_string_value.string_value)
+			an_expression := STRING_.concat ("normalize-unicode('", raw_affin)
+			an_expression := STRING_.appended_string (an_expression, "', ' nFkd ')")
+			an_evaluator.evaluate (an_expression)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("String value", evaluated_items.item (1).is_string_value)
+			assert_strings_equal ("Decomposed string under NFKD", decomposed_affin, evaluated_items.item (1).as_string_value.string_value)
+			an_expression := STRING_.concat ("normalize-unicode('", affin_with_ligature)
+			an_expression := STRING_.appended_string (an_expression, "', ' nFkc ')")
+			an_evaluator.evaluate (an_expression)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("String value", evaluated_items.item (1).is_string_value)
+			assert_strings_equal ("Composed under NFKC", raw_affin, evaluated_items.item (1).as_string_value.string_value)
+			an_expression := STRING_.concat ("normalize-unicode('", affin_with_ligature)
+			an_expression := STRING_.appended_string (an_expression, "', ' nFkD ')")
+			an_evaluator.evaluate (an_expression)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("String value", evaluated_items.item (1).is_string_value)
+			assert_strings_equal ("Decomposed string under NFKD", decomposed_affin, evaluated_items.item (1).as_string_value.string_value)
+		end
+
 	set_up is
 		do
 			conformance.set_basic_xslt_processor
@@ -132,6 +218,42 @@ feature {NONE} -- Implementation
 			Result := File_uri.filename_to_uri (a_path)
 		ensure
 			books_xml_uri_not_void: Result /= Void
+		end
+
+	raw_affin: STRING is
+			-- Test string
+		once
+			Result := STRING_.concat (unicode.code_to_string (196), "ffin")
+		ensure
+			five_characters: Result /= Void and then Result.count = 5
+		end
+
+	decomposed_affin: STRING is
+			-- Test string
+		once
+			Result := STRING_.concat ("A", unicode.code_to_string (776))
+			Result := STRING_.appended_string (Result, "ffin")
+		ensure
+			six_characters: Result /= Void and then Result.count = 6
+		end
+
+	affin_with_ligature: STRING is
+			-- Test string
+		once
+			Result := STRING_.concat (unicode.code_to_string (196), unicode.code_to_string (64259))
+			Result := STRING_.appended_string (Result, "n")
+		ensure
+			three_characters: Result /= Void and then Result.count = 3
+		end
+
+	canonically_decomposed_affin_with_ligature: STRING is
+			-- Test string
+		once
+			Result := STRING_.concat ("A", unicode.code_to_string (776))
+			Result := STRING_.appended_string (Result, unicode.code_to_string (64259))
+			Result := STRING_.appended_string (Result, "n")
+		ensure
+			four_characters: Result /= Void and then Result.count = 4
 		end
 
 end
