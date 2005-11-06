@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			make_specials
 			system_id := "" -- TODO - set_system_id
 			encoder_factory := transformer.configuration.encoder_factory
+			set_normalization_form
 		ensure
 			transformer_set: transformer = a_transformer
 			outputter_set: raw_outputter = an_outputter

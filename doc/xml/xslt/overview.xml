@@ -32,32 +32,25 @@
     <ulink url="http://www.w3.org/TR/xslt20/">XSLT 2.0 tranformation language</ulink>.
   </para>
   <para>
-    The library supports a Basic XSLT processor, and is in line with the September 2005 Working Draft.
-    The XSLT working group expects to release a Candidate Recommenation very soon (if you take the above link, 
-    you can see from the title if they have done so or not). When this happens, I shall update the
-    library to comply with any changes.
+    The library supports a Basic XSLT processor, and is in line with the Candidate Recommendation..
   </para>
   <para>
     The support is not yet quite complete. The following features have yet to be implemented:
     <itemizedlist>
 	<listitem>
 	  <para>
-	    Serializer does not yet support UTF-16 as an output encoding, nor does it
-	    support Unicode normalization.
+	    Serializer does not yet support UTF-16 as an output encoding.
 	  </para>
 	</listitem>
 	<listitem>
 	  <para>
-	    Regular expressions do not yet support Unicode data (ASCII only).
+	    Regular expressions do not yet support Unicode data (ASCII support only).
 	  </para>
 	</listitem>
 	<listitem>
 	  <para>
 	    The functions unparsed-text() and and unparsed-text-available() do not work properly
 	    yet. They will probably work OK for 7-bit ASCII and UTF-8 files.
-	  </para>
-	  <para>
-	    The function normalize-unicode() has not been implemented yet.
 	  </para>
 	</listitem>
     </itemizedlist>

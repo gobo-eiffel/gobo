@@ -30,6 +30,9 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -176,7 +179,7 @@ feature -- Access
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 		do
 			if a_fingerprint = -1 then found := True end
-			create Result.make (-1000000)
+			create Result.make (Platform.Minimum_integer)
 
 			-- Note that we process backwards, so as to find highest
 			--  import precedence definitions first.
@@ -257,6 +260,9 @@ feature -- Status report
 	is_all_explaining: BOOLEAN
 			-- Should compiled instructions explain themsleves?
 			-- (Only significant for the principal stylesheet)
+
+	needs_dynamic_output_properties: BOOLEAN
+			-- Does `Current' require dynamic output formats?
 
 	is_named_output_property_defined (a_fingerprint: INTEGER): BOOLEAN is
 			-- Is there an xsl:output statement for `a_fingerprint'?
@@ -355,6 +361,14 @@ feature -- Status setting
 			any_compile_errors := True
 		ensure
 			compile_errors_reported: any_compile_errors = True
+		end
+
+	set_needs_dynamic_output_properties is
+			--  Set dynamic output formats needed.
+		do
+			needs_dynamic_output_properties := True
+		ensure
+			dynamic_output_formats_needed: needs_dynamic_output_properties
 		end
 
 feature -- Element change
@@ -852,6 +866,9 @@ feature -- Element change
 					report_compile_error (an_error)
 				else
 					executable.set_default_output_properties (a_property_set)
+					if needs_dynamic_output_properties then
+						save_output_definitions
+					end
 					create a_compiled_templates_index.make_map (named_templates_index.count)
 					from
 						another_cursor := named_templates_index.new_cursor; another_cursor.start
@@ -1230,6 +1247,47 @@ feature {NONE} -- Implementation
 					top_level_elements.force (a_style_element, a_count + 1)
 				end
 				a_cursor.forth
+			end
+		end
+
+	save_output_definitions is
+			-- Save output definitions in `executable.
+		require
+			executable_not_void: executable /= Void
+		local
+			a_set: DS_HASH_SET [INTEGER]
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_fingerprint: INTEGER
+			an_error: XM_XPATH_ERROR_VALUE
+			a_message: STRING
+			a_set_cursor: DS_HASH_SET_CURSOR [INTEGER]
+			a_property_set: XM_XSLT_OUTPUT_PROPERTIES
+		do
+			create a_set.make_default
+			from
+				a_cursor := top_level_elements.new_cursor; a_cursor.finish
+			variant
+				a_cursor.index
+			until
+				any_compile_errors or else a_cursor.before
+			loop
+				if a_cursor.item.is_output and then not a_cursor.item.as_output.is_excluded then
+					a_fingerprint := a_cursor.item.as_output.output_fingerprint
+					if a_fingerprint /= -1 then a_set.force (a_fingerprint) end
+				end
+				a_cursor.back
+			end
+			if a_set.is_empty then
+				a_message := "The stylesheet contains xsl:result-document instructions that calculate the output " +
+					"format name at run-time, but there are no named xsl:output declarations"
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1460", Static_error)
+				report_compile_error (an_error)
+			else
+				from a_set_cursor := a_set.new_cursor; a_set_cursor.start until a_set_cursor.after loop
+					a_property_set := gathered_output_properties (a_set_cursor.item)
+					executable.set_output_properties (a_property_set, a_set_cursor.item)
+					a_set_cursor.forth
+				end
 			end
 		end
 

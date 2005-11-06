@@ -94,6 +94,8 @@ feature -- Element change
 					use_character_maps := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (use_character_maps); STRING_.right_adjust (use_character_maps)
 				elseif STRING_.same_string (an_expanded_name, Undeclare_prefixes_attribute) then
 					undeclare_prefixes := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
+				elseif STRING_.same_string (an_expanded_name, Normalization_form_attribute) then
+					normalization_form := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_character_representation_attribute) then
 					character_representation := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (character_representation); STRING_.right_adjust (character_representation)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_indent_spaces_attribute) then
@@ -104,7 +106,7 @@ feature -- Element change
 					byte_order_mark := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (byte_order_mark); STRING_.right_adjust (byte_order_mark)
 				else
 					a_uri := shared_name_pool.namespace_uri_from_name_code (a_name_code)
-					if a_uri.count = 0 or else STRING_.same_string (a_uri, Xslt_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
+					if a_uri.count = 0 or STRING_.same_string (a_uri, Xslt_uri) or STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
 						check_unknown_attribute (a_name_code)
 					else
 						extension_attributes.force (attribute_value_by_index (a_cursor.index), an_expanded_name)
@@ -134,9 +136,9 @@ feature -- Element change
 			end
 			if method /= Void then
 				if is_ncname (method) then
-					if STRING_.same_string (method, "xml") or else
-						STRING_.same_string (method, "xhtml") or else
-						STRING_.same_string (method, "html") or else
+					if STRING_.same_string (method, "xml") or
+						STRING_.same_string (method, "xhtml") or
+						STRING_.same_string (method, "html") or
 						STRING_.same_string (method, "text") then
 						-- OK
 					else
@@ -149,7 +151,7 @@ feature -- Element change
 				end
 			end
 			if indent /= Void then
-				if STRING_.same_string (indent, "yes") or else STRING_.same_string (indent, "no") then
+				if STRING_.same_string (indent, "yes") or STRING_.same_string (indent, "no") then
 					-- OK
 				else
 					create an_error.make_from_string ("indent must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
@@ -164,7 +166,7 @@ feature -- Element change
 				end
 			end
 			if omit_xml_declaration /= Void then
-				if STRING_.same_string (omit_xml_declaration, "yes") or else STRING_.same_string (omit_xml_declaration, "no") then
+				if STRING_.same_string (omit_xml_declaration, "yes") or STRING_.same_string (omit_xml_declaration, "no") then
 					-- OK
 				else
 					create an_error.make_from_string ("omit_xml_declaration must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
@@ -172,7 +174,7 @@ feature -- Element change
 				end
 			end
 			if standalone /= Void then
-				if STRING_.same_string (standalone, "yes") or else STRING_.same_string (standalone, "no") or else STRING_.same_string (standalone, "omit") then
+				if STRING_.same_string (standalone, "yes") or STRING_.same_string (standalone, "no") or STRING_.same_string (standalone, "omit") then
 					-- OK
 				else
 					create an_error.make_from_string ("standalone must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
@@ -186,15 +188,27 @@ feature -- Element change
 				end
 			end
 			if undeclare_prefixes /= Void then
-				if STRING_.same_string (undeclare_prefixes, "yes") or else STRING_.same_string (undeclare_prefixes, "no") then
+				if STRING_.same_string (undeclare_prefixes, "yes") or STRING_.same_string (undeclare_prefixes, "no") then
 					-- OK
 				else
 					create an_error.make_from_string ("undeclare-prefixes must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
+			if normalization_form /= Void then
+				if STRING_.same_string (normalization_form, "NFC") or STRING_.same_string (normalization_form, "NFD")
+					or STRING_.same_string (normalization_form, "NFKC") or STRING_.same_string (normalization_form, "NFKD")
+					or STRING_.same_string (normalization_form, "fully-normalized") or STRING_.same_string (normalization_form, "none")
+					or is_nmtoken (normalization_form)
+				 then
+					-- OK
+				else
+					create an_error.make_from_string ("normalization-form must be one of 'NFC', 'NFD', 'NFKC', 'NFKD', 'fully-normalized', 'none' or an NMTOKEN", Xpath_errors_uri, "XTSE0020", Static_error)
+					report_compile_error (an_error)
+				end
+			end
 			if include_content_type /= Void then
-				if STRING_.same_string (include_content_type, "yes") or else STRING_.same_string (include_content_type, "no") then
+				if STRING_.same_string (include_content_type, "yes") or STRING_.same_string (include_content_type, "no") then
 					-- OK
 				else
 					create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
@@ -202,7 +216,7 @@ feature -- Element change
 				end
 			end
 			if escape_uri_attributes /= Void then
-				if STRING_.same_string (escape_uri_attributes, "yes") or else STRING_.same_string (escape_uri_attributes, "no") then
+				if STRING_.same_string (escape_uri_attributes, "yes") or STRING_.same_string (escape_uri_attributes, "no") then
 					-- OK
 				else
 					create an_error.make_from_string ("escape-uri-attribute must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
@@ -210,7 +224,7 @@ feature -- Element change
 				end
 			end
 			if byte_order_mark /= Void then
-				if STRING_.same_string (byte_order_mark, "yes") or else STRING_.same_string (byte_order_mark, "no") then
+				if STRING_.same_string (byte_order_mark, "yes") or STRING_.same_string (byte_order_mark, "no") then
 					-- OK
 				else
 					create an_error.make_from_string ("byte-order-mark must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
@@ -314,7 +328,7 @@ feature -- Element change
 				if a_property_set.is_higher_precedence (an_import_precedence, Indent_attribute) then
 					a_property_set.set_indent (STRING_.same_string (indent, "yes"), an_import_precedence)
 				elseif not a_property_set.is_lower_precedence (an_import_precedence, Indent_attribute) and then
-					((STRING_.same_string (indent, "yes") and then not a_property_set.indent) or else
+					((STRING_.same_string (indent, "yes") and then not a_property_set.indent) or
 					(STRING_.same_string (indent, "no") and then a_property_set.indent)) then
 					a_property_set.set_duplication_error (Indent_attribute)
 				end
@@ -371,7 +385,7 @@ feature -- Element change
 				if a_property_set.is_higher_precedence (an_import_precedence, Omit_xml_declaration_attribute) then
 					a_property_set.set_omit_xml_declaration (STRING_.same_string (omit_xml_declaration, "yes"), an_import_precedence)
 				elseif not a_property_set.is_lower_precedence (an_import_precedence, Omit_xml_declaration_attribute) then
-					if STRING_.same_string (omit_xml_declaration, "yes") and then not a_property_set.omit_xml_declaration or else
+					if STRING_.same_string (omit_xml_declaration, "yes") and then not a_property_set.omit_xml_declaration or
 						STRING_.same_string (omit_xml_declaration, "no") and then a_property_set.omit_xml_declaration then
 						a_property_set.set_duplication_error (Omit_xml_declaration_attribute)
 					end
@@ -392,7 +406,7 @@ feature -- Element change
 				if a_property_set.is_higher_precedence (an_import_precedence, Escape_uri_attributes_attribute) then
 					a_property_set.set_escape_uri_attributes (STRING_.same_string (escape_uri_attributes, "yes"), an_import_precedence)
 				elseif not a_property_set.is_lower_precedence (an_import_precedence, Escape_uri_attributes_attribute) then
-					if STRING_.same_string (escape_uri_attributes, "yes") and then not a_property_set.escape_uri_attributes or else
+					if STRING_.same_string (escape_uri_attributes, "yes") and then not a_property_set.escape_uri_attributes or
 						STRING_.same_string (escape_uri_attributes, "no") and then a_property_set.escape_uri_attributes then
 						a_property_set.set_duplication_error (Escape_uri_attributes_attribute)
 					end
@@ -469,7 +483,7 @@ feature -- Element change
 				if a_property_set.is_higher_precedence (an_import_precedence, Include_content_type_attribute) then
 					a_property_set.set_include_content_type (STRING_.same_string (include_content_type, "yes"), an_import_precedence)
 				elseif not a_property_set.is_lower_precedence (an_import_precedence, Include_content_type_attribute) then
-					if STRING_.same_string (include_content_type, "yes") and then not a_property_set.include_content_type or else
+					if STRING_.same_string (include_content_type, "yes") and then not a_property_set.include_content_type or
 						STRING_.same_string (include_content_type, "no") and then a_property_set.include_content_type then
 						a_property_set.set_duplication_error (Include_content_type_attribute)
 					end
@@ -479,17 +493,25 @@ feature -- Element change
 				if a_property_set.is_higher_precedence (an_import_precedence, Undeclare_prefixes_attribute) then
 					a_property_set.set_undeclare_prefixes (STRING_.same_string (undeclare_prefixes, "yes"), an_import_precedence)
 				elseif not a_property_set.is_lower_precedence (an_import_precedence, Undeclare_prefixes_attribute) then
-					if STRING_.same_string (undeclare_prefixes, "yes") and then not a_property_set.undeclare_prefixes or else
+					if STRING_.same_string (undeclare_prefixes, "yes") and then not a_property_set.undeclare_prefixes or
 						STRING_.same_string (undeclare_prefixes, "no") and then a_property_set.undeclare_prefixes then
 						a_property_set.set_duplication_error (Undeclare_prefixes_attribute)
 					end
 				end					
 			end
+			if normalization_form /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Normalization_form_attribute) then
+					a_property_set.set_normalization_form (normalization_form, an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Normalization_form_attribute) 
+					and then not STRING_.same_string (normalization_form, a_property_set.normalization_form) then
+					a_property_set.set_duplication_error (Normalization_form_attribute)
+				end					
+			end			
 			if byte_order_mark /= Void and then not a_property_set.is_error then
 				if a_property_set.is_higher_precedence (an_import_precedence, Byte_order_mark_attribute) then
 					a_property_set.set_byte_order_mark_required (STRING_.same_string (byte_order_mark, "yes"), an_import_precedence)
 				elseif not a_property_set.is_lower_precedence (an_import_precedence, Byte_order_mark_attribute) then
-					if STRING_.same_string (byte_order_mark, "yes") and then not a_property_set.byte_order_mark_required or else
+					if STRING_.same_string (byte_order_mark, "yes") and then not a_property_set.byte_order_mark_required or
 						STRING_.same_string (byte_order_mark, "no") and then a_property_set.byte_order_mark_required then
 						a_property_set.set_duplication_error (Byte_order_mark_attribute)
 					end
@@ -552,6 +574,9 @@ feature {NONE} -- Implementation
 
 	undeclare_prefixes: STRING
 			-- undeclare-prefixes value
+
+	normalization_form: STRING
+			-- normalization-form value
 
 	character_representation: STRING
 			-- Extension attribute - character representation

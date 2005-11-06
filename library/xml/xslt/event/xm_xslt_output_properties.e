@@ -28,6 +28,9 @@ inherit
 	XM_XPATH_SHARED_NAME_POOL
 		export {NONE} all end
 
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 create
 
 	make
@@ -147,6 +150,9 @@ feature -- Access
 	indent_spaces: INTEGER
 			-- Number of spaces to be used for indentation when `indent' is `True' (a gexslt extension)
 
+	normalization_form: STRING
+			-- Requested normalization-form
+
 	next_in_chain: STRING
 			-- URI of next stylesheet to be applied to output
 
@@ -242,6 +248,45 @@ feature -- Status report
 
 	duplicate_attribute_name: STRING
 			-- Name of attribute that caused a duplication error
+
+	is_default_version: BOOLEAN is
+			-- Is `version' returning `default_version'?
+		do
+			Result := not string_property_map.has (Version_attribute)
+		end
+
+	is_default_media_type: BOOLEAN is
+			-- Is `media_type' returning `default_media_type'?
+		do
+			Result := not string_property_map.has (Media_type_attribute)
+		end
+
+	is_default_indent: BOOLEAN is
+			-- Is `indent' returning `default_indent'?
+		do
+			Result := not boolean_property_map.has (Indent_attribute)
+		end
+
+	is_encoding_set: BOOLEAN
+			-- Is a non-default `encoding' set?
+
+	is_byte_order_mark_set: BOOLEAN
+			-- Is a non-default `byte_order_mark_required' set?
+
+	is_escape_uri_attributes_set: BOOLEAN
+			-- Is a non-default `escape_uri_attributes' set?
+
+	is_include_content_type_set: BOOLEAN
+			-- Is a non-default `include_content_type' set?
+
+	is_omit_xml_declaration_set: BOOLEAN
+			-- Is a non-default `omit_xml_declaration' set?
+
+	is_standalone_set: BOOLEAN
+			-- Is a non-default `standalone' set?
+
+	is_undeclare_prefixes_set: BOOLEAN
+			-- Is a non-default `undeclare_prefixes' set?
 
 feature -- Status setting
 
@@ -388,21 +433,28 @@ feature -- Element change
 		do
 			precedence_property_map.force (an_import_precedence, Omit_xml_declaration_attribute)
 			omit_xml_declaration := an_omit_xml_declaration_value
+			is_omit_xml_declaration_set := True
 		ensure
 			import_precedence_set: precedence_property_map.has (Omit_xml_declaration_attribute) and then precedence_property_map.item (Omit_xml_declaration_attribute) = an_import_precedence
-			omit_xml_declaration_set: omit_xml_declaration = an_omit_xml_declaration_value
+			omit_xml_declaration_set: omit_xml_declaration = an_omit_xml_declaration_value and is_omit_xml_declaration_set
 		end
 
 	set_standalone (a_standalone_value: STRING; an_import_precedence: INTEGER) is
 			-- Set `standalone'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Standalone_attribute)			
+			higher_precedence: is_higher_precedence (an_import_precedence, Standalone_attribute)
+			valid_value: STRING_.same_string (a_standalone_value, "yes") or STRING_.same_string (a_standalone_value, "no") or STRING_.same_string (a_standalone_value, "omit")
 		do
 			precedence_property_map.force (an_import_precedence, Standalone_attribute)
-			standalone := a_standalone_value
+			if STRING_.same_string (a_standalone_value, "omit") then
+				standalone := Void
+			else
+				standalone := a_standalone_value
+			end
+			is_standalone_set := True
 		ensure
 			import_precedence_set: precedence_property_map.has (Standalone_attribute) and then precedence_property_map.item (Standalone_attribute) = an_import_precedence
-			standalone_set: standalone = a_standalone_value
+			flagged: is_standalone_set
 		end
 
 	set_indent_spaces (a_number: INTEGER; an_import_precedence: INTEGER) is
@@ -452,9 +504,10 @@ feature -- Element change
 			if STRING_.same_string (encoding, "UTF-16") and then not precedence_property_map.has (Byte_order_mark_attribute) then
 				byte_order_mark_required := True
 			end
+			is_encoding_set := True
 		ensure
 			import_precedence_set: precedence_property_map.has (Encoding_attribute) and then precedence_property_map.item (Encoding_attribute) = an_import_precedence
-			encoding_set: STRING_.same_string (encoding, an_encoding.as_upper)
+			encoding_set: STRING_.same_string (encoding, an_encoding.as_upper) and is_encoding_set = True
 		end
 
 	set_media_type (a_media_type: STRING; an_import_precedence: INTEGER) is
@@ -470,6 +523,19 @@ feature -- Element change
 		ensure
 			import_precedence_set: precedence_property_map.has (Media_type_attribute) and then precedence_property_map.item (Media_type_attribute) = an_import_precedence
 			media_type_set: STRING_.same_string (media_type , a_media_type)
+		end
+
+	set_normalization_form (a_form: STRING; an_import_precedence: INTEGER) is
+			-- Set `normalization_form'.
+		require
+			higher_precedence: is_higher_precedence (an_import_precedence, Normalization_form_attribute)
+			normalization_form_not_void: a_form /= Void
+		do
+			precedence_property_map.force (an_import_precedence, Normalization_form_attribute)
+			normalization_form := a_form
+		ensure
+			import_precedence_set: precedence_property_map.has (Normalization_form_attribute) and then precedence_property_map.item (Normalization_form_attribute) = an_import_precedence
+			normalization_form_set: STRING_.same_string (a_form, normalization_form)
 		end
 
 	set_doctype_system (a_system_id: STRING; an_import_precedence: INTEGER) is
@@ -524,6 +590,22 @@ feature -- Element change
 			end
 		end
 
+	merge_cdata_sections (some_cdata_sections: like cdata_section_elements) is
+			-- Merge `some_cdata_sections' with `cdata_section_elements'.
+		require
+			cdata_sections_not_void: some_cdata_sections /= Void
+		local
+			a_cursor: DS_HASH_SET_CURSOR [STRING]
+		do
+			a_cursor := some_cdata_sections.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				if not cdata_section_elements.has (a_cursor.item) then
+					cdata_section_elements.force (a_cursor.item)
+				end
+				a_cursor.forth
+			end
+		end
+
 	set_undeclare_prefixes (an_undeclare_prefixes_value: BOOLEAN; an_import_precedence: INTEGER) is
 			-- Set `undeclare_prefixes'.
 		require
@@ -531,9 +613,10 @@ feature -- Element change
 		do
 			precedence_property_map.force (an_import_precedence, Undeclare_prefixes_attribute)
 			undeclare_prefixes := an_undeclare_prefixes_value
+			is_undeclare_prefixes_set := True
 		ensure
 			import_precedence_set: precedence_property_map.has (Undeclare_prefixes_attribute) and then precedence_property_map.item (Undeclare_prefixes_attribute) = an_import_precedence
-			undeclare_prefixes_set: undeclare_prefixes = an_undeclare_prefixes_value
+			undeclare_prefixes_set: undeclare_prefixes = an_undeclare_prefixes_value and is_undeclare_prefixes_set
 		end
 
 	set_character_representation (a_character_representation: STRING; an_import_precedence: INTEGER) is
@@ -559,9 +642,10 @@ feature -- Element change
 		do
 			precedence_property_map.force (an_import_precedence, Include_content_type_attribute)
 			include_content_type := an_include_content_type_value
+			is_include_content_type_set := True
 		ensure
 			import_precedence_set: precedence_property_map.has (Include_content_type_attribute) and then precedence_property_map.item (Include_content_type_attribute) = an_import_precedence
-			include_content_type_set: include_content_type = an_include_content_type_value
+			include_content_type_set: include_content_type = an_include_content_type_value and is_include_content_type_set
 		end
 
 	set_escape_uri_attributes (an_escape_uri_attributes_value: BOOLEAN; an_import_precedence: INTEGER) is
@@ -571,9 +655,10 @@ feature -- Element change
 		do
 			precedence_property_map.force (an_import_precedence, Escape_uri_attributes_attribute)
 			escape_uri_attributes := an_escape_uri_attributes_value
+			is_escape_uri_attributes_set := True
 		ensure
 			import_precedence_set: precedence_property_map.has (Escape_uri_attributes_attribute) and then precedence_property_map.item (Escape_uri_attributes_attribute) = an_import_precedence
-			escape_uri_attributes_set: escape_uri_attributes = an_escape_uri_attributes_value
+			escape_uri_attributes_set: escape_uri_attributes = an_escape_uri_attributes_value and is_escape_uri_attributes_set
 		end
 										
 	set_byte_order_mark_required (an_byte_order_mark_required_value: BOOLEAN; an_import_precedence: INTEGER) is
@@ -583,9 +668,10 @@ feature -- Element change
 		do
 			precedence_property_map.force (an_import_precedence, Byte_order_mark_attribute)
 			byte_order_mark_required := an_byte_order_mark_required_value
+			is_byte_order_mark_set := True
 		ensure
 			import_precedence_set: precedence_property_map.has (Byte_order_mark_attribute) and then precedence_property_map.item (Byte_order_mark_attribute) = an_import_precedence
-			byte_order_mark_required_set: byte_order_mark_required = an_byte_order_mark_required_value
+			byte_order_mark_required_set: byte_order_mark_required = an_byte_order_mark_required_value and is_byte_order_mark_set
 		end
 
 	merge_extension_attributes (some_extension_attributes: like extension_attributes) is
@@ -627,6 +713,22 @@ feature -- Element change
 			end
 		ensure
 			error_message_set: is_error implies error_message /= Void
+		end
+
+	merge_character_maps (some_maps: like used_character_maps) is
+			-- Merge `some_maps' with `used_character_maps'.
+		require
+			character_maps_not_void: some_maps /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
+		do
+			a_cursor := some_maps.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				if not used_character_maps.has (a_cursor.item) then
+					used_character_maps.force_last (STRING_.cloned_string (a_cursor.item))
+				end
+				a_cursor.forth
+			end
 		end
 
 feature -- Duplication
@@ -860,31 +962,31 @@ feature {NONE} -- Implementation
 			no_previous_error: not is_error
 		do
 			if STRING_.same_string (a_local_name, Method_attribute) then
-				set_method (a_local_name, 1000000)
+				set_method (a_local_name, Platform.Maximum_integer - 2)
 			elseif STRING_.same_string (a_local_name, Version_attribute) or else STRING_.same_string (a_local_name, Output_version_attribute)then
-				set_version (a_value, 1000000)
+				set_version (a_value, Platform.Maximum_integer - 2)
 			elseif STRING_.same_string (a_local_name, Indent_attribute) then
 				set_yes_no_property (Indent_attribute, a_value)
-				if not is_error then set_indent (last_yes_no_value, 1000000) end
+				if not is_error then set_indent (last_yes_no_value, Platform.Maximum_integer - 2) end
 			elseif STRING_.same_string (a_local_name, Encoding_attribute) then
-				set_encoding (a_value, 1000000)
+				set_encoding (a_value, Platform.Maximum_integer - 2)
 			elseif STRING_.same_string (a_local_name, Media_type_attribute) then
-				set_media_type (a_value, 1000000)
+				set_media_type (a_value, Platform.Maximum_integer - 2)
 			elseif STRING_.same_string (a_local_name, Doctype_system_attribute) then
-				set_doctype_system (a_value, 1000000)
+				set_doctype_system (a_value, Platform.Maximum_integer - 2)
 			elseif STRING_.same_string (a_local_name, Doctype_public_attribute) then
-				set_doctype_public (a_value, 1000000)
+				set_doctype_public (a_value, Platform.Maximum_integer - 2)
 			elseif STRING_.same_string (a_local_name, Byte_order_mark_attribute) then
 				set_yes_no_property (Byte_order_mark_attribute, a_value)
-				if not is_error then set_byte_order_mark_required (last_yes_no_value, 1000000) end
+				if not is_error then set_byte_order_mark_required (last_yes_no_value, Platform.Maximum_integer - 2) end
 			elseif STRING_.same_string (a_local_name, Omit_xml_declaration_attribute) then
 				set_yes_no_property (Omit_xml_declaration_attribute, a_value)
-				if not is_error then set_omit_xml_declaration (last_yes_no_value, 1000000) end
+				if not is_error then set_omit_xml_declaration (last_yes_no_value, Platform.Maximum_integer - 2) end
 			elseif STRING_.same_string (a_local_name, Standalone_attribute) then
 				if STRING_.same_string (a_value, "yes") or else
 					STRING_.same_string (a_value, "no") or else
 					STRING_.same_string (a_value, "omit") then
-					set_standalone (a_value, 1000000)
+					set_standalone (a_value, Platform.Maximum_integer - 2)
 				else
 					set_general_error (STRING_.concat ("Value for standalone attribute on xsl:result-document must be 'yes' or 'no' or 'omit'. Found: ", a_value))
 				end
@@ -897,13 +999,13 @@ feature {NONE} -- Implementation
 				end
 			elseif STRING_.same_string (a_local_name, Undeclare_prefixes_attribute) then
 				set_yes_no_property (Undeclare_prefixes_attribute, a_value)
-				if not is_error then set_undeclare_prefixes (last_yes_no_value, 1000000) end
+				if not is_error then set_undeclare_prefixes (last_yes_no_value, Platform.Maximum_integer - 2) end
 			elseif STRING_.same_string (a_local_name, Include_content_type_attribute) then
 				set_yes_no_property (Include_content_type_attribute, a_value)
-				if not is_error then set_include_content_type (last_yes_no_value, 1000000) end
+				if not is_error then set_include_content_type (last_yes_no_value, Platform.Maximum_integer - 2) end
 			elseif STRING_.same_string (a_local_name, Escape_uri_attributes_attribute) then
 				set_yes_no_property (Escape_uri_attributes_attribute, a_value)
-				if not is_error then set_include_content_type (last_yes_no_value, 1000000) end					
+				if not is_error then set_include_content_type (last_yes_no_value, Platform.Maximum_integer - 2) end					
 			end
 		ensure
 			error_message_set: is_error implies error_message /= Void
@@ -918,13 +1020,13 @@ feature {NONE} -- Implementation
 		do
 			if STRING_.same_string (a_local_name, Gexslt_character_representation_name) then
 				if is_valid_character_representation (a_value) then
-					set_character_representation (a_value, 1000000)
+					set_character_representation (a_value, Platform.Maximum_integer - 2)
 				end
 			elseif STRING_.same_string (a_local_name, Gexslt_next_in_chain_name) then
-				set_next_in_chain (a_value, 1000000)
+				set_next_in_chain (a_value, Platform.Maximum_integer - 2)
 			elseif STRING_.same_string (a_local_name, Gexslt_indent_spaces_name) then
 				if a_value.is_integer and then a_value.to_integer > 0 then
-					set_indent_spaces (a_value.to_integer, 1000000)
+					set_indent_spaces (a_value.to_integer, Platform.Maximum_integer - 2)
 				end
 			end
 		ensure
@@ -960,7 +1062,7 @@ invariant
 
 	extension_attributes_not_void: extension_attributes /= Void
 	cdata_section_elements_not_void: cdata_section_elements /= Void
-	standalone_valid: standalone /= Void implies standalone.is_equal ("yes") or else standalone.is_equal ("no")
+	standalone_valid: standalone /= Void implies STRING_.same_string (standalone, "yes") or STRING_.same_string (standalone, "no")
 	default_media_type_not_void: default_media_type /= Void
 	used_character_maps_not_void: used_character_maps /= Void
 	default_version_not_void: default_version /= Void
@@ -971,9 +1073,9 @@ invariant
 	boolean_property_map_not_void: boolean_property_map /= Void
 	precedence_property_map_not_void: precedence_property_map /= Void
 	unique_property_names: True -- forall (a) string_property_map.has (a) implies not boolean_property_map.has (a) and vice-versa
-	duplication_error: is_duplication_error implies is_error and then duplicate_attribute_name /= Void and then error_message = Void
-	other_error: is_error and not is_duplication_error implies duplicate_attribute_name = Void and then error_message /= Void
-	no_error: not is_error implies duplicate_attribute_name = Void and then error_message = Void
+	duplication_error: is_duplication_error implies is_error and  duplicate_attribute_name /= Void and  error_message = Void
+	other_error: is_error and is_duplication_error implies duplicate_attribute_name = Void and error_message /= Void
+	no_error: not is_error implies duplicate_attribute_name = Void and error_message = Void
 
 end
 

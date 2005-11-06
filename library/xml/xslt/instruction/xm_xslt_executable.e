@@ -12,6 +12,10 @@ indexing
 
 class XM_XSLT_EXECUTABLE
 
+inherit
+
+	XM_XPATH_SHARED_NAME_POOL
+
 create
 
 	make
@@ -39,6 +43,7 @@ feature {NONE} -- Initialization
 			function_library := a_function_library
 			create character_map_index.make_default
 			create global_slot_manager.make
+			create output_properties_map.make_default
 		ensure
 			rule_manager_set: rule_manager = a_rule_manager
 			key_manager_set: key_manager = a_key_manager
@@ -91,6 +96,17 @@ feature -- Access
 			system_id_not_void: Result /= Void
 		end
 
+	output_properties (a_fingerprint: INTEGER): XM_XSLT_OUTPUT_PROPERTIES is
+			-- Output properties set named by `a_fingerprint'?
+		require
+			valid_fingerprint: shared_name_pool.is_valid_name_code (a_fingerprint)
+			has_property_set: has_output_properties (a_fingerprint)
+		do
+			Result := output_properties_map.item (a_fingerprint)
+		ensure
+			output_properties_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 	is_strips_type_annotation: BOOLEAN
@@ -108,6 +124,14 @@ feature -- Status report
 
 	are_slots_allocated: BOOLEAN
 			-- Have variable slots been allocated yet?
+
+	has_output_properties (a_fingerprint: INTEGER): BOOLEAN is
+			-- Does the executable have an output properties set named by `a_fingerprint'?
+		require
+			valid_fingerprint: shared_name_pool.is_valid_name_code (a_fingerprint)
+		do
+			Result := output_properties_map.has (a_fingerprint)
+		end
 
 feature -- Status setting
 
@@ -194,6 +218,18 @@ feature -- Element change
 			default_output_properties_set: default_output_properties = a_property_set
 		end
 
+	set_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_fingerprint: INTEGER) is
+			-- Set output properties named by `a_fingerprint'?
+		require
+			valid_fingerprint: shared_name_pool.is_valid_name_code (a_fingerprint)
+			property_set_not_known: not has_output_properties (a_fingerprint)
+			output_properties_not_void: a_property_set /= Void
+		do
+			output_properties_map.force (a_property_set, a_fingerprint)
+		ensure
+			property_set_known: has_output_properties (a_fingerprint)
+		end
+
 	save_static_context (a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
 			-- Save static context of principal stylesheet.
 			-- For XPath-valued global parameter setting
@@ -225,6 +261,9 @@ feature {NONE} -- Implementation
 
 	module_list: DS_ARRAYED_LIST [STRING]
 			-- SYSTEM ids indexed by module number
+
+	output_properties_map: DS_HASH_TABLE [XM_XSLT_OUTPUT_PROPERTIES, INTEGER]
+			-- Output property sets indexed by fingerprint
 
 invariant
 

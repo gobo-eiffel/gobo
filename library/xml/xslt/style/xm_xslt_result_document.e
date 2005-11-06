@@ -19,6 +19,9 @@ inherit
 			validate, make_style_element, may_contain_sequence_constructor
 		end
 
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -32,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			is_instruction := True
 			validation_action := Validation_strip
-			create formatting_attributes.make_with_equality_testers (17, expression_tester, Void)
+			create formatting_attributes.make_with_equality_testers (Formatting_attributes_count, expression_tester, Void)
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
 			end
 
@@ -98,13 +101,18 @@ feature -- Element change
 				href := last_generated_expression
 			end
 			if a_format_attribute /= Void then
-				generate_name_code (a_format_attribute)
-				output_fingerprint := last_generated_name_code
-				if output_fingerprint = -1 then
-					a_message := STRING_.concat ("XTSE1460: xsl:result-document format='", a_format_attribute)
-					a_message := STRING_.appended_string (a_message, "' does not specify a valid QName")
-					create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1460", Static_error)
-					report_compile_error (an_error)
+				generate_attribute_value_template (a_format_attribute, static_context)
+				if last_generated_expression.is_string_value then
+					generate_name_code (a_format_attribute)
+					output_fingerprint := last_generated_name_code
+					if output_fingerprint = -1 then
+						a_message := STRING_.concat ("XTDE1460: xsl:result-document format='", a_format_attribute)
+						a_message := STRING_.appended_string (a_message, "' does not specify a valid QName")
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1460", Static_error)
+						report_compile_error (an_error)
+					end
+				else
+					format_expression := last_generated_expression
 				end
 			else
 				output_fingerprint := -1
@@ -147,6 +155,12 @@ feature -- Element change
 					href := href.replacement_expression
 				end
 			end
+			if format_expression /= Void then
+				type_check_expression ("format", format_expression)
+				if format_expression.was_expression_replaced then
+					format_expression := format_expression.replacement_expression
+				end
+			end
 			from
 				a_cursor := formatting_attributes.new_cursor; a_cursor.start
 			until
@@ -167,90 +181,123 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_property_set: XM_XSLT_OUTPUT_PROPERTIES
+			a_global_property_set, a_local_property_set: XM_XSLT_OUTPUT_PROPERTIES
 			a_stylesheet: XM_XSLT_STYLESHEET
-			namespace_context_needed: BOOLEAN
-			a_fingerprint_list: DS_ARRAYED_LIST [INTEGER]
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
-			another_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_fingerprint: INTEGER
-			an_expression,a_content: XM_XPATH_EXPRESSION
-			a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
-			a_local_name, a_message: STRING
+			a_message: STRING
 			an_error: XM_XPATH_ERROR_VALUE
+			a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
+			a_content: XM_XPATH_EXPRESSION
 		do
 			last_generated_expression := Void
 			a_stylesheet := principal_stylesheet
-			if output_fingerprint = -1 or else a_stylesheet.is_named_output_property_defined (output_fingerprint) then
-				a_property_set := a_stylesheet.gathered_output_properties (output_fingerprint)
-				if a_property_set.is_error then
-					a_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", a_property_set.duplicate_attribute_name)
+			if format_expression /= Void then
+				create a_global_property_set.make (Platform.Minimum_integer)
+				a_stylesheet.set_needs_dynamic_output_properties
+			elseif output_fingerprint = -1 or a_stylesheet.is_named_output_property_defined (output_fingerprint) then
+				a_global_property_set := a_stylesheet.gathered_output_properties (output_fingerprint)
+				if a_global_property_set.is_error then
+					a_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", a_global_property_set.duplicate_attribute_name)
 					a_message := STRING_.appended_string (a_message, "', in the output definition named '")
 					a_message := STRING_.appended_string (a_message, shared_name_pool.display_name_from_name_code (output_fingerprint))
 					a_message := STRING_.appended_string (a_message, "'.")
 					create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1560", Static_error)
 					report_compile_error (an_error)
-				else
-					create a_fingerprint_list.make (formatting_attributes.count)
-					a_namespace_resolver := static_context.namespace_resolver
-					from
-						a_cursor := formatting_attributes.new_cursor; a_cursor.start
-					until
-						a_cursor.after
-					loop
-						a_fingerprint := a_cursor.key
-						an_expression := a_cursor.item
-						if an_expression.is_string_value then
-							a_property_set.set_property (a_fingerprint, an_expression.as_string_value.string_value, a_namespace_resolver)
-							if a_property_set.is_error then
-								a_cursor.go_after
-								create an_error.make_from_string (a_property_set.error_message, Gexslt_eiffel_type_uri, "OUTPUT_PROPERTY", Static_error)
-								report_compile_error (an_error)
-							else
-								a_fingerprint_list.put_last (a_fingerprint)
-							end
-						else
-							a_local_name := shared_name_pool.local_name_from_name_code (a_fingerprint)
-							if STRING_.same_string (a_local_name, Method_attribute) or else
-								STRING_.same_string (a_local_name, Cdata_section_elements_attribute) then
-								namespace_context_needed := True
-							end
-						end
-						if not a_cursor.after then a_cursor.forth end
-					end
-					from
-						another_cursor := a_fingerprint_list.new_cursor; another_cursor.start
-					variant
-						a_fingerprint_list.count + 1 - another_cursor.index
-					until
-						another_cursor.after
-					loop
-						a_fingerprint := another_cursor.item
-						formatting_attributes.remove (a_fingerprint)
-						another_cursor.forth
-					end
-					if not namespace_context_needed then a_namespace_resolver := Void end
-					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-					a_content := last_generated_expression
-					if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
-					create {XM_XSLT_COMPILED_RESULT_DOCUMENT} last_generated_expression.make (an_executable, a_property_set, href, base_uri, validation_action,
-																													  Void, formatting_attributes, a_namespace_resolver, a_content)
 				end
 			else
 				a_message := STRING_.concat ("Output definition named '", shared_name_pool.display_name_from_name_code (output_fingerprint))
 				a_message := STRING_.appended_string (a_message, "' by the format attribute of xsl:result-document has not been defined.")
-				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1460", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1460", Static_error)
 				report_compile_error (an_error)
+			end
+
+			if not any_compile_errors then
+				-- TODO: we can optimize by determining method now, in some cases
+				create a_local_property_set.make (Platform.Minimum_integer)
+				build_local_properties (a_local_property_set)
+				if not any_compile_errors then
+					if namespace_context_needed then a_namespace_resolver := static_context.namespace_resolver end
+					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+					a_content := last_generated_expression
+					if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
+					
+					create {XM_XSLT_COMPILED_RESULT_DOCUMENT} last_generated_expression.make (an_executable, a_global_property_set, a_local_property_set, href,
+																													  format_expression, base_uri, validation_action,
+																													  Void, formatting_attributes, a_namespace_resolver, a_content)				
+				end
 			end
 		end
 
+	build_local_properties (a_local_property_set: XM_XSLT_OUTPUT_PROPERTIES) is
+			-- Add properties defined on `Current'.
+		require
+			local_properties_not_void: a_local_property_set /= Void
+		local
+			a_fingerprint_list: DS_ARRAYED_LIST [INTEGER]
+			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			another_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_fingerprint: INTEGER
+			an_expression: XM_XPATH_EXPRESSION
+			a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
+			a_local_name: STRING
+			an_error: XM_XPATH_ERROR_VALUE
+		do
+			create a_fingerprint_list.make (formatting_attributes.count)
+			namespace_context_needed := format_expression = Void
+			a_namespace_resolver := static_context.namespace_resolver
+			from
+				a_cursor := formatting_attributes.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				a_fingerprint := a_cursor.key
+				an_expression := a_cursor.item
+				if an_expression.is_string_value then
+					a_local_property_set.set_property (a_fingerprint, an_expression.as_string_value.string_value, a_namespace_resolver)
+					if a_local_property_set.is_error then
+						a_cursor.go_after
+						create an_error.make_from_string (a_local_property_set.error_message, Xpath_errors_uri, "XTSE0020", Static_error)
+						report_compile_error (an_error)
+					else
+						a_fingerprint_list.put_last (a_fingerprint)
+					end
+				else
+					a_local_name := shared_name_pool.local_name_from_name_code (a_fingerprint)
+					if STRING_.same_string (a_local_name, Method_attribute) or else
+						STRING_.same_string (a_local_name, Cdata_section_elements_attribute) then
+						namespace_context_needed := True
+					end
+				end
+				if not a_cursor.after then a_cursor.forth end
+			end
+			from
+				another_cursor := a_fingerprint_list.new_cursor; another_cursor.start
+			variant
+				a_fingerprint_list.count + 1 - another_cursor.index
+			until
+				another_cursor.after
+			loop
+				a_fingerprint := another_cursor.item
+				formatting_attributes.remove (a_fingerprint)
+				another_cursor.forth
+			end	
+		end
+
 feature {NONE} -- Implementation
+
+	Formatting_attributes_count: INTEGER is 17
+			-- Number of formatting attributes
 
 	output_fingerprint: INTEGER
 			-- Fingerprint of name of output definition
 
 	href: XM_XPATH_EXPRESSION
 			-- URI of output destination
+
+	format_expression: XM_XPATH_EXPRESSION
+			-- Format attribute, when supplied as an AVT
+
+	namespace_context_needed: BOOLEAN
+			-- Is namespace context needed at runtime?
 
 	use_character_maps: STRING
 			-- Character maps to be used
@@ -265,7 +312,7 @@ feature {NONE} -- Implementation
 			-- Names of formatting attributes permitted as AVTs;
 			-- `Use_character_maps_attribute' is also permitted, but not as an AVT.
 		once
-			create Result.make (16)
+			create Result.make (Formatting_attributes_count)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put (Method_attribute)
 			Result.put (Output_version_attribute)
@@ -274,6 +321,7 @@ feature {NONE} -- Implementation
 			Result.put (Media_type_attribute)
 			Result.put (Doctype_system_attribute)
 			Result.put (Doctype_public_attribute)
+			Result.put (Normalization_form_attribute)
 			Result.put (Omit_xml_declaration_attribute)
 			Result.put (Standalone_attribute)
 			Result.put (Escape_uri_attributes_attribute)

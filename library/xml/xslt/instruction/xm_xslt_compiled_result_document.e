@@ -21,31 +21,37 @@ inherit
 
 	XM_XSLT_VALIDATION
 
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_property_set: XM_XSLT_OUTPUT_PROPERTIES; an_href: XM_XPATH_EXPRESSION;
+	make (an_executable: XM_XSLT_EXECUTABLE; a_global_property_set, a_local_property_set: XM_XSLT_OUTPUT_PROPERTIES; an_href, a_format: XM_XPATH_EXPRESSION;
 			a_base_uri: STRING; a_validation_action: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
 			some_formatting_attributes: DS_HASH_TABLE [XM_XPATH_EXPRESSION, INTEGER];
 			a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER; a_content: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
-			property_set_not_void: a_property_set /= Void
+			global_property_set_not_void: a_global_property_set /= Void
+			local_property_set_not_void: a_local_property_set /= Void
 			base_uri: a_base_uri /= Void
 			only_basic_xslt_as_yet: a_validation_action = Validation_strip
 			no_schema_type_as_yet: a_schema_type = Void
 			formatting_attributes_not_void: some_formatting_attributes /= Void
 			content_not_void: a_content /= Void
+			namespace_resolver_not_void: a_format /= Void implies a_namespace_resolver /= Void
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
 		do
 			executable := an_executable
 			base_uri := a_base_uri
-			property_set := a_property_set
+			global_property_set := a_global_property_set
+			local_property_set := a_local_property_set
 			href := an_href; if href /= Void then adopt_child_expression (href) end
 			validation_action := a_validation_action
 			schema_type := a_schema_type
@@ -60,24 +66,30 @@ feature {NONE} -- Initialization
 				adopt_child_expression (a_cursor.item)
 				a_cursor.forth
 			end
+			format := a_format
 			compute_static_properties
 			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			base_uri_set: base_uri = a_base_uri
-			output_properties_set: property_set = a_property_set
+			global_output_properties_set: global_property_set = a_global_property_set
+			local_output_properties_set: local_property_set = a_local_property_set
 			href_set: href = an_href
 			validation_action_set: validation_action = a_validation_action
 			schema_type_set: schema_type = a_schema_type
 			formatting_attributes_set: formatting_attributes = some_formatting_attributes
 			namespace_resolver_set: namespace_resolver = a_namespace_resolver
 			content_set: content = a_content
+			format_set: format = a_format
 		end
 
 feature -- Access
 	
-	property_set: XM_XSLT_OUTPUT_PROPERTIES
-			-- Output properties
+	global_property_set: XM_XSLT_OUTPUT_PROPERTIES
+			-- Global output properties
+
+	local_property_set: XM_XSLT_OUTPUT_PROPERTIES
+			-- Local output properties
 
 	href: XM_XPATH_EXPRESSION
 			--	Optional URI for output destination
@@ -180,6 +192,12 @@ feature -- Optimization
 					href := href.replacement_expression; adopt_child_expression (href)
 				end
 			end
+			if format /= Void then
+				format.check_static_type (a_context, a_context_item_type)
+				if format.was_expression_replaced then
+					format := format.replacement_expression; adopt_child_expression (format)
+				end
+			end
 			from
 				a_cursor := formatting_attributes.new_cursor; a_cursor.start
 			until
@@ -211,6 +229,13 @@ feature -- Optimization
 					href := href.replacement_expression; adopt_child_expression (href)
 				end
 			end
+			if format /= Void then
+				format.optimize (a_context, a_context_item_type)
+				if format.was_expression_replaced then
+					format := format.replacement_expression; adopt_child_expression (format)
+				end
+			end
+			-- TODO: if `format' is a string literal, evaluate now
 			from
 				a_cursor := formatting_attributes.new_cursor; a_cursor.start
 			until
@@ -265,11 +290,6 @@ feature -- Evaluation
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			an_output_resolver: XM_XSLT_OUTPUT_URI_RESOLVER
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
-			a_fingerprint: INTEGER
-			an_expression: XM_XPATH_EXPRESSION
-			a_value: XM_XPATH_STRING_VALUE
-			a_property_set: XM_XSLT_OUTPUT_PROPERTIES
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			a_uri: UT_URI
 			a_uri_to_use: STRING
@@ -317,28 +337,7 @@ feature -- Evaluation
 								an_error.set_location (system_id, line_number)
 								a_transformer.report_fatal_error (an_error)
 							else
-								a_property_set := property_set
-								if formatting_attributes.count > 0 then
-									a_property_set := property_set.another
-									from
-										a_cursor := formatting_attributes.new_cursor; a_cursor.start
-									until
-										a_cursor.after
-									loop
-										a_fingerprint := a_cursor.key
-										an_expression := a_cursor.item
-										an_expression.evaluate_as_string (a_context)
-										a_value :=  an_expression.last_evaluated_string
-										if a_value.is_error then
-											a_value.error_value.set_location (system_id, line_number)
-											a_transformer.report_fatal_error (a_value.error_value)
-											a_cursor.go_after
-										else
-											a_property_set.set_property (a_fingerprint, a_value.string_value, namespace_resolver)
-											a_cursor.forth
-										end
-									end
-								end
+								process_formatting_attributes (a_new_context, a_transformer)
 							end
 						end
 					end
@@ -346,7 +345,7 @@ feature -- Evaluation
 			end
 			if not a_transformer.is_error then
 				-- TODO - next-in-chain processing
-				a_new_context.change_output_destination (a_property_set, a_result, True, validation_action, schema_type)
+				a_new_context.change_output_destination (computed_property_set, a_result, True, validation_action, schema_type)
 				a_receiver := a_new_context.current_receiver
 				a_receiver.start_document
 				content.process (a_new_context)
@@ -361,14 +360,173 @@ feature {NONE} -- Implementation
 	content: XM_XPATH_EXPRESSION
 			-- Sequence constructor
 
+	format: XM_XPATH_EXPRESSION
+			-- Format attribute if not known at compile time
+
+	computed_property_set: XM_XSLT_OUTPUT_PROPERTIES
+			-- Merged and computed output properties
+
+	process_format_attribute (a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER) is
+			-- Evaluate and process `format'.
+		require
+			format_not_void: format /= Void
+			context_not_void: a_context /= Void
+			transformer_not_void: a_transformer /= Void
+			no_previous_error: not a_transformer.is_error
+		local
+			an_error: XM_XPATH_ERROR_VALUE
+			a_parser: XM_XPATH_QNAME_PARSER
+			a_uri: STRING
+			a_fingerprint: INTEGER
+		do
+			format.evaluate_as_string (a_context)
+			if format.last_evaluated_string.is_error then
+				create an_error.make_from_string (STRING_.concat ("Error evaluating 'format' attribute at runtime. Error text was: ", format.last_evaluated_string.error_value.error_message) ,
+															 Xpath_errors_uri, "XTDE1460", Dynamic_error)
+				a_transformer.report_fatal_error (an_error)
+			else
+				create a_parser.make (format.last_evaluated_string.string_value)
+				if not a_parser.is_valid then
+					create an_error.make_from_string ("'format' attribute does not evaluate to a lexical QName",
+																 Xpath_errors_uri, "XTDE1460", Dynamic_error)
+					a_transformer.report_fatal_error (an_error)
+				else
+					a_uri := namespace_resolver.uri_for_defaulted_prefix (a_parser.optional_prefix, False)
+					if a_uri = Void then
+						create an_error.make_from_string ("The evaluated prefix in the 'format' attribute is undeclared",
+																	 Xpath_errors_uri, "XTDE1460", Dynamic_error)
+						a_transformer.report_fatal_error (an_error)
+					else
+						if shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
+							a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+						else
+							shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
+							a_fingerprint := fingerprint_from_name_code (shared_name_pool.last_name_code)
+						end
+						if executable.has_output_properties (a_fingerprint) then
+							computed_property_set := executable.output_properties (a_fingerprint)
+						else
+							create an_error.make_from_string (STRING_.concat ("Thre is no output definition named ", format.last_evaluated_string.string_value),
+																		 Xpath_errors_uri, "XTDE1460", Dynamic_error)
+							a_transformer.report_fatal_error (an_error)
+						end
+					end
+				end
+			end
+		ensure
+			error_or_computed_property_set_not_void: not a_transformer.is_error implies computed_property_set /= Void
+		end
+
+	process_formatting_attributes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER) is
+			-- Merge formatting attributes from xsl:output and xsl:result-document (both static and AVTs).
+		require
+			context_not_void: a_context /= Void
+			transformer_not_void: a_transformer /= Void
+			no_previous_error: not a_transformer.is_error
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			a_fingerprint: INTEGER
+			an_expression: XM_XPATH_EXPRESSION
+			a_value: XM_XPATH_STRING_VALUE
+		do			
+			if format /= Void then
+				process_format_attribute (a_context, a_transformer)
+			else
+				computed_property_set := global_property_set.another			
+			end
+			if not a_transformer.is_error then
+				merge_local_properties
+				if formatting_attributes.count > 0 then
+					-- AVT local properties
+					from
+						a_cursor := formatting_attributes.new_cursor; a_cursor.start
+					until
+						a_cursor.after
+					loop
+						a_fingerprint := a_cursor.key
+						an_expression := a_cursor.item
+						an_expression.evaluate_as_string (a_context)
+						a_value :=  an_expression.last_evaluated_string
+						if a_value.is_error then
+							a_value.error_value.set_location (system_id, line_number)
+							a_transformer.report_fatal_error (a_value.error_value)
+							a_cursor.go_after
+						else
+							computed_property_set.set_property (a_fingerprint, a_value.string_value, namespace_resolver)
+							a_cursor.forth
+						end
+					end
+				end
+			end
+		ensure
+			error_or_computed_property_set_not_void: not a_transformer.is_error implies computed_property_set /= Void
+		end
+
+	merge_local_properties is
+			-- Merge `local_property_set' into `computed_property_set'.
+		require
+			computed_property_set_not_void: computed_property_set /= Void
+		do
+			if not local_property_set.method.is_empty then
+				computed_property_set.set_method (local_property_set.method, Platform.Maximum_integer - 3)
+			end
+			if not local_property_set.is_default_version then
+				computed_property_set.set_version (local_property_set.version, Platform.Maximum_integer - 3)
+			end
+			if local_property_set.is_encoding_set then
+				computed_property_set.set_encoding (local_property_set.encoding, Platform.Maximum_integer - 3)
+			end
+			if local_property_set.is_byte_order_mark_set then
+				computed_property_set.set_byte_order_mark_required (local_property_set.byte_order_mark_required, Platform.Maximum_integer - 3)
+			end
+			computed_property_set.merge_cdata_sections (local_property_set.cdata_section_elements)
+			if local_property_set.doctype_public /= Void then
+				computed_property_set.set_doctype_public (local_property_set.doctype_public, Platform.Maximum_integer - 3)
+			end
+			if local_property_set.doctype_system /= Void then
+				computed_property_set.set_doctype_system (local_property_set.doctype_system, Platform.Maximum_integer - 3)
+			end
+			if local_property_set.is_escape_uri_attributes_set then
+				computed_property_set.set_escape_uri_attributes (local_property_set.escape_uri_attributes, Platform.Maximum_integer - 3)
+			end
+			if local_property_set.is_include_content_type_set then
+				computed_property_set.set_include_content_type (local_property_set.include_content_type, Platform.Maximum_integer - 3)
+			end
+			if not local_property_set.is_default_indent then
+				computed_property_set.set_indent (local_property_set.indent, Platform.Maximum_integer - 3)
+			end
+			if not local_property_set.is_default_media_type then
+				computed_property_set.set_media_type (local_property_set.media_type, Platform.Maximum_integer - 3)
+			end
+			if local_property_set.normalization_form /= Void then
+				computed_property_set.set_normalization_form (local_property_set.normalization_form, Platform.Maximum_integer - 3)
+			end
+			if local_property_set.is_omit_xml_declaration_set then
+				computed_property_set.set_omit_xml_declaration (local_property_set.omit_xml_declaration, Platform.Maximum_integer - 3)
+			end
+			if local_property_set.is_standalone_set then
+				if local_property_set.standalone = Void then
+					computed_property_set.set_standalone ("omit", Platform.Maximum_integer - 3)
+				else
+					computed_property_set.set_standalone (local_property_set.standalone, Platform.Maximum_integer - 3)
+				end
+			end
+			if local_property_set.is_undeclare_prefixes_set then
+				computed_property_set.set_undeclare_prefixes (local_property_set.undeclare_prefixes, Platform.Maximum_integer - 3)
+			end
+			computed_property_set.merge_character_maps (local_property_set.used_character_maps)
+		end
+
 invariant
 
 	base_uri: initialized implies base_uri /= Void
-	property_set_not_void: initialized implies property_set /= Void
+	global_property_set_not_void: initialized implies global_property_set /= Void
+	local_property_set_not_void: initialized implies local_property_set /= Void
 	only_basic_xslt_as_yet: initialized implies validation_action = Validation_strip
 	no_schema_type_as_yet: initialized implies schema_type = Void
 	formatting_attributes_not_void: initialized implies formatting_attributes /= Void
 	content_not_void: initialized implies content /= Void
+	namespace_resolver_not_void: format /= Void implies namespace_resolver /= Void
 
 end
 

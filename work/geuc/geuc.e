@@ -625,7 +625,7 @@ feature -- Composition
 	store_composition (a_code_point: INTEGER; a_value: DS_ARRAYED_LIST [INTEGER]) is
 			-- Store `a_code_point' as a canonical composition.
 		require
-			valid_code_point: unicode.valid_code (a_code_point)
+			valid_code_point: unicode.is_bmp_code_point (a_code_point)
 			not_hangul_syllable: not is_hangul_syllable (a_code_point)
 			value_not_void: a_value /= Void
 		local
@@ -1225,7 +1225,7 @@ feature {NONE} -- Implementation
 							a_value := Void
 						else
 							a_value := a_data_point.decomposition_mapping
-							if a_value /= Void then store_composition (a_code_point, a_value) end
+							if unicode.is_bmp_code_point (a_code_point) and a_value /= Void then store_composition (a_code_point, a_value) end
 						end
 						if a_value /= Void then segment_all_empty := False; plane_all_empty := False	end
 						a_segment.put (a_value, k); k := k + 1

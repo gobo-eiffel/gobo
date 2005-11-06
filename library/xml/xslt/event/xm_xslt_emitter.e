@@ -24,6 +24,13 @@ inherit
 	UC_UNICODE_ROUTINES
 		export {NONE} all end
 
+	ST_UNICODE_NORMALIZATION_ROUTINES
+		export
+			{NONE} all
+		undefine
+			valid_code
+		end
+
 	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Access
@@ -37,16 +44,37 @@ feature -- Access
 	character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER
 			-- Optional character-map expander 
 
-	normalized_string (a_value: STRING) : STRING is
+	normalization_form: INTEGER
+			-- Requested_normalization form
+
+	No_normalization: INTEGER is -1
+			-- Default for `normalization_form'
+	
+	normalized_string (a_value: STRING): STRING is
 			-- Unicode-normalized version of `a_value'
 		require
 			value_not_void: a_value /= Void
 			-- and then URI escaping and character mapping has not been performed
 		do
-
-			-- TODO
-
-			Result := a_value
+			if a_value.is_empty then
+				Result := a_value
+			else
+				inspect
+					normalization_form
+				when No_normalization then
+					Result := a_value
+				when Nfc then
+					Result := to_nfc (a_value)
+				when Nfkc then
+					Result := to_nfkc (a_value)
+				when Nfd then
+					Result := as_nfd (a_value)
+				when Nfkd then
+					Result := as_nfkd (a_value)
+				end
+			end
+		ensure
+			normalized_string_not_void: Result /= Void
 		end
 
 	is_xml_emitter: BOOLEAN is
@@ -141,6 +169,33 @@ feature -- Element change
 			output_properties_set: output_properties = some_output_properties
 		end
 
+	set_normalization_form is
+			-- Set `normalization_form'.
+		local
+			a_request, a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
+		do
+			a_request := output_properties.normalization_form
+			if a_request = Void then
+				normalization_form := No_normalization
+			elseif STRING_.same_string (a_request, "none") then
+				normalization_form := No_normalization
+			elseif STRING_.same_string (a_request, "NFC") then
+				normalization_form := Nfc
+			elseif STRING_.same_string (a_request, "NFD") then
+				normalization_form := Nfd				
+			elseif STRING_.same_string (a_request, "NFKC") then
+				normalization_form := Nfkc
+			elseif STRING_.same_string (a_request, "NFKD") then
+				normalization_form := Nfkd
+			else
+				a_message := STRING_.concat ("The value for the 'normalization-form' attribute is not supported by the serializser. Found: ", a_request)
+				a_message := STRING_.appended_string (a_message, "%N. Only 'NFC', 'NFKC', 'NFD', 'NFKD' and 'none' are supported")
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "SESU0011", Dynamic_error)
+				transformer.report_fatal_error (an_error)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	transformer: XM_XSLT_TRANSFORMER
@@ -151,6 +206,7 @@ invariant
 	system_id_not_void: system_id /= Void
 	output_properties_not_void: output_properties /= Void
 	transformer_not_void: transformer /= Void
+	normalization_form: normalization_form >= No_normalization and normalization_form <= Nfkd
 
 end
 
