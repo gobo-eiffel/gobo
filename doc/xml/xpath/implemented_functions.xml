@@ -473,8 +473,8 @@ revision: "$Revision$"
 	  </row>	
 	  <row>
 	    <entry>fn:normalize-unicode</entry>
-	    <entry>No</entry>
-	    <entry>No</entry>
+	    <entry>Yes</entry>
+	    <entry>Yes</entry>
 	    <entry>None</entry>
 	  </row>	
 	  <row>
