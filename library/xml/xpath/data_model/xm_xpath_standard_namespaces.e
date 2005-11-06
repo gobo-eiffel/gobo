@@ -500,6 +500,7 @@ feature -- Access
 	Name_attribute: STRING is "name"
 	Namespace_attribute: STRING is "namespace"
 	Nan_attribute: STRING is "NaN"
+	Normalization_form_attribute: STRING is "normalization-form"
 	Omit_xml_declaration_attribute: STRING is "omit-xml-declaration"
 	Order_attribute: STRING is "order"
 	Ordinal_attribute: STRING is "ordinal"

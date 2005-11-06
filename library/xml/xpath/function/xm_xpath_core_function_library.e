@@ -172,6 +172,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 2
 			elseif a_fingerprint = Normalize_space_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
+			elseif a_fingerprint = Normalize_unicode_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
 			elseif a_fingerprint = Not_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Number_function_type_code then
@@ -402,6 +404,8 @@ feature -- Element change
 				create {XM_XPATH_NAMESPACE_URI_FROM_QNAME} a_function_call.make
 			elseif a_fingerprint = Normalize_space_function_type_code then
 				create {XM_XPATH_NORMALIZE_SPACE} a_function_call.make
+			elseif a_fingerprint = Normalize_unicode_function_type_code then
+				create {XM_XPATH_NORMALIZE_UNICODE} a_function_call.make
 			elseif a_fingerprint = Not_function_type_code then
 				create {XM_XPATH_NOT} a_function_call.make
 			elseif a_fingerprint = Number_function_type_code then
