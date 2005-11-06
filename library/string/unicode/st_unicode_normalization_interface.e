@@ -33,7 +33,7 @@ inherit
 
 feature -- Access
 
-	is_nfd_normalized_string (a_source: STRING): BOOLEAN is
+	is_nfd (a_source: STRING): BOOLEAN is
 			-- Is `a_source' in NFD normal form?
 		require
 			source_not_void: a_source /= Void
@@ -51,7 +51,7 @@ feature -- Access
 			end
 		end
 
-	is_nfkd_normalized_string (a_source: STRING): BOOLEAN is
+	is_nfkd (a_source: STRING): BOOLEAN is
 			-- Is `a_source' in NFKD normal form?
 		require
 			source_not_void: a_source /= Void
@@ -69,7 +69,7 @@ feature -- Access
 			end
 		end
 
-	is_nfc_normalized_string (a_source: STRING): BOOLEAN is
+	is_nfc (a_source: STRING): BOOLEAN is
 			-- Is `a_source' in NFC normal form?
 		require
 			source_not_void: a_source /= Void
@@ -80,11 +80,11 @@ feature -- Access
 			if a_state.is_true then
 				Result := True
 			elseif a_state.is_undefined then
-				Result := STRING_.same_string (a_source, to_nfc_normalized_string (a_source))
+				Result := STRING_.same_string (a_source, to_nfc (a_source))
 			end
 		end
 
-	is_nfkc_normalized_string (a_source: STRING): BOOLEAN is
+	is_nfkc (a_source: STRING): BOOLEAN is
 			-- Is `a_source' in NFKC normal form?
 		require
 			source_not_void: a_source /= Void
@@ -95,11 +95,11 @@ feature -- Access
 			if a_state.is_true then
 				Result := True
 			elseif a_state.is_undefined then
-				Result := STRING_.same_string (a_source, to_nfkc_normalized_string (a_source))
+				Result := STRING_.same_string (a_source, to_nfkc (a_source))
 			end
 		end
 
-	as_nfd_normalized_string (a_source: STRING): STRING is
+	as_nfd (a_source: STRING): STRING is
 			-- Canonical decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -120,14 +120,14 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-			nfd: is_nfd_normalized_string (Result)
+			nfd: is_nfd (Result)
 		end
 
-	to_nfd_normalized_string (a_source: STRING): STRING is
+	to_nfd (a_source: STRING): STRING is
 			-- Canonical decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
-			source_not_normalized: not is_nfd_normalized_string (a_source)
+			source_not_normalized: not is_nfd (a_source)
 		local
 			changed: DS_CELL [BOOLEAN]
 		do
@@ -139,11 +139,11 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-			nfd: is_nfd_normalized_string (Result)
+			nfd: is_nfd (Result)
 			new_object: Result /= a_source
 		end
 
-	as_nfkd_normalized_string (a_source: STRING): STRING is
+	as_nfkd (a_source: STRING): STRING is
 			-- Compatibility decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -164,14 +164,14 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-			nfd: is_nfd_normalized_string (Result)
+			nfd: is_nfd (Result)
 		end
 
-	to_nfkd_normalized_string (a_source: STRING): STRING is
+	to_nfkd (a_source: STRING): STRING is
 			-- Compatibility decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
-			source_not_normalized: not is_nfd_normalized_string (a_source)
+			source_not_normalized: not is_nfd (a_source)
 		local
 			changed: DS_CELL [BOOLEAN]
 		do
@@ -183,11 +183,11 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-			nfd: is_nfd_normalized_string (Result)
+			nfd: is_nfd (Result)
 			new_object: Result /= a_source
 		end
 
-	to_nfc_normalized_string (a_source: STRING): STRING is
+	to_nfc (a_source: STRING): STRING is
 			-- Canonical decomposition then canonical composition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -205,11 +205,11 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-			nfc: is_nfc_normalized_string (Result)
+			nfc: is_nfc (Result)
 			new_object: Result /= a_source
 		end
 
-	to_nfkc_normalized_string (a_source: STRING): STRING is
+	to_nfkc (a_source: STRING): STRING is
 			-- Compatibility decomposition then canonical composition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -227,7 +227,7 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-			nfkc: is_nfkc_normalized_string (Result)
+			nfkc: is_nfkc (Result)
 			new_object: Result /= a_source
 		end
 
