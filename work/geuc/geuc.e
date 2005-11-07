@@ -62,13 +62,13 @@ feature -- Processing
 		do
 			nb := Arguments.argument_count
 			if nb = 0 then
-				file_name_prefix := "uc_"
-				normalization_file_name_prefix := "st_unicode_"
+				kernel_file_name_prefix := "uc_"
+				file_name_prefix := "st_unicode_"
 			elseif nb = 1 then
 				arg := Arguments.argument (1)
 				if arg.count > 10 and then arg.substring (1, 13).is_equal ("--uc_version=") then
-					file_name_prefix := "uc_" + arg.substring (14, arg.count).as_lower + "_"
-					normalization_file_name_prefix := "st_unicode_" + arg.substring (14, arg.count).as_lower + "_"
+					kernel_file_name_prefix := "uc_" + arg.substring (14, arg.count).as_lower + "_"
+					file_name_prefix := "st_unicode_" + arg.substring (14, arg.count).as_lower + "_"
 				else
 					report_general_message ("Usage is geuc [--uc_version=<version-prefix>]")
 					Exceptions.die (1)
@@ -79,7 +79,7 @@ feature -- Processing
 				Exceptions.die (1)
 			end
 		ensure
-			file_name_prefix_void: file_name_prefix /= Void
+			kernel_file_name_prefix_void: kernel_file_name_prefix /= Void
 		end
 
 	parse_character_classes is
@@ -267,30 +267,30 @@ feature -- Processing
 
 feature -- Code generation
 
-	file_name_prefix: STRING
-			-- Prefix for generated file names
+	kernel_file_name_prefix: STRING
+			-- Prefix for generated kernel file names
 
-	normalization_file_name_prefix: STRING
-			-- Prefix for generated normalization file names
+	file_name_prefix: STRING
+			-- Prefix for other generated file names
+
+	kernel_class_name_prefix: STRING is
+			-- Prefix for generated kernel class names
+		require
+			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
+		do
+			Result := kernel_file_name_prefix.as_upper
+		ensure
+			kernel_class_name_prefix_not_void: Result /= Void
+		end
 
 	class_name_prefix: STRING is
-			-- Prefix for generated class names
+			-- Prefix for other generated class names
 		require
 			file_name_prefix_not_void: file_name_prefix /= Void
 		do
 			Result := file_name_prefix.as_upper
 		ensure
 			class_name_prefix_not_void: Result /= Void
-		end
-
-	normalization_class_name_prefix: STRING is
-			-- Prefix for generated normalization_class names
-		require
-			file_name_prefix_not_void: file_name_prefix /= Void
-		do
-			Result := normalization_file_name_prefix.as_upper
-		ensure
-			normalization_class_name_prefix_not_void: Result /= Void
 		end
 
 	generate_character_class_routines is
@@ -317,7 +317,7 @@ feature -- Code generation
 			an_output_file.put_string ("class ")
 			an_output_file.put_string (class_name_prefix)
 			an_output_file.put_string ("CHARACTER_CLASS_ROUTINES%N%N")
-			an_output_file.put_string ("inherit%N%N%TUC_CHARACTER_CLASS_INTERFACE%N%N")
+			an_output_file.put_string ("inherit%N%N%TST_UNICODE_CHARACTER_CLASS_INTERFACE%N%N")
 			an_output_file.put_string ("feature {NONE} -- Implementation%N%N")
 			write_character_class_array (an_output_file)
 			write_decimal_value_array (an_output_file)
@@ -333,12 +333,12 @@ feature -- Code generation
 			-- Generate lower-case routines from `code_points' data.
 		require
 			code_points_exist: code_points /= Void
-			file_name_prefix_not_void: file_name_prefix /= Void
-			class_name_prefix_not_void: class_name_prefix /= Void
+			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
+			kernel_class_name_prefix_not_void: kernel_class_name_prefix /= Void
 		local
 			an_output_file:  KL_TEXT_OUTPUT_FILE
 		do
-			create an_output_file.make (file_name_prefix + "ctype_lowercase.e")
+			create an_output_file.make (kernel_file_name_prefix + "ctype_lowercase.e")
 			an_output_file.open_write
 			an_output_file.put_string ("indexing%N%N")
 			an_output_file.put_string ("%Tdescription:%N%N")
@@ -351,7 +351,7 @@ feature -- Code generation
 			an_output_file.put_string ("%Tdate: %"$Date$%"%N")
 			an_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
 			an_output_file.put_string ("class ")
-			an_output_file.put_string (class_name_prefix)
+			an_output_file.put_string (kernel_class_name_prefix)
 			an_output_file.put_string ("CTYPE_LOWERCASE%N%N")
 			an_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
 			an_output_file.put_string ("feature {NONE} -- Implementation%N%N")
@@ -364,12 +364,12 @@ feature -- Code generation
 			-- Generate upper-case routines from `code_points' data.
 		require
 			code_points_exist: code_points /= Void
-			file_name_prefix_not_void: file_name_prefix /= Void
-			class_name_prefix_not_void: class_name_prefix /= Void
+			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
+			kernel_class_name_prefix_not_void: kernel_class_name_prefix /= Void
 		local
 			an_output_file:  KL_TEXT_OUTPUT_FILE
 		do
-			create an_output_file.make (file_name_prefix + "ctype_uppercase.e")
+			create an_output_file.make (kernel_file_name_prefix + "ctype_uppercase.e")
 			an_output_file.open_write
 			an_output_file.put_string ("indexing%N%N")
 			an_output_file.put_string ("%Tdescription:%N%N")
@@ -382,7 +382,7 @@ feature -- Code generation
 			an_output_file.put_string ("%Tdate: %"$Date$%"%N")
 			an_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
 			an_output_file.put_string ("class ")
-			an_output_file.put_string (class_name_prefix)
+			an_output_file.put_string (kernel_class_name_prefix)
 			an_output_file.put_string ("CTYPE_UPPERCASE%N%N")
 			an_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
 			an_output_file.put_string ("feature {NONE} -- Implementation%N%N")
@@ -395,12 +395,12 @@ feature -- Code generation
 			-- Generate title-case routines from `code_points' data.
 		require
 			code_points_exist: code_points /= Void
-			file_name_prefix_not_void: file_name_prefix /= Void
-			class_name_prefix_not_void: class_name_prefix /= Void
+			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
+			kernel_class_name_prefix_not_void: kernel_class_name_prefix /= Void
 		local
 			an_output_file:  KL_TEXT_OUTPUT_FILE
 		do
-			create an_output_file.make (file_name_prefix + "ctype_titlecase.e")
+			create an_output_file.make (kernel_file_name_prefix + "ctype_titlecase.e")
 			an_output_file.open_write
 			an_output_file.put_string ("indexing%N%N")
 			an_output_file.put_string ("%Tdescription:%N%N")
@@ -413,7 +413,7 @@ feature -- Code generation
 			an_output_file.put_string ("%Tdate: %"$Date$%"%N")
 			an_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
 			an_output_file.put_string ("class ")
-			an_output_file.put_string (class_name_prefix)
+			an_output_file.put_string (kernel_class_name_prefix)
 			an_output_file.put_string ("CTYPE_TITLECASE%N%N")
 			an_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
 			an_output_file.put_string ("feature {NONE} -- Implementation%N%N")
@@ -431,7 +431,7 @@ feature -- Code generation
 		local
 			an_output_file:  KL_TEXT_OUTPUT_FILE
 		do
-			create an_output_file.make (normalization_file_name_prefix + "normalization_routines.e")
+			create an_output_file.make (file_name_prefix + "normalization_routines.e")
 			an_output_file.open_write
 			an_output_file.put_string ("indexing%N%N")
 			an_output_file.put_string ("%Tdescription:%N%N")
@@ -444,7 +444,7 @@ feature -- Code generation
 			an_output_file.put_string ("%Tdate: %"$Date$%"%N")
 			an_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
 			an_output_file.put_string ("class ")
-			an_output_file.put_string (normalization_class_name_prefix)
+			an_output_file.put_string (class_name_prefix)
 			an_output_file.put_string ("NORMALIZATION_ROUTINES%N%N")
 			an_output_file.put_string ("inherit%N%N%TST_UNICODE_NORMALIZATION_INTERFACE%N%N")
 			an_output_file.put_string ("feature {NONE} -- Implementation%N%N")

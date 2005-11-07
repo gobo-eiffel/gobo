@@ -16,7 +16,7 @@ inherit
 
 	XM_UNICODE_CHARACTERS_1_1
 
-	UC_IMPORTED_CHARACTER_CLASS_ROUTINES
+	ST_UNICODE_IMPORTED_CHARACTER_CLASS_ROUTINES
 		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
@@ -49,7 +49,7 @@ feature -- Status report
 		require
 			positive_character_code: a_character_code > 0
 		do
-			Result := unicode_character_class.is_valid_code_point (a_character_code)
+			Result := unicode_character_class.unicode.valid_code (a_character_code)
 				and then (unicode_character_class.is_letter (a_character_code)
 							 or else unicode_character_class.is_number (a_character_code))
 		end

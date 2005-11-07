@@ -19,8 +19,8 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
-	UC_CHARACTER_CLASS_ROUTINES
-		export {NONE} all end
+-- removed 2005/11/07 as the code in `is_bad_character_code' is commented out:	ST_UNICODE_CHARACTER_CLASS_ROUTINES
+--		export {NONE} all end
 
 create
 
