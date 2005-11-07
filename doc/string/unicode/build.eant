@@ -28,6 +28,7 @@
 		<set name="previous" value="index"/>
 		<set name="current" value="index"/>
 		
+		<geant target="xslt_and_shift" arguments="classes"/>
 		<geant target="xslt_and_shift" arguments="about"/>
 		<geant target="xslt_and_shift" arguments="routines"/>
 		<geant target="xslt_and_shift" arguments="see_also"/>
@@ -47,6 +48,7 @@
 			Remove all generated files.
 		</description>
 
+		<delete file="classes.html"/>
 		<delete file="about.html"/>
 		<delete file="routines.html"/>
 		<delete file="see_also.html"/>

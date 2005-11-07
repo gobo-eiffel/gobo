@@ -51,7 +51,7 @@ This document is structured as follows:
 			<ulink url="unicode/index.html">Unicode</ulink>
 		</term>
 		<listitem><para>
-		  Normalizing Unicode strings
+		  Unicode string library
 		</para></listitem>
 	</varlistentry>
 

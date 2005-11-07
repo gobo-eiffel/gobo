@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Unicode character classes"
+
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/about">
+
+<chapterinfo>
+	<copyright>
+		<year>2005</year>
+		<holder>Colin Adams</holder>
+	</copyright>
+	<author>
+	  <firstname>Colin</firstname><surname>Adams</surname>
+	</author>
+	<email>colin-adams@users.sourceforge.net</email>
+	<date>4 November 2005</date>
+</chapterinfo>
+
+<title>Unicode character classes</title>
+
+<section>
+  <title>About character classes</title>
+
+  <para>
+    The <emphasis role="introduction">Unicode Character Database</emphasis> (UCD) defines 
+    a character class for every code-point in Unicode.
+  </para>
+
+  <para>
+    Within the UCD, these character classes are written as a single upper-case latin letter, to
+    denote the major category, followed by a single lower-case latin letter, to denote the minor category.
+    For example, if a code-point is classified as an upper case letter, then it is given the character class
+    of Lu. The 'L' denotes "letter" as the major category, and the 'u' denotes "upper-case" as the minor category.
+  </para>
+
+  <para>
+    These character classes are translated into Eiffel code as <classname>INTEGER</classname> constants in
+    <classname>UC_UNICODE_CONSTANTS</classname>. The names are structured such that they start with the minor category, 
+    are followed by the major category, and end with the word category. So we have <featurename>Uppercase_letter_category</featurename>,
+    for instance.
+  </para>
+
+  <para>
+    The character class for a given code-point can be retrieved by means of <featurename>character_class</featurename>
+    from <classname>ST_UNICODE_CHARACTER_CLASS_INTERFACE</classname>. This can be useful for defining your own 
+    classification routines. For instance, an <featurename>is_alphanumeric</featurename> routine might be 
+    defined in this way (the library doesn't provide one, as more than one plausible definition is possible).
+  </para>
+
+  <para>
+    However, some code-points can usefully be considered to be in more than one category. The UCD deals
+    with this situation by defining the principle category, and also defining various character properties.
+    For example, the code-points in the range 24B6..24CF (CIRCLED LATIN SMALL LETTER A..CIRCLED LATIN SMALL LETTER Z)
+    are classified as So (<featurename>Other_symbol_category</featurename>). But they also have the Other_Uppercase property.
+    The library handles by providing the routine <featurename>is_upper_case</featurename>, which includes all
+    code-points in <featurename>Uppercase_letter_category</featurename> and all code-points with the  Other_Uppercase property.
+  </para>
+
+</section>
+
+<section>
+  <title>How to access the character class routines provided by the library</title>
+
+  <para>
+    The character class routines provided by the library are defined in the deferred class 
+    <classname>ST_UNICODE_CHARACTER_CLASS_INTERFACE</classname>. In order to gain access to these routines
+    you can either inherit from <classname>ST_UNICODE_CHARACTER_CLASS_ROUTINES</classname>, which
+    provides information form the latest available version of unicode. or you can inherit from a class
+    for a particular version of Unicode (e.g. <classname>ST_UNICODE_V410_CHARACTER_CLASS_ROUTINES</classname> for Unicode version 4.1.0).
+  </para>
+
+  <para>
+    Alternatively, you can access these classes as clients, by inheriting from <classname>ST_UNICODE_IMPORTED_CHARACTER_CLASS_ROUTINES</classname> 
+    or <classname>ST_UNICODE_V410_IMPORTED_CHARACTER_CLASS_ROUTINES</classname>, which provide the routines
+    <featurename>unicode_character_class</featurename> and <featurename>unicode_v410_character_class</featurename> respectively.
+  </para>
+
+  <para>
+    The latter method is necessary if you want to be able to use routines from two different versions of Unicode within
+    the same class.
+  </para>
+
+</section>
+
+</chapter>

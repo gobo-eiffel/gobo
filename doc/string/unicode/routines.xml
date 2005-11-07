@@ -43,7 +43,7 @@
     Unicode, and it is also the latest and only version supported by this library.
     But 5.0.0 is currently in beta. So for the purposes of illustration, I shall assume
     that 5.0.0 is now live, and that this library supports it.
-    Do you could inherit from one of the following:
+    So you could inherit from one of the following:
 
     <variablelist>
  
@@ -90,7 +90,7 @@
       </varlistentry>
     
       <varlistentry>
-	<term>ST_UNICODE_V500_IMPORTED_NORMALIZATION_ROUTINES</term>
+	<term>ST_UNICODE_IMPORTED_V500_NORMALIZATION_ROUTINES</term>
 	<listitem>
 	  <para>
 	    This would give you indirect access to routines for version 5.0.0 of Unicode, via
@@ -101,7 +101,7 @@
       </varlistentry>
 
       <varlistentry>
-	<term>ST_UNICODE_V410_IMPORTED_NORMALIZATION_ROUTINES</term>
+	<term>ST_UNICODE_IMPORTED_V410_NORMALIZATION_ROUTINES</term>
 	<listitem>
 	  <para>
 	    This would give you indirect access to routines for version 4.1.0 of Unicode, via
@@ -173,7 +173,7 @@
      </listitem>
      <listitem><para>
        Otherwise, call <featurename>as_nfd</featurename> or <featurename>as_nfkd</featurename>.
-       You can then test for object identity, if you wish to know whether normalization was actually required.</para>
+       You can then test for object identity, if you wish to know whether normalization was actually performed.</para>
      </listitem>
     </orderedlist>
   </para>

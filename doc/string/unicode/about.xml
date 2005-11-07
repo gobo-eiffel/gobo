@@ -105,7 +105,8 @@
   <title>The four normalization forms</title>
   <para>
     Accordingly, there are four <emphasis role="definition">Normalization forms</emphasis> defined
-    in Unicode (there are additional forms defined by the W3C's Character Model - see TODO):
+    in Unicode (there are additional forms defined by the 
+    W3C's Character Model - see <ulink url="http://www.w3.org/TR/charmod-norm/">Character Model for the World Wide Web 1.0: Normalization</ulink>).
 
     <variablelist>
  
@@ -144,7 +145,7 @@
 	<listitem>
 	  <para>Normal Form Kompatibility Composition.</para>
 	  <para>
-	    This is obtained by replacing all composed characters by their compatibility decompositions, and then
+	    This is obtained by replacing all composed characters by their decompositions (whether canonical or compatibility), and then
 	    in turn replacing all decomposed sequences by their canonical compositions.
 	  </para>
 	</listitem>
