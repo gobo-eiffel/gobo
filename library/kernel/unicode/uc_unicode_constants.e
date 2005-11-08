@@ -5,7 +5,7 @@ indexing
 		"Unicode constants"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,11 +32,11 @@ feature -- Access
 --		end
 
 	maximum_bmp_character_code: INTEGER is 65535
-			-- Largest code for unicode characters in Basic Multi-ligual Plane (FFFF);
+			-- Largest code for unicode characters in Basic Multi-lingual Plane (FFFF);
 --		ensure
 --			definition: Result = 65535
 --		end
-	
+
 	minimum_ascii_character_code: INTEGER is 0
 			-- Smallest code for ASCII characters
 --		ensure
@@ -185,22 +185,22 @@ feature -- Access
 
 	Vertical_decomposition_mapping: INTEGER is 10
 			-- Decomposition mapping for vertical layout presentation form
-	
+
 	Wide_decomposition_mapping: INTEGER is 11
 			-- Decomposition mapping for wide (zenkaku) compatibility character
-	
+
 	Narrow_decomposition_mapping: INTEGER is 12
 			-- Decomposition mapping for narrow (hankaku) compatibility character
-		
+
 	Small_decomposition_mapping: INTEGER is 13
 			-- Decomposition mapping for small variant form (CNS compatibility)
-		
+
 	Square_decomposition_mapping: INTEGER is 14
 			-- Decomposition mapping for CJK squared font variant
-			
+
 	Fraction_decomposition_mapping: INTEGER is 15
 			-- Decomposition mapping for vulgar fraction form
-		
+
 	Compatibility_decomposition_mapping: INTEGER is 16
 			-- Decomposition mapping for unspecified compatibility character
 

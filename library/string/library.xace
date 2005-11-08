@@ -4,7 +4,7 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel String Library"
 		library: "Gobo Eiffel String Library"
-		copyright: "Copyright (c) 2004, Eric Bezault and others"
+		copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"

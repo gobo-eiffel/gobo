@@ -22,8 +22,9 @@ values are in use (hopefully, the changes files will tell you this).
 When all supported compilers support NATURAL_8, then we can drop these
 projections.
 
-A note on Hangul syllables and conjoining jamo behaviour.
---------------------------------------------------------
+A note on Hangul syllables and conjoining jamo behavior
+-------------------------------------------------------
+
 The UCD does not contain any decompositions for Hangul syllables and
 conjoining Hangul jamo, as these compositions/decompositions are
 completely determined algorithmically.
@@ -45,7 +46,7 @@ compared with the total Unicode array memory usage for an application.
 Usage
 -----
 
-The basic procude for use is:
+The basic procedure for use is:
 
 1) Change directory to $GOBO/work/geuc and then remove any existing
    generated classes by:
@@ -127,4 +128,5 @@ file, and use it to test the normalization code.
 These tests MUST be run after any changes, to ensure the correct
 working of the normalization code, which is highly optimized.
 
-
+--
+Copyright (c) 2005, Colin Adams and others

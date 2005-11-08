@@ -4,8 +4,8 @@ indexing
 
 		"Test features of ST_UNICODE_CHARACTER_CLASS_ROUTINES"
 
-	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ inherit
 feature -- Test
 
 	test_categories is
-			-- Test `is_upper_case etc.'.
+			-- Test `is_upper_case', etc.
 		do
 			assert ("A is upper case", is_upper_case (65))
 			assert ("@ is not upper case", not is_upper_case (64))

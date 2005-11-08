@@ -28,11 +28,13 @@ create
 feature {NONE} -- Initialization
 
 	make (a_code_point: INTEGER; a_name: STRING; some_fields: DS_LIST [STRING]) is
-			-- Establish invariant.
+			-- Create a new unicode data for `a_code_point'.
 		require
-			code_point_in_range: a_code_point >= 0 and a_code_point <= maximum_unicode_character_code
-			name_exists: a_name /= Void
-			fifteen_fields: some_fields /= Void and then some_fields.count = Field_count
+			code_point_large_enough: a_code_point >= 0
+			code_point_small_enough: a_code_point <= maximum_unicode_character_code
+			name_not_void: a_name /= Void
+			fields_not_void: some_fields /= Void
+			fifteen_fields: some_fields.count = Field_count
 		local
 			a_decimal: INTEGER
 			a_hex_code_point: STRING
@@ -103,7 +105,9 @@ feature {NONE} -- Initialization
 				is_valid := canonical_combining_class >= 0 and canonical_combining_class <= Highest_combining_class
 			end
 			if some_fields.item (6).is_empty then
-				is_valid := True; decomposition_type := Canonical_decomposition_mapping; decomposition_mapping := Void
+				is_valid := True
+				decomposition_type := Canonical_decomposition_mapping
+				decomposition_mapping := Void
 			elseif is_valid_decomposition_type (some_fields.item (6)) then
 				decomposition_type := encoded_decomposition_type (some_fields.item (6))
 				decomposition_mapping := mapped_decomposition (some_fields.item (6))
@@ -164,7 +168,7 @@ feature -- Access
 	category (a_category: STRING): INTEGER is
 			-- Coded version of `a_category', or `Unassigned_other_category' if unrecognized
 		require
-			category_exists: a_category /= Void
+			category_not_void: a_category /= Void
 		do
 			if a_category.is_equal ("Lu") then
 				Result := Uppercase_letter_category
@@ -175,7 +179,7 @@ feature -- Access
 			elseif a_category.is_equal ("Lm") then
 				Result := Modifier_letter_category
 			elseif a_category.is_equal ("Lo") then
-				Result := Other_letter_category				
+				Result := Other_letter_category
 			elseif a_category.is_equal ("Mn") then
 				Result := Non_spacing_mark_category
 			elseif a_category.is_equal ("Mc") then
@@ -217,13 +221,13 @@ feature -- Access
 			elseif a_category.is_equal ("Zp") then
 				Result := Paragraph_separator_category
 			elseif a_category.is_equal ("Cc") then
-				Result := Control_other_category				
+				Result := Control_other_category
 			elseif a_category.is_equal ("Cf") then
-				Result := Format_other_category		
+				Result := Format_other_category
 			elseif a_category.is_equal ("Cs") then
-				Result := Surrogate_other_category				
+				Result := Surrogate_other_category
 			elseif a_category.is_equal ("Co") then
-				Result := Private_other_category			
+				Result := Private_other_category
 			else
 				Result := Unassigned_other_category
 			end
@@ -232,7 +236,8 @@ feature -- Access
 	encoded_decomposition_type (a_string: STRING): INTEGER is
 			-- Decomposition type
 		require
-			string_not_empty: a_string /= Void and then not a_string.is_empty
+			string_not_void: a_string /= Void
+			string_not_empty: not a_string.is_empty
 			valid_decomposition: is_valid_decomposition_type (a_string)
 		local
 			a_splitter: ST_SPLITTER
@@ -286,7 +291,8 @@ feature -- Access
 	mapped_decomposition (a_string: STRING): DS_ARRAYED_LIST [INTEGER] is
 			-- Decomposition mapping
 		require
-			string_not_empty: a_string /= Void and then not a_string.is_empty
+			string_not_void: a_string /= Void
+			string_not_empty: not a_string.is_empty
 			valid_decomposition: is_valid_decomposition_type (a_string)
 		local
 			a_splitter: ST_SPLITTER
@@ -299,11 +305,13 @@ feature -- Access
 			a_type := some_fields.item (1)
 			j := some_fields.count
 			if STRING_.is_hexadecimal (a_type) then
-				i := 1; create Result.make (j)
+				i := 1
+				create Result.make (j)
 			else
-				i := 2; create Result.make (j - 1)
+				i := 2
+				create Result.make (j - 1)
 			end
-			from  until i > j loop
+			from until i > j loop
 				a_type := some_fields.item (i)
 				if STRING_.is_hexadecimal (a_type) then
 					Result.put_last (STRING_.hexadecimal_to_integer (a_type))
@@ -325,9 +333,10 @@ feature -- Status report
 			-- Decimal digit value
 
 	is_valid_decomposition_type (a_string: STRING): BOOLEAN is
-			-- Does `a_string; start with a valid decomposition type?
+			-- Does `a_string' start with a valid decomposition type?
 		require
-			string_not_empty: a_string /= Void and then not a_string.is_empty
+			string_not_void: a_string /= Void
+			string_not_empty: not a_string.is_empty
 		local
 			a_splitter: ST_SPLITTER
 			some_fields: DS_LIST [STRING]
@@ -360,9 +369,8 @@ feature -- Status report
 
 invariant
 
-	code_point_in_range: code_point >= 0 and then code_point <= maximum_unicode_character_code
-	name_exists: name /= Void
+	code_point_large_enough: code_point >= 0
+	code_point_small_enough: code_point <= maximum_unicode_character_code
+	name_not_void: name /= Void
 
 end
-
-	

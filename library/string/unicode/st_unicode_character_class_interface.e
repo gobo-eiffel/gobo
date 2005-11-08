@@ -4,7 +4,7 @@ indexing
 
 		"Routines for determining class of Unicode characters"
 
-	library: "Gobo Eiffel Kernel Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -18,7 +18,7 @@ inherit
 		export {NONE} all end
 
 	UC_IMPORTED_UNICODE_ROUTINES
-		
+
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
@@ -69,8 +69,7 @@ feature -- Access
 		require
 			valid_code_point: unicode.valid_code (a_code_point)
 		do
-			inspect
-				character_class (a_code_point)
+			inspect character_class (a_code_point)
 			when
 				Uppercase_letter_category, Lowercase_letter_category, Titlecase_letter_category,
 				Modifier_letter_category, Other_letter_category
@@ -118,8 +117,7 @@ feature -- Access
 		require
 			valid_code_point: unicode.valid_code (a_code_point)
 		do
-			inspect
-				character_class (a_code_point)
+			inspect character_class (a_code_point)
 			when Non_spacing_mark_category, Spacing_combining_mark_category, Enclosing_mark_category then
 				Result := True
 			else
@@ -156,8 +154,7 @@ feature -- Access
 		require
 			valid_code_point: unicode.valid_code (a_code_point)
 		do
-			inspect
-				character_class (a_code_point)
+			inspect character_class (a_code_point)
 			when Decimal_digit_number_category, Letter_number_category, Other_number_category then
 				Result := True
 			else
@@ -226,8 +223,7 @@ feature -- Access
 		require
 			valid_code_point: unicode.valid_code (a_code_point)
 		do
-			inspect
-				character_class (a_code_point)
+			inspect character_class (a_code_point)
 			when
 				Connector_punctuation_category, Dash_punctuation_category,
 				Open_punctuation_category, Close_punctuation_category,
@@ -249,7 +245,7 @@ feature -- Access
 		end
 
 	is_currency_symbol (a_code_point: INTEGER): BOOLEAN is
-			-- Is `a_code_point' a currency symbolk?
+			-- Is `a_code_point' a currency symbol?
 		require
 			valid_code_point: unicode.valid_code (a_code_point)
 		do
@@ -277,8 +273,7 @@ feature -- Access
 		require
 			valid_code_point: unicode.valid_code (a_code_point)
 		do
-			inspect
-				character_class (a_code_point)
+			inspect character_class (a_code_point)
 			when Currency_symbol_category, Modifier_symbol_category, Other_symbol_category then
 				Result := True
 			else

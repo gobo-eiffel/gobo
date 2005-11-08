@@ -24,5 +24,3 @@ feature -- Access
 			-- Decimal value for code points which are not category Nd
 
 end
-
-	

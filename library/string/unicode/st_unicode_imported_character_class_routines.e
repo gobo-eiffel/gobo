@@ -4,7 +4,7 @@ indexing
 
 		"Imported character class routines"
 
-	library: "Gobo Eiffel Kernel Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"

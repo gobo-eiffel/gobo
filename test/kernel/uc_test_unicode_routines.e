@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Test features of classes UC_UNICODE_ROUTINES"
+		"Test features of class UC_UNICODE_ROUTINES"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"

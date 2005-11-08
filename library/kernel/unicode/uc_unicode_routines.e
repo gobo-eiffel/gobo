@@ -25,7 +25,7 @@ inherit
 		export {NONE} all end
 
 feature -- Status report
-	
+
 	is_bmp_code_point (a_code_point: INTEGER): BOOLEAN is
 			-- Does `a_code_point' lie within the BMP?
 		do

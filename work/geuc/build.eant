@@ -28,31 +28,29 @@
 	</target>
 
 	<target name="install" depend="init">
-	  <description>
-	    Install generated files.
-	  </description>
-	  
-	  <move to_directory="${GOBO}/library/string/unicode">
-	    <fileset include="@(st_*.e)" />
-	  </move>
-	  <move to_directory="${GOBO}/library/kernel/unicode">
-	    <fileset include="@(uc_*.e)" />
-	  </move>
+		<description>
+			Install generated files.
+		</description>
 
+		<move to_directory="${GOBO}/library/string/unicode">
+			<fileset include="@(st_*.e)" />
+		</move>
+		<move to_directory="${GOBO}/library/kernel/unicode">
+			<fileset include="@(uc_*.e)" />
+		</move>
 	</target>
 
 	<target name="other_clean" depend="init">
-	  <description>
-	    Remove generated classes.
-	  </description>
+		<description>
+			Remove generated classes.
+		</description>
 
-	  <delete>
-	    <fileset include="@(uc_*.e)" />
-	  </delete>
-	  <delete>
-	    <fileset include="@(st_*.e)" />
-	  </delete>
-
+		<delete>
+			<fileset include="@(uc_*.e)" />
+		</delete>
+		<delete>
+			<fileset include="@(st_*.e)" />
+		</delete>
 	</target>
 
 </project>

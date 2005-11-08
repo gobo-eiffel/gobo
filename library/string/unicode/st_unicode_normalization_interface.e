@@ -4,6 +4,11 @@ indexing
 
 		"Routines for normalizing Unicode strings"
 
+	remark:
+
+		"These routines will not work on UTF-16 strings - they will %
+		%need a few modifications to account of surrogates."
+
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -27,9 +32,6 @@ inherit
 
 	UC_IMPORTED_UNICODE_ROUTINES
 		export {NONE} all end
-
-		-- N.B. These routines will not work on UTF-16 strings - they will
-		--  need a few modifications to account of surrogates.
 
 feature -- Access
 
@@ -119,8 +121,8 @@ feature -- Access
 				end
 			end
 		ensure
-			result_not_void: Result /= Void
-			nfd: is_nfd (Result)
+			as_nfd_not_void: Result /= Void
+			is_nfd: is_nfd (Result)
 		end
 
 	to_nfd (a_source: STRING): STRING is
@@ -138,8 +140,8 @@ feature -- Access
 				Result := string_from_code_points (decomposition (a_source, True, changed))
 			end
 		ensure
-			result_not_void: Result /= Void
-			nfd: is_nfd (Result)
+			to_nfd_not_void: Result /= Void
+			is_nfd: is_nfd (Result)
 			new_object: Result /= a_source
 		end
 
@@ -163,8 +165,8 @@ feature -- Access
 				end
 			end
 		ensure
-			result_not_void: Result /= Void
-			nfd: is_nfd (Result)
+			as_nfkd_not_void: Result /= Void
+			is_nfd: is_nfd (Result)
 		end
 
 	to_nfkd (a_source: STRING): STRING is
@@ -182,8 +184,8 @@ feature -- Access
 				Result := string_from_code_points (decomposition (a_source, False, changed))
 			end
 		ensure
-			result_not_void: Result /= Void
-			nfd: is_nfd (Result)
+			to_nfkd_not_void: Result /= Void
+			is_nfd: is_nfd (Result)
 			new_object: Result /= a_source
 		end
 
@@ -204,8 +206,8 @@ feature -- Access
 				Result := string_from_code_points (a_decomposition)
 			end
 		ensure
-			result_not_void: Result /= Void
-			nfc: is_nfc (Result)
+			to_nfc_not_void: Result /= Void
+			is_nfc: is_nfc (Result)
 			new_object: Result /= a_source
 		end
 
@@ -226,8 +228,8 @@ feature -- Access
 				Result := string_from_code_points (a_decomposition)
 			end
 		ensure
-			result_not_void: Result /= Void
-			nfkc: is_nfkc (Result)
+			to_nfkc_not_void: Result /= Void
+			is_nfkc: is_nfkc (Result)
 			new_object: Result /= a_source
 		end
 
@@ -242,14 +244,12 @@ feature -- Status report
 	frozen less_than (u, v: INTEGER): BOOLEAN is
 			-- Is `u' considered less than `v'?
 		do
-
-			-- This will fail to meet the post-conditions
-			--  if u and v do not represent valid code-points.
-			-- This additional implied pre-condition is met by usage
-			--  within `Current', and this routine is not exported
-			--  from `Current', so violation will not occur.
-			-- Feature frozen to avoid abuse.
-
+				-- This will fail to meet the post-conditions
+				-- if u and v do not represent valid code-points.
+				-- This additional implied pre-condition is met by usage
+				-- within `Current', and this routine is not exported
+				-- from `Current', so violation will not occur.
+				-- Feature frozen to avoid abuse.
 			if valid_code (u) and valid_code (v) then
 				Result := canonical_combining_class_property (u) < canonical_combining_class_property (v)
 			end
@@ -268,10 +268,10 @@ feature -- Property
 			a_rem  := a_code_point \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
-
 			Result := injected_canonical_combining_class (canonical_combining_class_properties.item (i).item (j).item (k))
 		ensure
-			result_in_range: Result >= 0 and Result <= 255
+			property_large_enough: Result >= 0
+			property_small_enough: Result <= 255
 		end
 
 	decomposition_type_property (a_code_point: INTEGER): INTEGER is
@@ -287,7 +287,8 @@ feature -- Property
 			k := a_rem \\ 256
 			Result := decomposition_type_properties.item (i).item (j).item (k)
 		ensure
-			result_in_range: Result >= Canonical_decomposition_mapping and Result <= Compatibility_decomposition_mapping
+			property_large_enough: Result >= Canonical_decomposition_mapping
+			property_small_enough: Result <= Compatibility_decomposition_mapping
 		end
 
 	decomposition_mapping_property (a_code_point: INTEGER): DS_ARRAYED_LIST [INTEGER] is
@@ -314,7 +315,7 @@ feature {NONE} -- Implementation
 	Nfkd: INTEGER is 2
 	Nfkc: INTEGER is 3
 			-- Normal forms
-	
+
 	quick_check (a_source: STRING; a_form: INTEGER): UT_TRISTATE is
 			-- Quick check for `a_source' being in `a_form'
 		require
@@ -325,14 +326,18 @@ feature {NONE} -- Implementation
 			a_check: UT_TRISTATE
 		do
 			create Result.make_true
-			from i := 1; len := a_source.count until Result.is_false or i > len loop
+			from
+				i := 1
+				len := a_source.count
+			until
+				Result.is_false or i > len
+			loop
 				c := a_source.item_code (i)
 				a_combining_class := canonical_combining_class_property (c)
 				if last_combining_class > a_combining_class and a_combining_class /= 0 then
 					Result.set_false
 				else
-					inspect
-						a_form
+					inspect a_form
 					when Nfd then
 						a_check := nfd_quick_check (c)
 					when Nfkd then
@@ -370,7 +375,7 @@ feature {NONE} -- Implementation
 			Result := nfd_quick_check_array.item (i).item (j).item (k)
 		ensure
 			quick_check_not_void: Result /= Void
-			boolean_result: not Result.is_undefined
+			boolean_defined: not Result.is_undefined
 		end
 
 	nfkd_quick_check (a_code_point: INTEGER): UT_TRISTATE is
@@ -387,7 +392,7 @@ feature {NONE} -- Implementation
 			Result := nfkd_quick_check_array.item (i).item (j).item (k)
 		ensure
 			quick_check_not_void: Result /= Void
-			boolean_result: not Result.is_undefined
+			boolean_defined: not Result.is_undefined
 		end
 
 	nfc_quick_check (a_code_point: INTEGER): UT_TRISTATE is
@@ -425,14 +430,16 @@ feature {NONE} -- Implementation
 	order_canonically (a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN]) is
 			-- Perform Canonical Ordering on `a_decomposition'.
 		require
-			decomposition_not_empty: a_decomposition /= Void and then not a_decomposition.is_empty
+			decomposition_not_void: a_decomposition /= Void
+			decomposition_not_empty: not a_decomposition.is_empty
 			change_flag_not_void: changed /= Void
 		local
 			a_start, a_finish, len: INTEGER
 			a_sorter: DS_BUBBLE_SORTER [INTEGER]
 		do
 			create a_sorter.make (Current)
-			from a_start := 1; len := a_decomposition.count until a_start >= len loop
+			len := a_decomposition.count
+			from a_start := 1 until a_start >= len loop
 				a_finish := end_of_combining_sequence (a_decomposition, a_start, len)
 				if not a_sorter.subsorted (a_decomposition, a_start, a_finish) then
 					a_sorter.subsort (a_decomposition, a_start, a_finish)
@@ -447,14 +454,19 @@ feature {NONE} -- Implementation
 	end_of_combining_sequence  (a_decomposition: DS_ARRAYED_LIST [INTEGER]; a_start, len: INTEGER): INTEGER is
 			-- Last character in combining sequence
 		require
-			decomposition_not_empty: a_decomposition /= Void and then not a_decomposition.is_empty
+			decomposition_not_void: a_decomposition /= Void
+			decomposition_not_empty: not a_decomposition.is_empty
 			correct_length: len = a_decomposition.count
 			start_in_range: a_start > 0 and a_start < len
 		local
 			a_combining_class: INTEGER
 			finished: BOOLEAN
 		do
-			from Result := a_start until Result >= len or finished loop
+			from
+				Result := a_start
+			until
+				Result >= len or finished
+			loop
 				if Result /= len then
 					a_combining_class := canonical_combining_class_property (a_decomposition.item (Result + 1))
 					if a_combining_class = 0 then
@@ -483,14 +495,13 @@ feature {NONE} -- Implementation
 			a_mapping := decomposition_mapping_properties.item (i).item (j).item (k)
 			if a_mapping /= Void and not (is_canonical and decomposition_type_properties.item (i).item (j).item (k) /= Canonical_decomposition_mapping) then
 				changed.put (True)
-				from x := 1; len := a_mapping.count until x > len loop
+				len := a_mapping.count
+				from x := 1 until x > len loop
 					recursively_decompose (a_mapping.item (x), is_canonical, a_decomposition, changed)
 					x := x + 1
 				end
 			else
-
-				-- no suitable decomposition
-
+					-- Not suitable decomposition.
 				a_decomposition.force_last (a_code_point)
 			end
 		end
@@ -502,10 +513,9 @@ feature {NONE} -- Implementation
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
-			from
-				a_cursor := a_decomposition.new_cursor; a_cursor.start
-				create Result.make (a_decomposition.count)
-			until a_cursor.after loop
+			create Result.make (a_decomposition.count)
+			a_cursor := a_decomposition.new_cursor
+			from a_cursor.start until a_cursor.after loop
 				Result := STRING_.appended_string (Result, unicode.code_to_string (a_cursor.item))
 				a_cursor.forth
 			end
@@ -539,24 +549,31 @@ feature {NONE} -- Implementation
 	canonically_compose (a_decomposition: DS_ARRAYED_LIST [INTEGER]) is
 			-- Canonically compose `a_decomposition' in place.
 		require
-			decomposition_not_empty: a_decomposition /= Void and then not a_decomposition.is_empty
+			decomposition_not_void: a_decomposition /= Void
+			decomposition_not_empty: not a_decomposition.is_empty
 			in_canonical_order: True
 		local
 			a_comp_pos, a_decomp_pos, a_starter, a_starter_pos: INTEGER
 			a_class, a_last_class, a_code_point, a_composite, len: INTEGER
 			a_key: DS_HASHABLE_PAIR [INTEGER, INTEGER]
 		do
-			a_decomp_pos := 1; a_comp_pos := 2
-			a_starter := a_decomposition.item (a_decomp_pos); a_starter_pos := 1
+			a_decomp_pos := 1
+			a_comp_pos := 2
+			a_starter := a_decomposition.item (a_decomp_pos)
+			a_starter_pos := 1
 			a_last_class := canonical_combining_class_property (a_starter)
-			if a_last_class /= 0 then a_last_class := 256 end -- strings starting with a combining mark
+			if a_last_class /= 0 then
+					-- Strings starting with a combining mark.
+				a_last_class := 256
+			end
 			len := a_decomposition.count
 			from
 				a_decomp_pos := a_comp_pos
 			until
 				a_decomp_pos > a_decomposition.count
 			loop
-				a_code_point := a_decomposition.item (a_decomp_pos); a_decomp_pos := a_decomp_pos + 1
+				a_code_point := a_decomposition.item (a_decomp_pos)
+				a_decomp_pos := a_decomp_pos + 1
 				a_class :=  canonical_combining_class_property (a_code_point)
 				create a_key.make (a_starter, a_code_point)
 				if composition_map.has (a_key) and (a_last_class < a_class or a_last_class = 0) then
@@ -577,11 +594,14 @@ feature {NONE} -- Implementation
 					a_comp_pos := a_comp_pos + 1
 				end
 			end
-			if a_comp_pos <= a_decomposition.count then a_decomposition.keep_first (a_comp_pos - 1) end
+			if a_comp_pos <= a_decomposition.count then
+				a_decomposition.keep_first (a_comp_pos - 1)
+			end
 		ensure
-			decomposition_not_empty: a_decomposition /= Void and then not a_decomposition.is_empty
+			decomposition_not_void: a_decomposition /= Void
+			decomposition_not_empty: not a_decomposition.is_empty
 		end
-			
+
 	nfd_quick_check_array: ARRAY [ARRAY [ARRAY [UT_TRISTATE]]] is
 			-- NFD_Quick_Check values for each code point
 		deferred
@@ -674,8 +694,7 @@ feature {NONE} -- Implementation
 			c: INTEGER
 		do
 			c := a_class -- for VE - as also the lack of .. notation
-			inspect
-				c
+			inspect c
 			when 0 then
 				Result := 0
 			when 1 then
@@ -683,75 +702,75 @@ feature {NONE} -- Implementation
 			when 2 then
 				Result := 7
 			when 3 then
-				Result := 8								
+				Result := 8
 			when 4 then
-				Result := 9								
+				Result := 9
 			when 5 then
-				Result := 10								
+				Result := 10
 			when
 				6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
 				18, 19,20, 21, 22, 23, 24, 25, 26, 27, 28,
 				29, 30, 31
-			 then
-				Result := INTEGER_.to_integer_8 (a_class + 5)								
+			then
+				Result := INTEGER_.to_integer_8 (a_class + 5)
 			when 32 then
-				Result := 84								
+				Result := 84
 			when 33 then
-				Result := 91								
+				Result := 91
 			when 34 then
-				Result := 103								
+				Result := 103
 			when 35 then
-				Result := 107								
+				Result := 107
 			when 36 then
-				Result := 118				
+				Result := 118
 			when 37 then
-				Result := 122							
+				Result := 122
 			when 38 then
-				Result := 129					
+				Result := 129
 			when 39 then
-				Result := 130							
+				Result := 130
 			when 40 then
-				Result := 132							
+				Result := 132
 			when 41 then
 				Result := 199
 			when 42 then
-				Result := 200							
+				Result := 200
 			when 43 then
-				Result := 202							
+				Result := 202
 			when 44 then
-				Result := 204							
+				Result := 204
 			when 45 then
-				Result := 208							
+				Result := 208
 			when 46 then
-				Result := 210							
+				Result := 210
 			when 47 then
-				Result := 212							
+				Result := 212
 			when 48 then
-				Result := 214							
+				Result := 214
 			when 49 then
-				Result := 216							
+				Result := 216
 			when 50 then
-				Result := 218							
+				Result := 218
 			when 51 then
-				Result := 220							
+				Result := 220
 			when 52 then
-				Result := 222							
+				Result := 222
 			when 53 then
-				Result := 224							
+				Result := 224
 			when 54 then
-				Result := 226							
+				Result := 226
 			when 55 then
-				Result := 228							
+				Result := 228
 			when 56 then
-				Result := 230							
+				Result := 230
 			when 57 then
-				Result := 232							
+				Result := 232
 			when 58 then
-				Result := 233							
+				Result := 233
 			when 59 then
-				Result := 234							
+				Result := 234
 			when 60 then
-				Result := 240							
+				Result := 240
 			end
 		ensure
 			number_in_range: Result >= 0 and Result <= 240

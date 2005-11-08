@@ -31,13 +31,13 @@ feature -- Test
 			assert ("LATIN CAPITAL A has no decomposition", decomposition_type_property (65) = Canonical_decomposition_mapping and decomposition_mapping_property (65) = Void)
 			assert ("COMBINING GREEK DIALYTIKA TONOS has a canonical decomposition", decomposition_type_property (836) = Canonical_decomposition_mapping and decomposition_mapping_property (836) /= Void)
 			assert ("COMBINING GREEK DIALYTIKA TONOS decomposes to COMBINING DIAERESIS + COMBINING ACUTE ACCENT",
-					  decomposition_mapping_property (836).count = 2 and then (decomposition_mapping_property (836).item (1) = 776 and decomposition_mapping_property (836).item (2) = 769))
+				decomposition_mapping_property (836).count = 2 and then (decomposition_mapping_property (836).item (1) = 776 and decomposition_mapping_property (836).item (2) = 769))
 			assert ("GREEK YPOGEGRAMMENI has a compatibility decomposition", decomposition_type_property (890) = Compatibility_decomposition_mapping and decomposition_mapping_property (890) /= Void)
 			assert ("GREEK YPOGEGRAMMENI decomposes to SPACE + COMBINING GREEK YPOGEGRAMMENI",
-					  decomposition_mapping_property (890).count = 2 and then (decomposition_mapping_property (890).item (1) = 32 and decomposition_mapping_property (890).item (2) = 837))
+				decomposition_mapping_property (890).count = 2 and then (decomposition_mapping_property (890).item (1) = 32 and decomposition_mapping_property (890).item (2) = 837))
 			assert ("DOUBLE-STRUCK CAPITAL C has a font variant decomposition", decomposition_type_property (8450) = Font_decomposition_mapping and decomposition_mapping_property (8450) /= Void)
 			assert ("DOUBLE-STRUCK CAPITAL C decomposes to LATIN CAPITAL CC",
-					  decomposition_mapping_property (8450).count = 1 and then decomposition_mapping_property (8450).item (1) = 67)
+				decomposition_mapping_property (8450).count = 1 and then decomposition_mapping_property (8450).item (1) = 67)
 			create changed.make (False)
 			a_string := string_from_code_points (decomposition (a_acute_c_acute_cedilla, True, changed))
 			assert ("a_acute_c_acute_cedilla decomposes canonically to a_acute_c_cedilla_accute 1", a_string /= Void and then a_string.count = 5)
@@ -71,10 +71,13 @@ feature -- Test
 						a_line := a_file.last_string
 						if not a_line.is_empty and then a_line.item (1) = '@' then
 							assert ("@Partn", a_line.count >= 6 and then a_line.substring (6, 6).is_integer)
-							is_part1	:= a_line.substring (6, 6).to_integer = 1
+							is_part1 := a_line.substring (6, 6).to_integer = 1
 						else
 							a_hash :=  a_line.index_of ('#', 1)
-							if a_hash > 0 then a_line := a_line.substring (1, a_hash - 1) end -- strip comments
+							if a_hash > 0 then
+									-- Strip comments.
+								a_line := a_line.substring (1, a_hash - 1)
+							end
 							if not a_line.is_empty then
 								some_fields := a_splitter.split_greedy (a_line)
 								if some_fields.count /= Test_file_field_count then
@@ -112,24 +115,24 @@ feature -- Access
 			Result := STRING_.appended_string (Result, unicode.code_to_string (769))
 			Result := STRING_.appended_string (Result, unicode.code_to_string (807))
 		ensure
-			four_code_points: Result /= Void and then Result.count = 4
+			string_not_void: Result /= Void
+			four_code_points: Result.count = 4
 		end
 
 	Test_file_field_count: INTEGER is 6
 			-- Number of fields in "NormalizationTest.txt"
-		
+
 feature {NONE} -- Implementation
 
 	data_dirname: STRING is
 			-- Name of directory containing data files
 		once
-			Result := file_system.nested_pathname ("${GOBO}",
-																<<"test", "string", "data">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "string", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			data_dirname_not_empty: Result /= Void and then not Result.is_empty
 		end
-	
+
 	normalization_test_filename: STRING is
 			-- Pathname of file '.txt'
 		once
@@ -175,7 +178,6 @@ feature {NONE} -- Implementation
 			assert_strings_equal ("NFKC (column 3) equals column 4 on line " + a_line_number.out + " in NormalizationTest.txt", c4, to_nfkc (c3))
 			assert_strings_equal ("NFKC (column 4) equals column 4 on line " + a_line_number.out + " in NormalizationTest.txt", c4, to_nfkc (c4))
 			assert_strings_equal ("NFKC (column 5) equals column 4 on line " + a_line_number.out + " in NormalizationTest.txt", c4, to_nfkc (c5))
-
 		end
 
 	check_all_normal_forms_identity (a_code_point: INTEGER) is
@@ -190,7 +192,8 @@ feature {NONE} -- Implementation
 	decoded_string (a_column: STRING): STRING is
 			-- String decoded from code points in `a_column'
 		require
-			column_not_empty: a_column /= Void and then not a_column.is_empty
+			a_column_not_void: a_column /= Void
+			a_column_not_empty: not a_column.is_empty
 		local
 			a_splitter: ST_SPLITTER
 			some_codes: DS_LIST [STRING]
@@ -208,7 +211,8 @@ feature {NONE} -- Implementation
 				a_cursor.forth
 			end
 		ensure
-			decoded_string_not_empty: Result /= Void and then not Result.is_empty
+			decoded_string_not_void: Result /= Void
+			decoded_string_not_empty: not Result.is_empty
 		end
 
 end
