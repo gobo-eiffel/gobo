@@ -94,6 +94,7 @@
 		</description>
 
 		<geant file="build.eant" target="${target}" dir="formatter"/>
+		<geant file="build.eant" target="${target}" dir="unicode"/>
 	</target>
 
 </project>
