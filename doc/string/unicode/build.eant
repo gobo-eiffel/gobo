@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="unicode_normalization" default="help">
+<project name="unicode" default="help">
 
 	<description>
-		description: "Gobo Eiffel Unicode Normalization Library documentation"
+		description: "Gobo Eiffel Unicode Library documentation"
 		copyright: "Copyright (c) 2005, Colin Adams and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
@@ -19,7 +19,7 @@
 
 	<target name="install">
 		<description>
-			Install the Gobo Eiffel Unicode Normalization Library documentation.
+			Install the Gobo Eiffel Unicode Library documentation.
 		</description>
 
 		<set name="xslt_processor" value="gexslt" unless="$GOBO_XSLT_PROCESSOR"/>

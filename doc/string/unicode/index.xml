@@ -3,7 +3,7 @@
 <!--
 	description:
 
-		"Gobo Eiffel Unicode string library"
+		"Gobo Eiffel Unicode String Library"
 
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
@@ -20,17 +20,13 @@
 		<holder>Colin Adams</holder>
 	</copyright>
 	<author>
-	  <firstname>Colin</firstname><surname>Adams</surname>
+		<firstname>Colin</firstname><surname>Adams</surname>
 	</author>
 	<email>colin-adams@users.sourceforge.net</email>
 	<date>4 November 2005</date>
 </chapterinfo>
 
-<title>Gobo Eiffel Unicode string library</title>
-
-<para>
-  
-</para>
+<title>Gobo Eiffel Unicode String Library</title>
 
 <para>
 This documentation is structured as follows:
@@ -38,51 +34,51 @@ This documentation is structured as follows:
 <blockquote>
 <variablelist>
  
- <varlistentry>
-    <term>
-      <link linkend="classes">Character classes</link>
-    </term>
-    <listitem><para>
-      Constants and routines for testing character class
-    </para></listitem>
-  </varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="classes">Character classes</link>
+		</term>
+		<listitem><para>
+			Constants and routines for testing character class
+		</para></listitem>
+	</varlistentry>
 
- <varlistentry>
-    <term>
-      <link linkend="about">About Unicode normalization</link>
-    </term>
-    <listitem><para>
-      What is Unicode normalization, and why might I want to use it?
-    </para></listitem>
-  </varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="about">About Unicode normalization</link>
+		</term>
+		<listitem><para>
+			What is Unicode normalization, and why might I want to use it?
+		</para></listitem>
+	</varlistentry>
 
- <varlistentry>
-    <term>
-      <link linkend="routines">Gobo Eiffel normalization routines</link>
-    </term>
-    <listitem><para>
-      What normalization routines does the Gobo Eiffel string library provide, and how do I use them?
-    </para></listitem>
-  </varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="routines">Gobo Eiffel normalization routines</link>
+		</term>
+		<listitem><para>
+			What normalization routines does the Gobo Eiffel String Library provide, and how do I use them?
+		</para></listitem>
+	</varlistentry>
  
-  <varlistentry>
-    <term>
-      <link linkend="see_also">See Also</link>
-    </term>
-    <listitem><para>
-      Other resources.
-    </para></listitem>
-  </varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="see_also">See Also</link>
+		</term>
+		<listitem><para>
+			Other resources.
+		</para></listitem>
+	</varlistentry>
   
-  <varlistentry>
-    <term>
-      <ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
-      Instructions</ulink>
-    </term>
-    <listitem><para>
-      License agreement and downloading instructions.
-    </para></listitem>
-  </varlistentry>
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
 
 </variablelist>
 </blockquote>

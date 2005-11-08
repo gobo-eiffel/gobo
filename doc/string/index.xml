@@ -21,7 +21,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date>7 November 2005</date>
 </chapterinfo>
 
 <title>Gobo Eiffel String Library</title>
@@ -51,7 +51,7 @@ This document is structured as follows:
 			<ulink url="unicode/index.html">Unicode</ulink>
 		</term>
 		<listitem><para>
-		  Unicode string library
+			Unicode String Library
 		</para></listitem>
 	</varlistentry>
 
