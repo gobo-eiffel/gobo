@@ -307,7 +307,7 @@ feature
 			document_element ?= document.document_element
 			assert ("Document element not void", document_element /= Void)
 			a_name := document_element.node_name
-			assert("root name", STRING_.same_string (a_name, "xsl:transform"))
+			assert("root name", STRING_.same_string (a_name, "BOOKLIST"))
 		end
 
 	test_document_in_error is
