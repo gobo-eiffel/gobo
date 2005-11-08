@@ -47,18 +47,18 @@ feature -- Content
 				next.on_content (a_content)
 			else
 				if in_content then
-					if is_space (last_content.item_code (last_content.count)) then
+					if is_space (last_content.item.item_code (last_content.item.count)) then
 							-- We don't know if we are at the end, so this could 
 							-- be tail whitespace.
-						last_content := STRING_.appended_string (last_content, a_content)
+						last_content.append_string (a_content)
 					else
 							-- No tail whitespace, so can be processed now.
-						next.on_content (last_content)
-						last_content := a_content
+						next.on_content (last_content.item)
+						create last_content.make (a_content)
 					end
 				else
 						-- First (non-space) content event.
-					last_content := a_content
+					create last_content.make (a_content)
 					normalize_content_head
 						-- The content event is not processed further
 						-- because it is not known whether it needs 
@@ -73,7 +73,7 @@ feature {NONE} -- Content
 	is_space_preserved: DS_ARRAYED_STACK [BOOLEAN]
 			-- Is xml:space="preserve" mode set?
 
-	last_content: STRING
+	last_content: ST_COPY_ON_WRITE_STRING
 			-- Last unprocessed content event.
 	
 	default_space_preserved: BOOLEAN is
@@ -97,7 +97,7 @@ feature {NONE} -- Content
 			if in_content then
 				normalize_content_tail
 				if last_content /= Void then
-					next.on_content (last_content)
+					next.on_content (last_content.item)
 					last_content := Void
 				end
 			end
@@ -124,24 +124,24 @@ feature {NONE} -- Content
 			from
 				i := 1
 			variant
-				last_content.count - i + 1
+				last_content.item.count - i + 1
 			until
-				i > last_content.count or else not is_space (last_content.item_code (i))
+				i > last_content.item.count or else not is_space (last_content.item.item_code (i))
 			loop
 				i := i + 1
 			end
 			
-			if i > last_content.count then
+			if i > last_content.item.count then
 					-- All content is whitespace
 				last_content := Void
 			elseif i > 1 then
 					-- Remove whitespace.
-				last_content := last_content.substring (i, last_content.count)
+				create last_content.make (last_content.item.substring (i, last_content.item.count))
 			else
 					-- Unchanged, no whitespace.
 			end
 		ensure
-			no_whitespace_at_head: in_content implies not is_space (last_content.item_code (1))
+			no_whitespace_at_head: in_content implies not is_space (last_content.item.item_code (1))
 		end
 		
 	normalize_content_tail is
@@ -152,19 +152,19 @@ feature {NONE} -- Content
 			i: INTEGER
 		do
 			from
-				i := last_content.count
+				i := last_content.item.count
 			variant
 				i
 			until
-				i = 0 or else not is_space (last_content.item_code (i))
+				i = 0 or else not is_space (last_content.item.item_code (i))
 			loop
 				i := i - 1
 			end
 			
 			if i = 0 then
 				last_content := Void
-			elseif i < last_content.count then
-				last_content := last_content.substring (1, i)
+			elseif i < last_content.item.count then
+				create last_content.make (last_content.item.substring (1, i))
 			end
 		end
 			
@@ -232,6 +232,6 @@ feature -- Events
 
 invariant
 
-	last_content_not_empty: last_content = Void or else last_content.count > 0
+	last_content_not_empty: last_content = Void or else last_content.item.count > 0
 
 end
