@@ -5,7 +5,7 @@
 <?PI1 some PI data ?>
 <BOOKLIST>
   <BOOKS>
-    <?PI2 some more PI data ?>
+    <?PI2 some more PI data - this will be filtered out ?>
     <ITEM CAT="S" xml:id="an-id">
       <TITLE >Number, the Language of Science</TITLE>
       <?PI3 yet more PI data ?>
@@ -21,7 +21,7 @@
       <PRICE>6.58</PRICE>
       <QUANTITY>5</QUANTITY>
     </ITEM>
-    <?PI4 some PI data that will be filtered out?>
+    <?PI4 some PI data that will be filtered out, as will all PIs thereafter ?>
     <ITEM CAT="S">
       <TITLE>Language &amp; the Science of Number</TITLE>
       <AUTHOR>Danzig</AUTHOR>

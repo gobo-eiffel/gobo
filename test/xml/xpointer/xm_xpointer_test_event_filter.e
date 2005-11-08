@@ -53,7 +53,7 @@ feature -- Test
 			a_parser.set_callbacks (a_filter)
 			a_parser.set_dtd_callbacks (a_filter)
 			a_parser.parse_from_system (system_id)
-			assert ("Correct output", a_sink.last_output.count = 385)
+			assert ("Correct output", a_sink.last_output.count = 338)
 		end
 
 	test_shorthand_with_dtd_declared_id is
@@ -81,7 +81,7 @@ feature -- Test
 			a_parser.set_callbacks (a_filter)
 			a_parser.set_dtd_callbacks (a_filter)
 			a_parser.parse_from_system (system_id)
-			assert ("Correct output", a_sink.last_output.count = 291)
+			assert ("Correct output", a_sink.last_output.count = 134)
 		end
 
 	test_pass_through is
@@ -107,7 +107,7 @@ feature -- Test
 			a_parser.set_callbacks (a_filter)
 			a_parser.set_dtd_callbacks (a_filter)
 			a_parser.parse_from_system (system_id)
-			assert ("Correct output", a_sink.last_output.count = 2606)
+			assert ("Correct output", a_sink.last_output.count = 2453)
 		end
 
 

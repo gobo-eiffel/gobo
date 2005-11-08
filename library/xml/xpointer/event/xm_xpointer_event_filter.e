@@ -292,6 +292,10 @@ feature -- Meta
 	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction.
 		do
+
+			-- Processing Instructions prior to the document element, and those within
+			--  the selected element, will not be filtered out.
+
 			if not is_filtering or else (is_forwarding_processing_instructions and then not is_error) then
 				Precursor (a_name, a_content)
 			end
@@ -312,6 +316,9 @@ feature -- Tag
 		local
 			an_element_qname, an_xml_prefix: STRING
 		do
+			if is_filtering then
+				is_forwarding_processing_instructions := is_forwarding
+			end
 			if not is_filtering then
 				Precursor (a_namespace, a_prefix, a_local_part)
 			elseif not is_error then
@@ -322,7 +329,7 @@ feature -- Tag
 					else
 						an_xml_prefix := a_prefix
 					end
-					is_forwarding := False
+					is_forwarding := False; is_forwarding_processing_instructions := False
 					pending_namespace := a_namespace; pending_prefix := a_prefix; pending_local_part := a_local_part
 					create pending_attribute_namespaces.make
 					create pending_attribute_prefixes.make
