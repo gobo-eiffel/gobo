@@ -46,5 +46,6 @@
 	<mount location="${GOBO}/library/parse/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
 	<mount location="${GOBO}/library/xml/library.xace"/>
+	<mount location="${GOBO}/library/string/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace" />
 </system>
