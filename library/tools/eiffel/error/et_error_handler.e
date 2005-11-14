@@ -5884,7 +5884,7 @@ feature -- Validity errors
 		end
 
 	report_gvkbs3b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.infix "<"'
+			-- Report GVKBS-3 error: wrong signature for 'CHARACTER_REF.item'
 			-- built-in routine `a_feature' in class `a_class'.
 			--
 			-- Not in ETL
@@ -5904,7 +5904,7 @@ feature -- Validity errors
 		end
 
 	report_gvkbs3c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.infix ">"'
+			-- Report GVKBS-3 error: wrong signature for 'CHARACTER_REF.set_item'
 			-- built-in routine `a_feature' in class `a_class'.
 			--
 			-- Not in ETL
@@ -5919,46 +5919,6 @@ feature -- Validity errors
 		do
 			if reportable_gvkbs3_error (a_class) then
 				create an_error.make_gvkbs3c (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs3d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.infix "<="'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs3_error (a_class) then
-				create an_error.make_gvkbs3d (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs3e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.infix ">="'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs3_error (a_class) then
-				create an_error.make_gvkbs3e (a_class, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -6239,6 +6199,26 @@ feature -- Validity errors
 		do
 			if reportable_gvkbs4_error (a_class) then
 				create an_error.make_gvkbs4n (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4o_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_and'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4o (a_class, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -11204,7 +11184,6 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- report_gibjw_error
 	-- report_gibhy_error
 	-- report_gibhx_error
 	-- report_gibgl_error

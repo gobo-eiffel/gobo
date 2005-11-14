@@ -698,14 +698,8 @@ feature {NONE} -- Feature validity
 						report_builtin_special_aliased_resized_area (a_feature)
 					when builtin_character_code then
 						report_builtin_character_code (a_feature)
-					when builtin_character_lt then
-						report_builtin_character_lt (a_feature)
-					when builtin_character_gt then
-						report_builtin_character_gt (a_feature)
-					when builtin_character_le then
-						report_builtin_character_le (a_feature)
-					when builtin_character_ge then
-						report_builtin_character_ge (a_feature)
+					when builtin_character_item then
+						report_builtin_character_item (a_feature)
 					when builtin_integer_plus then
 						report_builtin_integer_plus (a_feature)
 					when builtin_integer_minus then
@@ -732,6 +726,8 @@ feature {NONE} -- Feature validity
 						report_builtin_integer_to_character (a_feature)
 					when builtin_integer_bit_or then
 						report_builtin_integer_bit_or (a_feature)
+					when builtin_integer_bit_and then
+						report_builtin_integer_bit_and (a_feature)
 					when builtin_integer_bit_shift_left then
 						report_builtin_integer_bit_shift_left (a_feature)
 					when builtin_boolean_and then
@@ -774,6 +770,8 @@ feature {NONE} -- Feature validity
 						report_builtin_special_make (a_feature)
 					when builtin_special_put then
 						report_builtin_special_put (a_feature)
+					when builtin_character_set_item then
+						report_builtin_character_set_item (a_feature)
 					when builtin_boolean_set_item then
 						report_builtin_boolean_set_item (a_feature)
 					else
@@ -2170,51 +2168,26 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_character_lt (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'CHARACTER.infix "<"' is being analyzed.
+	report_builtin_character_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'CHARACTER_REF.item' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_character_lt)
+				current_dynamic_feature.set_builtin_code (builtin_character_item)
 				current_system.boolean_type.set_alive
 			end
 		end
 
-	report_builtin_character_gt (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'CHARACTER.infix ">"' is being analyzed.
+	report_builtin_character_set_item (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'CHARACTER_REF.set_item' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_character_gt)
-				current_system.boolean_type.set_alive
-			end
-		end
-
-	report_builtin_character_le (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'CHARACTER.infix "<="' is being analyzed.
-		require
-			no_error: not has_fatal_error
-			a_feature_not_void: a_feature /= Void
-		do
-			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_character_le)
-				current_system.boolean_type.set_alive
-			end
-		end
-
-	report_builtin_character_ge (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'CHARACTER.infix ">="' is being analyzed.
-		require
-			no_error: not has_fatal_error
-			a_feature_not_void: a_feature /= Void
-		do
-			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_character_ge)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (builtin_character_set_item)
 			end
 		end
 
@@ -2370,6 +2343,18 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (builtin_integer_bit_or)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_integer_bit_and (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.bit_and' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_bit_and)
 				current_system.integer_type.set_alive
 			end
 		end

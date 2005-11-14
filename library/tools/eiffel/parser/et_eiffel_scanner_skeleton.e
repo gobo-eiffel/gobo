@@ -475,6 +475,7 @@ feature {NONE} -- String handler
 				-- Feature names.
 			Result.force_new (-1, tokens.aliased_resized_area_name)
 			Result.force_new (-1, tokens.area_name)
+			Result.force_new (-1, tokens.bit_and_name)
 			Result.force_new (-1, tokens.bit_or_name)
 			Result.force_new (-1, tokens.bit_shift_left_name)
 			Result.force_new (-1, tokens.call_name)

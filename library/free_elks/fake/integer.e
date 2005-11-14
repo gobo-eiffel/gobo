@@ -74,6 +74,21 @@ feature
 			"built_in"
 		end
 
+	infix "|" (i: like Current): like Current is
+		do
+			Result := bit_or (i)
+		end
+
+	bit_and (i: like Current): like Current is
+		external
+			"built_in"
+		end
+
+	infix "&" (i: like Current): like Current is
+		do
+			Result := bit_and (i)
+		end
+
 	bit_shift_left (n: INTEGER): like Current is
 		external
 			"built_in"

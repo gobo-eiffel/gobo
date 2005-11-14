@@ -156,10 +156,8 @@ feature -- Built-in codes
 	builtin_special_element_size: INTEGER is 205
 	builtin_special_aliased_resized_area: INTEGER is 206
 	builtin_character_code: INTEGER is 301
-	builtin_character_lt: INTEGER is 302
-	builtin_character_gt: INTEGER is 303
-	builtin_character_le: INTEGER is 304
-	builtin_character_ge: INTEGER is 305
+	builtin_character_item: INTEGER is 302
+	builtin_character_set_item: INTEGER is 303
 	builtin_integer_plus: INTEGER is 401
 	builtin_integer_minus: INTEGER is 402
 	builtin_integer_times: INTEGER is 403
@@ -174,6 +172,7 @@ feature -- Built-in codes
 	builtin_integer_gt: INTEGER is 412
 	builtin_integer_le: INTEGER is 413
 	builtin_integer_ge: INTEGER is 414
+	builtin_integer_bit_and: INTEGER is 415
 	builtin_boolean_and_then: INTEGER is 501
 	builtin_boolean_or_else: INTEGER is 502
 	builtin_boolean_implies: INTEGER is 503

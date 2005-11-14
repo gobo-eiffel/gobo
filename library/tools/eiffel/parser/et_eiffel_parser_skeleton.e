@@ -5,7 +5,7 @@ indexing
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1862,7 +1862,31 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbu1a_error (a_class, a_feature)
 				end
-			elseif a_class = universe.character_class or a_class = universe.character_ref_class then
+			elseif a_class = universe.character_ref_class then
+				if a_feature.name.same_feature_name (tokens.item_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_character_item)
+					l_formals := a_feature.arguments
+					if l_formals /= Void and then l_formals.count /= 0 then
+							-- The signature should be 'item: CHARACTER'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs3b_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (universe.character_class, a_class, a_class, universe) then
+							-- The signature should be 'item: CHARACTER'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs3b_error (a_class, a_feature)
+					end
+				elseif a_feature.name.same_feature_name (tokens.set_item_feature_name) then
+						-- 'CHARACTER_REF.set_item' should be a procedure.
+					a_feature.set_builtin_code (tokens.builtin_character_set_item)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3c_error (a_class, a_feature)
+				else
+						-- Unknown built-in routine.
+					a_feature.set_builtin_code (tokens.builtin_unknown)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
+			elseif a_class = universe.character_class then
 				if a_feature.name.same_feature_name (tokens.code_feature_name) then
 					a_feature.set_builtin_code (tokens.builtin_character_code)
 					l_formals := a_feature.arguments
@@ -1874,70 +1898,6 @@ feature {NONE} -- Built-in
 							-- The signature should be 'code: INTEGER'.
 						set_fatal_error (a_class)
 						error_handler.report_gvkbs3a_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_lt_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_character_lt)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "<" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3b_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "<" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3b_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "<" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3b_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_gt_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_character_gt)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix ">" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3c_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix ">" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3c_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix ">" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3c_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_le_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_character_le)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "<=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3d_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "<=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3d_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "<=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3d_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_ge_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_character_ge)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix ">=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3e_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix ">=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3e_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix ">=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3e_error (a_class, a_feature)
 					end
 				else
 						-- Unknown built-in routine.
@@ -2145,6 +2105,22 @@ feature {NONE} -- Built-in
 							-- The signature should be 'bit_or (other: like Current): like Current'.
 						set_fatal_error (a_class)
 						error_handler.report_gvkbs4j_error (a_class, a_feature)
+					end
+				elseif a_feature.name.same_feature_name (tokens.bit_and_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_integer_bit_and)
+					l_formals := a_feature.arguments
+					if l_formals = Void or else l_formals.count /= 1 then
+							-- The signature should be 'bit_and (other: like Current): like Current'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs4o_error (a_class, a_feature)
+					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+							-- The signature should be 'bit_and (other: like Current): like Current'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs4o_error (a_class, a_feature)
+					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+							-- The signature should be 'bit_and (other: like Current): like Current'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs4o_error (a_class, a_feature)
 					end
 				elseif a_feature.name.same_feature_name (tokens.bit_shift_left_feature_name) then
 					a_feature.set_builtin_code (tokens.builtin_integer_bit_shift_left)
@@ -2449,32 +2425,36 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbu1a_error (a_class, a_feature)
 				end
+			elseif a_class = universe.character_ref_class then
+				if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_character_set_item)
+					l_formals := a_feature.arguments
+					if l_formals = Void or else l_formals.count /= 1 then
+							-- The signature should be 'set_item (c: CHARACTER)'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs3c_error (a_class, a_feature)
+					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.character_class, a_class, a_class, universe) then
+							-- The signature should be 'set_item (c: CHARACTER)'.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs3c_error (a_class, a_feature)
+					end
+				elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
+						-- 'CHARACTER_REF.item' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_character_item)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3b_error (a_class, a_feature)
+				else
+						-- Unknown built-in routine.
+					a_feature.set_builtin_code (tokens.builtin_unknown)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			elseif a_class = universe.character_class then
 				if a_feature.name.same_feature_name (tokens.code_feature_name) then
 						-- 'CHARACTER.code' should be a function.
 					a_feature.set_builtin_code (tokens.builtin_character_code)
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs3a_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_lt_feature_name) then
-						-- 'CHARACTER.infix "<"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_character_lt)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs3b_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_gt_feature_name) then
-						-- 'CHARACTER.infix ">"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_character_gt)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs3c_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_le_feature_name) then
-						-- 'CHARACTER.infix "<="' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_character_le)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs3d_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_ge_feature_name) then
-						-- 'CHARACTER.infix ">="' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_character_ge)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs3e_error (a_class, a_feature)
 				else
 						-- Unknown built-in routine.
 					a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -2547,6 +2527,11 @@ feature {NONE} -- Built-in
 					a_feature.set_builtin_code (tokens.builtin_integer_bit_or)
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs4j_error (a_class, a_feature)
+				elseif a_feature.name.same_feature_name (tokens.bit_and_feature_name) then
+						-- 'INTEGER.bit_and' should be a function.
+					a_feature.set_builtin_code (tokens.builtin_integer_bit_and)
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4o_error (a_class, a_feature)
 				elseif a_feature.name.same_feature_name (tokens.bit_shift_left_feature_name) then
 						-- 'INTEGER.bit_shift_left' should be a function.
 					a_feature.set_builtin_code (tokens.builtin_integer_bit_shift_left)

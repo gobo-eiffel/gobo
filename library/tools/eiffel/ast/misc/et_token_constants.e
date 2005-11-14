@@ -406,6 +406,14 @@ feature -- Feature names
 			area_feature_name_not_void: Result /= Void
 		end
 
+	bit_and_feature_name: ET_FEATURE_NAME is
+			-- 'bit_and' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (bit_and_name)
+		ensure
+			bit_and_feature_name_not_void: Result /= Void
+		end
+
 	bit_or_feature_name: ET_FEATURE_NAME is
 			-- 'bit_or' feature name
 		once
@@ -1582,6 +1590,7 @@ feature -- Keyword and symbol names
 
 	aliased_resized_area_name: STRING is "aliased_resized_area"
 	area_name: STRING is "area"
+	bit_and_name: STRING is "bit_and"
 	bit_or_name: STRING is "bit_or"
 	bit_shift_left_name: STRING is "bit_shift_left"
 	call_name: STRING is "call"
