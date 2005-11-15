@@ -6,7 +6,7 @@
 		"Getest Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2005, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date>16 November 2005</date>
 </chapterinfo>
 
 	<title>getest</title>
@@ -95,6 +95,22 @@
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>default_test</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>
+						Specify whether the feature <featurename>default_test</featurename>
+						should be included in the generated test cases.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
 				</listitem>
 			</varlistentry>
 
@@ -182,6 +198,9 @@
       </optional>
       <optional>
         <attribute name="feature"/>
+      </optional>
+      <optional>
+        <attribute name="default_test"/>
       </optional>
       <optional>
         <attribute name="generation"/>

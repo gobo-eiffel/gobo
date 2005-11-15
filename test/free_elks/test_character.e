@@ -10,16 +10,23 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_CHARACTER
+class TEST_CHARACTER
 
 inherit
 
-	TS_TEST_CASE
-
-	KL_SHARED_EIFFEL_COMPILER
-		export {NONE} all end
+	TEST_CASE
 
 feature -- Test
+
+	run_all is
+			-- Run all tests.
+		do
+			test_default_create
+			test_less_than
+			test_less_equal
+			test_greater_than
+			test_greater_equal
+		end
 
 	test_default_create is
 			-- Test feature `default_create'

@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	put (class_name: STRING; feature_names: DS_LIST [STRING]; class_prefix: STRING) is
+	put (a_class: ET_CLASS; feature_names: DS_LIST [STRING]; class_prefix: STRING) is
 			-- Add (`class_name', `feature_names') to the list of testcases.
 		require
-			class_name_not_void: class_name /= Void
+			a_classnot_void: a_class /= Void
 			feature_names_not_void: feature_names /= Void
 			no_void_feature_name: not feature_names.has (Void)
 			class_prefix_not_void: class_prefix /= Void
@@ -52,7 +52,7 @@ feature -- Element change
 			a_pair: DS_PAIR [DS_LIST [STRING], STRING]
 		do
 			create a_pair.make (feature_names, class_prefix)
-			testcases.force (a_pair, class_name)
+			testcases.force (a_pair, a_class)
 		end
 
 feature -- Generation
@@ -60,7 +60,7 @@ feature -- Generation
 	generate_test_classes is
 			-- Generate test classes.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], STRING]
+			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], ET_CLASS]
 			a_pair: DS_PAIR [DS_LIST [STRING], STRING]
 		do
 			a_cursor := testcases.new_cursor
@@ -71,16 +71,16 @@ feature -- Generation
 			end
 		end
 
-	generate_test_class (class_name: STRING;
-		feature_names: DS_LIST [STRING]; class_prefix: STRING) is
+	generate_test_class (a_class: ET_CLASS; feature_names: DS_LIST [STRING]; class_prefix: STRING) is
 			-- Generate test class `class_name'.
 		require
-			class_name_not_void: class_name /= Void
+			a_class_not_void: a_class /= Void
 			feature_names_not_void: feature_names /= Void
 			no_void_feature_name: not feature_names.has (Void)
 			class_prefix_not_void: class_prefix /= Void
 		local
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
+			a_class_name: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 			a_filename: STRING
 			a_dirname: STRING
@@ -89,9 +89,10 @@ feature -- Generation
 			i: INTEGER
 			a_cursor: DS_LIST_CURSOR [STRING]
 		do
-			create new_name.make (class_name.count + class_prefix.count)
+			a_class_name := a_class.name.upper_name
+			create new_name.make (a_class_name.count + class_prefix.count)
 			new_name.append_string (class_prefix)
-			new_name.append_string (class_name)
+			new_name.append_string (a_class_name)
 			if testgen /= Void and then testgen.count > 0 then
 				a_dirname := file_system.pathname_from_file_system (testgen, unix_file_system)
 				a_dirname := Execution_environment.interpreted_string (a_dirname)
@@ -113,8 +114,11 @@ feature -- Generation
 				a_file.put_new_line
 				a_file.put_line ("inherit")
 				a_file.put_new_line
-				a_file.put_string ("%T")
-				a_file.put_line (class_name)
+				a_file.put_character ('%T')
+				a_file.put_line (a_class_name)
+				a_file.put_line ("%T%Tredefine")
+				a_file.put_line ("%T%T%Texecute_i_th, name_of_id")
+				a_file.put_line ("%T%Tend")
 				a_file.put_new_line
 				a_file.put_line ("create")
 				a_file.put_new_line
@@ -138,7 +142,7 @@ feature -- Generation
 					a_cursor.forth
 				end
 				a_file.put_line ("%T%T%Telse")
-				a_file.put_line ("%T%T%T%T-- Unknown id.")
+				a_file.put_line ("%T%T%T%Tdefault_test")
 				a_file.put_line ("%T%T%Tend")
 				a_file.put_line ("%T%Tend")
 				a_file.put_new_line
@@ -154,7 +158,7 @@ feature -- Generation
 					a_file.put_integer (i)
 					a_file.put_line (" then")
 					a_file.put_string ("%T%T%T%TResult := %"")
-					a_file.put_string (class_name.as_upper)
+					a_file.put_string (a_class_name)
 					a_file.put_character ('.')
 					a_file.put_string (a_cursor.item.as_lower)
 					a_file.put_line ("%"")
@@ -162,10 +166,17 @@ feature -- Generation
 					a_cursor.forth
 				end
 				a_file.put_line ("%T%T%Telse")
-				a_file.put_line ("%T%T%T%TResult := %"Unknown id%"")
+				a_file.put_line ("%T%T%T%TResult := %"Default test%"")
 				a_file.put_line ("%T%T%Tend")
 				a_file.put_line ("%T%Tend")
 				a_file.put_new_line
+				if a_class.is_deferred then
+					a_file.put_line ("%Tdeferred_feature is")
+					a_file.put_line ("%T%T%T-- VE needs at least a deferred feature in a deferred class.")
+					a_file.put_line ("%T%Tdo")
+					a_file.put_line ("%T%Tend")
+					a_file.put_new_line
+				end
 				a_file.put_line ("end")
 				a_file.close
 			else
@@ -180,7 +191,7 @@ feature -- Generation
 			class_name_not_void: class_name /= Void
 		local
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
-			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], STRING]
+			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], ET_CLASS]
 			a_pair: DS_PAIR [DS_LIST [STRING], STRING]
 			a_file: KL_TEXT_OUTPUT_FILE
 			a_filename: STRING
@@ -242,7 +253,7 @@ feature -- Generation
 				a_file.put_string (class_name)
 				a_file.put_line ("%", variables)")
 				from a_cursor.start until a_cursor.after loop
-					test_name := a_cursor.key
+					test_name := a_cursor.key.name.upper_name
 					a_pair := a_cursor.item
 					nb := a_pair.first.count
 					from i := 1 until i > nb loop
@@ -281,7 +292,7 @@ feature -- Measurement
 	count: INTEGER is
 			-- Number of testcases
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], STRING]
+			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], ET_CLASS]
 			a_list: DS_LIST [STRING]
 		do
 			a_cursor := testcases.new_cursor
@@ -298,9 +309,9 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	testcases: DS_HASH_TABLE [DS_PAIR [DS_LIST [STRING], STRING], STRING]
+	testcases: DS_HASH_TABLE [DS_PAIR [DS_LIST [STRING], STRING], ET_CLASS]
 			-- Testcases (lists of feature names and
-			-- class prefix indexed by class names)
+			-- class prefix indexed by classes)
 
 invariant
 

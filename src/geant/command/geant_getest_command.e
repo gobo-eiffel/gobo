@@ -68,6 +68,9 @@ feature -- Access
 	feature_regexp: STRING
 			-- Feature regular expression
 
+	default_test_included: BOOLEAN
+			-- Should 'default_test' be included in generated testcases?
+
 	generation: BOOLEAN
 			-- Should the Eiffel classes for the testcases be generated?
 
@@ -132,6 +135,14 @@ feature -- Setting
 			feature_regexp := a_regexp
 		ensure
 			feature_regexp_set: feature_regexp = a_regexp
+		end
+
+	set_default_test_included (b: BOOLEAN) is
+			-- Set `default_test_included' to `b'.
+		do
+			default_test_included := b
+		ensure
+			default_test_included_set: default_test_included = b
 		end
 
 	set_generation (b: BOOLEAN) is
@@ -229,6 +240,9 @@ feature -- Execution
 					cmd.append_string ("--feature=%"")
 					cmd := STRING_.appended_string (cmd, feature_regexp)
 					cmd.append_string ("%" ")
+				end
+				if default_test_included then
+					cmd.append_string ("--default_test ")
 				end
 				a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)
 				a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)

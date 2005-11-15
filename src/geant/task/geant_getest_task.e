@@ -61,6 +61,9 @@ feature {NONE} -- Initialization
 				a_value := attribute_value (Feature_attribute_name)
 				command.set_feature_regexp (a_value)
 			end
+			if has_attribute (Default_test_attribute_name) then
+				command.set_default_test_included (boolean_value (Default_test_attribute_name))
+			end
 			if has_attribute (Generation_attribute_name) then
 				command.set_generation (boolean_value (Generation_attribute_name))
 			end
@@ -90,6 +93,12 @@ feature {NONE} -- Initialization
 						command.set_class_regexp (a_value)
 					elseif STRING_.same_string (a_name, Feature_attribute_name) then
 						command.set_feature_regexp (a_value)
+					elseif STRING_.same_string (a_name, Default_test_attribute_name) then
+						if STRING_.same_string (True_attribute_value, a_value) then
+							command.set_default_test_included (True)
+						else
+							command.set_default_test_included (False)
+						end
 					end
 				end
 				cs.forth
@@ -162,6 +171,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for getest 'feature'
 		once
 			Result := "feature"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Default_test_attribute_name: STRING is
+			-- Name of xml attribute for getest 'default_test'
+		once
+			Result := "default_test"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

@@ -5,7 +5,7 @@ indexing
 		"Tests"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,8 +25,12 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	variables: TS_VARIABLES
+	variables: TS_VARIABLES is
 			-- Defined variables
+		deferred
+		ensure
+			variables_not_void: Result /= Void
+		end
 
 feature -- Measurement
 
@@ -45,9 +49,5 @@ feature -- Execution
 			a_summary_not_void: a_summary /= Void
 		deferred
 		end
-
-invariant
-
-	variables_not_void: variables /= Void
 
 end

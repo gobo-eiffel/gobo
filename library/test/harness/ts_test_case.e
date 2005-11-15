@@ -26,8 +26,7 @@ feature {NONE} -- Initialization
 			a_variables_not_void: a_variables /= Void
 		do
 			id := an_id
-			variables := a_variables
-			create assertions.make
+			internal_variables := a_variables
 			initialize
 		ensure
 			id_set: id = an_id
@@ -37,11 +36,7 @@ feature {NONE} -- Initialization
 	make_default is
 			-- Default initialization.
 		do
-			create variables.make
-			create assertions.make
-		ensure
-			variables_not_void: variables /= Void
-			assertions_not_void: assertions /= Void
+			initialize
 		end
 
 feature -- Initialization
@@ -64,8 +59,23 @@ feature -- Access
 	id: INTEGER
 			-- Test case id
 
-	assertions: TS_ASSERTIONS
+	variables: TS_VARIABLES is
+			-- Defined variables
+		do
+			if internal_variables = Void then
+				create internal_variables.make
+			end
+			Result := internal_variables
+		end
+
+	assertions: TS_ASSERTIONS is
 			-- Assertions
+		do
+			if internal_assertions = Void then
+				create internal_assertions.make
+			end
+			Result := internal_assertions
+		end
 
 feature -- Measurement
 
@@ -96,6 +106,12 @@ feature -- Execution
 
 	tear_down is
 			-- Tear down after a test.
+			-- (Can be redefined in descendant classes.)
+		do
+		end
+
+	default_test is
+			-- Run default test case.
 			-- (Can be redefined in descendant classes.)
 		do
 		end
@@ -165,16 +181,29 @@ feature {NONE} -- Execution
 
 	execute_i_th (an_id: INTEGER) is
 			-- Run test case of id `an_id'.
-		deferred
+		do
+			default_test
 		end
 
 feature {NONE} -- Implementation
 
 	name_of_id (an_id: INTEGER): STRING is
 			-- Name of test case of id `an_id'
-		deferred
+		do
+			Result := "Default test"
 		ensure
 			name_not_void: Result /= Void
+		end
+
+	internal_variables: TS_VARIABLES
+			-- Internal implementation of `variables'
+
+	internal_assertions: TS_ASSERTIONS
+			-- Internal implementation of `assertions'
+
+	deferred_feature is
+			-- VE needs at least a deferred feature in a deferred class.
+		deferred
 		end
 
 end

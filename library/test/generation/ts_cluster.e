@@ -78,6 +78,9 @@ feature -- Access
 	class_prefix: STRING
 			-- Prefix of generated testcase class names
 
+	default_test_included: BOOLEAN
+			-- Should 'default_test' be included in generated testcases?
+
 feature -- Setting
 
 	set_class_regexp (a_regexp: like class_regexp) is
@@ -100,6 +103,14 @@ feature -- Setting
 			feature_regexp := a_regexp
 		ensure
 			feature_regexp_set: feature_regexp = a_regexp
+		end
+
+	set_default_test_included (b: BOOLEAN) is
+			-- Set `default_test_included' to `b'.
+		do
+			default_test_included := b
+		ensure
+			default_test_included_set: default_test_included = b
 		end
 
 feature -- Processing
@@ -148,8 +159,9 @@ feature -- Processing
 			i, nb: INTEGER
 			an_identifier: ET_IDENTIFIER
 			a_name: STRING
+			l_default_test_name: STRING
 		do
-			create feature_names.make
+			create feature_names.make_equal
 			l_procedures := a_class.procedures
 			nb := l_procedures.count
 			from i := 1 until i > nb loop
@@ -162,8 +174,14 @@ feature -- Processing
 				end
 				i := i + 1
 			end
+			if default_test_included then
+				l_default_test_name := "default_test"
+				if not feature_names.has (l_default_test_name) then
+					feature_names.put_last (l_default_test_name)
+				end
+			end
 			if not feature_names.is_empty then
-				testcases.put (a_class.name.name, feature_names, class_prefix)
+				testcases.put (a_class, feature_names, class_prefix)
 			end
 		end
 

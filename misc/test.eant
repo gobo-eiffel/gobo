@@ -66,6 +66,7 @@
 		<getest verbose="${verbose_option}" abort="${abort_option}" config="${system_dir}/getest.cfg" compile="geant ${gobo_os} -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} ${compilation_log}">
 			<attribute name="class" value="${class}" if="${class}"/>
 			<attribute name="feature" value="${feature}" if="${feature}"/>
+			<attribute name="default_test" value="true" if="${default_test}=true"/>
 			<define name="debug" value="true" if="${debug}"/>
 			<define name="full_test" value="true" if="${full_test}"/>
 		</getest>

@@ -66,6 +66,9 @@ feature -- Processing
 				if feature_regexp /= Void then
 					a_config.set_feature_regexp (feature_regexp)
 				end
+				if default_test_included then
+					a_config.set_default_test_included (default_test_included)
+				end
 				process (a_config)
 				if error_handler.error_reported then
 					Exceptions.die (1)
@@ -188,6 +191,11 @@ feature -- Access
 			-- Feature regular expression given with
 			-- the option --feature=...
 
+	default_test_included: BOOLEAN
+			-- Whether 'default_test' should be included in
+			-- generated testcases or not, as specified by the
+			-- option --default
+
 	variables: TS_VARIABLES
 			-- Defined variables
 
@@ -308,6 +316,8 @@ feature {NONE} -- Command line
 					else
 						report_usage_error
 					end
+				elseif arg.is_equal ("--default_test") then
+					default_test_included := True
 				elseif arg.is_equal ("-g") then
 					must_generate := True
 				elseif arg.is_equal ("-c") then
@@ -448,7 +458,7 @@ feature {NONE} -- Error handling
 		once
 			create Result.make ("[-aceghvV?][--help][--version][--verbose]%N%
 				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
-				%%T[--class=<regexp>][--feature=<regexp>]%N%
+				%%T[--class=<regexp>][--feature=<regexp>][--default_test]%N%
 				%%T[--compile=<command>][--se|--ise|--ve|<filename>]")
 		ensure
 			usage_message_not_void: Result /= Void

@@ -10,16 +10,40 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_ANY
+class TEST_ANY
 
 inherit
 
-	TS_TEST_CASE
+	TEST_CASE
 
 	KL_SHARED_EIFFEL_COMPILER
 		export {NONE} all end
 
 feature -- Test
+
+	run_all is
+			-- Run all tests.
+		do
+			test_generator
+			test_generating_type
+			test_same_type
+			test_conforms_to
+			test_is_equal
+			test_equal
+			test_standard_is_equal
+			test_standard_equal
+			test_twin
+			test_copy
+			test_standard_twin
+			test_standard_copy
+			test_out
+			test_tagged_out
+			test_default
+			test_default_pointer
+			test_default_create
+			test_default_rescue
+			test_do_nothing
+		end
 
 	test_generator is
 			-- Test feature `generator'.

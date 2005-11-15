@@ -105,6 +105,18 @@ feature -- Setting
 			end
 		end
 
+	set_default_test_included (b: BOOLEAN) is
+			-- Set to `b' whether 'default_test' should be included in generated testcases or not.
+		local
+			a_cursor: DS_LIST_CURSOR [TS_CLUSTER]
+		do
+			a_cursor := clusters.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.set_default_test_included (b)
+				a_cursor.forth
+			end
+		end
+
 feature -- Processing
 
 	process (testcases: TS_TESTCASES; an_error_handler: TS_ERROR_HANDLER) is
