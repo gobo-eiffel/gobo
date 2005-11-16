@@ -183,10 +183,14 @@ feature {NONE} -- Implementation
 	check_all_normal_forms_identity (a_code_point: INTEGER) is
 			-- Check that NFX (`a_code_point') = `a_code_point' for all normal forms.
 		do
-			assert (a_code_point.out + " is in NFD", is_nfd (unicode.code_to_string (a_code_point)))
-			assert (a_code_point.out + " is in NFKD", is_nfkd (unicode.code_to_string (a_code_point)))
-			assert (a_code_point.out + " is in NFC", is_nfc (unicode.code_to_string (a_code_point)))
-			assert (a_code_point.out + " is in NFKC", is_nfkc (unicode.code_to_string (a_code_point)))
+			if unicode.valid_code_for_utf8 (a_code_point) then
+				assert (a_code_point.out + " is in NFD", is_nfd (unicode.code_to_string (a_code_point)))
+				assert (a_code_point.out + " is in NFKD", is_nfkd (unicode.code_to_string (a_code_point)))
+				assert (a_code_point.out + " is in NFC", is_nfc (unicode.code_to_string (a_code_point)))
+				assert (a_code_point.out + " is in NFKC", is_nfkc (unicode.code_to_string (a_code_point)))
+			else
+				-- need UTF-16 implementation to perform assertions
+			end
 		end
 
 	decoded_string (a_column: STRING): STRING is
@@ -207,6 +211,7 @@ feature {NONE} -- Implementation
 				assert ("Hexadecimal number", STRING_.is_hexadecimal (a_cursor.item))
 				a_code_point := STRING_.hexadecimal_to_integer (a_cursor.item)
 				assert ("Good code point", unicode.valid_code (a_code_point))
+				assert ("UTF-8 code point", unicode.valid_code_for_utf8 (a_code_point))
 				Result := STRING_.appended_string (Result, unicode.code_to_string (a_code_point))
 				a_cursor.forth
 			end
