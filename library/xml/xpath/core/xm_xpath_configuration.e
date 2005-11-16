@@ -22,12 +22,16 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			create {XM_XPATH_DEFAULT_COLLECTION_RESOLVER} collection_resolver.make
+			product_name := "Gexslt"
 		end
 
 feature -- Access
 
 	collection_resolver: XM_XPATH_COLLECTION_RESOLVER
 			-- URI resolver for fn:collection()
+
+	product_name: STRING
+			-- Product name ("Gexslt" or "Gestalt")
 
 feature -- Status report
 
@@ -68,6 +72,16 @@ feature -- Element change
 			collection_resolver_set: collection_resolver = a_collection_resolver
 		end
 
+	set_product_name (a_name: STRING) is
+			-- Set `product_name'.
+		require
+			name_not_void: a_name /= Void
+		do
+			product_name := a_name
+		ensure
+			name_set: product_name = a_name
+		end
+
 	trace (a_label, a_value: STRING) is
 			-- Create trace entry.
 		require
@@ -81,5 +95,6 @@ feature -- Element change
 invariant
 
 	collection_resolver_not_void: collection_resolver /= Void
+	product_name_not_void: product_name /= Void
 
 end
