@@ -44,10 +44,57 @@ feature {TS_TEST_HANDLER} -- Basic operations
 		require
 			a_tag_not_void: a_tag /= Void
 		do
+			assert_true (a_tag, a_condition)
+		end
+
+	assert_true (a_tag: STRING; a_condition: BOOLEAN) is
+			-- Assert that `a_condition' is true.
+		require
+			a_tag_not_void: a_tag /= Void
+		do
 			assertions.add_assertion
 			if not a_condition then
 				assertions.report_error (a_tag)
 			end
+		end
+
+	check_true (a_tag: STRING; a_condition: BOOLEAN) is
+			-- Check that `a_condition' is true.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_true (a_tag, a_condition)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+	assert_false (a_tag: STRING; a_condition: BOOLEAN) is
+			-- Assert that `a_condition' is false.
+		require
+			a_tag_not_void: a_tag /= Void
+		do
+			assertions.add_assertion
+			if a_condition then
+				assertions.report_error (a_tag)
+			end
+		end
+
+	check_false (a_tag: STRING; a_condition: BOOLEAN) is
+			-- Check that `a_condition' is false.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_false (a_tag, a_condition)
+			assertions.set_exception_on_error (l_fatal)
 		end
 
 feature {TS_TEST_HANDLER} -- Equality
@@ -66,6 +113,20 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
+	check_equal (a_tag: STRING; expected, actual: ANY) is
+			-- Check that `equal (expected, actual)'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_not_equal (a_tag: STRING; expected, actual: ANY) is
 			-- Assert that `not equal (expected, actual)'.
 		require
@@ -78,6 +139,20 @@ feature {TS_TEST_HANDLER} -- Equality
 				a_message := assert_not_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
 			end
+		end
+
+	check_not_equal (a_tag: STRING; expected, actual: ANY) is
+			-- Check that `not equal (expected, actual)'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_not_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
 		end
 
 	assert_same (a_tag: STRING; expected, actual: ANY) is
@@ -94,6 +169,48 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
+	check_same (a_tag: STRING; expected, actual: ANY) is
+			-- Check that `expected = actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_same (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+	assert_not_same (a_tag: STRING; expected, actual: ANY) is
+			-- Assert that `expected /= actual'.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			a_message: STRING
+		do
+			assertions.add_assertion
+			if expected = actual then
+				a_message := assert_not_equal_message (a_tag, expected, actual)
+				assertions.report_error (a_message)
+			end
+		end
+
+	check_not_same (a_tag: STRING; expected, actual: ANY) is
+			-- Check that `expected /= actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_not_same (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_integers_equal (a_tag: STRING; expected, actual: INTEGER) is
 			-- Assert that `expected = actual'.
 		require
@@ -103,9 +220,23 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			if expected /= actual then
-				a_message := assert_integers_equal_message (a_tag, expected, actual)
+				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
 				assertions.report_error (a_message)
 			end
+		end
+
+	check_integers_equal (a_tag: STRING; expected, actual: INTEGER) is
+			-- Check that `expected = actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_integers_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
 		end
 
 	assert_integers_not_equal (a_tag: STRING; expected, actual: INTEGER) is
@@ -117,9 +248,23 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			if expected = actual then
-				a_message := assert_integers_not_equal_message (a_tag, expected, actual)
+				a_message := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
 				assertions.report_error (a_message)
 			end
+		end
+
+	check_integers_not_equal (a_tag: STRING; expected, actual: INTEGER) is
+			-- Check that `expected /= actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_integers_not_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
 		end
 
 	assert_strings_equal (a_tag: STRING; expected, actual: STRING) is
@@ -136,6 +281,20 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
+	check_strings_equal (a_tag: STRING; expected, actual: STRING) is
+			-- Check that `expected' and `actual' are the same string.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_strings_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_strings_not_equal (a_tag: STRING; expected, actual: STRING) is
 			-- Assert that `expected' and `actual' are not the same string.
 		require
@@ -148,6 +307,20 @@ feature {TS_TEST_HANDLER} -- Equality
 				a_message := assert_strings_not_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
 			end
+		end
+
+	check_strings_not_equal (a_tag: STRING; expected, actual: STRING) is
+			-- Check that `expected' and `actual' are not the same string.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_strings_not_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
 		end
 
 	assert_characters_equal (a_tag: STRING; expected, actual: CHARACTER) is
@@ -164,6 +337,48 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
+	check_characters_equal (a_tag: STRING; expected, actual: CHARACTER) is
+			-- Check that `expected = actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_characters_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+	assert_characters_not_equal (a_tag: STRING; expected, actual: CHARACTER) is
+			-- Assert that `expected /= actual'
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			a_message: STRING
+		do
+			assertions.add_assertion
+			if expected = actual then
+				a_message := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
+				assertions.report_error (a_message)
+			end
+		end
+
+	check_characters_not_equal (a_tag: STRING; expected, actual: CHARACTER) is
+			-- Check that `expected /= actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_characters_not_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_booleans_equal (a_tag: STRING; expected, actual: BOOLEAN) is
 			-- Assert that `expected = actual'
 		require
@@ -176,6 +391,48 @@ feature {TS_TEST_HANDLER} -- Equality
 				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
 				assertions.report_error (a_message)
 			end
+		end
+
+	check_booleans_equal (a_tag: STRING; expected, actual: BOOLEAN) is
+			-- Check that `expected = actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_booleans_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+	assert_booleans_not_equal (a_tag: STRING; expected, actual: BOOLEAN) is
+			-- Assert that `expected /= actual'
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			a_message: STRING
+		do
+			assertions.add_assertion
+			if expected = actual then
+				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
+				assertions.report_error (a_message)
+			end
+		end
+
+	check_booleans_not_equal (a_tag: STRING; expected, actual: BOOLEAN) is
+			-- Check that `expected /= actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_booleans_not_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
 		end
 
 feature {TS_TEST_HANDLER} -- Files
@@ -273,6 +530,26 @@ feature {TS_TEST_HANDLER} -- Files
 			end
 		end
 
+	check_files_equal (a_tag: STRING; a_filename1, a_filename2: STRING) is
+			-- Check that there is no difference between the
+			-- files named `a_filename1' and `a_filename2'.
+			-- (Expand environment variables in filenames.)
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_filename1_not_void: a_filename1 /= Void
+			a_filename1_not_empty: a_filename1.count > 0
+			a_filename2_not_void: a_filename2 /= Void
+			a_filename2_not_empty: a_filename2.count > 0
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_files_equal (a_tag, a_filename1, a_filename2)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_filenames_equal (a_tag: STRING; a_filename1, a_filename2: STRING) is
 			-- Assert that filenames `a_filename1' and `a_filename2'
 			-- only differ by the letters '/' and '\'.
@@ -319,6 +596,23 @@ feature {TS_TEST_HANDLER} -- Files
 			end
 		end
 
+	check_filenames_equal (a_tag: STRING; a_filename1, a_filename2: STRING) is
+			-- Check that filenames `a_filename1' and `a_filename2'
+			-- only differ by the letters '/' and '\'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_filename1_not_void: a_filename1 /= Void
+			a_filename2_not_void: a_filename2 /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_filenames_equal (a_tag, a_filename1, a_filename2)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 feature {TS_TEST_HANDLER} -- Containers
 
 	assert_array (a_tag: STRING; expected, actual: ARRAY [ANY]) is
@@ -352,7 +646,7 @@ feature {TS_TEST_HANDLER} -- Containers
 				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
-				a_message := assert_integers_equal_message (new_tag, expected.count, actual.count)
+				a_message := assert_strings_equal_message (new_tag, expected.count.out, actual.count.out)
 				assertions.report_error (a_message)
 			else
 				i1 := expected.lower
@@ -377,6 +671,23 @@ feature {TS_TEST_HANDLER} -- Containers
 			end
 		end
 
+	check_arrays_same (a_tag: STRING; expected, actual: ARRAY [ANY]) is
+			-- Check that `expected' and `actual' have the same items
+			-- in the same order (use '=' for item comparison).
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			expected_not_void: expected /= Void
+			actual_not_void: actual /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_arrays_same (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_arrays_equal (a_tag: STRING; expected, actual: ARRAY [ANY]) is
 			-- Assert that `expected' and `actual' have the same items
 			-- in the same order (use `equal' for item comparison).
@@ -395,7 +706,7 @@ feature {TS_TEST_HANDLER} -- Containers
 				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
-				a_message := assert_integers_equal_message (new_tag, expected.count, actual.count)
+				a_message := assert_strings_equal_message (new_tag, expected.count.out, actual.count.out)
 				assertions.report_error (a_message)
 			else
 				i1 := expected.lower
@@ -418,6 +729,23 @@ feature {TS_TEST_HANDLER} -- Containers
 					end
 				end
 			end
+		end
+
+	check_arrays_equal (a_tag: STRING; expected, actual: ARRAY [ANY]) is
+			-- Check that `expected' and `actual' have the same items
+			-- in the same order (use `equal' for item comparison).
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			expected_not_void: expected /= Void
+			actual_not_void: actual /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_arrays_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
 		end
 
 	assert_iarray (a_tag: STRING; expected, actual: ARRAY [INTEGER]) is
@@ -451,7 +779,7 @@ feature {TS_TEST_HANDLER} -- Containers
 				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
-				a_message := assert_integers_equal_message (new_tag, expected.count, actual.count)
+				a_message := assert_strings_equal_message (new_tag, expected.count.out, actual.count.out)
 				assertions.report_error (a_message)
 			else
 				i1 := expected.lower
@@ -465,7 +793,7 @@ feature {TS_TEST_HANDLER} -- Containers
 						new_tag.append_string (a_tag)
 						new_tag.append_string ("-item #")
 						INTEGER_.append_decimal_integer (i, new_tag)
-						a_message := assert_integers_equal_message (new_tag, expected_item, actual_item)
+						a_message := assert_strings_equal_message (new_tag, expected_item.out, actual_item.out)
 						assertions.report_error (a_message)
 					else
 						i1 := i1 + 1
@@ -474,6 +802,23 @@ feature {TS_TEST_HANDLER} -- Containers
 					end
 				end
 			end
+		end
+
+	check_iarrays_same (a_tag: STRING; expected, actual: ARRAY [INTEGER]) is
+			-- Check that `expected' and `actual' have the same items
+			-- in the same order (use '=' for item comparison).
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			expected_not_void: expected /= Void
+			actual_not_void: actual /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_iarrays_same (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
 		end
 
 feature {TS_TEST_HANDLER} -- Execution
@@ -486,6 +831,22 @@ feature {TS_TEST_HANDLER} -- Execution
 			a_shell_command_not_empty: a_shell_command.count > 0
 		do
 			assert_exit_code_execute (a_shell_command, 0)
+		end
+
+	check_execute (a_shell_command: STRING) is
+			-- Execute `a_shell_command' and check whether the
+			-- exit status code is zero.
+			-- Violation of this assertion is not fatal.
+		require
+			a_shell_command_not_void: a_shell_command /= Void
+			a_shell_command_not_empty: a_shell_command.count > 0
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_execute (a_shell_command)
+			assertions.set_exception_on_error (l_fatal)
 		end
 
 	assert_exit_code_execute (a_shell_command: STRING; an_exit_code: INTEGER) is
@@ -502,6 +863,22 @@ feature {TS_TEST_HANDLER} -- Execution
 			assert_integers_equal (a_shell_command, an_exit_code, a_command.exit_code)
 		end
 
+	check_exit_code_execute (a_shell_command: STRING; an_exit_code: INTEGER) is
+			-- Execute `a_shell_command' and check whether the
+			-- exit status code is `an_exit_code'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_shell_command_not_void: a_shell_command /= Void
+			a_shell_command_not_empty: a_shell_command.count > 0
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_exit_code_execute (a_shell_command, an_exit_code)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_not_exit_code_execute (a_shell_command: STRING; an_exit_code: INTEGER) is
 			-- Execute `a_shell_command' and check whether the
 			-- exit status code is not equal to `an_exit_code'.
@@ -514,6 +891,22 @@ feature {TS_TEST_HANDLER} -- Execution
 			create a_command.make (a_shell_command)
 			a_command.execute
 			assert_integers_not_equal (a_shell_command, an_exit_code, a_command.exit_code)
+		end
+
+	check_not_exit_code_execute (a_shell_command: STRING; an_exit_code: INTEGER) is
+			-- Execute `a_shell_command' and check whether the
+			-- exit status code is not equal to `an_exit_code'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_shell_command_not_void: a_shell_command /= Void
+			a_shell_command_not_empty: a_shell_command.count > 0
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_not_exit_code_execute (a_shell_command, an_exit_code)
+			assertions.set_exception_on_error (l_fatal)
 		end
 
 feature {NONE} -- Messages
@@ -534,12 +927,12 @@ feature {NONE} -- Messages
 			Result := assert_strings_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
 		end
 
-	assert_integers_equal_message (a_tag: STRING; expected, actual: INTEGER): STRING is
-			-- Message stating that `expected' and `actual' should be equal.
+	assert_not_equal_message (a_tag: STRING; expected, actual: ANY): STRING is
+			-- Message stating that `expected' and `actual' should not be equal.
 		require
 			a_tag_not_void: a_tag /= Void
 		do
-			Result := assert_strings_equal_message (a_tag, expected.out, actual.out)
+			Result := assert_strings_not_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
 		end
 
 	assert_strings_equal_message (a_tag: STRING; expected, actual: STRING): STRING is
@@ -563,22 +956,6 @@ feature {NONE} -- Messages
 			end
 		ensure
 			message_not_void: Result /= Void
-		end
-
-	assert_not_equal_message (a_tag: STRING; expected, actual: ANY): STRING is
-			-- Message stating that `expected' and `actual' should not be equal.
-		require
-			a_tag_not_void: a_tag /= Void
-		do
-			Result := assert_strings_not_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
-		end
-
-	assert_integers_not_equal_message (a_tag: STRING; expected, actual: INTEGER): STRING is
-			-- Message stating that `expected' and `actual' should not be equal.
-		require
-			a_tag_not_void: a_tag /= Void
-		do
-			Result := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
 		end
 
 	assert_strings_not_equal_message (a_tag: STRING; expected, actual: STRING): STRING is
