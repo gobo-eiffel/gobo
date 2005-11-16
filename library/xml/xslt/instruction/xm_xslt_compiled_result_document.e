@@ -23,6 +23,9 @@ inherit
 
 	KL_SHARED_PLATFORM
 		export {NONE} all end
+		
+	UT_URL_ENCODING
+		export {NONE} all end
 
 create
 
@@ -292,7 +295,7 @@ feature -- Evaluation
 			an_output_resolver: XM_XSLT_OUTPUT_URI_RESOLVER
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			a_uri: UT_URI
-			a_uri_to_use: STRING
+			an_iri_reference,	a_uri_to_use: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
@@ -322,7 +325,8 @@ feature -- Evaluation
 					else
 						an_output_resolver := a_transformer.output_resolver
 						create a_uri.make (a_transformer.principal_result_uri)
-						create a_uri.make_resolve (a_uri, href.last_evaluated_string.string_value)
+						an_iri_reference := escaped_uri (href.last_evaluated_string.string_value)
+						create a_uri.make_resolve (a_uri, an_iri_reference)
 						a_uri_to_use := a_uri.full_reference
 						if an_output_resolver.output_destinations.has (a_uri_to_use) then
 							create an_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", a_uri_to_use),
@@ -351,7 +355,10 @@ feature -- Evaluation
 				content.process (a_new_context)
 				a_receiver.end_document
 				a_receiver.close
-				an_output_resolver.close (a_result)
+				an_output_resolver.close (a_result, computed_property_set)
+				if a_result.error_message /= Void then
+					a_transformer.report_warning (a_result.error_message, Void)
+				end
 			end
 		end
 
@@ -515,6 +522,31 @@ feature {NONE} -- Implementation
 				computed_property_set.set_undeclare_prefixes (local_property_set.undeclare_prefixes, Platform.Maximum_integer - 3)
 			end
 			computed_property_set.merge_character_maps (local_property_set.used_character_maps)
+		end
+
+	escaped_uri (a_uri_string: STRING): STRING is
+			-- Escaped version of `a_uri_string'
+		require
+			uri_string_not_void: a_uri_string /= Void
+		do
+			Result := escape_custom (utf8.to_utf8 (a_uri_string), unescaped_iri_characters, False)
+		ensure
+			escaped_uri_not_void: Result /= Void
+		end
+
+	unescaped_iri_characters: DS_HASH_SET [CHARACTER] is
+			-- Characters not to escaped for fn:iri-to-uri()
+		local
+			a_character_set: STRING
+		once
+			a_character_set := STRING_.concat (Rfc_lowalpha_characters, Rfc_upalpha_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_digit_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_mark_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_reserved_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_extra_reserved_characters)
+			a_character_set := STRING_.appended_string (a_character_set, "#")
+			a_character_set := STRING_.appended_string (a_character_set, "%%")
+			Result := new_character_set (a_character_set)
 		end
 
 invariant
