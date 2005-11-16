@@ -680,6 +680,9 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER} -- Transformation in
 					if initial_context.current_receiver.is_document_started then initial_context.current_receiver.end_document end
 					if initial_context.current_receiver.is_open then initial_context.current_receiver.close end
 					std.output.flush
+					if a_transformation_result.error_message /= Void then
+						report_warning (a_transformation_result.error_message, Void)
+					end
 				end
 			end
 		end

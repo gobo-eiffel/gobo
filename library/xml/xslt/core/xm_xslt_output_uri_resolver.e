@@ -55,10 +55,11 @@ feature -- Action
 				and then output_destinations.item (a_uri.full_reference) = last_result
 		end
 
-	close (a_result: XM_XSLT_TRANSFORMATION_RESULT) is
+	close (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES) is
 			-- Close output destination.
 		require
 			transformation_result_not_void: a_result /= Void
+			output_properties_not_void: some_properties /= Void
 		deferred
 		end
 

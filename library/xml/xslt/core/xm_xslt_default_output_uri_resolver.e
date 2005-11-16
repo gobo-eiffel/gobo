@@ -90,11 +90,11 @@ feature -- Action
 			end
 		end
 
-	close (a_result: XM_XSLT_TRANSFORMATION_RESULT) is
+	close (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES) is
 			-- Close output destination.
 		do
 			if a_result.is_stream then
-				a_result.close
+				a_result.close (some_properties)
 			end
 		end
 

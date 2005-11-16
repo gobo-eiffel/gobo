@@ -109,6 +109,9 @@ feature -- Status report
 	is_receiver: BOOLEAN
 			-- Is this a wrapper for an `XM_XPATH_RECEIVER'?
 
+	error_message: STRING
+			-- Possible error message from output resolver
+
 	is_document_started: BOOLEAN is
 			-- Has the result document been started yet?
 		do
@@ -127,10 +130,11 @@ feature -- Element change
 			principal_receiver_set: principal_receiver = a_receiver
 		end
 
-	close is
+	close (some_properties: XM_XSLT_OUTPUT_PROPERTIES) is
 			-- Close output stream.
 		require
 			stream_result: is_stream
+			output_properties_not_void: some_properties /= Void
 		do
 			if output_stream /= Void then
 				output_stream.close
