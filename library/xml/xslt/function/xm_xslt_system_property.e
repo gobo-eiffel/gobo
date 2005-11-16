@@ -72,6 +72,7 @@ feature -- Evaluation
 			a_parser: XM_XPATH_QNAME_PARSER
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
+			product_name := a_context.configuration.product_name
 			check
 				string_value: arguments.item (1).is_string_value
 				-- from static typing, and `pre_evaluate' is only called for fixed values
@@ -99,6 +100,7 @@ feature -- Evaluation
 			a_parser: XM_XPATH_QNAME_PARSER
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
+			product_name := a_context.configuration.product_name
 			check
 				string_value: arguments.item (1).is_string_value
 				-- from static typing, and `pre_evaluate' is only called for fixed values
@@ -153,11 +155,15 @@ feature {NONE} -- Implementation
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			-- Saved namespace context
 
+	product_name: STRING
+			-- Product name ("Gexslt" or "Gestalt")
+
 	system_property (a_namespace_uri, a_local_name: STRING): STRING is
 			-- Value of system-property named by {`a_namespace_uri'}`a_local_name'
 		require
 			namespace_uri_not_void: a_namespace_uri /= Void
 			local_name_not_void: a_local_name /= Void
+			product_name_not_void: product_name /= Void
 		do
 			if STRING_.same_string (a_namespace_uri, Xslt_uri) then
 				if STRING_.same_string (a_local_name, "version") then
@@ -167,7 +173,7 @@ feature {NONE} -- Implementation
 				elseif STRING_.same_string (a_local_name, "vendor-url") then
 					Result := "http://www.gobosoft.com/"
 				elseif STRING_.same_string (a_local_name, "product-name") then
-					Result := "gexslt"
+					Result := product_name
 				elseif STRING_.same_string (a_local_name, "product-version") then
 					Result := Version_number
 				elseif STRING_.same_string (a_local_name, "is-schema-aware") then
