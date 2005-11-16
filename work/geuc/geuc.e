@@ -777,10 +777,10 @@ feature {NONE} -- Implementation
 				some_plane_names.put (a_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tcharacter_classes: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is%N")
+			an_output_file.put_string ("%Tcharacter_classes: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
 			an_output_file.put_string ("%T%T%T-- Character class for each code point%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 16)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_plane_names.item (i))
@@ -860,10 +860,10 @@ feature {NONE} -- Implementation
 				some_plane_names.put (a_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tdecimal_values: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is%N")
+			an_output_file.put_string ("%Tdecimal_values: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
 			an_output_file.put_string ("%T%T%T-- Decimal value for each code point%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 16)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_plane_names.item (i))
@@ -1091,10 +1091,10 @@ feature {NONE} -- Implementation
 				some_plane_names.put (a_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%T" + an_array_name + ": ARRAY [ARRAY [ARRAY [BOOLEAN]]] is%N")
+			an_output_file.put_string ("%T" + an_array_name + ": SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is%N")
 			an_output_file.put_string ("%T%T%T-- " + a_title + " for each code point%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 16)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_plane_names.item (i))
@@ -1170,10 +1170,10 @@ feature {NONE} -- Implementation
 				some_plane_names.put (a_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tcanonical_combining_class_properties: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is%N")
+			an_output_file.put_string ("%Tcanonical_combining_class_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
 			an_output_file.put_string ("%T%T%T-- Canonical combining class for each code point%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 16)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_plane_names.item (i))
@@ -1249,10 +1249,10 @@ feature {NONE} -- Implementation
 				some_plane_names.put (a_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tdecomposition_type_properties: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is%N")
+			an_output_file.put_string ("%Tdecomposition_type_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
 			an_output_file.put_string ("%T%T%T-- Decomposition type for each code point%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 16)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_plane_names.item (i))
@@ -1334,10 +1334,10 @@ feature {NONE} -- Implementation
 				some_plane_names.put (a_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tdecomposition_mapping_properties: ARRAY [ARRAY [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is%N")
+			an_output_file.put_string ("%Tdecomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is%N")
 			an_output_file.put_string ("%T%T%T-- Decomposition mapping for each code point%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 16)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_plane_names.item (i))
@@ -1501,10 +1501,10 @@ feature {NONE} -- Implementation
 					an_output_file)
 				i := i + 1
 			end
-			an_output_file.put_string ("%T" + an_array_name + ": ARRAY [ARRAY [ARRAY [UT_TRISTATE]]] is%N")
+			an_output_file.put_string ("%T" + an_array_name + ": SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is%N")
 			an_output_file.put_string ("%T%T%T-- " + a_title + " for each code point%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 16)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_plane_names.item (i))
@@ -1625,10 +1625,10 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_name)
-			an_output_file.put_string (": ARRAY [ARRAY [UT_TRISTATE]] is%N")
+			an_output_file.put_string (": SPECIAL [ARRAY [CHARACTER]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
 			from  until an_index > 255 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_segment_names.item (an_index))
@@ -1659,10 +1659,10 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_plane_name)
-			an_output_file.put_string (": ARRAY [ARRAY [UT_TRISTATE]] is%N")
+			an_output_file.put_string (": SPECIAL [ARRAY [CHARACTER]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
 			from until an_index > 255 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (a_segment_name)
@@ -1740,10 +1740,10 @@ feature {NONE} -- Implementation
 				some_plane_names.put (a_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tlower_codes: ARRAY [ARRAY [ARRAY [INTEGER]]] is%N")
+			an_output_file.put_string ("%Tlower_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
 			an_output_file.put_string ("%T%T%T-- Lower case code points for each code point%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 16)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_plane_names.item (i))
@@ -1819,10 +1819,10 @@ feature {NONE} -- Implementation
 				some_plane_names.put (a_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tupper_codes: ARRAY [ARRAY [ARRAY [INTEGER]]] is%N")
+			an_output_file.put_string ("%Tupper_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
 			an_output_file.put_string ("%T%T%T-- Upper case code points for each code point%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 16)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_plane_names.item (i))
@@ -1898,10 +1898,10 @@ feature {NONE} -- Implementation
 				some_plane_names.put (a_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Ttitle_codes: ARRAY [ARRAY [ARRAY [INTEGER]]] is%N")
+			an_output_file.put_string ("%Ttitle_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
 			an_output_file.put_string ("%T%T%T-- Title case code points for each code point%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 16)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_plane_names.item (i))
@@ -1928,10 +1928,10 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_name)
-			an_output_file.put_string (": ARRAY [ARRAY [INTEGER_8]] is%N")
+			an_output_file.put_string (": SPECIAL [ARRAY [INTEGER_8]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated character class array plane%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
 			from  until an_index > 255 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_segment_names.item (an_index))
@@ -1962,10 +1962,10 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_plane_name)
-			an_output_file.put_string (": ARRAY [ARRAY [INTEGER_8]] is%N")
+			an_output_file.put_string (": SPECIAL [ARRAY [INTEGER_8]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated character class array plane%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
 			from until an_index > 255 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (a_segment_name)
@@ -2024,10 +2024,10 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_name)
-			an_output_file.put_string (": ARRAY [ARRAY [INTEGER]] is%N")
+			an_output_file.put_string (": SPECIAL [ARRAY [INTEGER]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
 			from until an_index > 255 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_segment_names.item (an_index))
@@ -2058,10 +2058,10 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_plane_name)
-			an_output_file.put_string (": ARRAY [ARRAY [INTEGER]] is%N")
+			an_output_file.put_string (": SPECIAL [ARRAY [INTEGER]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
 			from until an_index > 255 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (a_segment_name)
@@ -2132,10 +2132,10 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_plane_name)
-			an_output_file.put_string (": ARRAY [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is%N")
+			an_output_file.put_string (": SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
 			from until an_index > 255 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (a_segment_name)
@@ -2165,10 +2165,10 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_name)
-			an_output_file.put_string (": ARRAY [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is%N")
+			an_output_file.put_string (": SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
 			from until an_index > 255 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_segment_names.item (an_index))
@@ -2200,35 +2200,161 @@ feature {NONE} -- Implementation
 			an_output_file.put_string (a_segment_array_name)
 			an_output_file.put_string (": ARRAY [DS_ARRAYED_LIST [INTEGER]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated arrayed_list segment%N")
-			if not all_empty then
-				an_output_file.put_string ("%T%Tlocal%N")
-				an_output_file.put_string ("%T%T%Ta_list: DS_ARRAYED_LIST [INTEGER]%N")
-			end
 			an_output_file.put_string ("%T%Tonce%N")
 			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
 			if not all_empty then
 				from until an_index > 255 loop
 					a_list := a_segment.item (an_index)
 					if a_list /= Void then
-						an_output_file.put_string ("%T%T%Tcreate a_list.make (")
-						an_output_file.put_string (a_list.count.out)
-						an_output_file.put_string (")%N")
-						an_output_file.put_string ("%T%T%T")
 						j := a_list.count
-						from i := 1 until i > j loop
-							an_output_file.put_string ("a_list.put_last (")
-							an_output_file.put_string (a_list.item (i).out)
-							an_output_file.put_string (")")
-							if i /= j then
-								an_output_file.put_string ("; ")
-							else
-								an_output_file.put_string ("%N")
-							end
-							i := i + 1
+						if j = 1 then
+							an_output_file.put_string ("%T%T%TResult.put (new_singleton (")
+							an_output_file.put_string (a_list.item (1).out)
+							an_output_file.put_string ("),")
+							an_output_file.put_string (an_index.out)
+							an_output_file.put_string (")%N")
+						elseif j = 2 then
+							an_output_file.put_string ("%T%T%TResult.put (new_pair (")
+							an_output_file.put_string (a_list.item (1).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (2).out)
+							an_output_file.put_string ("),")
+							an_output_file.put_string (an_index.out)
+							an_output_file.put_string (")%N")
+						elseif j = 3 then
+							an_output_file.put_string ("%T%T%TResult.put (new_triple (")
+							an_output_file.put_string (a_list.item (1).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (2).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (3).out)
+							an_output_file.put_string ("),")
+							an_output_file.put_string (an_index.out)
+							an_output_file.put_string (")%N")
+						elseif j = 4 then
+							an_output_file.put_string ("%T%T%TResult.put (new_quadruple (")
+							an_output_file.put_string (a_list.item (1).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (2).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (3).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (4).out)
+							an_output_file.put_string ("),")
+							an_output_file.put_string (an_index.out)
+							an_output_file.put_string (")%N")							
+						elseif j = 5 then
+							an_output_file.put_string ("%T%T%TResult.put (new_quintuple (")
+							an_output_file.put_string (a_list.item (1).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (2).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (3).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (4).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (5).out)
+							an_output_file.put_string ("),")
+							an_output_file.put_string (an_index.out)
+							an_output_file.put_string (")%N")							
+						elseif j = 6 then
+							an_output_file.put_string ("%T%T%TResult.put (new_sextuple (")
+							an_output_file.put_string (a_list.item (1).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (2).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (3).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (4).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (5).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (6).out)
+							an_output_file.put_string ("),")
+							an_output_file.put_string (an_index.out)
+							an_output_file.put_string (")%N")							
+						elseif j = 7 then
+							an_output_file.put_string ("%T%T%TResult.put (new_heptuple (")
+							an_output_file.put_string (a_list.item (1).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (2).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (3).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (4).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (5).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (6).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (7).out)
+							an_output_file.put_string ("),")
+							an_output_file.put_string (an_index.out)
+							an_output_file.put_string (")%N")
+						elseif j = 8 then
+							an_output_file.put_string ("%T%T%TResult.put (new_octuple (")
+							an_output_file.put_string (a_list.item (1).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (2).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (3).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (4).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (5).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (6).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (7).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (8).out)
+							an_output_file.put_string ("),")
+							an_output_file.put_string (an_index.out)
+							an_output_file.put_string (")%N")							
+						elseif j = 18 then
+							an_output_file.put_string ("%T%T%TResult.put (new_eighteen_tuple (")
+							an_output_file.put_string (a_list.item (1).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (2).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (3).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (4).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (5).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (6).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (7).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (8).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (9).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (10).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (11).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (12).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (13).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (14).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (15).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (16).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (17).out)
+							an_output_file.put_string (",")
+							an_output_file.put_string (a_list.item (18).out)
+							an_output_file.put_string ("),")
+							an_output_file.put_string (an_index.out)
+							an_output_file.put_string (")%N")
+						else
+							report_general_message ("Integer list too long - count = " + j.out)
+							Exceptions.die (1)
 						end
-						an_output_file.put_string ("%T%T%TResult.put (a_list,")
-						an_output_file.put_string (an_index.out)
-						an_output_file.put_string (")%N")
 					end
 					an_index := an_index + 1
 				end
@@ -2254,10 +2380,10 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_name)
-			an_output_file.put_string (": ARRAY [ARRAY [BOOLEAN]] is%N")
+			an_output_file.put_string (": SPECIAL [ARRAY [BOOLEAN]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
 			from until an_index > 255 loop
 				an_output_file.put_string ("%T%T%TResult.put (")
 				an_output_file.put_string (some_segment_names.item (an_index))
@@ -2288,10 +2414,10 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_plane_name)
-			an_output_file.put_string (": ARRAY [ARRAY [BOOLEAN]] is%N")
+			an_output_file.put_string (": SPECIAL [ARRAY [BOOLEAN]] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
 			an_output_file.put_string ("%T%Tensure%N")
 			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
@@ -2350,25 +2476,29 @@ feature {NONE} -- Implementation
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_segment_array_name)
-			an_output_file.put_string (": ARRAY [UT_TRISTATE] is%N")
+			an_output_file.put_string (": ARRAY [CHARACTER] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated array segment%N")
 			an_output_file.put_string ("%T%Tlocal%N")
 			an_output_file.put_string ("%T%T%Ta_state: UT_TRISTATE%N")
 			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)")
+			an_output_file.put_string ("%T%T%TResult := <<")
 			from until an_index > 255 loop
-				an_output_file.put_string ("%T%T%Tcreate a_state.make_")
 				a_state := a_segment.item (an_index)
 				if a_state.is_true then
-					an_output_file.put_string ("true%N")
+					an_output_file.put_string ("'%%/1/'")
 				elseif a_state.is_false then
-					an_output_file.put_string ("false%N")
+					an_output_file.put_string ("'%%/0/'")
 				else
-					an_output_file.put_string ("undefined%N")
+					an_output_file.put_string ("'%%/2/'")
 				end
-				an_output_file.put_string ("%T%T%TResult.put (a_state, ")
-				an_output_file.put_string (an_index.out)
-				an_output_file.put_string (")%N")
+				if an_index = 255 then
+					an_output_file.put_string (">>%N")
+				else
+					an_output_file.put_string (",")
+					if an_index \\ 10 = 0 then
+						an_output_file.put_string ("%N")
+					end
+				end
 				an_index := an_index + 1
 			end
 			an_output_file.put_string ("%N")
