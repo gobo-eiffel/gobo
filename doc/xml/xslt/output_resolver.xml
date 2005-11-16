@@ -85,9 +85,13 @@
 	<term><featurename>close</featurename></term>
 	<listitem>
 	  <para>
-	    This routine is called when the result tree has been completely written to the output destination.
-	    It can perform actions such as closing the output stream where appropriate, and might also be used for 
-	    firing off other actions, such as letting a job scheduler know that an output file is available.
+	   This routine is called when the result tree has been completely written to the output destination.
+	   It can perform actions such as closing the output stream where appropriate, and might also be used for 
+	   firing off other actions, such as letting a job scheduler know that an output file is available.
+	  </para>
+	  <para>
+	   An <classname>XM_XSLT_OUTPUT_PROPERTIES</classname> object is passed to the routine so
+	   that MIME information is available for URI schemes that need it.
 	  </para>
 	</listitem>
       </varlistentry>

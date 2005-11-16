@@ -39,18 +39,19 @@
     <itemizedlist>
 	<listitem>
 	  <para>
-	    Serializer does not yet support UTF-16 as an output encoding.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>
 	    Regular expressions do not yet support Unicode data (ASCII support only).
 	  </para>
 	</listitem>
 	<listitem>
 	  <para>
-	    The functions unparsed-text() and and unparsed-text-available() do not work properly
+	    The functions unparsed-text() and unparsed-text-available() do not work properly
 	    yet. They will probably work OK for 7-bit ASCII and UTF-8 files.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    The functions lower-case() and upper-case() only use simple
+	    case mappings (one's that don't change the string length).
 	  </para>
 	</listitem>
     </itemizedlist>
