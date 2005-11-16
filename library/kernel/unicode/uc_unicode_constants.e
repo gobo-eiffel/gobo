@@ -31,6 +31,18 @@ feature -- Access
 --			definition: Result = 1114111
 --		end
 
+	minimum_unicode_surrogate_code: INTEGER is 55296
+			-- Lowest unicode surrogate code-point (0xD800)
+--		ensure
+--			definition: Result = 55296
+--		end
+
+	maximum_unicode_surrogate_code: INTEGER is 57343
+			-- Highest unicode surrogate code-point (0xDFFF)
+--		ensure
+--			definition: Result = 57343
+--		end
+
 	maximum_bmp_character_code: INTEGER is 65535
 			-- Largest code for unicode characters in Basic Multi-lingual Plane (FFFF);
 --		ensure

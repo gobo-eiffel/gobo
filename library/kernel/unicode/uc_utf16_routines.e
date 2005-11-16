@@ -14,7 +14,11 @@ class UC_UTF16_ROUTINES
 
 inherit
 
+	UC_UNICODE_CONSTANTS
+
 	KL_IMPORTED_ANY_ROUTINES
+
+	KL_IMPORTED_INTEGER_ROUTINES
 
 feature -- Status report
 
@@ -58,6 +62,28 @@ feature -- Status report
 
 feature -- Endian-ness detection
 
+	bom_be: STRING is
+			-- BOM in big-endian format
+		once
+			Result := "%/254/%/255/"
+		ensure
+			bom_be_not_void: Result /= Void
+			two_latin1_characters: Result.count = 2
+			first_character: Result.item_code (1) = Hex_fe
+			second_character: Result.item_code (2) = Hex_ff
+		end
+
+	bom_le: STRING is
+			-- BOM in little-endian format
+		once
+			Result := "%/255/%/254/"
+		ensure
+			bom_le_not_void: Result /= Void
+			two_latin1_characters: Result.count = 2
+			first_character: Result.item_code (1) = Hex_ff
+			second_character: Result.item_code (2) = Hex_fe
+		end
+
 	is_endian_detection_character_most_first (first, second: INTEGER): BOOLEAN is
 			-- Do the two bytes `first' and `second' represent the character
 			-- 0xFEFF with `first' being the most significant byte?
@@ -99,7 +125,7 @@ feature -- Endian-ness detection
 feature -- Surrogate
 
 	is_surrogate (a_most: INTEGER): BOOLEAN is
-			-- Is this a high surrogate character?
+			-- Is this a high surrogate byte?
 		require
 			byte: is_byte (a_most)
 		do
@@ -107,7 +133,7 @@ feature -- Surrogate
 		end
 
 	is_high_surrogate (a_most: INTEGER): BOOLEAN is
-			-- Is this a high surrogate character?
+			-- Is this a high surrogate byte?
 		require
 			byte: is_byte (a_most)
 		do
@@ -115,7 +141,7 @@ feature -- Surrogate
 		end
 
 	is_low_surrogate (a_most: INTEGER): BOOLEAN is
-			-- Is this a low surrogate character?
+			-- Is this a low surrogate byte?
 		require
 			byte: is_byte (a_most)
 		do
@@ -135,7 +161,7 @@ feature -- Surrogate
 		end
 
 	surrogate (a_high_10: INTEGER; a_low_10: INTEGER): INTEGER is
-			-- Surrogate from high and low values
+			-- Supplementary code point from high and low values
 		require
 			high_10: a_high_10 >= 0 and a_high_10 < 1024
 			low_10: a_low_10 >= 0 and a_low_10 < 1024
@@ -146,7 +172,7 @@ feature -- Surrogate
 		end
 
 	surrogate_from_bytes (a_high_most, a_high_least, a_low_most, a_low_least: INTEGER): INTEGER is
-			-- Surrogate from bytes
+			-- Supplementary code point from bytes
 		require
 			surrogate_high: is_high_surrogate (a_high_most)
 			high_least_byte: is_byte (a_high_least)
@@ -164,6 +190,30 @@ feature -- Surrogate
 			Result := a >= 0 and a < Hex_100
 		ensure
 			definition: Result = (a >= 0 and a < Hex_100)
+		end
+
+	supplementary_to_high_surrogate (a_code: INTEGER): INTEGER is
+			-- High surrogate for `a_code'
+		require
+			code_high_enough: a_code > maximum_bmp_character_code
+			code_low_enough: a_code <= maximum_unicode_character_code
+		do
+			Result := INTEGER_.bit_shift_right (a_code, 10) + Hex_d7c0
+		ensure
+			high_surrogate: Result >= 256 * Hex_d8
+			not_too_big: Result < 256 * Hex_dc
+		end
+
+	supplementary_to_low_surrogate (a_code: INTEGER): INTEGER is
+			-- Low surrogate for `a_code'
+		require
+			code_high_enough: a_code > maximum_bmp_character_code
+			code_low_enough: a_code <= maximum_unicode_character_code
+		do
+			Result :=  INTEGER_.bit_or (INTEGER_.bit_and (a_code, Hex_3ff), Hex_dc00)
+		ensure
+			low_surrogate: Result >= 256 * Hex_dc
+			not_too_big: Result < 256 * Hex_e0
 		end
 
 feature {NONE} -- Constants
@@ -189,5 +239,13 @@ feature {NONE} -- Constants
 
 	Hex_10000: INTEGER is 65536
 			-- Base of surrogates
+	
+	Hex_d7c0: INTEGER is 55232
+			-- Hex D7Co
 
+	Hex_3ff: INTEGER is 1023
+
+	Hex_dc00: INTEGER is 56320
+			-- Hex_dc00: start of so-called low-half zone or low surrogate area
+	
 end

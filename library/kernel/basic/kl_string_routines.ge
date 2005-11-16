@@ -23,8 +23,10 @@ inherit
 	KL_SHARED_PLATFORM
 
 	KL_IMPORTED_CHARACTER_ROUTINES
+	KL_IMPORTED_INTEGER_ROUTINES
 	KL_IMPORTED_ANY_ROUTINES
 	UC_IMPORTED_UNICODE_ROUTINES
+	UC_IMPORTED_UTF16_ROUTINES
 
 feature -- Initialization
 
@@ -286,6 +288,92 @@ feature -- Access
 			new_string_not_void: Result /= Void
 			same_type: ANY_.same_types (Result, a_string)
 			new_string_empty: Result.count = 0
+		end
+
+	to_utf16_be (a_string: STRING): STRING is
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-16BE representation of `a_string'
+		require
+			string_not_void: a_string /= Void
+		local
+			i, a_cnt, a_cde, a_high, a_low, a_surrogate: INTEGER
+			uc_string: UC_STRING
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				Result := uc_string.to_utf16_be
+			else
+				a_cnt := a_string.count
+				create Result.make (a_cnt)
+				from i := 1 until i > a_cnt loop
+					a_cde := a_string.item_code (i)
+					if unicode.is_bmp_code_point (a_cde) then
+						a_high := a_cde // 256
+						a_low := a_cde \\ 256
+						Result.append_character (INTEGER_.to_character (a_high))
+						Result.append_character (INTEGER_.to_character (a_low))
+					else
+						a_surrogate := utf16.supplementary_to_high_surrogate (a_cde)
+						a_high := a_surrogate // 256
+						a_low := a_surrogate \\ 256
+						Result.append_character (INTEGER_.to_character (a_high))
+						Result.append_character (INTEGER_.to_character (a_low))
+						a_surrogate := utf16.supplementary_to_low_surrogate (a_cde)
+						a_high := a_surrogate // 256
+						a_low := a_surrogate \\ 256
+						Result.append_character (INTEGER_.to_character (a_high))
+						Result.append_character (INTEGER_.to_character (a_low))
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			to_utf16_be_not_void: Result /= Void
+			string_type: ANY_.same_types (Result, "")
+			valid_utf16: utf16.valid_utf16 (Result)
+		end
+
+	to_utf16_le (a_string: STRING): STRING is
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-16LE representation of `a_string'
+		require
+			string_not_void: a_string /= Void
+		local
+			i, a_cnt, a_cde, a_high, a_low, a_surrogate: INTEGER
+			uc_string: UC_STRING
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				Result := uc_string.to_utf16_le
+			else
+				a_cnt := a_string.count
+				create Result.make (a_cnt)
+				from i := 1 until i > a_cnt loop
+					a_cde := a_string.item_code (i)
+					if unicode.is_bmp_code_point (a_cde) then
+						a_high := a_cde // 256
+						a_low := a_cde \\ 256
+						Result.append_character (INTEGER_.to_character (a_low))
+						Result.append_character (INTEGER_.to_character (a_high))
+					else
+						a_surrogate := utf16.supplementary_to_high_surrogate (a_cde)
+						a_high := a_surrogate // 256
+						a_low := a_surrogate \\ 256
+						Result.append_character (INTEGER_.to_character (a_low))
+						Result.append_character (INTEGER_.to_character (a_high))
+						a_surrogate := utf16.supplementary_to_low_surrogate (a_cde)
+						a_high := a_surrogate // 256
+						a_low := a_surrogate \\ 256
+						Result.append_character (INTEGER_.to_character (a_low))
+						Result.append_character (INTEGER_.to_character (a_high))
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			to_utf16_le_not_void: Result /= Void
+			string_type: ANY_.same_types (Result, "")
+			valid_utf16: utf16.valid_utf16 (utf16.bom_le + Result)
 		end
 
 	string (a_string: STRING): STRING is

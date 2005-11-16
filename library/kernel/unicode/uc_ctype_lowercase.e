@@ -513,10 +513,10 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_code_plane_0: ARRAY [ARRAY [INTEGER]] is
+	lower_code_plane_0: SPECIAL [ARRAY [INTEGER]] is
 			-- Generated array plane
 		once
-			create Result.make (0, 255)
+			create Result.make (256)
 			Result.put (lower_code_plane_0_segment_0, 0)
 			Result.put (lower_code_plane_0_segment_1, 1)
 			Result.put (lower_code_plane_0_segment_2, 2)
@@ -813,10 +813,10 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_code_plane_1: ARRAY [ARRAY [INTEGER]] is
+	lower_code_plane_1: SPECIAL [ARRAY [INTEGER]] is
 			-- Generated array plane
 		once
-			create Result.make (0, 255)
+			create Result.make (256)
 			Result.put (empty_lower_code_segment, 0)
 			Result.put (empty_lower_code_segment, 1)
 			Result.put (empty_lower_code_segment, 2)
@@ -1078,10 +1078,10 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True -- all items are non-Void
 		end
 
-	empty_lower_code_plane: ARRAY [ARRAY [INTEGER]] is
+	empty_lower_code_plane: SPECIAL [ARRAY [INTEGER]] is
 			-- Generated array plane
 		once
-			create Result.make (0, 255)
+			create Result.make (256)
 			Result.put (empty_lower_code_segment, 0)
 			Result.put (empty_lower_code_segment, 1)
 			Result.put (empty_lower_code_segment, 2)
@@ -1343,10 +1343,10 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True -- all items are non-Void
 		end
 
-	lower_codes: ARRAY [ARRAY [ARRAY [INTEGER]]] is
+	lower_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is
 			-- Lower case code points for each code point
 		once
-			create Result.make (0, 16)
+			create Result.make (17)
 			Result.put (lower_code_plane_0, 0)
 			Result.put (lower_code_plane_1, 1)
 			Result.put (empty_lower_code_plane, 2)

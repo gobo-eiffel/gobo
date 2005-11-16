@@ -30,14 +30,14 @@ feature -- Status report
 		local
 			i, nb, nb2: INTEGER
 			bc, a_code: INTEGER
-			a_byte: CHARACTER
+			a_byte, a_first_byte: CHARACTER
 		do
 			Result := True
 			nb := a_string.count
 			from i := 1 until i > nb loop
-				a_byte := a_string.item (i)
-				if is_encoded_first_byte (a_byte) then
-					bc := encoded_byte_count (a_byte)
+				a_first_byte := a_string.item (i)
+				if is_encoded_first_byte (a_first_byte) then
+					bc := encoded_byte_count (a_first_byte)
 					if bc = 1 then
 						i := i + 1
 					else
@@ -46,10 +46,10 @@ feature -- Status report
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						else
-							a_code := encoded_first_value (a_byte)
+							a_code := encoded_first_value (a_first_byte)
 							i := i + 1
 							a_byte := a_string.item (i)
-							if not is_encoded_next_byte (a_byte) then
+							if not is_encoded_next_byte (a_byte, a_first_byte, False) then
 								Result := False
 								i := nb + 1 -- Jump out of the loop.
 							else
@@ -70,20 +70,10 @@ feature -- Status report
 											-- 1110xxxx (2^4 - 1 = 15)
 										Result := False
 									end
-								when 5 then
-									if a_code <= code_7 then
-											-- 11110xxx (2^3 - 1 = 7)
-										Result := False
-									end
-								when 6 then
-									if a_code <= code_3 then
-											-- 111110xx (2^2 - 1 = 3)
-										Result := False
-									end
 								end
 								if Result then
 									from i := i + 1 until i > nb2 loop
-										if is_encoded_next_byte (a_string.item (i)) then
+										if is_encoded_next_byte (a_string.item (i), byte_127, True) then
 											i := i + 1
 										else
 											Result := False
@@ -105,14 +95,30 @@ feature -- Status report
 			-- Is `a_byte' the first byte in UTF-8 encoding?
 		do
 				-- All but 10xxxxxx and 1111111x
-			Result := (a_byte <= byte_127 or (byte_191 < a_byte and a_byte <= byte_253))
+			Result := (a_byte <= byte_127 or (byte_194 <= a_byte and a_byte <= byte_244))
 		end
 
-	is_encoded_next_byte (a_byte: CHARACTER): BOOLEAN is
+	is_encoded_next_byte (a_byte, a_first_byte: CHARACTER; ignore_first_byte: BOOLEAN): BOOLEAN is
 			-- Is `a_byte' one of the next bytes in UTF-8 encoding?
+		require
+			valid_first_byte: not ignore_first_byte implies is_encoded_first_byte (a_first_byte)
 		do
-				-- 10xxxxxx
-			Result := (byte_127 < a_byte and a_byte <= byte_191)
+			-- 10xxxxxx
+			if ignore_first_byte then
+				Result := (byte_127 < a_byte and a_byte <= byte_191)
+			else
+				if a_first_byte = byte_224 then
+					Result := (byte_159 < a_byte and a_byte <= byte_191)
+				elseif a_first_byte = byte_237 then
+					Result := (byte_127 < a_byte and a_byte <= byte_159)
+				elseif a_first_byte = byte_240 then
+					Result := (byte_143 < a_byte and a_byte <= byte_191)
+				elseif a_first_byte = byte_244 then
+					Result := (byte_127 < a_byte and a_byte <= byte_143)
+				else
+					Result := (byte_127 < a_byte and a_byte <= byte_191)
+				end
+			end
 		end
 
 feature -- Status report
@@ -133,6 +139,9 @@ feature -- Status report
 
 feature -- Access
 
+	byte_127: CHARACTER is '%/127/'
+			-- Highest ASCII character/1st UTF-8 byte
+
 	encoded_first_value (a_byte: CHARACTER): INTEGER is
 			-- Value encoded in first byte
 		require
@@ -147,17 +156,9 @@ feature -- Access
 			elseif a_byte <= byte_239 then
 					-- 1110xxxx
 				Result := Result \\ 16
-			elseif a_byte <= byte_247 then
+			elseif a_byte <= byte_244 then
 					-- 11110xxx
 				Result := Result \\ 8
-			elseif a_byte <= byte_251 then
-					-- 111110xx
-				Result := Result \\ 4
-			elseif a_byte <= byte_253 then
-					-- 1111110x
-				Result := Result \\ 2
-			else
-				Result := 0
 			end
 		ensure
 			value_positive: Result >= 0
@@ -167,7 +168,7 @@ feature -- Access
 	encoded_next_value (a_byte: CHARACTER): INTEGER is
 			-- Value encoded in one of the next bytes
 		require
-			is_encoded_next_byte: is_encoded_next_byte (a_byte)
+			is_encoded_next_byte: is_encoded_next_byte (a_byte, byte_127, False)
 		do
 				-- 10xxxxxx
 			Result := a_byte.code \\ 64
@@ -193,19 +194,13 @@ feature -- Measurement
 			elseif a_byte <= byte_239 then
 					-- 1110xxxx
 				Result := 3
-			elseif a_byte <= byte_247 then
+			else
 					-- 11110xxx
 				Result := 4
-			elseif a_byte <= byte_251 then
-					-- 111110xx
-				Result := 5
-			else
-					-- 1111110x
-				Result := 6
 			end
 		ensure
 			encoded_byte_code_large_enough: Result >= 1
-			encoded_byte_code_small_enough: Result <= 6
+			encoded_byte_code_small_enough: Result <= 4
 		end
 
 	substring_byte_count (a_string: STRING; start_index, end_index: INTEGER): INTEGER is
@@ -305,7 +300,7 @@ feature -- Measurement
 			-- Number of bytes needed to encode unicode character
 			-- of code `a_code' with the UTF-8 encoding
 		require
-			valid_code: unicode.valid_code (a_code)
+			valid_code: unicode.valid_code_for_utf8 (a_code)
 		do
 			if a_code < 128 then
 					-- 2^7
@@ -319,22 +314,12 @@ feature -- Measurement
 					-- 2^16
 					-- 1110xxxx 10xxxxxx 10xxxxxx
 				Result := 3
-			elseif a_code < 2097152 then
-					-- 2^21
-					-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-				Result := 4
-			elseif a_code < 67108864 then
-					-- 2^26
-					-- 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-				Result := 5
 			else
-					-- 2^31
-					-- 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-				Result := 6
+				Result := 4
 			end
 		ensure
 			code_byte_count_large_enough: Result >= 1
-			code_byte_count_small_enough: Result <= 6
+			code_byte_count_small_enough: Result <= 4
 		end
 
 	character_byte_count (c: CHARACTER): INTEGER is
@@ -360,23 +345,13 @@ feature -- Measurement
 						-- 2^16
 						-- 1110xxxx 10xxxxxx 10xxxxxx
 					Result := 3
-				elseif a_code < 2097152 then
-						-- 2^21
-						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-					Result := 4
-				elseif a_code < 67108864 then
-						-- 2^26
-						-- 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-					Result := 5
 				else
-						-- 2^31
-						-- 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-					Result := 6
+					Result := 4
 				end
 			end
 		ensure
 			character_byte_count_large_enough: Result >= 1
-			character_byte_count_small_enough: Result <= 6
+			character_byte_count_small_enough: Result <= 4
 		end
 
 feature -- Conversion
@@ -416,9 +391,9 @@ feature -- Element change
 			a_utf8_not_void: a_utf8 /= Void
 			a_utf8_is_string: ANY_.same_types (a_utf8, "")
 			a_utf8_valid: valid_utf8 (a_utf8)
-			valid_code: unicode.valid_code (a_code)
+			valid_code: unicode.valid_code_for_utf8 (a_code)
 		local
-			b2, b3, b4, b5, b6: CHARACTER
+			b2, b3, b4: CHARACTER
 			c: INTEGER
 		do
 			inspect code_byte_count (a_code)
@@ -455,41 +430,6 @@ feature -- Element change
 				a_utf8.append_character (b2)
 				a_utf8.append_character (b3)
 				a_utf8.append_character (b4)
-			when 5 then
-				c := a_code
-				b5 := INTEGER_.to_character ((c \\ 64) + 128)
-				c := c // 64
-				b4 := INTEGER_.to_character ((c \\ 64) + 128)
-				c := c // 64
-				b3 := INTEGER_.to_character ((c \\ 64) + 128)
-				c := c // 64
-				b2 := INTEGER_.to_character ((c \\ 64) + 128)
-				c := c // 64
-					-- 111110xx
-				a_utf8.append_character (INTEGER_.to_character (c + 248))
-				a_utf8.append_character (b2)
-				a_utf8.append_character (b3)
-				a_utf8.append_character (b4)
-				a_utf8.append_character (b5)
-			when 6 then
-				c := a_code
-				b6 := INTEGER_.to_character ((c \\ 64) + 128)
-				c := c // 64
-				b5 := INTEGER_.to_character ((c \\ 64) + 128)
-				c := c // 64
-				b4 := INTEGER_.to_character ((c \\ 64) + 128)
-				c := c // 64
-				b3 := INTEGER_.to_character ((c \\ 64) + 128)
-				c := c // 64
-				b2 := INTEGER_.to_character ((c \\ 64) + 128)
-				c := c // 64
-					-- 1111110x
-				a_utf8.append_character (INTEGER_.to_character (c + 252))
-				a_utf8.append_character (b2)
-				a_utf8.append_character (b3)
-				a_utf8.append_character (b4)
-				a_utf8.append_character (b5)
-				a_utf8.append_character (b6)
 			end
 		ensure
 			a_utf8_valid: valid_utf8 (a_utf8)
@@ -509,21 +449,34 @@ feature {NONE} -- Constants
 	code_31: INTEGER is 31
 			-- 110xxxxx (2^5 - 1 = 31)
 
-	byte_127: CHARACTER is '%/127/'
 	code_127: INTEGER is 127
 			-- 01111111
+
+	byte_143: CHARACTER is '%/143/'
+
+	byte_159: CHARACTER is '%/159/'
 
 	byte_191: CHARACTER is '%/191/'
 	code_191: INTEGER is 191
 			-- 10111111
 
+	byte_194: CHARACTER is '%/194/'
+
 	byte_223: CHARACTER is '%/223/'
 	code_223: INTEGER is 223
 			-- 11011111
 
+	byte_224: CHARACTER is '%/224/'
+
+	byte_237: CHARACTER is '%/237/'
+
 	byte_239: CHARACTER is '%/239/'
 	code_239: INTEGER is 239
 			-- 11101111
+
+	byte_240: CHARACTER is '%/240/'
+
+	byte_244: CHARACTER is '%/244/'
 
 	byte_247: CHARACTER is '%/247/'
 	code_247: INTEGER is 247

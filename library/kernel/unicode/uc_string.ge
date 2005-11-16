@@ -2399,6 +2399,76 @@ feature -- Conversion
 			valid_utf8: utf8.valid_utf8 (Result)
 		end
 
+	to_utf16_be: STRING is
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-16BE representation of current string
+		local
+			i, nb, a_cde, a_high, a_low, a_surrogate: INTEGER
+		do
+			nb := byte_count
+			create Result.make (nb)
+			from i := 1 until i > nb loop
+				a_cde := item_code_at_byte_index (i)
+				if unicode.is_bmp_code_point (a_cde) then
+					a_high := a_cde // 256
+					a_low := a_cde \\ 256
+					Result.append_character (INTEGER_.to_character (a_high))
+					Result.append_character (INTEGER_.to_character (a_low))
+				else
+					a_surrogate := utf16.supplementary_to_high_surrogate (a_cde)
+					a_high := a_surrogate // 256
+					a_low := a_surrogate \\ 256
+					Result.append_character (INTEGER_.to_character (a_high))
+					Result.append_character (INTEGER_.to_character (a_low))
+					a_surrogate := utf16.supplementary_to_low_surrogate (a_cde)
+					a_high := a_surrogate // 256
+					a_low := a_surrogate \\ 256
+					Result.append_character (INTEGER_.to_character (a_high))
+					Result.append_character (INTEGER_.to_character (a_low))
+				end
+				i := next_byte_index (i)
+			end
+		ensure
+			to_utf16_be_not_void: Result /= Void
+			string_type: ANY_.same_types (Result, "")
+			valid_utf16: utf16.valid_utf16 (Result)
+		end
+
+	to_utf16_le: STRING is
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-16LE representation of current string
+		local
+			i, nb, a_cde, a_high, a_low, a_surrogate: INTEGER
+		do
+			nb := byte_count
+			create Result.make (nb)
+			from i := 1 until i > nb loop
+				a_cde := item_code_at_byte_index (i)
+				if unicode.is_bmp_code_point (a_cde) then
+					a_high := a_cde // 256
+					a_low := a_cde \\ 256
+					Result.append_character (INTEGER_.to_character (a_low))
+					Result.append_character (INTEGER_.to_character (a_high))
+				else
+					a_surrogate := utf16.supplementary_to_high_surrogate (a_cde)
+					a_high := a_surrogate // 256
+					a_low := a_surrogate \\ 256
+					Result.append_character (INTEGER_.to_character (a_low))
+					Result.append_character (INTEGER_.to_character (a_high))
+					a_surrogate := utf16.supplementary_to_low_surrogate (a_cde)
+					a_high := a_surrogate // 256
+					a_low := a_surrogate \\ 256
+					Result.append_character (INTEGER_.to_character (a_low))
+					Result.append_character (INTEGER_.to_character (a_high))
+				end
+				i := next_byte_index (i)
+			end
+		ensure
+			to_utf16_le_not_void: Result /= Void
+			string_type: ANY_.same_types (Result, "")
+			valid_utf16: utf16.valid_utf16 (utf16.bom_le + Result)
+		end
+
 	as_string: STRING is
 			-- STRING version of current string;
 			-- Return the UTF8 representation if it is encoded
