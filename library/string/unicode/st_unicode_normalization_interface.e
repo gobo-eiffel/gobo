@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			valid_normal_form: a_form >= Nfd and a_form <= Nfkc
 		local
 			i, c, len, last_combining_class, a_combining_class: INTEGER
-			a_check: UT_TRISTATE
+			a_check: CHARACTER
 		do
 			create Result.make_true
 			from
@@ -347,9 +347,9 @@ feature {NONE} -- Implementation
 					when Nfkc then
 						a_check := nfkc_quick_check (c)
 					end
-					if a_check.is_false then
+					if a_check.code = 0 then
 						Result.set_false
-					elseif a_check.is_undefined then
+					elseif a_check.code = 2 then
 						Result.set_undefined
 					end
 					last_combining_class := a_combining_class
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			boolean_result_for_decompositions: (a_form = Nfd or a_form = Nfkd) implies not Result.is_undefined
 		end
 
-	nfd_quick_check (a_code_point: INTEGER): UT_TRISTATE is
+	nfd_quick_check (a_code_point: INTEGER): CHARACTER is
 			-- NFD quick ceck property for `a_code_point'
 		require
 			valid_code_point: valid_code (a_code_point)
@@ -372,13 +372,12 @@ feature {NONE} -- Implementation
 			a_rem  := a_code_point \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
-			Result := nfd_quick_check_array.item (i).item (j).item (k)
+			Result := nfd_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			quick_check_not_void: Result /= Void
-			boolean_defined: not Result.is_undefined
+			nfd_quick_check_in_range: Result.code >= 0 and Result.code <= 2
 		end
 
-	nfkd_quick_check (a_code_point: INTEGER): UT_TRISTATE is
+	nfkd_quick_check (a_code_point: INTEGER): CHARACTER is
 			-- NFKD quick ceck property for `a_code_point'
 		require
 			valid_code_point: valid_code (a_code_point)
@@ -389,13 +388,12 @@ feature {NONE} -- Implementation
 			a_rem  := a_code_point \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
-			Result := nfkd_quick_check_array.item (i).item (j).item (k)
+			Result := nfkd_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			quick_check_not_void: Result /= Void
-			boolean_defined: not Result.is_undefined
+			nfkd_quick_check_in_range: Result.code >= 0 and Result.code <= 2
 		end
 
-	nfc_quick_check (a_code_point: INTEGER): UT_TRISTATE is
+	nfc_quick_check (a_code_point: INTEGER): CHARACTER is
 			-- NFC quick ceck property for `a_code_point'
 		require
 			valid_code_point: valid_code (a_code_point)
@@ -406,12 +404,12 @@ feature {NONE} -- Implementation
 			a_rem  := a_code_point \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
-			Result := nfc_quick_check_array.item (i).item (j).item (k)
+			Result := nfc_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			quick_check_not_void: Result /= Void
+			nfc_quick_check_in_range: Result.code >= 0 and Result.code <= 2
 		end
 
-	nfkc_quick_check (a_code_point: INTEGER): UT_TRISTATE is
+	nfkc_quick_check (a_code_point: INTEGER): CHARACTER is
 			-- NFKC quick ceck property for `a_code_point'
 		require
 			valid_code_point: valid_code (a_code_point)
@@ -422,9 +420,9 @@ feature {NONE} -- Implementation
 			a_rem  := a_code_point \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
-			Result := nfkc_quick_check_array.item (i).item (j).item (k)
+			Result := nfkc_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			quick_check_not_void: Result /= Void
+			nfkc_quick_check_in_range: Result.code >= 0 and Result.code <= 2
 		end
 
 	order_canonically (a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN]) is
@@ -602,7 +600,7 @@ feature {NONE} -- Implementation
 			decomposition_not_empty: not a_decomposition.is_empty
 		end
 
-	nfd_quick_check_array: ARRAY [ARRAY [ARRAY [UT_TRISTATE]]] is
+	nfd_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
 			-- NFD_Quick_Check values for each code point
 		deferred
 		ensure
@@ -610,7 +608,7 @@ feature {NONE} -- Implementation
 			-- no_void_nfd_quick_check_array: not Result.has (Void)
 		end
 
-	nfc_quick_check_array: ARRAY [ARRAY [ARRAY [UT_TRISTATE]]] is
+	nfc_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
 			-- NFC_Quick_Check values for each code point
 		deferred
 		ensure
@@ -618,7 +616,7 @@ feature {NONE} -- Implementation
 			-- no_void_nfc_quick_check_array: not Result.has (Void)
 		end
 
-	nfkd_quick_check_array: ARRAY [ARRAY [ARRAY [UT_TRISTATE]]] is
+	nfkd_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
 			-- NFKD_Quick_Check values for each code point
 		deferred
 		ensure
@@ -626,7 +624,7 @@ feature {NONE} -- Implementation
 			-- no_void_nfkd_quick_check_array: not Result.has (Void)
 		end
 
-	nfkc_quick_check_array: ARRAY [ARRAY [ARRAY [UT_TRISTATE]]] is
+	nfkc_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
 			-- NFKC_Quick_Check values for each code point
 		deferred
 		ensure
@@ -634,7 +632,7 @@ feature {NONE} -- Implementation
 			-- no_void_nfkc_quick_check_array: not Result.has (Void)
 		end
 
-	canonical_combining_class_properties: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is
+	canonical_combining_class_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
 			-- Values of Canonical_Combining_Class for each code-point
 		deferred
 		ensure
@@ -642,7 +640,7 @@ feature {NONE} -- Implementation
 			-- no_void_canonical_combining_class_property: not Result.has (Void)
 		end
 
-	decomposition_type_properties: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is
+	decomposition_type_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
 		-- Decomposition type property for each code point
 		deferred
 		ensure
@@ -650,7 +648,7 @@ feature {NONE} -- Implementation
 			-- no_void_decomposition_type_property: not Result.has (Void)
 		end
 
-	decomposition_mapping_properties: ARRAY [ARRAY [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
+	decomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
 			-- Decomposition mapping property for each code point
 		deferred
 		ensure
@@ -684,6 +682,141 @@ feature {NONE} -- Implementation
 			array_not_void: Result /= Void
 			zero_indexed: Result.lower = 0
 			correct_count: Result.upper = 255
+		end
+	
+	new_singleton (i: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- List of one integer
+		do
+			create Result.make (1)
+			Result.put_last (i)
+		ensure
+			list_not_void: Result /= Void
+			one_integer: Result.count = 1
+		end
+	
+	new_pair (i, j: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- List of two integers
+		do
+			create Result.make (2)
+			Result.put_last (i)
+			Result.put_last (j)
+		ensure
+			list_not_void: Result /= Void
+			two_integers: Result.count = 2
+		end
+	
+	new_triple (i, j, k: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- List of three integers
+		do
+			create Result.make (3)
+			Result.put_last (i)
+			Result.put_last (j)
+			Result.put_last (k)
+		ensure
+			list_not_void: Result /= Void
+			three_integers: Result.count = 3
+		end
+	
+	new_quadruple (i, j, k, l: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- List of four integers
+		do
+			create Result.make (4)
+			Result.put_last (i)
+			Result.put_last (j)
+			Result.put_last (k)
+			Result.put_last (l)
+		ensure
+			list_not_void: Result /= Void
+			four_integers: Result.count = 4
+		end
+	
+	new_quintuple (i, j, k, l, m: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- List of five integers
+		do
+			create Result.make (5)
+			Result.put_last (i)
+			Result.put_last (j)
+			Result.put_last (k)
+			Result.put_last (l)
+			Result.put_last (m)
+		ensure
+			list_not_void: Result /= Void
+			five_integers: Result.count = 5
+		end
+	
+	new_sextuple (i, j, k, l, m , n: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- List of six integers
+		do
+			create Result.make (6)
+			Result.put_last (i)
+			Result.put_last (j)
+			Result.put_last (k)
+			Result.put_last (l)
+			Result.put_last (m)
+			Result.put_last (n)
+		ensure
+			list_not_void: Result /= Void
+			six_integers: Result.count = 6
+		end
+	
+	new_heptuple (i, j, k, l, m , n, o: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- List of seven integers
+		do
+			create Result.make (7)
+			Result.put_last (i)
+			Result.put_last (j)
+			Result.put_last (k)
+			Result.put_last (l)
+			Result.put_last (m)
+			Result.put_last (n)
+			Result.put_last (o)
+		ensure
+			list_not_void: Result /= Void
+			seven_integers: Result.count = 7
+		end
+
+	new_octuple (i, j, k, l, m , n, o, p: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- List of eight integers
+		do
+			create Result.make (8)
+			Result.put_last (i)
+			Result.put_last (j)
+			Result.put_last (k)
+			Result.put_last (l)
+			Result.put_last (m)
+			Result.put_last (n)
+			Result.put_last (o)
+			Result.put_last (p)
+		ensure
+			list_not_void: Result /= Void
+			eight_integers: Result.count = 8
+		end
+	
+	new_eighteen_tuple (i, j, k, l, m, n, o, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- List of eighteen integers
+		do
+			create Result.make (18)
+			Result.put_last (i)
+			Result.put_last (j)
+			Result.put_last (k)
+			Result.put_last (l)
+			Result.put_last (m)
+			Result.put_last (n)
+			Result.put_last (o)
+			Result.put_last (n8)
+			Result.put_last (n9)
+			Result.put_last (n10)
+			Result.put_last (n11)
+			Result.put_last (n12)
+			Result.put_last (n13)
+			Result.put_last (n14)
+			Result.put_last (n15)
+			Result.put_last (n16)
+			Result.put_last (n17)
+			Result.put_last (n18)
+		ensure
+			list_not_void: Result /= Void
+			eighteen_integers: Result.count = 18
 		end
 
 	injected_canonical_combining_class (a_class: INTEGER_8): INTEGER is

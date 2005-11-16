@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 			correct_count: Result.upper = 255
 		end
 
-	character_classes: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is
+	character_classes: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
 			-- Character classes for each code point
 		deferred
 		ensure
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 			-- no_void_character_class: not Result.has (Void)
 		end
 
-	decimal_values: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is
+	decimal_values: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
 			-- Decimal value for each code point
 		deferred
 		ensure
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 			-- no_void_decimal_value: not Result.has (Void)
 		end
 
-	upper_case_properties: ARRAY [ARRAY [ARRAY [BOOLEAN]]] is
+	upper_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Upper case property for each code point
 		deferred
 		ensure
@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 			-- no_void_upper_case_property: not Result.has (Void)
 		end
 
-	lower_case_properties: ARRAY [ARRAY [ARRAY [BOOLEAN]]] is
+	lower_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Lower case property for each code point
 		deferred
 		ensure
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 			-- no_void_lower_case_property: not Result.has (Void)
 		end
 
-	alphabetic_properties: ARRAY [ARRAY [ARRAY [BOOLEAN]]] is
+	alphabetic_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Alphabetic property for each code point
 		deferred
 		ensure
@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 			-- no_void_alphabetic_property: not Result.has (Void)
 		end
 
-	math_properties: ARRAY [ARRAY [ARRAY [BOOLEAN]]] is
+	math_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Math property for each code point
 		deferred
 		ensure
