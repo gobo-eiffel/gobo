@@ -459,6 +459,7 @@ feature {NONE} -- Implementation
 			specials_in_attributes.put (True, 9) -- 'TAB'
 			specials_in_attributes.put (True, 34) -- '"'
 		end	
+
 	write_declaration is
 			-- Write XML declaration
 		require
@@ -466,8 +467,11 @@ feature {NONE} -- Implementation
 		local
 			omit: BOOLEAN
 		do
-			if output_properties.byte_order_mark_required then
-				output_ignoring_error (byte_order_mark)
+			if outputter.byte_order_mark_permitted then
+				if output_properties.byte_order_mark_required
+					or (not output_properties.is_byte_order_mark_set and outputter.is_byte_order_mark_default) then
+					output_ignoring_error (outputter.byte_order_mark)
+				end
 			end
 			omit := output_properties.omit_xml_declaration
 			if omit and then
@@ -720,12 +724,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			document_opened: is_error or else is_output_open
-		end
-
-	byte_order_mark: STRING is
-			-- XML BOM
-		once
-			Result := code_to_string (254 * 256 + 255) -- FEFF
 		end
 
 	write_doctype (a_type, a_system_id, a_public_id: STRING ) is

@@ -38,7 +38,27 @@ feature {NONE} -- Initialization
 			outputter_set: outputter = a_raw_outputter
 		end
 
+feature -- Access
+
+	byte_order_mark: STRING is
+			-- XML BOM
+		once
+			-- Precondition is never met
+		end
+
 feature -- Status report
+
+	byte_order_mark_permitted: BOOLEAN is
+			--	Is a BOM permitted?
+		do
+			Result := False
+		end
+
+	is_byte_order_mark_default: BOOLEAN is
+			-- Is emitting a BOM the default behaviour?
+		do
+			Result := False
+		end
 
 	is_bad_character_code (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' not representable in `encoding'?

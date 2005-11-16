@@ -2,21 +2,24 @@ indexing
 
 	description:
 
-		"UTF-8 output encoders."
+		"Output encoders for UTF-16, UTF-16BE and UTF-16LE."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_UTF8_ENCODER
+class XM_XSLT_UTF16_ENCODER
 
 inherit
 
 	XM_XSLT_OUTPUT_ENCODER
 
 	UC_UNICODE_ROUTINES
+		export {NONE} all end
+
+	UC_IMPORTED_UTF16_ROUTINES
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -35,6 +38,16 @@ feature {NONE} -- Initialization
 			encoding_not_void: an_encoding /= Void
 		do
 			encoding := an_encoding
+			if STRING_.same_string (encoding, "UTF-16BE") then
+				is_utf16_be := True
+			elseif STRING_.same_string (encoding, "UTF-16LE") then
+				is_utf16_le := True
+			else
+				check
+					utf16: STRING_.same_string (encoding, "UTF-16")
+					-- Encoder factory assures this
+				end
+			end
 			outputter := a_raw_outputter
 		ensure
 			encoding_set: encoding = an_encoding
@@ -46,21 +59,28 @@ feature -- Access
 	byte_order_mark: STRING is
 			-- XML BOM
 		once
-			Result := code_to_string (254 * 256 + 255) -- FEFF
+			if is_utf16_le then
+				Result := utf16.bom_le
+			else
+				Result := utf16.bom_be
+			end
 		end
 
 feature -- Status report
 
+	is_utf16_be, is_utf16_le: BOOLEAN
+			-- Flags for specific encoding schemes
+
 	byte_order_mark_permitted: BOOLEAN is
 			--	Is a BOM permitted?
 		do
-			Result := True
+			Result := not (is_utf16_be or is_utf16_le)
 		end
 
 	is_byte_order_mark_default: BOOLEAN is
 			-- Is emitting a BOM the default behaviour?
 		do
-			Result := False
+			Result := True
 		end
 
 	is_bad_character_code (a_code: INTEGER): BOOLEAN is
@@ -71,6 +91,8 @@ feature -- Status report
 			-- The following code is not correct:
 			
 			-- Result := is_surrogate (a_code) or is_non_character (a_code)
+
+			-- The reasons for this are:
 
 			-- The reasons for this are:
 			-- 1) Surrogates have already been eliminated as the code has passed an `is_char' test
@@ -84,7 +106,11 @@ feature -- Element change
 			-- Encode `a_character_string' and write it to `outputter'.
 		do
 			if not is_error then
-				outputter.output (a_character_string)
+				if is_utf16_le then
+					outputter.output (STRING_.to_utf16_le (a_character_string))
+				else
+					outputter.output (STRING_.to_utf16_be (a_character_string))
+				end
 			end
 		rescue
 			is_error := True
@@ -103,6 +129,10 @@ feature -- Element change
 			is_error := True
 			retry
 		end
+
+invariant
+
+	unique_encoding_scheme: not (is_utf16_be and is_utf16_le)
 
 end
 	

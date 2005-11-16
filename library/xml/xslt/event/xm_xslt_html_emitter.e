@@ -351,10 +351,12 @@ feature {NONE} -- Implementation
 
 				media_type := STRING_.cloned_string (output_properties.media_type)
 
-				if output_properties.byte_order_mark_required then
-					output_ignoring_error (byte_order_mark)
+				if outputter.byte_order_mark_permitted then
+					if output_properties.byte_order_mark_required
+						or (not output_properties.is_byte_order_mark_set and outputter.is_byte_order_mark_default) then
+						output_ignoring_error (outputter.byte_order_mark)
+					end
 				end
-
 				escape_uri_attributes := output_properties.escape_uri_attributes
 
 				a_system_id := output_properties.doctype_system

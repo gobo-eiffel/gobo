@@ -43,9 +43,11 @@ feature -- Events
 
 			-- Write a BOM if requested
 
-			if output_properties.byte_order_mark_required then
-				output_ignoring_error (byte_order_mark)
-				is_empty := False
+			if outputter.byte_order_mark_permitted then
+				if output_properties.byte_order_mark_required
+					or (not output_properties.is_byte_order_mark_set and outputter.is_byte_order_mark_default) then
+					output_ignoring_error (outputter.byte_order_mark)
+				end
 			end
 			is_open := True
 		end

@@ -23,11 +23,32 @@ feature -- Access
 
 	outputter: XM_OUTPUT
 			-- Raw outputter
+	
+	byte_order_mark: STRING is
+			-- XML BOM
+		require
+			byte_order_mark_permitted: byte_order_mark_permitted 
+		deferred
+		ensure
+			byte_order_mark_not_void: Result /= Void
+		end
 
 feature -- Status report
 
 	is_error: BOOLEAN
 			-- has an error occured
+
+	byte_order_mark_permitted: BOOLEAN is
+			--	Is a BOM permitted?
+		deferred
+		end
+
+	is_byte_order_mark_default: BOOLEAN is
+			-- Is emitting a BOM the default behaviour?
+		require
+			byte_order_mark_permitted: byte_order_mark_permitted
+		deferred
+		end
 
 	is_bad_character_code (a_code: INTEGER): BOOLEAN is
 		-- Is `a_code' not representable in `encoding'?

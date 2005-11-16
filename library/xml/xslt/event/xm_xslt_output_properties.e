@@ -962,7 +962,7 @@ feature {NONE} -- Implementation
 			no_previous_error: not is_error
 		do
 			if STRING_.same_string (a_local_name, Method_attribute) then
-				set_method (a_local_name, Platform.Maximum_integer - 2)
+				set_method (a_value, Platform.Maximum_integer - 2)
 			elseif STRING_.same_string (a_local_name, Version_attribute) or else STRING_.same_string (a_local_name, Output_version_attribute)then
 				set_version (a_value, Platform.Maximum_integer - 2)
 			elseif STRING_.same_string (a_local_name, Indent_attribute) then
