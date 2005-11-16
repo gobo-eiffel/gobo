@@ -229,23 +229,24 @@ feature {NONE} -- Constants
 			-- Endian detection character
 
 	Hex_d8: INTEGER is 216
-			-- Hex_d800: start of so-called high-half zone or high surrogate area
+			-- Hex_D800: start of so-called high-half zone or high surrogate area
 
 	Hex_dc: INTEGER is 220
-			-- Hex_dc00: start of so-called low-half zone or low surrogate area
+			-- Hex_DC00: start of so-called low-half zone or low surrogate area
 
 	Hex_e0: INTEGER is 224
-			-- Hex_e000: end (exclusive) of surrogate area
+			-- Hex_E000: end (exclusive) of surrogate area
 
 	Hex_10000: INTEGER is 65536
 			-- Base of surrogates
-	
+
 	Hex_d7c0: INTEGER is 55232
-			-- Hex D7Co
+			-- Hex D7C0
 
 	Hex_3ff: INTEGER is 1023
+			-- Hex 3FF
 
 	Hex_dc00: INTEGER is 56320
-			-- Hex_dc00: start of so-called low-half zone or low surrogate area
-	
+			-- Hex_DC00: start of so-called low-half zone or low surrogate area
+
 end

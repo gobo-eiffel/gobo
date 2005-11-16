@@ -28,7 +28,7 @@ feature -- Status report
 
 	valid_code_for_utf8 (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' a valid non-surrogate unicode?
-			-- Includes all non-characters.
+			-- Include all non-characters.
 		do
 			Result := (a_code >= minimum_unicode_character_code and a_code < minimum_unicode_surrogate_code)
 				or (a_code > maximum_unicode_surrogate_code and a_code <= maximum_unicode_character_code)

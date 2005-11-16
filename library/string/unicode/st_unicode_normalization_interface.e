@@ -683,7 +683,7 @@ feature {NONE} -- Implementation
 			zero_indexed: Result.lower = 0
 			correct_count: Result.upper = 255
 		end
-	
+
 	new_singleton (i: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of one integer
 		do
@@ -693,7 +693,7 @@ feature {NONE} -- Implementation
 			list_not_void: Result /= Void
 			one_integer: Result.count = 1
 		end
-	
+
 	new_pair (i, j: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of two integers
 		do
@@ -704,7 +704,7 @@ feature {NONE} -- Implementation
 			list_not_void: Result /= Void
 			two_integers: Result.count = 2
 		end
-	
+
 	new_triple (i, j, k: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of three integers
 		do
@@ -716,7 +716,7 @@ feature {NONE} -- Implementation
 			list_not_void: Result /= Void
 			three_integers: Result.count = 3
 		end
-	
+
 	new_quadruple (i, j, k, l: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of four integers
 		do
@@ -729,7 +729,7 @@ feature {NONE} -- Implementation
 			list_not_void: Result /= Void
 			four_integers: Result.count = 4
 		end
-	
+
 	new_quintuple (i, j, k, l, m: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of five integers
 		do
@@ -743,7 +743,7 @@ feature {NONE} -- Implementation
 			list_not_void: Result /= Void
 			five_integers: Result.count = 5
 		end
-	
+
 	new_sextuple (i, j, k, l, m , n: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of six integers
 		do
@@ -758,7 +758,7 @@ feature {NONE} -- Implementation
 			list_not_void: Result /= Void
 			six_integers: Result.count = 6
 		end
-	
+
 	new_heptuple (i, j, k, l, m , n, o: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of seven integers
 		do
@@ -791,7 +791,7 @@ feature {NONE} -- Implementation
 			list_not_void: Result /= Void
 			eight_integers: Result.count = 8
 		end
-	
+
 	new_eighteen_tuple (i, j, k, l, m, n, o, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of eighteen integers
 		do

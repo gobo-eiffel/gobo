@@ -42,7 +42,7 @@ feature
 		end
 
 	test_is_endian_detection_character is
-			-- Test feature `is_endian_detection_character'
+			-- Test feature `is_endian_detection_character'.
 		do
 			assert ("big_endian_char", utf16.is_endian_detection_character (Big_endian.item_code (1), Big_endian.item_code (2)))
 			assert ("little_endian_char", utf16.is_endian_detection_character (Little_endian.item_code (1), Little_endian.item_code (2)))
@@ -50,7 +50,7 @@ feature
 		end
 
 	test_surrogate is
-			-- Test feature `surrogate_from_bytes'
+			-- Test feature `surrogate_from_bytes'.
 		do
 				-- Surrogate 0x10000.
 			assert_integers_equal ("surrogate_0x10000", utf16.surrogate_from_bytes (216, 0, 220, 0), 65536)
@@ -61,7 +61,7 @@ feature
 		end
 
 	test_supplementary is
-			-- Test features `supplementary_to_high/low_surrogate'
+			-- Test features `supplementary_to_high' and `supplementary_low_surrogate'.
 		do
 			-- Surrogates for 0x10000.
 			assert_integers_equal ("high_surrogate_0x10000", 55296, utf16.supplementary_to_high_surrogate (65536))

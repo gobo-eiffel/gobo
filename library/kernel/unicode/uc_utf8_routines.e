@@ -5,7 +5,7 @@ indexing
 		"UTF-8 encoding routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103,7 +103,7 @@ feature -- Status report
 		require
 			valid_first_byte: not ignore_first_byte implies is_encoded_first_byte (a_first_byte)
 		do
-			-- 10xxxxxx
+				-- 10xxxxxx
 			if ignore_first_byte then
 				Result := (byte_127 < a_byte and a_byte <= byte_191)
 			else
