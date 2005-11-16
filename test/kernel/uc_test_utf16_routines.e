@@ -60,6 +60,20 @@ feature
 			assert_integers_equal ("surrogate_0x10ffff", utf16.surrogate_from_bytes (219, 255, 223, 255), 1114111)
 		end
 
+	test_supplementary is
+			-- Test features `supplementary_to_high/low_surrogate'
+		do
+			-- Surrogates for 0x10000.
+			assert_integers_equal ("high_surrogate_0x10000", 55296, utf16.supplementary_to_high_surrogate (65536))
+			assert_integers_equal ("low_surrogate_0x10000", 56320, utf16.supplementary_to_low_surrogate (65536))
+				-- Surrogate 0x10001.
+			assert_integers_equal ("high_surrogate_0x10001", 55296, utf16.supplementary_to_high_surrogate (65537))
+			assert_integers_equal ("low_surrogate_0x10001", 56321, utf16.supplementary_to_low_surrogate (65537))
+				-- Surrogate 0x10ffff.
+			assert_integers_equal ("high_surrogate_0x10ffff", 56319, utf16.supplementary_to_high_surrogate (1114111))
+			assert_integers_equal ("low_surrogate_0x10ffff", 57343, utf16.supplementary_to_low_surrogate (1114111))
+		end
+
 feature {NONE} -- Constants
 
 	Big_endian: STRING is "%/254/%/255/"

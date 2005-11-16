@@ -193,6 +193,65 @@ feature -- Test
 			a_string1 := STRING_.cloned_string ("b%Ur")
 			assert_equal ("value3", a_string1, a_string2) 
 		end
+	test_to_utf16_be is
+			-- Test feature `to_utf16_be'.
+		local
+			a_unicode: UC_STRING
+			a_string, a_byte_string: STRING
+		do
+			a_string := "M"
+			a_byte_string := STRING_.to_utf16_be (a_string)
+			assert ("Two_bytes_1", a_byte_string /= Void and then a_byte_string.count = 2)
+			assert_integers_equal ("First_byte_is_0", 0, a_byte_string.item_code (1))
+			assert_integers_equal ("Second_byte_is_77", 77, a_byte_string.item_code (2))
+			create a_unicode.make_filled_code (1072, 1)
+			a_byte_string := STRING_.to_utf16_be (a_unicode)
+			assert ("Two_bytes_2", a_byte_string /= Void and then a_byte_string.count = 2)
+			assert_integers_equal ("First_byte_is_4", 4, a_byte_string.item_code (1))
+			assert_integers_equal ("Second_byte_is_48", 48, a_byte_string.item_code (2))
+			create a_unicode.make_filled_code (20108, 1)
+			a_byte_string := STRING_.to_utf16_be (a_unicode)
+			assert ("Two_bytes_3", a_byte_string /= Void and then a_byte_string.count = 2)
+			assert_integers_equal ("First_byte_is_0x4E", 78, a_byte_string.item_code (1))
+			assert_integers_equal ("Second_byte_is_8C", 140, a_byte_string.item_code (2))
+			create a_unicode.make_filled_code (66306, 1)
+			a_byte_string := STRING_.to_utf16_be (a_unicode)
+			assert ("Four_bytes", a_byte_string /= Void and then a_byte_string.count = 4)
+			assert_integers_equal ("First_byte_is_D8", 216, a_byte_string.item_code (1))
+			assert_integers_equal ("Second_byte_is_0", 0, a_byte_string.item_code (2))
+			assert_integers_equal ("Third_byte_is_DF", 223, a_byte_string.item_code (3))
+			assert_integers_equal ("Fourth_byte_is_2", 2, a_byte_string.item_code (4))
+		end
+
+	test_to_utf16_le is
+			-- Test feature `to_utf16_le'.
+		local
+			a_unicode: UC_STRING
+			a_string, a_byte_string: STRING
+		do
+			a_string := "M"
+			a_byte_string := STRING_.to_utf16_le (a_string)
+			assert ("Two_bytes_1", a_byte_string /= Void and then a_byte_string.count = 2)
+			assert_integers_equal ("First_byte_is_77", 77, a_byte_string.item_code (1))
+			assert_integers_equal ("Second_byte_is_0", 0, a_byte_string.item_code (2))
+			create a_unicode.make_filled_code (1072, 1)
+			a_byte_string := STRING_.to_utf16_le (a_unicode)
+			assert ("Two_bytes_2", a_byte_string /= Void and then a_byte_string.count = 2)
+			assert_integers_equal ("First_byte_is_48", 48, a_byte_string.item_code (1))
+			assert_integers_equal ("Second_byte_is_4", 4, a_byte_string.item_code (2))
+			create a_unicode.make_filled_code (20108, 1)
+			a_byte_string := STRING_.to_utf16_le (a_unicode)
+			assert ("Two_bytes_3", a_byte_string /= Void and then a_byte_string.count = 2)
+			assert_integers_equal ("First_byte_is_0x8C", 140, a_byte_string.item_code (1))
+			assert_integers_equal ("Second_byte_is_4E", 78, a_byte_string.item_code (2))
+			create a_unicode.make_filled_code (66306, 1)
+			a_byte_string := STRING_.to_utf16_le (a_unicode)
+			assert ("Four_bytes", a_byte_string /= Void and then a_byte_string.count = 4)
+			assert_integers_equal ("First_byte_is_0", 0, a_byte_string.item_code (1))
+			assert_integers_equal ("Second_byte_is_D8", 216, a_byte_string.item_code (2))
+			assert_integers_equal ("Third_byte_is_2", 2, a_byte_string.item_code (3))
+			assert_integers_equal ("Fourth_byte_is_DF", 223, a_byte_string.item_code (4))
+		end
 
 	test_substring is
 			-- Test feature `substring'.
