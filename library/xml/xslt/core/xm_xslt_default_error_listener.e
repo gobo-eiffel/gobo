@@ -67,11 +67,11 @@ feature -- Events
 			if warnings_are_recoverable_errors then
 				create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "WARNING", Dynamic_error)
 				error (an_error)
-			elseif warning_threshold >= 0 and then warnings <= warning_threshold then
+			elseif (warning_threshold > 0 and then warnings <= warning_threshold) or warning_threshold < 0 then
 				if a_locator /= Void then display_location_information (a_locator, False) end
 				error_reporter.report_warning_message (STRING_.concat ("Warning: ", a_message))
 				warnings := warnings + 1
-				if warnings > warning_threshold then
+				if warnings > warning_threshold and warning_threshold > 0 then
 					error_reporter.report_warning_message ("No more warnings will be displayed")
 				end
 			end
