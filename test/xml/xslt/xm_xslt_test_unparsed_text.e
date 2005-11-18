@@ -123,7 +123,7 @@ feature {NONE} -- Debug
 		require
 			string_not_void: a_string /= Void
 		local
-			an_index, a_code_point: INTEGER
+			an_index, a_code: INTEGER
 		do
 			from
 				Result := ""
@@ -133,8 +133,8 @@ feature {NONE} -- Debug
 			until
 				an_index > a_string.count
 			loop
-				a_code_point := a_string.item_code (an_index)
-				Result.append_string (INTEGER_.to_hexadecimal (a_code_point, True))
+				a_code := a_string.item_code (an_index)
+				Result.append_string (INTEGER_.to_hexadecimal (a_code, True))
 				an_index := an_index + 1
 			end
 		ensure

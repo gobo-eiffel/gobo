@@ -27,19 +27,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_code_point: INTEGER; a_name: STRING; some_fields: DS_LIST [STRING]) is
-			-- Create a new unicode data for `a_code_point'.
+	make (a_code: INTEGER; a_name: STRING; some_fields: DS_LIST [STRING]) is
+			-- Create a new unicode data for `a_code'.
 		require
-			code_point_large_enough: a_code_point >= 0
-			code_point_small_enough: a_code_point <= maximum_unicode_character_code
+			code_large_enough: a_code >= 0
+			code_small_enough: a_code <= maximum_unicode_character_code
 			name_not_void: a_name /= Void
 			fields_not_void: some_fields /= Void
 			fifteen_fields: some_fields.count = Field_count
 		local
 			a_decimal: INTEGER
-			a_hex_code_point: STRING
+			a_hex_code: STRING
 		do
-			code_point := a_code_point
+			code := a_code
 			name := a_name
 			general_category := category (some_fields.item (3))
 			is_valid := general_category /= Unassigned_other_category
@@ -60,9 +60,9 @@ feature {NONE} -- Initialization
 			if some_fields.item (13).is_empty then
 				upper_code := -1
 			else
-				a_hex_code_point := some_fields.item (13)
-				if STRING_.is_hexadecimal (a_hex_code_point) then
-					upper_code := STRING_.hexadecimal_to_integer (a_hex_code_point)
+				a_hex_code := some_fields.item (13)
+				if STRING_.is_hexadecimal (a_hex_code) then
+					upper_code := STRING_.hexadecimal_to_integer (a_hex_code)
 					if upper_code < 0 or upper_code > maximum_unicode_character_code then
 						is_valid := False
 					end
@@ -73,9 +73,9 @@ feature {NONE} -- Initialization
 			if some_fields.item (15).is_empty then
 				title_code := -1
 			else
-				a_hex_code_point := some_fields.item (15)
-				if STRING_.is_hexadecimal (a_hex_code_point) then
-					title_code := STRING_.hexadecimal_to_integer (a_hex_code_point)
+				a_hex_code := some_fields.item (15)
+				if STRING_.is_hexadecimal (a_hex_code) then
+					title_code := STRING_.hexadecimal_to_integer (a_hex_code)
 					if title_code < 0 or title_code > maximum_unicode_character_code then
 						is_valid := False
 					end
@@ -86,9 +86,9 @@ feature {NONE} -- Initialization
 			if some_fields.item (14).is_empty then
 				lower_code := -1
 			else
-				a_hex_code_point := some_fields.item (14)
-				if STRING_.is_hexadecimal (a_hex_code_point) then
-					lower_code := STRING_.hexadecimal_to_integer (a_hex_code_point)
+				a_hex_code := some_fields.item (14)
+				if STRING_.is_hexadecimal (a_hex_code) then
+					lower_code := STRING_.hexadecimal_to_integer (a_hex_code)
 					if lower_code < 0 or lower_code > maximum_unicode_character_code then
 						is_valid := False
 					end
@@ -119,7 +119,7 @@ feature {NONE} -- Initialization
 			-- TODO: extract any other fields of interest
 
 		ensure
-			code_point_set: code_point = a_code_point
+			code_set: code = a_code
 			name_set: name = a_name
 		end
 
@@ -128,7 +128,7 @@ feature -- Access
 	Highest_combining_class: INTEGER is 240
 			-- Highest combining class in current version of Unicode
 
-	code_point: INTEGER
+	code: INTEGER
 			-- Code point number
 
 	name: STRING
@@ -369,8 +369,8 @@ feature -- Status report
 
 invariant
 
-	code_point_large_enough: code_point >= 0
-	code_point_small_enough: code_point <= maximum_unicode_character_code
+	code_large_enough: code >= 0
+	code_small_enough: code <= maximum_unicode_character_code
 	name_not_void: name /= Void
 
 end

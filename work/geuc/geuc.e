@@ -41,7 +41,7 @@ feature -- Execution
 			Arguments.set_program_name ("geuc")
 			create error_handler.make_standard
 			process_command_line
-			create code_points.make (minimum_unicode_character_code, maximum_unicode_character_code)
+			create codes.make (minimum_unicode_character_code, maximum_unicode_character_code)
 			parse_character_classes
 			parse_derived_core_properties
 			parse_derived_normalization_properties
@@ -88,8 +88,8 @@ feature -- Processing
 			a_file: KL_TEXT_INPUT_FILE
 			a_splitter: ST_SPLITTER
 			some_fields: DS_LIST [STRING]
-			a_hex_code_point, a_name: STRING
-			a_code_point, an_index: INTEGER
+			a_hex_code, a_name: STRING
+			a_code, an_index: INTEGER
 		do
 			create a_file.make (Unicode_data)
 			create a_splitter.make_with_separators (";")
@@ -103,24 +103,24 @@ feature -- Processing
 							report_general_message ("Bad data line in " + Unicode_data + " - not enough fields - data line is: " + a_file.last_string)
 							Exceptions.die (1)
 						else
-							a_hex_code_point := some_fields.item (1)
+							a_hex_code := some_fields.item (1)
 							a_name := some_fields.item (2)
-							if STRING_.is_hexadecimal (a_hex_code_point) then
-								a_code_point := STRING_.hexadecimal_to_integer (a_hex_code_point)
+							if STRING_.is_hexadecimal (a_hex_code) then
+								a_code := STRING_.hexadecimal_to_integer (a_hex_code)
 								if is_range_start (a_name) then
-									initial_code_point := a_code_point
+									initial_code := a_code
 								elseif is_range_finish (a_name) then
-									if initial_code_point <= 0 or else initial_code_point > a_code_point then
+									if initial_code <= 0 or else initial_code > a_code then
 										report_general_message ("Invalid start range - data line for end of range is: " + a_file.last_string)
 										Exceptions.die (1)
 									else
-										from an_index := initial_code_point until an_index > a_code_point loop
-											process_code_point_class (an_index, a_name.substring (2, a_name.count - 7), some_fields)
+										from an_index := initial_code until an_index > a_code loop
+											process_code_class (an_index, a_name.substring (2, a_name.count - 7), some_fields)
 											an_index := an_index + 1
 										end
 									end
 								else
-									process_code_point_class (a_code_point, a_name, some_fields)
+									process_code_class (a_code, a_name, some_fields)
 								end
 							else
 								report_general_message ("Invalid code point - data line is: " + a_file.last_string)
@@ -169,7 +169,7 @@ feature -- Processing
 								STRING_.right_adjust (a_property)
 								if STRING_.same_string (a_property, Alphabetic_property) then
 									set_alphabetic_property (some_fields.item (1))
-								elseif STRING_.same_string (a_property, Default_ignorable_code_point_property) then
+								elseif STRING_.same_string (a_property, Default_ignorable_code_property) then
 								elseif STRING_.same_string (a_property, Lowercase_property) then
 									set_lower_case_property (some_fields.item (1))
 								elseif STRING_.same_string (a_property, Grapheme_base_property) then
@@ -306,9 +306,9 @@ feature -- Code generation
 		end
 
 	generate_character_class_routines is
-			-- Generate character class routines from `code_points' data.
+			-- Generate character class routines from `codes' data.
 		require
-			code_points_exist: code_points /= Void
+			codes_not_void: codes /= Void
 			file_name_prefix_not_void: file_name_prefix /= Void
 			class_name_prefix_not_void: class_name_prefix /= Void
 		local
@@ -342,9 +342,9 @@ feature -- Code generation
 		end
 
 	generate_lower_case_routines is
-			-- Generate lower-case routines from `code_points' data.
+			-- Generate lower-case routines from `codes' data.
 		require
-			code_points_exist: code_points /= Void
+			codes_not_void: codes /= Void
 			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
 			kernel_class_name_prefix_not_void: kernel_class_name_prefix /= Void
 		local
@@ -373,9 +373,9 @@ feature -- Code generation
 		end
 
 	generate_upper_case_routines is
-			-- Generate upper-case routines from `code_points' data.
+			-- Generate upper-case routines from `codes' data.
 		require
-			code_points_exist: code_points /= Void
+			codes_not_void: codes /= Void
 			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
 			kernel_class_name_prefix_not_void: kernel_class_name_prefix /= Void
 		local
@@ -404,9 +404,9 @@ feature -- Code generation
 		end
 	
 	generate_title_case_routines is
-			-- Generate title-case routines from `code_points' data.
+			-- Generate title-case routines from `codes' data.
 		require
-			code_points_exist: code_points /= Void
+			codes_not_void: codes /= Void
 			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
 			kernel_class_name_prefix_not_void: kernel_class_name_prefix /= Void
 		local
@@ -437,7 +437,7 @@ feature -- Code generation
 	generate_normalization_routines is
 			-- Generate normalization routines from parsed arrays.
 		require
-			code_points_exist: code_points /= Void
+			codes_not_void: codes /= Void
 			file_name_prefix_not_void: file_name_prefix /= Void
 			class_name_prefix_not_void: class_name_prefix /= Void
 		local
@@ -486,7 +486,7 @@ feature -- Access
 			-- Unicode Character Database filenames
 
 	Alphabetic_property: STRING is "Alphabetic"
-	Default_ignorable_code_point_property: STRING is "Default_Ignorable_Code_Point"
+	Default_ignorable_code_property: STRING is "Default_Ignorable_Code"
 	Lowercase_property: STRING is "Lowercase"
 	Grapheme_base_property: STRING is "Grapheme_Base"
 	Grapheme_extend_property: STRING is "Grapheme_Extend"
@@ -508,7 +508,7 @@ feature -- Access
 	Nfkc_quick_check_property: STRING is "NFKC_QC"
 			-- Property names
 
-	code_points: ARRAY [GEUC_UNICODE_DATA]
+	codes: ARRAY [GEUC_UNICODE_DATA]
 			-- Parsed data from `Unicode_data' for each code point;
 			-- Not that Unicode does not assign most of the code points
 			-- to characters, so many will be `Void'.
@@ -540,10 +540,10 @@ feature -- Access
 
 feature -- Status report
 
-	valid_code (a_code_point: INTEGER): BOOLEAN is
-			-- Is `a_code_point' a valid Unicode code point?
+	valid_code (a_code: INTEGER): BOOLEAN is
+			-- Is `a_code' a valid Unicode code point?
 		do
-			Result := unicode.valid_code (a_code_point)
+			Result := unicode.valid_code (a_code)
 		end
 
 feature -- Hangul
@@ -575,23 +575,23 @@ feature -- Hangul
 	Jamo_permutation_count: INTEGER is 588
 			-- `Vowel_jamo_count' * `Trailing_jamo_count'
 
-	is_hangul_syllable (a_code_point: INTEGER): BOOLEAN is
-			-- Is `a_code_point' a Hangul syllable?
+	is_hangul_syllable (a_code: INTEGER): BOOLEAN is
+			-- Is `a_code' a Hangul syllable?
 		require
-			valid_code_point: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		do
-			Result := a_code_point >= Hangul_syllable_base and a_code_point < Hangul_syllable_base + Hangul_syllable_count
+			Result := a_code >= Hangul_syllable_base and a_code < Hangul_syllable_base + Hangul_syllable_count
 		end
 
-	decomposed_hangul_syllable (a_code_point: INTEGER): DS_ARRAYED_LIST [INTEGER] is
-			-- Decomposition of `a_code_point' into conjoining jamo
+	decomposed_hangul_syllable (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- Decomposition of `a_code' into conjoining jamo
 		require
-			valid_code_point: valid_code (a_code_point)
-			hangul_syllable: is_hangul_syllable (a_code_point)
+			valid_code: valid_code (a_code)
+			hangul_syllable: is_hangul_syllable (a_code)
 		local
 			s, l, v, t: INTEGER
 		do
-			s := a_code_point - Hangul_syllable_base
+			s := a_code - Hangul_syllable_base
 			l := Leading_jamo_base + s // Jamo_permutation_count
 			v := Vowel_jamo_base + (s \\ Jamo_permutation_count) // Trailing_jamo_count
 			t := Trailing_jamo_base + s \\ Trailing_jamo_count
@@ -634,25 +634,25 @@ feature -- Hangul
 
 feature -- Composition
 
-	store_composition (a_code_point: INTEGER; a_value: DS_ARRAYED_LIST [INTEGER]) is
-			-- Store `a_code_point' as a canonical composition.
+	store_composition (a_code: INTEGER; a_value: DS_ARRAYED_LIST [INTEGER]) is
+			-- Store `a_code' as a canonical composition.
 		require
-			valid_code_point: unicode.is_bmp_code_point (a_code_point)
-			not_hangul_syllable: not is_hangul_syllable (a_code_point)
+			valid_code: unicode.is_bmp_code (a_code)
+			not_hangul_syllable: not is_hangul_syllable (a_code)
 			value_not_void: a_value /= Void
 		local
 			a_first, a_second: INTEGER
 			a_data_point: GEUC_UNICODE_DATA
 			a_pair: DS_HASHABLE_PAIR [INTEGER, INTEGER]
 		do
-			a_data_point := code_points.item (a_code_point)
+			a_data_point := codes.item (a_code)
 			if
 				a_data_point /= Void and then
 				a_data_point.decomposition_type = Canonical_decomposition_mapping and
-				not full_composition_exclusion_array.item (a_code_point)
+				not full_composition_exclusion_array.item (a_code)
 			then
 				check
-					at_least_one_code_point: a_value.count > 0
+					at_least_one_code: a_value.count > 0
 				end
 				a_first := 0
 				a_second := a_value.item (1)
@@ -661,7 +661,7 @@ feature -- Composition
 					a_second := a_value.item (2)
 				end
 				create a_pair.make (a_first, a_second)
-				compositions.force (a_code_point, a_pair)
+				compositions.force (a_code, a_pair)
 			end
 		end
 
@@ -681,7 +681,7 @@ feature {NONE} -- Implementation
 			error_handler.report_error (an_error)
 		end
 
-	initial_code_point: INTEGER
+	initial_code: INTEGER
 			-- Initial code point for range of characters in `Unicode_data'
 
 	Empty_character_class_segment_array_name: STRING is "empty_character_class_segment"
@@ -720,9 +720,9 @@ feature {NONE} -- Implementation
 			file_not_void: an_output_file /= Void
 			file_open_write: an_output_file.is_open_write
 		local
-			i, j, k, a_code_point: INTEGER
+			i, j, k, a_code: INTEGER
 			a_category: INTEGER
-			a_code_point_datum: GEUC_UNICODE_DATA
+			a_code_datum: GEUC_UNICODE_DATA
 			some_segment_names, some_plane_names: ARRAY [STRING]
 			a_segment: ARRAY [INTEGER_8]
 			plane_all_absent, segment_all_absent: BOOLEAN
@@ -737,12 +737,12 @@ feature {NONE} -- Implementation
 					create a_segment.make (0, 255)
 					segment_all_absent := True
 					from k := 0 until k > 255 loop
-						a_code_point := k + 256 * j + 256 * 256 * i
-						a_code_point_datum := code_points.item (a_code_point)
-						if a_code_point_datum = Void then
+						a_code := k + 256 * j + 256 * 256 * i
+						a_code_datum := codes.item (a_code)
+						if a_code_datum = Void then
 							a_category := Unassigned_other_category
 						else
-							a_category := a_code_point_datum.general_category
+							a_category := a_code_datum.general_category
 							if a_category /= Unassigned_other_category then
 								segment_all_absent := False
 								plane_all_absent := False
@@ -800,9 +800,9 @@ feature {NONE} -- Implementation
 			file_not_void: an_output_file /= Void
 			file_open_write: an_output_file.is_open_write
 		local
-			i, j, k, a_code_point, a_category: INTEGER
+			i, j, k, a_code, a_category: INTEGER
 			a_value: INTEGER_8
-			a_code_point_datum: GEUC_UNICODE_DATA
+			a_code_datum: GEUC_UNICODE_DATA
 			some_segment_names, some_plane_names: ARRAY [STRING]
 			a_segment: ARRAY [INTEGER_8]
 			plane_all_absent, segment_all_absent: BOOLEAN
@@ -817,16 +817,16 @@ feature {NONE} -- Implementation
 					create a_segment.make (0, 255)
 					segment_all_absent := True
 					from k := 0 until k > 255 loop
-						a_code_point := k + 256 * j + 256 * 256 * i
-						a_code_point_datum := code_points.item (a_code_point)
-						if a_code_point_datum = Void then
+						a_code := k + 256 * j + 256 * 256 * i
+						a_code_datum := codes.item (a_code)
+						if a_code_datum = Void then
 							a_value := Bad_decimal_value
 						else
-							a_category := a_code_point_datum.general_category
+							a_category := a_code_datum.general_category
 							if a_category = Decimal_digit_number_category then
 								segment_all_absent := False
 								plane_all_absent := False
-								a_value := a_code_point_datum.decimal_digit_value
+								a_value := a_code_datum.decimal_digit_value
 							else
 								a_value := Bad_decimal_value
 							end
@@ -1131,7 +1131,7 @@ feature {NONE} -- Implementation
 					create a_segment.make (0, 255)
 					segment_all_zero := True
 					from k := 0 until k > 255 loop
-						a_data_point := code_points.item (k + 256 * j + 256 * 256 * i)
+						a_data_point := codes.item (k + 256 * j + 256 * 256 * i)
 						if a_data_point = Void then
 							a_value := 0
 						else
@@ -1210,7 +1210,7 @@ feature {NONE} -- Implementation
 					create a_segment.make (0, 255)
 					segment_all_zero := True
 					from k := 0 until k > 255 loop
-						a_data_point := code_points.item (k + 256 * j + 256 * 256 * i)
+						a_data_point := codes.item (k + 256 * j + 256 * 256 * i)
 						if a_data_point = Void then
 							a_value := 0
 						else
@@ -1272,7 +1272,7 @@ feature {NONE} -- Implementation
 			file_not_void: an_output_file /= Void
 			file_open_write: an_output_file.is_open_write
 		local
-			i, j, k, a_code_point: INTEGER
+			i, j, k, a_code: INTEGER
 			a_plane_array_name, a_segment_array_name: STRING
 			some_segment_names, some_plane_names: ARRAY [STRING]
 			plane_all_empty, segment_all_empty: BOOLEAN
@@ -1289,16 +1289,16 @@ feature {NONE} -- Implementation
 					create a_segment.make (0, 255)
 					segment_all_empty := True
 					from k := 0 until k > 255 loop
-						a_code_point := k + 256 * j + 256 * 256 * i
-						a_data_point := code_points.item (a_code_point)
-						if is_hangul_syllable (a_code_point) then
-							a_value := decomposed_hangul_syllable (a_code_point)
+						a_code := k + 256 * j + 256 * 256 * i
+						a_data_point := codes.item (a_code)
+						if is_hangul_syllable (a_code) then
+							a_value := decomposed_hangul_syllable (a_code)
 						elseif a_data_point = Void then
 							a_value := Void
 						else
 							a_value := a_data_point.decomposition_mapping
-							if unicode.is_bmp_code_point (a_code_point) and a_value /= Void then
-								store_composition (a_code_point, a_value)
+							if unicode.is_bmp_code (a_code) and a_value /= Void then
+								store_composition (a_code, a_value)
 							end
 						end
 						if a_value /= Void then
@@ -1685,8 +1685,8 @@ feature {NONE} -- Implementation
 			file_not_void: an_output_file /= Void
 			file_open_write: an_output_file.is_open_write
 		local
-			i, j, k, a_code_point, a_value: INTEGER
-			a_code_point_datum: GEUC_UNICODE_DATA
+			i, j, k, a_code, a_value: INTEGER
+			a_code_datum: GEUC_UNICODE_DATA
 			some_segment_names, some_plane_names: ARRAY [STRING]
 			plane_all_absent, segment_all_absent: BOOLEAN
 			empty_plane_written, empty_segment_written: BOOLEAN
@@ -1700,12 +1700,12 @@ feature {NONE} -- Implementation
 					create a_segment.make (0, 255)
 					segment_all_absent := True
 					from k := 0 until k > 255 loop
-						a_code_point := k + 256 * j + 256 * 256 * i
-						a_code_point_datum := code_points.item (a_code_point)
-						if a_code_point_datum = Void then
+						a_code := k + 256 * j + 256 * 256 * i
+						a_code_datum := codes.item (a_code)
+						if a_code_datum = Void then
 							a_value := -1
 						else
-							a_value := a_code_point_datum.lower_code
+							a_value := a_code_datum.lower_code
 						end
 						if a_value /= - 1 then
 							segment_all_absent := False
@@ -1763,8 +1763,8 @@ feature {NONE} -- Implementation
 			file_not_void: an_output_file /= Void
 			file_open_write: an_output_file.is_open_write
 		local
-			i, j, k, a_code_point, a_value: INTEGER
-			a_code_point_datum: GEUC_UNICODE_DATA
+			i, j, k, a_code, a_value: INTEGER
+			a_code_datum: GEUC_UNICODE_DATA
 			some_segment_names, some_plane_names: ARRAY [STRING]
 			plane_all_absent, segment_all_absent: BOOLEAN
 			empty_plane_written, empty_segment_written: BOOLEAN
@@ -1779,12 +1779,12 @@ feature {NONE} -- Implementation
 					create a_segment.make (0, 255)
 					segment_all_absent := True
 					from k := 0 until k > 255 loop
-						a_code_point := k + 256 * j + 256 * 256 * i
-						a_code_point_datum := code_points.item (a_code_point)
-						if a_code_point_datum = Void then
+						a_code := k + 256 * j + 256 * 256 * i
+						a_code_datum := codes.item (a_code)
+						if a_code_datum = Void then
 							a_value := -1
 						else
-							a_value := a_code_point_datum.upper_code
+							a_value := a_code_datum.upper_code
 						end
 						if a_value /= - 1 then
 							segment_all_absent := False
@@ -1842,8 +1842,8 @@ feature {NONE} -- Implementation
 			file_not_void: an_output_file /= Void
 			file_open_write: an_output_file.is_open_write
 		local
-			i, j, k, a_code_point, a_value: INTEGER
-			a_code_point_datum: GEUC_UNICODE_DATA
+			i, j, k, a_code, a_value: INTEGER
+			a_code_datum: GEUC_UNICODE_DATA
 			some_segment_names, some_plane_names: ARRAY [STRING]
 			plane_all_absent, segment_all_absent: BOOLEAN
 			empty_plane_written, empty_segment_written: BOOLEAN
@@ -1858,12 +1858,12 @@ feature {NONE} -- Implementation
 					create a_segment.make (0, 255)
 					segment_all_absent := True
 					from k := 0 until k > 255 loop
-						a_code_point := k + 256 * j + 256 * 256 * i
-						a_code_point_datum := code_points.item (a_code_point)
-						if a_code_point_datum = Void then
+						a_code := k + 256 * j + 256 * 256 * i
+						a_code_datum := codes.item (a_code)
+						if a_code_datum = Void then
 							a_value := -1
 						else
-							a_value := a_code_point_datum.title_code
+							a_value := a_code_datum.title_code
 						end
 						if a_value /= - 1 then
 							segment_all_absent := False
@@ -2478,8 +2478,6 @@ feature {NONE} -- Implementation
 			an_output_file.put_string (a_segment_array_name)
 			an_output_file.put_string (": ARRAY [CHARACTER] is%N")
 			an_output_file.put_string ("%T%T%T-- Generated array segment%N")
-			an_output_file.put_string ("%T%Tlocal%N")
-			an_output_file.put_string ("%T%T%Ta_state: UT_TRISTATE%N")
 			an_output_file.put_string ("%T%Tonce%N")
 			an_output_file.put_string ("%T%T%TResult := <<")
 			from until an_index > 255 loop
@@ -2509,8 +2507,8 @@ feature {NONE} -- Implementation
 			file_still_open: an_output_file.is_open_write
 		end
 
-	process_code_point_class (a_code_point: INTEGER; a_name: STRING; some_fields: DS_LIST [STRING]) is
-			-- Process character class et. el. for `a_code_point'.
+	process_code_class (a_code: INTEGER; a_name: STRING; some_fields: DS_LIST [STRING]) is
+			-- Process character class et. el. for `a_code'.
 		require
 			name_not_void: a_name /= Void
 			fields_not_void: some_fields /= Void
@@ -2518,11 +2516,11 @@ feature {NONE} -- Implementation
 		local
 			a_data_point: GEUC_UNICODE_DATA
 		do
-			create a_data_point.make (a_code_point, a_name, some_fields)
+			create a_data_point.make (a_code, a_name, some_fields)
 			if a_data_point.is_valid then
-				code_points.put (a_data_point, a_code_point)
+				codes.put (a_data_point, a_code)
 			else
-				report_general_message ("Invalid code point: " + a_code_point.out)
+				report_general_message ("Invalid code point: " + a_code.out)
 				Exceptions.die (1)
 			end
 		end
@@ -2626,16 +2624,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
-				upper_case_array.put (True, a_code_point)
-				a_code_point := a_code_point + 1
+				upper_case_array.put (True, a_code)
+				a_code := a_code + 1
 			end
 		end
 
@@ -2646,16 +2644,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
-				lower_case_array.put (True, a_code_point)
-				a_code_point := a_code_point + 1
+				lower_case_array.put (True, a_code)
+				a_code := a_code + 1
 			end
 		end
 
@@ -2666,16 +2664,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
-				alphabetic_array.put (True, a_code_point)
-				a_code_point := a_code_point + 1
+				alphabetic_array.put (True, a_code)
+				a_code := a_code + 1
 			end
 		end
 
@@ -2686,16 +2684,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
-				math_array.put (True, a_code_point)
-				a_code_point := a_code_point + 1
+				math_array.put (True, a_code)
+				a_code := a_code + 1
 			end
 		end
 
@@ -2706,16 +2704,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
-				full_composition_exclusion_array.put (True, a_code_point)
-				a_code_point := a_code_point + 1
+				full_composition_exclusion_array.put (True, a_code)
+				a_code := a_code + 1
 			end
 		end
 
@@ -2726,16 +2724,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
-				expands_on_nfc_array.put (True, a_code_point)
-				a_code_point := a_code_point + 1
+				expands_on_nfc_array.put (True, a_code)
+				a_code := a_code + 1
 			end
 		end
 
@@ -2746,16 +2744,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
-				expands_on_nfd_array.put (True, a_code_point)
-				a_code_point := a_code_point + 1
+				expands_on_nfd_array.put (True, a_code)
+				a_code := a_code + 1
 			end
 		end
 
@@ -2766,16 +2764,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
-				expands_on_nfkc_array.put (True, a_code_point)
-				a_code_point := a_code_point + 1
+				expands_on_nfkc_array.put (True, a_code)
+				a_code := a_code + 1
 			end
 		end
 
@@ -2786,16 +2784,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
-				expands_on_nfkd_array.put (True, a_code_point)
-				a_code_point := a_code_point + 1
+				expands_on_nfkd_array.put (True, a_code)
+				a_code := a_code + 1
 			end
 		end
 
@@ -2809,20 +2807,20 @@ feature {NONE} -- Implementation
 			good_value: STRING_.same_string ("N", a_value) or STRING_.same_string ("M", a_value)
 			array_in_good_state: nfd_quick_check_array /= Void -- and then not nfd_quick_check_array.has (Void)
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfd_quick_check_array.item (a_code_point).set_false	
+					nfd_quick_check_array.item (a_code).set_false	
 				else
-					nfd_quick_check_array.item (a_code_point).set_undefined
+					nfd_quick_check_array.item (a_code).set_undefined
 				end
-				a_code_point := a_code_point + 1
+				a_code := a_code + 1
 			end
 		end
 
@@ -2836,20 +2834,20 @@ feature {NONE} -- Implementation
 			good_value: STRING_.same_string ("N", a_value) or STRING_.same_string ("M", a_value)
 			array_in_good_state: nfc_quick_check_array /= Void -- and then not nfc_quick_check_array.has (Void)
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfc_quick_check_array.item (a_code_point).set_false	
+					nfc_quick_check_array.item (a_code).set_false	
 				else
-					nfc_quick_check_array.item (a_code_point).set_undefined
+					nfc_quick_check_array.item (a_code).set_undefined
 				end
-				a_code_point := a_code_point + 1
+				a_code := a_code + 1
 			end
 		end
 
@@ -2863,20 +2861,20 @@ feature {NONE} -- Implementation
 			good_value: STRING_.same_string ("N", a_value) or STRING_.same_string ("M", a_value)
 			array_in_good_state: nfkd_quick_check_array /= Void -- and then not nfkd_quick_check_array.has (Void)
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfkd_quick_check_array.item (a_code_point).set_false	
+					nfkd_quick_check_array.item (a_code).set_false	
 				else
-					nfkd_quick_check_array.item (a_code_point).set_undefined
+					nfkd_quick_check_array.item (a_code).set_undefined
 				end
-				a_code_point := a_code_point + 1
+				a_code := a_code + 1
 			end
 		end
 
@@ -2890,36 +2888,36 @@ feature {NONE} -- Implementation
 			good_value: STRING_.same_string ("N", a_value) or STRING_.same_string ("M", a_value)
 			array_in_good_state: nfkc_quick_check_array /= Void -- and then not nfkc_quick_check_array.has (Void)
 		local
-			a_code_point, a_finish: INTEGER
+			a_code, a_finish: INTEGER
 		do
 			from
-				a_code_point := starting_code_point (a_range)
-				a_finish := ending_code_point (a_range)
+				a_code := starting_code (a_range)
+				a_finish := ending_code (a_range)
 			until
-				a_code_point > a_finish
+				a_code > a_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfkc_quick_check_array.item (a_code_point).set_false	
+					nfkc_quick_check_array.item (a_code).set_false	
 				else
-					nfkc_quick_check_array.item (a_code_point).set_undefined
+					nfkc_quick_check_array.item (a_code).set_undefined
 				end
-				a_code_point := a_code_point + 1
+				a_code := a_code + 1
 			end
 		end
 
-	starting_code_point (a_code_point_range: STRING): INTEGER is
-			-- Starting code-point within `a_code_point_range'.
+	starting_code (a_code_range: STRING): INTEGER is
+			-- Starting code-point within `a_code_range'.
 		require
-			range_not_void: a_code_point_range /= Void
-			range_not_empty: not a_code_point_range.is_empty
-			no_comment: a_code_point_range.index_of ('#', 1) = 0
+			range_not_void: a_code_range /= Void
+			range_not_empty: not a_code_range.is_empty
+			no_comment: a_code_range.index_of ('#', 1) = 0
 		local
 			a_splitter: ST_SPLITTER
 			some_codes: DS_LIST [STRING]
 			a_range: STRING
 			a_count: INTEGER
 		do
-			a_range := STRING_.cloned_string (a_code_point_range)
+			a_range := STRING_.cloned_string (a_code_range)
 			STRING_.left_adjust (a_range)
 			STRING_.right_adjust (a_range)
 			create a_splitter.make_with_separators ("..")
@@ -2927,7 +2925,7 @@ feature {NONE} -- Implementation
 			a_count := some_codes.count
 			if a_count = 1 or a_count = 3 then
 				if a_count = 3 and then not some_codes.item (2).is_empty then
-					report_general_message ("Invalid hexadecimal code point range: " + a_code_point_range)
+					report_general_message ("Invalid hexadecimal code point range: " + a_code_range)
 					Exceptions.die (1)
 				elseif STRING_.is_hexadecimal (some_codes.item (1)) then
 					Result := STRING_.hexadecimal_to_integer (some_codes.item (1))
@@ -2936,24 +2934,24 @@ feature {NONE} -- Implementation
 					Exceptions.die (1)
 				end
 			else
-				report_general_message ("Invalid code point range: " + a_code_point_range.out)
+				report_general_message ("Invalid code point range: " + a_code_range.out)
 				Exceptions.die (1)
 			end
 		end
 
-	ending_code_point (a_code_point_range: STRING): INTEGER is
-			-- Ending code-point within `a_code_point_range'.
+	ending_code (a_code_range: STRING): INTEGER is
+			-- Ending code-point within `a_code_range'.
 		require
-			range_not_void: a_code_point_range /= Void
-			range_not_empty: not a_code_point_range.is_empty
-			no_comment: a_code_point_range.index_of ('#', 1) = 0
+			range_not_void: a_code_range /= Void
+			range_not_empty: not a_code_range.is_empty
+			no_comment: a_code_range.index_of ('#', 1) = 0
 		local
 			a_splitter: ST_SPLITTER
 			some_codes: DS_LIST [STRING]
 			a_range: STRING
 			a_count: INTEGER
 		do
-			a_range := STRING_.cloned_string (a_code_point_range)
+			a_range := STRING_.cloned_string (a_code_range)
 			STRING_.left_adjust (a_range)
 			STRING_.right_adjust (a_range)
 			create a_splitter.make_with_separators ("..")
@@ -2968,7 +2966,7 @@ feature {NONE} -- Implementation
 				end
 			elseif a_count = 3 then
 				if not some_codes.item (2).is_empty then
-					report_general_message ("Invalid hexadecimal code point range: " + a_code_point_range)
+					report_general_message ("Invalid hexadecimal code point range: " + a_code_range)
 					Exceptions.die (1)
 				elseif STRING_.is_hexadecimal (some_codes.item (3)) then
 					Result := STRING_.hexadecimal_to_integer (some_codes.item (3))
@@ -2977,7 +2975,7 @@ feature {NONE} -- Implementation
 					Exceptions.die (1)
 				end
 			else
-				report_general_message ("Invalid code point range: " + a_code_point_range.out)
+				report_general_message ("Invalid code point range: " + a_code_range.out)
 				Exceptions.die (1)
 			end
 		end
