@@ -50273,8 +50273,6 @@ feature {NONE} -- Implementation
 
 	all_true_nfc_quick_check_segment: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50310,8 +50308,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_3: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/2/',
 '%/2/','%/2/','%/2/','%/2/','%/1/','%/2/','%/2/','%/2/','%/2/','%/2/',
@@ -50347,8 +50343,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_6: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50384,8 +50378,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_9: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50421,8 +50413,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_10: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50458,8 +50448,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_11: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50495,8 +50483,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_12: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50532,8 +50518,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_13: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50569,8 +50553,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_15: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50606,8 +50588,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_16: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50643,8 +50623,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_17: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50680,8 +50658,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_31: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50717,8 +50693,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_32: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50754,8 +50728,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_33: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50791,8 +50763,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_35: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50828,8 +50798,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_42: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50865,8 +50833,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_48: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -50902,8 +50868,6 @@ feature {NONE} -- Implementation
 
 	all_false_nfc_quick_check_segment: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -50939,8 +50903,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_250: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -50976,8 +50938,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_0_segment_251: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -51278,8 +51238,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_1_segment_209: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -51580,8 +51538,6 @@ feature {NONE} -- Implementation
 
 	nfc_quick_check_plane_2_segment_250: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -52170,8 +52126,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_0: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52207,8 +52161,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_1: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -52244,8 +52196,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_2: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -52281,8 +52231,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_3: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52318,8 +52266,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_4: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/1/','%/0/','%/1/','%/1/','%/1/','%/0/','%/1/','%/1/','%/1/',
@@ -52355,8 +52301,6 @@ feature {NONE} -- Implementation
 
 	all_true_nfd_quick_check_segment: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52392,8 +52336,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_6: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52429,8 +52371,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_9: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52466,8 +52406,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_10: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52503,8 +52441,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_11: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52540,8 +52476,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_12: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52577,8 +52511,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_13: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52614,8 +52546,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_15: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52651,8 +52581,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_16: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52688,8 +52616,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_30: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -52725,8 +52651,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_31: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -52762,8 +52686,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_32: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52799,8 +52721,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_33: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52836,8 +52756,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_34: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/0/','%/1/','%/1/','%/1/','%/1/','%/0/','%/1/',
@@ -52873,8 +52791,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_35: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52910,8 +52826,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_42: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52947,8 +52861,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_48: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -52984,8 +52896,6 @@ feature {NONE} -- Implementation
 
 	all_false_nfd_quick_check_segment: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -53021,8 +52931,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_215: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -53058,8 +52966,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_250: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -53095,8 +53001,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_0_segment_251: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -53397,8 +53301,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_1_segment_209: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -53699,8 +53601,6 @@ feature {NONE} -- Implementation
 
 	nfd_quick_check_plane_2_segment_250: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -54289,8 +54189,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_0: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54326,8 +54224,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_1: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54363,8 +54259,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_2: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54400,8 +54294,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_3: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/2/',
 '%/2/','%/2/','%/2/','%/2/','%/1/','%/2/','%/2/','%/2/','%/2/','%/2/',
@@ -54437,8 +54329,6 @@ feature {NONE} -- Implementation
 
 	all_true_nfkc_quick_check_segment: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54474,8 +54364,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_5: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54511,8 +54399,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_6: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54548,8 +54434,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_9: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54585,8 +54469,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_10: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54622,8 +54504,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_11: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54659,8 +54539,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_12: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54696,8 +54574,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_13: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54733,8 +54609,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_14: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54770,8 +54644,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_15: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54807,8 +54679,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_16: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54844,8 +54714,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_17: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54881,8 +54749,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_29: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54918,8 +54784,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_30: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54955,8 +54819,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_31: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -54992,8 +54854,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_32: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -55029,8 +54889,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_33: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/1/','%/0/','%/0/','%/0/','%/1/','%/0/','%/0/',
@@ -55066,8 +54924,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_34: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -55103,8 +54959,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_35: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -55140,8 +54994,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_36: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -55177,8 +55029,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_42: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -55214,8 +55064,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_45: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -55251,8 +55099,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_46: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -55288,8 +55134,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_47: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -55325,8 +55169,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_48: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -55362,8 +55204,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_49: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -55399,8 +55239,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_50: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -55436,8 +55274,6 @@ feature {NONE} -- Implementation
 
 	all_false_nfkc_quick_check_segment: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -55473,8 +55309,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_250: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -55510,8 +55344,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_251: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/1/','%/1/','%/1/','%/1/',
@@ -55547,8 +55379,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_253: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -55584,8 +55414,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_254: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -55621,8 +55449,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_0_segment_255: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -55923,8 +55749,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_1_segment_209: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -55960,8 +55784,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_1_segment_212: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -55997,8 +55819,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_1_segment_213: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/1/','%/0/','%/0/','%/0/','%/0/',
@@ -56034,8 +55854,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_1_segment_214: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -56071,8 +55889,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_1_segment_215: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -56373,8 +56189,6 @@ feature {NONE} -- Implementation
 
 	nfkc_quick_check_plane_2_segment_250: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -56963,8 +56777,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_0: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57000,8 +56812,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_1: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -57037,8 +56847,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_2: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -57074,8 +56882,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_3: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57111,8 +56917,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_4: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/1/','%/0/','%/1/','%/1/','%/1/','%/0/','%/1/','%/1/','%/1/',
@@ -57148,8 +56952,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_5: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57185,8 +56987,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_6: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57222,8 +57022,6 @@ feature {NONE} -- Implementation
 
 	all_true_nfkd_quick_check_segment: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57259,8 +57057,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_9: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57296,8 +57092,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_10: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57333,8 +57127,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_11: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57370,8 +57162,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_12: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57407,8 +57197,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_13: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57444,8 +57232,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_14: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57481,8 +57267,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_15: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57518,8 +57302,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_16: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57555,8 +57337,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_29: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57592,8 +57372,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_30: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -57629,8 +57407,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_31: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -57666,8 +57442,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_32: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -57703,8 +57477,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_33: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/1/','%/0/','%/0/','%/0/','%/1/','%/0/','%/0/',
@@ -57740,8 +57512,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_34: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/0/','%/1/','%/1/','%/1/','%/1/','%/0/','%/1/',
@@ -57777,8 +57547,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_35: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57814,8 +57582,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_36: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57851,8 +57617,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_42: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57888,8 +57652,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_45: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57925,8 +57687,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_46: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -57962,8 +57722,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_47: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -57999,8 +57757,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_48: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -58036,8 +57792,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_49: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -58073,8 +57827,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_50: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -58110,8 +57862,6 @@ feature {NONE} -- Implementation
 
 	all_false_nfkd_quick_check_segment: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -58147,8 +57897,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_215: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -58184,8 +57932,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_250: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -58221,8 +57967,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_251: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/1/','%/1/','%/1/','%/1/',
@@ -58258,8 +58002,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_253: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -58295,8 +58037,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_254: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -58332,8 +58072,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_0_segment_255: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -58634,8 +58372,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_1_segment_209: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/1/',
 '%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/','%/1/',
@@ -58671,8 +58407,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_1_segment_212: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -58708,8 +58442,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_1_segment_213: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/1/','%/0/','%/0/','%/0/','%/0/',
@@ -58745,8 +58477,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_1_segment_214: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -58782,8 +58512,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_1_segment_215: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',
@@ -59084,8 +58812,6 @@ feature {NONE} -- Implementation
 
 	nfkd_quick_check_plane_2_segment_250: ARRAY [CHARACTER] is
 			-- Generated array segment
-		local
-			a_state: UT_TRISTATE
 		once
 			Result := <<'%/0/',
 '%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/','%/0/',

@@ -39,7 +39,7 @@ feature -- Test
 			assert ("DOUBLE-STRUCK CAPITAL C decomposes to LATIN CAPITAL CC",
 				decomposition_mapping_property (8450).count = 1 and then decomposition_mapping_property (8450).item (1) = 67)
 			create changed.make (False)
-			a_string := string_from_code_points (decomposition (a_acute_c_acute_cedilla, True, changed))
+			a_string := string_from_codes (decomposition (a_acute_c_acute_cedilla, True, changed))
 			assert ("a_acute_c_acute_cedilla decomposes canonically to a_acute_c_cedilla_accute 1", a_string /= Void and then a_string.count = 5)
 			assert ("a_acute_c_acute_cedilla first character is a", a_string.item_code (1) = 97)
 			assert ("a_acute_c_acute_cedilla second character is acute", a_string.item_code (2) = 769)
@@ -57,9 +57,9 @@ feature -- Test
 			a_hash, a_line_number: INTEGER
 			a_line, c1, c2, c3, c4, c5: STRING
 			is_part1: BOOLEAN
-			last_part1_code_point, c1_code_point: INTEGER
+			last_part1_code, c1_code: INTEGER
 		do
-			last_part1_code_point := -1
+			last_part1_code := -1
 			create a_file.make (normalization_test_filename)
 			a_file.open_read
 			if a_file.is_open_read then
@@ -86,10 +86,10 @@ feature -- Test
 									c1 := decoded_string (some_fields.item (1))
 									if is_part1 then
 										assert ("Single code point", c1.count = 1)
-										c1_code_point := c1.item_code (1)
-										from last_part1_code_point := last_part1_code_point + 1 until c1_code_point = last_part1_code_point loop
-											check_all_normal_forms_identity (last_part1_code_point)
-											last_part1_code_point :=  last_part1_code_point + 1
+										c1_code := c1.item_code (1)
+										from last_part1_code := last_part1_code + 1 until c1_code = last_part1_code loop
+											check_all_normal_forms_identity (last_part1_code)
+											last_part1_code :=  last_part1_code + 1
 										end
 									end
 									c2 := decoded_string (some_fields.item (2))
@@ -116,7 +116,7 @@ feature -- Access
 			Result := STRING_.appended_string (Result, unicode.code_to_string (807))
 		ensure
 			string_not_void: Result /= Void
-			four_code_points: Result.count = 4
+			four_codes: Result.count = 4
 		end
 
 	Test_file_field_count: INTEGER is 6
@@ -180,14 +180,14 @@ feature {NONE} -- Implementation
 			assert_strings_equal ("NFKC (column 5) equals column 4 on line " + a_line_number.out + " in NormalizationTest.txt", c4, to_nfkc (c5))
 		end
 
-	check_all_normal_forms_identity (a_code_point: INTEGER) is
-			-- Check that NFX (`a_code_point') = `a_code_point' for all normal forms.
+	check_all_normal_forms_identity (a_code: INTEGER) is
+			-- Check that NFX (`a_code') = `a_code' for all normal forms.
 		do
-			if unicode.valid_code_for_utf8 (a_code_point) then
-				assert (a_code_point.out + " is in NFD", is_nfd (unicode.code_to_string (a_code_point)))
-				assert (a_code_point.out + " is in NFKD", is_nfkd (unicode.code_to_string (a_code_point)))
-				assert (a_code_point.out + " is in NFC", is_nfc (unicode.code_to_string (a_code_point)))
-				assert (a_code_point.out + " is in NFKC", is_nfkc (unicode.code_to_string (a_code_point)))
+			if unicode.valid_non_surrogate_code (a_code) then
+				assert (a_code.out + " is in NFD", is_nfd (unicode.code_to_string (a_code)))
+				assert (a_code.out + " is in NFKD", is_nfkd (unicode.code_to_string (a_code)))
+				assert (a_code.out + " is in NFC", is_nfc (unicode.code_to_string (a_code)))
+				assert (a_code.out + " is in NFKC", is_nfkc (unicode.code_to_string (a_code)))
 			else
 				-- need UTF-16 implementation to perform assertions
 			end
@@ -202,17 +202,17 @@ feature {NONE} -- Implementation
 			a_splitter: ST_SPLITTER
 			some_codes: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]
-			a_code_point: INTEGER
+			a_code: INTEGER
 		do
 			create a_splitter.make
 			some_codes := a_splitter.split (a_column)
 			create Result.make (some_codes.count)
 			from a_cursor := some_codes.new_cursor; a_cursor.start until a_cursor.after loop
 				assert ("Hexadecimal number", STRING_.is_hexadecimal (a_cursor.item))
-				a_code_point := STRING_.hexadecimal_to_integer (a_cursor.item)
-				assert ("Good code point", unicode.valid_code (a_code_point))
-				assert ("UTF-8 code point", unicode.valid_code_for_utf8 (a_code_point))
-				Result := STRING_.appended_string (Result, unicode.code_to_string (a_code_point))
+				a_code := STRING_.hexadecimal_to_integer (a_cursor.item)
+				assert ("Good code point", unicode.valid_code (a_code))
+				assert ("UTF-8 code point", unicode.valid_non_surrogate_code (a_code))
+				Result := STRING_.appended_string (Result, unicode.code_to_string (a_code))
 				a_cursor.forth
 			end
 		ensure

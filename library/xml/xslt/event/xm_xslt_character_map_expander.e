@@ -75,7 +75,7 @@ feature -- Access
 		require
 			input_string_not_void: an_unmapped_string /= Void
 		local
-			an_index, a_code_point: INTEGER
+			an_index, a_code: INTEGER
 			were_any_substitutions_made, disabled: BOOLEAN
 		do
 			create Result.make (an_unmapped_string.count)  -- it might be larger, but never smaller
@@ -86,8 +86,8 @@ feature -- Access
 			until
 				an_index > an_unmapped_string.count
 			loop
-				a_code_point := an_unmapped_string.item_code (an_index)
-				if a_code_point = 0 then
+				a_code := an_unmapped_string.item_code (an_index)
+				if a_code = 0 then
 					check
 						null_characters_used: are_null_characters_used
 						-- or there is a logic error in the XSLT library
@@ -100,11 +100,11 @@ feature -- Access
 					-- and retain the NUL to supress XML/HTML escaping
 
 					Result := STRING_.appended_string (Result, "%U")
-				elseif not disabled and then character_map.has (a_code_point) then
+				elseif not disabled and then character_map.has (a_code) then
 					if are_null_characters_used then
 						Result := STRING_.appended_string (Result, "%U")
 					end
-					Result := STRING_.appended_string (Result, character_map.item (a_code_point))
+					Result := STRING_.appended_string (Result, character_map.item (a_code))
 					if are_null_characters_used then
 						Result := STRING_.appended_string (Result, "%U")
 					end

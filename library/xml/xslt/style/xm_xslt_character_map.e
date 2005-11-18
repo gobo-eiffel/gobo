@@ -249,7 +249,7 @@ feature -- Element change
 					output_character_not_void: an_output_character /= Void
 					-- Validate ensured this
 				end
-				a_map.force (an_output_character.replacement_string, an_output_character.code_point)
+				a_map.force (an_output_character.replacement_string, an_output_character.code)
 				a_child_iterator.forth
 			end
 		end

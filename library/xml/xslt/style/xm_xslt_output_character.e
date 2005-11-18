@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	code_point: INTEGER
+	code: INTEGER
 			-- Unicode code-point of character to be replaced
 
 	replacement_string: STRING
@@ -41,7 +41,7 @@ feature -- Element change
 			an_expanded_name, a_character_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			code_point := -1
+			code := -1
 			from
 				a_cursor := attribute_collection.name_code_cursor
 				a_cursor.start
@@ -58,7 +58,7 @@ feature -- Element change
 						create an_error.make_from_string ("xsl:output-character's 'character' attribute must be a single XML character", Gexslt_eiffel_type_uri, "OUTPUT_CHARACTER", Static_error)
 						report_compile_error (an_error)
 					else
-						code_point := a_character_attribute.item_code (1)
+						code := a_character_attribute.item_code (1)
 					end
 				elseif STRING_.same_string (an_expanded_name, String_attribute) then
 					replacement_string := attribute_value_by_index (a_cursor.index)
@@ -67,7 +67,7 @@ feature -- Element change
 				end
 				a_cursor.forth
 			end
-			if code_point = -1 then
+			if code = -1 then
 				report_absence ("character")
 			elseif replacement_string = Void then
 				report_absence ("string")

@@ -117,7 +117,7 @@ feature -- Access
 				if not changed.item then
 					Result := a_source
 				else
-					Result := string_from_code_points (a_decomposition)
+					Result := string_from_codes (a_decomposition)
 				end
 			end
 		ensure
@@ -137,7 +137,7 @@ feature -- Access
 				Result := ""
 			else
 				create changed.make (False)
-				Result := string_from_code_points (decomposition (a_source, True, changed))
+				Result := string_from_codes (decomposition (a_source, True, changed))
 			end
 		ensure
 			to_nfd_not_void: Result /= Void
@@ -161,7 +161,7 @@ feature -- Access
 				if not changed.item then
 					Result := a_source
 				else
-					Result := string_from_code_points (a_decomposition)
+					Result := string_from_codes (a_decomposition)
 				end
 			end
 		ensure
@@ -181,7 +181,7 @@ feature -- Access
 				Result := ""
 			else
 				create changed.make (False)
-				Result := string_from_code_points (decomposition (a_source, False, changed))
+				Result := string_from_codes (decomposition (a_source, False, changed))
 			end
 		ensure
 			to_nfkd_not_void: Result /= Void
@@ -203,7 +203,7 @@ feature -- Access
 				create changed.make (False)
 				a_decomposition := decomposition (a_source, True, changed)
 				canonically_compose (a_decomposition)
-				Result := string_from_code_points (a_decomposition)
+				Result := string_from_codes (a_decomposition)
 			end
 		ensure
 			to_nfc_not_void: Result /= Void
@@ -225,7 +225,7 @@ feature -- Access
 				create changed.make (False)
 				a_decomposition := decomposition (a_source, False, changed)
 				canonically_compose (a_decomposition)
-				Result := string_from_code_points (a_decomposition)
+				Result := string_from_codes (a_decomposition)
 			end
 		ensure
 			to_nfkc_not_void: Result /= Void
@@ -235,10 +235,10 @@ feature -- Access
 
 feature -- Status report
 
-	valid_code (a_code_point: INTEGER): BOOLEAN is
-			-- Is `a_code_point' a valid Unicode code point?
+	valid_code (a_code: INTEGER): BOOLEAN is
+			-- Is `a_code' a valid Unicode code point?
 		do
-			Result := unicode.valid_code (a_code_point)
+			Result := unicode.valid_code (a_code)
 		end
 
 	frozen less_than (u, v: INTEGER): BOOLEAN is
@@ -257,15 +257,15 @@ feature -- Status report
 
 feature -- Property
 
-	canonical_combining_class_property (a_code_point: INTEGER): INTEGER is -- should be NATURAL_8
-			-- Canonical_Combining_Class property for `a_code_point'
+	canonical_combining_class_property (a_code: INTEGER): INTEGER is -- should be NATURAL_8
+			-- Canonical_Combining_Class property for `a_code'
 		require
-			valid_code_point: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := injected_canonical_combining_class (canonical_combining_class_properties.item (i).item (j).item (k))
@@ -274,15 +274,15 @@ feature -- Property
 			property_small_enough: Result <= 255
 		end
 
-	decomposition_type_property (a_code_point: INTEGER): INTEGER is
-			-- Decomposition_Type property for `a_code_point'
+	decomposition_type_property (a_code: INTEGER): INTEGER is
+			-- Decomposition_Type property for `a_code'
 		require
-			valid_code_point: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := decomposition_type_properties.item (i).item (j).item (k)
@@ -291,20 +291,20 @@ feature -- Property
 			property_small_enough: Result <= Compatibility_decomposition_mapping
 		end
 
-	decomposition_mapping_property (a_code_point: INTEGER): DS_ARRAYED_LIST [INTEGER] is
-			-- Decomposition_Mapping property for `a_code_point'
+	decomposition_mapping_property (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+			-- Decomposition_Mapping property for `a_code'
 		require
-			valid_code_point: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := decomposition_mapping_properties.item (i).item (j).item (k)
 		ensure
-			compatibility_mapping_not_empty: decomposition_type_property (a_code_point) /= Canonical_decomposition_mapping implies
+			compatibility_mapping_not_empty: decomposition_type_property (a_code) /= Canonical_decomposition_mapping implies
 				Result /= Void and then not Result.is_empty
 		end
 
@@ -315,6 +315,10 @@ feature {NONE} -- Implementation
 	Nfkd: INTEGER is 2
 	Nfkc: INTEGER is 3
 			-- Normal forms
+
+	False_value: CHARACTER is '%/0/'
+	True_value: CHARACTER is '%/1/'
+	Undefined_value: CHARACTER is '%/2/'
 
 	quick_check (a_source: STRING; a_form: INTEGER): UT_TRISTATE is
 			-- Quick check for `a_source' being in `a_form'
@@ -347,9 +351,9 @@ feature {NONE} -- Implementation
 					when Nfkc then
 						a_check := nfkc_quick_check (c)
 					end
-					if a_check.code = 0 then
+					if a_check = False_value then
 						Result.set_false
-					elseif a_check.code = 2 then
+					elseif a_check = Undefined_value then
 						Result.set_undefined
 					end
 					last_combining_class := a_combining_class
@@ -361,68 +365,68 @@ feature {NONE} -- Implementation
 			boolean_result_for_decompositions: (a_form = Nfd or a_form = Nfkd) implies not Result.is_undefined
 		end
 
-	nfd_quick_check (a_code_point: INTEGER): CHARACTER is
-			-- NFD quick ceck property for `a_code_point'
+	nfd_quick_check (a_code: INTEGER): CHARACTER is
+			-- NFD quick check property for `a_code'
 		require
-			valid_code_point: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := nfd_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			nfd_quick_check_in_range: Result.code >= 0 and Result.code <= 2
+			nfd_quick_check_in_range: Result >= False_value and Result <= True_value
 		end
 
-	nfkd_quick_check (a_code_point: INTEGER): CHARACTER is
-			-- NFKD quick ceck property for `a_code_point'
+	nfkd_quick_check (a_code: INTEGER): CHARACTER is
+			-- NFKD quick check property for `a_code'
 		require
-			valid_code_point: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := nfkd_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			nfkd_quick_check_in_range: Result.code >= 0 and Result.code <= 2
+			nfkd_quick_check_in_range: Result >= False_value and Result <= True_value
 		end
 
-	nfc_quick_check (a_code_point: INTEGER): CHARACTER is
-			-- NFC quick ceck property for `a_code_point'
+	nfc_quick_check (a_code: INTEGER): CHARACTER is
+			-- NFC quick check property for `a_code'
 		require
-			valid_code_point: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := nfc_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			nfc_quick_check_in_range: Result.code >= 0 and Result.code <= 2
+			nfc_quick_check_in_range: Result >= False_value and Result <= Undefined_value
 		end
 
-	nfkc_quick_check (a_code_point: INTEGER): CHARACTER is
-			-- NFKC quick ceck property for `a_code_point'
+	nfkc_quick_check (a_code: INTEGER): CHARACTER is
+			-- NFKC quick check property for `a_code'
 		require
-			valid_code_point: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := nfkc_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			nfkc_quick_check_in_range: Result.code >= 0 and Result.code <= 2
+			nfkc_quick_check_in_range: Result >= False_value and Result <= Undefined_value
 		end
 
 	order_canonically (a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN]) is
@@ -476,18 +480,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	recursively_decompose (a_code_point: INTEGER; is_canonical: BOOLEAN; a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN]) is
-			-- Recursively decompose `a_code_point' into `a_decomposition'
+	recursively_decompose (a_code: INTEGER; is_canonical: BOOLEAN; a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN]) is
+			-- Recursively decompose `a_code' into `a_decomposition'
 		require
 			decomposition_not_void: a_decomposition /= Void
 			change_flag_not_void: changed /= Void
-			valid_code_point: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem, x, len: INTEGER
 			a_mapping: DS_ARRAYED_LIST [INTEGER]
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			a_mapping := decomposition_mapping_properties.item (i).item (j).item (k)
@@ -500,11 +504,11 @@ feature {NONE} -- Implementation
 				end
 			else
 					-- Not suitable decomposition.
-				a_decomposition.force_last (a_code_point)
+				a_decomposition.force_last (a_code)
 			end
 		end
 
-	string_from_code_points (a_decomposition: DS_ARRAYED_LIST [INTEGER]): STRING is
+	string_from_codes (a_decomposition: DS_ARRAYED_LIST [INTEGER]): STRING is
 			-- String from code-point list
 		require
 			decomposition_not_void: a_decomposition /= Void
@@ -529,13 +533,13 @@ feature {NONE} -- Implementation
 			change_flag_not_void: changed /= Void
 		local
 			i, len: INTEGER
-			a_code_point: INTEGER
+			a_code: INTEGER
 		do
 			len := a_source.count
 			create Result.make (len)
 			from i := 1 until i > len loop
-				a_code_point := a_source.item_code (i)
-				recursively_decompose (a_code_point, is_canonical, Result, changed)
+				a_code := a_source.item_code (i)
+				recursively_decompose (a_code, is_canonical, Result, changed)
 				i := i + 1
 			end
 			order_canonically (Result, changed)
@@ -552,7 +556,7 @@ feature {NONE} -- Implementation
 			in_canonical_order: True
 		local
 			a_comp_pos, a_decomp_pos, a_starter, a_starter_pos: INTEGER
-			a_class, a_last_class, a_code_point, a_composite, len: INTEGER
+			a_class, a_last_class, a_code, a_composite, len: INTEGER
 			a_key: DS_HASHABLE_PAIR [INTEGER, INTEGER]
 		do
 			a_decomp_pos := 1
@@ -570,10 +574,10 @@ feature {NONE} -- Implementation
 			until
 				a_decomp_pos > a_decomposition.count
 			loop
-				a_code_point := a_decomposition.item (a_decomp_pos)
+				a_code := a_decomposition.item (a_decomp_pos)
 				a_decomp_pos := a_decomp_pos + 1
-				a_class :=  canonical_combining_class_property (a_code_point)
-				create a_key.make (a_starter, a_code_point)
+				a_class :=  canonical_combining_class_property (a_code)
+				create a_key.make (a_starter, a_code)
 				if composition_map.has (a_key) and (a_last_class < a_class or a_last_class = 0) then
 					a_composite := composition_map.item (a_key)
 					a_decomposition.replace (a_composite, a_starter_pos)
@@ -581,10 +585,10 @@ feature {NONE} -- Implementation
 				else
 					if a_class = 0 then
 						a_starter_pos := a_comp_pos
-						a_starter := a_code_point
+						a_starter := a_code
 					end
 					a_last_class := a_class
-					a_decomposition.replace (a_code_point, a_comp_pos)
+					a_decomposition.replace (a_code, a_comp_pos)
 					if a_decomposition.count /= len then
 						a_decomp_pos := a_decomp_pos + a_decomposition.count - len
 						len := a_decomposition.count
