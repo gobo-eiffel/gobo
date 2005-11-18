@@ -325,6 +325,19 @@ feature -- Preparsing
 			-- (Name clash is resolved if current class is in an
 			-- override cluster and `overridden_class' is not.)
 
+	non_override_overridden_class: ET_CLASS is
+			-- First overridden class that is not in an override cluster;
+			-- Void if no such class
+		do
+			from
+				Result := overridden_class
+			until
+				Result = Void or else not Result.is_in_override_cluster
+			loop
+				Result := Result.overridden_class
+			end
+		end
+
 	master_class: ET_CLASS
 			-- Class known by the universe with same name as current class
 			-- (This class is the current class when it is not overridden.)
@@ -367,6 +380,21 @@ feature -- Preparsing
 		ensure
 			overridden_class_set: overridden_class = a_class
 			master_class_set: a_class /= Void implies a_class.master_class = master_class
+		end
+
+	add_overridden_class (a_class: like overridden_class) is
+			-- Add `a_class' to the end of the chain of overridden classes.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if overridden_class /= Void then
+				overridden_class.add_overridden_class (a_class)
+			else
+				set_overridden_class (a_class)
+			end
+		ensure
+			overridden_class_set: old overridden_class = Void implies overridden_class = a_class
+			master_class_set: a_class.master_class = master_class
 		end
 
 	set_master_class (a_class: like master_class) is

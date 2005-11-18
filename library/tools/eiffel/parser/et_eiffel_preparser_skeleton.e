@@ -125,13 +125,12 @@ feature -- Parsing
 										l_other_class.reset_all
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_cluster (a_cluster)
-										l_other_class.set_overridden_class (a_class.overridden_class)
 										a_class.set_overridden_class (l_other_class)
 										error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
 									else
 											-- Override.
 										l_other_class := a_class.cloned_class
-										l_other_class.set_overridden_class (a_class.overridden_class)
+										l_other_class.reset
 										a_class.reset_all
 										a_class.set_filename (a_filename)
 										a_class.set_cluster (a_cluster)
@@ -144,16 +143,16 @@ feature -- Parsing
 									l_other_class.reset_all
 									l_other_class.set_filename (a_filename)
 									l_other_class.set_cluster (a_cluster)
-									l_other_class.set_overridden_class (a_class.overridden_class)
 									a_class.set_overridden_class (l_other_class)
 									error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
 								else
+										-- Overridden.
 									l_other_class := a_class.cloned_class
 									l_other_class.reset_all
 									l_other_class.set_filename (a_filename)
 									l_other_class.set_cluster (a_cluster)
-									l_other_class.set_overridden_class (a_class.overridden_class)
-									a_class.set_overridden_class (l_other_class)
+									l_other_class.set_overridden_class (Void)
+									a_class.add_overridden_class (l_other_class)
 								end
 							else
 								a_class.set_filename (a_filename)
@@ -272,13 +271,12 @@ feature -- Parsing
 											l_other_class.reset_all
 											l_other_class.set_filename (a_filename)
 											l_other_class.set_cluster (a_cluster)
-											l_other_class.set_overridden_class (a_class.overridden_class)
 											a_class.set_overridden_class (l_other_class)
 											error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
 										else
 												-- Override.
 											l_other_class := a_class.cloned_class
-											l_other_class.set_overridden_class (a_class.overridden_class)
+											l_other_class.reset
 											a_class.reset_all
 											a_class.set_filename (a_filename)
 											a_class.set_cluster (a_cluster)
@@ -291,16 +289,16 @@ feature -- Parsing
 										l_other_class.reset_all
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_cluster (a_cluster)
-										l_other_class.set_overridden_class (a_class.overridden_class)
 										a_class.set_overridden_class (l_other_class)
 										error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
 									else
+											-- Overridden.
 										l_other_class := a_class.cloned_class
 										l_other_class.reset_all
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_cluster (a_cluster)
-										l_other_class.set_overridden_class (a_class.overridden_class)
-										a_class.set_overridden_class (l_other_class)
+										l_other_class.set_overridden_class (Void)
+										a_class.add_overridden_class (l_other_class)
 									end
 								else
 									a_class.set_filename (a_filename)
@@ -410,13 +408,12 @@ feature -- Parsing
 							l_other_class.set_filename (a_filename)
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_cluster (a_cluster)
-							l_other_class.set_overridden_class (a_class.overridden_class)
 							a_class.set_overridden_class (l_other_class)
 							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
 						else
 								-- Override.
 							l_other_class := a_class.cloned_class
-							l_other_class.set_overridden_class (a_class.overridden_class)
+							l_other_class.reset
 							a_class.reset_all
 							a_class.set_filename (a_filename)
 							a_class.set_time_stamp (a_time_stamp)
@@ -431,17 +428,17 @@ feature -- Parsing
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_cluster (a_cluster)
-						l_other_class.set_overridden_class (a_class.overridden_class)
 						a_class.set_overridden_class (l_other_class)
 						error_handler.report_vscn0a_error (a_class, a_cluster, filename)
 					else
+							-- Overridden.
 						l_other_class := a_class.cloned_class
 						l_other_class.reset_all
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_cluster (a_cluster)
-						l_other_class.set_overridden_class (a_class.overridden_class)
-						a_class.set_overridden_class (l_other_class)
+						l_other_class.set_overridden_class (Void)
+						a_class.add_overridden_class (l_other_class)
 					end
 				else
 					a_class.set_filename (a_filename)
@@ -459,7 +456,7 @@ feature -- Parsing
 
 	preparse_cluster_single (a_cluster: ET_CLUSTER) is
 			-- Traverse `a_cluster' (recursively) and build a mapping
-			-- between class names and filenames. Classes are added to 
+			-- between class names and filenames. Classes are added to
 			-- `universe.classes', but are not parsed. Each Eiffel file
 			-- is supposed to contain exactly one class.
 			-- Set `overriding_class_added' if a class overriding
@@ -737,13 +734,12 @@ feature -- Parsing
 							l_other_class.set_filename (a_filename)
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_cluster (a_cluster)
-							l_other_class.set_overridden_class (a_class.overridden_class)
 							a_class.set_overridden_class (l_other_class)
 							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
 						else
 								-- Override.
 							l_other_class := a_class.cloned_class
-							l_other_class.set_overridden_class (a_class.overridden_class)
+							l_other_class.reset
 							a_class.reset_all
 							a_class.set_filename (a_filename)
 							a_class.set_time_stamp (a_time_stamp)
@@ -758,17 +754,17 @@ feature -- Parsing
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_cluster (a_cluster)
-						l_other_class.set_overridden_class (a_class.overridden_class)
 						a_class.set_overridden_class (l_other_class)
 						error_handler.report_vscn0a_error (a_class, a_cluster, filename)
 					else
+							-- Overridden.
 						l_other_class := a_class.cloned_class
 						l_other_class.reset_all
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_cluster (a_cluster)
-						l_other_class.set_overridden_class (a_class.overridden_class)
-						a_class.set_overridden_class (l_other_class)
+						l_other_class.set_overridden_class (Void)
+						a_class.add_overridden_class (l_other_class)
 					end
 				else
 					a_class.set_filename (a_filename)

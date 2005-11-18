@@ -479,7 +479,6 @@ feature -- AST processing
 			a_time_stamp: INTEGER
 			a_cluster: ET_CLUSTER
 			a_file: KL_TEXT_INPUT_FILE
-			an_overridden_class: ET_CLASS
 		do
 			overriding_class_added := False
 			if is_null then
@@ -500,9 +499,7 @@ feature -- AST processing
 					if current_class.is_preparsed then
 						a_filename := current_class.filename
 						a_cluster := current_class.cluster
-						an_overridden_class := current_class.overridden_class
 						current_class.reset_all
-						current_class.set_overridden_class (an_overridden_class)
 						a_file := tmp_file
 						a_file.reset (a_filename)
 						if eiffel_compiler.is_se then
@@ -1526,7 +1523,7 @@ feature {NONE} -- AST factory
 					else
 							-- Override.
 						l_other_class := Result.cloned_class
-						l_other_class.set_overridden_class (Result.overridden_class)
+						l_other_class.reset
 						Result.reset_all
 						Result.set_filename (filename)
 						Result.set_cluster (cluster)
@@ -1553,7 +1550,6 @@ feature {NONE} -- AST factory
 					l_other_class.set_parsed
 					l_other_class.set_time_stamp (time_stamp)
 					l_other_class.set_in_system (True)
-					l_other_class.set_overridden_class (Result.overridden_class)
 					Result.set_overridden_class (l_other_class)
 					error_handler.report_vscn0a_error (Result, cluster, filename)
 					Result := l_other_class
@@ -1567,8 +1563,8 @@ feature {NONE} -- AST factory
 					l_other_class.set_name (a_name)
 					l_other_class.set_parsed
 					l_other_class.set_time_stamp (time_stamp)
-					l_other_class.set_overridden_class (Result.overridden_class)
-					Result.set_overridden_class (l_other_class)
+					l_other_class.set_overridden_class (Void)
+					Result.add_overridden_class (l_other_class)
 					Result := l_other_class
 					old_class := current_class
 					current_class := Result

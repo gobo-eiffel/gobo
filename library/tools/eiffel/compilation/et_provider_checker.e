@@ -103,7 +103,7 @@ feature {NONE} -- Cluster dependence constraints
 			if current_class.is_preparsed then
 				l_cluster := current_class.cluster
 				l_provider_constraint := l_cluster.provider_constraint
-				l_overridden_class := current_class.overridden_class
+				l_overridden_class := current_class.non_override_overridden_class
 				if l_overridden_class /= Void and then l_overridden_class.cluster /= Void then
 					l_cluster := l_overridden_class.cluster
 					if l_provider_constraint = Void then
@@ -121,13 +121,13 @@ feature {NONE} -- Cluster dependence constraints
 						if l_provider.is_preparsed then
 							l_provider_cluster := l_provider.cluster
 							l_dependant_constraint := l_provider_cluster.dependant_constraint
-							l_overridden_class := l_provider.overridden_class
+							l_overridden_class := l_provider.non_override_overridden_class
 							if l_overridden_class /= Void and then l_overridden_class.cluster /= Void then
 								l_provider_cluster := l_overridden_class.cluster
 								if l_dependant_constraint = Void then
 									l_dependant_constraint := l_provider_cluster.dependant_constraint
 								end
-							end 
+							end
 							if l_provider_constraint /= Void and then not l_provider_constraint.has_cluster (l_provider_cluster) then
 								set_fatal_error (current_class)
 								error_handler.report_gcpro_error (l_provider_constraint.current_cluster, current_class, l_provider, l_provider_constraint)
