@@ -26,7 +26,7 @@ inherit
 
 feature -- Status report
 
-	valid_code_for_utf8 (a_code: INTEGER): BOOLEAN is
+	valid_non_surrogate_code (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' a valid non-surrogate unicode?
 			-- Include all non-characters.
 		do
@@ -34,10 +34,10 @@ feature -- Status report
 				or (a_code > maximum_unicode_surrogate_code and a_code <= maximum_unicode_character_code)
 		end
 
-	is_bmp_code_point (a_code_point: INTEGER): BOOLEAN is
-			-- Does `a_code_point' lie within the BMP?
+	is_bmp_code (a_code: INTEGER): BOOLEAN is
+			-- Does `a_code' lie within the BMP?
 		do
-			Result := a_code_point >= minimum_unicode_character_code and a_code_point <= maximum_bmp_character_code
+			Result := a_code >= minimum_unicode_character_code and a_code <= maximum_bmp_character_code
 		end
 
 	valid_ascii_code (a_code: INTEGER): BOOLEAN is

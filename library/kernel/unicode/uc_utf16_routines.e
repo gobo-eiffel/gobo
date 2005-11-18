@@ -68,9 +68,9 @@ feature -- Endian-ness detection
 			Result := "%/254/%/255/"
 		ensure
 			bom_be_not_void: Result /= Void
-			two_latin1_characters: Result.count = 2
-			first_character: Result.item_code (1) = Hex_fe
-			second_character: Result.item_code (2) = Hex_ff
+			two_bytes: Result.count = 2
+			first_byte: Result.item_code (1) = Hex_fe
+			second_byte: Result.item_code (2) = Hex_ff
 		end
 
 	bom_le: STRING is
@@ -79,9 +79,9 @@ feature -- Endian-ness detection
 			Result := "%/255/%/254/"
 		ensure
 			bom_le_not_void: Result /= Void
-			two_latin1_characters: Result.count = 2
-			first_character: Result.item_code (1) = Hex_ff
-			second_character: Result.item_code (2) = Hex_fe
+			two_bytes: Result.count = 2
+			first_byte: Result.item_code (1) = Hex_ff
+			second_byte: Result.item_code (2) = Hex_fe
 		end
 
 	is_endian_detection_character_most_first (first, second: INTEGER): BOOLEAN is

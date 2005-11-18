@@ -49,7 +49,7 @@ feature -- Status report
 							a_code := encoded_first_value (a_first_byte)
 							i := i + 1
 							a_byte := a_string.item (i)
-							if not is_encoded_next_byte (a_byte, a_first_byte, False) then
+							if not is_encoded_second_byte (a_byte, a_first_byte) then
 								Result := False
 								i := nb + 1 -- Jump out of the loop.
 							else
@@ -73,7 +73,7 @@ feature -- Status report
 								end
 								if Result then
 									from i := i + 1 until i > nb2 loop
-										if is_encoded_next_byte (a_string.item (i), byte_127, True) then
+										if is_encoded_next_byte (a_string.item (i)) then
 											i := i + 1
 										else
 											Result := False
@@ -98,26 +98,31 @@ feature -- Status report
 			Result := (a_byte <= byte_127 or (byte_194 <= a_byte and a_byte <= byte_244))
 		end
 
-	is_encoded_next_byte (a_byte, a_first_byte: CHARACTER; ignore_first_byte: BOOLEAN): BOOLEAN is
+feature {UC_STRING} -- Status report
+
+	is_encoded_next_byte (a_byte: CHARACTER): BOOLEAN is
 			-- Is `a_byte' one of the next bytes in UTF-8 encoding?
-		require
-			valid_first_byte: not ignore_first_byte implies is_encoded_first_byte (a_first_byte)
 		do
-				-- 10xxxxxx
-			if ignore_first_byte then
-				Result := (byte_127 < a_byte and a_byte <= byte_191)
+			-- 10xxxxxx
+			Result := (byte_127 < a_byte and a_byte <= byte_191)
+		end
+
+	is_encoded_second_byte (a_byte, a_first_byte: CHARACTER): BOOLEAN is
+			-- Is `a_byte' a valid second byte in UTF-8 encoding?
+		require
+			valid_first_byte: is_encoded_first_byte (a_first_byte)
+		do
+			-- 10xxxxxx
+        	if a_first_byte = byte_224 then
+				Result := (byte_159 < a_byte and a_byte <= byte_191)
+			elseif a_first_byte = byte_237 then
+				Result := (byte_127 < a_byte and a_byte <= byte_159)
+			elseif a_first_byte = byte_240 then
+				Result := (byte_143 < a_byte and a_byte <= byte_191)
+			elseif a_first_byte = byte_244 then
+				Result := (byte_127 < a_byte and a_byte <= byte_143)
 			else
-				if a_first_byte = byte_224 then
-					Result := (byte_159 < a_byte and a_byte <= byte_191)
-				elseif a_first_byte = byte_237 then
-					Result := (byte_127 < a_byte and a_byte <= byte_159)
-				elseif a_first_byte = byte_240 then
-					Result := (byte_143 < a_byte and a_byte <= byte_191)
-				elseif a_first_byte = byte_244 then
-					Result := (byte_127 < a_byte and a_byte <= byte_143)
-				else
-					Result := (byte_127 < a_byte and a_byte <= byte_191)
-				end
+				Result := (byte_127 < a_byte and a_byte <= byte_191)
 			end
 		end
 
@@ -137,10 +142,7 @@ feature -- Status report
 			Result := a_first = byte_ef and a_second = byte_bb
 		end
 
-feature -- Access
-
-	byte_127: CHARACTER is '%/127/'
-			-- Highest ASCII character/1st UTF-8 byte
+feature {UC_STRING} -- Access
 
 	encoded_first_value (a_byte: CHARACTER): INTEGER is
 			-- Value encoded in first byte
@@ -168,7 +170,7 @@ feature -- Access
 	encoded_next_value (a_byte: CHARACTER): INTEGER is
 			-- Value encoded in one of the next bytes
 		require
-			is_encoded_next_byte: is_encoded_next_byte (a_byte, byte_127, False)
+			is_encoded_next_byte: is_encoded_next_byte (a_byte)
 		do
 				-- 10xxxxxx
 			Result := a_byte.code \\ 64
@@ -300,7 +302,7 @@ feature -- Measurement
 			-- Number of bytes needed to encode unicode character
 			-- of code `a_code' with the UTF-8 encoding
 		require
-			valid_code: unicode.valid_code_for_utf8 (a_code)
+			valid_code: unicode.valid_non_surrogate_code (a_code)
 		do
 			if a_code < 128 then
 					-- 2^7
@@ -391,7 +393,7 @@ feature -- Element change
 			a_utf8_not_void: a_utf8 /= Void
 			a_utf8_is_string: ANY_.same_types (a_utf8, "")
 			a_utf8_valid: valid_utf8 (a_utf8)
-			valid_code: unicode.valid_code_for_utf8 (a_code)
+			valid_code: unicode.valid_non_surrogate_code (a_code)
 		local
 			b2, b3, b4: CHARACTER
 			c: INTEGER
@@ -448,6 +450,9 @@ feature {NONE} -- Constants
 
 	code_31: INTEGER is 31
 			-- 110xxxxx (2^5 - 1 = 31)
+
+	byte_127: CHARACTER is '%/127/'
+			-- Highest ASCII character/1st UTF-8 byte
 
 	code_127: INTEGER is 127
 			-- 01111111

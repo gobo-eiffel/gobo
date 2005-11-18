@@ -307,7 +307,7 @@ feature -- Access
 				create Result.make (nb)
 				from i := 1 until i > nb loop
 					a_code := a_string.item_code (i)
-					if unicode.is_bmp_code_point (a_code) then
+					if unicode.is_bmp_code (a_code) then
 						a_high := a_code // 256
 						a_low := a_code \\ 256
 						Result.append_character (INTEGER_.to_character (a_high))
@@ -350,7 +350,7 @@ feature -- Access
 				create Result.make (nb)
 				from i := 1 until i > nb loop
 					a_code := a_string.item_code (i)
-					if unicode.is_bmp_code_point (a_code) then
+					if unicode.is_bmp_code (a_code) then
 						a_high := a_code // 256
 						a_low := a_code \\ 256
 						Result.append_character (INTEGER_.to_character (a_low))

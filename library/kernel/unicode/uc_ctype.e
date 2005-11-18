@@ -44,58 +44,58 @@ feature -- Access
 	--       be used on their own, by legacy implementations which cannot
 	--       handle strings which increase in length when case-mapped.
 
-	lower_code (a_code_point: INTEGER): INTEGER is
-			-- Code of lower-case character of character with code `a_code_point'
+	lower_code (a_code: INTEGER): INTEGER is
+			-- Code of lower-case character of character with code `a_code'
 		require
-			valid_code: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := lower_codes.item (i).item (j).item (k + 1)
 			if Result = -1 then
-				Result := a_code_point
+				Result := a_code
 			end
 		ensure
 			valid_lower_code: valid_code (Result)
 		end
 
-	upper_code (a_code_point: INTEGER): INTEGER is
-			-- Code of upper-case character of character with code `a_code_point'
+	upper_code (a_code: INTEGER): INTEGER is
+			-- Code of upper-case character of character with code `a_code'
 		require
-			valid_code: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := upper_codes.item (i).item (j).item (k + 1)
 			if Result = -1 then
-				Result := a_code_point
+				Result := a_code
 			end
 		ensure
 			valid_upper_code: valid_code (Result)
 		end
 
-	title_code (a_code_point: INTEGER): INTEGER is
-			-- Code of title-case character of character with code `a_code_point'
+	title_code (a_code: INTEGER): INTEGER is
+			-- Code of title-case character of character with code `a_code'
 		require
-			valid_code: valid_code (a_code_point)
+			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			i := a_code // (65536)
+			a_rem  := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := title_codes.item (i).item (j).item (k + 1)
 			if Result = -1 then
-				Result := a_code_point
+				Result := a_code
 			end
 		ensure
 			valid_title_code: valid_code (Result)

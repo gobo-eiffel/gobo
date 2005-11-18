@@ -2409,7 +2409,7 @@ feature -- Conversion
 			create Result.make (nb)
 			from i := 1 until i > nb loop
 				a_code := item_code_at_byte_index (i)
-				if unicode.is_bmp_code_point (a_code) then
+				if unicode.is_bmp_code (a_code) then
 					a_high := a_code // 256
 					a_low := a_code \\ 256
 					Result.append_character (INTEGER_.to_character (a_high))
@@ -2444,7 +2444,7 @@ feature -- Conversion
 			create Result.make (nb)
 			from i := 1 until i > nb loop
 				a_code := item_code_at_byte_index (i)
-				if unicode.is_bmp_code_point (a_code) then
+				if unicode.is_bmp_code (a_code) then
 					a_high := a_code // 256
 					a_low := a_code \\ 256
 					Result.append_character (INTEGER_.to_character (a_low))
