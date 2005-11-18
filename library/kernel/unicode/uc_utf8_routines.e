@@ -98,12 +98,10 @@ feature -- Status report
 			Result := (a_byte <= byte_127 or (byte_194 <= a_byte and a_byte <= byte_244))
 		end
 
-feature {UC_STRING} -- Status report
-
 	is_encoded_next_byte (a_byte: CHARACTER): BOOLEAN is
 			-- Is `a_byte' one of the next bytes in UTF-8 encoding?
 		do
-			-- 10xxxxxx
+				-- 10xxxxxx
 			Result := (byte_127 < a_byte and a_byte <= byte_191)
 		end
 
@@ -112,8 +110,8 @@ feature {UC_STRING} -- Status report
 		require
 			valid_first_byte: is_encoded_first_byte (a_first_byte)
 		do
-			-- 10xxxxxx
-        	if a_first_byte = byte_224 then
+				-- 10xxxxxx
+			if a_first_byte = byte_224 then
 				Result := (byte_159 < a_byte and a_byte <= byte_191)
 			elseif a_first_byte = byte_237 then
 				Result := (byte_127 < a_byte and a_byte <= byte_159)
@@ -125,8 +123,6 @@ feature {UC_STRING} -- Status report
 				Result := (byte_127 < a_byte and a_byte <= byte_191)
 			end
 		end
-
-feature -- Status report
 
 	is_endian_detection_character (a_first, a_second, a_third: CHARACTER): BOOLEAN is
 			-- Is this sequence a UTF-8 Byte Order Marker (BOM)?
@@ -142,7 +138,7 @@ feature -- Status report
 			Result := a_first = byte_ef and a_second = byte_bb
 		end
 
-feature {UC_STRING} -- Access
+feature -- Access
 
 	encoded_first_value (a_byte: CHARACTER): INTEGER is
 			-- Value encoded in first byte

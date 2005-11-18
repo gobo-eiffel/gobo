@@ -402,7 +402,7 @@ feature -- Code generation
 			an_output_file.put_string ("end%N")
 			an_output_file.close
 		end
-	
+
 	generate_title_case_routines is
 			-- Generate title-case routines from `codes' data.
 		require
@@ -1981,7 +1981,7 @@ feature {NONE} -- Implementation
 		ensure
 			file_still_open: an_output_file.is_open_write
 		end
-			
+
 	write_integer8_segment (a_segment: ARRAY [INTEGER_8]; a_segment_array_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for `a_segment', named `a_segment_array_name' to `an_output_file'.
 		require
@@ -2077,7 +2077,7 @@ feature {NONE} -- Implementation
 		ensure
 			file_still_open: an_output_file.is_open_write
 		end
-			
+
 	write_integer_segment (a_segment: ARRAY [INTEGER]; a_segment_array_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for `a_segment', named `a_segment_array_name' to `an_output_file'.
 		require
@@ -2193,7 +2193,7 @@ feature {NONE} -- Implementation
 			segment_not_void: a_segment /= Void
 			segment_array_names_not_void: a_segment_array_name /= Void
 		local
-			an_index, i, j: INTEGER
+			an_index, j: INTEGER
 			a_list: DS_ARRAYED_LIST [INTEGER]
 		do
 			an_output_file.put_string ("%T")
@@ -2242,7 +2242,7 @@ feature {NONE} -- Implementation
 							an_output_file.put_string (a_list.item (4).out)
 							an_output_file.put_string ("),")
 							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")							
+							an_output_file.put_string (")%N")
 						elseif j = 5 then
 							an_output_file.put_string ("%T%T%TResult.put (new_quintuple (")
 							an_output_file.put_string (a_list.item (1).out)
@@ -2256,7 +2256,7 @@ feature {NONE} -- Implementation
 							an_output_file.put_string (a_list.item (5).out)
 							an_output_file.put_string ("),")
 							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")							
+							an_output_file.put_string (")%N")
 						elseif j = 6 then
 							an_output_file.put_string ("%T%T%TResult.put (new_sextuple (")
 							an_output_file.put_string (a_list.item (1).out)
@@ -2272,7 +2272,7 @@ feature {NONE} -- Implementation
 							an_output_file.put_string (a_list.item (6).out)
 							an_output_file.put_string ("),")
 							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")							
+							an_output_file.put_string (")%N")
 						elseif j = 7 then
 							an_output_file.put_string ("%T%T%TResult.put (new_heptuple (")
 							an_output_file.put_string (a_list.item (1).out)
@@ -2310,7 +2310,7 @@ feature {NONE} -- Implementation
 							an_output_file.put_string (a_list.item (8).out)
 							an_output_file.put_string ("),")
 							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")							
+							an_output_file.put_string (")%N")
 						elseif j = 18 then
 							an_output_file.put_string ("%T%T%TResult.put (new_eighteen_tuple (")
 							an_output_file.put_string (a_list.item (1).out)
@@ -2409,8 +2409,6 @@ feature {NONE} -- Implementation
 			plane_name_not_empty: not a_plane_name.is_empty
 			segment_name_not_void: a_segment_name /= Void
 			segment_name_not_empty: not a_segment_name.is_empty
-		local
-			an_index: INTEGER
 		do
 			an_output_file.put_string ("%T")
 			an_output_file.put_string (a_plane_name)
@@ -2816,7 +2814,7 @@ feature {NONE} -- Implementation
 				a_code > a_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfd_quick_check_array.item (a_code).set_false	
+					nfd_quick_check_array.item (a_code).set_false
 				else
 					nfd_quick_check_array.item (a_code).set_undefined
 				end
@@ -2843,7 +2841,7 @@ feature {NONE} -- Implementation
 				a_code > a_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfc_quick_check_array.item (a_code).set_false	
+					nfc_quick_check_array.item (a_code).set_false
 				else
 					nfc_quick_check_array.item (a_code).set_undefined
 				end
@@ -2870,7 +2868,7 @@ feature {NONE} -- Implementation
 				a_code > a_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfkd_quick_check_array.item (a_code).set_false	
+					nfkd_quick_check_array.item (a_code).set_false
 				else
 					nfkd_quick_check_array.item (a_code).set_undefined
 				end
@@ -2897,7 +2895,7 @@ feature {NONE} -- Implementation
 				a_code > a_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfkc_quick_check_array.item (a_code).set_false	
+					nfkc_quick_check_array.item (a_code).set_false
 				else
 					nfkc_quick_check_array.item (a_code).set_undefined
 				end
