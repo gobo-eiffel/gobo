@@ -524,7 +524,7 @@ feature -- Validity checking
 									l_convert_name := l_convert_feature.name
 									l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
 									if l_conversion_procedure /= Void then
-										report_creation_expression (l_convert_expression, actual_context.named_type (universe), l_conversion_procedure, l_actual)
+										report_creation_expression (l_convert_expression, l_formal_context.named_type (universe), l_conversion_procedure, l_actual)
 									else
 											-- Internal error: the seed of the convert feature should correspond
 											-- to a procedure of `a_convert_class'.
@@ -533,7 +533,7 @@ feature -- Validity checking
 									end
 								else
 									create l_convert_expression.make (l_actual, l_convert_feature)
-									l_convert_expression.set_index (l_actual.index)
+									report_builtin_conversion (l_convert_expression, l_formal_context)
 								end
 								l_expression_comma ?= l_actual_list.item (i)
 								if l_expression_comma /= Void then
@@ -1463,7 +1463,7 @@ feature {NONE} -- Type checking
 		end
 
 	check_local_type_validity (a_type: ET_TYPE) is
-			-- Check validity of `a_type' when it appears 
+			-- Check validity of `a_type' when it appears
 			-- in local variable declarations.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1647,7 +1647,7 @@ feature {NONE} -- Instruction validity
 								l_convert_name := l_convert_feature.name
 								l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
 								if l_conversion_procedure /= Void then
-									report_creation_expression (l_convert_expression, l_source_context.named_type (universe), l_conversion_procedure, l_source)
+									report_creation_expression (l_convert_expression, l_target_context.named_type (universe), l_conversion_procedure, l_source)
 								else
 										-- Internal error: the seed of the convert feature should correspond
 										-- to a procedure of `a_convert_class'.
@@ -1656,7 +1656,7 @@ feature {NONE} -- Instruction validity
 								end
 							else
 								create l_convert_expression.make (l_source, l_convert_feature)
-								l_convert_expression.set_index (l_source.index)
+								report_builtin_conversion (l_convert_expression, l_target_context)
 							end
 							an_instruction.set_source (l_convert_expression)
 							report_assignment (an_instruction)
@@ -1723,7 +1723,7 @@ feature {NONE} -- Instruction validity
 				a_target_context.wipe_out
 				a_target_context.force_last (universe.any_type)
 			elseif not universe.is_dotnet and not a_target_context.is_type_reference (universe) then
-					-- Assignment attempts with expanded sources 
+					-- Assignment attempts with expanded sources
 					-- are allowed in Eiffel for .NET.
 				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
@@ -3392,7 +3392,7 @@ feature {NONE} -- Expression validity
 					l_convert_feature.name, l_actuals, an_expression.position, a_context)
 			else
 				check_expression_validity (an_expression.expression, a_context, current_target_type, feature_impl, current_feature, current_type)
-				an_expression.set_index (an_expression.expression.index)
+				report_builtin_conversion (an_expression, current_target_type)
 				a_context.reset (current_type)
 				a_context.force_last (current_target_type.named_type (universe))
 			end
@@ -3727,7 +3727,7 @@ feature {NONE} -- Expression validity
 					else
 						left_class := left_context.base_class (universe)
 						right_class := right_context.base_class (universe)
-						if 
+						if
 							(left_class = universe.integer_8_class or
 							left_class = universe.integer_16_class or
 							left_class = universe.integer_class or
@@ -4655,7 +4655,7 @@ feature {NONE} -- Expression validity
 											l_convert_name := l_convert_feature.name
 											l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
 											if l_conversion_procedure /= Void then
-												report_creation_expression (l_convert_expression, l_actual_context.named_type (universe), l_conversion_procedure, l_actual)
+												report_creation_expression (l_convert_expression, l_formal_context.named_type (universe), l_conversion_procedure, l_actual)
 											else
 													-- Internal error: the seed of the convert procedure should correspond
 													-- to a feature of `l_convert_class'.
@@ -4664,7 +4664,7 @@ feature {NONE} -- Expression validity
 											end
 										else
 											create l_convert_expression.make (l_actual, l_convert_feature)
-											l_convert_expression.set_index (l_actual.index)
+											report_builtin_conversion (l_convert_expression, l_formal_context)
 										end
 										an_expression.set_right (l_convert_expression)
 										l_actual := l_convert_expression
@@ -4703,7 +4703,7 @@ feature {NONE} -- Expression validity
 											if other_query.is_exported_to (current_class, universe) then
 													-- There is an exported query with the same name in the
 													-- base class of the right-hand-side of the infix expression.
-													-- Now we need to find out whether it is possible to 
+													-- Now we need to find out whether it is possible to
 													-- convert the left-hand-side to the type of the right-
 													-- hand-side.
 												l_convert_feature := type_checker.convert_feature (l_formal_context, l_actual_context)
@@ -4729,7 +4729,7 @@ feature {NONE} -- Expression validity
 															l_convert_name := l_convert_feature.name
 															l_conversion_query := l_convert_class.seeded_query (l_convert_name.seed)
 															if l_conversion_query /= Void then
-																report_qualified_call_expression (l_convert_to_expression, l_actual_context, l_conversion_query)
+																report_qualified_call_expression (l_convert_to_expression, l_formal_context, l_conversion_query)
 																create l_cast_expression.make (l_convert_to_expression, l_actual_context.named_type (universe))
 																l_cast_expression.set_index (l_convert_to_expression.index)
 															else
@@ -4755,7 +4755,7 @@ feature {NONE} -- Expression validity
 															end
 														else
 															create l_convert_expression.make (l_target, l_convert_feature)
-															l_convert_expression.set_index (l_target.index)
+															report_builtin_conversion (l_convert_expression, l_actual_context)
 															create l_cast_expression.make (l_convert_expression, l_actual_context.named_type (universe))
 															l_cast_expression.set_index (l_convert_expression.index)
 														end
@@ -4970,6 +4970,7 @@ feature {NONE} -- Expression validity
 									-- will be reported when we try to pass this array as
 									-- argument or in an assignment will a type that does
 									-- not conform nor convert to the expected type.
+-- TODO: insert the conversion in the AST.
 								l_array_type := universe.array_any_type
 							else
 -- TODO: insert convert feature in AST.
@@ -7735,7 +7736,7 @@ feature {NONE} -- Agent validity
 											a_convert_name := a_convert_feature.name
 											l_conversion_procedure := a_convert_class.seeded_procedure (a_convert_name.seed)
 											if l_conversion_procedure /= Void then
-												report_creation_expression (a_convert_to_expression, l_actual_context.named_type (universe), l_conversion_procedure, an_actual)
+												report_creation_expression (a_convert_to_expression, l_formal_context.named_type (universe), l_conversion_procedure, an_actual)
 											else
 													-- Internal error: the seed of the convert feature should correspond
 													-- to a feature of `a_convert_class'.
@@ -7744,7 +7745,7 @@ feature {NONE} -- Agent validity
 											end
 										else
 											create a_convert_expression.make (an_actual, a_convert_feature)
-											a_convert_expression.set_index (an_actual.index)
+											report_builtin_conversion (a_convert_expression, l_formal_context)
 										end
 										an_argument_comma ?= l_actual_list.item (i)
 										if an_argument_comma /= Void then
@@ -7886,6 +7887,15 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+		do
+		end
+
+	report_builtin_conversion (an_expression: ET_CONVERT_EXPRESSION; a_target_type: ET_TYPE_CONTEXT) is
+			-- Report that a built-in convert expression has been processed.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			a_target_type_not_void: a_target_type /= Void
 		do
 		end
 
@@ -8053,7 +8063,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_manifest_type (an_expression: ET_MANIFEST_TYPE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a manifest type of type `a_type' 
+			-- Report that a manifest type of type `a_type'
 			-- in `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -8241,7 +8251,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_strip_expression (an_expression: ET_STRIP_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a strip expression of type `a_type' 
+			-- Report that a strip expression of type `a_type'
 			-- in `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -8253,7 +8263,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_typed_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a typed pointer expression of type `a_type' 
+			-- Report that a typed pointer expression of type `a_type'
 			-- in `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -8746,7 +8756,7 @@ feature {NONE} -- Access
 
 	feature_impl: ET_FEATURE
 			-- Feature where the code being processed comes from;
-			-- It might be different from `current_feature' when 
+			-- It might be different from `current_feature' when
 			-- processing inherited assertions. For example:
 			--    deferred class A
 			--    feature

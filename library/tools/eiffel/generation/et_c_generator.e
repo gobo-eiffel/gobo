@@ -2097,6 +2097,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 						nb := an_actuals.count
 						from i := 1 until i > nb loop
 							current_file.put_character (',')
+							current_file.put_character (' ')
 							print_expression (an_actuals.actual_argument (i))
 							i := i + 1
 						end
@@ -2357,19 +2358,81 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			a_convert_feature: ET_CONVERT_FEATURE
-			an_actuals: ET_ACTUAL_ARGUMENTS
+			l_convert_feature: ET_CONVERT_FEATURE
+			l_dynamic_procedure: ET_DYNAMIC_FEATURE
+			l_target_type: ET_DYNAMIC_TYPE
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type: ET_DYNAMIC_TYPE
+			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_seed: INTEGER
+			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
 		do
-print ("ET_C_GENERATOR.print_convert_expression%N")
-			a_convert_feature := an_expression.convert_feature
-			if a_convert_feature.is_convert_from then
--- TODO.
-				an_actuals := an_expression.expression
---				check_creation_expression_validity (current_target_type.named_type (universe),
---					a_convert_feature.name, an_actuals)
-				print_expression (an_expression.expression)
+			l_convert_feature := an_expression.convert_feature
+			l_target_type_set := current_feature.dynamic_type_set (an_expression)
+			if l_target_type_set = Void then
+					-- Internal error: the dynamic type set of expressions
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_gibhy_error
 			else
-				print_expression (an_expression.expression)
+				l_target_type := l_target_type_set.static_type
+				if l_convert_feature.is_convert_from then
+					l_seed := l_convert_feature.name.seed
+					l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_system)
+					if l_dynamic_procedure = Void then
+							-- Internal error: there should be a procedure with `l_seed'.
+							-- It has been computed in ET_FEATURE_FLATTENER or else an
+							-- error should have already been reported.
+						set_fatal_error
+						error_handler.report_gibhx_error
+					else
+						print_creation_expression (l_target_type, l_dynamic_procedure, an_expression.expression)
+					end
+				else
+						-- This is a built-in conversion.
+					l_source_type_set := current_feature.dynamic_type_set (an_expression.expression)
+					if l_source_type_set = Void then
+							-- Internal error: the dynamic type set of expressions
+							-- should be known at this stage.
+						set_fatal_error
+						error_handler.report_gibgl_error
+					else
+						l_source_type := l_source_type_set.static_type
+						if l_source_type.conforms_to_type (l_target_type, current_system) then
+-- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
+							print_expression (an_expression.expression)
+						else
+							l_convert_feature := type_checker.convert_feature (l_source_type.base_type, l_target_type.base_type)
+							if l_convert_feature = Void then
+									-- Internal error: no convert feature found.
+-- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
+print ("ET_C_GENERATOR.print_convert_expression%N")
+								print_expression (an_expression.expression)
+							elseif l_convert_feature.is_convert_to then
+-- TODO: can we avoid creating this intermediary 'convert_to_expression'?
+								create l_convert_to_expression.make (an_expression.expression, l_convert_feature)
+								print_convert_to_expression (l_convert_to_expression)
+							elseif l_convert_feature.is_convert_from then
+								l_seed := l_convert_feature.name.seed
+								l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_system)
+								if l_dynamic_procedure = Void then
+										-- Internal error: there should be a procedure with `l_seed'.
+										-- It has been computed in ET_FEATURE_FLATTENER or else an
+										-- error should have already been reported.
+									set_fatal_error
+									error_handler.report_gibjx_error
+								else
+									print_creation_expression (l_target_type, l_dynamic_procedure, an_expression.expression)
+								end
+							else
+									-- Built-in convert feature.
+print ("ET_C_GENERATOR.print_convert_expression%N")
+-- TODO: built-in feature between basic types? Should not be needed with ECMA Eiffel.
+								print_expression (an_expression.expression)
+							end
+						end
+					end
+				end
 			end
 		end
 
@@ -2378,7 +2441,6 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-print ("ET_C_GENERATOR.print_convert_to_expression%N")
 			print_qualified_call_expression (an_expression)
 		end
 
@@ -2420,7 +2482,7 @@ print ("ET_C_GENERATOR.print_convert_to_expression%N")
 			end
 		end
 
-	print_creation_expression (a_type: ET_DYNAMIC_TYPE; a_procedure: ET_DYNAMIC_FEATURE; an_actuals: ET_ACTUAL_ARGUMENT_LIST) is
+	print_creation_expression (a_type: ET_DYNAMIC_TYPE; a_procedure: ET_DYNAMIC_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Print a creation expression.
 		require
 			a_type_not_void: a_type /= Void
@@ -2955,6 +3017,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							nb := an_actuals.count
 							from i := 1 until i > nb loop
 								current_file.put_character (',')
+								current_file.put_character (' ')
 								print_expression (an_actuals.actual_argument (i))
 								i := i + 1
 							end

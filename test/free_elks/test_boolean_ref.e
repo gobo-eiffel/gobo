@@ -16,9 +16,6 @@ inherit
 
 	TEST_CASE
 
-	KL_SHARED_EIFFEL_COMPILER
-		export {NONE} all end
-
 feature -- Test
 
 	run_all is

@@ -16,9 +16,6 @@ inherit
 
 	TEST_CASE
 
-	KL_SHARED_EIFFEL_COMPILER
-		export {NONE} all end
-
 feature -- Test
 
 	run_all is
@@ -206,25 +203,20 @@ feature -- Test
 			sp1.put (5, 0)
 			sp1.put (7, 2)
 			sp1.put (5, 3)
-			if not eiffel_compiler.is_ge then
-					-- `index_of' uses `equal' and gec does not
-					-- handle conversion from INTEGER to ANY yet.
---				assert_integers_equal ("index1", -1, sp1.index_of (8, 0))
---				assert_integers_equal ("index2", -1, sp1.index_of (5, 10))
---				assert_integers_equal ("index3", 0, sp1.index_of (5, 0))
---				assert_integers_equal ("index4", 3, sp1.index_of (5, 1))
---				assert_integers_equal ("index5", 1, sp1.index_of (0, 0))
-			end
+			assert_integers_equal ("index1", -1, sp1.index_of (8, 0))
+			assert_integers_equal ("index2", -1, sp1.index_of (5, 10))
+			assert_integers_equal ("index3", 0, sp1.index_of (5, 0))
+			assert_integers_equal ("index4", 3, sp1.index_of (5, 1))
+			assert_integers_equal ("index5", 1, sp1.index_of (0, 0))
 			create sp2.make (3)
 			sp2.put ("foo", 1)
 			sp2.put ("bar", 2)
--- Conversion problem here as well (because of the formal generic parameter).
---			assert_integers_equal ("index6", 0, sp2.index_of (Void, 0))
---			assert_integers_equal ("index7", -1, sp2.index_of ("gobo", 0))
---			assert_integers_equal ("index8", -1, sp2.index_of ("foo", 2))
---			assert_integers_equal ("index9", -1, sp2.index_of ("foo", 3))
---			assert_integers_equal ("index10", 1, sp2.index_of ("foo", 1))
---			assert_integers_equal ("index11", 2, sp2.index_of ("bar", 0))
+			assert_integers_equal ("index6", 0, sp2.index_of (Void, 0))
+			assert_integers_equal ("index7", -1, sp2.index_of ("gobo", 0))
+			assert_integers_equal ("index8", -1, sp2.index_of ("foo", 2))
+			assert_integers_equal ("index9", -1, sp2.index_of ("foo", 3))
+			assert_integers_equal ("index10", 1, sp2.index_of ("foo", 1))
+			assert_integers_equal ("index11", 2, sp2.index_of ("bar", 0))
 		end
 
 	test_all_default is

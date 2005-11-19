@@ -335,16 +335,14 @@ feature -- Test
 			assert ("not_void2", bref /= Void)
 			assert ("item2", bref.item = False)
 				-- Convert from.
-			if not eiffel_compiler.is_ge then
-				create bref
-				bref.set_item (True)
-				b := bref
-				assert ("item3", b = True)
-				create bref
-				bref.set_item (False)
-				b := bref
-				assert ("item4", b = False)
-			end
+			create bref
+			bref.set_item (True)
+			b := bref
+			assert ("item3", b = True)
+			create bref
+			bref.set_item (False)
+			b := bref
+			assert ("item4", b = False)
 		end
 
 end

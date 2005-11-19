@@ -4,7 +4,25 @@ inherit
 
 	INTEGER_REF
 		redefine
+			to_reference,
 			out, hash_code
+		end
+
+create
+	default_create,
+	make_from_reference
+
+convert
+	make_from_reference ({INTEGER_REF}),
+	to_reference: {INTEGER_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY}
+
+feature -- Conversion
+
+	to_reference: INTEGER_REF is
+			-- Associated reference of Current
+		do
+			create Result
+			Result.set_item (Current)
 		end
 
 feature

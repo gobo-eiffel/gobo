@@ -295,6 +295,7 @@ feature -- Test
 			s1, s2, s3: STRING
 			sp1, sp2: SPECIAL [INTEGER]
 			aa1, aa2: AA
+			bbsi: BB [SPECIAL [INTEGER]]
 		do
 			s1 := "gobo"
 			s2 := "gobo"
@@ -308,12 +309,13 @@ feature -- Test
 			assert ("not_equal3", not s1.equal (s1, Void))
 			create sp1.make (2)
 			create sp2.make (2)
-			assert ("equal5", sp1.equal (sp1, sp1))
-			assert ("equal6", sp1.equal (sp1, sp2))
-			assert ("equal7", sp1.equal (sp2, sp1))
+			create bbsi
+			assert ("equal5", bbsi.equal (sp1, sp1))
+			assert ("equal6", bbsi.equal (sp1, sp2))
+			assert ("equal7", bbsi.equal (sp2, sp1))
 			sp2.put (5, 0)
-			assert ("not_equal4", not sp1.equal (sp1, sp2))
-			assert ("not_equal5", not sp1.equal (sp2, sp1))
+			assert ("not_equal4", not bbsi.equal (sp1, sp2))
+			assert ("not_equal5", not bbsi.equal (sp2, sp1))
 			create aa1
 			create aa2
 			assert ("equal8", aa1.equal (aa1, aa1))

@@ -40,6 +40,7 @@ inherit
 			report_bit_constant,
 			report_boolean_constant,
 			report_character_constant,
+			report_builtin_conversion,
 			report_creation_expression,
 			report_creation_instruction,
 			report_current,
@@ -910,6 +911,70 @@ feature {NONE} -- Event handling
 			end
 		end
 
+	report_builtin_conversion (an_expression: ET_CONVERT_EXPRESSION; a_target_type: ET_TYPE_CONTEXT) is
+			-- Report that a built-in convert expression has been processed.
+		local
+			l_procedure: ET_PROCEDURE
+			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type: ET_DYNAMIC_TYPE
+			l_convert_feature: ET_CONVERT_FEATURE
+			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
+			l_query: ET_QUERY
+			l_seed: INTEGER
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_source_type_set := dynamic_type_set (an_expression.expression)
+				if l_source_type_set = Void then
+						-- Internal error: the dynamic type set of the source
+						-- should be known at this stage.
+					set_fatal_error
+					error_handler.report_gibfn_error
+				else
+					l_source_type := l_source_type_set.static_type
+					if l_source_type.base_type.conforms_to_context (a_target_type, universe) then
+-- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
+						set_dynamic_type_set (l_source_type_set, an_expression)
+					else
+						l_convert_feature := type_checker.convert_feature (l_source_type.base_type, a_target_type)
+						if l_convert_feature = Void then
+								-- Internal error: no convert feature found.
+-- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
+							set_dynamic_type_set (l_source_type_set, an_expression)
+						elseif l_convert_feature.is_convert_to then
+							l_seed := l_convert_feature.name.seed
+							l_query := l_source_type.base_class.seeded_query (l_seed)
+							if l_query /= Void then
+-- TODO: can we avoid creating this intermediary 'convert_to_expression'?
+								create l_convert_to_expression.make (an_expression.expression, l_convert_feature)
+								report_qualified_call_expression (l_convert_to_expression, l_source_type.base_type, l_query)
+							else
+									-- Internal error: there should be a query with `l_seed'.
+									-- It has been computed in ET_FEATURE_FLATTENER or else an
+									-- error should have already been reported.
+								set_fatal_error
+								error_handler.report_gibjz_error
+							end
+						elseif l_convert_feature.is_convert_from then
+							l_seed := l_convert_feature.name.seed
+							l_procedure := a_target_type.base_class (universe).seeded_procedure (l_seed)
+							if l_procedure = Void then
+									-- Internal error: there should be a procedure with `l_seed'.
+									-- It has been computed in ET_FEATURE_FLATTENER or else an
+									-- error should have already been reported.
+								set_fatal_error
+								error_handler.report_gibjy_error
+							else
+								report_creation_expression (an_expression, a_target_type.named_type (universe), l_procedure, an_expression.expression)
+							end
+						else
+-- TODO: built-in feature between basic types? Should not be needed with ECMA Eiffel.
+							set_dynamic_type_set (l_source_type_set, an_expression)
+						end
+					end
+				end
+			end
+		end
+
 	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_NAMED_TYPE;
 		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a creation expression has been processed.
@@ -1489,7 +1554,7 @@ feature {NONE} -- Event handling
 				end
 			end
 		end
-		
+
 	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that a qualified query call (to `a_query') agent
 			-- of type `a_type' in `a_context' has been processed.
@@ -1735,7 +1800,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_strip_expression (an_expression: ET_STRIP_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a strip expression of type `a_type' 
+			-- Report that a strip expression of type `a_type'
 			-- in `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
@@ -1748,7 +1813,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_typed_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a typed pointer expression of type `a_type' 
+			-- Report that a typed pointer expression of type `a_type'
 			-- in `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
@@ -1814,7 +1879,7 @@ feature {NONE} -- Event handling
 				report_unqualified_call_agent (an_expression, l_dynamic_feature, a_type, a_context)
 			end
 		end
-	
+
 	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_DYNAMIC_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that an unqualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.

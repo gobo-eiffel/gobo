@@ -11184,12 +11184,5 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- report_gibhy_error
-	-- report_gibhx_error
-	-- report_gibgl_error
-	-- report_gibfn_error
-	-- report_gibjx_error
-	-- report_gibjy_error
-	-- report_gibjz_error
 
 end
