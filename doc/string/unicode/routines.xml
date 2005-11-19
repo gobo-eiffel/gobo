@@ -78,7 +78,7 @@
 	</varlistentry>
 
 	<varlistentry>
-		<term><classname>ST_UNICODE_IMPORTED_NORMALIZATION_ROUTINES</classname></term>
+		<term><classname>ST_IMPORTED_UNICODE_NORMALIZATION_ROUTINES</classname></term>
 		<listitem>
 			<para>
 				This would give you indirect access to routines for version 5.0.0 of Unicode, via
@@ -90,7 +90,7 @@
 	</varlistentry>
     
 	<varlistentry>
-		<term><classname>ST_UNICODE_IMPORTED_V500_NORMALIZATION_ROUTINES</classname></term>
+		<term><classname>ST_IMPORTED_UNICODE_V500_NORMALIZATION_ROUTINES</classname></term>
 		<listitem>
 			<para>
 				This would give you indirect access to routines for version 5.0.0 of Unicode, via
@@ -101,7 +101,7 @@
 	</varlistentry>
 
 	<varlistentry>
-		<term><classname>ST_UNICODE_IMPORTED_V410_NORMALIZATION_ROUTINES</classname></term>
+		<term><classname>ST_IMPORTED_UNICODE_V410_NORMALIZATION_ROUTINES</classname></term>
 		<listitem>
 			<para>
 				This would give you indirect access to routines for version 4.1.0 of Unicode, via

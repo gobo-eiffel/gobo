@@ -80,8 +80,8 @@
 </para>
 
 <para>
-	Alternatively, you can access these classes as clients, by inheriting from <classname>ST_UNICODE_IMPORTED_CHARACTER_CLASS_ROUTINES</classname> 
-	or <classname>ST_UNICODE_IMPORTED_V410_CHARACTER_CLASS_ROUTINES</classname>, which provide the routines
+	Alternatively, you can access these classes as clients, by inheriting from <classname>ST_IMPORTED_UNICODE_CHARACTER_CLASS_ROUTINES</classname> 
+	or <classname>ST_IMPORTED_UNICODE_V410_CHARACTER_CLASS_ROUTINES</classname>, which provide the routines
 	<featurename>unicode_character_class</featurename> and <featurename>unicode_v410_character_class</featurename> respectively.
 </para>
 
