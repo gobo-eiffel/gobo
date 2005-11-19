@@ -262,6 +262,86 @@ feature -- Test
 			assert_integers_equal ("fourth_byte4", 223, a_byte_string.item_code (4))
 		end
 
+	test_to_utf32_be is
+			-- Test feature `to_utf32_be'.
+		local
+			a_unicode: UC_STRING
+			a_string, a_byte_string: STRING
+		do
+			a_string := "M"
+			a_byte_string := STRING_.to_utf32_be (a_string)
+			assert ("not_void1", a_byte_string /= Void)
+			assert_integers_equal ("count1", 4, a_byte_string.count)
+			assert_integers_equal ("first_byte1", 0, a_byte_string.item_code (1))
+			assert_integers_equal ("second_byte1", 0, a_byte_string.item_code (2))
+			assert_integers_equal ("third_byte1", 0, a_byte_string.item_code (3))
+			assert_integers_equal ("fourth_byte1", 77, a_byte_string.item_code (4))
+			create a_unicode.make_filled_code (1072, 1)
+			a_byte_string := STRING_.to_utf32_be (a_unicode)
+			assert ("no_void2", a_byte_string /= Void)
+			assert_integers_equal ("count2", 4, a_byte_string.count)
+			assert_integers_equal ("first_byte2", 0, a_byte_string.item_code (1))
+			assert_integers_equal ("second_byte2", 0, a_byte_string.item_code (2))
+			assert_integers_equal ("third_byte2", 4, a_byte_string.item_code (3))
+			assert_integers_equal ("fourth_byte2", 48, a_byte_string.item_code (4))
+			create a_unicode.make_filled_code (20108, 1)
+			a_byte_string := STRING_.to_utf32_be (a_unicode)
+			assert ("not_void3", a_byte_string /= Void)
+			assert_integers_equal ("count3", 4, a_byte_string.count)
+			assert_integers_equal ("first_byte3", 0, a_byte_string.item_code (1))
+			assert_integers_equal ("second_byte3", 0, a_byte_string.item_code (2))
+			assert_integers_equal ("third_byte3", 78, a_byte_string.item_code (3))
+			assert_integers_equal ("fourth_byte3", 140, a_byte_string.item_code (4))
+			create a_unicode.make_filled_code (66306, 1)
+			a_byte_string := STRING_.to_utf32_be (a_unicode)
+			assert ("not_void4", a_byte_string /= Void)
+			assert_integers_equal ("count4", 4, a_byte_string.count)
+			assert_integers_equal ("first_byte4", 0, a_byte_string.item_code (1))
+			assert_integers_equal ("second_byte4", 1, a_byte_string.item_code (2))
+			assert_integers_equal ("third_byte4", 3, a_byte_string.item_code (3))
+			assert_integers_equal ("fourth_byte4", 2, a_byte_string.item_code (4))
+		end
+
+	test_to_utf32_le is
+			-- Test feature `to_utf32_le'.
+		local
+			a_unicode: UC_STRING
+			a_string, a_byte_string: STRING
+		do
+			a_string := "M"
+			a_byte_string := STRING_.to_utf32_le (a_string)
+			assert ("not_void1", a_byte_string /= Void)
+			assert_integers_equal ("count1", 4, a_byte_string.count)
+			assert_integers_equal ("first_byte1", 77, a_byte_string.item_code (1))
+			assert_integers_equal ("second_byte1", 0, a_byte_string.item_code (2))
+			assert_integers_equal ("third_byte1", 0, a_byte_string.item_code (3))
+			assert_integers_equal ("fourth_byte1", 0, a_byte_string.item_code (4))
+			create a_unicode.make_filled_code (1072, 1)
+			a_byte_string := STRING_.to_utf32_le (a_unicode)
+			assert ("no_void2", a_byte_string /= Void)
+			assert_integers_equal ("count2", 4, a_byte_string.count)
+			assert_integers_equal ("first_byte2", 48, a_byte_string.item_code (1))
+			assert_integers_equal ("second_byte2", 4, a_byte_string.item_code (2))
+			assert_integers_equal ("third_byte2", 0, a_byte_string.item_code (3))
+			assert_integers_equal ("fourth_byte2", 0, a_byte_string.item_code (4))
+			create a_unicode.make_filled_code (20108, 1)
+			a_byte_string := STRING_.to_utf32_le (a_unicode)
+			assert ("not_void3", a_byte_string /= Void)
+			assert_integers_equal ("count3", 4, a_byte_string.count)
+			assert_integers_equal ("first_byte3", 140, a_byte_string.item_code (1))
+			assert_integers_equal ("second_byte3", 78, a_byte_string.item_code (2))
+			assert_integers_equal ("third_byte3", 0, a_byte_string.item_code (3))
+			assert_integers_equal ("fourth_byte3", 0, a_byte_string.item_code (4))
+			create a_unicode.make_filled_code (66306, 1)
+			a_byte_string := STRING_.to_utf32_le (a_unicode)
+			assert ("not_void4", a_byte_string /= Void)
+			assert_integers_equal ("count4", 4, a_byte_string.count)
+			assert_integers_equal ("first_byte4", 2, a_byte_string.item_code (1))
+			assert_integers_equal ("second_byte4", 3, a_byte_string.item_code (2))
+			assert_integers_equal ("third_byte4", 1, a_byte_string.item_code (3))
+			assert_integers_equal ("fourth_byte4", 0, a_byte_string.item_code (4))
+		end
+
 	test_substring is
 			-- Test feature `substring'.
 		local
