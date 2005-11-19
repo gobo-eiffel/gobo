@@ -1,4 +1,3 @@
--- dummy
 class AA
 
 feature

@@ -10,7 +10,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
--- dummy
 class ET_SYSTEM
 
 inherit

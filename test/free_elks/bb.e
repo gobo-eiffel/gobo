@@ -1,4 +1,3 @@
--- dummy
 class BB [G]
 
 feature
