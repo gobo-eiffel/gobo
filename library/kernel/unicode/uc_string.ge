@@ -261,6 +261,15 @@ inherit
 			is_equal, copy, out
 		end
 
+	UC_IMPORTED_UTF32_ROUTINES
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+			is_equal, copy, out
+		end
+
 	KL_IMPORTED_INTEGER_ROUTINES
 		undefine
 #ifdef SE
@@ -2467,6 +2476,62 @@ feature -- Conversion
 			to_utf16_le_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
 			valid_utf16: utf16.valid_utf16 (utf16.bom_le + Result)
+		end
+
+	to_utf32_be: STRING is
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-32BE representation of current string
+		local
+			i, j, k, l, m, nb, a_code: INTEGER
+		do
+			nb := byte_count
+			create Result.make (nb)
+			from i := 1 until i > nb loop
+				a_code := item_code_at_byte_index (i)
+				m := a_code \\ 256
+				a_code := a_code // 256
+				l := a_code \\ 256
+				a_code := a_code // 256
+				j := a_code // 256
+				k := a_code \\ 256
+				Result.append_character (INTEGER_.to_character (j))
+				Result.append_character (INTEGER_.to_character (k))
+				Result.append_character (INTEGER_.to_character (l))
+				Result.append_character (INTEGER_.to_character (m))
+				i := next_byte_index (i)
+			end
+		ensure
+			to_utf32_be_not_void: Result /= Void
+			string_type: ANY_.same_types (Result, "")
+			valid_utf32: utf32.valid_utf32 (Result)
+		end
+
+	to_utf32_le: STRING is
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-32LE representation of current string
+		local
+			i, j, k, l, m, nb, a_code: INTEGER
+		do
+			nb := byte_count
+			create Result.make (nb)
+			from i := 1 until i > nb loop
+				a_code := item_code_at_byte_index (i)
+				m := a_code \\ 256
+				a_code := a_code // 256
+				l := a_code \\ 256
+				a_code := a_code // 256
+				j := a_code // 256
+				k := a_code \\ 256
+				Result.append_character (INTEGER_.to_character (m))
+				Result.append_character (INTEGER_.to_character (l))
+				Result.append_character (INTEGER_.to_character (k))
+				Result.append_character (INTEGER_.to_character (j))
+				i := next_byte_index (i)
+			end
+		ensure
+			to_utf32_le_not_void: Result /= Void
+			string_type: ANY_.same_types (Result, "")
+			valid_utf32: utf32.valid_utf32 (utf32.bom_le + Result)
 		end
 
 	as_string: STRING is

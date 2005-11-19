@@ -27,6 +27,7 @@ inherit
 	KL_IMPORTED_ANY_ROUTINES
 	UC_IMPORTED_UNICODE_ROUTINES
 	UC_IMPORTED_UTF16_ROUTINES
+	UC_IMPORTED_UTF32_ROUTINES
 
 feature -- Initialization
 
@@ -374,6 +375,78 @@ feature -- Access
 			to_utf16_le_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
 			valid_utf16: utf16.valid_utf16 (utf16.bom_le + Result)
+		end
+
+	to_utf32_be (a_string: STRING): STRING is
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-32BE representation of `a_string'
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, j, k, l, m, nb, a_code: INTEGER
+			uc_string: UC_STRING
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				Result := uc_string.to_utf32_be
+			else
+				nb := a_string.count
+				create Result.make (nb)
+				from i := 1 until i > nb loop
+					a_code := a_string.item_code (i)
+					m := a_code \\ 256
+					a_code := a_code // 256
+					l := a_code \\ 256
+					a_code := a_code // 256
+					j := a_code // 256
+					k := a_code \\ 256
+					Result.append_character (INTEGER_.to_character (j))
+					Result.append_character (INTEGER_.to_character (k))
+					Result.append_character (INTEGER_.to_character (l))
+					Result.append_character (INTEGER_.to_character (m))
+					i := i + 1
+				end
+			end
+		ensure
+			to_utf32_be_not_void: Result /= Void
+			string_type: ANY_.same_types (Result, "")
+			valid_utf32: utf32.valid_utf32 (Result)
+		end
+
+	to_utf32_le (a_string: STRING): STRING is
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-32LE representation of `a_string'
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, j, k, l, m, nb, a_code: INTEGER
+			uc_string: UC_STRING
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				Result := uc_string.to_utf32_le
+			else
+				nb := a_string.count
+				create Result.make (nb)
+				from i := 1 until i > nb loop
+					a_code := a_string.item_code (i)
+					m := a_code \\ 256
+					a_code := a_code // 256
+					l := a_code \\ 256
+					a_code := a_code // 256
+					j := a_code // 256
+					k := a_code \\ 256
+					Result.append_character (INTEGER_.to_character (m))
+					Result.append_character (INTEGER_.to_character (l))
+					Result.append_character (INTEGER_.to_character (k))
+					Result.append_character (INTEGER_.to_character (j))
+					i := i + 1
+				end
+			end
+		ensure
+			to_utf32_le_not_void: Result /= Void
+			string_type: ANY_.same_types (Result, "")
+			valid_utf32: utf32.valid_utf32 (utf32.bom_le + Result)
 		end
 
 	string (a_string: STRING): STRING is

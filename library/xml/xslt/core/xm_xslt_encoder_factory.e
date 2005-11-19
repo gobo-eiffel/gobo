@@ -44,6 +44,12 @@ feature -- Access
 				create {XM_XSLT_UTF16_ENCODER} Result.make (encoding, a_raw_outputter)
 			elseif encoding.is_equal ("UTF-16LE") then
 				create {XM_XSLT_UTF16_ENCODER} Result.make (encoding, a_raw_outputter)
+			elseif encoding.is_equal ("UTF-32") then
+				create {XM_XSLT_UTF32_ENCODER} Result.make (encoding, a_raw_outputter)
+			elseif encoding.is_equal ("UTF-32BE") then
+				create {XM_XSLT_UTF32_ENCODER} Result.make (encoding, a_raw_outputter)
+			elseif encoding.is_equal ("UTF-32LE") then
+				create {XM_XSLT_UTF32_ENCODER} Result.make (encoding, a_raw_outputter)
 			elseif encoding.is_equal ("ISO-8859-1")
 				or  encoding.is_equal ("ISO_8859-1")
 				or  encoding.is_equal ("ISO_8859-1:1987")
