@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 
 	False_value: CHARACTER is '%/0/'
 	True_value: CHARACTER is '%/1/'
-	Undefined_value: CHARACTER is '%/2/'
+	Uncertain_value: CHARACTER is '%/2/'
 
 	quick_check (a_source: STRING; a_form: INTEGER): UT_TRISTATE is
 			-- Quick check for `a_source' being in `a_form'
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 					end
 					if a_check = False_value then
 						Result.set_false
-					elseif a_check = Undefined_value then
+					elseif a_check = Uncertain_value then
 						Result.set_undefined
 					end
 					last_combining_class := a_combining_class
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			k := a_rem \\ 256
 			Result := nfd_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			nfd_quick_check_in_range: Result >= False_value and Result <= True_value
+			nfd_quick_check_in_range: Result = False_value or Result = True_value
 		end
 
 	nfkd_quick_check (a_code: INTEGER): CHARACTER is
@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 			k := a_rem \\ 256
 			Result := nfkd_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			nfkd_quick_check_in_range: Result >= False_value and Result <= True_value
+			nfkd_quick_check_in_range: Result = False_value or Result = True_value
 		end
 
 	nfc_quick_check (a_code: INTEGER): CHARACTER is
@@ -410,7 +410,7 @@ feature {NONE} -- Implementation
 			k := a_rem \\ 256
 			Result := nfc_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			nfc_quick_check_in_range: Result >= False_value and Result <= Undefined_value
+			nfc_quick_check_in_range: Result = False_value or Result = True_value or Result = Uncertain_value
 		end
 
 	nfkc_quick_check (a_code: INTEGER): CHARACTER is
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			k := a_rem \\ 256
 			Result := nfkc_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
-			nfkc_quick_check_in_range: Result >= False_value and Result <= Undefined_value
+			nfkc_quick_check_in_range: Result = False_value or Result = True_value or Result = Uncertain_value
 		end
 
 	order_canonically (a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN]) is
