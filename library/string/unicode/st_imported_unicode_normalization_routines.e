@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ST_UNICODE_IMPORTED_NORMALIZATION_ROUTINES
+class ST_IMPORTED_UNICODE_NORMALIZATION_ROUTINES
 
 feature -- Access
 

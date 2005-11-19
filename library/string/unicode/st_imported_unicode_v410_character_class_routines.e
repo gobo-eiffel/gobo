@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Imported character class routines"
+		"Imported character class routines for Unicode version 4.1.0"
 
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
@@ -10,12 +10,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ST_UNICODE_IMPORTED_CHARACTER_CLASS_ROUTINES
+class ST_IMPORTED_UNICODE_V410_CHARACTER_CLASS_ROUTINES
 
 feature -- Access
 
-	unicode_character_class: ST_UNICODE_CHARACTER_CLASS_ROUTINES is
-			-- Unicode character class routines
+	unicode_v410_character_class: ST_UNICODE_V410_CHARACTER_CLASS_ROUTINES is
+			-- Unicode version 4.1.0 character class routines
 		once
 			create Result
 		ensure
