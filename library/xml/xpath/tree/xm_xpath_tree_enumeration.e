@@ -10,6 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+-- dummy
 deferred class XM_XPATH_TREE_ENUMERATION
 
 feature {NONE} -- Initialization
