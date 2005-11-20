@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 							elseif is_qname (data_type) then
 								a_message := STRING_.concat ("QName '", data_type)
 								a_message := STRING_.appended_string (a_message, "' is not supported by this implementation.")
-								create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "UNSUPPORTED_DATA_TYPE_FOR_SORT", Static_error)
+								create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE0030", Static_error)
 								a_context.transformer.report_fatal_error (an_error)
 								is_error := True
 							else

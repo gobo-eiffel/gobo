@@ -40,6 +40,7 @@
 		<geant target="xslt_and_shift" arguments="transformation_source"/>
 		<geant target="xslt_and_shift" arguments="output_extensions"/>
 		<geant target="xslt_and_shift" arguments="examples"/>
+		<geant target="xslt_and_shift" arguments="conformance"/>
 		<geant target="xslt_and_shift" arguments="overview"/>
 	</target>
 
@@ -59,6 +60,7 @@
 		<delete file="overview.html"/>
 		<delete file="configuration.html"/>
 		<delete file="output_resolver.html"/>
+		<delete file="security_manager.html"/>
 		<delete file="transformer.html"/>
 		<delete file="transforming.html"/>
 		<delete file="results.html"/>
@@ -67,6 +69,8 @@
 		<delete file="transformation_result.html"/>
 		<delete file="transformation_source.html"/>
 		<delete file="output_extensions.html"/>
+		<delete file="examples.html"/>
+		<delete file="conformance.html"/>
 	</target>
 
 <!-- Implementation -->

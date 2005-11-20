@@ -36,7 +36,6 @@ Version 3.5 - ????
 	  characters. Also updated code for conversion to lower and
 	  upper case, and added code for conversion to title case.
 	  These are generated from the Unicode Character Database.
-	  More routines will be generated from this database in the future.
 	  Currently Unicode version 4.1.0 is supported.
 
 	Gobo Eiffel Math/Decimal Library:
@@ -73,10 +72,12 @@ Version 3.5 - ????
 
 	* Added classes for normalizing Unicode strings.
 
-	Gobo Eiffel XSLT Library:
+	Gobo Eiffel XML Library:
 
-	* This library is now sufficiently stable and mature to be
-	  considered supported.
+	* XSLT and XPointer are now sufficiently stable and mature to be
+	  considered supported. XPath is supported for it's use with
+	  XSLT and XPointer as host languages, but a general interface
+	  for host languages is not yet supported.
 
 Version 3.4 - 10 July 2005
 

@@ -172,7 +172,6 @@ feature -- Evaluation
 			an_outputter.set_output_standard_error
 			some_output_properties.set_omit_xml_declaration (True, -1000000)
 			create a_message_emitter.make (a_transformer, an_outputter, some_output_properties, Void)
-			--	removed 06/10/2005 - unnecessary: a_message_emitter.set_output_properties (some_output_properties)
 			create a_tree_receiver.make (a_message_emitter)
 			a_new_context := a_context.new_minor_context
 			create a_result.make_receiver (a_tree_receiver)

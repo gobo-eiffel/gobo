@@ -1,0 +1,433 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Conformance to standards"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_conformance">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Sunday, November 20th, 2005</date>
+  </chapterinfo>
+  <title>Conformance to standards</title>
+  <para>
+    This library is aligned with the Candidate Recommendations issued on the 3rd November 2005
+    for XPath 2.0 and XSLT 2.0. An XSLT processor claiming conformance with these Candidate Recommendations
+    is required to document what choices it makes for features that are listed as implementation-defined.
+  </para>
+  <para>
+    The library clains conformance to a Basic XSLT processor, and in addition supports the optional features
+    Serialization Feature and Backwards Compatibility Feature.
+  </para>
+  <section>
+   <title>Implementation-defined choices</title>
+   <para>
+    <variablelist>
+     <varlistentry>
+      <term>Invocation of the processor</term>
+      <listitem>
+       <para>
+	This is described elsewhere in the documentation starting from <link linkend="overview">Overview</link>.
+	The Base Output URI is equal to the value of <featurename>system_id</featurename> in 
+	<classname>XM_XSLT_TRANSFORMATION_RESULT</classname>, and this is set by whichever creation procedure
+	you use to create the object. See <link linkend="transformation_result">Transformation Result</link>.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Creating new extension instructions and extension functions</term>
+      <listitem>
+       <para>
+	There is no mechanism provided for creating new extension instructions.
+	<warning>The mechanism for creating new extension functions has still to be described. TODO</warning>
+       </para>
+      </listitem>
+     </varlistentry>
+    <varlistentry>
+      <term>Recoverable Dynamic Errors</term>
+      <listitem>
+       <para>
+	The decision on whether or not to recover from a recoverable dynamic error is made by the <classname>XM_XSLT_ERROR_LISTENER</classname>.
+	See <link linkend="error_listener">The Error Listener</link> for more details.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Type Errors</term>
+      <listitem>
+       <para>
+	Type errors are signalled statically whenever possible.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Serialization Errors</term>
+      <listitem>
+       <para>
+	To be defined upon the resolution of <ulink url="http://www.w3.org/Bugs/Public/show_bug.cgi?id=2540">[Bug 2540] [XSLT2.0] Circular references to serialization errors</ulink>.
+       </para>
+      </listitem>
+     </varlistentry>   
+     <varlistentry>
+      <term>Extension Namespaces</term>
+      <listitem>
+       <para>
+	See <link linkend="overview">Overview</link>.
+       </para>
+      </listitem>
+     </varlistentry> 
+    <varlistentry>
+      <term>User-defined Data Elements</term>
+      <listitem>
+       <para>
+	See <ulink url="../../gexslt/extension/index.html">Extensions</ulink>.
+       </para>
+      </listitem>
+     </varlistentry> 
+     <varlistentry>
+      <term>URI References</term>
+      <listitem>
+       <para>
+	The following URI schemes are directly supported by the library for reference
+	by the <xslt>href</xslt> attribute of <xslt>xsl:import</xslt> and <xslt>xsl:include</xslt>:
+	<itemizedlist>
+	 <listitem><para>file</para></listitem>
+	 <listitem><para>data</para></listitem>
+	 <listitem><para>string</para></listitem>
+	</itemizedlist>
+       </para>
+       <para>
+	The last scheme is used for reading text from Eiffel <classname>STRING</classname>s. It is documented
+	in <ulink url="../resolvers.html">Resolvers</ulink>, which also documents how to add additional URI schemes.
+       </para>
+       <para>
+	The following additional URI schemes are supported by <ulink url="http://gestalt.sourceforge.net">Gestalt</ulink>:
+	<itemizedlist>
+	 <listitem><para>http</para></listitem>
+	 <listitem><para>ftp</para></listitem>
+	</itemizedlist>
+       </para>
+       <para>
+	For the list of supported media types and treatment of fragment identifiers, see <ulink url="../../gexslt/options.html">Options</ulink>
+	This also applies to the <xslt>document()</xslt> function.
+       </para>
+      </listitem>
+     </varlistentry> 
+     <varlistentry>
+      <term>Limits</term>
+      <listitem>
+       <para>
+	<itemizedlist>
+	 <listitem>
+	  <para>
+	   The maximum number of digits permitted for an xs:decimal value is at least 18, but may be set
+	   to any higher value.
+	  </para>
+	 </listitem>
+	 <listitem>
+	  <para>
+	   For dates and times, both positive and negative year values are supported for any value that can be
+	   represented by a 32-bit signed integer. The maximum number of fractional second digits is three. Although additional digits
+	   will be recognised, values are rounded to 3 digits.
+	  </para>
+	 </listitem>
+	 <listitem>
+	  <para>
+	   For durations, the maximum values for the years, months, days, hours, minutes and seconds components are those that can be
+	   represented by a 32-bit signed integer.
+	  </para>
+	 </listitem>
+	 <listitem>
+	  <para>
+	   For xdt:yearMonth durations, the greatest durations that can be expressed in months is 13 times the maximum positive number that can be expressed 
+	   as a 32-bit signed integer.
+	  </para>
+	 </listitem>
+	 <listitem>
+	  <para>
+	   For xdt:dayTime durations, the greatest durations that can be expressed in seconds is 24 * 60 * 60 times the maximum positive number that can be expressed 
+	   as a 32-bit signed integer.
+	  </para>
+	 </listitem>
+	 <listitem>
+	  <para>
+	   For xs:string, xs:hexBinary, xs:base64Binary, xs:QName, xs:anyURI and xs:NOTATION, the maximum length of a value
+	   is the maximum positive number that can be expressed as a 32-bit signed integer.
+	  </para>
+	 </listitem>
+	 <listitem>
+	  <para>
+	   The maximum length of a sequence is the maximum positive number that can be expressed as a 32-bit signed integer.
+	  </para>
+	 </listitem>
+	</itemizedlist>
+       </para>
+      </listitem>
+     </varlistentry> 
+     <varlistentry>
+      <term>Implicit Timexone</term>
+      <listitem>
+       <para>
+	The implicit timezone is set to the local time zone when a transformer is created.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Numbering sequences</term>
+      <listitem>
+       <para>
+	No additional numbering sequences are defined.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Upper bounds on numbering sequences with xsl:number</term>
+      <listitem>
+       <para>
+	When using Roman Numerals, the maximum number is 3,999. Other sequences are limited 
+	to the maximum positive number that can be expressed as a 32-bit signed integer.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Languages supported by xsl:number</term>
+      <listitem>
+       <para>
+	The default language is English (en). The library does not have built-in support for any other languages right now,
+	but these can be added by writing a descendant of <classname>XM_XSLT_NUMBERER</classname>, and editing 
+	<featurename>selected_numberer</featurename> of <classname>XM_XSLT_NUMBER_ROUTINES</classname>.
+	<warning>TODO: there should be a plugin-mechanism for this.</warning>
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Data-type attribute on xsl:sort</term>
+      <listitem>
+       <para>
+	If the <xslt>data-type</xslt> attribuute on the <xslt>xsl:sort</xslt> instruction has a value other than text or number then
+	error <xslt>XTDE0030</xslt> is issued at run-time.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Defining collation URIs</term>
+      <listitem>
+       <para>
+	There is currently no mechanism for defining collations.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Selecting collations</term>
+      <listitem>
+       <para>
+	The algorithm currently used by <xslt>xsl:sort</xslt> for select a collation, given a <xslt>lang</xslt> and <xslt>case-order</xslt>
+	attribute, is
+	to use the Unicode Code-point collation for English, and to raise an error for any other language.
+	<warning>TODO: the <xslt>case-order</xslt> attribute is not currently implemented.</warning>
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Date/time formatting</term>
+      <listitem>
+       <para>
+	The default language is English (en). No other languages are currently supported.
+	The default calendar is CE. AD is also supported. The default country is US. The country is currently
+	ignored, and all values are accepted. This will change.
+       </para>
+       <para>
+	The following abbreviations are used for the days of the week in English:
+	<itemizedlist>
+	 <listitem><para>Sun</para></listitem>
+	 <listitem><para>Mon</para></listitem>
+	 <listitem><para>Tues</para></listitem>
+	 <listitem><para>Weds</para></listitem>
+	 <listitem><para>Thurs</para></listitem>
+	 <listitem><para>Fri</para></listitem>
+	 <listitem><para>Sat</para></listitem>
+	</itemizedlist>
+       </para>
+      </listitem>
+     </varlistentry>
+    <varlistentry>
+      <term>System properties</term>
+      <listitem>
+       <para>
+	The following values are returned for the standard system-properties:
+	<variablelist>
+	 <varlistentry>
+	  <term>xsl:version</term>
+	  <listitem><para>2.0</para></listitem>
+	 </varlistentry>
+	 <varlistentry>
+	  <term>xsl:vendor</term>
+	  <listitem><para>Gobo</para></listitem>
+	 </varlistentry>
+	 <varlistentry>
+	  <term>xsl:vendor-url</term>
+	  <listitem><para>http://www.gobosoft.com/</para></listitem>
+	 </varlistentry>
+	 <varlistentry>
+	  <term>xsl:product-name</term>
+	  <listitem>
+	   <para>gexslt</para>
+	   <para>
+	    This is actually configurable, by calling <featurename>set_product_name</featurename> from
+	    <classname>XM_XPATH_CONFIGURATION</classname>
+	   </para>
+	  </listitem>
+	 </varlistentry>
+	 <varlistentry>
+	  <term>xsl:product-version</term>
+	  <listitem><para>This is equal to the version of the Gobo library. See <ulink url="http://www.gobosoft.com/whatsnew/index.html">Gobo news</ulink></para></listitem>
+	 </varlistentry>
+	 <varlistentry>
+	  <term>xsl:is-schema-aware</term>
+	  <listitem><para>no</para></listitem>
+	 </varlistentry>
+	 <varlistentry>
+	  <term>xsl:supports-serialization</term>
+	  <listitem><para>yes</para></listitem>
+	 </varlistentry>
+	 <varlistentry>
+	  <term>xsl:supports-backwards-compatibility</term>
+	  <listitem><para>yes</para></listitem>
+	 </varlistentry>
+	</variablelist>
+	</para>
+	<para>
+	 Also, any property in the namespace http://exslt.org/environment-variables is treated as the name
+	 of an environment variable. If that environemnt variable is set, then it's value is returned.
+	</para>
+      </listitem>
+    </varlistentry>
+     <varlistentry>
+      <term>Destination for xsl:message</term>
+      <listitem>
+       <para>
+	All xsl:message output goes to the standard error stream.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Extension function string results</term>
+      <listitem>
+       <para>
+	Extension functions are required to raise an error if they attempt to
+	return a string that contains invalid XML instructions. Since any extension
+	functions must be linked into the executable, this effectively means that there will
+	be a different implementation.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>External objects</term>
+      <listitem>
+       <para>
+	External objects may return type <featurename>object_type</featurename> as defined in
+	<classname>XM_XPATH_TYPE_FACTORY</classname>.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Final result trees</term>
+      <listitem>
+       <para>
+	See <link linkend="results">Accessing the Transformation Results</link> for how to access
+	final result trees.
+       </para>
+       <para>
+	The following URI schemes are directly supported by the library for the value of the <xslt>href</xslt> attribute
+	of the <xslt>xsl:result-document</xslt> instruction:
+	<itemizedlist>
+	 <listitem><para>file</para></listitem>
+	 <listitem><para>string</para></listitem>
+	 <listitem><para>stdout</para></listitem>
+	</itemizedlist>
+       </para>
+       <para>
+	Stdout refers to the standard output stream. The only value permitted for URIs in this scheme
+	is the the string <uri>stdout:</uri>. String refers to Eiffel <classname>STRING</classname>s.
+       </para>
+      <para>
+	The following additional URI schemes are supported by <ulink url="http://gestalt.sourceforge.net">Gestalt</ulink>:
+	<itemizedlist>
+	 <listitem><para>http</para></listitem>
+	 <listitem><para>ftp</para></listitem>
+	 <listitem><para>mailto</para></listitem>
+	</itemizedlist>
+       </para>
+       <para>
+	Eiffel programmers may add additional URI schemes. See <link linkend="output_resolver">The Output URI Resolver </link>
+       </para>
+       <para>
+	Serialization is to the destination implied by the URI scheme. In the case of <uri>string:</uri>, these
+	can only be retrieved by an Eiffel program, by accessing <featurename>output_destinations</featurename>
+	from <classname>XM_XSLT_OUTPUT_URI_RESOLVER</classname>.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Encoding</term>
+      <listitem>
+       <para>
+	The default value for the <xslt>encoding</xslt> attribute of <xslt>xsl:output</xslt> is UTF-8.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Output versions</term>
+      <listitem>
+       <para>
+	This implementation supports the values 1.0 and 1.1 for the <xslt>version</xslt> attribute
+	of <xslt>xsl:output</xslt> when the method is <xslt>xml</xslt> or  <xslt>xhtml</xslt> .
+	It supports 4.0 or 4.01 when the method is <xslt>html</xslt>.
+       </para>
+      </listitem>
+     </varlistentry>
+    <varlistentry>
+      <term>Byte order mark</term>
+      <listitem>
+       <para>
+	The default value for the <xslt>byte-order-mark</xslt> attribute of <xslt>xsl:output</xslt> is no when the encoding is UTF-8.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Disabling Output Escaping</term>
+      <listitem>
+       <para>
+	This is not supported.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>Normalization forms</term>
+      <listitem>
+       <para>
+	Only NFC, NFKC, NFD and NFKD are supported.
+       </para>
+      </listitem>
+     </varlistentry>
+
+   </variablelist>
+  </para>
+ </section>
+</chapter>

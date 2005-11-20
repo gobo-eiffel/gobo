@@ -32,7 +32,7 @@
     <ulink url="http://www.w3.org/TR/xslt20/">XSLT 2.0 tranformation language</ulink>.
   </para>
   <para>
-    The library supports a Basic XSLT processor, and is in line with the Candidate Recommendation..
+    The library supports a Basic XSLT processor, and is in line with the Candidate Recommendation.
   </para>
   <para>
     The support is not yet quite complete. The following features have yet to be implemented:
@@ -169,5 +169,9 @@
       To see which libraries need to be mounted in your system.xace file,
       take a look at the example progam in $GOBO/example/xml/xslt/schematron.
     </para>
+  </section>
+  <section>
+   <title>Conformance</title>
+   <para>See <link linkend="conformance">Conformance to standards</link></para>
   </section>
 </chapter>
