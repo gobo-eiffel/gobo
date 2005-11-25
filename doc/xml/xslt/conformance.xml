@@ -55,7 +55,7 @@
       <listitem>
        <para>
 	There is no mechanism provided for creating new extension instructions.
-	<warning>The mechanism for creating new extension functions has still to be described. TODO</warning>
+	See <link linkend="extension_functions">Creating extension functions</link> for the mechanism for creating new extension functions.
        </para>
       </listitem>
      </varlistentry>

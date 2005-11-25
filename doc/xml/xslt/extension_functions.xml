@@ -1,0 +1,242 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Extensions functions"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_output_extensions">
+  <chapterinfo>
+    <copyright>
+      <year>2005</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Monday, November 21st, 2005</date>
+  </chapterinfo>
+  <title>Creating extension functions</title>    
+  <para>
+   This chapter describes how to create your own library of XPath extension functions
+   which can be called within your XSLT transformations.
+  </para>
+  <section>
+    <title>Creating your extension functions</title>
+    <para>
+     The first step is to write the Eiffel code for your extension functions. You do this by writing at least one 
+     Eiffel class. Usually you should create a separate class for each function, but if several functions are variations
+     on a theme, it might be simpler for them all to share one class, and just use a different creation procedure
+     for each implemented function. An example of this approach is the implementation of the core XPath functions
+     fn:encode-for-uri(), fn:iri-to-uri() and fn:escape-html-uri(), which all share the same implementation code
+     in XM_XPATH_ESCAPE_URI, the only difference between them being the set of reserved characters.
+    </para>
+    <para>
+     Your Eiffel class should be a descendant of <classname>XM_XPATH_SYSTEM_FUNCTION</classname> (if it is possible for
+     your function to always be evaluated when the transformation is compiled, then it is more efficient to inherit fron
+     <classname>XM_XPATH_COMPILE_TIME_FUNCTION</classname> instead). 
+    <warning>
+     Writing extension functions as descendants of <classname>XM_XPATH_SYSTEM_FUNCTION</classname> probably requires some
+     understanding of how the XPath library works. This is not properly documented yet. If in doubt ask for help on one of the Gobo
+     mailing lists.
+    </warning>
+     You will usually
+     want to redefine either <featurename>evaluate_item</featurename> or  <featurename>create_iterator</featurename>, or both
+     (if your function ever returns sequences of more than one item, then you will need to redefine <featurename>create_iterator</featurename>).
+    </para>
+    <para>
+     You may also need to redefine other routines. These routines are likely candidates:
+     <variablelist>
+      <varlistentry>
+       <term><featurename>pre_evaluate</featurename></term>
+       <listitem>
+	<para>
+	 By default, the library will attempt to pre-evaluate your function at compile time, if it can
+	 determine that all the arguments are fixed values. If for some reason that is unsuitable behaviour, then
+	 you should redefine this routine to do nothing.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><featurename>simplify</featurename></term>
+       <listitem>
+	<para>
+	 This performs optimizations that do not depend upon the XPath static context. By
+	 default it just simplifies all the other arguments. This is a suitable point for
+	 setting optimization flags that depend upon the number of arguments actually passed.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><featurename>check_arguments</featurename></term>
+       <listitem>
+	<para>
+	 This routine checks the number and type of arguments.
+	 This is a suitable place for performing additional checks or optimizations on particular arguments.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><featurename>calculate_effective_boolean_value</featurename></term>
+       <listitem>
+	<para>
+	 This routine evaluates the function as a boolean.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><featurename>check_static_type</featurename></term>
+       <listitem>
+	<para>
+	 This routine performs static type checking on the function.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><featurename>optimize</featurename></term>
+       <listitem>
+	<para>
+	 This routine performs optimizations at compile time. By default it optimizes
+	 all the arguments.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><featurename>evaluate_as_string</featurename></term>
+       <listitem>
+	<para>
+	 This routine evaluates the function when it is known to return a single string.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><featurename>compute_special_properties</featurename></term>
+       <listitem>
+	<para>
+	 This routine sets flags for the optimization process.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><featurename>compute_intrinsic_dependencies</featurename></term>
+       <listitem>
+	<para>
+	 This routine sets flags for the optimization process.
+	</para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </para>
+    <para>
+     You will also need to implement the following routines:
+     <variablelist>
+      <varlistentry>
+       <term><featurename>item_type</featurename></term>
+       <listitem>
+	<para>
+	 This routine tells the static type checker and optimizer what type of items might be returned by
+	 the function. Be as specific as you can, so that more optimizations can be performed.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><featurename>required_type</featurename></term>
+       <listitem>
+	<para>
+	 This routine tells the static type checker what type and length of sequence is allowed
+	 for each argument.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><featurename>compute_cardinality</featurename></term>
+       <listitem>
+	<para>
+	 This routine tells the static type checker and optimizer now many items might be returned by
+	 the function.
+	</para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </para>
+    <para>
+     You must also implement a creation routine with zero arguments. This <emphasis>must</emphasis> perform the following operations:
+     <itemizedlist>
+      <listitem>
+       <para>
+	Set the attributes <featurename>name</featurename> and <featurename>namespace_uri</featurename> to name
+	your function.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+	Set <featurename>fingerprint</featurename> to match <featurename>name</featurename> and <featurename>namespace_uri</featurename>.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+	Set the attributes <featurename>minimum_argument_count</featurename> and <featurename>maximum_argument_count</featurename> to 
+	specify the number of permitted arguments.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+	Finally create <featurename>arguments</featurename> and set <featurename>initialized</featurename> to <featurename>True</featurename>.
+       </para>
+      </listitem>
+     </itemizedlist>
+    </para>
+  </section>
+  <section>
+    <title>Creating an extension function library</title>
+    <para>
+     Next you should create a descendant of <classname>XM_XPATH_FUNCTION_LIBRARY</classname>. You need to implement two 
+     routines:
+     <variablelist>
+      <varlistentry>
+       <term><featurename>is_function_available</featurename></term>
+       <listitem>
+	<para>
+	 You must return <featurename>False</featurename> if <featurename>is_restricted</featurename> is <featurename>True</featurename>.
+	 Otherwise, if <featurename>a_fingerprint</featurename> is equal to the value of <featurename>fingerprint</featurename> for your function,
+	 then you should return <featurename>True</featurename> if <featurename>an_arity</featurename> is -1, or if it lies (inclusively)
+	 between the values that you set for <featurename>minimum_argument_count</featurename> and <featurename>maximum_argument_count</featurename>
+	 for your function.
+	</para>
+       </listitem>
+      </varlistentry>
+     <varlistentry>
+       <term><featurename>bind_function</featurename></term>
+       <listitem>
+	<para>
+	 You should create the function that matches <featurename>a_fingerprint</featurename>.
+	 Then call <featurecall><featurename>set_arguments</featurename><arguments><argument>some_arguments</argument></arguments></featurecall>.
+	 Then you should set <featurename>last_bound_function</featurename> to the created function.
+	</para>
+       </listitem>
+      </varlistentry>
+     </variablelist>     
+    </para>
+  </section>
+  <section>
+    <title>Informing the XSLT library of your extension function library</title>
+    <para>
+     There is one last step to take, you have to tell the library about the existence of your
+     function library.
+    </para>
+    <para>
+     Just pass your library as the sole argument to <featurename>add_extension_function_library</featurename>
+     of <classname>XM_XSLT_CONFIGURATION</classname>. After this call, your library will be searched whenever
+     a transformation is compiled.
+    </para>
+  </section>
+</chapter>
