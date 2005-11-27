@@ -1426,6 +1426,62 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_prefix_minus_expression (a_sign: ET_SYMBOL_OPERATOR; an_expression: ET_EXPRESSION): ET_EXPRESSION is
+			-- New prefix minus expression
+		local
+			l_integer: ET_INTEGER_CONSTANT
+			l_real: ET_REAL_CONSTANT
+		do
+			if a_sign /= Void and an_expression /= Void then
+				l_integer ?= an_expression
+				if l_integer /= Void then
+					if l_integer.sign = Void then
+						l_integer.set_sign (a_sign)
+						Result := l_integer
+					end
+				else
+					l_real ?= an_expression
+					if l_real /= Void then
+						if l_real.sign = Void then
+							l_real.set_sign (a_sign)
+							Result := l_real
+						end
+					end
+				end
+			end
+			if Result = Void then
+				Result := ast_factory.new_prefix_expression (ast_factory.new_prefix_minus_operator (a_sign), an_expression)
+			end
+		end
+
+	new_prefix_plus_expression (a_sign: ET_SYMBOL_OPERATOR; an_expression: ET_EXPRESSION): ET_EXPRESSION is
+			-- New prefix plus expression
+		local
+			l_integer: ET_INTEGER_CONSTANT
+			l_real: ET_REAL_CONSTANT
+		do
+			if a_sign /= Void and an_expression /= Void then
+				l_integer ?= an_expression
+				if l_integer /= Void then
+					if l_integer.sign = Void then
+						l_integer.set_sign (a_sign)
+						Result := l_integer
+					end
+				else
+					l_real ?= an_expression
+					if l_real /= Void then
+						if l_real.sign = Void then
+							l_real.set_sign (a_sign)
+							Result := l_real
+						end
+					end
+				end
+			end
+			if Result = Void then
+				Result := ast_factory.new_prefix_expression (ast_factory.new_prefix_plus_operator (a_sign), an_expression)
+			end
+		end
+
 	new_tuple_type (a_name: ET_IDENTIFIER; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE is
 			-- New TUPLE class type
 		do

@@ -2792,9 +2792,9 @@ Non_binary_expression: Bracket_target
 	| Manifest_tuple
 		{ $$ := $1 }
 	| '+' Non_binary_expression %prec E_NOT
-		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_plus_operator ($1), $2) }
+		{ $$ := new_prefix_plus_expression ($1, $2) }
 	| '-' Non_binary_expression %prec E_NOT
-		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_minus_operator ($1), $2) }
+		{ $$ := new_prefix_minus_expression ($1, $2) }
 	| E_NOT Non_binary_expression
 		{ $$ := ast_factory.new_prefix_expression ($1, $2) }
 	| E_FREEOP Non_binary_expression %prec E_NOT
