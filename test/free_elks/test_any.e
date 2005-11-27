@@ -16,9 +16,6 @@ inherit
 
 	TEST_CASE
 
-	KL_SHARED_EIFFEL_COMPILER
-		export {NONE} all end
-
 feature -- Test
 
 	run_all is
@@ -441,7 +438,6 @@ feature -- Test
 			-- Test feature `copy'.
 		local
 			s1, s2: STRING
-			i1, i2: INTEGER
 			sp1, sp2: SPECIAL [INTEGER]
 			aa1, aa2: AA
 		do
@@ -454,11 +450,7 @@ feature -- Test
 			s2.copy (s1)
 			assert_equal ("value2", "gobo", s2)
 			assert ("not_same_area2", s2.area /= s1.area)
-			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
-				i1 := 5
-				i2.copy (i1)
-				assert ("value3", i2 = 5)
-			end
+				-- Copy specials of the same size.
 			create sp1.make (2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
@@ -467,20 +459,6 @@ feature -- Test
 			assert_integers_equal ("sp_count4", 2, sp2.count)
 			assert_integers_equal ("sp_item0_4", 2, sp2.item (0))
 			assert_integers_equal ("sp_item1_4", 5, sp2.item (1))
-			if not eiffel_compiler.is_ise then
-				create sp2.make (5)
-				sp2.copy (sp1)
-				assert_integers_equal ("sp_count5", 2, sp2.count)
-				assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
-				assert_integers_equal ("sp_item1_5", 5, sp2.item (1))
-			end
-			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
-				create sp2.make (1)
-				sp2.copy (sp1)
-				assert_integers_equal ("sp_count6", 2, sp2.count)
-				assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
-				assert_integers_equal ("sp_item1_6", 5, sp2.item (1))
-			end
 			create aa1
 			aa1.set_foo (5)
 			create aa2
@@ -488,11 +466,48 @@ feature -- Test
 			assert_integers_equal ("value7", 5, aa2.foo)
 		end
 
+	test_copy___fail_ise is
+			-- Test feature `copy'.
+			-- Does not work with ISE Eiffel.
+		local
+			i1, i2: INTEGER
+			sp1, sp2: SPECIAL [INTEGER]
+		do
+			i1 := 5
+			i2.copy (i1)
+			assert ("value3", i2 = 5)
+				-- Copy a special to a bigger one.
+			create sp1.make (2)
+			sp1.put (2, 0)
+			sp1.put (5, 1)
+			create sp2.make (5)
+			sp2.copy (sp1)
+			assert_integers_equal ("sp_count5", 2, sp2.count)
+			assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
+			assert_integers_equal ("sp_item1_5", 5, sp2.item (1))
+		end
+
+	test_copy___fail_ise_ge is
+			-- Test feature `copy'.
+			-- Does not work with ISE Eiffel and Gobo Eiffel.
+		local
+			sp1, sp2: SPECIAL [INTEGER]
+		do
+				-- Copy a special to a smaller one.
+			create sp1.make (2)
+			sp1.put (2, 0)
+			sp1.put (5, 1)
+			create sp2.make (1)
+			sp2.copy (sp1)
+			assert_integers_equal ("sp_count6", 2, sp2.count)
+			assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
+			assert_integers_equal ("sp_item1_6", 5, sp2.item (1))
+		end
+
 	test_standard_twin is
 			-- Test feature `standard_twin'.
 		local
 			s1, s2: STRING
-			i1, i2: INTEGER
 			sp1, sp2: SPECIAL [INTEGER]
 			aa1, aa2: AA
 		do
@@ -502,11 +517,6 @@ feature -- Test
 			assert_equal ("value1", "gobo", s2)
 			assert ("same_area1", s2.area = s1.area)
 			assert ("cloned1", s2 /= s1)
-			if not eiffel_compiler.is_ise then
-				i1 := 5
-				i2 := i1.standard_twin
-				assert_integers_equal ("value2", 5, i2)
-			end
 			create sp1.make (2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
@@ -522,6 +532,17 @@ feature -- Test
 			assert ("not_void4", aa2 /= Void)
 			assert ("value4", aa2.foo = 5)
 			assert ("cloned4", aa2 /= aa1)
+		end
+
+	test_standard_twin___fail_ise is
+			-- Test feature `standard_twin'.
+			-- Does not work with ISE Eiffel.
+		local
+			i1, i2: INTEGER
+		do
+			i1 := 5
+			i2 := i1.standard_twin
+			assert_integers_equal ("value2", 5, i2)
 		end
 
 	test_standard_copy is
@@ -541,11 +562,7 @@ feature -- Test
 			s2.standard_copy (s1)
 			assert_equal ("value2", "gobo", s2)
 			assert ("same_area2", s2.area = s1.area)
-			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
-				i1 := 5
-				i2.copy (i1)
-				assert ("value3", i2 = 5)
-			end
+				-- Copy specials of the same size.
 			create sp1.make (2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
@@ -554,25 +571,49 @@ feature -- Test
 			assert_integers_equal ("sp_count4", 2, sp2.count)
 			assert_integers_equal ("sp_item0_4", 2, sp2.item (0))
 			assert_integers_equal ("sp_item1_4", 5, sp2.item (1))
-			if not eiffel_compiler.is_ise then
-				create sp2.make (5)
-				sp2.standard_copy (sp1)
-				assert_integers_equal ("sp_count5", 2, sp2.count)
-				assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
-				assert_integers_equal ("sp_item1_5", 5, sp2.item (1))
-			end
-			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
-				create sp2.make (1)
-				sp2.standard_copy (sp1)
-				assert_integers_equal ("sp_count6", 2, sp2.count)
-				assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
-				assert_integers_equal ("sp_item1_6", 5, sp2.item (1))
-			end
 			create aa1
 			aa1.set_foo (5)
 			create aa2
 			aa2.standard_copy (aa1)
 			assert_integers_equal ("value7", 5, aa2.foo)
+		end
+
+	test_standard_copy___fail_ise is
+			-- Test feature `standard_copy'.
+			-- Does not work with ISE Eiffel.
+		local
+			i1, i2: INTEGER
+			sp1, sp2: SPECIAL [INTEGER]
+		do
+			i1 := 5
+			i2.copy (i1)
+			assert ("value3", i2 = 5)
+				-- Copy a special to a bigger one.
+			create sp1.make (2)
+			sp1.put (2, 0)
+			sp1.put (5, 1)
+			create sp2.make (5)
+			sp2.standard_copy (sp1)
+			assert_integers_equal ("sp_count5", 2, sp2.count)
+			assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
+			assert_integers_equal ("sp_item1_5", 5, sp2.item (1))
+		end
+
+	test_standard_copy___fail_ise_ge is
+			-- Test feature `standard_copy'.
+			-- Does not work with ISE Eiffel and Gobo Eiffel.
+		local
+			sp1, sp2: SPECIAL [INTEGER]
+		do
+				-- Copy a special to a smaller one.
+			create sp1.make (2)
+			sp1.put (2, 0)
+			sp1.put (5, 1)
+			create sp2.make (1)
+			sp2.standard_copy (sp1)
+			assert_integers_equal ("sp_count6", 2, sp2.count)
+			assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
+			assert_integers_equal ("sp_item1_6", 5, sp2.item (1))
 		end
 
 	test_out is
@@ -608,9 +649,9 @@ feature -- Test
 			l_out := sp1.out
 			assert ("not_void3", l_out /= Void )
 			assert ("type3", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value3", "SPECIAL [INTEGER] [0x5]%N  0: INTEGER_32 = 5%N  1: INTEGER_32 = 6%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value3", "SPECIAL [INTEGER] [0x5]%N  0: INTEGER_32 = 5%N  1: INTEGER_32 = 6%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object3", l_out /= sp1.out)
 			create sp2.make (2)
 			sp2.put ("gobo", 0)
@@ -618,9 +659,9 @@ feature -- Test
 			l_out := sp2.out
 			assert ("not_void4", l_out /= Void )
 			assert ("type4", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value4", "SPECIAL [STRING] [0x5]%N  0: STRING [0x5]%N  1: STRING [0x5]%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value4", "SPECIAL [STRING] [0x5]%N  0: STRING [0x5]%N  1: STRING [0x5]%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object4", l_out /= sp2.out)
 			create sp3.make (2)
 			sp3.put (sp1, 0)
@@ -628,53 +669,53 @@ feature -- Test
 			l_out := sp3.out
 			assert ("not_void5", l_out /= Void )
 			assert ("type5", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value5", "SPECIAL [SPECIAL [INTEGER]] [0x5]%N  0: SPECIAL [INTEGER] [0x5]%N  1: SPECIAL [INTEGER] [0x5]%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value5", "SPECIAL [SPECIAL [INTEGER]] [0x5]%N  0: SPECIAL [INTEGER] [0x5]%N  1: SPECIAL [INTEGER] [0x5]%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object5", l_out /= sp3.out)
 			create aa
 			aa.set_foo (5)
 			l_out := aa.out
 			assert ("not_void6", l_out /= Void )
 			assert ("type6", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value6", "AA [0x5]%N  foo: INTEGER_32 = 5%N  bar: INTEGER_32 = 0%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value6", "AA [0x5]%N  foo: INTEGER_32 = 5%N  bar: INTEGER_32 = 0%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object6", l_out /= aa.out)
 			create bb1
 			bb1.set_item ('a')
 			l_out := bb1.out
 			assert ("not_void7", l_out /= Void )
 			assert ("type7", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value7", "BB [0x5]%N  item: CHARACTER = 'a'%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value7", "BB [0x5]%N  item: CHARACTER = 'a'%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object7", l_out /= bb1.out)
 			create bb2
 			bb2.set_item (True)
 			l_out := bb2.out
 			assert ("not_void8", l_out /= Void )
 			assert ("type8", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value8", "BB [0x5]%N  item: BOOLEAN = True%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value8", "BB [0x5]%N  item: BOOLEAN = True%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object8", l_out /= bb2.out)
 			create bb3
 			bb3.set_item (1.5)
 			l_out := bb3.out
 			assert ("not_void9", l_out /= Void )
 			assert ("type9", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value9", "BB [0x5]%N  item: DOUBLE = 1.5%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value9", "BB [0x5]%N  item: DOUBLE = 1.5%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object9", l_out /= bb3.out)
 			create bb4
 			l_out := bb4.out
 			assert ("not_void10", l_out /= Void )
 			assert ("type10", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value10", "BB [0x5]%N  item: POINTER =  C pointer 0x0%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value10", "BB [0x5]%N  item: POINTER =  C pointer 0x0%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object10", l_out /= bb4.out)
 		end
 
@@ -697,17 +738,17 @@ feature -- Test
 			l_out := s.tagged_out
 			assert ("not_void1", l_out /= Void )
 			assert ("type1", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value1", "STRING [0x5]%N  area: SPECIAL [CHARACTER] [0x5]%N    -- begin special object --%N        0: CHARACTER = 'g'%N        1: CHARACTER = Ctrl-@%N    -- end special object --%N  object_comparison: BOOLEAN = False%N  internal_hash_code: INTEGER_32 = 0%N  count: INTEGER_32 = 1%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value1", "STRING [0x5]%N  area: SPECIAL [CHARACTER] [0x5]%N    -- begin special object --%N        0: CHARACTER = 'g'%N        1: CHARACTER = Ctrl-@%N    -- end special object --%N  object_comparison: BOOLEAN = False%N  internal_hash_code: INTEGER_32 = 0%N  count: INTEGER_32 = 1%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object1", l_out /= s.tagged_out)
 			i1 := 15
 			l_out := i1.tagged_out
 			assert ("not_void2", l_out /= Void )
 			assert ("type2", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value2", "INTEGER_REF [0x5]%N  item: INTEGER_32 = 15%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value2", "INTEGER_REF [0x5]%N  item: INTEGER_32 = 15%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object2", l_out /= i1.tagged_out)
 			create sp1.make (2)
 			sp1.put (5, 0)
@@ -715,9 +756,9 @@ feature -- Test
 			l_out := sp1.tagged_out
 			assert ("not_void3", l_out /= Void )
 			assert ("type3", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value3", "SPECIAL [INTEGER] [0x5]%N  0: INTEGER_32 = 5%N  1: INTEGER_32 = 6%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value3", "SPECIAL [INTEGER] [0x5]%N  0: INTEGER_32 = 5%N  1: INTEGER_32 = 6%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object3", l_out /= sp1.tagged_out)
 			create sp2.make (2)
 			sp2.put ("gobo", 0)
@@ -725,9 +766,9 @@ feature -- Test
 			l_out := sp2.tagged_out
 			assert ("not_void4", l_out /= Void )
 			assert ("type4", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value4", "SPECIAL [STRING] [0x5]%N  0: STRING [0x5]%N  1: STRING [0x5]%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value4", "SPECIAL [STRING] [0x5]%N  0: STRING [0x5]%N  1: STRING [0x5]%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object4", l_out /= sp2.tagged_out)
 			create sp3.make (2)
 			sp3.put (sp1, 0)
@@ -735,53 +776,53 @@ feature -- Test
 			l_out := sp3.tagged_out
 			assert ("not_void5", l_out /= Void )
 			assert ("type5", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value5", "SPECIAL [SPECIAL [INTEGER]] [0x5]%N  0: SPECIAL [INTEGER] [0x5]%N  1: SPECIAL [INTEGER] [0x5]%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value5", "SPECIAL [SPECIAL [INTEGER]] [0x5]%N  0: SPECIAL [INTEGER] [0x5]%N  1: SPECIAL [INTEGER] [0x5]%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object5", l_out /= sp3.tagged_out)
 			create aa
 			aa.set_foo (5)
 			l_out := aa.tagged_out
 			assert ("not_void6", l_out /= Void )
 			assert ("type6", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value6", "AA [0x5]%N  foo: INTEGER_32 = 5%N  bar: INTEGER_32 = 0%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value6", "AA [0x5]%N  foo: INTEGER_32 = 5%N  bar: INTEGER_32 = 0%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object6", l_out /= aa.tagged_out)
 			create bb1
 			bb1.set_item ('a')
 			l_out := bb1.tagged_out
 			assert ("not_void7", l_out /= Void )
 			assert ("type7", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value7", "BB [0x5]%N  item: CHARACTER = 'a'%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value7", "BB [0x5]%N  item: CHARACTER = 'a'%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object7", l_out /= bb1.tagged_out)
 			create bb2
 			bb2.set_item (True)
 			l_out := bb2.tagged_out
 			assert ("not_void8", l_out /= Void )
 			assert ("type8", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value8", "BB [0x5]%N  item: BOOLEAN = True%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value8", "BB [0x5]%N  item: BOOLEAN = True%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object8", l_out /= bb2.tagged_out)
 			create bb3
 			bb3.set_item (1.5)
 			l_out := bb3.tagged_out
 			assert ("not_void9", l_out /= Void )
 			assert ("type9", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value9", "BB [0x5]%N  item: DOUBLE = 1.5%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value9", "BB [0x5]%N  item: DOUBLE = 1.5%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object9", l_out /= bb3.tagged_out)
 			create bb4
 			l_out := bb4.tagged_out
 			assert ("not_void10", l_out /= Void )
 			assert ("type10", l_out.same_type (""))
-			if eiffel_compiler.is_ise then
-				assert_equal ("value10", "BB [0x5]%N  item: POINTER =  C pointer 0x0%N", normalized_addresses (l_out))
-			end
+--			if eiffel_compiler.is_ise then
+--				assert_equal ("value10", "BB [0x5]%N  item: POINTER =  C pointer 0x0%N", normalized_addresses (l_out))
+--			end
 			assert ("new_object10", l_out /= bb4.tagged_out)
 		end
 

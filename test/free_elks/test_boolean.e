@@ -16,9 +16,6 @@ inherit
 
 	TEST_CASE
 
-	KL_SHARED_EIFFEL_COMPILER
-		export {NONE} all end
-
 feature -- Test
 
 	run_all is
@@ -84,18 +81,26 @@ feature -- Test
 			assert ("item4", (True).item = True)
 		end
 
-	test_set_item is
+	test_set_item___fail_ise is
 			-- Test feature `set_item'.
+			-- Does not work with ISE Eiffel.
 		local
 			b: BOOLEAN
 		do
-			if not eiffel_compiler.is_ise then
-					-- Does not work with ISE Eiffel.
-				b.set_item (True)
-				assert ("item1", b = True)
-				b.set_item (False)
-				assert ("item2", b = False)
-			end
+			b.set_item (True)
+			assert ("item1", b = True)
+			b.set_item (False)
+			assert ("item2", b = False)
+				-- We get a new "True" at each call (it's an expanded type).
+				-- So setting the `item' of one occurrence of `True' does not
+				-- change the `item' of the next occurrence of `True'.
+			(True).set_item (False)
+			assert ("item3", (True).item = True)
+				-- Setting the `item' of the result of a function does not
+				-- set the `item' of the result of the next call of this
+				-- function.
+			(True or False).set_item (False)
+			assert ("item4", (True or False).item = True)
 		end
 
 	test_is_hashable is
@@ -149,23 +154,21 @@ feature -- Test
 			assert ("item2", bref.item = False)
 		end
 
-	test_make_from_reference is
+	test_make_from_reference___fail_ise is
 			-- Test feature `make_from_reference'.
+			-- Does not work with ISE Eiffel.
 		local
 			b: BOOLEAN
 			bref: BOOLEAN_REF
 		do
-			if not eiffel_compiler.is_ise then
-					-- Does not work with ISE Eiffel.
-				create bref
-				bref.set_item (True)
-				create b.make_from_reference (bref)
-				assert ("item1", b = True)
-				create bref
-				bref.set_item (False)
-				create b.make_from_reference (bref)
-				assert ("item2", b = False)
-			end
+			create bref
+			bref.set_item (True)
+			create b.make_from_reference (bref)
+			assert ("item1", b = True)
+			create bref
+			bref.set_item (False)
+			create b.make_from_reference (bref)
+			assert ("item2", b = False)
 		end
 
 	test_infix_and is
