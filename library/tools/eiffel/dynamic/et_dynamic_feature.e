@@ -222,6 +222,8 @@ feature -- Status report
 				Result := static_feature.is_attribute
 			elseif builtin_code = tokens.builtin_boolean_item then
 				Result := True
+			elseif builtin_code = tokens.builtin_character_item then
+				Result := True
 			end
 		ensure
 			query: Result implies result_type_set /= Void
