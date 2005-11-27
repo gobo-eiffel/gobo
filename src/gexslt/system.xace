@@ -43,7 +43,9 @@
 		<option name="split" value="true" unless="${SE_1_0}"/>
 			<!-- SE 2.1 and 2.2b1 crash when compiling gexslt in boost mode with GC -->
 		<option name="garbage_collector" value="none" unless="${SE_1_0}"/>
-	<!--	<option name="garbage_collector" value="internal" />  -->
+		<!--	<option name="garbage_collector" value="internal" />  -->
+		<option name="c_compiler_options" value="-Od" if="${GOBO_OS}=windows"/>
+		<option name="c_compiler_options" value="-O0" if="${GOBO_OS}=unix"/>
 	</option>
 	<option name="profile" value="false"/> 
 

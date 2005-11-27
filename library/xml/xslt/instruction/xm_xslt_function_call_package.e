@@ -58,6 +58,10 @@ feature -- Access
 			-- Data type of the expression, when known
 		do
 			Result := function.result_type.primary_type
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 	primitive_value: XM_XPATH_ATOMIC_VALUE is

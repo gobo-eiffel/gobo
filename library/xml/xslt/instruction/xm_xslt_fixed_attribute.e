@@ -62,6 +62,10 @@ feature -- Access
 			-- Data type of the expression, when known
 		do
 			Result := attribute_node_kind_test
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 feature -- Status_report

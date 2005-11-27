@@ -59,8 +59,13 @@ feature -- Access
 			-- The following is hardly conducive to good optimization,
 			--  but since removing namespace nodes from our data model,
 			--  we have little choice:
+			-- TODO: review the above - namespace nodes have been added back in.
 
 			Result := any_item
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 	
