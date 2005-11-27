@@ -75,7 +75,7 @@ Version 3.5 - ????
 	Gobo Eiffel XML Library:
 
 	* XSLT and XPointer are now sufficiently stable and mature to be
-	  considered supported. XPath is supported for it's use with
+	  considered supported. XPath is supported for its use with
 	  XSLT and XPointer as host languages, but a general interface
 	  for host languages is not yet supported.
 
