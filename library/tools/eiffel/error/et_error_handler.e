@@ -11173,6 +11173,240 @@ feature -- Internal errors
 			report_internal_error (an_error)
 		end
 
+	report_gibka_error is
+			-- Report GIBKA internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibka
+			report_internal_error (an_error)
+		end
+
+	report_gibkb_error is
+			-- Report GIBKB internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkb
+			report_internal_error (an_error)
+		end
+
+	report_gibkc_error is
+			-- Report GIBKC internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkc
+			report_internal_error (an_error)
+		end
+
+	report_gibkd_error is
+			-- Report GIBKD internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkd
+			report_internal_error (an_error)
+		end
+
+	report_gibke_error is
+			-- Report GIBKE internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibke
+			report_internal_error (an_error)
+		end
+
+	report_gibkf_error is
+			-- Report GIBKF internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkf
+			report_internal_error (an_error)
+		end
+
+	report_gibkg_error is
+			-- Report GIBKG internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkg
+			report_internal_error (an_error)
+		end
+
+	report_gibkh_error is
+			-- Report GIBKH internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkh
+			report_internal_error (an_error)
+		end
+
+	report_gibki_error is
+			-- Report GIBKI internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibki
+			report_internal_error (an_error)
+		end
+
+	report_gibkj_error is
+			-- Report GIBKJ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkj
+			report_internal_error (an_error)
+		end
+
+	report_gibkk_error is
+			-- Report GIBKK internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkk
+			report_internal_error (an_error)
+		end
+
+	report_gibkl_error is
+			-- Report GIBKL internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkl
+			report_internal_error (an_error)
+		end
+
+	report_gibkm_error is
+			-- Report GIBKM internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkm
+			report_internal_error (an_error)
+		end
+
+	report_gibkn_error is
+			-- Report GIBKN internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkn
+			report_internal_error (an_error)
+		end
+
+	report_gibko_error is
+			-- Report GIBKO internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibko
+			report_internal_error (an_error)
+		end
+
+	report_gibkp_error is
+			-- Report GIBKP internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkp
+			report_internal_error (an_error)
+		end
+
+	report_gibkq_error is
+			-- Report GIBKQ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkq
+			report_internal_error (an_error)
+		end
+
+	report_gibkr_error is
+			-- Report GIBKR internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkr
+			report_internal_error (an_error)
+		end
+
+	report_gibks_error is
+			-- Report GIBKS internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibks
+			report_internal_error (an_error)
+		end
+
+	report_gibkt_error is
+			-- Report GIBKT internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkt
+			report_internal_error (an_error)
+		end
+
+	report_gibku_error is
+			-- Report GIBKU internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibku
+			report_internal_error (an_error)
+		end
+
+	report_gibkv_error is
+			-- Report GIBKV internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkv
+			report_internal_error (an_error)
+		end
+
+	report_gibkw_error is
+			-- Report GIBKW internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkw
+			report_internal_error (an_error)
+		end
+
+	report_gibkx_error is
+			-- Report GIBKX internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkx
+			report_internal_error (an_error)
+		end
+
+	report_gibky_error is
+			-- Report GIBKY internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibky
+			report_internal_error (an_error)
+		end
+
+	report_gibkz_error is
+			-- Report GIBKZ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibkz
+			report_internal_error (an_error)
+		end
+
 feature -- Reporting
 
 	report_error_message (an_error: STRING) is
@@ -11184,5 +11418,14 @@ feature -- Reporting
 
 -- Error codes not used:
 
+	-- report_gibkr_error
+	-- report_gibks_error
+	-- report_gibkt_error
+	-- report_gibku_error
+	-- report_gibkv_error
+	-- report_gibkw_error
+	-- report_gibkx_error
+	-- report_gibky_error
+	-- report_gibkz_error
 
 end
