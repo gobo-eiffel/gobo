@@ -32,23 +32,23 @@ feature -- Status report
 			a_string_not_void: a_string /= Void
 			a_string_is_string: ANY_.same_types (a_string, "")
 		local
-			i, cnt: INTEGER
+			i, nb: INTEGER
 			least_endian: BOOLEAN
 		do
 			Result := (a_string.count \\ 4) = 0
 			if Result and a_string.count > 0 then
-				from
-					i := 1
-						-- Loop through most significant bytes, detecting starting point is enough.
-					if is_endian_detection_character_least_first (a_string.item_code (1), a_string.item_code (2), a_string.item_code (3), a_string.item_code (4)) then
-						least_endian := True
-					end
-					cnt := a_string.count
-				until
-					(i > cnt) or (not Result)
-				loop
+					-- Loop through most significant bytes, detecting starting point is enough.
+				if is_endian_detection_character_least_first (a_string.item_code (1), a_string.item_code (2), a_string.item_code (3), a_string.item_code (4)) then
+					least_endian := True
+				end
+				nb := a_string.count
+				from i := 1 until i > nb loop
 					Result := unicode.valid_non_surrogate_code (code (a_string.item_code (i), a_string.item_code (i + 1), a_string.item_code (i + 2), a_string.item_code (i + 3), least_endian))
-					i := i + 4
+					if not Result then
+						i := nb + 1
+					else
+						i := i + 4
+					end
 				end
 			end
 		ensure
@@ -133,12 +133,12 @@ feature -- Access
 			fourth_is_byte: is_byte (fourth)
 		do
 			if least_endian then
-				Result := first + second * 256 + third * 256 * 256 + fourth * 256 * 256 * 256
+				Result := first + second * 256 + third * Two_byte_offset + fourth * Three_byte_offset
 			else
-				Result := fourth + third * 256 + second * 256 * 256 + first * 256 * 256 * 256
+				Result := fourth + third * 256 + second * Two_byte_offset + first * Three_byte_offset
 			end
 		ensure
-			positive_code: Result /= 0
+			code_not_negative: Result >= 0
 		end
 
 feature {NONE} -- Constants
@@ -149,5 +149,11 @@ feature {NONE} -- Constants
 	Hex_fe: INTEGER is 254
 	Hex_ff: INTEGER is 255
 			-- Endian detection character
-	
+
+	Two_byte_offset: INTEGER is 65536
+			-- 256 * 256
+
+	Three_byte_offset: INTEGER is 16777216
+			-- 256 * 256 * 256
+
 end

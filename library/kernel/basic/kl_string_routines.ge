@@ -391,7 +391,7 @@ feature -- Access
 				Result := uc_string.to_utf32_be
 			else
 				nb := a_string.count
-				create Result.make (nb)
+				create Result.make (4 * nb)
 				from i := 1 until i > nb loop
 					a_code := a_string.item_code (i)
 					m := a_code \\ 256
@@ -427,7 +427,7 @@ feature -- Access
 				Result := uc_string.to_utf32_le
 			else
 				nb := a_string.count
-				create Result.make (nb)
+				create Result.make (4 * nb)
 				from i := 1 until i > nb loop
 					a_code := a_string.item_code (i)
 					m := a_code \\ 256
