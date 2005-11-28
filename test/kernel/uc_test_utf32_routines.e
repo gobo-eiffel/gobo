@@ -31,10 +31,10 @@ feature
 	test_invalid is
 			-- Test feature `valid_utf32' when invalid.
 		do
-			assert ("only 3 bytes BE", not utf32.valid_utf32 (utf32.bom_be + "%/0/%/0/M"))
-			assert ("only 3 bytes LE", not utf32.valid_utf32 (utf32.bom_le + "M%/0/%/0/"))
+			assert ("only_3_bytes_be", not utf32.valid_utf32 (utf32.bom_be + "%/0/%/0/M"))
+			assert ("only_3_bytes_le", not utf32.valid_utf32 (utf32.bom_le + "M%/0/%/0/"))
 			assert ("surrogate", not utf32.valid_utf32 (utf32.bom_be + "%/0/%/0/%/216/%/223/"))
-			assert ("code too large", not utf32.valid_utf32 (utf32.bom_be + "%/127/%/0/%/0/%/0/"))
+			assert ("code_too_large", not utf32.valid_utf32 (utf32.bom_be + "%/127/%/0/%/0/%/0/"))
 		end
 
 end
