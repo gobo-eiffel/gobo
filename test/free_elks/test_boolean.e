@@ -24,12 +24,12 @@ feature -- Test
 			test_default_create
 			test_out
 			test_item
-			test_set_item
+			test_set_item___fail_ise
 			test_is_hashable
 			test_hash_code
 			test_to_integer
 			test_to_reference
-			test_make_from_reference
+			test_make_from_reference___fail_ise
 			test_infix_and
 			test_infix_and_then
 			test_infix_or

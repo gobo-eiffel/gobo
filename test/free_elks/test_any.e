@@ -31,8 +31,13 @@ feature -- Test
 			test_standard_equal
 			test_twin
 			test_copy
+			test_copy___fail_ise
+			test_copy___fail_ise_ge
 			test_standard_twin
+			test_standard_twin___fail_ise
 			test_standard_copy
+			test_standard_copy___fail_ise
+			test_standard_copy___fail_ise_ge
 			test_out
 			test_tagged_out
 			test_default
@@ -549,7 +554,6 @@ feature -- Test
 			-- Test feature `standard_copy'.
 		local
 			s1, s2: STRING
-			i1, i2: INTEGER
 			sp1, sp2: SPECIAL [INTEGER]
 			aa1, aa2: AA
 		do
