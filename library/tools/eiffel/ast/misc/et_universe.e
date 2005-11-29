@@ -299,13 +299,16 @@ feature -- Status report
 			-- in current universe?
 		require
 			a_name_not_void: a_name /= Void
+		local
+			l_class: ET_CLASS
 		do
 			classes.search (a_name)
 			if classes.found then
-				Result := classes.found_item.is_preparsed
+				l_class := classes.found_item
+				Result := l_class.is_preparsed or l_class = none_class
 			end
 		ensure
-			is_preparsed: Result implies eiffel_class (a_name).is_preparsed
+			is_preparsed: Result implies (eiffel_class (a_name).is_preparsed or eiffel_class (a_name) = none_class)
 		end
 
 	has_cluster (a_cluster: ET_CLUSTER): BOOLEAN is
