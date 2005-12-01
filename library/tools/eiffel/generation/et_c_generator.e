@@ -1432,6 +1432,38 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 					current_file.put_new_line
 				elseif l_denied_types.count < l_accepted_types.count then
 					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_expression (call_operands.first)
+					current_file.put_character (')')
+					current_file.put_character ('=')
+					current_file.put_character ('=')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					print_writable (an_instruction.target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
 					current_file.put_string (c_switch)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
@@ -1486,7 +1518,43 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
 				else
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_expression (call_operands.first)
+					current_file.put_character (')')
+					current_file.put_character ('=')
+					current_file.put_character ('=')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					print_writable (an_instruction.target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
 					print_indentation
 					current_file.put_string (c_switch)
 					current_file.put_character (' ')
@@ -1537,6 +1605,10 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 					current_file.put_character (' ')
 					current_file.put_string (c_eif_void)
 					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
 					current_file.put_new_line
 					dedent
 					print_indentation
