@@ -222,7 +222,7 @@ feature -- Cluster dependences
 		local
 			l_filename: STRING
 			l_file: KL_TEXT_INPUT_FILE
-			nb: INTEGER
+			l_string: STRING
 			l_splitter: ST_SPLITTER
 			l_names: DS_LIST [STRING]
 			l_cluster_names: DS_ARRAYED_LIST [STRING]
@@ -230,15 +230,22 @@ feature -- Cluster dependences
 		do
 			if universe.cluster_dependence_enabled then
 				l_filename := Execution_environment.interpreted_string (file_system.pathname (a_cluster.full_pathname, "providers.txt"))
-				nb := file_system.file_count (l_filename)
 				create l_file.make (l_filename)
 				l_file.open_read
 				if l_file.is_open_read then
+					create l_string.make (512)
+					from
+						l_file.read_string (512)
+					until
+						l_file.end_of_file
+					loop
+						l_string.append_string (l_file.last_string)
+						l_file.read_string (512)
+					end
+					l_file.close
 					create l_splitter.make
 					l_splitter.set_separators (" %T%R%N")
-					l_file.read_string (nb)
-					l_names := l_splitter.split (l_file.last_string)
-					l_file.close
+					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
 					create l_provider_constraint.make (a_cluster, l_cluster_names)
 				elseif a_cluster.parent /= Void then
@@ -255,7 +262,7 @@ feature -- Cluster dependences
 		local
 			l_filename: STRING
 			l_file: KL_TEXT_INPUT_FILE
-			nb: INTEGER
+			l_string: STRING
 			l_splitter: ST_SPLITTER
 			l_names: DS_LIST [STRING]
 			l_cluster_names: DS_ARRAYED_LIST [STRING]
@@ -263,15 +270,22 @@ feature -- Cluster dependences
 		do
 			if universe.cluster_dependence_enabled then
 				l_filename := Execution_environment.interpreted_string (file_system.pathname (a_cluster.full_pathname, "dependants.txt"))
-				nb := file_system.file_count (l_filename)
 				create l_file.make (l_filename)
 				l_file.open_read
 				if l_file.is_open_read then
+					create l_string.make (512)
+					from
+						l_file.read_string (512)
+					until
+						l_file.end_of_file
+					loop
+						l_string.append_string (l_file.last_string)
+						l_file.read_string (512)
+					end
+					l_file.close
 					create l_splitter.make
 					l_splitter.set_separators (" %T%R%N")
-					l_file.read_string (nb)
-					l_names := l_splitter.split (l_file.last_string)
-					l_file.close
+					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
 					create l_dependant_constraint.make (a_cluster, l_cluster_names)
 				elseif a_cluster.parent /= Void then
