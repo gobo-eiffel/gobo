@@ -753,7 +753,7 @@ feature {NONE} -- CAT-calls
 			l_visited_sources.wipe_out
 			l_source_stack.wipe_out
 			set_fatal_error
-			error_handler.report_error_message (l_message)
+			error_handler.report_catcall_error (l_message)
 			STRING_.wipe_out (l_message)
 		end
 

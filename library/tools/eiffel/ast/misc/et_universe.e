@@ -1889,14 +1889,14 @@ feature -- Compilation
 			end
 			parse_system
 			debug ("ericb")
-				std.error.put_string ("Preparsed ")
-				std.error.put_integer (classes.count)
-				std.error.put_line (" classes")
-				std.error.put_string ("Parsed ")
-				std.error.put_integer (parsed_classes_count)
-				std.error.put_line (" classes")
-				std.error.put_integer (feature_count)
-				std.error.put_line (" features")
+				std.output.put_string ("Preparsed ")
+				std.output.put_integer (classes.count)
+				std.output.put_line (" classes")
+				std.output.put_string ("Parsed ")
+				std.output.put_integer (parsed_classes_count)
+				std.output.put_line (" classes")
+				std.output.put_integer (feature_count)
+				std.output.put_line (" features")
 			end
 			debug ("ericb")
 				print_time (dt1, "Degree 5")
@@ -1968,11 +1968,11 @@ feature -- Compilation
 			end
 			check_provider_validity
 			debug ("ericb")
-				std.error.put_string ("Parsed ")
-				std.error.put_integer (classes.count)
-				std.error.put_line (" classes")
-				std.error.put_integer (feature_count)
-				std.error.put_line (" features")
+				std.output.put_string ("Parsed ")
+				std.output.put_integer (classes.count)
+				std.output.put_line (" classes")
+				std.output.put_integer (feature_count)
+				std.output.put_line (" features")
 			end
 		end
 
@@ -2010,11 +2010,11 @@ feature -- Compilation
 				a_cursor.forth
 			end
 			debug ("ericb")
-				std.error.put_string ("Flattened ")
-				std.error.put_integer (nb)
-				std.error.put_line (" classes")
-				std.error.put_integer (feature_count)
-				std.error.put_line (" features")
+				std.output.put_string ("Flattened ")
+				std.output.put_integer (nb)
+				std.output.put_line (" classes")
+				std.output.put_integer (feature_count)
+				std.output.put_line (" features")
 			end
 		end
 
@@ -2327,9 +2327,9 @@ feature -- Timing
 			dt2 := l_clock.system_clock.date_time_now
 			dtd := dt2 - a_start
 			dtd.set_canonical (a_start)
-			std.error.put_string (a_degree)
-			std.error.put_string (": ")
-			std.error.put_line (dtd.out)
+			std.output.put_string (a_degree)
+			std.output.put_string (": ")
+			std.output.put_line (dtd.out)
 			debug ("stop")
 				io.read_line
 			end

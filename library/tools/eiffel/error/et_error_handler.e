@@ -40,6 +40,12 @@ feature -- Status report
 	has_error: BOOLEAN
 			-- Has an error been reported?
 
+	has_eiffel_error: BOOLEAN
+			-- Has an Eiffel error been reported?
+
+	has_internal_error: BOOLEAN
+			-- Has an internal error been reported?
+
 	set_ise is
 		do
 			is_ise := True
@@ -106,9 +112,10 @@ feature -- Cluster errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			report_error (an_error)
-			if error_file = std.error then
-				error_file.put_line ("----")
+			has_eiffel_error := True
+			report_info (an_error)
+			if info_file = std.output then
+				info_file.put_line ("----")
 			end
 		end
 
@@ -230,8 +237,9 @@ feature -- Syntax errors
 		local
 			an_error: ET_SYNTAX_ERROR
 		do
+			has_eiffel_error := True
 			create an_error.make (a_filename, p)
-			report_error (an_error)
+			report_info (an_error)
 		end
 
 	report_SCAC_error (a_filename: STRING; p: ET_POSITION) is
@@ -396,8 +404,6 @@ feature -- Syntax errors
 			--an_error: ET_SSEL_ERROR
 		do
 			report_syntax_error (a_filename, p)
-			--create an_error.make (a_filename, p)
-			--report_error (an_error)
 		end
 
 	report_SSEQ_error (a_filename: STRING; p: ET_POSITION) is
@@ -460,10 +466,20 @@ feature -- System errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			report_error (an_error)
-			if error_file = std.error then
-				error_file.put_line ("----")
+			has_eiffel_error := True
+			report_info (an_error)
+			if info_file = std.output then
+				info_file.put_line ("----")
 			end
+		end
+
+	report_catcall_error (an_error: STRING) is
+			-- Report CAT-call error.
+		require
+			an_error_not_void: an_error /= Void
+		do
+			has_eiffel_error := True
+			report_info_message (an_error)
 		end
 
 	report_vsrc1a_error (a_class: ET_CLASS) is
@@ -609,9 +625,10 @@ feature -- Validity errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			report_error (an_error)
-			if error_file = std.error then
-				error_file.put_line ("----")
+			has_eiffel_error := True
+			report_info (an_error)
+			if info_file = std.output then
+				info_file.put_line ("----")
 			end
 		end
 
@@ -7855,6 +7872,7 @@ feature -- Internal errors
 		require
 			an_error_not_void: an_error /= Void
 		do
+			has_internal_error := True
 			report_error (an_error)
 			if error_file = std.error then
 				error_file.put_line ("----")

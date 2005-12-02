@@ -134,8 +134,10 @@ feature -- Execution
 							std.output.put_line ("Press Enter...")
 							io.read_line
 						end
-						if a_universe.error_handler.has_error then
+						if a_universe.error_handler.has_eiffel_error then
 							Exceptions.die (2)
+						elseif a_universe.error_handler.has_internal_error then
+							Exceptions.die (5)
 						end
 					else
 						Exceptions.die (3)
@@ -182,7 +184,6 @@ feature {NONE} -- Processing
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
 			if not is_verbose then
-				a_universe.error_handler.set_info_null
 			end
 			a_universe.set_use_assign_keyword (True)
 			a_universe.set_use_attribute_keyword (False)

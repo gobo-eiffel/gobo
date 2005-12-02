@@ -646,7 +646,7 @@ feature {NONE} -- CAT-calls
 			l_message.append_string (a_target_type.base_type.to_text)
 			l_message.append_string ("%'")
 			set_fatal_error
-			error_handler.report_error_message (l_message)
+			error_handler.report_catcall_error (l_message)
 			STRING_.wipe_out (l_message)
 			end
 		end
