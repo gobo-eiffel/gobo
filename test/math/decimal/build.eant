@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="decimal" default="help">
+<project name="math" default="help">
 
 	<description>
-		system: "Gobo Eiffel Decimal Arithmetic Library Tester"
+		system: "Gobo Eiffel Decimal Library Tester"
 		copyright: "Copyright (c) 2005, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
@@ -27,7 +27,7 @@
 
 	<target name="install" depend="init">
 		<description>
-			Install the Gobo Eiffel Decimal Arithmetic Library testers.
+			Install the Gobo Eiffel Decimal Library testers.
 		</description>
 
 		<set name="target" value="install"/>
@@ -36,7 +36,7 @@
 
 	<target name="test" depend="init">
 		<description>
-			Test the Gobo Eiffel Decimal Arithmetic Library.
+			Test the Gobo Eiffel Decimal Library.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
 			or 'se' if this variable is not defined.
 		</description>
@@ -48,7 +48,7 @@
 
 	<target name="test_ise" depend="init">
 		<description>
-			Test the Gobo Eiffel Decimal Arithmetic Library with ISE Eiffel.
+			Test the Gobo Eiffel Decimal Library with ISE Eiffel.
 		</description>
 
 		<set name="target" value="test_ise"/>
@@ -58,7 +58,7 @@
 
 	<target name="test_ve" depend="init">
 		<description>
-			Test the Gobo Eiffel Decimal Arithmetic Library with Visual Eiffel.
+			Test the Gobo Eiffel Decimal Library with Visual Eiffel.
 		</description>
 
 		<set name="target" value="test_ve"/>
@@ -68,7 +68,7 @@
 
 	<target name="test_se" depend="init">
 		<description>
-			Test the Gobo Eiffel Decimal Arithmetic Library with SmartEiffel.
+			Test the Gobo Eiffel Decimal Library with SmartEiffel.
 		</description>
 
 		<set name="target" value="test_se"/>
@@ -78,7 +78,7 @@
 
 	<target name="test_debug" depend="init">
 		<description>
-			Test the Gobo Eiffel Decimal Arithmetic Library in debug mode.
+			Test the Gobo Eiffel Decimal Library in debug mode.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
 			or 'se' if this variable is not defined.
 		</description>
@@ -90,7 +90,7 @@
 
 	<target name="test_debug_ise" depend="init">
 		<description>
-			Test the Gobo Eiffel Decimal Arithmetic Library with ISE Eiffel in debug mode.
+			Test the Gobo Eiffel Decimal Library with ISE Eiffel in debug mode.
 		</description>
 
 		<set name="target" value="test_debug_ise"/>
@@ -100,7 +100,7 @@
 
 	<target name="test_debug_ve" depend="init">
 		<description>
-			Test the Gobo Eiffel Decimal Arithmetic Library with Visual Eiffel in debug mode.
+			Test the Gobo Eiffel Decimal Library with Visual Eiffel in debug mode.
 		</description>
 
 		<set name="target" value="test_debug_ve"/>
@@ -110,7 +110,7 @@
 
 	<target name="test_debug_se" depend="init">
 		<description>
-			Test the Gobo Eiffel Decimal Arithmetic Library with SmartEiffel in debug mode.
+			Test the Gobo Eiffel Decimal Library with SmartEiffel in debug mode.
 		</description>
 
 		<set name="target" value="test_debug_se"/>
