@@ -19,9 +19,7 @@ inherit
 			out, is_equal, copy
 		end
 
-	MA_DECIMAL_CONTEXT_CONSTANTS
-		export
-			{NONE} all
+	HASHABLE
 		undefine
 			out, is_equal, copy
 		end
@@ -37,6 +35,13 @@ inherit
 		end
 
 	MA_SHARED_DECIMAL_CONSTANTS
+		undefine
+			out, is_equal, copy
+		end
+
+	MA_DECIMAL_CONTEXT_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			out, is_equal, copy
 		end
@@ -63,15 +68,12 @@ inherit
 		end
 
 	KL_SHARED_PLATFORM
+		export
+			{NONE} all
 		undefine
 			out, is_equal, copy
-		end	
-	
-	HASHABLE
-		undefine
-			out, is_equal, copy
-		end	
-		
+		end
+
 create
 
 	make_from_integer,
@@ -317,24 +319,25 @@ feature -- Access
 	exponent: INTEGER
 			-- Current exponent
 
-	hash_code : INTEGER is
+	hash_code: INTEGER is
+			-- Hash code value
 		local
-			i : INTEGER
-			l_exponent, l_coefficient_lsd, l_coefficient_msd : INTEGER
-			l_is_zero : BOOLEAN
+			i: INTEGER
+			l_exponent, l_coefficient_lsd, l_coefficient_msd: INTEGER
+			l_is_zero: BOOLEAN
 		do
-			--| 'One-at-a-Time Hash' from http://burtleburtle.net/bob/hash/doobs.html
+				-- 'One-at-a-Time Hash' from http://burtleburtle.net/bob/hash/doobs.html.
 			l_is_zero := is_zero
 			Result := special
 			Result := Result + INTEGER_.bit_shift_left (Result, 10)
 			Result := INTEGER_.bit_xor (Result, INTEGER_.bit_shift_right (Result, 6))
 			if not l_is_zero then
-				Result := Result + sign				
+				Result := Result + sign
 			end
 			Result := Result + INTEGER_.bit_shift_left (Result, 10)
 			Result := INTEGER_.bit_xor (Result, INTEGER_.bit_shift_right (Result, 6))
 			if not is_special then
-				--| Adjust exponent and l_coefficient_lsd
+					-- Adjust `l_exponent' and `l_coefficient_lsd'.
 				from
 					l_coefficient_msd := coefficient.msd_index
 					l_coefficient_lsd := coefficient.lower
@@ -344,14 +347,14 @@ feature -- Access
 				loop
 					l_coefficient_lsd := l_coefficient_lsd + 1
 					l_exponent := l_exponent + 1
-				end			
-				--| exponent
+				end
+					-- Exponent.
 				if not l_is_zero then
 					Result := Result + l_exponent
 				end
 				Result := Result + INTEGER_.bit_shift_left (Result, 10)
 				Result := INTEGER_.bit_xor (Result, INTEGER_.bit_shift_right (Result, 6))
-				--| significant digits of exponent
+					-- Significant digits of exponent.
 				from
 					i := l_coefficient_lsd
 				until
@@ -368,8 +371,7 @@ feature -- Access
 			Result := Result + INTEGER_.bit_shift_left (Result, 15)
 			Result := INTEGER_.bit_and (Result, Platform.maximum_integer)
 		end
-		
-	
+
 feature -- Constants
 
 	one: like Current is
@@ -2668,5 +2670,5 @@ invariant
 	coefficient_not_void: coefficient /= Void
 	specials_share_coefficient: is_special implies coefficient = special_coefficient
 	exponent_zero_when_special: is_special implies exponent = 0
-	
+
 end

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="math" default="help">
+<project name="decimal" default="help">
 
 	<description>
 		system: "Gobo Eiffel Decimal Library Tester"
