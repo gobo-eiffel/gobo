@@ -1698,6 +1698,8 @@ feature -- Pathname handling
 			assert_equal ("extension2", "", a_file_system.extension ("foo/bar"))
 			assert_equal ("extension3", "", a_file_system.extension ("foo.e/bar"))
 			assert_equal ("extension4", ".obj", a_file_system.extension ("foo/.obj"))
+			assert_equal ("extension5", "", a_file_system.extension ("foo"))
+			assert_equal ("extension6", "", a_file_system.extension (""))
 		end
 
 	test_exe_extension is

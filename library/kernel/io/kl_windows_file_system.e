@@ -627,6 +627,9 @@ feature -- Pathname handling
 				-- have better performances when `a_filename' is a UC_STRING. (ericb)
 			from
 				i := a_filename.count
+				if i = 0 then
+					stop := True
+				end
 			until
 				found or stop
 			loop
@@ -634,6 +637,8 @@ feature -- Pathname handling
 				if c = '.' then
 					found := True
 				elseif is_directory_separator (c) then
+					stop := True
+				elseif i = 1 then
 					stop := True
 				else
 					i := i - 1
