@@ -417,8 +417,8 @@ feature {NONE} -- Implementation
 							check_flags (l_tag, l_flags, l_ctx.flags)
 								-- Test hash codes of mathematically equal numbers or semantically equal values ([sq]NaN).
 							if (l_expected_result.is_integer and then l_expected_result.to_integer = 0) or else (a.is_signaling_nan and b.is_signaling_nan) or else (a.is_quiet_nan and b.is_quiet_nan) then
-								assert_integers_equal (l_tag+"_hash", a.hash_code, b.hash_code)
-							end						
+								assert_integers_equal (l_tag + "_hash", a.hash_code, b.hash_code)
+							end
 						elseif l_operation.is_equal ("divide") then
 							c := a.divide (b, l_ctx)
 							assert_strings_equal (l_tag, l_expected_result, c.to_scientific_string)
