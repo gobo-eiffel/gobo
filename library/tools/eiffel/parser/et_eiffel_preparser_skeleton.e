@@ -301,6 +301,10 @@ feature -- Parsing
 										a_class.add_overridden_class (l_other_class)
 									end
 								else
+										-- We need to `reset_all' when repreparsing, especially
+										-- if the class was used by other classes (some error
+										-- flags may have been set in that case).
+									a_class.reset_all
 									a_class.set_filename (a_filename)
 									a_class.set_cluster (a_cluster)
 								end
@@ -441,6 +445,10 @@ feature -- Parsing
 						a_class.add_overridden_class (l_other_class)
 					end
 				else
+						-- We need to `reset_all' when repreparsing, especially
+						-- if the class was used by other classes (some error
+						-- flags may have been set in that case).
+					a_class.reset_all
 					a_class.set_filename (a_filename)
 					a_class.set_time_stamp (a_time_stamp)
 					a_class.set_cluster (a_cluster)
@@ -767,6 +775,10 @@ feature -- Parsing
 						a_class.add_overridden_class (l_other_class)
 					end
 				else
+						-- We need to `reset_all' when repreparsing, especially
+						-- if the class was used by other classes (some error
+						-- flags may have been set in that case).
+					a_class.reset_all
 					a_class.set_filename (a_filename)
 					a_class.set_time_stamp (a_time_stamp)
 					a_class.set_cluster (a_cluster)
