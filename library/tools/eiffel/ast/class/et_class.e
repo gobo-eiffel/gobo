@@ -97,6 +97,9 @@ feature -- Initialization
 			if is_preparsed then
 				queries.reset
 				procedures.reset
+				if formal_parameters /= Void then
+					formal_parameters.reset
+				end
 				if parents /= Void then
 					parents.reset
 				end

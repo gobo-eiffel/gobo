@@ -19,7 +19,7 @@ inherit
 			make as make_unconstrained
 		redefine
 			constraint, creation_procedures, break, last_leaf, process,
-			constraint_base_type, set_constraint_base_type
+			constraint_base_type, set_constraint_base_type, reset
 		end
 
 create
@@ -42,6 +42,17 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			constraint_set: constraint = a_constraint
 			creation_procedures_set: creation_procedures = a_creation
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset type as it was when it was first parsed.
+		do
+			constraint.reset
+			if creation_procedures /= Void then
+				creation_procedures.reset
+			end
 		end
 
 feature -- Access
