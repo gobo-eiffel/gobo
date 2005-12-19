@@ -63,7 +63,7 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, an_isolation_level: STRING
+			an_expanded_name: STRING
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
