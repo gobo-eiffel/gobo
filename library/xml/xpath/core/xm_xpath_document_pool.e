@@ -4,7 +4,7 @@ indexing
 
 		"Objects that hold available documents and avaialable collections in the dynamic context"
 
-	library: "Gobo Eiffel XSLT Library"
+	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -15,6 +15,8 @@ class	XM_XPATH_DOCUMENT_POOL
 inherit
 
 	ANY
+
+	XM_XPATH_ISOLATION_LEVELS
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
@@ -29,12 +31,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_document_isolation_levels, a_collection_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]) is
 			-- Establish invariant.
+		require
+			a_document_isolation_levels_not_void: a_document_isolation_levels /= Void
+			a_collection_isolation_levels_not_void: a_document_isolation_levels /= Void			
 		do
 			create document_name_map.make_with_equality_testers (5, Void, string_equality_tester)
 			create collection_name_map.make_with_equality_testers (5, Void, string_equality_tester)
 			create media_type_name_map.make_with_equality_testers (5, Void, string_equality_tester)
+			document_isolation_levels := a_document_isolation_levels
+			collection_isolation_levels := a_collection_isolation_levels
+		ensure
+			document_isolation_levels_set: document_isolation_levels = a_document_isolation_levels
+			collection_isolation_levels_set: collection_isolation_levels = a_collection_isolation_levels
 		end
 
 feature -- Access
@@ -57,6 +67,7 @@ feature -- Access
 			media_type_mapped: Result = media_type_name_map.has (a_uri)
 		end
 
+
 	collection (a_uri: STRING): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Collection corresponding to `a_uri'
 		require
@@ -73,6 +84,7 @@ feature -- Access
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
 			uri_mapped: is_document_mapped (a_uri)
+			isolation_level_high_enough: document_isolation_level (a_uri) >= Repeatable_read
 		do
 			Result := document_name_map.item (a_uri)
 		ensure
@@ -90,6 +102,54 @@ feature -- Access
 			media_type_may_be_void: True
 		end
 
+	collection_isolation_level (a_uri: STRING): INTEGER is
+			-- Isolation-level for `a_uri'
+		require
+			uri_not_void: a_uri /= Void  -- and then is_absolute
+		do
+			if collection_isolation_levels.has (a_uri) then
+				Result := collection_isolation_levels.item (a_uri)
+			else
+				Result := Serializable
+			end
+		ensure
+			collection_isolation_level_small_enough: Result <= Serializable
+			collection_isolation_level_large_enough: Result >= Read_uncommitted
+		end
+
+	document_isolation_level (a_uri: STRING): INTEGER is
+			-- Isolation-level for `a_uri'
+		require
+			uri_not_void: a_uri /= Void  -- and then is_absolute
+		do
+			if document_isolation_levels.has (a_uri) then
+				Result := document_isolation_levels.item (a_uri)
+			else
+				Result := Serializable
+			end
+		ensure
+			document_isolation_level_small_enough: Result <= Serializable
+			document_isolation_level_large_enough: Result >= Read_uncommitted
+		end
+
+feature -- Status report
+
+	has_collection_isolation_level (a_uri: STRING): BOOLEAN is
+			-- Is isolation-level set for `a_uri'?
+		require
+			uri_not_void: a_uri /= Void  -- and then is_absolute
+		do
+			Result := collection_isolation_levels.has (a_uri)
+		end
+
+	has_document_isolation_level (a_uri: STRING): BOOLEAN is
+			-- Is isolation-level set for `a_uri'?
+		require
+			uri_not_void: a_uri /= Void  -- and then is_absolute
+		do
+			Result := document_isolation_levels.has (a_uri)
+		end
+	
 feature -- Element change
 
 	add (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING) is
@@ -98,6 +158,7 @@ feature -- Element change
 			uri_not_void: a_uri /= Void  -- and then is_absolute
 			not_mapped: not is_document_mapped (a_uri)
 			document_not_void: a_document /= Void
+			isolation_level_high_enough: document_isolation_level (a_uri) >= Repeatable_read
 		do
 			document_name_map.force (a_document, a_uri)
 			media_type_name_map.force (a_media_type, a_uri)
@@ -120,7 +181,7 @@ feature -- Element change
 feature {XM_XPATH_TRANSFORMER} -- Removal
 
 	remove (a_uri: STRING) is
-			-- Remove `a_document' from `Current'.
+			-- Remove `a_uri' from `Current'.
 			-- CAUTION: This breaks the guarentee of Unique URI to document mapping.
 			--          Hence the export restriction
 		require
@@ -144,10 +205,18 @@ feature {NONE} -- Implementation
 	media_type_name_map: DS_HASH_TABLE [UT_MEDIA_TYPE, STRING]
 			-- Map of SYSTEM ids to media types
 
+	document_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]
+			-- Map of SYSTEM ids to document isolation levels
+
+	collection_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]
+			-- Map of SYSTEM ids to collection isolation levels
+
 invariant
 
 	document_name_map_not_void: document_name_map /= Void
 	media_type_name_map_not_void: media_type_name_map /= Void
+	document_isolation_levels_not_void: document_isolation_levels /= Void
+	collection_isolation_levels_not_void: collection_isolation_levels /= Void
 
 end
 

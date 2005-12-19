@@ -47,7 +47,8 @@ feature {NONE} -- Initialization
 			create system_id_map.make
 			sequence_number_high_word := 1
 			set_system_id (a_system_id)
-			shared_name_pool.allocate_document_number (Current)
+			shared_serial_number_generator.generate_next_serial_number
+			set_document_number (shared_serial_number_generator.last_generated_serial_number)
 		ensure
 			base_uri_set: STRING_.same_string (base_uri, a_system_id)
 			cached_id_table_is_void: cached_id_table = Void

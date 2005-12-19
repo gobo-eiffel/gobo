@@ -145,15 +145,16 @@ feature -- Creation
 							a_style_element.process_default_collation_attribute (Default_collation_attribute)
 						end
 					else
-						if a_uri_code = Gexslt_uri_code and then is_top_level_element then
-								Result := new_gexslt_user_defined_element (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+						if a_uri_code = Gexslt_uri_code then
+							Result := new_gexslt_user_defined_element (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 						elseif  is_top_level_element and then a_uri_code /= Default_uri_code then
 
 							-- Unrecognized User-defined Data Elements
 
 							create {XM_XSLT_DATA_ELEMENT} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 							if a_parent /= Void then a_parent.add_child (Result) end
-						else
+						end
+						if Result = Void then
 							a_style_element := possible_literal_result_element (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 							if a_parent /= Void then
 								a_child_index := a_style_element.child_index
@@ -352,7 +353,7 @@ feature {NONE} -- Implementation
 
 	new_gexslt_user_defined_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT is
-			-- New gexslt User-defined Element.
+			-- New gexslt User-defined Element or child of such.
 		require
 			document_not_void: a_document /= Void
 			strictly_positive_sequence_number: a_sequence_number > 0
@@ -364,17 +365,25 @@ feature {NONE} -- Implementation
 			inspect
 				a_fingerprint
 			when Gexslt_collation_type_code then
-				create {XM_XSLT_GEXSLT_COLLATION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)				
+				create {XM_XSLT_GEXSLT_COLLATION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
+			when Gexslt_isolation_levels_type_code then
+				create {XM_XSLT_GEXSLT_ISOLATION_LEVELS} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
+			when Gexslt_document_type_code then
+				create {XM_XSLT_GEXSLT_DOCUMENT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
+			when Gexslt_collection_type_code then
+				create {XM_XSLT_GEXSLT_COLLECTION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			else
 			end
-			if a_parent /= Void then a_parent.add_child (Result) end
-			Result.process_use_when_attribute (Xslt_use_when_attribute)
-			if not Result.is_excluded then
-				Result.process_extension_element_attribute (Xslt_extension_element_prefixes_attribute)
-				Result.process_excluded_namespaces_attribute (Xslt_exclude_result_prefixes_attribute)
-				Result.process_version_attribute (Xslt_version_attribute, Report_unless_forwards_comptible)
-				Result.process_default_xpath_namespace_attribute (Xslt_xpath_default_namespace_attribute)
-				Result.process_default_collation_attribute (Xslt_default_collation_attribute)
+			if Result /= Void then
+				if a_parent /= Void then a_parent.add_child (Result) end
+				Result.process_use_when_attribute (Xslt_use_when_attribute)
+				if not Result.is_excluded then
+					Result.process_extension_element_attribute (Xslt_extension_element_prefixes_attribute)
+					Result.process_excluded_namespaces_attribute (Xslt_exclude_result_prefixes_attribute)
+					Result.process_version_attribute (Xslt_version_attribute, Report_unless_forwards_comptible)
+					Result.process_default_xpath_namespace_attribute (Xslt_xpath_default_namespace_attribute)
+					Result.process_default_collation_attribute (Xslt_default_collation_attribute)
+				end
 			end
 		end
 

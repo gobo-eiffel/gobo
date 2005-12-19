@@ -68,13 +68,16 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		local
 			a_uri_item: XM_XPATH_ITEM
-			a_namespace_uri, an_error_code: STRING
+			a_namespace_uri, an_error_code, an_iri_reference: STRING
+			a_uri: UT_URI
 		do
 			arguments.item (1).evaluate_item (a_context)
 			a_uri_item := arguments.item (1).last_evaluated_item
 			if a_uri_item = Void or else a_uri_item.is_error then -- suppress errors
 				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
 			else
+				an_iri_reference := escaped_uri (a_uri_item.string_value)
+				create a_uri.make_resolve (base_uri, an_iri_reference)
 				parse_document (a_uri_item.string_value, base_uri, a_context)
 				if last_evaluated_document = Void then
 					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)

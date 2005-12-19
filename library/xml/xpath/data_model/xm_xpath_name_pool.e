@@ -78,7 +78,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			create documents.make_default
 			create hash_slots.make (0, Maximum_hash_chain_depth - 1)
 			
 			create prefixes.make (100)
@@ -470,18 +469,6 @@ feature -- Access
 			valid_name_code: Result = -1 or else is_valid_name_code (Result)
 		end
 
-
-	document_number (a_doc: XM_XPATH_DOCUMENT): INTEGER is
-			-- Document number associated with `a_doc'
-		require
-			document_not_void: a_doc /= Void
-			document_is_allocated: is_document_allocated (a_doc)
-		do
-			Result := a_doc.document_number
-		ensure
-			document_number_positive: Result >= 1
-		end
-
 	last_name_code: INTEGER
 			-- The last name code allocated by `allocate_name_using_uri_code' or `allocate_name'
 
@@ -495,12 +482,6 @@ feature -- Access
 			-- The last namespace code allocated by `allocate_namespace_code'
 
 feature -- Status report
-
-	is_valid_document_number (a_document_number: INTEGER): BOOLEAN is
-			-- Does `a_dcument_number' represent a slot in `documents'?
-		do
-			Result := a_document_number > 0 and then a_document_number <= documents.count
-		end
 
 	is_valid_namespace_code (a_namespace_code: INTEGER): BOOLEAN is
 			-- Does `a_namespace_code' represent a URI in `Current'?
@@ -742,14 +723,6 @@ feature -- Status report
 			end				
 		end
 
-	is_document_allocated (a_doc: XM_XPATH_DOCUMENT): BOOLEAN is
-			--	Is a document number associated with `a_doc'
-		require
-			document_not_void: a_doc /= Void
-		do
-			Result := a_doc.document_number /= 0
-		end
-	
 	is_name_pool_full (a_uri, a_local_name: STRING): BOOLEAN is
 			--	Is `Current' full for `a_local_name', taking `a_uri' into consideration?
 		require
@@ -955,21 +928,6 @@ feature -- Status report
 		end
 	
 feature -- Element change
-
-	allocate_document_number (a_doc: XM_XPATH_DOCUMENT) is
-			-- Add a document to the pool, and allocate a document number.
-		require
-			document_not_void: a_doc /= Void
-			document_not_allocated: not is_document_allocated (a_doc)
-		do
-			if documents.is_full then
-				documents.resize (2 * documents.count)
-			end
-			a_doc.set_document_number (documents.count + 1)
-			documents.put_last (a_doc)
-		ensure
-			document_allocated: is_document_allocated (a_doc)
-		end
 
 	allocate_namespace_code (an_xml_prefix: STRING; a_uri: STRING) is
 			--	Allocate the namespace code for a namespace prefix/URI pair;
@@ -1450,18 +1408,6 @@ feature -- Conversion
 			end
 		end
 
-feature -- Removal
-
-	remove_document_from_pool (a_document_number: INTEGER) is
-			-- Remove a document from the pool.
-		require
-			valid_document_number: is_valid_document_number (a_document_number)
-		do
-			documents.replace (Void, a_document_number)
-		ensure
-			removed: documents.item (a_document_number) = Void
-		end
-
 feature {NONE} -- Implementation
 
 	name_entry (a_name_code: INTEGER): XM_XPATH_NAME_ENTRY is
@@ -1616,9 +1562,6 @@ feature {NONE} -- Implementation
 			prefix_allocated: prefix_index (a_uri_code, an_xml_prefix) > -1
 		end
 
-	documents: DS_ARRAYED_LIST [XM_XPATH_DOCUMENT]
-			-- Documents indexed by document numbers
-	
 	hash_slots: ARRAY [XM_XPATH_NAME_ENTRY]
 			-- Fixed size hash table
 feature
@@ -1639,7 +1582,6 @@ feature
 	
 invariant
 
-	documentsnot_void: documents /= Void
 	fixed_hash_slots: hash_slots /= Void and then hash_slots.count = Maximum_hash_chain_depth
 	prefixes_not_void: prefixes /= Void
 	prefixes_used: prefixes_used >= 3

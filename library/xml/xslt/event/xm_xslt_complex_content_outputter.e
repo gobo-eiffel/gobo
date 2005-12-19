@@ -382,10 +382,6 @@ feature -- Events
 					append_item (an_iterator.item)
 					an_iterator.forth
 				end
-				
-				-- Now free the document from memory: TODO: do we need to do this?
-				
-				shared_name_pool.remove_document_from_pool (an_item.as_document.document_number)					
 			elseif an_item.is_error then
 				on_error (an_item.error_value.error_message)
 			else

@@ -526,6 +526,9 @@ feature {NONE} -- Implementation
 			bind_gexslt_name (Byte_order_mark_type_code, "byte-order-mark")
 			bind_gexslt_name (Gexslt_collation_type_code, "collation")
 			bind_gexslt_name (Memo_function_type_code, "memo-function")
+			bind_gexslt_name (Gexslt_isolation_levels_type_code, "isolation-levels")
+			bind_gexslt_name (Gexslt_document_type_code, "document")
+			bind_gexslt_name (Gexslt_collection_type_code, "collection")
 		end
 	
 	bind_xdt_names is

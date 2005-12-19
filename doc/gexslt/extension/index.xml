@@ -132,7 +132,44 @@
  <section>
     <title>User-defined data elements</title>
     <para>
-      The only user-defined data element provided by the library is <exmlsyntax>collation</exmlsyntax>.
+     The <xpath>fn:doc(), fn:collection() and fn:document()</xpath> functions are defined to be stable by default.
+     That is, repeated use of one of these functions on the same URI will result in the identical document node (or 
+     collection of document nodes in the case of <xpath>fn:collection()</xpath>). But to implement this the library
+     is forced to lock the documents in memory for the duration of the transformation. 
+     This can cause severe performance problems, especially with large
+     collections. For that reason, an implementation is allowed to provide options that allow other isolation levels
+     (in the SQL sense - the default behaviour corresponds to SERIALIZABLE).
+    </para>
+    <para>
+     This option is provided through the user-defined data element <exmlsyntax>isolation-levels</exmlsyntax>.
+     This may have zero or more <exmlsyntax>document</exmlsyntax> and/or <exmlsyntax>collection</exmlsyntax>
+     children, each of which has compulsory attributes (in the per-element partition, not in the gexslt namespace)
+     <exmlsyntax>href</exmlsyntax> and <exmlsyntax>isolation-level</exmlsyntax>.
+    </para>
+    <para>
+     The <exmlsyntax>href</exmlsyntax> attribute takes as it's value, the URI of the document or collection whose isolation
+     level is to be defined. The <exmlsyntax>isolation-level</exmlsyntax> attribute takes one of the four values:
+     <itemizedlist>
+      <listitem><para>read-uncommitted</para></listitem>
+      <listitem><para>read-committed</para></listitem>
+      <listitem><para>repeatable-read</para></listitem>
+      <listitem><para>serializable</para></listitem>
+     </itemizedlist>
+    </para>
+    <para>
+     Note that it is possible to access the same document via both the <xpath>fn:doc()</xpath> and <xpath>fn:collection()</xpath>
+     functions. In this case, the two isolation levels specified must be compatible. In general this means they must be identical,
+     but the implementation of <xpath>fn:doc()</xpath> currently treats read-committed and read-uncommitted in the same way, and
+     likewise repeatable-read is treated as if it were serializable. The implementation of <xpath>fn:collection</xpath> for the
+     <uri>file</uri> URI scheme also pairs the isolation levels in the same manner. But this treatment is not guarenteed.
+    </para>
+    <para>
+     The effect of this implementation, is that documents or collections specified as read-committed (or read-uncommitted) will
+     not be locked in memory. If the same URI is passed to one of these functions a second time, then the document(s) will be read
+     and parsed by the XML parser a second time. This will break the usual guarantee of node identity.
+    </para>
+    <para>
+      There is also <exmlsyntax>collation</exmlsyntax>.
       This is intended for declaring collation-URI names, but as the only collation supported is
       the default one at the moment, it is not much use (I use it for binding additional URIs to the default collation,
       to test the collation-naming mechanism). When a tailorable collation based on the Unicode Collation Algorithm is

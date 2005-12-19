@@ -16,6 +16,15 @@ inherit
 
 	ANY
 
+	XM_XPATH_ISOLATION_LEVELS
+		export {NONE} all end
+
+	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
+
+	XM_XPATH_ERROR_TYPES
+		export {NONE} all end
+
 	UT_SHARED_URL_ENCODING
 		export {NONE} all end
 
@@ -30,11 +39,11 @@ feature {NONE} -- Implementation
 			-- Resolve all XML files in `a_directory'.
 		require
 			absolute_uri_not_void: a_uri /= Void and then a_uri.is_absolute
-			base_uri_not_void: a_uri /= Void and then a_uri.is_absolute
+			base_uri_not_void: a_base_uri /= Void and then a_base_uri.is_absolute
 			dynamic_context_not_void: a_context /= Void
 			directory_not_void: a_directory /= Void
 		local
-			a_file_name: STRING
+			a_file_name, a_message: STRING
 			an_index: INTEGER
 			entries: ARRAY [STRING]
 			a_file_uri: UT_URI
@@ -42,9 +51,12 @@ feature {NONE} -- Implementation
 			a_list: DS_ARRAYED_LIST [XM_XPATH_DOCUMENT]
 			a_document: XM_XPATH_DOCUMENT
 		do
+			last_collection := Void
 			entries := a_directory.filenames
 			if entries = Void then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_collection.make
+			elseif a_context.available_documents.collection_isolation_level (a_uri.full_uri) < Repeatable_read then
+				create {XM_XPATH_FILE_COLLECTION_ITERATOR} last_collection.make (entries, a_base_uri, a_context)
 			else
 				create a_list.make (entries.count)
 				from an_index := entries.lower until an_index > entries.upper loop
@@ -62,16 +74,25 @@ feature {NONE} -- Implementation
 								a_document := Void -- for now, we just ignore errors
 							else
 								a_document := a_context.last_parsed_document
-								a_context.available_documents.add (a_document, a_context.last_parsed_media_type, a_file_uri.full_uri)
+								if a_context.available_documents.document_isolation_level (a_file_uri.full_uri) < Repeatable_read then
+									a_message := "Incompatiable isolation-levels between collection " + a_uri.full_reference + " and document " + a_file_uri.full_reference
+									create {XM_XPATH_INVALID_NODE_ITERATOR} last_collection.make_from_string (a_message, Gexslt_eiffel_type_uri, "ISOLATION-LEVEL", Dynamic_error)
+									an_index := entries.upper
+								else
+									a_context.available_documents.add (a_document, a_context.last_parsed_media_type, a_file_uri.full_uri)
+								end
 							end
 						end
 						if a_document /= Void then a_list.put_last (a_document) end
 					end
 					an_index := an_index + 1
 				end
-				create an_extent.make_from_list (a_list)
-				a_context.available_documents.add_collection (an_extent, a_uri.full_uri)
-				last_collection := a_context.available_documents.collection (a_uri.full_uri)
+				if last_collection = Void then
+					create an_extent.make_from_list (a_list)
+					a_context.available_documents.add_collection (an_extent, a_uri.full_uri)
+					last_collection := a_context.available_documents.collection (a_uri.full_uri)
+				end
+
 				-- TODO: use fragment identifier for filter on extent??
 			end
 		end

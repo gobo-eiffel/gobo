@@ -77,7 +77,7 @@ feature -- Element change
 		do
 			an_analyze_string ?= parent
 			if an_analyze_string = Void then
-				create an_error.make_from_string ("Xsl:matching-substring must be immediate child of sxsl:analyze-string", Xpath_errors_uri, "XTSE0010", Static_error)
+				create an_error.make_from_string ("Xsl:matching-substring must be immediate child of xsl:analyze-string", Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			end
 			validated := True

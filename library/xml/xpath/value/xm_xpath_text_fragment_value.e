@@ -33,7 +33,8 @@ feature {NONE} -- Initialization
 		do
 			text := a_value
 			system_id := a_system_id
-			shared_name_pool.allocate_document_number (Current)
+			shared_serial_number_generator.generate_next_serial_number
+			set_document_number (shared_serial_number_generator.last_generated_serial_number)
 		ensure
 			text_set: text = a_value
 			system_id_set: system_id = a_system_id

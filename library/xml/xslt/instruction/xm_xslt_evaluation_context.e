@@ -180,7 +180,6 @@ feature -- Access
 			end
 		end
 
-
 	static_context: XM_XSLT_EXPRESSION_CONTEXT
 			-- Static context
 
@@ -470,6 +469,7 @@ feature -- Element change
 			a_parser: XM_PARSER
 			a_builder: XM_XPATH_BUILDER
 			a_source: XM_XSLT_URI_SOURCE
+			an_executable: XM_XSLT_EXECUTABLE
 		do
 			is_build_document_error := False
 			last_parsed_document := Void
@@ -490,6 +490,9 @@ feature -- Element change
 					set_build_error (a_builder.last_error)
 				else
 					last_parsed_document	?= a_builder.current_root
+					if last_parsed_document /= Void then
+						an_executable := transformer.executable
+					end
 				end
 			end
 			transformer.configuration.reset_entity_resolver

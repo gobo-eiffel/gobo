@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE
 		redefine
-			base_uri, typed_value
+			base_uri, typed_value, generate_id
 		end
 
 create
@@ -175,6 +175,17 @@ feature -- Element change
 			name_code := a_name_code
 		ensure
 			name_code_set: name_code = a_name_code
+		end
+
+	generate_id is
+			-- Generate a unique id for `Current'
+		do
+			shared_serial_number_generator.generate_next_serial_number
+			if shared_serial_number_generator.last_generated_serial_number > 0 then
+				generated_id := "N" + shared_serial_number_generator.last_generated_serial_number.out
+			else
+				generated_id := "Nn" + shared_serial_number_generator.last_generated_serial_number.abs.out
+			end
 		end
 
 feature -- Duplication

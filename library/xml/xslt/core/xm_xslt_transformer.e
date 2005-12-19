@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			executable := an_executable
 			rule_manager := executable.rule_manager
 			decimal_format_manager := executable.decimal_format_manager
-			create document_pool.make
+			create document_pool.make (executable.document_isolation_levels, executable.collection_isolation_levels)
 			initial_mode := -1
 			recovery_policy := Recover_with_warnings
 			create parser_factory
@@ -392,7 +392,7 @@ feature -- Element change
 			-- This might need to be done between multiple
 			--  transformations, but you lose caching benefits if you do call it.
 		do
-			create document_pool.make
+			create document_pool.make (executable.document_isolation_levels, executable.collection_isolation_levels)
 		end
 
 	clear_parameters is
@@ -454,12 +454,8 @@ feature -- Element change
 			document_not_registered: not document_pool.is_document_mapped (a_uri)
 		do
 			document_pool.add (a_document, a_media_type, a_uri)
-			if not shared_name_pool.is_document_allocated (a_document) then
-				shared_name_pool.allocate_document_number (a_document)
-			end
 		ensure
 			document_mapped: document_pool.is_document_mapped (a_uri)
-			document_allocated: shared_name_pool.is_document_allocated (a_document)
 		end
 
 	resolve_next_destination (a_system_id, a_base_uri: STRING; a_result: XM_XSLT_TRANSFORMATION_RESULT) is

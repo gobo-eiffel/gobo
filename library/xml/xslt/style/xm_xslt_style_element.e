@@ -819,6 +819,18 @@ feature -- Status_report
 		do
 			Result := False
 		end
+	
+	is_gexslt_document: BOOLEAN is
+			-- Is `Current' a gexslt:document?
+		do
+			Result := False
+		end
+	
+	is_gexslt_collection: BOOLEAN is
+			-- Is `Current' a gexslt:collection?
+		do
+			Result := False
+		end
 
 feature -- Status setting
 

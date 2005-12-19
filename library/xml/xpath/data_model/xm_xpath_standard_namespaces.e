@@ -240,6 +240,9 @@ feature -- Access
 	Gexslt_collation_type_code: INTEGER is 1031
 	Memo_function_type_code: INTEGER is 1032
 	Next_in_chain_type_code: INTEGER is 1033
+	Gexslt_isolation_levels_type_code: INTEGER is 1034
+	Gexslt_document_type_code: INTEGER is 1035
+	Gexslt_collection_type_code: INTEGER is 1036
 
 			-- Codes in XSLT namespace (`Xslt_uri_code' * 256 + 0..n)
 
@@ -489,6 +492,7 @@ feature -- Access
 	Infinity_attribute: STRING is "infinity"
 	Inherit_namespaces_attribute: STRING is "inherit-namespaces"
 	Input_type_annotations_attribute: STRING is "input-type-annotations"
+	Isolation_level_attribute: STRING is "isolation-level"
 	Lang_attribute: STRING is "lang"
 	Letter_value_attribute: STRING is "letter-value"
 	Level_attribute: STRING is "level"

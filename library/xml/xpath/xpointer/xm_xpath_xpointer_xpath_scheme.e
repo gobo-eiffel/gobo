@@ -30,6 +30,9 @@ inherit
 	XM_XPATH_TOKENS
 		export {NONE} all end
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 create
 
 	make
@@ -147,8 +150,12 @@ feature {NONE} -- Implementation
 			a_document_pool: XM_XPATH_DOCUMENT_POOL
 			a_context: XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_document_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]
+			a_collection_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]
 		do
-			create a_document_pool.make
+			create a_document_isolation_levels.make_with_equality_testers (5, Void, string_equality_tester)
+			create a_collection_isolation_levels.make_with_equality_testers (5, Void, string_equality_tester)
+			create a_document_pool.make (a_document_isolation_levels, a_collection_isolation_levels)
 			a_document_pool.add (a_document, Void, a_document.base_uri) -- N.B. We can safely ignore the media type
 			create a_context.make (a_document, a_document_pool, function_library)
 			a_context.set_string_mode_mixed

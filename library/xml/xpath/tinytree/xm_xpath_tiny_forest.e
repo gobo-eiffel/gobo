@@ -27,6 +27,9 @@ inherit
 
 	XM_UNICODE_CHARACTERS_1_1
 		export {NONE} all end
+		
+	XM_XPATH_SHARED_SERIAL_NUMBER_GENERATOR
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
 
@@ -547,11 +550,10 @@ feature -- Element change
 			root_index := root_index + 1
 			document_list.force_last (a_document_node)
 			if number_of_nodes = 0 then
-				shared_name_pool.allocate_document_number (a_document_node)
-				document_number := a_document_node.document_number
-			else
-				a_document_node.set_document_number (document_number) -- all documents in `Current' have the same document number
+				shared_serial_number_generator.generate_next_serial_number
+				document_number := shared_serial_number_generator.last_generated_serial_number
 			end
+			a_document_node.set_document_number (document_number) -- all documents in `Current' have the same document number
 			add_node (Document_node, 1, root_index, 0, -1)
 			root_indices.force (last_node_added, root_index)
 		end

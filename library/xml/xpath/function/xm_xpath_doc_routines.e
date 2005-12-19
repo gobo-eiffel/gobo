@@ -14,6 +14,9 @@ class XM_XPATH_DOC_ROUTINES
 
 inherit
 
+	XM_XPATH_ISOLATION_LEVELS
+		export {NONE} all end
+
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
@@ -67,7 +70,9 @@ feature -- Evaluation
 					a_document := a_context.last_parsed_document
 					last_evaluated_media_type := a_context.last_parsed_media_type
 					last_evaluated_document := a_document
-					a_context.available_documents.add (a_document, last_evaluated_media_type, a_uri.full_uri)
+					if a_context.available_documents.document_isolation_level (a_uri.full_uri) >= Repeatable_read then
+						a_context.available_documents.add (a_document, last_evaluated_media_type, a_uri.full_uri)
+					end
 				end
 			end
 		end

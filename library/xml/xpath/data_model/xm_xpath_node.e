@@ -514,21 +514,6 @@ feature -- Access
 	generated_id: STRING
 			-- Unique identifier (across all documents)
 
-	generate_id is
-			-- Generate a unique id for `Current'
-		require
-			no_generated_id_yet: generated_id = Void
-		do
-			shared_serial_number_generator.generate_next_serial_number
-			if shared_serial_number_generator.last_generated_serial_number > 0 then
-				generated_id := "N" + shared_serial_number_generator.last_generated_serial_number.out
-			else
-				generated_id := "Nn" + shared_serial_number_generator.last_generated_serial_number.abs.out
-			end
-		ensure
-			unique_id_generated: generated_id /= Void
-		end
-
 	boxed: DS_CELL [like Current] is
         -- Current node boxed in a cell
     do
@@ -619,6 +604,18 @@ feature -- Conversion
 			-- `Current' seen as a value
 		do
 			create {XM_XPATH_SINGLETON_NODE} Result.make (Current)
+		end
+
+feature -- Element change
+	
+	generate_id is
+			-- Generate a unique id for `Current'
+		require
+			no_generated_id_yet: generated_id = Void
+		do
+			generated_id := "N" + document_number.out + "N" + sequence_number.out
+		ensure
+			id_generated: generated_id /= Void
 		end
 
 feature -- Duplication
