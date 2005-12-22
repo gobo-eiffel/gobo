@@ -1189,6 +1189,10 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_target, a_position_table.item (an_element))
 									end
+								when target_architecture_code then
+									an_option.set_target_architecture (a_value)
+								when target_os_code then
+									an_option.set_target_os (a_value)
 								when trace_code then
 									if is_true (a_value) then
 										an_option.set_trace (True)
@@ -1196,6 +1200,12 @@ feature {NONE} -- Element change
 										an_option.set_trace (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
+								when unicode_code then
+									if an_option.valid_unicode.has (a_value) then
+										an_option.set_unicode (a_value)
+									else
+										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_unicode, a_position_table.item (an_element))
 									end
 								when use_cluster_name_as_namespace_code then
 									if is_true (a_value) then

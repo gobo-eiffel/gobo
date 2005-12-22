@@ -5,7 +5,7 @@ indexing
 		"Ace file generators for SmartEiffel"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2005, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,8 +25,11 @@ create
 
 feature -- Access
 
-	default_system_output_filename: STRING is "se.ace"
+	default_system_output_filename: STRING is
 			-- Name of generated Ace file
+		once
+			Result := "se.ace"
+		end
 
 	default_library_output_filename: STRING is "loadpath.se"
 			-- Name of generated loadpath file

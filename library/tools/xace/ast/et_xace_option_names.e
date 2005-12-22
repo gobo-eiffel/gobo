@@ -91,7 +91,10 @@ feature -- Option names
 	storable_filename_name: STRING is "storable_filename"
 	strip_option_name: STRING is "strip"
 	target_name: STRING is "target"
+	target_architecture_name: STRING is "target_architecture"
+	target_os_name: STRING is "target_os"
 	trace_name: STRING is "trace"
+	unicode_name: STRING is "unicode"
 	use_cluster_name_as_namespace_name: STRING is "use_cluster_name_as_namespace"
 	use_full_cluster_name_as_namespace_name: STRING is "use_full_cluster_name_as_namespace"
 	verbose_name: STRING is "verbose"
@@ -175,7 +178,10 @@ feature -- Option codes
 	storable_filename_code: INTEGER is 66
 	strip_option_code: INTEGER is 67
 	target_code: INTEGER is 68
+	target_architecture_code: INTEGER is 82
+	target_os_code: INTEGER is 83
 	trace_code: INTEGER is 69
+	unicode_code: INTEGER is 84
 	use_cluster_name_as_namespace_code: INTEGER is 77
 	use_full_cluster_name_as_namespace_code: INTEGER is 76
 	verbose_code: INTEGER is 70
@@ -187,7 +193,7 @@ feature -- Option codes
 	option_codes: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Mapping option names -> option codes
 		once
-			create Result.make_map (81)
+			create Result.make_map (84)
 			Result.set_key_equality_tester (string_equality_tester)
 			Result.put_new (abstract_code, abstract_name)
 			Result.put_new (address_expression_code, address_expression_name)
@@ -262,7 +268,10 @@ feature -- Option codes
 			Result.put_new (storable_filename_code, storable_filename_name)
 			Result.put_new (strip_option_code, strip_option_name)
 			Result.put_new (target_code, target_name)
+			Result.put_new (target_architecture_code, target_architecture_name)
+			Result.put_new (target_os_code, target_os_name)
 			Result.put_new (trace_code, trace_name)
+			Result.put_new (unicode_code, unicode_name)
 			Result.put_new (use_cluster_name_as_namespace_code, use_cluster_name_as_namespace_name)
 			Result.put_new (use_full_cluster_name_as_namespace_code, use_full_cluster_name_as_namespace_name)
 			Result.put_new (verbose_code, verbose_name)
@@ -303,6 +312,7 @@ feature -- Option values
 	require_value: STRING is "require"
 	sequential_value: STRING is "sequential"
 	style_value: STRING is "style"
+	utf8_value: STRING is "utf8"
 	winapi_value: STRING is "winapi"
 
 end

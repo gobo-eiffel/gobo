@@ -947,6 +947,9 @@ VE:
   No effect on platforms other than Windows.
 SE:
   N/A
+ASE:
+  true -> multithreading (yes)
+  false -> multithreading (no)
 -------------------------------------------------------------
 NAME: no_default_lib
 
@@ -1113,7 +1116,7 @@ ISE:
   N/A
 VE:
   N/A
-SE
+SE:
   true -> no_strip (no)
   false -> no_strip (yes)
 -------------------------------------------------------------
@@ -1139,6 +1142,38 @@ SE:
   com -> no_main (yes)
   no_main -> no_main (yes)
 -------------------------------------------------------------
+NAME: target_architecture
+
+VALUES: <architecture>
+DEFAULT: no default
+EXAMPLE: ix86
+DESCRIPTION: Specify target architecture.
+
+ISE:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+ASE:
+  <architecture> -> target_architecture: "<architecture>"
+-------------------------------------------------------------
+NAME: target_os
+
+VALUES: <os>
+DEFAULT: no default
+EXAMPLE: win32
+DESCRIPTION: Specify target operating system.
+
+ISE:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+ASE:
+  <os> -> target_os: "<os>"
+-------------------------------------------------------------
 NAME: trace
 
 VALUES: true | false
@@ -1153,6 +1188,22 @@ VE:
 SE:
   true -> trace (yes)
   false -> trace (no)
+-------------------------------------------------------------
+NAME: unicode
+
+VALUES: utf8 | none
+DEFAULT: none
+DESCRIPTION: Enable Unicode support.
+
+ISE:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+ASE:
+  utf8 -> unicode (yes)
+  none -> unicode (no)
 -------------------------------------------------------------
 NAME: use_cluster_name_as_namespace
 

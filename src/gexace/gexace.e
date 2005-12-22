@@ -224,7 +224,7 @@ feature {NONE} -- Command-line processing
 
 	process_compilers (a_command: GEXACE_BUILD_COMMAND; a_compiler: STRING) is
 			-- Process compiler name.
-			-- Possible values are: "ge", "ise", "se", "ve" or "xml".
+			-- Possible values are: "ge", "ise", "se" (and "ase"), "ve" (and "ve41") or "xml".
 			-- The variable GOBO_EIFFEL will automatically be defined
 			-- for the four first cases.
 		require
@@ -241,6 +241,10 @@ feature {NONE} -- Command-line processing
 			elseif a_compiler.is_equal ("se") then
 				variables.force_last ("se", "GOBO_EIFFEL")
 				create {ET_XACE_SE_GENERATOR} g.make (variables, error_handler)
+				a_command.generators.force_last (g)
+			elseif a_compiler.is_equal ("ase") then
+				variables.force_last ("se", "GOBO_EIFFEL")
+				create {ET_XACE_ASE_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("ise") then
 				variables.force_last ("ise", "GOBO_EIFFEL")
@@ -341,8 +345,8 @@ feature {NONE} -- Usage message
 			create Result.make ("[defines][options] command [xace-file]%N%
 				%%Tdefines:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose|--shallow%N%
-				%%Tcommand:  --system=(ge|se|ise|ve|ve41|xml) [--output=<filename>]%N%
-				%%Tcommand:  --library=(ge|se|ise|ve|ve41|xml) [--output=<filename>]%N%
+				%%Tcommand:  --system=(ge|se|ise|ve|ve41|ase|xml) [--output=<filename>]%N%
+				%%Tcommand:  --library=(ge|se|ise|ve|ve41|ase|xml) [--output=<filename>]%N%
 				%%Tcommand:  --validate")
 		ensure
 			usage_message_not_void: Result /= Void
