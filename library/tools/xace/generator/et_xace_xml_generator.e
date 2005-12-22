@@ -682,6 +682,18 @@ feature {NONE} -- Output
 				print_quote_escaped_string (an_option.target, a_file)
 				a_file.put_line ("%"/>")
 			end
+			if an_option.is_target_architecture_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option name=%"target_architecture%" value=%"")
+				print_quote_escaped_string (an_option.target_architecture, a_file)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_target_os_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option name=%"target_os%" value=%"")
+				print_quote_escaped_string (an_option.target_os, a_file)
+				a_file.put_line ("%"/>")
+			end
 			if an_option.is_trace_declared then
 				print_indentation (indent, a_file)
 				if an_option.trace then
@@ -689,6 +701,12 @@ feature {NONE} -- Output
 				else
 					a_file.put_line ("<option name=%"trace%" value=%"false%"/>")
 				end
+			end
+			if an_option.is_unicode_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option name=%"unicode%" value=%"")
+				print_quote_escaped_string (an_option.unicode, a_file)
+				a_file.put_line ("%"/>")
 			end
 			if an_option.is_verbose_declared then
 				print_indentation (indent, a_file)
