@@ -66,11 +66,14 @@ feature -- Evaluation
 					a_message := STRING_.appended_string (a_message, ". ")
 					a_message := STRING_.appended_string (a_message, a_context.last_build_error)
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (a_message, Xpath_errors_uri, "FODC0002", Dynamic_error)
+					if a_context.available_documents.isolation_level = Serializable then
+						a_context.available_documents.add (Void, Void, a_uri.full_uri)
+					end
 				else
 					a_document := a_context.last_parsed_document
 					last_evaluated_media_type := a_context.last_parsed_media_type
 					last_evaluated_document := a_document
-					if a_context.available_documents.document_isolation_level (a_uri.full_uri) >= Repeatable_read then
+					if a_context.available_documents.isolation_level >= Repeatable_read then
 						a_context.available_documents.add (a_document, last_evaluated_media_type, a_uri.full_uri)
 					end
 				end

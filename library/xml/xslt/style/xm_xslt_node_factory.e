@@ -366,12 +366,8 @@ feature {NONE} -- Implementation
 				a_fingerprint
 			when Gexslt_collation_type_code then
 				create {XM_XSLT_GEXSLT_COLLATION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
-			when Gexslt_isolation_levels_type_code then
-				create {XM_XSLT_GEXSLT_ISOLATION_LEVELS} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
-			when Gexslt_document_type_code then
-				create {XM_XSLT_GEXSLT_DOCUMENT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
-			when Gexslt_collection_type_code then
-				create {XM_XSLT_GEXSLT_COLLECTION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
+			when Gexslt_isolation_level_type_code then
+				create {XM_XSLT_GEXSLT_ISOLATION_LEVEL} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			else
 			end
 			if Result /= Void then

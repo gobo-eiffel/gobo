@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			executable := an_executable
 			rule_manager := executable.rule_manager
 			decimal_format_manager := executable.decimal_format_manager
-			create document_pool.make (executable.document_isolation_levels, executable.collection_isolation_levels)
+			clear_document_pool
 			initial_mode := -1
 			recovery_policy := Recover_with_warnings
 			create parser_factory
@@ -392,7 +392,7 @@ feature -- Element change
 			-- This might need to be done between multiple
 			--  transformations, but you lose caching benefits if you do call it.
 		do
-			create document_pool.make (executable.document_isolation_levels, executable.collection_isolation_levels)
+			create document_pool.make (executable.isolation_level)
 		end
 
 	clear_parameters is

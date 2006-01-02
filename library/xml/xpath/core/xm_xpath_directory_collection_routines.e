@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			entries := a_directory.filenames
 			if entries = Void then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_collection.make
-			elseif a_context.available_documents.collection_isolation_level (a_uri.full_uri) < Repeatable_read then
+			elseif a_context.available_documents.isolation_level < Repeatable_read then
 				create {XM_XPATH_FILE_COLLECTION_ITERATOR} last_collection.make (entries, a_base_uri, a_context)
 			else
 				create a_list.make (entries.count)
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 					if not Url_encoding.has_excluded_characters (a_file_name) then
 						
 						-- for now, we just ignore errors
-
+						
 						create a_file_uri.make_resolve (a_base_uri, a_file_name)
 						if a_context.available_documents.is_document_mapped (a_file_uri.full_uri) then
 							a_document := a_context.available_documents.document (a_file_uri.full_uri)
@@ -72,15 +72,12 @@ feature {NONE} -- Implementation
 							a_context.build_document (a_file_uri.full_reference)
 							if a_context.is_build_document_error then
 								a_document := Void -- for now, we just ignore errors
+								if a_context.available_documents.isolation_level = Serializable then
+									a_context.available_documents.add (void, Void, a_file_uri.full_uri)
+								end
 							else
 								a_document := a_context.last_parsed_document
-								if a_context.available_documents.document_isolation_level (a_file_uri.full_uri) < Repeatable_read then
-									a_message := "Incompatiable isolation-levels between collection " + a_uri.full_reference + " and document " + a_file_uri.full_reference
-									create {XM_XPATH_INVALID_NODE_ITERATOR} last_collection.make_from_string (a_message, Gexslt_eiffel_type_uri, "ISOLATION-LEVEL", Dynamic_error)
-									an_index := entries.upper
-								else
-									a_context.available_documents.add (a_document, a_context.last_parsed_media_type, a_file_uri.full_uri)
-								end
+								a_context.available_documents.add (a_document, a_context.last_parsed_media_type, a_file_uri.full_uri)
 							end
 						end
 						if a_document /= Void then a_list.put_last (a_document) end

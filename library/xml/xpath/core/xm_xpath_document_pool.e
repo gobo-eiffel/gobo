@@ -31,20 +31,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document_isolation_levels, a_collection_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]) is
+	make (an_isolation_level: INTEGER) is
 			-- Establish invariant.
 		require
-			a_document_isolation_levels_not_void: a_document_isolation_levels /= Void
-			a_collection_isolation_levels_not_void: a_document_isolation_levels /= Void			
+			isolation_level_small_enough: an_isolation_level <= Serializable
+			isolation_level_large_enough: an_isolation_level >= Read_uncommitted
 		do
 			create document_name_map.make_with_equality_testers (5, Void, string_equality_tester)
 			create collection_name_map.make_with_equality_testers (5, Void, string_equality_tester)
 			create media_type_name_map.make_with_equality_testers (5, Void, string_equality_tester)
-			document_isolation_levels := a_document_isolation_levels
-			collection_isolation_levels := a_collection_isolation_levels
+			isolation_level := an_isolation_level
 		ensure
-			document_isolation_levels_set: document_isolation_levels = a_document_isolation_levels
-			collection_isolation_levels_set: collection_isolation_levels = a_collection_isolation_levels
+			isolation_level_set: isolation_level = an_isolation_level
 		end
 
 feature -- Access
@@ -76,7 +74,7 @@ feature -- Access
 		do
 			Result := collection_name_map.item (a_uri).node_iterator (False)
 		ensure
-			collection_before: Result /= Void and then Result.before
+			collection_before:  isolation_level < Serializable implies Result /= Void and then Result.before
 		end
 	
 	document (a_uri: STRING): XM_XPATH_DOCUMENT is
@@ -84,11 +82,11 @@ feature -- Access
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
 			uri_mapped: is_document_mapped (a_uri)
-			isolation_level_high_enough: document_isolation_level (a_uri) >= Repeatable_read
+			isolation_level_high_enough: isolation_level >= Repeatable_read
 		do
 			Result := document_name_map.item (a_uri)
 		ensure
-			document_not_void: Result /= Void
+			document_not_void:  isolation_level < Serializable implies Result /= Void
 		end
 
 	media_type (a_uri: STRING): UT_MEDIA_TYPE is
@@ -102,54 +100,9 @@ feature -- Access
 			media_type_may_be_void: True
 		end
 
-	collection_isolation_level (a_uri: STRING): INTEGER is
+	isolation_level: INTEGER
 			-- Isolation-level for `a_uri'
-		require
-			uri_not_void: a_uri /= Void  -- and then is_absolute
-		do
-			if collection_isolation_levels.has (a_uri) then
-				Result := collection_isolation_levels.item (a_uri)
-			else
-				Result := Serializable
-			end
-		ensure
-			collection_isolation_level_small_enough: Result <= Serializable
-			collection_isolation_level_large_enough: Result >= Read_uncommitted
-		end
 
-	document_isolation_level (a_uri: STRING): INTEGER is
-			-- Isolation-level for `a_uri'
-		require
-			uri_not_void: a_uri /= Void  -- and then is_absolute
-		do
-			if document_isolation_levels.has (a_uri) then
-				Result := document_isolation_levels.item (a_uri)
-			else
-				Result := Serializable
-			end
-		ensure
-			document_isolation_level_small_enough: Result <= Serializable
-			document_isolation_level_large_enough: Result >= Read_uncommitted
-		end
-
-feature -- Status report
-
-	has_collection_isolation_level (a_uri: STRING): BOOLEAN is
-			-- Is isolation-level set for `a_uri'?
-		require
-			uri_not_void: a_uri /= Void  -- and then is_absolute
-		do
-			Result := collection_isolation_levels.has (a_uri)
-		end
-
-	has_document_isolation_level (a_uri: STRING): BOOLEAN is
-			-- Is isolation-level set for `a_uri'?
-		require
-			uri_not_void: a_uri /= Void  -- and then is_absolute
-		do
-			Result := document_isolation_levels.has (a_uri)
-		end
-	
 feature -- Element change
 
 	add (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING) is
@@ -157,8 +110,8 @@ feature -- Element change
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
 			not_mapped: not is_document_mapped (a_uri)
-			document_not_void: a_document /= Void
-			isolation_level_high_enough: document_isolation_level (a_uri) >= Repeatable_read
+			document_not_void: isolation_level < Serializable implies a_document /= Void
+			isolation_level_high_enough: isolation_level >= Repeatable_read
 		do
 			document_name_map.force (a_document, a_uri)
 			media_type_name_map.force (a_media_type, a_uri)
@@ -171,7 +124,8 @@ feature -- Element change
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
 			not_mapped: not is_collection_mapped (a_uri)
-			collection: a_collection /= Void
+			collection:  isolation_level < Serializable implies a_collection /= Void
+			isolation_level_high_enough: isolation_level >= Repeatable_read
 		do
 			collection_name_map.force (a_collection, a_uri)
 		ensure
@@ -205,18 +159,12 @@ feature {NONE} -- Implementation
 	media_type_name_map: DS_HASH_TABLE [UT_MEDIA_TYPE, STRING]
 			-- Map of SYSTEM ids to media types
 
-	document_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]
-			-- Map of SYSTEM ids to document isolation levels
-
-	collection_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]
-			-- Map of SYSTEM ids to collection isolation levels
-
 invariant
 
 	document_name_map_not_void: document_name_map /= Void
 	media_type_name_map_not_void: media_type_name_map /= Void
-	document_isolation_levels_not_void: document_isolation_levels /= Void
-	collection_isolation_levels_not_void: collection_isolation_levels /= Void
+	isolation_level_small_enough: isolation_level <= Serializable
+	isolation_level_large_enough: isolation_level >= Read_uncommitted
 
 end
 

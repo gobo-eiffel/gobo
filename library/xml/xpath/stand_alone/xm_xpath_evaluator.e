@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_TOKENS
 
+	XM_XPATH_ISOLATION_LEVELS
+
 	KL_SHARED_STANDARD_FILES
 
 	MA_SHARED_DECIMAL_CONTEXT
@@ -320,12 +322,8 @@ feature {NONE} -- Implementation
 			a_context: XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
-			a_document_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]
-			a_collection_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]
 		do
-			create a_document_isolation_levels.make_with_equality_testers (5, Void, string_equality_tester)
-			create a_collection_isolation_levels.make_with_equality_testers (5, Void, string_equality_tester)
-			create a_document_pool.make (a_document_isolation_levels, a_collection_isolation_levels)
+			create a_document_pool.make (Serializable)
 			-- TODO media_type needs to be retrieved (earlier) from the tree pipe
 			a_document_pool.add (document, media_type, source_uri)
 			create a_context.make (context_item, a_document_pool, function_library)

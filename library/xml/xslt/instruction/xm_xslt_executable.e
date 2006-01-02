@@ -49,8 +49,7 @@ feature {NONE} -- Initialization
 			create character_map_index.make_default
 			create global_slot_manager.make
 			create output_properties_map.make_default
-			create document_isolation_levels.make_with_equality_testers (5, Void, string_equality_tester)
-			create collection_isolation_levels.make_with_equality_testers (5, Void, string_equality_tester)
+			isolation_level := Serializable
 		ensure
 			rule_manager_set: rule_manager = a_rule_manager
 			key_manager_set: key_manager = a_key_manager
@@ -93,12 +92,6 @@ feature -- Access
 	largest_pattern_stack_frame: INTEGER
 			-- Maximum local variable count within a pattern
 
-	document_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]
-			-- Map of SYSTEM ids to document isolation levels
-
-	collection_isolation_levels: DS_HASH_TABLE [INTEGER, STRING]
-			-- Map of SYSTEM ids to collection isolation levels
-
 	system_id (a_module_number: INTEGER): STRING is
 			-- SYSTEM id for stylesheet module `a_module_number'
 		require
@@ -120,35 +113,8 @@ feature -- Access
 			output_properties_not_void: Result /= Void
 		end
 
-	document_isolation_level (a_uri: STRING): INTEGER is
-			-- Isolation-level for `a_uri'
-		require
-			uri_not_void: a_uri /= Void  -- and then is_absolute
-		do
-			if document_isolation_levels.has (a_uri) then
-				Result := document_isolation_levels.item (a_uri)
-			else
-				Result := Serializable
-			end
-		ensure
-			document_isolation_level_small_enough: Result <= Serializable
-			document_isolation_level_large_enough: Result >= Read_uncommitted
-		end
-
-	collection_isolation_level (a_uri: STRING): INTEGER is
-			-- Isolation-level for `a_uri'
-		require
-			uri_not_void: a_uri /= Void  -- and then is_absolute
-		do
-			if collection_isolation_levels.has (a_uri) then
-				Result := collection_isolation_levels.item (a_uri)
-			else
-				Result := Serializable
-			end
-		ensure
-			collection_isolation_level_small_enough: Result <= Serializable
-			collection_isolation_level_large_enough: Result >= Read_uncommitted
-		end
+	isolation_level: INTEGER
+			-- Isolation-level
 
 feature -- Status report
 
@@ -174,22 +140,6 @@ feature -- Status report
 			valid_fingerprint: shared_name_pool.is_valid_name_code (a_fingerprint)
 		do
 			Result := output_properties_map.has (a_fingerprint)
-		end
-
-	has_document_isolation_level (a_uri: STRING): BOOLEAN is
-			-- Is isolation-level set for `a_uri'?
-		require
-			uri_not_void: a_uri /= Void  -- and then is_absolute
-		do
-			Result := document_isolation_levels.has (a_uri)
-		end
-
-	has_collection_isolation_level (a_uri: STRING): BOOLEAN is
-			-- Is isolation-level set for `a_uri'?
-		require
-			uri_not_void: a_uri /= Void  -- and then is_absolute
-		do
-			Result := collection_isolation_levels.has (a_uri)
 		end
 
 feature -- Status setting
@@ -308,30 +258,15 @@ feature -- Element change
 			stripper_rules_set: stripper_rules = a_stripper_rules_set
 		end
 
-	set_document_isolation_level (an_isolation_level: INTEGER; a_uri: STRING) is
-			-- Set isolation-level for `a_uri' to `an_isolation_level'.
+	set_isolation_level (an_isolation_level: INTEGER) is
+			-- Set isolation-level to `an_isolation_level'.
 		require
-			uri_not_void: a_uri /= Void  -- and then is_absolute
-			document_isolation_level_small_enough: an_isolation_level <= Serializable
-			document_isolation_level_large_enough: an_isolation_level >= Read_uncommitted
-			not_already_set: not has_document_isolation_level (a_uri)
+			isolation_level_small_enough: an_isolation_level <= Serializable
+			isolation_level_large_enough: an_isolation_level >= Read_uncommitted
 		do
-			document_isolation_levels.force_new (an_isolation_level, a_uri)
+			isolation_level := an_isolation_level
 		ensure
-			document_isolation_level_set: has_document_isolation_level (a_uri) and then document_isolation_level (a_uri) = an_isolation_level
-		end
-
-	set_collection_isolation_level (an_isolation_level: INTEGER; a_uri: STRING) is
-			-- Set isolation-level for `a_uri' to `an_isolation_level'.
-		require
-			uri_not_void: a_uri /= Void  -- and then is_absolute
-			collection_isolation_level_small_enough: an_isolation_level <= Serializable
-			collection_isolation_level_large_enough: an_isolation_level >= Read_uncommitted
-			not_already_set: not has_collection_isolation_level (a_uri)
-		do
-			collection_isolation_levels.force_new (an_isolation_level, a_uri)
-		ensure
-			collection_isolation_level_set: has_collection_isolation_level (a_uri) and then collection_isolation_level (a_uri) = an_isolation_level
+			isolation_level_set: isolation_level = an_isolation_level
 		end
 
 feature {XM_XSLT_EVALUATION_CONTEXT} -- Access
@@ -358,9 +293,9 @@ invariant
 	collation_map_not_void: collation_map /= Void
 	module_list_not_void: module_list /= Void
 	character_map_index_not_void: character_map_index /= Void
-	function_library_not_void: function_library /= Void
-	document_isolation_levels_not_void: document_isolation_levels /= Void
-	collection_isolation_levels_not_void: collection_isolation_levels /= Void
+	function_library_not_void: function_library /= Void	
+	isolation_level_small_enough: isolation_level <= Serializable
+	isolation_level_large_enough: isolation_level >= Read_uncommitted
 
 end
 	
