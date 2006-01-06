@@ -42,20 +42,34 @@ feature -- Formatting
 			inspect alignment
 			when align_left then
 				decimal_formatter.set_width (1)
+				if fsign = -1 and integer_part = 0 then
+					string_output_stream.put_character ('-')
+				end
 				decimal_formatter.integer_format_to (integer_part, string_output_stream)
 				double_buffer.append_string (fractional_part)
 				left_format_to (double_buffer, a_stream)
 			when align_right then
-				if width - fractional_part.count < 1 then
+				if fsign = -1 and integer_part = 0 then
 					decimal_formatter.set_width (1)
+					string_output_stream.put_character ('-')
+					decimal_formatter.integer_format_to (integer_part, string_output_stream)
+					double_buffer.append_string (fractional_part)
+					right_format_to (double_buffer, a_stream)
 				else
-					decimal_formatter.set_width (width - fractional_part.count)
+					if width - fractional_part.count < 1 then
+						decimal_formatter.set_width (1)
+					else
+						decimal_formatter.set_width (width - fractional_part.count)
+					end
+					decimal_formatter.set_align_right
+					decimal_formatter.integer_format_to (integer_part, a_stream)
+					a_stream.put_string (fractional_part)
 				end
-				decimal_formatter.set_align_right
-				decimal_formatter.integer_format_to (integer_part, a_stream)
-				a_stream.put_string (fractional_part)
 			when align_center then
 				decimal_formatter.set_width (1)
+				if fsign = -1 and integer_part = 0 then
+					string_output_stream.put_character ('-')
+				end
 				decimal_formatter.integer_format_to (integer_part, string_output_stream)
 				double_buffer.append_string (fractional_part)
 				center_format_to (double_buffer, a_stream)

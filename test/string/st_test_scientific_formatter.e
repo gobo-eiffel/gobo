@@ -115,6 +115,8 @@ feature -- Test
 			assert_equal ("test7", "   2.5e+01", format ("$10.1e", << double_cell (25.000) >>))
 			assert_equal ("test8", "2.5e+01   ", format ("$-10.1e", << double_cell (25.000) >>))
 			assert_equal ("test9", "2.5E+01   ", format ("$-10.1E", << double_cell (25.000) >>))
+			assert_equal ("test10", "-1.00e+00", format ("$.2e", << double_cell (-1.0) >>))
+			assert_equal ("test11", "-2.00e-01", format ("$.2e", << double_cell (-0.2) >>))
 		end
 
 	test_fixed_point is
@@ -129,6 +131,8 @@ feature -- Test
 			assert_equal ("test7", " 3.15", format ("$5.2f", << double_cell (3.14501) >>))
 			assert_equal ("test8", "3", format ("$.0f", << double_cell (3.145) >>))
 			assert_equal ("test9", "4", format ("$.0f", << double_cell (3.6) >>))
+			assert_equal ("test10", "-1.00", format ("$.2f", << double_cell (-1.0) >>))
+			assert_equal ("test11", "-0.20", format ("$.2f", << double_cell (-0.2) >>))
 		end
 
 	test_mixed_point is
