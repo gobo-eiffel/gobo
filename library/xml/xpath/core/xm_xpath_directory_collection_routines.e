@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			dynamic_context_not_void: a_context /= Void
 			directory_not_void: a_directory /= Void
 		local
-			a_file_name, a_message: STRING
+			a_file_name: STRING
 			an_index: INTEGER
 			entries: ARRAY [STRING]
 			a_file_uri: UT_URI
@@ -62,9 +62,9 @@ feature {NONE} -- Implementation
 				from an_index := entries.lower until an_index > entries.upper loop
 					a_file_name := entries.item (an_index)
 					if not Url_encoding.has_excluded_characters (a_file_name) then
-						
+
 						-- for now, we just ignore errors
-						
+
 						create a_file_uri.make_resolve (a_base_uri, a_file_name)
 						if a_context.available_documents.is_document_mapped (a_file_uri.full_uri) then
 							a_document := a_context.available_documents.document (a_file_uri.full_uri)
