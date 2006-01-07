@@ -210,12 +210,10 @@ feature
 			l_starting_index, l_ending_index: INTEGER
 			l_temp: CHARACTER
 			l_area: like area
-			p: PLATFORM
 		do
 			if i = 0 then
 				append_character ('0')
 			else
-				create p
 					-- Extract integer value digit by digit from right to left.
 				from
 					l_starting_index := count
@@ -225,13 +223,309 @@ feature
 						l_value := -i
 							-- Special case for minimum integer value as negating it
 							-- as no effect.
-						if l_value = p.Minimum_integer then
+						if l_value = {INTEGER_REF}.Min_value then
 							append_character ((-(l_value \\ 10) + 48).to_character)
 							l_value := -(l_value // 10)
 						end
 					else
 						l_value := i
 					end
+				until
+					l_value = 0
+				loop
+					append_character (((l_value \\ 10)+ 48).to_character)
+					l_value := l_value // 10
+				end
+
+					-- Now put digits in correct order from left to right.
+				from
+					l_ending_index := count - 1
+					l_area := area
+				until
+					l_starting_index >= l_ending_index
+				loop
+					l_temp := l_area.item (l_starting_index)
+					l_area.put (l_area.item (l_ending_index), l_starting_index)
+					l_area.put (l_temp, l_ending_index)
+					l_ending_index := l_ending_index - 1
+					l_starting_index := l_starting_index + 1
+				end
+			end
+		end
+
+	append_integer_8 (i: INTEGER_8) is
+		local
+			l_value: INTEGER_8
+			l_starting_index, l_ending_index: INTEGER
+			l_temp: CHARACTER
+			l_area: like area
+		do
+			if i = 0 then
+				append_character ('0')
+			else
+					-- Extract integer value digit by digit from right to left.
+				from
+					l_starting_index := count
+					if i < 0 then
+						append_character ('-')
+						l_starting_index := l_starting_index + 1
+						l_value := -i
+							-- Special case for minimum integer value as negating it
+							-- as no effect.
+						if l_value = {INTEGER_8_REF}.Min_value then
+							append_character ((-(l_value \\ 10) + 48).to_character)
+							l_value := -(l_value // 10)
+						end
+					else
+						l_value := i
+					end
+				until
+					l_value = 0
+				loop
+					append_character (((l_value \\ 10)+ 48).to_character)
+					l_value := l_value // 10
+				end
+
+					-- Now put digits in correct order from left to right.
+				from
+					l_ending_index := count - 1
+					l_area := area
+				until
+					l_starting_index >= l_ending_index
+				loop
+					l_temp := l_area.item (l_starting_index)
+					l_area.put (l_area.item (l_ending_index), l_starting_index)
+					l_area.put (l_temp, l_ending_index)
+					l_ending_index := l_ending_index - 1
+					l_starting_index := l_starting_index + 1
+				end
+			end
+		end
+
+	append_integer_16 (i: INTEGER_16) is
+		local
+			l_value: INTEGER_16
+			l_starting_index, l_ending_index: INTEGER
+			l_temp: CHARACTER
+			l_area: like area
+		do
+			if i = 0 then
+				append_character ('0')
+			else
+					-- Extract integer value digit by digit from right to left.
+				from
+					l_starting_index := count
+					if i < 0 then
+						append_character ('-')
+						l_starting_index := l_starting_index + 1
+						l_value := -i
+							-- Special case for minimum integer value as negating it
+							-- as no effect.
+						if l_value = {INTEGER_16_REF}.Min_value then
+							append_character ((-(l_value \\ 10) + 48).to_character)
+							l_value := -(l_value // 10)
+						end
+					else
+						l_value := i
+					end
+				until
+					l_value = 0
+				loop
+					append_character (((l_value \\ 10)+ 48).to_character)
+					l_value := l_value // 10
+				end
+
+					-- Now put digits in correct order from left to right.
+				from
+					l_ending_index := count - 1
+					l_area := area
+				until
+					l_starting_index >= l_ending_index
+				loop
+					l_temp := l_area.item (l_starting_index)
+					l_area.put (l_area.item (l_ending_index), l_starting_index)
+					l_area.put (l_temp, l_ending_index)
+					l_ending_index := l_ending_index - 1
+					l_starting_index := l_starting_index + 1
+				end
+			end
+		end
+
+	append_integer_64 (i: INTEGER_64) is
+		local
+			l_value: INTEGER_64
+			l_starting_index, l_ending_index: INTEGER
+			l_temp: CHARACTER
+			l_area: like area
+		do
+			if i = 0 then
+				append_character ('0')
+			else
+					-- Extract integer value digit by digit from right to left.
+				from
+					l_starting_index := count
+					if i < 0 then
+						append_character ('-')
+						l_starting_index := l_starting_index + 1
+							-- Special case for minimum integer value as negating it
+							-- as no effect.
+						if i = {INTEGER_64_REF}.Min_value then
+							append_character ((48 -(i \\ 10)).to_character)
+							l_value := -(i // 10)
+						else
+							l_value := -i
+						end
+					else
+						l_value := i
+					end
+				until
+					l_value = 0
+				loop
+					append_character (((l_value \\ 10)+ 48).to_character)
+					l_value := l_value // 10
+				end
+
+					-- Now put digits in correct order from left to right.
+				from
+					l_ending_index := count - 1
+					l_area := area
+				until
+					l_starting_index >= l_ending_index
+				loop
+					l_temp := l_area.item (l_starting_index)
+					l_area.put (l_area.item (l_ending_index), l_starting_index)
+					l_area.put (l_temp, l_ending_index)
+					l_ending_index := l_ending_index - 1
+					l_starting_index := l_starting_index + 1
+				end
+			end
+		end
+
+	append_natural_8 (i: NATURAL_8) is
+		local
+			l_value: NATURAL_8
+			l_starting_index, l_ending_index: INTEGER
+			l_temp: CHARACTER
+			l_area: like area
+		do
+			if i = 0 then
+				append_character ('0')
+			else
+					-- Extract integer value digit by digit from right to left.
+				from
+					l_starting_index := count
+					l_value := i
+				until
+					l_value = 0
+				loop
+					append_character (((l_value \\ 10)+ 48).to_character)
+					l_value := l_value // 10
+				end
+
+					-- Now put digits in correct order from left to right.
+				from
+					l_ending_index := count - 1
+					l_area := area
+				until
+					l_starting_index >= l_ending_index
+				loop
+					l_temp := l_area.item (l_starting_index)
+					l_area.put (l_area.item (l_ending_index), l_starting_index)
+					l_area.put (l_temp, l_ending_index)
+					l_ending_index := l_ending_index - 1
+					l_starting_index := l_starting_index + 1
+				end
+			end
+		end
+
+	append_natural_16 (i: NATURAL_16) is
+		local
+			l_value: NATURAL_16
+			l_starting_index, l_ending_index: INTEGER
+			l_temp: CHARACTER
+			l_area: like area
+		do
+			if i = 0 then
+				append_character ('0')
+			else
+					-- Extract integer value digit by digit from right to left.
+				from
+					l_starting_index := count
+					l_value := i
+				until
+					l_value = 0
+				loop
+					append_character (((l_value \\ 10)+ 48).to_character)
+					l_value := l_value // 10
+				end
+
+					-- Now put digits in correct order from left to right.
+				from
+					l_ending_index := count - 1
+					l_area := area
+				until
+					l_starting_index >= l_ending_index
+				loop
+					l_temp := l_area.item (l_starting_index)
+					l_area.put (l_area.item (l_ending_index), l_starting_index)
+					l_area.put (l_temp, l_ending_index)
+					l_ending_index := l_ending_index - 1
+					l_starting_index := l_starting_index + 1
+				end
+			end
+		end
+
+	append_natural_32 (i: NATURAL_32) is
+		local
+			l_value: NATURAL_32
+			l_starting_index, l_ending_index: INTEGER
+			l_temp: CHARACTER
+			l_area: like area
+		do
+			if i = 0 then
+				append_character ('0')
+			else
+					-- Extract integer value digit by digit from right to left.
+				from
+					l_starting_index := count
+					l_value := i
+				until
+					l_value = 0
+				loop
+					append_character (((l_value \\ 10)+ 48).to_character)
+					l_value := l_value // 10
+				end
+
+					-- Now put digits in correct order from left to right.
+				from
+					l_ending_index := count - 1
+					l_area := area
+				until
+					l_starting_index >= l_ending_index
+				loop
+					l_temp := l_area.item (l_starting_index)
+					l_area.put (l_area.item (l_ending_index), l_starting_index)
+					l_area.put (l_temp, l_ending_index)
+					l_ending_index := l_ending_index - 1
+					l_starting_index := l_starting_index + 1
+				end
+			end
+		end
+
+	append_natural_64 (i: NATURAL_64) is
+		local
+			l_value: NATURAL_64
+			l_starting_index, l_ending_index: INTEGER
+			l_temp: CHARACTER
+			l_area: like area
+		do
+			if i = 0 then
+				append_character ('0')
+			else
+					-- Extract integer value digit by digit from right to left.
+				from
+					l_starting_index := count
+					l_value := i
 				until
 					l_value = 0
 				loop

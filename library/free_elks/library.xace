@@ -15,5 +15,6 @@
 		<cluster name="fake"/>
 		<cluster name="kernel"/>
 		<cluster name="refactoring"/>
+		<cluster name="support"/>
 	</cluster>
 </library>
