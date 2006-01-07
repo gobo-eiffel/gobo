@@ -593,7 +593,7 @@ feature -- System error status
 		do
 			Result := True
 		end
-		
+
 	reportable_gvsrc3_error: BOOLEAN is
 			-- Can a GVSRC-3 error be reported?
 		do
@@ -1358,7 +1358,7 @@ feature -- Validity errors
 		end
 
 	report_vdpr1a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_INSTRUCTION) is
-			-- Report VDPR-1 error: instruction `a_precursor' does not 
+			-- Report VDPR-1 error: instruction `a_precursor' does not
 			-- appear in a routine body in `a_class'.
 			--
 			-- ETL3-4.82-00-00: p.215
@@ -1376,7 +1376,7 @@ feature -- Validity errors
 		end
 
 	report_vdpr1b_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_EXPRESSION) is
-			-- Report VDPR-1 error: expression `a_precursor' does not 
+			-- Report VDPR-1 error: expression `a_precursor' does not
 			-- appear in a routine body in `a_class'.
 			--
 			-- ETL3-4.82-00-00: p.215
@@ -1413,7 +1413,7 @@ feature -- Validity errors
 		end
 
 	report_vdpr3a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; f1, f2: ET_PARENT_FEATURE) is
-			-- Report VDPR-3 error: two effective features `f1' and `f2' redefined into 
+			-- Report VDPR-3 error: two effective features `f1' and `f2' redefined into
 			-- the same feature `a_redefined_feature' containing `a_precursor' in `a_class'.
 			--
 			-- ETL3-4.82-00-00: p.215
@@ -3295,7 +3295,7 @@ feature -- Validity errors
 				report_validity_error (an_error)
 			end
 		end
-			
+
 	report_vhrc4b_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
 			-- Report VHRC-4 error: the Rename_pair
 			-- `a_rename' has a new_name with a bracket alias,
@@ -4015,7 +4015,7 @@ feature -- Validity errors
 
 	report_vpca2a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VPCA-2 error: `a_feature' of class `a_target',
-			-- is not exported to `a_class' where the qualified call 
+			-- is not exported to `a_class' where the qualified call
 			-- agent `a_name' appears.
 			--
 			-- ETL3 (4.82-00-00): p.581
@@ -5278,7 +5278,7 @@ feature -- Validity errors
 
 	report_vuex2b_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VUEX-2 error: `a_feature' of class `a_target',
-			-- is not exported to `a_class' where the qualified call 
+			-- is not exported to `a_class' where the qualified call
 			-- `a_name' appears.
 			--
 			-- ETL2: p.368
@@ -5463,7 +5463,7 @@ feature -- Validity errors
 		end
 
 	report_vxrt0a_error (a_class: ET_CLASS; a_retry: ET_RETRY_INSTRUCTION) is
-			-- Report VXRT error: instruction `a_retry' does not 
+			-- Report VXRT error: instruction `a_retry' does not
 			-- appear in a rescue clause in `a_class'.
 			--
 			-- ETL2: p.256
@@ -6161,7 +6161,7 @@ feature -- Validity errors
 		end
 
 	report_gvkbs4l_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix ">"'
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_shift_right'
 			-- built-in routine `a_feature' in class `a_class'.
 			--
 			-- Not in ETL
@@ -6181,7 +6181,7 @@ feature -- Validity errors
 		end
 
 	report_gvkbs4m_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "<="'
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_xor'
 			-- built-in routine `a_feature' in class `a_class'.
 			--
 			-- Not in ETL
@@ -6201,7 +6201,7 @@ feature -- Validity errors
 		end
 
 	report_gvkbs4n_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix ">="'
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_not'
 			-- built-in routine `a_feature' in class `a_class'.
 			--
 			-- Not in ETL
@@ -6236,6 +6236,328 @@ feature -- Validity errors
 		do
 			if reportable_gvkbs4_error (a_class) then
 				create an_error.make_gvkbs4o (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4p_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; an_integer_class: ET_CLASS) is
+			-- Report GVKBS-4 error: wrong signature for `a_feature' in `a_class',
+			-- built-in routine 'item' from ref class of sized integer class `an_integer_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+			an_integer_class_not_void: an_integer_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4p (a_class, a_feature, an_integer_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4q_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; an_integer_class: ET_CLASS) is
+			-- Report GVKBS-4 error: wrong signature for `a_feature' in `a_class',
+			-- built-in routine 'set_item' from ref class of sized integer class `an_integer_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+			an_integer_class_not_void: an_integer_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4q (a_class, a_feature, an_integer_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4r_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.prefix "+"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4r (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4s_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "^"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4s (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4t_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_real'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4t (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4u_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_double'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4u (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4v_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_natural_8'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4v (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4w_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_natural_16'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4w (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4x_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_natural_32'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4x (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4y_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_natural_64'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4y (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4z_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_integer_8'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4z (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4aa_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_integer_16'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4aa (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4ab_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_integer_32'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4ab (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4ac_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_integer_64'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4ac (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4ad_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_real_32'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4ad (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4ae_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_real_64'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4ae (a_class, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -11425,6 +11747,474 @@ feature -- Internal errors
 			report_internal_error (an_error)
 		end
 
+	report_gibla_error is
+			-- Report GIBMA internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibla
+			report_internal_error (an_error)
+		end
+
+	report_giblb_error is
+			-- Report GIBMB internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblb
+			report_internal_error (an_error)
+		end
+
+	report_giblc_error is
+			-- Report GIBMC internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblc
+			report_internal_error (an_error)
+		end
+
+	report_gibld_error is
+			-- Report GIBMD internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibld
+			report_internal_error (an_error)
+		end
+
+	report_gible_error is
+			-- Report GIBME internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gible
+			report_internal_error (an_error)
+		end
+
+	report_giblf_error is
+			-- Report GIBMF internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblf
+			report_internal_error (an_error)
+		end
+
+	report_giblg_error is
+			-- Report GIBMG internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblg
+			report_internal_error (an_error)
+		end
+
+	report_giblh_error is
+			-- Report GIBMH internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblh
+			report_internal_error (an_error)
+		end
+
+	report_gibli_error is
+			-- Report GIBMI internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibli
+			report_internal_error (an_error)
+		end
+
+	report_giblj_error is
+			-- Report GIBMJ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblj
+			report_internal_error (an_error)
+		end
+
+	report_giblk_error is
+			-- Report GIBMK internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblk
+			report_internal_error (an_error)
+		end
+
+	report_gibll_error is
+			-- Report GIBML internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibll
+			report_internal_error (an_error)
+		end
+
+	report_giblm_error is
+			-- Report GIBMM internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblm
+			report_internal_error (an_error)
+		end
+
+	report_gibln_error is
+			-- Report GIBMN internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibln
+			report_internal_error (an_error)
+		end
+
+	report_giblo_error is
+			-- Report GIBMO internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblo
+			report_internal_error (an_error)
+		end
+
+	report_giblp_error is
+			-- Report GIBMP internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblp
+			report_internal_error (an_error)
+		end
+
+	report_giblq_error is
+			-- Report GIBMQ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblq
+			report_internal_error (an_error)
+		end
+
+	report_giblr_error is
+			-- Report GIBMR internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblr
+			report_internal_error (an_error)
+		end
+
+	report_gibls_error is
+			-- Report GIBMS internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibls
+			report_internal_error (an_error)
+		end
+
+	report_giblt_error is
+			-- Report GIBMT internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblt
+			report_internal_error (an_error)
+		end
+
+	report_giblu_error is
+			-- Report GIBMU internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblu
+			report_internal_error (an_error)
+		end
+
+	report_giblv_error is
+			-- Report GIBMV internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblv
+			report_internal_error (an_error)
+		end
+
+	report_giblw_error is
+			-- Report GIBMW internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblw
+			report_internal_error (an_error)
+		end
+
+	report_giblx_error is
+			-- Report GIBMX internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblx
+			report_internal_error (an_error)
+		end
+
+	report_gibly_error is
+			-- Report GIBMY internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibly
+			report_internal_error (an_error)
+		end
+
+	report_giblz_error is
+			-- Report GIBMZ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giblz
+			report_internal_error (an_error)
+		end
+
+	report_gibma_error is
+			-- Report GIBMA internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibma
+			report_internal_error (an_error)
+		end
+
+	report_gibmb_error is
+			-- Report GIBMB internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmb
+			report_internal_error (an_error)
+		end
+
+	report_gibmc_error is
+			-- Report GIBMC internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmc
+			report_internal_error (an_error)
+		end
+
+	report_gibmd_error is
+			-- Report GIBMD internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmd
+			report_internal_error (an_error)
+		end
+
+	report_gibme_error is
+			-- Report GIBME internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibme
+			report_internal_error (an_error)
+		end
+
+	report_gibmf_error is
+			-- Report GIBMF internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmf
+			report_internal_error (an_error)
+		end
+
+	report_gibmg_error is
+			-- Report GIBMG internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmg
+			report_internal_error (an_error)
+		end
+
+	report_gibmh_error is
+			-- Report GIBMH internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmh
+			report_internal_error (an_error)
+		end
+
+	report_gibmi_error is
+			-- Report GIBMI internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmi
+			report_internal_error (an_error)
+		end
+
+	report_gibmj_error is
+			-- Report GIBMJ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmj
+			report_internal_error (an_error)
+		end
+
+	report_gibmk_error is
+			-- Report GIBMK internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmk
+			report_internal_error (an_error)
+		end
+
+	report_gibml_error is
+			-- Report GIBML internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibml
+			report_internal_error (an_error)
+		end
+
+	report_gibmm_error is
+			-- Report GIBMM internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmm
+			report_internal_error (an_error)
+		end
+
+	report_gibmn_error is
+			-- Report GIBMN internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmn
+			report_internal_error (an_error)
+		end
+
+	report_gibmo_error is
+			-- Report GIBMO internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmo
+			report_internal_error (an_error)
+		end
+
+	report_gibmp_error is
+			-- Report GIBMP internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmp
+			report_internal_error (an_error)
+		end
+
+	report_gibmq_error is
+			-- Report GIBMQ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmq
+			report_internal_error (an_error)
+		end
+
+	report_gibmr_error is
+			-- Report GIBMR internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmr
+			report_internal_error (an_error)
+		end
+
+	report_gibms_error is
+			-- Report GIBMS internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibms
+			report_internal_error (an_error)
+		end
+
+	report_gibmt_error is
+			-- Report GIBMT internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmt
+			report_internal_error (an_error)
+		end
+
+	report_gibmu_error is
+			-- Report GIBMU internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmu
+			report_internal_error (an_error)
+		end
+
+	report_gibmv_error is
+			-- Report GIBMV internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmv
+			report_internal_error (an_error)
+		end
+
+	report_gibmw_error is
+			-- Report GIBMW internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmw
+			report_internal_error (an_error)
+		end
+
+	report_gibmx_error is
+			-- Report GIBMX internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmx
+			report_internal_error (an_error)
+		end
+
+	report_gibmy_error is
+			-- Report GIBMY internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmy
+			report_internal_error (an_error)
+		end
+
+	report_gibmz_error is
+			-- Report GIBMZ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibmz
+			report_internal_error (an_error)
+		end
+
 feature -- Reporting
 
 	report_error_message (an_error: STRING) is
@@ -11436,14 +12226,56 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- report_gibkr_error
-	-- report_gibks_error
-	-- report_gibkt_error
-	-- report_gibku_error
-	-- report_gibkv_error
-	-- report_gibkw_error
-	-- report_gibkx_error
-	-- report_gibky_error
-	-- report_gibkz_error
+	-- error_handler.report_giblc_error
+	-- error_handler.report_gibld_error
+	-- error_handler.report_gible_error
+	-- error_handler.report_giblf_error
+	-- error_handler.report_giblg_error
+	-- error_handler.report_giblh_error
+	-- error_handler.report_gibli_error
+	-- error_handler.report_giblj_error
+	-- error_handler.report_giblk_error
+	-- error_handler.report_gibll_error
+	-- error_handler.report_giblm_error
+	-- error_handler.report_gibln_error
+	-- error_handler.report_giblo_error
+	-- error_handler.report_giblp_error
+	-- error_handler.report_giblq_error
+	-- error_handler.report_giblr_error
+	-- error_handler.report_gibls_error
+	-- error_handler.report_giblt_error
+	-- error_handler.report_giblu_error
+	-- error_handler.report_giblv_error
+	-- error_handler.report_giblw_error
+	-- error_handler.report_giblx_error
+	-- report_gibly_error
+	-- report_giblz_error
+	-- report_gibla_error
+	-- report_giblb_error
+	-- report_giblc_error
+	-- report_gibld_error
+	-- report_gible_error
+	-- report_giblf_error
+	-- report_giblg_error
+	-- report_giblh_error
+	-- report_gibli_error
+	-- report_giblj_error
+	-- report_giblk_error
+	-- report_gibll_error
+	-- report_giblm_error
+	-- report_gibln_error
+	-- report_giblo_error
+	-- report_giblp_error
+	-- report_giblq_error
+	-- report_giblr_error
+	-- report_gibls_error
+	-- report_giblt_error
+	-- report_giblu_error
+	-- report_giblv_error
+	-- report_giblw_error
+	-- report_giblx_error
+	-- report_gibly_error
+	-- report_giblz_error
+
 
 end

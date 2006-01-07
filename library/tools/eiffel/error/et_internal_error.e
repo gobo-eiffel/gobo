@@ -411,7 +411,59 @@ create
 	make_gibkw,
 	make_gibkx,
 	make_gibky,
-	make_gibkz
+	make_gibkz,
+	make_gibla,
+	make_giblb,
+	make_giblc,
+	make_gibld,
+	make_gible,
+	make_giblf,
+	make_giblg,
+	make_giblh,
+	make_gibli,
+	make_giblj,
+	make_giblk,
+	make_gibll,
+	make_giblm,
+	make_gibln,
+	make_giblo,
+	make_giblp,
+	make_giblq,
+	make_giblr,
+	make_gibls,
+	make_giblt,
+	make_giblu,
+	make_giblv,
+	make_giblw,
+	make_giblx,
+	make_gibly,
+	make_giblz,
+	make_gibma,
+	make_gibmb,
+	make_gibmc,
+	make_gibmd,
+	make_gibme,
+	make_gibmf,
+	make_gibmg,
+	make_gibmh,
+	make_gibmi,
+	make_gibmj,
+	make_gibmk,
+	make_gibml,
+	make_gibmm,
+	make_gibmn,
+	make_gibmo,
+	make_gibmp,
+	make_gibmq,
+	make_gibmr,
+	make_gibms,
+	make_gibmt,
+	make_gibmu,
+	make_gibmv,
+	make_gibmw,
+	make_gibmx,
+	make_gibmy,
+	make_gibmz
 
 feature {NONE} -- Initialization
 
@@ -5537,6 +5589,682 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 		end
 
+	make_gibla is
+			-- Create a new GIBLA error.
+		do
+			code := gibla_template_code
+			etl_code := gibla_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblb is
+			-- Create a new GIBLB error.
+		do
+			code := giblb_template_code
+			etl_code := giblb_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblc is
+			-- Create a new GIBLC error.
+		do
+			code := giblc_template_code
+			etl_code := giblc_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibld is
+			-- Create a new GIBLD error.
+		do
+			code := gibld_template_code
+			etl_code := gibld_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gible is
+			-- Create a new GIBLE error.
+		do
+			code := gible_template_code
+			etl_code := gible_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblf is
+			-- Create a new GIBLF error.
+		do
+			code := giblf_template_code
+			etl_code := giblf_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblg is
+			-- Create a new GIBLG error.
+		do
+			code := giblg_template_code
+			etl_code := giblg_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblh is
+			-- Create a new GIBLH error.
+		do
+			code := giblh_template_code
+			etl_code := giblh_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibli is
+			-- Create a new GIBLI error.
+		do
+			code := gibli_template_code
+			etl_code := gibli_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblj is
+			-- Create a new GIBLJ error.
+		do
+			code := giblj_template_code
+			etl_code := giblj_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblk is
+			-- Create a new GIBLK error.
+		do
+			code := giblk_template_code
+			etl_code := giblk_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibll is
+			-- Create a new GIBLL error.
+		do
+			code := gibll_template_code
+			etl_code := gibll_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblm is
+			-- Create a new GIBLM error.
+		do
+			code := giblm_template_code
+			etl_code := giblm_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibln is
+			-- Create a new GIBLN error.
+		do
+			code := gibln_template_code
+			etl_code := gibln_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblo is
+			-- Create a new GIBLO error.
+		do
+			code := giblo_template_code
+			etl_code := giblo_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblp is
+			-- Create a new GIBLP error.
+		do
+			code := giblp_template_code
+			etl_code := giblp_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblq is
+			-- Create a new GIBLQ error.
+		do
+			code := giblq_template_code
+			etl_code := giblq_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblr is
+			-- Create a new GIBLR error.
+		do
+			code := giblr_template_code
+			etl_code := giblr_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibls is
+			-- Create a new GIBLS error.
+		do
+			code := gibls_template_code
+			etl_code := gibls_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblt is
+			-- Create a new GIBLT error.
+		do
+			code := giblt_template_code
+			etl_code := giblt_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblu is
+			-- Create a new GIBLU error.
+		do
+			code := giblu_template_code
+			etl_code := giblu_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblv is
+			-- Create a new GIBLV error.
+		do
+			code := giblv_template_code
+			etl_code := giblv_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblw is
+			-- Create a new GIBLW error.
+		do
+			code := giblw_template_code
+			etl_code := giblw_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblx is
+			-- Create a new GIBLX error.
+		do
+			code := giblx_template_code
+			etl_code := giblx_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibly is
+			-- Create a new GIBLY error.
+		do
+			code := gibly_template_code
+			etl_code := gibly_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giblz is
+			-- Create a new GIBLZ error.
+		do
+			code := giblz_template_code
+			etl_code := giblz_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibma is
+			-- Create a new GIBMA error.
+		do
+			code := gibma_template_code
+			etl_code := gibma_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmb is
+			-- Create a new GIBMB error.
+		do
+			code := gibmb_template_code
+			etl_code := gibmb_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmc is
+			-- Create a new GIBMC error.
+		do
+			code := gibmc_template_code
+			etl_code := gibmc_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmd is
+			-- Create a new GIBMD error.
+		do
+			code := gibmd_template_code
+			etl_code := gibmd_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibme is
+			-- Create a new GIBME error.
+		do
+			code := gibme_template_code
+			etl_code := gibme_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmf is
+			-- Create a new GIBMF error.
+		do
+			code := gibmf_template_code
+			etl_code := gibmf_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmg is
+			-- Create a new GIBMG error.
+		do
+			code := gibmg_template_code
+			etl_code := gibmg_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmh is
+			-- Create a new GIBMH error.
+		do
+			code := gibmh_template_code
+			etl_code := gibmh_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmi is
+			-- Create a new GIBMI error.
+		do
+			code := gibmi_template_code
+			etl_code := gibmi_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmj is
+			-- Create a new GIBMJ error.
+		do
+			code := gibmj_template_code
+			etl_code := gibmj_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmk is
+			-- Create a new GIBMK error.
+		do
+			code := gibmk_template_code
+			etl_code := gibmk_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibml is
+			-- Create a new GIBML error.
+		do
+			code := gibml_template_code
+			etl_code := gibml_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmm is
+			-- Create a new GIBMM error.
+		do
+			code := gibmm_template_code
+			etl_code := gibmm_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmn is
+			-- Create a new GIBMN error.
+		do
+			code := gibmn_template_code
+			etl_code := gibmn_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmo is
+			-- Create a new GIBMO error.
+		do
+			code := gibmo_template_code
+			etl_code := gibmo_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmp is
+			-- Create a new GIBMP error.
+		do
+			code := gibmp_template_code
+			etl_code := gibmp_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmq is
+			-- Create a new GIBMQ error.
+		do
+			code := gibmq_template_code
+			etl_code := gibmq_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmr is
+			-- Create a new GIBMR error.
+		do
+			code := gibmr_template_code
+			etl_code := gibmr_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibms is
+			-- Create a new GIBMS error.
+		do
+			code := gibms_template_code
+			etl_code := gibms_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmt is
+			-- Create a new GIBMT error.
+		do
+			code := gibmt_template_code
+			etl_code := gibmt_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmu is
+			-- Create a new GIBMU error.
+		do
+			code := gibmu_template_code
+			etl_code := gibmu_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmv is
+			-- Create a new GIBMV error.
+		do
+			code := gibmv_template_code
+			etl_code := gibmv_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmw is
+			-- Create a new GIBMW error.
+		do
+			code := gibmw_template_code
+			etl_code := gibmw_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmx is
+			-- Create a new GIBMX error.
+		do
+			code := gibmx_template_code
+			etl_code := gibmx_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmy is
+			-- Create a new GIBMY error.
+		do
+			code := gibmy_template_code
+			etl_code := gibmy_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibmz is
+			-- Create a new GIBMZ error.
+		do
+			code := gibmz_template_code
+			etl_code := gibmz_etl_code
+			default_template := gi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
 feature {NONE} -- Implementation
 
 	gi_default_template: STRING is "[$1] internal error."
@@ -5936,6 +6664,58 @@ feature {NONE} -- Implementation
 	gibkx_etl_code: STRING is "GIBKX"
 	gibky_etl_code: STRING is "GIBKY"
 	gibkz_etl_code: STRING is "GIBKZ"
+	gibla_etl_code: STRING is "GIBLA"
+	giblb_etl_code: STRING is "GIBLB"
+	giblc_etl_code: STRING is "GIBLC"
+	gibld_etl_code: STRING is "GIBLD"
+	gible_etl_code: STRING is "GIBLE"
+	giblf_etl_code: STRING is "GIBLF"
+	giblg_etl_code: STRING is "GIBLG"
+	giblh_etl_code: STRING is "GIBLH"
+	gibli_etl_code: STRING is "GIBLI"
+	giblj_etl_code: STRING is "GIBLJ"
+	giblk_etl_code: STRING is "GIBLK"
+	gibll_etl_code: STRING is "GIBLL"
+	giblm_etl_code: STRING is "GIBLM"
+	gibln_etl_code: STRING is "GIBLN"
+	giblo_etl_code: STRING is "GIBLO"
+	giblp_etl_code: STRING is "GIBLP"
+	giblq_etl_code: STRING is "GIBLQ"
+	giblr_etl_code: STRING is "GIBLR"
+	gibls_etl_code: STRING is "GIBLS"
+	giblt_etl_code: STRING is "GIBLT"
+	giblu_etl_code: STRING is "GIBLU"
+	giblv_etl_code: STRING is "GIBLV"
+	giblw_etl_code: STRING is "GIBLW"
+	giblx_etl_code: STRING is "GIBLX"
+	gibly_etl_code: STRING is "GIBLY"
+	giblz_etl_code: STRING is "GIBLZ"
+	gibma_etl_code: STRING is "GIBMA"
+	gibmb_etl_code: STRING is "GIBMB"
+	gibmc_etl_code: STRING is "GIBMC"
+	gibmd_etl_code: STRING is "GIBMD"
+	gibme_etl_code: STRING is "GIBME"
+	gibmf_etl_code: STRING is "GIBMF"
+	gibmg_etl_code: STRING is "GIBMG"
+	gibmh_etl_code: STRING is "GIBMH"
+	gibmi_etl_code: STRING is "GIBMI"
+	gibmj_etl_code: STRING is "GIBMJ"
+	gibmk_etl_code: STRING is "GIBMK"
+	gibml_etl_code: STRING is "GIBML"
+	gibmm_etl_code: STRING is "GIBMM"
+	gibmn_etl_code: STRING is "GIBMN"
+	gibmo_etl_code: STRING is "GIBMO"
+	gibmp_etl_code: STRING is "GIBMP"
+	gibmq_etl_code: STRING is "GIBMQ"
+	gibmr_etl_code: STRING is "GIBMR"
+	gibms_etl_code: STRING is "GIBMS"
+	gibmt_etl_code: STRING is "GIBMT"
+	gibmu_etl_code: STRING is "GIBMU"
+	gibmv_etl_code: STRING is "GIBMV"
+	gibmw_etl_code: STRING is "GIBMW"
+	gibmx_etl_code: STRING is "GIBMX"
+	gibmy_etl_code: STRING is "GIBMY"
+	gibmz_etl_code: STRING is "GIBMZ"
 			-- ETL validity codes
 
 	giaaa_template_code: STRING is "giaaa"
@@ -6332,6 +7112,58 @@ feature {NONE} -- Implementation
 	gibkx_template_code: STRING is "gibkx"
 	gibky_template_code: STRING is "gibky"
 	gibkz_template_code: STRING is "gibkz"
+	gibla_template_code: STRING is "gibla"
+	giblb_template_code: STRING is "giblb"
+	giblc_template_code: STRING is "giblc"
+	gibld_template_code: STRING is "gibld"
+	gible_template_code: STRING is "gible"
+	giblf_template_code: STRING is "giblf"
+	giblg_template_code: STRING is "giblg"
+	giblh_template_code: STRING is "giblh"
+	gibli_template_code: STRING is "gibli"
+	giblj_template_code: STRING is "giblj"
+	giblk_template_code: STRING is "giblk"
+	gibll_template_code: STRING is "gibll"
+	giblm_template_code: STRING is "giblm"
+	gibln_template_code: STRING is "gibln"
+	giblo_template_code: STRING is "giblo"
+	giblp_template_code: STRING is "giblp"
+	giblq_template_code: STRING is "giblq"
+	giblr_template_code: STRING is "giblr"
+	gibls_template_code: STRING is "gibls"
+	giblt_template_code: STRING is "giblt"
+	giblu_template_code: STRING is "giblu"
+	giblv_template_code: STRING is "giblv"
+	giblw_template_code: STRING is "giblw"
+	giblx_template_code: STRING is "giblx"
+	gibly_template_code: STRING is "gibly"
+	giblz_template_code: STRING is "giblz"
+	gibma_template_code: STRING is "gibma"
+	gibmb_template_code: STRING is "gibmb"
+	gibmc_template_code: STRING is "gibmc"
+	gibmd_template_code: STRING is "gibmd"
+	gibme_template_code: STRING is "gibme"
+	gibmf_template_code: STRING is "gibmf"
+	gibmg_template_code: STRING is "gibmg"
+	gibmh_template_code: STRING is "gibmh"
+	gibmi_template_code: STRING is "gibmi"
+	gibmj_template_code: STRING is "gibmj"
+	gibmk_template_code: STRING is "gibmk"
+	gibml_template_code: STRING is "gibml"
+	gibmm_template_code: STRING is "gibmm"
+	gibmn_template_code: STRING is "gibmn"
+	gibmo_template_code: STRING is "gibmo"
+	gibmp_template_code: STRING is "gibmp"
+	gibmq_template_code: STRING is "gibmq"
+	gibmr_template_code: STRING is "gibmr"
+	gibms_template_code: STRING is "gibms"
+	gibmt_template_code: STRING is "gibmt"
+	gibmu_template_code: STRING is "gibmu"
+	gibmv_template_code: STRING is "gibmv"
+	gibmw_template_code: STRING is "gibmw"
+	gibmx_template_code: STRING is "gibmx"
+	gibmy_template_code: STRING is "gibmy"
+	gibmz_template_code: STRING is "gibmz"
 		-- Template error codes
 
 end

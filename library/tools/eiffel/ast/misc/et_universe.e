@@ -189,6 +189,10 @@ feature {NONE} -- Initialization
 			integer_8_ref_class := eiffel_class (tokens.integer_8_ref_class_name)
 			integer_16_ref_class := eiffel_class (tokens.integer_16_ref_class_name)
 			integer_64_ref_class := eiffel_class (tokens.integer_64_ref_class_name)
+			natural_8_ref_class := eiffel_class (tokens.natural_8_ref_class_name)
+			natural_16_ref_class := eiffel_class (tokens.natural_16_ref_class_name)
+			natural_32_ref_class := eiffel_class (tokens.natural_32_ref_class_name)
+			natural_64_ref_class := eiffel_class (tokens.natural_64_ref_class_name)
 			real_ref_class := eiffel_class (tokens.real_ref_class_name)
 			double_ref_class := eiffel_class (tokens.double_ref_class_name)
 			pointer_ref_class := eiffel_class (tokens.pointer_ref_class_name)
@@ -257,6 +261,10 @@ feature {NONE} -- Initialization
 			integer_8_ref_class_not_void: integer_8_ref_class /= Void
 			integer_16_ref_class_not_void: integer_16_ref_class /= Void
 			integer_64_ref_class_not_void: integer_64_ref_class /= Void
+			natural_8_ref_class_not_void: natural_8_ref_class /= Void
+			natural_16_ref_class_not_void: natural_16_ref_class /= Void
+			natural_32_ref_class_not_void: natural_32_ref_class /= Void
+			natural_64_ref_class_not_void: natural_64_ref_class /= Void
 			real_ref_class_not_void: real_ref_class /= Void
 			double_ref_class_not_void: double_ref_class /= Void
 			pointer_ref_class_not_void: pointer_ref_class /= Void
@@ -621,6 +629,18 @@ feature -- Basic classes (compatibility with 5.6.0610, to be removed later)
 
 	integer_64_ref_class: ET_CLASS
 			-- Class "INTEGER_64_REF"
+
+	natural_8_ref_class: ET_CLASS
+			-- Class "NATURAL_8_REF"
+
+	natural_16_ref_class: ET_CLASS
+			-- Class "NATURAL_16_REF"
+
+	natural_32_ref_class: ET_CLASS
+			-- Class "NATURAL_32_REF"
+
+	natural_64_ref_class: ET_CLASS
+			-- Class "NATURAL_64_REF"
 
 	real_ref_class: ET_CLASS
 			-- Class "REAL_REF"
@@ -2423,6 +2443,10 @@ invariant
 	integer_8_ref_class_not_void: integer_8_ref_class /= Void
 	integer_16_ref_class_not_void: integer_16_ref_class /= Void
 	integer_64_ref_class_not_void: integer_64_ref_class /= Void
+	natural_8_ref_class_not_void: natural_8_ref_class /= Void
+	natural_16_ref_class_not_void: natural_16_ref_class /= Void
+	natural_32_ref_class_not_void: natural_32_ref_class /= Void
+	natural_64_ref_class_not_void: natural_64_ref_class /= Void
 	real_ref_class_not_void: real_ref_class /= Void
 	double_ref_class_not_void: double_ref_class /= Void
 	pointer_ref_class_not_void: pointer_ref_class /= Void

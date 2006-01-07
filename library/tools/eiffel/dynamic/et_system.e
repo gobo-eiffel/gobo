@@ -134,6 +134,26 @@ feature -- Status report
 			c_code_compilation_set: c_code_compilation = b
 		end
 
+	set_string_type_alive is
+			-- Make sure that `string_type' and its dependent types
+			-- are marked as alive.
+		do
+			string_type.set_alive
+				-- Make sure that type SPECIAL[CHARACTER] (used in
+				-- feature 'area') is marked as alive.
+			special_character_type.set_alive
+				-- Make sure that type CHARACTER (used as actual generic type
+				-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
+			character_type.set_alive
+				-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
+			integer_type.set_alive
+		ensure
+			string_type_alive: string_type.is_alive
+			special_character_type_alive: special_character_type.is_alive
+			character_type_alive: character_type.is_alive
+			integer_type_alive: integer_type.is_alive
+		end
+
 feature -- Types
 
 	character_type: ET_DYNAMIC_TYPE
