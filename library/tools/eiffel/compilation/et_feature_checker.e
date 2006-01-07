@@ -905,6 +905,7 @@ feature {NONE} -- Feature validity
 			a_constant: ET_CONSTANT
 			a_class_impl: ET_CLASS
 			a_bit_type: ET_BIT_TYPE
+			an_integer_constant: ET_INTEGER_CONSTANT
 		do
 			has_fatal_error := False
 			a_type := a_feature.type
@@ -933,26 +934,38 @@ feature {NONE} -- Feature validity
 						end
 					end
 				elseif a_constant.is_integer_constant then
+					an_integer_constant ?= a_constant
+					check is_integer_constant: an_integer_constant /= Void end
 					if a_type.same_named_type (universe.integer_class, current_type, current_type, universe) then
-						-- OK.
+							-- OK.
+						an_integer_constant.set_integer
 					elseif a_type.same_named_type (universe.integer_8_class, current_type, current_type, universe) then
-						-- Valid with ISE Eiffel. To be checked with other compilers.
+							-- Valid with ISE Eiffel. To be checked with other compilers.
+						an_integer_constant.set_integer_8
 					elseif a_type.same_named_type (universe.integer_16_class, current_type, current_type, universe) then
-						-- Valid with ISE Eiffel. To be checked with other compilers.
+							-- Valid with ISE Eiffel. To be checked with other compilers.
+						an_integer_constant.set_integer_16
 					elseif a_type.same_named_type (universe.integer_32_class, current_type, current_type, universe) then
-						-- Valid with ISE Eiffel. To be checked with other compilers.
+							-- Valid with ISE Eiffel. To be checked with other compilers.
+						an_integer_constant.set_integer_32
 					elseif a_type.same_named_type (universe.integer_64_class, current_type, current_type, universe) then
-						-- Valid with ISE Eiffel. To be checked with other compilers.
+							-- Valid with ISE Eiffel. To be checked with other compilers.
+						an_integer_constant.set_integer_64
 					elseif a_type.same_named_type (universe.natural_class, current_type, current_type, universe) then
-						-- Valid with ISE Eiffel. To be checked with other compilers.
+							-- Valid with ISE Eiffel. To be checked with other compilers.
+						an_integer_constant.set_natural
 					elseif a_type.same_named_type (universe.natural_8_class, current_type, current_type, universe) then
-						-- Valid with ISE Eiffel. To be checked with other compilers.
+							-- Valid with ISE Eiffel. To be checked with other compilers.
+						an_integer_constant.set_natural_8
 					elseif a_type.same_named_type (universe.natural_16_class, current_type, current_type, universe) then
-						-- Valid with ISE Eiffel. To be checked with other compilers.
+							-- Valid with ISE Eiffel. To be checked with other compilers.
+						an_integer_constant.set_natural_16
 					elseif a_type.same_named_type (universe.natural_32_class, current_type, current_type, universe) then
-						-- Valid with ISE Eiffel. To be checked with other compilers.
+							-- Valid with ISE Eiffel. To be checked with other compilers.
+						an_integer_constant.set_natural_32
 					elseif a_type.same_named_type (universe.natural_64_class, current_type, current_type, universe) then
-						-- Valid with ISE Eiffel. To be checked with other compilers.
+							-- Valid with ISE Eiffel. To be checked with other compilers.
+						an_integer_constant.set_natural_64
 					else
 						set_fatal_error
 						a_class_impl := a_feature.implementation_class

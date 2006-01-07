@@ -5,7 +5,7 @@ indexing
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -253,6 +253,7 @@ feature -- Generation
 					-- Include runtime C files.
 				a_file.put_new_line
 				header_file.put_new_line
+				include_runtime_c_file ("ge_integer.h", header_file)
 				include_runtime_c_file ("ge_directory.h", header_file)
 				include_runtime_c_file ("ge_directory.c", a_file)
 				once_features.wipe_out
@@ -524,6 +525,9 @@ feature {NONE} -- Feature generation
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_name: STRING
 			l_comma: BOOLEAN
+			l_builtin_code: INTEGER
+			l_builtin_class: INTEGER
+			l_integer_type: ET_DYNAMIC_TYPE
 		do
 				-- Print signature to `header_file' and `current_file'.
 			print_feature_name_comment (a_feature, current_type, header_file)
@@ -630,239 +634,467 @@ feature {NONE} -- Feature generation
 				print_malloc_current
 			end
 			if a_feature.is_builtin then
+				l_builtin_code := a_feature.builtin_code
+				l_builtin_class := l_builtin_code // builtin_capacity
 				if l_result_type_set /= Void then
 						-- This is a built-in function.
-					inspect a_feature.builtin_code
-					when builtin_any_twin then
-						print_builtin_any_twin_body (a_feature)
-					when builtin_any_same_type then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_any_same_type_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_any_standard_is_equal then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_any_standard_is_equal_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_any_conforms_to then
-						print_builtin_any_conforms_to_body (a_feature)
-					when builtin_any_generator then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_any_generator_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_any_generating_type then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_any_generating_type_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_any_standard_twin then
-						print_builtin_any_standard_twin_body (a_feature)
-					when builtin_any_tagged_out then
-						print_builtin_any_tagged_out_body (a_feature)
-					when builtin_any_is_deep_equal then
-						print_builtin_any_is_deep_equal_body (a_feature)
-					when builtin_any_deep_twin then
-						print_builtin_any_deep_twin_body (a_feature)
-					when builtin_special_item then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_special_item_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_special_count then
-						fill_call_formal_arguments (0)
-						print_indentation_assign_to_result
-						print_builtin_special_count_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_special_element_size then
-						fill_call_formal_arguments (0)
-						print_indentation_assign_to_result
-						print_builtin_special_element_size_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_special_aliased_resized_area then
-						print_builtin_special_aliased_resized_area_body (a_feature)
-					when builtin_character_code then
-						fill_call_formal_arguments (0)
-						print_indentation_assign_to_result
-						print_builtin_character_code_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_character_item then
-						fill_call_formal_arguments (0)
-						print_indentation_assign_to_result
-						print_builtin_character_item_call (current_type, current_feature)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_boolean_and then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_boolean_and_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_boolean_or then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_boolean_or_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_boolean_xor then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_boolean_xor_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_boolean_not then
-						fill_call_formal_arguments (0)
-						print_indentation_assign_to_result
-						print_builtin_boolean_not_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_boolean_item then
-						fill_call_formal_arguments (0)
-						print_indentation_assign_to_result
-						print_builtin_boolean_item_call (current_type, current_feature)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_plus then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_plus_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_minus then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_minus_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_times then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_times_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_divide then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_divide_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_div then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_div_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_mod then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_mod_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_opposite then
-						fill_call_formal_arguments (0)
-						print_indentation_assign_to_result
-						print_builtin_integer_opposite_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_lt then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_lt_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_gt then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_gt_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_le then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_le_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_ge then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_ge_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_to_character then
-						fill_call_formal_arguments (0)
-						print_indentation_assign_to_result
-						print_builtin_integer_to_character_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_bit_or then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_bit_or_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_bit_and then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_bit_and_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_integer_bit_shift_left then
-						fill_call_formal_arguments (1)
-						print_indentation_assign_to_result
-						print_builtin_integer_bit_shift_left_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
+					inspect l_builtin_class
+					when builtin_any_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_any_twin then
+							print_builtin_any_twin_body (a_feature)
+						when builtin_any_same_type then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_any_same_type_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_any_standard_is_equal then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_any_standard_is_equal_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_any_conforms_to then
+							print_builtin_any_conforms_to_body (a_feature)
+						when builtin_any_generator then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_any_generator_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_any_generating_type then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_any_generating_type_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_any_standard_twin then
+							print_builtin_any_standard_twin_body (a_feature)
+						when builtin_any_tagged_out then
+							print_builtin_any_tagged_out_body (a_feature)
+						when builtin_any_is_deep_equal then
+							print_builtin_any_is_deep_equal_body (a_feature)
+						when builtin_any_deep_twin then
+							print_builtin_any_deep_twin_body (a_feature)
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibhk_error
+						end
+					when builtin_special_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_special_item then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_special_item_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_special_count then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_special_count_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_special_element_size then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_special_element_size_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_special_aliased_resized_area then
+							print_builtin_special_aliased_resized_area_body (a_feature)
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibgj_error
+						end
+					when builtin_character_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_character_code then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_character_code_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_character_item then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_character_item_call (current_type, current_feature)
+							print_semicolon_newline
+							call_operands.wipe_out
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibfr_error
+						end
+					when builtin_boolean_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_boolean_and then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_boolean_and_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_boolean_or then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_boolean_or_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_boolean_xor then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_boolean_xor_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_boolean_not then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_boolean_not_call (current_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_boolean_item then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_boolean_item_call (current_type, current_feature)
+							print_semicolon_newline
+							call_operands.wipe_out
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibgn_error
+						end
 					else
-							-- Unknown built-in feature.
-							-- This error should already have been reported during parsing.
-							-- building the dynamic type sets.
-						set_fatal_error
-						error_handler.report_gibib_error
+						inspect l_builtin_class
+						when builtin_integer_class then
+							l_integer_type := current_system.integer_type
+						when builtin_integer_8_class then
+							l_integer_type := current_system.integer_8_type
+						when builtin_integer_16_class then
+							l_integer_type := current_system.integer_16_type
+						when builtin_integer_64_class then
+							l_integer_type := current_system.integer_64_type
+						when builtin_natural_8_class then
+							l_integer_type := current_system.natural_8_type
+						when builtin_natural_16_class then
+							l_integer_type := current_system.natural_16_type
+						when builtin_natural_32_class then
+							l_integer_type := current_system.natural_32_type
+						when builtin_natural_64_class then
+							l_integer_type := current_system.natural_64_type
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibgb_error
+						end
+						if l_integer_type /= Void then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_integer_plus then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_plus_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_minus then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_minus_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_times then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_times_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_divide then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_divide_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_div then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_div_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_mod then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_mod_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_power then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_power_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_opposite then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_opposite_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_identity then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_identity_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_lt then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_lt_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_to_character then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_to_character_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_to_real then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_to_real_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_to_real_32 then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_to_real_32_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_to_real_64 then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_to_real_64_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_to_double then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_to_double_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_as_natural_8 then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_as_natural_8_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_as_natural_16 then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_as_natural_16_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_as_natural_32 then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_as_natural_32_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_as_natural_64 then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_as_natural_64_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_as_integer_8 then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_as_integer_8_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_as_integer_16 then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_as_integer_16_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_as_integer_32 then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_as_integer_32_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_as_integer_64 then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_as_integer_64_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_bit_or then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_bit_or_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_bit_and then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_bit_and_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_bit_shift_left then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_bit_shift_left_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_bit_shift_right then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_bit_shift_right_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_bit_xor then
+								fill_call_formal_arguments (1)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_bit_xor_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_bit_not then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_bit_not_call (current_type, l_integer_type)
+								print_semicolon_newline
+								call_operands.wipe_out
+							when builtin_integer_item then
+								fill_call_formal_arguments (0)
+								print_indentation_assign_to_result
+								print_builtin_sized_integer_item_call (current_type, l_integer_type, current_feature)
+								print_semicolon_newline
+								call_operands.wipe_out
+							else
+									-- Unknown built-in feature.
+									-- This error should already have been reported during parsing.
+									-- building the dynamic type sets.
+								set_fatal_error
+								error_handler.report_gibib_error
+							end
+						end
 					end
 				else
 						-- This is a built-in procedure.
-					inspect a_feature.builtin_code
-					when builtin_any_standard_copy then
-						fill_call_formal_arguments (1)
-						print_indentation
-						print_builtin_any_standard_copy_call (current_type)
-						current_file.put_new_line
-						call_operands.wipe_out
-					when builtin_special_make then
-						-- Do nothing: already done in `print_malloc_current'.
-					when builtin_special_put then
-						fill_call_formal_arguments (2)
-						print_indentation
-						print_builtin_special_put_call (current_type)
-						current_file.put_new_line
-						call_operands.wipe_out
-					when builtin_character_set_item then
-						fill_call_formal_arguments (1)
-						print_indentation
-						print_builtin_character_set_item_call (current_type)
-						current_file.put_new_line
-						call_operands.wipe_out
-					when builtin_boolean_set_item then
-						fill_call_formal_arguments (1)
-						print_indentation
-						print_builtin_boolean_set_item_call (current_type)
-						current_file.put_new_line
-						call_operands.wipe_out
+					inspect l_builtin_class
+					when builtin_any_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_any_standard_copy then
+							fill_call_formal_arguments (1)
+							print_indentation
+							print_builtin_any_standard_copy_call (current_type)
+							current_file.put_new_line
+							call_operands.wipe_out
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibgi_error
+						end
+					when builtin_special_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_special_make then
+							-- Do nothing: already done in `print_malloc_current'.
+						when builtin_special_put then
+							fill_call_formal_arguments (2)
+							print_indentation
+							print_builtin_special_put_call (current_type)
+							current_file.put_new_line
+							call_operands.wipe_out
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibga_error
+						end
+					when builtin_character_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_character_set_item then
+							fill_call_formal_arguments (1)
+							print_indentation
+							print_builtin_character_set_item_call (current_type)
+							current_file.put_new_line
+							call_operands.wipe_out
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_giaaj_error
+						end
+					when builtin_boolean_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_boolean_set_item then
+							fill_call_formal_arguments (1)
+							print_indentation
+							print_builtin_boolean_set_item_call (current_type)
+							current_file.put_new_line
+							call_operands.wipe_out
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibax_error
+						end
 					else
-							-- Unknown built-in feature.
-							-- This error should already have been reported during parsing.
-							-- building the dynamic type sets.
-						set_fatal_error
-						error_handler.report_gibib_error
+						inspect l_builtin_class
+						when builtin_integer_class then
+							l_integer_type := current_system.integer_type
+						when builtin_integer_8_class then
+							l_integer_type := current_system.integer_8_type
+						when builtin_integer_16_class then
+							l_integer_type := current_system.integer_16_type
+						when builtin_integer_64_class then
+							l_integer_type := current_system.integer_64_type
+						when builtin_natural_8_class then
+							l_integer_type := current_system.natural_8_type
+						when builtin_natural_16_class then
+							l_integer_type := current_system.natural_16_type
+						when builtin_natural_32_class then
+							l_integer_type := current_system.natural_32_type
+						when builtin_natural_64_class then
+							l_integer_type := current_system.natural_64_type
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibkr_error
+						end
+						if l_integer_type /= Void then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_integer_set_item then
+								fill_call_formal_arguments (1)
+								print_indentation
+								print_builtin_sized_integer_set_item_call (current_type, l_integer_type, l_builtin_class)
+								current_file.put_new_line
+								call_operands.wipe_out
+							else
+									-- Unknown built-in feature.
+									-- This error should already have been reported during parsing.
+									-- building the dynamic type sets.
+								set_fatal_error
+								error_handler.report_gibib_error
+							end
+						end
 					end
 				end
 			else
@@ -2173,6 +2405,9 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			l_seed: INTEGER
 			i, nb: INTEGER
 			l_printed: BOOLEAN
+			l_builtin_code: INTEGER
+			l_builtin_class: INTEGER
+			l_integer_type: ET_DYNAMIC_TYPE
 		do
 			l_seed := a_name.seed
 			l_dynamic_feature := a_target_type.seeded_dynamic_procedure (l_seed, current_system)
@@ -2185,17 +2420,66 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				print_indentation
 				if l_dynamic_feature.is_builtin then
 					l_printed := True
-					inspect l_dynamic_feature.builtin_code
-					when builtin_any_standard_copy then
-						print_builtin_any_standard_copy_call (a_target_type)
-					when builtin_special_put then
-						print_builtin_special_put_call (a_target_type)
-					when builtin_character_set_item then
-						print_builtin_character_set_item_call (a_target_type)
-					when builtin_boolean_set_item then
-						print_builtin_boolean_set_item_call (a_target_type)
+					l_builtin_code := l_dynamic_feature.builtin_code
+					l_builtin_class := l_builtin_code // builtin_capacity
+					inspect l_builtin_class
+					when builtin_any_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_any_standard_copy then
+							print_builtin_any_standard_copy_call (a_target_type)
+						else
+							l_printed := False
+						end
+					when builtin_special_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_special_put then
+							print_builtin_special_put_call (a_target_type)
+						else
+							l_printed := False
+						end
+					when builtin_character_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_character_set_item then
+							print_builtin_character_set_item_call (a_target_type)
+						else
+							l_printed := False
+						end
+					when builtin_boolean_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_boolean_set_item then
+							print_builtin_boolean_set_item_call (a_target_type)
+						else
+							l_printed := False
+						end
 					else
-						l_printed := False
+						inspect l_builtin_class
+						when builtin_integer_class then
+							l_integer_type := current_system.integer_type
+						when builtin_integer_8_class then
+							l_integer_type := current_system.integer_8_type
+						when builtin_integer_16_class then
+							l_integer_type := current_system.integer_16_type
+						when builtin_integer_64_class then
+							l_integer_type := current_system.integer_64_type
+						when builtin_natural_8_class then
+							l_integer_type := current_system.natural_8_type
+						when builtin_natural_16_class then
+							l_integer_type := current_system.natural_16_type
+						when builtin_natural_32_class then
+							l_integer_type := current_system.natural_32_type
+						when builtin_natural_64_class then
+							l_integer_type := current_system.natural_64_type
+						else
+							l_printed := False
+						end
+						if l_integer_type /= Void then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_integer_set_item then
+								print_builtin_sized_integer_set_item_call (a_target_type, l_integer_type, l_builtin_class)
+							else
+								l_printed := False
+							end
+						end
 					end
 				end
 				if not l_printed then
@@ -3799,6 +4083,9 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			l_seed: INTEGER
 			i, nb: INTEGER
 			l_printed: BOOLEAN
+			l_builtin_code: INTEGER
+			l_builtin_class: INTEGER
+			l_integer_type: ET_DYNAMIC_TYPE
 		do
 			l_seed := a_name.seed
 			l_query := a_target_type.base_class.seeded_query (l_seed)
@@ -3839,73 +4126,150 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 						print_attribute_name (l_dynamic_feature, call_operands.first, a_target_type)
 					elseif l_dynamic_feature.is_builtin then
 						l_printed := True
-						inspect l_dynamic_feature.builtin_code
-						when builtin_any_same_type then
-							print_builtin_any_same_type_call (a_target_type)
-						when builtin_any_standard_is_equal then
-							print_builtin_any_standard_is_equal_call (a_target_type)
-						when builtin_any_generator then
-							print_builtin_any_generator_call (a_target_type)
-						when builtin_any_generating_type then
-							print_builtin_any_generating_type_call (a_target_type)
-						when builtin_special_item then
-							print_builtin_special_item_call (a_target_type)
-						when builtin_special_count then
-							print_builtin_special_count_call (a_target_type)
-						when builtin_special_element_size then
-							print_builtin_special_element_size_call (a_target_type)
-						when builtin_character_code then
-							print_builtin_character_code_call (a_target_type)
-						when builtin_character_item then
-							print_builtin_character_item_call (a_target_type, l_dynamic_feature)
-						when builtin_integer_plus then
-							print_builtin_integer_plus_call (a_target_type)
-						when builtin_integer_minus then
-							print_builtin_integer_minus_call (a_target_type)
-						when builtin_integer_times then
-							print_builtin_integer_times_call (a_target_type)
-						when builtin_integer_divide then
-							print_builtin_integer_divide_call (a_target_type)
-						when builtin_integer_div then
-							print_builtin_integer_div_call (a_target_type)
-						when builtin_integer_mod then
-							print_builtin_integer_mod_call (a_target_type)
-						when builtin_integer_lt then
-							print_builtin_integer_lt_call (a_target_type)
-						when builtin_integer_gt then
-							print_builtin_integer_gt_call (a_target_type)
-						when builtin_integer_le then
-							print_builtin_integer_le_call (a_target_type)
-						when builtin_integer_ge then
-							print_builtin_integer_ge_call (a_target_type)
-						when builtin_integer_opposite then
-							print_builtin_integer_opposite_call (a_target_type)
-						when builtin_integer_to_character then
-							print_builtin_integer_to_character_call (a_target_type)
-						when builtin_integer_bit_or then
-							print_builtin_integer_bit_or_call (a_target_type)
-						when builtin_integer_bit_and then
-							print_builtin_integer_bit_and_call (a_target_type)
-						when builtin_integer_bit_shift_left then
-							print_builtin_integer_bit_shift_left_call (a_target_type)
-						when builtin_boolean_and then
-							print_builtin_boolean_and_call (a_target_type)
-						when builtin_boolean_and_then then
-							print_builtin_boolean_and_then_call (a_target_type)
-						when builtin_boolean_or then
-							print_builtin_boolean_or_call (a_target_type)
-						when builtin_boolean_or_else then
-							print_builtin_boolean_or_else_call (a_target_type)
-						when builtin_boolean_xor then
-							print_builtin_boolean_xor_call (a_target_type)
-						when builtin_boolean_implies then
-							print_builtin_boolean_implies_call (a_target_type)
-						when builtin_boolean_not then
-							print_builtin_boolean_not_call (a_target_type)
-						when builtin_boolean_item then
-							print_builtin_boolean_item_call (a_target_type, l_dynamic_feature)
+						l_builtin_code := l_dynamic_feature.builtin_code
+						l_builtin_class := l_builtin_code // builtin_capacity
+						inspect l_builtin_class
+						when builtin_any_class then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_any_same_type then
+								print_builtin_any_same_type_call (a_target_type)
+							when builtin_any_standard_is_equal then
+								print_builtin_any_standard_is_equal_call (a_target_type)
+							when builtin_any_generator then
+								print_builtin_any_generator_call (a_target_type)
+							when builtin_any_generating_type then
+								print_builtin_any_generating_type_call (a_target_type)
+							else
+								l_printed := False
+							end
+						when builtin_special_class then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_special_item then
+								print_builtin_special_item_call (a_target_type)
+							when builtin_special_count then
+								print_builtin_special_count_call (a_target_type)
+							when builtin_special_element_size then
+								print_builtin_special_element_size_call (a_target_type)
+							else
+								l_printed := False
+							end
+						when builtin_character_class then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_character_code then
+								print_builtin_character_code_call (a_target_type)
+							when builtin_character_item then
+								print_builtin_character_item_call (a_target_type, l_dynamic_feature)
+							else
+								l_printed := False
+							end
+						when builtin_boolean_class then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_boolean_and then
+								print_builtin_boolean_and_call (a_target_type)
+							when builtin_boolean_and_then then
+								print_builtin_boolean_and_then_call (a_target_type)
+							when builtin_boolean_or then
+								print_builtin_boolean_or_call (a_target_type)
+							when builtin_boolean_or_else then
+								print_builtin_boolean_or_else_call (a_target_type)
+							when builtin_boolean_xor then
+								print_builtin_boolean_xor_call (a_target_type)
+							when builtin_boolean_implies then
+								print_builtin_boolean_implies_call (a_target_type)
+							when builtin_boolean_not then
+								print_builtin_boolean_not_call (a_target_type)
+							when builtin_boolean_item then
+								print_builtin_boolean_item_call (a_target_type, l_dynamic_feature)
+							else
+								l_printed := False
+							end
 						else
-							l_printed := False
+							inspect l_builtin_class
+							when builtin_integer_class then
+								l_integer_type := current_system.integer_type
+							when builtin_integer_8_class then
+								l_integer_type := current_system.integer_8_type
+							when builtin_integer_16_class then
+								l_integer_type := current_system.integer_16_type
+							when builtin_integer_64_class then
+								l_integer_type := current_system.integer_64_type
+							when builtin_natural_8_class then
+								l_integer_type := current_system.natural_8_type
+							when builtin_natural_16_class then
+								l_integer_type := current_system.natural_16_type
+							when builtin_natural_32_class then
+								l_integer_type := current_system.natural_32_type
+							when builtin_natural_64_class then
+								l_integer_type := current_system.natural_64_type
+							else
+								l_printed := False
+							end
+							if l_integer_type /= Void then
+								inspect l_builtin_code \\ builtin_capacity
+								when builtin_integer_plus then
+									print_builtin_sized_integer_plus_call (a_target_type, l_integer_type)
+								when builtin_integer_minus then
+									print_builtin_sized_integer_minus_call (a_target_type, l_integer_type)
+								when builtin_integer_times then
+									print_builtin_sized_integer_times_call (a_target_type, l_integer_type)
+								when builtin_integer_divide then
+									print_builtin_sized_integer_divide_call (a_target_type, l_integer_type)
+								when builtin_integer_div then
+									print_builtin_sized_integer_div_call (a_target_type, l_integer_type)
+								when builtin_integer_mod then
+									print_builtin_sized_integer_mod_call (a_target_type, l_integer_type)
+								when builtin_integer_power then
+									print_builtin_sized_integer_power_call (a_target_type, l_integer_type)
+								when builtin_integer_lt then
+									print_builtin_sized_integer_lt_call (a_target_type, l_integer_type)
+								when builtin_integer_opposite then
+									print_builtin_sized_integer_opposite_call (a_target_type, l_integer_type)
+								when builtin_integer_identity then
+									print_builtin_sized_integer_identity_call (a_target_type, l_integer_type)
+								when builtin_integer_to_character then
+									print_builtin_sized_integer_to_character_call (a_target_type, l_integer_type)
+								when builtin_integer_to_real then
+									print_builtin_sized_integer_to_real_call (a_target_type, l_integer_type)
+								when builtin_integer_to_real_32 then
+									print_builtin_sized_integer_to_real_32_call (a_target_type, l_integer_type)
+								when builtin_integer_to_real_64 then
+									print_builtin_sized_integer_to_real_64_call (a_target_type, l_integer_type)
+								when builtin_integer_to_double then
+									print_builtin_sized_integer_to_double_call (a_target_type, l_integer_type)
+								when builtin_integer_as_natural_8 then
+									print_builtin_sized_integer_as_natural_8_call (a_target_type, l_integer_type)
+								when builtin_integer_as_natural_16 then
+									print_builtin_sized_integer_as_natural_16_call (a_target_type, l_integer_type)
+								when builtin_integer_as_natural_32 then
+									print_builtin_sized_integer_as_natural_32_call (a_target_type, l_integer_type)
+								when builtin_integer_as_natural_64 then
+									print_builtin_sized_integer_as_natural_64_call (a_target_type, l_integer_type)
+								when builtin_integer_as_integer_8 then
+									print_builtin_sized_integer_as_integer_8_call (a_target_type, l_integer_type)
+								when builtin_integer_as_integer_16 then
+									print_builtin_sized_integer_as_integer_16_call (a_target_type, l_integer_type)
+								when builtin_integer_as_integer_32 then
+									print_builtin_sized_integer_as_integer_32_call (a_target_type, l_integer_type)
+								when builtin_integer_as_integer_64 then
+									print_builtin_sized_integer_as_integer_64_call (a_target_type, l_integer_type)
+								when builtin_integer_bit_or then
+									print_builtin_sized_integer_bit_or_call (a_target_type, l_integer_type)
+								when builtin_integer_bit_and then
+									print_builtin_sized_integer_bit_and_call (a_target_type, l_integer_type)
+								when builtin_integer_bit_shift_left then
+									print_builtin_sized_integer_bit_shift_left_call (a_target_type, l_integer_type)
+								when builtin_integer_bit_shift_right then
+									print_builtin_sized_integer_bit_shift_right_call (a_target_type, l_integer_type)
+								when builtin_integer_bit_xor then
+									print_builtin_sized_integer_bit_xor_call (a_target_type, l_integer_type)
+								when builtin_integer_bit_not then
+									print_builtin_sized_integer_bit_not_call (a_target_type, l_integer_type)
+								when builtin_integer_item then
+									print_builtin_sized_integer_item_call (a_target_type, l_integer_type, l_dynamic_feature)
+								else
+									l_printed := False
+								end
+							end
 						end
 					end
 					if not l_printed then
@@ -4029,7 +4393,12 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							i := i + 1
 						end
 						if l_buffer.is_equal ("2147483648") then
+								-- INTEGER.Min_value.
 							current_file.put_string ("2147483647-1")
+						elseif l_buffer.is_equal ("9223372036854775808") then
+								-- INTEGER_64.Min_value.
+							print_type_cast (current_system.integer_64_type, current_file)
+							current_file.put_string ("9223372036854775807-1")
 						else
 							current_file.put_string (l_buffer)
 						end
@@ -4283,7 +4652,7 @@ print ("ET_C_GENERATOR.print_result_address%N")
 						set_fatal_error
 						error_handler.report_gibde_error
 					else
-						l_constant_attribute.constant.process (Current)
+						print_expression (l_constant_attribute.constant)
 					end
 				elseif l_query.is_unique_attribute then
 -- TODO.
@@ -4493,7 +4862,12 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 							i := i + 1
 						end
 						if l_buffer.is_equal ("2147483648") then
+								-- INTEGER.Min_value.
 							current_file.put_string ("2147483647-1")
+						elseif l_buffer.is_equal ("9223372036854775808") then
+								-- INTEGER_64.Min_value.
+							print_type_cast (current_system.integer_64_type, current_file)
+							current_file.put_string ("9223372036854775807-1")
 						else
 							current_file.put_string (l_buffer)
 						end
@@ -7129,12 +7503,14 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_integer_plus_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.infix "+"' (static binding) to `current_file'.
+	print_builtin_sized_integer_plus_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'infix "+"' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			if call_operands.count /= 2 then
@@ -7142,7 +7518,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_gibda_error
 			else
-				print_type_cast (current_system.integer_type, current_file)
+				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
@@ -7155,12 +7531,14 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_integer_minus_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.infix "-"' (static binding) to `current_file'.
+	print_builtin_sized_integer_minus_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'infix "-"' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			if call_operands.count /= 2 then
@@ -7168,7 +7546,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_gibir_error
 			else
-				print_type_cast (current_system.integer_type, current_file)
+				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
@@ -7181,12 +7559,14 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_integer_times_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.infix "*"' (static binding) to `current_file'.
+	print_builtin_sized_integer_times_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'infix "*"' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			if call_operands.count /= 2 then
@@ -7194,7 +7574,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_gibiq_error
 			else
-				print_type_cast (current_system.integer_type, current_file)
+				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
@@ -7207,12 +7587,14 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_integer_divide_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.infix "/"' (static binding) to `current_file'.
+	print_builtin_sized_integer_divide_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'infix "/"' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			if call_operands.count /= 2 then
@@ -7222,12 +7604,16 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			else
 				print_type_cast (current_system.double_type, current_file)
 				current_file.put_character ('(')
-				print_type_cast (current_system.double_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (c_double)
+				current_file.put_character (')')
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
 				current_file.put_character (')')
 				current_file.put_character ('/')
-				print_type_cast (current_system.double_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (c_double)
+				current_file.put_character (')')
 				current_file.put_character ('(')
 				print_expression (call_operands.item (2))
 				current_file.put_character (')')
@@ -7235,12 +7621,14 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_integer_div_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.infix "//"' (static binding) to `current_file'.
+	print_builtin_sized_integer_div_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'infix "//"' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			if call_operands.count /= 2 then
@@ -7248,7 +7636,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_gibio_error
 			else
-				print_type_cast (current_system.integer_type, current_file)
+				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
@@ -7261,12 +7649,14 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_integer_mod_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.infix "\\"' (static binding) to `current_file'.
+	print_builtin_sized_integer_mod_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'infix "\\"' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			if call_operands.count /= 2 then
@@ -7274,7 +7664,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_gibin_error
 			else
-				print_type_cast (current_system.integer_type, current_file)
+				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
@@ -7287,15 +7677,53 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_integer_opposite_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.prefix "-"' (static binding) to `current_file'.
+	print_builtin_sized_integer_power_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'infix "^"' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_type_cast (current_system.integer_type, current_file)
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibgk_error
+			else
+				print_type_cast (current_system.double_type, current_file)
+				current_file.put_string (c_gepower)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_double)
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_expression (call_operands.first)
+				current_file.put_character (')')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_double)
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_expression (call_operands.item (2))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_sized_integer_opposite_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'prefix "-"' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (an_integer_type, current_file)
 			current_file.put_character ('(')
 			current_file.put_character ('-')
 			current_file.put_character ('(')
@@ -7304,12 +7732,30 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			current_file.put_character (')')
 		end
 
-	print_builtin_integer_lt_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.infix "<"' (static binding) to `current_file'.
+	print_builtin_sized_integer_identity_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'prefix "+"' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (an_integer_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_lt_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'infix "<"' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			if call_operands.count /= 2 then
@@ -7330,92 +7776,14 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_integer_gt_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.infix ">"' (static binding) to `current_file'.
+	print_builtin_sized_integer_to_character_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'to_character' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
-			call_operands_not_empty: not call_operands.is_empty
-		do
-			if call_operands.count /= 2 then
-					-- Internal error: this was already reported during parsing.
-				set_fatal_error
-				error_handler.report_gibjh_error
-			else
-				print_type_cast (current_system.boolean_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_character ('(')
-				print_expression (call_operands.first)
-				current_file.put_character (')')
-				current_file.put_character ('>')
-				current_file.put_character ('(')
-				print_expression (call_operands.item (2))
-				current_file.put_character (')')
-				current_file.put_character (')')
-			end
-		end
-
-	print_builtin_integer_le_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.infix "<="' (static binding) to `current_file'.
-			-- `a_target_type' is the dynamic type of the target.
-			-- Operands can be found in `call_operands'.
-		require
-			a_target_type_not_void: a_target_type /= Void
-			call_operands_not_empty: not call_operands.is_empty
-		do
-			if call_operands.count /= 2 then
-					-- Internal error: this was already reported during parsing.
-				set_fatal_error
-				error_handler.report_gibji_error
-			else
-				print_type_cast (current_system.boolean_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_character ('(')
-				print_expression (call_operands.first)
-				current_file.put_character (')')
-				current_file.put_character ('<')
-				current_file.put_character ('=')
-				current_file.put_character ('(')
-				print_expression (call_operands.item (2))
-				current_file.put_character (')')
-				current_file.put_character (')')
-			end
-		end
-
-	print_builtin_integer_ge_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.infix ">="' (static binding) to `current_file'.
-			-- `a_target_type' is the dynamic type of the target.
-			-- Operands can be found in `call_operands'.
-		require
-			a_target_type_not_void: a_target_type /= Void
-			call_operands_not_empty: not call_operands.is_empty
-		do
-			if call_operands.count /= 2 then
-					-- Internal error: this was already reported during parsing.
-				set_fatal_error
-				error_handler.report_gibjj_error
-			else
-				print_type_cast (current_system.boolean_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_character ('(')
-				print_expression (call_operands.first)
-				current_file.put_character (')')
-				current_file.put_character ('>')
-				current_file.put_character ('=')
-				current_file.put_character ('(')
-				print_expression (call_operands.item (2))
-				current_file.put_character (')')
-				current_file.put_character (')')
-			end
-		end
-
-	print_builtin_integer_to_character_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.to_character' (static binding) to `current_file'.
-			-- `a_target_type' is the dynamic type of the target.
-			-- Operands can be found in `call_operands'.
-		require
-			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			print_type_cast (current_system.character_type, current_file)
@@ -7424,12 +7792,206 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			current_file.put_character (')')
 		end
 
-	print_builtin_integer_bit_or_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.bit_or' (static binding) to `current_file'.
+	print_builtin_sized_integer_to_real_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'to_real' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.real_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_to_real_32_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'to_real_32' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.real_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_to_real_64_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'to_real_64' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.double_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_to_double_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'to_double' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.double_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_as_natural_8_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'as_natural_8' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.natural_8_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_as_natural_16_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'as_natural_16' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.natural_16_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_as_natural_32_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'as_natural_32' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.natural_32_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_as_natural_64_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'as_natural_64' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.natural_64_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_as_integer_8_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'as_integer_8' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_8_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_as_integer_16_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'as_integer_16' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_16_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_as_integer_32_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'as_integer_32' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_as_integer_64_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'as_integer_64' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_64_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_bit_or_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'bit_or' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			if call_operands.count /= 2 then
@@ -7437,7 +7999,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_gibit_error
 			else
-				print_type_cast (current_system.integer_type, current_file)
+				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
@@ -7450,12 +8012,14 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_integer_bit_and_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.bit_and' (static binding) to `current_file'.
+	print_builtin_sized_integer_bit_and_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'bit_and' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			if call_operands.count /= 2 then
@@ -7463,7 +8027,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_gibjw_error
 			else
-				print_type_cast (current_system.integer_type, current_file)
+				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
@@ -7476,12 +8040,14 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_integer_bit_shift_left_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'INTEGER.bit_shift_left' (static binding) to `current_file'.
+	print_builtin_sized_integer_bit_shift_left_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'bit_shift_left' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			if call_operands.count /= 2 then
@@ -7489,7 +8055,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_gibis_error
 			else
-				print_type_cast (current_system.integer_type, current_file)
+				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
@@ -7500,6 +8066,160 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				print_expression (call_operands.item (2))
 				current_file.put_character (')')
 				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_sized_integer_bit_shift_right_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'bit_shift_right' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibji_error
+			else
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_expression (call_operands.first)
+				current_file.put_character (')')
+				current_file.put_character ('>')
+				current_file.put_character ('>')
+				current_file.put_character ('(')
+				print_expression (call_operands.item (2))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_sized_integer_bit_xor_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'bit_xor' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibjh_error
+			else
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_expression (call_operands.first)
+				current_file.put_character (')')
+				current_file.put_character ('^')
+				current_file.put_character ('(')
+				print_expression (call_operands.item (2))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_sized_integer_bit_not_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'bit_not' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (an_integer_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_character ('~')
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+			current_file.put_character (')')
+		end
+
+	print_builtin_sized_integer_item_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
+			-- Print to `current_file' a call (static binding) to built-in feature `a_feature'
+			-- corresponding to feature `item' from sized integer type `an_integer_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			if a_target_type = an_integer_type then
+					-- Current value.
+				print_expression (call_operands.first)
+			else
+					-- Internal attribute.
+				print_attribute_name (a_feature, call_operands.first, a_target_type)
+			end
+		end
+
+	print_builtin_sized_integer_set_item_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE; a_builtin_class_code: INTEGER) is
+			-- Print call to built-in feature 'set_item' (static binding)
+			-- from sized integer type `an_integer_type' to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_builtin_class_code' is the built-in code of class `an_integer_class'.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			l_item_attribute: ET_DYNAMIC_FEATURE
+			i, nb: INTEGER
+			l_builtin_item_code: INTEGER
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibjj_error
+			elseif a_target_type = an_integer_type then
+					-- Set current value.
+				print_expression (call_operands.first)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_expression (call_operands.item (2))
+				current_file.put_character (')')
+				current_file.put_character (';')
+			else
+				l_builtin_item_code := builtin_feature (a_builtin_class_code, builtin_integer_item)
+				l_queries := a_target_type.queries
+				nb := l_queries.count
+				from i := 1 until i > nb loop
+					l_query := l_queries.item (i)
+					if l_query.builtin_code = l_builtin_item_code then
+						l_item_attribute := l_query
+						i := nb + 1
+					else
+						i := i + 1
+					end
+				end
+				if l_item_attribute /= Void then
+						-- Set the built-in attribute.
+					print_attribute_name (l_item_attribute, call_operands.first, a_target_type)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_expression (call_operands.item (2))
+					current_file.put_character (')')
+					current_file.put_character (';')
+				end
 			end
 		end
 
@@ -7715,6 +8435,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			l_query: ET_DYNAMIC_FEATURE
 			l_item_attribute: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
+			l_builtin_boolean_item: INTEGER
 		do
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
@@ -7731,11 +8452,12 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				current_file.put_character (')')
 				current_file.put_character (';')
 			else
+				l_builtin_boolean_item := builtin_boolean_feature (builtin_boolean_item)
 				l_queries := a_target_type.queries
 				nb := l_queries.count
 				from i := 1 until i > nb loop
 					l_query := l_queries.item (i)
-					if l_query.builtin_code = builtin_boolean_item then
+					if l_query.builtin_code = l_builtin_boolean_item then
 						l_item_attribute := l_query
 						i := nb + 1
 					else
@@ -9731,6 +10453,7 @@ feature {NONE} -- Constants
 	c_float: STRING is "float"
 	c_gealloc: STRING is "gealloc"
 	c_gems: STRING is "gems"
+	c_gepower: STRING is "gepower"
 	c_gevoid: STRING is "gevoid"
 	c_id: STRING is "id"
 	c_if: STRING is "if"

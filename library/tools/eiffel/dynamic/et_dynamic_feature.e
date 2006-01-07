@@ -16,7 +16,7 @@ inherit
 
 	DEBUG_OUTPUT
 
-	ET_SHARED_TOKEN_CONSTANTS
+	ET_TOKEN_CODES
 		export {NONE} all end
 
 create
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
-			builtin_code := tokens.builtin_not_builtin
+			builtin_code := builtin_not_builtin
 		ensure
 			static_feature_set: static_feature = a_feature
 			target_type_set: target_type = a_target_type
@@ -220,10 +220,37 @@ feature -- Status report
 		do
 			if not is_builtin then
 				Result := static_feature.is_attribute
-			elseif builtin_code = tokens.builtin_boolean_item then
-				Result := True
-			elseif builtin_code = tokens.builtin_character_item then
-				Result := True
+			else
+				inspect builtin_code // builtin_capacity
+				when builtin_boolean_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_boolean_item
+				when builtin_character_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_character_item
+				when builtin_pointer_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_pointer_item
+				when builtin_integer_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+				when builtin_integer_8_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+				when builtin_integer_16_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+				when builtin_integer_64_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+				when builtin_natural_8_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+				when builtin_natural_16_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+				when builtin_natural_32_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+				when builtin_natural_64_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+				when builtin_real_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_real_item
+				when builtin_double_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_real_item
+				else
+					Result := False
+				end
 			end
 		ensure
 			query: Result implies result_type_set /= Void
@@ -264,22 +291,22 @@ feature -- Status report
 		do
 			if not is_builtin then
 				-- Result := False
-			elseif builtin_code = tokens.builtin_boolean_and_then then
+			elseif builtin_code = builtin_boolean_and_then then
 				Result := True
-			elseif builtin_code = tokens.builtin_boolean_or_else then
+			elseif builtin_code = builtin_boolean_or_else then
 				Result := True
-			elseif builtin_code = tokens.builtin_boolean_implies then
+			elseif builtin_code = builtin_boolean_implies then
 				Result := True
 			end
 		end
-		
+
 	is_inlined: BOOLEAN
 			-- Is current feature inlined?
 
 	is_builtin: BOOLEAN is
 			-- Is current feature built-in?
 		do
-			Result := (builtin_code /= tokens.builtin_not_builtin)
+			Result := (builtin_code /= builtin_not_builtin)
 		end
 
 	is_current_type_needed: BOOLEAN
@@ -287,12 +314,12 @@ feature -- Status report
 			-- (This might be needed for optimization purposes.)
 
 	builtin_code: INTEGER
-			-- Built-in code of current feature 
+			-- Built-in code of current feature
 
 	is_builtin_routine_call: BOOLEAN is
 			-- Is current feature the built-in feature 'ROUTINE.call'?
 		do
-			Result := (builtin_code = tokens.builtin_routine_call)
+			Result := (builtin_code = builtin_routine_call)
 		ensure
 			builtin: Result implies is_builtin
 		end
@@ -300,7 +327,7 @@ feature -- Status report
 	is_builtin_function_item: BOOLEAN is
 			-- Is current feature the built-in feature 'FUNCTION.item'?
 		do
-			Result := (builtin_code = tokens.builtin_function_item)
+			Result := (builtin_code = builtin_function_item)
 		ensure
 			builtin: Result implies is_builtin
 		end
@@ -402,7 +429,7 @@ feature -- Status setting
 		ensure
 			current_type_needed_set: is_current_type_needed = b
 		end
-		
+
 	set_builtin_code (a_code: INTEGER) is
 			-- Set `builtin_code' to `a_code'.
 		do

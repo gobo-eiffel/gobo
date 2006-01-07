@@ -332,6 +332,38 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 			integer_64_ref_class_name_not_void: Result /= Void
 		end
 
+	natural_8_ref_class_name: ET_CLASS_NAME is
+			-- "NATURAL_8_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_natural_8_ref_name)
+		ensure
+			natural_8_ref_class_name_not_void: Result /= Void
+		end
+
+	natural_16_ref_class_name: ET_CLASS_NAME is
+			-- "NATURAL_16_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_natural_16_ref_name)
+		ensure
+			natural_16_ref_class_name_not_void: Result /= Void
+		end
+
+	natural_32_ref_class_name: ET_CLASS_NAME is
+			-- "NATURAL_32_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_natural_32_ref_name)
+		ensure
+			natural_32_ref_class_name_not_void: Result /= Void
+		end
+
+	natural_64_ref_class_name: ET_CLASS_NAME is
+			-- "NATURAL_64_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_natural_64_ref_name)
+		ensure
+			natural_64_ref_class_name_not_void: Result /= Void
+		end
+
 	real_ref_class_name: ET_CLASS_NAME is
 			-- "REAL_REF" class name
 		once
@@ -406,12 +438,84 @@ feature -- Feature names
 			area_feature_name_not_void: Result /= Void
 		end
 
+	as_natural_8_feature_name: ET_FEATURE_NAME is
+			-- 'as_natural_8' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (as_natural_8_name)
+		ensure
+			as_natural_8_feature_name_not_void: Result /= Void
+		end
+
+	as_natural_16_feature_name: ET_FEATURE_NAME is
+			-- 'as_natural_16' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (as_natural_16_name)
+		ensure
+			as_natural_16_feature_name_not_void: Result /= Void
+		end
+
+	as_natural_32_feature_name: ET_FEATURE_NAME is
+			-- 'as_natural_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (as_natural_32_name)
+		ensure
+			as_natural_32_feature_name_not_void: Result /= Void
+		end
+
+	as_natural_64_feature_name: ET_FEATURE_NAME is
+			-- 'as_natural_64' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (as_natural_64_name)
+		ensure
+			as_natural_64_feature_name_not_void: Result /= Void
+		end
+
+	as_integer_8_feature_name: ET_FEATURE_NAME is
+			-- 'as_integer_8' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (as_integer_8_name)
+		ensure
+			as_integer_8_feature_name_not_void: Result /= Void
+		end
+
+	as_integer_16_feature_name: ET_FEATURE_NAME is
+			-- 'as_integer_16' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (as_integer_16_name)
+		ensure
+			as_integer_16_feature_name_not_void: Result /= Void
+		end
+
+	as_integer_32_feature_name: ET_FEATURE_NAME is
+			-- 'as_integer_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (as_integer_32_name)
+		ensure
+			as_integer_32_feature_name_not_void: Result /= Void
+		end
+
+	as_integer_64_feature_name: ET_FEATURE_NAME is
+			-- 'as_integer_84' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (as_integer_64_name)
+		ensure
+			as_integer_64_feature_name_not_void: Result /= Void
+		end
+
 	bit_and_feature_name: ET_FEATURE_NAME is
 			-- 'bit_and' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (bit_and_name)
 		ensure
 			bit_and_feature_name_not_void: Result /= Void
+		end
+
+	bit_not_feature_name: ET_FEATURE_NAME is
+			-- 'bit_not' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (bit_not_name)
+		ensure
+			bit_not_feature_name_not_void: Result /= Void
 		end
 
 	bit_or_feature_name: ET_FEATURE_NAME is
@@ -428,6 +532,22 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (bit_shift_left_name)
 		ensure
 			bit_shift_left_feature_name_not_void: Result /= Void
+		end
+
+	bit_shift_right_feature_name: ET_FEATURE_NAME is
+			-- 'bit_shift_right' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (bit_shift_right_name)
+		ensure
+			bit_shift_right_feature_name_not_void: Result /= Void
+		end
+
+	bit_xor_feature_name: ET_FEATURE_NAME is
+			-- 'bit_xor' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (bit_xor_name)
+		ensure
+			bit_xor_feature_name_not_void: Result /= Void
 		end
 
 	call_feature_name: ET_FEATURE_NAME is
@@ -675,6 +795,17 @@ feature -- Feature names
 			infix_plus_feature_name_not_void: Result /= Void
 		end
 
+	infix_power_feature_name: ET_FEATURE_NAME is
+			-- 'infix "^"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (power_symbol_name)
+			create {ET_INFIX_NAME} Result.make_power (l_string)
+		ensure
+			infix_power_feature_name_not_void: Result /= Void
+		end
+
 	infix_times_feature_name: ET_FEATURE_NAME is
 			-- 'infix "*"' feature name
 		local
@@ -767,6 +898,17 @@ feature -- Feature names
 			prefix_not_feature_name_not_void: Result /= Void
 		end
 
+	prefix_plus_feature_name: ET_FEATURE_NAME is
+			-- 'prefix "+"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (plus_symbol_name)
+			create {ET_PREFIX_NAME} Result.make_plus (l_string)
+		ensure
+			prefix_plus_feature_name_not_void: Result /= Void
+		end
+
 	put_feature_name: ET_FEATURE_NAME is
 			-- 'put' feature name
 		once
@@ -853,6 +995,38 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (to_character_name)
 		ensure
 			to_character_feature_name_not_void: Result /= Void
+		end
+
+	to_double_feature_name: ET_FEATURE_NAME is
+			-- 'to_double' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (to_double_name)
+		ensure
+			to_double_feature_name_not_void: Result /= Void
+		end
+
+	to_real_feature_name: ET_FEATURE_NAME is
+			-- 'to_real' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (to_real_name)
+		ensure
+			to_real_feature_name_not_void: Result /= Void
+		end
+
+	to_real_32_feature_name: ET_FEATURE_NAME is
+			-- 'to_real_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (to_real_32_name)
+		ensure
+			to_real_32_feature_name_not_void: Result /= Void
+		end
+
+	to_real_64_feature_name: ET_FEATURE_NAME is
+			-- 'to_real_64' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (to_real_64_name)
+		ensure
+			to_real_64_feature_name_not_void: Result /= Void
 		end
 
 	twin_feature_name: ET_FEATURE_NAME is
@@ -1590,9 +1764,20 @@ feature -- Keyword and symbol names
 
 	aliased_resized_area_name: STRING is "aliased_resized_area"
 	area_name: STRING is "area"
+	as_natural_8_name: STRING is "as_natural_8"
+	as_natural_16_name: STRING is "as_natural_16"
+	as_natural_32_name: STRING is "as_natural_32"
+	as_natural_64_name: STRING is "as_natural_64"
+	as_integer_8_name: STRING is "as_integer_8"
+	as_integer_16_name: STRING is "as_integer_16"
+	as_integer_32_name: STRING is "as_integer_32"
+	as_integer_64_name: STRING is "as_integer_64"
 	bit_and_name: STRING is "bit_and"
+	bit_not_name: STRING is "bit_not"
 	bit_or_name: STRING is "bit_or"
 	bit_shift_left_name: STRING is "bit_shift_left"
+	bit_shift_right_name: STRING is "bit_shift_right"
+	bit_xor_name: STRING is "bit_xor"
 	call_name: STRING is "call"
 	code_name: STRING is "code"
 	conforms_to_name: STRING is "conforms_to"
@@ -1619,6 +1804,10 @@ feature -- Keyword and symbol names
 	standard_twin_name: STRING is "standard_twin"
 	tagged_out_name: STRING is "tagged_out"
 	to_character_name: STRING is "to_character"
+	to_double_name: STRING is "to_double"
+	to_real_name: STRING is "to_real"
+	to_real_32_name: STRING is "to_real_32"
+	to_real_64_name: STRING is "to_real_64"
 	twin_name: STRING is "twin"
 	upper_name: STRING is "upper"
 		-- Eiffel feature names
@@ -1749,6 +1938,10 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 	capitalized_integer_8_ref_name: STRING is "INTEGER_8_REF"
 	capitalized_integer_16_ref_name: STRING is "INTEGER_16_REF"
 	capitalized_integer_64_ref_name: STRING is "INTEGER_64_REF"
+	capitalized_natural_8_ref_name: STRING is "NATURAL_8_REF"
+	capitalized_natural_16_ref_name: STRING is "NATURAL_16_REF"
+	capitalized_natural_32_ref_name: STRING is "NATURAL_32_REF"
+	capitalized_natural_64_ref_name: STRING is "NATURAL_64_REF"
 	capitalized_pointer_ref_name: STRING is "POINTER_REF"
 	capitalized_real_ref_name: STRING is "REAL_REF"
 	capitalized_wide_character_ref_name: STRING is "WIDE_CHARACTER_REF"

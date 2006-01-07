@@ -138,52 +138,161 @@ feature -- Built-in codes
 
 	builtin_not_builtin: INTEGER is 0
 	builtin_unknown: INTEGER is 1
-	builtin_any_twin: INTEGER is 101
-	builtin_any_standard_copy: INTEGER is 102
-	builtin_any_standard_is_equal: INTEGER is 103
-	builtin_any_same_type: INTEGER is 104
-	builtin_any_generating_type: INTEGER is 105
-	builtin_any_generator: INTEGER is 106
-	builtin_any_conforms_to: INTEGER is 107
-	builtin_any_is_deep_equal: INTEGER is 108
-	builtin_any_tagged_out: INTEGER is 109
-	builtin_any_standard_twin: INTEGER is 110
-	builtin_any_deep_twin: INTEGER is 111
-	builtin_special_make: INTEGER is 201
-	builtin_special_item: INTEGER is 202
-	builtin_special_put: INTEGER is 203
-	builtin_special_count: INTEGER is 204
-	builtin_special_element_size: INTEGER is 205
-	builtin_special_aliased_resized_area: INTEGER is 206
-	builtin_character_code: INTEGER is 301
-	builtin_character_item: INTEGER is 302
-	builtin_character_set_item: INTEGER is 303
-	builtin_integer_plus: INTEGER is 401
-	builtin_integer_minus: INTEGER is 402
-	builtin_integer_times: INTEGER is 403
-	builtin_integer_divide: INTEGER is 404
-	builtin_integer_div: INTEGER is 405
-	builtin_integer_mod: INTEGER is 406
-	builtin_integer_opposite: INTEGER is 407
-	builtin_integer_lt: INTEGER is 408
-	builtin_integer_to_character: INTEGER is 409
-	builtin_integer_bit_or: INTEGER is 410
-	builtin_integer_bit_shift_left: INTEGER is 411
-	builtin_integer_gt: INTEGER is 412
-	builtin_integer_le: INTEGER is 413
-	builtin_integer_ge: INTEGER is 414
-	builtin_integer_bit_and: INTEGER is 415
-	builtin_boolean_and_then: INTEGER is 501
-	builtin_boolean_or_else: INTEGER is 502
-	builtin_boolean_implies: INTEGER is 503
-	builtin_boolean_and: INTEGER is 504
-	builtin_boolean_or: INTEGER is 505
-	builtin_boolean_xor: INTEGER is 506
-	builtin_boolean_not: INTEGER is 507
-	builtin_boolean_item: INTEGER is 508
-	builtin_boolean_set_item: INTEGER is 509
-	builtin_function_item: INTEGER is 1001
-	builtin_routine_call: INTEGER is 1101
+	builtin_capacity: INTEGER is 100
+
+	builtin_feature (a_class_code, a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature
+		do
+			Result := a_class_code * builtin_capacity + a_feature_code
+		end
+
+	builtin_any_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class ANY
+		do
+			Result := builtin_any_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_any_class: INTEGER is 1
+	builtin_any_twin: INTEGER is 1
+	builtin_any_standard_copy: INTEGER is 2
+	builtin_any_standard_is_equal: INTEGER is 3
+	builtin_any_same_type: INTEGER is 4
+	builtin_any_generating_type: INTEGER is 5
+	builtin_any_generator: INTEGER is 6
+	builtin_any_conforms_to: INTEGER is 7
+	builtin_any_is_deep_equal: INTEGER is 8
+	builtin_any_tagged_out: INTEGER is 9
+	builtin_any_standard_twin: INTEGER is 10
+	builtin_any_deep_twin: INTEGER is 11
+			-- Codes for built-in features from class ANY
+
+	builtin_special_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class SPECIAL
+		do
+			Result := builtin_special_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_special_class: INTEGER is 2
+	builtin_special_make: INTEGER is 1
+	builtin_special_item: INTEGER is 2
+	builtin_special_put: INTEGER is 3
+	builtin_special_count: INTEGER is 4
+	builtin_special_element_size: INTEGER is 5
+	builtin_special_aliased_resized_area: INTEGER is 6
+			-- Codes for built-in features from class SPECIAL
+
+	builtin_character_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class CHARACTER
+		do
+			Result := builtin_character_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_character_class: INTEGER is 3
+	builtin_character_item: INTEGER is 1
+	builtin_character_set_item: INTEGER is 2
+	builtin_character_code: INTEGER is 3
+			-- Codes for built-in features from class CHARACTER
+
+	builtin_boolean_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class BOOLEAN
+		do
+			Result := builtin_boolean_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_boolean_class: INTEGER is 4
+	builtin_boolean_item: INTEGER is 1
+	builtin_boolean_set_item: INTEGER is 2
+	builtin_boolean_and: INTEGER is 3
+	builtin_boolean_or: INTEGER is 4
+	builtin_boolean_xor: INTEGER is 5
+	builtin_boolean_not: INTEGER is 6
+	builtin_boolean_and_then: INTEGER is 7
+	builtin_boolean_or_else: INTEGER is 8
+	builtin_boolean_implies: INTEGER is 9
+			-- Codes for built-in features from class BOOLEAN
+
+	builtin_integer_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class INTEGER
+		do
+			Result := builtin_integer_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_integer_class: INTEGER is 5
+	builtin_integer_8_class: INTEGER is 6
+	builtin_integer_16_class: INTEGER is 7
+	builtin_integer_64_class: INTEGER is 8
+	builtin_natural_8_class: INTEGER is 9
+	builtin_natural_16_class: INTEGER is 10
+	builtin_natural_32_class: INTEGER is 11
+	builtin_natural_64_class: INTEGER is 12
+	builtin_integer_item: INTEGER is 1
+	builtin_integer_set_item: INTEGER is 2
+	builtin_integer_plus: INTEGER is 3
+	builtin_integer_minus: INTEGER is 4
+	builtin_integer_times: INTEGER is 5
+	builtin_integer_divide: INTEGER is 6
+	builtin_integer_div: INTEGER is 7
+	builtin_integer_mod: INTEGER is 8
+	builtin_integer_power: INTEGER is 9
+	builtin_integer_opposite: INTEGER is 10
+	builtin_integer_identity: INTEGER is 11
+	builtin_integer_lt: INTEGER is 12
+	builtin_integer_bit_and: INTEGER is 13
+	builtin_integer_bit_or: INTEGER is 14
+	builtin_integer_bit_xor: INTEGER is 15
+	builtin_integer_bit_not: INTEGER is 16
+	builtin_integer_bit_shift_left: INTEGER is 17
+	builtin_integer_bit_shift_right: INTEGER is 18
+	builtin_integer_as_natural_8: INTEGER is 19
+	builtin_integer_as_natural_16: INTEGER is 20
+	builtin_integer_as_natural_32: INTEGER is 21
+	builtin_integer_as_natural_64: INTEGER is 22
+	builtin_integer_as_integer_8: INTEGER is 23
+	builtin_integer_as_integer_16: INTEGER is 24
+	builtin_integer_as_integer_32: INTEGER is 25
+	builtin_integer_as_integer_64: INTEGER is 26
+	builtin_integer_to_real: INTEGER is 27
+	builtin_integer_to_real_32: INTEGER is 28
+	builtin_integer_to_real_64: INTEGER is 29
+	builtin_integer_to_double: INTEGER is 30
+	builtin_integer_to_character: INTEGER is 31
+			-- Codes for built-in features from class INTEGER
+
+	builtin_real_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class REAL
+		do
+			Result := builtin_real_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_real_class: INTEGER is 13
+	builtin_real_item: INTEGER is 1
+	builtin_real_set_item: INTEGER is 2
+			-- Codes for built-in features from class REAL
+
+	builtin_double_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class DOUBLE
+		do
+			Result := builtin_double_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_double_class: INTEGER is 14
+	builtin_double_item: INTEGER is 1
+	builtin_double_set_item: INTEGER is 2
+			-- Codes for built-in features from class DOUBLE
+
+	builtin_pointer_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class POINTER
+		do
+			Result := builtin_pointer_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_pointer_class: INTEGER is 15
+	builtin_pointer_item: INTEGER is 1
+	builtin_pointer_set_item: INTEGER is 2
+			-- Codes for built-in features from class POINTER
+
+	builtin_function_item: INTEGER is 5001
+	builtin_routine_call: INTEGER is 5101
 			-- Built-in feature codes
 
 end

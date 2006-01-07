@@ -1689,651 +1689,977 @@ feature {NONE} -- Built-in
 			a_feature_not_void: a_feature /= Void
 		local
 			a_class: ET_CLASS
-			l_formals: ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			a_class := a_feature.implementation_class
 			if a_class = universe.any_class then
-				if a_feature.name.same_feature_name (tokens.twin_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_twin)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'twin: like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1a_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'twin: like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1a_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.standard_is_equal_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_standard_is_equal)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'standard_is_equal (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1b_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'standard_is_equal (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1b_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'standard_is_equal (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1b_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.same_type_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_same_type)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'same_type (other: ANY): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1d_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
-							-- The signature should be 'same_type (other: ANY): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1d_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'same_type (other: ANY): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1d_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.conforms_to_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_conforms_to)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1e_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
-							-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1e_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1e_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.generator_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_generator)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'generator: STRING'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1f_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
-							-- The signature should be 'generator: STRING'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1f_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_generating_type)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'generating_type: STRING'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1g_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
-							-- The signature should be 'generating_type: STRING'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1g_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.tagged_out_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_tagged_out)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'tagged_out: STRING'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1h_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
-							-- The signature should be 'tagged_out: STRING'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1h_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.standard_twin_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_standard_twin)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'standard_twin: like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1i_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'standard_twin: like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1i_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.is_deep_equal_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_is_deep_equal)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1j_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1j_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1j_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.deep_twin_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_deep_twin)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'deep_twin: like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1k_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'deep_twin: like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1k_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.standard_copy_feature_name) then
-						-- 'ANY.standard_copy' should be a procedure.
-					a_feature.set_builtin_code (tokens.builtin_any_standard_copy)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1c_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
+				set_builtin_any_function (a_feature)
 			elseif a_class = universe.special_class then
-				if a_feature.name.same_feature_name (tokens.item_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_special_item)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'item (i: INTEGER): G'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2a_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
-							-- The signature should be 'item (i: INTEGER): G'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2a_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.formal_parameter_1, a_class, a_class, universe) then
-							-- The signature should be 'item (i: INTEGER): G'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2a_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.count_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_special_count)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'count: INTEGER'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2d_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
-							-- The signature should be 'count: INTEGER'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2d_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.element_size_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_special_element_size)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'element_size: INTEGER'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2e_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
-							-- The signature should be 'element_size: INTEGER'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2e_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.aliased_resized_area_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_special_aliased_resized_area)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2f_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
-							-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2f_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2f_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.make_feature_name) then
-						-- 'SPECIAL.make' should be a procedure.
-					a_feature.set_builtin_code (tokens.builtin_special_make)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs2c_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.put_feature_name) then
-						-- 'SPECIAL.put' should be a procedure.
-					a_feature.set_builtin_code (tokens.builtin_special_put)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs2b_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
+				set_builtin_special_function (a_feature)
 			elseif a_class = universe.character_ref_class then
-				if a_feature.name.same_feature_name (tokens.item_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_character_item)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'item: CHARACTER'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3b_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.character_class, a_class, a_class, universe) then
-							-- The signature should be 'item: CHARACTER'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3b_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.set_item_feature_name) then
-						-- 'CHARACTER_REF.set_item' should be a procedure.
-					a_feature.set_builtin_code (tokens.builtin_character_set_item)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs3c_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
+				set_builtin_character_ref_function (a_feature)
 			elseif a_class = universe.character_class then
-				if a_feature.name.same_feature_name (tokens.code_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_character_code)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'code: INTEGER'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3a_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
-							-- The signature should be 'code: INTEGER'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3a_error (a_class, a_feature)
-					end
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
-			elseif a_class = universe.integer_class or a_class = universe.integer_ref_class then
-				if a_feature.name.same_feature_name (tokens.infix_plus_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_plus)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "+" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4a_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "+" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4a_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "+" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4a_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_minus_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_minus)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "-" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4b_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "-" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4b_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "-" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4b_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_times_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_times)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "*" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4c_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "*" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4c_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "*" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4c_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_divide_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_divide)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "/" (other: like Current): DOUBLE'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4d_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "/" (other: like Current): DOUBLE'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4d_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.double_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "/" (other: like Current): DOUBLE'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4d_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_div_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_div)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "//" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4e_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "//" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4e_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "//" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4e_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_mod_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_mod)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "\\" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4f_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "\\" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4f_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "\\" (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4f_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.prefix_minus_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_opposite)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'prefix "-": like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4g_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'prefix "-": like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4g_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_lt_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_lt)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "<" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4h_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "<" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4h_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "<" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4h_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_gt_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_gt)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix ">" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4l_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix ">" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4l_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix ">" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4l_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_le_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_le)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "<=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4m_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "<=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4m_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "<=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4m_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_ge_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_ge)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix ">=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4n_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix ">=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4n_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix ">=" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4n_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.to_character_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_to_character)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'to_character: CHARACTER'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4i_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.character_class, a_class, a_class, universe) then
-							-- The signature should be 'to_character: CHARACTER'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4i_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.bit_or_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_bit_or)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'bit_or (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4j_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'bit_or (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4j_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'bit_or (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4j_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.bit_and_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_bit_and)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'bit_and (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4o_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'bit_and (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4o_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'bit_and (other: like Current): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4o_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.bit_shift_left_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_integer_bit_shift_left)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'bit_shift_left (other: INTEGER): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4k_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
-							-- The signature should be 'bit_shift_left (other: INTEGER): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4k_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'bit_shift_left (other: INTEGER): like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs4k_error (a_class, a_feature)
-					end
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
+				set_builtin_character_function (a_feature)
 			elseif a_class = universe.boolean_ref_class then
-				if a_feature.name.same_feature_name (tokens.item_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_boolean_item)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'item: BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5h_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'item: BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5h_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.set_item_feature_name) then
-						-- 'BOOLEAN_REF.set_item' should be a procedure.
-					a_feature.set_builtin_code (tokens.builtin_boolean_item)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs5i_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
+				set_builtin_boolean_ref_function (a_feature)
 			elseif a_class = universe.boolean_class then
-				if a_feature.name.same_feature_name (tokens.infix_and_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_boolean_and)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "and" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5d_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "and" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5d_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "and" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5d_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_and_then_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_boolean_and_then)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "and then" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5a_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "and then" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5a_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "and then" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5a_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_or_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_boolean_or)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "or" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5e_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "or" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5e_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "or" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5e_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_or_else_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_boolean_or_else)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "or else" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5b_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "or else" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5b_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "or else" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5b_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.prefix_not_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_boolean_not)
-					l_formals := a_feature.arguments
-					if l_formals /= Void and then l_formals.count /= 0 then
-							-- The signature should be 'prefix "not": like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5g_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'prefix "not": like Current'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5g_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_implies_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_boolean_implies)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "implies" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5c_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "implies" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5c_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "implies" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5c_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.infix_xor_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_boolean_xor)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'infix "xor" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5f_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'infix "xor" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5f_error (a_class, a_feature)
-					elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'infix "xor" (other: like Current): BOOLEAN'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5f_error (a_class, a_feature)
-					end
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_builtin_boolean_function (a_feature)
+			elseif a_class = universe.integer_ref_class then
+				set_builtin_sized_integer_ref_function (a_feature, universe.integer_class, tokens.builtin_integer_class)
+			elseif a_class = universe.integer_class then
+				set_builtin_sized_integer_function (a_feature, tokens.builtin_integer_class)
+			elseif a_class = universe.integer_8_ref_class then
+				set_builtin_sized_integer_ref_function (a_feature, universe.integer_8_class, tokens.builtin_integer_8_class)
+			elseif a_class = universe.integer_8_class then
+				set_builtin_sized_integer_function (a_feature, tokens.builtin_integer_8_class)
+			elseif a_class = universe.integer_16_ref_class then
+				set_builtin_sized_integer_ref_function (a_feature, universe.integer_16_class, tokens.builtin_integer_16_class)
+			elseif a_class = universe.integer_16_class then
+				set_builtin_sized_integer_function (a_feature, tokens.builtin_integer_16_class)
+			elseif a_class = universe.integer_64_ref_class then
+				set_builtin_sized_integer_ref_function (a_feature, universe.integer_64_class, tokens.builtin_integer_64_class)
+			elseif a_class = universe.integer_64_class then
+				set_builtin_sized_integer_function (a_feature, tokens.builtin_integer_64_class)
+			elseif a_class = universe.natural_8_ref_class then
+				set_builtin_sized_integer_ref_function (a_feature, universe.natural_8_class, tokens.builtin_natural_8_class)
+			elseif a_class = universe.natural_8_class then
+				set_builtin_sized_integer_function (a_feature, tokens.builtin_natural_8_class)
+			elseif a_class = universe.natural_16_ref_class then
+				set_builtin_sized_integer_ref_function (a_feature, universe.natural_16_class, tokens.builtin_natural_16_class)
+			elseif a_class = universe.natural_16_class then
+				set_builtin_sized_integer_function (a_feature, tokens.builtin_natural_16_class)
+			elseif a_class = universe.natural_32_ref_class then
+				set_builtin_sized_integer_ref_function (a_feature, universe.natural_32_class, tokens.builtin_natural_32_class)
+			elseif a_class = universe.natural_32_class then
+				set_builtin_sized_integer_function (a_feature, tokens.builtin_natural_32_class)
+			elseif a_class = universe.natural_64_ref_class then
+				set_builtin_sized_integer_ref_function (a_feature, universe.natural_64_class, tokens.builtin_natural_64_class)
+			elseif a_class = universe.natural_64_class then
+				set_builtin_sized_integer_function (a_feature, tokens.builtin_natural_64_class)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_any_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class ANY.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.twin_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_twin))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'twin: like Current'.
 					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
+					error_handler.report_gvkbs1a_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'twin: like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1a_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.standard_is_equal_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_is_equal))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'standard_is_equal (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1b_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'standard_is_equal (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1b_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'standard_is_equal (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1b_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.same_type_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_same_type))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'same_type (other: ANY): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1d_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
+						-- The signature should be 'same_type (other: ANY): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1d_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'same_type (other: ANY): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1d_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.conforms_to_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_conforms_to))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1e_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
+						-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1e_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1e_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.generator_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generator))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'generator: STRING'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1f_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
+						-- The signature should be 'generator: STRING'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1f_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generating_type))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'generating_type: STRING'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1g_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
+						-- The signature should be 'generating_type: STRING'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1g_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.tagged_out_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_tagged_out))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'tagged_out: STRING'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1h_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
+						-- The signature should be 'tagged_out: STRING'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1h_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.standard_twin_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_twin))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'standard_twin: like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1i_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'standard_twin: like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1i_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.is_deep_equal_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_is_deep_equal))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1j_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1j_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1j_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.deep_twin_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_deep_twin))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'deep_twin: like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1k_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'deep_twin: like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1k_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.standard_copy_feature_name) then
+					-- 'ANY.standard_copy' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_copy))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1c_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_special_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class SPECIAL.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'item (i: INTEGER): G'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2a_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'item (i: INTEGER): G'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2a_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.formal_parameter_1, a_class, a_class, universe) then
+						-- The signature should be 'item (i: INTEGER): G'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2a_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.count_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_count))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'count: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2d_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'count: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2d_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.element_size_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_element_size))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'element_size: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2e_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'element_size: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2e_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.aliased_resized_area_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_aliased_resized_area))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2f_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2f_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2f_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.make_feature_name) then
+					-- 'SPECIAL.make' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_make))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs2c_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.put_feature_name) then
+					-- 'SPECIAL.put' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_put))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs2b_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_character_ref_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class CHARACTER_REF.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_character_feature (tokens.builtin_character_item))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'item: CHARACTER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3b_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.character_class, a_class, a_class, universe) then
+						-- The signature should be 'item: CHARACTER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3b_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.set_item_feature_name) then
+					-- 'CHARACTER_REF.set_item' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_character_feature (tokens.builtin_character_set_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs3c_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_character_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class CHARACTER.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.code_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_character_feature (tokens.builtin_character_code))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'code: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3a_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'code: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3a_error (a_class, a_feature)
+				end
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_boolean_ref_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class BOOLEAN_REF.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_item))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'item: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5h_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'item: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5h_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.set_item_feature_name) then
+					-- 'BOOLEAN_REF.set_item' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_set_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs5i_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_boolean_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class BOOLEAN.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.infix_and_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_and))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "and" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5d_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "and" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5d_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'infix "and" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5d_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_and_then_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_and_then))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "and then" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5a_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "and then" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5a_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'infix "and then" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5a_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_or_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_or))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "or" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5e_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "or" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5e_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'infix "or" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5e_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_or_else_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_or_else))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "or else" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5b_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "or else" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5b_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'infix "or else" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5b_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.prefix_not_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_not))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'prefix "not": like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5g_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'prefix "not": like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5g_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_implies_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_implies))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "implies" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5c_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "implies" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5c_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'infix "implies" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5c_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_xor_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_xor))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "xor" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5f_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "xor" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5f_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'infix "xor" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5f_error (a_class, a_feature)
+				end
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_sized_integer_ref_function (a_feature: ET_EXTERNAL_FUNCTION; an_integer_class: ET_CLASS; a_builtin_class_code: INTEGER) is
+			-- Set built-in code of `a_feature' from the ref class of sized integer class `an_integer_class'.
+			-- `a_builtin_class_code' is the built-in code of class `an_integer_class'.
+		require
+			a_feature_not_void: a_feature /= Void
+			an_integer_class_not_void: an_integer_class /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_item))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'item: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4p_error (a_class, a_feature, an_integer_class)
+				elseif not a_feature.type.same_syntactical_type (an_integer_class, a_class, a_class, universe) then
+						-- The signature should be 'item: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4p_error (a_class, a_feature, an_integer_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.set_item_feature_name) then
+					-- 'set_item' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_set_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4q_error (a_class, a_feature, an_integer_class)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_sized_integer_function (a_feature: ET_EXTERNAL_FUNCTION; a_builtin_class_code: INTEGER) is
+			-- Set built-in code of `a_feature' from a sized integer class whose
+			-- built-in code is `a_builtin_class_code'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.infix_plus_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_plus))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "+" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4a_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "+" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4a_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "+" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4a_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_minus_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_minus))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "-" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4b_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "-" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4b_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "-" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4b_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_times_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_times))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "*" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4c_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "*" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4c_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "*" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4c_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_divide_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_divide))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "/" (other: like Current): DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4d_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "/" (other: like Current): DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4d_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.double_class, a_class, a_class, universe) then
+						-- The signature should be 'infix "/" (other: like Current): DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4d_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_div_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_div))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "//" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4e_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "//" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4e_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "//" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4e_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_mod_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_mod))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "\\" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4f_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "\\" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4f_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "\\" (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4f_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_power_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_power))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "^" (other: DOUBLE): DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4s_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.double_class, a_class, a_class, universe) then
+						-- The signature should be 'infix "^" (other: DOUBLE): DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4s_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.double_class, a_class, a_class, universe) then
+						-- The signature should be 'infix "^" (other: DOUBLE): DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4s_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.prefix_minus_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_opposite))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'prefix "-": like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4g_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'prefix "-": like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4g_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.infix_lt_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_lt))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'infix "<" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4h_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'infix "<" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4h_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'infix "<" (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4h_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.to_character_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_character))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'to_character: CHARACTER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4i_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.character_class, a_class, a_class, universe) then
+						-- The signature should be 'to_character: CHARACTER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4i_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.to_real_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_real))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'to_real: REAL'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4t_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.real_class, a_class, a_class, universe) then
+						-- The signature should be 'to_real: REAL'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4t_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.to_real_32_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_real_32))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'to_real_32: REAL'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4ad_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.real_class, a_class, a_class, universe) then
+						-- The signature should be 'to_real_32: REAL'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4ad_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.to_real_64_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_real_64))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'to_real_64: DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4ae_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.double_class, a_class, a_class, universe) then
+						-- The signature should be 'to_real_64: DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4ae_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.to_double_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_double))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'to_double: DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4u_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.double_class, a_class, a_class, universe) then
+						-- The signature should be 'to_double: DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4u_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.as_natural_8_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_natural_8))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'as_natural_8: NATURAL_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4v_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.natural_8_class, a_class, a_class, universe) then
+						-- The signature should be 'as_natural_8: NATURAL_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4v_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.as_natural_16_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_natural_16))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'as_natural_16: NATURAL_16'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4w_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.natural_16_class, a_class, a_class, universe) then
+						-- The signature should be 'as_natural_16: NATURAL_16'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4w_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.as_natural_32_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_natural_32))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'as_natural_32: NATURAL_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4x_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.natural_32_class, a_class, a_class, universe) then
+						-- The signature should be 'as_natural_32: NATURAL_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4x_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.as_natural_64_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_natural_64))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'as_natural_64: NATURAL_64'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4y_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.natural_64_class, a_class, a_class, universe) then
+						-- The signature should be 'as_natural_64: NATURAL_64'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4y_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.as_integer_8_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_integer_8))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'as_integer_8: INTEGER_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4z_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_8_class, a_class, a_class, universe) then
+						-- The signature should be 'as_integer_8: INTEGER_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4z_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.as_integer_16_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_integer_16))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'as_integer_16: INTEGER_16'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4aa_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_16_class, a_class, a_class, universe) then
+						-- The signature should be 'as_integer_16: INTEGER_16'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4aa_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.as_integer_32_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_integer_32))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'as_integer_32: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4ab_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'as_integer_32: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4ab_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.as_integer_64_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_integer_64))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'as_integer_64: INTEGER_64'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4ac_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_64_class, a_class, a_class, universe) then
+						-- The signature should be 'as_integer_64: INTEGER_64'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4ac_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.bit_or_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_or))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'bit_or (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4j_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'bit_or (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4j_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'bit_or (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4j_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.bit_and_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_and))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'bit_and (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4o_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'bit_and (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4o_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'bit_and (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4o_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.bit_shift_left_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_shift_left))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'bit_shift_left (other: INTEGER): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4k_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'bit_shift_left (other: INTEGER): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4k_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'bit_shift_left (other: INTEGER): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4k_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.bit_shift_right_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_shift_right))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'bit_shift_right (other: INTEGER): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4l_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'bit_shift_right (other: INTEGER): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4l_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'bit_shift_right (other: INTEGER): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4l_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.bit_xor_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_xor))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'bit_xor (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4m_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'bit_xor (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4m_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'bit_xor (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4m_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.bit_not_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_not))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'bit_not: like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4n_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'bit_not (other: like Current): like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4n_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.prefix_plus_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_identity))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'prefix "+": like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4r_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'prefix "+": like Current'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4r_error (a_class, a_feature)
 				end
 			else
 					-- Unknown built-in routine.
@@ -2349,318 +2675,543 @@ feature {NONE} -- Built-in
 			a_feature_not_void: a_feature /= Void
 		local
 			a_class: ET_CLASS
-			l_formals: ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List procedure names first, then function names.
 			a_class := a_feature.implementation_class
 			if a_class = universe.any_class then
-				if a_feature.name.same_feature_name (tokens.standard_copy_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_any_standard_copy)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'standard_copy (other: like Current)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1c_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-							-- The signature should be 'standard_copy (other: like Current)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs1c_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.twin_feature_name) then
-						-- 'ANY.twin' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_any_twin)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1a_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.standard_is_equal_feature_name) then
-						-- 'ANY.standard_is_equal' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_any_standard_is_equal)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1b_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.same_type_feature_name) then
-						-- 'ANY.same_type' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_any_same_type)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1d_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.conforms_to_feature_name) then
-						-- 'ANY.conforms_to' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_any_conforms_to)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1e_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.generator_feature_name) then
-						-- 'ANY.generator' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_any_generator)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1f_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
-						-- 'ANY.generating_type' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_any_generating_type)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1g_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.tagged_out_feature_name) then
-						-- 'ANY.tagged_out' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_any_tagged_out)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1h_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.standard_twin_feature_name) then
-						-- 'ANY.standard_twin' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_any_standard_twin)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1i_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.is_deep_equal_feature_name) then
-						-- 'ANY.is_deep_equal' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_any_is_deep_equal)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1j_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.deep_twin_feature_name) then
-						-- 'ANY.deep_twin' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_any_deep_twin)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs1k_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
+				set_builtin_any_procedure (a_feature)
 			elseif a_class = universe.special_class then
-				if a_feature.name.same_feature_name (tokens.make_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_special_make)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'make (nb: INTEGER)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2c_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
-							-- The signature should be 'make (nb: INTEGER)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2c_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.put_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_special_put)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 2 then
-							-- The signature should be 'put (v: G; i: INTEGER)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2b_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.formal_parameter_1, a_class, a_class, universe) then
-							-- The signature should be 'put (v: G; i: INTEGER)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2b_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
-							-- The signature should be 'put (v: G; i: INTEGER)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs2b_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
-						-- 'SPECIAL.item' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_special_item)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs2a_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.count_feature_name) then
-						-- 'SPECIAL.count' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_special_count)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs2d_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.element_size_feature_name) then
-						-- 'SPECIAL.element_size' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_special_element_size)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs2e_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.aliased_resized_area_feature_name) then
-						-- 'SPECIAL.aliased_resized_area' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_special_aliased_resized_area)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs2f_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
+				set_builtin_special_procedure (a_feature)
 			elseif a_class = universe.character_ref_class then
-				if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_character_set_item)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'set_item (c: CHARACTER)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3c_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.character_class, a_class, a_class, universe) then
-							-- The signature should be 'set_item (c: CHARACTER)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs3c_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
-						-- 'CHARACTER_REF.item' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_character_item)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs3b_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
+				set_builtin_character_ref_procedure (a_feature)
 			elseif a_class = universe.character_class then
-				if a_feature.name.same_feature_name (tokens.code_feature_name) then
-						-- 'CHARACTER.code' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_character_code)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs3a_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
-			elseif a_class = universe.integer_class or a_class = universe.integer_ref_class then
-				if a_feature.name.same_feature_name (tokens.infix_plus_feature_name) then
-						-- 'INTEGER.infix "+"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_plus)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4a_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_minus_feature_name) then
-						-- 'INTEGER.infix "-"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_minus)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4b_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_times_feature_name) then
-						-- 'INTEGER.infix "*"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_times)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4c_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_divide_feature_name) then
-						-- 'INTEGER.infix "/"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_divide)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4d_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_div_feature_name) then
-						-- 'INTEGER.infix "//"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_div)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4e_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_mod_feature_name) then
-						-- 'INTEGER.infix "\\"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_mod)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4f_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.prefix_minus_feature_name) then
-						-- 'INTEGER.prefix "-"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_opposite)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4g_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_lt_feature_name) then
-						-- 'INTEGER.infix "<"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_lt)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4h_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_gt_feature_name) then
-						-- 'INTEGER.infix ">"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_gt)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4l_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_le_feature_name) then
-						-- 'INTEGER.infix "<="' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_le)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4m_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_ge_feature_name) then
-						-- 'INTEGER.infix ">="' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_ge)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4n_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.to_character_feature_name) then
-						-- 'INTEGER.to_character' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_to_character)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4i_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.bit_or_feature_name) then
-						-- 'INTEGER.bit_or' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_bit_or)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4j_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.bit_and_feature_name) then
-						-- 'INTEGER.bit_and' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_bit_and)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4o_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.bit_shift_left_feature_name) then
-						-- 'INTEGER.bit_shift_left' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_integer_bit_shift_left)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs4k_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
+				set_builtin_character_procedure (a_feature)
 			elseif a_class = universe.boolean_ref_class then
-				if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
-					a_feature.set_builtin_code (tokens.builtin_boolean_set_item)
-					l_formals := a_feature.arguments
-					if l_formals = Void or else l_formals.count /= 1 then
-							-- The signature should be 'set_item (b: BOOLEAN)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5i_error (a_class, a_feature)
-					elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
-							-- The signature should be 'set_item (b: BOOLEAN)'.
-						set_fatal_error (a_class)
-						error_handler.report_gvkbs5i_error (a_class, a_feature)
-					end
-				elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
-						-- 'BOOLEAN_REF.item' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_boolean_item)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs5h_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
-				end
+				set_builtin_boolean_ref_procedure (a_feature)
 			elseif a_class = universe.boolean_class then
-				if a_feature.name.same_feature_name (tokens.infix_and_feature_name) then
-						-- 'BOOLEAN.infix "and"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_boolean_and)
+				set_builtin_boolean_procedure (a_feature)
+			elseif a_class = universe.integer_ref_class then
+				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_class, tokens.builtin_integer_class)
+			elseif a_class = universe.integer_class then
+				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_integer_class)
+			elseif a_class = universe.integer_8_ref_class then
+				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_8_class, tokens.builtin_integer_8_class)
+			elseif a_class = universe.integer_8_class then
+				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_integer_8_class)
+			elseif a_class = universe.integer_16_ref_class then
+				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_16_class, tokens.builtin_integer_16_class)
+			elseif a_class = universe.integer_16_class then
+				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_integer_16_class)
+			elseif a_class = universe.integer_64_ref_class then
+				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_64_class, tokens.builtin_integer_64_class)
+			elseif a_class = universe.integer_64_class then
+				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_integer_64_class)
+			elseif a_class = universe.natural_8_ref_class then
+				set_builtin_sized_integer_ref_procedure (a_feature, universe.natural_8_class, tokens.builtin_natural_8_class)
+			elseif a_class = universe.natural_8_class then
+				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_natural_8_class)
+			elseif a_class = universe.natural_16_ref_class then
+				set_builtin_sized_integer_ref_procedure (a_feature, universe.natural_16_class, tokens.builtin_natural_16_class)
+			elseif a_class = universe.natural_16_class then
+				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_natural_16_class)
+			elseif a_class = universe.natural_32_ref_class then
+				set_builtin_sized_integer_ref_procedure (a_feature, universe.natural_32_class, tokens.builtin_natural_32_class)
+			elseif a_class = universe.natural_32_class then
+				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_natural_32_class)
+			elseif a_class = universe.natural_64_ref_class then
+				set_builtin_sized_integer_ref_procedure (a_feature, universe.natural_64_class, tokens.builtin_natural_64_class)
+			elseif a_class = universe.natural_64_class then
+				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_natural_64_class)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_any_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class ANY.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.standard_copy_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_copy))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'standard_copy (other: like Current)'.
 					set_fatal_error (a_class)
-					error_handler.report_gvkbs5d_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_and_then_feature_name) then
-						-- 'BOOLEAN.infix "and then"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_boolean_and_then)
+					error_handler.report_gvkbs1c_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'standard_copy (other: like Current)'.
 					set_fatal_error (a_class)
-					error_handler.report_gvkbs5a_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_or_feature_name) then
-						-- 'BOOLEAN.infix "or"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_boolean_or)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs5e_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_or_else_feature_name) then
-						-- 'BOOLEAN.infix "or else"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_boolean_or_else)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs5b_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_implies_feature_name) then
-						-- 'BOOLEAN.infix "implies"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_boolean_implies)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs5c_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.prefix_not_feature_name) then
-						-- 'BOOLEAN.prefix "not"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_boolean_not)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs5g_error (a_class, a_feature)
-				elseif a_feature.name.same_feature_name (tokens.infix_xor_feature_name) then
-						-- 'BOOLEAN.infix "xor"' should be a function.
-					a_feature.set_builtin_code (tokens.builtin_boolean_xor)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs5f_error (a_class, a_feature)
-				else
-						-- Unknown built-in routine.
-					a_feature.set_builtin_code (tokens.builtin_unknown)
-					set_fatal_error (a_class)
-					error_handler.report_gvkbu1a_error (a_class, a_feature)
+					error_handler.report_gvkbs1c_error (a_class, a_feature)
 				end
+			elseif a_feature.name.same_feature_name (tokens.twin_feature_name) then
+					-- 'ANY.twin' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_twin))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1a_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.standard_is_equal_feature_name) then
+					-- 'ANY.standard_is_equal' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_is_equal))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1b_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.same_type_feature_name) then
+					-- 'ANY.same_type' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_same_type))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1d_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.conforms_to_feature_name) then
+					-- 'ANY.conforms_to' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_conforms_to))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1e_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.generator_feature_name) then
+					-- 'ANY.generator' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generator))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1f_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
+					-- 'ANY.generating_type' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generating_type))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1g_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.tagged_out_feature_name) then
+					-- 'ANY.tagged_out' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_tagged_out))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1h_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.standard_twin_feature_name) then
+					-- 'ANY.standard_twin' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_twin))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1i_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.is_deep_equal_feature_name) then
+					-- 'ANY.is_deep_equal' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_is_deep_equal))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1j_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.deep_twin_feature_name) then
+					-- 'ANY.deep_twin' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_deep_twin))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1k_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_special_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class SPECIAL.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.make_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_make))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'make (nb: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2c_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'make (nb: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2c_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_put))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put (v: G; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2b_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.formal_parameter_1, a_class, a_class, universe) then
+						-- The signature should be 'put (v: G; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2b_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put (v: G; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs2b_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
+					-- 'SPECIAL.item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs2a_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.count_feature_name) then
+					-- 'SPECIAL.count' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_count))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs2d_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.element_size_feature_name) then
+					-- 'SPECIAL.element_size' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_element_size))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs2e_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.aliased_resized_area_feature_name) then
+					-- 'SPECIAL.aliased_resized_area' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_aliased_resized_area))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs2f_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_character_ref_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class CHARACTER_REF.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_character_feature (tokens.builtin_character_set_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'set_item (c: CHARACTER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3c_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.character_class, a_class, a_class, universe) then
+						-- The signature should be 'set_item (c: CHARACTER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3c_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
+					-- 'CHARACTER_REF.item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_character_feature (tokens.builtin_character_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs3b_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_character_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class CHARACTER.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.code_feature_name) then
+					-- 'CHARACTER.code' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_character_feature (tokens.builtin_character_code))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs3a_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_boolean_ref_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class BOOLEAN_REF.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_set_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'set_item (b: BOOLEAN)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5i_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'set_item (b: BOOLEAN)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs5i_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
+					-- 'BOOLEAN_REF.item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs5h_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_boolean_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class BOOLEAN.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.infix_and_feature_name) then
+					-- 'BOOLEAN.infix "and"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_and))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs5d_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_and_then_feature_name) then
+					-- 'BOOLEAN.infix "and then"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_and_then))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs5a_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_or_feature_name) then
+					-- 'BOOLEAN.infix "or"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_or))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs5e_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_or_else_feature_name) then
+					-- 'BOOLEAN.infix "or else"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_or_else))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs5b_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_implies_feature_name) then
+					-- 'BOOLEAN.infix "implies"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_implies))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs5c_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.prefix_not_feature_name) then
+					-- 'BOOLEAN.prefix "not"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_not))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs5g_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_xor_feature_name) then
+					-- 'BOOLEAN.infix "xor"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_xor))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs5f_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_sized_integer_ref_procedure (a_feature: ET_EXTERNAL_PROCEDURE; an_integer_class: ET_CLASS; a_builtin_class_code: INTEGER) is
+			-- Set built-in code of `a_feature' from the ref class of sized integer class `an_integer_class'.
+			-- `a_builtin_class_code' is the built-in code of class `an_integer_class'.
+		require
+			a_feature_not_void: a_feature /= Void
+			an_integer_class_not_void: an_integer_class /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_set_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'set_item (i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4q_error (a_class, a_feature, an_integer_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (an_integer_class, a_class, a_class, universe) then
+						-- The signature should be 'set_item (i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4q_error (a_class, a_feature, an_integer_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
+					-- 'item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4p_error (a_class, a_feature, an_integer_class)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_sized_integer_procedure (a_feature: ET_EXTERNAL_PROCEDURE; a_builtin_class_code: INTEGER) is
+			-- Set built-in code of `a_feature' from a sized integer class whose
+			-- built-in code is `a_builtin_class_code'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.infix_plus_feature_name) then
+					-- 'infix "+"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_plus))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4a_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_minus_feature_name) then
+					-- 'infix "-"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_minus))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4b_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_times_feature_name) then
+					-- 'infix "*"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_times))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4c_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_divide_feature_name) then
+					-- 'infix "/"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_divide))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4d_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_div_feature_name) then
+					-- 'infix "//"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_div))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4e_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_mod_feature_name) then
+					-- 'infix "\\"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_mod))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4f_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_power_feature_name) then
+					-- 'infix "^"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_power))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4s_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.prefix_minus_feature_name) then
+					-- 'prefix "-"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_opposite))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4g_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.prefix_plus_feature_name) then
+					-- 'prefix "+"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_identity))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4r_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.infix_lt_feature_name) then
+					-- 'infix "<"' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_lt))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4h_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.to_character_feature_name) then
+					-- 'to_character' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_character))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4i_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.to_real_feature_name) then
+					-- 'to_real' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_real))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4t_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.to_real_32_feature_name) then
+					-- 'to_real_32' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_real_32))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4ad_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.to_real_64_feature_name) then
+					-- 'to_real_64' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_real_64))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4ae_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.to_double_feature_name) then
+					-- 'to_double' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_double))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4u_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.as_natural_8_feature_name) then
+					-- 'as_natural_8' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_natural_8))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4v_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.as_natural_16_feature_name) then
+					-- 'as_natural_16' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_natural_16))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4w_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.as_natural_32_feature_name) then
+					-- 'as_natural_32' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_natural_32))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4x_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.as_natural_64_feature_name) then
+					-- 'as_natural_64' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_natural_64))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4y_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.as_integer_8_feature_name) then
+					-- 'as_integer_8' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_integer_8))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4z_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.as_integer_16_feature_name) then
+					-- 'as_integer_16' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_integer_16))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4aa_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.as_integer_32_feature_name) then
+					-- 'as_integer_32' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_integer_32))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4ab_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.as_integer_64_feature_name) then
+					-- 'as_integer_64' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_as_integer_64))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4ac_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.bit_or_feature_name) then
+					-- 'bit_or' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_or))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4j_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.bit_and_feature_name) then
+					-- 'bit_and' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_and))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4o_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.bit_shift_left_feature_name) then
+					-- 'bit_shift_left' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_shift_left))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4k_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.bit_shift_right_feature_name) then
+					-- 'bit_shift_right' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_shift_right))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4l_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.bit_xor_feature_name) then
+					-- 'bit_xor' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_xor))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4m_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.bit_not_feature_name) then
+					-- 'bit_not' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_bit_not))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4n_error (a_class, a_feature)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

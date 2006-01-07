@@ -41,12 +41,7 @@ inherit
 			report_unqualified_call_expression,
 			report_unqualified_call_instruction,
 			report_builtin_any_twin,
-			report_builtin_any_standard_twin,
-			report_builtin_any_deep_twin,
-			report_builtin_any_generator,
-			report_builtin_any_generating_type,
-			report_builtin_any_tagged_out,
-			report_builtin_special_aliased_resized_area
+			propagate_builtin_result_type
 		end
 
 create
@@ -1812,167 +1807,23 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_any_standard_twin (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature ANY.standard_twin is being analyzed.
-		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
-		do
-			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_standard_twin)
-				l_result_type_set := current_dynamic_feature.result_type_set
-				if l_result_type_set = Void then
-						-- Internal error: it was already checked during parsing
-						-- that the signature should be 'standard_twin: like Current'.
-					set_fatal_error
-					error_handler.report_gibax_error
-				else
-					if not l_result_type_set.is_expanded then
-						create l_attachment.make (current_dynamic_type, current_dynamic_feature, current_dynamic_type)
-						l_result_type_set.put_source (l_attachment, current_system)
-					end
-				end
-			end
-		end
+feature {NONE} -- Implementation
 
-	report_builtin_any_deep_twin (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature ANY.deep_twin is being analyzed.
+	propagate_builtin_result_type (a_source: ET_DYNAMIC_TYPE_SET; a_query: ET_DYNAMIC_FEATURE) is
+			-- Propagate dynamic types of `a_source' to the dynamic type set of the result of the built-in `a_query'.
 		local
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
 		do
-			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_deep_twin)
-				l_result_type_set := current_dynamic_feature.result_type_set
-				if l_result_type_set = Void then
-						-- Internal error: it was already checked during parsing
-						-- that the signature should be 'deep_twin: like Current'.
-					set_fatal_error
-					error_handler.report_gibga_error
-				else
-					if not l_result_type_set.is_expanded then
-						create l_attachment.make (current_dynamic_type, current_dynamic_feature, current_dynamic_type)
-						l_result_type_set.put_source (l_attachment, current_system)
-					end
-				end
-			end
-		end
-
-	report_builtin_any_generator (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature ANY.generator is being analyzed.
-		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
-		do
-			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_generator)
-				current_system.string_type.set_alive
-					-- Make sure that type SPECIAL[CHARACTER] (used in
-					-- feature 'area') is marked as alive.
-				current_system.special_character_type.set_alive
-					-- Make sure that type CHARACTER (used as actual generic type
-					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
-				current_system.character_type.set_alive
-					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
-				current_system.integer_type.set_alive
-				l_result_type_set := current_dynamic_feature.result_type_set
-				if l_result_type_set = Void then
-						-- Internal error: it was already checked during parsing
-						-- that the signature should be 'generator: STRING'.
-					set_fatal_error
-					error_handler.report_gibgb_error
-				else
-					if not l_result_type_set.is_expanded then
-						create l_attachment.make (current_system.string_type, current_dynamic_feature, current_dynamic_type)
-						l_result_type_set.put_source (l_attachment, current_system)
-					end
-				end
-			end
-		end
-
-	report_builtin_any_generating_type (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature ANY.generating_type is being analyzed.
-		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
-		do
-			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_generating_type)
-				current_system.string_type.set_alive
-					-- Make sure that type SPECIAL[CHARACTER] (used in
-					-- feature 'area') is marked as alive.
-				current_system.special_character_type.set_alive
-					-- Make sure that type CHARACTER (used as actual generic type
-					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
-				current_system.character_type.set_alive
-					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
-				current_system.integer_type.set_alive
-				l_result_type_set := current_dynamic_feature.result_type_set
-				if l_result_type_set = Void then
-						-- Internal error: it was already checked during parsing
-						-- that the signature should be 'generating_type: STRING'.
-					set_fatal_error
-					error_handler.report_gibfr_error
-				else
-					if not l_result_type_set.is_expanded then
-						create l_attachment.make (current_system.string_type, current_dynamic_feature, current_dynamic_type)
-						l_result_type_set.put_source (l_attachment, current_system)
-					end
-				end
-			end
-		end
-
-	report_builtin_any_tagged_out (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature ANY.tagged_out is being analyzed.
-		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
-		do
-			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_tagged_out)
-				current_system.string_type.set_alive
-					-- Make sure that type SPECIAL[CHARACTER] (used in
-					-- feature 'area') is marked as alive.
-				current_system.special_character_type.set_alive
-					-- Make sure that type CHARACTER (used as actual generic type
-					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
-				current_system.character_type.set_alive
-					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
-				current_system.integer_type.set_alive
-				l_result_type_set := current_dynamic_feature.result_type_set
-				if l_result_type_set = Void then
-						-- Internal error: it was already checked during parsing
-						-- that the signature should be 'tagged_out: STRING'.
-					set_fatal_error
-					error_handler.report_gibhk_error
-				else
-					if not l_result_type_set.is_expanded then
-						create l_attachment.make (current_system.string_type, current_dynamic_feature, current_dynamic_type)
-						l_result_type_set.put_source (l_attachment, current_system)
-					end
-				end
-			end
-		end
-
-	report_builtin_special_aliased_resized_area (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature SPECIAL.special_aliased_resized_area is being analyzed.
-		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
-		do
-			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_special_aliased_resized_area)
-				l_result_type_set := current_dynamic_feature.result_type_set
-				if l_result_type_set = Void then
-						-- Internal error: it was already checked during parsing
-						-- that the signature should be 'aliased_resized_area (n: INTEGER): like Current'.
-					set_fatal_error
-					error_handler.report_giabv_error
-				else
-					if not l_result_type_set.is_expanded then
-						create l_attachment.make (current_dynamic_type, current_dynamic_feature, current_dynamic_type)
-						l_result_type_set.put_source (l_attachment, current_system)
-					end
+			l_result_type_set := a_query.result_type_set
+			if l_result_type_set = Void then
+					-- Internal error: it is expected that `a_query' is a query.
+				set_fatal_error
+				error_handler.report_giabv_error
+			else
+				if not l_result_type_set.is_expanded then
+					create l_attachment.make (a_source, current_dynamic_feature, current_dynamic_type)
+					l_result_type_set.put_source (l_attachment, current_system)
 				end
 			end
 		end

@@ -664,94 +664,190 @@ feature {NONE} -- Feature validity
 	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			l_builtin_code: INTEGER
+			l_builtin_class: INTEGER
+			l_integer_type: ET_DYNAMIC_TYPE
 		do
 			Precursor (a_feature)
 			if not has_fatal_error then
 				if a_feature.is_builtin then
-					inspect a_feature.builtin_code
-					when builtin_any_twin then
-						report_builtin_any_twin (a_feature)
-					when builtin_any_standard_twin then
-						report_builtin_any_standard_twin (a_feature)
-					when builtin_any_deep_twin then
-						report_builtin_any_deep_twin (a_feature)
-					when builtin_any_same_type then
-						report_builtin_any_same_type (a_feature)
-					when builtin_any_conforms_to then
-						report_builtin_any_conforms_to (a_feature)
-					when builtin_any_standard_is_equal then
-						report_builtin_any_standard_is_equal (a_feature)
-					when builtin_any_is_deep_equal then
-						report_builtin_any_is_deep_equal (a_feature)
-					when builtin_any_generator then
-						report_builtin_any_generator (a_feature)
-					when builtin_any_generating_type then
-						report_builtin_any_generating_type (a_feature)
-					when builtin_any_tagged_out then
-						report_builtin_any_tagged_out (a_feature)
-					when builtin_special_item then
-						report_builtin_special_item (a_feature)
-					when builtin_special_count then
-						report_builtin_special_count (a_feature)
-					when builtin_special_element_size then
-						report_builtin_special_element_size (a_feature)
-					when builtin_special_aliased_resized_area then
-						report_builtin_special_aliased_resized_area (a_feature)
-					when builtin_character_code then
-						report_builtin_character_code (a_feature)
-					when builtin_character_item then
-						report_builtin_character_item (a_feature)
-					when builtin_integer_plus then
-						report_builtin_integer_plus (a_feature)
-					when builtin_integer_minus then
-						report_builtin_integer_minus (a_feature)
-					when builtin_integer_times then
-						report_builtin_integer_times (a_feature)
-					when builtin_integer_divide then
-						report_builtin_integer_divide (a_feature)
-					when builtin_integer_div then
-						report_builtin_integer_div (a_feature)
-					when builtin_integer_mod then
-						report_builtin_integer_mod (a_feature)
-					when builtin_integer_opposite then
-						report_builtin_integer_opposite (a_feature)
-					when builtin_integer_lt then
-						report_builtin_integer_lt (a_feature)
-					when builtin_integer_gt then
-						report_builtin_integer_gt (a_feature)
-					when builtin_integer_le then
-						report_builtin_integer_le (a_feature)
-					when builtin_integer_ge then
-						report_builtin_integer_ge (a_feature)
-					when builtin_integer_to_character then
-						report_builtin_integer_to_character (a_feature)
-					when builtin_integer_bit_or then
-						report_builtin_integer_bit_or (a_feature)
-					when builtin_integer_bit_and then
-						report_builtin_integer_bit_and (a_feature)
-					when builtin_integer_bit_shift_left then
-						report_builtin_integer_bit_shift_left (a_feature)
-					when builtin_boolean_and then
-						report_builtin_boolean_and (a_feature)
-					when builtin_boolean_and_then then
-						report_builtin_boolean_and_then (a_feature)
-					when builtin_boolean_or then
-						report_builtin_boolean_or (a_feature)
-					when builtin_boolean_or_else then
-						report_builtin_boolean_or_else (a_feature)
-					when builtin_boolean_not then
-						report_builtin_boolean_not (a_feature)
-					when builtin_boolean_implies then
-						report_builtin_boolean_implies (a_feature)
-					when builtin_boolean_xor then
-						report_builtin_boolean_xor (a_feature)
-					when builtin_boolean_item then
-						report_builtin_boolean_item (a_feature)
+					l_builtin_code := a_feature.builtin_code
+					l_builtin_class := l_builtin_code // builtin_capacity
+					inspect l_builtin_class
+					when builtin_any_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_any_twin then
+							report_builtin_any_twin (a_feature)
+						when builtin_any_standard_twin then
+							report_builtin_any_standard_twin (a_feature)
+						when builtin_any_deep_twin then
+							report_builtin_any_deep_twin (a_feature)
+						when builtin_any_same_type then
+							report_builtin_any_same_type (a_feature)
+						when builtin_any_conforms_to then
+							report_builtin_any_conforms_to (a_feature)
+						when builtin_any_standard_is_equal then
+							report_builtin_any_standard_is_equal (a_feature)
+						when builtin_any_is_deep_equal then
+							report_builtin_any_is_deep_equal (a_feature)
+						when builtin_any_generator then
+							report_builtin_any_generator (a_feature)
+						when builtin_any_generating_type then
+							report_builtin_any_generating_type (a_feature)
+						when builtin_any_tagged_out then
+							report_builtin_any_tagged_out (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibks_error
+						end
+					when builtin_special_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_special_item then
+							report_builtin_special_item (a_feature)
+						when builtin_special_count then
+							report_builtin_special_count (a_feature)
+						when builtin_special_element_size then
+							report_builtin_special_element_size (a_feature)
+						when builtin_special_aliased_resized_area then
+							report_builtin_special_aliased_resized_area (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibkt_error
+						end
+					when builtin_character_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_character_code then
+							report_builtin_character_code (a_feature)
+						when builtin_character_item then
+							report_builtin_character_item (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibku_error
+						end
+					when builtin_boolean_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_boolean_and then
+							report_builtin_boolean_and (a_feature)
+						when builtin_boolean_and_then then
+							report_builtin_boolean_and_then (a_feature)
+						when builtin_boolean_or then
+							report_builtin_boolean_or (a_feature)
+						when builtin_boolean_or_else then
+							report_builtin_boolean_or_else (a_feature)
+						when builtin_boolean_not then
+							report_builtin_boolean_not (a_feature)
+						when builtin_boolean_implies then
+							report_builtin_boolean_implies (a_feature)
+						when builtin_boolean_xor then
+							report_builtin_boolean_xor (a_feature)
+						when builtin_boolean_item then
+							report_builtin_boolean_item (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibkv_error
+						end
 					else
-							-- Internal error: invalid built-in feature.
-							-- Error already reported during parsing.
-						set_fatal_error
-						error_handler.report_gibii_error
+						inspect l_builtin_class
+						when builtin_integer_class then
+							l_integer_type := current_system.integer_type
+						when builtin_integer_8_class then
+							l_integer_type := current_system.integer_8_type
+						when builtin_integer_16_class then
+							l_integer_type := current_system.integer_16_type
+						when builtin_integer_64_class then
+							l_integer_type := current_system.integer_64_type
+						when builtin_natural_8_class then
+							l_integer_type := current_system.natural_8_type
+						when builtin_natural_16_class then
+							l_integer_type := current_system.natural_16_type
+						when builtin_natural_32_class then
+							l_integer_type := current_system.natural_32_type
+						when builtin_natural_64_class then
+							l_integer_type := current_system.natural_64_type
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibkw_error
+						end
+						if l_integer_type /= Void then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_integer_plus then
+								report_builtin_sized_integer_plus (a_feature, l_integer_type)
+							when builtin_integer_minus then
+								report_builtin_sized_integer_minus (a_feature, l_integer_type)
+							when builtin_integer_times then
+								report_builtin_sized_integer_times (a_feature, l_integer_type)
+							when builtin_integer_divide then
+								report_builtin_sized_integer_divide (a_feature, l_integer_type)
+							when builtin_integer_div then
+								report_builtin_sized_integer_div (a_feature, l_integer_type)
+							when builtin_integer_mod then
+								report_builtin_sized_integer_mod (a_feature, l_integer_type)
+							when builtin_integer_power then
+								report_builtin_sized_integer_power (a_feature, l_integer_type)
+							when builtin_integer_opposite then
+								report_builtin_sized_integer_opposite (a_feature, l_integer_type)
+							when builtin_integer_identity then
+								report_builtin_sized_integer_identity (a_feature, l_integer_type)
+							when builtin_integer_lt then
+								report_builtin_sized_integer_lt (a_feature, l_integer_type)
+							when builtin_integer_to_character then
+								report_builtin_sized_integer_to_character (a_feature, l_integer_type)
+							when builtin_integer_to_real then
+								report_builtin_sized_integer_to_real (a_feature, l_integer_type)
+							when builtin_integer_to_real_32 then
+								report_builtin_sized_integer_to_real_32 (a_feature, l_integer_type)
+							when builtin_integer_to_real_64 then
+								report_builtin_sized_integer_to_real_64 (a_feature, l_integer_type)
+							when builtin_integer_to_double then
+								report_builtin_sized_integer_to_double (a_feature, l_integer_type)
+							when builtin_integer_as_natural_8 then
+								report_builtin_sized_integer_as_natural_8 (a_feature, l_integer_type)
+							when builtin_integer_as_natural_16 then
+								report_builtin_sized_integer_as_natural_16 (a_feature, l_integer_type)
+							when builtin_integer_as_natural_32 then
+								report_builtin_sized_integer_as_natural_32 (a_feature, l_integer_type)
+							when builtin_integer_as_natural_64 then
+								report_builtin_sized_integer_as_natural_64 (a_feature, l_integer_type)
+							when builtin_integer_as_integer_8 then
+								report_builtin_sized_integer_as_integer_8 (a_feature, l_integer_type)
+							when builtin_integer_as_integer_16 then
+								report_builtin_sized_integer_as_integer_16 (a_feature, l_integer_type)
+							when builtin_integer_as_integer_32 then
+								report_builtin_sized_integer_as_integer_32 (a_feature, l_integer_type)
+							when builtin_integer_as_integer_64 then
+								report_builtin_sized_integer_as_integer_64 (a_feature, l_integer_type)
+							when builtin_integer_bit_or then
+								report_builtin_sized_integer_bit_or (a_feature, l_integer_type)
+							when builtin_integer_bit_and then
+								report_builtin_sized_integer_bit_and (a_feature, l_integer_type)
+							when builtin_integer_bit_shift_left then
+								report_builtin_sized_integer_bit_shift_left (a_feature, l_integer_type)
+							when builtin_integer_bit_shift_right then
+								report_builtin_sized_integer_bit_shift_right (a_feature, l_integer_type)
+							when builtin_integer_bit_xor then
+								report_builtin_sized_integer_bit_xor (a_feature, l_integer_type)
+							when builtin_integer_bit_not then
+								report_builtin_sized_integer_bit_not (a_feature, l_integer_type)
+							when builtin_integer_item then
+								report_builtin_sized_integer_item (a_feature, l_integer_type)
+							else
+									-- Internal error: invalid built-in feature.
+									-- Error already reported during parsing.
+								set_fatal_error
+								error_handler.report_gibii_error
+							end
+						end
 					end
 				end
 			end
@@ -760,26 +856,94 @@ feature {NONE} -- Feature validity
 	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			l_builtin_code: INTEGER
+			l_builtin_class: INTEGER
+			l_integer_type: ET_DYNAMIC_TYPE
 		do
 			Precursor (a_feature)
 			if not has_fatal_error then
 				if a_feature.is_builtin then
-					inspect a_feature.builtin_code
-					when builtin_any_standard_copy then
-						report_builtin_any_standard_copy (a_feature)
-					when builtin_special_make then
-						report_builtin_special_make (a_feature)
-					when builtin_special_put then
-						report_builtin_special_put (a_feature)
-					when builtin_character_set_item then
-						report_builtin_character_set_item (a_feature)
-					when builtin_boolean_set_item then
-						report_builtin_boolean_set_item (a_feature)
+					l_builtin_code := a_feature.builtin_code
+					l_builtin_class := l_builtin_code // builtin_capacity
+					inspect l_builtin_class
+					when builtin_any_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_any_standard_copy then
+							report_builtin_any_standard_copy (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibkx_error
+						end
+					when builtin_special_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_special_make then
+							report_builtin_special_make (a_feature)
+						when builtin_special_put then
+							report_builtin_special_put (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibky_error
+						end
+					when builtin_character_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_character_set_item then
+							report_builtin_character_set_item (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibkz_error
+						end
+					when builtin_boolean_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_boolean_set_item then
+							report_builtin_boolean_set_item (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibla_error
+						end
 					else
-							-- Internal error: invalid built-in feature.
-							-- Error already reported during parsing.
-						set_fatal_error
-						error_handler.report_gibij_error
+						inspect l_builtin_class
+						when builtin_integer_class then
+							l_integer_type := current_system.integer_type
+						when builtin_integer_8_class then
+							l_integer_type := current_system.integer_8_type
+						when builtin_integer_16_class then
+							l_integer_type := current_system.integer_16_type
+						when builtin_integer_64_class then
+							l_integer_type := current_system.integer_64_type
+						when builtin_natural_8_class then
+							l_integer_type := current_system.natural_8_type
+						when builtin_natural_16_class then
+							l_integer_type := current_system.natural_16_type
+						when builtin_natural_32_class then
+							l_integer_type := current_system.natural_32_type
+						when builtin_natural_64_class then
+							l_integer_type := current_system.natural_64_type
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_giblb_error
+						end
+						if l_integer_type /= Void then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_integer_set_item then
+								report_builtin_sized_integer_set_item (a_feature, l_integer_type)
+							else
+									-- Internal error: invalid built-in feature.
+									-- Error already reported during parsing.
+								set_fatal_error
+								error_handler.report_gibij_error
+							end
+						end
 					end
 				end
 			end
@@ -1986,7 +2150,7 @@ feature {NONE} -- Built-in features
 			l_copy_feature: ET_DYNAMIC_FEATURE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_twin)
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
 					-- Feature `copy' is called internally.
 				l_copy_feature := current_dynamic_type.seeded_dynamic_procedure (universe.copy_seed, current_system)
 				if l_copy_feature = Void then
@@ -2008,7 +2172,8 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_standard_twin)
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
@@ -2019,7 +2184,8 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_deep_twin)
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
@@ -2028,10 +2194,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_same_type)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2040,10 +2210,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_conforms_to)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2052,10 +2226,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_standard_is_equal)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2064,10 +2242,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_is_deep_equal)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2078,16 +2260,9 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_generator)
-				current_system.string_type.set_alive
-					-- Make sure that type SPECIAL[CHARACTER] (used in
-					-- feature 'area') is marked as alive.
-				current_system.special_character_type.set_alive
-					-- Make sure that type CHARACTER (used as actual generic type
-					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
-				current_system.character_type.set_alive
-					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				current_system.set_string_type_alive
+				propagate_builtin_result_type (current_system.string_type, current_dynamic_feature)
 			end
 		end
 
@@ -2098,16 +2273,9 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_generating_type)
-				current_system.string_type.set_alive
-					-- Make sure that type SPECIAL[CHARACTER] (used in
-					-- feature 'area') is marked as alive.
-				current_system.special_character_type.set_alive
-					-- Make sure that type CHARACTER (used as actual generic type
-					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
-				current_system.character_type.set_alive
-					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				current_system.set_string_type_alive
+				propagate_builtin_result_type (current_system.string_type, current_dynamic_feature)
 			end
 		end
 
@@ -2118,16 +2286,9 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_tagged_out)
-				current_system.string_type.set_alive
-					-- Make sure that type SPECIAL[CHARACTER] (used in
-					-- feature 'area') is marked as alive.
-				current_system.special_character_type.set_alive
-					-- Make sure that type CHARACTER (used as actual generic type
-					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
-				current_system.character_type.set_alive
-					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				current_system.set_string_type_alive
+				propagate_builtin_result_type (current_system.string_type, current_dynamic_feature)
 			end
 		end
 
@@ -2138,7 +2299,7 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_any_standard_copy)
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
 			end
 		end
 
@@ -2151,7 +2312,7 @@ feature {NONE} -- Built-in features
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_special_item)
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
 				l_result_type_set := current_dynamic_feature.result_type_set
 				if l_result_type_set = Void then
 						-- Internal error: it was already checked during parsing
@@ -2169,10 +2330,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_special_count)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2181,10 +2346,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_special_element_size)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2195,7 +2364,8 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_special_aliased_resized_area)
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
@@ -2206,7 +2376,7 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_special_make)
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
 			end
 		end
 
@@ -2217,7 +2387,7 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_special_put)
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
 			end
 		end
 
@@ -2226,10 +2396,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_character_code)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2238,10 +2412,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_character_item)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.character_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2252,187 +2430,477 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_character_set_item)
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
 			end
 		end
 
-	report_builtin_integer_plus (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.infix "+"' is being analyzed.
+	report_builtin_sized_integer_plus (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "+"' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_plus)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_minus (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.infix "-"' is being analyzed.
+	report_builtin_sized_integer_minus (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "-"' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_minus)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_times (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.infix "*"' is being analyzed.
+	report_builtin_sized_integer_times (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "*"' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_times)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_divide (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.infix "/"' is being analyzed.
+	report_builtin_sized_integer_divide (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "/"' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_divide)
-				current_system.double_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.double_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_div (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.infix "//"' is being analyzed.
+	report_builtin_sized_integer_div (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "//"' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_div)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_mod (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.infix "\\"' is being analyzed.
+	report_builtin_sized_integer_mod (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "\\"' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_mod)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_opposite (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.prefix "-"' is being analyzed.
+	report_builtin_sized_integer_power (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "^"' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_opposite)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.double_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_lt (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.infix "<"' is being analyzed.
+	report_builtin_sized_integer_opposite (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'prefix "-"' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_lt)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_gt (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.infix ">"' is being analyzed.
+	report_builtin_sized_integer_identity (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'prefix "+"' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_gt)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_le (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.infix "<="' is being analyzed.
+	report_builtin_sized_integer_lt (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "<"' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_le)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_ge (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.infix ">="' is being analyzed.
+	report_builtin_sized_integer_to_character (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'to_character' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_ge)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.character_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_to_character (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.to_character' is being analyzed.
+	report_builtin_sized_integer_to_real (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'to_real' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_to_character)
-				current_system.character_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.real_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_bit_or (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.bit_or' is being analyzed.
+	report_builtin_sized_integer_to_real_32 (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'to_real_32' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_bit_or)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.real_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_bit_and (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.bit_and' is being analyzed.
+	report_builtin_sized_integer_to_real_64 (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'to_real_64' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_bit_and)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.double_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_integer_bit_shift_left (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'INTEGER.bit_shift_left' is being analyzed.
+	report_builtin_sized_integer_to_double (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'to_double' from sized integer type `an_integer_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_integer_bit_shift_left)
-				current_system.integer_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.double_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_as_natural_8 (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'as_natural_8' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.natural_8_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_as_natural_16 (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'as_natural_16' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.natural_16_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_as_natural_32 (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'as_natural_32' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.natural_32_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_as_natural_64 (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'as_natural_64' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.natural_64_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_as_integer_8 (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'as_integer_8' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_8_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_as_integer_16 (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'as_integer_16' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_16_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_as_integer_32 (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'as_integer_32' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_as_integer_64 (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'as_integer_64' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_64_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_bit_or (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'bit_or' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_bit_and (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'bit_and' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_bit_shift_left (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'bit_shift_left' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_bit_shift_right (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'bit_shift_right' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_bit_xor (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'bit_xor' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_bit_not (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'bit_not' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_item (a_feature: ET_EXTERNAL_FUNCTION; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'item' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := an_integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_integer_set_item (a_feature: ET_EXTERNAL_PROCEDURE; an_integer_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'set_item' from sized integer type `an_integer_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			an_integer_type_not_void: an_integer_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
 			end
 		end
 
@@ -2441,10 +2909,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_boolean_and)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2453,10 +2925,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_boolean_and_then)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2465,10 +2941,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_boolean_or)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2477,10 +2957,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_boolean_or_else)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2489,10 +2973,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_boolean_implies)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2503,8 +2991,8 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_boolean_not)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
 			end
 		end
 
@@ -2513,10 +3001,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_boolean_xor)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2525,10 +3017,14 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_boolean_item)
-				current_system.boolean_type.set_alive
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -2539,7 +3035,7 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_builtin_code (builtin_boolean_set_item)
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
 			end
 		end
 
@@ -2621,6 +3117,15 @@ feature {ET_FEATURE_CHECKER} -- Status report
 		end
 
 feature {NONE} -- Implementation
+
+	propagate_builtin_result_type (a_source: ET_DYNAMIC_TYPE_SET; a_query: ET_DYNAMIC_FEATURE) is
+			-- Propagate dynamic types of `a_source' to the dynamic type set of the result of the built-in `a_query'.
+		require
+			a_source_not_void: a_source /= Void
+			a_query_not_void: a_query /= Void
+		do
+			-- Do nothing.
+		end
 
 	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET is
 			-- Dynamic type set associated with `an_operand';
