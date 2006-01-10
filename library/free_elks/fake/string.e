@@ -713,6 +713,16 @@ feature
 			empty_area_not_void: Result /= Void
 		end
 
+	is_empty: BOOLEAN is
+		do
+			Result := count = 0
+		end
+
+	empty: BOOLEAN is
+		do
+			Result := count = 0
+		end
+
 feature -- Not used.
 
 	index_of (c: CHARACTER; p: INTEGER): INTEGER is
@@ -736,16 +746,6 @@ print ("TODO STRING")
 		end
 
 	infix "@" (i: INTEGER): CHARACTER is
-		do
-print ("TODO STRING")
-		end
-
-	is_empty: BOOLEAN is
-		do
-print ("TODO STRING")
-		end
-
-	empty: BOOLEAN is
 		do
 print ("TODO STRING")
 		end
