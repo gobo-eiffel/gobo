@@ -511,23 +511,34 @@ feature {NONE} -- Feature generation
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			i, j, nb: INTEGER
-			i2, nb2: INTEGER
-			i3, nb3: INTEGER
-			l_max: INTEGER
-			l_max_index: INTEGER
-			c, c3: CHARACTER
+			i, nb: INTEGER
 			l_language: ET_EXTERNAL_LANGUAGE
 			l_language_value: ET_MANIFEST_STRING
+			l_language_string: STRING
+			l_language_name: STRING
+			l_inline: STRING
+			l_blocking: STRING
+			l_macro: STRING
+			l_include_filename: STRING
+			l_signature: STRING
+			l_use: STRING
+			l_signature_arguments: STRING
+			l_signature_result: STRING
+			c: CHARACTER
+			stop: BOOLEAN
+			l_comma: BOOLEAN
 			l_alias: ET_EXTERNAL_ALIAS
 			l_alias_value: ET_MANIFEST_STRING
-			l_c_code: STRING
-			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_name: STRING
-			l_comma: BOOLEAN
-			l_builtin_code: INTEGER
-			l_builtin_class: INTEGER
-			l_integer_type: ET_DYNAMIC_TYPE
+			l_splitter: ST_SPLITTER
+			l_list: DS_LIST [STRING]
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_struct: STRING
+			l_access: STRING
+			l_type: STRING
+			l_get: STRING
+			l_struct_field_name: STRING
+			l_struct_field_type: STRING
+			l_struct_type: STRING
 		do
 				-- Print signature to `header_file' and `current_file'.
 			print_feature_name_comment (a_feature, current_type, header_file)
@@ -634,551 +645,648 @@ feature {NONE} -- Feature generation
 				print_malloc_current
 			end
 			if a_feature.is_builtin then
-				l_builtin_code := a_feature.builtin_code
-				l_builtin_class := l_builtin_code // builtin_capacity
-				if l_result_type_set /= Void then
-						-- This is a built-in function.
-					inspect l_builtin_class
-					when builtin_any_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_any_twin then
-							print_builtin_any_twin_body (a_feature)
-						when builtin_any_same_type then
-							fill_call_formal_arguments (1)
-							print_indentation_assign_to_result
-							print_builtin_any_same_type_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_any_standard_is_equal then
-							fill_call_formal_arguments (1)
-							print_indentation_assign_to_result
-							print_builtin_any_standard_is_equal_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_any_conforms_to then
-							print_builtin_any_conforms_to_body (a_feature)
-						when builtin_any_generator then
-							fill_call_formal_arguments (1)
-							print_indentation_assign_to_result
-							print_builtin_any_generator_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_any_generating_type then
-							fill_call_formal_arguments (1)
-							print_indentation_assign_to_result
-							print_builtin_any_generating_type_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_any_standard_twin then
-							print_builtin_any_standard_twin_body (a_feature)
-						when builtin_any_tagged_out then
-							print_builtin_any_tagged_out_body (a_feature)
-						when builtin_any_is_deep_equal then
-							print_builtin_any_is_deep_equal_body (a_feature)
-						when builtin_any_deep_twin then
-							print_builtin_any_deep_twin_body (a_feature)
-						else
-								-- Unknown built-in feature.
-								-- This error should already have been reported during parsing.
-								-- building the dynamic type sets.
-							set_fatal_error
-							error_handler.report_gibhk_error
-						end
-					when builtin_special_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_special_item then
-							fill_call_formal_arguments (1)
-							print_indentation_assign_to_result
-							print_builtin_special_item_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_special_count then
-							fill_call_formal_arguments (0)
-							print_indentation_assign_to_result
-							print_builtin_special_count_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_special_element_size then
-							fill_call_formal_arguments (0)
-							print_indentation_assign_to_result
-							print_builtin_special_element_size_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_special_aliased_resized_area then
-							print_builtin_special_aliased_resized_area_body (a_feature)
-						else
-								-- Unknown built-in feature.
-								-- This error should already have been reported during parsing.
-								-- building the dynamic type sets.
-							set_fatal_error
-							error_handler.report_gibgj_error
-						end
-					when builtin_character_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_character_code then
-							fill_call_formal_arguments (0)
-							print_indentation_assign_to_result
-							print_builtin_character_code_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_character_item then
-							fill_call_formal_arguments (0)
-							print_indentation_assign_to_result
-							print_builtin_character_item_call (current_type, current_feature)
-							print_semicolon_newline
-							call_operands.wipe_out
-						else
-								-- Unknown built-in feature.
-								-- This error should already have been reported during parsing.
-								-- building the dynamic type sets.
-							set_fatal_error
-							error_handler.report_gibfr_error
-						end
-					when builtin_boolean_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_boolean_and then
-							fill_call_formal_arguments (1)
-							print_indentation_assign_to_result
-							print_builtin_boolean_and_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_boolean_or then
-							fill_call_formal_arguments (1)
-							print_indentation_assign_to_result
-							print_builtin_boolean_or_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_boolean_xor then
-							fill_call_formal_arguments (1)
-							print_indentation_assign_to_result
-							print_builtin_boolean_xor_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_boolean_not then
-							fill_call_formal_arguments (0)
-							print_indentation_assign_to_result
-							print_builtin_boolean_not_call (current_type)
-							print_semicolon_newline
-							call_operands.wipe_out
-						when builtin_boolean_item then
-							fill_call_formal_arguments (0)
-							print_indentation_assign_to_result
-							print_builtin_boolean_item_call (current_type, current_feature)
-							print_semicolon_newline
-							call_operands.wipe_out
-						else
-								-- Unknown built-in feature.
-								-- This error should already have been reported during parsing.
-								-- building the dynamic type sets.
-							set_fatal_error
-							error_handler.report_gibgn_error
-						end
-					else
-						inspect l_builtin_class
-						when builtin_integer_class then
-							l_integer_type := current_system.integer_type
-						when builtin_integer_8_class then
-							l_integer_type := current_system.integer_8_type
-						when builtin_integer_16_class then
-							l_integer_type := current_system.integer_16_type
-						when builtin_integer_64_class then
-							l_integer_type := current_system.integer_64_type
-						when builtin_natural_8_class then
-							l_integer_type := current_system.natural_8_type
-						when builtin_natural_16_class then
-							l_integer_type := current_system.natural_16_type
-						when builtin_natural_32_class then
-							l_integer_type := current_system.natural_32_type
-						when builtin_natural_64_class then
-							l_integer_type := current_system.natural_64_type
-						else
-								-- Unknown built-in feature.
-								-- This error should already have been reported during parsing.
-								-- building the dynamic type sets.
-							set_fatal_error
-							error_handler.report_gibgb_error
-						end
-						if l_integer_type /= Void then
-							inspect l_builtin_code \\ builtin_capacity
-							when builtin_integer_plus then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_plus_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_minus then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_minus_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_times then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_times_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_divide then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_divide_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_div then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_div_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_mod then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_mod_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_power then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_power_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_opposite then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_opposite_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_identity then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_identity_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_lt then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_lt_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_to_character then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_to_character_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_to_real then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_to_real_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_to_real_32 then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_to_real_32_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_to_real_64 then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_to_real_64_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_to_double then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_to_double_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_as_natural_8 then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_as_natural_8_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_as_natural_16 then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_as_natural_16_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_as_natural_32 then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_as_natural_32_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_as_natural_64 then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_as_natural_64_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_as_integer_8 then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_as_integer_8_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_as_integer_16 then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_as_integer_16_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_as_integer_32 then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_as_integer_32_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_as_integer_64 then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_as_integer_64_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_bit_or then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_bit_or_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_bit_and then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_bit_and_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_bit_shift_left then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_bit_shift_left_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_bit_shift_right then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_bit_shift_right_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_bit_xor then
-								fill_call_formal_arguments (1)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_bit_xor_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_bit_not then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_bit_not_call (current_type, l_integer_type)
-								print_semicolon_newline
-								call_operands.wipe_out
-							when builtin_integer_item then
-								fill_call_formal_arguments (0)
-								print_indentation_assign_to_result
-								print_builtin_sized_integer_item_call (current_type, l_integer_type, current_feature)
-								print_semicolon_newline
-								call_operands.wipe_out
-							else
-									-- Unknown built-in feature.
-									-- This error should already have been reported during parsing.
-									-- building the dynamic type sets.
-								set_fatal_error
-								error_handler.report_gibib_error
-							end
-						end
-					end
-				else
-						-- This is a built-in procedure.
-					inspect l_builtin_class
-					when builtin_any_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_any_standard_copy then
-							fill_call_formal_arguments (1)
-							print_indentation
-							print_builtin_any_standard_copy_call (current_type)
-							current_file.put_new_line
-							call_operands.wipe_out
-						else
-								-- Unknown built-in feature.
-								-- This error should already have been reported during parsing.
-								-- building the dynamic type sets.
-							set_fatal_error
-							error_handler.report_gibgi_error
-						end
-					when builtin_special_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_special_make then
-							-- Do nothing: already done in `print_malloc_current'.
-						when builtin_special_put then
-							fill_call_formal_arguments (2)
-							print_indentation
-							print_builtin_special_put_call (current_type)
-							current_file.put_new_line
-							call_operands.wipe_out
-						else
-								-- Unknown built-in feature.
-								-- This error should already have been reported during parsing.
-								-- building the dynamic type sets.
-							set_fatal_error
-							error_handler.report_gibga_error
-						end
-					when builtin_character_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_character_set_item then
-							fill_call_formal_arguments (1)
-							print_indentation
-							print_builtin_character_set_item_call (current_type)
-							current_file.put_new_line
-							call_operands.wipe_out
-						else
-								-- Unknown built-in feature.
-								-- This error should already have been reported during parsing.
-								-- building the dynamic type sets.
-							set_fatal_error
-							error_handler.report_giaaj_error
-						end
-					when builtin_boolean_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_boolean_set_item then
-							fill_call_formal_arguments (1)
-							print_indentation
-							print_builtin_boolean_set_item_call (current_type)
-							current_file.put_new_line
-							call_operands.wipe_out
-						else
-								-- Unknown built-in feature.
-								-- This error should already have been reported during parsing.
-								-- building the dynamic type sets.
-							set_fatal_error
-							error_handler.report_gibax_error
-						end
-					else
-						inspect l_builtin_class
-						when builtin_integer_class then
-							l_integer_type := current_system.integer_type
-						when builtin_integer_8_class then
-							l_integer_type := current_system.integer_8_type
-						when builtin_integer_16_class then
-							l_integer_type := current_system.integer_16_type
-						when builtin_integer_64_class then
-							l_integer_type := current_system.integer_64_type
-						when builtin_natural_8_class then
-							l_integer_type := current_system.natural_8_type
-						when builtin_natural_16_class then
-							l_integer_type := current_system.natural_16_type
-						when builtin_natural_32_class then
-							l_integer_type := current_system.natural_32_type
-						when builtin_natural_64_class then
-							l_integer_type := current_system.natural_64_type
-						else
-								-- Unknown built-in feature.
-								-- This error should already have been reported during parsing.
-								-- building the dynamic type sets.
-							set_fatal_error
-							error_handler.report_gibkr_error
-						end
-						if l_integer_type /= Void then
-							inspect l_builtin_code \\ builtin_capacity
-							when builtin_integer_set_item then
-								fill_call_formal_arguments (1)
-								print_indentation
-								print_builtin_sized_integer_set_item_call (current_type, l_integer_type, l_builtin_class)
-								current_file.put_new_line
-								call_operands.wipe_out
-							else
-									-- Unknown built-in feature.
-									-- This error should already have been reported during parsing.
-									-- building the dynamic type sets.
-								set_fatal_error
-								error_handler.report_gibib_error
-							end
-						end
-					end
-				end
+				print_external_builtin_body (a_feature)
 			else
 				l_language := a_feature.language
 				l_language_value := l_language.manifest_string
-				if STRING_.same_case_insensitive (l_language_value.value, e_inline) then
-					l_alias := a_feature.alias_clause
-					if l_alias /= Void then
-						l_alias_value := l_alias.manifest_string
-						l_c_code := l_alias_value.value
-						l_formal_arguments := a_feature.arguments
-						if l_formal_arguments /= Void then
-							nb := l_c_code.count
-							from i := 1 until i > nb loop
-								c := l_c_code.item (i)
-								if c = '$' then
+				l_language_string := l_language_value.value
+				nb := l_language_string.count
+					-- Remove leading spaces.
+				from
+					i := 1
+				until
+					i > nb or stop
+				loop
+					inspect l_language_string.item (i)
+					when ' ', '%R', '%T', '%N' then
+						i := i + 1
+					else
+						stop := True
+					end
+				end
+					-- Read language name.
+				from
+					stop := False
+					create l_language_name.make (10)
+				until
+					i > nb or stop
+				loop
+					c := l_language_string.item (i)
+					inspect c
+					when ' ', '%R', '%T', '%N' then
+						stop := True
+					else
+						l_language_name.append_character (c)
+						i := i + 1
+					end
+				end
+					-- Remove spaces.
+				from
+					stop := False
+				until
+					i > nb or stop
+				loop
+					inspect l_language_string.item (i)
+					when ' ', '%R', '%T', '%N' then
+						i := i + 1
+					else
+						stop := True
+					end
+				end
+				if l_language_name.is_empty then
+-- TODO: error
+				elseif STRING_.same_case_insensitive (l_language_name, e_c) then
+						-- Look for 'blocking' keyword.
+					if i + 7 <= nb then
+						l_blocking := l_language_string.substring (i, i + 7)
+						if not STRING_.same_case_insensitive (l_blocking, e_blocking) then
+							l_blocking := Void
+						else
+								-- Remove spaces.
+							from
+								i := i + 8
+								stop := False
+							until
+								i > nb or stop
+							loop
+								inspect l_language_string.item (i)
+								when ' ', '%R', '%T', '%N' then
 									i := i + 1
-									if i <= nb then
-										c := l_c_code.item (i)
-										inspect c
-										when '$' then
-											current_file.put_character ('$')
-											i := i + 1
-										when 'a'..'z', 'A'..'Z' then
-											l_max := 0
-											l_max_index := 0
-											nb2 := l_formal_arguments.count
-											from i2 := 1 until i2 > nb2 loop
-												l_name := l_formal_arguments.formal_argument (i2).name.name
-												nb3 := l_name.count
-												if nb3 > l_max then
-													from
-														i3 := 1
-														j := i
-													until
-														j > nb or
-														i3 > nb3
-													loop
-														c := l_c_code.item (j)
-														c3 := l_name.item (i3)
-														if CHARACTER_.as_lower (c3) = CHARACTER_.as_lower (c) then
-															i3 := i3 + 1
-															j := j + 1
-														else
-															j := nb + 1
-														end
-													end
-													if i3 > nb3 then
-														l_max_index := i2
-														l_max := nb3
-													end
-												end
-												i2 := i2 + 1
-											end
-											if l_max_index /= 0 then
-												current_file.put_character ('a')
-												current_file.put_integer (l_max_index)
-												i := i + l_max
-											else
-												current_file.put_character ('$')
-												current_file.put_character (l_c_code.item (i))
-												i := i + 1
-											end
+								else
+									stop := True
+								end
+							end
+						end
+					end
+						-- Look for 'inline' keyword.
+					if i + 5 <= nb then
+						l_inline := l_language_string.substring (i, i + 5)
+						if not STRING_.same_case_insensitive (l_inline, e_inline) then
+							l_inline := Void
+						else
+								-- Remove spaces.
+							from
+								i := i + 6
+								stop := False
+							until
+								i > nb or stop
+							loop
+								inspect l_language_string.item (i)
+								when ' ', '%R', '%T', '%N' then
+									i := i + 1
+								else
+									stop := True
+								end
+							end
+						end
+					end
+						-- Look for 'macro' keyword.
+					if i + 4 <= nb then
+						l_macro := l_language_string.substring (i, i + 4)
+						if not STRING_.same_case_insensitive (l_macro, e_macro) then
+							l_macro := Void
+						else
+								-- Remove spaces.
+							from
+								i := i + 5
+								stop := False
+							until
+								i > nb or stop
+							loop
+								inspect l_language_string.item (i)
+								when ' ', '%R', '%T', '%N' then
+									i := i + 1
+								else
+									stop := True
+								end
+							end
+						end
+					end
+						-- Look for 'struct' keyword.
+					if i + 5 <= nb then
+						l_struct := l_language_string.substring (i, i + 5)
+						if not STRING_.same_case_insensitive (l_struct, e_struct) then
+							l_struct := Void
+						else
+								-- Look for struct type.
+							from
+								i := i + 6
+								stop := False
+								create l_struct_type.make (10)
+							until
+								i > nb or stop
+							loop
+								c := l_language_string.item (i)
+								inspect c
+								when 'a', 'A' then
+									if i + 5 <= nb then
+										l_access := l_language_string.substring (i, i + 5)
+										if not STRING_.same_case_insensitive (l_access, e_access) then
+											l_access := Void
 										else
-											current_file.put_character ('$')
-											current_file.put_character (c)
-											i := i + 1
+											i := i + 6
+											stop := True
 										end
-									else
-										current_file.put_character ('$')
+									end
+									if not stop then
+										l_struct_type.append_character (c)
+										i := i + 1
+									end
+								when 'g', 'G' then
+									if i + 2 <= nb then
+										l_get := l_language_string.substring (i, i + 2)
+										if not STRING_.same_case_insensitive (l_get, e_get) then
+											l_get := Void
+										else
+											i := i + 3
+											stop := True
+										end
+									end
+									if not stop then
+										l_struct_type.append_character (c)
+										i := i + 1
 									end
 								else
-									current_file.put_character (c)
+									l_struct_type.append_character (c)
 									i := i + 1
 								end
 							end
-							current_file.put_new_line
-						else
-							current_file.put_line (l_c_code)
+								-- Look for field name.
+							from
+								stop := False
+								create l_struct_field_name.make (10)
+							until
+								i > nb or stop
+							loop
+								c := l_language_string.item (i)
+								inspect c
+								when 't', 'T' then
+									if i + 3 <= nb then
+										l_type := l_language_string.substring (i, i + 3)
+										if not STRING_.same_case_insensitive (l_type, e_type) then
+											l_type := Void
+										else
+											i := i + 4
+											stop := True
+										end
+									end
+									if not stop then
+										l_struct_field_name.append_character (c)
+										i := i + 1
+									end
+								when 'u', 'U' then
+									if i + 2 <= nb then
+										l_use := l_language_string.substring (i, i + 2)
+										if not STRING_.same_case_insensitive (l_use, e_use) then
+											l_use := Void
+										else
+											stop := True
+										end
+									end
+									if not stop then
+										l_struct_field_name.append_character (c)
+										i := i + 1
+									end
+								else
+									l_struct_field_name.append_character (c)
+									i := i + 1
+								end
+							end
+								-- Look for field type.
+							if l_type /= Void then
+								from
+									stop := False
+									create l_struct_field_type.make (10)
+								until
+									i > nb or stop
+								loop
+									c := l_language_string.item (i)
+									inspect c
+									when 'u', 'U' then
+										if i + 2 <= nb then
+											l_use := l_language_string.substring (i, i + 2)
+											if not STRING_.same_case_insensitive (l_use, e_use) then
+												l_use := Void
+											else
+												stop := True
+											end
+										end
+										if not stop then
+											l_struct_field_type.append_character (c)
+											i := i + 1
+										end
+									else
+										l_struct_field_type.append_character (c)
+										i := i + 1
+									end
+								end
+							end
+								-- Remove spaces.
+							from
+								i := i + 6
+								stop := False
+							until
+								i > nb or stop
+							loop
+								inspect l_language_string.item (i)
+								when ' ', '%R', '%T', '%N' then
+									i := i + 1
+								else
+									stop := True
+								end
+							end
 						end
 					end
---						-- No need to print "return R;", this should
---						-- already be done in the inlined code.
---					l_result_type_set := Void
+						-- Look for old 'macro' or 'struct' syntax.
+					if i <= nb and then l_language_string.item (i) = '[' then
+							-- Remove spaces.
+						from
+							i := i + 1
+							stop := False
+						until
+							i > nb or stop
+						loop
+							inspect l_language_string.item (i)
+							when ' ', '%R', '%T', '%N' then
+								i := i + 1
+							else
+								stop := True
+							end
+						end
+						if i + 4 <= nb then
+							l_macro := l_language_string.substring (i, i + 4)
+							if not STRING_.same_case_insensitive (l_macro, e_macro) then
+								l_macro := Void
+							else
+									-- Remove spaces.
+								from
+									i := i + 5
+									stop := False
+								until
+									i > nb or stop
+								loop
+									inspect l_language_string.item (i)
+									when ' ', '%R', '%T', '%N' then
+										i := i + 1
+									else
+										stop := True
+									end
+								end
+							end
+						end
+						if i + 5 <= nb then
+							l_struct := l_language_string.substring (i, i + 5)
+							if not STRING_.same_case_insensitive (l_struct, e_struct) then
+								l_struct := Void
+							else
+									-- Remove spaces.
+								from
+									i := i + 6
+									stop := False
+								until
+									i > nb or stop
+								loop
+									inspect l_language_string.item (i)
+									when ' ', '%R', '%T', '%N' then
+										i := i + 1
+									else
+										stop := True
+									end
+								end
+							end
+						end
+						if l_macro = Void and l_struct = Void then
+-- TODO: syntax error
+						end
+						from
+							i := i + 1
+							stop := False
+							create l_include_filename.make (50)
+						until
+							i > nb or stop
+						loop
+							c := l_language_string.item (i)
+							inspect c
+							when ']' then
+								stop := True
+							else
+								l_include_filename.append_character (c)
+								i := i + 1
+							end
+						end
+						if i > nb then
+-- TODO: error
+						else
+							i := i + 1
+							header_file.put_string (c_include)
+							header_file.put_character (' ')
+							header_file.put_string (l_include_filename)
+							header_file.put_new_line
+						end
+							-- Remove spaces.
+						from
+							stop := False
+						until
+							i > nb or stop
+						loop
+							inspect l_language_string.item (i)
+							when ' ', '%R', '%T', '%N' then
+								i := i + 1
+							else
+								stop := True
+							end
+						end
+					end
+						-- Look for signature.
+					if i + 8 <= nb then
+						l_signature := l_language_string.substring (i, i + 8)
+						if not STRING_.same_case_insensitive (l_signature, e_signature) then
+							l_signature := Void
+						else
+								-- Remove spaces.
+							from
+								i := i + 9
+								stop := False
+							until
+								i > nb or stop
+							loop
+								inspect l_language_string.item (i)
+								when ' ', '%R', '%T', '%N' then
+									i := i + 1
+								else
+									stop := True
+								end
+							end
+						end
+					end
+					if i <= nb and then l_language_string.item (i) = '(' then
+							-- Read signature arguments.
+						from
+							i := i + 1
+							stop := False
+							create l_signature_arguments.make (50)
+						until
+							i > nb or stop
+						loop
+							c := l_language_string.item (i)
+							inspect c
+							when ')' then
+								stop := True
+							else
+								l_signature_arguments.append_character (c)
+								i := i + 1
+							end
+						end
+						if i > nb then
+-- TODO: error
+						else
+							i := i + 1
+						end
+							-- Remove spaces.
+						from
+							stop := False
+						until
+							i > nb or stop
+						loop
+							inspect l_language_string.item (i)
+							when ' ', '%R', '%T', '%N' then
+								i := i + 1
+							else
+								stop := True
+							end
+						end
+					end
+					if i <= nb and then l_language_string.item (i) = ':' then
+							-- Read signature result.
+						from
+							i := i + 1
+							stop := False
+							create l_signature_arguments.make (10)
+						until
+							i > nb or stop
+						loop
+							c := l_language_string.item (i)
+							inspect c
+							when '|' then
+								stop := True
+							when 'u', 'U' then
+								if i + 2 <= nb then
+									l_use := l_language_string.substring (i, i + 2)
+									if not STRING_.same_case_insensitive (l_use, e_use) then
+										l_use := Void
+									else
+										stop := True
+									end
+								end
+								if not stop then
+									l_signature_result.append_character (c)
+									i := i + 1
+								end
+							else
+								l_signature_result.append_character (c)
+								i := i + 1
+							end
+						end
+					end
+					if l_signature_arguments = Void and l_signature_result = Void then
+						if l_signature /= Void then
+-- TODO: syntax error.
+						end
+					elseif l_signature = Void then
+						l_signature := e_signature
+					end
+						-- Look for use.
+					if i <= nb and then l_language_string.item (i) = '|' then
+						l_use := e_use
+						i := i + 1
+					elseif i + 2 <= nb then
+						l_use := l_language_string.substring (i, i + 2)
+						if not STRING_.same_case_insensitive (l_use, e_use) then
+							l_use := Void
+						else
+							i := i + 3
+						end
+					end
+					if l_use /= Void then
+						if i > nb then
+-- TODO: syntax error
+						else
+							create l_splitter.make_with_separators (",")
+							l_list := l_splitter.split (l_language_string.substring (i, nb))
+							l_cursor := l_list.new_cursor
+							from l_cursor.start until l_cursor.after loop
+								header_file.put_string (c_include)
+								header_file.put_character (' ')
+								header_file.put_string (l_cursor.item)
+								header_file.put_new_line
+								l_cursor.forth
+							end
+						end
+					end
+					if l_inline /= Void then
+							-- external "C inline".
+						if l_signature /= Void then
+-- TODO: syntax error
+						end
+						print_external_c_inline_body (a_feature)
+--							-- No need to print "return R;", this should
+--							-- already be done in the inlined code.
+--						l_result_type_set := Void
+					elseif l_struct /= Void then
+						if l_result_type_set /= Void then
+							current_file.put_character ('R')
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							print_type_cast (l_result_type_set.static_type, current_file)
+							current_file.put_character ('(')
+						end
+						if l_struct_type = Void then
+							if l_signature_arguments = Void then
+-- TODO: syntax error
+							else
+								create l_splitter.make_with_separators (",")
+								l_list := l_splitter.split (l_signature_arguments)
+								inspect l_list.count
+								when 1 then
+									l_struct_type := l_list.item (1)
+								when 2 then
+									l_struct_type := l_list.item (1)
+									l_struct_field_type := l_list.item (2)
+								else
+-- TODO: syntax error
+								end
+							end
+							if l_signature_result /= Void then
+								l_struct_field_type := l_signature_result
+							end
+							l_alias := a_feature.alias_clause
+							if l_alias /= Void then
+								l_alias_value := l_alias.manifest_string
+								l_struct_field_name := l_alias_value.value
+							else
+								l_struct_field_name := a_feature.implementation_feature.name.lower_name
+							end
+						end
+						if l_struct_type /= Void and l_struct_field_name /= Void then
+							if not l_struct_field_name.is_empty then
+								inspect l_struct_field_name.item (1)
+								when '@' then
+									l_struct_field_name.remove_head (1)
+								when '&' then
+									l_struct_field_name.remove_head (1)
+									current_file.put_character ('&')
+								else
+								end
+							end
+							current_file.put_character ('(')
+							current_file.put_character ('(')
+							current_file.put_character ('(')
+							current_file.put_string (l_struct_type)
+							current_file.put_character ('*')
+							current_file.put_character (')')
+							current_file.put_character ('a')
+							current_file.put_character ('1')
+							current_file.put_character (')')
+							current_file.put_character ('-')
+							current_file.put_character ('>')
+							current_file.put_string (l_struct_field_name)
+							current_file.put_character (')')
+							if l_result_type_set = Void then
+								current_file.put_character (' ')
+								current_file.put_character ('=')
+								current_file.put_character (' ')
+								if l_struct_field_type /= Void then
+									current_file.put_character ('(')
+									current_file.put_string (l_struct_field_type)
+									current_file.put_character (')')
+								end
+								current_file.put_character ('a')
+								current_file.put_character ('2')
+							end
+						end
+						if l_result_type_set /= Void then
+							current_file.put_character (')')
+						end
+						current_file.put_character (';')
+						current_file.put_new_line
+					else
+							-- external "C".
+						print_indentation
+						if l_result_type_set /= Void then
+							current_file.put_character ('R')
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							print_type_cast (l_result_type_set.static_type, current_file)
+							if l_signature_result /= Void then
+								current_file.put_character ('(')
+								current_file.put_string (l_signature_result)
+								current_file.put_character (')')
+							end
+						end
+						l_alias := a_feature.alias_clause
+						if l_alias /= Void then
+							l_alias_value := l_alias.manifest_string
+							current_file.put_string (l_alias_value.value)
+						else
+							current_file.put_string (a_feature.implementation_feature.name.lower_name)
+						end
+						if l_arguments /= Void then
+							nb := l_arguments.count
+						else
+							nb := 0
+						end
+						if nb > 0 then
+							current_file.put_character ('(')
+							if l_signature_arguments /= Void then
+								create l_splitter.make_with_separators (",")
+								l_list := l_splitter.split (l_signature_arguments)
+								if l_list.count /= nb then
+-- TODO: error
+								end
+								l_cursor := l_list.new_cursor
+								l_cursor.start
+								if not l_cursor.after then
+									current_file.put_character ('(')
+									current_file.put_string (l_cursor.item)
+									current_file.put_character (')')
+									l_cursor.forth
+								end
+								current_file.put_character ('a')
+								current_file.put_integer (1)
+								from i := 2 until i > nb loop
+									current_file.put_character (',')
+									if not l_cursor.after then
+										current_file.put_character ('(')
+										current_file.put_string (l_cursor.item)
+										current_file.put_character (')')
+										l_cursor.forth
+									end
+									current_file.put_character ('a')
+									current_file.put_integer (i)
+									i := i + 1
+								end
+							else
+								current_file.put_character ('a')
+								current_file.put_integer (1)
+								from i := 2 until i > nb loop
+									current_file.put_character (',')
+									current_file.put_character ('a')
+									current_file.put_integer (i)
+									i := i + 1
+								end
+							end
+							current_file.put_character (')')
+						elseif l_macro = Void or else l_signature_arguments /= Void then
+							current_file.put_character ('(')
+							current_file.put_character (')')
+						end
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+				else
+-- TODO: not supported
 				end
 			end
 			if l_result_type_set /= Void then
@@ -1200,6 +1308,578 @@ feature {NONE} -- Feature generation
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+		end
+
+	print_external_builtin_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature `a_feature' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_builtin_code: INTEGER
+			l_builtin_class: INTEGER
+			l_integer_type: ET_DYNAMIC_TYPE
+		do
+			l_builtin_code := a_feature.builtin_code
+			l_builtin_class := l_builtin_code // builtin_capacity
+			l_result_type_set := current_feature.result_type_set
+			if l_result_type_set /= Void then
+					-- This is a built-in function.
+				inspect l_builtin_class
+				when builtin_any_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_any_twin then
+						print_builtin_any_twin_body (a_feature)
+					when builtin_any_same_type then
+						fill_call_formal_arguments (1)
+						print_indentation_assign_to_result
+						print_builtin_any_same_type_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_any_standard_is_equal then
+						fill_call_formal_arguments (1)
+						print_indentation_assign_to_result
+						print_builtin_any_standard_is_equal_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_any_conforms_to then
+						print_builtin_any_conforms_to_body (a_feature)
+					when builtin_any_generator then
+						fill_call_formal_arguments (1)
+						print_indentation_assign_to_result
+						print_builtin_any_generator_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_any_generating_type then
+						fill_call_formal_arguments (1)
+						print_indentation_assign_to_result
+						print_builtin_any_generating_type_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_any_standard_twin then
+						print_builtin_any_standard_twin_body (a_feature)
+					when builtin_any_tagged_out then
+						print_builtin_any_tagged_out_body (a_feature)
+					when builtin_any_is_deep_equal then
+						print_builtin_any_is_deep_equal_body (a_feature)
+					when builtin_any_deep_twin then
+						print_builtin_any_deep_twin_body (a_feature)
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gibhk_error
+					end
+				when builtin_special_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_special_item then
+						fill_call_formal_arguments (1)
+						print_indentation_assign_to_result
+						print_builtin_special_item_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_special_count then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_special_count_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_special_element_size then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_special_element_size_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_special_aliased_resized_area then
+						print_builtin_special_aliased_resized_area_body (a_feature)
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gibgj_error
+					end
+				when builtin_character_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_character_code then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_character_code_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_character_item then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_character_item_call (current_type, current_feature)
+						print_semicolon_newline
+						call_operands.wipe_out
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gibfr_error
+					end
+				when builtin_boolean_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_boolean_and then
+						fill_call_formal_arguments (1)
+						print_indentation_assign_to_result
+						print_builtin_boolean_and_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_boolean_or then
+						fill_call_formal_arguments (1)
+						print_indentation_assign_to_result
+						print_builtin_boolean_or_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_boolean_xor then
+						fill_call_formal_arguments (1)
+						print_indentation_assign_to_result
+						print_builtin_boolean_xor_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_boolean_not then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_boolean_not_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_boolean_item then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_boolean_item_call (current_type, current_feature)
+						print_semicolon_newline
+						call_operands.wipe_out
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gibgn_error
+					end
+				else
+					inspect l_builtin_class
+					when builtin_integer_class then
+						l_integer_type := current_system.integer_type
+					when builtin_integer_8_class then
+						l_integer_type := current_system.integer_8_type
+					when builtin_integer_16_class then
+						l_integer_type := current_system.integer_16_type
+					when builtin_integer_64_class then
+						l_integer_type := current_system.integer_64_type
+					when builtin_natural_8_class then
+						l_integer_type := current_system.natural_8_type
+					when builtin_natural_16_class then
+						l_integer_type := current_system.natural_16_type
+					when builtin_natural_32_class then
+						l_integer_type := current_system.natural_32_type
+					when builtin_natural_64_class then
+						l_integer_type := current_system.natural_64_type
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gibgb_error
+					end
+					if l_integer_type /= Void then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_integer_plus then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_plus_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_minus then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_minus_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_times then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_times_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_divide then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_divide_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_div then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_div_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_mod then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_mod_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_power then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_power_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_opposite then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_opposite_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_identity then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_identity_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_lt then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_lt_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_to_character then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_to_character_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_to_real then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_to_real_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_to_real_32 then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_to_real_32_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_to_real_64 then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_to_real_64_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_to_double then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_to_double_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_as_natural_8 then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_as_natural_8_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_as_natural_16 then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_as_natural_16_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_as_natural_32 then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_as_natural_32_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_as_natural_64 then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_as_natural_64_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_as_integer_8 then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_as_integer_8_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_as_integer_16 then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_as_integer_16_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_as_integer_32 then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_as_integer_32_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_as_integer_64 then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_as_integer_64_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_bit_or then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_bit_or_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_bit_and then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_bit_and_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_bit_shift_left then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_bit_shift_left_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_bit_shift_right then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_bit_shift_right_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_bit_xor then
+							fill_call_formal_arguments (1)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_bit_xor_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_bit_not then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_bit_not_call (current_type, l_integer_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_integer_item then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_integer_item_call (current_type, l_integer_type, current_feature)
+							print_semicolon_newline
+							call_operands.wipe_out
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibib_error
+						end
+					end
+				end
+			else
+					-- This is a built-in procedure.
+				inspect l_builtin_class
+				when builtin_any_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_any_standard_copy then
+						fill_call_formal_arguments (1)
+						print_indentation
+						print_builtin_any_standard_copy_call (current_type)
+						current_file.put_new_line
+						call_operands.wipe_out
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gibgi_error
+					end
+				when builtin_special_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_special_make then
+						-- Do nothing: already done in `print_malloc_current'.
+					when builtin_special_put then
+						fill_call_formal_arguments (2)
+						print_indentation
+						print_builtin_special_put_call (current_type)
+						current_file.put_new_line
+						call_operands.wipe_out
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gibga_error
+					end
+				when builtin_character_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_character_set_item then
+						fill_call_formal_arguments (1)
+						print_indentation
+						print_builtin_character_set_item_call (current_type)
+						current_file.put_new_line
+						call_operands.wipe_out
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_giaaj_error
+					end
+				when builtin_boolean_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_boolean_set_item then
+						fill_call_formal_arguments (1)
+						print_indentation
+						print_builtin_boolean_set_item_call (current_type)
+						current_file.put_new_line
+						call_operands.wipe_out
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gibax_error
+					end
+				else
+					inspect l_builtin_class
+					when builtin_integer_class then
+						l_integer_type := current_system.integer_type
+					when builtin_integer_8_class then
+						l_integer_type := current_system.integer_8_type
+					when builtin_integer_16_class then
+						l_integer_type := current_system.integer_16_type
+					when builtin_integer_64_class then
+						l_integer_type := current_system.integer_64_type
+					when builtin_natural_8_class then
+						l_integer_type := current_system.natural_8_type
+					when builtin_natural_16_class then
+						l_integer_type := current_system.natural_16_type
+					when builtin_natural_32_class then
+						l_integer_type := current_system.natural_32_type
+					when builtin_natural_64_class then
+						l_integer_type := current_system.natural_64_type
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gibkr_error
+					end
+					if l_integer_type /= Void then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_integer_set_item then
+							fill_call_formal_arguments (1)
+							print_indentation
+							print_builtin_sized_integer_set_item_call (current_type, l_integer_type, l_builtin_class)
+							current_file.put_new_line
+							call_operands.wipe_out
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibib_error
+						end
+					end
+				end
+			end
+		end
+
+	print_external_c_inline_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of external "C inline" `a_feature' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_alias: ET_EXTERNAL_ALIAS
+			l_alias_value: ET_MANIFEST_STRING
+			l_c_code: STRING
+			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_name: STRING
+			i, j, nb: INTEGER
+			i2, nb2: INTEGER
+			i3, nb3: INTEGER
+			l_max: INTEGER
+			l_max_index: INTEGER
+			c, c3: CHARACTER
+		do
+			l_alias := a_feature.alias_clause
+			if l_alias /= Void then
+				l_alias_value := l_alias.manifest_string
+				l_c_code := l_alias_value.value
+				l_formal_arguments := a_feature.arguments
+				if l_formal_arguments /= Void then
+					nb := l_c_code.count
+					from i := 1 until i > nb loop
+						c := l_c_code.item (i)
+						if c = '$' then
+							i := i + 1
+							if i <= nb then
+								c := l_c_code.item (i)
+								inspect c
+								when '$' then
+									current_file.put_character ('$')
+									i := i + 1
+								when 'a'..'z', 'A'..'Z' then
+									l_max := 0
+									l_max_index := 0
+									nb2 := l_formal_arguments.count
+									from i2 := 1 until i2 > nb2 loop
+										l_name := l_formal_arguments.formal_argument (i2).name.name
+										nb3 := l_name.count
+										if nb3 > l_max then
+											from
+												i3 := 1
+												j := i
+											until
+												j > nb or
+												i3 > nb3
+											loop
+												c := l_c_code.item (j)
+												c3 := l_name.item (i3)
+												if CHARACTER_.as_lower (c3) = CHARACTER_.as_lower (c) then
+													i3 := i3 + 1
+													j := j + 1
+												else
+													j := nb + 1
+												end
+											end
+											if i3 > nb3 then
+												l_max_index := i2
+												l_max := nb3
+											end
+										end
+										i2 := i2 + 1
+									end
+									if l_max_index /= 0 then
+										current_file.put_character ('a')
+										current_file.put_integer (l_max_index)
+										i := i + l_max
+									else
+										current_file.put_character ('$')
+										current_file.put_character (l_c_code.item (i))
+										i := i + 1
+									end
+								else
+									current_file.put_character ('$')
+									current_file.put_character (c)
+									i := i + 1
+								end
+							else
+								current_file.put_character ('$')
+							end
+						else
+							current_file.put_character (c)
+							i := i + 1
+						end
+					end
+					current_file.put_new_line
+				else
+					current_file.put_line (l_c_code)
+				end
+			end
 		end
 
 	print_internal_function (a_feature: ET_INTERNAL_FUNCTION) is
@@ -10421,7 +11101,16 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	e_inline: STRING is "C inline"
+	e_access: STRING is "access"
+	e_blocking: STRING is "blocking"
+	e_c: STRING is "C"
+	e_get: STRING is "get"
+	e_inline: STRING is "inline"
+	e_macro: STRING is "macro"
+	e_signature: STRING is "signature"
+	e_struct: STRING is "struct"
+	e_type: STRING is "type"
+	e_use: STRING is "use"
 	c_arrow: STRING is "->"
 	c_break: STRING is "break"
 	c_case: STRING is "case"
@@ -10457,6 +11146,7 @@ feature {NONE} -- Constants
 	c_gevoid: STRING is "gevoid"
 	c_id: STRING is "id"
 	c_if: STRING is "if"
+	c_include: STRING is "#include"
 	c_int: STRING is "int"
 	c_int8_t: STRING is "int8_t"
 	c_int16_t: STRING is "int16_t"
