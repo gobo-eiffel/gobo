@@ -39,7 +39,7 @@ feature -- Test
 		end
 
 	test_default_create is
-			-- Test feature `default_create'
+			-- Test feature 'default_create'.
 		local
 			bref: BOOLEAN_REF
 		do
@@ -49,7 +49,7 @@ feature -- Test
 		end
 
 	test_out is
-			-- Test feature `out'.
+			-- Test feature 'out'.
 		local
 			bref: BOOLEAN_REF
 			l_out: STRING
@@ -69,7 +69,7 @@ feature -- Test
 		end
 
 	test_item is
-			-- Test feature `item'.
+			-- Test feature 'item'.
 		local
 			bref: BOOLEAN_REF
 		do
@@ -80,7 +80,7 @@ feature -- Test
 		end
 
 	test_set_item is
-			-- Test feature `set_item'.
+			-- Test feature 'set_item'.
 		local
 			bref: BOOLEAN_REF
 		do
@@ -92,7 +92,7 @@ feature -- Test
 		end
 
 	test_is_hashable is
-			-- Test feature `is_hashable'.
+			-- Test feature 'is_hashable'.
 		local
 			bref: BOOLEAN_REF
 		do
@@ -103,7 +103,7 @@ feature -- Test
 		end
 
 	test_hash_code is
-			-- Test feature `hash_code'.
+			-- Test feature 'hash_code'.
 		local
 			bref1, bref2: BOOLEAN_REF
 		do
@@ -116,7 +116,7 @@ feature -- Test
 		end
 
 	test_to_integer is
-			-- Test feature `to_integer'.
+			-- Test feature 'to_integer'.
 		local
 			bref: BOOLEAN_REF
 		do
@@ -127,7 +127,7 @@ feature -- Test
 		end
 
 	test_to_reference is
-			-- Test feature `to_reference'.
+			-- Test feature 'to_reference'.
 		local
 			bref1, bref2: BOOLEAN_REF
 		do
@@ -142,7 +142,7 @@ feature -- Test
 		end
 
 	test_infix_and is
-			-- Test feature `infix "and"'.
+			-- Test feature 'infix "and"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -166,7 +166,7 @@ feature -- Test
 		end
 
 	test_infix_and_then is
-			-- Test feature `infix "and then"'.
+			-- Test feature 'infix "and then"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -190,7 +190,7 @@ feature -- Test
 		end
 
 	test_infix_or is
-			-- Test feature `infix "or"'.
+			-- Test feature 'infix "or"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -214,7 +214,7 @@ feature -- Test
 		end
 
 	test_infix_or_else is
-			-- Test feature `infix "or else"'.
+			-- Test feature 'infix "or else"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -238,7 +238,7 @@ feature -- Test
 		end
 
 	test_infix_xor is
-			-- Test feature `infix "xor"'.
+			-- Test feature 'infix "xor"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -262,7 +262,7 @@ feature -- Test
 		end
 
 	test_infix_implies is
-			-- Test feature `infix "implies"'.
+			-- Test feature 'infix "implies"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -286,7 +286,7 @@ feature -- Test
 		end
 
 	test_prefix_not is
-			-- Test feature `prefix "not"'.
+			-- Test feature 'prefix "not"'.
 		local
 			bref1, bref2: BOOLEAN_REF
 		do

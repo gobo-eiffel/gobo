@@ -41,7 +41,7 @@ feature -- Test
 		end
 
 	test_default_create is
-			-- Test feature `default_create'
+			-- Test feature 'default_create'.
 		local
 			b: BOOLEAN
 		do
@@ -49,7 +49,7 @@ feature -- Test
 		end
 
 	test_out is
-			-- Test feature `out'.
+			-- Test feature 'out'.
 		local
 			b: BOOLEAN
 			l_out: STRING
@@ -69,7 +69,7 @@ feature -- Test
 		end
 
 	test_item is
-			-- Test feature `item'.
+			-- Test feature 'item'.
 		local
 			b: BOOLEAN
 		do
@@ -82,7 +82,7 @@ feature -- Test
 		end
 
 	test_set_item___fail_ise is
-			-- Test feature `set_item'.
+			-- Test feature 'set_item'.
 			-- Does not work with ISE Eiffel.
 		local
 			b: BOOLEAN
@@ -92,19 +92,19 @@ feature -- Test
 			b.set_item (False)
 			assert ("item2", b = False)
 				-- We get a new "True" at each call (it's an expanded type).
-				-- So setting the `item' of one occurrence of `True' does not
-				-- change the `item' of the next occurrence of `True'.
+				-- So setting the 'item' of one occurrence of "True" does not
+				-- change the 'item' of the next occurrence of "True".
 			(True).set_item (False)
 			assert ("item3", (True).item = True)
-				-- Setting the `item' of the result of a function does not
-				-- set the `item' of the result of the next call of this
+				-- Setting the 'item' of the result of a function does not
+				-- set the 'item' of the result of the next call of this
 				-- function.
 			(True or False).set_item (False)
 			assert ("item4", (True or False).item = True)
 		end
 
 	test_is_hashable is
-			-- Test feature `is_hashable'.
+			-- Test feature 'is_hashable'.
 		local
 			b: BOOLEAN
 		do
@@ -115,7 +115,7 @@ feature -- Test
 		end
 
 	test_hash_code is
-			-- Test feature `hash_code'.
+			-- Test feature 'hash_code'.
 		local
 			b1, b2: BOOLEAN
 		do
@@ -128,7 +128,7 @@ feature -- Test
 		end
 
 	test_to_integer is
-			-- Test feature `to_integer'.
+			-- Test feature 'to_integer'.
 		local
 			b: BOOLEAN
 		do
@@ -139,7 +139,7 @@ feature -- Test
 		end
 
 	test_to_reference is
-			-- Test feature `to_reference'.
+			-- Test feature 'to_reference'.
 		local
 			b: BOOLEAN
 			bref: BOOLEAN_REF
@@ -155,7 +155,7 @@ feature -- Test
 		end
 
 	test_make_from_reference___fail_ise is
-			-- Test feature `make_from_reference'.
+			-- Test feature 'make_from_reference'.
 			-- Does not work with ISE Eiffel.
 		local
 			b: BOOLEAN
@@ -172,7 +172,7 @@ feature -- Test
 		end
 
 	test_infix_and is
-			-- Test feature `infix "and"'.
+			-- Test feature 'infix "and"'.
 		local
 			b1, b2, b3: BOOLEAN
 		do
@@ -195,7 +195,7 @@ feature -- Test
 		end
 
 	test_infix_and_then is
-			-- Test feature `infix "and then"'.
+			-- Test feature 'infix "and then"'.
 		local
 			b1, b2, b3: BOOLEAN
 		do
@@ -218,7 +218,7 @@ feature -- Test
 		end
 
 	test_infix_or is
-			-- Test feature `infix "or"'.
+			-- Test feature 'infix "or"'.
 		local
 			b1, b2, b3: BOOLEAN
 		do
@@ -241,7 +241,7 @@ feature -- Test
 		end
 
 	test_infix_or_else is
-			-- Test feature `infix "or else"'.
+			-- Test feature 'infix "or else"'.
 		local
 			b1, b2, b3: BOOLEAN
 		do
@@ -264,7 +264,7 @@ feature -- Test
 		end
 
 	test_infix_xor is
-			-- Test feature `infix "xor"'.
+			-- Test feature 'infix "xor"'.
 		local
 			b1, b2, b3: BOOLEAN
 		do
@@ -287,7 +287,7 @@ feature -- Test
 		end
 
 	test_infix_implies is
-			-- Test feature `infix "implies"'.
+			-- Test feature 'infix "implies"'.
 		local
 			b1, b2, b3: BOOLEAN
 		do
@@ -310,7 +310,7 @@ feature -- Test
 		end
 
 	test_prefix_not is
-			-- Test feature `prefix "not"'.
+			-- Test feature 'prefix "not"'.
 		local
 			b1, b2: BOOLEAN
 		do

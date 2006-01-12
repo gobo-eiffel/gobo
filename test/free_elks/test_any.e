@@ -48,7 +48,7 @@ feature -- Test
 		end
 
 	test_generator is
-			-- Test feature `generator'.
+			-- Test feature 'generator'.
 		local
 			l_generator: STRING
 			s: STRING
@@ -103,7 +103,7 @@ feature -- Test
 		end
 
 	test_generating_type is
-			-- Test feature `generating_type'.
+			-- Test feature 'generating_type'.
 		local
 			l_type: STRING
 			s: STRING
@@ -158,7 +158,7 @@ feature -- Test
 		end
 
 	test_same_type is
-			-- Test feature `same_type'.
+			-- Test feature 'same_type'.
 		local
 			s1, s2: STRING
 			i1, i2: INTEGER
@@ -174,10 +174,10 @@ feature -- Test
 			assert ("same3", s1.same_type (s1))
 			i1 := 5
 			i2 := 6
--- Does not compile with gec: INTEGER does not conform (nor convert) to ANY.
---			assert ("same4", i1.same_type (i2))
---			assert ("same5", i2.same_type (i1))
---			assert ("same6", i1.same_type (i1))
+			-- INTEGER is converter to an INTEGER_REF.
+			-- assert ("same4", i1.same_type (i2))
+			-- assert ("same5", i2.same_type (i1))
+			-- assert ("same6", i1.same_type (i1))
 			assert ("not_same1", not i1.same_type (s1))
 			create bb1
 			create bb2
@@ -200,7 +200,7 @@ feature -- Test
 		end
 
 	test_conforms_to is
-			-- Test feature `conforms_to'.
+			-- Test feature 'conforms_to'.
 		local
 			s1, s2: STRING
 			i1, i2: INTEGER
@@ -217,10 +217,10 @@ feature -- Test
 			assert ("conforms3", s1.conforms_to (s1))
 			i1 := 5
 			i2 := 6
--- Does not compile with gec: INTEGER does not conform (nor convert) to ANY.
---			assert ("conforms4", i1.conforms_to (i2))
---			assert ("conforms5", i2.conforms_to (i1))
---			assert ("conforms6", i1.conforms_to (i1))
+			-- INTEGER is converter to an INTEGER_REF.
+			-- assert ("conforms4", i1.conforms_to (i2))
+			-- assert ("conforms5", i2.conforms_to (i1))
+			-- assert ("conforms6", i1.conforms_to (i1))
 			assert ("not_conforms1", not i1.conforms_to (s1))
 			create bb1
 			create bb2
@@ -250,7 +250,7 @@ feature -- Test
 		end
 
 	test_is_equal is
-			-- Test feature `is_equal'.
+			-- Test feature 'is_equal'.
 		local
 			s1, s2, s3: STRING
 			i1, i2, i3: INTEGER
@@ -292,7 +292,7 @@ feature -- Test
 		end
 
 	test_equal is
-			-- Test feature `equal'.
+			-- Test feature 'equal'.
 		local
 			s1, s2, s3: STRING
 			sp1, sp2: SPECIAL [INTEGER]
@@ -329,7 +329,7 @@ feature -- Test
 		end
 
 	test_standard_is_equal is
-			-- Test feature `standard_is_equal'.
+			-- Test feature 'standard_is_equal'.
 		local
 			s1, s2, s3: STRING
 			i1, i2, i3: INTEGER
@@ -371,7 +371,7 @@ feature -- Test
 		end
 
 	test_standard_equal is
-			-- Test feature `standard_equal'.
+			-- Test feature 'standard_equal'.
 		local
 			s1, s2, s3: STRING
 			sp1, sp2: SPECIAL [INTEGER]
@@ -406,7 +406,7 @@ feature -- Test
 		end
 
 	test_twin is
-			-- Test feature `twin'.
+			-- Test feature 'twin'.
 		local
 			s1, s2: STRING
 			i1, i2: INTEGER
@@ -440,7 +440,7 @@ feature -- Test
 		end
 
 	test_copy is
-			-- Test feature `copy'.
+			-- Test feature 'copy'.
 		local
 			s1, s2: STRING
 			sp1, sp2: SPECIAL [INTEGER]
@@ -472,7 +472,7 @@ feature -- Test
 		end
 
 	test_copy___fail_ise is
-			-- Test feature `copy'.
+			-- Test feature 'copy'.
 			-- Does not work with ISE Eiffel.
 		local
 			i1, i2: INTEGER
@@ -493,7 +493,7 @@ feature -- Test
 		end
 
 	test_copy___fail_ise_ge is
-			-- Test feature `copy'.
+			-- Test feature 'copy'.
 			-- Does not work with ISE Eiffel and Gobo Eiffel.
 		local
 			sp1, sp2: SPECIAL [INTEGER]
@@ -510,7 +510,7 @@ feature -- Test
 		end
 
 	test_standard_twin is
-			-- Test feature `standard_twin'.
+			-- Test feature 'standard_twin'.
 		local
 			s1, s2: STRING
 			sp1, sp2: SPECIAL [INTEGER]
@@ -540,7 +540,7 @@ feature -- Test
 		end
 
 	test_standard_twin___fail_ise is
-			-- Test feature `standard_twin'.
+			-- Test feature 'standard_twin'.
 			-- Does not work with ISE Eiffel.
 		local
 			i1, i2: INTEGER
@@ -551,7 +551,7 @@ feature -- Test
 		end
 
 	test_standard_copy is
-			-- Test feature `standard_copy'.
+			-- Test feature 'standard_copy'.
 		local
 			s1, s2: STRING
 			sp1, sp2: SPECIAL [INTEGER]
@@ -583,7 +583,7 @@ feature -- Test
 		end
 
 	test_standard_copy___fail_ise is
-			-- Test feature `standard_copy'.
+			-- Test feature 'standard_copy'.
 			-- Does not work with ISE Eiffel.
 		local
 			i1, i2: INTEGER
@@ -604,7 +604,7 @@ feature -- Test
 		end
 
 	test_standard_copy___fail_ise_ge is
-			-- Test feature `standard_copy'.
+			-- Test feature 'standard_copy'.
 			-- Does not work with ISE Eiffel and Gobo Eiffel.
 		local
 			sp1, sp2: SPECIAL [INTEGER]
@@ -621,7 +621,7 @@ feature -- Test
 		end
 
 	test_out is
-			-- Test feature `out'.
+			-- Test feature 'out'.
 		local
 			l_out: STRING
 			s: STRING
@@ -724,7 +724,7 @@ feature -- Test
 		end
 
 	test_tagged_out is
-			-- Test feature `tagged_out'.
+			-- Test feature 'tagged_out'.
 		local
 			l_out: STRING
 			s: STRING
@@ -831,7 +831,7 @@ feature -- Test
 		end
 
 	test_default is
-			-- Test feature `default'.
+			-- Test feature 'default'.
 		local
 			s: STRING
 			i: INTEGER
@@ -856,7 +856,7 @@ feature -- Test
 		end
 
 	test_default_pointer is
-			-- Test feature `default_pointer'.
+			-- Test feature 'default_pointer'.
 		local
 			p: POINTER
 		do
@@ -865,19 +865,19 @@ feature -- Test
 		end
 
 	test_default_create is
-			-- Test feature `default_create'.
+			-- Test feature 'default_create'.
 		do
 			default_create
 		end
 
 	test_default_rescue is
-			-- Test feature `default_rescue'.
+			-- Test feature 'default_rescue'.
 		do
 			default_rescue
 		end
 
 	test_do_nothing is
-			-- Test feature `do_nothing'.
+			-- Test feature 'do_nothing'.
 		local
 			s: STRING
 			aa: AA

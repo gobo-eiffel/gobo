@@ -61,7 +61,7 @@ feature -- Test
 		end
 
 	test_default_create is
-			-- Test feature `default_create'
+			-- Test feature 'default_create'.
 		local
 			i: INTEGER_64
 		do
@@ -69,7 +69,7 @@ feature -- Test
 		end
 
 	test_less_than is
-			-- Test feature `infix "<"'.
+			-- Test feature 'infix "<"'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -85,7 +85,7 @@ feature -- Test
 		end
 
 	test_less_equal is
-			-- Test feature `infix "<="'.
+			-- Test feature 'infix "<="'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -101,7 +101,7 @@ feature -- Test
 		end
 
 	test_greater_than is
-			-- Test feature `infix ">"'.
+			-- Test feature 'infix ">"'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -117,7 +117,7 @@ feature -- Test
 		end
 
 	test_greater_equal is
-			-- Test feature `infix ">="'.
+			-- Test feature 'infix ">="'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -133,7 +133,7 @@ feature -- Test
 		end
 
 	test_out is
-			-- Test feature `out'.
+			-- Test feature 'out'.
 		local
 			i: INTEGER_64
 			l_out: STRING
@@ -165,7 +165,7 @@ feature -- Test
 		end
 
 	test_item is
-			-- Test feature `item'.
+			-- Test feature 'item'.
 		local
 			i: INTEGER_64
 		do
@@ -178,7 +178,7 @@ feature -- Test
 		end
 
 	test_set_item___fail_ise is
-			-- Test feature `set_item'.
+			-- Test feature 'set_item'.
 			-- Does not work with ISE Eiffel.
 		local
 			i: INTEGER_64
@@ -188,19 +188,19 @@ feature -- Test
 			i.set_item (-10)
 			assert ("item2", i = -10)
 				-- We get a new "5" at each call (it's an expanded type).
-				-- So setting the `item' of one occurrence of `5' does not
-				-- change the `item' of the next occurrence of `5'.
+				-- So setting the 'item' of one occurrence of "5" does not
+				-- change the 'item' of the next occurrence of "5".
 			({INTEGER_64} 5).set_item (-10)
 			assert ("item3", (5).item = 5)
-				-- Setting the `item' of the result of a function does not
-				-- set the `item' of the result of the next call of this
+				-- Setting the 'item' of the result of a function does not
+				-- set the 'item' of the result of the next call of this
 				-- function.
 			({INTEGER_64} 5 + {INTEGER_64} 6).set_item (-10)
 			assert ("item4", ({INTEGER_64} 5 + {INTEGER_64} 6).item = 11)
 		end
 
 	test_to_reference is
-			-- Test feature `to_reference'.
+			-- Test feature 'to_reference'.
 		local
 			i: INTEGER_64
 			iref: INTEGER_64_REF
@@ -216,7 +216,7 @@ feature -- Test
 		end
 
 	test_make_from_reference___fail_ise is
-			-- Test feature `make_from_reference'.
+			-- Test feature 'make_from_reference'.
 			-- Does not work with ISE Eiffel.
 		local
 			i: INTEGER_64
@@ -233,7 +233,7 @@ feature -- Test
 		end
 
 	test_infix_plus is
-			-- Test feature `infix "+"'.
+			-- Test feature 'infix "+"'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -244,7 +244,7 @@ feature -- Test
 		end
 
 	test_infix_minus is
-			-- Test feature `infix "-"'.
+			-- Test feature 'infix "-"'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -255,7 +255,7 @@ feature -- Test
 		end
 
 	test_infix_times is
-			-- Test feature `infix "*"'.
+			-- Test feature 'infix "*"'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -266,7 +266,7 @@ feature -- Test
 		end
 
 	test_infix_divide is
-			-- Test feature `infix "/"'.
+			-- Test feature 'infix "/"'.
 		local
 			i1, i2: INTEGER_64
 			d1: DOUBLE
@@ -278,7 +278,7 @@ feature -- Test
 		end
 
 	test_infix_div is
-			-- Test feature `infix "//"'.
+			-- Test feature 'infix "//"'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -297,7 +297,7 @@ feature -- Test
 		end
 
 	test_infix_mod is
-			-- Test feature `infix "\\"'.
+			-- Test feature 'infix "\\"'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -320,7 +320,7 @@ feature -- Test
 		end
 
 	test_infix_power is
-			-- Test feature `infix "^"'.
+			-- Test feature 'infix "^"'.
 		local
 			i: INTEGER_64
 			d1, d2: DOUBLE
@@ -336,7 +336,7 @@ feature -- Test
 		end
 
 	test_prefix_minus is
-			-- Test feature `prefix "-"'.
+			-- Test feature 'prefix "-"'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -346,7 +346,7 @@ feature -- Test
 		end
 
 	test_prefix_plus is
-			-- Test feature `prefix "+"'.
+			-- Test feature 'prefix "+"'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -356,7 +356,7 @@ feature -- Test
 		end
 
 	test_to_character is
-			-- Test feature `to_character'.
+			-- Test feature 'to_character'.
 		local
 			i: INTEGER_64
 			c: CHARACTER
@@ -367,7 +367,7 @@ feature -- Test
 		end
 
 	test_to_real is
-			-- Test feature `to_real'.
+			-- Test feature 'to_real'.
 		local
 			i: INTEGER_64
 			r: REAL
@@ -378,7 +378,7 @@ feature -- Test
 		end
 
 	test_to_double is
-			-- Test feature `to_double'.
+			-- Test feature 'to_double'.
 		local
 			i: INTEGER_64
 			d: DOUBLE
@@ -389,7 +389,7 @@ feature -- Test
 		end
 
 	test_as_natural_8 is
-			-- Test feature `as_natural_8'.
+			-- Test feature 'as_natural_8'.
 		local
 			i1: INTEGER_64
 			i2: NATURAL_8
@@ -400,7 +400,7 @@ feature -- Test
 		end
 
 	test_as_natural_16 is
-			-- Test feature `as_natural_16'.
+			-- Test feature 'as_natural_16'.
 		local
 			i1: INTEGER_64
 			i2: NATURAL_16
@@ -411,7 +411,7 @@ feature -- Test
 		end
 
 	test_as_natural_32 is
-			-- Test feature `as_natural_32'.
+			-- Test feature 'as_natural_32'.
 		local
 			i1: INTEGER_64
 			i2: NATURAL_32
@@ -422,7 +422,7 @@ feature -- Test
 		end
 
 	test_as_natural_64 is
-			-- Test feature `as_natural_64'.
+			-- Test feature 'as_natural_64'.
 		local
 			i1: INTEGER_64
 			i2: NATURAL_64
@@ -433,7 +433,7 @@ feature -- Test
 		end
 
 	test_as_integer_8 is
-			-- Test feature `as_integer_8'.
+			-- Test feature 'as_integer_8'.
 		local
 			i1: INTEGER_64
 			i2: INTEGER_8
@@ -444,7 +444,7 @@ feature -- Test
 		end
 
 	test_as_integer_16 is
-			-- Test feature `as_integer_16'.
+			-- Test feature 'as_integer_16'.
 		local
 			i1: INTEGER_64
 			i2: INTEGER_16
@@ -455,7 +455,7 @@ feature -- Test
 		end
 
 	test_as_integer_32 is
-			-- Test feature `as_integer_32'.
+			-- Test feature 'as_integer_32'.
 		local
 			i1: INTEGER_64
 			i2: INTEGER
@@ -466,7 +466,7 @@ feature -- Test
 		end
 
 	test_as_integer_64 is
-			-- Test feature `as_integer_64'.
+			-- Test feature 'as_integer_64'.
 		local
 			i1: INTEGER_64
 			i2: INTEGER_64
@@ -477,7 +477,7 @@ feature -- Test
 		end
 
 	test_bit_and is
-			-- Test feature `bit_and'.
+			-- Test feature 'bit_and'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -492,7 +492,7 @@ feature -- Test
 		end
 
 	test_bit_or is
-			-- Test feature `bit_or'.
+			-- Test feature 'bit_or'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -507,7 +507,7 @@ feature -- Test
 		end
 
 	test_bit_xor is
-			-- Test feature `bit_xor'.
+			-- Test feature 'bit_xor'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -522,7 +522,7 @@ feature -- Test
 		end
 
 	test_bit_not is
-			-- Test feature `bit_not'.
+			-- Test feature 'bit_not'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -535,7 +535,7 @@ feature -- Test
 		end
 
 	test_bit_shift_left is
-			-- Test feature `bit_shift_left'.
+			-- Test feature 'bit_shift_left'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -554,7 +554,7 @@ feature -- Test
 		end
 
 	test_bit_shift_right is
-			-- Test feature `bit_shift_right'.
+			-- Test feature 'bit_shift_right'.
 		local
 			i1, i2: INTEGER_64
 		do

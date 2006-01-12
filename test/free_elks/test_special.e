@@ -44,7 +44,7 @@ feature -- Test
 		end
 
 	test_make is
-			-- Test feature `make'.
+			-- Test feature 'make'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
@@ -61,7 +61,7 @@ feature -- Test
 		end
 
 	test_count is
-			-- Test feature `count'.
+			-- Test feature 'count'.
 		local
 			sp1: SPECIAL [BOOLEAN]
 			sp2: SPECIAL [ANY]
@@ -75,7 +75,7 @@ feature -- Test
 		end
 
 	test_capacity is
-			-- Test feature `capacity'.
+			-- Test feature 'capacity'.
 		local
 			sp1: SPECIAL [BOOLEAN]
 			sp2: SPECIAL [ANY]
@@ -89,7 +89,7 @@ feature -- Test
 		end
 
 	test_lower is
-			-- Test feature `lower'.
+			-- Test feature 'lower'.
 		local
 			sp1: SPECIAL [CHARACTER]
 			sp2: SPECIAL [STRING]
@@ -103,7 +103,7 @@ feature -- Test
 		end
 
 	test_upper is
-			-- Test feature `upper'.
+			-- Test feature 'upper'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [ANY]
@@ -117,7 +117,7 @@ feature -- Test
 		end
 
 	test_item_address is
-			-- Test feature `item_address'.
+			-- Test feature 'item_address'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
@@ -131,7 +131,7 @@ feature -- Test
 		end
 
 	test_item is
-			-- Test feature `item'.
+			-- Test feature 'item'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
@@ -152,7 +152,7 @@ feature -- Test
 		end
 
 	test_alias_bracket is
-			-- Test feature `alias "[]"'.
+			-- Test feature 'alias "[]"'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
@@ -173,7 +173,7 @@ feature -- Test
 		end
 
 	test_infix_at is
-			-- Test feature `infx "@"'.
+			-- Test feature 'infx "@"'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
@@ -194,7 +194,7 @@ feature -- Test
 		end
 
 	test_index_of is
-			-- Test feature `index_of'.
+			-- Test feature 'index_of'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
@@ -220,7 +220,7 @@ feature -- Test
 		end
 
 	test_all_default is
-			-- Test feature `index_of'.
+			-- Test feature 'index_of'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
@@ -241,7 +241,7 @@ feature -- Test
 		end
 
 	test_same_items is
-			-- Test feature `index_of'.
+			-- Test feature 'index_of'.
 		local
 			sp1, sp2: SPECIAL [INTEGER]
 			sp3, sp4: SPECIAL [STRING]
@@ -283,7 +283,7 @@ feature -- Test
 		end
 
 	test_valid_index is
-			-- Test feature `valid_index'.
+			-- Test feature 'valid_index'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
@@ -302,7 +302,7 @@ feature -- Test
 		end
 
 	test_put is
-			-- Test feature `put'.
+			-- Test feature 'put'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
@@ -329,7 +329,7 @@ feature -- Test
 		end
 
 	test_fill_with is
-			-- Test feature `fill_with'.
+			-- Test feature 'fill_with'.
 		local
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
@@ -360,7 +360,7 @@ feature -- Test
 		end
 
 	test_copy_data is
-			-- Test feature `copy_data'.
+			-- Test feature 'copy_data'.
 		local
 			sp1, sp2: SPECIAL [CHARACTER]
 			sp3, sp4: SPECIAL [STRING]
@@ -403,7 +403,7 @@ feature -- Test
 		end
 
 	test_move_data is
-			-- Test feature `move_data'.
+			-- Test feature 'move_data'.
 		local
 			sp1: SPECIAL [CHARACTER]
 			sp2: SPECIAL [STRING]
@@ -449,7 +449,7 @@ feature -- Test
 		end
 
 	test_clear_all is
-			-- Test feature `clear_all'.
+			-- Test feature 'clear_all'.
 		local
 			sp1: SPECIAL [CHARACTER]
 			sp2: SPECIAL [STRING]
@@ -475,7 +475,7 @@ feature -- Test
 		end
 
 	test_resized_area is
-			-- Test feature `resized_area'.
+			-- Test feature 'resized_area'.
 		local
 			sp1, sp2: SPECIAL [CHARACTER]
 			sp3, sp4: SPECIAL [STRING]
@@ -513,7 +513,7 @@ feature -- Test
 		end
 
 	test_aliased_resized_area is
-			-- Test feature `aliased_resized_area'.
+			-- Test feature 'aliased_resized_area'.
 		local
 			sp1, sp2: SPECIAL [CHARACTER]
 			sp3, sp4: SPECIAL [STRING]

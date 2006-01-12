@@ -29,7 +29,7 @@ feature -- Test
 		end
 
 	test_default_create is
-			-- Test feature `default_create'
+			-- Test feature 'default_create'.
 		local
 			c: CHARACTER
 		do
@@ -37,7 +37,7 @@ feature -- Test
 		end
 
 	test_less_than is
-			-- Test feature `infix "<"'.
+			-- Test feature 'infix "<"'.
 		local
 			c1, c2: CHARACTER
 		do
@@ -53,7 +53,7 @@ feature -- Test
 		end
 
 	test_less_equal is
-			-- Test feature `infix "<="'.
+			-- Test feature 'infix "<="'.
 		local
 			c1, c2: CHARACTER
 		do
@@ -69,7 +69,7 @@ feature -- Test
 		end
 
 	test_greater_than is
-			-- Test feature `infix ">"'.
+			-- Test feature 'infix ">"'.
 		local
 			c1, c2: CHARACTER
 		do
@@ -85,7 +85,7 @@ feature -- Test
 		end
 
 	test_greater_equal is
-			-- Test feature `infix ">="'.
+			-- Test feature 'infix ">="'.
 		local
 			c1, c2: CHARACTER
 		do
