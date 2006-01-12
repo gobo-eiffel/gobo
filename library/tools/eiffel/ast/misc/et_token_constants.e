@@ -630,6 +630,14 @@ feature -- Feature names
 			generator_feature_name_not_void: Result /= Void
 		end
 
+	hash_code_feature_name: ET_FEATURE_NAME is
+			-- 'hash_code' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (hash_code_name)
+		ensure
+			hash_code_feature_name_not_void: Result /= Void
+		end
+
 	infix_and_feature_name: ET_FEATURE_NAME is
 			-- 'infix "and"' feature name
 		local
@@ -876,6 +884,14 @@ feature -- Feature names
 			make_feature_name_not_void: Result /= Void
 		end
 
+	out_feature_name: ET_FEATURE_NAME is
+			-- 'out' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (out_name)
+		ensure
+			out_feature_name_not_void: Result /= Void
+		end
+
 	prefix_minus_feature_name: ET_FEATURE_NAME is
 			-- 'prefix "-"' feature name
 		local
@@ -1003,6 +1019,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (to_double_name)
 		ensure
 			to_double_feature_name_not_void: Result /= Void
+		end
+
+	to_integer_32_feature_name: ET_FEATURE_NAME is
+			-- 'to_integer_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (to_integer_32_name)
+		ensure
+			to_integer_32_feature_name_not_void: Result /= Void
 		end
 
 	to_real_feature_name: ET_FEATURE_NAME is
@@ -1788,11 +1812,13 @@ feature -- Keyword and symbol names
 	element_size_name: STRING is "element_size"
 	generating_type_name: STRING is "generating_type"
 	generator_name: STRING is "generator"
+	hash_code_name: STRING is "hash_code"
 	is_deep_equal_name: STRING is "is_deep_equal"
 	item_name: STRING is "item"
 	last_result_name: STRING is "last_result"
 	lower_name: STRING is "lower"
 	make_name: STRING is "make"
+	out_name: STRING is "out"
 	put_name: STRING is "put"
 	put_reference_name: STRING is "put_reference"
 	reference_item_name: STRING is "reference_item"
@@ -1805,6 +1831,7 @@ feature -- Keyword and symbol names
 	tagged_out_name: STRING is "tagged_out"
 	to_character_name: STRING is "to_character"
 	to_double_name: STRING is "to_double"
+	to_integer_32_name: STRING is "to_integer_32"
 	to_real_name: STRING is "to_real"
 	to_real_32_name: STRING is "to_real_32"
 	to_real_64_name: STRING is "to_real_64"

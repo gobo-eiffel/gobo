@@ -289,6 +289,10 @@ feature -- Built-in codes
 	builtin_pointer_class: INTEGER is 15
 	builtin_pointer_item: INTEGER is 1
 	builtin_pointer_set_item: INTEGER is 2
+	builtin_pointer_plus: INTEGER is 3
+	builtin_pointer_to_integer_32: INTEGER is 4
+	builtin_pointer_out: INTEGER is 5
+	builtin_pointer_hash_code: INTEGER is 6
 			-- Codes for built-in features from class POINTER
 
 	builtin_function_item: INTEGER is 5001

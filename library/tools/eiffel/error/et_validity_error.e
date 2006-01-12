@@ -306,6 +306,12 @@ create
 	make_gvkbs5g,
 	make_gvkbs5h,
 	make_gvkbs5i,
+	make_gvkbs6a,
+	make_gvkbs6b,
+	make_gvkbs6c,
+	make_gvkbs6d,
+	make_gvkbs6e,
+	make_gvkbs6f,
 	make_gvkbu1a,
 	make_gvkfe1a,
 	make_gvkfe2a,
@@ -320,7 +326,7 @@ create
 	make_gvuil0a
 
 feature {NONE} -- Initialization
-	
+
 	make (a_class: like current_class; a_position: like position) is
 			-- Create a new Eiffel validity error in `a_class' at `a_position'.
 		require
@@ -1697,7 +1703,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vdpr1a (a_class: like current_class; a_precursor: ET_PRECURSOR_INSTRUCTION) is
-			-- Create a new VDPR-1 error: instruction `a_precursor' does not 
+			-- Create a new VDPR-1 error: instruction `a_precursor' does not
 			-- appear in a routine body in `a_class'.
 			--
 			-- ETL3-4.82-00-00: p.215
@@ -1733,7 +1739,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vdpr1b (a_class: like current_class; a_precursor: ET_PRECURSOR_EXPRESSION) is
-			-- Create a new VDPR-1 error: expression `a_precursor' does not 
+			-- Create a new VDPR-1 error: expression `a_precursor' does not
 			-- appear in a routine body in `a_class'.
 			--
 			-- ETL3-4.82-00-00: p.215
@@ -1807,7 +1813,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vdpr3a (a_class: like current_class; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; f1, f2: ET_PARENT_FEATURE) is
-			-- Create a new VDPR-3 error: two effective features `f1' and `f2' redefined into 
+			-- Create a new VDPR-3 error: two effective features `f1' and `f2' redefined into
 			-- the same feature `a_redefined_feature' containing `a_precursor' in `a_class'.
 			--
 			-- ETL3-4.82-00-00: p.215
@@ -5341,7 +5347,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vhpr1a (a_class: like current_class; a_cycle: DS_LIST [ET_CLASS]) is
-			-- Create a new VHPR-1 error: `a_class' is 
+			-- Create a new VHPR-1 error: `a_class' is
 			-- involved in the inheritance cycle `a_cycle'.
 			--
 			-- ETL2: p.79
@@ -7195,7 +7201,7 @@ feature {NONE} -- Initialization
 
 	make_vpca2a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VPCA-2 error: `a_feature' of class `a_target',
-			-- is not exported to `a_class' where the qualified call 
+			-- is not exported to `a_class' where the qualified call
 			-- agent `a_name' appears.
 			--
 			-- ETL3 (4.82-00-00): p.581
@@ -9989,7 +9995,7 @@ feature {NONE} -- Initialization
 
 	make_vuex2b (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VUEX-2 error: `a_feature' of class `a_target',
-			-- is not exported to `a_class' where the qualified call 
+			-- is not exported to `a_class' where the qualified call
 			-- `a_name' appears.
 			--
 			-- ETL2: p.368
@@ -10379,7 +10385,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vxrt0a (a_class: like current_class; a_retry: ET_RETRY_INSTRUCTION) is
-			-- Create a new VXRT error: instruction `a_retry' does not 
+			-- Create a new VXRT error: instruction `a_retry' does not
 			-- appear in a rescue clause in `a_class'.
 			--
 			-- ETL2: p.256
@@ -12939,6 +12945,246 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
+	make_gvkbs6a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-6 error: wrong signature for 'POINTER_REF.item'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs6a_template_code
+			etl_code := gvkbs6_etl_code
+			default_template := gvkbs6a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs6b (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-6 error: wrong signature for 'POINTER_REF.set_item'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs6b_template_code
+			etl_code := gvkbs6_etl_code
+			default_template := gvkbs6b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs6c (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-6 error: wrong signature for 'POINTER.infix "+"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs6c_template_code
+			etl_code := gvkbs6_etl_code
+			default_template := gvkbs6c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs6d (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-6 error: wrong signature for 'POINTER.to_integer_32'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs6d_template_code
+			etl_code := gvkbs6_etl_code
+			default_template := gvkbs6d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs6e (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-6 error: wrong signature for 'POINTER.out'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs6e_template_code
+			etl_code := gvkbs6_etl_code
+			default_template := gvkbs6e_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs6f (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-6 error: wrong signature for 'POINTER.hash_code'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs6f_template_code
+			etl_code := gvkbs6_etl_code
+			default_template := gvkbs6f_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
 	make_gvkbu1a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Create a new GVKBU-1 error: unknown built-in routine `a_feature'
 			-- in class `a_class'.
@@ -13759,6 +14005,12 @@ feature {NONE} -- Implementation
 	gvkbs5g_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'prefix %"not%": like Current'."
 	gvkbs5h_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'item: BOOLEAN'."
 	gvkbs5i_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'set_item (b: BOOLEAN)'."
+	gvkbs6a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'item: POINTER'."
+	gvkbs6b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'set_item (p: POINTER)'."
+	gvkbs6c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"+%" (offset: INTEGER): POINTER'."
+	gvkbs6d_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'to_integer_32: INTEGER'."
+	gvkbs6e_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'out: STRING'."
+	gvkbs6f_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'hash_code: INTEGER'."
 	gvkbu1a_default_template: STRING is "[$1] class $5: unknown built-in routine `$6' in class $5."
 	gvkfe1a_default_template: STRING is "[$1] class $5: feature `$6' is missing in kernel class $5."
 	gvkfe2a_default_template: STRING is "[$1] class $5: feature `$6' in kernel class $5 is not an attribute."
@@ -13885,6 +14137,7 @@ feature {NONE} -- Implementation
 	gvkbs3_etl_code: STRING is "GVKBS-3"
 	gvkbs4_etl_code: STRING is "GVKBS-4"
 	gvkbs5_etl_code: STRING is "GVKBS-5"
+	gvkbs6_etl_code: STRING is "GVKBS-6"
 	gvkbu1_etl_code: STRING is "GVKBU-1"
 	gvkfe1_etl_code: STRING is "GVKFE-1"
 	gvkfe2_etl_code: STRING is "GVKFE-2"
@@ -14183,6 +14436,12 @@ feature {NONE} -- Implementation
 	gvkbs5g_template_code: STRING is "gvkbs5g"
 	gvkbs5h_template_code: STRING is "gvkbs5h"
 	gvkbs5i_template_code: STRING is "gvkbs5i"
+	gvkbs6a_template_code: STRING is "gvkbs6a"
+	gvkbs6b_template_code: STRING is "gvkbs6b"
+	gvkbs6c_template_code: STRING is "gvkbs6c"
+	gvkbs6d_template_code: STRING is "gvkbs6d"
+	gvkbs6e_template_code: STRING is "gvkbs6e"
+	gvkbs6f_template_code: STRING is "gvkbs6f"
 	gvkbu1a_template_code: STRING is "gvkbu1a"
 	gvkfe1a_template_code: STRING is "gvkfe1a"
 	gvkfe2a_template_code: STRING is "gvkfe2a"

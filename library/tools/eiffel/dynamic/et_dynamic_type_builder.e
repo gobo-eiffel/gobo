@@ -755,6 +755,24 @@ feature {NONE} -- Feature validity
 							set_fatal_error
 							error_handler.report_gibkv_error
 						end
+					when builtin_pointer_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_pointer_item then
+							report_builtin_pointer_item (a_feature)
+						when builtin_pointer_plus then
+							report_builtin_pointer_plus (a_feature)
+						when builtin_pointer_to_integer_32 then
+							report_builtin_pointer_to_integer_32 (a_feature)
+						when builtin_pointer_out then
+							report_builtin_pointer_out (a_feature)
+						when builtin_pointer_hash_code then
+							report_builtin_pointer_hash_code (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_giblc_error
+						end
 					else
 						inspect l_builtin_class
 						when builtin_integer_class then
@@ -908,6 +926,16 @@ feature {NONE} -- Feature validity
 								-- Error already reported during parsing.
 							set_fatal_error
 							error_handler.report_gibla_error
+						end
+					when builtin_pointer_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_pointer_set_item then
+							report_builtin_pointer_set_item (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibld_error
 						end
 					else
 						inspect l_builtin_class
@@ -3036,6 +3064,94 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+			end
+		end
+
+	report_builtin_pointer_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'POINTER_REF.item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.pointer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_pointer_set_item (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'POINTER_REF.set_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+			end
+		end
+
+	report_builtin_pointer_plus (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'POINTER.infix "+"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.pointer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_pointer_to_integer_32 (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'POINTER.to_integer_32' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_pointer_out (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'POINTER.out' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				current_system.set_string_type_alive
+				propagate_builtin_result_type (current_system.string_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_pointer_hash_code (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'POINTER.hash_code' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 

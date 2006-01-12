@@ -1061,7 +1061,7 @@ feature {NONE} -- Feature generation
 						from
 							i := i + 1
 							stop := False
-							create l_signature_arguments.make (10)
+							create l_signature_result.make (10)
 						until
 							i > nb or stop
 						loop
@@ -1461,6 +1461,41 @@ feature {NONE} -- Feature generation
 						set_fatal_error
 						error_handler.report_gibgn_error
 					end
+				when builtin_pointer_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_pointer_item then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_pointer_item_call (current_type, current_feature)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_pointer_plus then
+						fill_call_formal_arguments (1)
+						print_indentation_assign_to_result
+						print_builtin_pointer_plus_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_pointer_to_integer_32 then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_pointer_to_integer_32_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_pointer_out then
+						print_builtin_pointer_out_body (a_feature)
+					when builtin_pointer_hash_code then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_pointer_hash_code_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gible_error
+					end
 				else
 					inspect l_builtin_class
 					when builtin_integer_class then
@@ -1741,6 +1776,21 @@ feature {NONE} -- Feature generation
 							-- building the dynamic type sets.
 						set_fatal_error
 						error_handler.report_gibax_error
+					end
+				when builtin_pointer_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_pointer_set_item then
+						fill_call_formal_arguments (1)
+						print_indentation
+						print_builtin_pointer_set_item_call (current_type)
+						current_file.put_new_line
+						call_operands.wipe_out
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_giblf_error
 					end
 				else
 					inspect l_builtin_class
@@ -3128,6 +3178,13 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 						inspect l_builtin_code \\ builtin_capacity
 						when builtin_boolean_set_item then
 							print_builtin_boolean_set_item_call (a_target_type)
+						else
+							l_printed := False
+						end
+					when builtin_pointer_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_pointer_set_item then
+							print_builtin_pointer_set_item_call (a_target_type)
 						else
 							l_printed := False
 						end
@@ -4860,6 +4917,19 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 								print_builtin_boolean_not_call (a_target_type)
 							when builtin_boolean_item then
 								print_builtin_boolean_item_call (a_target_type, l_dynamic_feature)
+							else
+								l_printed := False
+							end
+						when builtin_pointer_class then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_pointer_item then
+								print_builtin_pointer_item_call (a_target_type, l_dynamic_feature)
+							when builtin_pointer_plus then
+								print_builtin_pointer_plus_call (a_target_type)
+							when builtin_pointer_to_integer_32 then
+								print_builtin_pointer_to_integer_32_call (a_target_type)
+							when builtin_pointer_hash_code then
+								print_builtin_pointer_hash_code_call (a_target_type)
 							else
 								l_printed := False
 							end
@@ -7048,6 +7118,7 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character (')')
 				current_file.put_character (')')
 				current_file.put_character (';')
+				current_file.put_new_line
 			elseif
 				current_type = current_system.character_type or
 				current_type = current_system.boolean_type or
@@ -7250,6 +7321,7 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character (')')
 				current_file.put_character (')')
 				current_file.put_character (';')
+				current_file.put_new_line
 			elseif
 				current_type = current_system.character_type or
 				current_type = current_system.boolean_type or
@@ -7312,9 +7384,9 @@ feature {NONE} -- Built-in feature generation
 					current_file.put_character ('(')
 					current_file.put_character ('C')
 					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
 				end
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 		end
 
@@ -7340,6 +7412,7 @@ feature {NONE} -- Built-in feature generation
 			current_file.put_integer (l_string.count)
 			current_file.put_character (')')
 			current_file.put_character (';')
+			current_file.put_new_line
 			l_special_type ?= current_type
 			if l_special_type /= Void then
 			elseif current_type = current_system.character_type then
@@ -9138,6 +9211,177 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				from i := 1 until i > nb loop
 					l_query := l_queries.item (i)
 					if l_query.builtin_code = l_builtin_boolean_item then
+						l_item_attribute := l_query
+						i := nb + 1
+					else
+						i := i + 1
+					end
+				end
+				if l_item_attribute /= Void then
+						-- Set the built-in attribute.
+					print_attribute_name (l_item_attribute, call_operands.first, a_target_type)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_expression (call_operands.item (2))
+					current_file.put_character (')')
+					current_file.put_character (';')
+				end
+			end
+		end
+
+	print_builtin_pointer_plus_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'POINTER.infix "+"' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giblh_error
+			else
+				print_type_cast (current_system.pointer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_expression (call_operands.first)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('+')
+				current_file.put_character ('(')
+				print_expression (call_operands.item (2))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_pointer_to_integer_32_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'POINTER.to_integer_32' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+		end
+
+	print_builtin_pointer_out_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'POINTER.out' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_indentation
+			current_file.put_string (c_char)
+			current_file.put_character (' ')
+			current_file.put_character ('s')
+			current_file.put_character ('[')
+			current_file.put_character ('2')
+			current_file.put_character ('0')
+			current_file.put_character (']')
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_string ("sprintf(s,%"0x%%X%",*C);")
+			current_file.put_new_line
+			print_indentation
+			current_file.put_character ('R')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_string ("gems(s,strlen(s))")
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_builtin_pointer_hash_code_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'POINTER.hash_code' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+			current_file.put_character ('&')
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string ("0x7FFFFFFF")
+			current_file.put_character (')')
+			current_file.put_character (')')
+		end
+
+	print_builtin_pointer_item_call (a_target_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
+			-- Print to `current_file' a call (static binding) to built-in
+			-- feature `a_feature' corresponding to 'POINTER_REF.item'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			a_feature_not_void: a_feature /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			if a_target_type = current_system.pointer_type then
+					-- Current value.
+				print_expression (call_operands.first)
+			else
+					-- Internal attribute.
+				print_attribute_name (a_feature, call_operands.first, a_target_type)
+			end
+		end
+
+	print_builtin_pointer_set_item_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'POINTER_REF.set_item' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			l_item_attribute: ET_DYNAMIC_FEATURE
+			i, nb: INTEGER
+			l_builtin_pointer_item: INTEGER
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giblg_error
+			elseif a_target_type = current_system.pointer_type then
+					-- Set current value.
+				print_expression (call_operands.first)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_expression (call_operands.item (2))
+				current_file.put_character (')')
+				current_file.put_character (';')
+			else
+				l_builtin_pointer_item := builtin_pointer_feature (builtin_pointer_item)
+				l_queries := a_target_type.queries
+				nb := l_queries.count
+				from i := 1 until i > nb loop
+					l_query := l_queries.item (i)
+					if l_query.builtin_code = l_builtin_pointer_item then
 						l_item_attribute := l_query
 						i := nb + 1
 					else

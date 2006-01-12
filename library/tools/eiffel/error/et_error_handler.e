@@ -6742,6 +6742,126 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvkbs6a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-6 error: wrong signature for 'POINTER_REF.item'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs6_error (a_class) then
+				create an_error.make_gvkbs6a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs6b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-6 error: wrong signature for 'POINTER_REF.set_item'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs6_error (a_class) then
+				create an_error.make_gvkbs6b (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs6c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-6 error: wrong signature for 'POINTER.infix "+"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs6_error (a_class) then
+				create an_error.make_gvkbs6c (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs6d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-6 error: wrong signature for 'POINTER.to_integer_32'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs6_error (a_class) then
+				create an_error.make_gvkbs6d (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs6e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-6 error: wrong signature for 'POINTER.out'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs6_error (a_class) then
+				create an_error.make_gvkbs6e (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs6f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-6 error: wrong signature for 'POINTER.hash_code'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs6_error (a_class) then
+				create an_error.make_gvkbs6f (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvkbu1a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Report GVKBU-1 error: unknown built-in routine `a_feature'
 			-- in class `a_class'.
@@ -8069,6 +8189,16 @@ feature -- Validity error status
 
 	reportable_gvkbs5_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVKBS-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbs6_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS-6 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -12226,12 +12356,6 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- error_handler.report_giblc_error
-	-- error_handler.report_gibld_error
-	-- error_handler.report_gible_error
-	-- error_handler.report_giblf_error
-	-- error_handler.report_giblg_error
-	-- error_handler.report_giblh_error
 	-- error_handler.report_gibli_error
 	-- error_handler.report_giblj_error
 	-- error_handler.report_giblk_error
