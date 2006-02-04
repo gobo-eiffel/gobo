@@ -73,6 +73,12 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_special: BOOLEAN is
+			-- Is current type a SPECIAL type?
+		do
+			-- Result := False
+		end
+
 	has_static: BOOLEAN
 			-- Does current type contain features that are used as static features?
 

@@ -296,6 +296,13 @@ feature -- Types
 								if array_upper_feature /= Void then
 									l_dynamic_feature := Result.dynamic_query (array_upper_feature, Current)
 								end
+							elseif l_base_class = universe.typed_pointer_class then
+								create Result.make (l_base_type, l_base_class)
+									-- Make feature 'pointer_item' alive at the first position
+									-- in the feature list of the TYPED_POINTER type.
+								if typed_pointer_pointer_item_feature /= Void then
+									l_dynamic_feature := Result.dynamic_query (typed_pointer_pointer_item_feature, Current)
+								end
 							elseif l_base_class = universe.procedure_class then
 								l_any := universe.any_class
 								l_actual_parameters := l_base_type.actual_parameters
@@ -412,6 +419,13 @@ feature -- Types
 					end
 					if array_upper_feature /= Void then
 						l_dynamic_feature := Result.dynamic_query (array_upper_feature, Current)
+					end
+				elseif l_base_class = universe.typed_pointer_class then
+					create Result.make (l_base_type, l_base_class)
+						-- Make feature 'pointer_item' alive at the first position
+						-- in the feature list of the TYPED_POINTER type.
+					if typed_pointer_pointer_item_feature /= Void then
+						l_dynamic_feature := Result.dynamic_query (typed_pointer_pointer_item_feature, Current)
 					end
 				elseif l_base_class = universe.procedure_class then
 					l_any := universe.any_class
@@ -701,6 +715,7 @@ feature {NONE} -- Compilation
 			l_count_feature: ET_QUERY
 			l_procedure: ET_PROCEDURE
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_external_function: ET_EXTERNAL_FUNCTION
 		do
 			dynamic_types.wipe_out
 			l_any := universe.any_class
@@ -953,6 +968,44 @@ feature {NONE} -- Compilation
 					end
 				end
 			end
+				-- Class TYPED_POINTER.
+			typed_pointer_pointer_item_feature := Void
+			l_class := universe.typed_pointer_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			else
+				l_class.process (universe.interface_checker)
+				if not l_class.interface_checked or else l_class.has_interface_error then
+						-- Error already reported by the previous
+						-- processing on `l_class'.
+					set_fatal_error
+				else
+						-- Check feature 'pointer_item' of class TYPED_POINTER.
+					typed_pointer_pointer_item_feature := l_class.named_query (tokens.pointer_item_feature_name)
+					if typed_pointer_pointer_item_feature = Void then
+						l_procedure := l_class.named_procedure (tokens.pointer_item_feature_name)
+						if l_procedure /= Void then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, typed_pointer_pointer_item_feature)
+						else
+							set_fatal_error
+							error_handler.report_gvkfe1a_error (l_class, tokens.pointer_item_feature_name)
+						end
+					elseif not typed_pointer_pointer_item_feature.type.same_named_type (universe.pointer_class, l_class, l_class, universe) then
+						set_fatal_error
+						error_handler.report_gvkfe3a_error (l_class, typed_pointer_pointer_item_feature, universe.pointer_class)
+						typed_pointer_pointer_item_feature := Void
+					elseif not typed_pointer_pointer_item_feature.is_attribute then
+						l_external_function ?= typed_pointer_pointer_item_feature
+						if l_external_function = Void or else l_external_function.builtin_code /= tokens.builtin_pointer_feature (tokens.builtin_pointer_item) then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, typed_pointer_pointer_item_feature)
+							typed_pointer_pointer_item_feature := Void
+						end
+					end
+				end
+			end
 				-- Type "NONE".
 			none_type := dynamic_type (universe.none_class, l_any)
 		end
@@ -1045,6 +1098,9 @@ feature {NONE} -- Features
 	array_lower_feature: ET_QUERY
 	array_upper_feature: ET_QUERY
 			-- Expected attributes in class ARRAY
+
+	typed_pointer_pointer_item_feature: ET_QUERY
+			-- Expected attributes in class TYPED_POINTER
 
 feature {NONE} -- Implementation
 

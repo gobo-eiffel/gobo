@@ -23,10 +23,24 @@ feature -- Status report
 		require
 			a_type_not_void: a_type /= Void
 		do
-			Result := (first_type = a_type)
-			if not Result then
-				if other_types /= Void then
-					Result := other_types.has (a_type)
+			if first_type = a_type then
+				Result := True
+			elseif other_types /= Void then
+				Result := other_types.has (a_type)
+			end
+		end
+
+	has_special: BOOLEAN is
+			-- Does current type set contain at least one SPECIAL type?
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			l_type := first_type
+			if l_type /= Void then
+				if l_type.is_special then
+					Result := True
+				elseif other_types /= Void then
+					Result := other_types.has_special
 				end
 			end
 		end
@@ -63,6 +77,22 @@ feature -- Access
 	sources: ET_DYNAMIC_ATTACHMENT is
 			-- Sub-sets of current set
 		deferred
+		end
+
+	special_type: ET_DYNAMIC_TYPE is
+			-- One of the SPECIAL types contained in current type
+			-- set if any, Void otherwise
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			l_type := first_type
+			if l_type /= Void then
+				if l_type.is_special then
+					Result := l_type
+				elseif other_types /= Void then
+					Result := other_types.special_type
+				end
+			end
 		end
 
 feature -- Measurement

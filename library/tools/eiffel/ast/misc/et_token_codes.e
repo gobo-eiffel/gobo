@@ -295,6 +295,16 @@ feature -- Built-in codes
 	builtin_pointer_hash_code: INTEGER is 6
 			-- Codes for built-in features from class POINTER
 
+	builtin_arguments_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class ARGUMENTS
+		do
+			Result := builtin_arguments_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_arguments_class: INTEGER is 16
+	builtin_arguments_argument: INTEGER is 1
+	builtin_arguments_argument_count: INTEGER is 2
+
 	builtin_function_item: INTEGER is 5001
 	builtin_routine_call: INTEGER is 5101
 			-- Built-in feature codes

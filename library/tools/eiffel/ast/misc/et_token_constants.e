@@ -5,7 +5,7 @@ indexing
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,14 @@ feature -- Class names
 			create {ET_IDENTIFIER} Result.make (capitalized_any_name)
 		ensure
 			any_class_name_not_void: Result /= Void
+		end
+
+	arguments_class_name: ET_CLASS_NAME is
+			-- "ARGUMENTS" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_arguments_name)
+		ensure
+			arguments_class_name_not_void: Result /= Void
 		end
 
 	none_class_name: ET_CLASS_NAME is
@@ -436,6 +444,22 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (area_name)
 		ensure
 			area_feature_name_not_void: Result /= Void
+		end
+
+	argument_feature_name: ET_FEATURE_NAME is
+			-- 'argument' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (argument_name)
+		ensure
+			argument_feature_name_not_void: Result /= Void
+		end
+
+	argument_count_feature_name: ET_FEATURE_NAME is
+			-- 'argument_count' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (argument_count_name)
+		ensure
+			argument_count_feature_name_not_void: Result /= Void
 		end
 
 	as_natural_8_feature_name: ET_FEATURE_NAME is
@@ -890,6 +914,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (out_name)
 		ensure
 			out_feature_name_not_void: Result /= Void
+		end
+
+	pointer_item_feature_name: ET_FEATURE_NAME is
+			-- 'pointer_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (pointer_item_name)
+		ensure
+			pointer_item_feature_name_not_void: Result /= Void
 		end
 
 	prefix_minus_feature_name: ET_FEATURE_NAME is
@@ -1753,6 +1785,7 @@ feature -- Keywords
 feature -- Keyword and symbol names
 
 	capitalized_any_name: STRING is "ANY"
+	capitalized_arguments_name: STRING is "ARGUMENTS"
 	capitalized_array_name: STRING is "ARRAY"
 	capitalized_bit_name: STRING is "BIT"
 	capitalized_boolean_name: STRING is "BOOLEAN"
@@ -1788,6 +1821,8 @@ feature -- Keyword and symbol names
 
 	aliased_resized_area_name: STRING is "aliased_resized_area"
 	area_name: STRING is "area"
+	argument_name: STRING is "argument"
+	argument_count_name: STRING is "argument_count"
 	as_natural_8_name: STRING is "as_natural_8"
 	as_natural_16_name: STRING is "as_natural_16"
 	as_natural_32_name: STRING is "as_natural_32"
@@ -1819,6 +1854,7 @@ feature -- Keyword and symbol names
 	lower_name: STRING is "lower"
 	make_name: STRING is "make"
 	out_name: STRING is "out"
+	pointer_item_name: STRING is "pointer_item"
 	put_name: STRING is "put"
 	put_reference_name: STRING is "put_reference"
 	reference_item_name: STRING is "reference_item"

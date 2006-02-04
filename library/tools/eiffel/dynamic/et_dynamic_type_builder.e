@@ -773,6 +773,18 @@ feature {NONE} -- Feature validity
 							set_fatal_error
 							error_handler.report_giblc_error
 						end
+					when builtin_arguments_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_arguments_argument then
+							report_builtin_arguments_argument (a_feature)
+						when builtin_arguments_argument_count then
+							report_builtin_arguments_argument_count (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_gibli_error
+						end
 					else
 						inspect l_builtin_class
 						when builtin_integer_class then
@@ -866,6 +878,11 @@ feature {NONE} -- Feature validity
 								error_handler.report_gibii_error
 							end
 						end
+					end
+				elseif a_feature.type.same_base_type (universe.string_class, current_type, current_type, universe) then
+					if current_type = current_dynamic_type.base_type then
+						current_system.set_string_type_alive
+						propagate_builtin_result_type (current_system.string_type, current_dynamic_feature)
 					end
 				end
 			end
@@ -3141,6 +3158,35 @@ feature {NONE} -- Built-in features
 
 	report_builtin_pointer_hash_code (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'POINTER.hash_code' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_arguments_argument (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ARGUMENTS.argument' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				current_system.set_string_type_alive
+				propagate_builtin_result_type (current_system.string_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_arguments_argument_count (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ARGUMENTS.argument_count' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void

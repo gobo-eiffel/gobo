@@ -18,6 +18,7 @@ inherit
 		rename
 			make as make_type
 		redefine
+			is_special,
 			new_dynamic_query, new_dynamic_procedure
 		end
 
@@ -51,6 +52,11 @@ feature -- Access
 	item_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type set of items
 
+feature -- Status report
+
+	is_special: BOOLEAN is True
+			-- Is current type a SPECIAL type?
+
 feature {NONE} -- Implementation
 
 	new_dynamic_query (a_query: ET_QUERY; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
@@ -68,7 +74,7 @@ feature {NONE} -- Implementation
 					Result.set_result_type_set (item_type_set)
 				end
 			end
-		end	
+		end
 
 	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time procedure associated with `a_procedure';

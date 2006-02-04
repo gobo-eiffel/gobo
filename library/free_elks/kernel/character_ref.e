@@ -260,7 +260,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	character_types (a_code: INTEGER): INTEGER is
+	character_types (a_code: INTEGER): NATURAL_8 is
 			-- Associated type for character of code `a_code'.
 		do
 				-- For character whose code is above 256, it is as if 
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_character_types: SPECIAL [INTEGER] is
+	internal_character_types: SPECIAL [NATURAL_8] is
 			-- Array which stores the various type for the ASCII characters.
 		once
 			create Result.make (256)
@@ -404,20 +404,20 @@ feature {NONE} -- Implementation
 			Result.put (is_control_flag, 127)
 		end
 
-	is_upper_flag: INTEGER is {INTEGER} 0x01	
+	is_upper_flag: NATURAL_8 is {NATURAL_8} 0x01	
 
-	is_lower_flag: INTEGER is {INTEGER} 0x02
+	is_lower_flag: NATURAL_8 is {NATURAL_8} 0x02
 	
-	is_digit_flag: INTEGER is {INTEGER} 0x04
+	is_digit_flag: NATURAL_8 is {NATURAL_8} 0x04
 	
-	is_white_space_flag: INTEGER is {INTEGER} 0x08
+	is_white_space_flag: NATURAL_8 is {NATURAL_8} 0x08
 	
-	is_punctuation_flag: INTEGER is {INTEGER} 0x10
+	is_punctuation_flag: NATURAL_8 is {NATURAL_8} 0x10
 	
-	is_control_flag: INTEGER is {INTEGER} 0x20
+	is_control_flag: NATURAL_8 is {NATURAL_8} 0x20
 
-	is_hexa_digit_flag: INTEGER is {INTEGER} 0x40
+	is_hexa_digit_flag: NATURAL_8 is {NATURAL_8} 0x40
 	
-	is_space_flag: INTEGER is {INTEGER} 0x80;
+	is_space_flag: NATURAL_8 is {NATURAL_8} 0x80;
 	
 end

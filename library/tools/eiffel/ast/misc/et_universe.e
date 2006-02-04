@@ -149,6 +149,7 @@ feature {NONE} -- Initialization
 			predicate_class.set_in_system (True)
 			function_class := eiffel_class (tokens.function_class_name)
 			function_class.set_in_system (True)
+			arguments_class := eiffel_class (tokens.arguments_class_name)
 			system_object_class := eiffel_class (tokens.system_object_class_name)
 				-- Unknown class.
 			create unknown_class.make_unknown (tokens.unknown_class_name)
@@ -235,6 +236,7 @@ feature {NONE} -- Initialization
 			procedure_class_not_void: procedure_class /= Void
 			predicate_class_not_void: predicate_class /= Void
 			function_class_not_void: function_class /= Void
+			arguments_class_not_void: arguments_class /= Void
 			system_object_class_not_void: system_object_class /= Void
 			unknown_class_not_void: unknown_class /= Void
 			any_type_not_void: any_type /= Void
@@ -576,6 +578,9 @@ feature -- Basic classes
 
 	function_class: ET_CLASS
 			-- Class "FUNCTION"
+
+	arguments_class: ET_CLASS
+			-- Class "ARGUMENTS"
 
 	system_object_class: ET_CLASS
 			-- Class "SYSTEM_OBJECT" (in Eiffel for .NET)
@@ -2409,6 +2414,7 @@ invariant
 	procedure_class_not_void: procedure_class /= Void
 	predicate_class_not_void: predicate_class /= Void
 	function_class_not_void: function_class /= Void
+	arguments_class_not_void: arguments_class /= Void
 	system_object_class_not_void: system_object_class /= Void
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void

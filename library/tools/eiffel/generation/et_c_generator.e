@@ -102,6 +102,9 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export {NONE} all end
 
+	KL_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 	KL_IMPORTED_CHARACTER_ROUTINES
 		export {NONE} all end
 
@@ -152,6 +155,12 @@ feature {NONE} -- Initialization
 			create polymorphic_equivalent_types1.make (100)
 			create polymorphic_equivalent_types2.make (100)
 			create polymorphic_equivalent_types3.make (100)
+			create included_header_filenames.make (100)
+			included_header_filenames.set_equality_tester (string_equality_tester)
+			create included_runtime_header_files.make (100)
+			included_runtime_header_files.set_equality_tester (string_equality_tester)
+			create included_runtime_c_files.make (100)
+			included_runtime_c_files.set_equality_tester (string_equality_tester)
 		end
 
 feature -- Access
@@ -198,7 +207,7 @@ feature -- Generation
 				old_file := current_file
 				current_file := a_file
 				generate_ids
-				include_runtime_c_file ("ge_eiffel.h", header_file)
+				include_runtime_header_file ("ge_eiffel.h", header_file)
 				header_file.put_new_line
 				print_types (header_file)
 				header_file.put_new_line
@@ -248,14 +257,21 @@ feature -- Generation
 				a_file.put_new_line
 				print_geconst_function
 				a_file.put_new_line
+					-- Print 'getypes' array.
+				print_getypes_array
+				a_file.put_new_line
 					-- Print 'main' function.
 				print_main_function
-					-- Include runtime C files.
 				a_file.put_new_line
+					-- Include runtime C files.
 				header_file.put_new_line
-				include_runtime_c_file ("ge_integer.h", header_file)
-				include_runtime_c_file ("ge_directory.h", header_file)
-				include_runtime_c_file ("ge_directory.c", a_file)
+				from included_runtime_c_files.start until included_runtime_c_files.after loop
+					include_runtime_c_file (included_runtime_c_files.item_for_iteration, a_file)
+					included_runtime_c_files.forth
+				end
+				included_header_filenames.wipe_out
+				included_runtime_header_files.wipe_out
+				included_runtime_c_files.wipe_out
 				once_features.wipe_out
 				constant_features.wipe_out
 				header_file := old_header_file
@@ -978,10 +994,9 @@ feature {NONE} -- Feature generation
 -- TODO: error
 						else
 							i := i + 1
-							header_file.put_string (c_include)
-							header_file.put_character (' ')
-							header_file.put_string (l_include_filename)
-							header_file.put_new_line
+							STRING_.left_adjust (l_include_filename)
+							STRING_.right_adjust (l_include_filename)
+							include_header_filename (l_include_filename, header_file)
 						end
 							-- Remove spaces.
 						from
@@ -1115,10 +1130,10 @@ feature {NONE} -- Feature generation
 							l_list := l_splitter.split (l_language_string.substring (i, nb))
 							l_cursor := l_list.new_cursor
 							from l_cursor.start until l_cursor.after loop
-								header_file.put_string (c_include)
-								header_file.put_character (' ')
-								header_file.put_string (l_cursor.item)
-								header_file.put_new_line
+								l_include_filename := l_cursor.item
+								STRING_.left_adjust (l_include_filename)
+								STRING_.right_adjust (l_include_filename)
+								include_header_filename (l_include_filename, header_file)
 								l_cursor.forth
 							end
 						end
@@ -1218,7 +1233,9 @@ feature {NONE} -- Feature generation
 							current_file.put_character (' ')
 							current_file.put_character ('=')
 							current_file.put_character (' ')
-							print_type_cast (l_result_type_set.static_type, current_file)
+							current_file.put_character ('(')
+							print_type_declaration (l_result_type_set.static_type, current_file)
+							current_file.put_character (')')
 							if l_signature_result /= Void then
 								current_file.put_character ('(')
 								current_file.put_string (l_signature_result)
@@ -1495,6 +1512,23 @@ feature {NONE} -- Feature generation
 							-- building the dynamic type sets.
 						set_fatal_error
 						error_handler.report_gible_error
+					end
+				when builtin_arguments_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_arguments_argument then
+						print_builtin_arguments_argument_body (a_feature)
+					when builtin_arguments_argument_count then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_arguments_argument_count_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_giblj_error
 					end
 				else
 					inspect l_builtin_class
@@ -3801,23 +3835,51 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_temp: ET_INTERNAL_LOCAL_NAME
+			l_pointer: BOOLEAN
 		do
-			if in_operand then
-				operand_stack.force (an_expression)
+			l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			if l_dynamic_type_set = Void then
+					-- Internal error: the dynamic type set of `an_expression'
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_gibdg_error
 			else
--- TODO: TYPED_POINTER vs. POINTER.
-				l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
-				if l_dynamic_type_set = Void then
-						-- Internal error: the dynamic type set of `an_expression'
-						-- should be known at this stage.
-					set_fatal_error
-					error_handler.report_gibdg_error
-				else
+				l_dynamic_type := l_dynamic_type_set.static_type
+				l_pointer := (l_dynamic_type = current_system.pointer_type)
+				if not l_pointer then
+						-- $Current is of type TYPED_POINTER.
 					l_dynamic_type := l_dynamic_type_set.static_type
+					l_temp := new_temp_variable (l_dynamic_type)
+					operand_stack.force (l_temp)
+					print_indentation
+					current_file.put_character ('t')
+					current_file.put_integer (l_temp.seed)
+					current_file.put_character ('.')
+					current_file.put_string (c_id)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_integer (l_dynamic_type.id)
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_character ('t')
+					current_file.put_integer (l_temp.seed)
+					current_file.put_character ('.')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+				end
+				if l_pointer and in_operand then
+						-- $Current is of type POINTER.
+					operand_stack.force (an_expression)
+				else
+					print_type_cast (current_system.pointer_type, current_file)
+					current_file.put_character ('(')
 					l_special_type ?= current_type
 					if l_special_type /= Void then
-						print_type_cast (current_system.pointer_type, current_file)
-						current_file.put_character ('(')
 						current_file.put_character ('(')
 						print_type_cast (current_type, current_file)
 						current_file.put_character ('(')
@@ -3828,21 +3890,14 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 						current_file.put_character ('>')
 						current_file.put_character ('a')
 						current_file.put_character ('2')
-						current_file.put_character (')')
 					else
-print ("ET_C_GENERATOR.print_current_address%N")
-						l_temp := new_temp_variable (l_dynamic_type)
-						if current_type.is_expanded then
---							current_file.put_character ('&')
---							current_file.put_character ('C')
-							current_file.put_character ('t')
-							current_file.put_integer (l_temp.seed)
-						else
---							current_file.put_character ('C')
-							current_file.put_character ('z')
-							current_file.put_integer (l_temp.seed)
-						end
+						current_file.put_character ('C')
 					end
+					current_file.put_character (')')
+				end
+				if not l_pointer then
+					current_file.put_character (';')
+					current_file.put_new_line
 				end
 			end
 		end
@@ -3987,30 +4042,254 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 		local
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_value_type_set: ET_DYNAMIC_TYPE_SET
+			l_special_type: ET_DYNAMIC_TYPE
 			l_temp: ET_INTERNAL_LOCAL_NAME
+			l_pointer: BOOLEAN
+			l_name: ET_FEATURE_NAME
+			l_query: ET_DYNAMIC_FEATURE
+			l_procedure: ET_DYNAMIC_FEATURE
 		do
-			if in_operand then
-				operand_stack.force (an_expression)
+			l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			if l_dynamic_type_set = Void then
+					-- Internal error: the dynamic type set of `an_expression'
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_gibch_error
 			else
--- TODO.
-print ("ET_C_GENERATOR.print_feature_address%N")
-				l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
-				if l_dynamic_type_set = Void then
-						-- Internal error: the dynamic type set of `an_expression'
-						-- should be known atthis stage.
-					set_fatal_error
-					error_handler.report_gibch_error
-				else
+				l_dynamic_type := l_dynamic_type_set.static_type
+				l_pointer := (l_dynamic_type = current_system.pointer_type)
+				if not l_pointer then
+						-- $feature_name is of type TYPED_POINTER.
 					l_dynamic_type := l_dynamic_type_set.static_type
-					if l_dynamic_type = current_system.pointer_type then
-							-- $feature_name is of type POINTER, even
-							-- in ISE and its TYPED_POINTER support.
-						current_file.put_character ('0')
+					l_temp := new_temp_variable (l_dynamic_type)
+					operand_stack.force (l_temp)
+					print_indentation
+					current_file.put_character ('t')
+					current_file.put_integer (l_temp.seed)
+					current_file.put_character ('.')
+					current_file.put_string (c_id)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_integer (l_dynamic_type.id)
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_character ('t')
+					current_file.put_integer (l_temp.seed)
+					current_file.put_character ('.')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+				end
+				if l_pointer and in_operand then
+						-- $feature_name is of type POINTER.
+					operand_stack.force (an_expression)
+				else
+					current_file.put_character ('(')
+					l_name := an_expression.name
+					if l_name.is_argument then
+						l_value_type_set := current_feature.dynamic_type_set (l_name)
+						if l_value_type_set = Void then
+								-- Internal error: it should have been checked elsewhere that
+								-- the current feature is a function.
+							set_fatal_error
+							error_handler.report_giblk_error
+						elseif l_value_type_set.is_expanded then
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('&')
+							current_file.put_character ('a')
+							current_file.put_integer (l_name.seed)
+						else
+							l_special_type := l_value_type_set.special_type
+							if l_special_type /= Void then
+								current_file.put_character ('(')
+								current_file.put_character ('a')
+								current_file.put_integer (l_name.seed)
+								current_file.put_character ('?')
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('(')
+								current_file.put_string (c_getypes)
+								current_file.put_character ('[')
+								current_file.put_character ('a')
+								current_file.put_integer (l_name.seed)
+								current_file.put_character ('-')
+								current_file.put_character ('>')
+								current_file.put_string (c_id)
+								current_file.put_character (']')
+								current_file.put_character ('.')
+								current_file.put_string (c_is_special)
+								current_file.put_character ('?')
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('(')
+								print_type_cast (l_special_type, current_file)
+								current_file.put_character ('(')
+								current_file.put_character ('a')
+								current_file.put_integer (l_name.seed)
+								current_file.put_character (')')
+								current_file.put_character (')')
+								current_file.put_character ('-')
+								current_file.put_character ('>')
+								current_file.put_character ('a')
+								current_file.put_character ('2')
+								current_file.put_character (':')
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('a')
+								current_file.put_integer (l_name.seed)
+								current_file.put_character (')')
+								current_file.put_character (':')
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('0')
+								current_file.put_character (')')
+							else
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('a')
+								current_file.put_integer (l_name.seed)
+							end
+						end
+					elseif l_name.is_local then
+						l_value_type_set := current_feature.dynamic_type_set (l_name)
+						if l_value_type_set = Void then
+								-- Internal error: it should have been checked elsewhere that
+								-- the current feature is a function.
+							set_fatal_error
+							error_handler.report_gibll_error
+						elseif l_value_type_set.is_expanded then
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('&')
+							current_file.put_character ('l')
+							current_file.put_integer (l_name.seed)
+						else
+							l_special_type := l_value_type_set.special_type
+							if l_special_type /= Void then
+								current_file.put_character ('(')
+								current_file.put_character ('l')
+								current_file.put_integer (l_name.seed)
+								current_file.put_character ('?')
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('(')
+								current_file.put_string (c_getypes)
+								current_file.put_character ('[')
+								current_file.put_character ('l')
+								current_file.put_integer (l_name.seed)
+								current_file.put_character ('-')
+								current_file.put_character ('>')
+								current_file.put_string (c_id)
+								current_file.put_character (']')
+								current_file.put_character ('.')
+								current_file.put_string (c_is_special)
+								current_file.put_character ('?')
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('(')
+								print_type_cast (l_special_type, current_file)
+								current_file.put_character ('(')
+								current_file.put_character ('l')
+								current_file.put_integer (l_name.seed)
+								current_file.put_character (')')
+								current_file.put_character (')')
+								current_file.put_character ('-')
+								current_file.put_character ('>')
+								current_file.put_character ('a')
+								current_file.put_character ('2')
+								current_file.put_character (':')
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('l')
+								current_file.put_integer (l_name.seed)
+								current_file.put_character (')')
+								current_file.put_character (':')
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('0')
+								current_file.put_character (')')
+							else
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('l')
+								current_file.put_integer (l_name.seed)
+							end
+						end
 					else
-						l_temp := new_temp_variable (l_dynamic_type)
-						current_file.put_character ('t')
-						current_file.put_integer (l_temp.seed)
+						l_query := current_type.seeded_dynamic_query (l_name.seed, current_system)
+						if l_query /= Void then
+							if l_query.is_attribute then
+								l_value_type_set := current_feature.result_type_set
+								if l_value_type_set = Void then
+										-- Internal error: we know that `l_query' is an attribute.
+									set_fatal_error
+									error_handler.report_giblm_error
+								elseif l_value_type_set.is_expanded then
+									print_type_cast (current_system.pointer_type, current_file)
+									current_file.put_character ('&')
+									current_file.put_character ('(')
+									print_current_attribute_name (l_query)
+									current_file.put_character (')')
+								else
+									l_special_type := l_value_type_set.special_type
+									if l_special_type /= Void then
+										current_file.put_character ('(')
+										print_current_attribute_name (l_query)
+										current_file.put_character ('?')
+										print_type_cast (current_system.pointer_type, current_file)
+										current_file.put_character ('(')
+										current_file.put_string (c_getypes)
+										current_file.put_character ('[')
+										current_file.put_character ('(')
+										print_current_attribute_name (l_query)
+										current_file.put_character (')')
+										current_file.put_character ('-')
+										current_file.put_character ('>')
+										current_file.put_string (c_id)
+										current_file.put_character (']')
+										current_file.put_character ('.')
+										current_file.put_string (c_is_special)
+										current_file.put_character ('?')
+										print_type_cast (current_system.pointer_type, current_file)
+										current_file.put_character ('(')
+										print_type_cast (l_special_type, current_file)
+										current_file.put_character ('(')
+										print_current_attribute_name (l_query)
+										current_file.put_character (')')
+										current_file.put_character (')')
+										current_file.put_character ('-')
+										current_file.put_character ('>')
+										current_file.put_character ('a')
+										current_file.put_character ('2')
+										current_file.put_character (':')
+										print_type_cast (current_system.pointer_type, current_file)
+										print_current_attribute_name (l_query)
+										current_file.put_character (')')
+										current_file.put_character (':')
+										print_type_cast (current_system.pointer_type, current_file)
+										current_file.put_character ('0')
+										current_file.put_character (')')
+									else
+										print_type_cast (current_system.pointer_type, current_file)
+										print_current_attribute_name (l_query)
+									end
+								end
+							else
+								print_type_cast (current_system.pointer_type, current_file)
+								print_routine_name (l_query, current_type, current_file)
+							end
+						else
+							l_procedure := current_type.seeded_dynamic_query (l_name.seed, current_system)
+							if l_procedure /= Void then
+								print_type_cast (current_system.pointer_type, current_file)
+								print_routine_name (l_procedure, current_type, current_file)
+							else
+									-- Internal error: It has been checked in ET_FEATURE_CHECKER that
+									-- we should have either $argument, $local or $feature_name.
+								set_fatal_error
+								error_handler.report_gibln_error
+							end
+						end
 					end
+					current_file.put_character (')')
+				end
+				if not l_pointer then
+					current_file.put_character (';')
+					current_file.put_new_line
 				end
 			end
 		end
@@ -4933,6 +5212,13 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							else
 								l_printed := False
 							end
+						when builtin_arguments_class then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_arguments_argument_count then
+								print_builtin_arguments_argument_count_call (a_target_type)
+							else
+								l_printed := False
+							end
 						else
 							inspect l_builtin_class
 							when builtin_integer_class then
@@ -5260,41 +5546,110 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_special_type: ET_DYNAMIC_TYPE
 			l_temp: ET_INTERNAL_LOCAL_NAME
+			l_pointer: BOOLEAN
 		do
-			if in_operand then
-				operand_stack.force (an_expression)
+			l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			if l_dynamic_type_set = Void then
+					-- Internal error: the dynamic type set of `an_expression'
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_gibdj_error
 			else
--- TODO: TYPED_POINTER vs. POINTER.
-print ("ET_C_GENERATOR.print_result_address%N")
-				l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
-				if l_dynamic_type_set = Void then
-						-- Internal error: the dynamic type set of `an_expression'
-						-- should be known atthis stage.
-					set_fatal_error
-					error_handler.report_gibdj_error
-				else
+				l_dynamic_type := l_dynamic_type_set.static_type
+				l_pointer := (l_dynamic_type = current_system.pointer_type)
+				if not l_pointer then
+						-- $Result is of type TYPED_POINTER.
 					l_dynamic_type := l_dynamic_type_set.static_type
 					l_temp := new_temp_variable (l_dynamic_type)
+					operand_stack.force (l_temp)
+					print_indentation
+					current_file.put_character ('t')
+					current_file.put_integer (l_temp.seed)
+					current_file.put_character ('.')
+					current_file.put_string (c_id)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_integer (l_dynamic_type.id)
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_character ('t')
+					current_file.put_integer (l_temp.seed)
+					current_file.put_character ('.')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+				end
+				if l_pointer and in_operand then
+						-- $Result is of type POINTER.
+					operand_stack.force (an_expression)
+				else
+					current_file.put_character ('(')
 					l_result_type_set := current_feature.result_type_set
 					if l_result_type_set = Void then
 							-- Internal error: it should have been checked elsewhere that
 							-- the current feature is a function.
 						set_fatal_error
 						error_handler.report_gibdk_error
-					elseif l_result_type_set.static_type.is_expanded then
---						current_file.put_character ('&')
---						current_file.put_character ('R')
-						current_file.put_character ('t')
-						current_file.put_integer (l_temp.seed)
+					elseif l_result_type_set.is_expanded then
+						print_type_cast (current_system.pointer_type, current_file)
+						current_file.put_character ('&')
+						current_file.put_character ('R')
 					else
---						current_file.put_character ('R')
-						current_file.put_character ('t')
-						current_file.put_integer (l_temp.seed)
+						l_special_type := l_result_type_set.special_type
+						if l_special_type /= Void then
+							current_file.put_character ('(')
+							current_file.put_character ('R')
+							current_file.put_character ('?')
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('(')
+							current_file.put_string (c_getypes)
+							current_file.put_character ('[')
+							current_file.put_character ('R')
+							current_file.put_character ('-')
+							current_file.put_character ('>')
+							current_file.put_string (c_id)
+							current_file.put_character (']')
+							current_file.put_character ('.')
+							current_file.put_string (c_is_special)
+							current_file.put_character ('?')
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('(')
+							print_type_cast (l_special_type, current_file)
+							current_file.put_character ('(')
+							current_file.put_character ('R')
+							current_file.put_character (')')
+							current_file.put_character (')')
+							current_file.put_character ('-')
+							current_file.put_character ('>')
+							current_file.put_character ('a')
+							current_file.put_character ('2')
+							current_file.put_character (':')
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('R')
+							current_file.put_character (')')
+							current_file.put_character (':')
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('0')
+							current_file.put_character (')')
+						else
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('R')
+						end
 					end
+					current_file.put_character (')')
+				end
+				if not l_pointer then
+					current_file.put_character (';')
+					current_file.put_new_line
 				end
 			end
 		end
@@ -8445,6 +8800,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_gibgk_error
 			else
+				include_runtime_header_file ("ge_integer.h", header_file)
 				print_type_cast (current_system.double_type, current_file)
 				current_file.put_string (c_gepower)
 				current_file.put_character ('(')
@@ -9402,6 +9758,55 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
+	print_builtin_arguments_argument_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'ARGUMENTS.argument' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_indentation
+			current_file.put_string (c_char)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_character ('s')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_string (c_geargv)
+			current_file.put_character ('[')
+			current_file.put_character ('a')
+			current_file.put_character ('1')
+			current_file.put_character (']')
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_character ('R')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_string ("gems(s,strlen(s))")
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_builtin_arguments_argument_count_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'ARGUMENTS.argument_count' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string (c_geargc)
+			current_file.put_character (' ')
+			current_file.put_character ('-')
+			current_file.put_character (' ')
+			current_file.put_character ('1')
+			current_file.put_character (')')
+		end
+
 feature {NONE} -- C function generation
 
 	print_main_function is
@@ -10272,6 +10677,92 @@ feature {NONE} -- Type generation
 				end
 				i := i + 1
 			end
+			a_file.put_string (c_typedef)
+			a_file.put_character (' ')
+			a_file.put_string (c_struct)
+			a_file.put_character (' ')
+			a_file.put_character ('{')
+			a_file.put_new_line
+			a_file.put_character ('%T')
+			a_file.put_string (c_int)
+			a_file.put_character (' ')
+			a_file.put_string (c_id)
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_character ('%T')
+			a_file.put_string (c_eif_boolean)
+			a_file.put_character (' ')
+			a_file.put_string (c_is_special)
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_character ('}')
+			a_file.put_character (' ')
+			a_file.put_string (c_eif_type)
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_new_line
+		end
+
+	print_getypes_array is
+			-- Print 'getypes' array to `current_file' and its declaration to `header_file'.
+		local
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			l_dynamic_types := current_system.dynamic_types
+			nb := l_dynamic_types.count
+				-- Print declaration of 'getypes' in `header_file'.
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			header_file.put_string (c_eif_type)
+			header_file.put_character (' ')
+			header_file.put_string (c_getypes)
+			header_file.put_character ('[')
+			header_file.put_character (']')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_string (c_eif_type)
+			current_file.put_character (' ')
+			current_file.put_string (c_getypes)
+			current_file.put_character ('[')
+			current_file.put_integer (nb + 1)
+			current_file.put_character (']')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+				-- Dummy type at index 0.
+			current_file.put_character ('{')
+			current_file.put_integer (0)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			current_file.put_string (c_eif_false)
+			current_file.put_character ('}')
+			current_file.put_character (',')
+			current_file.put_new_line
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				current_file.put_character ('{')
+				current_file.put_integer (0)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				if l_type.is_special then
+					current_file.put_string (c_eif_true)
+				else
+					current_file.put_string (c_eif_false)
+				end
+				current_file.put_character ('}')
+				if i /= nb then
+					current_file.put_character (',')
+				end
+				current_file.put_new_line
+				i := i + 1
+			end
+			current_file.put_character ('}')
+			current_file.put_character (';')
+			current_file.put_new_line
 		end
 
 	print_type_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -10442,15 +10933,18 @@ feature {NONE} -- Attribute access generation
 			a_target_not_void: a_target /= Void
 			a_type_not_void: a_type /= Void
 		do
-			current_file.put_character ('(')
-			print_type_cast (a_type, current_file)
-			current_file.put_character ('(')
-			print_expression (a_target)
-			current_file.put_character (')')
-			current_file.put_character (')')
 			if a_type.is_expanded then
+				current_file.put_character ('(')
+				print_expression (a_target)
+				current_file.put_character (')')
 				current_file.put_character ('.')
 			else
+				current_file.put_character ('(')
+				print_type_cast (a_type, current_file)
+				current_file.put_character ('(')
+				print_expression (a_target)
+				current_file.put_character (')')
+				current_file.put_character (')')
 				current_file.put_character ('-')
 				current_file.put_character ('>')
 			end
@@ -10463,15 +10957,16 @@ feature {NONE} -- Attribute access generation
 		require
 			an_attribute_not_void: an_attribute /= Void
 		do
-			current_file.put_character ('(')
-			print_type_cast (current_type, current_file)
-			current_file.put_character ('(')
-			current_file.put_character ('C')
-			current_file.put_character (')')
-			current_file.put_character (')')
 			if current_type.is_expanded then
+				current_file.put_character ('C')
 				current_file.put_character ('.')
 			else
+				current_file.put_character ('(')
+				print_type_cast (current_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('C')
+				current_file.put_character (')')
+				current_file.put_character (')')
 				current_file.put_character ('-')
 				current_file.put_character ('>')
 			end
@@ -10666,6 +11161,57 @@ feature {NONE} -- Include files
 			l_full_pathname := Execution_environment.interpreted_string (l_full_pathname)
 			include_file (l_full_pathname, a_file)
 		end
+
+	include_header_filename (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Include header filename `a_filename' to `a_file'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if not included_header_filenames.has (a_filename) then
+				if a_filename.is_equal ("%"eif_dir.h%"") then
+					include_runtime_header_file ("eif_dir.h", a_file)
+				elseif a_filename.is_equal ("%"eif_file.h%"") then
+					include_runtime_header_file ("eif_dir.h", a_file)
+				elseif a_filename.is_equal ("%"eif_memory.h%"") then
+					include_runtime_header_file ("eif_memory.h", a_file)
+				else
+					a_file.put_string (c_include)
+					a_file.put_character (' ')
+					a_file.put_string (a_filename)
+					a_file.put_new_line
+				end
+				included_header_filenames.force (a_filename)
+			end
+		end
+
+	include_runtime_header_file (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Include runtime header file `a_filename' to `a_file'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if not included_runtime_header_files.has (a_filename) then
+				if a_filename.is_equal ("eif_dir.h") then
+					included_runtime_c_files.force ("eif_dir.c")
+				elseif a_filename.is_equal ("eif_file.h") then
+					included_runtime_c_files.force ("eif_file.c")
+				end
+				include_runtime_c_file (a_filename, a_file)
+				included_runtime_header_files.force (a_filename)
+			end
+		end
+
+	included_header_filenames: DS_HASH_SET [STRING]
+			-- Name of header filenames already included
+
+	included_runtime_header_files: DS_HASH_SET [STRING]
+			-- Name of runtime header files already included
+
+	included_runtime_c_files: DS_HASH_SET [STRING]
+			-- Name of runtime C files already included
 
 feature {ET_AST_NODE} -- Processing
 
@@ -11379,14 +11925,18 @@ feature {NONE} -- Constants
 	c_eif_real_64: STRING is "EIF_REAL_64"
 	c_eif_reference: STRING is "EIF_REFERENCE"
 	c_eif_true: STRING is "EIF_TRUE"
+	c_eif_type: STRING is "EIF_TYPE"
 	c_eif_void: STRING is "EIF_VOID"
 	c_eif_wide_char: STRING is "EIF_WIDE_CHAR"
 	c_else: STRING is "else"
 	c_extern: STRING is "extern"
 	c_float: STRING is "float"
 	c_gealloc: STRING is "gealloc"
+	c_geargc: STRING is "geargc"
+	c_geargv: STRING is "geargv"
 	c_gems: STRING is "gems"
 	c_gepower: STRING is "gepower"
+	c_getypes: STRING is "getypes"
 	c_gevoid: STRING is "gevoid"
 	c_id: STRING is "id"
 	c_if: STRING is "if"
@@ -11396,6 +11946,7 @@ feature {NONE} -- Constants
 	c_int16_t: STRING is "int16_t"
 	c_int32_t: STRING is "int32_t"
 	c_int64_t: STRING is "int64_t"
+	c_is_special: STRING is "is_special"
 	c_memcmp: STRING is "memcmp"
 	c_memcpy: STRING is "memcpy"
 	c_return: STRING is "return"
@@ -11455,5 +12006,11 @@ invariant
 	no_void_used_temp_variable: not used_temp_variables.has (Void)
 	free_temp_variables_not_void: free_temp_variables /= Void
 	no_void_free_temp_variable: not free_temp_variables.has (Void)
+	included_header_filenames_not_void: included_header_filenames /= Void
+	no_void_included_header_filename: not included_header_filenames.has (Void)
+	included_runtime_header_files_not_void: included_runtime_header_files /= Void
+	no_void_included_runtime_header_file: not included_runtime_header_files.has (Void)
+	included_runtime_c_files_not_void: included_runtime_c_files /= Void
+	no_void_included_runtime_c_file: not included_runtime_c_files.has (Void)
 
 end

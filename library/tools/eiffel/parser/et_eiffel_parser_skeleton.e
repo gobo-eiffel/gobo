@@ -1708,6 +1708,8 @@ feature {NONE} -- Built-in
 				set_builtin_pointer_ref_function (a_feature)
 			elseif a_class = universe.pointer_class then
 				set_builtin_pointer_function (a_feature)
+			elseif a_class = universe.arguments_class then
+				set_builtin_arguments_function (a_feature)
 			elseif a_class = universe.integer_ref_class then
 				set_builtin_sized_integer_ref_function (a_feature, universe.integer_class, tokens.builtin_integer_class)
 			elseif a_class = universe.integer_class then
@@ -2322,6 +2324,52 @@ feature {NONE} -- Built-in
 			end
 		end
 
+	set_builtin_arguments_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class ARGUMENTS.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.argument_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_arguments_feature (tokens.builtin_arguments_argument))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'argument (i: INTEGER): STRING'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs7a_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'argument (i: INTEGER): STRING'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs7a_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
+						-- The signature should be 'argument (i: INTEGER): STRING'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs7a_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.argument_count_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_arguments_feature (tokens.builtin_arguments_argument_count))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'argument_count: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs7b_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'argument_count: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs7b_error (a_class, a_feature)
+				end
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
 	set_builtin_sized_integer_ref_function (a_feature: ET_EXTERNAL_FUNCTION; an_integer_class: ET_CLASS; a_builtin_class_code: INTEGER) is
 			-- Set built-in code of `a_feature' from the ref class of sized integer class `an_integer_class'.
 			-- `a_builtin_class_code' is the built-in code of class `an_integer_class'.
@@ -2803,6 +2851,8 @@ feature {NONE} -- Built-in
 				set_builtin_pointer_ref_procedure (a_feature)
 			elseif a_class = universe.pointer_class then
 				set_builtin_pointer_procedure (a_feature)
+			elseif a_class = universe.arguments_class then
+				set_builtin_arguments_procedure (a_feature)
 			elseif a_class = universe.integer_ref_class then
 				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_class, tokens.builtin_integer_class)
 			elseif a_class = universe.integer_class then
@@ -3197,6 +3247,33 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_pointer_feature (tokens.builtin_pointer_hash_code))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs6f_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_arguments_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class ARGUMENTS.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.argument_feature_name) then
+					-- 'ARGUMENTS.argument' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_arguments_feature (tokens.builtin_arguments_argument))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs7a_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.argument_count_feature_name) then
+					-- 'ARGUMENTS.argument_count' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_arguments_feature (tokens.builtin_arguments_argument_count))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs7b_error (a_class, a_feature)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

@@ -1,5 +1,9 @@
 class PLAIN_TEXT_FILE
 
+inherit
+
+	STRING_HANDLER
+
 create
 
 	make

@@ -5,7 +5,7 @@ indexing
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -6862,6 +6862,46 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvkbs7a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-7 error: wrong signature for 'ARGUMENTS.argument'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs7_error (a_class) then
+				create an_error.make_gvkbs7a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs7b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-7 error: wrong signature for 'ARGUMENTS.argument_count'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs7_error (a_class) then
+				create an_error.make_gvkbs7b (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvkbu1a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Report GVKBU-1 error: unknown built-in routine `a_feature'
 			-- in class `a_class'.
@@ -8199,6 +8239,16 @@ feature -- Validity error status
 
 	reportable_gvkbs6_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVKBS-6 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbs7_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS-7 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -12356,12 +12406,6 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- error_handler.report_gibli_error
-	-- error_handler.report_giblj_error
-	-- error_handler.report_giblk_error
-	-- error_handler.report_gibll_error
-	-- error_handler.report_giblm_error
-	-- error_handler.report_gibln_error
 	-- error_handler.report_giblo_error
 	-- error_handler.report_giblp_error
 	-- error_handler.report_giblq_error

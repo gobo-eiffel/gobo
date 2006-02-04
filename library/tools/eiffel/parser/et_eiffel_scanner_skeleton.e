@@ -460,6 +460,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.builtin_marker)
 				-- Class names.
 			Result.force_new (-1, tokens.capitalized_any_name)
+			Result.force_new (-1, tokens.capitalized_arguments_name)
 			Result.force_new (-1, tokens.capitalized_array_name)
 			Result.force_new (-1, tokens.capitalized_bit_name)
 			Result.force_new (-1, tokens.capitalized_boolean_name)
@@ -493,6 +494,8 @@ feature {NONE} -- String handler
 				-- Feature names.
 			Result.force_new (-1, tokens.aliased_resized_area_name)
 			Result.force_new (-1, tokens.area_name)
+			Result.force_new (-1, tokens.argument_name)
+			Result.force_new (-1, tokens.argument_count_name)
 			Result.force_new (-1, tokens.as_natural_8_name)
 			Result.force_new (-1, tokens.as_natural_16_name)
 			Result.force_new (-1, tokens.as_natural_32_name)
@@ -524,6 +527,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.lower_name)
 			Result.force_new (-1, tokens.make_name)
 			Result.force_new (-1, tokens.out_name)
+			Result.force_new (-1, tokens.pointer_item_name)
 			Result.force_new (-1, tokens.put_name)
 			Result.force_new (-1, tokens.put_reference_name)
 			Result.force_new (-1, tokens.reference_item_name)

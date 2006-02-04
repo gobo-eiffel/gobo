@@ -1,5 +1,9 @@
 class CONSOLE
 
+inherit
+
+	STRING_HANDLER
+
 feature
 
 	make_open_stdout (a_name: STRING) is

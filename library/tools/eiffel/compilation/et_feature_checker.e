@@ -3916,6 +3916,7 @@ feature {NONE} -- Expression validity
 									set_fatal_error
 									error_handler.report_giaeb_error
 								else
+									report_formal_argument (l_identifier, l_argument)
 									l_typed_pointer_class := universe.typed_pointer_class
 									if l_typed_pointer_class.is_preparsed then
 											-- Class TYPED_POINTER has been found in the universe.
@@ -3967,6 +3968,7 @@ feature {NONE} -- Expression validity
 										set_fatal_error
 										error_handler.report_gibbu_error
 									else
+										report_local_variable (l_identifier, l_local)
 										l_typed_pointer_class := universe.typed_pointer_class
 										if l_typed_pointer_class.is_preparsed then
 												-- Class TYPED_POINTER has been found in the universe.
@@ -4112,11 +4114,15 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 							error_handler.report_giaar_error
 						else
+							l_argument := l_arguments.formal_argument (l_seed)
+							l_identifier ?= l_name
+							check is_argument: l_identifier /= Void end
+							report_formal_argument (l_identifier, l_argument)
 							l_typed_pointer_class := universe.typed_pointer_class
 							if l_typed_pointer_class.is_preparsed then
 									-- Class TYPED_POINTER has been found in the universe.
 									-- Use ISE's implementation: the type of '$argument' is 'TYPED_POINTER [<type-of-argument>]'.
-								l_type := l_arguments.formal_argument (l_seed).type
+								l_type := l_argument.type
 								l_resolved_type := resolved_formal_parameters (l_type, current_feature, current_type)
 								if not has_fatal_error then
 									create l_actuals.make_with_capacity (1)
@@ -4169,6 +4175,10 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 							error_handler.report_giaat_error
 						else
+							l_local := l_locals.local_variable (l_seed)
+							l_identifier ?= l_name
+							check is_local: l_identifier /= Void end
+							report_local_variable (l_identifier, l_local)
 							l_typed_pointer_class := universe.typed_pointer_class
 							if l_typed_pointer_class.is_preparsed then
 									-- Class TYPED_POINTER has been found in the universe.
@@ -4177,7 +4187,7 @@ feature {NONE} -- Expression validity
 									-- local variables in the AST are those found in the implementation
 									-- class of `current_feature', and hence need to be resolved in
 									-- `current_type'.
-								l_type := l_locals.local_variable (l_seed).type
+								l_type := l_local.type
 								l_resolved_type := resolved_formal_parameters (l_type, feature_impl, current_type)
 								if not has_fatal_error then
 									create l_actuals.make_with_capacity (1)
