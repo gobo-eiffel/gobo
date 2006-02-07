@@ -265,20 +265,27 @@ feature -- Built-in codes
 		end
 
 	builtin_real_class: INTEGER is 13
+	builtin_double_class: INTEGER is 14
 	builtin_real_item: INTEGER is 1
 	builtin_real_set_item: INTEGER is 2
+	builtin_real_lt: INTEGER is 3
+	builtin_real_truncated_to_integer: INTEGER is 4
+	builtin_real_truncated_to_integer_64: INTEGER is 5
+	builtin_real_truncated_to_real: INTEGER is 6
+	builtin_real_to_double: INTEGER is 7
+	builtin_real_ceiling_real_32: INTEGER is 8
+	builtin_real_ceiling_real_64: INTEGER is 9
+	builtin_real_floor_real_32: INTEGER is 10
+	builtin_real_floor_real_64: INTEGER is 11
+	builtin_real_plus: INTEGER is 12
+	builtin_real_minus: INTEGER is 13
+	builtin_real_times: INTEGER is 14
+	builtin_real_divide: INTEGER is 15
+	builtin_real_power: INTEGER is 16
+	builtin_real_opposite: INTEGER is 17
+	builtin_real_identity: INTEGER is 18
+	builtin_real_out: INTEGER is 19
 			-- Codes for built-in features from class REAL
-
-	builtin_double_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class DOUBLE
-		do
-			Result := builtin_double_class * builtin_capacity + a_feature_code
-		end
-
-	builtin_double_class: INTEGER is 14
-	builtin_double_item: INTEGER is 1
-	builtin_double_set_item: INTEGER is 2
-			-- Codes for built-in features from class DOUBLE
 
 	builtin_pointer_feature (a_feature_code: INTEGER): INTEGER is
 			-- Full code for built-in feature from class POINTER

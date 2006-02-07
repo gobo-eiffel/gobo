@@ -582,6 +582,22 @@ feature -- Feature names
 			call_feature_name_not_void: Result /= Void
 		end
 
+	ceiling_real_32_feature_name: ET_FEATURE_NAME is
+			-- 'ceiling_real_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (ceiling_real_32_name)
+		ensure
+			ceiling_real_32_feature_name_not_void: Result /= Void
+		end
+
+	ceiling_real_64_feature_name: ET_FEATURE_NAME is
+			-- 'ceiling_real_64' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (ceiling_real_64_name)
+		ensure
+			ceiling_real_64_feature_name_not_void: Result /= Void
+		end
+
 	code_feature_name: ET_FEATURE_NAME is
 			-- 'code' feature name
 		once
@@ -636,6 +652,22 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (element_size_name)
 		ensure
 			element_size_feature_name_not_void: Result /= Void
+		end
+
+	floor_real_32_feature_name: ET_FEATURE_NAME is
+			-- 'floor_real_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (floor_real_32_name)
+		ensure
+			floor_real_32_feature_name_not_void: Result /= Void
+		end
+
+	floor_real_64_feature_name: ET_FEATURE_NAME is
+			-- 'floor_real_64' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (floor_real_64_name)
+		ensure
+			floor_real_64_feature_name_not_void: Result /= Void
 		end
 
 	generating_type_feature_name: ET_FEATURE_NAME is
@@ -1083,6 +1115,30 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (to_real_64_name)
 		ensure
 			to_real_64_feature_name_not_void: Result /= Void
+		end
+
+	truncated_to_integer_feature_name: ET_FEATURE_NAME is
+			-- 'truncated_to_integer' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (truncated_to_integer_name)
+		ensure
+			truncated_to_integer_feature_name_not_void: Result /= Void
+		end
+
+	truncated_to_integer_64_feature_name: ET_FEATURE_NAME is
+			-- 'truncated_to_integer_64' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (truncated_to_integer_64_name)
+		ensure
+			truncated_to_integer_64_feature_name_not_void: Result /= Void
+		end
+
+	truncated_to_real_feature_name: ET_FEATURE_NAME is
+			-- 'truncated_to_real' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (truncated_to_real_name)
+		ensure
+			truncated_to_real_feature_name_not_void: Result /= Void
 		end
 
 	twin_feature_name: ET_FEATURE_NAME is
@@ -1838,6 +1894,8 @@ feature -- Keyword and symbol names
 	bit_shift_right_name: STRING is "bit_shift_right"
 	bit_xor_name: STRING is "bit_xor"
 	call_name: STRING is "call"
+	ceiling_real_32_name: STRING is "ceiling_real_32"
+	ceiling_real_64_name: STRING is "ceiling_real_64"
 	code_name: STRING is "code"
 	conforms_to_name: STRING is "conforms_to"
 	copy_name: STRING is "copy"
@@ -1845,6 +1903,8 @@ feature -- Keyword and symbol names
 	deep_twin_name: STRING is "deep_twin"
 	default_create_name: STRING is "default_create"
 	element_size_name: STRING is "element_size"
+	floor_real_32_name: STRING is "floor_real_32"
+	floor_real_64_name: STRING is "floor_real_64"
 	generating_type_name: STRING is "generating_type"
 	generator_name: STRING is "generator"
 	hash_code_name: STRING is "hash_code"
@@ -1871,6 +1931,9 @@ feature -- Keyword and symbol names
 	to_real_name: STRING is "to_real"
 	to_real_32_name: STRING is "to_real_32"
 	to_real_64_name: STRING is "to_real_64"
+	truncated_to_integer_name: STRING is "truncated_to_integer"
+	truncated_to_integer_64_name: STRING is "truncated_to_integer_64"
+	truncated_to_real_name: STRING is "truncated_to_real"
 	twin_name: STRING is "twin"
 	upper_name: STRING is "upper"
 		-- Eiffel feature names

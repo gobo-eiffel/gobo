@@ -906,6 +906,7 @@ feature {NONE} -- Feature validity
 			a_class_impl: ET_CLASS
 			a_bit_type: ET_BIT_TYPE
 			an_integer_constant: ET_INTEGER_CONSTANT
+			a_real_constant: ET_REAL_CONSTANT
 		do
 			has_fatal_error := False
 			a_type := a_feature.type
@@ -976,10 +977,14 @@ feature {NONE} -- Feature validity
 						end
 					end
 				elseif a_constant.is_real_constant then
+					a_real_constant ?= a_constant
+					check is_real_constant: a_real_constant /= Void end
 					if a_type.same_named_type (universe.real_class, current_type, current_type, universe) then
-						-- OK.
+							-- OK.
+						a_real_constant.set_real_32
 					elseif a_type.same_named_type (universe.double_class, current_type, current_type, universe) then
-						-- OK.
+							-- OK.
+						a_real_constant.set_double_64
 					else
 						set_fatal_error
 						a_class_impl := a_feature.implementation_class
@@ -5624,11 +5629,42 @@ feature {NONE} -- Expression validity
 		require
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
+		local
+			l_class_type: ET_CLASS_TYPE
+			l_class: ET_CLASS
+			l_type: ET_TYPE
+			l_cast_type: ET_TYPE
 		do
 			has_fatal_error := False
-			a_context.force_last (universe.double_class)
-			a_constant.set_double_64
-			report_double_constant (a_constant)
+			l_cast_type := a_constant.type
+			if l_cast_type /= Void then
+-- TODO: make sure that `l_cast_type' is a valid type.
+-- For example 'REAL [STRING]' is not valid.
+				l_class_type ?= l_cast_type.named_type (a_context, universe)
+			else
+				l_class_type ?= current_target_type.named_type (universe)
+			end
+			if l_class_type /= Void then
+				l_class := l_class_type.direct_base_class (universe)
+				if l_class = universe.real_class then
+					l_type := l_class
+					a_constant.set_real_32
+					report_real_constant (a_constant)
+				elseif l_class = universe.double_class then
+					l_type := l_class
+					a_constant.set_double_64
+					report_double_constant (a_constant)
+				end
+			end
+			if l_type = Void then
+				if l_cast_type /= Void then
+-- TODO: invalid cast type, it should be an integer type.
+				end
+				l_type := universe.double_class
+				a_constant.set_double_64
+				report_double_constant (a_constant)
+			end
+			a_context.force_last (l_type)
 		end
 
 	check_result_validity (an_expression: ET_RESULT; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -6181,11 +6217,42 @@ feature {NONE} -- Expression validity
 		require
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
+		local
+			l_class_type: ET_CLASS_TYPE
+			l_class: ET_CLASS
+			l_type: ET_TYPE
+			l_cast_type: ET_TYPE
 		do
 			has_fatal_error := False
-			a_context.force_last (universe.double_class)
-			a_constant.set_double_64
-			report_double_constant (a_constant)
+			l_cast_type := a_constant.type
+			if l_cast_type /= Void then
+-- TODO: make sure that `l_cast_type' is a valid type.
+-- For example 'REAL [STRING]' is not valid.
+				l_class_type ?= l_cast_type.named_type (a_context, universe)
+			else
+				l_class_type ?= current_target_type.named_type (universe)
+			end
+			if l_class_type /= Void then
+				l_class := l_class_type.direct_base_class (universe)
+				if l_class = universe.real_class then
+					l_type := l_class
+					a_constant.set_real_32
+					report_real_constant (a_constant)
+				elseif l_class = universe.double_class then
+					l_type := l_class
+					a_constant.set_double_64
+					report_double_constant (a_constant)
+				end
+			end
+			if l_type = Void then
+				if l_cast_type /= Void then
+-- TODO: invalid cast type, it should be an integer type.
+				end
+				l_type := universe.double_class
+				a_constant.set_double_64
+				report_double_constant (a_constant)
+			end
+			a_context.force_last (l_type)
 		end
 
 	check_unqualified_call_expression_validity (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -8216,6 +8283,14 @@ feature {NONE} -- Event handling
 			a_type_not_void: a_type /= Void
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
+		do
+		end
+
+	report_real_constant (a_constant: ET_REAL_CONSTANT) is
+			-- Report that a real has been processed.
+		require
+			no_error: not has_fatal_error
+			a_constant_not_void: a_constant /= Void
 		do
 		end
 

@@ -6902,6 +6902,388 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvkbs8a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_real_class: ET_CLASS) is
+			-- Report GVKBS-8 error: wrong signature for `a_feature' in `a_class',
+			-- built-in routine 'item' from ref class of sized real class `a_real_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+			a_real_class_not_void: a_real_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8a (a_class, a_feature, a_real_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_real_class: ET_CLASS) is
+			-- Report GVKBS-8 error: wrong signature for `a_feature' in `a_class',
+			-- built-in routine 'set_item' from ref class of sized real class `a_real_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+			a_real_class_not_void: a_real_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8b (a_class, a_feature, a_real_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "+"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8c (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "-"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8d (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "*"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8e (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "/"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8f (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8g_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "^"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8g (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8h_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.prefix "-"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8h (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8i_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.prefix "+"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8i (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8j_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "<"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8j (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8k_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.truncated_to_integer'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8k (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8l_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.truncated_to_integer_64'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8l (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8m_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.truncated_to_real'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8m (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8n_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.to_double'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8n (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8o_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.ceiling_real_32'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8o (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8p_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.ceiling_real_64'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8p (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8q_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.floor_real_32'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8q (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8r_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.floor_real_64'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8r (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs8s_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-8 error: wrong signature for 'REAL.out'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs8_error (a_class) then
+				create an_error.make_gvkbs8s (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvkbu1a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Report GVKBU-1 error: unknown built-in routine `a_feature'
 			-- in class `a_class'.
@@ -8249,6 +8631,16 @@ feature -- Validity error status
 
 	reportable_gvkbs7_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVKBS-7 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbs8_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS-8 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -12406,21 +12798,9 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- error_handler.report_giblo_error
-	-- error_handler.report_giblp_error
 	-- error_handler.report_giblq_error
-	-- error_handler.report_giblr_error
 	-- error_handler.report_gibls_error
-	-- error_handler.report_giblt_error
 	-- error_handler.report_giblu_error
-	-- error_handler.report_giblv_error
-	-- error_handler.report_giblw_error
-	-- error_handler.report_giblx_error
-	-- report_gibly_error
-	-- report_giblz_error
-	-- report_gibla_error
-	-- report_giblb_error
-	-- report_giblc_error
 	-- report_gibld_error
 	-- report_gible_error
 	-- report_giblf_error

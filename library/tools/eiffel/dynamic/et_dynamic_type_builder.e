@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,6 +71,7 @@ inherit
 			report_qualified_call_instruction,
 			report_qualified_procedure_call_agent,
 			report_qualified_query_call_agent,
+			report_real_constant,
 			report_result,
 			report_result_assignment_target,
 			report_static_call_expression,
@@ -121,6 +122,7 @@ feature {NONE} -- Initialization
 			create character_index.make (0)
 			create boolean_index.make (0)
 			create double_index.make (0)
+			create real_index.make (0)
 			create integer_index.make (0)
 			create integer_8_index.make (0)
 			create integer_16_index.make (0)
@@ -460,6 +462,7 @@ feature {NONE} -- Generation
 			character_index.put (0)
 			boolean_index.put (0)
 			double_index.put (0)
+			real_index.put (0)
 			integer_index.put (0)
 			integer_8_index.put (0)
 			integer_16_index.put (0)
@@ -668,6 +671,7 @@ feature {NONE} -- Feature validity
 			l_builtin_code: INTEGER
 			l_builtin_class: INTEGER
 			l_integer_type: ET_DYNAMIC_TYPE
+			l_real_type: ET_DYNAMIC_TYPE
 		do
 			Precursor (a_feature)
 			if not has_fatal_error then
@@ -803,6 +807,10 @@ feature {NONE} -- Feature validity
 							l_integer_type := current_system.natural_32_type
 						when builtin_natural_64_class then
 							l_integer_type := current_system.natural_64_type
+						when builtin_real_class then
+							l_real_type := current_system.real_type
+						when builtin_double_class then
+							l_real_type := current_system.double_type
 						else
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
@@ -877,6 +885,50 @@ feature {NONE} -- Feature validity
 								set_fatal_error
 								error_handler.report_gibii_error
 							end
+						elseif l_real_type /= Void then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_real_plus then
+								report_builtin_sized_real_plus (a_feature, l_real_type)
+							when builtin_real_minus then
+								report_builtin_sized_real_minus (a_feature, l_real_type)
+							when builtin_real_times then
+								report_builtin_sized_real_times (a_feature, l_real_type)
+							when builtin_real_divide then
+								report_builtin_sized_real_divide (a_feature, l_real_type)
+							when builtin_real_power then
+								report_builtin_sized_real_power (a_feature, l_real_type)
+							when builtin_real_opposite then
+								report_builtin_sized_real_opposite (a_feature, l_real_type)
+							when builtin_real_identity then
+								report_builtin_sized_real_identity (a_feature, l_real_type)
+							when builtin_real_lt then
+								report_builtin_sized_real_lt (a_feature, l_real_type)
+							when builtin_real_truncated_to_integer then
+								report_builtin_sized_real_truncated_to_integer (a_feature, l_real_type)
+							when builtin_real_truncated_to_integer_64 then
+								report_builtin_sized_real_truncated_to_integer_64 (a_feature, l_real_type)
+							when builtin_real_truncated_to_real then
+								report_builtin_sized_real_truncated_to_real (a_feature, l_real_type)
+							when builtin_real_to_double then
+								report_builtin_sized_real_to_double (a_feature, l_real_type)
+							when builtin_real_ceiling_real_32 then
+								report_builtin_sized_real_ceiling_real_32 (a_feature, l_real_type)
+							when builtin_real_ceiling_real_64 then
+								report_builtin_sized_real_ceiling_real_64 (a_feature, l_real_type)
+							when builtin_real_floor_real_32 then
+								report_builtin_sized_real_floor_real_32 (a_feature, l_real_type)
+							when builtin_real_floor_real_64 then
+								report_builtin_sized_real_floor_real_64 (a_feature, l_real_type)
+							when builtin_real_out then
+								report_builtin_sized_real_out (a_feature, l_real_type)
+							when builtin_real_item then
+								report_builtin_sized_real_item (a_feature, l_real_type)
+							else
+									-- Internal error: invalid built-in feature.
+									-- Error already reported during parsing.
+								set_fatal_error
+								error_handler.report_giblp_error
+							end
 						end
 					end
 				elseif a_feature.type.same_base_type (universe.string_class, current_type, current_type, universe) then
@@ -895,6 +947,7 @@ feature {NONE} -- Feature validity
 			l_builtin_code: INTEGER
 			l_builtin_class: INTEGER
 			l_integer_type: ET_DYNAMIC_TYPE
+			l_real_type: ET_DYNAMIC_TYPE
 		do
 			Precursor (a_feature)
 			if not has_fatal_error then
@@ -972,6 +1025,10 @@ feature {NONE} -- Feature validity
 							l_integer_type := current_system.natural_32_type
 						when builtin_natural_64_class then
 							l_integer_type := current_system.natural_64_type
+						when builtin_real_class then
+							l_real_type := current_system.real_type
+						when builtin_double_class then
+							l_real_type := current_system.double_type
 						else
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
@@ -987,6 +1044,16 @@ feature {NONE} -- Feature validity
 									-- Error already reported during parsing.
 								set_fatal_error
 								error_handler.report_gibij_error
+							end
+						elseif l_real_type /= Void then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_real_set_item then
+								report_builtin_sized_real_set_item (a_feature, l_real_type)
+							else
+									-- Internal error: invalid built-in feature.
+									-- Error already reported during parsing.
+								set_fatal_error
+								error_handler.report_giblr_error
 							end
 						end
 					end
@@ -1896,6 +1963,24 @@ feature {NONE} -- Event handling
 		do
 			create l_dynamic_query_call.make (an_expression, a_target_type_set, a_result_type_set, current_dynamic_feature, current_dynamic_type)
 			dynamic_qualified_query_calls.force_last (l_dynamic_query_call)
+		end
+
+	report_real_constant (a_constant: ET_REAL_CONSTANT) is
+			-- Report that a real has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_system.real_type
+				l_type.set_alive
+				if a_constant.index = 0 and real_index.item /= 0 then
+					a_constant.set_index (real_index.item)
+				end
+				set_dynamic_type_set (l_type, a_constant)
+				if real_index.item = 0 then
+					real_index.put (a_constant.index)
+				end
+			end
 		end
 
 	report_result (an_expression: ET_RESULT) is
@@ -3201,6 +3286,297 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_sized_real_plus (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "+"' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_minus (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "-"' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_times (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "*"' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_divide (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "/"' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_power (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "^"' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.double_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_opposite (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'prefix "-"' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_identity (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'prefix "+"' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				propagate_builtin_result_type (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_lt (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'infix "<"' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_truncated_to_integer (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'truncated_to_integer' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_truncated_to_integer_64 (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'truncated_to_integer_64' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_64_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_truncated_to_real (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'truncated_to_real' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.real_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_to_double (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'to_double' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.double_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_ceiling_real_32 (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'ceiling_real_32' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.real_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_ceiling_real_64 (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'ceiling_real_64' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.double_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_floor_real_32 (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'floor_real_32' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.real_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_floor_real_64 (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'floor_real_64' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.double_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_out (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'out' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				current_system.set_string_type_alive
+				propagate_builtin_result_type (current_system.string_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_item (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'item' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := a_real_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_sized_real_set_item (a_feature: ET_EXTERNAL_PROCEDURE; a_real_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'set_item' from sized real type `a_real_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+			a_real_type_not_void: a_real_type /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+			end
+		end
+
 feature {ET_FEATURE_CHECKER} -- Access
 
 	current_dynamic_type: ET_DYNAMIC_TYPE
@@ -3223,6 +3599,9 @@ feature {ET_FEATURE_CHECKER} -- Access
 
 	double_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of double expressions in `dynamic_type_sets'
+
+	real_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of real expressions in `dynamic_type_sets'
 
 	integer_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of integer expressions in `dynamic_type_sets'
@@ -3373,6 +3752,7 @@ invariant
 	character_index_not_void: character_index /= Void
 	boolean_index_not_void: boolean_index /= Void
 	double_index_not_void: double_index /= Void
+	real_index_not_void: real_index /= Void
 	integer_index_not_void: integer_index /= Void
 	integer_8_index_not_void: integer_8_index /= Void
 	integer_16_index_not_void: integer_16_index /= Void
