@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1187,7 +1187,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- type is itself a formal generic parameter.
 					an_index := a_formal_type.index
 					other_index := other.index
-					if an_index = an_index then
+					if an_index = other_index then
 						Result := True
 					else
 							-- Check for constraints of the form "[G -> H,
@@ -1415,7 +1415,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 						-- type is itself a formal generic parameter.
 					an_index := a_formal_type.index
 					other_index := other.index
-					if an_index = an_index then
+					if an_index = other_index then
 						Result := True
 					else
 							-- Check for constraints of the form "[G -> H,
