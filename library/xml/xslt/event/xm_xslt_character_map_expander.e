@@ -14,6 +14,8 @@ class	XM_XSLT_CHARACTER_MAP_EXPANDER
 
 inherit
 
+	ANY
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +44,7 @@ feature {NONE} -- Initialization
 				create character_map.make_with_equality_testers (10, string_equality_tester, Void)
 
 				-- Now merge all character maps - later definitions override earlier ones
-				
+
 				from
 					a_cursor := a_character_map_list.new_cursor; a_cursor.start
 				variant

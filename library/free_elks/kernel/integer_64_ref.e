@@ -609,7 +609,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	abs_ref: INTEGER_64_REF is
+	abs_ref: like Current is
 			-- Absolute value
 		do
 			if item >= 0 then

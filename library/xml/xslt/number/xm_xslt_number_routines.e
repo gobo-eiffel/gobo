@@ -14,6 +14,8 @@ class XM_XSLT_NUMBER_ROUTINES
 
 inherit
 
+	ANY
+
 	ST_IMPORTED_UNICODE_CHARACTER_CLASS_ROUTINES
 		export {NONE} all end
 
@@ -97,4 +99,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

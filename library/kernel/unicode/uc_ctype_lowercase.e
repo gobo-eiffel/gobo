@@ -18,6 +18,8 @@ class UC_CTYPE_LOWERCASE
 
 inherit
 
+	ANY
+
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 

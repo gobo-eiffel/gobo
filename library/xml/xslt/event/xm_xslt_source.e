@@ -10,9 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class	XM_XSLT_SOURCE
+deferred class XM_XSLT_SOURCE
 
 inherit
+
+	ANY
 
 	XM_XPATH_SHARED_NAME_POOL
 		export {NONE} all end
@@ -61,7 +63,7 @@ feature -- Events
 
 			-- User requests (such as type of validation) are available in `a_configuration'.
 			-- These can be sensitive to `is_stylesheet'.
-			
+
 		end
 
 feature -- Status report
@@ -91,4 +93,4 @@ feature -- Element change
 		end
 
 end
-	
+

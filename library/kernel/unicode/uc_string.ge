@@ -83,7 +83,7 @@ inherit
 			{UC_STRING_HANDLER} storage, compare;
 #endif
 #ifdef ISE
-			{STRING} share, area, old_is_empty, mirror;
+			{STRING} share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal;
 #endif
 			{NONE} all
 		undefine
@@ -3310,6 +3310,8 @@ feature {NONE} -- Inapplicable
 		do
 			wipe_out
 		end
+
+feature {UC_STRING} -- Inapplicable
 
 	old_left_adjust is
 			-- Remove leading whitespace.

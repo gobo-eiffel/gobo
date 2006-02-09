@@ -14,6 +14,8 @@ class XM_XSLT_DECIMAL_FORMAT_ENTRY
 
 inherit
 
+	ANY
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -197,7 +199,7 @@ feature -- Element change
 		ensure
 			per_mille_set: per_mille = a_per_mille
 		end
-	
+
 	set_zero_digit (a_zero_digit: STRING) is
 			-- Set `zero_digit'.
 		require
@@ -207,8 +209,8 @@ feature -- Element change
 		ensure
 			zero_digit_set: zero_digit = a_zero_digit
 		end
-	
-	
+
+
 	set_digit_sign (a_digit: STRING) is
 			-- Set `digit_sign'.
 		require
@@ -218,7 +220,7 @@ feature -- Element change
 		ensure
 			digit_sign_set: digit_sign = a_digit
 		end
-	
+
 	set_infinity (an_infinity: STRING) is
 			-- Set `infinity'.
 		require

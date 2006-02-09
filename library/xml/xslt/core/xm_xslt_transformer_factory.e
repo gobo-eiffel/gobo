@@ -14,6 +14,8 @@ class XM_XSLT_TRANSFORMER_FACTORY
 
 inherit
 
+	ANY
+
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
@@ -44,7 +46,7 @@ feature {NONE} -- Initialization
 			configuration_set: configuration = a_configuration
 			caching: is_caching
 		end
-			
+
 feature -- Access
 
 	configuration: XM_XSLT_CONFIGURATION
@@ -257,7 +259,7 @@ feature {NONE} -- Implementation
 				a_text := STRING_.appended_string (a_text, "</xsl:transform>")
 
 				-- TODO - set MIME type and charset parameters?
-				
+
 				create {XM_XSLT_STRING_SOURCE} Result.make (a_uri.full_reference, a_text)
 			end
 		ensure

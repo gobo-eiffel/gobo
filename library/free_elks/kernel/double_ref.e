@@ -290,7 +290,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	abs_ref: DOUBLE_REF is
+	abs_ref: like Current is
 			-- Absolute value
 		do
 			if item >= 0.0 then
