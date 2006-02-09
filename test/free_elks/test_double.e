@@ -43,6 +43,7 @@ feature -- Test
 			test_truncated_to_real
 			test_ceiling_real_64
 			test_floor_real_64
+			test_abs
 			test_convert
 		end
 
@@ -336,6 +337,19 @@ feature -- Test
 			r1 := 7.8
 			r2 := 7.0
 			assert ("floor_real_64_1", r1.floor_real_64 = r2)
+		end
+
+	test_abs is
+			-- Test feature 'abs'.
+		local
+			r1, r2: DOUBLE
+		do
+			r1 := 7.8
+			r2 := 7.8
+			assert ("abs1", r1.abs = r2)
+			r1 := -9.1
+			r2 := 9.1
+			assert ("abs1", r1.abs = r2)
 		end
 
 	test_convert is

@@ -43,6 +43,7 @@ feature -- Test
 			test_to_double
 			test_ceiling_real_32
 			test_floor_real_32
+			test_abs
 			test_convert
 		end
 
@@ -342,6 +343,19 @@ feature -- Test
 			r1 := {REAL} 7.8
 			r2 := {REAL} 7.0
 			assert ("floor_real_32_1", r1.floor_real_32 = r2)
+		end
+
+	test_abs is
+			-- Test feature 'abs'.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL} 7.8
+			r2 := {REAL} 7.8
+			assert ("abs1", r1.abs = r2)
+			r1 := {REAL} -9.1
+			r2 := {REAL} 9.1
+			assert ("abs1", r1.abs = r2)
 		end
 
 	test_convert is
