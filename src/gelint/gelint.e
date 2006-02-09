@@ -183,6 +183,7 @@ feature {NONE} -- Processing
 			end
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
+			a_universe.set_ise (True)
 			if not is_verbose then
 			end
 			a_universe.set_use_assign_keyword (True)

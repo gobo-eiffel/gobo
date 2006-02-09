@@ -543,7 +543,7 @@ feature -- Validity checking
 								end
 							end
 						elseif
-							current_class /= l_class_impl and
+							universe.is_ise and current_class /= l_class_impl and
 							(current_class = universe.boolean_class or
 							current_class = universe.character_class or
 							current_class = universe.wide_character_class or
@@ -1680,7 +1680,7 @@ feature {NONE} -- Instruction validity
 							report_assignment (an_instruction)
 						end
 					elseif
-						current_class /= l_class_impl and
+						universe.is_ise and current_class /= l_class_impl and
 						(current_class = universe.boolean_class or
 						current_class = universe.character_class or
 						current_class = universe.wide_character_class or
