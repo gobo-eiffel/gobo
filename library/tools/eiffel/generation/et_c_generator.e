@@ -1338,6 +1338,7 @@ feature {NONE} -- Feature generation
 			l_builtin_class: INTEGER
 			l_integer_type: ET_DYNAMIC_TYPE
 			l_real_type: ET_DYNAMIC_TYPE
+			l_character_type: ET_DYNAMIC_TYPE
 		do
 			l_builtin_code := a_feature.builtin_code
 			l_builtin_class := l_builtin_code // builtin_capacity
@@ -1418,27 +1419,6 @@ feature {NONE} -- Feature generation
 							-- building the dynamic type sets.
 						set_fatal_error
 						error_handler.report_gibgj_error
-					end
-				when builtin_character_class then
-					inspect l_builtin_code \\ builtin_capacity
-					when builtin_character_code then
-						fill_call_formal_arguments (0)
-						print_indentation_assign_to_result
-						print_builtin_character_code_call (current_type)
-						print_semicolon_newline
-						call_operands.wipe_out
-					when builtin_character_item then
-						fill_call_formal_arguments (0)
-						print_indentation_assign_to_result
-						print_builtin_character_item_call (current_type, current_feature)
-						print_semicolon_newline
-						call_operands.wipe_out
-					else
-							-- Unknown built-in feature.
-							-- This error should already have been reported during parsing.
-							-- building the dynamic type sets.
-						set_fatal_error
-						error_handler.report_gibfr_error
 					end
 				when builtin_boolean_class then
 					inspect l_builtin_code \\ builtin_capacity
@@ -1549,6 +1529,10 @@ feature {NONE} -- Feature generation
 						l_integer_type := current_system.natural_32_type
 					when builtin_natural_64_class then
 						l_integer_type := current_system.natural_64_type
+					when builtin_character_class then
+						l_character_type := current_system.character_type
+					when builtin_wide_character_class then
+						l_character_type := current_system.wide_character_type
 					when builtin_real_class then
 						l_real_type := current_system.real_type
 					when builtin_double_class then
@@ -1749,6 +1733,27 @@ feature {NONE} -- Feature generation
 							set_fatal_error
 							error_handler.report_gibib_error
 						end
+					elseif l_character_type /= Void then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_character_code then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_character_code_call (current_type, l_character_type)
+							print_semicolon_newline
+							call_operands.wipe_out
+						when builtin_character_item then
+							fill_call_formal_arguments (0)
+							print_indentation_assign_to_result
+							print_builtin_sized_character_item_call (current_type, l_character_type, current_feature)
+							print_semicolon_newline
+							call_operands.wipe_out
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibfr_error
+						end
 					elseif l_real_type /= Void then
 						inspect l_builtin_code \\ builtin_capacity
 						when builtin_real_plus then
@@ -1899,21 +1904,6 @@ feature {NONE} -- Feature generation
 						set_fatal_error
 						error_handler.report_gibga_error
 					end
-				when builtin_character_class then
-					inspect l_builtin_code \\ builtin_capacity
-					when builtin_character_set_item then
-						fill_call_formal_arguments (1)
-						print_indentation
-						print_builtin_character_set_item_call (current_type)
-						current_file.put_new_line
-						call_operands.wipe_out
-					else
-							-- Unknown built-in feature.
-							-- This error should already have been reported during parsing.
-							-- building the dynamic type sets.
-						set_fatal_error
-						error_handler.report_giaaj_error
-					end
 				when builtin_boolean_class then
 					inspect l_builtin_code \\ builtin_capacity
 					when builtin_boolean_set_item then
@@ -1962,6 +1952,10 @@ feature {NONE} -- Feature generation
 						l_integer_type := current_system.natural_32_type
 					when builtin_natural_64_class then
 						l_integer_type := current_system.natural_64_type
+					when builtin_character_class then
+						l_character_type := current_system.character_type
+					when builtin_wide_character_class then
+						l_character_type := current_system.wide_character_type
 					when builtin_real_class then
 						l_real_type := current_system.real_type
 					when builtin_double_class then
@@ -1987,6 +1981,21 @@ feature {NONE} -- Feature generation
 								-- building the dynamic type sets.
 							set_fatal_error
 							error_handler.report_gibib_error
+						end
+					elseif l_character_type /= Void then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_character_set_item then
+							fill_call_formal_arguments (1)
+							print_indentation
+							print_builtin_sized_character_set_item_call (current_type, l_character_type, l_builtin_class)
+							current_file.put_new_line
+							call_operands.wipe_out
+						else
+								-- Unknown built-in feature.
+								-- This error should already have been reported during parsing.
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_giaaj_error
 						end
 					elseif l_real_type /= Void then
 						inspect l_builtin_code \\ builtin_capacity
@@ -3310,6 +3319,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			l_builtin_class: INTEGER
 			l_integer_type: ET_DYNAMIC_TYPE
 			l_real_type: ET_DYNAMIC_TYPE
+			l_character_type: ET_DYNAMIC_TYPE
 		do
 			l_seed := a_name.seed
 			l_dynamic_feature := a_target_type.seeded_dynamic_procedure (l_seed, current_system)
@@ -3336,13 +3346,6 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 						inspect l_builtin_code \\ builtin_capacity
 						when builtin_special_put then
 							print_builtin_special_put_call (a_target_type)
-						else
-							l_printed := False
-						end
-					when builtin_character_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_character_set_item then
-							print_builtin_character_set_item_call (a_target_type)
 						else
 							l_printed := False
 						end
@@ -3378,6 +3381,10 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 							l_integer_type := current_system.natural_32_type
 						when builtin_natural_64_class then
 							l_integer_type := current_system.natural_64_type
+						when builtin_character_class then
+							l_character_type := current_system.character_type
+						when builtin_wide_character_class then
+							l_character_type := current_system.wide_character_type
 						when builtin_real_class then
 							l_real_type := current_system.real_type
 						when builtin_double_class then
@@ -3389,6 +3396,13 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 							inspect l_builtin_code \\ builtin_capacity
 							when builtin_integer_set_item then
 								print_builtin_sized_integer_set_item_call (a_target_type, l_integer_type, l_builtin_class)
+							else
+								l_printed := False
+							end
+						elseif l_character_type /= Void then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_character_set_item then
+								print_builtin_sized_character_set_item_call (a_target_type, l_character_type, l_builtin_class)
 							else
 								l_printed := False
 							end
@@ -5252,6 +5266,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			l_builtin_class: INTEGER
 			l_integer_type: ET_DYNAMIC_TYPE
 			l_real_type: ET_DYNAMIC_TYPE
+			l_character_type: ET_DYNAMIC_TYPE
 		do
 			l_seed := a_name.seed
 			l_query := a_target_type.base_class.seeded_query (l_seed)
@@ -5319,15 +5334,6 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							else
 								l_printed := False
 							end
-						when builtin_character_class then
-							inspect l_builtin_code \\ builtin_capacity
-							when builtin_character_code then
-								print_builtin_character_code_call (a_target_type)
-							when builtin_character_item then
-								print_builtin_character_item_call (a_target_type, l_dynamic_feature)
-							else
-								l_printed := False
-							end
 						when builtin_boolean_class then
 							inspect l_builtin_code \\ builtin_capacity
 							when builtin_boolean_and then
@@ -5387,6 +5393,10 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 								l_integer_type := current_system.natural_32_type
 							when builtin_natural_64_class then
 								l_integer_type := current_system.natural_64_type
+							when builtin_character_class then
+								l_character_type := current_system.character_type
+							when builtin_wide_character_class then
+								l_character_type := current_system.wide_character_type
 							when builtin_real_class then
 								l_real_type := current_system.real_type
 							when builtin_double_class then
@@ -5456,6 +5466,15 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 									print_builtin_sized_integer_bit_not_call (a_target_type, l_integer_type)
 								when builtin_integer_item then
 									print_builtin_sized_integer_item_call (a_target_type, l_integer_type, l_dynamic_feature)
+								else
+									l_printed := False
+								end
+							elseif l_character_type /= Void then
+								inspect l_builtin_code \\ builtin_capacity
+								when builtin_character_code then
+									print_builtin_sized_character_code_call (a_target_type, l_character_type)
+								when builtin_character_item then
+									print_builtin_sized_character_item_call (a_target_type, l_character_type, l_dynamic_feature)
 								else
 									l_printed := False
 								end
@@ -8718,12 +8737,14 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_character_code_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'CHARACTER.code' (static binding) to `current_file'.
+	print_builtin_sized_character_code_call (a_target_type, a_character_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'code' (static binding)
+			-- from sized character type `a_character_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			a_character_type_not_void: a_character_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			print_type_cast (current_system.integer_type, current_file)
@@ -8732,17 +8753,18 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			current_file.put_character (')')
 		end
 
-	print_builtin_character_item_call (a_target_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
-			-- Print to `current_file' a call (static binding) to built-in
-			-- feature `a_feature' corresponding to 'CHARACTER_REF.item'.
+	print_builtin_sized_character_item_call (a_target_type, a_character_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
+			-- Print to `current_file' a call (static binding) to built-in feature `a_feature'
+			-- corresponding to feature 'item' from sized character type `a_character_type'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
+			a_character_type_not_void: a_character_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			if a_target_type = current_system.character_type then
+			if a_target_type = a_character_type then
 					-- Current value.
 				print_expression (call_operands.first)
 			else
@@ -8751,24 +8773,29 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			end
 		end
 
-	print_builtin_character_set_item_call (a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print call to built-in feature 'CHARACTER_REF.set_item' (static binding) to `current_file'.
+	print_builtin_sized_character_set_item_call (a_target_type, a_character_type: ET_DYNAMIC_TYPE; a_builtin_class_code: INTEGER) is
+			-- Print call to built-in feature 'set_item' (static binding)
+			-- from sized character type `a_character_type' to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
+			-- `a_builtin_class_code' is the built-in code of the
+			-- base class of `a_character_type'.
 			-- Operands can be found in `call_operands'.
 		require
 			a_target_type_not_void: a_target_type /= Void
+			a_character_type_not_void: a_character_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_query: ET_DYNAMIC_FEATURE
 			l_item_attribute: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
+			l_builtin_item_code: INTEGER
 		do
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
 				error_handler.report_gibkf_error
-			elseif a_target_type = current_system.character_type then
+			elseif a_target_type = a_character_type then
 					-- Set current value.
 				print_expression (call_operands.first)
 				current_file.put_character (' ')
@@ -8779,11 +8806,12 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				current_file.put_character (')')
 				current_file.put_character (';')
 			else
+				l_builtin_item_code := builtin_feature (a_builtin_class_code, builtin_character_item)
 				l_queries := a_target_type.queries
 				nb := l_queries.count
 				from i := 1 until i > nb loop
 					l_query := l_queries.item (i)
-					if l_query.builtin_code = builtin_character_item then
+					if l_query.builtin_code = l_builtin_item_code then
 						l_item_attribute := l_query
 						i := nb + 1
 					else
@@ -9449,7 +9477,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 
 	print_builtin_sized_integer_item_call (a_target_type, an_integer_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
 			-- Print to `current_file' a call (static binding) to built-in feature `a_feature'
-			-- corresponding to feature `item' from sized integer type `an_integer_type'.
+			-- corresponding to feature 'item' from sized integer type `an_integer_type'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
@@ -10405,7 +10433,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 
 	print_builtin_sized_real_item_call (a_target_type, a_real_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
 			-- Print to `current_file' a call (static binding) to built-in feature `a_feature'
-			-- corresponding to feature `item' from sized real type `a_real_type'.
+			-- corresponding to feature 'item' from sized real type `a_real_type'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require

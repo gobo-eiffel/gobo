@@ -188,6 +188,7 @@ feature -- Built-in codes
 		end
 
 	builtin_character_class: INTEGER is 3
+	builtin_wide_character_class: INTEGER is 4
 	builtin_character_item: INTEGER is 1
 	builtin_character_set_item: INTEGER is 2
 	builtin_character_code: INTEGER is 3
@@ -199,7 +200,7 @@ feature -- Built-in codes
 			Result := builtin_boolean_class * builtin_capacity + a_feature_code
 		end
 
-	builtin_boolean_class: INTEGER is 4
+	builtin_boolean_class: INTEGER is 5
 	builtin_boolean_item: INTEGER is 1
 	builtin_boolean_set_item: INTEGER is 2
 	builtin_boolean_and: INTEGER is 3
@@ -217,14 +218,14 @@ feature -- Built-in codes
 			Result := builtin_integer_class * builtin_capacity + a_feature_code
 		end
 
-	builtin_integer_class: INTEGER is 5
-	builtin_integer_8_class: INTEGER is 6
-	builtin_integer_16_class: INTEGER is 7
-	builtin_integer_64_class: INTEGER is 8
-	builtin_natural_8_class: INTEGER is 9
-	builtin_natural_16_class: INTEGER is 10
-	builtin_natural_32_class: INTEGER is 11
-	builtin_natural_64_class: INTEGER is 12
+	builtin_integer_class: INTEGER is 6
+	builtin_integer_8_class: INTEGER is 7
+	builtin_integer_16_class: INTEGER is 8
+	builtin_integer_64_class: INTEGER is 9
+	builtin_natural_8_class: INTEGER is 10
+	builtin_natural_16_class: INTEGER is 11
+	builtin_natural_32_class: INTEGER is 12
+	builtin_natural_64_class: INTEGER is 13
 	builtin_integer_item: INTEGER is 1
 	builtin_integer_set_item: INTEGER is 2
 	builtin_integer_plus: INTEGER is 3
@@ -264,8 +265,8 @@ feature -- Built-in codes
 			Result := builtin_real_class * builtin_capacity + a_feature_code
 		end
 
-	builtin_real_class: INTEGER is 13
-	builtin_double_class: INTEGER is 14
+	builtin_real_class: INTEGER is 14
+	builtin_double_class: INTEGER is 15
 	builtin_real_item: INTEGER is 1
 	builtin_real_set_item: INTEGER is 2
 	builtin_real_lt: INTEGER is 3
@@ -293,7 +294,7 @@ feature -- Built-in codes
 			Result := builtin_pointer_class * builtin_capacity + a_feature_code
 		end
 
-	builtin_pointer_class: INTEGER is 15
+	builtin_pointer_class: INTEGER is 16
 	builtin_pointer_item: INTEGER is 1
 	builtin_pointer_set_item: INTEGER is 2
 	builtin_pointer_plus: INTEGER is 3
@@ -308,7 +309,7 @@ feature -- Built-in codes
 			Result := builtin_arguments_class * builtin_capacity + a_feature_code
 		end
 
-	builtin_arguments_class: INTEGER is 16
+	builtin_arguments_class: INTEGER is 17
 	builtin_arguments_argument: INTEGER is 1
 	builtin_arguments_argument_count: INTEGER is 2
 

@@ -226,6 +226,8 @@ feature -- Status report
 					Result := (builtin_code \\ builtin_capacity) = builtin_boolean_item
 				when builtin_character_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_character_item
+				when builtin_wide_character_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_character_item
 				when builtin_pointer_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_pointer_item
 				when builtin_integer_class then

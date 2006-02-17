@@ -5900,9 +5900,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvkbs3b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-3 error: wrong signature for 'CHARACTER_REF.item'
-			-- built-in routine `a_feature' in class `a_class'.
+	report_gvkbs3b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_character_class: ET_CLASS) is
+			-- Report GVKBS-3 error: wrong signature for `a_feature' in `a_class',
+			-- built-in routine 'item' from ref class of sized character class `a_character_class'.
 			--
 			-- Not in ETL
 			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
@@ -5911,18 +5911,19 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
 			a_feature_builtin: a_feature.is_builtin
+			a_character_class_not_void: a_character_class /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_gvkbs3_error (a_class) then
-				create an_error.make_gvkbs3b (a_class, a_feature)
+				create an_error.make_gvkbs3b (a_class, a_feature, a_character_class)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_gvkbs3c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-3 error: wrong signature for 'CHARACTER_REF.set_item'
-			-- built-in routine `a_feature' in class `a_class'.
+	report_gvkbs3c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_character_class: ET_CLASS) is
+			-- Report GVKBS-3 error: wrong signature for `a_feature' in `a_class',
+			-- built-in routine 'set_item' from ref class of sized character class `a_character_class'.
 			--
 			-- Not in ETL
 			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
@@ -5931,11 +5932,12 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
 			a_feature_builtin: a_feature.is_builtin
+			a_character_class_not_void: a_character_class /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_gvkbs3_error (a_class) then
-				create an_error.make_gvkbs3c (a_class, a_feature)
+				create an_error.make_gvkbs3c (a_class, a_feature, a_character_class)
 				report_validity_error (an_error)
 			end
 		end

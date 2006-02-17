@@ -672,6 +672,7 @@ feature {NONE} -- Feature validity
 			l_builtin_class: INTEGER
 			l_integer_type: ET_DYNAMIC_TYPE
 			l_real_type: ET_DYNAMIC_TYPE
+			l_character_type: ET_DYNAMIC_TYPE
 		do
 			Precursor (a_feature)
 			if not has_fatal_error then
@@ -722,18 +723,6 @@ feature {NONE} -- Feature validity
 								-- Error already reported during parsing.
 							set_fatal_error
 							error_handler.report_gibkt_error
-						end
-					when builtin_character_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_character_code then
-							report_builtin_character_code (a_feature)
-						when builtin_character_item then
-							report_builtin_character_item (a_feature)
-						else
-								-- Internal error: invalid built-in feature.
-								-- Error already reported during parsing.
-							set_fatal_error
-							error_handler.report_gibku_error
 						end
 					when builtin_boolean_class then
 						inspect l_builtin_code \\ builtin_capacity
@@ -807,6 +796,10 @@ feature {NONE} -- Feature validity
 							l_integer_type := current_system.natural_32_type
 						when builtin_natural_64_class then
 							l_integer_type := current_system.natural_64_type
+						when builtin_character_class then
+							l_character_type := current_system.character_type
+						when builtin_wide_character_class then
+							l_character_type := current_system.wide_character_type
 						when builtin_real_class then
 							l_real_type := current_system.real_type
 						when builtin_double_class then
@@ -885,6 +878,18 @@ feature {NONE} -- Feature validity
 								set_fatal_error
 								error_handler.report_gibii_error
 							end
+						elseif l_character_type /= Void then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_character_code then
+								report_builtin_sized_character_code (a_feature, l_character_type)
+							when builtin_character_item then
+								report_builtin_sized_character_item (a_feature, l_character_type)
+							else
+									-- Internal error: invalid built-in feature.
+									-- Error already reported during parsing.
+								set_fatal_error
+								error_handler.report_gibku_error
+							end
 						elseif l_real_type /= Void then
 							inspect l_builtin_code \\ builtin_capacity
 							when builtin_real_plus then
@@ -948,6 +953,7 @@ feature {NONE} -- Feature validity
 			l_builtin_class: INTEGER
 			l_integer_type: ET_DYNAMIC_TYPE
 			l_real_type: ET_DYNAMIC_TYPE
+			l_character_type: ET_DYNAMIC_TYPE
 		do
 			Precursor (a_feature)
 			if not has_fatal_error then
@@ -976,16 +982,6 @@ feature {NONE} -- Feature validity
 								-- Error already reported during parsing.
 							set_fatal_error
 							error_handler.report_gibky_error
-						end
-					when builtin_character_class then
-						inspect l_builtin_code \\ builtin_capacity
-						when builtin_character_set_item then
-							report_builtin_character_set_item (a_feature)
-						else
-								-- Internal error: invalid built-in feature.
-								-- Error already reported during parsing.
-							set_fatal_error
-							error_handler.report_gibkz_error
 						end
 					when builtin_boolean_class then
 						inspect l_builtin_code \\ builtin_capacity
@@ -1025,6 +1021,10 @@ feature {NONE} -- Feature validity
 							l_integer_type := current_system.natural_32_type
 						when builtin_natural_64_class then
 							l_integer_type := current_system.natural_64_type
+						when builtin_character_class then
+							l_character_type := current_system.character_type
+						when builtin_wide_character_class then
+							l_character_type := current_system.wide_character_type
 						when builtin_real_class then
 							l_real_type := current_system.real_type
 						when builtin_double_class then
@@ -1044,6 +1044,16 @@ feature {NONE} -- Feature validity
 									-- Error already reported during parsing.
 								set_fatal_error
 								error_handler.report_gibij_error
+							end
+						elseif l_character_type /= Void then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_character_set_item then
+								report_builtin_sized_character_set_item (a_feature, l_character_type)
+							else
+									-- Internal error: invalid built-in feature.
+									-- Error already reported during parsing.
+								set_fatal_error
+								error_handler.report_gibkz_error
 							end
 						elseif l_real_type /= Void then
 							inspect l_builtin_code \\ builtin_capacity
@@ -2521,11 +2531,12 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_character_code (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'CHARACTER.code' is being analyzed.
+	report_builtin_sized_character_code (a_feature: ET_EXTERNAL_FUNCTION; a_character_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'code' from sized character type `a_character_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			a_character_type_not_void: a_character_type /= Void
 		local
 			l_result_type: ET_DYNAMIC_TYPE
 		do
@@ -2537,27 +2548,29 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_character_item (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'CHARACTER_REF.item' is being analyzed.
+	report_builtin_sized_character_item (a_feature: ET_EXTERNAL_FUNCTION; a_character_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'item' from sized character type `a_character_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			a_character_type_not_void: a_character_type /= Void
 		local
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
-				l_result_type := current_system.character_type
+				l_result_type := a_character_type
 				l_result_type.set_alive
 				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
 			end
 		end
 
-	report_builtin_character_set_item (a_feature: ET_EXTERNAL_PROCEDURE) is
-			-- Report that built-in feature 'CHARACTER_REF.set_item' is being analyzed.
+	report_builtin_sized_character_set_item (a_feature: ET_EXTERNAL_PROCEDURE; a_character_type: ET_DYNAMIC_TYPE) is
+			-- Report that built-in feature 'set_item' from sized character type `a_character_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+			a_character_type_not_void: a_character_type /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
