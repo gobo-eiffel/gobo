@@ -11847,10 +11847,16 @@ feature {NONE} -- Include files
 			if not included_header_filenames.has (a_filename) then
 				if a_filename.is_equal ("%"eif_dir.h%"") then
 					include_runtime_header_file ("eif_dir.h", a_file)
+				elseif a_filename.is_equal ("%"eif_eiffel.h%"") then
+					include_runtime_header_file ("eif_eiffel.h", a_file)
+				elseif a_filename.is_equal ("%"eif_except.h%"") then
+					include_runtime_header_file ("eif_except.h", a_file)
 				elseif a_filename.is_equal ("%"eif_file.h%"") then
 					include_runtime_header_file ("eif_dir.h", a_file)
 				elseif a_filename.is_equal ("%"eif_memory.h%"") then
 					include_runtime_header_file ("eif_memory.h", a_file)
+				elseif a_filename.is_equal ("%"eif_traverse.h%"") then
+					include_runtime_header_file ("eif_traverse.h", a_file)
 				else
 					a_file.put_string (c_include)
 					a_file.put_character (' ')
@@ -11871,8 +11877,14 @@ feature {NONE} -- Include files
 			if not included_runtime_header_files.has (a_filename) then
 				if a_filename.is_equal ("eif_dir.h") then
 					included_runtime_c_files.force ("eif_dir.c")
+				elseif a_filename.is_equal ("eif_except.h") then
+					included_runtime_c_files.force ("eif_except.c")
 				elseif a_filename.is_equal ("eif_file.h") then
 					included_runtime_c_files.force ("eif_file.c")
+				elseif a_filename.is_equal ("eif_memory.h") then
+					included_runtime_c_files.force ("eif_memory.c")
+				elseif a_filename.is_equal ("eif_traverse.h") then
+					included_runtime_c_files.force ("eif_traverse.c")
 				end
 				include_runtime_c_file (a_filename, a_file)
 				included_runtime_header_files.force (a_filename)

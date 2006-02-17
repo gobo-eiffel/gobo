@@ -48,10 +48,10 @@ typedef struct {int id;} EIF_OBJECT;
 #define EIF_REFERENCE EIF_OBJECT*
 typedef char EIF_BOOLEAN;
 typedef unsigned char EIF_CHARACTER;
-typedef int32_t EIF_INTEGER;
+typedef int32_t EIF_INTEGER_32;
 typedef int8_t EIF_INTEGER_8;
 typedef int16_t EIF_INTEGER_16;
-#define EIF_INTEGER_32 EIF_INTEGER
+#define EIF_INTEGER EIF_INTEGER_32
 typedef int64_t EIF_INTEGER_64;
 typedef uint8_t EIF_NATURAL_8;
 typedef uint16_t EIF_NATURAL_16;

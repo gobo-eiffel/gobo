@@ -246,11 +246,11 @@ feature {NONE} -- Implementation
 
 	c_strlen (ptr: POINTER): INTEGER is
 		external
-			"C macro signature (char *): EIF_INTEGER use %"eif_str.h%""
+			"C signature (char *): EIF_INTEGER use <string.h>"
 		alias
 			"strlen"
-		end	
-		
+		end
+
 invariant
 	managed_data_not_void: managed_data /= Void
 	count_not_negative: count >= 0
