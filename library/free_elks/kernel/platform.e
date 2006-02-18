@@ -37,13 +37,14 @@ feature -- Platform
 	is_little_endian: BOOLEAN is
 			-- Is current platform a little endian one?
 		local
-			l_pointer: MANAGED_POINTER
-			l_int16: INTEGER_16
+			l_nat16: NATURAL_16
+			l_nat8: NATURAL_8
+			l_first: NATURAL_8
 		once
-			l_int16 := 1
-			create l_pointer.make (2)
-			l_pointer.put_integer_16 (l_int16, 0)
-			Result := l_pointer.read_integer_16_le (0) = l_int16
+			l_nat16 := 0x4321
+			l_nat8 := 0x21
+			($l_first).memory_copy ($l_nat16, 1)
+			Result := l_first = l_nat8
 		end
 
 feature -- Access bytes size
