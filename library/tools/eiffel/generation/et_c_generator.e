@@ -1511,6 +1511,69 @@ feature {NONE} -- Feature generation
 						set_fatal_error
 						error_handler.report_giblj_error
 					end
+				when builtin_platform_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_platform_is_dotnet then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_platform_is_dotnet_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_platform_is_unix then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_platform_is_unix_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_platform_is_vms then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_platform_is_vms_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_platform_is_windows then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_platform_is_windows_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_platform_boolean_bytes then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_platform_boolean_bytes_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_platform_character_bytes then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_platform_character_bytes_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_platform_integer_bytes then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_platform_integer_bytes_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_platform_pointer_bytes then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_platform_pointer_bytes_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					when builtin_platform_real_bytes then
+						fill_call_formal_arguments (0)
+						print_indentation_assign_to_result
+						print_builtin_platform_real_bytes_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
+					else
+							-- Unknown built-in feature.
+							-- This error should already have been reported during parsing.
+							-- building the dynamic type sets.
+						set_fatal_error
+						error_handler.report_gibls_error
+					end
 				else
 					inspect l_builtin_class
 					when builtin_integer_class then
@@ -5372,6 +5435,29 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							inspect l_builtin_code \\ builtin_capacity
 							when builtin_arguments_argument_count then
 								print_builtin_arguments_argument_count_call (a_target_type)
+							else
+								l_printed := False
+							end
+						when builtin_platform_class then
+							inspect l_builtin_code \\ builtin_capacity
+							when builtin_platform_is_dotnet then
+								print_builtin_platform_is_dotnet_call (a_target_type)
+							when builtin_platform_is_unix then
+								print_builtin_platform_is_unix_call (a_target_type)
+							when builtin_platform_is_vms then
+								print_builtin_platform_is_vms_call (a_target_type)
+							when builtin_platform_is_windows then
+								print_builtin_platform_is_windows_call (a_target_type)
+							when builtin_platform_boolean_bytes then
+								print_builtin_platform_boolean_bytes_call (a_target_type)
+							when builtin_platform_character_bytes then
+								print_builtin_platform_character_bytes_call (a_target_type)
+							when builtin_platform_integer_bytes then
+								print_builtin_platform_integer_bytes_call (a_target_type)
+							when builtin_platform_pointer_bytes then
+								print_builtin_platform_pointer_bytes_call (a_target_type)
+							when builtin_platform_real_bytes then
+								print_builtin_platform_real_bytes_call (a_target_type)
 							else
 								l_printed := False
 							end
@@ -10029,6 +10115,135 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			current_file.put_character (')')
 		end
 
+	print_builtin_platform_is_dotnet_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'PLATFORM.is_dotnet' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_string (c_eif_false)
+		end
+
+	print_builtin_platform_is_unix_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'PLATFORM.is_unix' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_string (c_eif_is_unix)
+		end
+
+	print_builtin_platform_is_vms_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'PLATFORM.is_vms' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_string (c_eif_is_vms)
+		end
+
+	print_builtin_platform_is_windows_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'PLATFORM.is_windows' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_string (c_eif_is_windows)
+		end
+
+	print_builtin_platform_boolean_bytes_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'PLATFORM.boolean_bytes' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			current_file.put_string (c_eif_boolean)
+			current_file.put_character (')')
+			current_file.put_character (')')
+		end
+
+	print_builtin_platform_character_bytes_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'PLATFORM.character_bytes' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			current_file.put_string (c_eif_character)
+			current_file.put_character (')')
+			current_file.put_character (')')
+		end
+
+	print_builtin_platform_integer_bytes_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'PLATFORM.integer_bytes' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			current_file.put_string (c_eif_integer)
+			current_file.put_character (')')
+			current_file.put_character (')')
+		end
+
+	print_builtin_platform_pointer_bytes_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'PLATFORM.pointer_bytes' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			current_file.put_string (c_eif_pointer)
+			current_file.put_character (')')
+			current_file.put_character (')')
+		end
+
+	print_builtin_platform_real_bytes_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'PLATFORM.real_bytes' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			current_file.put_string (c_eif_real)
+			current_file.put_character (')')
+			current_file.put_character (')')
+		end
+
 	print_builtin_sized_real_plus_call (a_target_type, a_real_type: ET_DYNAMIC_TYPE) is
 			-- Print call to built-in feature 'infix "+"' (static binding)
 			-- from sized real type `a_real_type' to `current_file'.
@@ -12629,13 +12844,18 @@ feature {NONE} -- Constants
 	c_eif_integer: STRING is "EIF_INTEGER"
 	c_eif_integer_8: STRING is "EIF_INTEGER_8"
 	c_eif_integer_16: STRING is "EIF_INTEGER_16"
+	c_eif_integer_32: STRING is "EIF_INTEGER_32"
 	c_eif_integer_64: STRING is "EIF_INTEGER_64"
+	c_eif_is_unix: STRING is "EIF_IS_UNIX"
+	c_eif_is_vms: STRING is "EIF_IS_VMS"
+	c_eif_is_windows: STRING is "EIF_IS_WINDOWS"
 	c_eif_natural_8: STRING is "EIF_NATURAL_8"
 	c_eif_natural_16: STRING is "EIF_NATURAL_16"
 	c_eif_natural_32: STRING is "EIF_NATURAL_32"
 	c_eif_natural_64: STRING is "EIF_NATURAL_64"
 	c_eif_object: STRING is "EIF_OBJECT"
 	c_eif_pointer: STRING is "EIF_POINTER"
+	c_eif_real: STRING is "EIF_REAL"
 	c_eif_real_32: STRING is "EIF_REAL_32"
 	c_eif_real_64: STRING is "EIF_REAL_64"
 	c_eif_reference: STRING is "EIF_REFERENCE"

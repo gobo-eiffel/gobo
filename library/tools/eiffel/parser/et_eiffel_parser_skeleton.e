@@ -5,7 +5,7 @@ indexing
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1714,6 +1714,8 @@ feature {NONE} -- Built-in
 				set_builtin_pointer_function (a_feature)
 			elseif a_class = universe.arguments_class then
 				set_builtin_arguments_function (a_feature)
+			elseif a_class = universe.platform_class then
+				set_builtin_platform_function (a_feature)
 			elseif a_class = universe.integer_ref_class then
 				set_builtin_sized_integer_ref_function (a_feature, universe.integer_class, tokens.builtin_integer_class)
 			elseif a_class = universe.integer_class then
@@ -2376,6 +2378,132 @@ feature {NONE} -- Built-in
 						-- The signature should be 'argument_count: INTEGER'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs7b_error (a_class, a_feature)
+				end
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_platform_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class PLATFORM.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.is_dotnet_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_dotnet))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'is_dotnet: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9a_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'is_dotnet: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9a_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.is_unix_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_unix))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'is_unix: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9b_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'is_unix: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9b_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.is_vms_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_vms))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'is_vms: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9c_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'is_vms: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9c_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.is_windows_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_windows))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'is_windows: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9d_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'is_windows: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9d_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.boolean_bytes_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_boolean_bytes))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'boolean_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9e_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'boolean_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9e_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.character_bytes_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_character_bytes))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'character_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9f_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'character_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9f_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.integer_bytes_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_integer_bytes))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'integer_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9g_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'integer_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9g_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.pointer_bytes_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_pointer_bytes))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'pointer_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9h_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'pointer_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9h_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.real_bytes_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_real_bytes))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'real_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9i_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'real_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9i_error (a_class, a_feature)
 				end
 			else
 					-- Unknown built-in routine.
@@ -3156,6 +3284,8 @@ feature {NONE} -- Built-in
 				set_builtin_pointer_procedure (a_feature)
 			elseif a_class = universe.arguments_class then
 				set_builtin_arguments_procedure (a_feature)
+			elseif a_class = universe.platform_class then
+				set_builtin_platform_procedure (a_feature)
 			elseif a_class = universe.integer_ref_class then
 				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_class, tokens.builtin_integer_class)
 			elseif a_class = universe.integer_class then
@@ -3588,6 +3718,68 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_arguments_feature (tokens.builtin_arguments_argument_count))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs7b_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_platform_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class PLATFORM.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.is_dotnet_feature_name) then
+					-- 'PLATFORM.is_dotnet' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_dotnet))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9a_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.is_unix_feature_name) then
+					-- 'PLATFORM.is_unix' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_unix))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9b_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.is_vms_feature_name) then
+					-- 'PLATFORM.is_vms' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_vms))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9c_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.is_windows_feature_name) then
+					-- 'PLATFORM.is_windows' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_windows))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9d_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.boolean_bytes_feature_name) then
+					-- 'PLATFORM.boolean_bytes' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_boolean_bytes))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9e_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.character_bytes_feature_name) then
+					-- 'PLATFORM.character_bytes' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_character_bytes))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9f_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.integer_bytes_feature_name) then
+					-- 'PLATFORM.integer_bytes' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_integer_bytes))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9g_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.pointer_bytes_feature_name) then
+					-- 'PLATFORM.pointer_bytes' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_pointer_bytes))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9h_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.real_bytes_feature_name) then
+					-- 'PLATFORM.real_bytes' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_real_bytes))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9i_error (a_class, a_feature)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

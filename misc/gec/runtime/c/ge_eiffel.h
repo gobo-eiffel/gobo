@@ -20,6 +20,7 @@
 	(defined(WINVER) || defined(_WIN32_WINNT) || defined(_WIN32) || \
 	defined(__WIN32__) || defined(__TOS_WIN__) || defined(_MSC_VER))
 #define WIN32 1
+#define EIF_WINDOWS 1
 #endif
 #ifdef WIN32
 #include <windows.h>
@@ -68,6 +69,24 @@ typedef uint32_t EIF_WIDE_CHAR;
 #define EIF_VOID ((EIF_REFERENCE)0)
 #define EIF_FALSE ((EIF_BOOLEAN)'\0')
 #define EIF_TRUE ((EIF_BOOLEAN)'\1')
+
+/* Platform definition */
+/* Unix definition */
+#define EIF_IS_UNIX EIF_TRUE
+/* Windows definition */
+#ifdef EIF_WINDOWS
+#define EIF_IS_WINDOWS EIF_TRUE
+#define EIF_IS_UNIX EIF_FALSE
+#else
+#define EIF_IS_WINDOWS EIF_FALSE
+#endif
+/* VMS definition */
+#ifdef EIF_VMS
+#define EIF_IS_VMS EIF_TRUE
+#define EIF_IS_UNIX EIF_FALSE
+#else
+#define EIF_IS_VMS EIF_FALSE
+#endif
 
 /* Memory allocation, GC */
 #define gealloc(x) calloc((x),1)

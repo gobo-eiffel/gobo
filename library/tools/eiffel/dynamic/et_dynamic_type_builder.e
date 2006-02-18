@@ -778,6 +778,32 @@ feature {NONE} -- Feature validity
 							set_fatal_error
 							error_handler.report_gibli_error
 						end
+					when builtin_platform_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_platform_is_dotnet then
+							report_builtin_platform_is_dotnet (a_feature)
+						when builtin_platform_is_unix then
+							report_builtin_platform_is_unix (a_feature)
+						when builtin_platform_is_vms then
+							report_builtin_platform_is_vms (a_feature)
+						when builtin_platform_is_windows then
+							report_builtin_platform_is_windows (a_feature)
+						when builtin_platform_boolean_bytes then
+							report_builtin_platform_boolean_bytes (a_feature)
+						when builtin_platform_character_bytes then
+							report_builtin_platform_character_bytes (a_feature)
+						when builtin_platform_integer_bytes then
+							report_builtin_platform_integer_bytes (a_feature)
+						when builtin_platform_pointer_bytes then
+							report_builtin_platform_pointer_bytes (a_feature)
+						when builtin_platform_real_bytes then
+							report_builtin_platform_real_bytes (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_giblq_error
+						end
 					else
 						inspect l_builtin_class
 						when builtin_integer_class then
@@ -3285,6 +3311,150 @@ feature {NONE} -- Built-in features
 
 	report_builtin_arguments_argument_count (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'ARGUMENTS.argument_count' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_is_dotnet (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.is_dotnet' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_is_unix (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.is_unix' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_is_vms (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.is_vms' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_is_windows (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.is_windows' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_boolean_bytes (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.boolean_bytes' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_character_bytes (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.character_bytes' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_integer_bytes (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.integer_bytes' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_pointer_bytes (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.pointer_bytes' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_real_bytes (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.real_bytes' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void

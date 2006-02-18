@@ -313,6 +313,23 @@ feature -- Built-in codes
 	builtin_arguments_argument: INTEGER is 1
 	builtin_arguments_argument_count: INTEGER is 2
 
+	builtin_platform_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class PLATFORM
+		do
+			Result := builtin_platform_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_platform_class: INTEGER is 18
+	builtin_platform_is_dotnet: INTEGER is 1
+	builtin_platform_is_windows: INTEGER is 2
+	builtin_platform_is_unix: INTEGER is 3
+	builtin_platform_is_vms: INTEGER is 4
+	builtin_platform_boolean_bytes: INTEGER is 5
+	builtin_platform_character_bytes: INTEGER is 6
+	builtin_platform_integer_bytes: INTEGER is 7
+	builtin_platform_real_bytes: INTEGER is 8
+	builtin_platform_pointer_bytes: INTEGER is 9
+
 	builtin_function_item: INTEGER is 5001
 	builtin_routine_call: INTEGER is 5101
 			-- Built-in feature codes
