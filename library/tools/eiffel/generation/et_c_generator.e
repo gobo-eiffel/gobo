@@ -4439,7 +4439,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						l_query := current_type.seeded_dynamic_query (l_name.seed, current_system)
 						if l_query /= Void then
 							if l_query.is_attribute then
-								l_value_type_set := current_feature.result_type_set
+								l_value_type_set := l_query.result_type_set
 								if l_value_type_set = Void then
 										-- Internal error: we know that `l_query' is an attribute.
 									set_fatal_error
@@ -12088,16 +12088,27 @@ feature {NONE} -- Include files
 			a_file_open_write: a_file.is_open_write
 		do
 			if not included_header_filenames.has (a_filename) then
-				if a_filename.is_equal ("%"eif_dir.h%"") then
+				if a_filename.is_equal ("%"eif_console.h%"") then
+					include_runtime_header_file ("eif_file.h", a_file)
+					include_runtime_header_file ("eif_console.h", a_file)
+				elseif a_filename.is_equal ("%"eif_dir.h%"") then
 					include_runtime_header_file ("eif_dir.h", a_file)
 				elseif a_filename.is_equal ("%"eif_eiffel.h%"") then
 					include_runtime_header_file ("eif_eiffel.h", a_file)
 				elseif a_filename.is_equal ("%"eif_except.h%"") then
 					include_runtime_header_file ("eif_except.h", a_file)
 				elseif a_filename.is_equal ("%"eif_file.h%"") then
-					include_runtime_header_file ("eif_dir.h", a_file)
+					include_runtime_header_file ("eif_file.h", a_file)
 				elseif a_filename.is_equal ("%"eif_memory.h%"") then
 					include_runtime_header_file ("eif_memory.h", a_file)
+				elseif a_filename.is_equal ("%"eif_path_name.h%"") then
+					include_runtime_header_file ("eif_path_name.h", a_file)
+				elseif a_filename.is_equal ("%"eif_retrieve.h%"") then
+					include_runtime_header_file ("eif_retrieve.h", a_file)
+				elseif a_filename.is_equal ("%"eif_sig.h%"") then
+					include_runtime_header_file ("eif_sig.h", a_file)
+				elseif a_filename.is_equal ("%"eif_store.h%"") then
+					include_runtime_header_file ("eif_store.h", a_file)
 				elseif a_filename.is_equal ("%"eif_traverse.h%"") then
 					include_runtime_header_file ("eif_traverse.h", a_file)
 				else
@@ -12118,7 +12129,9 @@ feature {NONE} -- Include files
 			a_file_open_write: a_file.is_open_write
 		do
 			if not included_runtime_header_files.has (a_filename) then
-				if a_filename.is_equal ("eif_dir.h") then
+				if a_filename.is_equal ("eif_console.h") then
+					included_runtime_c_files.force ("eif_console.c")
+				elseif a_filename.is_equal ("eif_dir.h") then
 					included_runtime_c_files.force ("eif_dir.c")
 				elseif a_filename.is_equal ("eif_except.h") then
 					included_runtime_c_files.force ("eif_except.c")
@@ -12126,6 +12139,14 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("eif_file.c")
 				elseif a_filename.is_equal ("eif_memory.h") then
 					included_runtime_c_files.force ("eif_memory.c")
+				elseif a_filename.is_equal ("eif_path_name.h") then
+					included_runtime_c_files.force ("eif_path_name.c")
+				elseif a_filename.is_equal ("eif_retrieve.h") then
+					included_runtime_c_files.force ("eif_retrieve.c")
+				elseif a_filename.is_equal ("eif_sig.h") then
+					included_runtime_c_files.force ("eif_sig.c")
+				elseif a_filename.is_equal ("eif_store.h") then
+					included_runtime_c_files.force ("eif_store.c")
 				elseif a_filename.is_equal ("eif_traverse.h") then
 					included_runtime_c_files.force ("eif_traverse.c")
 				end

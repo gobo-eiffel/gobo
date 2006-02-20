@@ -122,7 +122,7 @@ EIF_BOOLEAN eif_dir_exists (char* dirname) {
 
 EIF_BOOLEAN eif_dir_is_readable (char* dirname) {
 #ifdef WIN32
-	return (EIF_BOOLEAN) (access (dirname, 04) != -1);
+	return (EIF_BOOLEAN)(access(dirname, 04) != -1);
 #else
 #ifdef HAS_GETEUID
 	int uid, gid;
@@ -212,6 +212,14 @@ EIF_BOOLEAN eif_dir_is_writable (char* dirname) {
 
 void eif_dir_delete (char* dirname) {
 	rmdir(dirname);
+}
+
+EIF_CHARACTER eif_dir_separator(void) {
+#ifdef WIN32
+	return (EIF_CHARACTER)'\\';
+#else
+	return (EIF_CHARACTER)'/';
+#endif
 }
 
 #endif

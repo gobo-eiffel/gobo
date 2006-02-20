@@ -65,10 +65,12 @@ typedef double EIF_REAL_64;
 #define EIF_REAL EIF_REAL_32
 #define EIF_DOUBLE EIF_REAL_64
 typedef uint32_t EIF_WIDE_CHAR;
+#define EIF_PROCEDURE EIF_POINTER
 
 #define EIF_VOID ((EIF_REFERENCE)0)
 #define EIF_FALSE ((EIF_BOOLEAN)'\0')
 #define EIF_TRUE ((EIF_BOOLEAN)'\1')
+#define EIF_TEST(x) ((x) ? EIF_TRUE : EIF_FALSE)
 
 /* Platform definition */
 /* Unix definition */
@@ -76,6 +78,7 @@ typedef uint32_t EIF_WIDE_CHAR;
 /* Windows definition */
 #ifdef EIF_WINDOWS
 #define EIF_IS_WINDOWS EIF_TRUE
+#undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
 #else
 #define EIF_IS_WINDOWS EIF_FALSE
@@ -83,6 +86,7 @@ typedef uint32_t EIF_WIDE_CHAR;
 /* VMS definition */
 #ifdef EIF_VMS
 #define EIF_IS_VMS EIF_TRUE
+#undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
 #else
 #define EIF_IS_VMS EIF_FALSE
