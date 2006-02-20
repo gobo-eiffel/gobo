@@ -1,0 +1,3 @@
+class INTERNAL
+
+end
