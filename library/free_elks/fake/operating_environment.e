@@ -1,3 +1,0 @@
-class OPERATING_ENVIRONMENT
-
-end
