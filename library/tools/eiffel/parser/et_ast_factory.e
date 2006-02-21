@@ -1126,7 +1126,7 @@ feature -- AST leaves
 							i := i + 1
 							c := l_literal.item (i)
 							l_code := 0
-						until 
+						until
 							c = '/'
 						loop
 							l_code := l_code * 10 + c.code - Zero_code
@@ -1137,7 +1137,7 @@ feature -- AST leaves
 					when '%N', '%R', ' ', '%T'  then
 						from
 							i := i + 1
-						until 
+						until
 							l_literal.item (i) = '%%'
 						loop
 							i := i + 1
