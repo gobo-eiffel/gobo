@@ -114,7 +114,7 @@ feature -- Access
 				s := a_string_interpreter.interpreted_string (s)
 				s2 := a_tokens.item (2)
 				s2 := a_string_interpreter.interpreted_string (s2)
-				Result := s.is_equal (s2)
+				Result := STRING_.same_string (s, s2)
 			else
 				exit_application (1, <<"geant: incorrect conditional: '", a_condition, "%'">>)
 			end

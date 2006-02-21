@@ -26,6 +26,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_SHARED_STRING_EQUALITY_TESTER
+
 feature {NONE} -- Initialization
 
 	make (handler: like error_handler) is
@@ -36,8 +38,10 @@ feature {NONE} -- Initialization
 			create description.make
 			make_with_buffer (Empty_buffer)
 			error_handler := handler
-			create name_definitions.make (Initial_max_nb_names)
-			create character_classes.make (Initial_max_character_classes)
+			create name_definitions.make_map (Initial_max_nb_names)
+			name_definitions.set_key_equality_tester (string_equality_tester)
+			create character_classes.make_map (Initial_max_character_classes)
+			character_classes.set_key_equality_tester (string_equality_tester)
 			successful := True
 			line_nb := 1
 		ensure
@@ -55,8 +59,10 @@ feature {NONE} -- Initialization
 			description := a_description
 			make_with_buffer (Empty_buffer)
 			error_handler := handler
-			create name_definitions.make (Initial_max_nb_names)
-			create character_classes.make (Initial_max_character_classes)
+			create name_definitions.make_map (Initial_max_nb_names)
+			name_definitions.set_key_equality_tester (string_equality_tester)
+			create character_classes.make_map (Initial_max_character_classes)
+			character_classes.set_key_equality_tester (string_equality_tester)
 			successful := True
 			line_nb := 1
 		ensure

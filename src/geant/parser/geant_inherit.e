@@ -330,7 +330,7 @@ feature -- Status report
 				if project.targets.has (a_unchanged_target_name) then
 						-- There is already a target named `a_unchanged_target_name'.
 					a_target := project.targets.item (a_unchanged_target_name)
-					if a_target.full_name.is_equal (a_unchanged_target.full_name) then
+					if STRING_.same_string (a_target.full_name, a_unchanged_target.full_name) then
 							-- It is the same target so we can safely share it:
 						project.trace_debug (<<"Project '", project.name, "': sharing target `",
 						a_unchanged_target_name, "' since name and full_name ('",

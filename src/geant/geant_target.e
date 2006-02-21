@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 				a_exports := string_tokens (
 					a_xml_element.attribute_by_name (Export_attribute_name).value, ',')
 			else
-				create a_exports.make_equal (1)
+				create a_exports.make (1)
 				a_exports.put (Project_name_any, 1)
 			end
 			create a_tester
@@ -500,7 +500,7 @@ feature -- Processing
 						a_old_target_cwd := file_system.current_working_directory
 						file_system.set_current_working_directory (a_new_target_cwd)
 					end
-	
+
 						-- Execute nested tasks:
 					cs := xml_element.new_cursor
 					from

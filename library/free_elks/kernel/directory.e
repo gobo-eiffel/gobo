@@ -282,8 +282,8 @@ feature -- Removal
 				l.after
 			loop
 				if
-					not l.item.is_equal (".") and
-					not l.item.is_equal ("..")
+					not l.item.same_string (".") and
+					not l.item.same_string ("..")
 				then
 					create file_name.make_from_string (name)
 					file_name.set_file_name (l.item)
