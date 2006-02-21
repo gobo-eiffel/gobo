@@ -3079,6 +3079,8 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 			l_upper_integer: ET_INTEGER_CONSTANT
 			l_lower_character: ET_CHARACTER_CONSTANT
 			l_upper_character: ET_CHARACTER_CONSTANT
+			l_feature_name: ET_FEATURE_NAME
+			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			k, nb3: INTEGER
 		do
 -- TODO.
@@ -3113,7 +3115,33 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 								l_lower := l_choice.lower
 								l_upper := l_choice.upper
 								l_lower_integer ?= l_lower
+								if l_lower_integer = Void then
+									l_lower_character ?= l_lower
+									if l_lower_character = Void then
+										l_feature_name ?= l_lower
+										if l_feature_name /= Void then
+											l_constant_attribute ?= current_type.base_class.seeded_query (l_feature_name.seed)
+											if l_constant_attribute /= Void then
+												l_lower_integer ?= l_constant_attribute.constant
+												l_lower_character ?= l_constant_attribute.constant
+											end
+										end
+									end
+								end
 								l_upper_integer ?= l_upper
+								if l_upper_integer = Void then
+									l_upper_character ?= l_upper
+									if l_upper_character = Void then
+										l_feature_name ?= l_upper
+										if l_feature_name /= Void then
+											l_constant_attribute ?= current_type.base_class.seeded_query (l_feature_name.seed)
+											if l_constant_attribute /= Void then
+												l_upper_integer ?= l_constant_attribute.constant
+												l_upper_character ?= l_constant_attribute.constant
+											end
+										end
+									end
+								end
 								if l_lower_integer /= Void and l_upper_integer /= Void then
 									from
 										l_lower_integer.compute_value
@@ -3132,31 +3160,27 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 										current_file.put_new_line
 										k := k + 1
 									end
+								elseif l_lower_character /= Void and l_upper_character /= Void then
+									from
+										k := l_lower_character.value.code
+										nb3 := l_upper_character.value.code
+									until
+										k > nb3
+									loop
+										l_has_case := True
+										print_indentation
+										current_file.put_string (c_case)
+										current_file.put_character (' ')
+										current_file.put_character ('%'')
+										print_escaped_character (k.to_character)
+										current_file.put_character ('%'')
+										current_file.put_character (':')
+										current_file.put_new_line
+										k := k + 1
+									end
 								else
-									l_lower_character ?= l_lower
-									l_upper_character ?= l_upper
-									if l_lower_character /= Void and l_upper_character /= Void then
-										from
-											k := l_lower_character.value.code
-											nb3 := l_upper_character.value.code
-										until
-											k > nb3
-										loop
-											l_has_case := True
-											print_indentation
-											current_file.put_string (c_case)
-											current_file.put_character (' ')
-											current_file.put_character ('%'')
-											print_escaped_character (k.to_character)
-											current_file.put_character ('%'')
-											current_file.put_character (':')
-											current_file.put_new_line
-											k := k + 1
-										end
-									else
 -- TODO
 print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
-									end
 								end
 							else
 								l_has_case := True
@@ -4618,8 +4642,6 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 		require
 			an_expression_not_void: an_expression /= Void
 		do
--- TODO.
-print ("ET_C_GENERATOR.print_infix_cast_expression%N")
 			an_expression.expression.process (Current)
 		end
 
@@ -12088,30 +12110,30 @@ feature {NONE} -- Include files
 			a_file_open_write: a_file.is_open_write
 		do
 			if not included_header_filenames.has (a_filename) then
-				if a_filename.is_equal ("%"eif_console.h%"") then
+				if a_filename.same_string ("%"eif_console.h%"") then
 					include_runtime_header_file ("eif_file.h", a_file)
 					include_runtime_header_file ("eif_console.h", a_file)
-				elseif a_filename.is_equal ("%"eif_dir.h%"") then
+				elseif a_filename.same_string ("%"eif_dir.h%"") then
 					include_runtime_header_file ("eif_dir.h", a_file)
-				elseif a_filename.is_equal ("%"eif_eiffel.h%"") then
+				elseif a_filename.same_string ("%"eif_eiffel.h%"") then
 					include_runtime_header_file ("eif_eiffel.h", a_file)
-				elseif a_filename.is_equal ("%"eif_except.h%"") then
+				elseif a_filename.same_string ("%"eif_except.h%"") then
 					include_runtime_header_file ("eif_except.h", a_file)
-				elseif a_filename.is_equal ("%"eif_file.h%"") then
+				elseif a_filename.same_string ("%"eif_file.h%"") then
 					include_runtime_header_file ("eif_file.h", a_file)
-				elseif a_filename.is_equal ("%"eif_memory.h%"") then
+				elseif a_filename.same_string ("%"eif_memory.h%"") then
 					include_runtime_header_file ("eif_memory.h", a_file)
-				elseif a_filename.is_equal ("%"eif_misc.h%"") then
+				elseif a_filename.same_string ("%"eif_misc.h%"") then
 					include_runtime_header_file ("eif_misc.h", a_file)
-				elseif a_filename.is_equal ("%"eif_path_name.h%"") then
+				elseif a_filename.same_string ("%"eif_path_name.h%"") then
 					include_runtime_header_file ("eif_path_name.h", a_file)
-				elseif a_filename.is_equal ("%"eif_retrieve.h%"") then
+				elseif a_filename.same_string ("%"eif_retrieve.h%"") then
 					include_runtime_header_file ("eif_retrieve.h", a_file)
-				elseif a_filename.is_equal ("%"eif_sig.h%"") then
+				elseif a_filename.same_string ("%"eif_sig.h%"") then
 					include_runtime_header_file ("eif_sig.h", a_file)
-				elseif a_filename.is_equal ("%"eif_store.h%"") then
+				elseif a_filename.same_string ("%"eif_store.h%"") then
 					include_runtime_header_file ("eif_store.h", a_file)
-				elseif a_filename.is_equal ("%"eif_traverse.h%"") then
+				elseif a_filename.same_string ("%"eif_traverse.h%"") then
 					include_runtime_header_file ("eif_traverse.h", a_file)
 				else
 					a_file.put_string (c_include)
@@ -12131,27 +12153,27 @@ feature {NONE} -- Include files
 			a_file_open_write: a_file.is_open_write
 		do
 			if not included_runtime_header_files.has (a_filename) then
-				if a_filename.is_equal ("eif_console.h") then
+				if a_filename.same_string ("eif_console.h") then
 					included_runtime_c_files.force ("eif_console.c")
-				elseif a_filename.is_equal ("eif_dir.h") then
+				elseif a_filename.same_string ("eif_dir.h") then
 					included_runtime_c_files.force ("eif_dir.c")
-				elseif a_filename.is_equal ("eif_except.h") then
+				elseif a_filename.same_string ("eif_except.h") then
 					included_runtime_c_files.force ("eif_except.c")
-				elseif a_filename.is_equal ("eif_file.h") then
+				elseif a_filename.same_string ("eif_file.h") then
 					included_runtime_c_files.force ("eif_file.c")
-				elseif a_filename.is_equal ("eif_memory.h") then
+				elseif a_filename.same_string ("eif_memory.h") then
 					included_runtime_c_files.force ("eif_memory.c")
-				elseif a_filename.is_equal ("eif_misc.h") then
+				elseif a_filename.same_string ("eif_misc.h") then
 					included_runtime_c_files.force ("eif_misc.c")
-				elseif a_filename.is_equal ("eif_path_name.h") then
+				elseif a_filename.same_string ("eif_path_name.h") then
 					included_runtime_c_files.force ("eif_path_name.c")
-				elseif a_filename.is_equal ("eif_retrieve.h") then
+				elseif a_filename.same_string ("eif_retrieve.h") then
 					included_runtime_c_files.force ("eif_retrieve.c")
-				elseif a_filename.is_equal ("eif_sig.h") then
+				elseif a_filename.same_string ("eif_sig.h") then
 					included_runtime_c_files.force ("eif_sig.c")
-				elseif a_filename.is_equal ("eif_store.h") then
+				elseif a_filename.same_string ("eif_store.h") then
 					included_runtime_c_files.force ("eif_store.c")
-				elseif a_filename.is_equal ("eif_traverse.h") then
+				elseif a_filename.same_string ("eif_traverse.h") then
 					included_runtime_c_files.force ("eif_traverse.c")
 				end
 				include_runtime_c_file (a_filename, a_file)
