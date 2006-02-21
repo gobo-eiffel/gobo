@@ -167,7 +167,7 @@ feature -- Allocation/free
 			-- Free allocated memory with `malloc'.
 		do
 			c_free (item)
-			item := default_pointer
+			set_item (default_pointer)
 		end
 
 feature -- Comparison
