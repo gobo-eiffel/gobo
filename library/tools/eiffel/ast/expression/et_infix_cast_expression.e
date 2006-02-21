@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	expression: ET_EXPRESSION
-			-- Expression to be casted
+			-- Expression to be casted, already converted to the expected type
 
 	type: ET_TYPE
 			-- Cast type
