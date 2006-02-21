@@ -35,4 +35,32 @@ void set_mismatch_information_access(EIF_OBJECT object, EIF_PROCEDURE init, EIF_
 	printf("'set_mismatch_information_access' in 'eif_retrieve.h' not implemented\n");
 }
 
+void class_translation_put (char* new_name, char* old_name) {
+	/* TODO */
+	printf("'class_translation_put' in 'eif_retrieve.h' not implemented\n");
+}
+
+void class_translation_clear (void) {
+	/* TODO */
+	printf("'class_translation_clear' in 'eif_retrieve.h' not implemented\n");
+}
+
+EIF_INTEGER class_translation_count (void) {
+	/* TODO */
+	printf("'class_translation_count' in 'eif_retrieve.h' not implemented\n");
+	return (EIF_INTEGER)0;
+}
+
+char* class_translation_old (EIF_INTEGER i) {
+	/* TODO */
+	printf("'class_translation_old' in 'eif_retrieve.h' not implemented\n");
+	return (char*)0;
+}
+
+char* class_translation_new (EIF_INTEGER i) {
+	/* TODO */
+	printf("'class_translation_new' in 'eif_retrieve.h' not implemented\n");
+	return (char*)0;
+}
+
 #endif

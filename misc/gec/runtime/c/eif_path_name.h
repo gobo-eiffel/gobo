@@ -29,5 +29,7 @@ extern EIF_BOOLEAN eif_home_dir_supported(void);
 extern EIF_BOOLEAN eif_root_dir_supported(void);
 extern EIF_BOOLEAN eif_case_sensitive_path_names(void);
 extern EIF_REFERENCE eif_current_dir_representation(void);
+extern EIF_REFERENCE eif_home_directory_name(void);
+extern EIF_REFERENCE eif_root_directory_name(void);
 
 #endif

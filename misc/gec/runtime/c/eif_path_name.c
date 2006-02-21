@@ -17,6 +17,7 @@
 #include <windows.h>
 #endif
 #include <string.h>
+#include <stdlib.h>
 
 EIF_BOOLEAN eif_is_volume_name_valid(EIF_CHARACTER* p) {
 #ifdef WIN32
@@ -148,6 +149,23 @@ EIF_BOOLEAN eif_case_sensitive_path_names(void) {
 
 EIF_REFERENCE eif_current_dir_representation(void) {
 	return gems(".", 1);
+}
+
+EIF_REFERENCE eif_home_directory_name(void) {
+#ifdef WIN32
+	return EIF_VOID;
+#else
+	char* s = getenv("HOME");
+	return gems(s, strlen(s));
+#endif
+}
+
+EIF_REFERENCE eif_root_directory_name(void) {
+#ifdef EIF_WINDOWS
+	return gems("\\", 1);
+#else
+	return gems("/", 1);
+#endif
 }
 
 #endif

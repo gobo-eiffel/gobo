@@ -25,6 +25,11 @@ typedef struct {
 #include <unistd.h>
 #endif
 #include <sys/stat.h>
+#include <string.h>
+
+#ifndef PATH_MAX
+#define PATH_MAX 1024 /* Maximum length of full path name */
+#endif
 
 void* dir_open (char* dirname) {
 #ifdef WIN32
@@ -220,6 +225,20 @@ EIF_CHARACTER eif_dir_separator(void) {
 #else
 	return (EIF_CHARACTER)'/';
 #endif
+}
+
+EIF_REFERENCE dir_current(void) {
+	char* s;
+	EIF_REFERENCE result;
+
+	s = (char*)getcwd(NULL, PATH_MAX);
+	result = gems(s, strlen(s));
+	free(s);
+	return result;
+}
+
+EIF_INTEGER eif_chdir(char* path) {
+	return chdir(path);
 }
 
 #endif

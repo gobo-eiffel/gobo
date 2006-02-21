@@ -12101,6 +12101,8 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_file.h", a_file)
 				elseif a_filename.is_equal ("%"eif_memory.h%"") then
 					include_runtime_header_file ("eif_memory.h", a_file)
+				elseif a_filename.is_equal ("%"eif_misc.h%"") then
+					include_runtime_header_file ("eif_misc.h", a_file)
 				elseif a_filename.is_equal ("%"eif_path_name.h%"") then
 					include_runtime_header_file ("eif_path_name.h", a_file)
 				elseif a_filename.is_equal ("%"eif_retrieve.h%"") then
@@ -12139,6 +12141,8 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("eif_file.c")
 				elseif a_filename.is_equal ("eif_memory.h") then
 					included_runtime_c_files.force ("eif_memory.c")
+				elseif a_filename.is_equal ("eif_misc.h") then
+					included_runtime_c_files.force ("eif_misc.c")
 				elseif a_filename.is_equal ("eif_path_name.h") then
 					included_runtime_c_files.force ("eif_path_name.c")
 				elseif a_filename.is_equal ("eif_retrieve.h") then

@@ -23,5 +23,7 @@ extern EIF_BOOLEAN eif_dir_is_writable (char* dirname);
 extern EIF_BOOLEAN eif_dir_is_executable (char* dirname);
 extern void eif_dir_delete (char* dirname);
 extern EIF_CHARACTER eif_dir_separator(void);
+extern EIF_REFERENCE dir_current(void);
+extern EIF_INTEGER eif_chdir(char* path);
 
 #endif
