@@ -65,7 +65,7 @@ C Compiler options used:
 #  endif
 #endif
 
-#if defined(_MSC_VER) && (_MSC_VER < 1400) /* MSVC older than v8 */
+#if defined(_MSC_VER) /* MSVC */
 typedef signed char int8_t;
 typedef signed short int16_t;
 typedef signed int int32_t;
