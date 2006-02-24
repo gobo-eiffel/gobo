@@ -117,6 +117,7 @@ void mem_coalesc(void) {
 
 int collect(void) {
 	/* TODO */
+	return 0;
 }
 
 void plsc(void) {
