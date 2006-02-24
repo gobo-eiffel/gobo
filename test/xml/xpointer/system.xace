@@ -15,6 +15,15 @@
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
 		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+		<option if="${GOBO_EIFFEL}=ise">
+			<!--
+				In finized mode, ISE 5.6 takes a huge amount of time to compile a big generated C file.
+				The options below turn off some optimizations to make the C compilation faster.
+			-->
+			<option name="inlining" value="none"/>
+			<option name="c_compiler_options" value="-Od" if="${GOBO_OS}=windows"/>
+			<option name="c_compiler_options" value="-O0" if="${GOBO_OS}=unix"/>
+		</option>
 	</option>
 	<option if="${DEBUG}">
 		<option name="case_insensitive" value="true" />
