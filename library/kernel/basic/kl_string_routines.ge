@@ -851,13 +851,42 @@ feature -- Comparison
 		local
 			uc_string: UC_STRING
 			i, nb, nb1, nb2: INTEGER
+			a1, a2: CHARACTER
 			c1, c2: INTEGER
 			found: BOOLEAN
 		do
 			if other = a_string then
 				Result := 0
 			elseif ANY_.same_types (a_string, dummy_string) and ANY_.same_types (other, dummy_string) then
-				Result := a_string.three_way_comparison (other)
+				nb1 := a_string.count
+				nb2 := other.count
+				if nb1 < nb2 then
+					nb := nb1
+				else
+					nb := nb2
+				end
+				from i := 1 until i > nb loop
+					a1 := a_string.item (i)
+					a2 := other.item (i)
+					if a1 = a2 then
+						i := i + 1
+					elseif a1 < a2 then
+						found := True
+						Result := -1
+						i := nb + 1 -- Jump out of the loop.
+					else
+						found := True
+						Result := 1
+						i := nb + 1 -- Jump out of the loop.
+					end
+				end
+				if not found then
+					if nb1 < nb2 then
+						Result := -1
+					elseif nb1 /= nb2 then
+						Result := 1
+					end
+				end
 			else
 				uc_string ?= a_string
 				if uc_string /= Void then

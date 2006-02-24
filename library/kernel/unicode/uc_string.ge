@@ -1995,10 +1995,13 @@ feature -- Element change
 			end
 		end
 
-	replace_substring (a_string: like Current; start_index, end_index: INTEGER) is
+#ifdef VE
 	-- Note: VE 4.1 has 'like Current' in its signature instead
 	-- of STRING as specified in ELKS 2001:
-	-- replace_substring (a_string: STRING; start_index, end_index: INTEGER) is
+	replace_substring (a_string: like Current; start_index, end_index: INTEGER) is
+#else
+	replace_substring (a_string: STRING; start_index, end_index: INTEGER) is
+#endif
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `a_string'.
 			-- (ELKS 2001 STRING)

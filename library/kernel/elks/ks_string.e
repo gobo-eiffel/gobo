@@ -555,10 +555,7 @@ feature -- Element change
 			inserted: is_equal (old substring (1, i - 1) + old STRING_.cloned_string (s) + old substring (i, count).current_string)
 		end
 
-	replace_substring (s: like Current; start_index, end_index: INTEGER) is
-	-- Note: VE 4.1 has 'like Current' in its signature instead
-	-- of STRING as specified in ELKS 2001:
-	-- replace_substring (s: STRING; start_index, end_index: INTEGER) is
+	replace_substring (s: STRING; start_index, end_index: INTEGER) is
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `s'.
 			-- (ELKS 2001 STRING)
@@ -575,7 +572,7 @@ feature -- Element change
 			meaningful_interval: start_index <= end_index + 1
 		deferred
 		ensure
-			replaced: is_equal (old (substring (1, start_index - 1) + s.current_string + substring (end_index + 1, count).current_string))
+			replaced: is_equal (old (substring (1, start_index - 1) + s + substring (end_index + 1, count).current_string))
 		end
 
 feature -- Removal
