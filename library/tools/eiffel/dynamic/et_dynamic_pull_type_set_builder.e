@@ -643,6 +643,12 @@ feature {NONE} -- CAT-calls
 						end
 					end
 				end
+				if j >= 10 then
+						-- Report no more than 10 entries in the
+						-- attachment stack, otherwise `l_message'
+						-- gets too big and we run out of memory.
+					l_type_set := Void
+				end
 			end
 			nb := l_visited_sources.count
 			from i := 1 until i > nb loop
@@ -738,6 +744,12 @@ feature {NONE} -- CAT-calls
 							l_source_stack.remove
 						end
 					end
+				end
+				if j >= 10 then
+						-- Report no more than 10 entries in the
+						-- attachment stack, otherwise `l_message'
+						-- gets too big and we run out of memory.
+					l_type_set := Void
 				end
 			end
 			nb := l_visited_sources.count
