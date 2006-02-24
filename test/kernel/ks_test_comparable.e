@@ -25,12 +25,12 @@ feature -- Test
 		local
 			a_comparable: COMPARABLE
 		do
-			a_comparable := STRING_.cloned_string ("bar")
+			a_comparable := "bar"
 			assert ("is_equal1", a_comparable.is_equal ("bar")) 
 			assert ("not_is_equal1", not a_comparable.is_equal ("foo")) 
 			assert ("not_is_equal2", not a_comparable.is_equal ("ba")) 
 			assert ("not_is_equal3", not a_comparable.is_equal ("bart")) 
-			a_comparable := STRING_.cloned_string ("")
+			a_comparable := ""
 			assert ("is_equal2", a_comparable.is_equal ("")) 
 			assert ("not_is_equal4", not a_comparable.is_equal ("foo")) 
 		end
@@ -52,21 +52,21 @@ feature -- Test
 		local
 			a_comparable, a_comparable2: COMPARABLE
 		do
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("bar")
+			a_comparable := "foo"
+			a_comparable2 := "bar"
 			assert ("not_less1", not (a_comparable < a_comparable2))
 			assert ("not_less2", not (a_comparable < a_comparable))
 			assert ("less1", a_comparable2 < a_comparable)
-			a_comparable := STRING_.cloned_string ("fo")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "fo"
+			a_comparable2 := "foo"
 			assert ("less2", a_comparable < a_comparable2)
 			assert ("not_less3", not (a_comparable2 < a_comparable))
-			a_comparable := STRING_.cloned_string ("")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := ""
+			a_comparable2 := "foo"
 			assert ("less3", a_comparable < a_comparable2)
 			assert ("not_less4", not (a_comparable2 < a_comparable))
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "foo"
+			a_comparable2 := "foo"
 			assert ("not_less5", not (a_comparable < a_comparable2))
 			assert ("not_less6", not (a_comparable2 < a_comparable))
 		end
@@ -100,21 +100,21 @@ feature -- Test
 		local
 			a_comparable, a_comparable2: COMPARABLE
 		do
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("bar")
+			a_comparable := "foo"
+			a_comparable2 := "bar"
 			assert ("not_less1", not (a_comparable <= a_comparable2))
 			assert ("less1", a_comparable <= a_comparable)
 			assert ("less2", a_comparable2 <= a_comparable)
-			a_comparable := STRING_.cloned_string ("fo")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "fo"
+			a_comparable2 := "foo"
 			assert ("less3", a_comparable <= a_comparable2)
 			assert ("not_less3", not (a_comparable2 <= a_comparable))
-			a_comparable := STRING_.cloned_string ("")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := ""
+			a_comparable2 := "foo"
 			assert ("less4", a_comparable <= a_comparable2)
 			assert ("not_less4", not (a_comparable2 <= a_comparable))
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "foo"
+			a_comparable2 := "foo"
 			assert ("less5", a_comparable <= a_comparable2)
 			assert ("less6", a_comparable2 <= a_comparable)
 		end
@@ -148,21 +148,21 @@ feature -- Test
 		local
 			a_comparable, a_comparable2: COMPARABLE
 		do
-			a_comparable := STRING_.cloned_string ("bar")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "bar"
+			a_comparable2 := "foo"
 			assert ("not_greater1", not (a_comparable > a_comparable2))
 			assert ("not_greater2", not (a_comparable > a_comparable))
 			assert ("greater1", a_comparable2 > a_comparable)
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("fo")
+			a_comparable := "foo"
+			a_comparable2 := "fo"
 			assert ("greater2", a_comparable > a_comparable2)
 			assert ("not_greater3", not (a_comparable2 > a_comparable))
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("")
+			a_comparable := "foo"
+			a_comparable2 := ""
 			assert ("greater3", a_comparable > a_comparable2)
 			assert ("not_greater4", not (a_comparable2 > a_comparable))
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "foo"
+			a_comparable2 := "foo"
 			assert ("not_greater5", not (a_comparable > a_comparable2))
 			assert ("not_greater6", not (a_comparable2 > a_comparable))
 		end
@@ -196,21 +196,21 @@ feature -- Test
 		local
 			a_comparable, a_comparable2: COMPARABLE
 		do
-			a_comparable := STRING_.cloned_string ("bar")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "bar"
+			a_comparable2 := "foo"
 			assert ("not_greater1", not (a_comparable >= a_comparable2))
 			assert ("greater1", a_comparable >= a_comparable)
 			assert ("greater2", a_comparable2 >= a_comparable)
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("fo")
+			a_comparable := "foo"
+			a_comparable2 := "fo"
 			assert ("greater3", a_comparable >= a_comparable2)
 			assert ("not_greater3", not (a_comparable2 >= a_comparable))
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("")
+			a_comparable := "foo"
+			a_comparable2 := ""
 			assert ("greater4", a_comparable >= a_comparable2)
 			assert ("not_greater4", not (a_comparable2 >= a_comparable))
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "foo"
+			a_comparable2 := "foo"
 			assert ("greater5", a_comparable >= a_comparable2)
 			assert ("greater6", a_comparable2 >= a_comparable)
 		end
@@ -244,17 +244,17 @@ feature -- Test
 		local
 			a_comparable, a_comparable2: STRING
 		do
-			a_comparable := STRING_.cloned_string ("bar")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "bar"
+			a_comparable2 := "foo"
 			assert_same ("min1", a_comparable, a_comparable.min (a_comparable2))
 			assert_same ("min2", a_comparable, a_comparable.min (a_comparable))
 			assert_same ("min3", a_comparable, a_comparable2.min (a_comparable))
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("")
+			a_comparable := "foo"
+			a_comparable2 := ""
 			assert_same ("min4", a_comparable2, a_comparable.min (a_comparable2))
 			assert_same ("min5", a_comparable2, a_comparable2.min (a_comparable))
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "foo"
+			a_comparable2 := "foo"
 			assert_same ("min6", a_comparable, a_comparable.min (a_comparable2))
 			assert_same ("min7", a_comparable2, a_comparable2.min (a_comparable))
 		end
@@ -284,17 +284,17 @@ feature -- Test
 		local
 			a_comparable, a_comparable2: STRING
 		do
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("bar")
+			a_comparable := "foo"
+			a_comparable2 := "bar"
 			assert_same ("max1", a_comparable, a_comparable.max (a_comparable2))
 			assert_same ("max2", a_comparable, a_comparable.max (a_comparable))
 			assert_same ("max3", a_comparable, a_comparable2.max (a_comparable))
-			a_comparable := STRING_.cloned_string ("")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := ""
+			a_comparable2 := "foo"
 			assert_same ("max4", a_comparable2, a_comparable.max (a_comparable2))
 			assert_same ("max5", a_comparable2, a_comparable2.max (a_comparable))
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "foo"
+			a_comparable2 := "foo"
 			assert_same ("max6", a_comparable, a_comparable.max (a_comparable2))
 			assert_same ("max7", a_comparable2, a_comparable2.max (a_comparable))
 		end
@@ -324,17 +324,17 @@ feature -- Test
 		local
 			a_comparable, a_comparable2: COMPARABLE
 		do
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("bar")
+			a_comparable := "foo"
+			a_comparable2 := "bar"
 			assert_integers_equal ("compare1", 1, a_comparable.three_way_comparison (a_comparable2))
 			assert_integers_equal ("compare2", 0, a_comparable.three_way_comparison (a_comparable))
 			assert_integers_equal ("compare3", -1, a_comparable2.three_way_comparison (a_comparable))
-			a_comparable := STRING_.cloned_string ("")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := ""
+			a_comparable2 := "foo"
 			assert_integers_equal ("compare4", -1, a_comparable.three_way_comparison (a_comparable2))
 			assert_integers_equal ("compare5", 1, a_comparable2.three_way_comparison (a_comparable))
-			a_comparable := STRING_.cloned_string ("foo")
-			a_comparable2 := STRING_.cloned_string ("foo")
+			a_comparable := "foo"
+			a_comparable2 := "foo"
 			assert_integers_equal ("compare6", 0, a_comparable.three_way_comparison (a_comparable2))
 			assert_integers_equal ("compare7", 0, a_comparable2.three_way_comparison (a_comparable))
 		end

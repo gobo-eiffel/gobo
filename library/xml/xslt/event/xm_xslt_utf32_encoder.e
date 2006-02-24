@@ -16,9 +16,6 @@ inherit
 
 	XM_XSLT_OUTPUT_ENCODER
 
-	UC_UNICODE_ROUTINES
-		export {NONE} all end
-
 	UC_IMPORTED_UTF32_ROUTINES
 		export {NONE} all end
 
@@ -55,7 +52,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	byte_order_mark: STRING is
 			-- XML BOM
 		once
@@ -89,7 +86,7 @@ feature -- Status report
 			Result := False
 
 			-- The following code is not correct:
-			
+
 			-- Result := is_surrogate (a_code) or is_non_character (a_code)
 
 			-- The reasons for this are:
@@ -135,4 +132,4 @@ invariant
 	unique_encoding_scheme: not (is_utf32_be and is_utf32_le)
 
 end
-	
+

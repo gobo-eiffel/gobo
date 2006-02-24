@@ -13,7 +13,7 @@ indexing
 deferred class XM_XSLT_EMITTER
 
 inherit
-	
+
 	XM_XPATH_RECEIVER
 
 	XM_XPATH_STANDARD_NAMESPACES
@@ -21,15 +21,14 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 
-	UC_UNICODE_ROUTINES
+	UC_IMPORTED_UNICODE_ROUTINES
 		export {NONE} all end
 
-	ST_UNICODE_NORMALIZATION_ROUTINES
-		export
-			{NONE} all
-		undefine
-			valid_code
-		end
+	ST_IMPORTED_UNICODE_NORMALIZATION_ROUTINES
+		export {NONE} all end
+
+	ST_UNICODE_NORMALIZATION_CONSTANTS
+		export {NONE} all end
 
 	KL_IMPORTED_ANY_ROUTINES
 
@@ -42,14 +41,14 @@ feature -- Access
 			-- Output properties
 
 	character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER
-			-- Optional character-map expander 
+			-- Optional character-map expander
 
 	normalization_form: INTEGER
 			-- Requested_normalization form
 
 	No_normalization: INTEGER is -1
 			-- Default for `normalization_form'
-	
+
 	normalized_string (a_value: STRING): STRING is
 			-- Unicode-normalized version of `a_value'
 		require
@@ -64,13 +63,13 @@ feature -- Access
 				when No_normalization then
 					Result := a_value
 				when Nfc then
-					Result := to_nfc (a_value)
+					Result := normalization.to_nfc (a_value)
 				when Nfkc then
-					Result := to_nfkc (a_value)
+					Result := normalization.to_nfkc (a_value)
 				when Nfd then
-					Result := as_nfd (a_value)
+					Result := normalization.as_nfd (a_value)
 				when Nfkd then
-					Result := as_nfkd (a_value)
+					Result := normalization.as_nfkd (a_value)
 				end
 			end
 		ensure
@@ -183,7 +182,7 @@ feature -- Element change
 			elseif STRING_.same_string (a_request, "NFC") then
 				normalization_form := Nfc
 			elseif STRING_.same_string (a_request, "NFD") then
-				normalization_form := Nfd				
+				normalization_form := Nfd
 			elseif STRING_.same_string (a_request, "NFKC") then
 				normalization_form := Nfkc
 			elseif STRING_.same_string (a_request, "NFKD") then

@@ -474,11 +474,13 @@ feature {NONE} -- Implementation
 				end
 			end
 			omit := output_properties.omit_xml_declaration
-			if omit and then
-				not (encoding.is_equal ("UTF-8") or else
-					  encoding.is_equal ("UTF-16") or else
-					  encoding.is_equal ("US-ASCII") or else
-					  encoding.is_equal ("ASCII")) then
+			if
+				omit and then
+				not (STRING_.same_string (encoding, "UTF-8") or else
+				STRING_.same_string (encoding, "UTF-16") or else
+				STRING_.same_string (encoding, "US-ASCII") or else
+				STRING_.same_string (encoding, "ASCII"))
+			then
 				omit := False 
 			end
 			
@@ -490,8 +492,8 @@ feature {NONE} -- Implementation
 				output ("?>")
 
 				-- Don't write a newline character: it's wrong if the output is an
-            --  external general parsed entity
-				
+				--  external general parsed entity
+
 			end
 			is_declaration_written := True
 		ensure

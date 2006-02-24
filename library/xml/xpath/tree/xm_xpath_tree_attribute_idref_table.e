@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			from an_iterator.start until an_iterator.after loop
 				another_iterator := an_iterator.item.new_axis_iterator (Attribute_axis)
 				from another_iterator.start until another_iterator.after loop
-					an_attribute := another_iterator.item.as_tree_node.as_tree_attribute				
+					an_attribute := another_iterator.item.as_tree_node.as_tree_attribute
 					if an_attribute.is_idrefs then
 						create a_splitter.make
 						a_cursor := a_splitter.split (an_attribute.string_value).new_cursor
@@ -79,7 +79,8 @@ feature -- Access
 		require
 			idrefs_not_empty: some_idrefs /= Void and then not some_idrefs.is_empty
 		local
-			a_list, an_idref_list: DS_ARRAYED_LIST [XM_XPATH_TREE_ATTRIBUTE]
+			a_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
+			an_idref_list: DS_ARRAYED_LIST [XM_XPATH_TREE_ATTRIBUTE]
 			an_attribute_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_ATTRIBUTE]
 			an_idrefs_cursor: DS_LIST_CURSOR [STRING]
 			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TREE_NODE]
@@ -111,9 +112,9 @@ feature {NONE} -- Implementation
 
 	mapping_table: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_TREE_ATTRIBUTE], STRING]
 			-- Mapping of IDREFs to lists of attribute nodes
-	
+
 invariant
 
 	mapping_table_not_void: mapping_table /= Void
-	
+
 end

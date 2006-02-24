@@ -167,14 +167,13 @@ feature {NONE} -- Access
 		local
 			a_sub_type: STRING
 		do
-			Result := a_media_type.type.is_equal ("text")
-						  or else a_media_type.type.is_equal ("application")
+			Result := STRING_.same_string (a_media_type.type, "text") or else STRING_.same_string (a_media_type.type, "application")
 			if Result then
 				a_sub_type := a_media_type.subtype
-				Result := a_sub_type.is_equal ("xml")
+				Result := STRING_.same_string (a_sub_type, "xml")
 				if not Result then
-					Result := a_sub_type.count > 4 
-						and then a_sub_type.substring (a_sub_type.count - 4, a_sub_type.count).is_equal ("+xml")
+					Result := a_sub_type.count > 4 and then
+						STRING_.same_string (a_sub_type.substring (a_sub_type.count - 4, a_sub_type.count), "+xml")
 				end
 			end
 		end

@@ -16,6 +16,13 @@ class	XM_XSLT_MEDIA_TYPE_MAP
 	-- TODO: This will implement mapping URIs expressed as regular expressions,
 	-- to media types, for when the resolver does not provide the information.
 
+inherit
+
+	ANY
+
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -48,25 +55,25 @@ feature -- Element change
 			may_use_id := False
 			a_type := a_media_type.type
 			a_subtype := a_media_type.subtype
-			if a_type.is_equal ("text") then
-				if a_subtype.is_equal ("html") then
+			if STRING_.same_string (a_type, "text") then
+				if STRING_.same_string (a_subtype, "html") then
 					if is_xhtml_spoofing then
 						a_type := "application"; a_subtype := "xhtml+xml"
 					end
-				elseif a_subtype.is_equal ("xml") or else a_subtype.is_equal ("xml-external-parsed-entity") then
+				elseif STRING_.same_string (a_subtype, "xml") or else STRING_.same_string (a_subtype, "xml-external-parsed-entity") then
 					may_use_xpointer := True
 				end
 			end
-			if a_type.is_equal ("application") then
-				if a_subtype.is_equal ("xml") or else a_subtype.is_equal ("xml-external-parsed-entity") or else a_subtype.is_equal ("xslt+xml") then
+			if STRING_.same_string (a_type, "application") then
+				if STRING_.same_string (a_subtype, "xml") or else STRING_.same_string (a_subtype, "xml-external-parsed-entity") or else STRING_.same_string (a_subtype, "xslt+xml") then
 					may_use_xpointer := True
-				elseif a_subtype.is_equal ("xhtml+xml") then
+				elseif STRING_.same_string (a_subtype, "xhtml+xml") then
 					may_use_xpointer := True
-				elseif a_subtype.count > 4 and then a_subtype.substring (a_subtype.count - 4, a_subtype.count).is_equal ("+xml") then
+				elseif a_subtype.count > 4 and then STRING_.same_string (a_subtype.substring (a_subtype.count - 4, a_subtype.count), "+xml") then
 					may_use_xpointer := True
 				end
 			end
 		end
 
 end
-	
+

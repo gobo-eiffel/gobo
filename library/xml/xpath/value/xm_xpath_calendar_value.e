@@ -109,7 +109,7 @@ feature -- Access
 		ensure
 			result_in_range: Result >= 1 and then Result <= 366
 		end
-	
+
 	week_day_number: INTEGER is
 			-- ISO 8601 day within week;
 			-- Monday = 1; Sunday = 7
@@ -124,7 +124,7 @@ feature -- Access
 		ensure
 			result_in_range: Result >= 1 and then Result <= 7
 		end
-	
+
 	week_in_year: INTEGER is
 			-- ISO 8601 week within year
 		require
@@ -134,7 +134,7 @@ feature -- Access
 		ensure
 			result_in_range: Result >= 1 and then Result <= 53
 		end
-	
+
 	week_in_month: INTEGER is
 			-- Week within month
 		require
@@ -193,7 +193,7 @@ feature -- Access
 		ensure
 			result_in_range: Result >= 0 and then Result <= 59
 		end
-	
+
 	second: INTEGER is
 			-- Seconds within minute
 		require
@@ -207,7 +207,7 @@ feature -- Access
 		ensure
 			result_in_range: Result >= 0 and then Result <= 59
 		end
-		
+
 	millisecond: INTEGER is
 			-- Milliseconds within second
 		require
@@ -279,7 +279,7 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 
-	minus (other: like Current; a_context: XM_XPATH_CONTEXT): XM_XPATH_SECONDS_DURATION_VALUE is
+	minus (other: XM_XPATH_CALENDAR_VALUE; a_context: XM_XPATH_CONTEXT): XM_XPATH_SECONDS_DURATION_VALUE is
 			-- Subtraction of `other' from `Current'
 		require
 			other_not_void: other /= Void
@@ -287,7 +287,7 @@ feature -- Basic operations
 			valid_other: (is_date_value and other.is_date_value) or
 				(is_date_time_value and other.is_date_time_value) or
 				(is_time_value and other.is_time_value)
-			
+
 		local
 			dt1, dt2: DT_DATE_TIME
 		do

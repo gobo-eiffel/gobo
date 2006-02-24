@@ -38,40 +38,44 @@ feature -- Access
 			-- Therefore these names are tested seperately, even though they share
 			--  the same implementation class
 
-			if encoding.is_equal ("UTF-8") then
+			if STRING_.same_string (encoding, "UTF-8") then
 				create {XM_XSLT_UTF8_ENCODER} Result.make (encoding, a_raw_outputter)
-			elseif encoding.is_equal ("UTF-16") then
+			elseif STRING_.same_string (encoding, "UTF-16") then
 				create {XM_XSLT_UTF16_ENCODER} Result.make (encoding, a_raw_outputter)
-			elseif encoding.is_equal ("UTF-16BE") then
+			elseif STRING_.same_string (encoding, "UTF-16BE") then
 				create {XM_XSLT_UTF16_ENCODER} Result.make (encoding, a_raw_outputter)
-			elseif encoding.is_equal ("UTF-16LE") then
+			elseif STRING_.same_string (encoding, "UTF-16LE") then
 				create {XM_XSLT_UTF16_ENCODER} Result.make (encoding, a_raw_outputter)
-			elseif encoding.is_equal ("UTF-32") then
+			elseif STRING_.same_string (encoding, "UTF-32") then
 				create {XM_XSLT_UTF32_ENCODER} Result.make (encoding, a_raw_outputter)
-			elseif encoding.is_equal ("UTF-32BE") then
+			elseif STRING_.same_string (encoding, "UTF-32BE") then
 				create {XM_XSLT_UTF32_ENCODER} Result.make (encoding, a_raw_outputter)
-			elseif encoding.is_equal ("UTF-32LE") then
+			elseif STRING_.same_string (encoding, "UTF-32LE") then
 				create {XM_XSLT_UTF32_ENCODER} Result.make (encoding, a_raw_outputter)
-			elseif encoding.is_equal ("ISO-8859-1")
-				or  encoding.is_equal ("ISO_8859-1")
-				or  encoding.is_equal ("ISO_8859-1:1987")
-				or  encoding.is_equal ("LATIN1")
-				or  encoding.is_equal ("L1")
-				or  encoding.is_equal ("ISO-IR-100")
-				or  encoding.is_equal ("IBM819")
-				or  encoding.is_equal ("CP819")
-				or  encoding.is_equal ("CSISOLATIN1") then
+			elseif
+				STRING_.same_string (encoding, "ISO-8859-1") or
+				STRING_.same_string (encoding, "ISO_8859-1") or
+				STRING_.same_string (encoding, "ISO_8859-1:1987") or
+				STRING_.same_string (encoding, "LATIN1") or
+				STRING_.same_string (encoding, "L1") or
+				STRING_.same_string (encoding, "ISO-IR-100") or
+				STRING_.same_string (encoding, "IBM819") or
+				STRING_.same_string (encoding, "CP819") or
+				STRING_.same_string (encoding, "CSISOLATIN1")
+			then
 				create {XM_XSLT_LATIN1_ENCODER} Result.make (encoding, a_raw_outputter)
-			elseif encoding.is_equal ("US-ASCII")
-				or encoding.is_equal ("ASCII")
-				or encoding.is_equal ("US")
-				or encoding.is_equal ("ISO646-US")
-				or encoding.is_equal ("ISO-IR-6")
-				or encoding.is_equal ("ISO_646.IRV:1991")
-				or encoding.is_equal ("ANSI_X3.4-1968")
-				or encoding.is_equal ("CSASCII")
-				or encoding.is_equal ("IBM367")
-				or encoding.is_equal ("CP367") then
+			elseif
+				STRING_.same_string (encoding, "US-ASCII") or
+				STRING_.same_string (encoding, "ASCII") or
+				STRING_.same_string (encoding, "US") or
+				STRING_.same_string (encoding, "ISO646-US") or
+				STRING_.same_string (encoding, "ISO-IR-6") or
+				STRING_.same_string (encoding, "ISO_646.IRV:1991") or
+				STRING_.same_string (encoding, "ANSI_X3.4-1968") or
+				STRING_.same_string (encoding, "CSASCII") or
+				STRING_.same_string (encoding, "IBM367") or
+				STRING_.same_string (encoding, "CP367")
+			then
 				create {XM_XSLT_ASCII_ENCODER} Result.make (a_raw_outputter)
 			end
 		end

@@ -183,7 +183,7 @@ feature -- Status setting
 	allow_generic_xml_types (yes_or_no: BOOLEAN) is
 			-- Allow or disallow all media types of form "application/*+xml"
 		require
-			filtering: is_filtering		
+			filtering: is_filtering
 		do
 			generic_xml_types_allowed := yes_or_no
 		ensure
@@ -256,18 +256,18 @@ feature -- Document
 							if has_media_type (media_type) then
 								ok_to_filter := True
 							elseif generic_xml_types_allowed then
-								if media_type.subtype.count > 4 and then media_type.type.is_equal ("application") then
-									ok_to_filter := media_type.subtype.substring (media_type.subtype.count - 4, media_type.subtype.count).is_equal ("+xml")
+								if media_type.subtype.count > 4 and then STRING_.same_string (media_type.type, "application") then
+									ok_to_filter := STRING_.same_string (media_type.subtype.substring (media_type.subtype.count - 4, media_type.subtype.count), "+xml")
 								end
 							end
 						end
 					end
 					if ok_to_filter then
 						Precursor
-						
+
 						-- We forward comments PIs prior to the document element,
 						--  as they might be needed for other purposes.
-						
+
 						is_forwarding := True
 					else
 						is_error := True
@@ -470,14 +470,14 @@ feature {NONE} -- Implementation
 	pending_attribute_namespaces: DS_LINKED_QUEUE [STRING]
 			-- Namespaces of pending attributes
 
-	
+
 	pending_attribute_prefixes: DS_LINKED_QUEUE [STRING]
 			-- prefixes of pending attributes
 
-	
+
 	pending_attribute_local_parts: DS_LINKED_QUEUE [STRING]
 			-- Local parts of pending attributes
-	
+
 	pending_attribute_values: DS_LINKED_QUEUE [STRING]
 			-- Values of pending attributes
 
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 
 	resolver: XM_RESOLVER_MEDIA_TYPE
 			-- Resolver for media type
-	
+
 	shorthand: STRING
 			-- parsed shorthand pointer
 
@@ -510,4 +510,4 @@ invariant
 	acceptable_media_types: is_filtering implies acceptable_media_types /= Void and then acceptable_media_types.equality_tester = media_type_tester
 
 end
-	
+

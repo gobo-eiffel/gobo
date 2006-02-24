@@ -48,7 +48,7 @@ feature -- Comparison
 				-- This implementation directly compares the source values,
 				-- so it is not any more efficient to use this class than
 				-- to compare the strings directly
-			Result := source.three_way_comparison (other.source)
+			Result := STRING_.three_way_comparison (source, other.source)
 		end
 
 end

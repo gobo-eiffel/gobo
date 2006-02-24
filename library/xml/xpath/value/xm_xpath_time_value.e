@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			create a_date_time_parser.make_1_1
 			if a_date_time_parser.is_zoned_time (a_lexical_time) then
 				zoned := True
-				zoned_time := a_date_time_parser.string_to_zoned_time (a_lexical_time)				
+				zoned_time := a_date_time_parser.string_to_zoned_time (a_lexical_time)
 			else
 				local_time := a_date_time_parser.string_to_time (a_lexical_time)
 			end
@@ -110,14 +110,14 @@ feature -- Access
 			a_time: DT_TIME
 			a_dt: DT_DATE_TIME
 		do
-			create a_zone.make (an_offset.duration)
+			create a_zone.make (an_offset.duration.time_duration)
 			if not zoned then
 				create a_zoned_dt.make (local_time, a_zone)
 				create Result.make_from_zoned_time (a_zoned_dt)
 			else
 				a_time := zoned_time.time
 				create a_dt.make_precise (1970, January, 1, a_time.hour, a_time.minute, a_time.second, a_time.millisecond)
-				a_time := a_zone.date_time_from (a_dt, zoned_time.time_zone).time 
+				a_time := a_zone.date_time_from (a_dt, zoned_time.time_zone).time
 				create a_zoned_dt.make (a_time, a_zone)
 				create Result.make_from_zoned_time (a_zoned_dt)
 			end
@@ -149,7 +149,7 @@ feature -- Access
 			if zoned_time = Void then
 				Result := local_time.hash_code
 			else
-				
+
 				-- Equality implies same `hash_code', but
 				--  not vice-versa:
 
@@ -207,7 +207,7 @@ feature -- Comparison
 					and then utc_time.three_way_comparison (other.as_time_value.utc_time) = 0
 			end
 		end
-	
+
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Comparison of `Current' to `other'
 		local
@@ -299,7 +299,7 @@ feature -- Status report
 		end
 
 feature -- Conversions
-	
+
 	as_time_value: XM_XPATH_TIME_VALUE is
 			-- `Current' seen as a time value
 		do

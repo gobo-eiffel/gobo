@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			create a_date_time_parser.make_1_1
 			if a_date_time_parser.is_zoned_date (a_lexical_date) then
 				zoned := True
-				zoned_date := a_date_time_parser.string_to_zoned_date (a_lexical_date)				
+				zoned_date := a_date_time_parser.string_to_zoned_date (a_lexical_date)
 			else
 				local_date := a_date_time_parser.string_to_date (a_lexical_date)
 			end
@@ -109,7 +109,7 @@ feature -- Access
 			a_zoned_dt: DT_FIXED_OFFSET_ZONED_DATE
 			a_dt: DT_DATE_TIME
 		do
-			create a_zone.make (an_offset.duration)
+			create a_zone.make (an_offset.duration.time_duration)
 			if not zoned then
 				create a_zoned_dt.make (local_date, a_zone)
 				create Result.make_from_zoned_date (a_zoned_dt)
@@ -145,7 +145,7 @@ feature -- Access
 			if zoned_date = Void then
 				Result := local_date.hash_code
 			else
-				
+
 				-- Equality implies same `hash_code', but
 				--  not vice-versa:
 
@@ -170,7 +170,7 @@ feature -- Access
 			create a_date_time.make_from_date (local_date)
 			Result := a_context.implicit_timezone.date_time_to_utc (a_date_time)
 		end
-	
+
 	utc_date: DT_DATE is
 			-- Date adjusted to UTC;
 			-- Ignores implicit time zone.
@@ -197,7 +197,7 @@ feature -- Comparison
 					and then utc_date.three_way_comparison (other.as_date_value.utc_date) = 0
 			end
 		end
-	
+
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Comparison of `Current' to `other'
 		local

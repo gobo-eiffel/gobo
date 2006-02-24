@@ -91,7 +91,7 @@ feature -- Comparison
 			-- N.B. This implementatation won't be used, as ST_COLLATOR's version
 			-- will be used for comparing strings
 			
-			Result := string_value.three_way_comparison (other.as_string_value.string_value)
+			Result := STRING_.three_way_comparison (string_value, other.as_string_value.string_value)
 		end
 
 	same_atomic_value (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is

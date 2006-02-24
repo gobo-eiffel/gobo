@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_OUTPUT_ENCODER
 
-	UC_UNICODE_ROUTINES
+	UC_IMPORTED_UNICODE_ROUTINES
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -42,11 +42,11 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	byte_order_mark: STRING is
 			-- XML BOM
 		once
-			Result := code_to_string (254 * 256 + 255) -- FEFF
+			Result := unicode.code_to_string (254 * 256 + 255) -- FEFF
 		end
 
 feature -- Status report
@@ -69,7 +69,7 @@ feature -- Status report
 			Result := False
 
 			-- The following code is not correct:
-			
+
 			-- Result := is_surrogate (a_code) or is_non_character (a_code)
 
 			-- The reasons for this are:
@@ -105,4 +105,4 @@ feature -- Element change
 		end
 
 end
-	
+

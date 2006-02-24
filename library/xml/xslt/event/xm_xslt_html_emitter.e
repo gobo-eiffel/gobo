@@ -13,10 +13,10 @@ revision: "$Revision$"
 class XM_XSLT_HTML_EMITTER
 
 inherit
-	
+
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
-		
+
 	XM_XSLT_XML_EMITTER
 		rename
 			make as make_xml
@@ -28,7 +28,7 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
-		
+
 	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
@@ -122,9 +122,9 @@ feature -- Events
 				output (a_string)
 			end
 		end
-	
+
 feature {NONE} -- Implementation
-		
+
 	boolean_attributes_set: DS_HASH_SET [STRING] is
 			-- Names of attributes that are sometimes boolean valued
 
@@ -151,10 +151,10 @@ feature {NONE} -- Implementation
 	Decimal_representation: INTEGER is 3
 	Hexadecimal_representation: INTEGER is 4
 			-- Character representation methods
-	
+
 	non_ascii_representation: INTEGER
 			-- Method for representing non-ASCII characters
-	
+
 	excluded_representation: INTEGER
 			-- Method for representing characters excluded from the encoding
 
@@ -320,9 +320,9 @@ feature {NONE} -- Implementation
 			set_boolean_attribute ("textarea", "disabled")
 			set_boolean_attribute ("textarea", "readonly")
 			set_boolean_attribute ("th", "nowrap")
-			set_boolean_attribute ("ul", "compact")			
+			set_boolean_attribute ("ul", "compact")
 		end
-		
+
 	open_document is
 			-- Open output document.
 		local
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 				end
 				is_empty := False
 				in_script := -1000000 -- safe to assume we will not increment up to zero!
-	
+
 				a_character_representation := output_properties.character_representation
 				an_index := a_character_representation.index_of (';', 1)
 				if an_index = 0 or else an_index = a_character_representation.count then
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 				end
 			else -- not in attribute
 				if a_character_code = 60 then
-					output ("&lt;")                
+					output ("&lt;")
 				elseif a_character_code = 62 then
 					output ("&gt;")                 -- changed to allow for "]]>" ???
 				elseif a_character_code = 38 then
@@ -524,7 +524,7 @@ feature {NONE} -- Implementation
 			inspect
 				non_ascii_representation
 			when Native_representation then
-				output (code_to_string (a_character_code))
+				output (unicode.code_to_string (a_character_code))
 			when Entity_representation then
 				if a_character_code > 160 and then a_character_code <= 255 then
 
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 				output_character_reference (a_character_code)
 			end
 		end
-		
+
 	maximal_ordinary_string (a_character_string: STRING; a_start_index: INTEGER; special_characters: ARRAY [BOOLEAN]): INTEGER is
 			-- Maximal sequence of ordinary characters
 		local
@@ -585,7 +585,7 @@ invariant
 	boolean_combinations_set_not_void: boolean_combinations_set /= Void
 	boolean_attributes_set_not_void: boolean_attributes_set /= Void
 	url_combinations_set_not_void: url_combinations_set /= Void
-	url_attributes_set_not_void: url_attributes_set /= Void	
+	url_attributes_set_not_void: url_attributes_set /= Void
 
 end
-	
+

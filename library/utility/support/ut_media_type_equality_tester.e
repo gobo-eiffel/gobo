@@ -19,6 +19,9 @@ inherit
 			test
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 feature -- Status report
 
 	test (v, u: UT_MEDIA_TYPE): BOOLEAN is
@@ -32,7 +35,7 @@ feature -- Status report
 			elseif u = Void then
 				Result := False
 			else
-				Result := v.type.is_equal (u.type) and then v.subtype.is_equal (u.subtype)
+				Result := STRING_.same_string (v.type, u.type) and then STRING_.same_string (v.subtype, u.subtype)
 			end
 		end
 

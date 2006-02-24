@@ -1333,7 +1333,7 @@ feature {NONE} -- Implementation
 			elseif a_year.item (1) = '+' then
 				create Result.make (False, 0)
 			elseif not a_year.is_integer
-				or else (a_year.is_equal ("0000") and then not is_year_zero_valid) then
+				or else (STRING_.same_string (a_year, "0000") and then not is_year_zero_valid) then
 				create Result.make (False, 0)
 			elseif a_year.count < 4 then
 				create Result.make (False, 0)
