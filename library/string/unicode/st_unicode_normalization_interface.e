@@ -21,6 +21,9 @@ inherit
 
 	UC_UNICODE_CONSTANTS
 
+	ST_UNICODE_NORMALIZATION_CONSTANTS
+		export {NONE} all end
+
 	KL_COMPARATOR [INTEGER]
 		export {NONE} all end
 
@@ -309,12 +312,6 @@ feature -- Property
 		end
 
 feature {NONE} -- Implementation
-
-	Nfd: INTEGER is 0
-	Nfc: INTEGER is 1
-	Nfkd: INTEGER is 2
-	Nfkc: INTEGER is 3
-			-- Normal forms
 
 	False_value: CHARACTER is '%/0/'
 	True_value: CHARACTER is '%/1/'
