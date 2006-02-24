@@ -264,7 +264,6 @@ feature -- Types
 									create Result.make (l_base_type, l_base_class)
 								end
 							elseif l_base_class = universe.tuple_class then
-								l_any := universe.any_class
 								l_actual_parameters := l_base_type.actual_parameters
 								if l_actual_parameters /= Void then
 									nb := l_actual_parameters.count
@@ -304,7 +303,6 @@ feature -- Types
 									l_dynamic_feature := Result.dynamic_query (typed_pointer_pointer_item_feature, Current)
 								end
 							elseif l_base_class = universe.procedure_class then
-								l_any := universe.any_class
 								l_actual_parameters := l_base_type.actual_parameters
 								if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
 									l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
@@ -330,7 +328,6 @@ feature -- Types
 									create Result.make (l_base_type, l_base_class)
 								end
 							elseif l_base_class = universe.function_class then
-								l_any := universe.any_class
 								l_actual_parameters := l_base_type.actual_parameters
 								if l_actual_parameters /= Void and then l_actual_parameters.count = 3 then
 									l_return_type := dynamic_type (l_actual_parameters.type (3), l_any)
@@ -361,6 +358,10 @@ feature -- Types
 								create Result.make (l_base_type, l_base_class)
 							end
 							dynamic_types.force_last (Result)
+								-- `dynamic_type' is re-entrant. So at this stage
+								-- 'l_type.next_type' is not necessarily Void anymore.
+								-- We have to take that possibility into account.
+							Result.set_next_type (l_type.next_type)
 							l_type.set_next_type (Result)
 						else
 							l_type := l_type.next_type
@@ -485,7 +486,24 @@ feature -- Types
 					create Result.make (l_base_type, l_base_class)
 				end
 				dynamic_types.force_last (Result)
-				l_base_class.set_index (dynamic_types.count)
+					-- `dynamic_type' is re-entrant. So at this stage another type with
+					-- the same base class may have been inserted into `dynamic_types'.
+					-- We have to take that possibility into account.
+				i := l_base_class.index
+				if i >= 1 and i <= dynamic_types.count then
+					l_type := dynamic_types.item (i)
+					if l_type.base_class /= l_base_class then
+							-- Wrong index.
+						l_base_class.set_index (dynamic_types.count)
+					else
+							-- Another type has been inserted.
+						Result.set_next_type (l_type.next_type)
+						l_type.set_next_type (Result)
+					end
+				else
+						-- No other type has been inserted.
+					l_base_class.set_index (dynamic_types.count)
+				end
 			end
 		ensure
 			dynamic_type_not_void: Result /= Void
