@@ -33,6 +33,15 @@ C Compiler options used:
   This file is also included in the header file of C++ wrappers (when
   using the external "C++" clause).
 */
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)       // VC8+
+# ifndef _CRT_SECURE_NO_DEPRECATE
+#  define _CRT_SECURE_NO_DEPRECATE
+# endif
+# ifndef _CRT_NONSTDC_NO_DEPRECATE
+#  define _CRT_NONSTDC_NO_DEPRECATE
+# endif
+#endif   // VC8+
+
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
