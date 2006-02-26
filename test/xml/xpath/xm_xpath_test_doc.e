@@ -20,7 +20,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -31,10 +31,10 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
-		
+
 feature -- Test
 
 	test_collection_not_found is
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
+
 	books_xml_uri: UT_URI is
 			-- URI of file 'books.xml'
 		local
@@ -163,4 +163,4 @@ feature {NONE} -- Implementation
 
 end
 
-			
+

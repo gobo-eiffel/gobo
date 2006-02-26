@@ -25,7 +25,7 @@ inherit
 feature -- Filename
 
 	uri_to_filename (a_uri: UT_URI): STRING is
-			-- Convert URI to filename and then to string using the 
+			-- Convert URI to filename and then to string using the
 			-- current filesystem rules.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -48,8 +48,8 @@ feature -- Filename
 		end
 
 	filename_to_uri (a_string: STRING): UT_URI is
-			-- Convert filename in the current filesystem convention 
-			-- to a file: URI. 
+			-- Convert filename in the current filesystem convention
+			-- to a file: URI.
 		require
 			a_string_not_void: a_string /= Void
 		do

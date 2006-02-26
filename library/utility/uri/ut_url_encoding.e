@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Routines to encode and decode url encoded (%HH in hex) strings"
 
@@ -27,7 +27,7 @@ inherit
 feature -- Escape/unescape data characters
 
 	unescape_string (a_string: STRING): STRING is
-			-- Replace the URI hexadecimal escape sequences in `a_string' 
+			-- Replace the URI hexadecimal escape sequences in `a_string'
 			-- with the corresponding characters.
 		require
 			a_string_not_void: a_string /= Void
@@ -69,7 +69,7 @@ feature -- Escape/unescape data characters
 			Result := unescape_string (a_string)
 			if maximum_character_code_in_string (Result) > 127 and utf8.valid_utf8 (Result) then
 				Result := new_unicode_string_from_utf8 (Result)
-			end 
+			end
 		ensure
 			unescape_utf8_not_void: Result /= Void
 			unescape_utf8_cannot_be_larger: Result.count <= a_string.count
@@ -97,7 +97,7 @@ feature -- Escape/unescape data characters
 
 	escape_utf8 (a_string: STRING): STRING is
 			-- Escape reserved characters in `a_string' and return a new
-			-- string. Characters above 128 are converted to UTF8 
+			-- string. Characters above 128 are converted to UTF8
 			-- representation before being encoded.
 		require
 			a_string_not_void: a_string /= Void
@@ -117,7 +117,7 @@ feature -- Escape/unescape data characters
 		end
 
 	escape_custom (a_string: STRING; unescaped_chars: DS_SET [CHARACTER]; escape_space_as_plus: BOOLEAN): STRING is
-			-- Escape all characters except those in `unescaped_chars' in 
+			-- Escape all characters except those in `unescaped_chars' in
 			-- `a_string' and return a new string.
 		require
 			a_string_not_void: a_string /= Void
@@ -217,7 +217,7 @@ feature -- Character sets
 
 	Rfc_mark_characters: STRING is "-_.!~*%'()"
 			-- RFC 2396 'mark' characters
-			
+
 	Rfc_reserved_characters: STRING is ";/?:@&=+$,"
 			-- RFC 2396 'reserved' characters
 
