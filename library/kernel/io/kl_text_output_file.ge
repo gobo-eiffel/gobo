@@ -37,7 +37,7 @@ inherit
 		end
 #endif
 
-#ifdef ISE
+#ifdef ISE || GE
 	PLAIN_TEXT_FILE
 		rename
 			make as old_make,
@@ -70,6 +70,10 @@ inherit
 			{PLAIN_TEXT_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
 			{NONE} all
 		redefine
+#ifdef GE
+			old_open_write,
+			old_open_append,
+#endif
 			string_name
 		end
 
@@ -138,7 +142,7 @@ feature -- Output
 		end
 
 #endif
-#ifdef SE || ISE
+#ifdef SE || ISE || GE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -162,6 +166,30 @@ feature {NONE} -- Implementation
 #ifdef ISE
 	string_name: STRING
 			-- Name of file (STRING version)
+
+#endif
+#ifdef GE
+	old_open_write is
+			-- Open file in write-only mode;
+			-- create it if it does not exist.
+		do
+			precursor
+			if file_pointer = default_pointer then
+				mode := Closed_file
+				descriptor_available := False
+			end
+		end
+
+	old_open_append is
+			-- Open file in append-only mode;
+			-- create it if it does not exist.
+		do
+			precursor
+			if file_pointer = default_pointer then
+				mode := Closed_file
+				descriptor_available := False
+			end
+		end
 
 #endif
 #endif

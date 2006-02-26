@@ -77,11 +77,21 @@ feature -- Test
 						if file_system.same_text_files (expected_output, output_log_filename) then
 							assert ("freeise_output3", True)
 						else
+								-- Exception raised by Gobo Eiffel?
 							file_system.delete_file (expected_output)
 							file_system.concat_files (expected_output, expected_output1)
 							file_system.concat_files (expected_output, expected_output2)
+							file_system.concat_files (expected_output, geeraise_log_filename)
 							file_system.concat_files (expected_output, expected_output3)
-							assert_files_equal ("output2", expected_output, output_log_filename)
+							if file_system.same_text_files (expected_output, output_log_filename) then
+								assert ("geeraise_output1", True)
+							else
+								file_system.delete_file (expected_output)
+								file_system.concat_files (expected_output, expected_output1)
+								file_system.concat_files (expected_output, expected_output2)
+								file_system.concat_files (expected_output, expected_output3)
+								assert_files_equal ("output2", expected_output, output_log_filename)
+							end
 						end
 					end
 				end

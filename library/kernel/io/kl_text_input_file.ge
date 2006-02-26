@@ -9,7 +9,7 @@ indexing
 		%are able to recognize '%%N', '%%R%%N' and '%%R' as line separators."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ inherit
 		end
 #endif
 
-#ifdef ISE
+#ifdef ISE || GE
 	PLAIN_TEXT_FILE
 		rename
 			make as old_make,
@@ -80,6 +80,9 @@ inherit
 		undefine
 			file_readable
 		redefine
+#ifdef GE
+			old_open_read,
+#endif
 			string_name,
 			last_character,
 			last_string
@@ -316,7 +319,7 @@ feature -- Input
 			end_of_file := False
 		end
 
-#ifdef SE || ISE
+#ifdef SE || ISE || GE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -332,6 +335,18 @@ feature {NONE} -- Implementation
 #ifdef ISE
 	string_name: STRING
 			-- Name of file (STRING version)
+
+#endif
+#ifdef GE
+	old_open_read is
+			-- Open file in read-only mode.
+		do
+			precursor
+			if file_pointer = default_pointer then
+				mode := Closed_file
+				descriptor_available := False
+			end
+		end
 
 #endif
 #endif

@@ -151,4 +151,16 @@ feature {NONE} -- Implementation
 			freeise_log_filename_not_empty: Result.count > 0
 		end
 
+	geeraise_log_filename: STRING is
+			-- Name of file containing message displayed
+			-- by programs compiled with Gobo Eiffel Compiler
+			-- when raising an exception
+		once
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "common", "data", "geeraise.txt">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			geeraise_log_filename_not_void: Result /= Void
+			geeraise_log_filename_not_empty: Result.count > 0
+		end
+
 end
