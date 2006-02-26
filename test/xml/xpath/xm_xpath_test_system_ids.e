@@ -72,22 +72,20 @@ feature
 				tiny_document := tiny_tree_pipe.document
 				assert ("Document not void", tiny_document /= Void)
 				assert ("Line number zero", tiny_document.line_number = 0)
-				assert ("Base-URI equals SYSTEM ID for document", STRING_.same_string (tiny_document.base_uri, tiny_document.system_id))
+				assert_strings_equal ("Base-URI equals SYSTEM ID for document", tiny_document.system_id, tiny_document.base_uri)
 			else
 				assert ("No parsing error", not tree_pipe.tree.has_error)
 				document := tree_pipe.document
 				assert ("Document not void", document /= Void)
 				assert ("Line number zero", document.line_number = 0)
-				assert ("Base-URI equals SYSTEM ID for document", STRING_.same_string (document.base_uri, document.system_id))
+				assert_strings_equal ("Base-URI equals SYSTEM ID for document", document.system_id, document.base_uri)
 
 			end
-			a_base_uri := STRING_.concat ("file://localhost", file_system.current_working_directory)
-			a_base_uri := STRING_.appended_string (a_base_uri, "/")
-			a_base_uri := STRING_.appended_string (a_base_uri, "data/books2.xml")
+			a_base_uri := resolved_uri_string ("data/books2.xml")
 			if is_tiny then
-				assert ("SYSTEM ID for document", STRING_.same_string (a_base_uri, tiny_document.system_id))
+				assert_strings_equal ("SYSTEM ID for document", a_base_uri, tiny_document.system_id)
 			else
-				assert ("SYSTEM ID for document", STRING_.same_string (a_base_uri, document.system_id))
+				assert_strings_equal ("SYSTEM ID for document", a_base_uri, document.system_id)
 			end
 
 			-- Test document_element
@@ -103,11 +101,9 @@ feature
 			books_element ?= document_element.first_child
 			assert ("Books", books_element /= Void)
 			assert ("Books element line number is 2", books_element.line_number = 2)
-			a_base_uri := STRING_.concat ("file://localhost", file_system.current_working_directory)
-			a_base_uri := STRING_.appended_string (a_base_uri, "/")
-			a_base_uri := STRING_.appended_string (a_base_uri, "data/booklist.xml")
-			assert ("SYSTEM ID for BOOKS", STRING_.same_string (a_base_uri, books_element.base_uri))
-			
+			a_base_uri := resolved_uri_string ("data/booklist.xml")
+			assert_strings_equal ("SYSTEM ID for BOOKS", a_base_uri, books_element.base_uri)
+
 			-- look for "ITEM" number 6 descendant of the document_element
 
 			if is_tiny then
@@ -146,12 +142,13 @@ feature
 				item_element := a_tree_element
 			end
 			assert ("sixth item", item_element /= Void)
-			assert ("SYSTEM ID for ITEM", STRING_.same_string (item_element.system_id, a_base_uri))
-			assert ("Base URI for ITEM", STRING_.same_string (item_element.base_uri, "http://www.gobosoft.com/xml-tests/AAMilne-book"))
+			assert_strings_equal ("SYSTEM ID for ITEM", a_base_uri, item_element.system_id)
+			assert_strings_equal ("Base URI for ITEM", "http://www.gobosoft.com/xml-tests/AAMilne-book", item_element.base_uri)
 			assert ("Item element line number is 35", item_element.line_number = 35)
 			a_pi ?= item_element.first_child
-			assert ("PI child 1", a_pi /= Void and then STRING_.same_string (a_pi.node_name, "testpi1"))
-			assert ("Base URI for PI 1", STRING_.same_string (a_pi.base_uri, "http://www.gobosoft.com/xml-tests/AAMilne-book"))
+			assert ("PI child 1 not_void", a_pi /= Void)
+			assert_strings_equal ("PI child 1", "testpi1", a_pi.node_name)
+			assert_strings_equal ("Base URI for PI 1", "http://www.gobosoft.com/xml-tests/AAMilne-book", a_pi.base_uri)
 			assert ("PI1 line number is 36", a_pi.line_number = 36)
 			if is_tiny then
 				tiny_descendants.forth
@@ -165,14 +162,16 @@ feature
 				item_element := a_tree_element
 			end
 			assert ("eighth item", item_element /= Void)
-			assert ("SYSTEM ID for ITEM 2", STRING_.same_string (item_element.system_id, a_base_uri))
-			assert ("Base URI for ITEM 2", STRING_.same_string (item_element.base_uri, a_base_uri))
+			assert_strings_equal ("SYSTEM ID for ITEM 2", a_base_uri, item_element.system_id)
+			assert_strings_equal ("Base URI for ITEM 2", a_base_uri, item_element.base_uri)
 			a_pi ?= item_element.first_child
-			assert ("PI child 2", a_pi /= Void and then STRING_.same_string (a_pi.node_name, "testpi2"))
-			assert ("Base URI for PI 2", STRING_.same_string (a_pi.base_uri, a_base_uri))
+			assert ("PI child 2 not_void", a_pi /= Void)
+			assert_strings_equal ("PI child 2", "testpi2", a_pi.node_name)
+			assert_strings_equal ("Base URI for PI 2", a_base_uri, a_pi.base_uri)
 			a_pi ?= item_element.next_sibling
-			assert ("PI sibling", a_pi /= Void and then STRING_.same_string (a_pi.node_name, "testpi3"))
-			assert ("Base URI for PI 3", STRING_.same_string (a_pi.base_uri, a_base_uri))
+			assert ("PI sibling not_void", a_pi /= Void)
+			assert_strings_equal ("PI sibling", "testpi3", a_pi.node_name)
+			assert_strings_equal ("Base URI for PI 3", a_base_uri, a_pi.base_uri)
 			assert ("PI3 line number is 57", a_pi.line_number = 57)
 		end
 
@@ -195,7 +194,7 @@ feature {NONE} -- Implementation
 				create tree_pipe.make (parser, True)
 				parser.set_callbacks (tree_pipe.start)
 				parser.set_dtd_callbacks (tree_pipe.emitter)
-			end				
+			end
 			parser.set_string_mode_ascii
 		end
 
@@ -206,14 +205,13 @@ feature {NONE} -- Implementation
 	data_dirname: STRING is
 			-- Name of directory containing data files
 		once
-			Result := file_system.nested_pathname ("${GOBO}",
-																<<"test", "xml", "xpath", "data">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "xpath", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
+
 	books2_xml_uri: UT_URI is
 			-- URI of file 'books2.xml'
 		local
@@ -224,5 +222,28 @@ feature {NONE} -- Implementation
 		ensure
 			books2_xml_uri_not_void: Result /= Void
 		end
-		
+
+	resolved_uri_string (a_relative_uri: STRING): STRING is
+			-- Resolved path for `a_relative_uri' relative to
+			-- `current_directory_base'
+		require
+			a_relative_uri_not_void: a_relative_uri /= Void
+		local
+			a_uri: UT_URI
+		do
+			create a_uri.make_resolve (current_directory_base, a_relative_uri)
+			Result := a_uri.full_reference
+		ensure
+			resolved_uri_string_not_void: Result /= Void
+		end
+
+	current_directory_base: UT_URI is
+			-- URI of current directory
+		local
+			a_cwd: KI_PATHNAME
+		once
+			a_cwd := file_system.string_to_pathname (file_system.current_working_directory)
+			Result := File_uri.pathname_to_uri (a_cwd)
+		end
+
 end

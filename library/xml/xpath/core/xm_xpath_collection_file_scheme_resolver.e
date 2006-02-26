@@ -24,6 +24,9 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -37,12 +40,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
-	
+
 	last_error: XM_XPATH_ERROR_VALUE
 			-- Last error set by `resolve'
 
 feature -- Element change
-	
+
 	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
 			-- Resolve `a_uri' to a sequence of nodes.
 		local
@@ -58,7 +61,7 @@ feature -- Element change
 			elseif a_uri.has_path_base then
 				create last_error.make_from_string ("Filtering is not yet implemented on file URIs for fn:collection()", Xpath_errors_uri, "FODC0004", Dynamic_error)
 			else
-				a_directory_name := file_system.pathname_to_string(unix_file_system.string_to_pathname(a_uri.path))
+				a_directory_name := file_system.pathname_to_string (File_uri.uri_to_pathname(a_uri))
 				if not file_system.directory_exists (a_directory_name) then
 					create last_error.make_from_string ("Directory specified in file: argument to fn:collection() does not exist", Xpath_errors_uri, "FODC0004", Dynamic_error)
 				else
