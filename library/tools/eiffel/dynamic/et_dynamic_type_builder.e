@@ -508,19 +508,31 @@ feature {NONE} -- CAT-calls
 		require
 			a_call_not_void: a_call /= Void
 		local
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_feature: ET_FEATURE
 			l_type: ET_DYNAMIC_TYPE
 			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
 		do
-			l_type := a_call.target_type_set.first_type
-			if l_type /= Void then
-				check_catcall_target_validity (l_type, a_call)
-				l_other_types := a_call.target_type_set.other_types
-				if l_other_types /= Void then
-					nb := l_other_types.count
-					from i := 1 until i > nb loop
-						check_catcall_target_validity (l_other_types.item (i), a_call)
-						i := i + 1
+			l_feature := a_call.current_feature.static_feature.implementation_feature
+			if
+				l_feature.implementation_class.name.same_class_name (tilde_class_name) and then
+				l_feature.name.same_feature_name (tilde_feature_name)
+			then
+				-- This feature is supposed to simulate the forthcoming
+				-- '~' operator introduced in ECMA Eiffel 367.
+			else
+				l_target_type_set := a_call.target_type_set
+				l_type := l_target_type_set.first_type
+				if l_type /= Void then
+					check_catcall_target_validity (l_type, a_call)
+					l_other_types := l_target_type_set.other_types
+					if l_other_types /= Void then
+						nb := l_other_types.count
+						from i := 1 until i > nb loop
+							check_catcall_target_validity (l_other_types.item (i), a_call)
+							i := i + 1
+						end
 					end
 				end
 			end
@@ -648,7 +660,7 @@ feature {NONE} -- CAT-calls
 			l_message.append_string ("' in class '")
 			l_message.append_string (a_target_type.base_type.to_text)
 			l_message.append_string ("%'")
-			set_fatal_error
+				-- CAT-calls are not considered as a fatal error.
 			error_handler.report_catcall_error (l_message)
 			STRING_.wipe_out (l_message)
 			end
@@ -3919,6 +3931,25 @@ feature {NONE} -- Implementation
 			create Result.make (dummy_feature, dummy_dynamic_type, current_system)
 		ensure
 			dummy_dynamic_feature_not_void: Result /= Void
+		end
+
+feature {NONE} -- Constants
+
+	tilde_class_name: ET_IDENTIFIER is
+			-- Name of class containing `tilde_feature_name'
+		once
+			create Result.make ("KL_ANY_ROUTINES")
+		ensure
+			tilde_class_name_not_void: Result /= Void
+		end
+
+	tilde_feature_name: ET_IDENTIFIER is
+			-- Name of  feature supposed to simulate the forthcoming
+			-- '~' operator introduced in ECMA Eiffel 367
+		once
+			create Result.make ("equal_objects")
+		ensure
+			tilde_feature_name_not_void: Result /= Void
 		end
 
 invariant
