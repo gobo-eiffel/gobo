@@ -1970,11 +1970,7 @@ feature -- Resizing
 		do
 			area_count := area.count
 			if newsize >= area_count then
-				if area = empty_area then
-					make_area (newsize + 1)
-				else
-					area := area.aliased_resized_area (newsize + 1)
-				end
+				area := area.aliased_resized_area (newsize + 1)
 			end
 		end
 
