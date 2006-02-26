@@ -109,9 +109,9 @@ feature -- Test
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if
-					(not eiffel_compiler.is_ve or else not a_class.name.name.is_equal ("SORTED_ARRAY")) and
+					(not eiffel_compiler.is_ve or else not a_class.name.name.same_string ("SORTED_ARRAY")) and
 						-- Class SORTED_ARRAY in VE 4.0 has a feature named `create'.
-					(not eiffel_compiler.is_ise or else not a_class.name.name.is_equal ("ANY"))
+					(not eiffel_compiler.is_ise or else not a_class.name.name.same_string ("ANY"))
 						-- Class ANY in ISE 5.4 has 'Void' as a feature and not as a keyword.
 				then
 					if a_class.is_preparsed then

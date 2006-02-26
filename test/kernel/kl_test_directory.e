@@ -16,6 +16,7 @@ inherit
 
 	KL_TEST_CASE
 	KL_SHARED_EXECUTION_ENVIRONMENT
+	UC_SHARED_STRING_COMPARATOR
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Test
@@ -30,15 +31,15 @@ feature -- Test
 			a_name := kernel_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
 			create a_directory.make (a_name)
-			assert ("a_directory_not_void", a_directory /= Void)
-			assert_same ("name_set", a_name, a_directory.name)
-			assert ("is_closed", a_directory.is_closed)
+			assert ("a_directory_not_void1", a_directory /= Void)
+			assert_same ("name_set1", a_name, a_directory.name)
+			assert ("is_closed1", a_directory.is_closed)
 				-- Dummy directory name:
 			a_name := new_dirname ("gobo")
 			create a_directory.make (a_name)
-			assert ("a_directory_not_void", a_directory /= Void)
-			assert_same ("name_set", a_name, a_directory.name)
-			assert ("is_closed", a_directory.is_closed)
+			assert ("a_directory_not_void2", a_directory /= Void)
+			assert_same ("name_set2", a_name, a_directory.name)
+			assert ("is_closed2", a_directory.is_closed)
 		end
 
 	test_exists1 is
@@ -207,7 +208,6 @@ feature -- Test
 			a_name: STRING
 			filenames: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
-			name_comparator: KL_COMPARABLE_COMPARATOR [STRING]
 			expected_entries: ARRAY [STRING]
 			an_entry: STRING
 			cvs_dir: STRING
@@ -236,8 +236,7 @@ feature -- Test
 						end
 					end
 				end
-				create name_comparator.make
-				create name_sorter.make (name_comparator)
+				create name_sorter.make (string_comparator)
 				filenames.sort (name_sorter)
 				expected_entries := <<"booleans.txt", "empty.txt", "gobo.txt", "hello.txt", "integers.txt">>
 				assert_arrays_equal ("entries", expected_entries, filenames.to_array)
@@ -255,7 +254,6 @@ feature -- Test
 			a_name: STRING
 			filenames: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
-			name_comparator: KL_COMPARABLE_COMPARATOR [STRING]
 			an_entry: STRING
 			cvs_dir: STRING
 		do
@@ -285,8 +283,7 @@ feature -- Test
 						end
 					end
 				end
-				create name_comparator.make
-				create name_sorter.make (name_comparator)
+				create name_sorter.make (string_comparator)
 				filenames.sort (name_sorter)
 				assert ("entries", filenames.to_array.count = 0)
 				a_directory.close
@@ -526,7 +523,6 @@ feature -- Test
 			filenames: ARRAY [STRING]
 			filenames_list: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
-			name_comparator: KL_COMPARABLE_COMPARATOR [STRING]
 			expected_entries: ARRAY [STRING]
 			i, nb: INTEGER
 		do
@@ -541,8 +537,7 @@ feature -- Test
 				filenames_list.put_last (filenames.item (i))
 				i := i + 1
 			end
-			create name_comparator.make
-			create name_sorter.make (name_comparator)
+			create name_sorter.make (string_comparator)
 			filenames_list.sort (name_sorter)
 			filenames := filenames_list.to_array
 			expected_entries := <<"booleans.txt", "empty.txt", "gobo.txt", "hello.txt", "integers.txt">>
@@ -558,7 +553,6 @@ feature -- Test
 			directory_names: ARRAY [STRING]
 			directory_names_list: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
-			name_comparator: KL_COMPARABLE_COMPARATOR [STRING]
 			expected_entries: ARRAY [STRING]
 			i, nb: INTEGER
 		do
@@ -590,8 +584,7 @@ feature -- Test
 				directory_names_list.put_last (directory_names.item (i))
 				i := i + 1
 			end
-			create name_comparator.make
-			create name_sorter.make (name_comparator)
+			create name_sorter.make (string_comparator)
 			directory_names_list.sort (name_sorter)
 			directory_names := directory_names_list.to_array
 			expected_entries := << a_child >>
