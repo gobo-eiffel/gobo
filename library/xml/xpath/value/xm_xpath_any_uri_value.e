@@ -43,7 +43,6 @@ feature {NONE} -- Initialization
 			make_atomic_value
 			value := trimmed_white_space (a_value)
 		ensure
-			value_set: STRING_.same_string (value, a_value)
 			static_properties_computed: are_static_properties_computed
 		end
 
@@ -98,7 +97,7 @@ feature -- Status report
 		do
 			Result := other.is_string_value
 		end
-	
+
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
