@@ -274,7 +274,7 @@ feature {NONE} -- CAT-calls
 			l_message.append_string ("' in class '")
 			l_message.append_string (a_target_type.base_type.to_text)
 			l_message.append_string ("%'")
-			set_fatal_error
+				-- CAT-calls are not considered as a fatal error.
 			error_handler.report_catcall_error (l_message)
 			STRING_.wipe_out (l_message)
 		end
