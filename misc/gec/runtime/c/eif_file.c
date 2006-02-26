@@ -103,8 +103,8 @@ void file_rename(char* old, char* new) {
 #ifdef WIN32
 	struct stat buf;
 
-	if (stat(old, &buf) != -1) {
-		remove (old);
+	if (stat(new, &buf) != -1) {
+		remove (new);
 	}
 #endif
 	rename(old, new);
