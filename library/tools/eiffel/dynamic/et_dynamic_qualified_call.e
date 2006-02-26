@@ -21,6 +21,12 @@ feature -- Access
 	static_call: ET_CALL_COMPONENT
 			-- Static call
 
+	static_feature: ET_FEATURE is
+			-- Static feature of the call;
+			-- Void if no such feature found
+		deferred
+		end
+
 	target_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type of target
 

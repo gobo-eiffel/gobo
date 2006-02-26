@@ -43,6 +43,18 @@ feature {NONE} -- Initialization
 			current_type_set: current_type = a_current_type
 		end
 
+feature -- Access
+
+	static_feature: ET_PROCEDURE is
+			-- Static feature of the call;
+			-- Void if no such feature found
+		local
+			l_class: ET_CLASS
+		do
+			l_class := target_type_set.static_type.base_class
+			Result := l_class.seeded_procedure (static_call.name.seed)
+		end
+
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
 	seeded_dynamic_feature (a_seed: INTEGER; a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is

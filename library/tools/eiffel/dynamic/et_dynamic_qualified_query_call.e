@@ -52,6 +52,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	static_feature: ET_QUERY is
+			-- Static feature of the call;
+			-- Void if no such feature found
+		local
+			l_class: ET_CLASS
+		do
+			l_class := target_type_set.static_type.base_class
+			Result := l_class.seeded_query (static_call.name.seed)
+		end
+
 	result_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type of Result
 
