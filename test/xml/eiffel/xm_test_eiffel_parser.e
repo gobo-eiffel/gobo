@@ -44,7 +44,7 @@ feature -- Test
 			create parser.make
 			parser.parse_from_string ("%N%N  <a?>")
 			a_position ?= parser.position
-			assert_not_equal ("position_exists", Void, a_position)
+			assert ("position_not_void", a_position /= Void)
 			assert_integers_equal ("row_correct", 3, a_position.row)
 			assert_integers_equal ("column_correct", 5, a_position.column)
 			assert_integers_equal ("byte_index_correct", 7, a_position.byte_index)
