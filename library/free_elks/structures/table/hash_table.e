@@ -1249,7 +1249,7 @@ feature {NONE} -- Implementation
 			position := (position + increment) \\ capacity
 		end
 
-	Conflict_constant: INTEGER is unique
+	Conflict_constant: INTEGER is 1
 			-- Could not insert an already existing key
 
 	set_conflict is
@@ -1260,7 +1260,7 @@ feature {NONE} -- Implementation
 			conflict: conflict
 		end
 
-	Found_constant: INTEGER is unique
+	Found_constant: INTEGER is 2
 			-- Key found
 
 	set_found is
@@ -1271,7 +1271,7 @@ feature {NONE} -- Implementation
 			found: found
 		end
 
-	Inserted_constant: INTEGER is unique
+	Inserted_constant: INTEGER is 3
 			-- Insertion successful
 
 	set_inserted is
@@ -1282,7 +1282,7 @@ feature {NONE} -- Implementation
 			inserted: inserted
 		end
 
-	Not_found_constant: INTEGER is unique
+	Not_found_constant: INTEGER is 4
 			-- Key not found
 
 	set_not_found is
@@ -1301,7 +1301,7 @@ feature {NONE} -- Implementation
 			default_status: not special_status
 		end
 
-	Removed_constant: INTEGER is unique
+	Removed_constant: INTEGER is 5
 			-- Remove successful
 
 	set_removed is
@@ -1312,7 +1312,7 @@ feature {NONE} -- Implementation
 			removed: removed
 		end
 
-	Replaced_constant: INTEGER is unique
+	Replaced_constant: INTEGER is 6
 			-- Replaced value
 
 	set_replaced is
