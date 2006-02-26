@@ -95,7 +95,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (document_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", document_uri, a_uri.string_value)
 		end
 
 	test_context_item_not_a_node is
@@ -109,7 +109,7 @@ feature -- Tests
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("(1,2,3)[base-uri() eq 'fred']")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("Error FORG0006", STRING_.same_string (an_evaluator.error_value.code, "FORG0006"))
+			assert_strings_equal ("Error FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
 	test_empty_sequence is
@@ -155,7 +155,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (nested_xml_base_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
 		end
 
 	test_element_with_xml_base_tiny_tree is
@@ -173,7 +173,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (nested_xml_base_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
 		end
 
 	test_element is
@@ -191,7 +191,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (secondary_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
 		end
 
 	test_element_tiny_tree is
@@ -209,7 +209,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (secondary_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
 		end
 
 	test_nested_element is
@@ -227,7 +227,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (xml_base_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", xml_base_uri, a_uri.string_value)
 		end
 
 	test_nested_element_tiny_tree is
@@ -245,7 +245,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (xml_base_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", xml_base_uri, a_uri.string_value)
 		end
 
 	test_pi_child_of_element_with_xml_base is
@@ -263,7 +263,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (nested_xml_base_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
 		end
 
 	test_pi_child_of_element_with_xml_base_tiny_tree is
@@ -281,7 +281,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (nested_xml_base_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
 		end
 
 	test_pi_at_top_level is
@@ -299,7 +299,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (secondary_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
 		end
 
 	test_pi_at_top_level_tiny_tree is
@@ -317,7 +317,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert ("Correct base-URI", STRING_.same_string (secondary_uri, a_uri.string_value))
+			assert_strings_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
 		end
 
 	set_up is
@@ -330,8 +330,7 @@ feature {NONE} -- Implementation
 	data_dirname: STRING is
 			-- Name of directory containing data files
 		once
-			Result := file_system.nested_pathname ("${GOBO}",
-																<<"test", "xml", "xpath", "data">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "xpath", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			data_dirname_not_void: Result /= Void
@@ -348,7 +347,5 @@ feature {NONE} -- Implementation
 		ensure
 			base_uri_master_xml_uri_not_void: Result /= Void
 		end
-			
-end
 
-			
+end
