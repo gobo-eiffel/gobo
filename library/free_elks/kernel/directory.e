@@ -103,6 +103,7 @@ feature -- Access
 			is_open: not is_closed
 		do
 			dir_close (directory_pointer)
+			directory_pointer := default_pointer
 			mode := Close_directory
 		end
 
@@ -457,9 +458,9 @@ feature {NONE} -- Implementation
 			-- Status mode of the directory.
 			-- Possible values are the following:
 
-	Close_directory: INTEGER is unique
+	Close_directory: INTEGER is 1
 
-	Read_directory: INTEGER is unique
+	Read_directory: INTEGER is 2
 
 	file_mkdir (dir_name: POINTER) is
 			-- Make directory `dir_name'.
