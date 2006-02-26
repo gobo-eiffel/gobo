@@ -14,7 +14,6 @@
 	<inherit>
 		<parent location="${GOBO}/misc/eiffel.eant">
 			<redefine target="init_system"/>
-			<redefine target="install"/>
 			<redefine target="other_clean"/>
 		</parent>
 	</inherit>
@@ -27,9 +26,9 @@
 		<set name="system_dir" value="${GOBO}/work/${system}"/>
 	</target>
 
-	<target name="install" depend="init">
+	<target name="copy" depend="init">
 		<description>
-			Install generated files.
+			Copy generated files.
 		</description>
 
 		<move to_directory="${GOBO}/library/string/unicode">
