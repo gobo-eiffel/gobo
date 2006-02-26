@@ -729,8 +729,8 @@ color="#008080">  -- Memory name</font><font color="#0000FF">
 color="#0000FF">&gt; </font><font color="#800080">exp</font><font
 color="#0000FF">
 
-%right </font><font color="#FF0000">ASSIGN</font><font
-color="#0000FF">        </font><font color="#008080">-- Assignment sign `:=</font><font
+%right </font><font color="#FF0000">ASSIGNMENT</font><font
+color="#0000FF">    </font><font color="#008080">-- Assignment sign `:=</font><font
 color="#0000FF">'
 %left </font><font color="#FF0000">'-' '+'</font><font
 color="#0000FF">
@@ -811,7 +811,7 @@ color="#0000FF">            { $$ </font><font color="#008080">:= <em>memory_valu
 color="#0000FF">$1</font><font color="#008080">)</font><font
 color="#0000FF"> }
     | </font><font color="#FF0000">VAR</font><font
-color="#0000FF"> </font><font color="#FF0000">ASSIGN</font><font
+color="#0000FF"> </font><font color="#FF0000">ASSIGNMENT</font><font
 color="#0000FF"> </font><font color="#800080">exp</font><font
 color="#0000FF"> { $$ </font><font color="#008080">:= </font><font
 color="#0000FF">$3</font><font color="#008080">; <em>set_memory_value</em> (</font><font
@@ -864,7 +864,7 @@ character.</p>
     <pre><font color="#008080"><em>read_token </em><em><strong>is</strong></em><em>
         </em>-- Lexical analyzer returns a double floating point
         -- number on the stack and the token NUM, a STRING and
-        -- and the token VAR, a token ASSIGN, or the ASCII
+        -- and the token VAR, a token ASSIGNMENT, or the ASCII
         -- character read if not a number. Skips all blanks
         -- and tabs, returns 0 for EOF.<em>
     </em><em><strong>local</strong></em><em>
@@ -956,7 +956,7 @@ character.</p>
                 </em><em><strong>if not</strong></em><em> io.end_of_file </em><em><strong>then</strong></em><em>
                     </em><em><strong>if</strong></em><em> c </em>=<em> '=' </em><em><strong>then</strong></em><em>
                             </em>-- Found &quot;:=&quot;<em>
-                        last_token </em>:=<em> ASSIGN
+                        last_token </em>:=<em> ASSIGNMENT
                     </em><em><strong>else</strong></em><em>
                         </em>    -- Return single character<em>
                         last_token </em>:= (<em>':'</em>)<em>.code

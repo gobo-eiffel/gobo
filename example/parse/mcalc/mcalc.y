@@ -5,7 +5,7 @@ indexing
 
 		"Calculator with memory"
 
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ create
 %token <STRING> VAR  -- Memory name
 %type <DOUBLE> exp
 
-%right ASSIGN        -- Assignment sign `:='
+%right ASSIGNMENT    -- Assignment sign `:='
 %left '-' '+'
 %left '*' '/'
 %left NEG            -- negation--unary minus
@@ -49,15 +49,15 @@ line: '\n'
 	| error '\n'	{ recover }
 	;
 
-exp: NUM				{ $$ := $1 }
-	| VAR				{ $$ := memory_value ($1) }
-	| VAR ASSIGN exp	{ $$ := $3; set_memory_value ($$, $1) }
-	| exp '+' exp		{ $$ := $1 + $3 }
-	| exp '-' exp		{ $$ := $1 - $3 }
-	| exp '*' exp		{ $$ := $1 * $3 }
-	| exp '/' exp		{ $$ := $1 / $3 }
-	| '-' exp %prec NEG	{ $$ := -$2 }
-	| '(' exp ')'		{ $$ := $2 }
+exp: NUM					{ $$ := $1 }
+	| VAR					{ $$ := memory_value ($1) }
+	| VAR ASSIGNMENT exp	{ $$ := $3; set_memory_value ($$, $1) }
+	| exp '+' exp			{ $$ := $1 + $3 }
+	| exp '-' exp			{ $$ := $1 - $3 }
+	| exp '*' exp			{ $$ := $1 * $3 }
+	| exp '/' exp			{ $$ := $1 / $3 }
+	| '-' exp %prec NEG		{ $$ := -$2 }
+	| '(' exp ')'			{ $$ := $2 }
 	;
 
 %%
@@ -108,7 +108,7 @@ feature {NONE} -- Scanner
 	read_token is
 			-- Lexical analyzer returns a double floating point
 			-- number on the stack and the token NUM, a STRING and
-			-- and the token VAR, a token ASSIGN, or the ASCII
+			-- and the token VAR, a token ASSIGNMENT, or the ASCII
 			-- character read if not a number. Skips all blanks
 			-- and tabs, returns 0 for EOF.
 		local
@@ -200,7 +200,7 @@ feature {NONE} -- Scanner
 					if not std.input.end_of_file then
 						if c = '=' then
 								-- Found ":="
-							last_token := ASSIGN
+							last_token := ASSIGNMENT
 						else
 								-- Return single character
 							last_token := (':').code
