@@ -28,9 +28,9 @@ feature {NONE} -- Status report
 			-- after execution of current program?
 			-- Safe to use in `dispose'.
 		external
-			"C macro use %"eif_memory.h%""
+			"C inline use %"eif_memory.h%""
 		alias
-			"eif_is_in_final_collect"
+			"return eif_is_in_final_collect;"
 		end
 	
 end

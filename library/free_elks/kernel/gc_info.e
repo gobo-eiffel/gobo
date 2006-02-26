@@ -197,9 +197,9 @@ feature {NONE} -- C externals
 	c_sizeof_gacstat: INTEGER is
 			-- Size of struct `gacstat'.
 		external
-			"C macro use %"eif_memory.h%""
+			"C inline use %"eif_memory.h%""
 		alias
-			"sizeof(struct gacstat)"
+			"return sizeof(struct gacstat);"
 		end
 
 	c_count (a_ptr: POINTER): INTEGER is
@@ -207,7 +207,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->count"
+			"return ((struct gacstat *) $a_ptr)->count;"
 		end
 		
 	c_mem_used (a_ptr: POINTER): INTEGER is
@@ -215,7 +215,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->mem_used"
+			"return ((struct gacstat *) $a_ptr)->mem_used;"
 		end
 
 	c_mem_collect (a_ptr: POINTER): INTEGER is
@@ -223,7 +223,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->mem_collect"
+			"return ((struct gacstat *) $a_ptr)->mem_collect;"
 		end
 
 	c_mem_avg (a_ptr: POINTER): INTEGER is
@@ -231,7 +231,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->mem_avg"
+			"return ((struct gacstat *) $a_ptr)->mem_avg;"
 		end
 
 	c_real_time (a_ptr: POINTER): INTEGER is
@@ -239,7 +239,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->real_time"
+			"return ((struct gacstat *) $a_ptr)->real_time;"
 		end
 
 	c_real_avg (a_ptr: POINTER): INTEGER is
@@ -247,7 +247,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->real_avg"
+			"return ((struct gacstat *) $a_ptr)->real_avg;"
 		end
 
 	c_real_itime (a_ptr: POINTER): INTEGER is
@@ -255,7 +255,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->real_itime"
+			"return ((struct gacstat *) $a_ptr)->real_itime;"
 		end
 
 	c_real_iavg (a_ptr: POINTER): INTEGER is
@@ -263,7 +263,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->real_iavg"
+			"return ((struct gacstat *) $a_ptr)->real_iavg;"
 		end
 
 	c_cpu_time (a_ptr: POINTER): DOUBLE is
@@ -271,7 +271,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->cpu_time"
+			"return ((struct gacstat *) $a_ptr)->cpu_time;"
 		end
 
 	c_cpu_avg (a_ptr: POINTER): DOUBLE is
@@ -279,7 +279,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->cpu_avg"
+			"return ((struct gacstat *) $a_ptr)->cpu_avg;"
 		end
 
 	c_cpu_itime (a_ptr: POINTER): DOUBLE is
@@ -287,7 +287,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->cpu_itime"
+			"return ((struct gacstat *) $a_ptr)->cpu_itime;"
 		end
 
 	c_cpu_iavg (a_ptr: POINTER): DOUBLE is
@@ -295,7 +295,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->cpu_iavg"
+			"return ((struct gacstat *) $a_ptr)->cpu_iavg;"
 		end
 
 	c_sys_time (a_ptr: POINTER): DOUBLE is
@@ -303,7 +303,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->sys_time"
+			"return ((struct gacstat *) $a_ptr)->sys_time;"
 		end
 
 	c_sys_avg (a_ptr: POINTER): DOUBLE is
@@ -311,7 +311,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->sys_avg"
+			"return ((struct gacstat *) $a_ptr)->sys_avg;"
 		end
 
 	c_sys_itime (a_ptr: POINTER): DOUBLE is
@@ -319,7 +319,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->sys_itime"
+			"return ((struct gacstat *) $a_ptr)->sys_itime;"
 		end
 
 	c_sys_iavg (a_ptr: POINTER): DOUBLE is
@@ -327,7 +327,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"((struct gacstat *) $a_ptr)->sys_iavg"
+			"return ((struct gacstat *) $a_ptr)->sys_iavg;"
 		end
 
 end

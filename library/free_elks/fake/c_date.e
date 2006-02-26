@@ -131,7 +131,7 @@ feature {NONE} -- Externals
 	ftime (p: POINTER) is
 			-- Set current date and time in `p', pointer to a `struct timeb' area.
 		external
-			"C macro signature (struct timeb*) use <sys/timeb.h>"
+			"C signature (struct timeb*) use <sys/timeb.h>"
 		end
 
 feature {NONE} -- `struct timeb' encapsulation
@@ -139,31 +139,33 @@ feature {NONE} -- `struct timeb' encapsulation
 	timeb_structure_size: INTEGER is
 			-- Size of `struct timeb'.
 		external
-			"C macro use <sys/timeb.h>"
+			"C inline use <sys/timeb.h>"
 		alias
-			"sizeof(struct timeb)"
+			"return sizeof(struct timeb);"
 		end	
 
 	time_t_structure_size: INTEGER is
 			-- Size of `struct timeb'.
 		external
-			"C macro use <time.h>"
+			"C inline use <time.h>"
 		alias
-			"sizeof(time_t)"
+			"return sizeof(time_t);"
 		end
 
 	tm_structure_size: INTEGER is
 			-- Size of `struct tm'.
 		external
-			"C macro use <time.h>"
+			"C inline use <time.h>"
 		alias
-			"sizeof(struct tm)"
+			"return sizeof(struct tm);"
 		end
 		
 	get_millitm (p: POINTER): INTEGER is
 			-- Get `p->millitm'.
 		external
-			"C struct struct timeb access millitm use <sys/timeb.h>"
+			"C inline use <sys/timeb.h>"
+		alias
+			"return ((struct timeb *) $p)->millitm;"
 		end
 
 	get_time (p, t: POINTER) is
@@ -198,37 +200,49 @@ feature {NONE} -- `struct tm' encapsulation
 	get_tm_year (p: POINTER): INTEGER is
 			-- Get `p->tm_year', number of years since 1900.
 		external
-			"C struct struct tm access tm_year use <time.h>"
+			"C inline <time.h>"
+		alias
+			"return ((struct tm *) $p)->tm_year;"
 		end
 
 	get_tm_mon (p: POINTER): INTEGER is
 			-- Get `p->tm_mon'.
 		external
-			"C struct struct tm access tm_mon use <time.h>"
+			"C inline <time.h>"
+		alias
+			"return ((struct tm *) $p)->tm_mon;"
 		end
 		
 	get_tm_mday (p: POINTER): INTEGER is
 			-- Get `p->tm_mday'.
 		external
-			"C struct struct tm access tm_mday use <time.h>"
+			"C inline <time.h>"
+		alias
+			"return ((struct tm *) $p)->tm_mday;"
 		end
 
 	get_tm_hour (p: POINTER): INTEGER is
 			-- Get `p->tm_hour'.
 		external
-			"C struct struct tm access tm_hour use <time.h>"
+			"C inline <time.h>"
+		alias
+			"return ((struct tm *) $p)->tm_hour;"
 		end
 	
 	get_tm_min (p: POINTER): INTEGER is
 			-- Get `p->tm_min'.
 		external
-			"C struct struct tm access tm_min use <time.h>"
+			"C inline <time.h>"
+		alias
+			"return ((struct tm *) $p)->tm_min;"
 		end
 	
 	get_tm_sec (p: POINTER): INTEGER is
 			-- Get `p->tm_sec'.
 		external
-			"C struct struct tm access tm_sec use <time.h>"
+			"C inline <time.h>"
+		alias
+			"return ((struct tm *) $p)->tm_sec;"
 		end
 
 end

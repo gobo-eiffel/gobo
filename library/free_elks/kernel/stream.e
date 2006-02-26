@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 		external
 			"C inline"
 		alias
-			"*(EIF_POINTER *) $a_buf"
+			"return (*(EIF_POINTER *) $a_buf);"
 		end
 			
 	c_stream_basic_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
