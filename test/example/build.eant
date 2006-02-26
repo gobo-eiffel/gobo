@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for testing Gobo Eiffel examples"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -14,10 +14,12 @@
 		<echo message="usage:"/>
 		<echo message="   geant install"/>
 		<echo message="   geant test"/>
+		<echo message="   geant test_ge"/>
 		<echo message="   geant test_ise"/>
 		<echo message="   geant test_se"/>
 		<echo message="   geant test_ve"/>
 		<echo message="   geant test_debug"/>
+		<echo message="   geant test_debug_ge"/>
 		<echo message="   geant test_debug_ise"/>
 		<echo message="   geant test_debug_se"/>
 		<echo message="   geant test_debug_ve"/>
@@ -42,6 +44,16 @@
 		</description>
 
 		<set name="target" value="test"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_ge" depend="init">
+		<description>
+			Test Gobo examples with Gobo Eiffel.
+		</description>
+
+		<set name="target" value="test_ge"/>
 		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
@@ -84,6 +96,16 @@
 		</description>
 
 		<set name="target" value="test_debug"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug_ge" depend="init">
+		<description>
+			Test Gobo examples with Gobo Eiffel in debug mode.
+		</description>
+
+		<set name="target" value="test_debug_ge"/>
 		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>

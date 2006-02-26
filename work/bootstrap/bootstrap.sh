@@ -13,7 +13,7 @@
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v] <c_compiler> <eiffel_compiler>"
 	echo "   c_compiler:  msc | bcc | lcc | gcc | no_c"
-	echo "   eiffel_compiler:  ise | se | ve"
+	echo "   eiffel_compiler:  ge | ise | se | ve"
 }
 
 if [ "$1" = "-v" ]; then
@@ -125,7 +125,10 @@ else
 	exit 1
 fi
 
-if [ "$EIF" = "ise" ]; then
+if [ "$EIF" = "ge" ]; then
+	GOBO_EIFFEL=ge
+	export GOBO_EIFFEL
+elif [ "$EIF" = "ise" ]; then
 	GOBO_EIFFEL=ise
 	export GOBO_EIFFEL
 elif [ "$EIF" = "se" ]; then

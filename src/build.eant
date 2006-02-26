@@ -14,10 +14,12 @@
 		<echo message="usage:"/>
 		<echo message="   geant install"/>
 		<echo message="   geant compile"/>
+		<echo message="   geant compile_ge"/>
 		<echo message="   geant compile_ise"/>
 		<echo message="   geant compile_se"/>
 		<echo message="   geant compile_ve"/>
 		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ge"/>
 		<echo message="   geant compile_debug_ise"/>
 		<echo message="   geant compile_debug_se"/>
 		<echo message="   geant compile_debug_ve"/>
@@ -42,6 +44,15 @@
 		</description>
 
 		<set name="target" value="compile"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="compile_ge" depend="init">
+		<description>
+			Compile Gobo tools with Gobo Eiffel.
+		</description>
+
+		<set name="target" value="compile_ge"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -80,6 +91,15 @@
 		</description>
 
 		<set name="target" value="compile_debug"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="compile_debug_ge" depend="init">
+		<description>
+			Compile Gobo tools with Gobo Eiffel in debug mode.
+		</description>
+
+		<set name="target" value="compile_debug_ge"/>
 		<geant target="do_all"/>
 	</target>
 
