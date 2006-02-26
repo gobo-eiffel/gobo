@@ -5,7 +5,7 @@ indexing
 		"Test precompilation of Gobo Library classes"
 
 	library: "Gobo Eiffel Library"
-	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,6 +32,14 @@ inherit
 		export {NONE} all end
 
 feature -- Test
+
+	test_ge is
+			-- Test precompilation with Gobo Eiffel.
+		do
+			if eiffel_compiler.is_ge then
+				precomp_ge
+			end
+		end
 
 	test_ise_base is
 			-- Test precompilation with ISE Eiffel using Gobo's
@@ -81,6 +89,19 @@ feature -- Execution
 			-- Initial current working directory
 
 feature {NONE} -- Precompilation
+
+	precomp_ge is
+			-- Test precompilation with Gobo Eiffel.
+		do
+			old_cwd := file_system.cwd
+			file_system.create_directory (testdir)
+			assert (testdir + "_exists", file_system.directory_exists (testdir))
+			file_system.cd (testdir)
+				-- Generate Ace file.
+			assert_execute ("gexace --library=ge " + xace_filename + output_log)
+				-- Gobo Eiffel Lint.
+			assert_execute ("gelint ge.ace" + output_log)
+		end
 
 	precomp_ise (base: BOOLEAN) is
 			-- Test precompilation with ISE Eiffel. If `base' is true then
