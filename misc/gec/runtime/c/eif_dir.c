@@ -31,7 +31,7 @@ typedef struct {
 #define PATH_MAX 1024 /* Maximum length of full path name */
 #endif
 
-void* dir_open (char* dirname) {
+void* dir_open(char* dirname) {
 #ifdef WIN32
 	int len = strlen((char*)dirname);
 	char* pattern = malloc(len + 5);
@@ -52,7 +52,7 @@ void* dir_open (char* dirname) {
 #endif
 }
 
-EIF_REFERENCE dir_next (void* dir) {
+EIF_REFERENCE dir_next(void* dir) {
 #ifdef WIN32
 	ge_directory* ge_dir = (ge_directory*)dir;
 	HANDLE h = ge_dir->handle;
@@ -85,7 +85,7 @@ EIF_REFERENCE dir_next (void* dir) {
 #endif
 }
 
-void dir_rewind (void* dir) {
+void dir_rewind(void* dir) {
 #ifdef WIN32
 	ge_directory* ge_dir = (ge_directory*)dir;
 	HANDLE h = ge_dir->handle;
@@ -100,7 +100,7 @@ void dir_rewind (void* dir) {
 #endif
 }
 
-void dir_close (void* dir) {
+void dir_close(void* dir) {
 #ifdef WIN32
 	ge_directory* ge_dir = (ge_directory*)dir;
 	HANDLE h = ge_dir->handle;
@@ -115,7 +115,7 @@ void dir_close (void* dir) {
 #endif
 }
 
-EIF_BOOLEAN eif_dir_exists (char* dirname) {
+EIF_BOOLEAN eif_dir_exists(char* dirname) {
 	struct stat buf;
 
 	if (stat(dirname, &buf) == -1) {
@@ -125,7 +125,7 @@ EIF_BOOLEAN eif_dir_exists (char* dirname) {
 	}
 }
 
-EIF_BOOLEAN eif_dir_is_readable (char* dirname) {
+EIF_BOOLEAN eif_dir_is_readable(char* dirname) {
 #ifdef WIN32
 	return (EIF_BOOLEAN)(access(dirname, 04) != -1);
 #else
@@ -155,7 +155,7 @@ EIF_BOOLEAN eif_dir_is_readable (char* dirname) {
 #endif
 }
 
-EIF_BOOLEAN eif_dir_is_executable (char* dirname) {
+EIF_BOOLEAN eif_dir_is_executable(char* dirname) {
 #ifdef WIN32
 	return (EIF_BOOLEAN) (access (dirname, 0) != -1);
 #else
@@ -185,7 +185,7 @@ EIF_BOOLEAN eif_dir_is_executable (char* dirname) {
 #endif
 }
 
-EIF_BOOLEAN eif_dir_is_writable (char* dirname) {
+EIF_BOOLEAN eif_dir_is_writable(char* dirname) {
 #ifdef WIN32
 	return (EIF_BOOLEAN) (access (dirname, 02) != -1);
 #else
@@ -215,7 +215,7 @@ EIF_BOOLEAN eif_dir_is_writable (char* dirname) {
 #endif
 }
 
-void eif_dir_delete (char* dirname) {
+void eif_dir_delete(char* dirname) {
 	rmdir(dirname);
 }
 
