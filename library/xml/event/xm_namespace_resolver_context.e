@@ -21,7 +21,7 @@ inherit
 
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
-	
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -124,7 +124,7 @@ feature -- Access
 				end
 			end
 		ensure
-			resoled_not_void: Result /= Void
+			resolved_not_void: Result /= Void
 		end
 
 feature -- Stack
