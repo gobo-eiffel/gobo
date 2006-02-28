@@ -176,8 +176,6 @@ feature -- Generation
 				end
 			end
 			check_catcall_validity
-			dynamic_qualified_query_calls.wipe_out
-			dynamic_qualified_procedure_calls.wipe_out
 		end
 
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
@@ -289,7 +287,7 @@ feature {NONE} -- Event handling
 		do
 			create l_dynamic_procedure_call.make (an_expression, a_target_type_set, current_dynamic_feature, current_dynamic_type)
 			a_target_type_set.put_target (l_dynamic_procedure_call, current_system)
-			dynamic_qualified_procedure_calls.force_last (l_dynamic_procedure_call)
+			a_target_type_set.static_type.put_procedure_call (l_dynamic_procedure_call)
 		end
 
 	report_agent_qualified_query_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
@@ -300,7 +298,7 @@ feature {NONE} -- Event handling
 		do
 			create l_dynamic_query_call.make (an_expression, a_target_type_set, a_result_type_set, current_dynamic_feature, current_dynamic_type)
 			a_target_type_set.put_target (l_dynamic_query_call, current_system)
-			dynamic_qualified_query_calls.force_last (l_dynamic_query_call)
+			a_target_type_set.static_type.put_query_call (l_dynamic_query_call)
 		end
 
 	report_assignment (an_instruction: ET_ASSIGNMENT) is
@@ -683,7 +681,7 @@ feature {NONE} -- Event handling
 					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
 					set_dynamic_type_set (l_result_type_set, an_expression)
 					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_qualified_query_calls.force_last (l_dynamic_call)
+					l_target_type_set.static_type.put_query_call (l_dynamic_call)
 					l_target_type_set.put_target (l_dynamic_call, current_system)
 				end
 			end
@@ -706,7 +704,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibez_error
 				else
 					create l_dynamic_call.make (an_instruction, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_qualified_procedure_calls.force_last (l_dynamic_call)
+					l_target_type_set.static_type.put_procedure_call (l_dynamic_call)
 					l_target_type_set.put_target (l_dynamic_call, current_system)
 				end
 			end

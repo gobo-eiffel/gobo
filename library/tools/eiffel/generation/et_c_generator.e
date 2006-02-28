@@ -132,8 +132,6 @@ feature {NONE} -- Initialization
 			header_file := null_output_stream
 			current_type := a_system.none_type
 			current_feature := dummy_feature
-			create polymorphic_query_calls.make (100000)
-			create polymorphic_procedure_calls.make (100000)
 			create l_buffer.make (1024)
 			create current_function_header_buffer.make (l_buffer)
 			create l_buffer.make (100000)
@@ -146,15 +144,13 @@ feature {NONE} -- Initialization
 			create denied_types.make_with_capacity (100)
 			create operand_stack.make (5000)
 			create call_operands.make (5000)
+			create polymorphic_seeds.make (1000)
 			create polymorphic_type_ids.make (100)
 			create polymorphic_types.make_map (100)
 			create manifest_array_types.make (100)
 			create once_features.make (10000)
 			create constant_features.make_map (10000)
 			create called_features.make (1000)
-			create polymorphic_equivalent_types1.make (100)
-			create polymorphic_equivalent_types2.make (100)
-			create polymorphic_equivalent_types3.make (100)
 			create included_header_filenames.make (100)
 			included_header_filenames.set_equality_tester (string_equality_tester)
 			create included_runtime_header_files.make (100)
@@ -221,23 +217,20 @@ feature -- Generation
 				a_file.put_new_line
 				print_gems_function
 				a_file.put_new_line
+					-- Print polymorphic calls.
+				print_polymorphic_query_calls
+				print_polymorphic_procedure_calls
 					-- Print Eiffel features.
 				l_root_procedure := current_system.root_creation_procedure
 				if l_root_procedure /= Void then
 					l_root_procedure.set_generated (True)
 					called_features.force_last (l_root_procedure)
-					last_polymorphic_query_index := 1
-					last_polymorphic_procedure_index := 1
 					from until called_features.is_empty loop
 						l_dynamic_feature := called_features.last
 						called_features.remove_last
 						print_feature (l_dynamic_feature)
-						print_polymorphic_queries
-						print_polymorphic_procedures
 					end
 				end
-				polymorphic_query_calls.wipe_out
-				polymorphic_procedure_calls.wipe_out
 					-- Print features which build manifest arrays.
 				from manifest_array_types.start until manifest_array_types.after loop
 					print_gema_function (manifest_array_types.item_for_iteration)
@@ -3544,7 +3537,6 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
 			j, nb2: INTEGER
-			l_polymorphic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 			l_switch: BOOLEAN
 		do
 			l_target := a_call.target
@@ -3599,11 +3591,8 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				else
 						-- Dynamic binding.
 					if l_other_dynamic_types.count /= 1 then
-						create l_polymorphic_call.make (a_call, l_target_type_set, current_feature, current_type)
-						polymorphic_procedure_calls.force_last (l_polymorphic_call)
 						print_indentation
-						current_file.put_character ('X')
-						current_file.put_integer (polymorphic_procedure_calls.count)
+						print_call_name (a_call, l_target_type_set.static_type, current_file)
 						current_file.put_character ('(')
 						if l_target_type_set.is_expanded then
 							print_target_expression (call_operands.first)
@@ -5059,7 +5048,6 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			l_target_static_type: ET_DYNAMIC_TYPE
 			l_other_target_dynamic_types: ET_DYNAMIC_TYPE_LIST
 			j, nb2: INTEGER
-			l_polymorphic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -5267,10 +5255,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							if l_constant_attribute /= Void then
 								print_query_call (l_target_dynamic_type, a_call.name)
 							elseif l_other_target_dynamic_types.count /= 1 then
-								create l_polymorphic_call.make (a_call, l_target_type_set, current_system.none_type, current_feature, current_type)
-								polymorphic_query_calls.force_last (l_polymorphic_call)
-								current_file.put_character ('Y')
-								current_file.put_integer (polymorphic_query_calls.count)
+								print_call_name (a_call, l_target_static_type, current_file)
 								current_file.put_character ('(')
 								if l_target_static_type.is_expanded then
 									print_target_expression (call_operands.first)
@@ -6755,582 +6740,408 @@ print ("ET_C_GENERATOR.print_call_agent%N")
 
 feature {NONE} -- Polymorphic call generation
 
-	print_polymorphic_queries is
-			-- Print polymorphic queries.
+	print_polymorphic_query_calls is
+			-- Print polymorphic query calls.
 		local
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_type: ET_DYNAMIC_TYPE
+			l_call, l_other_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
+			l_seed: INTEGER
 			i, nb: INTEGER
-			l_polymorphic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
-			l_call: ET_CALL_COMPONENT
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_result_type: ET_DYNAMIC_TYPE
-			l_argument_type: ET_DYNAMIC_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
-			l_type: ET_TYPE
-			l_base_type: ET_BASE_TYPE
+			j, nb2: INTEGER
 			l_query: ET_QUERY
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_seed: INTEGER
-			j, nb2: INTEGER
+			l_argument_type: ET_DYNAMIC_TYPE
+			l_base_type: ET_BASE_TYPE
+			l_result_type: ET_DYNAMIC_TYPE
+			l_static_call: ET_CALL_COMPONENT
 			l_switch: BOOLEAN
-			l_equivalent_feature1: ET_DYNAMIC_FEATURE
-			l_equivalent_types1: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_equivalent_feature2: ET_DYNAMIC_FEATURE
-			l_equivalent_types2: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_equivalent_feature3: ET_DYNAMIC_FEATURE
-			l_equivalent_types3: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_other_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			k, nb3: INTEGER
 		do
-			nb := polymorphic_query_calls.count
-			from i := last_polymorphic_query_index until i > nb loop
-				l_polymorphic_call := polymorphic_query_calls.item (i)
-				l_call := l_polymorphic_call.static_call
-				l_seed := l_call.name.seed
-				l_target_type_set := l_polymorphic_call.target_type_set
-				l_base_type := l_target_type_set.static_type.base_type
-				l_dynamic_type := l_target_type_set.first_type
-				l_other_dynamic_types := l_target_type_set.other_types
-				if l_dynamic_type /= Void and l_other_dynamic_types /= Void then
-					l_query := l_dynamic_type.base_class.seeded_query (l_seed)
-					if l_query = Void then
-							-- Internal error: there should be a query with `a_seed'.
-							-- It has been computed in ET_FEATURE_FLATTENER.
-						set_fatal_error
-						error_handler.report_gibiz_error
-					else
-							-- Print feature signature.
-						header_file.put_string (c_extern)
-						header_file.put_character (' ')
-						l_type := l_query.type
-						l_result_type := current_system.dynamic_type (l_type, l_base_type)
-						print_type_declaration (l_result_type, header_file)
-						print_type_declaration (l_result_type, current_file)
-						header_file.put_character (' ')
-						current_file.put_character (' ')
-						header_file.put_character ('Y')
-						current_file.put_character ('Y')
-						header_file.put_integer (i)
-						current_file.put_integer (i)
-						header_file.put_character ('(')
-						current_file.put_character ('(')
-						print_type_declaration (l_target_type_set.static_type, header_file)
-						print_type_declaration (l_target_type_set.static_type, current_file)
-						header_file.put_character (' ')
-						current_file.put_character (' ')
-						header_file.put_character ('C')
-						current_file.put_character ('C')
-						l_arguments := l_query.arguments
-						if l_arguments /= Void then
-							nb2 := l_arguments.count
-							fill_call_formal_arguments (nb2)
-							if nb2 > 0 then
-								from j := 1 until j > nb2 loop
-									header_file.put_character (',')
-									current_file.put_character (',')
-									header_file.put_character (' ')
-									current_file.put_character (' ')
-									l_argument_type := current_system.dynamic_type (l_arguments.item (j).type, l_base_type)
-									print_type_declaration (l_argument_type, header_file)
-									print_type_declaration (l_argument_type, current_file)
-									header_file.put_character (' ')
-									current_file.put_character (' ')
-									header_file.put_character ('a')
-									current_file.put_character ('a')
-									header_file.put_integer (j)
-									current_file.put_integer (j)
-									j := j + 1
-								end
-							end
-						else
-							fill_call_formal_arguments (0)
-						end
-						header_file.put_character (')')
-						current_file.put_character (')')
-						header_file.put_character (';')
-			 			header_file.put_new_line
-			 			current_file.put_new_line
-							-- Print feature body.
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						resolve_polymorphic_query_call (l_target_type_set, l_seed)
-						l_equivalent_feature1 := polymorphic_equivalent_feature1
-						l_equivalent_feature2 := polymorphic_equivalent_feature2
-						l_equivalent_feature3 := polymorphic_equivalent_feature3
-						if l_equivalent_feature1 /= Void and l_equivalent_feature2 = Void then
-								-- Static binding.
-							print_indentation
-							current_file.put_string (c_return)
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_query_call (l_dynamic_type, l_call.name)
-							current_file.put_character (')')
-							current_file.put_character (';')
-							current_file.put_new_line
-						elseif l_equivalent_feature1 /= Void and l_other_dynamic_types.count > 10 then
-							l_equivalent_types1 := polymorphic_equivalent_types1
-							l_equivalent_types2 := polymorphic_equivalent_types2
-							l_equivalent_types3 := polymorphic_equivalent_types3
-							print_indentation
-							current_file.put_string (c_int)
-							current_file.put_character (' ')
-							current_file.put_character ('z')
-							current_file.put_character ('1')
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							current_file.put_character ('C')
-							current_file.put_string (c_arrow)
-							current_file.put_string (c_id)
-							current_file.put_character (';')
-							current_file.put_new_line
-							l_types := l_equivalent_types1
-							if l_types.count < l_equivalent_types2.count then
-								l_types := l_equivalent_types2
-							end
-							if l_equivalent_feature3 /= Void and then l_types.count < l_equivalent_types3.count then
-								l_types := l_equivalent_types3
-							end
+			l_dynamic_types := current_system.dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				l_base_type := l_type.base_type
+				from
+					l_call := l_type.query_calls
+				until
+					l_call = Void
+				loop
+					if l_call.target_type_set.count > 2 then
+						l_static_call := l_call.static_call
+						l_seed := l_static_call.name.seed
+						if not polymorphic_seeds.has (l_seed) then
+							polymorphic_seeds.force_last (l_seed)
 							from
-								j := 1
-								l_other_types := l_equivalent_types1
+								l_other_call := l_call
 							until
-								l_other_types = Void
+								l_other_call = Void
 							loop
-								if l_other_types /= l_types then
-									nb3 := l_other_types.count
-									from k := 1 until k > nb3 loop
-										if j = 1 and k = 1 then
-											print_indentation
+								if l_other_call.static_call.name.seed = l_seed then
+									l_target_type_set := l_other_call.target_type_set
+									if l_target_type_set.count > 2 then
+										l_dynamic_type := l_target_type_set.first_type
+										l_other_dynamic_types := l_target_type_set.other_types
+										if not polymorphic_types.has (l_dynamic_type.id) then
+											if not l_switch then
+												polymorphic_type_ids.force_last (l_dynamic_type.id)
+											end
+											polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
 										end
-										current_file.put_string (c_if)
+										nb2 := l_other_dynamic_types.count
+										from j := 1 until j > nb2 loop
+											l_dynamic_type := l_other_dynamic_types.item (j)
+											if not polymorphic_types.has (l_dynamic_type.id) then
+												if not l_switch then
+													polymorphic_type_ids.force_last (l_dynamic_type.id)
+												end
+												polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
+											end
+											j := j + 1
+										end
+									end
+								end
+								l_other_call := l_other_call.next
+							end
+							if not polymorphic_types.is_empty then
+								l_dynamic_type := polymorphic_types.first
+								l_query := l_dynamic_type.base_class.seeded_query (l_seed)
+								if l_query = Void then
+										-- Internal error: there should be a query with `a_seed'.
+										-- It has been computed in ET_FEATURE_FLATTENER.
+									set_fatal_error
+									error_handler.report_gibiz_error
+								else
+										-- Print feature signature.
+									print_call_name_comment (l_static_call, l_type, header_file)
+									print_call_name_comment (l_static_call, l_type, current_file)
+									header_file.put_string (c_extern)
+									header_file.put_character (' ')
+									l_result_type := current_system.dynamic_type (l_query.type, l_base_type)
+									print_type_declaration (l_result_type, header_file)
+									print_type_declaration (l_result_type, current_file)
+									header_file.put_character (' ')
+									current_file.put_character (' ')
+									print_call_name (l_static_call, l_type, header_file)
+									print_call_name (l_static_call, l_type, current_file)
+									header_file.put_character ('(')
+									current_file.put_character ('(')
+									print_type_declaration (l_type, header_file)
+									print_type_declaration (l_type, current_file)
+									header_file.put_character (' ')
+									current_file.put_character (' ')
+									header_file.put_character ('C')
+									current_file.put_character ('C')
+									l_arguments := l_query.arguments
+									if l_arguments /= Void then
+										nb2 := l_arguments.count
+										fill_call_formal_arguments (nb2)
+										if nb2 > 0 then
+											from j := 1 until j > nb2 loop
+												header_file.put_character (',')
+												current_file.put_character (',')
+												header_file.put_character (' ')
+												current_file.put_character (' ')
+												l_argument_type := current_system.dynamic_type (l_arguments.item (j).type, l_base_type)
+												print_type_declaration (l_argument_type, header_file)
+												print_type_declaration (l_argument_type, current_file)
+												header_file.put_character (' ')
+												current_file.put_character (' ')
+												header_file.put_character ('a')
+												current_file.put_character ('a')
+												header_file.put_integer (j)
+												current_file.put_integer (j)
+												j := j + 1
+											end
+										end
+									else
+										fill_call_formal_arguments (0)
+									end
+									header_file.put_character (')')
+									current_file.put_character (')')
+									header_file.put_character (';')
+			 						header_file.put_new_line
+			 						current_file.put_new_line
+										-- Print feature body.
+									current_file.put_character ('{')
+									current_file.put_new_line
+									indent
+									if l_switch then
+											-- Use switch statement.
+										print_indentation
+										current_file.put_string (c_switch)
 										current_file.put_character (' ')
 										current_file.put_character ('(')
-										current_file.put_character ('z')
-										current_file.put_character ('1')
-										current_file.put_character ('=')
-										current_file.put_character ('=')
-										current_file.put_integer (l_other_types.item (k).id)
+										current_file.put_character ('C')
+										current_file.put_string (c_arrow)
+										current_file.put_string (c_id)
 										current_file.put_character (')')
 										current_file.put_character (' ')
 										current_file.put_character ('{')
 										current_file.put_new_line
-										indent
+										from polymorphic_types.start until polymorphic_types.after loop
+											l_dynamic_type := polymorphic_types.item_for_iteration
+											print_indentation
+											current_file.put_string (c_case)
+											current_file.put_character (' ')
+											current_file.put_integer (l_dynamic_type.id)
+											current_file.put_character (':')
+											current_file.put_new_line
+											indent
+											print_indentation
+											current_file.put_string (c_return)
+											current_file.put_character (' ')
+											current_file.put_character ('(')
+											print_query_call (l_dynamic_type, l_static_call.name)
+											current_file.put_character (')')
+											current_file.put_character (';')
+											current_file.put_new_line
+											dedent
+											polymorphic_types.forth
+										end
 										print_indentation
-										current_file.put_string (c_return)
+										current_file.put_character ('}')
+										current_file.put_new_line
+									else
+										polymorphic_type_ids.sort (polymorphic_type_id_sorter)
+										print_indentation
+										current_file.put_string (c_int)
 										current_file.put_character (' ')
-										current_file.put_character ('(')
-										print_query_call (l_other_types.item (k), l_call.name)
-										current_file.put_character (')')
+										current_file.put_character ('z')
+										current_file.put_character ('1')
+										current_file.put_character (' ')
+										current_file.put_character ('=')
+										current_file.put_character (' ')
+										current_file.put_character ('C')
+										current_file.put_string (c_arrow)
+										current_file.put_string (c_id)
 										current_file.put_character (';')
 										current_file.put_new_line
-										dedent
-										print_indentation
-										current_file.put_character ('}')
-										current_file.put_character (' ')
-										current_file.put_string (c_else)
-										current_file.put_character (' ')
-										k := k + 1
+											-- Use binary search.
+										print_binary_search_polymorphic_calls (l_static_call, l_result_type, 1, polymorphic_type_ids.count)
 									end
-								end
-								j := j + 1
-								if j = 2 then
-									l_other_types := l_equivalent_types2
-								elseif j = 3 and l_equivalent_feature3 /= Void then
-									l_other_types := l_equivalent_types3
-								else
-									l_other_types := Void
-								end
-							end
-							current_file.put_character ('{')
-							current_file.put_new_line
-							indent
-							print_indentation
-							current_file.put_string (c_return)
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_query_call (l_types.first, l_call.name)
-							current_file.put_character (')')
-							current_file.put_character (';')
-							current_file.put_new_line
-							dedent
-							print_indentation
-							current_file.put_character ('}')
-							current_file.put_new_line
-						elseif l_switch then
-								-- Use switch statement.
-							from
-								j := 1
-								if l_other_dynamic_types /= Void then
-									nb2 := l_other_dynamic_types.count
-								else
-									nb2 := 0
-								end
-								print_indentation
-								current_file.put_string (c_switch)
-								current_file.put_character (' ')
-								current_file.put_character ('(')
-								current_file.put_character ('C')
-								current_file.put_string (c_arrow)
-								current_file.put_string (c_id)
-								current_file.put_character (')')
-								current_file.put_character (' ')
-								current_file.put_character ('{')
-								current_file.put_new_line
-							until
-								l_dynamic_type = Void
-							loop
-								print_indentation
-								current_file.put_string (c_case)
-								current_file.put_character (' ')
-								current_file.put_integer (l_dynamic_type.id)
-								current_file.put_character (':')
-								current_file.put_new_line
-								indent
-								print_indentation
-								current_file.put_string (c_return)
-								current_file.put_character (' ')
-								current_file.put_character ('(')
-								print_query_call (l_dynamic_type, l_call.name)
-								current_file.put_character (')')
-								current_file.put_character (';')
-								current_file.put_new_line
-								dedent
-								if j > nb2 then
-									l_dynamic_type := Void
-								else
-									l_dynamic_type := l_other_dynamic_types.item (j)
-									j := j + 1
+									print_indentation
+									current_file.put_string (c_return)
+									current_file.put_character (' ')
+									current_file.put_character ('0')
+									current_file.put_character (';')
+									current_file.put_new_line
+									dedent
+									current_file.put_character ('}')
+									current_file.put_new_line
+									current_file.put_new_line
+									call_operands.wipe_out
 								end
 							end
-							print_indentation
-							current_file.put_character ('}')
-						else
-							print_indentation
-							current_file.put_string (c_int)
-							current_file.put_character (' ')
-							current_file.put_character ('z')
-							current_file.put_character ('1')
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							current_file.put_character ('C')
-							current_file.put_string (c_arrow)
-							current_file.put_string (c_id)
-							current_file.put_character (';')
-							current_file.put_new_line
-								-- Use binary search.
-							polymorphic_type_ids.force_last (l_dynamic_type.id)
-							polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
-							if l_other_dynamic_types /= Void then
-								nb2 := l_other_dynamic_types.count
-								from j := 1 until j > nb2 loop
-									l_dynamic_type := l_other_dynamic_types.item (j)
-									polymorphic_type_ids.force_last (l_dynamic_type.id)
-									polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
-									j := j + 1
-								end
-							end
-							polymorphic_type_ids.sort (polymorphic_type_id_sorter)
-							print_binary_search_polymorphic_calls (l_call, l_result_type, 1, polymorphic_type_ids.count)
 							polymorphic_type_ids.wipe_out
 							polymorphic_types.wipe_out
 						end
-						print_indentation
-						current_file.put_string (c_return)
-						current_file.put_character (' ')
-						current_file.put_character ('0')
-						current_file.put_character (';')
-						current_file.put_new_line
-						dedent
-						current_file.put_character ('}')
-						current_file.put_new_line
-						current_file.put_new_line
-						call_operands.wipe_out
 					end
+					l_call := l_call.next
 				end
-				wipe_out_polymorphic_equivalent_features
+				polymorphic_seeds.wipe_out
 				i := i + 1
 			end
-			last_polymorphic_query_index := i
 		end
 
-	print_polymorphic_procedures is
-			-- Print polymorphic procedures.
+	print_polymorphic_procedure_calls is
+			-- Print polymorphic procedure calls.
 		local
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_type: ET_DYNAMIC_TYPE
+			l_call, l_other_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
+			l_seed: INTEGER
 			i, nb: INTEGER
-			l_polymorphic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
-			l_call: ET_CALL_COMPONENT
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_argument_type: ET_DYNAMIC_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
-			l_base_type: ET_BASE_TYPE
+			j, nb2: INTEGER
 			l_procedure: ET_PROCEDURE
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_seed: INTEGER
-			j, nb2: INTEGER
+			l_argument_type: ET_DYNAMIC_TYPE
+			l_base_type: ET_BASE_TYPE
 			l_switch: BOOLEAN
-			l_equivalent_feature1: ET_DYNAMIC_FEATURE
-			l_equivalent_types1: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_equivalent_feature2: ET_DYNAMIC_FEATURE
-			l_equivalent_types2: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_equivalent_feature3: ET_DYNAMIC_FEATURE
-			l_equivalent_types3: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_other_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			k, nb3: INTEGER
+			l_static_call: ET_CALL_COMPONENT
 		do
-			nb := polymorphic_procedure_calls.count
-			from i := last_polymorphic_procedure_index until i > nb loop
-				l_polymorphic_call := polymorphic_procedure_calls.item (i)
-				l_call := l_polymorphic_call.static_call
-				l_seed := l_call.name.seed
-				l_target_type_set := l_polymorphic_call.target_type_set
-				l_base_type := l_target_type_set.static_type.base_type
-				l_dynamic_type := l_target_type_set.first_type
-				l_other_dynamic_types := l_target_type_set.other_types
-				if l_dynamic_type /= Void and l_other_dynamic_types /= Void then
-					l_procedure := l_dynamic_type.base_class.seeded_procedure (l_seed)
-					if l_procedure = Void then
-							-- Internal error: there should be a procedure with `a_seed'.
-							-- It has been computed in ET_FEATURE_FLATTENER.
-						set_fatal_error
-						error_handler.report_giaed_error
-					else
-							-- Print feature signature.
-						header_file.put_string (c_extern)
-						header_file.put_character (' ')
-						header_file.put_string (c_void)
-						current_file.put_string (c_void)
-						header_file.put_character (' ')
-						current_file.put_character (' ')
-						header_file.put_character ('X')
-						current_file.put_character ('X')
-						header_file.put_integer (i)
-						current_file.put_integer (i)
-						header_file.put_character ('(')
-						current_file.put_character ('(')
-						print_type_declaration (l_target_type_set.static_type, header_file)
-						print_type_declaration (l_target_type_set.static_type, current_file)
-						header_file.put_character (' ')
-						current_file.put_character (' ')
-						header_file.put_character ('C')
-						current_file.put_character ('C')
-						l_arguments := l_procedure.arguments
-						if l_arguments /= Void then
-							nb2 := l_arguments.count
-							fill_call_formal_arguments (nb2)
-							if nb2 > 0 then
-								from j := 1 until j > nb2 loop
-									header_file.put_character (',')
-									current_file.put_character (',')
-									header_file.put_character (' ')
-									current_file.put_character (' ')
-									l_argument_type := current_system.dynamic_type (l_arguments.item (j).type, l_base_type)
-									print_type_declaration (l_argument_type, header_file)
-									print_type_declaration (l_argument_type, current_file)
-									header_file.put_character (' ')
-									current_file.put_character (' ')
-									header_file.put_character ('a')
-									current_file.put_character ('a')
-									header_file.put_integer (j)
-									current_file.put_integer (j)
-									j := j + 1
-								end
-							end
-						else
-							fill_call_formal_arguments (0)
-						end
-						header_file.put_character (')')
-						current_file.put_character (')')
-						header_file.put_character (';')
-			 			header_file.put_new_line
-			 			current_file.put_new_line
-							-- Print feature body.
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						resolve_polymorphic_procedure_call (l_target_type_set, l_seed)
-						l_equivalent_feature1 := polymorphic_equivalent_feature1
-						l_equivalent_feature2 := polymorphic_equivalent_feature2
-						l_equivalent_feature3 := polymorphic_equivalent_feature3
-						if l_equivalent_feature1 /= Void and l_equivalent_feature2 = Void then
-								-- Static binding.
-							print_indentation
-							print_procedure_call (l_dynamic_type, l_call.name)
-							current_file.put_new_line
-						elseif l_equivalent_feature1 /= Void and l_other_dynamic_types.count > 10 then
-							l_equivalent_types1 := polymorphic_equivalent_types1
-							l_equivalent_types2 := polymorphic_equivalent_types2
-							l_equivalent_types3 := polymorphic_equivalent_types3
-							print_indentation
-							current_file.put_string (c_int)
-							current_file.put_character (' ')
-							current_file.put_character ('z')
-							current_file.put_character ('1')
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							current_file.put_character ('C')
-							current_file.put_string (c_arrow)
-							current_file.put_string (c_id)
-							current_file.put_character (';')
-							current_file.put_new_line
-							l_types := l_equivalent_types1
-							if l_types.count < l_equivalent_types2.count then
-								l_types := l_equivalent_types2
-							end
-							if l_equivalent_feature3 /= Void and then l_types.count < l_equivalent_types3.count then
-								l_types := l_equivalent_types3
-							end
+			l_dynamic_types := current_system.dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				l_base_type := l_type.base_type
+				from
+					l_call := l_type.procedure_calls
+				until
+					l_call = Void
+				loop
+					if l_call.target_type_set.count > 2 then
+						l_static_call := l_call.static_call
+						l_seed := l_static_call.name.seed
+						if not polymorphic_seeds.has (l_seed) then
+							polymorphic_seeds.force_last (l_seed)
 							from
-								j := 1
-								l_other_types := l_equivalent_types1
+								l_other_call := l_call
 							until
-								l_other_types = Void
+								l_other_call = Void
 							loop
-								if l_other_types /= l_types then
-									nb3 := l_other_types.count
-									from k := 1 until k > nb3 loop
-										if j = 1 and k = 1 then
-											print_indentation
+								if l_other_call.static_call.name.seed = l_seed then
+									l_target_type_set := l_other_call.target_type_set
+									if l_target_type_set.count > 2 then
+										l_dynamic_type := l_target_type_set.first_type
+										l_other_dynamic_types := l_target_type_set.other_types
+										if not polymorphic_types.has (l_dynamic_type.id) then
+											if not l_switch then
+												polymorphic_type_ids.force_last (l_dynamic_type.id)
+											end
+											polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
 										end
-										current_file.put_string (c_if)
+										nb2 := l_other_dynamic_types.count
+										from j := 1 until j > nb2 loop
+											l_dynamic_type := l_other_dynamic_types.item (j)
+											if not polymorphic_types.has (l_dynamic_type.id) then
+												if not l_switch then
+													polymorphic_type_ids.force_last (l_dynamic_type.id)
+												end
+												polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
+											end
+											j := j + 1
+										end
+									end
+								end
+								l_other_call := l_other_call.next
+							end
+							if not polymorphic_types.is_empty then
+								l_dynamic_type := polymorphic_types.first
+								l_procedure := l_dynamic_type.base_class.seeded_procedure (l_seed)
+								if l_procedure = Void then
+										-- Internal error: there should be a procedure with `a_seed'.
+										-- It has been computed in ET_FEATURE_FLATTENER.
+									set_fatal_error
+									error_handler.report_giaed_error
+								else
+										-- Print feature signature.
+									print_call_name_comment (l_static_call, l_type, header_file)
+									print_call_name_comment (l_static_call, l_type, current_file)
+									header_file.put_string (c_extern)
+									header_file.put_character (' ')
+									header_file.put_string (c_void)
+									current_file.put_string (c_void)
+									header_file.put_character (' ')
+									current_file.put_character (' ')
+									print_call_name (l_static_call, l_type, header_file)
+									print_call_name (l_static_call, l_type, current_file)
+									header_file.put_character ('(')
+									current_file.put_character ('(')
+									print_type_declaration (l_type, header_file)
+									print_type_declaration (l_type, current_file)
+									header_file.put_character (' ')
+									current_file.put_character (' ')
+									header_file.put_character ('C')
+									current_file.put_character ('C')
+									l_arguments := l_procedure.arguments
+									if l_arguments /= Void then
+										nb2 := l_arguments.count
+										fill_call_formal_arguments (nb2)
+										if nb2 > 0 then
+											from j := 1 until j > nb2 loop
+												header_file.put_character (',')
+												current_file.put_character (',')
+												header_file.put_character (' ')
+												current_file.put_character (' ')
+												l_argument_type := current_system.dynamic_type (l_arguments.item (j).type, l_base_type)
+												print_type_declaration (l_argument_type, header_file)
+												print_type_declaration (l_argument_type, current_file)
+												header_file.put_character (' ')
+												current_file.put_character (' ')
+												header_file.put_character ('a')
+												current_file.put_character ('a')
+												header_file.put_integer (j)
+												current_file.put_integer (j)
+												j := j + 1
+											end
+										end
+									else
+										fill_call_formal_arguments (0)
+									end
+									header_file.put_character (')')
+									current_file.put_character (')')
+									header_file.put_character (';')
+			 						header_file.put_new_line
+			 						current_file.put_new_line
+										-- Print feature body.
+									current_file.put_character ('{')
+									current_file.put_new_line
+									indent
+									if l_switch then
+										print_indentation
+										current_file.put_string (c_switch)
 										current_file.put_character (' ')
 										current_file.put_character ('(')
-										current_file.put_character ('z')
-										current_file.put_character ('1')
-										current_file.put_character ('=')
-										current_file.put_character ('=')
-										current_file.put_integer (l_other_types.item (k).id)
+										current_file.put_character ('C')
+										current_file.put_string (c_arrow)
+										current_file.put_string (c_id)
 										current_file.put_character (')')
 										current_file.put_character (' ')
 										current_file.put_character ('{')
 										current_file.put_new_line
-										indent
-										print_indentation
-										print_procedure_call (l_other_types.item (k), l_call.name)
-										current_file.put_new_line
-										dedent
+										from polymorphic_types.start until polymorphic_types.after loop
+											l_dynamic_type := polymorphic_types.item_for_iteration
+											print_indentation
+											current_file.put_string (c_case)
+											current_file.put_character (' ')
+											current_file.put_integer (l_dynamic_type.id)
+											current_file.put_character (':')
+											current_file.put_new_line
+											indent
+											print_indentation
+											print_procedure_call (l_dynamic_type, l_static_call.name)
+											current_file.put_new_line
+											print_indentation
+											current_file.put_string (c_break)
+											current_file.put_character (';')
+											current_file.put_new_line
+											dedent
+											polymorphic_types.forth
+										end
 										print_indentation
 										current_file.put_character ('}')
+										current_file.put_new_line
+									else
+										polymorphic_type_ids.sort (polymorphic_type_id_sorter)
+										print_indentation
+										current_file.put_string (c_int)
 										current_file.put_character (' ')
-										current_file.put_string (c_else)
+										current_file.put_character ('z')
+										current_file.put_character ('1')
 										current_file.put_character (' ')
-										k := k + 1
+										current_file.put_character ('=')
+										current_file.put_character (' ')
+										current_file.put_character ('C')
+										current_file.put_string (c_arrow)
+										current_file.put_string (c_id)
+										current_file.put_character (';')
+										current_file.put_new_line
+											-- Use binary search.
+										print_binary_search_polymorphic_calls (l_static_call, Void, 1, polymorphic_type_ids.count)
 									end
-								end
-								j := j + 1
-								if j = 2 then
-									l_other_types := l_equivalent_types2
-								elseif j = 3 and l_equivalent_feature3 /= Void then
-									l_other_types := l_equivalent_types3
-								else
-									l_other_types := Void
+									dedent
+									current_file.put_character ('}')
+									current_file.put_new_line
+									current_file.put_new_line
+									call_operands.wipe_out
 								end
 							end
-							current_file.put_character ('{')
-							current_file.put_new_line
-							indent
-							print_indentation
-							print_procedure_call (l_types.first, l_call.name)
-							current_file.put_new_line
-							dedent
-							print_indentation
-							current_file.put_character ('}')
-							current_file.put_new_line
-						elseif l_switch then
-								-- Use switch statement.
-							from
-								j := 1
-								if l_other_dynamic_types /= Void then
-									nb2 := l_other_dynamic_types.count
-								else
-									nb2 := 0
-								end
-								print_indentation
-								current_file.put_string (c_switch)
-								current_file.put_character (' ')
-								current_file.put_character ('(')
-								current_file.put_character ('C')
-								current_file.put_string (c_arrow)
-								current_file.put_string (c_id)
-								current_file.put_character (')')
-								current_file.put_character (' ')
-								current_file.put_character ('{')
-								current_file.put_new_line
-							until
-								l_dynamic_type = Void
-							loop
-								print_indentation
-								current_file.put_string (c_case)
-								current_file.put_character (' ')
-								current_file.put_integer (l_dynamic_type.id)
-								current_file.put_character (':')
-								current_file.put_new_line
-								indent
-								print_indentation
-								print_procedure_call (l_dynamic_type, l_call.name)
-								current_file.put_new_line
-								print_indentation
-								current_file.put_string (c_break)
-								current_file.put_character (';')
-								current_file.put_new_line
-								dedent
-								if j > nb2 then
-									l_dynamic_type := Void
-								else
-									l_dynamic_type := l_other_dynamic_types.item (j)
-									j := j + 1
-								end
-							end
-							print_indentation
-							current_file.put_character ('}')
-						else
-							print_indentation
-							current_file.put_string (c_int)
-							current_file.put_character (' ')
-							current_file.put_character ('z')
-							current_file.put_character ('1')
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							current_file.put_character ('C')
-							current_file.put_string (c_arrow)
-							current_file.put_string (c_id)
-							current_file.put_character (';')
-							current_file.put_new_line
-								-- Use binary search.
-							polymorphic_type_ids.force_last (l_dynamic_type.id)
-							polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
-							if l_other_dynamic_types /= Void then
-								nb2 := l_other_dynamic_types.count
-								from j := 1 until j > nb2 loop
-									l_dynamic_type := l_other_dynamic_types.item (j)
-									polymorphic_type_ids.force_last (l_dynamic_type.id)
-									polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
-									j := j + 1
-								end
-							end
-							polymorphic_type_ids.sort (polymorphic_type_id_sorter)
-							print_binary_search_polymorphic_calls (l_call, Void, 1, polymorphic_type_ids.count)
 							polymorphic_type_ids.wipe_out
 							polymorphic_types.wipe_out
 						end
-						dedent
-						current_file.put_character ('}')
-						current_file.put_new_line
-						current_file.put_new_line
-						call_operands.wipe_out
 					end
+					l_call := l_call.next
 				end
-				wipe_out_polymorphic_equivalent_features
+				polymorphic_seeds.wipe_out
 				i := i + 1
 			end
-			last_polymorphic_procedure_index := i
 		end
 
 	print_binary_search_polymorphic_calls (a_call: ET_CALL_COMPONENT;
@@ -7440,6 +7251,10 @@ feature {NONE} -- Polymorphic call generation
 			end
 		end
 
+	polymorphic_seeds: DS_HASH_SET [INTEGER]
+			-- Seeds of calls already visited when traversing
+			-- qualified calls for a given target static type
+
 	polymorphic_type_ids: DS_ARRAYED_LIST [INTEGER]
 			-- List of target type ids of current polymorphic call
 
@@ -7456,230 +7271,6 @@ feature {NONE} -- Polymorphic call generation
 		ensure
 			sorter_not_void: Result /= Void
 		end
-
-	last_polymorphic_query_index: INTEGER
-	last_polymorphic_procedure_index: INTEGER
-
-	resolve_polymorphic_query_call (a_target_type_set: ET_DYNAMIC_TYPE_SET; a_seed: INTEGER) is
-			-- Try to find similarities between the queries with seed `a_seed'
-			-- in the various types of `a_target_type_set' and group them by
-			-- equivalence classes in (`polymorphic_equivalent_featureN',
-			-- `polymorphic_equivalent_typesN') where 1<=N<=3, or leave the
-			-- `polymorphic_equivalent_featuresN' Void if there are more
-			-- than N equivalence classes.
-		require
-			a_target_type_set_not_void: a_target_type_set /= Void
-			not_call_on_void_target: a_target_type_set.first_type /= Void
-			polymorphic_call: a_target_type_set.other_types /= Void
-		local
-			l_type: ET_DYNAMIC_TYPE
-			l_other_types: ET_DYNAMIC_TYPE_LIST
-			l_feature: ET_DYNAMIC_FEATURE
-			l_feature1: ET_DYNAMIC_FEATURE
-			l_feature2: ET_DYNAMIC_FEATURE
-			l_feature3: ET_DYNAMIC_FEATURE
-			l_static_feature: ET_FEATURE
-			l_static_feature1: ET_FEATURE
-			l_static_feature2: ET_FEATURE
-			l_static_feature3: ET_FEATURE
-			i, nb: INTEGER
-			l_new: BOOLEAN
-			l_found: BOOLEAN
-		do
-			l_type := a_target_type_set.first_type
-			l_feature := l_type.seeded_dynamic_query (a_seed, current_system)
-			if l_feature = Void then
-					-- Internal error: there should be a query with that seed.
-				set_fatal_error
-				error_handler.report_giabr_error
-			else
-				l_found := True
-				l_feature1 := l_feature
-				l_static_feature1 := l_feature1.static_feature.implementation_feature
-				polymorphic_equivalent_types1.force_last (l_type)
-				l_other_types := a_target_type_set.other_types
-				nb := l_other_types.count
-				from i := 1 until i > nb loop
-					l_type := l_other_types.item (i)
-					l_feature := l_type.seeded_dynamic_query (a_seed, current_system)
-					if l_feature = Void then
-							-- Internal error: there should be a query with that seed.
-						set_fatal_error
-						error_handler.report_giady_error
-						l_found := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						l_new := True
-						l_static_feature := l_feature.static_feature.implementation_feature
--- TODO: The following implementation to find out whether features are
--- polymorphically equivalent or not does not work if the feature
--- contains code of the form 'a.f' where the dynamic type set of
--- `a' is different in the various types of `a_target_type_set'.
---						if l_feature.is_current_type_needed then
---							-- New equivalence class.
---						elseif not l_feature1.is_current_type_needed and then l_static_feature1 = l_static_feature then
---							polymorphic_equivalent_types1.force_last (l_type)
---							l_new := False
---						elseif l_feature2 /= Void then
---							if not l_feature2.is_current_type_needed and then l_static_feature2 = l_static_feature then
---								polymorphic_equivalent_types2.force_last (l_type)
---									l_new := False
---							elseif l_feature3 /= Void then
---								if not l_feature3.is_current_type_needed and then l_static_feature3 = l_static_feature then
---									polymorphic_equivalent_types3.force_last (l_type)
---									l_new := False
---								end
---							end
---						end
-						if l_new then
-							if l_feature2 = Void then
-								l_feature2 := l_feature
-								l_static_feature2 := l_static_feature
-								polymorphic_equivalent_types2.force_last (l_type)
-							elseif l_feature3 = Void then
-								l_feature3 := l_feature
-								l_static_feature3 := l_static_feature
-								polymorphic_equivalent_types3.force_last (l_type)
-							else
-									-- Too many equivalence classes.
-								l_found := False
-								i := nb + 1
-							end
-						end
-					end
-					i := i + 1
-				end
-				if l_found then
-					polymorphic_equivalent_feature1 := l_feature1
-					polymorphic_equivalent_feature2 := l_feature2
-					polymorphic_equivalent_feature3 := l_feature3
-				else
-					polymorphic_equivalent_types1.wipe_out
-					polymorphic_equivalent_types2.wipe_out
-					polymorphic_equivalent_types3.wipe_out
-				end
-			end
-		end
-
-	resolve_polymorphic_procedure_call (a_target_type_set: ET_DYNAMIC_TYPE_SET; a_seed: INTEGER) is
-			-- Try to find similarities between the procedures with seed `a_seed'
-			-- in the various types of `a_target_type_set' and group them by
-			-- equivalence classes in (`polymorphic_equivalent_featureN',
-			-- `polymorphic_equivalent_typesN') where 1<=N<=3, or leave the
-			-- `polymorphic_equivalent_featuresN' Void if there are more
-			-- than N equivalence classes.
-		require
-			a_target_type_set_not_void: a_target_type_set /= Void
-			not_call_on_void_target: a_target_type_set.first_type /= Void
-			polymorphic_call: a_target_type_set.other_types /= Void
-		local
-			l_type: ET_DYNAMIC_TYPE
-			l_other_types: ET_DYNAMIC_TYPE_LIST
-			l_feature: ET_DYNAMIC_FEATURE
-			l_feature1: ET_DYNAMIC_FEATURE
-			l_feature2: ET_DYNAMIC_FEATURE
-			l_feature3: ET_DYNAMIC_FEATURE
-			l_static_feature: ET_FEATURE
-			l_static_feature1: ET_FEATURE
-			l_static_feature2: ET_FEATURE
-			l_static_feature3: ET_FEATURE
-			i, nb: INTEGER
-			l_new: BOOLEAN
-			l_found: BOOLEAN
-		do
-			l_type := a_target_type_set.first_type
-			l_feature := l_type.seeded_dynamic_procedure (a_seed, current_system)
-			if l_feature = Void then
-					-- Internal error: there should be a procedure with that seed.
-				set_fatal_error
-				error_handler.report_gibbx_error
-			else
-				l_found := True
-				l_feature1 := l_feature
-				l_static_feature1 := l_feature1.static_feature.implementation_feature
-				polymorphic_equivalent_types1.force_last (l_type)
-				l_other_types := a_target_type_set.other_types
-				nb := l_other_types.count
-				from i := 1 until i > nb loop
-					l_type := l_other_types.item (i)
-					l_feature := l_type.seeded_dynamic_procedure (a_seed, current_system)
-					if l_feature = Void then
-							-- Internal error: there should be a procedure with that seed.
-						set_fatal_error
-						error_handler.report_gibed_error
-						l_found := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						l_new := True
-						l_static_feature := l_feature.static_feature.implementation_feature
--- TODO: The following implementation to find out whether features are
--- polymorphically equivalent or not does not work if the feature
--- contains code of the form 'a.f' where the dynamic type set of
--- `a' is different in the various types of `a_target_type_set'.
---						if l_feature.is_current_type_needed then
---							-- New equivalence class.
---						elseif not l_feature1.is_current_type_needed and then l_static_feature1 = l_static_feature then
---							polymorphic_equivalent_types1.force_last (l_type)
---							l_new := False
---						elseif l_feature2 /= Void then
---							if not l_feature2.is_current_type_needed and then l_static_feature2 = l_static_feature then
---								polymorphic_equivalent_types2.force_last (l_type)
---									l_new := False
---							elseif l_feature3 /= Void then
---								if not l_feature3.is_current_type_needed and then l_static_feature3 = l_static_feature then
---									polymorphic_equivalent_types3.force_last (l_type)
---									l_new := False
---								end
---							end
---						end
-						if l_new then
-							if l_feature2 = Void then
-								l_feature2 := l_feature
-								l_static_feature2 := l_static_feature
-								polymorphic_equivalent_types2.force_last (l_type)
-							elseif l_feature3 = Void then
-								l_feature3 := l_feature
-								l_static_feature3 := l_static_feature
-								polymorphic_equivalent_types3.force_last (l_type)
-							else
-									-- Too many equivalence classes.
-								l_found := False
-								i := nb + 1
-							end
-						end
-					end
-					i := i + 1
-				end
-				if l_found then
-					polymorphic_equivalent_feature1 := l_feature1
-					polymorphic_equivalent_feature2 := l_feature2
-					polymorphic_equivalent_feature3 := l_feature3
-				else
-					polymorphic_equivalent_types1.wipe_out
-					polymorphic_equivalent_types2.wipe_out
-					polymorphic_equivalent_types3.wipe_out
-				end
-			end
-		end
-
-	wipe_out_polymorphic_equivalent_features is
-			-- Wipe out structures generated by `resolve_polymorphic_call'.
-		do
-			polymorphic_equivalent_feature1 := Void
-			polymorphic_equivalent_feature2 := Void
-			polymorphic_equivalent_feature3 := Void
-			polymorphic_equivalent_types1.wipe_out
-			polymorphic_equivalent_types2.wipe_out
-			polymorphic_equivalent_types3.wipe_out
-		end
-
-	polymorphic_equivalent_feature1: ET_DYNAMIC_FEATURE
-	polymorphic_equivalent_types1: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-	polymorphic_equivalent_feature2: ET_DYNAMIC_FEATURE
-	polymorphic_equivalent_types2: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-	polymorphic_equivalent_feature3: ET_DYNAMIC_FEATURE
-	polymorphic_equivalent_types3: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			-- Equivalence classes for polymorphic calls
 
 feature {NONE} -- Built-in feature generation
 
@@ -11810,6 +11401,19 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (a_procedure.id)
 		end
 
+	print_call_name (a_call: ET_CALL_COMPONENT; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of `a_call' with `a_type' as target static type to `a_file'.
+		require
+			a_call_not_void: a_call /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			print_type_name (a_type, a_file)
+			a_file.put_character ('x')
+			a_file.put_integer (a_call.name.seed)
+		end
+
 	print_once_status_name (a_feature: ET_FEATURE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print name of variable holding the status of execution
 			-- of the once-feature `a_feature' to `a_file'.
@@ -11857,7 +11461,35 @@ feature {NONE} -- Feature name generation
 			a_file.put_character (' ')
 			a_file.put_string (a_type.base_type.to_text)
 			a_file.put_character ('.')
-			a_file.put_string (a_feature.name.name)
+			a_file.put_string (a_feature.name.lower_name)
+			a_file.put_character (' ')
+			a_file.put_character ('*')
+			a_file.put_character ('/')
+			a_file.put_new_line
+		end
+
+	print_call_name_comment (a_call: ET_CALL_COMPONENT; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of `a_call', with `a_type' as target static type, as a C comment to `a_file'.
+		require
+			a_call_not_void: a_call /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_character ('/')
+			a_file.put_character ('*')
+			a_file.put_character (' ')
+			a_file.put_character ('C')
+			a_file.put_character ('a')
+			a_file.put_character ('l')
+			a_file.put_character ('l')
+			a_file.put_character (' ')
+			a_file.put_character ('t')
+			a_file.put_character ('o')
+			a_file.put_character (' ')
+			a_file.put_string (a_type.base_type.to_text)
+			a_file.put_character ('.')
+			a_file.put_string (a_call.name.lower_name)
 			a_file.put_character (' ')
 			a_file.put_character ('*')
 			a_file.put_character ('/')
@@ -12658,12 +12290,6 @@ feature {NONE} -- Access
 	called_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
 			-- Features being called
 
-	polymorphic_query_calls: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_QUERY_CALL]
-			-- Polymorphic query calls
-
-	polymorphic_procedure_calls: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL]
-			-- Polymorphic procedure calls
-
 	manifest_array_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
 			-- Types of manifest arrays
 
@@ -12961,10 +12587,7 @@ invariant
 	no_void_call_operand: not call_operands.has (Void)
 	accepted_types_not_void: accepted_types /= Void
 	denied_types_not_void: denied_types /= Void
-	polymorphic_query_calls_not_void: polymorphic_query_calls /= Void
-	no_void_polymorphic_query_call: not polymorphic_query_calls.has (Void)
-	polymorphic_procedure_calls_not_void: polymorphic_procedure_calls /= Void
-	no_void_polymorphic_procedure_call: not polymorphic_procedure_calls.has (Void)
+	polymorphic_seeds_not_void: polymorphic_seeds /= Void
 	polymorphic_type_ids_not_void: polymorphic_type_ids /= Void
 	polymorphic_types_not_void: polymorphic_types /= Void
 	no_void_polymorphic_type: not polymorphic_types.has_item (Void)
@@ -12976,12 +12599,6 @@ invariant
 	no_void_once_feature: not once_features.has (Void)
 	constant_features_not_void: constant_features /= Void
 	no_void_constant_feature: not constant_features.has (Void)
-	polymorphic_equivalent_types1_not_void: polymorphic_equivalent_types1 /= Void
-	no_void_polymorphic_equivalent_type1: not polymorphic_equivalent_types1.has (Void)
-	polymorphic_equivalent_types2_not_void: polymorphic_equivalent_types2 /= Void
-	no_void_polymorphic_equivalent_type2: not polymorphic_equivalent_types2.has (Void)
-	polymorphic_equivalent_types3_not_void: polymorphic_equivalent_types3 /= Void
-	no_void_polymorphic_equivalent_type3: not polymorphic_equivalent_types3.has (Void)
 	temp_variables_not_void: temp_variables /= Void
 	no_void_temp_variable: not temp_variables.has (Void)
 	formal_variables_not_void: formal_variables /= Void

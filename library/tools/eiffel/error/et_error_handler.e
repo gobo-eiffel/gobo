@@ -12991,6 +12991,10 @@ feature -- Reporting
 -- Error codes not used:
 
 	-- error_handler.report_giblu_error
+	-- error_handler.report_giabr_error
+	-- error_handler.report_giady_error
+	-- error_handler.report_gibbx_error
+	-- error_handler.report_gibed_error
 	-- report_gibld_error
 	-- report_gible_error
 	-- report_giblf_error

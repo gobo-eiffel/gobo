@@ -341,7 +341,35 @@ feature -- Features
 			end
 		end
 
+feature -- Calls
+
+	query_calls: ET_DYNAMIC_QUALIFIED_QUERY_CALL
+			-- First qualified query call with current type as target static type
+			-- (Other calls are accessed with 'query_calls.next'.)
+
+	procedure_calls: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
+			-- First qualified procedure call with current type as target static type
+			-- (Other calls are accessed with 'procedure_calls.next'.)
+
 feature -- Element change
+
+	put_query_call (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL) is
+			-- Add `a_call' to the list of qualified query calls.
+		require
+			a_call_not_void: a_call /= Void
+		do
+			a_call.set_next (query_calls)
+			query_calls := a_call
+		end
+
+	put_procedure_call (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL) is
+			-- Add `a_call' to the list of qualified procedure calls.
+		require
+			a_call_not_void: a_call /= Void
+		do
+			a_call.set_next (procedure_calls)
+			procedure_calls := a_call
+		end
 
 	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
 			-- Add `a_type' to current set.

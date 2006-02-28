@@ -377,6 +377,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature -- Link
+
+	next: like Current
+			-- Next call with the same target static type
+
+	set_next (a_next: like Current) is
+			-- Set `next' to `a_next'.
+		do
+			next := a_next
+		ensure
+			next_set: next = a_next
+		end
+
 invariant
 
 	static_call_not_void: static_call /= Void

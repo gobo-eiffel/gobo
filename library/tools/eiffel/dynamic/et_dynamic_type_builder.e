@@ -115,8 +115,6 @@ feature {NONE} -- Initialization
 			current_dynamic_type := dummy_dynamic_type
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
-			create dynamic_qualified_query_calls.make (100000)
-			create dynamic_qualified_procedure_calls.make (100000)
 			create current_index.make (0)
 			create result_index.make (0)
 			create character_index.make (0)
@@ -305,6 +303,32 @@ feature -- Generation
 						end
 						j := j + 1
 					end
+						-- Process dynamic qualified query calls.
+					from
+						l_call := l_type.query_calls
+					until
+						l_call = Void
+					loop
+						l_count := l_call.count
+						l_call.propagate_types (Current)
+						if l_call.count /= l_count then
+							is_built := False
+						end
+						l_call := l_call.next
+					end
+						-- Process dynamic qualified procedure calls.
+					from
+						l_call := l_type.procedure_calls
+					until
+						l_call = Void
+					loop
+						l_count := l_call.count
+						l_call.propagate_types (Current)
+						if l_call.count /= l_count then
+							is_built := False
+						end
+						l_call := l_call.next
+					end
 					i := i + 1
 				end
 					-- Process dynamic types.
@@ -331,32 +355,8 @@ feature -- Generation
 					i := i + 1
 				end
 				old_nb := nb
-					-- Process dynamic qualified query calls.
-				nb := dynamic_qualified_query_calls.count
-				from i := 1 until i > nb loop
-					l_call := dynamic_qualified_query_calls.item (i)
-					l_count := l_call.count
-					l_call.propagate_types (Current)
-					if l_call.count /= l_count then
-						is_built := False
-					end
-					i := i + 1
-				end
-					-- Process dynamic qualified procedure calls.
-				nb := dynamic_qualified_procedure_calls.count
-				from i := 1 until i > nb loop
-					l_call := dynamic_qualified_procedure_calls.item (i)
-					l_count := l_call.count
-					l_call.propagate_types (Current)
-					if l_call.count /= l_count then
-						is_built := False
-					end
-					i := i + 1
-				end
 			end
 			check_catcall_validity
-			dynamic_qualified_query_calls.wipe_out
-			dynamic_qualified_procedure_calls.wipe_out
 		end
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
@@ -488,17 +488,29 @@ feature {NONE} -- CAT-calls
 		local
 			i, nb: INTEGER
 			l_call: ET_DYNAMIC_QUALIFIED_CALL
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_type: ET_DYNAMIC_TYPE
 		do
-			nb := dynamic_qualified_query_calls.count
+			l_dynamic_types := current_system.dynamic_types
+			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
-				l_call := dynamic_qualified_query_calls.item (i)
-				check_catcall_call_validity (l_call)
-				i := i + 1
-			end
-			nb := dynamic_qualified_procedure_calls.count
-			from i := 1 until i > nb loop
-				l_call := dynamic_qualified_procedure_calls.item (i)
-				check_catcall_call_validity (l_call)
+				l_type := l_dynamic_types.item (i)
+				from
+					l_call := l_type.query_calls
+				until
+					l_call = Void
+				loop
+					check_catcall_call_validity (l_call)
+					l_call := l_call.next
+				end
+				from
+					l_call := l_type.procedure_calls
+				until
+					l_call = Void
+				loop
+					check_catcall_call_validity (l_call)
+					l_call := l_call.next
+				end
 				i := i + 1
 			end
 		end
@@ -1754,7 +1766,7 @@ feature {NONE} -- Event handling
 					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
 					set_dynamic_type_set (l_result_type_set, an_expression)
 					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_qualified_query_calls.force_last (l_dynamic_call)
+					l_target_type_set.static_type.put_query_call (l_dynamic_call)
 				end
 			end
 		end
@@ -1776,7 +1788,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibbe_error
 				else
 					create l_dynamic_call.make (an_instruction, l_dynamic_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_qualified_procedure_calls.force_last (l_dynamic_call)
+					l_dynamic_type_set.static_type.put_procedure_call (l_dynamic_call)
 				end
 			end
 		end
@@ -1995,7 +2007,7 @@ feature {NONE} -- Event handling
 			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 		do
 			create l_dynamic_procedure_call.make (an_expression, a_target_type_set, current_dynamic_feature, current_dynamic_type)
-			dynamic_qualified_procedure_calls.force_last (l_dynamic_procedure_call)
+			a_target_type_set.static_type.put_procedure_call (l_dynamic_procedure_call)
 		end
 
 	report_agent_qualified_query_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
@@ -2010,7 +2022,7 @@ feature {NONE} -- Event handling
 			l_dynamic_query_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 		do
 			create l_dynamic_query_call.make (an_expression, a_target_type_set, a_result_type_set, current_dynamic_feature, current_dynamic_type)
-			dynamic_qualified_query_calls.force_last (l_dynamic_query_call)
+			a_target_type_set.static_type.put_query_call (l_dynamic_query_call)
 		end
 
 	report_real_constant (a_constant: ET_REAL_CONSTANT) is
@@ -3911,12 +3923,6 @@ feature {NONE} -- Implementation
 	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets of expressions within current feature
 
-	dynamic_qualified_query_calls: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_QUERY_CALL]
-			-- Dynamic qualified query calls within current feature
-
-	dynamic_qualified_procedure_calls: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL]
-			-- Dynamic qualified procedure calls within current feature
-
 	dummy_dynamic_type: ET_DYNAMIC_TYPE is
 			-- Dummy_dynamic type
 		once
@@ -3955,10 +3961,6 @@ feature {NONE} -- Constants
 invariant
 
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
-	dynamic_qualified_query_calls_not_void: dynamic_qualified_query_calls /= Void
-	no_void_dynamic_query_call: not dynamic_qualified_query_calls.has (Void)
-	dynamic_qualified_procedure_calls_not_void: dynamic_qualified_procedure_calls /= Void
-	no_void_dynamic_procedure_call: not dynamic_qualified_procedure_calls.has (Void)
 	current_dynamic_type_not_void: current_dynamic_type /= Void
 	current_dynamic_feature_not_void: current_dynamic_feature /= Void
 	current_index_not_void: current_index /= Void

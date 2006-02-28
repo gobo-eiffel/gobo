@@ -193,38 +193,42 @@ feature -- Generation
 						end
 						j := j + 1
 					end
-					i := i + 1
-				end
-				nb := dynamic_qualified_query_calls.count
-				from i := 1 until i > nb loop
-					l_query_call := dynamic_qualified_query_calls.item (i)
-					l_count := l_query_call.count
-					l_query_call.propagate_types (Current)
-					if l_query_call.count /= l_count then
-						is_built := False
+						-- Process dynamic qualified query calls.
+					from
+						l_query_call := l_type.query_calls
+					until
+						l_query_call = Void
+					loop
+						l_count := l_query_call.count
+						l_query_call.propagate_types (Current)
+						if l_query_call.count /= l_count then
+							is_built := False
+						end
+						l_target := l_query_call.result_type_set
+						l_count := l_target.count
+						l_target.propagate_types (current_system)
+						if l_target.count /= l_count then
+							is_built := False
+						end
+						l_query_call := l_query_call.next
 					end
-					l_target := l_query_call.result_type_set
-					l_count := l_target.count
-					l_target.propagate_types (current_system)
-					if l_target.count /= l_count then
-						is_built := False
-					end
-					i := i + 1
-				end
-				nb := dynamic_qualified_procedure_calls.count
-				from i := 1 until i > nb loop
-					l_procedure_call := dynamic_qualified_procedure_calls.item (i)
-					l_count := l_procedure_call.count
-					l_procedure_call.propagate_types (Current)
-					if l_procedure_call.count /= l_count then
-						is_built := False
+						-- Process dynamic qualified procedure calls.
+					from
+						l_procedure_call := l_type.procedure_calls
+					until
+						l_procedure_call = Void
+					loop
+						l_count := l_procedure_call.count
+						l_procedure_call.propagate_types (Current)
+						if l_procedure_call.count /= l_count then
+							is_built := False
+						end
+						l_procedure_call := l_procedure_call.next
 					end
 					i := i + 1
 				end
 			end
 			check_catcall_validity
-			dynamic_qualified_query_calls.wipe_out
-			dynamic_qualified_procedure_calls.wipe_out
 		end
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
@@ -794,12 +798,12 @@ feature {NONE} -- Event handling
 			if not l_result_type_set.is_expanded then
 				l_result_type_set := new_dynamic_type_set (l_result_type_set.static_type)
 				create l_dynamic_query_call.make (an_expression, a_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
-				dynamic_qualified_query_calls.force_last (l_dynamic_query_call)
+				a_target_type_set.static_type.put_query_call (l_dynamic_query_call)
 				create l_result_attachment.make (l_result_type_set, an_expression.name, current_dynamic_feature, current_dynamic_type)
 				l_result_type_set.put_source (l_result_attachment, current_system)
 			else
 				create l_dynamic_query_call.make (an_expression, a_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
-				dynamic_qualified_query_calls.force_last (l_dynamic_query_call)
+				a_target_type_set.static_type.put_query_call (l_dynamic_query_call)
 			end
 		end
 
