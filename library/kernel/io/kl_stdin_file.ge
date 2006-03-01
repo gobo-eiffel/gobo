@@ -463,6 +463,9 @@ feature -- Input
 				else
 					Result := i
 				end
+				end_of_file := old_end_of_file
+			else
+				Result := i
 			end
 		end
 
