@@ -97,10 +97,10 @@ void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER* p, EIF_CHARACTER*
 		strcat((char*)p, (char*)v);
 	} else {
 #ifdef EIF_WINDOWS
-		if (p[strlen(p) - 1] != '\\')
+		if (p[strlen((char*)p) - 1] != '\\')
 			strcat((char*)p, "\\");
 #else /* Not Windows: append unix delimiter */
-		if (p[strlen(p) - 1] != '/')
+		if (p[strlen((char*)p) - 1] != '/')
 			strcat((char *)p, "/");
 #endif
 		strcat ((char*)p, (char*)v);
