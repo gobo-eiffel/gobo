@@ -3075,158 +3075,171 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 			l_feature_name: ET_FEATURE_NAME
 			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			k, nb3: INTEGER
+			l_value_type_set: ET_DYNAMIC_TYPE_SET
+			l_value_type: ET_DYNAMIC_TYPE
 		do
 -- TODO.
 			l_expression := an_instruction.conditional.expression
-			print_operand (l_expression)
-			fill_call_operands (1)
-			print_indentation
-			current_file.put_string (c_switch)
-			current_file.put_character (' ')
-			current_file.put_character ('(')
-			print_expression (call_operands.first)
-			call_operands.wipe_out
-			current_file.put_character (')')
-			current_file.put_character (' ')
-			current_file.put_character ('{')
-			current_file.put_new_line
-			l_when_parts := an_instruction.when_parts
-			if l_when_parts /= Void then
-				nb := l_when_parts.count
-				from i := 1 until i > nb loop
-					l_when_part := l_when_parts.item (i)
-					l_choices := l_when_part.choices
-					nb2 := l_choices.count
-					if nb2 = 0 then
-						-- Do nothing.
-					else
-						l_has_case := False
-						from j := 1 until j > nb2 loop
-							l_choice := l_choices.choice (j)
-							if l_choice.is_range then
+			l_value_type_set := current_feature.dynamic_type_set (l_expression)
+			if l_value_type_set = Void then
+					-- Internal error.
+				set_fatal_error
+				error_handler.report_giblu_error
+			else
+				l_value_type := l_value_type_set.static_type
+				print_operand (l_expression)
+				fill_call_operands (1)
+				print_indentation
+				current_file.put_string (c_switch)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_expression (call_operands.first)
+				call_operands.wipe_out
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				l_when_parts := an_instruction.when_parts
+				if l_when_parts /= Void then
+					nb := l_when_parts.count
+					from i := 1 until i > nb loop
+						l_when_part := l_when_parts.item (i)
+						l_choices := l_when_part.choices
+						nb2 := l_choices.count
+						if nb2 = 0 then
+							-- Do nothing.
+						else
+							l_has_case := False
+							from j := 1 until j > nb2 loop
+								l_choice := l_choices.choice (j)
+								if l_choice.is_range then
 -- TODO
-								l_lower := l_choice.lower
-								l_upper := l_choice.upper
-								l_lower_integer ?= l_lower
-								if l_lower_integer = Void then
-									l_lower_character ?= l_lower
-									if l_lower_character = Void then
-										l_feature_name ?= l_lower
-										if l_feature_name /= Void then
-											l_constant_attribute ?= current_type.base_class.seeded_query (l_feature_name.seed)
-											if l_constant_attribute /= Void then
-												l_lower_integer ?= l_constant_attribute.constant
-												l_lower_character ?= l_constant_attribute.constant
+									l_lower := l_choice.lower
+									l_upper := l_choice.upper
+									l_lower_integer ?= l_lower
+									if l_lower_integer = Void then
+										l_lower_character ?= l_lower
+										if l_lower_character = Void then
+											l_feature_name ?= l_lower
+											if l_feature_name /= Void then
+												l_constant_attribute ?= current_type.base_class.seeded_query (l_feature_name.seed)
+												if l_constant_attribute /= Void then
+													l_lower_integer ?= l_constant_attribute.constant
+													l_lower_character ?= l_constant_attribute.constant
+												end
 											end
 										end
 									end
-								end
-								l_upper_integer ?= l_upper
-								if l_upper_integer = Void then
-									l_upper_character ?= l_upper
-									if l_upper_character = Void then
-										l_feature_name ?= l_upper
-										if l_feature_name /= Void then
-											l_constant_attribute ?= current_type.base_class.seeded_query (l_feature_name.seed)
-											if l_constant_attribute /= Void then
-												l_upper_integer ?= l_constant_attribute.constant
-												l_upper_character ?= l_constant_attribute.constant
+									l_upper_integer ?= l_upper
+									if l_upper_integer = Void then
+										l_upper_character ?= l_upper
+										if l_upper_character = Void then
+											l_feature_name ?= l_upper
+											if l_feature_name /= Void then
+												l_constant_attribute ?= current_type.base_class.seeded_query (l_feature_name.seed)
+												if l_constant_attribute /= Void then
+													l_upper_integer ?= l_constant_attribute.constant
+													l_upper_character ?= l_constant_attribute.constant
+												end
 											end
 										end
 									end
-								end
-								if l_lower_integer /= Void and l_upper_integer /= Void then
-									from
-										l_lower_integer.compute_value
-										l_upper_integer.compute_value
-										k := l_lower_integer.value
-										nb3 := l_upper_integer.value
-									until
-										k > nb3
-									loop
-										l_has_case := True
-										print_indentation
-										current_file.put_string (c_case)
-										current_file.put_character (' ')
-										current_file.put_integer (k)
-										current_file.put_character (':')
-										current_file.put_new_line
-										k := k + 1
-									end
-								elseif l_lower_character /= Void and l_upper_character /= Void then
-									from
-										k := l_lower_character.value.code
-										nb3 := l_upper_character.value.code
-									until
-										k > nb3
-									loop
-										l_has_case := True
-										print_indentation
-										current_file.put_string (c_case)
-										current_file.put_character (' ')
-										current_file.put_character ('%'')
-										print_escaped_character (k.to_character)
-										current_file.put_character ('%'')
-										current_file.put_character (':')
-										current_file.put_new_line
-										k := k + 1
-									end
-								else
+									if l_lower_integer /= Void and l_upper_integer /= Void then
+										from
+											l_lower_integer.compute_value
+											l_upper_integer.compute_value
+											k := l_lower_integer.value
+											nb3 := l_upper_integer.value
+										until
+											k > nb3
+										loop
+											l_has_case := True
+											print_indentation
+											current_file.put_string (c_case)
+											current_file.put_character (' ')
+											print_type_cast (l_value_type, current_file)
+											current_file.put_integer (k)
+											current_file.put_character (':')
+											current_file.put_new_line
+											k := k + 1
+										end
+									elseif l_lower_character /= Void and l_upper_character /= Void then
+										from
+											k := l_lower_character.value.code
+											nb3 := l_upper_character.value.code
+										until
+											k > nb3
+										loop
+											l_has_case := True
+											print_indentation
+											current_file.put_string (c_case)
+											current_file.put_character (' ')
+											print_type_cast (l_value_type, current_file)
+											current_file.put_character ('%'')
+											print_escaped_character (k.to_character)
+											current_file.put_character ('%'')
+											current_file.put_character (':')
+											current_file.put_new_line
+											k := k + 1
+										end
+									else
 -- TODO
 print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
+									end
+								else
+									l_has_case := True
+									print_indentation
+									current_file.put_string (c_case)
+									current_file.put_character (' ')
+									print_type_cast (l_value_type, current_file)
+									print_expression (l_choice.lower.expression)
+									current_file.put_character (':')
+									current_file.put_new_line
 								end
-							else
-								l_has_case := True
+								j := j + 1
+							end
+							if l_has_case then
+								indent
+								l_compound := l_when_part.then_compound
+								if l_compound /= Void then
+									print_compound (l_compound)
+								end
 								print_indentation
-								current_file.put_string (c_case)
-								current_file.put_character (' ')
-								print_expression (l_choice.lower.expression)
-								current_file.put_character (':')
+								current_file.put_string (c_break)
+								current_file.put_character (';')
 								current_file.put_new_line
+								dedent
 							end
-							j := j + 1
 						end
-						if l_has_case then
-							indent
-							l_compound := l_when_part.then_compound
-							if l_compound /= Void then
-								print_compound (l_compound)
-							end
-							print_indentation
-							current_file.put_string (c_break)
-							current_file.put_character (';')
-							current_file.put_new_line
-							dedent
-						end
+						i := i + 1
 					end
-					i := i + 1
 				end
-			end
-			print_indentation
-			current_file.put_string (c_default)
-			current_file.put_character (':')
-			current_file.put_new_line
-			l_compound := an_instruction.else_compound
-			if l_compound /= Void then
-				indent
-				print_compound (l_compound)
 				print_indentation
-				current_file.put_string (c_break)
-				current_file.put_character (';')
+				current_file.put_string (c_default)
+				current_file.put_character (':')
 				current_file.put_new_line
-				dedent
-			else
+				l_compound := an_instruction.else_compound
+				if l_compound /= Void then
+					indent
+					print_compound (l_compound)
+					print_indentation
+					current_file.put_string (c_break)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+				else
 -- TODO.
-				indent
+					indent
+					print_indentation
+					current_file.put_string (c_break)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+				end
 				print_indentation
-				current_file.put_string (c_break)
-				current_file.put_character (';')
+				current_file.put_character ('}')
 				current_file.put_new_line
-				dedent
 			end
-			print_indentation
-			current_file.put_character ('}')
-			current_file.put_new_line
 		end
 
 	print_instruction (an_instruction: ET_INSTRUCTION) is

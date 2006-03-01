@@ -12990,7 +12990,6 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- error_handler.report_giblu_error
 	-- error_handler.report_giabr_error
 	-- error_handler.report_giady_error
 	-- error_handler.report_gibbx_error
