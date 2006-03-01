@@ -4567,7 +4567,6 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 		local
 			l_literal: STRING
 			l_temp: ET_INTERNAL_LOCAL_NAME
-			l_int64: BOOLEAN
 		do
 			if in_operand then
 				if in_target then
@@ -4609,28 +4608,31 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				when 4 then
 						-- 0[xX][a-fA-F0-9]{2}
 					print_type_cast (current_system.integer_8_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint8)
 				when 6 then
 						-- 0[xX][a-fA-F0-9]{4}
 					print_type_cast (current_system.integer_16_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint16)
 				when 10 then
 						-- 0[xX][a-fA-F0-9]{8}
 					print_type_cast (current_system.integer_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint32)
 				when 18 then
 						-- 0[xX][a-fA-F0-9]{16}
 					print_type_cast (current_system.integer_64_type, current_file)
-					l_int64 := True
+					current_file.put_character ('(')
+					current_file.put_string (c_geint64)
 				else
 					print_type_cast (current_system.integer_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint32)
 				end
 				current_file.put_character ('(')
-				if l_int64 then
-					current_file.put_string (c_geint64)
-					current_file.put_character ('(')
-				end
 				current_file.put_string (l_literal)
-				if l_int64 then
-					current_file.put_character (')')
-				end
+				current_file.put_character (')')
 				current_file.put_character (')')
 			end
 		end
@@ -5657,7 +5659,6 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			l_negative: BOOLEAN
 			l_buffer: STRING
 			l_temp: ET_INTERNAL_LOCAL_NAME
-			l_int64, l_nat64: BOOLEAN
 		do
 			if in_operand then
 				if in_target then
@@ -5700,26 +5701,44 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			else
 				if a_constant.is_integer_8 then
 					print_type_cast (current_system.integer_8_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint8)
 				elseif a_constant.is_integer_16 then
 					print_type_cast (current_system.integer_16_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint16)
 				elseif a_constant.is_integer_32 then
 					print_type_cast (current_system.integer_32_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint32)
 				elseif a_constant.is_integer_64 then
 					print_type_cast (current_system.integer_64_type, current_file)
-					l_int64 := True
+					current_file.put_character ('(')
+					current_file.put_string (c_geint64)
 				elseif a_constant.is_natural then
 					print_type_cast (current_system.natural_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_genat32)
 				elseif a_constant.is_natural_8 then
 					print_type_cast (current_system.natural_8_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_genat8)
 				elseif a_constant.is_natural_16 then
 					print_type_cast (current_system.natural_16_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_genat16)
 				elseif a_constant.is_natural_32 then
 					print_type_cast (current_system.natural_32_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_genat32)
 				elseif a_constant.is_natural_64 then
 					print_type_cast (current_system.natural_64_type, current_file)
-					l_nat64 := True
+					current_file.put_character ('(')
+					current_file.put_string (c_genat64)
 				else
 					print_type_cast (current_system.integer_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint32)
 				end
 				current_file.put_character ('(')
 				if a_constant.is_negative then
@@ -5737,19 +5756,8 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					i := i + 1
 				end
 				if i > nb then
-					if l_int64 then
-						current_file.put_string (c_geint64)
-						current_file.put_character ('(')
-						current_file.put_character ('0')
-						current_file.put_character (')')
-					elseif l_nat64 then
-						current_file.put_string (c_genat64)
-						current_file.put_character ('(')
-						current_file.put_character ('0')
-						current_file.put_character (')')
-					else
-						current_file.put_character ('0')
-					end
+					current_file.put_character ('0')
+					current_file.put_character (')')
 				else
 					if l_negative and (nb - i + 1) >= 10 then
 						create l_buffer.make (nb - i + 1)
@@ -5759,63 +5767,20 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 						end
 						if l_buffer.is_equal ("2147483648") then
 								-- INTEGER.Min_value.
-							if l_int64 then
-								current_file.put_string (c_geint64)
-								current_file.put_character ('(')
-								current_file.put_string ("2147483647)-1")
-							elseif l_nat64 then
-								current_file.put_string (c_genat64)
-								current_file.put_character ('(')
-								current_file.put_string ("2147483647)-1")
-							else
-								current_file.put_string ("2147483647-1")
-							end
+							current_file.put_string ("2147483647)-1")
 						elseif l_buffer.is_equal ("9223372036854775808") then
 								-- INTEGER_64.Min_value.
-							print_type_cast (current_system.integer_64_type, current_file)
-							if l_int64 then
-								current_file.put_string (c_geint64)
-								current_file.put_character ('(')
-								current_file.put_string ("9223372036854775807)-1")
-							elseif l_nat64 then
-								current_file.put_string (c_genat64)
-								current_file.put_character ('(')
-								current_file.put_string ("9223372036854775807)-1")
-							else
-								current_file.put_string ("9223372036854775807-1")
-							end
+							current_file.put_string ("9223372036854775807)-1")
 						else
-							if l_int64 then
-								current_file.put_string (c_geint64)
-								current_file.put_character ('(')
-							elseif l_nat64 then
-								current_file.put_string (c_genat64)
-								current_file.put_character ('(')
-							end
 							current_file.put_string (l_buffer)
-							if l_int64 then
-								current_file.put_character (')')
-							elseif l_nat64 then
-								current_file.put_character (')')
-							end
+							current_file.put_character (')')
 						end
 					else
-						if l_int64 then
-							current_file.put_string (c_geint64)
-							current_file.put_character ('(')
-						elseif l_nat64 then
-							current_file.put_string (c_genat64)
-							current_file.put_character ('(')
-						end
 						from until i > nb loop
 							current_file.put_character (l_literal.item (i))
 							i := i + 1
 						end
-						if l_int64 then
-							current_file.put_character (')')
-						elseif l_nat64 then
-							current_file.put_character (')')
-						end
+						current_file.put_character (')')
 					end
 				end
 				current_file.put_character (')')
@@ -6252,7 +6217,6 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			l_negative: BOOLEAN
 			l_buffer: STRING
 			l_temp: ET_INTERNAL_LOCAL_NAME
-			l_int64, l_nat64: BOOLEAN
 		do
 			if in_operand then
 				if in_target then
@@ -6295,26 +6259,44 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			else
 				if a_constant.is_integer_8 then
 					print_type_cast (current_system.integer_8_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint8)
 				elseif a_constant.is_integer_16 then
 					print_type_cast (current_system.integer_16_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint16)
 				elseif a_constant.is_integer_32 then
 					print_type_cast (current_system.integer_32_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint32)
 				elseif a_constant.is_integer_64 then
 					print_type_cast (current_system.integer_64_type, current_file)
-					l_int64 := True
+					current_file.put_character ('(')
+					current_file.put_string (c_geint64)
 				elseif a_constant.is_natural then
 					print_type_cast (current_system.natural_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_genat32)
 				elseif a_constant.is_natural_8 then
 					print_type_cast (current_system.natural_8_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_genat8)
 				elseif a_constant.is_natural_16 then
 					print_type_cast (current_system.natural_16_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_genat16)
 				elseif a_constant.is_natural_32 then
 					print_type_cast (current_system.natural_32_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_genat32)
 				elseif a_constant.is_natural_64 then
 					print_type_cast (current_system.natural_64_type, current_file)
-					l_nat64 := True
+					current_file.put_character ('(')
+					current_file.put_string (c_genat64)
 				else
 					print_type_cast (current_system.integer_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_geint32)
 				end
 				current_file.put_character ('(')
 				if a_constant.is_negative then
@@ -6332,19 +6314,8 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 					i := i + 1
 				end
 				if i > nb then
-					if l_int64 then
-						current_file.put_string (c_geint64)
-						current_file.put_character ('(')
-						current_file.put_character ('0')
-						current_file.put_character (')')
-					elseif l_nat64 then
-						current_file.put_string (c_genat64)
-						current_file.put_character ('(')
-						current_file.put_character ('0')
-						current_file.put_character (')')
-					else
-						current_file.put_character ('0')
-					end
+					current_file.put_character ('0')
+					current_file.put_character (')')
 				else
 					if l_negative and (nb - i + 1) >= 10 then
 						create l_buffer.make (nb - i + 1)
@@ -6356,65 +6327,22 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 						end
 						if l_buffer.is_equal ("2147483648") then
 								-- INTEGER.Min_value.
-							if l_int64 then
-								current_file.put_string (c_geint64)
-								current_file.put_character ('(')
-								current_file.put_string ("2147483647)-1")
-							elseif l_nat64 then
-								current_file.put_string (c_genat64)
-								current_file.put_character ('(')
-								current_file.put_string ("2147483647)-1")
-							else
-								current_file.put_string ("2147483647-1")
-							end
+							current_file.put_string ("2147483647)-1")
 						elseif l_buffer.is_equal ("9223372036854775808") then
 								-- INTEGER_64.Min_value.
-							print_type_cast (current_system.integer_64_type, current_file)
-							if l_int64 then
-								current_file.put_string (c_geint64)
-								current_file.put_character ('(')
-								current_file.put_string ("9223372036854775807)-1")
-							elseif l_nat64 then
-								current_file.put_string (c_genat64)
-								current_file.put_character ('(')
-								current_file.put_string ("9223372036854775807)-1")
-							else
-								current_file.put_string ("9223372036854775807-1")
-							end
+							current_file.put_string ("9223372036854775807)-1")
 						else
-							if l_int64 then
-								current_file.put_string (c_geint64)
-								current_file.put_character ('(')
-							elseif l_nat64 then
-								current_file.put_string (c_genat64)
-								current_file.put_character ('(')
-							end
 							current_file.put_string (l_buffer)
-							if l_int64 then
-								current_file.put_character (')')
-							elseif l_nat64 then
-								current_file.put_character (')')
-							end
+							current_file.put_character (')')
 						end
 					else
-						if l_int64 then
-							current_file.put_string (c_geint64)
-							current_file.put_character ('(')
-						elseif l_nat64 then
-							current_file.put_string (c_genat64)
-							current_file.put_character ('(')
-						end
 						from until i > nb loop
 							if l_literal.item (i) /= '_' then
 								current_file.put_character (l_literal.item (i))
 							end
 							i := i + 1
 						end
-						if l_int64 then
-							current_file.put_character (')')
-						elseif l_nat64 then
-							current_file.put_character (')')
-						end
+						current_file.put_character (')')
 					end
 				end
 				current_file.put_character (')')
@@ -12671,8 +12599,14 @@ feature {NONE} -- Constants
 	c_geargv: STRING is "geargv"
 	c_geceiling: STRING is "geceiling"
 	c_gefloor: STRING is "gefloor"
+	c_geint8: STRING is "geint8"
+	c_geint16: STRING is "geint16"
+	c_geint32: STRING is "geint32"
 	c_geint64: STRING is "geint64"
 	c_gems: STRING is "gems"
+	c_genat8: STRING is "genat8"
+	c_genat16: STRING is "genat16"
+	c_genat32: STRING is "genat32"
 	c_genat64: STRING is "genat64"
 	c_gepower: STRING is "gepower"
 	c_getypes: STRING is "getypes"

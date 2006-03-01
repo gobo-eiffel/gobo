@@ -92,7 +92,13 @@ typedef uint32_t EIF_WIDE_CHAR;
 #define EIF_TRUE ((EIF_BOOLEAN)'\1')
 #define EIF_TEST(x) ((x) ? EIF_TRUE : EIF_FALSE)
 
-/* For INTEGER_64 and NATURAL_64 manifest constants */
+/* For INTEGER and NATURAL manifest constants */
+#define geint8(x) x
+#define genat8(x) x
+#define geint16(x) x
+#define genat16(x) x
+#define geint32(x) x##L
+#define genat32(x) x##U
 #ifdef WIN32
 #define geint64(x) x##i64
 #define genat64(x) x##ui64
