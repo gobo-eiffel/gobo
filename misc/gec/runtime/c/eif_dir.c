@@ -183,16 +183,13 @@ EIF_BOOLEAN eif_dir_is_readable(char* dirname) {
 #ifdef WIN32
 	return (EIF_BOOLEAN)(access(dirname, 04) != -1);
 #else
-#ifdef HAS_GETEUID
 	int uid, gid;
 	int euid, egid;
-#endif
 	int mode;
 	struct stat buf;
 
 	stat(dirname, &buf);
 	mode = buf.st_mode & ST_MODE;
-#ifdef HAS_GETEUID
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 	euid = geteuid();
@@ -204,7 +201,6 @@ EIF_BOOLEAN eif_dir_is_readable(char* dirname) {
 	else if (gid == egid)
 		return ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
 	else
-#endif
 		return ((mode & S_IROTH) ? EIF_TRUE : EIF_FALSE);
 #endif
 }
@@ -213,16 +209,13 @@ EIF_BOOLEAN eif_dir_is_executable(char* dirname) {
 #ifdef WIN32
 	return (EIF_BOOLEAN) (access (dirname, 0) != -1);
 #else
-#ifdef HAS_GETEUID
 	int uid, gid;
 	int euid, egid;
-#endif
 	int mode;
 	struct stat buf;
 
 	stat(dirname, &buf);
 	mode = buf.st_mode & ST_MODE;
-#ifdef HAS_GETEUID
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 	euid = geteuid();
@@ -234,7 +227,6 @@ EIF_BOOLEAN eif_dir_is_executable(char* dirname) {
 	else if (gid == egid)
 		return ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
 	else
-#endif
 		return ((mode & S_IXOTH) ? EIF_TRUE : EIF_FALSE);
 #endif
 }
@@ -243,16 +235,13 @@ EIF_BOOLEAN eif_dir_is_writable(char* dirname) {
 #ifdef WIN32
 	return (EIF_BOOLEAN) (access (dirname, 02) != -1);
 #else
-#ifdef HAS_GETEUID
 	int uid, gid;
 	int euid, egid;
-#endif
 	int mode;
 	struct stat buf;
 
 	stat(dirname, &buf);
 	mode = buf.st_mode & ST_MODE;
-#ifdef HAS_GETEUID
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 	euid = geteuid();
@@ -264,7 +253,6 @@ EIF_BOOLEAN eif_dir_is_writable(char* dirname) {
 	else if (gid == egid)
 		return ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
 	else
-#endif
 		return ((mode & S_IWOTH) ? EIF_TRUE : EIF_FALSE);
 #endif
 }

@@ -645,11 +645,9 @@ EIF_INTEGER stat_size(void) {
 
 EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 	int mode = buf->st_mode & ST_MODE;	/* Current mode */
-#if defined HAS_GETEUID || defined HAS_GETUID
+#ifndef WIN32
 	int uid = buf->st_uid;				/* File owner */
 	int gid = buf->st_gid;				/* File group */
-#endif
-#ifdef HAS_GETEUID
 	int euid, egid;						/* Effective user and group */
 #endif
 
@@ -657,7 +655,7 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 	case 0: /* Is file readable */
 #ifdef WIN32
 	return ((mode && S_IREAD) ? EIF_TRUE : EIF_FALSE);
-#elif defined HAS_GETEUID
+#else
 		euid = geteuid();
 		egid = getegid();
 
@@ -673,7 +671,7 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 	case 1: /* Is file writable */
 #ifdef WIN32
 	return ((mode & S_IWRITE) ? EIF_TRUE : EIF_FALSE);
-#elif defined HAS_GETEUID
+#else
 		euid = geteuid();
 		egid = getegid();
 
@@ -689,7 +687,7 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 	case 2: /* Is file executable */
 #ifdef WIN32
 	return EIF_TRUE;
-#elif defined HAS_GETEUID
+#else
 		euid = geteuid();
 		egid = getegid();
 
@@ -721,16 +719,16 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 		return ((mode & S_ISVTX) ? EIF_TRUE : EIF_FALSE);
 #endif
 	case 6: /* Is file owned by effective UID */
-#ifdef HAS_GETEUID
-		return ((uid == geteuid()) ? EIF_TRUE : EIF_FALSE);
-#else
+#ifdef WIN32
 		return EIF_TRUE;
+#else
+		return ((uid == geteuid()) ? EIF_TRUE : EIF_FALSE);
 #endif
 	case 7: /* Is file owned by real UID */
-#ifdef HAS_GETEUID
-		return ((uid == getuid()) ? EIF_TRUE : EIF_FALSE);
-#else
+#ifdef WIN32
 		return EIF_TRUE;
+#else
+		return ((uid == getuid()) ? EIF_TRUE : EIF_FALSE);
 #endif
 	default:
 		break;
