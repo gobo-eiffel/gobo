@@ -88,7 +88,9 @@
 #endif
 
 /* Keep only permission mode */
+#ifndef ST_MODE
 #define ST_MODE 0x0fff
+#endif
 
 void file_mkdir(char* dirname) {
 #ifdef WIN32

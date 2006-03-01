@@ -31,6 +31,60 @@ typedef struct {
 #define PATH_MAX 1024 /* Maximum length of full path name */
 #endif
 
+#ifndef S_IRUSR
+#define S_IRUSR 0000400
+#endif
+#ifndef S_IWUSR
+#define S_IWUSR 0000200
+#endif
+#ifndef S_IXUSR
+#define S_IXUSR 0000100
+#endif
+#ifndef S_IRGRP
+#define S_IRGRP 0000040
+#endif
+#ifndef S_IWGRP
+#define S_IWGRP 0000020
+#endif
+#ifndef S_IXGRP
+#define S_IXGRP 0000010
+#endif
+#ifndef S_IROTH
+#define S_IROTH 0000004
+#endif
+#ifndef S_IWOTH
+#define S_IWOTH 0000002
+#endif
+#ifndef S_IXOTH
+#define S_IXOTH 0000001
+#endif
+#ifndef S_IFDIR
+#define S_IFDIR 0040000
+#endif
+#ifndef S_IFCHR
+#define S_IFCHR 0020000
+#endif
+#ifndef S_IFBLK
+#define S_IFBLK 0060000
+#endif
+#ifndef S_IFREG
+#define S_IFREG 0100000
+#endif
+#ifndef S_IFIFO
+#define S_IFIFO 0010000
+#endif
+#ifndef S_IFLNK
+#define S_IFLNK 0120000
+#endif
+#ifndef S_IFSOCK
+#define S_IFSOCK 0140000
+#endif
+
+/* Keep only permission mode */
+#ifndef ST_MODE
+#define ST_MODE 0x0fff
+#endif
+
 void* dir_open(char* dirname) {
 #ifdef WIN32
 	int len = strlen((char*)dirname);
