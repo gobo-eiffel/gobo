@@ -10423,6 +10423,12 @@ feature {NONE} -- C function generation
 				print_creation_expression (l_root_type, l_root_creation, Void)
 				current_file.put_character (';')
 				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (';')
+				current_file.put_new_line
 				dedent
 			end
 			current_file.put_character ('}')

@@ -539,7 +539,7 @@ feature -- Compilation
 							if operating_system.is_windows then
 								create l_command.make ("cl " + l_base_name + ".c")
 							else
-								create l_command.make ("gcc " + l_base_name + ".c -o " + l_base_name)
+								create l_command.make ("gcc " + l_base_name + ".c -lm -o " + l_base_name)
 							end
 							l_command.execute
 						end
