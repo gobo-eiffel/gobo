@@ -95,7 +95,7 @@ void dir_rewind(void* dir) {
 	}
 	ge_dir->handle = 0;
 #else
-	struct dirent* ge_dir = (DIR*)dir;
+	DIR* ge_dir = (DIR*)dir;
 	rewinddir(ge_dir);
 #endif
 }

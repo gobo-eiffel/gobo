@@ -16,12 +16,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <time.h>
-#include <sys/utime.h>
-#include <sys/stat.h>
 #ifdef EIF_WINDOWS
+#include <sys/utime.h>
 #include <io.h> /* for access, chmod */
 #else
+#include <utime.h>
 #include <unistd.h>
 #endif
 

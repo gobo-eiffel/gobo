@@ -31,6 +31,26 @@
 #include <stdarg.h>
 #include <string.h>
 
+/* Platform definition */
+/* Unix definition */
+#define EIF_IS_UNIX EIF_TRUE
+/* Windows definition */
+#ifdef EIF_WINDOWS
+#define EIF_IS_WINDOWS EIF_TRUE
+#undef EIF_IS_UNIX
+#define EIF_IS_UNIX EIF_FALSE
+#else
+#define EIF_IS_WINDOWS EIF_FALSE
+#endif
+/* VMS definition */
+#ifdef EIF_VMS
+#define EIF_IS_VMS EIF_TRUE
+#undef EIF_IS_UNIX
+#define EIF_IS_UNIX EIF_FALSE
+#else
+#define EIF_IS_VMS EIF_FALSE
+#endif
+
 #ifdef _MSC_VER /* MSVC */
 typedef signed char int8_t;
 typedef signed short int16_t;
@@ -72,24 +92,13 @@ typedef uint32_t EIF_WIDE_CHAR;
 #define EIF_TRUE ((EIF_BOOLEAN)'\1')
 #define EIF_TEST(x) ((x) ? EIF_TRUE : EIF_FALSE)
 
-/* Platform definition */
-/* Unix definition */
-#define EIF_IS_UNIX EIF_TRUE
-/* Windows definition */
-#ifdef EIF_WINDOWS
-#define EIF_IS_WINDOWS EIF_TRUE
-#undef EIF_IS_UNIX
-#define EIF_IS_UNIX EIF_FALSE
+/* For INTEGER_64 and NATURAL_64 manifest constants */
+#ifdef WIN32
+#define geint64(x) x##i64
+#define genat64(x) x##ui64
 #else
-#define EIF_IS_WINDOWS EIF_FALSE
-#endif
-/* VMS definition */
-#ifdef EIF_VMS
-#define EIF_IS_VMS EIF_TRUE
-#undef EIF_IS_UNIX
-#define EIF_IS_UNIX EIF_FALSE
-#else
-#define EIF_IS_VMS EIF_FALSE
+#define geint64(x) x##LL
+#define genat64(x) x##ULL
 #endif
 
 /* Memory allocation, GC */

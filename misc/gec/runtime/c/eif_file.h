@@ -14,6 +14,7 @@
 #define EIF_FILE_H
 
 #include <time.h>
+#include <sys/stat.h>
 
 extern void file_mkdir(char* dirname);
 extern void file_rename(char* old, char* new);
