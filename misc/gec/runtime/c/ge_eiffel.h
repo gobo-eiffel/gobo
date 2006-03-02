@@ -99,13 +99,8 @@ typedef uint32_t EIF_WIDE_CHAR;
 #define genat16(x) x
 #define geint32(x) x##L
 #define genat32(x) x##U
-#ifdef WIN32
-#define geint64(x) x##i64
-#define genat64(x) x##ui64
-#else
 #define geint64(x) x##LL
 #define genat64(x) x##ULL
-#endif
 
 /* Memory allocation, GC */
 #define gealloc(x) calloc((x),1)

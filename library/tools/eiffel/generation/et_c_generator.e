@@ -4726,6 +4726,11 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_temp: ET_INTERNAL_LOCAL_NAME
 			i, nb: INTEGER
 			l_assignment_target: ET_WRITABLE
+			l_int_promoted: BOOLEAN
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_area_type_set: ET_DYNAMIC_TYPE_SET
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_item_type: ET_DYNAMIC_TYPE
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -4743,6 +4748,45 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				error_handler.report_gibjc_error
 			else
 				l_dynamic_type := l_dynamic_type_set.static_type
+				l_queries := l_dynamic_type.queries
+				if l_queries.is_empty then
+						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+					set_fatal_error
+					error_handler.report_giabr_error
+				else
+					l_area_type_set := l_queries.item (1).result_type_set
+					if l_area_type_set = Void then
+							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+						set_fatal_error
+						error_handler.report_giady_error
+					else
+						l_special_type ?= l_area_type_set.static_type
+						if l_special_type = Void then
+								-- Internal error: it has already been checked in ET_SYSTEM.compile_kernel
+								-- that the attribute `area' is of SPECIAL type.
+							set_fatal_error
+							error_handler.report_gibbx_error
+						else
+							l_item_type := l_special_type.item_type_set.static_type
+						end
+					end
+				end
+			end
+			if l_item_type /= Void then
+				if
+					l_item_type = current_system.boolean_type or
+					l_item_type = current_system.character_type or
+					l_item_type = current_system.integer_8_type or
+					l_item_type = current_system.natural_8_type or
+					l_item_type = current_system.integer_16_type or
+					l_item_type = current_system.natural_16_type
+				then
+						-- ISO C 99 says that through "..." the types are promoted to
+						-- 'int', and that promotion to 'int' leaves the type unchanged
+						-- if all values cannot be represented with an 'int' or
+						-- 'unsigned int'.
+					l_int_promoted := True
+				end
 				manifest_array_types.force_last (l_dynamic_type)
 				if in_operand then
 					if l_assignment_target /= Void then
@@ -4767,13 +4811,23 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				current_file.put_character ('a')
 				current_file.put_integer (l_dynamic_type.id)
 				current_file.put_character ('(')
+				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_integer (nb)
 				from i := 1 until i > nb loop
 					current_file.put_character (',')
 						-- Print one item per line for better readability,
 						-- avoidind too long lines for big arrays.
 					current_file.put_new_line
-					print_expression (call_operands.item (i))
+					if l_int_promoted then
+						current_file.put_character ('(')
+						current_file.put_string (c_int)
+						current_file.put_character (')')
+						current_file.put_character ('(')
+						print_expression (call_operands.item (i))
+						current_file.put_character (')')
+					else
+						print_expression (call_operands.item (i))
+					end
 					i := i + 1
 				end
 				current_file.put_character (')')
@@ -10670,8 +10724,12 @@ feature {NONE} -- C function generation
 					-- Use varargs rather than inlining the code, this
 					-- makes the C compilation with the -O2 faster and
 					-- the resulting application is not slower.
-				header_file.put_string ("(int c, ...)")
-				current_file.put_string ("(int c, ...)")
+				header_file.put_character ('(')
+				print_type_declaration (current_system.integer_type, header_file)
+				header_file.put_string (" c, ...)")
+				current_file.put_character ('(')
+				print_type_declaration (current_system.integer_type, current_file)
+				current_file.put_string (" c, ...)")
 				header_file.put_character (';')
 				header_file.put_new_line
 				current_file.put_new_line
@@ -10745,7 +10803,8 @@ feature {NONE} -- C function generation
 				print_indentation
 				current_file.put_line ("va_list v;")
 				print_indentation
-				current_file.put_line ("int n = c;")
+				print_type_declaration (current_system.integer_type, current_file)
+				current_file.put_line (" n = c;")
 				print_indentation
 				print_type_declaration (l_item_type, current_file)
 				current_file.put_character (' ')
@@ -10772,8 +10831,25 @@ feature {NONE} -- C function generation
 				current_file.put_line ("while (n--) {")
 				indent
 				print_indentation
-				current_file.put_string ("*(i++) = va_arg(v, ")
-				print_type_declaration (l_item_type, current_file)
+				if
+					l_item_type = current_system.boolean_type or
+					l_item_type = current_system.character_type or
+					l_item_type = current_system.integer_8_type or
+					l_item_type = current_system.natural_8_type or
+					l_item_type = current_system.integer_16_type or
+					l_item_type = current_system.natural_16_type
+				then
+						-- ISO C 99 says that through "..." the types are promoted to
+						-- 'int', and that promotion to 'int' leaves the type unchanged
+						-- if all values cannot be represented with an 'int' or
+						-- 'unsigned int'.
+					current_file.put_string ("*(i++) = ")
+					print_type_cast (l_item_type, current_file)
+					current_file.put_string ("va_arg(v, int")
+				else
+					current_file.put_string ("*(i++) = va_arg(v, ")
+					print_type_declaration (l_item_type, current_file)
+				end
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
