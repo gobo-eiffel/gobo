@@ -4727,6 +4727,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			i, nb: INTEGER
 			l_assignment_target: ET_WRITABLE
 			l_int_promoted: BOOLEAN
+			l_double_promoted: BOOLEAN
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_area_type_set: ET_DYNAMIC_TYPE_SET
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
@@ -4786,6 +4787,12 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						-- if all values cannot be represented with an 'int' or
 						-- 'unsigned int'.
 					l_int_promoted := True
+				elseif
+					l_item_type = current_system.real_type
+				then
+						-- ISO C 99 says that 'float' is promoted to 'double' when
+						-- passed as argument of a function.
+					l_double_promoted := True
 				end
 				manifest_array_types.force_last (l_dynamic_type)
 				if in_operand then
@@ -4821,6 +4828,13 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					if l_int_promoted then
 						current_file.put_character ('(')
 						current_file.put_string (c_int)
+						current_file.put_character (')')
+						current_file.put_character ('(')
+						print_expression (call_operands.item (i))
+						current_file.put_character (')')
+					elseif l_double_promoted then
+						current_file.put_character ('(')
+						current_file.put_string (c_double)
 						current_file.put_character (')')
 						current_file.put_character ('(')
 						print_expression (call_operands.item (i))
@@ -10846,6 +10860,14 @@ feature {NONE} -- C function generation
 					current_file.put_string ("*(i++) = ")
 					print_type_cast (l_item_type, current_file)
 					current_file.put_string ("va_arg(v, int")
+				elseif
+					l_item_type = current_system.real_type
+				then
+						-- ISO C 99 says that 'float' is promoted to 'double' when
+						-- passed as argument of a function.
+					current_file.put_string ("*(i++) = ")
+					print_type_cast (l_item_type, current_file)
+					current_file.put_string ("va_arg(v, double")
 				else
 					current_file.put_string ("*(i++) = va_arg(v, ")
 					print_type_declaration (l_item_type, current_file)

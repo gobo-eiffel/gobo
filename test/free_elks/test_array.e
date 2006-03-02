@@ -31,6 +31,8 @@ feature -- Test
 			test_manifest_array_natural_16
 			test_manifest_array_natural_32
 			test_manifest_array_natural_64
+			test_manifest_array_real_32
+			test_manifest_array_real_64
 		end
 
 	test_manifest_array_character is
@@ -156,6 +158,32 @@ feature -- Test
 			l_array := <<i1, i2>>
 			assert ("item1", l_array.item (1) = i1)
 			assert ("item2", l_array.item (2) = i2)
+		end
+
+	test_manifest_array_real_32 is
+			-- Test manifest arrays of REAL.
+		local
+			l_array: ARRAY [REAL]
+			r1, r2: REAL
+		do
+			r1 := 1.45
+			r2 := -4.2E+7
+			l_array := <<r1, r2>>
+			assert ("item1", l_array.item (1) = r1)
+			assert ("item2", l_array.item (2) = r2)
+		end
+
+	test_manifest_array_real_64 is
+			-- Test manifest arrays of DOUBLE.
+		local
+			l_array: ARRAY [DOUBLE]
+			r1, r2: DOUBLE
+		do
+			r1 := 1.45
+			r2 := -4.2E+7
+			l_array := <<r1, r2>>
+			assert ("item1", l_array.item (1) = r1)
+			assert ("item2", l_array.item (2) = r2)
 		end
 
 end
