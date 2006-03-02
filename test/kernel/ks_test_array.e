@@ -83,4 +83,25 @@ feature -- Test
 			assert_integers_equal ("as_same_upper2", 2, l_as.upper)
 		end
 
+	test_manifest_array_character is
+			-- Test manifest arrays of CHARACTER.
+		local
+			l_array: ARRAY [CHARACTER]
+		do
+			l_array := <<'a', 'c'>>
+			assert_characters_equal ("item1", 'a', l_array.item (1))
+			assert_characters_equal ("item2", 'c', l_array.item (2))
+		end
+
+	test_manifest_array_boolean is
+			-- Test manifest arrays of BOOLEAN.
+		local
+			l_array: ARRAY [BOOLEAN]
+		do
+			l_array := <<True, False, True>>
+			assert ("item1", l_array.item (1))
+			assert ("item2", not l_array.item (2))
+			assert ("item3", l_array.item (3))
+		end
+
 end
