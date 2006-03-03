@@ -5,7 +5,7 @@ indexing
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ inherit
 			text as skeleton_text,
 			text_substring as skeleton_text_substring
 		redefine
-			reset
+			reset, fatal_error
 		end
 
 	ET_EIFFEL_TOKENS
@@ -212,6 +212,27 @@ feature -- Error handling
 
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
+
+	fatal_error (a_message: STRING) is
+			-- A fatal error occurred.
+			-- Print error message.
+		do
+			report_syntax_error (current_position)
+		end
+
+	report_syntax_error (a_position: ET_POSITION) is
+			-- Report a syntax error at position `a_position'.
+		require
+			a_position_not_void: a_position /= Void
+		do
+			set_syntax_error
+			error_handler.report_syntax_error (filename, a_position)
+		end
+
+	set_syntax_error is
+			-- Set syntax error flag in class being parsed, if already known.
+		do
+		end
 
 feature -- Cluster dependences
 
@@ -2605,6 +2626,7 @@ feature {NONE} -- Processing
 					-- Syntax error: character quote should be declared
 					-- as '%'' and not as ''' in character constant.
 				column := column + 1
+				set_syntax_error
 				error_handler.report_SCTQ_error (filename, current_position)
 				column := column - 1
 			end
@@ -2671,6 +2693,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%A'
@@ -2679,6 +2702,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%B'
@@ -2687,6 +2711,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%C'
@@ -2695,6 +2720,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%D'
@@ -2703,6 +2729,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%F'
@@ -2711,6 +2738,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%H'
@@ -2719,6 +2747,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%L'
@@ -2727,6 +2756,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%N'
@@ -2735,6 +2765,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%Q'
@@ -2743,6 +2774,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%R'
@@ -2751,6 +2783,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%S'
@@ -2759,6 +2792,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%T'
@@ -2767,6 +2801,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%U'
@@ -2775,6 +2810,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%V'
@@ -2782,6 +2818,7 @@ feature {NONE} -- Processing
 					-- Syntax error: invalid special character
 					-- %l in character constant.
 				column := column + 2
+				set_syntax_error
 				error_handler.report_SCSC_error (filename, current_position)
 				column := column - 2
 				a_value := c

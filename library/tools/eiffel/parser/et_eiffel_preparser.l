@@ -6,7 +6,7 @@ indexing
 		"Eiffel preparsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -217,6 +217,7 @@ create
 					-- Syntax error: missing character / at end
 					-- of special character specification %/code/.
 				column := column + text_count
+				set_syntax_error
 				error_handler.report_SCAS_error (filename, current_position)
 				column := column - text_count
 				last_token := E_CHARERR
@@ -225,6 +226,7 @@ create
 					-- Syntax error: missing ASCII code in
 					-- special character specification %/code/.
 				column := column + 3
+				set_syntax_error
 				error_handler.report_SCAC_error (filename, current_position)
 				column := column - 3
 				last_token := E_CHARERR
@@ -232,6 +234,7 @@ create
 \'\'		{
 					-- Syntax error: missing character between quotes.
 				column := column + 1
+				set_syntax_error
 				error_handler.report_SCQQ_error (filename, current_position)
 				column := column - 1
 				last_token := E_CHARERR
@@ -240,6 +243,7 @@ create
 					-- Syntax error: missing quote at
 					-- end of character constant.
 				column := column + text_count
+				set_syntax_error
 				error_handler.report_SCEQ_error (filename, current_position)
 				column := column - text_count
 				last_token := E_CHARERR
@@ -361,6 +365,7 @@ create
 					-- % at end of line in multi-line manifest strings.
 				column := yy_column - 1
 				line := yy_line
+--				set_syntax_error
 --				error_handler.report_SSNS_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -376,6 +381,7 @@ create
 					-- character specification %/code/ in manifest string.
 				column := yy_column
 				line := yy_line
+--				set_syntax_error
 --				error_handler.report_SSAS_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -387,6 +393,7 @@ create
 					-- specification %/code/ in manifest string.
 				column := yy_column
 				line := yy_line
+--				set_syntax_error
 --				error_handler.report_SSAC_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -399,6 +406,7 @@ create
 					-- upper-case in manifest strings.
 				column := yy_column - 1
 				line := yy_line
+--				set_syntax_error
 --				error_handler.report_SSCU_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -416,6 +424,7 @@ create
 					-- in manifest strings.
 				column := yy_column - 1
 				line := yy_line
+--				set_syntax_error
 --				error_handler.report_SSSC_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -427,6 +436,7 @@ create
 					-- %l in manifest strings.
 				column := yy_column
 				line := yy_line
+				set_syntax_error
 				error_handler.report_SSSC_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -438,6 +448,7 @@ create
 					-- Syntax error: Invalid new-line in manifest string.
 				column := 1
 				line := yy_line
+				set_syntax_error
 				error_handler.report_SSNL_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -450,6 +461,7 @@ create
 					-- end of manifest string.
 				column := yy_column
 				line := yy_line
+				set_syntax_error
 				error_handler.report_SSEQ_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -486,6 +498,7 @@ create
 					-- multi-line manifest string.
 				column := 1
 				line := yy_line - 1
+--				set_syntax_error
 --				error_handler.report_SSEL_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -497,6 +510,7 @@ create
 					-- of line in multi-line manifest string.
 				column := yy_column - 1
 				line := yy_line
+				set_syntax_error
 				error_handler.report_SSNP_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -509,6 +523,7 @@ create
 					-- of line in multi-line manifest string.
 				column := yy_column
 				line := yy_line
+				set_syntax_error
 				error_handler.report_SSNP_error (filename, current_position)
 				column := ms_column
 				line := ms_line
@@ -534,6 +549,7 @@ create
 _(_*[0-9_]+_*)+	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
+				set_syntax_error
 				error_handler.report_SIFU_error (filename, current_position)
 
 				last_token := E_INTERR
@@ -542,6 +558,7 @@ _(_*[0-9_]+_*)+	{
 					-- Syntax error: an underscore must be followed
 					-- by three digits and there must not be any
 					-- consecutive group of four digits.
+				set_syntax_error
 				error_handler.report_SITD_error (filename, current_position)
 
 				last_token := E_INTERR

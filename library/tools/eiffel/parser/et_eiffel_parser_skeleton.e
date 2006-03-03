@@ -27,7 +27,7 @@ inherit
 			make as make_eiffel_scanner,
 			make_with_factory as make_eiffel_scanner_with_factory
 		redefine
-			reset, universe
+			reset, universe, set_syntax_error
 		end
 
 	ET_CLASS_PROCESSOR
@@ -1114,7 +1114,7 @@ feature {NONE} -- AST factory
 				Result.compute_size
 				if Result.has_size_error then
 					if last_class /= Void then
-						last_class.set_syntax_error
+						set_fatal_error (last_class)
 						error_handler.report_vtbt0c_error (last_class, Result)
 					else
 						error_handler.report_syntax_error (filename, Result.constant.position)
@@ -4136,14 +4136,11 @@ feature -- Error handling
 			report_syntax_error (current_position)
 		end
 
-	report_syntax_error (a_position: ET_POSITION) is
-			-- Report a syntax error at position `a_position'.
-		require
-			a_position_not_void: a_position /= Void
+	set_syntax_error is
+			-- Set syntax error flag in class being parsed, if already known.
 		do
-			error_handler.report_syntax_error (filename, a_position)
 			if last_class /= Void then
-				last_class.set_syntax_error
+				set_fatal_error (last_class)
 			end
 		end
 

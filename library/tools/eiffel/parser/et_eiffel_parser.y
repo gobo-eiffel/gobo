@@ -6,7 +6,7 @@ indexing
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ inherit
 			make as make_eiffel_scanner,
 			make_with_factory as make_eiffel_scanner_with_factory
 		undefine
-			reset
+			reset, set_syntax_error
 		redefine
 			universe
 		end
