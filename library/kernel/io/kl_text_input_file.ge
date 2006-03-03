@@ -319,7 +319,7 @@ feature -- Input
 			end_of_file := False
 		end
 
-#ifdef SE || ISE || GE
+#ifdef SE || ISE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -337,7 +337,10 @@ feature {NONE} -- Implementation
 			-- Name of file (STRING version)
 
 #endif
+#endif
 #ifdef GE
+feature {PLAIN_TEXT_FILE} -- Implementation
+
 	old_open_read is
 			-- Open file in read-only mode.
 		do
@@ -348,6 +351,5 @@ feature {NONE} -- Implementation
 			end
 		end
 
-#endif
 #endif
 end

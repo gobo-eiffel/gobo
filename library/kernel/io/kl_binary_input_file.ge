@@ -112,7 +112,7 @@ feature -- Access
 			-- However `last_string' is not shared between file objects.)
 
 #endif
-#ifdef ISE || SE || GE
+#ifdef ISE || SE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -143,7 +143,10 @@ feature {NONE} -- Implementation
 			-- Name of file (STRING version)
 
 #endif
+#endif
 #ifdef GE
+feature {RAW_FILE} -- Implementation
+
 	old_open_read is
 			-- Open file in read-only mode.
 		do
@@ -154,6 +157,5 @@ feature {NONE} -- Implementation
 			end
 		end
 
-#endif
 #endif
 end
