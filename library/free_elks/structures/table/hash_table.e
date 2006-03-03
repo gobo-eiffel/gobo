@@ -6,25 +6,25 @@ indexing
 	instructions: "[
 		Several procedures are provided for inserting an item
 		with a given key.
-		
+
 		Here is how to choose between them:
-		
+
 			- Use `put' if you want to do an insertion only if
 			  there was no item with the given key, doing nothing
 			  otherwise. (You can find out on return if there was one,
 			  and what it was.)
-		
+
 			- Use `force' if you always want to insert the item;
 			  if there was one for the given key it will be removed,
 			  (and you can find out on return what it was).
-		
+
 			- Use `extend' if you are sure there is no item with
 			  the given key, enabling faster insertion (but
 			  unpredictable behavior if this assumption is not true).
-		
+
 			- Use `replace' if you want to replace an already present
 			  item with the given key, and do nothing if there is none.
-		
+
 		In addition you can use `replace_key' to change the key of an
 		already present item, identified by its previous key, or
 		do nothing if there is nothing for that previous key.
@@ -35,17 +35,17 @@ indexing
 		To find out whether a key appears in the table, use `has'.
 		To find out the item, if any, associated with a certain key,
 		use `item'.
-		
+
 		Both of these routines perform a search. If you need
 		both pieces of information (does a key appear? And, if so,
 		what is the associated item?), you can avoid performing
 		two redundant traversals by using instead the combination
-		of `search', `found' and `found_item' as follows: 
-		
+		of `search', `found' and `found_item' as follows:
+
 			your_table.search (your_key)
 			if your_table.found then
 				what_you_where_looking_for := your_table.found_item
-				... Do whatever is needed to `what_you_were_looking_for' ... 
+				... Do whatever is needed to `what_you_were_looking_for' ...
 			else
 				... No item was present for `your_key' ...
 			end
@@ -58,7 +58,7 @@ indexing
 		should work correctly with this one; a client that explicitly relied
 		on the default value not being hashable should use the old version
 		available in the EiffelBase 3.3 compatibility cluster.
-		
+
 		Also, `force' now sets either `found' or `not_found'.
 		(Previously it would always set `inserted'.)
 		]"
@@ -75,7 +75,7 @@ indexing
 		`put' and `replace_key'.
 		]"
 
-	status: "See notice at end of class"
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -498,11 +498,11 @@ feature -- Cursor movement
 			if found then
 				found_item := content.item (position)
 			else
-				found_item := default_value 
+				found_item := default_value
 			end
 		ensure
 			found_or_not_found: found or not_found
-			item_if_found: found implies (found_item = content.item (position)) 
+			item_if_found: found implies (found_item = content.item (position))
 		end
 
 	search_item: G is
@@ -511,7 +511,7 @@ feature -- Cursor movement
 		do
 			Result := found_item
 		end
-		
+
 feature -- Element change
 
 	put (new: G; key: H) is
@@ -544,9 +544,10 @@ feature -- Element change
 				if deleted_position /= Impossible_position then
 					position := deleted_position
 					set_not_deleted (position)
+				else
+					used_slot_count := used_slot_count + 1
 				end
 				count := count + 1
-				used_slot_count := used_slot_count + 1
 				put_at_position (new, key)
 				found_item := new
 				set_inserted
@@ -556,10 +557,6 @@ feature -- Element change
 			insertion_done: inserted implies item (key) = new
 			now_present: inserted implies has (key)
 			one_more_if_inserted: inserted implies (count = old count + 1)
-			one_more_slot_if_inserted_unless_reallocated:
-				inserted implies
-					((used_slot_count = old used_slot_count + 1) or
-					(used_slot_count = count))
 			unchanged_if_conflict: conflict implies (count = old count)
 			same_item_if_conflict: conflict implies (item (key) = old (item (key)))
 			slot_count_unchanged_if_conflict:
@@ -598,13 +595,14 @@ feature -- Element change
 				if deleted_position /= Impossible_position then
 					position := deleted_position
 					set_not_deleted (position)
+				else
+					used_slot_count := used_slot_count + 1
 				end
 				keys.put (key, position)
 				if key = default_key then
 					set_default
 				end
 				count := count + 1
-				used_slot_count := used_slot_count + 1
 			end
 			content.put (new, position)
 		ensure then
@@ -619,7 +617,7 @@ feature -- Element change
 				(used_slot_count = count)
 			found_item_is_old_item: found implies (found_item = old (item (key)))
 			default_value_if_not_found:
-				not_found implies (found_item = computed_default_value) 
+				not_found implies (found_item = computed_default_value)
 					-- The reverse is not true, as we can always insert
 					-- an item with the default value, for any key.
 
@@ -708,7 +706,6 @@ feature -- Element change
 			put (default_value, new_key)
 			if inserted then
 				count := count - 1
-				used_slot_count := used_slot_count - 1
 				insert_position := position
 				search (old_key)
 				if found then
@@ -736,7 +733,6 @@ feature -- Element change
 			end
 		ensure
 			same_count: count = old count
-			same_slot_count: used_slot_count = old used_slot_count
 			replaced_or_conflict_or_not_found: replaced or conflict or not_found
 			old_absent: (replaced and not equal (new_key, old_key))
 								implies (not has (old_key))
@@ -751,7 +747,7 @@ feature -- Element change
 					((new_key = computed_default_key) or
 					((new_key /= computed_default_key) and (old has_default)))
 		end
-		
+
 	merge (other: HASH_TABLE [G, H]) is
 			-- Merge `other' into Current. If `other' has some elements
 			-- with same key as in `Current', replace them by one from
@@ -872,12 +868,13 @@ feature {NONE} -- Transformation
 			array_content: ARRAY [G]
 			array_keys: ARRAY [H]
 			array_marks: ARRAY [BOOLEAN]
+			l_deleted_marks: SPECIAL [BOOLEAN]
 		do
 				-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'
 				-- where of base class ARRAY. In 5.2 we changed it to be a SPECIAL for
 				-- efficiency reasons. In order to retrieve an old HASH_TABLE we
 				-- need to convert those ARRAY instances into SPECIAL instances.
-				
+
 				-- Convert `content' from ARRAY to SPECIAL
 			array_content ?= mismatch_information.item ("content")
 			if array_content /= Void then
@@ -895,12 +892,33 @@ feature {NONE} -- Transformation
 			if array_marks /= Void then
 				deleted_marks := array_marks.area
 			end
-			
+
+				-- In version 5.5 and later, `deleted_marks' had its size increased by 1 to take
+				-- into account removal of default key, and therefore if we hit a 5.4 or earlier
+				-- version, we need to resize `deleted_marks' to the new expected size.
+			if deleted_marks /= Void then
+				if not mismatch_information.has ("hash_table_version_57") then
+						-- Unfortunately this handling of the mismatch was added in 5.7 and
+						-- therefore we might have stored a valid HASH_TABLE using 5.5 or 5.6.
+						-- Fortunately enough we can simply compare the counts of
+						-- `deleted_marks' and `keys'. If they are the same it is 5.5 or 5.6,
+						-- otherwise it is 5.4 or older.
+					if deleted_marks.count /= keys.count then
+						l_deleted_marks := deleted_marks
+						create deleted_marks.make (keys.count)
+						deleted_marks.copy_data (l_deleted_marks, 0, 0, l_deleted_marks.count)
+					end
+				end
+			end
+
 			if content = Void or keys = Void or deleted_marks = Void then
 					-- Could not retrieve old version of HASH_TABLE. We throw an exception.
 				Precursor {MISMATCH_CORRECTOR}
 			end
 		end
+
+	hash_table_version_57: BOOLEAN
+			-- Fake attribute for versioning purposes. Used in `correct_mismatch'.
 
 feature {HASH_TABLE} -- Implementation: content attributes and preservation
 
@@ -979,7 +997,7 @@ feature {NONE} -- Implementation
 			default_key: H
 		do
 			Result := (keys.item (i) /= default_key)
-		end	
+		end
 
 	truly_occupied (i: INTEGER): BOOLEAN is
 			-- Is position `i' occupied by a key and a value?
@@ -1015,7 +1033,7 @@ feature {NONE} -- Implementation
 			in_bounds: i >= 0 and i <= capacity
 		do
 			Result := deleted_marks.item (i)
-		end	
+		end
 
 	set_not_deleted (i: INTEGER) is
 			-- Mark position `i' as not deleted.
@@ -1023,7 +1041,7 @@ feature {NONE} -- Implementation
 			in_bounds: i >= 0 and i <= capacity
 		do
 			deleted_marks.put (False, i)
-		end	
+		end
 
 	set_deleted (i: INTEGER) is
 			-- Mark position `i' as deleted.
@@ -1033,7 +1051,7 @@ feature {NONE} -- Implementation
 			deleted_marks.put (True, i)
 		ensure
 			deleted: deleted (i)
-		end	
+		end
 
 	set_keys (c: like keys) is
 			-- Assign `c' to `keys'.
@@ -1131,7 +1149,7 @@ feature {NONE} -- Implementation
 					(deleted (deleted_position))
 			default_value_if_not_found:
 				not_found implies
-					(content.item (position) = computed_default_value) 
+					(content.item (position) = computed_default_value)
 			default_iff_at_capacity:
 				(position = capacity) = (key = computed_default_key)
 		end
@@ -1378,7 +1396,7 @@ invariant
 	count_no_more_than_slot_count: count <= used_slot_count
 	slot_count_big_enough: 0 <= count
 	slot_count_small_enough: used_slot_count <= capacity
-							
+
 indexing
 
 	library: "[

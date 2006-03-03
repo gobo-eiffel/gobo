@@ -49,7 +49,7 @@ inherit
 		redefine
 			copy, is_equal, out
 		end
-		
+
 	MISMATCH_CORRECTOR
 		redefine
 			copy, is_equal, out, correct_mismatch
@@ -135,7 +135,7 @@ feature -- Initialization
 				make_area (l_count + 1)
 				count := l_count
 				internal_hash_code := 0
-				c_string_provider.read_string_into (Current)				
+				c_string_provider.read_string_into (Current)
 			else
 				from_c (c_string)
 			end
@@ -158,7 +158,7 @@ feature -- Initialization
 				make (0)
 			end
 		end
-		
+
 	from_c (c_string: POINTER) is
 			-- Reset contents of string from contents of `c_string',
 			-- a string created by some C function.
@@ -311,7 +311,7 @@ feature -- Access
 			valid_result: Result = 0 or (start_index <= Result and Result <= count)
 			zero_if_absent: (Result = 0) = not substring (start_index, count).has (c)
 			found_if_present: substring (start_index, count).has (c) implies item (Result) = c
-			none_before: substring (start_index, count).has (c) implies 
+			none_before: substring (start_index, count).has (c) implies
 				not substring (start_index, Result - 1).has (c)
 		end
 
@@ -375,7 +375,7 @@ feature -- Access
 		end
 
 	substring_index (other: STRING; start_index: INTEGER): INTEGER is
-			-- Index of first occurrence of other at or after start_index; 
+			-- Index of first occurrence of other at or after start_index;
 			-- 0 if none
 		require
 			other_not_void: other /= Void
@@ -389,7 +389,7 @@ feature -- Access
 				not substring (start_index, count).has_substring (other)
 			at_this_index: Result >= start_index implies
 				other.same_string (substring (Result, Result + other.count - 1))
-			none_before: Result > start_index implies 
+			none_before: Result > start_index implies
 				not substring (start_index, Result + other.count - 2).has_substring (other)
 		end
 
@@ -479,7 +479,7 @@ feature -- Comparison
 		local
 			l_area, l_other_area: like area
 			i, nb: INTEGER
-		do			
+		do
 			if other = Current then
 				Result := True
 			else
@@ -497,7 +497,7 @@ feature -- Comparison
 							i := nb - 1 -- Jump out of loop
 						end
 						i := i + 1
-					end				
+					end
 				end
 			end
 		ensure
@@ -639,7 +639,7 @@ feature -- Status report
 	is_number_sequence: BOOLEAN is
 			-- Does `Current' represent a number sequence?
 		do
-			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_no_limitation)			
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_no_limitation)
 		ensure
 			syntax_and_range:
 				-- Result is true if and only if the following two
@@ -654,7 +654,7 @@ feature -- Status report
 				-- Integer	= Digit | Digit Integer
 				-- Digit	= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 		end
-		
+
 	is_real: BOOLEAN is
 			-- Does `Current' represent a REAL?
 		do
@@ -711,68 +711,81 @@ feature -- Status report
 				--	is within the range that can be represented
 				--	by an instance of type DOUBLE.
 		end
-	
+
 	is_boolean: BOOLEAN is
 			-- Does `Current' represent a BOOLEAN?
 		local
-			s: like Current
+			nb: INTEGER
+			l_area: like area
 		do
-			s := twin
-			s.right_adjust
-			s.left_adjust
-			s.to_lower
-			Result := s.is_equal (true_constant) or else s.is_equal (false_constant)
+			nb := count
+			if nb = 4 then
+					-- Check if this is `true_constant'
+				l_area := area
+				Result := l_area.item (0).lower = 't' and then
+					l_area.item (1).lower = 'r' and then
+					l_area.item (2).lower = 'u' and then
+					l_area.item (3).lower = 'e'
+			elseif nb = 5 then
+					-- Check if this is `false_constant'
+				l_area := area
+				Result := l_area.item (0).lower = 'f' and then
+					l_area.item (1).lower = 'a' and then
+					l_area.item (2).lower = 'l' and then
+					l_area.item (3).lower = 's' and then
+					l_area.item (4).lower = 'e'
+			end
 		ensure
-			is_boolean: Result = (as_lower.has_substring (true_constant) or as_lower.has_substring (false_constant))
+			is_boolean: Result = (true_constant.same_string (as_lower) or false_constant.same_string (as_lower))
 		end
-		
+
 	is_integer_8: BOOLEAN is
 			-- Does `Current' represent an INTEGER_8?
 		do
-			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_8)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_8)
 		end
-		
+
 	is_integer_16: BOOLEAN is
 			-- Does `Current' represent an INTEGER_16?
 		do
-			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_16)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_16)
 		end
-		
+
 	is_integer, is_integer_32: BOOLEAN is
 			-- Does `Current' represent an INTEGER?
 		do
-			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_32)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_32)
 		end
-		
+
 	is_integer_64: BOOLEAN is
-			-- Does `Current' represent an INTEGER_64? 
+			-- Does `Current' represent an INTEGER_64?
 		do
-			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_64)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_64)
 		end
-		
+
 	is_natural_8: BOOLEAN is
 			-- Does `Current' represent a NATURAL_8?
 		do
-			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_8)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_8)
 		end
-		
+
 	is_natural_16: BOOLEAN is
 			-- Does `Current' represent a NATURAL_16?
 
 		do
-			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_16)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_16)
 		end
-		
+
 	is_natural, is_natural_32: BOOLEAN is
 			-- Does `Current' represent a NATURAL_32?
 		do
-			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_32)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_32)
 		end
-		
+
 	is_natural_64: BOOLEAN is
 			-- Does `Current' represent a NATURAL_64?
 		do
-			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_64)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_64)
 		end
 
 feature -- Element change
@@ -1283,7 +1296,7 @@ feature -- Element change
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		require
-			argument_not_void: s /= Void	
+			argument_not_void: s /= Void
 		do
 			Result := new_string (count + s.count)
 			Result.append (Current)
@@ -1708,9 +1721,9 @@ feature -- Element change
 			inserted: elks_checking implies
 				(is_equal (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
-		
+
 	insert_string (s: STRING; i: INTEGER) is
-			-- Insert `s' at index `i', shifting characters between ranks 
+			-- Insert `s' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
 			string_exists: s /= Void
@@ -1728,11 +1741,11 @@ feature -- Element change
 				if new_size > capacity then
 					resize (new_size + additional_space)
 				end
-				
+
 					-- Perform all operations using a zero based arrays.
 				l_area := area
 				pos := i - 1
-				
+
 					-- First shift from `s.count' position all characters starting at index `pos'.
 				l_area.overlapping_move (pos, pos + l_s_count, count - pos)
 
@@ -1748,7 +1761,7 @@ feature -- Element change
 		end
 
 	insert_character (c: CHARACTER; i: INTEGER) is
-			-- Insert `c' at index `i', shifting characters between ranks 
+			-- Insert `c' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
 			valid_insertion_index: 1 <= i and i <= count + 1
@@ -1761,11 +1774,11 @@ feature -- Element change
 			if new_size > capacity then
 				resize (new_size + additional_space)
 			end
-			
+
 				-- Perform all operations using a zero based arrays.
 			pos := i - 1
 			l_area := area
-			
+
 				-- First shift from `s.count' position all characters starting at index `pos'.
 			l_area.overlapping_move (pos, pos + 1, count - pos)
 
@@ -1933,7 +1946,7 @@ feature -- Removal
 	wipe_out is
 			-- Remove all characters.
 		do
-			area := empty_area
+			create area.make (1)
 			count := 0
 			internal_hash_code := 0
 		ensure then
@@ -2017,7 +2030,7 @@ feature -- Conversion
 				-- Remove leading white spaces.
 			nb := count
 			left_adjust
-			
+
 				-- Get new count
 			i := count
 			if i < nb then
@@ -2065,7 +2078,7 @@ feature -- Conversion
 				i := i - 1
 			end
 
-				-- We encourage that more spaces will be put to the left, when 
+				-- We encourage that more spaces will be put to the left, when
 				-- number of spaces is not even.
 			l_offset := left_nb_space + right_nb_space
 			if l_offset \\ 2 = 0 then
@@ -2152,7 +2165,7 @@ feature -- Conversion
 			l_index_of_pivot := index_of (pivot, 1)
 			if l_index_of_pivot /= 0 then
 				if l_index_of_pivot < position then
-						-- We need to resize Current so that we can shift Current by 
+						-- We need to resize Current so that we can shift Current by
 						-- `l_index_of_pivot - position'.
 					l_new_size := count + position - l_index_of_pivot
 					grow (l_new_size)
@@ -2209,76 +2222,76 @@ feature -- Conversion
 		ensure
 			length_end_content: elks_checking implies is_equal (old as_upper)
 		end
-		
+
 	to_integer_8: INTEGER_8 is
-			-- 8-bit integer value 
+			-- 8-bit integer value
 		require
 			is_integer_8: is_integer_8
 		do
 			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_8)
-			Result := ctoi_convertor.parsed_integer_8	
+			Result := ctoi_convertor.parsed_integer_8
 		end
-		
+
 	to_integer_16: INTEGER_16 is
-			-- 16-bit integer value 
+			-- 16-bit integer value
 		require
 			is_integer_16: is_integer_16
-		do	
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_16)			
+		do
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_16)
 			Result := ctoi_convertor.parsed_integer_16
-		end		
-		
+		end
+
 	to_integer, to_integer_32: INTEGER is
-			-- 32-bit integer value 
-		require		
+			-- 32-bit integer value
+		require
 			is_integer: is_integer_32
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_32)			
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_32)
 			Result := ctoi_convertor.parsed_integer
-		end		
-		
+		end
+
 	to_integer_64: INTEGER_64 is
-			-- 64-bit integer value 
-		require		
+			-- 64-bit integer value
+		require
 			is_integer_64: is_integer_64
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_64)			
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_64)
 			Result := ctoi_convertor.parsed_integer_64
-		end	
-		
-	to_natural_8: NATURAL_8 is		
-			-- 8-bit natural value 
+		end
+
+	to_natural_8: NATURAL_8 is
+			-- 8-bit natural value
 		require
 			is_natural_8: is_natural_8
 		do
 			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_8)
 			Result := ctoi_convertor.parsed_natural_8
 		end
-		
-	to_natural_16: NATURAL_16 is		
+
+	to_natural_16: NATURAL_16 is
 			-- 16-bit natural value
-		require	
+		require
 			is_natural_16: is_natural_16
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_16)			
-			Result := ctoi_convertor.parsed_natural_16	
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_16)
+			Result := ctoi_convertor.parsed_natural_16
 		end
-		
-	to_natural, to_natural_32: NATURAL_32 is		
-			-- 32-bit natural value 
-		require	
+
+	to_natural, to_natural_32: NATURAL_32 is
+			-- 32-bit natural value
+		require
 			is_natural: is_natural
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_32)			
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_32)
 			Result := ctoi_convertor.parsed_natural_32
-		end	
-		
-	to_natural_64: NATURAL_64 is		
+		end
+
+	to_natural_64: NATURAL_64 is
 			-- 64-bit natural value
-		require		
+		require
 			is_natural_64: is_natural_64
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_64)			
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_64)
 			Result := ctoi_convertor.parsed_natural_64
 		end
 
@@ -2307,17 +2320,14 @@ feature -- Conversion
 			-- (case-insensitive)
 		require
 			is_boolean: is_boolean
-		local
-			s: like Current
 		do
-			s := twin
-			s.right_adjust
-			s.left_adjust
-			s.to_lower
-			Result := s.is_equal (true_constant)
+			check true_constant.count = 4 end
+			if count = 4 then
+				Result := True
+			end
 		ensure
-			to_boolean: (Result = same_string (true_constant)) or
-				(not Result = same_string (false_constant))
+			to_boolean: (Result = true_constant.same_string (as_lower)) or
+				(not Result = false_constant.same_string (as_lower))
 		end
 
 	linear_representation: LINEAR [CHARACTER] is
@@ -2337,7 +2347,7 @@ feature -- Conversion
 			end
 			Result := temp
 		end
-	
+
 	split (a_separator: CHARACTER): LIST [STRING] is
 			-- Split on `a_separator'.
 		local
@@ -2374,16 +2384,16 @@ feature -- Conversion
 				end
 			else
 					-- Extend empty string, since Current is empty.
-				l_list.extend ("")	
+				l_list.extend ("")
 			end
 			Result := l_list
-			check 
+			check
 				l_list.count = occurrences (a_separator) + 1
 			end
 		ensure
 			Result /= Void
 		end
-	
+
 	frozen to_c: ANY is
 			-- A reference to a C form of current string.
 			-- Useful only for interfacing with C software.
@@ -2396,7 +2406,7 @@ feature -- Conversion
 			l_area.put ('%U', count)
 			Result := l_area
 		end
-		
+
 	frozen to_cil: SYSTEM_STRING is
 			-- Create an instance of SYSTEM_STRING using characters
 			-- of Current between indices `1' and `count'.
@@ -2556,7 +2566,7 @@ feature {NONE} -- Transformation
 			-- Nothing to be done because we only added `internal_hash_code' that will
 			-- be recomputed next time we query `hash_code'.
 		end
-		
+
 feature {NONE} -- Implementation
 
 	is_valid_integer_or_natural (type: INTEGER) : BOOLEAN is
@@ -2568,7 +2578,7 @@ feature {NONE} -- Implementation
 		end
 
 	str_strict_cmp (this, other: like area; nb: INTEGER): INTEGER is
-			-- Compare `this' and `other' strings 
+			-- Compare `this' and `other' strings
 			-- for the first `nb' characters.
 			-- 0 if equal, < 0 if `this' < `other',
 			-- > 0 if `this' > `other'
@@ -2593,7 +2603,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	string_searcher: STRING_SEARCHER is
 			-- Facilities to search string in another string.
 		once
@@ -2601,7 +2611,7 @@ feature {NONE} -- Implementation
 		ensure
 			string_searcher_not_void: Result /= Void
 		end
-		
+
 	c_string_provider: C_STRING is
 			-- To create Eiffel strings from C string.
 		once
@@ -2612,30 +2622,32 @@ feature {NONE} -- Implementation
 
 	empty_area: SPECIAL [CHARACTER] is
 			-- Empty `area' to avoid useless creation of empty areas when wiping out a STRING.
+		obsolete
+			"Simply create `area' directly."
 		do
 			create Result.make (1)
 		ensure
 			empty_area_not_void: Result /= Void
 		end
-		
+
 	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR is
 			-- Convertor used to convert string to integer or natural
 		once
 			create Result.make
 			Result.set_leading_separators (" ")
-			Result.set_trailing_separators (" ")			
+			Result.set_trailing_separators (" ")
 			Result.set_leading_separators_acceptable (True)
-			Result.set_trailing_separators_acceptable (True)			
+			Result.set_trailing_separators_acceptable (True)
 		end
-		
+
 	ctor_convertor: STRING_TO_REAL_CONVERTOR is
 			-- Convertor used to convert string to real or double
 		once
 			create Result.make
 			Result.set_leading_separators (" ")
-			Result.set_trailing_separators (" ")			
+			Result.set_trailing_separators (" ")
 			Result.set_leading_separators_acceptable (True)
-			Result.set_trailing_separators_acceptable (True)						
+			Result.set_trailing_separators_acceptable (True)
 		end
 
 invariant

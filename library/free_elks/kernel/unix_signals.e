@@ -1,4 +1,5 @@
 indexing
+
 	description: "[
 		Constants used for signal handling.
 		This class may be used as ancestor by classes needing its facilities.

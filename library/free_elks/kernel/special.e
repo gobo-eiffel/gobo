@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		ensure
 			area_allocated: count = n
 		end
-		
+
 	frozen make_from_native_array (an_array: like native_array) is
 			-- Creates a special object from `an_array'.
 		require
@@ -83,7 +83,7 @@ feature -- Access
 		ensure
 			found_or_not_found: Result = -1 or else (Result >= 0 and then Result < count)
 		end
-		
+
 	frozen item_address (i: INTEGER): POINTER is
 			-- Address of element at position `i'.
 		require
@@ -106,7 +106,7 @@ feature -- Access
 		ensure
 			base_address_not_null: Result /= default_pointer
 		end
-	
+
 	frozen native_array: NATIVE_ARRAY [T] is
 			-- Only for compatibility with .NET
 		require
@@ -118,8 +118,8 @@ feature -- Measurement
 
 	lower: INTEGER is 0
 			-- Minimum index of Current
-			
-	frozen upper: INTEGER is 
+
+	frozen upper: INTEGER is
 			-- Maximum index of Current
 		do
 			Result := count - 1
@@ -183,13 +183,13 @@ feature -- Status report
 		ensure
 			valid_on_empty_area: upper_bound = -1 implies Result
 		end
-	
+
 	frozen valid_index (i: INTEGER): BOOLEAN is
 			-- Is `i' within the bounds of Current?
 		do
 			Result := (0 <= i) and then (i < count)
 		end
-		
+
 feature -- Element change
 
 	frozen put (v: T; i: INTEGER) is
@@ -201,7 +201,7 @@ feature -- Element change
 		external
 			"built_in"
 		end
-		
+
 	frozen fill_with (v: T; start_index, end_index: INTEGER) is
 			-- Set items between `start_index' and `end_index' with `v'.
 		require
@@ -223,7 +223,7 @@ feature -- Element change
 		end
 
 	frozen copy_data (other: like Current; source_index, destination_index, n: INTEGER) is
-			-- Copy `n' elements of `other' from `source_start' position to Current at
+			-- Copy `n' elements of `other' from `source_index' position to Current at
 			-- `destination_index'. Other elements of Current remain unchanged.
 		require
 			other_not_void: other /= Void
@@ -334,7 +334,7 @@ feature -- Element change
 			destination_index_non_negative: destination_index >= 0
 			n_non_negative: n >= 0
 			different_source_and_target: source_index /= destination_index
-			non_overlapping: 
+			non_overlapping:
 				(source_index < destination_index implies source_index + n < destination_index) or
 				(source_index > destination_index implies destination_index + n < source_index)
 			n_is_small_enough_for_source: source_index + n <= count
@@ -354,7 +354,7 @@ feature -- Element change
 				i := i + 1
 			end
 		end
-		
+
 feature -- Resizing
 
 	frozen resized_area (n: INTEGER): like Current is
@@ -382,7 +382,7 @@ feature -- Resizing
 			Result_different_from_current: Result /= Current
 			new_count: Result.count = n
 		end
-	
+
 	frozen aliased_resized_area (n: INTEGER): like Current is
 			-- Try to resize `Current' with a count of `n', if not
 			-- possible a new copy.

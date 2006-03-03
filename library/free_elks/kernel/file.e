@@ -1188,7 +1188,7 @@ feature -- Element change
 		do
 			c_basic_store (descriptor, $object)
 		end
- 
+
 	general_store (object: ANY) is
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
@@ -1412,6 +1412,8 @@ feature -- Input
 				end
 			end
 			separator := file_lh (file_pointer) -- Look ahead
+		ensure
+			last_string_not_void: last_string /= Void
 		end
 
 feature -- Convenience
@@ -1751,7 +1753,7 @@ feature {NONE} -- Implementation
 		alias
 			"eretrieve"
 		end
- 
+
 	c_basic_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
@@ -1760,7 +1762,7 @@ feature {NONE} -- Implementation
 		alias
 			"estore"
 		end
- 
+
 	c_general_store (file_handle: INTEGER; object: POINTER)is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
@@ -1769,7 +1771,7 @@ feature {NONE} -- Implementation
 		alias
 			"eestore"
 		end
- 
+
 	c_independent_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
@@ -1831,7 +1833,7 @@ feature {FILE} -- Implementation
 		do
 			mode := Write_file
 		end
-		
+
 	platform_indicator: PLATFORM is
 			-- Platform indicator
 		once

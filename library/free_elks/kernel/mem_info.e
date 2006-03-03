@@ -149,6 +149,7 @@ feature {NONE} -- C externals
 		end
 
 invariant
+
 	consistent_memory: total = free + used + overhead
 
 end

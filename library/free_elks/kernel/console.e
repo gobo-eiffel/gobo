@@ -30,7 +30,7 @@ class CONSOLE inherit
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			 read_real, read_double, read_character,
-			read_line, read_stream, read_word, next_line, 
+			read_line, read_stream, read_word, next_line,
 			put_boolean, put_real, put_double, put_string, put_character,
 			put_new_line, new_line, end_of_file, file_close,
 			readreal, readdouble, readchar, readline, readstream,
@@ -38,7 +38,7 @@ class CONSOLE inherit
 			dispose, read_to_string, back,
 			read_integer_with_no_type,
 			ctoi_convertor
-			
+
 		end
 
 	ANY
@@ -98,12 +98,13 @@ feature -- Removal
 			-- file_close (file_pointer)
 		end
 
-feature -- Cursor movement
+feature {NONE} -- Cursor movement
+
 	back is
 			-- Not supported on console
-		do			
+		do
 		end
-		
+
 feature -- Input
 
 	read_real, readreal is
@@ -300,7 +301,7 @@ feature {NONE} -- Inapplicable
 			--| `empty' is false not to invalidate invariant clauses.
 
 feature {NONE} -- Implementation
-		
+
 	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR is
 			-- Convertor used to parse string to integer or natural
 		once
@@ -308,8 +309,8 @@ feature {NONE} -- Implementation
 			Result.set_leading_separators (internal_leading_separators)
 			Result.set_leading_separators_acceptable (True)
 			Result.set_trailing_separators_acceptable (False)
-		end		
-		
+		end
+
 	read_integer_with_no_type is
 			-- Read a ASCII representation of number of `type'
 			-- at current position.
@@ -318,20 +319,20 @@ feature {NONE} -- Implementation
 				-- Consume all left characters.
 			consume_characters
 		end
-		
+
 	consume_characters is
-			-- Consume all characters from current position 
+			-- Consume all characters from current position
 			-- until we meet a new-line character.
 		do
 			from
-				
+
 			until
-				end_of_file or last_character = '%N' 
+				end_of_file or last_character = '%N'
 			loop
 				read_character
-			end			
-		end		
-		
+			end
+		end
+
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.

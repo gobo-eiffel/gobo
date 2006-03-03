@@ -42,7 +42,7 @@ feature --{NONE} -- Initialization
 			create managed_data.make ((a_length + 1))
 			count := 0
 		end
-	
+
 	make_by_pointer (a_ptr: POINTER) is
 			-- Make a copy of string pointed by `a_ptr'.
 		require
@@ -50,7 +50,7 @@ feature --{NONE} -- Initialization
 		do
 			make_by_pointer_and_count (a_ptr, c_strlen (a_ptr))
 		end
-		
+
 	make_by_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
 			-- Make a copy of first `a_length' byte of string pointed by `a_ptr'.
 		require
@@ -105,7 +105,7 @@ feature -- Access
 		ensure
 			susbstring_not_void: Result /= Void
 		end
-		
+
 	string: STRING is
 			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
 		do
@@ -113,7 +113,7 @@ feature -- Access
 		ensure
 			string_not_void: Result /= Void
 		end
-		
+
 	read_substring_into (a_string: STRING; start_pos, end_pos: INTEGER) is
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string'.
@@ -160,6 +160,9 @@ feature -- Access
 			item_not_null: Result /= default_pointer
 		end
 
+	managed_data: MANAGED_POINTER
+			-- Hold data of Current.
+
 feature -- Measurement
 
 	capacity: INTEGER is
@@ -185,9 +188,9 @@ feature -- Element change
 		do
 			nb := a_string.count
 			count := nb
-			
+
 			new_size := nb + 1
-			
+
 			if managed_data.count < new_size  then
 				managed_data.resize (new_size)
 			end
@@ -222,7 +225,7 @@ feature -- Element change
 		ensure
 			count_set: count = a_count
 		end
-		
+
 	fill_blank is
 			-- Fill Current with zeros.
 		do
@@ -230,7 +233,7 @@ feature -- Element change
 		ensure
 			-- all_values: For every `i' in 1..`count', `item' (`i') = `0'
 		end
-		
+
 	fill_value (a_value: INTEGER_8) is
 			-- Fill Current with `a_value'.
 		do
@@ -238,11 +241,8 @@ feature -- Element change
 		ensure
 			-- all_values: For every `i' in 1..`count', `item' (`i') = `a_value'
 		end
-		
-feature {NONE} -- Implementation
 
-	managed_data: MANAGED_POINTER
-			-- Hold data of Current.
+feature {NONE} -- Implementation
 
 	c_strlen (ptr: POINTER): INTEGER is
 		external

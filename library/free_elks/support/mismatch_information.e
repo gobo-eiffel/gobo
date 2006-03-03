@@ -91,10 +91,10 @@ feature {NONE} -- Implementation
 	internal_put (value: ANY; ckey: POINTER) is
 			-- Allows run-time to insert items into table
 		local
-			key: STRING
+			l_key: STRING
 		do
-			create key.make_from_c (ckey)
-			put (value, key)
+			create l_key.make_from_c (ckey)
+			put (value, l_key)
 		end
 
 	set_callback_pointers is

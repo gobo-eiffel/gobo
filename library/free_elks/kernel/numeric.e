@@ -106,6 +106,7 @@ feature -- Basic operations
 		end
 
 invariant
+
 --	neutral_addition: equal (Current + zero, Current);
 --	self_subtraction: equal (Current - Current, zero);
 --	neutral_multiplication: equal (Current * one, Current);

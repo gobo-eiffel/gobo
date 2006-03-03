@@ -39,6 +39,7 @@ create
 
 convert
 	to_cil: {NATIVE_ARRAY [G]},
+	to_special: {SPECIAL [G]},
 	make_from_cil ({NATIVE_ARRAY [G]})
 
 feature -- Initialization
@@ -206,7 +207,7 @@ feature -- Comparison
 						Result := True
 						i := lower
 					until
-						not Result or i > upper 
+						not Result or i > upper
 					loop
 						Result := equal (item (i), other.item (i))
 						i := i + 1
@@ -224,9 +225,9 @@ feature -- Status report
 		do
 			Result := area.all_default (upper - lower)
 		ensure
-			definition: Result = (count = 0 or else 
-				((item (upper) = Void or else 
-				item (upper) = item (upper).default) and 
+			definition: Result = (count = 0 or else
+				((item (upper) = Void or else
+				item (upper) = item (upper).default) and
 				subarray (lower, upper - 1).all_default))
 		end
 
@@ -247,7 +248,7 @@ feature -- Status report
 		ensure
 			definition: Result = ((count = other.count) and then
 				(count = 0 or else (item (upper) = other.item (other.upper)
-				and subarray (lower, upper - 1).same_items 
+				and subarray (lower, upper - 1).same_items
 				(other.subarray (other.lower, other.upper - 1)))))
 		end
 
@@ -337,7 +338,7 @@ feature -- Iteration
 	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
 			-- Apply `action' to every non-void item.
 			-- Semantics not guaranteed if `action' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		require
 			action_not_void: action /= Void
 		local
@@ -362,7 +363,7 @@ feature -- Iteration
 	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `action' to every non-void item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		require
 			action_not_void: action /= Void
 			test_not_void: test /= Void
@@ -540,7 +541,7 @@ feature -- Conversion
 		do
 			Result := area
 		end
-		
+
 	to_cil: NATIVE_ARRAY [G] is
 			-- Address of actual sequence of values,
 			-- for passing to external (non-Eiffel) routines.
@@ -550,6 +551,14 @@ feature -- Conversion
 			Result := area.native_array
 		ensure
 			to_cil_not_void: Result /= Void
+		end
+
+	to_special: SPECIAL [G] is
+			-- 'area'.
+		do
+			Result := area
+		ensure
+			to_special_not_void: Result /= Void
 		end
 
 	linear_representation: LINEAR [G] is
@@ -676,7 +685,7 @@ invariant
 	non_negative_count: count >= 0
 	index_set_has_same_count: valid_index_set
 -- Internal discussion haven't reached an agreement on this invariant
---	index_set_has_same_bounds: ((index_set.lower = lower) and 
+--	index_set_has_same_bounds: ((index_set.lower = lower) and
 --				(index_set.upper = lower + count - 1))
 
 end

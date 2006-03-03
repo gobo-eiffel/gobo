@@ -11,14 +11,14 @@ class
 
 inherit
 	STRING_TO_NUMERIC_CONVERTOR
-	
+
 create
 	make
-	
+
 feature{NONE} -- Initialization
 
 	make is
-			-- 
+			--
 		do
 			set_leading_separators (" ")
 			set_trailing_separators (" ")
@@ -35,19 +35,19 @@ feature -- Status reporting
 
 	conversion_type_valid (type: INTEGER): BOOLEAN is
 		do
-			Result := real_double_type_valid (type)	
+			Result := real_double_type_valid (type)
 		end
-		
+
 	overflowed: BOOLEAN is
 		do
 			Result := False
 		end
-	
-	underflowed: BOOLEAN is 
+
+	underflowed: BOOLEAN is
 		do
 			Result := False
-		end		
-		
+		end
+
 	parse_successful: BOOLEAN is
 			-- This only means we didn't enter an invalid state when parsing,
 			-- it doesn't mean that we have got an valid double/real number.
@@ -55,7 +55,7 @@ feature -- Status reporting
 		do
 			Result := (last_state /= 9)
 		end
-		
+
 	separators_valid (separators: STRING): BOOLEAN is
 		local
 			i: INTEGER
@@ -79,31 +79,31 @@ feature -- Status reporting
 				i := i + 1
 			end
 		end
-	
+
 	is_integral_double: BOOLEAN is
 			-- Is character sequence that has been parsed represents a valid double?
 		do
 			Result := (last_state > 1 and last_state < 9) and (not needs_digit)
 		end
-	
+
 	is_integral_real: BOOLEAN is
 			-- Is character sequence that has been parsed represents a valid real?	
 		do
 			Result := is_integral_double
 		end
-		
+
 	is_part_of_double: BOOLEAN is
-			-- Is character sequence that has been parsed so far a valid start part of double?  
+			-- Is character sequence that has been parsed so far a valid start part of double?
 		do
 			Result := last_state /= 9
 		end
-		
+
 	is_part_of_real: BOOLEAN is
-			-- Is character sequence that has been parsed so far a valid start part of real?  
+			-- Is character sequence that has been parsed so far a valid start part of real?
 		do
 			Result := is_part_of_double
 		end
-		
+
 	parsed_double: DOUBLE is
 			-- Parsed double value
 		do
@@ -117,9 +117,9 @@ feature -- Status reporting
 				Result := -natural_part * (10.0 ^ exponent)
 			else
 				Result := natural_part * (10.0 ^ exponent)
-			end			
+			end
 		end
-		
+
 	parsed_real: REAL is
 			-- Parsed real value
 		do
@@ -133,7 +133,7 @@ feature -- Status setting
 			conversion_type := type
 			sign := 0
 			last_state := 0
-						
+
 			natural_part := 0
 			fractional_part := 0
 			fractional_divider := 0
@@ -152,13 +152,13 @@ feature -- Status setting
 			has_fractional_part_set: has_fractional_part = False
 			needs_digit_set: needs_digit = False
 		end
-				
+
 feature -- Parse
 
-	parse_string_with_type (s: STRING; type: INTEGER) is			
+	parse_string_with_type (s: STRING; type: INTEGER) is
 		local
 			i: INTEGER
-			l_c: INTEGER			
+			l_c: INTEGER
 		do
 			reset (type)
 			from
@@ -173,7 +173,7 @@ feature -- Parse
 		end
 
 	parse_character (c: CHARACTER) is
-	
+
 		do
 				-- Parse according to the following specification:
 				-- Real/double number specification:
@@ -187,7 +187,7 @@ feature -- Parse
 				-- Sign			= "+" | "-"
 				-- Integer		= Digit | Digit Integer
 				-- Digit		= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9".			
-				
+
 					-- last_state = 0 : waiting sign or double value.
 					-- last_state = 1 : sign read, waiting double value.
 					-- last_state = 2 : in the number.
@@ -240,7 +240,6 @@ feature -- Parse
 						last_state := 8
 					elseif c.as_lower = 'e' then
 							-- Not conform to ECMA standard, just for backward compatibility.
-						needs_digit := True
 						last_state := 5
 					else
 						last_state := 9
@@ -251,8 +250,8 @@ feature -- Parse
 						last_state := 4
 						has_fractional_part := True
 						fractional_part := c.code - 48
-						fractional_divider := 10.0	
-						needs_digit := False					
+						fractional_divider := 10.0
+						needs_digit := False
 					elseif c.as_lower = 'e' and not needs_digit then
 						needs_digit := True
 						last_state := 5
@@ -265,12 +264,12 @@ feature -- Parse
 						-- Continue reading decimal part
 					if c.is_digit then
 						fractional_part := fractional_part * 10.0 + (c.code - 48)
-						fractional_divider := fractional_divider * 10.0						
+						fractional_divider := fractional_divider * 10.0
 					elseif c.as_lower = 'e' then
 						needs_digit := True
 						last_state := 5
 					elseif (trailing_separators_acceptable and then trailing_separators.has (c)) then
-						last_state := 8						
+						last_state := 8
 					else
 						last_state := 9
 					end
@@ -314,19 +313,19 @@ feature -- Parse
 						last_state := 9
 					end
 				else
-				end				
-		end	
-		
+				end
+		end
+
 feature{NONE} -- Implementation
-			
+
 	natural_part: DOUBLE
 	fractional_part: DOUBLE
 	fractional_divider: DOUBLE
 	exponent: INTEGER
 	is_negative: BOOLEAN
-	has_negative_exponent: BOOLEAN 
+	has_negative_exponent: BOOLEAN
 	has_fractional_part: BOOLEAN
 	needs_digit: BOOLEAN
 			-- Used to calculate real/double value
-					
+
 end

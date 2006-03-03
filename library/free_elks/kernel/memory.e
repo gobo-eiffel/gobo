@@ -16,7 +16,7 @@ inherit
 	DISPOSABLE
 
 	MEM_CONST
-
+	
 feature -- Measurement
 
 	memory_statistics (memory_type: INTEGER): MEM_INFO is
@@ -206,7 +206,7 @@ feature -- Status report
 				-- Now create table indexed by dynamic type. For a given
 				-- dynamic type, we will have a list of all objects of
 				-- this type.
-			create Result.make (100)
+			create Result.make (100)		
 			from
 				i := 0
 				nb := l_spec.count
