@@ -31,10 +31,10 @@ feature -- Test
 			assert ("Parse successful", not a_parser.is_error)
 			assert ("Not shorthand", not a_parser.is_shorthand)
 			assert ("Two schemes", a_parser.scheme_sequence.count = 2)
-			assert ("First scheme is xpointer", a_parser.scheme_sequence.item (1).is_equal ("xpointer"))
-			assert ("First scheme data", a_parser.scheme_data.item (1).is_equal ("id('boy-blue')/horn[1]"))
-			assert ("First scheme is element", a_parser.scheme_sequence.item (2).is_equal ("element")) 
-			assert ("Second scheme data", a_parser.scheme_data.item (2).is_equal ("boy-blue/3"))
+			assert_strings_equal ("First scheme is xpointer", "xpointer", a_parser.scheme_sequence.item (1))
+			assert_strings_equal ("First scheme data", "id('boy-blue')/horn[1]", a_parser.scheme_data.item (1))
+			assert_strings_equal ("First scheme is element", "element", a_parser.scheme_sequence.item (2))
+			assert_strings_equal ("Second scheme data", "boy-blue/3", a_parser.scheme_data.item (2))
 		end
 	
 	test_two_schemes_with_white_space is
@@ -57,7 +57,7 @@ feature -- Test
 			assert ("Parse successful", not a_parser.is_error)
 			assert ("Not shorthand", not a_parser.is_shorthand)
 			assert ("One scheme", a_parser.scheme_sequence.count = 1)
-			assert ("Unescaped scheme data", a_parser.scheme_data.item (1).is_equal ("string-range(//P,%"my (favorite smiley :-)%")"))
+			assert_strings_equal ("Unescaped scheme data", "string-range(//P,%"my (favorite smiley :-)%")", a_parser.scheme_data.item (1))
 		end
 
 	test_shorthand is
