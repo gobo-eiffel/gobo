@@ -108,6 +108,9 @@ inherit
 	KL_IMPORTED_CHARACTER_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -3176,7 +3179,7 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 											current_file.put_character (' ')
 											print_type_cast (l_value_type, current_file)
 											current_file.put_character ('%'')
-											print_escaped_character (k.to_character)
+											print_escaped_character (INTEGER_.to_character (k))
 											current_file.put_character ('%'')
 											current_file.put_character (':')
 											current_file.put_new_line
