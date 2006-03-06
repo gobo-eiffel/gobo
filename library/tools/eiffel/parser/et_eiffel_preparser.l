@@ -22,7 +22,7 @@ create
 	make, make_with_factory
 %}
 
-%x MS MSN MSN1 VS1 VS2 VS3
+%x MS MSN MSN1 VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
 %option nodefault line outfile="et_eiffel_preparser.e"
 
 %%
@@ -255,7 +255,7 @@ create
 \"[^%\n"]*\"	{
 			}
 
-\"[^\n"%]*\[/[ \t\r]*\n {
+\"[^\n"%]*\{/[ \t\r]*\n {
 					-- Verbatim string.
 				verbatim_marker := text_substring (2, text_count - 1)
 				set_start_condition (VS1)
@@ -269,20 +269,22 @@ create
 				set_start_condition (VS2)
 			}
 	.		{
-					-- No final bracket-double-quote.
+					-- No final brace-double-quote.
 				last_token := E_STRERR
+				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
-					-- No final bracket-double-quote.
+					-- No final brace-double-quote.
 				last_token := E_STRERR
+				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 }
 <VS2>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	[ \t\r]*\][^%\n"]*\" {
+	[ \t\r]*\}[^%\n"]*\" {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					verbatim_marker := Void
 					set_start_condition (INITIAL)
@@ -304,13 +306,15 @@ create
 				last_literal_end := text_count - 1
 			}
 	[^"\n]* {
-					-- No final bracket-double-quote.
+					-- No final brace-double-quote.
 				last_token := E_STRERR
+				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
-					-- No final bracket-double-quote.
+					-- No final brace-double-quote.
 				last_token := E_STRERR
+				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 }
@@ -328,13 +332,105 @@ create
 				set_start_condition (VS2)
 			}
 	.*		{
+					-- No final brace-double-quote.
+				last_token := E_STRERR
+				report_syntax_error (current_position)
+				set_start_condition (INITIAL)
+			}
+	<<EOF>>	{
+					-- No final brace-double-quote.
+				last_token := E_STRERR
+				report_syntax_error (current_position)
+				set_start_condition (INITIAL)
+			}
+}
+
+\"[^\n"%]*\[/[ \t\r]*\n {
+					-- Left aligned verbatim string.
+				verbatim_marker := text_substring (2, text_count - 1)
+				set_start_condition (LAVS1)
+			}
+<LAVS1>{
+		-- Discard space characters at the
+		-- end of Verbatim_string_opener.
+	[ \t\r]*\n {
+				last_literal_start := 1
+				last_literal_end := 0
+				set_start_condition (LAVS2)
+			}
+	.		{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
+				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
+				report_syntax_error (current_position)
+				set_start_condition (INITIAL)
+			}
+}
+<LAVS2>{
+		-- Read one line of a verbatim string body
+		-- from the beginning of line.
+	[ \t\r]*\][^%\n"]*\" {
+				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
+					verbatim_marker := Void
+					set_start_condition (INITIAL)
+				else
+					more
+					set_start_condition (LAVS3)
+				end
+			}
+	[^"\n]*\" {
+				more
+				set_start_condition (LAVS3)
+			}
+	[^"\n]*\r\n {
+				more
+				last_literal_end := text_count - 2
+			}
+	[^"\n]*\n {
+				more
+				last_literal_end := text_count - 1
+			}
+	[^"\n]* {
+					-- No final bracket-double-quote.
+				last_token := E_STRERR
+				report_syntax_error (current_position)
+				set_start_condition (INITIAL)
+			}
+	<<EOF>>	{
+					-- No final bracket-double-quote.
+				last_token := E_STRERR
+				report_syntax_error (current_position)
+				set_start_condition (INITIAL)
+			}
+}
+<LAVS3>{
+		-- Read remaining characters of a line
+		-- in verbatim string body.
+	.*\r\n	{
+				more
+				last_literal_end := text_count - 2
+				set_start_condition (LAVS2)
+			}
+	.*\n	{
+				more
+				last_literal_end := text_count - 1
+				set_start_condition (LAVS2)
+			}
+	.*		{
+					-- No final bracket-double-quote.
+				last_token := E_STRERR
+				report_syntax_error (current_position)
+				set_start_condition (INITIAL)
+			}
+	<<EOF>>	{
+					-- No final bracket-double-quote.
+				last_token := E_STRERR
+				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 }
@@ -479,11 +575,13 @@ create
 	.		{
 					-- Should never happen.
 				last_token := E_STRERR
+				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- Should never happen.
 				last_token := E_STRERR
+				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 }

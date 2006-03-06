@@ -5,7 +5,7 @@ indexing
 		"Test features of class STRING listed in KS_STRING"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1474,6 +1474,45 @@ feature -- Test
 			assert_integers_equal ("code_254", 254, a_string.item (1).code)
 			a_string := "%/255/"
 			assert_integers_equal ("code_255", 255, a_string.item (1).code)
+		end
+
+	test_verbatim_string is
+			-- Test verbatim strings.
+		local
+			s: STRING
+		do
+			s := "[
+		foo
+		bar
+			]"
+			assert_strings_equal ("string1", "foo%Nbar", s)
+-- SE 1.0 and 1.2r6 report a syntax error when 'foo' and 'bar' are not aligned.
+--			s := "[
+--		foo
+--	bar
+--			]"
+--			assert_strings_equal ("string2", "%Tfoo%Nbar", s)
+--			s := "xyz[
+--  foo
+-- 		bar
+--			]xyz"
+--			assert_strings_equal ("string3", " foo%N%T%Tbar", s)
+			s := "{
+		foo
+	bar
+}"
+			assert_strings_equal ("string4", "%T%Tfoo%N%Tbar", s)
+			s := "ab{
+ 	foo
+  bar
+			}ab"
+			assert_strings_equal ("string5", " %Tfoo%N  bar", s)
+			s := "[
+				]"
+			assert_strings_equal ("string6", "", s)
+			s := "{
+				}"
+			assert_strings_equal ("string7", "", s)
 		end
 
 end

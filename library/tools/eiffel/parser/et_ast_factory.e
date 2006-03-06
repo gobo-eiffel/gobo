@@ -5,7 +5,7 @@ indexing
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,12 +15,6 @@ class ET_AST_FACTORY
 inherit
 
 	ET_SHARED_TOKEN_CONSTANTS
-
-	UT_CHARACTER_CODES
-		export {NONE} all end
-
-	KL_IMPORTED_INTEGER_ROUTINES
-		export {NONE} all end
 
 create
 
@@ -971,22 +965,8 @@ feature -- AST leaves
 		require
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).recognizes (a_scanner.last_literal)
-		local
-			l_literal: STRING
-			l_value: CHARACTER
-			i, nb: INTEGER
-			c: CHARACTER
-			l_code: INTEGER
 		do
-			l_literal := a_scanner.last_literal
-			nb := l_literal.count
-			from i := 1 until i > nb loop
-				c := l_literal.item (i)
-				l_code := l_code * 10 + c.code - Zero_code
-				i := i + 1
-			end
-			l_value := INTEGER_.to_character (l_code)
-			create Result.make (l_literal, l_value)
+			Result := a_scanner.last_c3_character_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1064,122 +1044,8 @@ feature -- AST leaves
 		require
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: (([^"%\n]|%([^\n]|\/([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (a_scanner.last_literal)
-		local
-			l_literal, l_value: STRING
-			i, nb: INTEGER
-			c: CHARACTER
-			l_code: INTEGER
 		do
-			l_literal := a_scanner.last_literal
-			nb := l_literal.count
-			create l_value.make (nb)
-			from i := 1 until i > nb loop
-				c := l_literal.item (i)
-				if c = '%%' then
-					i := i + 1
-					c := l_literal.item (i)
-					inspect c
-					when 'N' then
-						l_value.append_character ('%N')
-					when 'T' then
-						l_value.append_character ('%T')
-					when 'U' then
-						l_value.append_character ('%U')
-					when 'R' then
-						l_value.append_character ('%R')
-					when 'A' then
-						l_value.append_character ('%A')
-					when 'B' then
-						l_value.append_character ('%B')
-					when 'C' then
-						l_value.append_character ('%C')
-					when 'D' then
-						l_value.append_character ('%D')
-					when 'F' then
-						l_value.append_character ('%F')
-					when 'H' then
-						l_value.append_character ('%H')
-					when 'L' then
-						l_value.append_character ('%L')
-					when 'Q' then
-						l_value.append_character ('%Q')
-					when 'S' then
-						l_value.append_character ('%S')
-					when 'V' then
-						l_value.append_character ('%V')
-					when '%%' then
-						l_value.append_character ('%%')
-					when '%'' then
-						l_value.append_character ('%'')
-					when '%"' then
-						l_value.append_character ('%"')
-					when '(' then
-						l_value.append_character ('%(')
-					when ')' then
-						l_value.append_character ('%)')
-					when '<' then
-						l_value.append_character ('%<')
-					when '>' then
-						l_value.append_character ('%>')
-					when '/' then
-						from
-							i := i + 1
-							c := l_literal.item (i)
-							l_code := 0
-						until
-							c = '/'
-						loop
-							l_code := l_code * 10 + c.code - Zero_code
-							i := i + 1
-							c := l_literal.item (i)
-						end
-						l_value.append_character (INTEGER_.to_character (l_code))
-					when '%N', '%R', ' ', '%T'  then
-						from
-							i := i + 1
-						until
-							l_literal.item (i) = '%%'
-						loop
-							i := i + 1
-						end
-					when 'n' then
-						l_value.append_character ('%N')
-					when 't' then
-						l_value.append_character ('%T')
-					when 'u' then
-						l_value.append_character ('%U')
-					when 'r' then
-						l_value.append_character ('%R')
-					when 'a' then
-						l_value.append_character ('%A')
-					when 'b' then
-						l_value.append_character ('%B')
-					when 'c' then
-						l_value.append_character ('%C')
-					when 'd' then
-						l_value.append_character ('%D')
-					when 'f' then
-						l_value.append_character ('%F')
-					when 'h' then
-						l_value.append_character ('%H')
-					when 'l' then
-						l_value.append_character ('%L')
-					when 'q' then
-						l_value.append_character ('%Q')
-					when 's' then
-						l_value.append_character ('%S')
-					when 'v' then
-						l_value.append_character ('%V')
-					else
-						l_value.append_character (c)
-					end
-					i := i + 1
-				else
-					l_value.append_character (c)
-					i := i + 1
-				end
-			end
-			create Result.make (l_literal, l_value)
+			Result := a_scanner.last_special_manifest_string
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1203,7 +1069,7 @@ feature -- AST leaves
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
-	new_verbatim_string (a_marker, an_open, a_close: STRING; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_VERBATIM_STRING is
+	new_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_VERBATIM_STRING is
 			-- New verbatim string
 		require
 			a_marker_not_void: a_marker /= Void
@@ -1211,7 +1077,7 @@ feature -- AST leaves
 			a_close_not_void: a_close /= Void
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make (a_scanner.last_literal, a_marker, an_open, a_close)
+			Result := a_scanner.last_verbatim_string (a_marker, an_open, a_close, a_left_aligned)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 

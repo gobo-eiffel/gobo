@@ -353,6 +353,8 @@ feature -- Tokens
 
 	last_identifier: ET_IDENTIFIER is
 			-- Last identifier scanned
+		require
+			last_literal_not_empty: last_literal_count > 0
 		local
 			a_string: STRING
 			a_name: STRING
@@ -379,6 +381,246 @@ feature -- Tokens
 			end
 		ensure
 			last_identifier_not_void: Result /= Void
+		end
+
+	last_c3_character_constant: ET_C3_CHARACTER_CONSTANT is
+			-- Last character constant scanned of the form '%/code/'
+		require
+			-- valid_literal: ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).recognizes (last_literal)
+		local
+			l_literal: STRING
+			l_value: CHARACTER
+			i, nb: INTEGER
+			c: CHARACTER
+			l_code: INTEGER
+		do
+			l_literal := last_literal
+			nb := l_literal.count
+			from i := 1 until i > nb loop
+				c := l_literal.item (i)
+				l_code := l_code * 10 + c.code - Zero_code
+				i := i + 1
+			end
+			l_value := INTEGER_.to_character (l_code)
+			create Result.make (l_literal, l_value)
+		ensure
+			last_c3_character_constant_not_void: Result /= Void
+		end
+
+	last_special_manifest_string: ET_SPECIAL_MANIFEST_STRING is
+			-- Last special manifest string scanned
+		require
+			-- valid_literal: (([^"%\n]|%([^\n]|\/([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (last_literal)
+		local
+			l_literal, l_value: STRING
+			i, nb: INTEGER
+			c: CHARACTER
+			l_code: INTEGER
+		do
+			l_literal := last_literal
+			nb := l_literal.count
+			create l_value.make (nb)
+			from i := 1 until i > nb loop
+				c := l_literal.item (i)
+				if c = '%%' then
+					i := i + 1
+					c := l_literal.item (i)
+					inspect c
+					when 'N' then
+						l_value.append_character ('%N')
+					when 'T' then
+						l_value.append_character ('%T')
+					when 'U' then
+						l_value.append_character ('%U')
+					when 'R' then
+						l_value.append_character ('%R')
+					when 'A' then
+						l_value.append_character ('%A')
+					when 'B' then
+						l_value.append_character ('%B')
+					when 'C' then
+						l_value.append_character ('%C')
+					when 'D' then
+						l_value.append_character ('%D')
+					when 'F' then
+						l_value.append_character ('%F')
+					when 'H' then
+						l_value.append_character ('%H')
+					when 'L' then
+						l_value.append_character ('%L')
+					when 'Q' then
+						l_value.append_character ('%Q')
+					when 'S' then
+						l_value.append_character ('%S')
+					when 'V' then
+						l_value.append_character ('%V')
+					when '%%' then
+						l_value.append_character ('%%')
+					when '%'' then
+						l_value.append_character ('%'')
+					when '%"' then
+						l_value.append_character ('%"')
+					when '(' then
+						l_value.append_character ('%(')
+					when ')' then
+						l_value.append_character ('%)')
+					when '<' then
+						l_value.append_character ('%<')
+					when '>' then
+						l_value.append_character ('%>')
+					when '/' then
+						from
+							i := i + 1
+							c := l_literal.item (i)
+							l_code := 0
+						until
+							c = '/'
+						loop
+							l_code := l_code * 10 + c.code - Zero_code
+							i := i + 1
+							c := l_literal.item (i)
+						end
+						l_value.append_character (INTEGER_.to_character (l_code))
+					when '%N', '%R', ' ', '%T'  then
+						from
+							i := i + 1
+						until
+							l_literal.item (i) = '%%'
+						loop
+							i := i + 1
+						end
+					when 'n' then
+						l_value.append_character ('%N')
+					when 't' then
+						l_value.append_character ('%T')
+					when 'u' then
+						l_value.append_character ('%U')
+					when 'r' then
+						l_value.append_character ('%R')
+					when 'a' then
+						l_value.append_character ('%A')
+					when 'b' then
+						l_value.append_character ('%B')
+					when 'c' then
+						l_value.append_character ('%C')
+					when 'd' then
+						l_value.append_character ('%D')
+					when 'f' then
+						l_value.append_character ('%F')
+					when 'h' then
+						l_value.append_character ('%H')
+					when 'l' then
+						l_value.append_character ('%L')
+					when 'q' then
+						l_value.append_character ('%Q')
+					when 's' then
+						l_value.append_character ('%S')
+					when 'v' then
+						l_value.append_character ('%V')
+					else
+						l_value.append_character (c)
+					end
+					i := i + 1
+				else
+					l_value.append_character (c)
+					i := i + 1
+				end
+			end
+			create Result.make (l_literal, l_value)
+		ensure
+			last_special_manifest_string_not_void: Result /= Void
+		end
+
+	last_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN): ET_VERBATIM_STRING is
+			-- Last verbatim string scanned
+		require
+			a_marker_not_void: a_marker /= Void
+			an_open_not_void: an_open /= Void
+			a_close_not_void: a_close /= Void
+		local
+			l_literal: STRING
+			l_value: STRING
+			l_longest_break_prefix: INTEGER
+			l_nb_lines: INTEGER
+			c: CHARACTER
+			i, j, nb: INTEGER
+			l_stop: BOOLEAN
+		do
+			l_literal := last_literal
+			if l_literal.is_empty then
+				l_value := l_literal
+			elseif a_left_aligned then
+				nb := l_literal.count
+				l_longest_break_prefix := -1
+				from i := 1 until i > nb loop
+					c := l_literal.item (i)
+					if c = ' ' or c = '%T' then
+						if l_longest_break_prefix /= -1 then
+								-- Break prefix of second and subsequent lines.
+							if j <= l_longest_break_prefix and then c = l_literal.item (j) then
+									-- Same character as in longest break prefix.
+								j := j + 1
+							else
+									-- Reduce size of longest break prefix.
+								l_longest_break_prefix := j - 1
+									-- Skip the rest of the line.
+								from
+								until
+									i > nb or else l_literal.item (i) = '%N'
+								loop
+									i := i + 1
+								end
+								l_nb_lines := l_nb_lines + 1
+								j := 1
+							end
+						end
+					else
+						if l_longest_break_prefix = -1 then
+								-- Break prefix of first line.
+							l_longest_break_prefix := i - 1
+						else
+								-- Reduce size of longest break prefix.
+							l_longest_break_prefix := j - 1
+						end
+							-- Skip the rest of the line.
+						from
+						until
+							i > nb or else l_literal.item (i) = '%N'
+						loop
+							i := i + 1
+						end
+						l_nb_lines := l_nb_lines + 1
+						j := 1
+					end
+					i := i + 1
+				end
+				if l_longest_break_prefix > 0 then
+					create l_value.make (nb - l_nb_lines * l_longest_break_prefix)
+					from i := 1 until i > nb loop
+						from 
+								-- Skip the longest break prefix.
+							i := i + l_longest_break_prefix
+							l_stop := False
+						until
+							l_stop or i > nb
+						loop
+							c := l_literal.item (i)
+							l_value.append_character (c)
+							if c = '%N' then
+								l_stop := True
+							end
+							i := i + 1
+						end
+					end
+				else
+					l_value := l_literal
+				end
+			else
+				l_value := l_literal
+			end
+			create Result.make (l_literal, l_value, a_marker, an_open, a_close, a_left_aligned)
+		ensure
+			last_verbatim_string_not_void: Result /= Void
 		end
 
 	last_break: STRING is
@@ -729,26 +971,42 @@ feature {NONE} -- Verbatim strings
 			verbatim_string_scanned: verbatim_marker /= Void
 			a_start_large_enough: a_start >= 1
 			an_end_small_enough: an_end <= text_count
-			-- valid_string: ([ \t\r]*\][^%\n"]*).recognizes (text_substring (a_start, an_end))
+			-- valid_string: (\n?[ \t\r]*[\]\}][^\n"]*).recognizes (text_substring (a_start, an_end))
 		local
 			i, j, nb: INTEGER
+			l_marker_count: INTEGER
+			l_text_count: INTEGER
+			c: CHARACTER
 		do
-				-- Skip white characters:
-			from i := a_start until text_item (i) = ']' loop
-				i := i + 1
-			end
-				-- Compare end marker with start marker.
-			nb := an_end - i
-			if nb = verbatim_marker.count then
-				i := i + 1
-				Result := True
-				from j := 1 until j > nb loop
-					if verbatim_marker.item (j) = text_item (i) then
-						i := i + 1
-						j := j + 1
-					else
-						Result := False
-						j := nb + 1 -- Jump out of the loop.
+			l_marker_count := verbatim_marker.count
+			l_text_count := an_end - a_start + 1
+			if l_text_count > l_marker_count then
+				nb := a_start + l_text_count - l_marker_count - 1
+				c := text_item (nb)
+				if c = ']' or c = '}' then
+					Result := True
+						-- Compare end marker with start marker.
+					j := nb + 1
+					from i := 1 until i > l_marker_count loop
+						if verbatim_marker.item (i) = text_item (j) then
+							i := i + 1
+							j := j + 1
+						else
+							Result := False
+							i := l_marker_count + 1 -- Jump out of the loop.
+						end
+					end
+					if Result then
+							-- Check that all leading characters are white characters.
+						from j := a_start until j = nb loop
+							inspect text_item (j)
+							when ' ', '%T', '%R', '%N' then
+								j := j + 1
+							else
+								Result := False
+								j := nb -- Jump out of the loop.
+							end
+						end
 					end
 				end
 			end
@@ -773,6 +1031,7 @@ feature {NONE} -- Breaks
 	str_freeop_break: INTEGER is 11
 	str_special_break: INTEGER is 12
 	str_verbatim_break: INTEGER is 13
+	str_left_aligned_verbatim_break: INTEGER is 14
 			-- Various kinds of breaks being parsed when
 			-- reading the following break or comment
 
@@ -3113,7 +3372,14 @@ feature {NONE} -- Processing
 			when str_verbatim_break then
 				last_token := E_STRING
 				last_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker,
-					verbatim_open_white_characters, verbatim_close_white_characters, Current)
+					verbatim_open_white_characters, verbatim_close_white_characters, False, Current)
+				verbatim_marker := Void
+				verbatim_open_white_characters := Void
+				verbatim_close_white_characters := Void
+			when str_left_aligned_verbatim_break then
+				last_token := E_STRING
+				last_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker,
+					verbatim_open_white_characters, verbatim_close_white_characters, True, Current)
 				verbatim_marker := Void
 				verbatim_open_white_characters := Void
 				verbatim_close_white_characters := Void

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_literal: like literal; a_value: STRING) is
+	make (a_literal: like literal; a_value: like value) is
 			-- Create a new manifest string.
 		require
 			a_literal_not_void: a_literal /= Void

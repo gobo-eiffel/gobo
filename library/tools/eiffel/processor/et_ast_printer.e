@@ -268,11 +268,19 @@ feature {ET_AST_NODE} -- Processing
 		do
 			file.put_character ('%"')
 			file.put_string (a_string.marker)
-			file.put_character ('[')
+			if a_string.is_left_aligned then
+				file.put_character ('[')
+			else
+				file.put_character ('{')
+			end
 			file.put_string (a_string.open_white_characters)
 			file.put_string (a_string.literal)
 			file.put_string (a_string.close_white_characters)
-			file.put_character (']')
+			if a_string.is_left_aligned then
+				file.put_character (']')
+			else
+				file.put_character ('}')
+			end
 			file.put_string (a_string.marker)
 			file.put_character ('%"')
 			process_break (a_string.break)

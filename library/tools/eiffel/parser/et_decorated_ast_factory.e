@@ -5,7 +5,7 @@ indexing
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1214,10 +1214,9 @@ feature -- AST leaves
 	new_c3_character_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C3_CHARACTER_CONSTANT is
 			-- New character constant of the form '%/code/`'
 		do
-			Result := precursor (a_scanner)
-			if Result /= Void then
-				Result.set_break (last_break (True, a_scanner))
-			end
+			Result := a_scanner.last_c3_character_constant
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (True, a_scanner))
 		end
 
 	new_comment (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_COMMENT is
@@ -1277,10 +1276,9 @@ feature -- AST leaves
 	new_special_manifest_string (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SPECIAL_MANIFEST_STRING is
 			-- New manifest string with special characters
 		do
-			Result := precursor (a_scanner)
-			if Result /= Void then
-				Result.set_break (last_break (True, a_scanner))
-			end
+			Result := a_scanner.last_special_manifest_string
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (True, a_scanner))
 		end
 
 	new_underscored_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_UNDERSCORED_INTEGER_CONSTANT is
@@ -1299,10 +1297,10 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_verbatim_string (a_marker, an_open, a_close: STRING; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_VERBATIM_STRING is
+	new_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_VERBATIM_STRING is
 			-- New verbatim string
 		do
-			create Result.make (a_scanner.last_literal, a_marker, an_open, a_close)
+			Result := a_scanner.last_verbatim_string (a_marker, an_open, a_close, a_left_aligned)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
