@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 		local
 			an_index: INTEGER
 			a_namespace_code, another_namespace_code, a_prefix_code, a_uri_code: INTEGER -- _16
-			a_prefix: STRING
+			a_prefix, a_uri, a_local_name: STRING
 			finished: BOOLEAN
 		do
 			last_checked_namecode := a_name_code
@@ -492,10 +492,15 @@ feature {NONE} -- Implementation
 						finished := True
 					else
 						a_prefix := substituted_prefix (a_namespace_code, a_sequence_number)
-						shared_name_pool.allocate_name_using_uri_code (a_prefix,
-																					  shared_name_pool.uri_code_from_name_code (a_name_code),
-																					  shared_name_pool.local_name_from_name_code (a_name_code))
-						last_checked_namecode := shared_name_pool.last_name_code
+						a_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
+						a_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
+						a_uri := shared_name_pool.uri_from_uri_code (a_uri_code)
+						if shared_name_pool.is_name_code_allocated_using_uri_code (a_prefix,a_uri_code, a_local_name) then
+							last_checked_namecode := shared_name_pool.name_code (a_prefix, a_uri, a_local_name)
+						else
+							shared_name_pool.allocate_name_using_uri_code (a_prefix, a_uri_code, a_local_name)
+							last_checked_namecode := shared_name_pool.last_name_code
+						end
 						if not shared_name_pool.is_namespace_code_allocated_for_name_code (last_checked_namecode) then
 							shared_name_pool.allocate_namespace_code_for_name_code (last_checked_namecode)
 						end

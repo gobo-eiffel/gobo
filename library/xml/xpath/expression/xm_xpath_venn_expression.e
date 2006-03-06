@@ -18,7 +18,8 @@ inherit
 		rename
 			make as make_binary
 		redefine
-			compute_cardinality, compute_special_properties, simplify, check_static_type, create_iterator, calculate_effective_boolean_value
+			compute_cardinality, compute_special_properties, simplify, check_static_type, create_iterator,
+			calculate_effective_boolean_value, create_node_iterator
 		end
 
 	XM_XPATH_SHARED_GLOBAL_ORDER_COMPARER
@@ -163,7 +164,7 @@ feature -- Evaluation
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterate over the values of a sequence
+			-- Create an iterator over the values of a sequence
 		local
 			an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_node_iterator, another_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -199,6 +200,15 @@ feature -- Evaluation
 					end
 				end
 			end
+		ensure then
+			unique_document_order: True -- The result will always be sorted in document order, with duplicates eliminated
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			create_iterator (a_context)
+			last_node_iterator := last_iterator.as_node_iterator
 		ensure then
 			unique_document_order: True -- The result will always be sorted in document order, with duplicates eliminated
 		end

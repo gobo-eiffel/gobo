@@ -438,7 +438,6 @@ feature -- Evaluation
 
 			check
 					singleton_expression: not cardinality_allows_many
-					-- Not a prefect check, as cardinality may not have been set!
 				end
 			evaluate_item (a_context)
 			if last_evaluated_item = Void then
@@ -450,6 +449,29 @@ feature -- Evaluation
 			else
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item) 
 			end
+		end
+	
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		do
+				
+			-- The value of every expression can be regarded as a sequence, s
+			--  so this routine is supported for all expressions.
+			-- This default implementation handles iteration for expressions that
+			--  return singleton values: for non-singleton expressions, the subclass must
+			--  provide its own implementation.
+
+			check
+					singleton_expression: not cardinality_allows_many
+				end
+			evaluate_item (a_context)
+			if last_evaluated_item = Void then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+			elseif last_evaluated_item.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (last_evaluated_item.error_value)
+			else
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (last_evaluated_item.as_node) 
+			end		
 		end
 
 	process (a_context: XM_XPATH_CONTEXT) is

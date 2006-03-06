@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			compute_intrinsic_dependencies, create_iterator, evaluate_item, same_expression,
-			compute_special_properties, is_context_item, as_context_item
+			compute_special_properties, is_context_item, as_context_item, create_node_iterator
 		end
 
 create
@@ -127,6 +127,16 @@ feature -- Evaluation
 				end
 			else
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			if a_context /= Void and then a_context.is_context_position_set then
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (a_context.context_item.as_node)
+			else
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("The context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			end
 		end
 	

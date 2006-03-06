@@ -51,6 +51,9 @@ feature -- Access
 	key_fingerprint: INTEGER
 			-- Fingerprint of key's name
 
+	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			-- Result from `map_nodes'
+	
 feature -- Evaluation
 
 	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is

@@ -16,7 +16,8 @@ inherit
 	
 	XM_XPATH_CLOSURE
 		redefine
-			make, create_iterator, same_expression, process, is_memo_closure, as_memo_closure, count, item_at
+			make, create_iterator, same_expression, process, is_memo_closure, as_memo_closure, count,
+			item_at, is_node_sequence
 		end
 
 create {XM_XPATH_EXPRESSION_FACTORY}

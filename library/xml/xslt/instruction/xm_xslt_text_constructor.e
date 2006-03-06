@@ -159,7 +159,11 @@ feature -- Evaluation
 		do
 			evaluate_item (a_context)
 			if last_evaluated_item /= Void and then last_evaluated_item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+				if is_node_sequence then
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+				else
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+				end
 			elseif last_evaluated_item.is_node then
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (last_evaluated_item.as_node)
 			else

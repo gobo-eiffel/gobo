@@ -129,7 +129,11 @@ feature -- Evaluation
 			end
 			call (an_execution_context)
 			if last_called_value.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_called_value.error_value)
+				if is_node_sequence then
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (last_called_value.error_value)
+				else
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_called_value.error_value)
+				end
 			elseif last_called_value.is_function_package then
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_called_value.as_atomic_value)
 			else
@@ -138,7 +142,7 @@ feature -- Evaluation
 				last_iterator := a_value.last_iterator
 			end
 		end
-	
+
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
@@ -173,6 +177,13 @@ feature -- Evaluation
 			-- Pre-evaluate `Current' at compile time.
 		do
 			--	do_nothing
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		do
+			create_iterator (a_context)
+			last_node_iterator := last_iterator.as_node_iterator
 		end
 
 feature -- Element change

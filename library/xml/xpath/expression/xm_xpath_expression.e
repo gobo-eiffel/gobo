@@ -1335,6 +1335,9 @@ feature -- Status report
 	last_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Result from last call to `create_iterator'
 	
+	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			-- Result from last call to `create_node_iterator'
+	
 	last_slot_number: INTEGER
 			-- Last allocated variable slot number
 
@@ -1342,6 +1345,12 @@ feature -- Status report
 			-- Is `Current' a tail recursive function call?
 		do
 			Result := False
+		end
+
+	is_node_sequence: BOOLEAN is
+			-- Is `Current' a sequence of zero or more nodes?
+		do
+			Result := is_node_item_type (item_type)
 		end
 
 	calls_function (a_name_code: INTEGER): BOOLEAN is
@@ -1690,6 +1699,19 @@ feature -- Evaluation
 		ensure
 			iterator_not_void_but_may_be_error: last_iterator /= Void
 			iterator_before: not last_iterator.is_error implies last_iterator.before
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		require
+			not_in_error: not is_error
+			context_may_be_void: True
+			node_sequence: is_node_sequence
+			not_replaced: not was_expression_replaced
+		deferred
+		ensure
+			iterator_not_void_but_may_be_error: last_node_iterator /= Void
+			iterator_before: not last_node_iterator.is_error implies last_node_iterator.before
 		end
 
 	process (a_context: XM_XPATH_CONTEXT) is

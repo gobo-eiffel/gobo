@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
 			compute_cardinality, simplify, create_iterator, make,
-			is_append_expression, as_append_expression
+			is_append_expression, as_append_expression, create_node_iterator
 		end
 
 	XM_XPATH_TOKENS
@@ -153,6 +153,22 @@ feature -- Evaluation
 					last_iterator := second_operand.last_iterator
 				else
 					create {XM_XPATH_APPEND_ITERATOR} last_iterator.make (first_operand.last_iterator, second_operand.last_iterator, a_context)
+				end
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		do
+			first_operand.create_node_iterator (a_context)
+			if first_operand.last_node_iterator.is_error then
+				last_node_iterator := first_operand.last_node_iterator
+			else
+				second_operand.create_node_iterator (a_context)
+				if second_operand.last_node_iterator.is_error then
+					last_iterator := second_operand.last_node_iterator
+				else
+					create {XM_XPATH_NODE_APPEND_ITERATOR} last_node_iterator.make (first_operand.last_node_iterator, second_operand.last_node_iterator, a_context)
 				end
 			end
 		end

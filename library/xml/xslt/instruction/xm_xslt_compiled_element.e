@@ -171,6 +171,9 @@ feature -- Status report
 			std.error.put_new_line
 			a_string := STRING_.appended_string (indentation (a_level + 1), "name ")
 			std.error.put_string (a_string)
+			if namespace /= Void then
+				namespace.display (a_level + 2)
+			end
 			element_name.display (a_level + 2)
 			std.error.put_new_line
 			a_string := STRING_.appended_string (indentation (a_level + 1), "content ")

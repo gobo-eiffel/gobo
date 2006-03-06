@@ -195,6 +195,13 @@ feature -- Evaluation
 			end
 		end
 
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			create_iterator (a_context)
+			last_node_iterator := last_iterator.as_node_iterator
+		end
+
 	process (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do

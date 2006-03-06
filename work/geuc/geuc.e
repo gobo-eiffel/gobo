@@ -483,6 +483,7 @@ feature -- Access
 	Unicode_data: STRING is "UnicodeData.txt"
 	Derived_core_properties: STRING is "DerivedCoreProperties.txt"
 	Derived_normalization_properties: STRING is "DerivedNormalizationProps.txt"
+	Case_folding: STRING is "CaseFolding.txt"
 			-- Unicode Character Database filenames
 
 	Alphabetic_property: STRING is "Alphabetic"

@@ -19,7 +19,8 @@ inherit
 			simplify
 		redefine
 			promote, native_implementations, evaluate_item, create_iterator, compute_special_properties,
-			processed_eager_evaluation, process, system_id_from_module_number, is_tail_call, as_tail_call
+			processed_eager_evaluation, process, system_id_from_module_number, is_tail_call, as_tail_call,
+			create_node_iterator
 		end
 
 	XM_XPATH_TAIL_CALL
@@ -232,7 +233,11 @@ feature -- Evaluation
 				if last_evaluated_item = Void then
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 				elseif last_evaluated_item.is_error then
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+					if is_node_sequence then
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+					else
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+					end
 				else
 					if not last_evaluated_item.is_node then
 						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item)
@@ -254,9 +259,20 @@ feature -- Evaluation
 					a_receiver.sequence.create_iterator (another_context)
 					last_iterator := a_receiver.sequence.last_iterator
 				else
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (another_context.transformer.last_error)
+					if is_node_sequence then
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (another_context.transformer.last_error)
+					else
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (another_context.transformer.last_error)
+					end
 				end
 			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		do
+			create_iterator (a_context)
+			last_node_iterator := last_iterator.as_node_iterator
 		end
 
 	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is

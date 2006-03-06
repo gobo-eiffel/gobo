@@ -134,7 +134,7 @@ feature -- Element change
 			a_splitter: ST_SPLITTER
 			some_idrefs: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]
-			new_size: INTEGER
+			i, new_size: INTEGER
 			another_type_code: like a_type_code
 			all_idrefs: BOOLEAN
 		do
@@ -155,6 +155,10 @@ feature -- Element change
 				or else a_type_code = Idrefs_type_code then
 				if attribute_ids = Void then
 					create attribute_ids.make (attribute_name_codes.capacity)
+					from i:= 1 until i = attribute_name_codes.count loop
+						attribute_ids.put_last (No_dtd_property)
+						i := i + 1
+					end
 				end
 
 				-- The attribute is marked as being an ID/IDREF/IDREFS. But we don't trust it - it

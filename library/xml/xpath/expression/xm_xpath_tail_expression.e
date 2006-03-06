@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			promote, compute_special_properties, sub_expressions, same_expression, create_iterator,
-			is_tail_expression, as_tail_expression
+			is_tail_expression, as_tail_expression, create_node_iterator
 		end
 
 	KL_SHARED_PLATFORM
@@ -152,7 +152,7 @@ feature -- Optimization
 feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterate over the values of a sequence
+			-- Create an iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
@@ -167,7 +167,27 @@ feature -- Evaluation
 
 				last_iterator := an_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
 			else
-				create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (an_iterator, start)
+				create {XM_XPATH_TAIL_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (an_iterator, start)
+			end
+		end
+	
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+		do
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_node_iterator
+			if an_iterator.is_error then
+				last_node_iterator := an_iterator
+			elseif an_iterator.is_array_iterator then
+
+				-- Hm. This is theoretically insufficient, but in practice memory will get
+				--  exhausted before the problem manifests itself
+
+				last_node_iterator := an_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+			else
+				create {XM_XPATH_TAIL_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make (an_iterator, start)
 			end
 		end
 	

@@ -14,13 +14,13 @@ indexing
 	revision: "$Revision$"
 
 deferred class XM_XPATH_NODE_MAPPING_FUNCTION
-
-	-- TODO: drop the information object
 	
 feature -- Access
 
-	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Result from `map_nodes'
+		deferred
+		end
 
 feature -- Evaluation
 

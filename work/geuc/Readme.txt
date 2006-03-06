@@ -65,6 +65,7 @@ The following files need to be imported:
  ftp://www.unicode.org/Public/UNIDATA/UnicodeData.txt
  ftp://www.unicode.org/Public/UNIDATA/DerivedCoreProperties.txt
  ftp://www.unicode.org/Public/UNIDATA/DerivedNormalizationProps.txt
+ ftp://www.unicode.org/Public/UNIDATA/CaseFolding.txt
 
 Do NOT add these files to CVS.
 

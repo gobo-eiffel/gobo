@@ -151,7 +151,7 @@ feature -- Evaluation
 						if an_atomic_value /= Void then
 							a_transformer.key_manager.generate_keyed_sequence (a_fingerprint, a_context_document, an_atomic_value, an_evaluation_context)
 							if a_transformer.is_error then
-								create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
+								create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
 							else
 								last_iterator := a_transformer.key_manager.last_key_sequence
 							end
@@ -171,7 +171,7 @@ feature -- Evaluation
 						end
 					end
 				else
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
 				end
 			end
 		end
@@ -179,6 +179,14 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
+		end
+
+	
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			create_iterator (a_context)
+			last_node_iterator := last_iterator.as_node_iterator
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Restricted

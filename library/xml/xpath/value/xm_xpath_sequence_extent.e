@@ -24,7 +24,7 @@ inherit
 			copy, is_equal, count
 		redefine
 			item_type, calculate_effective_boolean_value, is_sequence_extent, as_sequence_extent,
-			item_at, simplify, reduce
+			item_at, simplify, reduce, is_node_sequence
 		end
 
 	DS_ARRAYED_LIST [XM_XPATH_ITEM]
@@ -301,6 +301,12 @@ feature -- Evaluation
 			else
 				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (Current)
 			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			last_node_iterator := node_iterator (False)
 		end
 
 	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is

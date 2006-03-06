@@ -45,4 +45,13 @@ feature -- Evaluation
 			create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string (a_message, Gexslt_eiffel_type_uri, "INTERNAL_ERROR", Dynamic_error)
 		end
 
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- An iterator over the values of a sequence
+		local
+			a_message: STRING
+		do
+			a_message := "Internal error: function " + name + " should have been resolved at compile-time"
+			create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string (a_message, Gexslt_eiffel_type_uri, "INTERNAL_ERROR", Dynamic_error)
+		end
+
 end

@@ -15,12 +15,14 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			item_type, creates_new_nodes, compute_dependencies, promote_instruction,
-			sub_expressions, native_implementations, create_iterator
+			sub_expressions, native_implementations, create_iterator, create_node_iterator
 		end
 
 	XM_XPATH_PROMOTION_ACTIONS
 
 	XM_XPATH_MAPPING_FUNCTION
+
+	XM_XPATH_NODE_MAPPING_FUNCTION
 
 create
 
@@ -305,6 +307,32 @@ feature -- Evaluation
 		do
 			action.create_iterator (a_context)
 			create last_mapped_item.make_sequence (action.last_iterator)
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		local
+			a_new_context: XM_XSLT_EVALUATION_CONTEXT
+		do
+			select_expression.create_node_iterator (a_context)
+			last_node_iterator := select_expression.last_node_iterator
+			a_new_context ?= a_context.new_context
+			check
+				evaluation_context: a_new_context /= Void
+				-- This is XSLT
+			end
+			a_new_context.set_current_template (Void)
+			a_new_context.set_current_iterator (last_iterator)
+			if not last_iterator.is_error then
+				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (last_node_iterator, Current, a_new_context)
+			end
+		end
+	
+	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+			-- Map `an_item' to a sequence
+		do
+			action.create_node_iterator (a_context)
+			last_node_iterator := action.last_node_iterator
 		end
 
 feature {NONE} -- Implementation

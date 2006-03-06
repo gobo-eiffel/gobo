@@ -18,7 +18,7 @@ inherit
 		redefine
 			simplify, item_type, check_static_type, optimize, same_expression, evaluate_item,
 			calculate_effective_boolean_value, compute_cardinality, compute_special_properties,
-			is_castable_expression, as_castable_expression
+			is_castable_expression, as_castable_expression, is_node_sequence
 		end
 
 	XM_XPATH_TYPE
@@ -87,7 +87,15 @@ feature -- Comparison
 					and then other_castable.target_type = target_type
 			end
 		end
-	
+
+feature -- Status report
+
+	is_node_sequence: BOOLEAN is
+			-- Is `Current' a sequence of zero or more nodes?
+		do
+			Result := False
+		end
+
 feature -- Optimization	
 
 	simplify is

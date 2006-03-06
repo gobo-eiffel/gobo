@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_MAPPING_FUNCTION
 
+		-- TODO: `create_node_iterator' needs re-defining to avoid possible bugs
+	
 		-- TODO: use XM_XSLT_PATTERN_EXPRESSION, when it is completed
 
 create

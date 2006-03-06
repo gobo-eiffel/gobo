@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			create_iterator, evaluate_item, calculate_effective_boolean_value, compute_intrinsic_dependencies, compute_special_properties
+			create_iterator, create_node_iterator,
+			evaluate_item, calculate_effective_boolean_value, compute_intrinsic_dependencies, compute_special_properties
 		end
 
 	-- N.B. This class is supposed to have intrinsic dependency on the context item
@@ -105,12 +106,22 @@ feature -- Evaluation
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterator over the values of a sequence
+			-- Create an iterator over the values of a sequence
 		do
 			if is_valid_context_for_node (a_context) then
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (node (a_context))
 			else
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (dynamic_error_value (a_context))
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			if is_valid_context_for_node (a_context) then
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (node (a_context))
+			else
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (dynamic_error_value (a_context))
 			end
 		end
 

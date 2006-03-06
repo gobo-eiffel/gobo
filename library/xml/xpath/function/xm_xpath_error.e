@@ -137,6 +137,8 @@ feature -- Evaluation
 			create an_error_value.make (a_description, a_namespace_uri, an_error_code, an_error_sequence, Dynamic_error)
 			an_error_value.set_location (system_id, line_number)
 			create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_error_value)
+		ensure then
+			invalid_item: last_evaluated_item.is_error
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -144,7 +146,15 @@ feature -- Evaluation
 		do
 			--	do_nothing
 		end
+
 	
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		do
+			evaluate_item (a_context)
+			create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (last_evaluated_item.error_value)
+		end
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is

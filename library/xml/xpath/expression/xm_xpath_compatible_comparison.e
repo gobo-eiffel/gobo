@@ -19,7 +19,7 @@ inherit
 			make as make_binary_expression
 		redefine
 			display_operator, evaluate_item, check_static_type, optimize,
-			calculate_effective_boolean_value, compute_cardinality
+			calculate_effective_boolean_value, compute_cardinality, is_node_sequence
 		end
 
 	XM_XPATH_CARDINALITY
@@ -77,6 +77,14 @@ feature -- Access
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
 			end
+		end
+
+feature -- Status report
+
+	is_node_sequence: BOOLEAN is
+			-- Is `Current' a sequence of zero or more nodes?
+		do
+			Result := False
 		end
 	
 feature -- Optimization	

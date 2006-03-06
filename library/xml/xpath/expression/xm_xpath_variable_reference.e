@@ -18,7 +18,8 @@ inherit
 		redefine
 			same_expression, promote, create_iterator, evaluate_item, lazily_evaluate,
 			native_implementations, compute_special_properties, compute_intrinsic_dependencies,
-			is_variable_reference, as_variable_reference, accumulate_slots_used
+			is_variable_reference, as_variable_reference, accumulate_slots_used,
+			create_node_iterator
 		end
 
 create
@@ -174,7 +175,7 @@ feature -- Optimization
 feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterate over the values of a sequence
+			-- Create an iterator over the values of a sequence
 		do
 			evaluate_variable (a_context)
 			if last_evaluated_binding.is_error then
@@ -182,6 +183,18 @@ feature -- Evaluation
 			else
 				last_evaluated_binding.create_iterator (a_context)
 				last_iterator := last_evaluated_binding.last_iterator
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over the values of a sequence
+		do
+			evaluate_variable (a_context)
+			if last_evaluated_binding.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (last_evaluated_binding.error_value)
+			else
+				last_evaluated_binding.create_node_iterator (a_context)
+				last_node_iterator := last_evaluated_binding.last_node_iterator
 			end
 		end
 

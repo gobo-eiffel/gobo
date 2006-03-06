@@ -18,10 +18,12 @@ inherit
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
 			simplify, check_static_type, create_iterator, evaluate_item, item_type,
-			same_expression, is_item_checker, as_item_checker
+			same_expression, is_item_checker, as_item_checker, create_node_iterator
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
+
+	XM_XPATH_NODE_MAPPING_FUNCTION
 
 create
 
@@ -153,7 +155,7 @@ feature -- Evaluation
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterator over the values of a base_expression
+			-- Create an iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
@@ -166,11 +168,40 @@ feature -- Evaluation
 			end
 		end
 
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_iterator
+			if an_iterator.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (an_iterator.error_value)
+			else
+				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (an_iterator, Current, Void)
+			end
+		end
+
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		do
 			if not an_item.is_error then test_conformance (an_item) end
 			create last_mapped_item.make_item (an_item)
+		end
+
+	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+			-- Map `an_item' to a sequence
+		do
+			if not an_item.is_error then
+				test_conformance (an_item)
+				if an_item.is_error then
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (an_item.error_value)
+				else
+					create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (an_item.as_node)
+				end
+			else
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (an_item.error_value)
+			end
 		end
 
 feature -- Element change

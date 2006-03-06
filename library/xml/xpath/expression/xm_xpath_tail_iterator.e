@@ -10,11 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_TAIL_ITERATOR
+class XM_XPATH_TAIL_ITERATOR [G->XM_XPATH_ITEM]
 
 inherit
 
-	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	XM_XPATH_SEQUENCE_ITERATOR [G]
 		redefine
 			before, start
 		end
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_start_position: INTEGER) is
+	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [G]; a_start_position: INTEGER) is
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_ITEM is
+	item: G is
 			-- Value or node at the current position
 		do
 			Result := base_iterator.item
@@ -101,7 +101,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [G]
 			-- Underlying sequence
 
 	start_position: INTEGER

@@ -79,7 +79,12 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("First argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)
 			end
 		end
-		
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			-- pre-condition is never met
+		end		
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 

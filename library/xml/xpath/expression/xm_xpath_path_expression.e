@@ -18,7 +18,7 @@ inherit
 		redefine
 			simplify, promote, compute_dependencies, compute_special_properties, sub_expressions,
 			same_expression, create_iterator, is_repeated_sub_expression, is_path_expression,
-			as_path_expression, is_error
+			as_path_expression, is_error, is_node_sequence, create_node_iterator
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -167,6 +167,12 @@ feature -- Status report
 			Result := error_value /= Void
 		end
 
+	is_node_sequence: BOOLEAN is
+			-- Is `Current' a sequence of zero or more nodes?
+		do
+			Result := is_node_item_type (step.item_type)
+		end
+
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
@@ -295,7 +301,7 @@ feature -- Optimization
 							--  either it is known statically to deliver nodes only (a 1.0 path expression),
 							--  or it is known statically to deliver atomic values only, or we don't yet know.
 							
-							if is_node_item_type (step.item_type) then
+							if is_node_sequence then
 								simplify_sorting (a_context, a_context_item_type)							
 							elseif is_atomic_item_type (step.item_type) then
 								create another_role.make (Binary_expression_role, "/", 2, Xpath_errors_uri, "XPTY0018")
@@ -402,11 +408,32 @@ feature -- Evaluation
 				end
 				another_context.set_current_iterator (an_iterator)
 
-				if is_node_item_type (step.item_type) then
+				if is_node_sequence then
 					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, another_context)
 				else
 					create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, another_context)
 				end
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			another_context: XM_XPATH_CONTEXT
+		do
+			start.create_node_iterator (a_context)
+			an_iterator := start.last_node_iterator
+			if an_iterator.is_error then
+				last_node_iterator := an_iterator
+			else
+				if a_context.has_push_processing then
+					another_context := a_context.new_minor_context
+				else
+					another_context := a_context.new_context
+				end
+				another_context.set_current_iterator (an_iterator)
+				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (an_iterator, Current, another_context)
 			end
 		end
 

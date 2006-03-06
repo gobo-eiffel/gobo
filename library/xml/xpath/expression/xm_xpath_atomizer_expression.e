@@ -17,7 +17,8 @@ inherit
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
 			item_type, simplify, check_static_type, create_iterator, evaluate_item, compute_cardinality,
-			compute_special_properties, is_atomizer_expression, as_atomizer_expression
+			compute_special_properties, is_atomizer_expression, as_atomizer_expression, is_node_sequence,
+			create_node_iterator
 		end
 
 	XM_XPATH_SHARED_ATOMIZING_FUNCTION
@@ -115,6 +116,14 @@ feature -- Access
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
 			end
+		end
+
+feature -- Status report
+
+	is_node_sequence: BOOLEAN is
+			-- Is `Current' a sequence of zero or more nodes?
+		do
+			Result := False
 		end
 
 feature -- Optimization	
@@ -226,6 +235,12 @@ feature -- Evaluation
 			else
 				last_iterator := shared_atomizing_function.new_atomizing_iterator (an_iterator)
 			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		do
+			-- pre-condition is never met
 		end
 
 feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted

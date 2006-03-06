@@ -115,7 +115,13 @@ feature -- Evaluation
 		do
 			create {XM_XPATH_RANGE_ITERATOR} last_iterator.make (minimum, maximum)
 		end
-	
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			-- precondition is never met
+		end
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	native_implementations: INTEGER is

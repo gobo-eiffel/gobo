@@ -18,7 +18,7 @@ inherit
 		redefine
 			compute_dependencies, compute_special_properties, simplify, promote, sub_expressions,
 			same_expression, create_iterator, is_repeated_sub_expression, is_filter_expression,
-			as_filter_expression
+			as_filter_expression, create_node_iterator
 		end
 
 	XM_XPATH_TOKENS
@@ -396,7 +396,7 @@ feature -- Optimization
 feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterate over the values of a sequence
+			-- Create an iterator over the values of a sequence
 		local
 			a_position_range: XM_XPATH_POSITION_RANGE
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -449,7 +449,47 @@ feature -- Evaluation
 				end
 			end
 		end
-	
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		local
+			a_position_range: XM_XPATH_POSITION_RANGE
+			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+		do
+			last_node_iterator := Void
+			start_expression := base_expression
+				
+			-- Get an iterator over the base nodes
+
+			start_expression.create_node_iterator (a_context)
+			a_base_iterator := start_expression.last_node_iterator
+
+			-- Quick exit for an empty sequence
+
+			if  a_base_iterator.is_error then
+				last_node_iterator := a_base_iterator
+			else
+				if a_base_iterator.is_empty_iterator then
+					last_node_iterator := a_base_iterator.as_empty_iterator
+				else
+						
+					-- Test whether the filter is a position range, e.g. [position()>$x]
+					-- TODO: handle all such cases with a TailExpression
+						
+					if filter.is_position_range then
+						a_position_range := filter.as_position_range
+						last_node_iterator := expression_factory.created_node_position_iterator (a_base_iterator.as_node_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
+					else
+						if filter_is_positional then
+							create {XM_XPATH_NODE_FILTER_ITERATOR} last_node_iterator.make (a_base_iterator.as_node_iterator, filter, a_context)
+						else
+							create {XM_XPATH_NODE_FILTER_ITERATOR} last_node_iterator.make_non_numeric (a_base_iterator.as_node_iterator, filter, a_context)
+						end
+					end
+				end
+			end
+		end
+
 feature -- Element change
 
 	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION) is

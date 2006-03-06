@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
 			item_type, check_static_type, evaluate_item, compute_cardinality, same_expression,
-			compute_special_properties, is_cast_expression, as_cast_expression
+			compute_special_properties, is_cast_expression, as_cast_expression, is_node_sequence
 		end
 
 	XM_XPATH_ROLE
@@ -85,6 +85,14 @@ feature -- Comparison
 					and then other_cast.is_empty_allowed = is_empty_allowed
 					and then other_cast.target_type = target_type
 			end
+		end
+
+feature -- Status report
+
+	is_node_sequence: BOOLEAN is
+			-- Is `Current' a sequence of zero or more nodes?
+		do
+			Result := False
 		end
 
 feature -- Optimization	

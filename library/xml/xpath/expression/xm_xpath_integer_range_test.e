@@ -46,8 +46,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
-			-- TODO
-			todo ("item-type", False)
+			Result := type_factory.boolean_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -98,8 +97,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			todo ("compute-cardinality", False)
-			-- TODO
+			set_cardinality_exactly_one
 		end
 	
 invariant

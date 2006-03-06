@@ -152,6 +152,12 @@ feature -- Evaluation
 			create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (node)
 		end
 
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (node)
+		end
+
 	process (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do

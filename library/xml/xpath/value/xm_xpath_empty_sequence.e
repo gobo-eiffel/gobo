@@ -109,6 +109,12 @@ feature -- Evaluation
 			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 		end
 
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+		end
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	native_implementations: INTEGER is

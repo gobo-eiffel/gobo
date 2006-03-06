@@ -345,7 +345,11 @@ feature -- Evaluation
 				if a_boolean_value.is_error then
 					a_boolean_value.error_value.set_location (system_id, line_number)
 					a_new_context.transformer.report_fatal_error (a_boolean_value.error_value)
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_boolean_value.error_value)
+					if is_node_sequence then
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (a_boolean_value.error_value)
+					else
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_boolean_value.error_value)
+					end
 					a_cursor.go_after
 				elseif a_boolean_value.value then
 					actions.item (a_cursor.index).create_iterator (a_context)

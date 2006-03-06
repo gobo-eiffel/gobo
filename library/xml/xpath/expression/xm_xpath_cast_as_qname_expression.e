@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			sub_expressions, evaluate_item, compute_special_properties
+			sub_expressions, evaluate_item, compute_special_properties, is_node_sequence
 		end
 
 create
@@ -60,6 +60,12 @@ feature -- Access
 		end
 	
 feature -- Status report
+
+	is_node_sequence: BOOLEAN is
+			-- Is `Current' a sequence of zero or more nodes?
+		do
+			Result := False
+		end
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'

@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			simplify, create_iterator, compute_intrinsic_dependencies, same_expression, compute_special_properties,
-			is_axis_expression, as_axis_expression
+			is_axis_expression, as_axis_expression, is_node_sequence, create_node_iterator
 		end
 
 	XM_XPATH_AXIS
@@ -110,6 +110,12 @@ feature -- Comparison
 
 feature -- Status report
 
+	is_node_sequence: BOOLEAN is
+			-- Is `Current' a sequence of zero or more nodes?
+		do
+			Result := True
+		end
+
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
@@ -183,6 +189,25 @@ feature -- Evaluation
 					last_iterator := an_item.as_node.new_axis_iterator (axis)
 				else
 					last_iterator := an_item.as_node.new_axis_iterator_with_node_test (axis, node_test)
+				end
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		local
+			an_item: XM_XPATH_ITEM
+		do
+			an_item := a_context.context_item
+			if an_item = Void then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("The context item for an axis step is not set.", Xpath_errors_uri, "XPDY0002", Dynamic_error)
+			else
+				if not an_item.is_node then
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("The context item for an axis is not a node.", Xpath_errors_uri, "XPTY0020", Type_error)
+				elseif node_test = Void then
+					last_node_iterator := an_item.as_node.new_axis_iterator (axis)
+				else
+					last_node_iterator := an_item.as_node.new_axis_iterator_with_node_test (axis, node_test)
 				end
 			end
 		end

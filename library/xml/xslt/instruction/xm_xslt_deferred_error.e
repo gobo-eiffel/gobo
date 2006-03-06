@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			evaluate_item, create_iterator
+			evaluate_item, create_iterator, create_node_iterator
 		end
 
 create
@@ -85,11 +85,16 @@ feature -- Evaluation
 			create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (error_value)
 		end
 
-	
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		do
 			create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (error)
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create iterator over a sequence of nodes.
+		do
+			create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (error)
 		end
 
 	

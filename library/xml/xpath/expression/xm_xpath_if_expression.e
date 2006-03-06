@@ -18,7 +18,7 @@ inherit
 		redefine
 			simplify, evaluate_item, promote, create_iterator,
 			sub_expressions, mark_tail_function_calls,
-			compute_special_properties, is_tail_recursive
+			compute_special_properties, is_tail_recursive, create_node_iterator
 		end
 
 create
@@ -274,7 +274,7 @@ feature -- Evaluation
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterates over the values of a sequence
+			-- Create an iterator over the values of a sequence
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
@@ -288,6 +288,24 @@ feature -- Evaluation
 			else
 				else_expression.create_iterator (a_context)
 				last_iterator := else_expression.last_iterator
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		local
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			condition.calculate_effective_boolean_value (a_context)
+			a_boolean_value := condition.last_boolean_value
+			if a_boolean_value.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (a_boolean_value.error_value)
+			elseif a_boolean_value.value then
+				then_expression.create_node_iterator (a_context)
+				last_iterator := then_expression.last_node_iterator
+			else
+				else_expression.create_node_iterator (a_context)
+				last_iterator := else_expression.last_node_iterator
 			end
 		end
 

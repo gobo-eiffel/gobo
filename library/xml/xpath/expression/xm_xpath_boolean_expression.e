@@ -17,7 +17,8 @@ inherit
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
 			calculate_effective_boolean_value, evaluate_item, make,
-			is_boolean_expression, as_boolean_expression
+			is_boolean_expression, as_boolean_expression,
+			is_node_sequence, create_node_iterator
 		end
 	
 	XM_XPATH_TOKENS
@@ -59,6 +60,14 @@ feature -- Access
 			end
 		end
 
+feature -- Status report
+
+	is_node_sequence: BOOLEAN is
+			-- Is `Current' a sequence of zero or more nodes?
+		do
+			Result := False
+		end
+
 feature -- Evaluation
 
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
@@ -96,6 +105,12 @@ feature -- Evaluation
 		do
 			calculate_effective_boolean_value (a_context)
 			last_evaluated_item := last_boolean_value
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		do
+			-- pre-condition is never met
 		end
 
 end

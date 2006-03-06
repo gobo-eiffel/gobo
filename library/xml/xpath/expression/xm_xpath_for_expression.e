@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_ASSIGNATION
 		redefine
 			create_iterator, is_repeated_sub_expression, native_implementations,
-			mark_tail_function_calls, is_tail_recursive
+			mark_tail_function_calls, is_tail_recursive, create_node_iterator
 		end
 
 	XM_XPATH_ROLE
@@ -165,7 +165,7 @@ feature -- Optimization
 feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- An iterator over the values of a sequence
+			-- Create an iterator over the values of a sequence
 		local
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_mapping_function: XM_XPATH_MAPPING_ACTION
@@ -186,7 +186,33 @@ feature -- Evaluation
 				--  setting the range variable at each step. TODO: mapping_action?
 
 				create a_mapping_function.make (a_context, slot_number, action)
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_base_iterator,a_mapping_function , Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_base_iterator, a_mapping_function, Void)
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		local
+			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_mapping_function: XM_XPATH_NODE_MAPPING_ACTION
+		do
+			
+			-- First create an iteration of the base sequence.
+
+			sequence.create_iterator (a_context)
+			a_base_iterator := sequence.last_iterator
+
+			if a_base_iterator.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (a_base_iterator.error_value)
+			else
+				
+				-- Then create a mapping iterator which applies a mapping function to each
+				--  item in the base sequence. The mapping function is essentially the "return"
+				--  expression, wrapped in a mapping action object that is responsible also for
+				--  setting the range variable at each step. TODO: mapping_action?
+
+				create a_mapping_function.make (a_context, slot_number, action)
+				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (a_base_iterator, a_mapping_function, Void)
 			end
 		end
 

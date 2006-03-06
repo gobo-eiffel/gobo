@@ -112,7 +112,7 @@ feature -- Evaluation
 						if a_starting_location <= 1 then
 							last_iterator := an_iterator
 						else
-							create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (an_iterator, a_starting_location)
+							create {XM_XPATH_TAIL_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (an_iterator, a_starting_location)
 						end
 					else
 						arguments.item (3).evaluate_item (a_context)
@@ -137,6 +137,12 @@ feature -- Evaluation
 					end
 				end
 			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			todo ("create_node_iterator", False)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
