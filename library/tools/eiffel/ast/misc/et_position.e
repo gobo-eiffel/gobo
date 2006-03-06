@@ -15,7 +15,6 @@ deferred class ET_POSITION
 inherit
 
 	ANY
-	KL_PART_COMPARABLE
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
 
@@ -51,6 +50,8 @@ feature -- Comparison
 
 	infix "<" (other: ET_POSITION): BOOLEAN is
 			-- Is current position less than `other'?
+		require
+			other_not_void: other /= Void
 		do
 			if line < other.line then
 				Result := True
