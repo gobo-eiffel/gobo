@@ -175,6 +175,8 @@
 
 		<geant file="build.eant" target="${target}" dir="geant"/>
 		<geant file="build.eant" target="clean" dir="geant" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="gec"/>
+		<geant file="build.eant" target="clean" dir="gec" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="gelex"/>
 		<geant file="build.eant" target="clean" dir="gelex" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="gepp"/>
