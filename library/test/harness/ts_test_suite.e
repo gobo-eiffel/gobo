@@ -5,7 +5,7 @@ indexing
 		"Test suites"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,9 +15,6 @@ class TS_TEST_SUITE
 inherit
 
 	TS_TEST
-		redefine
-			variables
-		end
 
 create
 
