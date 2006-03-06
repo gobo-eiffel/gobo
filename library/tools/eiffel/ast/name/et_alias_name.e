@@ -16,7 +16,6 @@ inherit
 
 	ET_CALL_NAME
 		redefine
-			name,
 			is_alias,
 			is_bracket,
 			is_infix,
