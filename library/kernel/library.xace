@@ -20,7 +20,9 @@
 		<cluster name="support"/>
 		<cluster name="spec">
 			<option name="abstract" value="true"/>
-			<cluster name="${GOBO_EIFFEL}" prefix="spec_"/>
+			<cluster name="${GOBO_EIFFEL}" prefix="spec_">
+				<option name="exclude" value="improved_hash_table.e" if="${GOBO_EIFFELBASE}"/>
+			</cluster>
 		</cluster>
 	</cluster>
 </library>
