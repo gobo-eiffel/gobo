@@ -547,24 +547,28 @@ EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length) {
 	struct stat buf;
 	char *temp = NULL;
 	char *ptr;
+	size_t n;
 
-	temp = (char *)malloc(length + 1);
-	strcpy(temp, path);
 #ifdef EIF_WINDOWS
-	ptr = strrchr(temp, '\\');
+	ptr = strrchr(path, '\\');
 #else
-	ptr = strrchr(temp, '/');
+	ptr = strrchr(path, '/');
 #endif
 	if (ptr != (char *) 0) {
-		*ptr = '\0';
+		n = ptr - path;
 #ifdef EIF_WINDOWS
-		if ((ptr == temp) || (*(ptr -1) == ':'))
+		if ((ptr == path) || (*(ptr-1) == ':'))
 				/* path is of the form a:\bbb or \bbb, parent is a:\ or \ */
-			strcat(ptr, "\\");
+			n = n + 1;
 #endif
-		}
-	else
-		strcpy(temp, ".");
+		temp = (char*)malloc(n + 1);
+		strncpy(temp, path, n);
+		temp[n] = '\0';
+	} else {
+		temp = (char*)malloc(2);
+		temp[0] = '.';
+		temp[1] = '\0';
+	}
 
 		/* Does the parent exist? */
 	if (!file_exists(temp)) {
@@ -791,33 +795,41 @@ EIF_INTEGER file_info(struct stat *buf, int op) {
 }
 
 EIF_REFERENCE file_owner(int uid) {
-	char str[NAME_MAX];
+	char buf[NAME_MAX];
+	char* str;
 #ifdef HAS_GETPWUID
 	struct passwd *pp;
 
 	pp = getpwuid(uid);
-	if (pp == (struct passwd *)0)
-		sprintf(str, "%d", uid);
-	else
-		strcpy(str, pp->pw_name);
+	if (pp == (struct passwd *)0) {
+		snprintf(buf, NAME_MAX, "%d", uid);
+		str = buf;
+	} else {
+		str = pp->pw_name;
+	}
 #else
-	sprintf(str, "%d", uid);
+	snprintf(buf, NAME_MAX, "%d", uid);
+	str = buf;
 #endif
 	return gems(str, strlen(str));
 }
 
 EIF_REFERENCE file_group(int gid) {
-	char str[NAME_MAX];
+	char buf[NAME_MAX];
+	char* str;
 #ifdef HAS_GETGRGID
 	struct group *gp;
 
 	gp = getgrgid(gid);
-	if (gp == (struct group *)0)
-		sprintf(str, "%d", gid);
-	else
-		strcpy(str, gp->gr_name);
+	if (gp == (struct group *)0) {
+		snprintf(buf, NAME_MAX, "%d", gid);
+		str = buf;
+	} else {
+		str = gp->gr_name;
+	}
 #else
-	sprintf(str, "%d", gid);
+	snprintf(buf, NAME_MAX, "%d", gid);
+	str = buf;
 #endif
 	return gems(str, strlen(str));
 }

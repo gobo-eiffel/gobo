@@ -25,7 +25,7 @@ EIF_BOOLEAN eif_is_volume_name_valid(EIF_CHARACTER* p) {
 
 	if (p)
 		if ((strlen(p) == 2) && (*(p+1) == ':')) {
-			strcpy(rootpath, p);
+			strncpy(rootpath, p, 2);
 			rootpath[2] = '\\';
 			rootpath [3] = '\0';
 			return (EIF_BOOLEAN)(GetDriveType(rootpath) != 1);
@@ -103,7 +103,7 @@ void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER* p, EIF_CHARACTER*
 		if (p[strlen((char*)p) - 1] != '/')
 			strcat((char *)p, "/");
 #endif
-		strcat ((char*)p, (char*)v);
+		strcat((char*)p, (char*)v);
 	}
 }
 

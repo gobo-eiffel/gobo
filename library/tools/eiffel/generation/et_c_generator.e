@@ -9710,7 +9710,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			current_file.put_character (';')
 			current_file.put_new_line
 			print_indentation
-			current_file.put_string ("int l = sprintf(s,%"0x%%lX%",(unsigned long)*C);")
+			current_file.put_string ("int l = snprintf(s,20,%"0x%%lX%",(unsigned long)*C);")
 			current_file.put_new_line
 			print_indentation
 			current_file.put_character ('R')
@@ -10383,9 +10383,9 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			current_file.put_new_line
 			print_indentation
 			if a_feature.builtin_code // builtin_capacity = builtin_real_class then
-				current_file.put_string ("int l = sprintf(s,%"%%g%",*C);")
+				current_file.put_string ("int l = snprintf(s,40,%"%%g%",*C);")
 			else
-				current_file.put_string ("int l = sprintf(s,%"%%.17g%",*C);")
+				current_file.put_string ("int l = snprintf(s,40,%"%%.17g%",*C);")
 			end
 			current_file.put_new_line
 			print_indentation

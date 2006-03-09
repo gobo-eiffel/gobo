@@ -32,7 +32,7 @@ void* ge_directory_open_read(char* dirname)
 	char* pattern = malloc(len + 5);
 	ge_directory* result = malloc(sizeof(ge_directory));
 
-	pattern = strcpy(pattern, (char*)dirname);
+	pattern = strncpy(pattern, (char*)dirname, len);
 	if (pattern[len - 1] != '\\')
 		pattern[len++] = '\\';
 	pattern[len++] = '*';
