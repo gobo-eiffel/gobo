@@ -13,7 +13,7 @@ indexing
 class XM_XPATH_MEMO_CLOSURE
 
 inherit
-	
+
 	XM_XPATH_CLOSURE
 		redefine
 			make, create_iterator, same_expression, process, is_memo_closure, as_memo_closure, count,
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	count: INTEGER is
 			-- Number of items in `Current'
 		do
@@ -158,6 +158,11 @@ feature -- Access
 			end
 		end
 
+feature -- Status report
+
+	is_node_sequence: BOOLEAN
+			-- Do we deliver a node sequence?
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -231,7 +236,7 @@ feature -- Evaluation
 		do
 			todo ("process", False)
 		end
-	
+
 feature {XM_XPATH_MEMO_CLOSURE, XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR} -- Restricted
 
 	state: INTEGER
@@ -241,11 +246,8 @@ feature {XM_XPATH_MEMO_CLOSURE, XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESS
 	Maybe_more_state: INTEGER is 2
 	All_read_state: INTEGER is 3
 	Busy_state: INTEGER is 4
-	
-feature {XM_XPATH_MEMO_CLOSURE} -- Local
 
-	is_node_sequence: BOOLEAN
-			-- Do we deliver a node sequence?
+feature {XM_XPATH_MEMO_CLOSURE} -- Local
 
 	reservoir: DS_ARRAYED_LIST [XM_XPATH_ITEM]
 			-- List of items already read
@@ -270,7 +272,7 @@ feature {XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR} -- r
 		ensure
 			all_read: state = All_read_state
 		end
-			
+
 invariant
 
 	state: Unread_state <= state and state <= Busy_state
