@@ -369,7 +369,7 @@ feature -- Access
 			Result := Result + INTEGER_.bit_shift_left (Result, 3)
 			Result := INTEGER_.bit_xor (Result, INTEGER_.bit_shift_right (Result, 11))
 			Result := Result + INTEGER_.bit_shift_left (Result, 15)
-			Result := INTEGER_.bit_and (Result, Platform.maximum_integer)
+			Result := INTEGER_.bit_and (Result, Platform.Maximum_integer)
 		end
 
 feature -- Constants
