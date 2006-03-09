@@ -105,12 +105,19 @@ feature -- Access
 			i, j, nb: INTEGER
 			a_parameter: ET_ACTUAL_PARAMETER
 			a_named_parameter: ET_ACTUAL_PARAMETER
+			l_type, l_other_type: ET_TYPE
+			l_named_type: ET_NAMED_TYPE
 		do
 			Result := Current
 			nb := count - 1
 			from i := 0 until i > nb loop
 				a_parameter := storage.item (i).actual_parameter
-				a_named_parameter := a_parameter.named_parameter (a_context, a_universe)
+				l_type := a_parameter.type
+				if l_type /= l_other_type then
+					l_named_type := l_type.named_type (a_context, a_universe)
+					l_other_type := l_type
+				end
+				a_named_parameter := a_parameter.named_parameter_with_type (l_named_type)
 				if Result /= Current then
 					Result.put_first (a_named_parameter)
 				elseif a_parameter /= a_named_parameter then
@@ -488,12 +495,19 @@ feature -- Type processing
 		local
 			i, j, nb: INTEGER
 			a_parameter, a_resolved_parameter: ET_ACTUAL_PARAMETER_ITEM
+			l_type, l_other_type: ET_TYPE
+			l_resolved_type: ET_TYPE
 		do
 			Result := Current
 			nb := count - 1
 			from i := 0 until i > nb loop
 				a_parameter := storage.item (i)
-				a_resolved_parameter := a_parameter.resolved_formal_parameters (a_parameters)
+				l_type := a_parameter.type
+				if l_type /= l_other_type then
+					l_resolved_type := l_type.resolved_formal_parameters (a_parameters)
+					l_other_type := l_type
+				end
+				a_resolved_parameter := a_parameter.resolved_formal_parameters_with_type (l_resolved_type)
 				if Result /= Current then
 					Result.put_first (a_resolved_parameter)
 				elseif a_parameter /= a_resolved_parameter then

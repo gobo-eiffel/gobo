@@ -20,7 +20,7 @@ inherit
 		rename
 			make as make_type
 		undefine
-			type, actual_parameter
+			type, label, actual_parameter
 		redefine
 			process, position, first_leaf
 		end

@@ -902,40 +902,23 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
-
-	resolved_constraint_actual_parameter_comma (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_COMMA;
-		a_formals: ET_FORMAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_ITEM is
-			-- Version of `a_constraint', appearing in the constraint
-			-- of one of the formal generic parameters in `a_formals', where
-			-- class names and formal generic parameter names have been
-			-- resolved (i.e. replaced by the corresponding Class_type,
-			-- Tuple_type and Formal_parameter_type)
-		require
-			a_constraint_not_void: a_constraint /= Void
-			a_formals_not_void: a_formals /= Void
-		local
-			a_parameter: ET_ACTUAL_PARAMETER
+	add_to_actual_parameter_list (a_parameter: ET_ACTUAL_PARAMETER_ITEM; a_list: ET_ACTUAL_PARAMETER_LIST) is
+			-- Add `a_parameter' at the beginning of `a_list'.
 		do
-			a_parameter := a_constraint.actual_parameter.resolved_syntactical_constraint (a_formals, Current)
-			if a_parameter /= Void then
-				Result := ast_factory.new_actual_parameter_comma (a_parameter, a_constraint.comma)
+			if a_list /= Void and a_parameter /= Void then
+				a_list.put_first (a_parameter)
 			end
 		end
 
-	resolved_constraint_qualified_actual_parameter (a_constraint: ET_CONSTRAINT_QUALIFIED_ACTUAL_PARAMETER;
-		a_formals: ET_FORMAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER is
-			-- Version of `a_constraint', appearing in the constraint
-			-- of one of the formal generic parameters in `a_formals', where
-			-- class names and formal generic parameter names have been
-			-- resolved (i.e. replaced by the corresponding Class_type,
-			-- Tuple_type and Formal_parameter_type)
-		require
-			a_constraint_not_void: a_constraint /= Void
-			a_formals_not_void: a_formals /= Void
+	add_to_constraint_actual_parameter_list (a_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM; a_list: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST) is
+			-- Add `a_parameter' at the beginning of `a_list'.
 		do
-			Result := a_constraint.type.resolved_syntactical_constraint (a_formals, Current)
+			if a_list /= Void and a_parameter /= Void then
+				a_list.put_first (a_parameter)
+			end
 		end
+
+feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
 
 	resolved_constraint_named_type (a_constraint: ET_CONSTRAINT_NAMED_TYPE;
 		a_formals: ET_FORMAL_PARAMETER_LIST): ET_TYPE is
@@ -1045,28 +1028,73 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_formals_not_void: a_formals /= Void
 		local
 			i, nb: INTEGER
-			a_parameter: ET_ACTUAL_PARAMETER_ITEM
+			l_type, l_other_type: ET_CONSTRAINT_TYPE
+			l_resolved_type: ET_TYPE
+			l_parameter: ET_ACTUAL_PARAMETER_ITEM
+			l_actual: ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 		do
 			nb := a_constraint.count
 			Result := ast_factory.new_actual_parameters (a_constraint.left_bracket, a_constraint.right_bracket, nb)
 			if Result /= Void then
 				from i := nb until i < 1 loop
-					a_parameter := a_constraint.item (i).resolved_syntactical_constraint (a_formals, Current)
-					if a_parameter /= Void then
-						Result.put_first (a_parameter)
+					l_actual := a_constraint.item (i)
+					l_type := l_actual.type
+					if l_type /= l_other_type then
+						l_resolved_type := l_type.resolved_syntactical_constraint (a_formals, Current)
+						l_other_type := l_type
+					end
+					l_parameter := l_actual.resolved_syntactical_constraint_with_type (l_resolved_type, Current)
+					if l_parameter /= Void then
+						Result.put_first (l_parameter)
 					end
 					i := i - 1
 				end
 			end
 		end
 
-feature {NONE} -- AST factory
-
-	new_actual_parameter (a_type: ET_TYPE): ET_ACTUAL_PARAMETER is
-			-- New actual parameter
+	resolved_constraint_actual_parameter_comma (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_COMMA;
+		a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM is
+			-- Version of `a_constraint', where its type has been replaced by `a_type'
+		require
+			a_constraint_not_void: a_constraint /= Void
+		local
+			a_parameter: ET_ACTUAL_PARAMETER
 		do
-			Result := ast_factory.new_actual_parameter (a_type)
+			a_parameter := a_constraint.actual_parameter.resolved_syntactical_constraint_with_type (a_type, Current)
+			Result := ast_factory.new_actual_parameter_comma (a_parameter, a_constraint.comma)
 		end
+
+	resolved_constraint_labeled_actual_parameter (a_constraint: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER;
+		a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER is
+			-- Version of `a_constraint', where its type has been replaced by `a_type'
+		require
+			a_constraint_not_void: a_constraint /= Void
+		do
+			Result := ast_factory.new_labeled_actual_parameter (a_constraint.label, ast_factory.new_colon_type (a_constraint.colon, a_type))
+		end
+
+	resolved_constraint_labeled_comma_actual_parameter (a_constraint: ET_CONSTRAINT_LABELED_COMMA_ACTUAL_PARAMETER;
+		a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER is
+			-- Version of `a_constraint', where its type has been replaced by `a_type'
+		require
+			a_constraint_not_void: a_constraint /= Void
+		do
+			Result := ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (a_constraint.label, a_constraint.comma), a_type)
+		end
+
+	resolved_constraint_labeled_actual_parameter_semicolon (a_constraint: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER_SEMICOLON;
+		a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM is
+			-- Version of `a_constraint', where its type has been replaced by `a_type'
+		require
+			a_constraint_not_void: a_constraint /= Void
+		local
+			l_parameter: ET_LABELED_ACTUAL_PARAMETER
+		do
+			l_parameter := a_constraint.actual_parameter.resolved_syntactical_constraint_with_type (a_type, Current)
+			Result := ast_factory.new_labeled_actual_parameter_semicolon (l_parameter, a_constraint.semicolon)
+		end
+
+feature {NONE} -- AST factory
 
 	new_agent_identifier_target (an_identifier: ET_IDENTIFIER): ET_IDENTIFIER is
 			-- New agent identifier target
@@ -1150,19 +1178,6 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_constraint_actual_parameter (a_type: ET_CONSTRAINT_TYPE): ET_CONSTRAINT_ACTUAL_PARAMETER is
-			-- New actual parameter appearing in a generic constraint
-		do
-			Result := ast_factory.new_constraint_actual_parameter (a_type)
-		end
-
-	new_constrained_formal_parameter (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL;
-		a_constraint: ET_TYPE; a_creation: ET_CONSTRAINT_CREATOR): ET_CONSTRAINED_FORMAL_PARAMETER is
-			-- New constrained formal generic parameter
-		do
-			Result := ast_factory.new_constrained_formal_parameter (a_type_mark, a_name, an_arrow, a_constraint, a_creation)
-		end
-
 	new_constraint_named_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER;
 		a_parameters: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST): ET_CONSTRAINT_NAMED_TYPE is
 			-- New Eiffel class type or formal generic paramater
@@ -1218,12 +1233,6 @@ feature {NONE} -- AST factory
 		do
 			Result := ast_factory.new_formal_arguments (a_left, a_right, nb)
 			last_formal_arguments := Result
-		end
-
-	new_formal_parameter (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER is
-			-- New formal generic parameter
-		do
-			Result := ast_factory.new_formal_parameter (a_type_mark, a_name)
 		end
 
 	new_invalid_alias_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME is
@@ -1480,12 +1489,6 @@ feature {NONE} -- AST factory
 			if Result = Void then
 				Result := ast_factory.new_prefix_expression (ast_factory.new_prefix_plus_operator (a_sign), an_expression)
 			end
-		end
-
-	new_tuple_type (a_name: ET_IDENTIFIER; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE is
-			-- New TUPLE class type
-		do
-			Result := ast_factory.new_tuple_type (a_name, a_parameters)
 		end
 
 	new_unqualified_call_expression (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_EXPRESSION is

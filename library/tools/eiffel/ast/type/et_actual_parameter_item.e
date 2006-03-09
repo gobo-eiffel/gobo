@@ -5,7 +5,7 @@ indexing
 		"Eiffel actual generic parameters which appear in a comma-separated list of parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,17 +32,22 @@ feature -- Access
 			type_not_void: Result /= Void
 		end
 
+	label: ET_IDENTIFIER is
+			-- Label of `actual_parameter';
+			-- Useful when part of a labeled tuple, Void if no label
+		deferred
+		end
+
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_ITEM is
-			-- Version of current actual parameter where the formal generic
-			-- parameter types have been replaced by their actual
-			-- counterparts in `a_parameters'
+	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM is
+			-- Version of current actual parameter where its type
+			-- is replaced by `a_type'
 		require
-			a_parameters_not_void: a_parameters /= Void
+			a_type_not_void: a_type /= Void
 		deferred
 		ensure
-			resolved_type_not_void: Result /= Void
+			resolved_formal_parameters_not_void: Result /= Void
 		end
 
 end

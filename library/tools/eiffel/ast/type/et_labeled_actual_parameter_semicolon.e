@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Eiffel actual generic parameters followed by a comma"
+		"Eiffel labeled actual generic parameters followed by a semicolon"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_ACTUAL_PARAMETER_COMMA
+class ET_LABELED_ACTUAL_PARAMETER_SEMICOLON
 
 inherit
 
@@ -22,23 +22,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parameter: like actual_parameter; a_comma: like comma) is
-			-- Create a new actual_parameter-comma.
+	make (a_parameter: like actual_parameter; a_semicolon: like semicolon) is
+			-- Create a new labeled_actual_parameter-semicolon.
 		require
 			a_parameter_not_void: a_parameter /= Void
-			a_comma_not_void: a_comma /= Void
+			a_semicolon_not_void: a_semicolon /= Void
 		do
 			actual_parameter := a_parameter
-			comma := a_comma
+			semicolon := a_semicolon
 		ensure
 			actual_parameter_set: actual_parameter = a_parameter
-			comma_set: comma = a_comma
+			semicolon_set: semicolon = a_semicolon
 		end
 
 feature -- Access
 
-	actual_parameter: ET_ACTUAL_PARAMETER
-			-- Actual parameter in comma-separated list
+	actual_parameter: ET_LABELED_ACTUAL_PARAMETER
+			-- Labeled actual generic parameter in semicolon-separated list
 
 	type: ET_TYPE is
 			-- Type of `actual_parameter'
@@ -53,8 +53,8 @@ feature -- Access
 			Result := actual_parameter.label
 		end
 
-	comma: ET_SYMBOL
-			-- Comma separator
+	semicolon: ET_SYMBOL
+			-- Semicolon separator
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -72,26 +72,26 @@ feature -- Access
 	last_leaf: ET_AST_LEAF is
 			-- Last leaf node in current node
 		do
-			Result := comma
+			Result := semicolon
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := comma.break
+			Result := semicolon.break
 		end
 
 feature -- Type processing
 
-	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER_COMMA is
+	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER_SEMICOLON is
 			-- Version of current actual parameter where its type
 			-- is replaced by `a_type'
 		local
-			a_parameter: ET_ACTUAL_PARAMETER
+			a_parameter: ET_LABELED_ACTUAL_PARAMETER
 		do
 			a_parameter := actual_parameter.resolved_formal_parameters_with_type (a_type)
 			if a_parameter /= actual_parameter then
-				create Result.make (a_parameter, comma)
+				create Result.make (a_parameter, semicolon)
 			else
 				Result := Current
 			end
@@ -102,11 +102,11 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR) is
 			-- Process current node.
 		do
-			a_processor.process_actual_parameter_comma (Current)
+			a_processor.process_labeled_actual_parameter_semicolon (Current)
 		end
 
 invariant
 
-	comma_not_void: comma /= Void
+	semicolon_not_void: semicolon /= Void
 
 end

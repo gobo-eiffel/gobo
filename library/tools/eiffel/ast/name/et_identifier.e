@@ -41,6 +41,12 @@ inherit
 			reset, is_equal
 		end
 
+	ET_LABEL
+		undefine
+			first_position, last_position,
+			is_equal
+		end
+
 	ET_TAG
 		undefine
 			first_position, last_position,
@@ -231,7 +237,7 @@ feature -- Status report
 		do
 			Result := (status_code = instruction_code)
 		end
-		
+
 feature -- Status setting
 
 	set_local (b: BOOLEAN) is

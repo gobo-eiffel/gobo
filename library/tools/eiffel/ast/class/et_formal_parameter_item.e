@@ -39,5 +39,12 @@ feature -- Access
 		ensure then
 			definition: Result = formal_parameter
 		end
-	
+
+	label: ET_IDENTIFIER is
+			-- Label of `actual_parameter';
+			-- Useful when part of a labeled tuple, Void if no label
+		do
+			-- No label.
+		end
+
 end

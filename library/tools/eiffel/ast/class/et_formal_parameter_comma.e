@@ -70,20 +70,14 @@ feature -- Access
 
 feature -- Type processing
 
-	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_COMMA is
-			-- Replace in current type the formal generic parameter
-			-- types by those of `actual_parameters' when the 
-			-- corresponding actual parameter is different from
-			-- the formal parameter. (Warning: this is a side-effect
-			-- function.)
-		local
-			a_type: ET_TYPE
+	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM is
+			-- Version of current actual parameter where its type
+			-- is replaced by `a_type'
 		do
-			a_type := formal_parameter.resolved_formal_parameters (actual_parameters)
 			if a_type /= formal_parameter then
-				create Result.make (a_type, comma)
+				create {ET_ACTUAL_PARAMETER_COMMA} Result.make (a_type, comma)
 			else
-				create Result.make (formal_parameter, comma)
+				Result := Current
 			end
 		end
 

@@ -184,6 +184,7 @@ inherit
 			new_constraint_actual_parameter_comma,
 			new_constraint_actual_parameters,
 			new_constraint_creator,
+			new_constraint_labeled_actual_parameter_semicolon,
 			new_convert_feature_comma,
 			new_convert_features,
 			new_convert_function,
@@ -248,6 +249,8 @@ inherit
 			new_inspect_instruction,
 			new_invariants,
 			new_keyword_feature_name_list,
+			new_label_comma,
+			new_labeled_actual_parameter_semicolon,
 			new_like_current,
 			new_like_feature,
 			new_local_name_comma,
@@ -1915,6 +1918,16 @@ feature -- AST nodes
 			end
 		end
 
+	new_constraint_labeled_actual_parameter_semicolon (a_parameter: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER; a_semicolon: ET_SEMICOLON_SYMBOL): ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM is
+			-- New constraint_labeled_actual_parameter-semicolon
+		do
+			if a_semicolon = Void then
+				Result := a_parameter
+			elseif a_parameter /= Void then
+				create {ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER_SEMICOLON} Result.make (a_parameter, a_semicolon)
+			end
+		end
+
 	new_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE; a_comma: ET_SYMBOL): ET_CONVERT_FEATURE_ITEM is
 			-- New convert_feature-comma
 		do
@@ -2692,6 +2705,26 @@ feature -- AST nodes
 		do
 			create Result.make_with_capacity (nb)
 			Result.set_keyword (a_keyword)
+		end
+
+	new_label_comma (a_label: ET_IDENTIFIER; a_comma: ET_SYMBOL): ET_LABEL is
+			-- New label-comma
+		do
+			if a_comma = Void then
+				Result := a_label
+			elseif a_label /= Void then
+				create {ET_IDENTIFIER_COMMA} Result.make (a_label, a_comma)
+			end
+		end
+
+	new_labeled_actual_parameter_semicolon (a_parameter: ET_LABELED_ACTUAL_PARAMETER; a_semicolon: ET_SYMBOL): ET_ACTUAL_PARAMETER_ITEM is
+			-- New labeled_actual_parameter-semicolon
+		do
+			if a_semicolon = Void then
+				Result := a_parameter
+			elseif a_parameter /= Void then
+				create {ET_LABELED_ACTUAL_PARAMETER_SEMICOLON} Result.make (a_parameter, a_semicolon)
+			end
 		end
 
 	new_like_current (a_like: ET_KEYWORD; a_current: ET_CURRENT): ET_LIKE_CURRENT is

@@ -24,6 +24,14 @@ feature -- Access
 			actual_parameter_not_void: Result /= Void
 		end
 
+	type: ET_CONSTRAINT_TYPE is
+			-- Type of actual parameter
+		do
+			Result := actual_parameter.type
+		ensure
+			type_not_void: Result /= Void
+		end
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
@@ -34,15 +42,11 @@ feature -- Access
 
 feature -- Conversion
 
-	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
+	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
 		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER_ITEM is
-			-- Version of current actual parameter, appearing in the constraint
-			-- of one of the formal generic parameters in `a_formals', where
-			-- class names and formal generic parameter names have been
-			-- resolved (i.e. replaced by the corresponding Class_type,
-			-- Tuple_type and Formal_parameter_type)
+			-- Version of current actual parameter, where its type has
+			-- been replaced by `a_type'
 		require
-			a_formals_not_void: a_formals /= Void
 			a_parser_not_void: a_parser /= Void
 		deferred
 		end

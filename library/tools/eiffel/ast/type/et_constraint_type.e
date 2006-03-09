@@ -8,7 +8,7 @@ indexing
 		%of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,17 @@ inherit
 
 	ET_CONSTRAINT_ACTUAL_PARAMETER
 		redefine
-			resolved_syntactical_constraint
+			type, resolved_syntactical_constraint_with_type
+		end
+
+feature -- Access
+
+	type: ET_CONSTRAINT_TYPE is
+			-- Type
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
 		end
 
 feature -- Conversion
@@ -31,7 +41,18 @@ feature -- Conversion
 			-- class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
+		require
+			a_formals_not_void: a_formals /= Void
+			a_parser_not_void: a_parser /= Void
 		deferred
+		end
+
+	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
+		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE is
+			-- Version of current actual parameter, where its type has
+			-- been replaced by `a_type'
+		do
+			Result := a_type
 		end
 
 end

@@ -2,18 +2,18 @@ indexing
 
 	description:
 
-		"Eiffel actual parameters that appear in constraints of formal %
-		%generic parameters, followed by a comma. The names %
-		%of the types have not been resolved yet, they may %
-		%be names of classes or of formal generic parameters."
+		"Eiffel labeled actual parameters followed by a semicolon, that %
+		%appear in constraints of formal generic parameters. The names %
+		%of the types have not been resolved yet, they may be names of %
+		%classes or of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_CONSTRAINT_ACTUAL_PARAMETER_COMMA
+class ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER_SEMICOLON
 
 inherit
 
@@ -25,26 +25,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parameter: like actual_parameter; a_comma: like comma) is
-			-- Create a new actual_parameter-comma.
+	make (a_parameter: like actual_parameter; a_semicolon: like semicolon) is
+			-- Create a new labeled actual parameter followed by a semicolon.
 		require
 			a_parameter_not_void: a_parameter /= Void
-			a_comma_not_void: a_comma /= Void
+			a_semicolon_not_void: a_semicolon /= Void
 		do
 			actual_parameter := a_parameter
-			comma := a_comma
+			semicolon := a_semicolon
 		ensure
 			actual_parameter_set: actual_parameter = a_parameter
-			comma_set: comma = a_comma
+			semicolon_set: semicolon = a_semicolon
 		end
 
 feature -- Access
 
-	actual_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER
+	actual_parameter: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER
 			-- Actual parameter in comma-separated list
 
-	comma: ET_SYMBOL
-			-- Comma separator
+	semicolon: ET_SEMICOLON_SYMBOL
+			-- Semicolon
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -60,11 +60,11 @@ feature -- Conversion
 			-- Version of current actual parameter, where its type has
 			-- been replaced by `a_type'
 		do
-			Result := a_parser.resolved_constraint_actual_parameter_comma (Current, a_type)
+			Result := a_parser.resolved_constraint_labeled_actual_parameter_semicolon (Current, a_type)
 		end
 
 invariant
 
-	comma_not_void: comma /= Void
+	semicolon_not_void: semicolon /= Void
 
 end

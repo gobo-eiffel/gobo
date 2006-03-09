@@ -15,10 +15,15 @@ deferred class ET_ACTUAL_PARAMETER
 inherit
 
 	ET_ACTUAL_PARAMETER_ITEM
+		redefine
+			resolved_formal_parameters_with_type
+		end
 
 	ET_CONSTRAINT_ACTUAL_PARAMETER
+		undefine
+			type
 		redefine
-			actual_parameter
+			actual_parameter, type
 		end
 
 feature -- Access
@@ -29,6 +34,11 @@ feature -- Access
 			Result := Current
 		ensure then
 			definition: Result = Current
+		end
+
+	type: ET_TYPE is
+			-- Type of `actual_parameter'
+		deferred
 		end
 
 	named_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
@@ -43,6 +53,19 @@ feature -- Access
 		ensure
 			named_parameter_not_void: Result /= Void
 			named_parameter_named: Result.type.is_named_type
+		end
+
+	named_parameter_with_type (a_type: ET_NAMED_TYPE): ET_ACTUAL_PARAMETER is
+			-- Same as current actual parameter but its type
+			-- replaced by `a_type'
+		require
+			a_type_not_void: a_type /= Void
+			a_type_is_named: a_type.is_named_type
+		do
+			Result := a_type
+		ensure
+			named_parameter_not_void: Result /= Void
+			type_set: Result.type = a_type
 		end
 
 feature -- Status report
@@ -61,21 +84,16 @@ feature -- Status report
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER is
-			-- Version of current actual parameter where the formal generic
-			-- parameter types have been replaced by their actual
-			-- counterparts in `a_parameters'
-		do
-			Result := Current
+	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER is
+			-- Version of current actual parameter where its type
+			-- is replaced by `a_type'
+		deferred
 		end
 
-	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
+	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
 		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER is
-			-- Version of current actual parameter, appearing in the constraint
-			-- of one of the formal generic parameters in `a_formals', where
-			-- class names and formal generic parameter names have been
-			-- resolved (i.e. replaced by the corresponding Class_type,
-			-- Tuple_type and Formal_parameter_type)
+			-- Version of current actual parameter, where its type has
+			-- been replaced by `a_type'
 		do
 			Result := Current
 		end

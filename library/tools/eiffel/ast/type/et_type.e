@@ -5,7 +5,7 @@ indexing
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,14 +17,15 @@ inherit
 	ET_TYPE_ITEM
 
 	ET_ACTUAL_PARAMETER
-		redefine
-			resolved_formal_parameters,
-			resolved_syntactical_constraint
+		undefine
+			resolved_syntactical_constraint_with_type
 		end
 
 	ET_CONSTRAINT_TYPE
 		undefine
 			actual_parameter
+		redefine
+			type
 		end
 
 	ET_DECLARED_TYPE
@@ -155,6 +156,13 @@ feature -- Access
 			Result := Current
 		ensure then
 			definition: Result = Current
+		end
+
+	label: ET_IDENTIFIER is
+			-- Label of `actual_parameter';
+			-- Useful when part of a labeled tuple, Void if no label
+		do
+			-- No label.
 		end
 
 feature -- Measurement
@@ -809,6 +817,13 @@ feature -- Type processing
 			-- counterparts in `a_parameters'
 		do
 			Result := Current
+		end
+
+	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_TYPE is
+			-- Version of current actual parameter where its type
+			-- is replaced by `a_type'
+		do
+			Result := a_type
 		end
 
 	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;

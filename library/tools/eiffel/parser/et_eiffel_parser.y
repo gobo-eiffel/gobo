@@ -99,9 +99,11 @@ create
 %right E_NOT E_OLD
 
 %type <ET_ACTUAL_ARGUMENT_LIST> Actuals_opt Actuals_expression_list
-%type <ET_ACTUAL_PARAMETER> Actual_parameter
-%type <ET_ACTUAL_PARAMETER_ITEM> Actual_parameter_comma
+%type <ET_ACTUAL_PARAMETER_ITEM> Type_no_identifier_comma
+%type <ET_ACTUAL_PARAMETER_ITEM> Tuple_labeled_actual_parameter Tuple_labeled_actual_parameter_semicolon
 %type <ET_ACTUAL_PARAMETER_LIST> Actual_parameters_opt Actual_parameter_list Actual_parameters
+%type <ET_ACTUAL_PARAMETER_LIST> Tuple_actual_parameters_opt Tuple_actual_parameters
+%type <ET_ACTUAL_PARAMETER_LIST> Tuple_labeled_actual_parameter_list
 %type <ET_AGENT_ARGUMENT_OPERAND> Agent_actual
 %type <ET_AGENT_ARGUMENT_OPERAND_ITEM> Agent_actual_comma
 %type <ET_AGENT_ARGUMENT_OPERAND_LIST> Agent_actuals_opt Agent_actual_list
@@ -124,11 +126,15 @@ create
 %type <ET_COMPOUND> Compound Rescue_opt Do_compound Once_compound Then_compound
 %type <ET_COMPOUND> Else_compound Rescue_compound From_compound Loop_compound
 %type <ET_CONSTANT> Manifest_constant
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER> Constraint_actual_parameter
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_actual_parameter_comma
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameters_opt Constraint_actual_parameter_list
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_type_no_identifier_comma
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_tuple_labeled_actual_parameter
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_tuple_labeled_actual_parameter_semicolon
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameters Constraint_actual_parameters_opt
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameter_list
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_tuple_actual_parameters Constraint_tuple_actual_parameters_opt
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_tuple_labeled_actual_parameter_list
 %type <ET_CONSTRAINT_CREATOR> Constraint_create Constraint_create_procedure_list
-%type <ET_CONSTRAINT_TYPE> Constraint_type
+%type <ET_CONSTRAINT_TYPE> Constraint_type Constraint_type_no_identifier
 %type <ET_CONVERT_FEATURE> Convert_feature
 %type <ET_CONVERT_FEATURE_ITEM> Convert_feature_comma
 %type <ET_CONVERT_FEATURE_LIST> Convert_clause_opt Convert_clause Convert_list
@@ -197,7 +203,7 @@ create
 %type <ET_SEMICOLON_SYMBOL> Semicolon_opt
 %type <ET_STATIC_CALL_EXPRESSION> Static_call_expression
 %type <ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
-%type <ET_TYPE> Type Type_no_class_name
+%type <ET_TYPE> Type Type_no_class_name Type_no_identifier
 %type <ET_TYPE_ITEM> Type_comma
 %type <ET_TYPE_LIST> Convert_types Convert_type_list
 %type <ET_VARIANT> Variant_clause_opt
@@ -553,63 +559,63 @@ Formal_parameter_comma: Formal_parameter ','
 
 Formal_parameter: Identifier
 		{
-			$$ := new_formal_parameter (Void, $1)
+			$$ := ast_factory.new_formal_parameter (Void, $1)
 			if $$ /= Void then
 				register_constraint (Void)
 			end
 		}
 	| E_EXPANDED Identifier
 		{
-			$$ := new_formal_parameter ($1, $2)
+			$$ := ast_factory.new_formal_parameter ($1, $2)
 			if $$ /= Void then
 				register_constraint (Void)
 			end
 		}
 	| E_REFERENCE Identifier
 		{
-			$$ := new_formal_parameter ($1, $2)
+			$$ := ast_factory.new_formal_parameter ($1, $2)
 			if $$ /= Void then
 				register_constraint (Void)
 			end
 		}
 	| Identifier E_ARROW Constraint_type
 		{
-			$$ := new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), Void)
+			$$ := ast_factory.new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), Void)
 			if $$ /= Void then
 				register_constraint ($3)
 			end
 		}
 	| E_EXPANDED Identifier E_ARROW Constraint_type
 		{
-			$$ := new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void)
+			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void)
 			if $$ /= Void then
 				register_constraint ($4)
 			end
 		}
 	| E_REFERENCE Identifier E_ARROW Constraint_type
 		{
-			$$ := new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void)
+			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void)
 			if $$ /= Void then
 				register_constraint ($4)
 			end
 		}
 	| Identifier E_ARROW Constraint_type Constraint_create
 		{
-			$$ := new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), $4)
+			$$ := ast_factory.new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), $4)
 			if $$ /= Void then
 				register_constraint ($3)
 			end
 		}
 	| E_EXPANDED Identifier E_ARROW Constraint_type Constraint_create
 		{
-			$$ := new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5)
+			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5)
 			if $$ /= Void then
 				register_constraint ($4)
 			end
 		}
 	| E_REFERENCE Identifier E_ARROW Constraint_type Constraint_create
 		{
-			$$ := new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5)
+			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5)
 			if $$ /= Void then
 				register_constraint ($4)
 			end
@@ -673,29 +679,46 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_bit_n ($1, $2) }
 	| E_BITTYPE Identifier
 		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
-	| E_TUPLE Constraint_actual_parameters_opt
+	| E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type (Void, $1, $2) }
+	;
+
+Constraint_type_no_identifier: Class_name Constraint_actual_parameters
+		{ $$ := new_constraint_named_type (Void, $1, $2) }
+	| E_EXPANDED Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_SEPARATE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_REFERENCE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| Anchored_type
+		{ $$ := $1 }
+	| E_BITTYPE Untyped_integer_constant
+		{ $$ := new_bit_n ($1, $2) }
+	| E_BITTYPE Identifier
+		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
+	| E_TUPLE Constraint_tuple_actual_parameters
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
 	;
 
 Constraint_actual_parameters_opt: -- Empty
 		-- { $$ := Void }
-	| '[' ']'
+	| Constraint_actual_parameters
+		{ $$ := $1 }
+	;
+
+Constraint_actual_parameters: '[' ']'
 		-- Warning:
 		{ $$ := ast_factory.new_constraint_actual_parameters ($1, $2, 0) }
-	| '['
+	| Open_bracket Constraint_actual_parameter_list
 		{
-			add_symbol ($1)
-			add_counter
-		}
-	  Constraint_actual_parameter_list
-		{
-			$$ := $3
+			$$ := $2
 			remove_symbol
 			remove_counter
 		}
 	;
 
-Constraint_actual_parameter_list: Constraint_actual_parameter ']'
+Constraint_actual_parameter_list: Constraint_type ']'
 		{
 			if $1 /= Void then
 				$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $2, counter_value + 1)
@@ -706,22 +729,117 @@ Constraint_actual_parameter_list: Constraint_actual_parameter ']'
 				$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $2, counter_value)
 			end
 		}
-	| Constraint_actual_parameter_comma Constraint_actual_parameter_list
+	| Constraint_type_no_identifier_comma Constraint_actual_parameter_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			add_to_constraint_actual_parameter_list ($1, $$)
+		}
+	| E_IDENTIFIER ',' Increment_counter Constraint_actual_parameter_list
+		{
+			$$ := $4
+			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_actual_parameter_comma (new_constraint_named_type (Void, $1, Void), $2), $$)
+		}
+	| E_TUPLE ',' Increment_counter Constraint_actual_parameter_list
+		{
+			$$ := $4
+			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_actual_parameter_comma (new_constraint_named_type (Void, $1, Void), $2), $$)
+		}
+	;
+
+Constraint_type_no_identifier_comma: Constraint_type_no_identifier ','
+		{
+			$$ := ast_factory.new_constraint_actual_parameter_comma ($1, $2)
+			if $$ /= Void then
+				increment_counter
 			end
 		}
 	;
 
-Constraint_actual_parameter: Constraint_type
-		{ $$ := new_constraint_actual_parameter ($1) }
+Constraint_tuple_actual_parameters_opt: -- Empty
+		-- { $$ := Void }
+	| Constraint_tuple_actual_parameters
+		{ $$ := $1 }
 	;
 
-Constraint_actual_parameter_comma: Constraint_actual_parameter ','
+Constraint_tuple_actual_parameters: '[' ']'
+		-- Warning:
+		{ $$ := ast_factory.new_constraint_actual_parameters ($1, $2, 0) }
+	| Open_bracket Constraint_actual_parameter_list
 		{
-			$$ := ast_factory.new_constraint_actual_parameter_comma ($1, $2)
+			$$ := $2
+			remove_symbol
+			remove_counter
+		}
+	| Open_bracket Constraint_tuple_labeled_actual_parameter_list
+		{
+			$$ := $2
+			remove_symbol
+			remove_counter
+		}
+	;
+
+Constraint_tuple_labeled_actual_parameter_list: Identifier ':' Constraint_type ']'
+		{
+			$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $4, counter_value + 1)
+			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3), $$)
+		}
+	| Constraint_tuple_labeled_actual_parameter_semicolon Constraint_tuple_labeled_actual_parameter_list
+		{
+			$$ := $2
+			add_to_constraint_actual_parameter_list ($1, $2)
+		}
+	| Constraint_tuple_labeled_actual_parameter Constraint_tuple_labeled_actual_parameter_list
+		{
+			$$ := $2
+			add_to_constraint_actual_parameter_list ($1, $2)
+		}
+	| E_IDENTIFIER ',' Increment_counter Constraint_tuple_labeled_actual_parameter_list
+		{
+			$$ := $4
+			if $$ /= Void then
+				if not $$.is_empty then
+					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, $$.first.type), $$)
+				else
+					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, Void), $$)
+				end
+			end
+		}
+	| E_TUPLE ',' Increment_counter Constraint_tuple_labeled_actual_parameter_list
+		{
+			$$ := $4
+			if $$ /= Void then
+				if not $$.is_empty then
+					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, $$.first.type), $$)
+				else
+					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, Void), $$)
+				end
+			end
+		}
+	| E_BITTYPE ',' Increment_counter Constraint_tuple_labeled_actual_parameter_list
+		{
+			$$ := $4
+			if $$ /= Void then
+				if not $$.is_empty then
+					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, $$.first.type), $$)
+				else
+					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, Void), $$)
+				end
+			end
+		}
+	;
+
+Constraint_tuple_labeled_actual_parameter: Identifier ':' Constraint_type
+		{
+			$$ := ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3)
+			if $$ /= Void then
+				increment_counter
+			end
+		}
+	;
+
+Constraint_tuple_labeled_actual_parameter_semicolon: Identifier ':' Constraint_type ';'
+		{
+			$$ := ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3), $4)
 			if $$ /= Void then
 				increment_counter
 			end
@@ -2158,8 +2276,26 @@ Type_no_class_name: Class_name Actual_parameters
 		{ $$ := new_bit_n ($1, $2) }
 	| E_BITTYPE Identifier
 		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
-	| E_TUPLE Actual_parameters_opt
-		{ $$ := new_tuple_type ($1, $2) }
+	| E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := ast_factory.new_tuple_type ($1, $2) }
+	;
+
+Type_no_identifier: Class_name Actual_parameters
+		{ $$ := new_named_type (Void, $1, $2) }
+	| E_EXPANDED Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| E_REFERENCE Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| Anchored_type
+		{ $$ := $1 }
+	| E_BITTYPE Untyped_integer_constant
+		{ $$ := new_bit_n ($1, $2) }
+	| E_BITTYPE Identifier
+		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
+	| E_TUPLE Tuple_actual_parameters
+		{ $$ := ast_factory.new_tuple_type ($1, $2) }
 	;
 
 Class_name: E_IDENTIFIER
@@ -2175,20 +2311,22 @@ Actual_parameters_opt: -- Empty
 Actual_parameters: '[' ']'
 		-- Warning:
 		{ $$ := ast_factory.new_actual_parameters ($1, $2, 0) }
-	| '['
+	| Open_bracket Actual_parameter_list
 		{
-			add_symbol ($1)
-			add_counter
-		}
-	  Actual_parameter_list
-		{
-			$$ := $3
+			$$ := $2
 			remove_symbol
 			remove_counter
 		}
 	;
 
-Actual_parameter_list: Actual_parameter ']'
+Open_bracket: '['
+		{
+			add_symbol ($1)
+			add_counter
+		}
+	;
+
+Actual_parameter_list: Type ']'
 		{
 			if $1 /= Void then
 				$$ := ast_factory.new_actual_parameters (last_symbol, $2, counter_value + 1)
@@ -2199,22 +2337,123 @@ Actual_parameter_list: Actual_parameter ']'
 				$$ := ast_factory.new_actual_parameters (last_symbol, $2, counter_value)
 			end
 		}
-	| Actual_parameter_comma Actual_parameter_list
+	| Type_no_identifier_comma Actual_parameter_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			add_to_actual_parameter_list ($1, $$)
+		}
+	| E_IDENTIFIER ',' Increment_counter Actual_parameter_list
+		{
+			$$ := $4
+			add_to_actual_parameter_list (ast_factory.new_actual_parameter_comma (new_named_type (Void, $1, Void), $2), $$)
+		}
+	| E_TUPLE ',' Increment_counter Actual_parameter_list
+		{
+			$$ := $4
+			add_to_actual_parameter_list (ast_factory.new_actual_parameter_comma (ast_factory.new_tuple_type ($1, Void), $2), $$)
+		}
+	;
+
+Increment_counter: -- Empty
+		{
+			increment_counter
+		}
+	;
+
+Type_no_identifier_comma: Type_no_identifier ','
+		{
+			$$ := ast_factory.new_actual_parameter_comma ($1, $2)
+			if $$ /= Void then
+				increment_counter
 			end
 		}
 	;
 
-Actual_parameter: Type
-		{ $$ := new_actual_parameter ($1) }
+Tuple_actual_parameters_opt: -- Empty
+		-- { $$ := Void }
+	| Tuple_actual_parameters
+		{ $$ := $1 }
 	;
 
-Actual_parameter_comma: Actual_parameter ','
+Tuple_actual_parameters: '[' ']'
+		-- Warning:
+		{ $$ := ast_factory.new_actual_parameters ($1, $2, 0) }
+	| Open_bracket Actual_parameter_list
 		{
-			$$ := ast_factory.new_actual_parameter_comma ($1, $2)
+			$$ := $2
+			remove_symbol
+			remove_counter
+		}
+	| Open_bracket Tuple_labeled_actual_parameter_list
+		{
+			$$ := $2
+			remove_symbol
+			remove_counter
+		}
+	;
+
+Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
+		{
+			$$ := ast_factory.new_actual_parameters (last_symbol, $4, counter_value + 1)
+			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3)), $$)
+		}
+	| Tuple_labeled_actual_parameter_semicolon Tuple_labeled_actual_parameter_list
+		{
+			$$ := $2
+			add_to_actual_parameter_list ($1, $2)
+		}
+	| Tuple_labeled_actual_parameter Tuple_labeled_actual_parameter_list
+		{
+			$$ := $2
+			add_to_actual_parameter_list ($1, $2)
+		}
+	| E_IDENTIFIER ',' Increment_counter Tuple_labeled_actual_parameter_list
+		{
+			$$ := $4
+			if $$ /= Void then
+				if not $$.is_empty then
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type), $$)
+				else
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void), $$)
+				end
+			end
+		}
+	| E_TUPLE ',' Increment_counter Tuple_labeled_actual_parameter_list
+		{
+			$$ := $4
+			if $$ /= Void then
+				if not $$.is_empty then
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type), $$)
+				else
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void), $$)
+				end
+			end
+		}
+	| E_BITTYPE ',' Increment_counter Tuple_labeled_actual_parameter_list
+		{
+			$$ := $4
+			if $$ /= Void then
+				if not $$.is_empty then
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type), $$)
+				else
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void), $$)
+				end
+			end
+		}
+	;
+
+Tuple_labeled_actual_parameter: Identifier ':' Type
+		{
+			$$ := ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3))
+			if $$ /= Void then
+				increment_counter
+			end
+		}
+	;
+
+Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type ';'
+		{
+			$$ := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3)), $4)
 			if $$ /= Void then
 				increment_counter
 			end

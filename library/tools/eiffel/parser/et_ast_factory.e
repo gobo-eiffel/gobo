@@ -1093,12 +1093,6 @@ feature -- AST nodes
 			end
 		end
 
-	new_actual_parameter (a_type: ET_TYPE): ET_ACTUAL_PARAMETER is
-			-- New actual parameter
-		do
-			Result := a_type
-		end
-
 	new_actual_parameter_comma (a_parameter: ET_ACTUAL_PARAMETER; a_comma: ET_SYMBOL): ET_ACTUAL_PARAMETER_ITEM is
 			-- New actual_parameter-comma
 		do
@@ -1662,12 +1656,6 @@ feature -- AST nodes
 			end
 		end
 
-	new_constraint_actual_parameter (a_type: ET_CONSTRAINT_TYPE): ET_CONSTRAINT_ACTUAL_PARAMETER is
-			-- New actual parameter appearing in a generic constraint
-		do
-			Result := a_type
-		end
-
 	new_constraint_actual_parameter_comma (a_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER; a_comma: ET_SYMBOL): ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM is
 			-- New constraint_actual_parameter-comma
 		do
@@ -1701,6 +1689,28 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_generics /= Void then
 				create Result.make (a_type_mark, a_name, a_generics)
+			end
+		end
+
+	new_constraint_labeled_actual_parameter (a_label: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_CONSTRAINT_TYPE): ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER is
+			-- New constraint labeled actual parameter
+		do
+			if a_label /= Void and a_type /= Void then
+				create Result.make (a_label, a_colon, a_type)
+			end
+		end
+
+	new_constraint_labeled_actual_parameter_semicolon (a_parameter: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER; a_semicolon: ET_SEMICOLON_SYMBOL): ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM is
+			-- New constraint_labeled_actual_parameter-semicolon
+		do
+			Result := a_parameter
+		end
+
+	new_constraint_labeled_comma_actual_parameter (a_label: ET_IDENTIFIER; a_comma: ET_SYMBOL; a_type: ET_CONSTRAINT_TYPE): ET_CONSTRAINT_LABELED_COMMA_ACTUAL_PARAMETER is
+			-- New constraint labeled actual parameter followed by a comma
+		do
+			if a_label /= Void and a_type /= Void then
+				create Result.make (a_label, a_comma, a_type)
 			end
 		end
 
@@ -2491,6 +2501,34 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			create Result.make_with_capacity (nb)
+		end
+
+	new_label_comma (a_label: ET_IDENTIFIER; a_comma: ET_SYMBOL): ET_LABEL is
+			-- New label-comma
+		do
+			Result := a_label
+		end
+
+	new_labeled_actual_parameter (a_label: ET_LABEL; a_type: ET_DECLARED_TYPE): ET_LABELED_ACTUAL_PARAMETER is
+			-- New labeled actual parameter
+		do
+			if a_label /= Void and a_type /= Void then
+				create Result.make (a_label, a_type)
+			end
+		end
+
+	new_labeled_actual_parameter_semicolon (a_parameter: ET_LABELED_ACTUAL_PARAMETER; a_semicolon: ET_SYMBOL): ET_ACTUAL_PARAMETER_ITEM is
+			-- New labeled_actual_parameter-semicolon
+		do
+			Result := a_parameter
+		end
+
+	new_labeled_comma_actual_parameter (a_label: ET_LABEL; a_type: ET_DECLARED_TYPE): ET_LABELED_ACTUAL_PARAMETER is
+			-- New labeled actual parameter whose label is followed by a comma
+		do
+			if a_label /= Void and a_type /= Void then
+				create {ET_LABELED_COMMA_ACTUAL_PARAMETER} Result.make (a_label, a_type)
+			end
 		end
 
 	new_like_current (a_like: ET_KEYWORD; a_current: ET_CURRENT): ET_LIKE_CURRENT is

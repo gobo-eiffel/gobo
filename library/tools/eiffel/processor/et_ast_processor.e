@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -840,6 +840,27 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_keyword'.
 		require
 			a_keyword_not_void: a_keyword /= Void
+		deferred
+		end
+
+	process_labeled_actual_parameter (a_parameter: ET_LABELED_ACTUAL_PARAMETER) is
+			-- Process `a_parameter'.
+		require
+			a_parameter_not_void: a_parameter /= Void
+		deferred
+		end
+
+	process_labeled_actual_parameter_semicolon (a_parameter: ET_LABELED_ACTUAL_PARAMETER_SEMICOLON) is
+			-- Process `a_parameter'.
+		require
+			a_parameter_not_void: a_parameter /= Void
+		deferred
+		end
+
+	process_labeled_comma_actual_parameter (a_parameter: ET_LABELED_COMMA_ACTUAL_PARAMETER) is
+			-- Process `a_parameter'.
+		require
+			a_parameter_not_void: a_parameter /= Void
 		deferred
 		end
 

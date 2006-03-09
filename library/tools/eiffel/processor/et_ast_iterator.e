@@ -1721,6 +1721,26 @@ feature {ET_AST_NODE} -- Processing
 			process_keyword (a_keyword)
 		end
 
+	process_labeled_actual_parameter (a_parameter: ET_LABELED_ACTUAL_PARAMETER) is
+			-- Process `a_parameter'.
+		do
+			a_parameter.label_item.process (Current)
+			a_parameter.declared_type.process (Current)
+		end
+
+	process_labeled_actual_parameter_semicolon (a_parameter: ET_LABELED_ACTUAL_PARAMETER_SEMICOLON) is
+			-- Process `a_parameter'.
+		do
+			a_parameter.actual_parameter.process (Current)
+			a_parameter.semicolon.process (Current)
+		end
+
+	process_labeled_comma_actual_parameter (a_parameter: ET_LABELED_COMMA_ACTUAL_PARAMETER) is
+			-- Process `a_parameter'.
+		do
+			a_parameter.label_item.process (Current)
+		end
+
 	process_like_current (a_type: ET_LIKE_CURRENT) is
 			-- Process `a_type'.
 		do

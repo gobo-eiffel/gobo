@@ -16,6 +16,7 @@ inherit
 
 	ET_LOCAL_NAME
 	ET_ARGUMENT_NAME
+	ET_LABEL
 
 create
 
