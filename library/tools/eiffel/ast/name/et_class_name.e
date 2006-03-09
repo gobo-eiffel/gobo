@@ -38,6 +38,16 @@ feature -- Access
 			definition: Result.is_equal (name.as_upper)
 		end
 
+	lower_name: STRING is
+			-- Lower-name of class
+			-- (May return the same object as `name' if already in upper case.)
+		deferred
+		ensure
+			upper_name_not_void: Result /= Void
+			upper_name_not_empty: Result.count > 0
+			definition: Result.is_equal (name.as_lower)
+		end
+
 	class_name: ET_CLASS_NAME is
 			-- Class name
 		do
