@@ -56,7 +56,7 @@ feature -- Execution
 			a_name: STRING
 			stop: BOOLEAN
 			a_class: ET_CLASS
-			a_class_type: ET_CLASS_TYPE
+			a_base_type: ET_BASE_TYPE
 		do
 			from until stop loop
 				output_file.put_string ("Enter class name: ")
@@ -66,10 +66,10 @@ feature -- Execution
 					if a_name.is_empty then
 						stop := True
 					else
-						a_class_type := class_type (a_name)
-						if a_class_type /= Void then
-							current_context := a_class_type
-							a_class := a_class_type.direct_base_class (universe)
+						a_base_type := base_type (a_name)
+						if a_base_type /= Void then
+							current_context := a_base_type
+							a_class := a_base_type.direct_base_class (universe)
 							process_class (a_class)
 						end
 					end
@@ -204,24 +204,24 @@ feature {ET_AST_NODE} -- Processing
 
 feature {NONE} -- Implementation
 
-	class_type (a_name: STRING): ET_CLASS_TYPE is
-			-- Build a class type from `a_name',
+	base_type (a_name: STRING): ET_BASE_TYPE is
+			-- Build a class type or tuple type from `a_name',
 			-- or report error to `output_file'.
 		require
 			a_name_not_void: a_name /= Void
 		local
 			i: INTEGER
 		do
-			i := parse_class_type (a_name, 1)
+			i := parse_base_type (a_name, 1)
 			if i <= a_name.count then
 				output_file.put_string ("Invalid type name '")
 				output_file.put_string (a_name)
 				output_file.put_string ("'.")
 				output_file.put_new_line
 			else
-				Result := last_class_type
+				Result := last_base_type
 			end
-			last_class_type := Void
+			last_base_type := Void
 		ensure
 			valid_context: Result /= Void implies Result.is_valid_context
 		end
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 			from
 				i := a_position
 				nb := str.count
-			until 
+			until
 				i > nb or
 				stop
 			loop
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			from
 				stop := False
 				create a_name.make (10)
-			until 
+			until
 				i > nb or
 				stop
 			loop
@@ -297,9 +297,9 @@ feature {NONE} -- Implementation
 			-- Last class parsed by `parse_class';
 			-- Void if an error was found when parsing
 
-	parse_class_type (str: STRING; a_position: INTEGER): INTEGER is
-			-- Parse class type in `str' starting at `a_position'.
-			-- Make result available in `last_class_type', or Void
+	parse_base_type (str: STRING; a_position: INTEGER): INTEGER is
+			-- Parse class type or tuple type in `str' starting at `a_position'.
+			-- Make result available in `last_base_type', or Void
 			-- if an error was found (report error to `output_file'.
 			-- Return the new position in `str'.
 		local
@@ -307,12 +307,56 @@ feature {NONE} -- Implementation
 			stop: BOOLEAN
 			a_class: ET_CLASS
 			an_actuals, tmp_actuals: ET_ACTUAL_PARAMETER_LIST
+			close_brackets_parsed: BOOLEAN
 		do
-			last_class_type := Void
+			last_base_type := Void
 			Result := parse_class (str, a_position)
 			a_class := last_class
 			if a_class /= Void then
-				if a_class.is_generic then
+				if a_class = universe.tuple_class then
+						-- Tuples have a variable number of arguments.
+					i := parse_open_bracket (str, Result)
+					if i > str.count + 1 then
+						create {ET_TUPLE_TYPE} last_base_type.make (Void)
+					else
+						from
+							Result := i
+							create tmp_actuals.make
+						until
+							close_brackets_parsed or stop
+						loop
+							Result := parse_base_type (str, Result)
+							if last_base_type /= Void then
+								tmp_actuals.force_first (last_base_type)
+								i := parse_comma (str, Result)
+								if i > str.count + 1 then
+									Result := parse_close_bracket (str, Result)
+									if Result > str.count + 1 then
+										stop := True
+										Result := str.count + 2
+									else
+										close_brackets_parsed := True
+									end
+								else
+									Result := i
+								end
+							else
+								stop := True
+								Result := str.count + 2
+							end
+						end
+						last_base_type := Void
+						if not stop then
+							nb := tmp_actuals.count
+							create an_actuals.make_with_capacity (nb)
+							from i := 1 until i > nb loop
+								an_actuals.force_first (tmp_actuals.item (i))
+								i := i + 1
+							end
+							create {ET_TUPLE_TYPE} last_base_type.make (an_actuals)
+						end
+					end
+				elseif a_class.is_generic then
 					Result := parse_open_bracket (str, Result)
 					if Result > str.count + 1 then
 						stop := True
@@ -324,9 +368,9 @@ feature {NONE} -- Implementation
 					until
 						i > nb or stop
 					loop
-						Result := parse_class_type (str, Result)
-						if last_class_type /= Void then
-							tmp_actuals.put_first (last_class_type)
+						Result := parse_base_type (str, Result)
+						if last_base_type /= Void then
+							tmp_actuals.put_first (last_base_type)
 							if i /= nb then
 								Result := parse_comma (str, Result)
 								if Result > str.count + 1 then
@@ -339,7 +383,7 @@ feature {NONE} -- Implementation
 						end
 						i := i + 1
 					end
-					last_class_type := Void
+					last_base_type := Void
 					if not stop then
 						Result := parse_close_bracket (str, Result)
 						if Result <= str.count + 1 then
@@ -348,20 +392,20 @@ feature {NONE} -- Implementation
 								an_actuals.put_first (tmp_actuals.item (i))
 								i := i + 1
 							end
-							create {ET_GENERIC_CLASS_TYPE} last_class_type.make (Void, a_class.name, an_actuals, a_class)
+							create {ET_GENERIC_CLASS_TYPE} last_base_type.make (Void, a_class.name, an_actuals, a_class)
 						end
 					end
 				else
-					last_class_type := a_class
+					last_base_type := a_class
 				end
 			end
 		ensure
 			valid_position: Result > a_position
-			valid_context: last_class_type /= Void implies last_class_type.is_valid_context
+			valid_context: last_base_type /= Void implies last_base_type.is_valid_context
 		end
 
-	last_class_type: ET_CLASS_TYPE
-			-- Last class type parsed by `parse_class_type';
+	last_base_type: ET_BASE_TYPE
+			-- Last class type or tuple type parsed by `parse_base_type';
 			-- Void if an error was found when parsing
 
 	parse_open_bracket (str: STRING; a_position: INTEGER): INTEGER is
@@ -376,7 +420,7 @@ feature {NONE} -- Implementation
 			from
 				i := a_position
 				nb := str.count
-			until 
+			until
 				i > nb or
 				found or error
 			loop
@@ -417,7 +461,7 @@ feature {NONE} -- Implementation
 			from
 				i := a_position
 				nb := str.count
-			until 
+			until
 				i > nb or
 				found or error
 			loop
@@ -458,7 +502,7 @@ feature {NONE} -- Implementation
 			from
 				i := a_position
 				nb := str.count
-			until 
+			until
 				i > nb or
 				found or error
 			loop
@@ -483,7 +527,7 @@ feature {NONE} -- Implementation
 			elseif found then
 				from
 					found := False
-				until 
+				until
 					i > nb or
 					found
 				loop
