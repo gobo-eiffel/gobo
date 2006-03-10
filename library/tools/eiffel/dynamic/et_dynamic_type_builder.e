@@ -1283,6 +1283,7 @@ feature {NONE} -- Event handling
 -- TODO: can we avoid creating this intermediary 'convert_to_expression'?
 								create l_convert_to_expression.make (an_expression.expression, l_convert_feature)
 								report_qualified_call_expression (l_convert_to_expression, l_source_type.base_type, l_query)
+								an_expression.set_index (l_convert_to_expression.index)
 							else
 									-- Internal error: there should be a query with `l_seed'.
 									-- It has been computed in ET_FEATURE_FLATTENER or else an
