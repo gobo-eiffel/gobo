@@ -18,7 +18,7 @@ inherit
 		undefine
 			first_position, last_position
 		redefine
-			reset,
+			reset, is_tuple_label,
 			is_local, is_argument,
 			is_identifier, is_equal
 		end
@@ -232,6 +232,12 @@ feature -- Status report
 			Result := (status_code = argument_code)
 		end
 
+	is_tuple_label: BOOLEAN is
+			-- Is current identifier a tuple label?
+		do
+			Result := (status_code = tuple_label_code)
+		end
+
 	is_instruction: BOOLEAN is
 			-- Is current identifier an argumentless unqualified call?
 		do
@@ -262,6 +268,18 @@ feature -- Status setting
 			end
 		ensure
 			argument_set: is_argument = b
+		end
+
+	set_tuple_label (b: BOOLEAN) is
+			-- Set `is_tuple_label' to `b'.
+		do
+			if b then
+				status_code := tuple_label_code
+			else
+				status_code := no_code
+			end
+		ensure
+			tuple_label_set: is_tuple_label = b
 		end
 
 	set_instruction (b: BOOLEAN) is
@@ -425,6 +443,7 @@ feature {NONE} -- Implementation
 	status_code: CHARACTER
 	local_code: CHARACTER is 'l'
 	argument_code: CHARACTER is 'a'
+	tuple_label_code: CHARACTER is 't'
 	instruction_code: CHARACTER is 'i'
 	no_code: CHARACTER is '%U'
 			-- Status codes

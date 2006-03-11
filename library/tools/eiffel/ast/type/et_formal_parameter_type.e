@@ -278,6 +278,52 @@ feature -- Access
 			end
 		end
 
+	base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): INTEGER is
+			-- Index of actual generic parameter with label `a_label'
+			-- in the base type of current type when it appears in
+			-- `a_context' in `a_universe';
+			-- 0 if it does not exist
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_class: ET_CLASS
+			a_formals: ET_FORMAL_PARAMETER_LIST
+			a_formal: ET_FORMAL_PARAMETER
+			a_base_type: ET_BASE_TYPE
+			an_index: INTEGER
+		do
+			if index <= a_context.base_type_actual_count (a_universe) then
+				an_actual := a_context.base_type_actual (index, a_universe)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+					a_class := a_context.root_context.direct_base_class (a_universe)
+					a_formals := a_class.formal_parameters
+					an_index := a_formal_type.index
+					if a_formals /= Void and then an_index <= a_formals.count then
+						a_formal := a_formals.formal_parameter (an_index)
+						a_base_type := a_formal.constraint_base_type
+						if a_base_type /= Void then
+							Result := a_base_type.base_type_index_of_label (a_label, a_context.root_context, a_universe)
+						else
+								-- This formal parameter has either no constraint
+								-- or a cyclic constraint of the form "[G -> H,
+								-- H -> G]". The base type is considered to be
+								-- "ANY" in these two cases.
+							Result := 0
+						end
+					else
+							-- Error: formal parameter not matched.
+						Result := 0
+					end
+				else
+					Result := an_actual.base_type_index_of_label (a_label, a_context.root_context, a_universe)
+				end
+			else
+					-- Error: formal parameter not matched.
+				Result := 0
+			end
+		end
+
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- Same as `base_type' except when current type is still
 			-- a formal generic parameter after having been replaced

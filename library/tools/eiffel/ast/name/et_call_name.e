@@ -18,7 +18,7 @@ inherit
 		redefine
 			reset
 		end
-	
+
 	ET_INSTRUCTION
 		undefine
 			reset
@@ -58,7 +58,10 @@ feature -- Access
 		end
 
 	seed: INTEGER
-			-- One of the seeds of feature in enclosing class
+			-- One of the seeds of feature in enclosing class,
+			-- or index of formal argument or local variable
+			-- in the enclosing feature, or index of label in
+			-- tuple type
 
 feature -- Setting
 
@@ -86,6 +89,12 @@ feature -- Status report
 
 	is_argument: BOOLEAN is
 			-- Is current feature name actually a formal argument name?
+		do
+			-- Result := False
+		end
+
+	is_tuple_label: BOOLEAN is
+			-- Is current identifier a tuple label?
 		do
 			-- Result := False
 		end

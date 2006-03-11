@@ -138,6 +138,30 @@ feature -- Access
 			-- types_named: forall i in 1..count, Result.type (i).is_named_type
 		end
 
+	index_of_label (a_label: ET_IDENTIFIER): INTEGER is
+			-- Index of actual generic parameter with label `a_label';
+			-- 0 if it does not exist
+		require
+			a_label_not_void: a_label /= Void
+		local
+			l_actual_label: ET_IDENTIFIER
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				l_actual_label := storage.item (i).label
+				if l_actual_label /= Void and then a_label.same_identifier (l_actual_label) then
+					Result := count - i
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			index_large_enough: Result >= 0
+			index_small_enough: Result <= count
+		end
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code

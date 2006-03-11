@@ -5,7 +5,7 @@ indexing
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,6 +40,7 @@ inherit
 			base_type_actual as context_base_type_actual,
 			base_type_actual_parameter as context_base_type_actual_parameter,
 			base_type_actual_count as context_base_type_actual_count,
+			base_type_index_of_label as context_base_type_index_of_label,
 			named_type as context_named_type,
 			is_type_expanded as context_is_type_expanded,
 			is_type_reference as context_is_type_reference,
@@ -136,6 +137,32 @@ feature -- Access
 			else
 				Result := an_actual.named_parameter (a_context, a_universe)
 			end
+		end
+
+	base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): INTEGER is
+			-- Index of actual generic parameter with label `a_label'
+			-- in the base type of current type when it appears in
+			-- `a_context' in `a_universe';
+			-- 0 if it does not exist
+		do
+			Result := index_of_label (a_label)
+		end
+
+	index_of_label (a_label: ET_IDENTIFIER): INTEGER is
+			-- Index of actual generic parameter with label `a_label';
+			-- 0 if it does not exist
+		require
+			a_label_not_void: a_label /= Void
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			l_parameters := actual_parameters
+			if l_parameters /= Void then
+				Result := l_parameters.index_of_label (a_label)
+			end
+		ensure
+			index_large_enough: Result >= 0
+			index_small_enough: Result <= actual_parameter_count
 		end
 
 feature -- Measurement
@@ -512,6 +539,13 @@ feature -- Type context
 			-- Number of actual generic parameters of `base_type'
 		do
 			Result := base_type_actual_count (Current, a_universe)
+		end
+
+	context_base_type_index_of_label (a_label: ET_IDENTIFIER; a_universe: ET_UNIVERSE): INTEGER is
+			-- Index of actual generic parameter with label `a_label' in `base_type';
+			-- 0 if it does not exist
+		do
+			Result := index_of_label (a_label)
 		end
 
 	context_named_type (a_universe: ET_UNIVERSE): ET_NAMED_TYPE is

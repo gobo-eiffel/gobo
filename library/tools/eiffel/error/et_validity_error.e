@@ -225,6 +225,7 @@ create
 	make_vtug1a,
 	make_vtug2a,
 	make_vuar1a,
+	make_vuar1b,
 	make_vuar1c,
 	make_vuar2a,
 	make_vuar2b,
@@ -9590,7 +9591,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vuar1a (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Create a new  VUAR-1 error: the number of actual arguments in
+			-- Create a new VUAR-1 error: the number of actual arguments in
 			-- the qualified call `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in
 			-- class `a_target'.
@@ -9635,8 +9636,8 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vuar1c (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
-			-- Create a new  VUAR-1 error: the number of actual arguments in
+	make_vuar1b (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
+			-- Create a new VUAR-1 error: the number of actual arguments in
 			-- the unqualified call `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in `a_class'.
 			--
@@ -9647,9 +9648,9 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 		do
-			code := vuar1c_template_code
+			code := vuar1b_template_code
 			etl_code := vuar1_etl_code
-			default_template := vuar1c_default_template
+			default_template := vuar1b_default_template
 			current_class := a_class
 			class_impl := a_class
 			position := a_name.position
@@ -9675,6 +9676,42 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = feature name of the call
 			-- dollar7: $7 = name of corresponding feature in class $5
+		end
+
+	make_vuar1c (a_class: like current_class; a_label: ET_CALL_NAME) is
+			-- Create a new VUAR-1 error: Tuple label calls cannot have arguments.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_label_not_void: a_label /= Void
+			a_label_is_tuple_label: a_label.is_tuple_label
+		do
+			code := vuar1c_template_code
+			etl_code := vuar1_etl_code
+			default_template := vuar1c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_label.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_label.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = label name of the call
 		end
 
 	make_vuar2a (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
@@ -15166,7 +15203,8 @@ feature {NONE} -- Implementation
 	vtug1a_default_template: STRING is "[$1] class $5 ($3,$4): type '$6' has actual generic parameters but class $7 is not generic."
 	vtug2a_default_template: STRING is "[$1] class $5 ($3,$4): type '$6' has wrong number of actual generic parameters."
 	vuar1a_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7' in class $8."
-	vuar1c_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7'."
+	vuar1b_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7'."
+	vuar1c_default_template: STRING is "[$1] class $5 ($3,$4): call to Tuple label `$6' cannot have arguments."
 	vuar2a_default_template: STRING is "[$1] class $5 ($3,$4): the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$7' in class $8."
 	vuar2b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $10-th actual argument (of type '$11') does not conform to the corresponding formal argument (of type '$12') of feature `$8' in class $9."
 	vuar2c_default_template: STRING is "[$1] class $5 ($3,$4): the $8-th actual argument (of type '$9') does not conform to the corresponding formal argument (of type '$10') of feature `$7'."
@@ -15630,6 +15668,7 @@ feature {NONE} -- Implementation
 	vtug1a_template_code: STRING is "vtug1a"
 	vtug2a_template_code: STRING is "vtug2a"
 	vuar1a_template_code: STRING is "vuar1a"
+	vuar1b_template_code: STRING is "vuar1b"
 	vuar1c_template_code: STRING is "vuar1c"
 	vuar2a_template_code: STRING is "vuar2a"
 	vuar2b_template_code: STRING is "vuar2b"

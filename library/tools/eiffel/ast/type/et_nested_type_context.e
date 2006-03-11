@@ -157,6 +157,25 @@ feature -- Access
 			end
 		end
 
+	base_type_index_of_label (a_label: ET_IDENTIFIER; a_universe: ET_UNIVERSE): INTEGER is
+			-- Index of actual generic parameter with label `a_label' in `base_type';
+			-- 0 if it does not exist
+		local
+			l_type: ET_TYPE
+		do
+			inspect count
+			when 0 then
+				Result := root_context.context_base_type_index_of_label (a_label, a_universe)
+			when 1 then
+				Result := last.base_type_index_of_label (a_label, root_context, a_universe)
+			else
+				l_type := last
+				remove_last
+				Result := l_type.base_type_index_of_label (a_label, Current, a_universe)
+				put_last (l_type)
+			end
+		end
+
 	named_type (a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- Same as `base_type' except when the type is still
 			-- a formal generic parameter after having been replaced

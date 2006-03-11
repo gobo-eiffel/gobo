@@ -95,6 +95,15 @@ feature -- Access
 			Result := a_context.base_type_actual_parameter (i, a_universe)
 		end
 
+	base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): INTEGER is
+			-- Index of actual generic parameter with label `a_label'
+			-- in the base type of current type when it appears in
+			-- `a_context' in `a_universe';
+			-- 0 if it does not exist
+		do
+			Result := a_context.base_type_index_of_label (a_label, a_universe)
+		end
+
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- Same as `base_type' except when current type is still
 			-- a formal generic parameter after having been replaced

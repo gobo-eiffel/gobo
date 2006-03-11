@@ -78,6 +78,8 @@ inherit
 			report_static_call_instruction,
 			report_string_constant,
 			report_strip_expression,
+			report_tuple_label_call_agent,
+			report_tuple_label_expression,
 			report_typed_pointer_expression,
 			report_unqualified_call_expression,
 			report_unqualified_call_instruction,
@@ -1794,12 +1796,12 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that a qualified procedure call (to `a_procedure') agent
-			-- of type `a_type' in `a_context' has been processed.
+			-- of type `an_agent_type' in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
+			l_dynamic_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -1814,16 +1816,16 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_system.dynamic_type (a_type, a_context)
+				l_dynamic_type := current_system.dynamic_type (an_agent_type, a_context)
 				l_dynamic_type.set_alive
 				set_dynamic_type_set (l_dynamic_type, an_expression)
-				l_agent_type ?= l_dynamic_type
-				if l_agent_type = Void then
+				l_dynamic_agent_type ?= l_dynamic_type
+				if l_dynamic_agent_type = Void then
 						-- Internal error: the dynamic type of an agent should be an agent type.
 					set_fatal_error
 					error_handler.report_gibax_error
 				else
-					l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+					l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
 					nb2 := l_open_operand_type_sets.count
 					l_target := an_expression.target
 					l_target_expression ?= l_target
@@ -1892,12 +1894,12 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that a qualified query call (to `a_query') agent
-			-- of type `a_type' in `a_context' has been processed.
+			-- of type `an_agent_type' in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
+			l_dynamic_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -1913,16 +1915,16 @@ feature {NONE} -- Event handling
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_system.dynamic_type (a_type, a_context)
+				l_dynamic_type := current_system.dynamic_type (an_agent_type, a_context)
 				l_dynamic_type.set_alive
 				set_dynamic_type_set (l_dynamic_type, an_expression)
-				l_agent_type ?= l_dynamic_type
-				if l_agent_type = Void then
+				l_dynamic_agent_type ?= l_dynamic_type
+				if l_dynamic_agent_type = Void then
 						-- Internal error: the dynamic type of an agent should be an agent type.
 					set_fatal_error
 					error_handler.report_gibjq_error
 				else
-					l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+					l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
 					nb2 := l_open_operand_type_sets.count
 					l_target := an_expression.target
 					l_target_expression ?= l_target
@@ -1937,7 +1939,7 @@ feature {NONE} -- Event handling
 							set_dynamic_type_set (l_target_type_set, l_target)
 						end
 					end
-					l_result_type_set := l_agent_type.result_type_set
+					l_result_type_set := l_dynamic_agent_type.result_type_set
 					if l_target_type_set = Void then
 							-- Internal error: the dynamic type sets of the
 							-- target should be known at this stage.
@@ -2164,6 +2166,98 @@ feature {NONE} -- Event handling
 				l_type := current_system.dynamic_type (a_type, a_context)
 				l_type.set_alive
 				set_dynamic_type_set (l_type, an_expression)
+			end
+		end
+
+	report_tuple_label_call_agent (an_expression: ET_CALL_AGENT; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that a tuple label call agent of type `an_agent_type'
+			-- in `a_context' has been processed.
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_agent_type: ET_DYNAMIC_ROUTINE_TYPE
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_target: ET_AGENT_TARGET
+			l_target_expression: ET_EXPRESSION
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_dynamic_type := current_system.dynamic_type (an_agent_type, a_context)
+				l_dynamic_type.set_alive
+				set_dynamic_type_set (l_dynamic_type, an_expression)
+				l_dynamic_agent_type ?= l_dynamic_type
+				if l_dynamic_agent_type = Void then
+						-- Internal error: the dynamic type of an agent should be an agent type.
+					set_fatal_error
+					error_handler.report_gibll_error
+				else
+					l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
+					l_target := an_expression.target
+					l_target_expression ?= l_target
+					if l_target_expression /= Void then
+						l_target_type_set := dynamic_type_set (l_target_expression)
+					else
+							-- The agent is of the form:   agent {TYPE}.f
+							-- The dynamic type set of the target is the first of open operand dynamic type sets.
+						if not l_open_operand_type_sets.is_empty then
+							l_target_type_set := l_open_operand_type_sets.item (1)
+							set_dynamic_type_set (l_target_type_set, l_target)
+						end
+					end
+					l_result_type_set := l_dynamic_agent_type.result_type_set
+					if l_target_type_set = Void then
+							-- Internal error: the dynamic type sets of the
+							-- target should be known at this stage.
+						set_fatal_error
+						error_handler.report_giblm_error
+					elseif l_result_type_set = Void then
+							-- Internal error: if the corresponding feature is a query
+							-- then the result type set should not be Void.
+						set_fatal_error
+						error_handler.report_gibln_error
+					end
+				end
+			end
+		end
+
+	report_tuple_label_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT) is
+			-- Report that a call to a tuple label has been processed.
+		local
+			l_target: ET_EXPRESSION
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_index: INTEGER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_target := an_expression.target
+				l_target_type_set := dynamic_type_set (l_target)
+				if l_target_type_set = Void then
+						-- Internal error: the dynamic type sets of the
+						-- target should be known at this stage.
+					set_fatal_error
+					error_handler.report_gible_error
+				else
+					l_tuple_type ?= l_target_type_set.static_type
+					if l_tuple_type = Void then
+							-- Internal error: the target of a label expression
+							-- should be a Tuple.
+						set_fatal_error
+						error_handler.report_giblf_error
+					else
+						l_item_type_sets := l_tuple_type.item_type_sets
+						l_index := an_expression.name.seed
+						if not l_item_type_sets.valid_index (l_index) then
+								-- Internal error: invalid label index.
+							set_fatal_error
+							error_handler.report_giblg_error
+						else
+							l_dynamic_type_set := l_item_type_sets.item (l_index)
+							set_dynamic_type_set (l_dynamic_type_set, an_expression)
+						end
+					end
+				end
 			end
 		end
 

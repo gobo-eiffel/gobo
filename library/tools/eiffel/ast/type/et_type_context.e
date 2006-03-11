@@ -96,6 +96,21 @@ feature -- Access
 			named_type_named: Result.type.is_named_type
 		end
 
+	base_type_index_of_label (a_label: ET_IDENTIFIER; a_universe: ET_UNIVERSE): INTEGER is
+			-- Index of actual generic parameter with label `a_label' in `base_type';
+			-- 0 if it does not exist
+		require
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			a_label_not_void: a_label /= Void
+		deferred
+		ensure
+			definition: Result = base_type (a_universe).index_of_label (a_label)
+			index_large_enough: Result >= 0
+			index_small_enough: Result <= base_type_actual_count (a_universe)
+		end
+
 	named_type (a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- Same as `base_type' except when the type is still
 			-- a formal generic parameter after having been replaced

@@ -115,6 +115,14 @@ feature -- Status report
 			end
 		end
 
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is there an item at index `i'?
+		do
+			Result := (1 <= i and i <= count)
+		ensure
+			definition: Result = (1 <= i and i <= count)
+		end
+
 feature -- Element change
 
 	put_last (an_item: like item) is

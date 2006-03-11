@@ -5088,7 +5088,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar1c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
+	report_vuar1b_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
 			-- Report VUAR-1 error: the number of actual arguments in
 			-- the unqualified call `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in `a_class'.
@@ -5103,7 +5103,23 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuar1_error (a_class) then
-				create an_error.make_vuar1c (a_class, a_name, a_feature)
+				create an_error.make_vuar1b (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar1c_error (a_class: ET_CLASS; a_label: ET_CALL_NAME) is
+			-- Report VUAR-1 error: Tuple label calls cannot have arguments.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_label_not_void: a_label /= Void
+			a_label_is_tuple_label: a_label.is_tuple_label
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar1_error (a_class) then
+				create an_error.make_vuar1c (a_class, a_label)
 				report_validity_error (an_error)
 			end
 		end
@@ -12990,19 +13006,6 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- error_handler.report_gibed_error
-	-- report_gibld_error
-	-- report_gible_error
-	-- report_giblf_error
-	-- report_giblg_error
-	-- report_giblh_error
-	-- report_gibli_error
-	-- report_giblj_error
-	-- report_giblk_error
-	-- report_gibll_error
-	-- report_giblm_error
-	-- report_gibln_error
-	-- report_giblo_error
 	-- report_giblp_error
 	-- report_giblq_error
 	-- report_giblr_error

@@ -330,6 +330,59 @@ feature -- Access
 			end
 		end
 
+	base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): INTEGER is
+			-- Index of actual generic parameter with label `a_label'
+			-- in the base type of current type when it appears in
+			-- `a_context' in `a_universe';
+			-- 0 if it does not exist
+		local
+			a_class: ET_CLASS
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := 0
+			elseif is_like_argument then
+				a_class := a_context.base_class (a_universe)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
+				if l_feature /= Void then
+					args := l_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := 0
+					else
+						Result := args.item (an_index).type.base_type_index_of_label (a_label, a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := 0
+				end
+			else
+				a_class := a_context.base_class (a_universe)
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.base_type_index_of_label (a_label, a_context, a_universe)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := 0
+				end
+			end
+		end
+
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- Same as `base_type' except when current type is still
 			-- a formal generic parameter after having been replaced
