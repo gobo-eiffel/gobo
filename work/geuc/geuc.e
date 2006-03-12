@@ -487,7 +487,7 @@ feature -- Access
 			-- Unicode Character Database filenames
 
 	Alphabetic_property: STRING is "Alphabetic"
-	Default_ignorable_code_property: STRING is "Default_Ignorable_Code"
+	Default_ignorable_code_property: STRING is "Default_Ignorable_Code_Point"
 	Lowercase_property: STRING is "Lowercase"
 	Grapheme_base_property: STRING is "Grapheme_Base"
 	Grapheme_extend_property: STRING is "Grapheme_Extend"
@@ -1373,7 +1373,7 @@ feature {NONE} -- Implementation
 				an_output_file.put_string (", ")
 				an_output_file.put_string (a_cursor.key.second.out)
 				an_output_file.put_string (")%N")
-				an_output_file.put_string ("%T%T%TResult.put (")
+				an_output_file.put_string ("%T%T%TResult.put_new (")
 				an_output_file.put_string (a_cursor.item.out)
 				an_output_file.put_string (", a_pair)%N")
 				a_cursor.forth
