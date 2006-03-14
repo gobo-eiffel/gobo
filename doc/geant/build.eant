@@ -41,6 +41,7 @@
 		<geant target="xslt_and_shift" arguments="exec_task"/>
 		<geant target="xslt_and_shift" arguments="exit_task"/>
 		<geant target="xslt_and_shift" arguments="geant_task"/>
+		<geant target="xslt_and_shift" arguments="gec_task"/>
 		<geant target="xslt_and_shift" arguments="gelex_task"/>
 		<geant target="xslt_and_shift" arguments="geyacc_task"/>
 		<geant target="xslt_and_shift" arguments="gepp_task"/>
@@ -89,6 +90,7 @@
 		<delete file="exec_task.html"/>
 		<delete file="exit_task.html"/>
 		<delete file="geant_task.html"/>
+		<delete file="gec_task.html"/>
 		<delete file="gelex_task.html"/>
 		<delete file="geyacc_task.html"/>
 		<delete file="gepp_task.html"/>

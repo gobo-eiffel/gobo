@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gec Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation"  id="gec_task">
+<chapterinfo>
+	<copyright>
+		<year>2006</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname>
+		<surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>11 March 2006</date>
+</chapterinfo>
+
+	<title>gec</title>
+
+	<section id="gec_description">
+		<title>Description</title>
+		<para>
+			Execute gec.
+		</para>
+	</section>
+
+	<section id="gec_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>ace</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of Ace file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>finalize</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Finalize</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>c_compile</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Launch C compilation</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>true</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>clean</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>clean</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid system name</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>exit_code_variable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of variable holding the compiler process's return code after it's run
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Integer (usually 0 for OK, and any other number for not OK)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>`Void' (no variable is set if attribute is not specified)</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+	</section>
+
+	<section id="gec_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="gec">
+    <element name="gec">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <group>
+          <attribute name="ace"/>
+          <optional>
+            <attribute name="finalize"/>
+          </optional>
+          <optional>
+            <attribute name="c_compile"/>
+          </optional>
+        </group>
+        <attribute name="clean"/>
+      </choice>
+    </element>
+  </define>
+]]>
+	</programlisting>
+
+	</section>
+
+	<section id="gec_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <gec ace="ge.ace"/>
+
+  <gec ace="ge.ace" finalize="true"/>
+
+  <gec clean="${system}"/>
+]]>
+	</programlisting>
+	</section>
+
+</chapter>
