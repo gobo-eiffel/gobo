@@ -5,7 +5,7 @@ indexing
 		"Gec commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005, Sven Ehrke and others"
+	copyright: "Copyright (c) 2005-2006, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,10 +15,22 @@ class GEANT_GEC_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT) is
+			-- Create a new 'gec' command.
+		do
+			precursor (a_project)
+			c_compile := True
+		end
 
 feature -- Status report
 
@@ -58,6 +70,9 @@ feature -- Access
 	c_compile: BOOLEAN
 			-- Should C compilation be launched?
 
+	finalize: BOOLEAN
+			-- Should system be compiled in finalized mode?
+
 	clean: STRING
 			-- Name of system to be cleaned
 
@@ -83,6 +98,14 @@ feature -- Setting
 			c_compile := b
 		ensure
 			c_compile_set: c_compile = b
+		end
+
+	set_finalize (b: BOOLEAN) is
+			-- Set `finalize' to `b'.
+		do
+			finalize := b
+		ensure
+			finalize_set: finalize = b
 		end
 
 	set_clean (a_clean: like clean) is
@@ -142,6 +165,20 @@ feature -- Execution
 						file_system.delete_file (a_name)
 					end
 				end
+				a_name := clean + ".bat"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [gec] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
+				a_name := clean + ".sh"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [gec] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
 			elseif is_ace_configuration then
 				cmd := new_ace_cmdline
 				project.trace (<<"  [gec] ", cmd>>)
@@ -167,8 +204,11 @@ feature -- Command-line
 		do
 			create Result.make (50)
 			Result.append_string ("gec ")
-			if c_compile then
-				Result.append_string ("--c_compile ")
+			if finalize then
+				Result.append_string ("--finalize ")
+			end
+			if not c_compile then
+				Result.append_string ("--no_cc ")
 			end
 			a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
 			Result := STRING_.appended_string (Result, a_filename)

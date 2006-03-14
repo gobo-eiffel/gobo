@@ -51,6 +51,10 @@ feature {NONE} -- Initialization
 			if has_attribute (C_compile_attribute_name) then
 				command.set_c_compile (boolean_value (C_compile_attribute_name))
 			end
+				-- finalize.
+			if has_attribute (Finalize_attribute_name) then
+				command.set_finalize (boolean_value (Finalize_attribute_name))
+			end
 			if has_attribute (Exit_code_variable_attribute_name) then
 				a_value := attribute_value (Exit_code_variable_attribute_name)
 				if a_value.count > 0 then
@@ -97,6 +101,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute exit_code_variable.
 		once
 			Result := "exit_code_variable"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Finalize_attribute_name: STRING is
+			-- Name of xml attribute for "finalize"
+		once
+			Result := "finalize"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
