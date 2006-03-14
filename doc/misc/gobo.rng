@@ -117,9 +117,11 @@
 	<element name="variablelist">
 		<oneOrMore>
 			<element name="varlistentry">
-				<element name="term">
-					<ref name="inline_content"/>
-				</element>
+				<oneOrMore>
+					<element name="term">
+						<ref name="inline_content"/>
+					</element>
+				</oneOrMore>
 				<oneOrMore>
 					<ref name="listitem"/>
 				</oneOrMore>

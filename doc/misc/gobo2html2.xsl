@@ -1126,11 +1126,11 @@
 </xsl:template>
 
 <xsl:template match="gobodoc:varlistentry">
+	<xsl:for-each select="gobodoc:term">
 	<dt>
-		<xsl:for-each select="gobodoc:term">
-			<xsl:apply-templates select="."/>
-		</xsl:for-each>
+		<xsl:apply-templates select="."/>
 	</dt>
+	</xsl:for-each>
 	<dd>
 		<xsl:for-each select="gobodoc:listitem/*">
 			<xsl:choose>
