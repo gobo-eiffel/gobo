@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<project name="gelint" default="help">
+
+	<description>
+		description: "Gobo Eiffel Lint documentation"
+		copyright: "Copyright (c) 2006, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the Gobo Eiffel Lint documentation.
+		</description>
+
+		<set name="xslt_processor" value="gexslt" unless="$GOBO_XSLT_PROCESSOR"/>
+		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/>
+
+		<set name="previous" value="index"/>
+		<set name="current" value="index"/>
+		<geant target="xslt_and_shift" arguments="usage"/>
+		<geant target="xslt_and_shift" arguments="technology"/>
+		<geant target="xslt_and_shift" arguments="limitations"/>
+		<geant target="xslt_and_shift" arguments="see_also"/>
+		<geant target="xslt_and_shift" arguments="index"/>
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<delete file="index.html"/>
+		<delete file="usage.html"/>
+		<delete file="technology.html"/>
+		<delete file="limitations.html"/>
+		<delete file="see_also.html"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="init">
+		<!-- do nothing -->
+	</target>
+
+	<target name="xslt_and_shift" export="NONE">
+		<description>
+			Call `xslt' and shift variables `previous' and `current' one chapter forward.
+		</description>
+		<argument name="a_next"/>
+
+		<geant target="xslt" arguments="${previous},${current},${a_next}"/>
+			<!-- Shift parameters -->
+		<set name="previous" value="${current}"/>
+		<set name="current" value="${a_next}"/>
+	</target>
+
+	<target name="xslt" export="NONE">
+		<description>
+			Execute XSL Transformation for argument ${a_file}, ${a_previous}
+			and ${a_next} using processor ${xslt_processor}.
+		</description>
+		<argument name="a_previous"/>
+		<argument name="a_file"/>
+		<argument name="a_next"/>
+
+		<xslt processor="${xslt_processor}" input="${a_file}.xml" output="${a_file}.html" stylesheet="${GOBO}/doc/misc/gobo2html2.xsl">
+			<parameter name="previous" value="&quot;'${a_previous}.html'&quot;"/>
+			<parameter name="next" value="&quot;'${a_next}.html'&quot;"/>
+			<parameter name="toc" value="&quot;'index.html'&quot;"/>
+		</xslt>
+	</target>
+
+</project>

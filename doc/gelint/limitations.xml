@@ -1,0 +1,34 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Limitations"
+
+	tool: "Gobo Eiffel Lint"
+	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/limitations">
+<chapterinfo>
+	<copyright>
+		<year>2006</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>5 March 2006</date>
+</chapterinfo>
+
+<title>Limitations</title>
+
+<para>
+Under construction
+</para>
+
+</chapter>
