@@ -76,7 +76,9 @@
 		<unset name="gexace_output"/>
 		<unset name="gexace_system"/>
 		<delete file="${system}${exe}"/>
-		<gec ace="compile_ge.ace" c_compile="true"/>
+		<set name="finalize" value="true"/>
+		<set name="finalize" value="false" if="${debug}"/>
+		<gec ace="compile_ge.ace" finalize="${finalize}" c_compile="true"/>
 	</target>
 
 	<target name="compile_ise" depend="prepare_compile">
