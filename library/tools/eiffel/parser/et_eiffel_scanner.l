@@ -27,7 +27,7 @@ create
 
 CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 
-%x BREAK MS MSN MSN1 VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
+%x BREAK MS MSN VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
 %option nodefault line outfile="et_eiffel_scanner.e"
 
 %%
@@ -565,24 +565,10 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 			}
 
 <MS>{
-	%\r?\n	{
+	%[ \t\r]*\n	{
 					-- Multi-line manifest string.
 				more
 				set_start_condition (MSN)
-			}
-	%[ \t\r]/[ \t\r]*\n	{
-					-- Multi-line manifest string.
-
-					-- Syntax error: no space allowed after character
-					-- % at end of line in multi-line manifest strings.
-				column := yy_column - 1
-				line := yy_line
-				set_syntax_error
-				error_handler.report_SSNS_error (filename, current_position)
-				column := ms_column
-				line := ms_line
-				more
-				set_start_condition (MSN1)
 			}
 	%\/{CHAR_CODE}\/	{
 				more
@@ -705,27 +691,6 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
-				set_start_condition (INITIAL)
-			}
-}
-
-<MSN1>{
-	[ \t\r]*\n	{
-				more
-				set_start_condition (MSN)
-			}
-	.		{
-					-- Should never happen.
-				last_token := E_STRERR
-				last_et_position_value := current_position
-				report_syntax_error (current_position)
-				set_start_condition (INITIAL)
-			}
-	<<EOF>>	{
-					-- Should never happen.
-				last_token := E_STRERR
-				last_et_position_value := current_position
-				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 }

@@ -437,18 +437,6 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SSNS_error (a_filename: STRING; p: ET_POSITION) is
-			-- No space allowed after character % at end
-			-- of line in multi-line manifest strings.
-			-- (SSNS: Syntax String New-line Space)
-		require
-			a_filename_not_void: a_filename /= Void
-			p_not_void: p /= Void
-		do
---Disabled for AXA.
---			report_syntax_error (a_filename, p)
-		end
-
 	report_SSSC_error (a_filename: STRING; p: ET_POSITION) is
 			-- Invalid special character %l in manifest strings.
 			-- (SSSC: Syntax String Special Character)
