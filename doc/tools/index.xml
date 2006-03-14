@@ -1,0 +1,96 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Gobo Eiffel Tools Library"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/index">
+<chapterinfo>
+	<copyright>
+		<year>2006</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>5 March 2006</date>
+</chapterinfo>
+
+<title>Gobo Eiffel Tools Library</title>
+
+<para>
+The <projectname>Gobo Eiffel Tools Library</projectname> is an Eiffel class
+library useful for writing tools that expect Eiffel souce code as input. It
+provides Ace and Xace parsers, an Eiffel parser which generates <ulink
+url="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax
+Trees</ulink>, and numerous processors traversing these ASTs to perform
+code analysis using various compilation techniques. Tools that can take
+advantage of this library are Eiffel compilers and interpreters, <ulink
+url="http://en.wikipedia.org/wiki/Lint_programming_tool">lint-like</ulink> tools,
+pretty-printers or flat-short form generators, test tools, <ulink
+url="http://en.wikipedia.org/wiki/Ctags">ctags-like</ulink> tools,
+Eiffel reflection generators, Eiffel preprocessing tools, and more.
+</para>
+
+<para>
+This documentation is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="ace">Ace Files</link>
+		</term>
+		<listitem><para>
+			Purpose, syntax and semantics of Ace files.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="applications">Applications</link>
+		</term>
+		<listitem><para>
+			Examples of applications based on this library.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="limitations">Limitations</link>
+		</term>
+		<listitem><para>
+			Limitations, bugs and other deficiencies.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="see_also">See Also</link>
+		</term>
+		<listitem><para>
+			Bibliographical references, related resources and
+			acknowledgments.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>

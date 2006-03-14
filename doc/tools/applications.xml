@@ -1,0 +1,87 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Applications using the Gobo Eiffel Tools Library"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/applications">
+<chapterinfo>
+	<copyright>
+		<year>2006</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>5 March 2006</date>
+</chapterinfo>
+
+<title>Applications using the Gobo Eiffel Tools Library</title>
+
+<para>
+The <projectname>Gobo Eiffel Tools Library</projectname> is an Eiffel class
+library useful for writing tools that expect Eiffel souce code as input. Here
+are a few examples using this library:
+</para>
+
+<section><title>Compilers and interpreters</title>
+<blockquote>
+	<para>
+		<link linkend="../gec/index">gec</link>
+	</para>
+</blockquote>
+</section>
+
+<section><title>Lint-like tools</title>
+<blockquote>
+	<para>
+		<link linkend="../gelint/index">gelint</link>
+	</para>
+</blockquote>
+</section>
+
+<section><title>Test tools</title>
+<blockquote>
+	<para>
+		<link linkend="../getest/index">getest</link>
+	</para>
+	<para>
+		<ulink url="http://se.inf.ethz.ch/people/leitner/auto_test/">AutoTest</ulink>
+	</para>
+</blockquote>
+</section>
+
+<section><title>Ctags-like tools</title>
+<blockquote>
+	<para>
+		<ulink url="http://www.raboof.at/various/">gutentag</ulink>
+	</para>
+</blockquote>
+</section>
+
+<section><title>Reflection generators</title>
+<blockquote>
+	<para>
+		<ulink url="http://se.inf.ethz.ch/people/leitner/erl_g/">Erl-G</ulink>
+	</para>
+</blockquote>
+</section>
+
+<section><title>Preprocessing tools</title>
+<blockquote>
+	<para>
+		<ulink url="http://se.inf.ethz.ch/research/scoop.html">SCOOP to SCOOPLI preprocessor</ulink>
+	</para>
+</blockquote>
+</section>
+
+</chapter>
