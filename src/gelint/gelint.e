@@ -201,8 +201,6 @@ feature {NONE} -- Processing
 				create a_system.make (a_universe)
 				create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_system)
 				a_system.set_dynamic_type_set_builder (a_builder)
-				a_system.set_c_code_generation (False)
-				a_system.set_c_code_compilation (False)
 				a_system.compile
 			else
 				a_universe.set_providers_enabled (True)

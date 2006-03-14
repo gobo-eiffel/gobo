@@ -5,7 +5,7 @@ indexing
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,12 +15,6 @@ class ET_SYSTEM
 inherit
 
 	ANY
-
-	KL_SHARED_STANDARD_FILES
-		export {NONE} all end
-
-	KL_SHARED_OPERATING_SYSTEM
-		export {NONE} all end
 
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
@@ -109,30 +103,6 @@ feature -- Access
 			-- Surrounding universe
 
 feature -- Status report
-
-	c_code_generation: BOOLEAN
-			-- Should C code be generated when compiling current system?
-
-	c_code_compilation: BOOLEAN
-			-- Should generated C code be compiled when compiling current system?
-
-feature -- Status report
-
-	set_c_code_generation (b: BOOLEAN) is
-			-- Set `c_code_generation' to `b'.
-		do
-			c_code_generation := b
-		ensure
-			c_code_generation_set: c_code_generation = b
-		end
-
-	set_c_code_compilation (b: BOOLEAN) is
-			-- Set `c_code_compilation' to `b'.
-		do
-			c_code_compilation := b
-		ensure
-			c_code_compilation_set: c_code_compilation = b
-		end
 
 	set_string_type_alive is
 			-- Make sure that `string_type' and its dependent types
@@ -519,32 +489,12 @@ feature -- Compilation
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			l_class: ET_CLASS
-			l_command: KL_SHELL_COMMAND
-			l_base_name: STRING
 		do
 			l_class := universe.root_class
 			if l_class = universe.none_class then
 				compile_all
 			elseif l_class /= Void then
 				compile_system
-				if not has_fatal_error then
-					if c_code_generation then
-						generate_c_code
-						if c_code_compilation then
-							if universe.system_name /= Void then
-								l_base_name := universe.system_name
-							else
-								l_base_name := l_class.name.name
-							end
-							if operating_system.is_windows then
-								create l_command.make ("cl " + l_base_name + ".c")
-							else
-								create l_command.make ("gcc " + l_base_name + ".c -lm -o " + l_base_name)
-							end
-							l_command.execute
-						end
-					end
-				end
 			end
 		end
 
@@ -1039,27 +989,6 @@ feature {NONE} -- Compilation
 			l_builder.build_dynamic_type_sets
 			if l_builder.has_fatal_error then
 				set_fatal_error
-			end
-		end
-
-	generate_c_code is
-			-- Generate C code for current system.
-		local
-			l_generator: ET_C_GENERATOR
-			l_file: KL_TEXT_OUTPUT_FILE
-		do
-			if universe.system_name /= Void then
-				create l_file.make (universe.system_name + ".c")
-			else
-				create l_file.make (universe.root_class.name.name + ".c")
-			end
-			l_file.open_write
-			if l_file.is_open_write then
-				create l_generator.make (Current)
-				l_generator.generate (l_file)
-				l_file.close
-			else
--- TODO: report error.
 			end
 		end
 
