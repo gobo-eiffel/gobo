@@ -10542,11 +10542,10 @@ feature {NONE} -- C function generation
 				print_type_name (current_system.special_character_type, current_file)
 				current_file.put_character (')')
 				current_file.put_character ('+')
-				current_file.put_character ('(')
+					-- Note: no need to allocate an extra character for '\0', it
+					-- is already included with the "struct hack" used to implement
+					-- SPECIAL objects.
 				current_file.put_character ('c')
-				current_file.put_character ('+')
-				current_file.put_character ('1')
-				current_file.put_character (')')
 				current_file.put_character ('*')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -11303,6 +11302,14 @@ feature {NONE} -- Type generation
 						a_file.put_new_line
 						l_special_type ?= l_type
 						if l_special_type /= Void then
+								-- We use the "struct hack" to represent SPECIAL
+								-- object header. The last member of the struct
+								-- is an array of size 1, but we malloc the needed
+								-- space when creating the SPECIAL object. We use
+								-- an array of size 1 because some compilers don't
+								-- like having an array of size 0 here. Note that
+								-- the "struct hack" is superseded by the concept
+								-- of "flexible array member" in ISO C 99.
 							a_file.put_character ('%T')
 							print_type_declaration (current_system.integer_type, a_file)
 							a_file.put_character (' ')
@@ -11329,7 +11336,7 @@ feature {NONE} -- Type generation
 							a_file.put_character ('a')
 							a_file.put_integer (2)
 							a_file.put_character ('[')
-							a_file.put_integer (0)
+							a_file.put_character ('1')
 							a_file.put_character (']')
 							a_file.put_character (';')
 							a_file.put_character (' ')
