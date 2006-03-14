@@ -96,10 +96,10 @@
 					<para><emphasis>Description: </emphasis>clean</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+					<para><emphasis>Domain: </emphasis>valid system name</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Default: </emphasis>false</para>
+					<para><emphasis>Default: </emphasis>empty string</para>
 				</listitem>
 			</varlistentry>
 
