@@ -26,7 +26,7 @@
 		<set name="system_dir" value="${GOBO}/work/${system}"/>
 	</target>
 
-	<target name="copy" depend="init">
+	<target name="deploy" depend="init">
 		<description>
 			Copy generated files.
 		</description>
