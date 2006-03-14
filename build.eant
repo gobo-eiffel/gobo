@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel"
-		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -127,7 +127,8 @@
 		<geant file="../src/gelint/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/gec/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/gec/build.eant" target="clean" dir="bin"/>
-		<geant file="../src/gexslt/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/gexslt/build.eant" target="compile" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
+		<geant file="../src/gexslt/build.eant" target="compile_debug" dir="bin" if="${GOBO_EIFFEL}=ge"/>
 		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
 		<geant file="build.eant" target="install" dir="example"/>
 		<geant file="build.eant" target="install" dir="test"/>
