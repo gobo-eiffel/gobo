@@ -1,0 +1,137 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Using gec"
+
+	tool: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/usage">
+<chapterinfo>
+	<copyright>
+		<year>2006</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>5 March 2006</date>
+</chapterinfo>
+
+<title>Using gec</title>
+
+<section><title>Command-line options</title>
+<para>
+The usual way to invoke <projectname>gec</projectname> is as follows:
+<blockquote>
+	<filename>gec ace_filename</filename>
+</blockquote>
+This will read the description of your program in the Ace file
+<filename>ace_filename</filename>, compile it and invoke the
+back-end C compiler on the generated C code as explained
+below. Here is a list of options that can be
+used with <projectname>gec</projectname>:
+<variablelist>
+	<varlistentry>
+		<term>
+			<filename>-h</filename>
+		</term>
+		<term>
+			<filename>-?</filename>
+		</term>
+		<term>
+			<filename>--help</filename>
+		</term>
+		<listitem><para>
+			Print a summary of the command-line options of <projectname>gec</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--silent</filename>
+		</term>
+		<listitem><para>
+			Run <projectname>gec</projectname> in silent mode.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--verbose</filename>
+		</term>
+		<listitem><para>
+			Run <projectname>gec</projectname> in verbose mode.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--no_cc</filename>
+		</term>
+		<listitem><para>
+			Do not invoke the back-end C compiler on the generated C code.
+		</para></listitem>
+	</varlistentry>
+<!--
+	<varlistentry>
+		<term>
+			<filename>- -define=variables</filename>
+		</term>
+		<listitem><para>
+			Override environment variable values when processing Ace file.
+			(Not supported yet.)
+		</para></listitem>
+	</varlistentry>
+-->
+	<varlistentry>
+		<term>
+			<filename>-V</filename>
+		</term>
+		<term>
+			<filename>--version</filename>
+		</term>
+		<listitem><para>
+			Print the version number of <projectname>gec</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</para>
+</section>
+
+<section><title>Ace files</title>
+<para>
+An Ace file contains the description of the Eiffel program to be compiled.
+<projectname>gec</projectname> is able to read the same Ace files as
+ISE Eiffel. So if you already have your Ace files the only thing you have
+to do is to instruct <projectname>gec</projectname> to use
+<libraryname>FreeELKS</libraryname> kernel classes instead of ISE
+<libraryname>EiffelBase</libraryname> kernel classes. To do so you just
+have to replace the EiffelBase clusters in your Ace file by:
+<informalexample>
+	<filename class="directory">all free_elks: "${GOBO}/library/free_elks"</filename>
+</informalexample>
+If you are new to Eiffel and don't know what an Ace file is, please have
+a look at this <link linkend="../tools/ace">description</link> from the
+documentation of the <libraryname>Gobo Eiffel Tools Library</libraryname>
+on which <projectname>gec</projectname> is based.
+</para>
+</section>
+
+<section><title>Back-end C compiler</title>
+<para>
+<projectname>gec</projectname> translates your Eiffel programs into C code.
+This C code is then passed to a back-end C compiler to generate an executable.
+By default <projectname>gec</projectname> uses Microsoft Visual C
+<projectname>cl</projectname> on Windows and GNU <projectname>gcc</projectname>
+on other operating systems such as Linux. This sections explains how to override
+this default if you want to use another back-end C compiler or if you want to
+specify different C compilation options.
+</para>
+</section>
+
+</chapter>

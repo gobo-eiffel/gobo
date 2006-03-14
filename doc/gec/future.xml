@@ -1,0 +1,34 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Future Work"
+
+	tool: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/future">
+<chapterinfo>
+	<copyright>
+		<year>2006</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>5 March 2006</date>
+</chapterinfo>
+
+<title>Future Work</title>
+
+<para>
+Under construction
+</para>
+
+</chapter>
