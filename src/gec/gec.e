@@ -299,7 +299,7 @@ feature {NONE} -- Processing
 		do
 			l_name := Execution_environment.variable_value ("GOBO_CC")
 			if l_name = Void then
-				l_filename := file_system.nested_pathname ("${GOBO}", <<"misc", "gec", "c_compiler", "c_compiler.cfg">>)
+				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", "default.cfg">>)
 				l_filename := Execution_environment.interpreted_string (l_filename)
 				create l_file.make (l_filename)
 				l_file.open_read
@@ -338,7 +338,7 @@ feature {NONE} -- Processing
 				Result.put ("", "cflags")
 				Result.put ("", "lflags")
 			end
-			l_filename := file_system.nested_pathname ("${GOBO}", <<"misc", "gec", "c_compiler", l_name>>)
+			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", l_name>>)
 			l_filename := Execution_environment.interpreted_string (l_filename)
 			if not file_system.has_extension (l_filename, ".cfg") then
 				l_filename := l_filename + ".cfg"
