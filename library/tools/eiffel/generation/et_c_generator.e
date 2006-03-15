@@ -11922,7 +11922,7 @@ feature {NONE} -- Include files
 		local
 			l_full_pathname: STRING
 		do
-			l_full_pathname := file_system.nested_pathname ("${GOBO}", <<"misc", "gec", "runtime", "c", a_filename>>)
+			l_full_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "runtime", "c", a_filename>>)
 			l_full_pathname := Execution_environment.interpreted_string (l_full_pathname)
 			include_file (l_full_pathname, a_file)
 		end
