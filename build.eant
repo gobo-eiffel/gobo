@@ -95,6 +95,19 @@
 
 		<geant file="build.eant" target="clobber" dir="library"/>
 		<geant file="build.eant" target="install" dir="library"/>
+		<geant file="build.eant" target="clobber" dir="src/gec"/>
+		<geant file="build.eant" target="install" dir="src/gec"/>
+			<!-- Compile gec twice to get a bootstrap effect -->
+		<geant file="build.eant" target="compile" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+		<move file="src/gec/gec${exe}" to_directory="bin" if="${GOBO_EIFFEL}=ge"/>
+		<geant file="build.eant" target="clean" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+		<geant file="build.eant" target="compile" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+		<move file="src/gec/gec${exe}" to_directory="bin" if="${GOBO_EIFFEL}=ge"/>
+		<geant file="build.eant" target="clean" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+			<!-- Compile gec only once with Eiffel compilers -->
+		<geant file="../src/gec/build.eant" target="compile" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
+		<geant file="../src/gec/build.eant" target="clean" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
+			<!-- Compile geant -->
 		<geant file="build.eant" target="clobber" dir="src/geant"/>
 		<geant file="build.eant" target="install" dir="src/geant"/>
 		<geant file="../src/geant/build.eant" target="compile" dir="bin"/>
@@ -125,8 +138,6 @@
 		<geant file="../src/getest/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="clean" dir="bin"/>
-		<geant file="../src/gec/build.eant" target="compile" dir="bin"/>
-		<geant file="../src/gec/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/gexslt/build.eant" target="compile" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
 		<geant file="../src/gexslt/build.eant" target="compile_debug" dir="bin" if="${GOBO_EIFFEL}=ge"/>
 		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
@@ -135,7 +146,6 @@
 		<geant file="build.eant" target="install" dir="doc" unless="${SE_1_0}"/>
 		<geant target="clean"/>
 	</target>
-
 
 <!-- Implementation -->
 

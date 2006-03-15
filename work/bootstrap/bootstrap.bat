@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel package"
-rem copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+rem copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 rem license: "Eiffel Forum License v2 (see forum.txt)"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -55,8 +55,8 @@ if .%CC%. == ./h. goto usage
 if .%CC%. == ./?. goto usage
 if .%EIF%. == .. goto usage
 
-if .%CC%. == .msc. goto cl
-if .%CC%. == .cl. goto cl
+if .%CC%. == .msc. goto msc
+if .%CC%. == .cl. goto msc
 if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .lcc. goto lcc
@@ -65,9 +65,11 @@ if .%CC%. == .no_c. goto install
 echo Unknown C compiler: %CC%
 goto exit
 
-:cl
+:msc
 	set CC=cl
-	set CFLAGS=-O2 -nologo -D"WIN32" -w
+	set CFLAGS=-O2 -nologo -w
+	%CC% %CFLAGS% -o%BIN_DIR%\gec%EXE% gec.c
+	%RM% gec%OBJ%
 	%CC% %CFLAGS% -o%BIN_DIR%\gexace%EXE% gexace.c
 	%RM% gexace%OBJ%
 	%CC% %CFLAGS% -o%BIN_DIR%\geant%EXE% geant.c
@@ -83,6 +85,9 @@ goto exit
 :bcc32
 	set CC=bcc32
 	set CFLAGS=-5 -w-aus -w-par -w-rvl -O2 -O-v
+	%CC% %CFLAGS% -ogec%EXE% gec.c
+	%CP% gec%EXE% %BIN_DIR%
+	%RM% gec%EXE% gec.tds
 	%CC% %CFLAGS% -ogexace%EXE% gexace.c
 	%CP% gexace%EXE% %BIN_DIR%
 	%RM% gexace%EXE% gexace.tds
@@ -104,6 +109,9 @@ goto exit
 	set CFLAGS=-O
 	set LNK=lcclnk
 	set LNKFLAGS=-s
+	%CC% %CFLAGS% gec.c
+	%LNK% %LNKFLAGS% -o %BIN_DIR%\gec%EXE% gec%OBJ%
+	%RM% gec%OBJ%
 	%CC% %CFLAGS% gexace.c
 	%LNK% %LNKFLAGS% -o %BIN_DIR%\gexace%EXE% gexace%OBJ%
 	%RM% gexace%OBJ%
@@ -124,6 +132,7 @@ goto exit
 :gcc
 	set CFLAGS=-O2
 	set OBJ=.o
+	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
 	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
 	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
 	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c

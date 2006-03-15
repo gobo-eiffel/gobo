@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel package"
-# copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+# copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 # license: "Eiffel Forum License v2 (see forum.txt)"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -64,6 +64,8 @@ elif [ "$EIF" = "" ]; then
 elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	CC=cl
 	CFLAGS='-O2 -nologo -D"WIN32" -w'
+	$CC $CFLAGS -o$BIN_DIR/gec$EXE gec.c
+	$RM gec$OBJ
 	$CC $CFLAGS -o$BIN_DIR/gexace$EXE gexace.c
 	$RM gexace$OBJ
 	$CC $CFLAGS -o$BIN_DIR/geant$EXE geant.c
@@ -77,6 +79,9 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	CC=bcc32
 	CFLAGS='-5 -w-aus -w-par -w-rvl -O2 -O-v'
+	$CC $CFLAGS -ogec$EXE gec.c
+	$CP gec$EXE $BIN_DIR
+	$RM gec$EXE gec.tds
 	$CC $CFLAGS -ogexace$EXE gexace.c
 	$CP gexace$EXE $BIN_DIR
 	$RM gexace$EXE gexace.tds
@@ -96,6 +101,9 @@ elif [ "$CC" = "lcc" ]; then
 	CFLAGS='-O'
 	LNK='lcclnk'
 	LNKFLAGS='-s'
+	$CC $CFLAGS gec.c
+	$LNK $LNKFLAGS -o $BIN_DIR/gec$EXE gec$OBJ
+	$RM gec$OBJ
 	$CC $CFLAGS gexace.c
 	$LNK $LNKFLAGS -o $BIN_DIR/gexace$EXE gexace$OBJ
 	$RM gexace$OBJ
@@ -113,6 +121,7 @@ elif [ "$CC" = "lcc" ]; then
 	$RM gepp$OBJ
 elif [ "$CC" = "gcc" ]; then
 	CFLAGS='-O2'
+	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
 	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
 	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
