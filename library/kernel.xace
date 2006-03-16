@@ -31,14 +31,14 @@
 			<option name="read_only" value="true"/>
 			<option name="exclude" value="serialization" if="${GOBO_EIFFELBASE}"/>
 		</cluster>
-		<cluster name="mscorlib" if="${GOBO_DOTNET}">
+		<cluster name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll" if="${GOBO_DOTNET}">
 			<option name="abstract" value="true"/>
 			<option name="assembly" value="mscorlib"/>
 			<option name="version" value="1.0.5000.0"/>
 			<option name="culture" value="neutral"/>
 			<option name="public_key_token" value="b77a5c561934e089"/>
 		</cluster>
-		<cluster name="system_" if="${GOBO_DOTNET}">
+		<cluster name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" if="${GOBO_DOTNET}">
 			<option name="abstract" value="true"/>
 			<option name="assembly" value="System"/>
 			<option name="version" value="1.0.5000.0"/>
@@ -46,7 +46,7 @@
 			<option name="public_key_token" value="b77a5c561934e089"/>
 			<option name="prefix" value="SYSTEM_DLL_"/>
 		</cluster>
-		<cluster name="system_xml" if="${GOBO_DOTNET}">
+		<cluster name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" if="${GOBO_DOTNET}">
 			<option name="abstract" value="true"/>
 			<option name="assembly" value="System.Xml"/>
 			<option name="version" value="1.0.5000.0"/>
