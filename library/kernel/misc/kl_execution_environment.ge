@@ -30,14 +30,13 @@ inherit
 	KL_IMPORTED_ANY_ROUTINES
 
 #ifdef ISE
+#ifdef GE
+	GE_EXECUTION_ENVIRONMENT
+
+#else
 	EXECUTION_ENVIRONMENT
-		redefine
-			environ
-		end
 
-	KL_SHARED_STRING_EQUALITY_TESTER
-		export {NONE} all end
-
+#endif
 #endif
 feature -- Access
 
@@ -201,18 +200,6 @@ feature {NONE} -- Implementation
 			create Result
 		ensure
 			environment_impl_not_void: Result /= Void
-		end
-
-	environ: IMPROVED_HASH_TABLE [C_STRING, STRING] is
-			-- Environment variable memory set by current execution,
-			-- indexed by environment variable name. Needed otherwise
-			-- we would corrupt memory after freeing memory used by
-			-- C_STRING instance since not referenced anywhere else.
-		once
-			create Result.make_map (10)
-			Result.set_key_equality_tester (string_equality_tester)
-		ensure then
-			environ_not_void: Result /= Void
 		end
 
 #endif

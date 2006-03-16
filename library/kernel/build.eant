@@ -30,7 +30,6 @@
 		<geant target="install_basic"/>
 		<geant target="install_io"/>
 		<geant target="install_misc"/>
-		<geant target="install_support"/>
 		<geant target="install_unicode"/>
 	</target>
 
@@ -159,13 +158,6 @@
 		<set name="gepp_file" value="kl_shell_command"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_system_clock"/>
-		<geant target="ge2e"/>
-	</target>
-
-	<target name="install_support">
-		<set name="gepp_dir" value="support"/>
-		<set name="spec_dir" value="spec"/>
-		<set name="gepp_file" value="improved_hash_table"/>
 		<geant target="ge2e"/>
 	</target>
 

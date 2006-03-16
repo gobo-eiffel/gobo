@@ -3,7 +3,7 @@ indexing
 	description:
 
 		"Improved HASH_TABLE not using `is_equal' to compare keys. %
-		%Use a KL_EQUALITY_TESTER instead to avoid CAT-calls."
+		%Use a GE_EQUALITY_TESTER instead to avoid CAT-calls."
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
@@ -11,10 +11,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-#ifndef ISE
-class DUMMY_IMPROVED_HASH_TABLE [G, H -> HASHABLE]
-#else
-class IMPROVED_HASH_TABLE [G, H -> HASHABLE]
+class GE_HASH_TABLE [G, H -> HASHABLE]
 
 inherit
 
@@ -57,7 +54,7 @@ feature -- Initialization
 			-- keep all current items.
 		local
 			i: INTEGER
-			new_table: IMPROVED_HASH_TABLE [G, H]
+			new_table: GE_HASH_TABLE [G, H]
 			default_key: H
 			l_content: like content
 			l_keys: like keys
@@ -96,7 +93,7 @@ feature -- Initialization
 
 feature -- Access
 
-	key_equality_tester: KL_EQUALITY_TESTER [H]
+	key_equality_tester: GE_EQUALITY_TESTER [H]
 			-- Equality tester for keys;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
@@ -189,5 +186,4 @@ feature {NONE} -- Implementation
 			deleted_position := first_deleted_position
 		end
 
-#endif
 end
