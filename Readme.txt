@@ -99,13 +99,13 @@ Note that if you downloaded this package from CVS on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
 The supported Eiffel compilers, in alphabetical order, are: ISE Eiffel
-5.5.1012 and 5.6.1108 (Classic and .NET), SmartEiffel 1.0 and 2.2b1,
-and Visual Eiffel 5.0b (Build 2508). For more details about the supported
-Eiffel compilers, please see the file "Release_notes.txt". This software
-might work with other Eiffel compilers and/or other compiler versions,
-however no test has been done. To have a better understanding of the
-way this software has been designed and implemented, you can also have
-a look at "$GOBO/doc/portability".
+5.6.1218 (Classic and .NET), SmartEiffel 1.0, and Visual Eiffel 5.0b
+(Build 2508). For more details about the supported Eiffel compilers,
+please see the file "Release_notes.txt". This software might work with
+other Eiffel compilers and/or other compiler versions, however no test
+has been done. To have a better understanding of the way this software
+has been designed and implemented, you can also have a look at
+"$GOBO/doc/portability".
 
 In this distribution:
 
