@@ -131,7 +131,9 @@ feature {NONE} -- Externals
 	ftime (p: POINTER) is
 			-- Set current date and time in `p', pointer to a `struct timeb' area.
 		external
-			"C signature (struct timeb*) use <sys/timeb.h>"
+			"C inline use %"ge_time.h%""
+		alias
+			"geftime($p);"
 		end
 
 feature {NONE} -- `struct timeb' encapsulation
@@ -139,19 +141,32 @@ feature {NONE} -- `struct timeb' encapsulation
 	timeb_structure_size: INTEGER is
 			-- Size of `struct timeb'.
 		external
-			"C inline use <sys/timeb.h>"
+			"C inline use %"ge_time.h%""
 		alias
-			"return sizeof(struct timeb);"
+			"return getimebsz;"
 		end	
 
-	time_t_structure_size: INTEGER is
-			-- Size of `struct timeb'.
+	get_millitm (p: POINTER): INTEGER is
+			-- Get `p->millitm'.
 		external
-			"C inline use <time.h>"
+			"C inline use %"ge_time.h%""
 		alias
-			"return sizeof(time_t);"
+			"return getimebmillitm($p);"
 		end
 
+	get_time (p, t: POINTER) is
+			-- Get `p->time'.
+		external
+			"C inline use %"ge_time.h%", <time.h>"
+		alias
+			"*(time_t *) $t = getimebtime($p);"
+		end
+		
+feature {NONE} -- `struct tm' encapsulation
+
+	internal_item: MANAGED_POINTER
+			-- Pointer to `struct tm' area.
+	
 	tm_structure_size: INTEGER is
 			-- Size of `struct tm'.
 		external
@@ -160,27 +175,14 @@ feature {NONE} -- `struct timeb' encapsulation
 			"return sizeof(struct tm);"
 		end
 		
-	get_millitm (p: POINTER): INTEGER is
-			-- Get `p->millitm'.
+	time_t_structure_size: INTEGER is
+			-- Size of `struct time_t'.
 		external
-			"C inline use <sys/timeb.h>"
+			"C inline use <time.h>"
 		alias
-			"return ((struct timeb *) $p)->millitm;"
+			"return sizeof(time_t);"
 		end
 
-	get_time (p, t: POINTER) is
-			-- Get `p->time'.
-		external
-			"C inline use <sys/timeb.h>, <time.h>"
-		alias
-			"*(time_t *) $t = (((struct timeb *)$p)->time);"
-		end
-		
-feature {NONE} -- `struct tm' encapsulation
-
-	internal_item: MANAGED_POINTER
-			-- Pointer to `struct tm' area.
-	
 	localtime (t: POINTER): POINTER is
 			-- Pointer to `struct tm' area.
 		external

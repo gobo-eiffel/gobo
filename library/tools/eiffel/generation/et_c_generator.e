@@ -11960,6 +11960,8 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_store.h", a_file)
 				elseif a_filename.same_string ("%"eif_traverse.h%"") then
 					include_runtime_header_file ("eif_traverse.h", a_file)
+				elseif a_filename.same_string ("%"ge_time.h%"") then
+					include_runtime_header_file ("ge_time.h", a_file)
 				else
 					a_file.put_string (c_include)
 					a_file.put_character (' ')
