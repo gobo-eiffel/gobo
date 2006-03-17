@@ -5,7 +5,7 @@ indexing
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,7 +56,13 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	flat_mode: BOOLEAN
-			-- Process flat form of `current_class'
+			-- Should the inherited features be processed
+			-- again in `current_class'?
+
+	flat_dbc_mode: BOOLEAN
+			-- Should the inherited pre- and postconditions be
+			-- processed again in the redeclaration of features
+			-- in `current_class'?
 
 	short_mode: BOOLEAN
 			-- Process short form of `current_class'
@@ -69,6 +75,14 @@ feature -- Status setting
 			flat_mode := b
 		ensure
 			flat_mode_set: flat_mode = b
+		end
+
+	set_flat_dbc_mode (b: BOOLEAN) is
+			-- Set `flat_dbc_mode' to `b'.
+		do
+			flat_dbc_mode := b
+		ensure
+			flat_dbc_mode_set: flat_dbc_mode = b
 		end
 
 	set_short_mode (b: BOOLEAN) is
@@ -267,7 +281,7 @@ feature {NONE} -- Assertion validity
 					a_feature.set_assertions_error
 				end
 			end
-			if flat_mode then
+			if flat_dbc_mode or flat_mode then
 				l_first_precursor := a_feature_impl.first_precursor
 				if l_first_precursor /= Void then
 					check_assertions_validity (l_first_precursor, a_feature)

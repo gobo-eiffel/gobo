@@ -5,7 +5,7 @@ indexing
 		"Eiffel class universes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -992,6 +992,46 @@ feature -- Parser setting
 			cluster_dependence_enabled_set: cluster_dependence_enabled = b
 		end
 
+feature -- Implementation checking status report
+
+	flat_mode: BOOLEAN
+			-- Should the inherited features be checked
+			-- again in the descendant classes?
+
+	flat_dbc_mode: BOOLEAN
+			-- Should the inherited pre- and postconditions be
+			-- checked again in the redeclaration of features?
+
+feature -- Implementation checking status setting
+
+	set_flat_mode (b: BOOLEAN) is
+			-- Set `flat_mode' to `b'.
+		local
+			a_checker: ET_IMPLEMENTATION_CHECKER
+		do
+			flat_mode := b
+			a_checker ?= implementation_checker
+			if a_checker /= Void then
+				a_checker.set_flat_mode (b)
+			end
+		ensure
+			flat_mode_set: flat_mode = b
+		end
+
+	set_flat_dbc_mode (b: BOOLEAN) is
+			-- Set `flat_dbc_mode' to `b'.
+		local
+			a_checker: ET_IMPLEMENTATION_CHECKER
+		do
+			flat_dbc_mode := b
+			a_checker ?= implementation_checker
+			if a_checker /= Void then
+				a_checker.set_flat_dbc_mode (b)
+			end
+		ensure
+			flat_dbc_mode_set: flat_dbc_mode = b
+		end
+
 feature -- Element change
 
 	add_implicit_subclusters is
@@ -1887,22 +1927,26 @@ feature -- Compilation setting
 
 feature -- Compilation
 
-	compile (flat: BOOLEAN) is
+	compile is
 			-- Compile universe.
-			-- `flat' means that the inherited features are checked
+			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
+			-- `flat_dbc_mode' means that the inherited pre- and postconditions
+			-- are checked again in the redeclaration of features during Degree 3.
 		do
 			if root_class = Void or root_class = none_class then
-				compile_all (flat)
+				compile_all
 			else
-				compile_system (flat)
+				compile_system
 			end
 		end
 
-	compile_system (flat: BOOLEAN) is
+	compile_system is
 			-- Compile all classes in the system.
-			-- `flat' means that the inherited features are checked
+			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
+			-- `flat_dbc_mode' means that the inherited pre- and postconditions
+			-- are checked again in the redeclaration of features during Degree 3.
 		local
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
@@ -1937,16 +1981,18 @@ feature -- Compilation
 				print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			compile_degree_3 (flat)
+			compile_degree_3
 			debug ("ericb")
 				print_time (dt1, "Degree 3")
 			end
 		end
 
-	compile_all (flat: BOOLEAN) is
+	compile_all is
 			-- Compile all classes in the universe.
-			-- `flat' means that the inherited features are checked
+			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
+			-- `flat_dbc_mode' means that the inherited pre- and postconditions
+			-- are checked again in the redeclaration of features during Degree 3.
 		local
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
@@ -1973,7 +2019,7 @@ feature -- Compilation
 				print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			compile_degree_3 (flat)
+			compile_degree_3
 			debug ("ericb")
 				print_time (dt1, "Degree 3")
 			end
@@ -2048,10 +2094,12 @@ feature -- Compilation
 			end
 		end
 
-	compile_degree_3 (flat: BOOLEAN) is
+	compile_degree_3 is
 			-- Equivalent of ISE Eiffel's Degree 3.
-			-- `flat' means that the inherited features are checked
+			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes.
+			-- `flat_dbc_mode' means that the inherited pre- and postconditions
+			-- are checked again in the redeclaration of features.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
@@ -2060,7 +2108,8 @@ feature -- Compilation
 				-- Check implementation.
 			a_checker ?= implementation_checker
 			if a_checker /= Void then
-				a_checker.set_flat_mode (flat)
+				a_checker.set_flat_mode (flat_mode)
+				a_checker.set_flat_dbc_mode (flat_dbc_mode)
 			end
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
@@ -2340,7 +2389,7 @@ feature -- Processors
 		ensure
 			implementation_checker_set: implementation_checker = a_checker
 		end
-		
+
 feature -- Timing
 
 	print_time (a_start: DT_DATE_TIME; a_degree: STRING) is
