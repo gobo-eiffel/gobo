@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	value: DOUBLE
-	
+
 	is_double_value: BOOLEAN is
 			-- Is `Current' a double value?
 		do
@@ -78,7 +78,7 @@ feature -- Access
 		do
 			Result := value.hash_code
 		end
-	
+
 	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
 		do
 			Result := DOUBLE_.truncated_to_integer (value)
@@ -117,7 +117,7 @@ feature -- Access
 				create a_decimal.make_from_string (value.out)
 				Result := a_decimal.to_scientific_string
 			else
-				Result := value.out -- TODO - No good - but how to determine the result? use MA-DECIMAL rather than double 
+				Result := value.out -- TODO - No good - but how to determine the result? use MA-DECIMAL rather than double
 			end
 		end
 
@@ -134,7 +134,7 @@ feature -- Status report
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end
-	
+
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
@@ -162,7 +162,7 @@ feature -- Status report
 	is_platform_integer: BOOLEAN is
 			-- Can value be represented by an `INTEGER'?
 		do
-			Result := is_whole_number			
+			Result := is_whole_number
 		end
 
 	is_double: BOOLEAN is
@@ -190,15 +190,15 @@ feature -- Status report
 		do
 			Result := value.sign = -1
 		end
-	
+
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
 			Result := value = plus_infinity or else value = minus_infinity
-		end	
+		end
 
 feature -- Conversion
-	
+
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
 			-- TODO - need to virtualize the pre-condition so that
@@ -262,7 +262,7 @@ feature -- Conversion
 	floor: like Current is
 			-- Value rounded towards minus infinity
 		local
-			a_decimal: MA_DECIMAL		
+			a_decimal: MA_DECIMAL
 		do
 			if is_infinite or else is_nan then
 				Result := Current
@@ -277,7 +277,7 @@ feature -- Conversion
 	ceiling: like Current is
 			-- Value rounded towards plus infinity;
 		local
-			a_decimal: MA_DECIMAL		
+			a_decimal: MA_DECIMAL
 		do
 			if is_infinite or else is_nan then
 				Result := Current
@@ -288,7 +288,7 @@ feature -- Conversion
 				create Result.make (a_decimal.round_to_integer (shared_ceiling_context).to_double)
 			end
 
-			
+
 		end
 
 	negated_value: like Current is
@@ -371,20 +371,67 @@ feature {NONE} -- Implementation
 
 	Large_number: DOUBLE is 2.0e300
 	Large_negative_number: DOUBLE is -2.0e300
- 
-	plus_infinity: DOUBLE is 
+
+	plus_infinity: DOUBLE is
 			-- Overflow on purpose.
+		local
+			d1: DOUBLE
+			i: INTEGER
 		once
-			Result := Large_number * Large_number 
+				-- Bug in SE 1.2r6: make sure that this once-function is
+				-- not precomputed otherwise MSVC 7.1 complains about a
+				-- division by zero at compilation time.
+				-- Also, work around another problem with SE 1.2r6 where
+				-- 2.0e300 is generated in the C code as 2000...000.0
+				-- yielding a buffer overflow in the C compiler.
+			-- Result := Large_number * Large_number
+			from
+				i := 1
+				d1 := 2.0
+			until
+				i > 300
+			loop
+				d1 := d1 * 10.0
+				i := i + 1
+			end
+			Result := d1 * d1
 		ensure
 			positive: Result > 0
 			infinity_reached: Result / Large_number = Result
 		end
 
-	minus_infinity: DOUBLE is 
+	minus_infinity: DOUBLE is
 			-- Overflow on purpose.
+		local
+			d1, d2: DOUBLE
+			i: INTEGER
 		once
-			Result := Large_number * Large_negative_number 
+				-- Bug in SE 1.2r6: make sure that this once-function is
+				-- not precomputed otherwise MSVC 7.1 complains about a
+				-- division by zero at compilation time.
+				-- Also, work around another problem with SE 1.2r6 where
+				-- 2.0e300 is generated in the C code as 2000...000.0
+				-- yielding a buffer overflow in the C compiler.
+			-- Result := Large_number * Large_negative_number
+			from
+				i := 1
+				d1 := 2.0
+			until
+				i > 300
+			loop
+				d1 := d1 * 10.0
+				i := i + 1
+			end
+			from
+				i := 1
+				d2 := -2.0
+			until
+				i > 300
+			loop
+				d2 := d2 * 10.0
+				i := i + 1
+			end
+			Result := d1 * d2
 		ensure
 			negative: Result < 0
 			infinity_reached: Result / Large_number = Result

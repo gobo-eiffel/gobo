@@ -163,19 +163,13 @@ feature {NONE} -- Precompilation
 			a_line: STRING
 			a_dir: KL_DIRECTORY
 			a_dirname, a_filename: STRING
-			se_1_0: STRING
 		do
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Generate loadpath file.
-			se_1_0 := Execution_environment.variable_value ("SE_1_0")
-			if se_1_0 /= Void and then se_1_0.count > 0 then
-				assert_execute ("gexace --define=SE_1_0 --library=se " + xace_filename + output_log)
-			else
-				assert_execute ("gexace --library=se " + xace_filename + output_log)
-			end
+			assert_execute ("gexace --library=se " + xace_filename + output_log)
 				-- Eiffel precompilation.
 			create a_file.make ("loadpath.se")
 			a_file.open_read
@@ -200,12 +194,7 @@ feature {NONE} -- Precompilation
 								a_filename := a_dir.last_entry
 								if file_system.has_extension (a_filename, ".e") then
 									a_filename := file_system.pathname (a_dirname, a_filename)
-									if se_1_0 /= Void and then se_1_0.count > 0 then
-										assert_execute ("short -plain -no_style_warning -no_warning " + a_filename + output_log)
-									else
-										-- 'class_check' takes more than 7 hours to run!
-										assert_execute ("class_check -no_style_warning -no_warning -loadpath loadpath.se " + a_filename + output_log)
-									end
+									assert_execute ("short -plain -no_style_warning -no_warning " + a_filename + output_log)
 									assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 								end
 								a_dir.read_entry

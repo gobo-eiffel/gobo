@@ -52,7 +52,6 @@ feature -- Test
 			a_prefixed_name: STRING
 			a_full_test: BOOLEAN
 			ve_os: STRING
-			se_1_0: STRING
 		do
 			create an_xace_file.make (xace_filename)
 			an_xace_file.open_read
@@ -69,12 +68,6 @@ feature -- Test
 					an_xace_variables.force_last ("Win32", "VE_OS")
 				else
 					an_xace_variables.force_last ("Linux", "VE_OS")
-				end
-			end
-			if eiffel_compiler.is_se then
-				se_1_0 := Execution_environment.variable_value ("SE_1_0")
-				if se_1_0 /= Void and then se_1_0.count > 0 then
-					an_xace_variables.force_last (se_1_0, "SE_1_0")
 				end
 			end
 			create an_xace_ast_factory.make
