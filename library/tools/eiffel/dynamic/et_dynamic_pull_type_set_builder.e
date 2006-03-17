@@ -763,7 +763,10 @@ feature {NONE} -- CAT-calls
 			end
 			l_visited_sources.wipe_out
 			l_source_stack.wipe_out
-				-- CAT-calls are not considered as a fatal error.
+			if catcall_mode then
+					-- CAT-calls are considered as fatal errors.
+				set_fatal_error
+			end
 			error_handler.report_catcall_error (l_message)
 			STRING_.wipe_out (l_message)
 		end

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			universe := a_universe
 			nb := a_universe.classes.capacity
 			create null_dynamic_type_set_builder.make (Current)
-			dynamic_type_set_builder := null_dynamic_type_set_builder
+			set_dynamic_type_set_builder (null_dynamic_type_set_builder)
 			create dynamic_types.make (nb)
 			make_basic_types
 		ensure
@@ -103,6 +103,19 @@ feature -- Access
 			-- Surrounding universe
 
 feature -- Status report
+
+	catcall_mode: BOOLEAN
+			-- Are CAT-call errors considered as fatal errors?
+
+feature -- Status setting
+
+	set_catcall_mode (b: BOOLEAN) is
+			-- Set `catcall_mode' to `b'.
+		do
+			catcall_mode := b
+		ensure
+			catcall_mode_set: catcall_mode = b
+		end
 
 	set_string_type_alive is
 			-- Make sure that `string_type' and its dependent types
@@ -631,7 +644,7 @@ feature -- Compilation
 				universe.print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			universe.compile_degree_3 (False)
+			universe.compile_degree_3
 			debug ("ericb")
 				universe.print_time (dt1, "Degree 3")
 				dt1 := l_clock.system_clock.date_time_now
@@ -986,6 +999,7 @@ feature {NONE} -- Compilation
 			l_builder := dynamic_type_set_builder
 			l_builder.set_no_debug (True)
 			l_builder.set_no_assertion (True)
+			l_builder.set_catcall_mode (catcall_mode)
 			l_builder.build_dynamic_type_sets
 			if l_builder.has_fatal_error then
 				set_fatal_error
@@ -1026,6 +1040,7 @@ feature -- Processors
 		do
 			if dynamic_type_set_builder = null_dynamic_type_set_builder then
 				create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} dynamic_type_set_builder.make (Current)
+				dynamic_type_set_builder.set_catcall_mode (catcall_mode)
 			end
 		end
 
@@ -1035,6 +1050,7 @@ feature -- Processors
 			a_builder_not_void: a_builder /= Void
 		do
 			dynamic_type_set_builder := a_builder
+			dynamic_type_set_builder.set_catcall_mode (catcall_mode)
 		ensure
 			dynamic_type_set_builder_set: dynamic_type_set_builder = a_builder
 		end
