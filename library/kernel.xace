@@ -66,16 +66,15 @@
 		<option name="abstract" value="true"/>
 		<cluster name="se" location="${SmartEiffelDirectory}/lib">
 			<option name="abstract" value="true"/>
-			<cluster name="lib" location="loadpath.se" relative="true" unless="${SE_1_0}"/>
-			<cluster name="base" if="${SE_1_0}"/>
-			<cluster name="io" if="${SE_1_0}"/>
-			<cluster name="iterator" if="${SE_1_0}"/>
-			<cluster name="kernel" if="${SE_1_0}"/>
-			<cluster name="misc" if="${SE_1_0}"/>
-			<cluster name="number" if="${SE_1_0}"/>
-			<cluster name="random" if="${SE_1_0}"/>
-			<cluster name="sorting" if="${SE_1_0}"/>
-			<cluster name="time" if="${SE_1_0}"/>
+			<cluster name="base"/>
+			<cluster name="io"/>
+			<cluster name="iterator"/>
+			<cluster name="kernel"/>
+			<cluster name="misc"/>
+			<cluster name="number"/>
+			<cluster name="random"/>
+			<cluster name="sorting"/>
+			<cluster name="time"/>
 		</cluster>
 	</cluster>
 

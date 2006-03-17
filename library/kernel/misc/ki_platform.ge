@@ -25,9 +25,7 @@ inherit
 #endif
 			Boolean_bits as old_boolean_bits,
 			Character_bits as old_character_bits,
-#ifndef SE && ! SE_1_0
 			Double_bits as old_double_bits,
-#endif
 			Integer_bits as old_integer_bits,
 			Pointer_bits as old_pointer_bits,
 			Real_bits as old_real_bits
@@ -59,7 +57,6 @@ feature -- Bits
 			more_than_byte: Result >= Byte_bits
 		end
 
-#ifndef SE && ! SE_1_0
 	Double_bits: INTEGER is
 			-- Number of bits in a value of type DOUBLE
 		deferred
@@ -70,7 +67,6 @@ feature -- Bits
 			more_than_real: Result >= Real_bits
 		end
 
-#endif
 	Integer_bits: INTEGER is
 			-- Number of bits in a value of type INTEGER
 		deferred

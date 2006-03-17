@@ -114,9 +114,7 @@ inherit
 #else
 			head, tail,
 #endif
-#ifndef (SE && ! SE_1_0)
 			infix "@",
-#endif
 #ifdef ISE
 			count,
 			old_clear_all,
@@ -516,7 +514,6 @@ feature -- Access
 			end
 		end
 
-#ifndef (SE && ! SE_1_0)
 	infix "@" (i: INTEGER): CHARACTER is
 			-- Character at index `i'
 			-- (ELKS 2001 STRING)
@@ -524,7 +521,6 @@ feature -- Access
 			Result := item (i)
 		end
 
-#endif
 	substring (start_index, end_index: INTEGER): like Current is
 			-- New object containing all characters
 			-- from `start_index' to `end_index' inclusive

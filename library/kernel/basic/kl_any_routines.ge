@@ -5,7 +5,7 @@ indexing
 		"Routines that ought to be in class ANY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,11 +20,7 @@ feature -- Status report
 			obj1_not_void: obj1 /= Void
 			obj2_not_void: obj2 /= Void
 		do
-#ifdef (SE && ! SE_1_0)
-			Result := obj1.generating_type = obj2.generating_type
-#else
 			Result := obj1.same_type (obj2)
-#endif
 		end
 
 	same_objects (obj1, obj2: ANY): BOOLEAN is

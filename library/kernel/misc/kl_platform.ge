@@ -41,9 +41,7 @@ inherit
 #endif
 			Boolean_bits as old_boolean_bits,
 			Character_bits as old_character_bits,
-#ifndef SE && ! SE_1_0
 			Double_bits as old_double_bits,
-#endif
 			Integer_bits as old_integer_bits,
 			Pointer_bits as old_pointer_bits,
 			Real_bits as old_real_bits
@@ -65,14 +63,12 @@ feature -- Bits
 			Result := old_character_bits
 		end
 
-#ifndef SE && ! SE_1_0
 	Double_bits: INTEGER is
 			-- Number of bits in a value of type DOUBLE
 		once
 			Result := old_double_bits
 		end
 
-#endif
 	Integer_bits: INTEGER is
 			-- Number of bits in a value of type INTEGER
 		once
@@ -119,14 +115,10 @@ feature -- Bytes
 	Double_bytes: INTEGER is
 			-- Number of bytes in a value of type DOUBLE
 		once
-#ifdef (SE && SE_1_0)
+#ifdef SE
 			Result := Double_bits // Byte_bits
 #else
-#ifdef SE && ! SE_1_0
-			Result := Real_bytes
-#else
 			Result := old_double_bytes
-#endif
 #endif
 		end
 
