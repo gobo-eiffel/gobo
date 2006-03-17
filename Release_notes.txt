@@ -10,7 +10,7 @@ ISE 5.6 (ISE Eiffel)
 	    geant clobber
 	    geant install
 
-SE 1.0 (SmartEiffel)
+SE 1.2r6 (SmartEiffel)
 
 VE 5.0b build 2508 (Visual Eiffel)
 
