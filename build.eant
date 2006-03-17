@@ -30,7 +30,7 @@
 		<geant file="build.eant" target="install" dir="src"/>
 		<geant file="build.eant" target="install" dir="example"/>
 		<geant file="build.eant" target="install" dir="test"/>
-		<geant file="build.eant" target="install" dir="doc" unless="${SE_1_0}"/>
+		<geant file="build.eant" target="install" dir="doc" unless="${GOBO_EIFFEL}=se"/>
 	</target>
 
 	<target name="clean" depend="init">
@@ -143,7 +143,7 @@
 		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
 		<geant file="build.eant" target="install" dir="example"/>
 		<geant file="build.eant" target="install" dir="test"/>
-		<geant file="build.eant" target="install" dir="doc" unless="${SE_1_0}"/>
+		<geant file="build.eant" target="install" dir="doc" unless="${GOBO_EIFFEL}=se"/>
 		<geant target="clean"/>
 	</target>
 
