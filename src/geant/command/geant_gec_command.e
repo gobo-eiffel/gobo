@@ -208,7 +208,7 @@ feature -- Command-line
 				Result.append_string ("--finalize ")
 			end
 			if not c_compile then
-				Result.append_string ("--no_cc ")
+				Result.append_string ("--nocc ")
 			end
 			a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
 			Result := STRING_.appended_string (Result, a_filename)

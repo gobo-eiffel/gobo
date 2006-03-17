@@ -50,6 +50,7 @@ feature -- Execution
 		do
 			Arguments.set_program_name ("gelint")
 			create error_handler.make_standard
+			is_flat_dbc := True
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
 				arg := Arguments.argument (i)
@@ -65,10 +66,12 @@ feature -- Execution
 					is_verbose := True
 				elseif arg.is_equal ("--flat") then
 					is_flat := True
+				elseif arg.is_equal ("--noflatdbc") then
+					is_flat_dbc := False
 				elseif arg.is_equal ("--cat") then
 					is_cat := True
-				elseif arg.is_equal ("--no_output") then
-					no_output := True
+				elseif arg.is_equal ("--silent") then
+					is_silent := True
 				elseif arg.is_equal ("--void") then
 					void_feature := True
 				elseif i = nb then
@@ -156,8 +159,9 @@ feature -- Status report
 	defined_variables: STRING
 	is_verbose: BOOLEAN
 	is_flat: BOOLEAN
+	is_flat_dbc: BOOLEAN
 	is_cat: BOOLEAN
-	no_output: BOOLEAN
+	is_silent: BOOLEAN
 	void_feature: BOOLEAN
 			-- Command-line options
 
@@ -177,7 +181,7 @@ feature {NONE} -- Processing
 			a_system: ET_SYSTEM
 			a_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 		do
-			if no_output then
+			if is_silent then
 				create a_null_error_handler.make_standard
 				a_universe.set_error_handler (a_null_error_handler)
 			end
@@ -197,15 +201,18 @@ feature {NONE} -- Processing
 			else
 				a_universe.set_use_void_keyword (True)
 			end
+			a_universe.set_flat_mode (is_flat)
+			a_universe.set_flat_dbc_mode (is_flat_dbc)
 			if is_cat then
 				create a_system.make (a_universe)
+				a_system.set_catcall_mode (True)
 				create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_system)
 				a_system.set_dynamic_type_set_builder (a_builder)
 				a_system.compile
 			else
 				a_universe.set_providers_enabled (True)
 				a_universe.set_cluster_dependence_enabled (True)
-				a_universe.compile (is_flat)
+				a_universe.compile
 			end
 		end
 
@@ -239,9 +246,9 @@ feature -- Error handling
 		end
 
 	Usage_message: UT_USAGE_MESSAGE is
-			-- Gepp usage message.
+			-- Gelint usage message.
 		once
-			create Result.make ("[--verbose][--define=variables][--void][--flat][--cat] ace_filename")
+			create Result.make ("[--flat][--noflatdbc][--cat][--define=variables][--void][--silent][--verbose] ace_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

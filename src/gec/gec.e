@@ -69,8 +69,10 @@ feature -- Execution
 					is_silent := True
 				elseif arg.is_equal ("--verbose") then
 					is_verbose := True
-				elseif arg.is_equal ("--no_cc") then
+				elseif arg.is_equal ("--nocc") then
 					no_c_compile := True
+				elseif arg.is_equal ("--cat") then
+					is_cat := True
 				elseif arg.is_equal ("--finalize") then
 					is_finalize := True
 				elseif i = nb then
@@ -158,6 +160,7 @@ feature -- Status report
 	defined_variables: STRING
 	is_verbose: BOOLEAN
 	no_c_compile: BOOLEAN
+	is_cat: BOOLEAN
 	is_silent: BOOLEAN
 	is_finalize: BOOLEAN
 			-- Command-line options
@@ -205,6 +208,7 @@ feature {NONE} -- Processing
 			a_universe.set_use_reference_keyword (True)
 			a_universe.set_use_void_keyword (True)
 			create l_system.make (a_universe)
+			l_system.set_catcall_mode (is_cat)
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system)
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile
@@ -426,9 +430,9 @@ feature -- Error handling
 		end
 
 	Usage_message: UT_USAGE_MESSAGE is
-			-- Gepp usage message.
+			-- Gec usage message.
 		once
-			create Result.make ("[--silent][--verbose][--finalize][--no_cc] ace_filename")
+			create Result.make ("[--finalize][--cat][--nocc][--silent][--verbose] ace_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
