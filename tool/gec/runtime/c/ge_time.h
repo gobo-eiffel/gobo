@@ -13,10 +13,18 @@
 #ifndef GE_TIME_H
 #define GE_TIME_H
 
-#ifdef _XOPEN_UNIX
+#if defined _XOPEN_UNIX || defined __USE_XOPEN || defined __USE_BSD
+#define HAS_GETTIMEOFDAY
+#else
+#ifndef WIN32
+#define HAS_GETTIMEOFDAY
+#endif
+#endif
+
+#ifdef HAS_GETTIMEOFDAY
 /* OpenBSD does not support 'ftime' unless -lcompat is specified. */
 /* Use the recommended XSI (X/Open System Interface) extension instead. */
-#include <sys/timeb.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #define geftime(p) gettimeofday((struct timeval*)(p),((void*)0))
 #define getimebsz sizeof(struct timeval)
