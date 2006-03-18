@@ -120,7 +120,8 @@ elif [ "$CC" = "lcc" ]; then
 	$LNK $LNKFLAGS -o $BIN_DIR/gepp$EXE gepp$OBJ
 	$RM gepp$OBJ
 elif [ "$CC" = "gcc" ]; then
-	CFLAGS='-O2'
+#	CFLAGS='-O2'
+	CFLAGS=''
 	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
 	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
 	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
