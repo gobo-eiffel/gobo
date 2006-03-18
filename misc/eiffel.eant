@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel compilation"
-		copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -78,7 +78,9 @@
 		<delete file="${system}${exe}"/>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
-		<gec ace="compile_ge.ace" finalize="${finalize}" c_compile="true"/>
+		<gec ace="compile_ge.ace" finalize="${finalize}" c_compile="false" cat="true"/>
+		<exec executable=".\${system}.bat" if="${GOBO_OS}=windows"/>
+		<exec executable="./${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>
 
 	<target name="compile_ise" depend="prepare_compile">
@@ -211,10 +213,10 @@
 
 	<target name="bootstrap" depend="init">
 		<description>
-			Compile '${system}' with SmartEiffel in bootstrap mode.
+			Compile '${system}' with Gobo Eiffel in bootstrap mode.
 		</description>
 
-		<set name="eiffel" value="se"/>
+		<set name="eiffel" value="ge"/>
 		<set name="bootstrap" value="true"/>
 		<geant target="compile"/>
 	</target>
