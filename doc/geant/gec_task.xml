@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation"  id="gec_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec_task">
 <chapterinfo>
 	<copyright>
 		<year>2006</year>
@@ -56,6 +56,19 @@
 				<term>finalize</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>Finalize</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>cat</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Should CAT-call errors be considered as fatal errors?</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>

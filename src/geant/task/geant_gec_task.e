@@ -5,7 +5,7 @@ indexing
 		"Gec tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,6 +55,10 @@ feature {NONE} -- Initialization
 			if has_attribute (Finalize_attribute_name) then
 				command.set_finalize (boolean_value (Finalize_attribute_name))
 			end
+				-- cat.
+			if has_attribute (Cat_attribute_name) then
+				command.set_cat_mode (boolean_value (Cat_attribute_name))
+			end
 			if has_attribute (Exit_code_variable_attribute_name) then
 				a_value := attribute_value (Exit_code_variable_attribute_name)
 				if a_value.count > 0 then
@@ -83,6 +87,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "c_compile"
 		once
 			Result := "c_compile"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Cat_attribute_name: STRING is
+			-- Name of xml attribute for "cat"
+		once
+			Result := "cat"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

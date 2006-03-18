@@ -73,6 +73,9 @@ feature -- Access
 	finalize: BOOLEAN
 			-- Should system be compiled in finalized mode?
 
+	cat_mode: BOOLEAN
+			-- Should CAT-calls be considered as fatal errors?
+
 	clean: STRING
 			-- Name of system to be cleaned
 
@@ -106,6 +109,14 @@ feature -- Setting
 			finalize := b
 		ensure
 			finalize_set: finalize = b
+		end
+
+	set_cat_mode (b: BOOLEAN) is
+			-- Set `cat_mode' to `b'.
+		do
+			cat_mode := b
+		ensure
+			cat_mode_set: cat_mode = b
 		end
 
 	set_clean (a_clean: like clean) is
@@ -209,6 +220,9 @@ feature -- Command-line
 			end
 			if not c_compile then
 				Result.append_string ("--nocc ")
+			end
+			if cat_mode then
+				Result.append_string ("--cat ")
 			end
 			a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
 			Result := STRING_.appended_string (Result, a_filename)
