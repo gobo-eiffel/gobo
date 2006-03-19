@@ -35,52 +35,71 @@ are a few examples using this library:
 
 <section><title>Compilers and interpreters</title>
 <blockquote>
-	<para>
-		<link linkend="../gec/index">gec</link>
-	</para>
+<variablelist>
+	<varlistentry>
+		<term><link linkend="../gec/index">gec</link></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
 </blockquote>
 </section>
 
 <section><title>Lint-like tools</title>
 <blockquote>
-	<para>
-		<link linkend="../gelint/index">gelint</link>
-	</para>
+<variablelist>
+	<varlistentry>
+		<term><link linkend="../gelint/index">gelint</link></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
 </blockquote>
 </section>
 
 <section><title>Test tools</title>
 <blockquote>
-	<para>
-		<link linkend="../getest/index">getest</link>
-	</para>
-	<para>
-		<ulink url="http://se.inf.ethz.ch/people/leitner/auto_test/">AutoTest</ulink>
-	</para>
+<variablelist>
+	<varlistentry>
+		<term><link linkend="../getest/index">getest</link></term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term><ulink url="http://se.inf.ethz.ch/people/leitner/auto_test/">AutoTest</ulink></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
 </blockquote>
 </section>
 
 <section><title>Ctags-like tools</title>
 <blockquote>
-	<para>
-		<ulink url="http://www.raboof.at/various/">gutentag</ulink>
-	</para>
+<variablelist>
+	<varlistentry>
+		<term><ulink url="http://www.raboof.at/various/">gutentag</ulink></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
 </blockquote>
 </section>
 
 <section><title>Reflection generators</title>
 <blockquote>
-	<para>
-		<ulink url="http://se.inf.ethz.ch/people/leitner/erl_g/">Erl-G</ulink>
-	</para>
+<variablelist>
+	<varlistentry>
+		<term><ulink url="http://se.inf.ethz.ch/people/leitner/erl_g/">Erl-G</ulink></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
 </blockquote>
 </section>
 
 <section><title>Preprocessing tools</title>
 <blockquote>
-	<para>
-		<ulink url="http://se.inf.ethz.ch/research/scoop.html">SCOOP to SCOOPLI preprocessor</ulink>
-	</para>
+<variablelist>
+	<varlistentry>
+		<term><ulink url="http://se.inf.ethz.ch/research/scoop.html">SCOOP to SCOOPLI preprocessor</ulink></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
 </blockquote>
 </section>
 
