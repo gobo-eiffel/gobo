@@ -394,7 +394,7 @@
 </xsl:template>
 
 <xsl:template match="gobodoc:entry" mode="thead">
-	<td><xsl:apply-templates/></td>
+	<td><b><xsl:apply-templates/></b></td>
 </xsl:template>
 
 <xsl:template match="gobodoc:equal">
