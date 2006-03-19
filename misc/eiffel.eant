@@ -56,7 +56,7 @@
 		<description>
 			Compile '${system}'.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'se' if this variable is not defined.
+			or 'ge' if this variable is not defined.
 			Compile in debug mode if ${debug} is defined.
 		</description>
 
@@ -327,7 +327,7 @@
 	</target>
 
 	<target name="init">
-		<set name="eiffel" value="se"/>
+		<set name="eiffel" value="ge"/>
 		<geant target="init_eiffel"/>
 		<geant target="init_os"/>
 		<geant target="init_system"/>
