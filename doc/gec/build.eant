@@ -31,6 +31,7 @@
 		<geant target="xslt_and_shift" arguments="technology"/>
 		<geant target="xslt_and_shift" arguments="limitations"/>
 		<geant target="xslt_and_shift" arguments="future"/>
+		<geant target="xslt_and_shift" arguments="platforms"/>
 		<geant target="xslt_and_shift" arguments="see_also"/>
 		<geant target="xslt_and_shift" arguments="index"/>
 	</target>
@@ -51,6 +52,7 @@
 		<delete file="technology.html"/>
 		<delete file="limitations.html"/>
 		<delete file="future.html"/>
+		<delete file="platforms.html"/>
 		<delete file="see_also.html"/>
 	</target>
 

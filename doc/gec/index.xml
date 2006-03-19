@@ -46,7 +46,7 @@ to be tied to a single vendor.
 <para>
 <projectname>gec</projectname> is the only open source Eiffel compiler
 that is released under a <link linkend="../license">less constraining
-license</link> than GPL. To my knowledge it is also the first and only one whose
+license</link> than GNU GPL. To my knowledge it is also the first and only one whose
 source code can be compiled by all its major Eiffel compiler competitors, as is the
 case of all other classes provided in the <link linkend="../index"><projectname>Gobo
 Eiffel Project</projectname></link>. However, note that although it is already
@@ -93,6 +93,15 @@ This documentation of <projectname>gec</projectname> is structured as follows:
 		</term>
 		<listitem><para>
 			List of possible enhancements and future developments.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="platforms">Supported Platforms</link>
+		</term>
+		<listitem><para>
+			List of C compilers, operating systems, hardware on which
+			<projectname>gec</projectname> has been tested.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

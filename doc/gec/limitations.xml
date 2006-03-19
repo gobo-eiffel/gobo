@@ -22,13 +22,80 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>5 March 2006</date>
+	<date>18 March 2006</date>
 </chapterinfo>
 
-<title>Limitations</title>
+<title>Gec Limitations</title>
 
 <para>
-Under construction
+The following Eiffel constructs have not been implemented yet:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>Assertions</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Exceptions</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Garbage Collection</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Agents/Tuples</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term><featurename>deep_*</featurename> features in <classname>ANY</classname></term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Storable</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>User-defined expanded classes</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>BIT types</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Unique constants</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Class <classname>INTERNAL</classname></term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Options and external declarations in the Ace files</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Multithreading</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Debugger</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Profiler</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Cecil (C to Eiffel interface)</term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+Note that this list is not exhaustive.
 </para>
 
 </chapter>

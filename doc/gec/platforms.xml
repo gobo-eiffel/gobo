@@ -1,0 +1,185 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Supported Platforms"
+
+	tool: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/platforms">
+<chapterinfo>
+	<copyright>
+		<year>2006</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>18 March 2006</date>
+</chapterinfo>
+
+<title>Supported Platforms</title>
+
+<para>
+If you are not sure whether <projectname>gec</projectname> works with your C compiler
+on your operating system and hardware, you can see below if others already
+succeeded in doing so. If your platform or C compiler does not appear in
+this list, you can still give it a try. You just have to follow the 
+instructions given at the end of this chapter.
+</para>
+
+<section><title>Hardware, Operating systems and C compilers</title>
+<para>
+This table shows the C compilers and platforms on which <projectname>gec</projectname>
+has already been used successfully:
+</para>
+<table>
+	<title></title>
+	<tgroup cols="3">
+	<thead>
+		<row>
+			<entry>Operating System</entry>
+			<entry>C Compiler</entry>
+			<entry>Hardware</entry>
+		</row>
+	</thead>
+	<tbody>
+		<row>
+			<entry>Windows XP Pro</entry>
+			<entry>msc 7.1 (Visual Studio .NET 2003)</entry>
+			<entry>32-bit x86</entry>
+		</row>
+		<row>
+			<entry>Linux Ubuntu 5.10 "The Breezy Badger"</entry>
+			<entry>gcc 4.0.2</entry>
+			<entry>32-bit x86</entry>
+		</row>
+		<row>
+			<entry>OpenBSD ???</entry>
+			<entry>gcc ???</entry>
+			<entry>32-bit x86</entry>
+		</row>
+	</tbody>
+	</tgroup>
+</table>
+<para>
+And using computers from SourceForge's
+<ulink url="https://sourceforge.net/docs/compile_farm#devel_tools">Compile Farm</ulink>:
+</para>
+<table>
+	<title></title>
+	<tgroup cols="4">
+	<thead>
+		<row>
+			<entry>Name</entry>
+			<entry>Operating System</entry>
+			<entry>C Compiler</entry>
+			<entry>Hardware</entry>
+		</row>
+	</thead>
+	<tbody>
+		<row>
+			<entry>x86-linux2</entry>
+			<entry>Fedora Linux FC2</entry>
+			<entry>gcc 3.3.3</entry>
+			<entry>32-bit x86, little endian</entry>
+		</row>
+		<row>
+			<entry>x86-linux1</entry>
+			<entry>Debian GNU/Linux 3.1</entry>
+			<entry>gcc 3.3.5</entry>
+			<entry>32-bit x86, little endian</entry>
+		</row>
+		<row>
+			<entry>x86-openbsd1</entry>
+			<entry>OpenBSD 3.8</entry>
+			<entry>gcc 3.3.5</entry>
+			<entry>32-bit x86, little endian</entry>
+		</row>
+		<row>
+			<entry>sparc-solaris1</entry>
+			<entry>Sun Solaris 9 (SunOS 5.9)</entry>
+			<entry>gcc 3.3.2</entry>
+			<entry>64-bit Sun UltraSPARC-II, big-endian</entry>
+		</row>
+	</tbody>
+	</tgroup>
+</table>
+</section>
+
+<section><title>Testing gec on a new platform</title>
+<para>
+This section explains what to do in order to test <projectname>gec</projectname>
+on a new platform or with a new C compiler using the code from CVS.
+</para>
+<para>
+First you need to check-out the code from the
+<ulink url="https://sourceforge.net/cvs/?group_id=24591">Gobo CVS
+repository</ulink>. Then you should set the environment variable $GOBO
+to the directory where you checked out the code, and add
+<filename class="directory">$GOBO/bin</filename> to your $PATH.
+All this is explained in <filename>$GOBO/work/bootstrap/Readme.txt</filename>.
+If you are using a C compiler other than Microsoft Visual C
+<projectname>cl</projectname> on Windows or GNU <projectname>gcc</projectname>
+on other operating systems such as Linux, you should provide a configuration
+file for your compiler as explained in the section <link linkend="usage">"Back-end
+C compiler"</link>.
+</para>
+<para>
+Then, depending on your platform and your C compiler, you should run either one of these:
+<blockquote>
+<programlisting>
+<filename>bootstrap.bat &lt;c_compiler&gt; ge</filename>
+<filename>bootstrap.sh &lt;c_compiler&gt; ge</filename>
+</programlisting>
+</blockquote>
+If this completes successfully (no "BUILD FAILED!" message), you can then run
+the following tests:
+<blockquote>
+<programlisting>
+<filename>cd $GOBO/test/free_elks</filename>
+<filename>geant test_debug_ge</filename>
+</programlisting>
+</blockquote>
+<blockquote>
+<programlisting>
+<filename>cd $GOBO/test</filename>
+<filename>geant test_debug_ge</filename>
+</programlisting>
+</blockquote>
+<blockquote>
+<programlisting>
+<filename>cd $GOBO/test/xml/xpointer</filename>
+<filename>geant test_debug_ge</filename>
+</programlisting>
+</blockquote>
+<blockquote>
+<programlisting>
+<filename>cd $GOBO/test/xml/xpath</filename>
+<filename>geant test_debug_ge</filename>
+</programlisting>
+</blockquote>
+<blockquote>
+<programlisting>
+<filename>cd $GOBO/test/xml/xslt</filename>
+<filename>geant test_debug_ge</filename>
+</programlisting>
+</blockquote>
+</para>
+<para>
+Please don't forget to send feedbacks to the Gobo 
+<ulink url="http://lists.sourceforge.net/lists/listinfo/gobo-eiffel-develop">development
+team</ulink> about your experiments, and whether we should add new entries to the list
+of platforms and C compilers above or add new config files to
+<filename class="directory">$GOBO/tool/gec/config/c/</filename>.
+</para>
+</section>
+
+</chapter>
