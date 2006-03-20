@@ -53,35 +53,35 @@ feature
 			document_element ?= document.document_element
 			assert ("Document element not void", document_element /= Void)
 			a_name := document_element.node_name
-			assert("root name", STRING_.same_string (a_name, "doc"))
+			assert_strings_equal ("root name", "doc", a_name)
 
 			-- Test last_child
 
 			an_element ?= document_element.last_child
 			assert ("Last child not void", an_element /= Void)
 			a_name := an_element.node_name
-			assert("Last child name", STRING_.same_string (a_name, "b"))
+			assert_strings_equal ("Last child name", "b", a_name)
 
 			-- Test first_child
 
 			an_element ?= document_element.first_child
 			assert ("First child not void", an_element /= Void)
 			a_name := an_element.node_name
-			assert("First child name", STRING_.same_string (a_name, "a"))
-			
+			assert_strings_equal ("First child name", "a", a_name)
+
 			-- Test next_sibling
 
 			an_element ?= an_element.next_sibling
-			assert ("Second child not void", an_element /= Void)			
+			assert ("Second child not void", an_element /= Void)
 			a_name := an_element.node_name
-			assert("Second child name", STRING_.same_string (a_name, "b"))
+			assert_strings_equal ("Second child name", "b", a_name)
 
 			-- Test previous_sibling
 
 			an_element ?= an_element.previous_sibling
-			assert ("Previous sibling not void", an_element /= Void)			
+			assert ("Previous sibling not void", an_element /= Void)
 			a_name := an_element.node_name
-			assert("Previous sibling name", STRING_.same_string (a_name, "a"))						
+			assert_strings_equal ("Previous sibling name", "a", a_name)
 		end
 
 	test_with_dtd is
@@ -117,14 +117,14 @@ feature
 			document_element ?= document.document_element
 			assert ("Document element not void", document_element /= Void)
 			a_name := document_element.node_name
-			assert("root name", STRING_.same_string (a_name, "BOOKLIST"))
+			assert_strings_equal ("root name", "BOOKLIST", a_name)
 
 			-- Test first_child
 
 			books_element ?= document_element.first_child
 			assert ("First child not void", books_element /= Void)
 			a_name := books_element.node_name
-			assert("First child name", STRING_.same_string (a_name, "BOOKS"))
+			assert_strings_equal ("First child name", "BOOKS", a_name)
 
 			-- Test parent
 
@@ -135,7 +135,7 @@ feature
 			item_element ?= books_element.first_child
 			assert ("First child not void", item_element /= Void)
 			a_name := item_element.node_name
-			assert("First child 2 name", STRING_.same_string (a_name, "ITEM"))
+			assert_strings_equal ("First child 2 name", "ITEM", a_name)
 			
 			-- Test next_sibling loop to last child
 
@@ -152,7 +152,7 @@ feature
 				an_element ?= a_node
 				if an_element /= Void then
 					a_name := an_element.node_name
-					assert("Sibling name", STRING_.same_string (a_name, "ITEM"))
+					assert_strings_equal ("Sibling name", "ITEM", a_name)
 					counter := counter + 1
 				end
 			end
@@ -189,7 +189,7 @@ feature
 				check
 					element_ancestor: an_element /= Void
 				end
-			assert ("BOOKLIST ancestor", STRING_.same_string (an_element.node_name, "BOOKLIST"))
+			assert_strings_equal ("BOOKLIST ancestor", "BOOKLIST", an_element.node_name)
 
 			-- Test all_elements
 
@@ -274,8 +274,8 @@ feature
 					attribute_node: an_attribute /= Void
 				end
 
-			assert ("NOTE attribute", STRING_.same_string (an_attribute.node_name, "NOTE"))
-			assert ("NOTE attribute value", STRING_.same_string (an_attribute.string_value, "Limited Stock"))
+			assert_strings_equal ("NOTE attribute", "NOTE", an_attribute.node_name)
+			assert_strings_equal ("NOTE attribute value", "Limited Stock", an_attribute.string_value)
 
 			-- Test all_elements - cached result
 
@@ -307,7 +307,7 @@ feature
 			document_element ?= document.document_element
 			assert ("Document element not void", document_element /= Void)
 			a_name := document_element.node_name
-			assert("root name", STRING_.same_string (a_name, "BOOKLIST"))
+			assert_strings_equal ("root name", "BOOKLIST", a_name)
 		end
 
 	test_document_in_error is
@@ -340,8 +340,7 @@ feature {NONE} -- Implementation
 	data_dirname: STRING is
 			-- Name of directory containing data files
 		once
-			Result := file_system.nested_pathname ("${GOBO}",
-																<<"test", "xml", "xpath", "data">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "xpath", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			data_dirname_not_void: Result /= Void

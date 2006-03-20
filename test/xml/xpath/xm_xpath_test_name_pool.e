@@ -80,7 +80,8 @@ feature -- Test
 			name_code := shared_name_pool.last_name_code
 			assert ("Positive name code", name_code > 0)
 			an_xml_prefix := shared_name_pool.prefix_from_name_code (name_code)
-			assert ("Prefix", an_xml_prefix /= Void and then STRING_.same_string (an_xml_prefix, "test3"))
+			assert ("prefix_not_void", an_xml_prefix /= Void)
+			assert_strings_equal ("prefix", "test3", an_xml_prefix)
 			prefix_code := shared_name_pool.code_for_prefix ("test3")
 			assert ("Prefix code 2", prefix_code > 0)
 			namespace_code := shared_name_pool.namespace_code ("test3", testing_namespace)
@@ -88,17 +89,22 @@ feature -- Test
 			uri_code := shared_name_pool.uri_code_from_name_code (name_code)
 			assert ("URI code", uri_code > 0)
 			namespace_uri := shared_name_pool.namespace_uri_from_name_code (name_code)
-			assert ("Namespace URI", namespace_uri /= Void and then STRING_.same_string (namespace_uri, testing_namespace))
+			assert ("namespace_uri_not_void", namespace_uri /= Void)
+			assert_strings_equal ("Namespace URI", testing_namespace, namespace_uri)
 			local_name := shared_name_pool.local_name_from_name_code (name_code)
-			assert ("Local name", local_name /= Void and then STRING_.same_string (local_name, "test3"))
+			assert ("local_name_not_void", local_name /= Void)
+			assert_strings_equal ("Local name", "test3", local_name)
 			display_name := shared_name_pool.display_name_from_name_code (name_code)
-			assert ("Display name", display_name /= Void and then STRING_.same_string (display_name, "test3:test3"))
+			assert ("display_name_not_void", display_name /= Void)
+			assert_strings_equal ("Display name", "test3:test3", display_name)
 			namespace_uri := shared_name_pool.uri_from_namespace_code (namespace_code)
-			assert ("Namespace URI 2", namespace_uri /= Void and then STRING_.same_string (namespace_uri, testing_namespace))
+			assert ("namespace_uri_not_void_2", namespace_uri /= Void)
+			assert_strings_equal ("Namespace URI 2", testing_namespace, namespace_uri)
 			namespace_uri := shared_name_pool.uri_from_uri_code (uri_code)
 			assert ("Namespace URI 3", STRING_.same_string (namespace_uri, testing_namespace))
 			an_xml_prefix := shared_name_pool.prefix_from_namespace_code (namespace_code)
-			assert ("Prefix 2",  an_xml_prefix /= Void and then STRING_.same_string (an_xml_prefix, "test3"))
+			assert ("prefix_not_void_2", an_xml_prefix /= Void)
+			assert_strings_equal ("Prefix 2", "test3", an_xml_prefix)
 		end
 
 	test_name_code_consistency is
@@ -121,7 +127,7 @@ feature -- Test
 			fingerprint, fingerprint2: INTEGER
 		do
 			suggestion := shared_name_pool.suggested_prefix_for_uri (Xslt_uri)
-			assert ("Suggestion", STRING_.same_string (suggestion, "xsl"))
+			assert_strings_equal ("Suggestion", "xsl", suggestion)
 			shared_name_pool.allocate_name ("test4", testing_namespace, "test4")
 			fingerprint := shared_name_pool.fingerprint (testing_namespace, "test4")
 			assert ("Fingerprint", fingerprint > 0) -- calculation depends upon {STRING}.hash_code, and so differs between compilers
@@ -131,7 +137,7 @@ feature -- Test
 
 	-- still to test:
 	--  allocate_document_number
-	
+
 feature -- Setting
 
 	set_up is
@@ -144,4 +150,5 @@ feature -- Setting
 			-- Comment this next line out when finished debugging test cases.
 			--			default_pool.diagnostic_dump
 --		end
+
 end

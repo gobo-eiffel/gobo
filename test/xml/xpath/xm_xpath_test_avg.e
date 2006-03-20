@@ -113,7 +113,7 @@ feature -- Test
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("avg(('a', 5))")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("FORG0006", STRING_.same_string (an_evaluator.error_value.code, "FORG0006"))
+			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
 	test_avg_error_two is
@@ -127,7 +127,7 @@ feature -- Test
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("avg(((3, 4, 5), xdt:yearMonthDuration('P10M')))")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("FORG0006", STRING_.same_string (an_evaluator.error_value.code, "FORG0006"))
+			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
 	test_avg_year_month is
@@ -257,7 +257,7 @@ feature -- Test
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("sum((xdt:yearMonthDuration('P20Y'), 9E1))")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("FORG0006", STRING_.same_string (an_evaluator.error_value.code, "FORG0006"))
+			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
 	test_max_one is
@@ -311,7 +311,7 @@ feature -- Test
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("max((3,4,'Zero'))")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("FORG0006", STRING_.same_string (an_evaluator.error_value.code, "FORG0006"))
+			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
 	test_max_mixed_zones is
@@ -356,7 +356,7 @@ feature -- Test
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Result is c", STRING_.same_string ("c", a_string_value.string_value))
+			assert_strings_equal ("Result is c", "c", a_string_value.string_value)
 		end
 
 	test_min_one is
@@ -410,7 +410,7 @@ feature -- Test
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("min((3,4,'Zero'))")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("FORG0006", STRING_.same_string (an_evaluator.error_value.code, "FORG0006"))
+			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
 	test_min_mixed_zones is
@@ -455,7 +455,7 @@ feature -- Test
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Result is a", STRING_.same_string ("a", a_string_value.string_value))
+			assert ("Result is a", "a", a_string_value.string_value)
 		end
 
 	set_up is
