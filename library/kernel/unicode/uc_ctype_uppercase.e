@@ -18,8 +18,6 @@ class UC_CTYPE_UPPERCASE
 
 inherit
 
-	ANY
-
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 

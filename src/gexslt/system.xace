@@ -23,7 +23,7 @@
 				-->
 			<option name="inlining" value="none"/>
 			<option name="c_compiler_options" value="-Od" if="${GOBO_OS}=windows"/>
-			<option name="c_compiler_options" value="-O0" if="${GOBO_OS}=unix"/>
+		<!--	<option name="c_compiler_options" value="-O0" if="${GOBO_OS}=unix"/> -->
 		</option>
 	</option>
 	<option if="${DEBUG}">

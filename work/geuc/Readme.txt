@@ -103,7 +103,7 @@ UC_V410_CHARACTER_CLASS_ROUTINES
 
 6) Move the generated classes to their target libraries by:
 
-geant install
+geant deploy
 
 The target library is $GOBO/library/string/unicode for normalization
 routines, and $GOBO/library/kernel/unicode for all other routines.

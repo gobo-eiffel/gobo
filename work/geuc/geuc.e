@@ -25,6 +25,9 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
+	UC_UTF8_ROUTINES
+		export {NONE} all end
+
 	UC_IMPORTED_UNICODE_ROUTINES
 
 	GEUC_CONSTANTS
@@ -85,45 +88,45 @@ feature -- Processing
 	parse_character_classes is
 			-- Parse `Unicode_data' for character classes, etc.
 		local
-			a_file: KL_TEXT_INPUT_FILE
-			a_splitter: ST_SPLITTER
-			some_fields: DS_LIST [STRING]
-			a_hex_code, a_name: STRING
-			a_code, an_index: INTEGER
+			l_file: KL_TEXT_INPUT_FILE
+			l_splitter: ST_SPLITTER
+			l_fields: DS_LIST [STRING]
+			l_hex_code, l_name: STRING
+			l_code, i: INTEGER
 		do
-			create a_file.make (Unicode_data)
-			create a_splitter.make_with_separators (";")
-			a_file.open_read
-			if a_file.is_open_read then
-				from  until a_file.end_of_file loop
-					a_file.read_line
-					if not a_file.end_of_file then
-						some_fields := a_splitter.split_greedy (a_file.last_string)
-						if some_fields.count /= Field_count then
-							report_general_message ("Bad data line in " + Unicode_data + " - not enough fields - data line is: " + a_file.last_string)
+			create l_file.make (Unicode_data)
+			create l_splitter.make_with_separators (";")
+			l_file.open_read
+			if l_file.is_open_read then
+				from  until l_file.end_of_file loop
+					l_file.read_line
+					if not l_file.end_of_file then
+						l_fields := l_splitter.split_greedy (l_file.last_string)
+						if l_fields.count /= Field_count then
+							report_general_message ("Bad data line in " + Unicode_data + " - not enough fields - data line is: " + l_file.last_string)
 							Exceptions.die (1)
 						else
-							a_hex_code := some_fields.item (1)
-							a_name := some_fields.item (2)
-							if STRING_.is_hexadecimal (a_hex_code) then
-								a_code := STRING_.hexadecimal_to_integer (a_hex_code)
-								if is_range_start (a_name) then
-									initial_code := a_code
-								elseif is_range_finish (a_name) then
-									if initial_code <= 0 or else initial_code > a_code then
-										report_general_message ("Invalid start range - data line for end of range is: " + a_file.last_string)
+							l_hex_code := l_fields.item (1)
+							l_name := l_fields.item (2)
+							if STRING_.is_hexadecimal (l_hex_code) then
+								l_code := STRING_.hexadecimal_to_integer (l_hex_code)
+								if is_range_start (l_name) then
+									initial_code := l_code
+								elseif is_range_finish (l_name) then
+									if initial_code <= 0 or else initial_code > l_code then
+										report_general_message ("Invalid start range - data line for end of range is: " + l_file.last_string)
 										Exceptions.die (1)
 									else
-										from an_index := initial_code until an_index > a_code loop
-											process_code_class (an_index, a_name.substring (2, a_name.count - 7), some_fields)
-											an_index := an_index + 1
+										from i := initial_code until i > l_code loop
+											process_code_class (i, l_name.substring (2, l_name.count - 7), l_fields)
+											i := i + 1
 										end
 									end
 								else
-									process_code_class (a_code, a_name, some_fields)
+									process_code_class (l_code, l_name, l_fields)
 								end
 							else
-								report_general_message ("Invalid code point - data line is: " + a_file.last_string)
+								report_general_message ("Invalid code point - data line is: " + l_file.last_string)
 								Exceptions.die (1)
 							end
 						end
@@ -138,52 +141,52 @@ feature -- Processing
 	parse_derived_core_properties is
 			-- Parse `Derived_core_properties'.
 		local
-			a_file: KL_TEXT_INPUT_FILE
-			a_splitter: ST_SPLITTER
-			some_fields: DS_LIST [STRING]
-			a_line, a_property: STRING
-			a_hash: INTEGER
+			l_file: KL_TEXT_INPUT_FILE
+			l_splitter: ST_SPLITTER
+			l_fields: DS_LIST [STRING]
+			l_line, l_property: STRING
+			l_hash: INTEGER
 		do
-			create a_file.make (Derived_core_properties)
-			a_file.open_read
-			if a_file.is_open_read then
+			create l_file.make (Derived_core_properties)
+			l_file.open_read
+			if l_file.is_open_read then
 				initialize_derived_core_properties
-				from  until a_file.end_of_file loop
-					a_file.read_line
-					if not a_file.end_of_file then
-						a_line := a_file.last_string
-						a_hash :=  a_line.index_of ('#', 1)
-						if a_hash > 0 then
+				from  until l_file.end_of_file loop
+					l_file.read_line
+					if not l_file.end_of_file then
+						l_line := l_file.last_string
+						l_hash :=  l_line.index_of ('#', 1)
+						if l_hash > 0 then
 								-- Strip comments.
-							a_line := a_line.substring (1, a_hash - 1)
+							l_line := l_line.substring (1, l_hash - 1)
 						end
-						if not a_line.is_empty then
-							create a_splitter.make_with_separators (";")
-							some_fields := a_splitter.split_greedy (a_line)
-							if some_fields.count /= 2 then
-								report_general_message (Derived_core_properties + " must have precisely two fields. Found: " + a_file.last_string)
+						if not l_line.is_empty then
+							create l_splitter.make_with_separators (";")
+							l_fields := l_splitter.split_greedy (l_line)
+							if l_fields.count /= 2 then
+								report_general_message (Derived_core_properties + " must have precisely two fields. Found: " + l_file.last_string)
 								Exceptions.die (1)
 							else
-								a_property := some_fields.item (2)
-								STRING_.left_adjust (a_property)
-								STRING_.right_adjust (a_property)
-								if STRING_.same_string (a_property, Alphabetic_property) then
-									set_alphabetic_property (some_fields.item (1))
-								elseif STRING_.same_string (a_property, Default_ignorable_code_property) then
-								elseif STRING_.same_string (a_property, Lowercase_property) then
-									set_lower_case_property (some_fields.item (1))
-								elseif STRING_.same_string (a_property, Grapheme_base_property) then
-								elseif STRING_.same_string (a_property, Grapheme_extend_property) then
-								elseif STRING_.same_string (a_property, Id_start_property) then
-								elseif STRING_.same_string (a_property, Id_continue_property) then
-								elseif STRING_.same_string (a_property, Math_property) then
-									set_math_property (some_fields.item (1))
-								elseif STRING_.same_string (a_property, Uppercase_property) then
-									set_upper_case_property (some_fields.item (1))
-								elseif STRING_.same_string (a_property, Xid_start_property) then
-								elseif STRING_.same_string (a_property, Xid_continue_property) then
+								l_property := l_fields.item (2)
+								STRING_.left_adjust (l_property)
+								STRING_.right_adjust (l_property)
+								if STRING_.same_string (l_property, Alphabetic_property) then
+									set_alphabetic_property (l_fields.item (1))
+								elseif STRING_.same_string (l_property, Default_ignorable_code_property) then
+								elseif STRING_.same_string (l_property, Lowercase_property) then
+									set_lower_case_property (l_fields.item (1))
+								elseif STRING_.same_string (l_property, Grapheme_base_property) then
+								elseif STRING_.same_string (l_property, Grapheme_extend_property) then
+								elseif STRING_.same_string (l_property, Id_start_property) then
+								elseif STRING_.same_string (l_property, Id_continue_property) then
+								elseif STRING_.same_string (l_property, Math_property) then
+									set_math_property (l_fields.item (1))
+								elseif STRING_.same_string (l_property, Uppercase_property) then
+									set_upper_case_property (l_fields.item (1))
+								elseif STRING_.same_string (l_property, Xid_start_property) then
+								elseif STRING_.same_string (l_property, Xid_continue_property) then
 								else
-									report_general_message ("Unknown property name " + a_property + " in " + Derived_core_properties)
+									report_general_message ("Unknown property name " + l_property + " in " + Derived_core_properties)
 									Exceptions.die (1)
 								end
 							end
@@ -199,72 +202,72 @@ feature -- Processing
 	parse_derived_normalization_properties is
 			-- Parse `Derived_normalization_properties'.
 		local
-			a_file: KL_TEXT_INPUT_FILE
-			a_splitter: ST_SPLITTER
-			some_fields: DS_LIST [STRING]
-			a_line, a_property: STRING
-			a_hash: INTEGER
+			l_file: KL_TEXT_INPUT_FILE
+			l_splitter: ST_SPLITTER
+			l_fields: DS_LIST [STRING]
+			l_line, l_property: STRING
+			l_hash: INTEGER
 		do
-			create a_file.make (Derived_normalization_properties)
-			a_file.open_read
-			if a_file.is_open_read then
+			create l_file.make (Derived_normalization_properties)
+			l_file.open_read
+			if l_file.is_open_read then
 				initialize_derived_normalization_properties
-				from until a_file.end_of_file loop
-					a_file.read_line
-					if not a_file.end_of_file then
-						a_line := a_file.last_string
-						a_hash :=  a_line.index_of ('#', 1)
-						if a_hash > 0 then
+				from until l_file.end_of_file loop
+					l_file.read_line
+					if not l_file.end_of_file then
+						l_line := l_file.last_string
+						l_hash :=  l_line.index_of ('#', 1)
+						if l_hash > 0 then
 								-- Strip comments.
-							a_line := a_line.substring (1, a_hash - 1)
+							l_line := l_line.substring (1, l_hash - 1)
 						end
-						if not a_line.is_empty then
-							create a_splitter.make_with_separators (";")
-							some_fields := a_splitter.split_greedy (a_line)
-							if some_fields.count < 2 then
-								report_general_message (Derived_normalization_properties + " must have at least two fields. Found: " + a_file.last_string)
+						if not l_line.is_empty then
+							create l_splitter.make_with_separators (";")
+							l_fields := l_splitter.split_greedy (l_line)
+							if l_fields.count < 2 then
+								report_general_message (Derived_normalization_properties + " must have at least two fields. Found: " + l_file.last_string)
 								Exceptions.die (1)
 							else
-								a_property := some_fields.item (2)
-								STRING_.left_adjust (a_property)
-								STRING_.right_adjust (a_property)
-								if STRING_.same_string (a_property, Expands_on_nfc_property) then
-									set_nfc_property (some_fields.item (1))
-								elseif STRING_.same_string (a_property, Expands_on_nfd_property) then
-									set_nfd_property (some_fields.item (1))
-								elseif STRING_.same_string (a_property, Expands_on_nfkc_property) then
-									set_nfkc_property (some_fields.item (1))
-								elseif STRING_.same_string (a_property, Expands_on_nfkd_property) then
-									set_nfkd_property (some_fields.item (1))
-								elseif STRING_.same_string (a_property, Fold_case_nfkc_closure_property) then
-								elseif STRING_.same_string (a_property, Nfd_quick_check_property) then
-									check_tristate_property (some_fields, a_file.last_string)
-									a_property := some_fields.item (3)
-									STRING_.left_adjust (a_property)
-									STRING_.right_adjust (a_property)
-									set_nfd_quick_check_property (a_property, some_fields.item (1))
-								elseif STRING_.same_string (a_property, Nfc_quick_check_property) then
-									check_tristate_property (some_fields, a_file.last_string)
-									a_property := some_fields.item (3)
-									STRING_.left_adjust (a_property)
-									STRING_.right_adjust (a_property)
-									set_nfc_quick_check_property (a_property, some_fields.item (1))
-								elseif STRING_.same_string (a_property, Nfkd_quick_check_property) then
-									check_tristate_property (some_fields, a_file.last_string)
-									a_property := some_fields.item (3)
-									STRING_.left_adjust (a_property)
-									STRING_.right_adjust (a_property)
-									set_nfkd_quick_check_property (a_property, some_fields.item (1))
-								elseif STRING_.same_string (a_property, Nfkc_quick_check_property) then
-									check_tristate_property (some_fields, a_file.last_string)
-									a_property := some_fields.item (3)
-									STRING_.left_adjust (a_property)
-									STRING_.right_adjust (a_property)
-									set_nfkc_quick_check_property (a_property, some_fields.item (1))
-								elseif STRING_.same_string (a_property, Full_composition_exclusion_property) then
-									set_full_composition_exclusion_property (some_fields.item (1))
+								l_property := l_fields.item (2)
+								STRING_.left_adjust (l_property)
+								STRING_.right_adjust (l_property)
+								if STRING_.same_string (l_property, Expands_on_nfc_property) then
+									set_nfc_property (l_fields.item (1))
+								elseif STRING_.same_string (l_property, Expands_on_nfd_property) then
+									set_nfd_property (l_fields.item (1))
+								elseif STRING_.same_string (l_property, Expands_on_nfkc_property) then
+									set_nfkc_property (l_fields.item (1))
+								elseif STRING_.same_string (l_property, Expands_on_nfkd_property) then
+									set_nfkd_property (l_fields.item (1))
+								elseif STRING_.same_string (l_property, Fold_case_nfkc_closure_property) then
+								elseif STRING_.same_string (l_property, Nfd_quick_check_property) then
+									check_tristate_property (l_fields, l_file.last_string)
+									l_property := l_fields.item (3)
+									STRING_.left_adjust (l_property)
+									STRING_.right_adjust (l_property)
+									set_nfd_quick_check_property (l_property, l_fields.item (1))
+								elseif STRING_.same_string (l_property, Nfc_quick_check_property) then
+									check_tristate_property (l_fields, l_file.last_string)
+									l_property := l_fields.item (3)
+									STRING_.left_adjust (l_property)
+									STRING_.right_adjust (l_property)
+									set_nfc_quick_check_property (l_property, l_fields.item (1))
+								elseif STRING_.same_string (l_property, Nfkd_quick_check_property) then
+									check_tristate_property (l_fields, l_file.last_string)
+									l_property := l_fields.item (3)
+									STRING_.left_adjust (l_property)
+									STRING_.right_adjust (l_property)
+									set_nfkd_quick_check_property (l_property, l_fields.item (1))
+								elseif STRING_.same_string (l_property, Nfkc_quick_check_property) then
+									check_tristate_property (l_fields, l_file.last_string)
+									l_property := l_fields.item (3)
+									STRING_.left_adjust (l_property)
+									STRING_.right_adjust (l_property)
+									set_nfkc_quick_check_property (l_property, l_fields.item (1))
+								elseif STRING_.same_string (l_property, Full_composition_exclusion_property) then
+									set_full_composition_exclusion_property (l_fields.item (1))
 								else
-									report_general_message ("Unknown property name " + a_property + " in " + Derived_normalization_properties)
+									report_general_message ("Unknown property name " + l_property + " in " + Derived_normalization_properties)
 									Exceptions.die (1)
 								end
 							end
@@ -312,33 +315,33 @@ feature -- Code generation
 			file_name_prefix_not_void: file_name_prefix /= Void
 			class_name_prefix_not_void: class_name_prefix /= Void
 		local
-			an_output_file: KL_TEXT_OUTPUT_FILE
+			l_output_file: KL_TEXT_OUTPUT_FILE
 		do
-			create an_output_file.make (file_name_prefix + "character_class_routines.e")
-			an_output_file.open_write
-			an_output_file.put_string ("indexing%N%N")
-			an_output_file.put_string ("%Tdescription:%N%N")
-			an_output_file.put_string ("%T%T%"Routines for determining class of Unicode characters%"%N%N")
-			an_output_file.put_string ("%Tremark:%N%N")
-			an_output_file.put_string ("%T%T%"Generated by geuc%"%N%N")
-			an_output_file.put_string ("%Tlibrary: %"Gobo Eiffel String Library%"%N")
-			an_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005, Colin Adams and others%"%N")
-			an_output_file.put_string ("%Tlicense: %"Eiffel Forum License v2 (see forum.txt)%"%N")
-			an_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			an_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
-			an_output_file.put_string ("class ")
-			an_output_file.put_string (class_name_prefix)
-			an_output_file.put_string ("CHARACTER_CLASS_ROUTINES%N%N")
-			an_output_file.put_string ("inherit%N%N%TST_UNICODE_CHARACTER_CLASS_INTERFACE%N%N")
-			an_output_file.put_string ("feature {NONE} -- Implementation%N%N")
-			write_character_class_array (an_output_file)
-			write_decimal_value_array (an_output_file)
-			write_upper_case_property_array (an_output_file)
-			write_lower_case_property_array (an_output_file)
-			write_alphabetic_property_array (an_output_file)
-			write_math_property_array (an_output_file)
-			an_output_file.put_string ("end%N")
-			an_output_file.close
+			create l_output_file.make (file_name_prefix + "character_class_routines.e")
+			l_output_file.open_write
+			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("%Tdescription:%N%N")
+			l_output_file.put_string ("%T%T%"Routines for determining class of Unicode characters%"%N%N")
+			l_output_file.put_string ("%Tremark:%N%N")
+			l_output_file.put_string ("%T%T%"Generated by geuc%"%N%N")
+			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel String Library%"%N")
+			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005, Colin Adams and others%"%N")
+			l_output_file.put_string ("%Tlicense: %"Eiffel Forum License v2 (see forum.txt)%"%N")
+			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
+			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("class ")
+			l_output_file.put_string (class_name_prefix)
+			l_output_file.put_string ("CHARACTER_CLASS_ROUTINES%N%N")
+			l_output_file.put_string ("inherit%N%N%TST_UNICODE_CHARACTER_CLASS_INTERFACE%N%N")
+			l_output_file.put_string ("feature {NONE} -- Implementation%N%N")
+			write_character_class_array (l_output_file)
+			write_decimal_value_array (l_output_file)
+			write_upper_case_property_array (l_output_file)
+			write_lower_case_property_array (l_output_file)
+			write_alphabetic_property_array (l_output_file)
+			write_math_property_array (l_output_file)
+			l_output_file.put_string ("end%N")
+			l_output_file.close
 		end
 
 	generate_lower_case_routines is
@@ -348,28 +351,28 @@ feature -- Code generation
 			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
 			kernel_class_name_prefix_not_void: kernel_class_name_prefix /= Void
 		local
-			an_output_file: KL_TEXT_OUTPUT_FILE
+			l_output_file: KL_TEXT_OUTPUT_FILE
 		do
-			create an_output_file.make (kernel_file_name_prefix + "ctype_lowercase.e")
-			an_output_file.open_write
-			an_output_file.put_string ("indexing%N%N")
-			an_output_file.put_string ("%Tdescription:%N%N")
-			an_output_file.put_string ("%T%T%"Database for simple mapping to lower case%"%N%N")
-			an_output_file.put_string ("%Tremark:%N%N")
-			an_output_file.put_string ("%T%T%"Generated by geuc%"%N%N")
-			an_output_file.put_string ("%Tlibrary: %"Gobo Eiffel Kernel Library%"%N")
-			an_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005, Colin Adams and others%"%N")
-			an_output_file.put_string ("%Tlicense: %"Eiffel Forum License v2 (see forum.txt)%"%N")
-			an_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			an_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
-			an_output_file.put_string ("class ")
-			an_output_file.put_string (kernel_class_name_prefix)
-			an_output_file.put_string ("CTYPE_LOWERCASE%N%N")
-			an_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
-			an_output_file.put_string ("feature {NONE} -- Implementation%N%N")
-			write_lower_case_array (an_output_file)
-			an_output_file.put_string ("end%N")
-			an_output_file.close
+			create l_output_file.make (kernel_file_name_prefix + "ctype_lowercase.e")
+			l_output_file.open_write
+			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("%Tdescription:%N%N")
+			l_output_file.put_string ("%T%T%"Database for simple mapping to lower case%"%N%N")
+			l_output_file.put_string ("%Tremark:%N%N")
+			l_output_file.put_string ("%T%T%"Generated by geuc%"%N%N")
+			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel Kernel Library%"%N")
+			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005, Colin Adams and others%"%N")
+			l_output_file.put_string ("%Tlicense: %"Eiffel Forum License v2 (see forum.txt)%"%N")
+			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
+			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("class ")
+			l_output_file.put_string (kernel_class_name_prefix)
+			l_output_file.put_string ("CTYPE_LOWERCASE%N%N")
+			l_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
+			l_output_file.put_string ("feature {NONE} -- Implementation%N%N")
+			write_lower_case_array (l_output_file)
+			l_output_file.put_string ("end%N")
+			l_output_file.close
 		end
 
 	generate_upper_case_routines is
@@ -379,28 +382,28 @@ feature -- Code generation
 			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
 			kernel_class_name_prefix_not_void: kernel_class_name_prefix /= Void
 		local
-			an_output_file: KL_TEXT_OUTPUT_FILE
+			l_output_file: KL_TEXT_OUTPUT_FILE
 		do
-			create an_output_file.make (kernel_file_name_prefix + "ctype_uppercase.e")
-			an_output_file.open_write
-			an_output_file.put_string ("indexing%N%N")
-			an_output_file.put_string ("%Tdescription:%N%N")
-			an_output_file.put_string ("%T%T%"Database for simple mapping to upper case%"%N%N")
-			an_output_file.put_string ("%Tremark:%N%N")
-			an_output_file.put_string ("%T%T%"Generated by geuc%"%N%N")
-			an_output_file.put_string ("%Tlibrary: %"Gobo Eiffel Kernel Library%"%N")
-			an_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005, Colin Adams and others%"%N")
-			an_output_file.put_string ("%Tlicense: %"Eiffel Forum License v2 (see forum.txt)%"%N")
-			an_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			an_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
-			an_output_file.put_string ("class ")
-			an_output_file.put_string (kernel_class_name_prefix)
-			an_output_file.put_string ("CTYPE_UPPERCASE%N%N")
-			an_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
-			an_output_file.put_string ("feature {NONE} -- Implementation%N%N")
-			write_upper_case_array (an_output_file)
-			an_output_file.put_string ("end%N")
-			an_output_file.close
+			create l_output_file.make (kernel_file_name_prefix + "ctype_uppercase.e")
+			l_output_file.open_write
+			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("%Tdescription:%N%N")
+			l_output_file.put_string ("%T%T%"Database for simple mapping to upper case%"%N%N")
+			l_output_file.put_string ("%Tremark:%N%N")
+			l_output_file.put_string ("%T%T%"Generated by geuc%"%N%N")
+			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel Kernel Library%"%N")
+			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005, Colin Adams and others%"%N")
+			l_output_file.put_string ("%Tlicense: %"Eiffel Forum License v2 (see forum.txt)%"%N")
+			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
+			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("class ")
+			l_output_file.put_string (kernel_class_name_prefix)
+			l_output_file.put_string ("CTYPE_UPPERCASE%N%N")
+			l_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
+			l_output_file.put_string ("feature {NONE} -- Implementation%N%N")
+			write_upper_case_array (l_output_file)
+			l_output_file.put_string ("end%N")
+			l_output_file.close
 		end
 
 	generate_title_case_routines is
@@ -410,28 +413,28 @@ feature -- Code generation
 			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
 			kernel_class_name_prefix_not_void: kernel_class_name_prefix /= Void
 		local
-			an_output_file: KL_TEXT_OUTPUT_FILE
+			l_output_file: KL_TEXT_OUTPUT_FILE
 		do
-			create an_output_file.make (kernel_file_name_prefix + "ctype_titlecase.e")
-			an_output_file.open_write
-			an_output_file.put_string ("indexing%N%N")
-			an_output_file.put_string ("%Tdescription:%N%N")
-			an_output_file.put_string ("%T%T%"Database for simple mapping to title case%"%N%N")
-			an_output_file.put_string ("%Tremark:%N%N")
-			an_output_file.put_string ("%T%T%"Generated by geuc%"%N%N")
-			an_output_file.put_string ("%Tlibrary: %"Gobo Eiffel Kernel Library%"%N")
-			an_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005, Colin Adams and others%"%N")
-			an_output_file.put_string ("%Tlicense: %"Eiffel Forum License v2 (see forum.txt)%"%N")
-			an_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			an_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
-			an_output_file.put_string ("class ")
-			an_output_file.put_string (kernel_class_name_prefix)
-			an_output_file.put_string ("CTYPE_TITLECASE%N%N")
-			an_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
-			an_output_file.put_string ("feature {NONE} -- Implementation%N%N")
-			write_title_case_array (an_output_file)
-			an_output_file.put_string ("end%N")
-			an_output_file.close
+			create l_output_file.make (kernel_file_name_prefix + "ctype_titlecase.e")
+			l_output_file.open_write
+			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("%Tdescription:%N%N")
+			l_output_file.put_string ("%T%T%"Database for simple mapping to title case%"%N%N")
+			l_output_file.put_string ("%Tremark:%N%N")
+			l_output_file.put_string ("%T%T%"Generated by geuc%"%N%N")
+			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel Kernel Library%"%N")
+			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005, Colin Adams and others%"%N")
+			l_output_file.put_string ("%Tlicense: %"Eiffel Forum License v2 (see forum.txt)%"%N")
+			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
+			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("class ")
+			l_output_file.put_string (kernel_class_name_prefix)
+			l_output_file.put_string ("CTYPE_TITLECASE%N%N")
+			l_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
+			l_output_file.put_string ("feature {NONE} -- Implementation%N%N")
+			write_title_case_array (l_output_file)
+			l_output_file.put_string ("end%N")
+			l_output_file.close
 		end
 
 	generate_normalization_routines is
@@ -441,41 +444,41 @@ feature -- Code generation
 			file_name_prefix_not_void: file_name_prefix /= Void
 			class_name_prefix_not_void: class_name_prefix /= Void
 		local
-			an_output_file: KL_TEXT_OUTPUT_FILE
+			l_output_file: KL_TEXT_OUTPUT_FILE
 		do
-			create an_output_file.make (file_name_prefix + "normalization_routines.e")
-			an_output_file.open_write
-			an_output_file.put_string ("indexing%N%N")
-			an_output_file.put_string ("%Tdescription:%N%N")
-			an_output_file.put_string ("%T%T%"Routines for normalizing strings%"%N%N")
-			an_output_file.put_string ("%Tremark:%N%N")
-			an_output_file.put_string ("%T%T%"Generated by geuc%"%N%N")
-			an_output_file.put_string ("%Tlibrary: %"Gobo Eiffel String Library%"%N")
-			an_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005, Colin Adams and others%"%N")
-			an_output_file.put_string ("%Tlicense: %"Eiffel Forum License v2 (see forum.txt)%"%N")
-			an_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			an_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
-			an_output_file.put_string ("class ")
-			an_output_file.put_string (class_name_prefix)
-			an_output_file.put_string ("NORMALIZATION_ROUTINES%N%N")
-			an_output_file.put_string ("inherit%N%N%TST_UNICODE_NORMALIZATION_INTERFACE%N%N")
-			an_output_file.put_string ("feature {NONE} -- Implementation%N%N")
-			write_canonical_combining_class_property_array (an_output_file)
+			create l_output_file.make (file_name_prefix + "normalization_routines.e")
+			l_output_file.open_write
+			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("%Tdescription:%N%N")
+			l_output_file.put_string ("%T%T%"Routines for normalizing strings%"%N%N")
+			l_output_file.put_string ("%Tremark:%N%N")
+			l_output_file.put_string ("%T%T%"Generated by geuc%"%N%N")
+			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel String Library%"%N")
+			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005, Colin Adams and others%"%N")
+			l_output_file.put_string ("%Tlicense: %"Eiffel Forum License v2 (see forum.txt)%"%N")
+			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
+			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("class ")
+			l_output_file.put_string (class_name_prefix)
+			l_output_file.put_string ("NORMALIZATION_ROUTINES%N%N")
+			l_output_file.put_string ("inherit%N%N%TST_UNICODE_NORMALIZATION_INTERFACE%N%N")
+			l_output_file.put_string ("feature {NONE} -- Implementation%N%N")
+			write_canonical_combining_class_property_array (l_output_file)
 			create compositions.make (15000)
 			store_hangul_compositions
-			write_decomposition_type_property_array (an_output_file)
-			write_decomposition_mapping_property_array (an_output_file)
-			write_composition_map (an_output_file)
-			write_expands_on_nfc_property_array (an_output_file)
-			write_expands_on_nfd_property_array (an_output_file)
-			write_expands_on_nfkc_property_array (an_output_file)
-			write_expands_on_nfkd_property_array (an_output_file)
-			write_nfc_quick_check_array (an_output_file)
-			write_nfd_quick_check_array (an_output_file)
-			write_nfkc_quick_check_array (an_output_file)
-			write_nfkd_quick_check_array (an_output_file)
-			an_output_file.put_string ("end%N")
-			an_output_file.close
+			write_decomposition_type_property_array (l_output_file)
+			write_decomposition_mapping_property_array (l_output_file)
+			write_composition_map (l_output_file)
+			write_expands_on_nfc_property_array (l_output_file)
+			write_expands_on_nfd_property_array (l_output_file)
+			write_expands_on_nfkc_property_array (l_output_file)
+			write_expands_on_nfkd_property_array (l_output_file)
+			write_nfc_quick_check_array (l_output_file)
+			write_nfd_quick_check_array (l_output_file)
+			write_nfkc_quick_check_array (l_output_file)
+			write_nfkd_quick_check_array (l_output_file)
+			l_output_file.put_string ("end%N")
+			l_output_file.close
 		end
 
 feature -- Access
@@ -511,7 +514,7 @@ feature -- Access
 
 	codes: ARRAY [GEUC_UNICODE_DATA]
 			-- Parsed data from `Unicode_data' for each code point;
-			-- Not that Unicode does not assign most of the code points
+			-- Note that Unicode does not assign most of the code points
 			-- to characters, so many will be `Void'.
 
 	compositions: DS_HASH_TABLE [INTEGER, DS_HASHABLE_PAIR [INTEGER, INTEGER]]
@@ -615,20 +618,20 @@ feature -- Hangul
 			-- Store all composed hangul syllables.
 		local
 			s, t: INTEGER
-			a_first, a_second: INTEGER
-			a_pair: DS_HASHABLE_PAIR [INTEGER, INTEGER]
+			l_first, l_second: INTEGER
+			l_pair: DS_HASHABLE_PAIR [INTEGER, INTEGER]
 		do
 			from s := 0 until s = Hangul_syllable_count loop
 				t := s \\ Trailing_jamo_count
 				if t /= 0 then -- Triple
-					a_first := Hangul_syllable_base + s - t
-					a_second := Trailing_jamo_base + t
+					l_first := Hangul_syllable_base + s - t
+					l_second := Trailing_jamo_base + t
 				else
-					a_first := Leading_jamo_base + s // Jamo_permutation_count
-					a_second := Vowel_jamo_base + (s \\ Jamo_permutation_count) // Trailing_jamo_count
+					l_first := Leading_jamo_base + s // Jamo_permutation_count
+					l_second := Vowel_jamo_base + (s \\ Jamo_permutation_count) // Trailing_jamo_count
 				end
-				create a_pair.make (a_first, a_second)
-				compositions.force (s + Hangul_syllable_base, a_pair)
+				create l_pair.make (l_first, l_second)
+				compositions.force (s + Hangul_syllable_base, l_pair)
 				s := s + 1
 			end
 		end
@@ -642,27 +645,27 @@ feature -- Composition
 			not_hangul_syllable: not is_hangul_syllable (a_code)
 			value_not_void: a_value /= Void
 		local
-			a_first, a_second: INTEGER
-			a_data_point: GEUC_UNICODE_DATA
-			a_pair: DS_HASHABLE_PAIR [INTEGER, INTEGER]
+			l_first, l_second: INTEGER
+			l_data_point: GEUC_UNICODE_DATA
+			l_pair: DS_HASHABLE_PAIR [INTEGER, INTEGER]
 		do
-			a_data_point := codes.item (a_code)
+			l_data_point := codes.item (a_code)
 			if
-				a_data_point /= Void and then
-				a_data_point.decomposition_type = Canonical_decomposition_mapping and
+				l_data_point /= Void and then
+				l_data_point.decomposition_type = Canonical_decomposition_mapping and
 				not full_composition_exclusion_array.item (a_code)
 			then
 				check
 					at_least_one_code: a_value.count > 0
 				end
-				a_first := 0
-				a_second := a_value.item (1)
+				l_first := 0
+				l_second := a_value.item (1)
 				if a_value.count > 1 then
-					a_first := a_second
-					a_second := a_value.item (2)
+					l_first := l_second
+					l_second := a_value.item (2)
 				end
-				create a_pair.make (a_first, a_second)
-				compositions.force (a_code, a_pair)
+				create l_pair.make (l_first, l_second)
+				compositions.force (a_code, l_pair)
 			end
 		end
 
@@ -676,10 +679,10 @@ feature {NONE} -- Implementation
 		require
 			message_not_void: a_message_string /= Void
 		local
-			an_error: UT_MESSAGE
+			l_error: UT_MESSAGE
 		do
-			create an_error.make (a_message_string)
-			error_handler.report_error (an_error)
+			create l_error.make (a_message_string)
+			error_handler.report_error (l_error)
 		end
 
 	initial_code: INTEGER
@@ -715,174 +718,174 @@ feature {NONE} -- Implementation
 	Empty_title_code_plane_array_name: STRING is "empty_title_code_plane"
 			-- Name for empty title_code plane
 
-	write_character_class_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_character_class_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing character classes.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		local
-			i, j, k, a_code: INTEGER
-			a_category: INTEGER
-			a_code_datum: GEUC_UNICODE_DATA
-			some_segment_names, some_plane_names: ARRAY [STRING]
-			a_segment: ARRAY [INTEGER_8]
-			plane_all_absent, segment_all_absent: BOOLEAN
-			empty_plane_written, empty_segment_written: BOOLEAN
-			a_plane_array_name, a_segment_array_name: STRING
+			i, j, k, l_code: INTEGER
+			l_category: INTEGER
+			l_code_datum: GEUC_UNICODE_DATA
+			l_segment_names, l_plane_names: ARRAY [STRING]
+			l_segment: ARRAY [INTEGER_8]
+			l_plane_all_absent, l_segment_all_absent: BOOLEAN
+			l_empty_plane_written, l_empty_segment_written: BOOLEAN
+			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create some_plane_names.make (0, 16)
+			create l_plane_names.make (0, 16)
 			from i := 0 until i > 16 loop
-				create some_segment_names.make (0, 255)
-				plane_all_absent := True
+				create l_segment_names.make (0, 255)
+				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
-					create a_segment.make (0, 255)
-					segment_all_absent := True
+					create l_segment.make (0, 255)
+					l_segment_all_absent := True
 					from k := 0 until k > 255 loop
-						a_code := k + 256 * j + 256 * 256 * i
-						a_code_datum := codes.item (a_code)
-						if a_code_datum = Void then
-							a_category := Unassigned_other_category
+						l_code := k + 256 * j + 256 * 256 * i
+						l_code_datum := codes.item (l_code)
+						if l_code_datum = Void then
+							l_category := Unassigned_other_category
 						else
-							a_category := a_code_datum.general_category
-							if a_category /= Unassigned_other_category then
-								segment_all_absent := False
-								plane_all_absent := False
+							l_category := l_code_datum.general_category
+							if l_category /= Unassigned_other_category then
+								l_segment_all_absent := False
+								l_plane_all_absent := False
 							end
 						end
-						a_segment.put (INTEGER_.to_integer_8 (a_category), k)
+						l_segment.put (INTEGER_.to_integer_8 (l_category), k)
 						k := k + 1
 					end
-					if segment_all_absent then
-						a_segment_array_name := Empty_character_class_segment_array_name
-						if not empty_segment_written then
-							empty_segment_written := True
-							write_integer8_segment (a_segment, Empty_character_class_segment_array_name, an_output_file)
+					if l_segment_all_absent then
+						l_segment_array_name := Empty_character_class_segment_array_name
+						if not l_empty_segment_written then
+							l_empty_segment_written := True
+							write_integer8_segment (l_segment, Empty_character_class_segment_array_name, a_output_file)
 						end
 					else
-						a_segment_array_name := "character_class_plane_" + i.out + "_segment_" + j.out
-						write_integer8_segment (a_segment, a_segment_array_name, an_output_file)
+						l_segment_array_name := "character_class_plane_" + i.out + "_segment_" + j.out
+						write_integer8_segment (l_segment, l_segment_array_name, a_output_file)
 					end
-					some_segment_names.put (a_segment_array_name, j)
+					l_segment_names.put (l_segment_array_name, j)
 					j := j + 1
 				end
-				if plane_all_absent then
-					a_plane_array_name := Empty_character_class_plane_array_name
-					if not empty_plane_written then
-						empty_plane_written := True
-						write_empty_integer8_plane (a_plane_array_name, Empty_character_class_segment_array_name, an_output_file)
+				if l_plane_all_absent then
+					l_plane_array_name := Empty_character_class_plane_array_name
+					if not l_empty_plane_written then
+						l_empty_plane_written := True
+						write_empty_integer8_plane (l_plane_array_name, Empty_character_class_segment_array_name, a_output_file)
 					end
 				else
-					a_plane_array_name := "character_class_plane_" + i.out
-					write_integer8_plane (some_segment_names, a_plane_array_name, an_output_file)
+					l_plane_array_name := "character_class_plane_" + i.out
+					write_integer8_plane (l_segment_names, l_plane_array_name, a_output_file)
 				end
-				some_plane_names.put (a_plane_array_name, i)
+				l_plane_names.put (l_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tcharacter_classes: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
-			an_output_file.put_string ("%T%T%T-- Character class for each code point%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%Tcharacter_classes: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
+			a_output_file.put_string ("%T%T%T-- Character class for each code point%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_plane_names.item (i))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (i.out)
-				an_output_file.put_string (")%N")
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (l_plane_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
 				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_decimal_value_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_decimal_value_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing decimal digit values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		local
-			i, j, k, a_code, a_category: INTEGER
-			a_value: INTEGER_8
-			a_code_datum: GEUC_UNICODE_DATA
-			some_segment_names, some_plane_names: ARRAY [STRING]
-			a_segment: ARRAY [INTEGER_8]
-			plane_all_absent, segment_all_absent: BOOLEAN
-			empty_plane_written, empty_segment_written: BOOLEAN
-			a_plane_array_name, a_segment_array_name: STRING
+			i, j, k, l_code, l_category: INTEGER
+			l_value: INTEGER_8
+			l_code_datum: GEUC_UNICODE_DATA
+			l_segment_names, l_plane_names: ARRAY [STRING]
+			l_segment: ARRAY [INTEGER_8]
+			l_plane_all_absent, l_segment_all_absent: BOOLEAN
+			l_empty_plane_written, l_empty_segment_written: BOOLEAN
+			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create some_plane_names.make (0, 16)
+			create l_plane_names.make (0, 16)
 			from i := 0 until i > 16 loop
-				create some_segment_names.make (0, 255)
-				plane_all_absent := True
+				create l_segment_names.make (0, 255)
+				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
-					create a_segment.make (0, 255)
-					segment_all_absent := True
+					create l_segment.make (0, 255)
+					l_segment_all_absent := True
 					from k := 0 until k > 255 loop
-						a_code := k + 256 * j + 256 * 256 * i
-						a_code_datum := codes.item (a_code)
-						if a_code_datum = Void then
-							a_value := Bad_decimal_value
+						l_code := k + 256 * j + 256 * 256 * i
+						l_code_datum := codes.item (l_code)
+						if l_code_datum = Void then
+							l_value := Bad_decimal_value
 						else
-							a_category := a_code_datum.general_category
-							if a_category = Decimal_digit_number_category then
-								segment_all_absent := False
-								plane_all_absent := False
-								a_value := a_code_datum.decimal_digit_value
+							l_category := l_code_datum.general_category
+							if l_category = Decimal_digit_number_category then
+								l_segment_all_absent := False
+								l_plane_all_absent := False
+								l_value := l_code_datum.decimal_digit_value
 							else
-								a_value := Bad_decimal_value
+								l_value := Bad_decimal_value
 							end
 						end
-						a_segment.put (a_value, k)
+						l_segment.put (l_value, k)
 						k := k + 1
 					end
-					if segment_all_absent then
-						a_segment_array_name := Empty_decimal_value_segment_array_name
-						if not empty_segment_written then
-							empty_segment_written := True
-							write_integer8_segment (a_segment, Empty_decimal_value_segment_array_name, an_output_file)
+					if l_segment_all_absent then
+						l_segment_array_name := Empty_decimal_value_segment_array_name
+						if not l_empty_segment_written then
+							l_empty_segment_written := True
+							write_integer8_segment (l_segment, Empty_decimal_value_segment_array_name, a_output_file)
 						end
 					else
-						a_segment_array_name := "decimal_value_plane_" + i.out + "_segment_" + j.out
-						write_integer8_segment (a_segment, a_segment_array_name, an_output_file)
+						l_segment_array_name := "decimal_value_plane_" + i.out + "_segment_" + j.out
+						write_integer8_segment (l_segment, l_segment_array_name, a_output_file)
 					end
-					some_segment_names.put (a_segment_array_name, j)
+					l_segment_names.put (l_segment_array_name, j)
 					j := j + 1
 				end
-				if plane_all_absent then
-					a_plane_array_name := Empty_decimal_value_plane_array_name
-					if not empty_plane_written then
-						empty_plane_written := True
-						write_empty_integer8_plane (a_plane_array_name, Empty_decimal_value_segment_array_name, an_output_file)
+				if l_plane_all_absent then
+					l_plane_array_name := Empty_decimal_value_plane_array_name
+					if not l_empty_plane_written then
+						l_empty_plane_written := True
+						write_empty_integer8_plane (l_plane_array_name, Empty_decimal_value_segment_array_name, a_output_file)
 					end
 				else
-					a_plane_array_name := "decimal_value_plane_" + i.out
-					write_integer8_plane (some_segment_names, a_plane_array_name, an_output_file)
+					l_plane_array_name := "decimal_value_plane_" + i.out
+					write_integer8_plane (l_segment_names, l_plane_array_name, a_output_file)
 				end
-				some_plane_names.put (a_plane_array_name, i)
+				l_plane_names.put (l_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tdecimal_values: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
-			an_output_file.put_string ("%T%T%T-- Decimal value for each code point%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%Tdecimal_values: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
+			a_output_file.put_string ("%T%T%T-- Decimal value for each code point%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_plane_names.item (i))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (i.out)
-				an_output_file.put_string (")%N")
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (l_plane_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
 				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_upper_case_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_upper_case_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing upper case property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_boolean_property_array ("all_false_upper_case_property_segment",
 				"all_true_upper_case_property_segment",
@@ -890,16 +893,16 @@ feature {NONE} -- Implementation
 				"upper_case_property_plane_",
 				"upper_case_properties",
 				"Uppercase property",
-				upper_case_array, an_output_file)
+				upper_case_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_lower_case_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_lower_case_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing lower case property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_boolean_property_array ("all_false_lower_case_property_segment",
 				"all_true_lower_case_property_segment",
@@ -907,16 +910,16 @@ feature {NONE} -- Implementation
 				"lower_case_property_plane_",
 				"lower_case_properties",
 				"Lowercase property",
-				lower_case_array, an_output_file)
+				lower_case_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_alphabetic_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_alphabetic_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing alphabetic property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_boolean_property_array ("all_false_alphabetic_property_segment",
 				"all_true_alphabetic_property_segment",
@@ -924,16 +927,16 @@ feature {NONE} -- Implementation
 				"alphabetic_property_plane_",
 				"alphabetic_properties",
 				"Alphabetic property",
-				alphabetic_array, an_output_file)
+				alphabetic_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_math_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_math_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing math property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_boolean_property_array ("all_false_math_property_segment",
 				"all_true_math_property_segment",
@@ -941,16 +944,16 @@ feature {NONE} -- Implementation
 				"math_property_plane_",
 				"math_properties",
 				"Math property",
-				math_array, an_output_file)
+				math_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_expands_on_nfc_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_expands_on_nfc_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing expands on NFC property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_boolean_property_array ("all_false_expands_on_nfc_property_segment",
 				"all_true_expands_on_nfc_property_segment",
@@ -958,16 +961,16 @@ feature {NONE} -- Implementation
 				"expands_on_nfc_property_plane_",
 				"expands_on_nfc_properties",
 				"Expands_On_NFC property",
-				expands_on_nfc_array, an_output_file)
+				expands_on_nfc_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_expands_on_nfd_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_expands_on_nfd_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing expands on NFD property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_boolean_property_array ("all_false_expands_on_nfd_property_segment",
 				"all_true_expands_on_nfd_property_segment",
@@ -975,16 +978,16 @@ feature {NONE} -- Implementation
 				"expands_on_nfd_property_plane_",
 				"expands_on_nfd_properties",
 				"Expands_On_NFD property",
-				expands_on_nfd_array, an_output_file)
+				expands_on_nfd_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_expands_on_nfkc_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_expands_on_nfkc_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing expands on NFKC property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_boolean_property_array ("all_false_expands_on_nfkc_property_segment",
 				"all_true_expands_on_nfkc_property_segment",
@@ -992,16 +995,16 @@ feature {NONE} -- Implementation
 				"expands_on_nfkc_property_plane_",
 				"expands_on_nfkc_properties",
 				"Expands_On_NFKC property",
-				expands_on_nfkc_array, an_output_file)
+				expands_on_nfkc_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_expands_on_nfkd_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_expands_on_nfkd_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing expands on NFKD property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_boolean_property_array ("all_false_expands_on_nfkd_property_segment",
 				"all_true_expands_on_nfkd_property_segment",
@@ -1009,17 +1012,17 @@ feature {NONE} -- Implementation
 				"expands_on_nfkd_property_plane_",
 				"expands_on_nfkd_properties",
 				"Expands_On_NFKD property",
-				expands_on_nfkd_array, an_output_file)
+				expands_on_nfkd_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
 	write_boolean_property_array (all_false_segment_name, all_true_segment_name, all_false_plane_name, a_plane_prefix, an_array_name, a_title: STRING;
-		an_array: ARRAY [BOOLEAN] ; an_output_file: KL_TEXT_OUTPUT_FILE) is
+		an_array: ARRAY [BOOLEAN] ; a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing full composition exclusion property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			all_false_segment_name_not_void: all_false_segment_name /= Void
 			all_false_segment_name_not_empty: not all_false_segment_name.is_empty
 			all_true_segment_name_not_void: all_true_segment_name /= Void
@@ -1035,359 +1038,410 @@ feature {NONE} -- Implementation
 			array_not_void: an_array /= Void
 		local
 			i, j, k: INTEGER
-			some_segment_names, some_plane_names: ARRAY [STRING]
-			plane_all_false, segment_all_false, segment_all_true, a_value: BOOLEAN
-			all_false_plane_written, all_false_segment_written, all_true_segment_written: BOOLEAN
-			a_segment: ARRAY [BOOLEAN]
-			a_plane_array_name, a_segment_array_name: STRING
+			l_segment_names, l_plane_names: ARRAY [STRING]
+			l_plane_all_false, l_segment_all_false, l_segment_all_true, l_value: BOOLEAN
+			l_all_false_plane_written, l_all_false_segment_written, l_all_true_segment_written: BOOLEAN
+			l_segment: ARRAY [BOOLEAN]
+			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create some_plane_names.make (0, 16)
+			create l_plane_names.make (0, 16)
 			from i := 0 until i > 16 loop
-				create some_segment_names.make (0, 255)
-				plane_all_false := True
+				create l_segment_names.make (0, 255)
+				l_plane_all_false := True
 				from j := 0 until j > 255 loop
-					create a_segment.make (0, 255)
-					segment_all_false := True
-					segment_all_true := True
+					create l_segment.make (0, 255)
+					l_segment_all_false := True
+					l_segment_all_true := True
 					from k := 0 until k > 255 loop
-						a_value := an_array.item (k + 256 * j + 256 * 256 * i)
-						if a_value then
-							segment_all_false := False
-							plane_all_false := False
+						l_value := an_array.item (k + 256 * j + 256 * 256 * i)
+						if l_value then
+							l_segment_all_false := False
+							l_plane_all_false := False
 						else
-							segment_all_true := False
+							l_segment_all_true := False
 						end
-						a_segment.put (a_value, k)
+						l_segment.put (l_value, k)
 						k := k + 1
 					end
-					if segment_all_false then
-						a_segment_array_name := all_false_segment_name
-						if not all_false_segment_written then
-							all_false_segment_written := True
-							write_boolean_segment (a_segment, a_segment_array_name, an_output_file)
+					if l_segment_all_false then
+						l_segment_array_name := all_false_segment_name
+						if not l_all_false_segment_written then
+							l_all_false_segment_written := True
+							write_boolean_segment (l_segment, l_segment_array_name, a_output_file)
 						end
-					elseif segment_all_true then
-						a_segment_array_name := all_true_segment_name
-						if not all_true_segment_written then
-							all_true_segment_written := True
-							write_boolean_segment (a_segment, a_segment_array_name, an_output_file)
+					elseif l_segment_all_true then
+						l_segment_array_name := all_true_segment_name
+						if not l_all_true_segment_written then
+							l_all_true_segment_written := True
+							write_boolean_segment (l_segment, l_segment_array_name, a_output_file)
 						end
 					else
-						a_segment_array_name := a_plane_prefix + i.out + "_segment_" + j.out
-						write_boolean_segment (a_segment, a_segment_array_name, an_output_file)
+						l_segment_array_name := a_plane_prefix + i.out + "_segment_" + j.out
+						write_boolean_segment (l_segment, l_segment_array_name, a_output_file)
 					end
-					some_segment_names.put (a_segment_array_name, j)
+					l_segment_names.put (l_segment_array_name, j)
 					j := j + 1
 				end
-				if plane_all_false then
-					a_plane_array_name := all_false_plane_name
-					if not all_false_plane_written then
-						all_false_plane_written := True
-						write_all_false_boolean_plane (a_plane_array_name, all_false_segment_name, an_output_file)
+				if l_plane_all_false then
+					l_plane_array_name := all_false_plane_name
+					if not l_all_false_plane_written then
+						l_all_false_plane_written := True
+						write_all_false_boolean_plane (l_plane_array_name, all_false_segment_name, a_output_file)
 					end
 				else
-					a_plane_array_name := a_plane_prefix + i.out
-					write_boolean_plane (some_segment_names, a_plane_array_name, an_output_file)
+					l_plane_array_name := a_plane_prefix + i.out
+					write_boolean_plane (l_segment_names, l_plane_array_name, a_output_file)
 				end
-				some_plane_names.put (a_plane_array_name, i)
+				l_plane_names.put (l_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%T" + an_array_name + ": SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is%N")
-			an_output_file.put_string ("%T%T%T-- " + a_title + " for each code point%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T" + an_array_name + ": SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is%N")
+			a_output_file.put_string ("%T%T%T-- " + a_title + " for each code point%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_plane_names.item (i))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (i.out)
-				an_output_file.put_string (")%N")
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (l_plane_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
 				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_canonical_combining_class_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_canonical_combining_class_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing Canonical_Combining_Class property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		local
 			i, j, k: INTEGER
-			a_plane_array_name, a_segment_array_name: STRING
-			some_segment_names, some_plane_names: ARRAY [STRING]
-			plane_all_zero, segment_all_zero: BOOLEAN
-			all_zero_plane_written, all_zero_segment_written: BOOLEAN
-			a_value: INTEGER
-			a_segment: ARRAY [INTEGER_8]
-			a_data_point: GEUC_UNICODE_DATA
+			l_plane_array_name, l_segment_array_name: STRING
+			l_segment_names, l_plane_names: ARRAY [STRING]
+			l_plane_all_zero, l_segment_all_zero: BOOLEAN
+			l_all_zero_plane_written, l_all_zero_segment_written: BOOLEAN
+			l_value: INTEGER
+			l_segment: ARRAY [INTEGER_8]
+			l_data_point: GEUC_UNICODE_DATA
 		do
-			create some_plane_names.make (0, 16)
+			create l_plane_names.make (0, 16)
 			from i := 0 until i > 16 loop
-				create some_segment_names.make (0, 255)
-				plane_all_zero := True
+				create l_segment_names.make (0, 255)
+				l_plane_all_zero := True
 				from j := 0 until j > 255 loop
-					create a_segment.make (0, 255)
-					segment_all_zero := True
+					create l_segment.make (0, 255)
+					l_segment_all_zero := True
 					from k := 0 until k > 255 loop
-						a_data_point := codes.item (k + 256 * j + 256 * 256 * i)
-						if a_data_point = Void then
-							a_value := 0
+						l_data_point := codes.item (k + 256 * j + 256 * 256 * i)
+						if l_data_point = Void then
+							l_value := 0
 						else
-							a_value := projected_combining_class (a_data_point.canonical_combining_class)
+							l_value := projected_combining_class (l_data_point.canonical_combining_class)
 						end
-						if a_value /= 0 then
-							segment_all_zero := False
-							plane_all_zero := False
+						if l_value /= 0 then
+							l_segment_all_zero := False
+							l_plane_all_zero := False
 						end
-						a_segment.put (INTEGER_.to_integer_8 (a_value), k)
+						l_segment.put (INTEGER_.to_integer_8 (l_value), k)
 						k := k + 1
 					end
-					if segment_all_zero then
-						a_segment_array_name := "all_zero_canonical_combining_class_segment"
-						if not all_zero_segment_written then
-							all_zero_segment_written := True
-							write_integer8_segment (a_segment, a_segment_array_name, an_output_file)
+					if l_segment_all_zero then
+						l_segment_array_name := "all_zero_canonical_combining_class_segment"
+						if not l_all_zero_segment_written then
+							l_all_zero_segment_written := True
+							write_integer8_segment (l_segment, l_segment_array_name, a_output_file)
 						end
 					else
-						a_segment_array_name := "canonical_combining_class_plane_" + i.out + "_segment_" + j.out
-						write_integer8_segment (a_segment, a_segment_array_name, an_output_file)
+						l_segment_array_name := "canonical_combining_class_plane_" + i.out + "_segment_" + j.out
+						write_integer8_segment (l_segment, l_segment_array_name, a_output_file)
 					end
-					some_segment_names.put (a_segment_array_name, j)
+					l_segment_names.put (l_segment_array_name, j)
 					j := j + 1
 				end
-				if plane_all_zero then
-					a_plane_array_name := "all_zero_canonical_combining_class_plane"
-					if not all_zero_plane_written then
-						all_zero_plane_written := True
-						write_empty_integer8_plane (a_plane_array_name, "all_zero_canonical_combining_class_segment", an_output_file)
+				if l_plane_all_zero then
+					l_plane_array_name := "all_zero_canonical_combining_class_plane"
+					if not l_all_zero_plane_written then
+						l_all_zero_plane_written := True
+						write_empty_integer8_plane (l_plane_array_name, "all_zero_canonical_combining_class_segment", a_output_file)
 					end
 				else
-					a_plane_array_name := "canonical_combining_class_plane_" + i.out
-					write_integer8_plane (some_segment_names, a_plane_array_name, an_output_file)
+					l_plane_array_name := "canonical_combining_class_plane_" + i.out
+					write_integer8_plane (l_segment_names, l_plane_array_name, a_output_file)
 				end
-				some_plane_names.put (a_plane_array_name, i)
+				l_plane_names.put (l_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tcanonical_combining_class_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
-			an_output_file.put_string ("%T%T%T-- Canonical combining class for each code point%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%Tcanonical_combining_class_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
+			a_output_file.put_string ("%T%T%T-- Canonical combining class for each code point%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_plane_names.item (i))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (i.out)
-				an_output_file.put_string (")%N")
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (l_plane_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
 				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_decomposition_type_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_decomposition_type_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing Decomposition_Type property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		local
 			i, j, k: INTEGER
-			a_plane_array_name, a_segment_array_name: STRING
-			some_segment_names, some_plane_names: ARRAY [STRING]
-			plane_all_zero, segment_all_zero: BOOLEAN
-			all_zero_plane_written, all_zero_segment_written: BOOLEAN
-			a_value: INTEGER
-			a_segment: ARRAY [INTEGER_8]
-			a_data_point: GEUC_UNICODE_DATA
+			l_plane_array_name, l_segment_array_name: STRING
+			l_segment_names, l_plane_names: ARRAY [STRING]
+			l_plane_all_zero, l_segment_all_zero: BOOLEAN
+			l_all_zero_plane_written, l_all_zero_segment_written: BOOLEAN
+			l_value: INTEGER
+			l_segment: ARRAY [INTEGER_8]
+			l_data_point: GEUC_UNICODE_DATA
 		do
-			create some_plane_names.make (0, 16)
+			create l_plane_names.make (0, 16)
 			from i := 0 until i > 16 loop
-				create some_segment_names.make (0, 255)
-				plane_all_zero := True
+				create l_segment_names.make (0, 255)
+				l_plane_all_zero := True
 				from j := 0 until j > 255 loop
-					create a_segment.make (0, 255)
-					segment_all_zero := True
+					create l_segment.make (0, 255)
+					l_segment_all_zero := True
 					from k := 0 until k > 255 loop
-						a_data_point := codes.item (k + 256 * j + 256 * 256 * i)
-						if a_data_point = Void then
-							a_value := 0
+						l_data_point := codes.item (k + 256 * j + 256 * 256 * i)
+						if l_data_point = Void then
+							l_value := 0
 						else
-							a_value := a_data_point.decomposition_type
+							l_value := l_data_point.decomposition_type
 						end
-						if a_value /= 0 then
-							segment_all_zero := False
-							plane_all_zero := False
+						if l_value /= 0 then
+							l_segment_all_zero := False
+							l_plane_all_zero := False
 						end
-						a_segment.put (INTEGER_.to_integer_8 (a_value), k)
+						l_segment.put (INTEGER_.to_integer_8 (l_value), k)
 						k := k + 1
 					end
-					if segment_all_zero then
-						a_segment_array_name := "all_zero_decomposition_type_segment"
-						if not all_zero_segment_written then
-							all_zero_segment_written := True
-							write_integer8_segment (a_segment, a_segment_array_name, an_output_file)
+					if l_segment_all_zero then
+						l_segment_array_name := "all_zero_decomposition_type_segment"
+						if not l_all_zero_segment_written then
+							l_all_zero_segment_written := True
+							write_integer8_segment (l_segment, l_segment_array_name, a_output_file)
 						end
 					else
-						a_segment_array_name := "decomposition_type_plane_" + i.out + "_segment_" + j.out
-						write_integer8_segment (a_segment, a_segment_array_name, an_output_file)
+						l_segment_array_name := "decomposition_type_plane_" + i.out + "_segment_" + j.out
+						write_integer8_segment (l_segment, l_segment_array_name, a_output_file)
 					end
-					some_segment_names.put (a_segment_array_name, j)
+					l_segment_names.put (l_segment_array_name, j)
 					j := j + 1
 				end
-				if plane_all_zero then
-					a_plane_array_name := "all_zero_decomposition_type_plane"
-					if not all_zero_plane_written then
-						all_zero_plane_written := True
-						write_empty_integer8_plane (a_plane_array_name, "all_zero_decomposition_type_segment", an_output_file)
+				if l_plane_all_zero then
+					l_plane_array_name := "all_zero_decomposition_type_plane"
+					if not l_all_zero_plane_written then
+						l_all_zero_plane_written := True
+						write_empty_integer8_plane (l_plane_array_name, "all_zero_decomposition_type_segment", a_output_file)
 					end
 				else
-					a_plane_array_name := "decomposition_type_plane_" + i.out
-					write_integer8_plane (some_segment_names, a_plane_array_name, an_output_file)
+					l_plane_array_name := "decomposition_type_plane_" + i.out
+					write_integer8_plane (l_segment_names, l_plane_array_name, a_output_file)
 				end
-				some_plane_names.put (a_plane_array_name, i)
+				l_plane_names.put (l_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tdecomposition_type_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
-			an_output_file.put_string ("%T%T%T-- Decomposition type for each code point%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%Tdecomposition_type_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
+			a_output_file.put_string ("%T%T%T-- Decomposition type for each code point%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_plane_names.item (i))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (i.out)
-				an_output_file.put_string (")%N")
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (l_plane_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
 				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_decomposition_mapping_property_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_decomposition_mapping_property_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing Decomposition_Mapping property values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		local
-			i, j, k, a_code: INTEGER
-			a_plane_array_name, a_segment_array_name: STRING
-			some_segment_names, some_plane_names: ARRAY [STRING]
-			plane_all_empty, segment_all_empty: BOOLEAN
-			all_empty_plane_written, all_empty_segment_written: BOOLEAN
-			a_value: DS_ARRAYED_LIST [INTEGER]
-			a_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
-			a_data_point: GEUC_UNICODE_DATA
+			i, j, k, l_code: INTEGER
+			l_plane_array_name, l_segment_array_name: STRING
+			l_segment_names, l_plane_names: ARRAY [STRING]
+			l_plane_all_empty, l_segment_all_empty: BOOLEAN
+			l_all_empty_plane_written, l_all_empty_segment_written: BOOLEAN
+			l_value: DS_ARRAYED_LIST [INTEGER]
+			l_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+			l_data_point: GEUC_UNICODE_DATA
 		do
-			create some_plane_names.make (0, 16)
+			create l_plane_names.make (0, 16)
 			from i := 0 until i > 16 loop
-				create some_segment_names.make (0, 255)
-				plane_all_empty := True
+				create l_segment_names.make (0, 255)
+				l_plane_all_empty := True
 				from j := 0 until j > 255 loop
-					create a_segment.make (0, 255)
-					segment_all_empty := True
+					create l_segment.make (0, 255)
+					l_segment_all_empty := True
 					from k := 0 until k > 255 loop
-						a_code := k + 256 * j + 256 * 256 * i
-						a_data_point := codes.item (a_code)
-						if is_hangul_syllable (a_code) then
-							a_value := decomposed_hangul_syllable (a_code)
-						elseif a_data_point = Void then
-							a_value := Void
+						l_code := k + 256 * j + 256 * 256 * i
+						l_data_point := codes.item (l_code)
+						if is_hangul_syllable (l_code) then
+							l_value := decomposed_hangul_syllable (l_code)
+						elseif l_data_point = Void then
+							l_value := Void
 						else
-							a_value := a_data_point.decomposition_mapping
-							if unicode.is_bmp_code (a_code) and a_value /= Void then
-								store_composition (a_code, a_value)
+							l_value := l_data_point.decomposition_mapping
+							if unicode.is_bmp_code (l_code) and l_value /= Void then
+								store_composition (l_code, l_value)
 							end
 						end
-						if a_value /= Void then
-							segment_all_empty := False
-							plane_all_empty := False
+						if l_value /= Void then
+							l_segment_all_empty := False
+							l_plane_all_empty := False
 						end
-						a_segment.put (a_value, k)
+						l_segment.put (l_value, k)
 						k := k + 1
 					end
-					if segment_all_empty then
-						a_segment_array_name := "all_empty_decomposition_mapping_segment"
-						if not all_empty_segment_written then
-							all_empty_segment_written := True
-							write_integer_list_segment (a_segment, a_segment_array_name, an_output_file, True)
+					if l_segment_all_empty then
+						l_segment_array_name := "all_empty_decomposition_mapping_segment"
+						if not l_all_empty_segment_written then
+							l_all_empty_segment_written := True
+							write_integer_list_segment (l_segment, l_segment_array_name, a_output_file, True)
 						end
 					else
-						a_segment_array_name := "decomposition_mapping_plane_" + i.out + "_segment_" + j.out
-						write_integer_list_segment (a_segment, a_segment_array_name, an_output_file, False)
+						l_segment_array_name := "decomposition_mapping_plane_" + i.out + "_segment_" + j.out
+						write_integer_list_segment (l_segment, l_segment_array_name, a_output_file, False)
 					end
-					some_segment_names.put (a_segment_array_name, j)
+					l_segment_names.put (l_segment_array_name, j)
 					j := j + 1
 				end
-				if plane_all_empty then
-					a_plane_array_name := "all_empty_decomposition_mapping_plane"
-					if not all_empty_plane_written then
-						all_empty_plane_written := True
-						write_empty_integer_list_plane (a_plane_array_name, "all_empty_decomposition_mapping_segment", an_output_file)
+				if l_plane_all_empty then
+					l_plane_array_name := "all_empty_decomposition_mapping_plane"
+					if not l_all_empty_plane_written then
+						l_all_empty_plane_written := True
+						write_empty_integer_list_plane (l_plane_array_name, "all_empty_decomposition_mapping_segment", a_output_file)
 					end
 				else
-					a_plane_array_name := "decomposition_mapping_plane_" + i.out
-					write_integer_list_plane (some_segment_names, a_plane_array_name, an_output_file)
+					l_plane_array_name := "decomposition_mapping_plane_" + i.out
+					write_integer_list_plane (l_segment_names, l_plane_array_name, a_output_file)
 				end
-				some_plane_names.put (a_plane_array_name, i)
+				l_plane_names.put (l_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tdecomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is%N")
-			an_output_file.put_string ("%T%T%T-- Decomposition mapping for each code point%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%Tdecomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is%N")
+			a_output_file.put_string ("%T%T%T-- Decomposition mapping for each code point%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_plane_names.item (i))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (i.out)
-				an_output_file.put_string (")%N")
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (l_plane_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
 				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_composition_map (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_composition_map (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write composition map.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [INTEGER, DS_HASHABLE_PAIR [INTEGER, INTEGER]]
+			l_cursor: DS_HASH_TABLE_CURSOR [INTEGER, DS_HASHABLE_PAIR [INTEGER, INTEGER]]
+			l_string_1, l_string_2, l_string_3: STRING
+			l_ustring_1, l_ustring_2, l_ustring_3: UC_UTF8_STRING
+			l_array: ARRAY [STRING]
+			i, j, k, l: INTEGER
 		do
-			an_output_file.put_string ("%Tcomposition_map: DS_HASH_TABLE [INTEGER, DS_HASHABLE_PAIR [INTEGER, INTEGER]] is%N")
-			an_output_file.put_string ("%T%T%T-- Map of compositions indexed by hashed character pairs%N")
-			an_output_file.put_string ("%T%Tlocal%N")
-			an_output_file.put_string ("%T%T%Ta_pair: DS_HASHABLE_PAIR [INTEGER, INTEGER]%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (" + compositions.count.out + ")%N")
-			a_cursor := compositions.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				an_output_file.put_string ("%T%T%Tcreate a_pair.make (")
-				an_output_file.put_string (a_cursor.key.first.out)
-				an_output_file.put_string (", ")
-				an_output_file.put_string (a_cursor.key.second.out)
-				an_output_file.put_string (")%N")
-				an_output_file.put_string ("%T%T%TResult.put_new (")
-				an_output_file.put_string (a_cursor.item.out)
-				an_output_file.put_string (", a_pair)%N")
-				a_cursor.forth
+			l_string_1 := ""
+			l_string_2 := ""
+			l_string_3 := ""
+			l_cursor := compositions.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				append_code_to_utf8 (l_string_1, l_cursor.key.first)
+				append_code_to_utf8 (l_string_2, l_cursor.key.second)
+				append_code_to_utf8 (l_string_3, l_cursor.item)
+				l_cursor.forth
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			create l_ustring_1.make_from_utf8 (l_string_1)
+			create l_ustring_2.make_from_utf8 (l_string_2)
+			create l_ustring_3.make_from_utf8 (l_string_3)
+			from i := 1 until i > l_ustring_1.count loop
+				k := k + 1
+				j := i + 10000
+				if j > l_ustring_1.count then j := l_ustring_1.count end
+				a_output_file.put_string ("%N%Tcomposition_map_first_integer_" + k.out + ": STRING is %"")
+				a_output_file.put_string (to_utf8 (l_ustring_1.substring (i, j)))
+				a_output_file.put_string ("%"%N%N")
+				a_output_file.put_string ("%N%Tcomposition_map_second_integer_" + k.out + ": STRING is %"")
+				a_output_file.put_string (to_utf8 (l_ustring_2.substring (i, j)))
+				a_output_file.put_string ("%"%N%N")
+				a_output_file.put_string ("%N%Tcomposition_map_third_integer_" + k.out + ": STRING is %"")
+				a_output_file.put_string (to_utf8 (l_ustring_3.substring (i, j)))
+				a_output_file.put_string ("%"%N%N")
+				i := j + 1
+			end
+			a_output_file.put_string ("%Tcomposition_map: DS_HASH_TABLE [INTEGER, DS_HASHABLE_PAIR [INTEGER, INTEGER]] is%N")
+			a_output_file.put_string ("%T%T%T-- Map of compositions indexed by hashed character pairs%N")
+			a_output_file.put_string ("%T%Tlocal%N")
+			a_output_file.put_string ("%T%T%Ti, j, k: INTEGER%N")
+			a_output_file.put_string ("%T%T%Tl_array_1, l_array_2, l_array_3: ARRAY [UC_UTF8_STRING]%N")
+			a_output_file.put_string ("%T%T%Tl_string: UC_UTF8_STRING%N")
+			a_output_file.put_string ("%T%T%Tl_pair: DS_HASHABLE_PAIR [INTEGER, INTEGER]%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (" + compositions.count.out + ")%N")
+			a_output_file.put_string ("%T%T%Tcreate l_array_1.make (1, " + k.out + ")%N")
+			a_output_file.put_string ("%T%T%Tcreate l_array_2.make (1, " + k.out + ")%N")
+			a_output_file.put_string ("%T%T%Tcreate l_array_3.make (1, " + k.out + ")%N")
+			from l := k; k := 1 until l = 0 loop
+				a_output_file.put_string ("%T%T%Tcreate l_string.make_from_utf8 (composition_map_first_integer_" + k.out + ")%N")
+				a_output_file.put_string ("%T%T%Tl_array_1.put (l_string, " + k.out + ")%N")
+				a_output_file.put_string ("%T%T%Tcreate l_string.make_from_utf8 (composition_map_second_integer_" + k.out + ")%N")
+				a_output_file.put_string ("%T%T%Tl_array_2.put (l_string, " + k.out + ")%N")
+				a_output_file.put_string ("%T%T%Tcreate l_string.make_from_utf8 (composition_map_third_integer_" + k.out + ")%N")
+				a_output_file.put_string ("%T%T%Tl_array_3.put (l_string, " + k.out + ")%N")
+				k := k + 1
+				l := l - 1
+			end
+			a_output_file.put_string ("%T%T%Tfrom%N")
+			a_output_file.put_string ("%T%T%T%T i := 1; j := 1; k := 1%N")
+			a_output_file.put_string ("%T%T%Tinvariant%N")
+			a_output_file.put_string ("%T%T%T%T i >= j%N")
+			a_output_file.put_string ("%T%T%T%T i >= k%N")
+			a_output_file.put_string ("%T%T%Tvariant%N")
+			a_output_file.put_string ("%T%T%T%T" + (compositions.count + 1).out + " - i%N")
+			a_output_file.put_string ("%T%T%Tuntil%N")
+			a_output_file.put_string ("%T%T%T%T i > " + (compositions.count).out + "%N")
+			a_output_file.put_string ("%T%T%Tloop%N")
+			a_output_file.put_string ("%T%T%T%Tcreate l_pair.make (l_array_1.item (k).item_code (j), l_array_2.item (k).item_code (j))%N")
+			a_output_file.put_string ("%T%T%T%TResult.put_new (l_array_3.item (k).item_code (j)")
+			a_output_file.put_string (", l_pair)%N")
+			a_output_file.put_string ("%T%T%T%Ti := i + 1; j := j + 1; if j > l_array_2.item (k).count  then j := 1; k := k + 1 end%N")
+			a_output_file.put_string ("%T%T%Tend%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_nfc_quick_check_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_nfc_quick_check_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing NFC quick check values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_quick_check_array ("nfc_quick_check_array",
 				"NFC_Quick_Check values",
@@ -1396,16 +1450,16 @@ feature {NONE} -- Implementation
 				"all_true_nfc_quick_check_segment",
 				"all_undefined_nfc_quick_check_segment",
 				"nfc_quick_check_plane_",
-				nfc_quick_check_array, an_output_file)
+				nfc_quick_check_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_nfd_quick_check_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_nfd_quick_check_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing NFD quick check values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_quick_check_array ("nfd_quick_check_array",
 				"NFD_Quick_Check values",
@@ -1414,16 +1468,16 @@ feature {NONE} -- Implementation
 				"all_true_nfd_quick_check_segment",
 				"all_undefined_nfd_quick_check_segment",
 				"nfd_quick_check_plane_",
-				nfd_quick_check_array, an_output_file)
+				nfd_quick_check_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_nfkc_quick_check_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_nfkc_quick_check_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing NFKC quick check values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_quick_check_array ("nfkc_quick_check_array",
 				"NFKC_Quick_Check values",
@@ -1432,16 +1486,16 @@ feature {NONE} -- Implementation
 				"all_true_nfkc_quick_check_segment",
 				"all_undefined_nfkc_quick_check_segment",
 				"nfkc_quick_check_plane_",
-				nfkc_quick_check_array, an_output_file)
+				nfkc_quick_check_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_nfkd_quick_check_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_nfkd_quick_check_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing NFKD quick check values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		do
 			write_quick_check_array ("nfkd_quick_check_array",
 				"NFKD_Quick_Check values",
@@ -1450,1074 +1504,1074 @@ feature {NONE} -- Implementation
 				"all_true_nfkd_quick_check_segment",
 				"all_undefined_nfkd_quick_check_segment",
 				"nfkd_quick_check_plane_",
-				nfkd_quick_check_array, an_output_file)
+				nfkd_quick_check_array, a_output_file)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_quick_check_array (an_array_name, a_title: STRING;
-		all_true_plane_name, all_false_segment_name, all_true_segment_name, all_undefined_segment_name, a_plane_prefix: STRING;
-		an_array: ARRAY [UT_TRISTATE];
-		an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_quick_check_array (a_array_name, a_title: STRING;
+		a_all_true_plane_name, a_all_false_segment_name, a_all_true_segment_name, a_all_undefined_segment_name, a_plane_prefix: STRING;
+		a_array: ARRAY [UT_TRISTATE];
+		a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing quick check values.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
-			array_not_void: an_array /= Void
-			array_name_not_void: an_array_name /= Void
-			array_name_not_empty: not an_array_name.is_empty
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
+			array_not_void: a_array /= Void
+			array_name_not_void: a_array_name /= Void
+			array_name_not_empty: not a_array_name.is_empty
 			title_not_void: a_title /= Void
 			title_not_empty: not a_title.is_empty
-			all_true_plane_name_not_void: all_true_plane_name /= Void
-			all_true_plane_name_not_empty: not all_true_plane_name.is_empty
-			all_false_segment_name_not_void: all_false_segment_name /= Void
-			all_false_segment_name_not_empty: not all_false_segment_name.is_empty
-			all_true_segment_name_not_void: all_true_segment_name /= Void
-			all_true_segment_name_not_empty: not all_true_segment_name.is_empty
-			all_undefined_segment_name_not_void: all_undefined_segment_name /= Void
-			all_undefined_segment_name_not_empty: not all_undefined_segment_name.is_empty
+			a_all_true_plane_name_not_void: a_all_true_plane_name /= Void
+			a_all_true_plane_name_not_empty: not a_all_true_plane_name.is_empty
+			a_all_false_segment_name_not_void: a_all_false_segment_name /= Void
+			a_all_false_segment_name_not_empty: not a_all_false_segment_name.is_empty
+			a_all_true_segment_name_not_void: a_all_true_segment_name /= Void
+			a_all_true_segment_name_not_empty: not a_all_true_segment_name.is_empty
+			a_all_undefined_segment_name_not_void: a_all_undefined_segment_name /= Void
+			a_all_undefined_segment_name_not_empty: not a_all_undefined_segment_name.is_empty
 			plane_prefix_not_void: a_plane_prefix /= Void
 			plane_prefix_not_empty: not a_plane_prefix.is_empty
 		local
 			i: INTEGER
-			some_plane_names: ARRAY [STRING]
-			all_true_plane_written, all_false_segment_written, all_undefined_segment_written, all_true_segment_written: DS_CELL [BOOLEAN]
+			l_plane_names: ARRAY [STRING]
+			l_all_true_plane_written, l_all_false_segment_written, l_all_undefined_segment_written, l_all_true_segment_written: DS_CELL [BOOLEAN]
 		do
-			create some_plane_names.make (0, 16)
-			create all_true_plane_written.make (False)
-			create all_false_segment_written.make (False)
-			create all_undefined_segment_written.make (False)
-			create all_true_segment_written.make (False)
+			create l_plane_names.make (0, 16)
+			create l_all_true_plane_written.make (False)
+			create l_all_false_segment_written.make (False)
+			create l_all_undefined_segment_written.make (False)
+			create l_all_true_segment_written.make (False)
 			from i := 0 until i > 16 loop
-				assemble_tristate_plane (i, an_array, some_plane_names,
-					all_true_plane_name,
-					all_false_segment_name,
-					all_true_segment_name,
-					all_undefined_segment_name,
+				assemble_tristate_plane (i, a_array, l_plane_names,
+					a_all_true_plane_name,
+					a_all_false_segment_name,
+					a_all_true_segment_name,
+					a_all_undefined_segment_name,
 					a_plane_prefix,
-					all_true_plane_written,
-					all_false_segment_written,
-					all_undefined_segment_written,
-					all_true_segment_written,
-					an_output_file)
+					l_all_true_plane_written,
+					l_all_false_segment_written,
+					l_all_undefined_segment_written,
+					l_all_true_segment_written,
+					a_output_file)
 				i := i + 1
 			end
-			an_output_file.put_string ("%T" + an_array_name + ": SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is%N")
-			an_output_file.put_string ("%T%T%T-- " + a_title + " for each code point%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T" + a_array_name + ": SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is%N")
+			a_output_file.put_string ("%T%T%T-- " + a_title + " for each code point%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_plane_names.item (i))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (i.out)
-				an_output_file.put_string (")%N")
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (l_plane_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
 				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	assemble_tristate_plane (i: INTEGER; an_array: ARRAY [UT_TRISTATE]; some_plane_names: ARRAY [STRING];
-		all_true_plane_name, all_false_segment_name, all_true_segment_name, all_undefined_segment_name, a_plane_prefix: STRING;
-		all_true_plane_written, all_false_segment_written, all_undefined_segment_written, all_true_segment_written: DS_CELL [BOOLEAN]
-		an_output_file: KL_TEXT_OUTPUT_FILE) is
+	assemble_tristate_plane (i: INTEGER; l_array: ARRAY [UT_TRISTATE]; a_plane_names: ARRAY [STRING];
+		a_all_true_plane_name, a_all_false_segment_name, a_all_true_segment_name, a_all_undefined_segment_name, a_plane_prefix: STRING;
+		a_all_true_plane_written, a_all_false_segment_written, a_all_undefined_segment_written, a_all_true_segment_written: DS_CELL [BOOLEAN]
+		a_output_file: KL_TEXT_OUTPUT_FILE) is
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
-			plane_names_not_void: some_plane_names /= Void
-			plane_names_indexed_from_zero: some_plane_names.lower = 0
-			plane_names_indexed_to_sixteen: some_plane_names.upper = 16
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
+			plane_names_not_void: a_plane_names /= Void
+			plane_names_indexed_from_zero: a_plane_names.lower = 0
+			plane_names_indexed_to_sixteen: a_plane_names.upper = 16
 			valid_plane_number: i >= 0 and i <= 16
-			array_not_void: an_array /= Void
-			all_true_plane_name_not_void: all_true_plane_name /= Void
-			all_true_plane_name_not_empty: not all_true_plane_name.is_empty
-			all_false_segment_name_not_void: all_false_segment_name /= Void
-			all_false_segment_name_not_empty: not all_false_segment_name.is_empty
-			all_true_segment_name_not_void: all_true_segment_name /= Void
-			all_true_segment_name_not_empty: not all_true_segment_name.is_empty
-			all_undefined_segment_name_not_void: all_undefined_segment_name /= Void
-			all_undefined_segment_name_not_empty: not all_undefined_segment_name.is_empty
+			array_not_void: l_array /= Void
+			a_all_true_plane_name_not_void: a_all_true_plane_name /= Void
+			a_all_true_plane_name_not_empty: not a_all_true_plane_name.is_empty
+			a_all_false_segment_name_not_void: a_all_false_segment_name /= Void
+			a_all_false_segment_name_not_empty: not a_all_false_segment_name.is_empty
+			a_all_true_segment_name_not_void: a_all_true_segment_name /= Void
+			a_all_true_segment_name_not_empty: not a_all_true_segment_name.is_empty
+			a_all_undefined_segment_name_not_void: a_all_undefined_segment_name /= Void
+			a_all_undefined_segment_name_not_empty: not a_all_undefined_segment_name.is_empty
 			plane_prefix_not_void: a_plane_prefix /= Void
 			plane_prefix_not_empty: not a_plane_prefix.is_empty
 		local
-			some_segment_names: ARRAY [STRING]
+			l_segment_names: ARRAY [STRING]
 			j, k: INTEGER
-			a_segment: ARRAY [UT_TRISTATE]
-			a_plane_array_name, a_segment_array_name: STRING
-			plane_all_true, segment_all_false, segment_all_undefined, segment_all_true: DS_CELL [BOOLEAN]
-			a_value: UT_TRISTATE
+			l_segment: ARRAY [UT_TRISTATE]
+			l_plane_array_name, l_segment_array_name: STRING
+			l_plane_all_true, l_segment_all_false, l_segment_all_undefined, l_segment_all_true: DS_CELL [BOOLEAN]
+			l_value: UT_TRISTATE
 		do
-			create some_segment_names.make (0, 255)
-			create plane_all_true.make (True)
+			create l_segment_names.make (0, 255)
+			create l_plane_all_true.make (True)
 			from j := 0 until j > 255 loop
-				create a_segment.make (0, 255)
-				create segment_all_false.make (True)
-				create segment_all_true.make (True)
-				create segment_all_undefined.make (True)
+				create l_segment.make (0, 255)
+				create l_segment_all_false.make (True)
+				create l_segment_all_true.make (True)
+				create l_segment_all_undefined.make (True)
 				from  k := 0 until k > 255 loop
-					a_value := an_array.item (k + 256 * j + 256 * 256 * i)
-					if a_value.is_true then
-						segment_all_false.put (False)
-						segment_all_undefined.put (False)
-					elseif a_value.is_undefined then
-						segment_all_false.put (False)
-						plane_all_true.put (False)
-						segment_all_true.put (False)
+					l_value := l_array.item (k + 256 * j + 256 * 256 * i)
+					if l_value.is_true then
+						l_segment_all_false.put (False)
+						l_segment_all_undefined.put (False)
+					elseif l_value.is_undefined then
+						l_segment_all_false.put (False)
+						l_plane_all_true.put (False)
+						l_segment_all_true.put (False)
 					else
-						segment_all_true.put (False)
-						plane_all_true.put (False)
-						segment_all_undefined.put (False)
+						l_segment_all_true.put (False)
+						l_plane_all_true.put (False)
+						l_segment_all_undefined.put (False)
 					end
-					a_segment.put (a_value, k)
+					l_segment.put (l_value, k)
 					k := k + 1
 				end
-				if segment_all_false.item then
-					a_segment_array_name := all_false_segment_name
-					if not all_false_segment_written.item then
-						all_false_segment_written.put (True)
-						write_tristate_segment (a_segment, a_segment_array_name, an_output_file)
+				if l_segment_all_false.item then
+					l_segment_array_name := a_all_false_segment_name
+					if not a_all_false_segment_written.item then
+						a_all_false_segment_written.put (True)
+						write_tristate_segment (l_segment, l_segment_array_name, a_output_file)
 					end
-				elseif segment_all_true.item then
-					a_segment_array_name := all_true_segment_name
-					if not all_true_segment_written.item then
-						all_true_segment_written.put (True)
-						write_tristate_segment (a_segment, a_segment_array_name, an_output_file)
+				elseif l_segment_all_true.item then
+					l_segment_array_name := a_all_true_segment_name
+					if not a_all_true_segment_written.item then
+						a_all_true_segment_written.put (True)
+						write_tristate_segment (l_segment, l_segment_array_name, a_output_file)
 					end
-				elseif segment_all_undefined.item then
-					a_segment_array_name := all_undefined_segment_name
-					if not all_undefined_segment_written.item then
-						all_undefined_segment_written.put (True)
-						write_tristate_segment (a_segment, a_segment_array_name, an_output_file)
+				elseif l_segment_all_undefined.item then
+					l_segment_array_name := a_all_undefined_segment_name
+					if not a_all_undefined_segment_written.item then
+						a_all_undefined_segment_written.put (True)
+						write_tristate_segment (l_segment, l_segment_array_name, a_output_file)
 					end
 				else
-					a_segment_array_name := a_plane_prefix + i.out + "_segment_" + j.out
-					write_tristate_segment (a_segment, a_segment_array_name, an_output_file)
+					l_segment_array_name := a_plane_prefix + i.out + "_segment_" + j.out
+					write_tristate_segment (l_segment, l_segment_array_name, a_output_file)
 				end
-				some_segment_names.put (a_segment_array_name, j)
+				l_segment_names.put (l_segment_array_name, j)
 				j := j + 1
 			end
-			if plane_all_true.item then
-				a_plane_array_name := all_true_plane_name
-				if not all_true_plane_written.item then
-					all_true_plane_written.put (True)
-					write_all_true_tristate_plane (a_plane_array_name, all_true_segment_name, an_output_file)
+			if l_plane_all_true.item then
+				l_plane_array_name := a_all_true_plane_name
+				if not a_all_true_plane_written.item then
+					a_all_true_plane_written.put (True)
+					write_all_true_tristate_plane (l_plane_array_name, a_all_true_segment_name, a_output_file)
 				end
 			else
-				a_plane_array_name := a_plane_prefix + i.out
-				write_tristate_plane (some_segment_names, a_plane_array_name, an_output_file)
+				l_plane_array_name := a_plane_prefix + i.out
+				write_tristate_plane (l_segment_names, l_plane_array_name, a_output_file)
 			end
-			some_plane_names.put (a_plane_array_name, i)
+			a_plane_names.put (l_plane_array_name, i)
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_tristate_plane (some_segment_names: ARRAY [STRING]; a_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for plane `a_name' to `an_output_file'.
+	write_tristate_plane (a_segment_names: ARRAY [STRING]; a_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for plane `a_name' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
-			segment_array_names_not_void: some_segment_names /= Void
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
+			segment_array_names_not_void: a_segment_names /= Void
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_name)
-			an_output_file.put_string (": SPECIAL [ARRAY [CHARACTER]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
-			from  until an_index > 255 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_segment_names.item (an_index))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (an_index.out)
-				an_output_file.put_string (")%N")
-				an_index := an_index + 1
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_name)
+			a_output_file.put_string (": SPECIAL [ARRAY [CHARACTER]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			from  until i > 255 loop
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (a_segment_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
+				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_all_true_tristate_plane (a_plane_name, a_segment_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for plane where every value is `True' to `an_output_file'.
+	write_all_true_tristate_plane (a_plane_name, a_segment_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for plane where every value is `True' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			plane_name_not_void: a_plane_name /= Void
 			plane_name_not_empty: not a_plane_name.is_empty
 			segment_name_not_void: a_segment_name /= Void
 			segment_name_not_empty: not a_segment_name.is_empty
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_plane_name)
-			an_output_file.put_string (": SPECIAL [ARRAY [CHARACTER]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
-			from until an_index > 255 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (a_segment_name)
-				an_output_file.put_string (", ")
-				an_output_file.put_string (an_index.out)
-				an_output_file.put_string (")%N")
-				an_index := an_index + 1
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_plane_name)
+			a_output_file.put_string (": SPECIAL [ARRAY [CHARACTER]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			from until i > 255 loop
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (a_segment_name)
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
+				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_lower_case_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_lower_case_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel `ARRAY' containing lower case equivalents.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		local
-			i, j, k, a_code, a_value: INTEGER
-			a_code_datum: GEUC_UNICODE_DATA
-			some_segment_names, some_plane_names: ARRAY [STRING]
-			plane_all_absent, segment_all_absent: BOOLEAN
-			empty_plane_written, empty_segment_written: BOOLEAN
-			a_segment: ARRAY [INTEGER]
-			a_plane_array_name, a_segment_array_name: STRING
+			i, j, k, l_code, l_value: INTEGER
+			l_code_datum: GEUC_UNICODE_DATA
+			l_segment_names, l_plane_names: ARRAY [STRING]
+			l_plane_all_absent, l_segment_all_absent: BOOLEAN
+			l_empty_plane_written, l_empty_segment_written: BOOLEAN
+			l_segment: ARRAY [INTEGER]
+			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create some_plane_names.make (0, 16)
+			create l_plane_names.make (0, 16)
 			from i := 0 until i > 16 loop
-				create some_segment_names.make (0, 255)
-				from plane_all_absent := True; j := 0 until j > 255 loop
-					create a_segment.make (0, 255)
-					segment_all_absent := True
+				create l_segment_names.make (0, 255)
+				from l_plane_all_absent := True; j := 0 until j > 255 loop
+					create l_segment.make (0, 255)
+					l_segment_all_absent := True
 					from k := 0 until k > 255 loop
-						a_code := k + 256 * j + 256 * 256 * i
-						a_code_datum := codes.item (a_code)
-						if a_code_datum = Void then
-							a_value := -1
+						l_code := k + 256 * j + 256 * 256 * i
+						l_code_datum := codes.item (l_code)
+						if l_code_datum = Void then
+							l_value := -1
 						else
-							a_value := a_code_datum.lower_code
+							l_value := l_code_datum.lower_code
 						end
-						if a_value /= - 1 then
-							segment_all_absent := False
-							plane_all_absent := False
+						if l_value /= - 1 then
+							l_segment_all_absent := False
+							l_plane_all_absent := False
 						end
-						a_segment.put (a_value, k)
+						l_segment.put (l_value, k)
 						k := k + 1
 					end
-					if segment_all_absent then
-						a_segment_array_name := Empty_lower_code_segment_array_name
-						if not empty_segment_written then
-							empty_segment_written := True
-							write_integer_segment (a_segment, Empty_lower_code_segment_array_name, an_output_file)
+					if l_segment_all_absent then
+						l_segment_array_name := Empty_lower_code_segment_array_name
+						if not l_empty_segment_written then
+							l_empty_segment_written := True
+							write_integer_segment (l_segment, Empty_lower_code_segment_array_name, a_output_file)
 						end
 					else
-						a_segment_array_name := "lower_code_plane_" + i.out + "_segment_" + j.out
-						write_integer_segment (a_segment, a_segment_array_name, an_output_file)
+						l_segment_array_name := "lower_code_plane_" + i.out + "_segment_" + j.out
+						write_integer_segment (l_segment, l_segment_array_name, a_output_file)
 					end
-					some_segment_names.put (a_segment_array_name, j)
+					l_segment_names.put (l_segment_array_name, j)
 					j := j + 1
 				end
-				if plane_all_absent then
-					a_plane_array_name := Empty_lower_code_plane_array_name
-					if not empty_plane_written then
-						empty_plane_written := True
-						write_empty_integer_plane (a_plane_array_name, Empty_lower_code_segment_array_name, an_output_file)
+				if l_plane_all_absent then
+					l_plane_array_name := Empty_lower_code_plane_array_name
+					if not l_empty_plane_written then
+						l_empty_plane_written := True
+						write_empty_integer_plane (l_plane_array_name, Empty_lower_code_segment_array_name, a_output_file)
 					end
 				else
-					a_plane_array_name := "lower_code_plane_" + i.out
-					write_integer_plane (some_segment_names, a_plane_array_name, an_output_file)
+					l_plane_array_name := "lower_code_plane_" + i.out
+					write_integer_plane (l_segment_names, l_plane_array_name, a_output_file)
 				end
-				some_plane_names.put (a_plane_array_name, i)
+				l_plane_names.put (l_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tlower_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
-			an_output_file.put_string ("%T%T%T-- Lower case code points for each code point%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%Tlower_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
+			a_output_file.put_string ("%T%T%T-- Lower case code points for each code point%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_plane_names.item (i))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (i.out)
-				an_output_file.put_string (")%N")
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (l_plane_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
 				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_upper_case_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_upper_case_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing upper case equivalents.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		local
-			i, j, k, a_code, a_value: INTEGER
-			a_code_datum: GEUC_UNICODE_DATA
-			some_segment_names, some_plane_names: ARRAY [STRING]
-			plane_all_absent, segment_all_absent: BOOLEAN
-			empty_plane_written, empty_segment_written: BOOLEAN
-			a_segment: ARRAY [INTEGER]
-			a_plane_array_name, a_segment_array_name: STRING
+			i, j, k, l_code, l_value: INTEGER
+			l_code_datum: GEUC_UNICODE_DATA
+			l_segment_names, l_plane_names: ARRAY [STRING]
+			l_plane_all_absent, l_segment_all_absent: BOOLEAN
+			l_empty_plane_written, l_empty_segment_written: BOOLEAN
+			l_segment: ARRAY [INTEGER]
+			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create some_plane_names.make (0, 16)
+			create l_plane_names.make (0, 16)
 			from i := 0 until i > 16 loop
-				create some_segment_names.make (0, 255)
-				plane_all_absent := True
+				create l_segment_names.make (0, 255)
+				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
-					create a_segment.make (0, 255)
-					segment_all_absent := True
+					create l_segment.make (0, 255)
+					l_segment_all_absent := True
 					from k := 0 until k > 255 loop
-						a_code := k + 256 * j + 256 * 256 * i
-						a_code_datum := codes.item (a_code)
-						if a_code_datum = Void then
-							a_value := -1
+						l_code := k + 256 * j + 256 * 256 * i
+						l_code_datum := codes.item (l_code)
+						if l_code_datum = Void then
+							l_value := -1
 						else
-							a_value := a_code_datum.upper_code
+							l_value := l_code_datum.upper_code
 						end
-						if a_value /= - 1 then
-							segment_all_absent := False
-							plane_all_absent := False
+						if l_value /= - 1 then
+							l_segment_all_absent := False
+							l_plane_all_absent := False
 						end
-						a_segment.put (a_value, k)
+						l_segment.put (l_value, k)
 						k := k + 1
 					end
-					if segment_all_absent then
-						a_segment_array_name := Empty_upper_code_segment_array_name
-						if not empty_segment_written then
-							empty_segment_written := True
-							write_integer_segment (a_segment, Empty_upper_code_segment_array_name, an_output_file)
+					if l_segment_all_absent then
+						l_segment_array_name := Empty_upper_code_segment_array_name
+						if not l_empty_segment_written then
+							l_empty_segment_written := True
+							write_integer_segment (l_segment, Empty_upper_code_segment_array_name, a_output_file)
 						end
 					else
-						a_segment_array_name := "upper_code_plane_" + i.out + "_segment_" + j.out
-						write_integer_segment (a_segment, a_segment_array_name, an_output_file)
+						l_segment_array_name := "upper_code_plane_" + i.out + "_segment_" + j.out
+						write_integer_segment (l_segment, l_segment_array_name, a_output_file)
 					end
-					some_segment_names.put (a_segment_array_name, j)
+					l_segment_names.put (l_segment_array_name, j)
 					j := j + 1
 				end
-				if plane_all_absent then
-					a_plane_array_name := Empty_upper_code_plane_array_name
-					if not empty_plane_written then
-						empty_plane_written := True
-						write_empty_integer_plane (a_plane_array_name, Empty_upper_code_segment_array_name, an_output_file)
+				if l_plane_all_absent then
+					l_plane_array_name := Empty_upper_code_plane_array_name
+					if not l_empty_plane_written then
+						l_empty_plane_written := True
+						write_empty_integer_plane (l_plane_array_name, Empty_upper_code_segment_array_name, a_output_file)
 					end
 				else
-					a_plane_array_name := "upper_code_plane_" + i.out
-					write_integer_plane (some_segment_names, a_plane_array_name, an_output_file)
+					l_plane_array_name := "upper_code_plane_" + i.out
+					write_integer_plane (l_segment_names, l_plane_array_name, a_output_file)
 				end
-				some_plane_names.put (a_plane_array_name, i)
+				l_plane_names.put (l_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Tupper_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
-			an_output_file.put_string ("%T%T%T-- Upper case code points for each code point%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%Tupper_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
+			a_output_file.put_string ("%T%T%T-- Upper case code points for each code point%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_plane_names.item (i))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (i.out)
-				an_output_file.put_string (")%N")
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (l_plane_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
 				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_title_case_array (an_output_file: KL_TEXT_OUTPUT_FILE) is
+	write_title_case_array (a_output_file: KL_TEXT_OUTPUT_FILE) is
 			-- Write code for an Eiffel 'ARRAY' containing title case equivalents.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 		local
-			i, j, k, a_code, a_value: INTEGER
-			a_code_datum: GEUC_UNICODE_DATA
-			some_segment_names, some_plane_names: ARRAY [STRING]
-			plane_all_absent, segment_all_absent: BOOLEAN
-			empty_plane_written, empty_segment_written: BOOLEAN
-			a_segment: ARRAY [INTEGER]
-			a_plane_array_name, a_segment_array_name: STRING
+			i, j, k, l_code, l_value: INTEGER
+			l_code_datum: GEUC_UNICODE_DATA
+			l_segment_names, l_plane_names: ARRAY [STRING]
+			l_plane_all_absent, l_segment_all_absent: BOOLEAN
+			l_empty_plane_written, l_empty_segment_written: BOOLEAN
+			l_segment: ARRAY [INTEGER]
+			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create some_plane_names.make (0, 16)
+			create l_plane_names.make (0, 16)
 			from i := 0 until i > 16 loop
-				create some_segment_names.make (0, 255)
-				plane_all_absent := True
+				create l_segment_names.make (0, 255)
+				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
-					create a_segment.make (0, 255)
-					segment_all_absent := True
+					create l_segment.make (0, 255)
+					l_segment_all_absent := True
 					from k := 0 until k > 255 loop
-						a_code := k + 256 * j + 256 * 256 * i
-						a_code_datum := codes.item (a_code)
-						if a_code_datum = Void then
-							a_value := -1
+						l_code := k + 256 * j + 256 * 256 * i
+						l_code_datum := codes.item (l_code)
+						if l_code_datum = Void then
+							l_value := -1
 						else
-							a_value := a_code_datum.title_code
+							l_value := l_code_datum.title_code
 						end
-						if a_value /= - 1 then
-							segment_all_absent := False
-							plane_all_absent := False
+						if l_value /= - 1 then
+							l_segment_all_absent := False
+							l_plane_all_absent := False
 						end
-						a_segment.put (a_value, k)
+						l_segment.put (l_value, k)
 						k := k + 1
 					end
-					if segment_all_absent then
-						a_segment_array_name := Empty_title_code_segment_array_name
-						if not empty_segment_written then
-							empty_segment_written := True
-							write_integer_segment (a_segment, Empty_title_code_segment_array_name, an_output_file)
+					if l_segment_all_absent then
+						l_segment_array_name := Empty_title_code_segment_array_name
+						if not l_empty_segment_written then
+							l_empty_segment_written := True
+							write_integer_segment (l_segment, Empty_title_code_segment_array_name, a_output_file)
 						end
 					else
-						a_segment_array_name := "title_code_plane_" + i.out + "_segment_" + j.out
-						write_integer_segment (a_segment, a_segment_array_name, an_output_file)
+						l_segment_array_name := "title_code_plane_" + i.out + "_segment_" + j.out
+						write_integer_segment (l_segment, l_segment_array_name, a_output_file)
 					end
-					some_segment_names.put (a_segment_array_name, j)
+					l_segment_names.put (l_segment_array_name, j)
 					j := j + 1
 				end
-				if plane_all_absent then
-					a_plane_array_name := Empty_title_code_plane_array_name
-					if not empty_plane_written then
-						empty_plane_written := True
-						write_empty_integer_plane (a_plane_array_name, Empty_title_code_segment_array_name, an_output_file)
+				if l_plane_all_absent then
+					l_plane_array_name := Empty_title_code_plane_array_name
+					if not l_empty_plane_written then
+						l_empty_plane_written := True
+						write_empty_integer_plane (l_plane_array_name, Empty_title_code_segment_array_name, a_output_file)
 					end
 				else
-					a_plane_array_name := "title_code_plane_" + i.out
-					write_integer_plane (some_segment_names, a_plane_array_name, an_output_file)
+					l_plane_array_name := "title_code_plane_" + i.out
+					write_integer_plane (l_segment_names, l_plane_array_name, a_output_file)
 				end
-				some_plane_names.put (a_plane_array_name, i)
+				l_plane_names.put (l_plane_array_name, i)
 				i := i + 1
 			end
-			an_output_file.put_string ("%Ttitle_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
-			an_output_file.put_string ("%T%T%T-- Title case code points for each code point%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%Ttitle_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
+			a_output_file.put_string ("%T%T%T-- Title case code points for each code point%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
 			from i := 0 until i > 16 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_plane_names.item (i))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (i.out)
-				an_output_file.put_string (")%N")
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (l_plane_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
 				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	 write_integer8_plane (some_segment_names: ARRAY [STRING]; a_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for plane `a_name' to `an_output_file'.
+	 write_integer8_plane (a_segment_names: ARRAY [STRING]; a_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for plane `a_name' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
-			segment_array_names_not_void: some_segment_names /= Void
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
+			segment_array_names_not_void: a_segment_names /= Void
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_name)
-			an_output_file.put_string (": SPECIAL [ARRAY [INTEGER_8]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated character class array plane%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
-			from  until an_index > 255 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_segment_names.item (an_index))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (an_index.out)
-				an_output_file.put_string (")%N")
-				an_index := an_index + 1
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_name)
+			a_output_file.put_string (": SPECIAL [ARRAY [INTEGER_8]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated character class array plane%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			from  until i > 255 loop
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (a_segment_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
+				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_empty_integer8_plane (a_plane_name, a_segment_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for an empty character-class plane to `an_output_file'.
+	write_empty_integer8_plane (a_plane_name, a_segment_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for an empty character-class plane to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			plane_name_not_void: a_plane_name /= Void
 			plane_name_not_empty: not a_plane_name.is_empty
 			segment_name_not_void: a_segment_name /= Void
 			segment_name_not_empty: not a_segment_name.is_empty
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_plane_name)
-			an_output_file.put_string (": SPECIAL [ARRAY [INTEGER_8]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated character class array plane%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
-			from until an_index > 255 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (a_segment_name)
-				an_output_file.put_string (", ")
-				an_output_file.put_string (an_index.out)
-				an_output_file.put_string (")%N")
-				an_index := an_index + 1
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_plane_name)
+			a_output_file.put_string (": SPECIAL [ARRAY [INTEGER_8]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated character class array plane%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			from until i > 255 loop
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (a_segment_name)
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
+				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_integer8_segment (a_segment: ARRAY [INTEGER_8]; a_segment_array_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for `a_segment', named `a_segment_array_name' to `an_output_file'.
+	write_integer8_segment (a_segment: ARRAY [INTEGER_8]; a_segment_array_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for `a_segment', named `a_segment_array_name' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			segment_not_void: a_segment /= Void
 			segment_array_names_not_void: a_segment_array_name /= Void
 		local
-			an_index, a_value: INTEGER
+			i, l_value: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_segment_array_name)
-			an_output_file.put_string (": ARRAY [INTEGER_8] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated character class array segment%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%TResult := string_to_array8 (%"")
-			from until an_index > 255 loop
-				a_value := a_segment.item (an_index)
-				an_output_file.put_string ("%%/" + a_value.out + "/")
-				an_index := an_index + 1
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_segment_array_name)
+			a_output_file.put_string (": ARRAY [INTEGER_8] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated character class array segment%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%TResult := string_to_array8 (%"")
+			from until i > 255 loop
+				l_value := a_segment.item (i)
+				a_output_file.put_string ("%%/" + l_value.out + "/")
+				i := i + 1
 			end
-			an_output_file.put_string ("%")%N")
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%")%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_integer_plane (some_segment_names: ARRAY [STRING]; a_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for plane `a_name' to `an_output_file'.
+	write_integer_plane (a_segment_names: ARRAY [STRING]; a_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for plane `a_name' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
-			segment_array_names_not_void: some_segment_names /= Void
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
+			segment_array_names_not_void: a_segment_names /= Void
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_name)
-			an_output_file.put_string (": SPECIAL [ARRAY [INTEGER]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
-			from until an_index > 255 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_segment_names.item (an_index))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (an_index.out)
-				an_output_file.put_string (")%N")
-				an_index := an_index + 1
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_name)
+			a_output_file.put_string (": SPECIAL [ARRAY [INTEGER]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			from until i > 255 loop
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (a_segment_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
+				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_empty_integer_plane (a_plane_name, a_segment_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for an empty code plane to `an_output_file'.
+	write_empty_integer_plane (a_plane_name, a_segment_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for an empty code plane to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			plane_name_not_void: a_plane_name /= Void
 			plane_name_not_empty: not a_plane_name.is_empty
 			segment_name_not_void: a_segment_name /= Void
 			segment_name_not_empty: not a_segment_name.is_empty
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_plane_name)
-			an_output_file.put_string (": SPECIAL [ARRAY [INTEGER]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
-			from until an_index > 255 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (a_segment_name)
-				an_output_file.put_string (", ")
-				an_output_file.put_string (an_index.out)
-				an_output_file.put_string (")%N")
-				an_index := an_index + 1
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_plane_name)
+			a_output_file.put_string (": SPECIAL [ARRAY [INTEGER]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			from until i > 255 loop
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (a_segment_name)
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
+				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_integer_segment (a_segment: ARRAY [INTEGER]; a_segment_array_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for `a_segment', named `a_segment_array_name' to `an_output_file'.
+	write_integer_segment (a_segment: ARRAY [INTEGER]; a_segment_array_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for `a_segment', named `a_segment_array_name' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			segment_not_void: a_segment /= Void
 			segment_array_names_not_void: a_segment_array_name /= Void
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_segment_array_name)
-			an_output_file.put_string (": ARRAY [INTEGER] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array segment%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%TResult := <<%N%T%T%TINTEGER_.to_integer (")
-			from until an_index > 255 loop
-				an_output_file.put_string (a_segment.item (an_index).out)
-				if an_index = 0 then
-					an_output_file.put_string (")")
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_segment_array_name)
+			a_output_file.put_string (": ARRAY [INTEGER] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array segment%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%TResult := <<%N%T%T%TINTEGER_.to_integer (")
+			from until i > 255 loop
+				a_output_file.put_string (a_segment.item (i).out)
+				if i = 0 then
+					a_output_file.put_string (")")
 				end
-				if an_index = 255 then
-				   an_output_file.put_string (">>")
+				if i = 255 then
+				   a_output_file.put_string (">>")
 				else
-					an_output_file.put_string (",")
+					a_output_file.put_string (",")
 				end
-				if an_index \\ 10 = 0 then
-					an_output_file.put_string ("%N%T%T%T")
+				if i \\ 10 = 0 then
+					a_output_file.put_string ("%N%T%T%T")
 				end
-				an_index := an_index + 1
+				i := i + 1
 			end
-			an_output_file.put_string ("%N")
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_empty_integer_list_plane (a_plane_name, a_segment_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for an empty code plane to `an_output_file'.
+	write_empty_integer_list_plane (a_plane_name, a_segment_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for an empty code plane to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			plane_name_not_void: a_plane_name /= Void
 			plane_name_not_empty: not a_plane_name.is_empty
 			segment_name_not_void: a_segment_name /= Void
 			segment_name_not_empty: not a_segment_name.is_empty
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_plane_name)
-			an_output_file.put_string (": SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
-			from until an_index > 255 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (a_segment_name)
-				an_output_file.put_string (", ")
-				an_output_file.put_string (an_index.out)
-				an_output_file.put_string (")%N")
-				an_index := an_index + 1
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_plane_name)
+			a_output_file.put_string (": SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			from until i > 255 loop
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (a_segment_name)
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
+				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_integer_list_plane (some_segment_names: ARRAY [STRING]; a_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for plane `a_name' to `an_output_file'.
+	write_integer_list_plane (a_segment_names: ARRAY [STRING]; a_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for plane `a_name' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
-			segment_array_names_not_void: some_segment_names /= Void
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
+			segment_array_names_not_void: a_segment_names /= Void
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_name)
-			an_output_file.put_string (": SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
-			from until an_index > 255 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_segment_names.item (an_index))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (an_index.out)
-				an_output_file.put_string (")%N")
-				an_index := an_index + 1
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_name)
+			a_output_file.put_string (": SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			from until i > 255 loop
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (a_segment_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
+				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_integer_list_segment (a_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]; a_segment_array_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE; all_empty: BOOLEAN) is
-			-- Write code for `a_segment', named `a_segment_array_name' to `an_output_file'.
+	write_integer_list_segment (a_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]; a_segment_array_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE; all_empty: BOOLEAN) is
+			-- Write code for `a_segment', named `a_segment_array_name' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			segment_not_void: a_segment /= Void
 			segment_array_names_not_void: a_segment_array_name /= Void
 		local
-			an_index, j: INTEGER
-			a_list: DS_ARRAYED_LIST [INTEGER]
+			i, j: INTEGER
+			l_list: DS_ARRAYED_LIST [INTEGER]
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_segment_array_name)
-			an_output_file.put_string (": ARRAY [DS_ARRAYED_LIST [INTEGER]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated arrayed_list segment%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_segment_array_name)
+			a_output_file.put_string (": ARRAY [DS_ARRAYED_LIST [INTEGER]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated arrayed_list segment%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
 			if not all_empty then
-				from until an_index > 255 loop
-					a_list := a_segment.item (an_index)
-					if a_list /= Void then
-						j := a_list.count
+				from until i > 255 loop
+					l_list := a_segment.item (i)
+					if l_list /= Void then
+						j := l_list.count
 						if j = 1 then
-							an_output_file.put_string ("%T%T%TResult.put (new_singleton (")
-							an_output_file.put_string (a_list.item (1).out)
-							an_output_file.put_string ("),")
-							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")
+							a_output_file.put_string ("%T%T%TResult.put (new_singleton (")
+							a_output_file.put_string (l_list.item (1).out)
+							a_output_file.put_string ("),")
+							a_output_file.put_string (i.out)
+							a_output_file.put_string (")%N")
 						elseif j = 2 then
-							an_output_file.put_string ("%T%T%TResult.put (new_pair (")
-							an_output_file.put_string (a_list.item (1).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (2).out)
-							an_output_file.put_string ("),")
-							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")
+							a_output_file.put_string ("%T%T%TResult.put (new_pair (")
+							a_output_file.put_string (l_list.item (1).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (2).out)
+							a_output_file.put_string ("),")
+							a_output_file.put_string (i.out)
+							a_output_file.put_string (")%N")
 						elseif j = 3 then
-							an_output_file.put_string ("%T%T%TResult.put (new_triple (")
-							an_output_file.put_string (a_list.item (1).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (2).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (3).out)
-							an_output_file.put_string ("),")
-							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")
+							a_output_file.put_string ("%T%T%TResult.put (new_triple (")
+							a_output_file.put_string (l_list.item (1).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (2).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (3).out)
+							a_output_file.put_string ("),")
+							a_output_file.put_string (i.out)
+							a_output_file.put_string (")%N")
 						elseif j = 4 then
-							an_output_file.put_string ("%T%T%TResult.put (new_quadruple (")
-							an_output_file.put_string (a_list.item (1).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (2).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (3).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (4).out)
-							an_output_file.put_string ("),")
-							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")
+							a_output_file.put_string ("%T%T%TResult.put (new_quadruple (")
+							a_output_file.put_string (l_list.item (1).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (2).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (3).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (4).out)
+							a_output_file.put_string ("),")
+							a_output_file.put_string (i.out)
+							a_output_file.put_string (")%N")
 						elseif j = 5 then
-							an_output_file.put_string ("%T%T%TResult.put (new_quintuple (")
-							an_output_file.put_string (a_list.item (1).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (2).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (3).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (4).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (5).out)
-							an_output_file.put_string ("),")
-							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")
+							a_output_file.put_string ("%T%T%TResult.put (new_quintuple (")
+							a_output_file.put_string (l_list.item (1).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (2).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (3).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (4).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (5).out)
+							a_output_file.put_string ("),")
+							a_output_file.put_string (i.out)
+							a_output_file.put_string (")%N")
 						elseif j = 6 then
-							an_output_file.put_string ("%T%T%TResult.put (new_sextuple (")
-							an_output_file.put_string (a_list.item (1).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (2).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (3).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (4).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (5).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (6).out)
-							an_output_file.put_string ("),")
-							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")
+							a_output_file.put_string ("%T%T%TResult.put (new_sextuple (")
+							a_output_file.put_string (l_list.item (1).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (2).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (3).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (4).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (5).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (6).out)
+							a_output_file.put_string ("),")
+							a_output_file.put_string (i.out)
+							a_output_file.put_string (")%N")
 						elseif j = 7 then
-							an_output_file.put_string ("%T%T%TResult.put (new_heptuple (")
-							an_output_file.put_string (a_list.item (1).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (2).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (3).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (4).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (5).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (6).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (7).out)
-							an_output_file.put_string ("),")
-							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")
+							a_output_file.put_string ("%T%T%TResult.put (new_heptuple (")
+							a_output_file.put_string (l_list.item (1).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (2).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (3).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (4).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (5).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (6).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (7).out)
+							a_output_file.put_string ("),")
+							a_output_file.put_string (i.out)
+							a_output_file.put_string (")%N")
 						elseif j = 8 then
-							an_output_file.put_string ("%T%T%TResult.put (new_octuple (")
-							an_output_file.put_string (a_list.item (1).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (2).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (3).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (4).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (5).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (6).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (7).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (8).out)
-							an_output_file.put_string ("),")
-							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")
+							a_output_file.put_string ("%T%T%TResult.put (new_octuple (")
+							a_output_file.put_string (l_list.item (1).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (2).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (3).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (4).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (5).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (6).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (7).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (8).out)
+							a_output_file.put_string ("),")
+							a_output_file.put_string (i.out)
+							a_output_file.put_string (")%N")
 						elseif j = 18 then
-							an_output_file.put_string ("%T%T%TResult.put (new_eighteen_tuple (")
-							an_output_file.put_string (a_list.item (1).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (2).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (3).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (4).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (5).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (6).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (7).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (8).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (9).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (10).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (11).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (12).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (13).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (14).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (15).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (16).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (17).out)
-							an_output_file.put_string (",")
-							an_output_file.put_string (a_list.item (18).out)
-							an_output_file.put_string ("),")
-							an_output_file.put_string (an_index.out)
-							an_output_file.put_string (")%N")
+							a_output_file.put_string ("%T%T%TResult.put (new_eighteen_tuple (")
+							a_output_file.put_string (l_list.item (1).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (2).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (3).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (4).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (5).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (6).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (7).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (8).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (9).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (10).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (11).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (12).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (13).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (14).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (15).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (16).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (17).out)
+							a_output_file.put_string (",")
+							a_output_file.put_string (l_list.item (18).out)
+							a_output_file.put_string ("),")
+							a_output_file.put_string (i.out)
+							a_output_file.put_string (")%N")
 						else
 							report_general_message ("Integer list too long - count = " + j.out)
 							Exceptions.die (1)
 						end
 					end
-					an_index := an_index + 1
+					i := i + 1
 				end
 			end
-			an_output_file.put_string ("%N")
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_boolean_plane (some_segment_names: ARRAY [STRING]; a_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for plane `a_name' to `an_output_file'.
+	write_boolean_plane (a_segment_names: ARRAY [STRING]; a_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for plane `a_name' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
-			segment_array_names_not_void: some_segment_names /= Void
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
+			segment_array_names_not_void: a_segment_names /= Void
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_name)
-			an_output_file.put_string (": SPECIAL [ARRAY [BOOLEAN]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
-			from until an_index > 255 loop
-				an_output_file.put_string ("%T%T%TResult.put (")
-				an_output_file.put_string (some_segment_names.item (an_index))
-				an_output_file.put_string (", ")
-				an_output_file.put_string (an_index.out)
-				an_output_file.put_string (")%N")
-				an_index := an_index + 1
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_name)
+			a_output_file.put_string (": SPECIAL [ARRAY [BOOLEAN]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			from until i > 255 loop
+				a_output_file.put_string ("%T%T%TResult.put (")
+				a_output_file.put_string (a_segment_names.item (i))
+				a_output_file.put_string (", ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
+				i := i + 1
 			end
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_all_false_boolean_plane (a_plane_name, a_segment_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for plane where every value is `False' to `an_output_file'.
+	write_all_false_boolean_plane (a_plane_name, a_segment_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for plane where every value is `False' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			plane_name_not_void: a_plane_name /= Void
 			plane_name_not_empty: not a_plane_name.is_empty
 			segment_name_not_void: a_segment_name /= Void
 			segment_name_not_empty: not a_segment_name.is_empty
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_plane_name)
-			an_output_file.put_string (": SPECIAL [ARRAY [BOOLEAN]] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array plane%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_plane_name)
+			a_output_file.put_string (": SPECIAL [ARRAY [BOOLEAN]] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_boolean_segment (a_segment: ARRAY [BOOLEAN]; a_segment_array_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for `a_segment', named `a_segment_array_name' to `an_output_file'.
+	write_boolean_segment (a_segment: ARRAY [BOOLEAN]; a_segment_array_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for `a_segment', named `a_segment_array_name' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			segment_not_void: a_segment /= Void
 			segment_array_names_not_void: a_segment_array_name /= Void
 		local
-			an_index: INTEGER
+			i: INTEGER
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_segment_array_name)
-			an_output_file.put_string (": ARRAY [BOOLEAN] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array segment%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%TResult := <<%N%T%T")
-			from  until an_index > 255 loop
-				an_output_file.put_string (a_segment.item (an_index).out)
-				if an_index = 255 then
-				   an_output_file.put_string (">>")
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_segment_array_name)
+			a_output_file.put_string (": ARRAY [BOOLEAN] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array segment%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%TResult := <<%N%T%T")
+			from  until i > 255 loop
+				a_output_file.put_string (a_segment.item (i).out)
+				if i = 255 then
+				   a_output_file.put_string (">>")
 				else
-					an_output_file.put_string (",")
+					a_output_file.put_string (",")
 				end
-				if an_index \\ 10 = 0 then
-					an_output_file.put_string ("%N%T%T%T")
+				if i \\ 10 = 0 then
+					a_output_file.put_string ("%N%T%T%T")
 				end
-				an_index := an_index + 1
+				i := i + 1
 			end
-			an_output_file.put_string ("%N")
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	write_tristate_segment (a_segment: ARRAY [UT_TRISTATE]; a_segment_array_name: STRING; an_output_file: KL_TEXT_OUTPUT_FILE) is
-			-- Write code for `a_segment', named `a_segment_array_name' to `an_output_file'.
+	write_tristate_segment (a_segment: ARRAY [UT_TRISTATE]; a_segment_array_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write code for `a_segment', named `a_segment_array_name' to `a_output_file'.
 		require
-			file_not_void: an_output_file /= Void
-			file_open_write: an_output_file.is_open_write
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
 			segment_not_void: a_segment /= Void
 			-- no_void_segment_item: not a_segment.has (Void)
 			segment_array_names_not_void: a_segment_array_name /= Void
 		local
-			an_index: INTEGER
-			a_state: UT_TRISTATE
+			i: INTEGER
+			l_state: UT_TRISTATE
 		do
-			an_output_file.put_string ("%T")
-			an_output_file.put_string (a_segment_array_name)
-			an_output_file.put_string (": ARRAY [CHARACTER] is%N")
-			an_output_file.put_string ("%T%T%T-- Generated array segment%N")
-			an_output_file.put_string ("%T%Tonce%N")
-			an_output_file.put_string ("%T%T%TResult := <<")
-			from until an_index > 255 loop
-				a_state := a_segment.item (an_index)
-				if a_state.is_true then
-					an_output_file.put_string ("'%%/1/'")
-				elseif a_state.is_false then
-					an_output_file.put_string ("'%%/0/'")
+			a_output_file.put_string ("%T")
+			a_output_file.put_string (a_segment_array_name)
+			a_output_file.put_string (": ARRAY [CHARACTER] is%N")
+			a_output_file.put_string ("%T%T%T-- Generated array segment%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%TResult := <<")
+			from until i > 255 loop
+				l_state := a_segment.item (i)
+				if l_state.is_true then
+					a_output_file.put_string ("'%%/1/'")
+				elseif l_state.is_false then
+					a_output_file.put_string ("'%%/0/'")
 				else
-					an_output_file.put_string ("'%%/2/'")
+					a_output_file.put_string ("'%%/2/'")
 				end
-				if an_index = 255 then
-					an_output_file.put_string (">>%N")
+				if i = 255 then
+					a_output_file.put_string (">>%N")
 				else
-					an_output_file.put_string (",")
-					if an_index \\ 10 = 0 then
-						an_output_file.put_string ("%N")
+					a_output_file.put_string (",")
+					if i \\ 10 = 0 then
+						a_output_file.put_string ("%N")
 					end
 				end
-				an_index := an_index + 1
+				i := i + 1
 			end
-			an_output_file.put_string ("%N")
-			an_output_file.put_string ("%T%Tensure%N")
-			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			an_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%N")
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
-			file_still_open: an_output_file.is_open_write
+			file_still_open: a_output_file.is_open_write
 		end
 
-	process_code_class (a_code: INTEGER; a_name: STRING; some_fields: DS_LIST [STRING]) is
+	process_code_class (a_code: INTEGER; a_name: STRING; a_fields: DS_LIST [STRING]) is
 			-- Process character class et. el. for `a_code'.
 		require
 			name_not_void: a_name /= Void
-			fields_not_void: some_fields /= Void
-			fifteen_fields: some_fields.count = Field_count
+			fields_not_void: a_fields /= Void
+			fifteen_fields: a_fields.count = Field_count
 		local
-			a_data_point: GEUC_UNICODE_DATA
+			l_data_point: GEUC_UNICODE_DATA
 		do
-			create a_data_point.make (a_code, a_name, some_fields)
-			if a_data_point.is_valid then
-				codes.put (a_data_point, a_code)
+			create l_data_point.make (a_code, a_name, a_fields)
+			if l_data_point.is_valid then
+				codes.put (l_data_point, a_code)
 			else
 				report_general_message ("Invalid code point: " + a_code.out)
 				Exceptions.die (1)
@@ -2623,16 +2677,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
-				upper_case_array.put (True, a_code)
-				a_code := a_code + 1
+				upper_case_array.put (True, l_code)
+				l_code := l_code + 1
 			end
 		end
 
@@ -2643,16 +2697,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
-				lower_case_array.put (True, a_code)
-				a_code := a_code + 1
+				lower_case_array.put (True, l_code)
+				l_code := l_code + 1
 			end
 		end
 
@@ -2663,16 +2717,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
-				alphabetic_array.put (True, a_code)
-				a_code := a_code + 1
+				alphabetic_array.put (True, l_code)
+				l_code := l_code + 1
 			end
 		end
 
@@ -2683,16 +2737,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
-				math_array.put (True, a_code)
-				a_code := a_code + 1
+				math_array.put (True, l_code)
+				l_code := l_code + 1
 			end
 		end
 
@@ -2703,16 +2757,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
-				full_composition_exclusion_array.put (True, a_code)
-				a_code := a_code + 1
+				full_composition_exclusion_array.put (True, l_code)
+				l_code := l_code + 1
 			end
 		end
 
@@ -2723,16 +2777,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
-				expands_on_nfc_array.put (True, a_code)
-				a_code := a_code + 1
+				expands_on_nfc_array.put (True, l_code)
+				l_code := l_code + 1
 			end
 		end
 
@@ -2743,16 +2797,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
-				expands_on_nfd_array.put (True, a_code)
-				a_code := a_code + 1
+				expands_on_nfd_array.put (True, l_code)
+				l_code := l_code + 1
 			end
 		end
 
@@ -2763,16 +2817,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
-				expands_on_nfkc_array.put (True, a_code)
-				a_code := a_code + 1
+				expands_on_nfkc_array.put (True, l_code)
+				l_code := l_code + 1
 			end
 		end
 
@@ -2783,16 +2837,16 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_range.is_empty
 			no_comment: a_range.index_of ('#', 1) = 0
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
-				expands_on_nfkd_array.put (True, a_code)
-				a_code := a_code + 1
+				expands_on_nfkd_array.put (True, l_code)
+				l_code := l_code + 1
 			end
 		end
 
@@ -2806,20 +2860,20 @@ feature {NONE} -- Implementation
 			good_value: STRING_.same_string ("N", a_value) or STRING_.same_string ("M", a_value)
 			array_in_good_state: nfd_quick_check_array /= Void -- and then not nfd_quick_check_array.has (Void)
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfd_quick_check_array.item (a_code).set_false
+					nfd_quick_check_array.item (l_code).set_false
 				else
-					nfd_quick_check_array.item (a_code).set_undefined
+					nfd_quick_check_array.item (l_code).set_undefined
 				end
-				a_code := a_code + 1
+				l_code := l_code + 1
 			end
 		end
 
@@ -2833,20 +2887,20 @@ feature {NONE} -- Implementation
 			good_value: STRING_.same_string ("N", a_value) or STRING_.same_string ("M", a_value)
 			array_in_good_state: nfc_quick_check_array /= Void -- and then not nfc_quick_check_array.has (Void)
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfc_quick_check_array.item (a_code).set_false
+					nfc_quick_check_array.item (l_code).set_false
 				else
-					nfc_quick_check_array.item (a_code).set_undefined
+					nfc_quick_check_array.item (l_code).set_undefined
 				end
-				a_code := a_code + 1
+				l_code := l_code + 1
 			end
 		end
 
@@ -2860,20 +2914,20 @@ feature {NONE} -- Implementation
 			good_value: STRING_.same_string ("N", a_value) or STRING_.same_string ("M", a_value)
 			array_in_good_state: nfkd_quick_check_array /= Void -- and then not nfkd_quick_check_array.has (Void)
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfkd_quick_check_array.item (a_code).set_false
+					nfkd_quick_check_array.item (l_code).set_false
 				else
-					nfkd_quick_check_array.item (a_code).set_undefined
+					nfkd_quick_check_array.item (l_code).set_undefined
 				end
-				a_code := a_code + 1
+				l_code := l_code + 1
 			end
 		end
 
@@ -2887,20 +2941,20 @@ feature {NONE} -- Implementation
 			good_value: STRING_.same_string ("N", a_value) or STRING_.same_string ("M", a_value)
 			array_in_good_state: nfkc_quick_check_array /= Void -- and then not nfkc_quick_check_array.has (Void)
 		local
-			a_code, a_finish: INTEGER
+			l_code, l_finish: INTEGER
 		do
 			from
-				a_code := starting_code (a_range)
-				a_finish := ending_code (a_range)
+				l_code := starting_code (a_range)
+				l_finish := ending_code (a_range)
 			until
-				a_code > a_finish
+				l_code > l_finish
 			loop
 				if STRING_.same_string ("N", a_value) then
-					nfkc_quick_check_array.item (a_code).set_false
+					nfkc_quick_check_array.item (l_code).set_false
 				else
-					nfkc_quick_check_array.item (a_code).set_undefined
+					nfkc_quick_check_array.item (l_code).set_undefined
 				end
-				a_code := a_code + 1
+				l_code := l_code + 1
 			end
 		end
 
@@ -2911,25 +2965,25 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_code_range.is_empty
 			no_comment: a_code_range.index_of ('#', 1) = 0
 		local
-			a_splitter: ST_SPLITTER
-			some_codes: DS_LIST [STRING]
-			a_range: STRING
-			a_count: INTEGER
+			l_splitter: ST_SPLITTER
+			l_codes: DS_LIST [STRING]
+			l_range: STRING
+			l_count: INTEGER
 		do
-			a_range := STRING_.cloned_string (a_code_range)
-			STRING_.left_adjust (a_range)
-			STRING_.right_adjust (a_range)
-			create a_splitter.make_with_separators ("..")
-			some_codes := a_splitter.split_greedy (a_range)
-			a_count := some_codes.count
-			if a_count = 1 or a_count = 3 then
-				if a_count = 3 and then not some_codes.item (2).is_empty then
+			l_range := STRING_.cloned_string (a_code_range)
+			STRING_.left_adjust (l_range)
+			STRING_.right_adjust (l_range)
+			create l_splitter.make_with_separators ("..")
+			l_codes := l_splitter.split_greedy (l_range)
+			l_count := l_codes.count
+			if l_count = 1 or l_count = 3 then
+				if l_count = 3 and then not l_codes.item (2).is_empty then
 					report_general_message ("Invalid hexadecimal code point range: " + a_code_range)
 					Exceptions.die (1)
-				elseif STRING_.is_hexadecimal (some_codes.item (1)) then
-					Result := STRING_.hexadecimal_to_integer (some_codes.item (1))
+				elseif STRING_.is_hexadecimal (l_codes.item (1)) then
+					Result := STRING_.hexadecimal_to_integer (l_codes.item (1))
 				else
-					report_general_message ("Invalid initial hexadecimal code point: " + some_codes.item (1))
+					report_general_message ("Invalid initial hexadecimal code point: " + l_codes.item (1))
 					Exceptions.die (1)
 				end
 			else
@@ -2945,32 +2999,32 @@ feature {NONE} -- Implementation
 			range_not_empty: not a_code_range.is_empty
 			no_comment: a_code_range.index_of ('#', 1) = 0
 		local
-			a_splitter: ST_SPLITTER
-			some_codes: DS_LIST [STRING]
-			a_range: STRING
-			a_count: INTEGER
+			l_splitter: ST_SPLITTER
+			l_codes: DS_LIST [STRING]
+			l_range: STRING
+			l_count: INTEGER
 		do
-			a_range := STRING_.cloned_string (a_code_range)
-			STRING_.left_adjust (a_range)
-			STRING_.right_adjust (a_range)
-			create a_splitter.make_with_separators ("..")
-			some_codes := a_splitter.split_greedy (a_range)
-			a_count := some_codes.count
-			if a_count = 1 then
-				if STRING_.is_hexadecimal (some_codes.item (1)) then
-					Result := STRING_.hexadecimal_to_integer (some_codes.item (1))
+			l_range := STRING_.cloned_string (a_code_range)
+			STRING_.left_adjust (l_range)
+			STRING_.right_adjust (l_range)
+			create l_splitter.make_with_separators ("..")
+			l_codes := l_splitter.split_greedy (l_range)
+			l_count := l_codes.count
+			if l_count = 1 then
+				if STRING_.is_hexadecimal (l_codes.item (1)) then
+					Result := STRING_.hexadecimal_to_integer (l_codes.item (1))
 				else
-					report_general_message ("Invalid initial hexadecimal code point: " + some_codes.item (1))
+					report_general_message ("Invalid initial hexadecimal code point: " + l_codes.item (1))
 					Exceptions.die (1)
 				end
-			elseif a_count = 3 then
-				if not some_codes.item (2).is_empty then
+			elseif l_count = 3 then
+				if not l_codes.item (2).is_empty then
 					report_general_message ("Invalid hexadecimal code point range: " + a_code_range)
 					Exceptions.die (1)
-				elseif STRING_.is_hexadecimal (some_codes.item (3)) then
-					Result := STRING_.hexadecimal_to_integer (some_codes.item (3))
+				elseif STRING_.is_hexadecimal (l_codes.item (3)) then
+					Result := STRING_.hexadecimal_to_integer (l_codes.item (3))
 				else
-					report_general_message ("Invalid final hexadecimal code: " + some_codes.item (2))
+					report_general_message ("Invalid final hexadecimal code: " + l_codes.item (2))
 					Exceptions.die (1)
 				end
 			else
@@ -2979,53 +3033,53 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_tristate_property (some_fields: DS_LIST [STRING]; a_line: STRING) is
-			-- Check `some_fields' has a valid tri-state property value.
+	check_tristate_property (a_fields: DS_LIST [STRING]; a_line: STRING) is
+			-- Check `a_fields' has a valid tri-state property value.
 		require
-			some_fields_not_void: some_fields /= Void
+			a_fields_not_void: a_fields /= Void
 			line_not_void: a_line /= Void
 			line_not_empty: not a_line.is_empty
 		local
-			a_value: STRING
+			l_value: STRING
 		do
-			if some_fields.count /= 3 then
+			if a_fields.count /= 3 then
 				report_general_message ("Exactly three fields must be present for a three-valued boolean property. Found: " + a_line)
 				Exceptions.die (1)
 			else
-				a_value := some_fields.item (3)
-				STRING_.left_adjust (a_value)
-				STRING_.right_adjust (a_value)
-				if STRING_.same_string ("M", a_value) then
+				l_value := a_fields.item (3)
+				STRING_.left_adjust (l_value)
+				STRING_.right_adjust (l_value)
+				if STRING_.same_string ("M", l_value) then
 					-- Maybe - OK
-				elseif STRING_.same_string ("N", a_value) then
+				elseif STRING_.same_string ("N", l_value) then
 					-- No - OK
 				else
-					report_general_message ("Three-valued boolean property must be 'N' or 'M'. Found: " + a_value)
+					report_general_message ("Three-valued boolean property must be 'N' or 'M'. Found: " + l_value)
 					Exceptions.die (1)
 				end
 			end
 		ensure
-			three_fields: some_fields.count = 3
+			three_fields: a_fields.count = 3
 			good_value: True -- 'M' or 'N'
 		end
 
-	set_array_tristate_true (an_array: ARRAY [UT_TRISTATE]) is
-			-- Set all `an_array' to true.
+	set_array_tristate_true (l_array: ARRAY [UT_TRISTATE]) is
+			-- Set all `l_array' to true.
 		require
-			array_not_void: an_array /= Void
+			array_not_void: l_array /= Void
 		local
-			a_true: UT_TRISTATE
+			l_true: UT_TRISTATE
 			i, nb: INTEGER
 		do
-			i := an_array.lower
-			nb := an_array.upper
+			i := l_array.lower
+			nb := l_array.upper
 			from until i > nb loop
-				create a_true.make_true
-				an_array.put (a_true, i)
+				create l_true.make_true
+				l_array.put (l_true, i)
 				i := i + 1
 			end
 		ensure
-			-- no_void_items: not an_array.has (Void)
+			-- no_void_items: not l_array.has (Void)
 			all_true: True
 		end
 
