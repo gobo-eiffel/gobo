@@ -323,6 +323,34 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
+	assert_strings_case_insensitive_equal (a_tag: STRING; expected, actual: STRING) is
+			-- Assert that `expected' and `actual' are the same string (case insensitive).
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			a_message: STRING
+		do
+			assertions.add_assertion
+			if not STRING_.same_case_insensitive (expected, actual) then
+				a_message := assert_strings_equal_message (a_tag, expected, actual)
+				assertions.report_error (a_message)
+			end
+		end
+
+	check_strings_case_insensitive_equal (a_tag: STRING; expected, actual: STRING) is
+			-- Check that `expected' and `actual' are the same string (case insensitive).
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_strings_case_insensitive_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_characters_equal (a_tag: STRING; expected, actual: CHARACTER) is
 			-- Assert that `expected = actual'
 		require
