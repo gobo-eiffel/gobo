@@ -13381,9 +13381,7 @@ EIF_POINTER console_def(EIF_INTEGER file) {
 	case 0:
 		return (EIF_POINTER)stdin;
 	case 1:
-			/* Output is set to only have line buffered. Meaning that
-			 * each displayed %N will flush the buffer. */
-		setvbuf(stdout, NULL, _IOLBF, 0);
+		setvbuf(stdout, NULL, _IONBF, 0);
 		return (EIF_POINTER)stdout;
 	case 2:
 		setvbuf (stderr, NULL, _IONBF, 0);
