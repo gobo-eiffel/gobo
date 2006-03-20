@@ -15,7 +15,6 @@
 		<parent location="${GOBO}/misc/eiffel.eant">
 			<redefine target="init_system"/>
 			<redefine target="other_clean"/>
-			<redefine target="install"/>
 		</parent>
 	</inherit>
 
