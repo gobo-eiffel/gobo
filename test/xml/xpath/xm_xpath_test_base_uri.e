@@ -95,7 +95,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", document_uri, a_uri.string_value)
+			assert_strings_case_insensitive_equal ("Correct base-URI", document_uri, a_uri.string_value)
 		end
 
 	test_context_item_not_a_node is
@@ -191,7 +191,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
 		end
 
 	test_element_tiny_tree is
@@ -209,7 +209,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
 		end
 
 	test_nested_element is
@@ -299,7 +299,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
 		end
 
 	test_pi_at_top_level_tiny_tree is
@@ -317,7 +317,7 @@ feature -- Tests
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
 			a_uri ?= an_evaluator.evaluated_items.item (1)
 			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
 		end
 
 	set_up is

@@ -83,9 +83,9 @@ feature
 			end
 			a_base_uri := resolved_uri_string ("data/books2.xml")
 			if is_tiny then
-				assert_strings_equal ("SYSTEM ID for document", a_base_uri, tiny_document.system_id)
+				assert_strings_case_insensitive_equal ("SYSTEM ID for document", a_base_uri, tiny_document.system_id)
 			else
-				assert_strings_equal ("SYSTEM ID for document", a_base_uri, document.system_id)
+				assert_strings_case_insensitive_equal ("SYSTEM ID for document", a_base_uri, document.system_id)
 			end
 
 			-- Test document_element
@@ -102,7 +102,7 @@ feature
 			assert ("Books", books_element /= Void)
 			assert ("Books element line number is 2", books_element.line_number = 2)
 			a_base_uri := resolved_uri_string ("data/booklist.xml")
-			assert_strings_equal ("SYSTEM ID for BOOKS", a_base_uri, books_element.base_uri)
+			assert_strings_case_insensitive_equal ("SYSTEM ID for BOOKS", a_base_uri, books_element.base_uri)
 
 			-- look for "ITEM" number 6 descendant of the document_element
 
@@ -142,7 +142,7 @@ feature
 				item_element := a_tree_element
 			end
 			assert ("sixth item", item_element /= Void)
-			assert_strings_equal ("SYSTEM ID for ITEM", a_base_uri, item_element.system_id)
+			assert_strings_case_insensitive_equal ("SYSTEM ID for ITEM", a_base_uri, item_element.system_id)
 			assert_strings_equal ("Base URI for ITEM", "http://www.gobosoft.com/xml-tests/AAMilne-book", item_element.base_uri)
 			assert ("Item element line number is 35", item_element.line_number = 35)
 			a_pi ?= item_element.first_child
@@ -162,16 +162,16 @@ feature
 				item_element := a_tree_element
 			end
 			assert ("eighth item", item_element /= Void)
-			assert_strings_equal ("SYSTEM ID for ITEM 2", a_base_uri, item_element.system_id)
-			assert_strings_equal ("Base URI for ITEM 2", a_base_uri, item_element.base_uri)
+			assert_strings_case_insensitive_equal ("SYSTEM ID for ITEM 2", a_base_uri, item_element.system_id)
+			assert_strings_case_insensitive_equal ("Base URI for ITEM 2", a_base_uri, item_element.base_uri)
 			a_pi ?= item_element.first_child
 			assert ("PI child 2 not_void", a_pi /= Void)
 			assert_strings_equal ("PI child 2", "testpi2", a_pi.node_name)
-			assert_strings_equal ("Base URI for PI 2", a_base_uri, a_pi.base_uri)
+			assert_strings_case_insensitive_equal ("Base URI for PI 2", a_base_uri, a_pi.base_uri)
 			a_pi ?= item_element.next_sibling
 			assert ("PI sibling not_void", a_pi /= Void)
 			assert_strings_equal ("PI sibling", "testpi3", a_pi.node_name)
-			assert_strings_equal ("Base URI for PI 3", a_base_uri, a_pi.base_uri)
+			assert_strings_case_insensitive_equal ("Base URI for PI 3", a_base_uri, a_pi.base_uri)
 			assert ("PI3 line number is 57", a_pi.line_number = 57)
 		end
 

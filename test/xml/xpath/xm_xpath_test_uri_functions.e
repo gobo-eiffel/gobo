@@ -74,7 +74,7 @@ feature -- Tests
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/00/Weather/CA/Los Angeles#ocean"))
+			assert_strings_equal ("Correct result", "http://www.example.com/00/Weather/CA/Los Angeles#ocean", a_string_value.string_value)
 		end
 
 	test_encode_for_uri_one is
@@ -94,7 +94,7 @@ feature -- Tests
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http%%3A%%2F%%2Fwww.example.com%%2F00%%2FWeather%%2FCA%%2FLos%%2520Angeles#ocean"))
+			assert_strings_equal ("Correct result", "http%%3A%%2F%%2Fwww.example.com%%2F00%%2FWeather%%2FCA%%2FLos%%2520Angeles#ocean", a_string_value.string_value)
 		end
 
 	test_encode_for_uri_two is
@@ -114,7 +114,7 @@ feature -- Tests
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/~b%%C3%%A9b%%C3%%A9"))
+			assert_strings_equal ("Correct result", "http://www.example.com/~b%%C3%%A9b%%C3%%A9", a_string_value.string_value)
 		end
 
 	test_encode_for_uri_three is
@@ -134,7 +134,7 @@ feature -- Tests
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/100%%25%%20organic"))
+			assert_strings_equal ("Correct result", "http://www.example.com/100%%25%%20organic", a_string_value.string_value)
 		end
 
 	test_iri_two_uri_one is
@@ -154,7 +154,7 @@ feature -- Tests
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/00/Weather/CA/Los%%20Angeles#ocean"))
+			assert_strings_equal ("Correct result", "http://www.example.com/00/Weather/CA/Los%%20Angeles#ocean", a_string_value.string_value)
 		end
 	
 	test_iri_two_uri_two is
@@ -174,7 +174,7 @@ feature -- Tests
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/~b%%C3%%A9b%%C3%%A9"))
+			assert_strings_equal ("Correct result", "http://www.example.com/~b%%C3%%A9b%%C3%%A9", a_string_value.string_value)
 		end
 	
 	test_resolve_absolute_uri_against_static_context is
@@ -192,7 +192,7 @@ feature -- Tests
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			assert ("AnyURI value", evaluated_items.item (1).is_any_uri)
-			assert ("Correct result", STRING_.same_string (evaluated_items.item (1).as_any_uri.string_value, "http://www.example.com/index.html"))
+			assert_strings_equal ("Correct result", "http://www.example.com/index.html", evaluated_items.item (1).as_any_uri.string_value)
 		end
 
 	test_resolve_relative_uri_against_absolute_uri is
@@ -210,7 +210,7 @@ feature -- Tests
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			assert ("AnyURI value", evaluated_items.item (1).is_any_uri)
-			assert ("Correct result", STRING_.same_string (evaluated_items.item (1).as_any_uri.string_value, "http://www.example.com/contents.html"))
+			assert_strings_equal ("Correct result", "http://www.example.com/contents.html", evaluated_items.item (1).as_any_uri.string_value)
 		end
 
 	test_resolve_relative_uri_against_static_content is
@@ -228,7 +228,7 @@ feature -- Tests
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			assert ("AnyURI value", evaluated_items.item (1).is_any_uri)
-			assert ("Correct result", STRING_.same_string (evaluated_items.item (1).as_any_uri.string_value, expected_resolved_uri))
+			assert_strings_case_insensitive_equal ("Correct result", expected_resolved_uri, evaluated_items.item (1).as_any_uri.string_value)
 		end
 
 	set_up is
@@ -261,5 +261,3 @@ feature {NONE} -- Implementation
 		end
 
 end
-
-			
