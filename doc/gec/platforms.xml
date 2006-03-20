@@ -62,7 +62,7 @@ has already been used successfully:
 			<entry>32-bit x86</entry>
 		</row>
 		<row>
-			<entry>OpenBSD ???</entry>
+			<entry>OpenBSD 3.8</entry>
 			<entry>gcc ???</entry>
 			<entry>32-bit x86</entry>
 		</row>
