@@ -33,7 +33,7 @@ for short, is a companion tool of <link linkend="../gec/index">
 <projectname>gec</projectname></link>. It's a <ulink
 url="http://en.wikipedia.org/wiki/Lint_programming_tool">lint-like</ulink> tool
 for Eiffel. In addition to reporting errors found by compilers, it also goes
-further and try to report suspicious language usage such as code that may lead
+further and tries to report suspicious language usage such as code that may lead
 to CAT-calls at run-time by performing system-level static analysis of the code.
 Contrary to some Eiffel compilers, <projectname>gelint</projectname> will report
 as many errors as possible in one go, both in live and dead Eiffel code.

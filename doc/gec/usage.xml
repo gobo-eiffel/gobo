@@ -154,7 +154,7 @@ cflags_finalize: -O2
 lflags_finalize:
 </programlisting></blockquote>
 This config file is used by <projectname>gec</projectname> to generate a
-bat file on Windows or a shell script on other platforms that will be
+.bat file on Windows or a shell script on other platforms that will be
 executed to compile the generated C code. The variable "cc" represents the
 command-line template to turn C files into object files, and "link" to
 turn object files into executables. The variables "$cflags", "$includes",
