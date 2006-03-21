@@ -455,7 +455,7 @@ feature -- Test
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Result is a", "a", a_string_value.string_value)
+			assert_strings_equal ("Result is a", "a", a_string_value.string_value)
 		end
 
 	set_up is
