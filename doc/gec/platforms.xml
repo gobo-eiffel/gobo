@@ -62,6 +62,11 @@ has already been used successfully:
 			<entry>32-bit x86</entry>
 		</row>
 		<row>
+			<entry>Red Hat Enterprise Linux 4</entry>
+			<entry>gcc 3.4.5</entry>
+			<entry>64-bit x86</entry>
+		</row>
+		<row>
 			<entry>OpenBSD 3.8</entry>
 			<entry>gcc ???</entry>
 			<entry>32-bit x86</entry>
