@@ -1863,11 +1863,11 @@ feature -- Parsing
 			if root_class /= Void then
 				a_parser := eiffel_parser
 				root_class.process (a_parser)
-				if not root_class.is_preparsed then
-						-- TODO:
-					print ("Class ")
-					print (root_class.name.name)
-					print (" not found.%N")
+				if root_class = none_class then
+					parse_all
+				elseif not root_class.is_preparsed then
+						-- Error: unknown root class.
+					error_handler.report_gvsrc4a_error (root_class)
 				else
 					not_done := True
 					a_cursor := classes.new_cursor
