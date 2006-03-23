@@ -3178,9 +3178,7 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 											current_file.put_string (c_case)
 											current_file.put_character (' ')
 											print_type_cast (l_value_type, current_file)
-											current_file.put_character ('%'')
 											print_escaped_character (INTEGER_.to_character (k))
-											current_file.put_character ('%'')
 											current_file.put_character (':')
 											current_file.put_new_line
 											k := k + 1
@@ -3856,9 +3854,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			else
 				print_type_cast (current_system.character_type, current_file)
 				current_file.put_character ('(')
-				current_file.put_character ('%'')
 				print_escaped_character (a_constant.value)
-				current_file.put_character ('%'')
 				current_file.put_character (')')
 			end
 		end
@@ -5884,9 +5880,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 				l_string := a_string.value
 				current_file.put_string (c_gems)
 				current_file.put_character ('(')
-				current_file.put_character ('%"')
 				print_escaped_string (l_string)
-				current_file.put_character ('%"')
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				current_file.put_integer (l_string.count)
@@ -6089,9 +6083,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 				l_string := a_string.value
 				current_file.put_string (c_gems)
 				current_file.put_character ('(')
-				current_file.put_character ('%"')
 				print_escaped_string (l_string)
-				current_file.put_character ('%"')
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				current_file.put_integer (l_string.count)
@@ -6740,9 +6732,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				l_string := a_string.value
 				current_file.put_string (c_gems)
 				current_file.put_character ('(')
-				current_file.put_character ('%"')
 				print_escaped_string (l_string)
-				current_file.put_character ('%"')
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				current_file.put_integer (l_string.count)
@@ -7811,9 +7801,11 @@ feature {NONE} -- Built-in feature generation
 			current_file.put_character ('=')
 			current_file.put_character (' ')
 			l_string := current_type.base_type.to_text
-			current_file.put_string ("gems(%"")
+			current_file.put_string (c_gems)
+			current_file.put_character ('(')
 			print_escaped_string (l_string)
-			current_file.put_string ("%", ")
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			current_file.put_integer (l_string.count)
 			current_file.put_character (')')
 			current_file.put_character (';')
@@ -8010,9 +8002,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			l_string := a_target_type.base_class.name.upper_name
 			current_file.put_string (c_gems)
 			current_file.put_character ('(')
-			current_file.put_character ('%"')
 			print_escaped_string (l_string)
-			current_file.put_character ('%"')
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			current_file.put_integer (l_string.count)
@@ -8032,9 +8022,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			l_string := a_target_type.base_type.to_text
 			current_file.put_string (c_gems)
 			current_file.put_character ('(')
-			current_file.put_character ('%"')
 			print_escaped_string (l_string)
-			current_file.put_character ('%"')
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			current_file.put_integer (l_string.count)
@@ -11749,9 +11737,24 @@ feature {NONE} -- String generation
 			i, nb: INTEGER
 			c: CHARACTER
 			l_code: INTEGER
+			l_splitted: BOOLEAN
+			l_split_size: INTEGER
 		do
+			l_split_size := 512
+			current_file.put_character ('%"')
 			nb := a_string.count
 			from i := 1 until i > nb loop
+				if (i \\ l_split_size) = 1 and i /= 1 then
+						-- Some C compilers don't accept too big strings.
+						-- Split them in several smaller ones.
+					current_file.put_character ('%"')
+					if not l_splitted then
+						l_splitted := True
+						indent
+					end
+					print_indentation
+					current_file.put_character ('%"')
+				end
 				c := a_string.item (i)
 				inspect c
 				when ' ', '!', '#', '$', '&', '('..'>', '@'..'[', ']'..'~' then
@@ -11797,6 +11800,10 @@ feature {NONE} -- String generation
 				end
 				i := i + 1
 			end
+			current_file.put_character ('%"')
+			if l_splitted then
+				dedent
+			end
 		end
 
 	print_escaped_character (c: CHARACTER) is
@@ -11804,6 +11811,7 @@ feature {NONE} -- String generation
 		local
 			l_code: INTEGER
 		do
+			current_file.put_character ('%'')
 			inspect c
 			when ' ', '!', '#', '$', '&', '('..'[', ']'..'~' then
 				current_file.put_character (c)
@@ -11841,6 +11849,7 @@ feature {NONE} -- String generation
 				end
 				INTEGER_FORMATTER_.put_octal_integer (current_file, l_code)
 			end
+			current_file.put_character ('%'')
 		end
 
 feature {NONE} -- Indentation
