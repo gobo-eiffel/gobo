@@ -1364,7 +1364,6 @@ feature {NONE} -- Implementation
 			l_cursor: DS_HASH_TABLE_CURSOR [INTEGER, DS_HASHABLE_PAIR [INTEGER, INTEGER]]
 			l_string_1, l_string_2, l_string_3: STRING
 			l_ustring_1, l_ustring_2, l_ustring_3: UC_UTF8_STRING
-			l_array: ARRAY [STRING]
 			i, j, k, l: INTEGER
 		do
 			l_string_1 := ""
