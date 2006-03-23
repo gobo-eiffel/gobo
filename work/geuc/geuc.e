@@ -1381,7 +1381,7 @@ feature {NONE} -- Implementation
 			create l_ustring_3.make_from_utf8 (l_string_3)
 			from i := 1 until i > l_ustring_1.count loop
 				k := k + 1
-				j := i + 10000
+				j := i + 1000
 				if j > l_ustring_1.count then j := l_ustring_1.count end
 				a_output_file.put_string ("%N%Tcomposition_map_first_integer_" + k.out + ": STRING is %"")
 				a_output_file.put_string (to_utf8 (l_ustring_1.substring (i, j)))
