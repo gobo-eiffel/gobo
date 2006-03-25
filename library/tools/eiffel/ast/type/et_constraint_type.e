@@ -19,7 +19,7 @@ inherit
 
 	ET_CONSTRAINT_ACTUAL_PARAMETER
 		redefine
-			type, resolved_syntactical_constraint_with_type
+			type
 		end
 
 feature -- Access

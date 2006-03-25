@@ -16,7 +16,7 @@ inherit
 
 	ET_ACTUAL_PARAMETER_ITEM
 		redefine
-			resolved_formal_parameters_with_type
+			type, resolved_formal_parameters_with_type
 		end
 
 	ET_CONSTRAINT_ACTUAL_PARAMETER
