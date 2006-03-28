@@ -25,78 +25,87 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	UC_UNICODE_ROUTINES
+		export {NONE} all end
+
 create
 
 	make, make_empty, make_from_string, make_unknown
 
 feature {NONE} -- Initialization
 
-	make (a_description, a_namespace_uri, an_error_code: STRING; a_value: like value; an_error_type: like type) is
+	make (a_description, a_namespace_uri, a_error_code: STRING; a_value: like value; a_error_type: like type) is
 			-- Create a general error value.
 		require
 			error_value_not_void: a_value /= Void
 			namespace_uri_not_void: a_namespace_uri /= Void
-			local_part_not_void: an_error_code /= Void
+			ascii_uri: is_ascii_string (a_namespace_uri)
+			local_part_not_void: a_error_code /= Void
+			ascii_code: is_ascii_string (a_error_code)
 			description_not_void: a_description /= Void
-			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
+			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
 		do
 			value := a_value
 			namespace_uri := a_namespace_uri
-			code := an_error_code
-			type := an_error_type
+			code := a_error_code
+			type := a_error_type
 			description := a_description
 			initialize_location
 		ensure
 			description_set: description = a_description
 			value_set: value = a_value
 			namespace_set: namespace_uri = a_namespace_uri
-			code_set: code = an_error_code
-			type_set: type = an_error_type
+			code_set: code = a_error_code
+			type_set: type = a_error_type
 		end
 
-	make_empty (a_namespace_uri, an_error_code: STRING an_error_type: INTEGER) is
+	make_empty (a_namespace_uri, a_error_code: STRING a_error_type: INTEGER) is
 			-- Create an empty-sequence error value
 		require
-			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
+			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
 			namespace_uri_not_void: a_namespace_uri /= Void
-			local_part_not_void: an_error_code /= Void
+			ascii_uri: is_ascii_string (a_namespace_uri)
+			local_part_not_void: a_error_code /= Void
+			ascii_code: is_ascii_string (a_error_code)
 		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
-			create an_empty_sequence.make
-			make ("()", a_namespace_uri, an_error_code, an_empty_sequence, an_error_type)
+			create l_empty_sequence.make
+			make ("()", a_namespace_uri, a_error_code, l_empty_sequence, a_error_type)
 		ensure
 			namespace_set: namespace_uri = a_namespace_uri
-			code_set: code = an_error_code
-			type_set: type = an_error_type
+			code_set: code = a_error_code
+			type_set: type = a_error_type
 		end
 
-	make_from_string (a_description, a_namespace_uri, an_error_code: STRING; an_error_type: like type) is
+	make_from_string (a_description, a_namespace_uri, a_error_code: STRING; a_error_type: like type) is
 			-- Create from `a_string'.
 		require
 			namespace_uri_not_void: a_namespace_uri /= Void
-			local_part_not_void: an_error_code /= Void
+			ascii_uri: is_ascii_string (a_namespace_uri)
+			local_part_not_void: a_error_code /= Void
+			ascii_code: is_ascii_string (a_error_code)
 			description_not_void: a_description /= Void
-			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
+			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
+			l_string_value: XM_XPATH_STRING_VALUE
 		do
-			create a_string_value.make (a_description)
-			make (a_description, a_namespace_uri, an_error_code, a_string_value, an_error_type)
+			create l_string_value.make (a_description)
+			make (a_description, a_namespace_uri, a_error_code, l_string_value, a_error_type)
 		ensure
 			description_set: description = a_description
 			namespace_set: namespace_uri = a_namespace_uri
-			code_set: code = an_error_code
-			type_set: type = an_error_type
+			code_set: code = a_error_code
+			type_set: type = a_error_type
 		end
 
 	make_unknown is
 			-- Create an unknown error
 		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
-			create an_empty_sequence.make
-			make ("Unknown error", Xpath_errors_uri, "FOER0000", an_empty_sequence, Dynamic_error)
+			create l_empty_sequence.make
+			make ("Unknown error", Xpath_errors_uri, "FOER0000", l_empty_sequence, Dynamic_error)
 		end
 
 	initialize_location is
@@ -129,18 +138,26 @@ feature -- Access
 	error_message: STRING is
 			-- Textual error message
 		local
-			a_message: STRING
+			l_message: STRING
 		do
 			if namespace_uri.count > 0 then
-				a_message := STRING_.concat (namespace_uri, "#")
-				a_message := STRING_.appended_string (a_message, code)
+				l_message := STRING_.concat (namespace_uri, "#")
+				l_message := STRING_.appended_string (l_message, code)
 			else
-				a_message := code
+				l_message := code
 			end
-			a_message := STRING_.appended_string (a_message, ": ")
-			Result := STRING_.appended_string (a_message, description)
+			l_message := STRING_.appended_string (l_message, ": ")
+			Result := STRING_.appended_string (l_message, description)
 		ensure
 			error_message_not_void: Result /= Void
+		end
+
+	error_identifier: STRING is
+			-- Identifier for error condition
+		do
+			Result := namespace_uri + "#" + code
+		ensure
+			error_identifier_not_void: Result /= Void
 		end
 
 feature -- Status report
