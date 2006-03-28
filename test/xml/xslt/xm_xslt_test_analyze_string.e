@@ -31,91 +31,100 @@ feature -- Tests
 	test_replacing_characters is
 			-- Test replacing all newline characters in the abstract element by empty br elements.
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			a_configuration.use_tiny_tree_model (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (abstract_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make (abstract_xml_uri.full_reference)
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform successful", not a_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (an_output.last_output.out, expected_result_string_one))
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			l_configuration.set_line_numbering (True)
+			l_configuration.use_tiny_tree_model (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (abstract_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			create l_second_uri_source.make (abstract_xml_uri.full_reference)
+			create l_output
+			l_output.set_output_to_string
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform successful", not l_transformer.is_error)
+			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_one))
 		end
 
 	test_regex_group_one is
 			-- Test simple use of fn:regex-group().
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			a_configuration.use_tiny_tree_model (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (cite_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make (cite_xml_uri.full_reference)
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform successful", not a_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (an_output.last_output.out, expected_result_string_two))
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			l_configuration.set_line_numbering (True)
+			l_configuration.use_tiny_tree_model (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (cite_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			create l_second_uri_source.make (cite_xml_uri.full_reference)
+			create l_output
+			l_output.set_output_to_string
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform successful", not l_transformer.is_error)
+			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_two))
 		end
 
 	test_regex_group_two is
 			-- Test use of fn:regex-group() for formatting dates.
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			a_configuration.use_tiny_tree_model (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (dates_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make (dates_xml_uri.full_reference)
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform successful", not a_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (an_output.last_output.out, expected_result_string_three))
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			l_configuration.set_line_numbering (True)
+			l_configuration.use_tiny_tree_model (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (dates_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			create l_second_uri_source.make (dates_xml_uri.full_reference)
+			create l_output
+			l_output.set_output_to_string
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform successful", not l_transformer.is_error)
+			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_three))
 		end
 
 	expected_result_string_one: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N  <abstract><br/>    Line 1<br/>    Line 2<br/>    Line 3 and last<br/>  </abstract>%N"
@@ -143,10 +152,10 @@ feature {NONE} -- Implementation
 	abstract_xsl_uri: UT_URI is
 			-- URI of file 'abstract.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "abstract.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "abstract.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			abstract_xsl_uri_not_void: Result /= Void
 		end
@@ -154,10 +163,10 @@ feature {NONE} -- Implementation
 	abstract_xml_uri: UT_URI is
 			-- URI of file 'abstract.xml'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "abstract.xml")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "abstract.xml")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			abstract_xml_uri_not_void: Result /= Void
 		end
@@ -165,10 +174,10 @@ feature {NONE} -- Implementation
 	cite_xsl_uri: UT_URI is
 			-- URI of file 'cite.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "cite.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "cite.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			cite_xsl_uri_not_void: Result /= Void
 		end
@@ -176,10 +185,10 @@ feature {NONE} -- Implementation
 	cite_xml_uri: UT_URI is
 			-- URI of file 'cite.xml'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "cite.xml")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "cite.xml")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			cite_xml_uri_not_void: Result /= Void
 		end
@@ -187,10 +196,10 @@ feature {NONE} -- Implementation
 	dates_xsl_uri: UT_URI is
 			-- URI of file 'dates.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "dates.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "dates.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			dates_xsl_uri_not_void: Result /= Void
 		end
@@ -198,10 +207,10 @@ feature {NONE} -- Implementation
 	dates_xml_uri: UT_URI is
 			-- URI of file 'dates.xml'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "dates.xml")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "dates.xml")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			dates_xml_uri_not_void: Result /= Void
 		end

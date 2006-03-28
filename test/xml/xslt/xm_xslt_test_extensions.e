@@ -33,86 +33,96 @@ feature -- Test
 	test_gexslt_collation is
 			-- Test gexslt:collation
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (collations_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			a_transformer.set_initial_template ("first")
-			assert ("Initial template set", a_transformer.initial_template /= Void)
-			create an_output
-			an_output.set_output_to_string 
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (Void, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (collations_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			l_transformer.set_initial_template ("first")
+			assert ("Initial template set", l_transformer.initial_template /= Void)
+			create l_output
+			l_output.set_output_to_string 
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (Void, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
 		end
 
 	test_fallback is
 			-- Test fallback
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (fallback_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			a_transformer.set_initial_template ("first")
-			assert ("Initial template set", a_transformer.initial_template /= Void)
-			create an_output
-			an_output.set_output_to_string 
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (Void, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (an_output.last_output, "OK"))
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (fallback_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			l_transformer.set_initial_template ("first")
+			assert ("Initial template set", l_transformer.initial_template /= Void)
+			create l_output
+			l_output.set_output_to_string 
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (Void, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, "OK"))
 		end
 
 	test_no_fallback is
 			-- Test absent extension instruction
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (no_fallback_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			a_transformer.set_initial_template ("first")
-			assert ("Initial template set", a_transformer.initial_template /= Void)
-			create an_output
-			an_output.set_output_to_string 
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (Void, a_result)
-			assert ("XT1450", a_transformer.is_error)
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (no_fallback_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			l_transformer.set_initial_template ("first")
+			assert ("Initial template set", l_transformer.initial_template /= Void)
+			create l_output
+			l_output.set_output_to_string 
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (Void, l_result)
+			assert ("In error", l_transformer.is_error)
+			assert ("XTDE1450", l_error_listener.has (xtde1450))
 		end
 
 feature {NONE} -- Implementation
@@ -131,10 +141,10 @@ feature {NONE} -- Implementation
 	collations_xsl_uri: UT_URI is
 			-- URI of file 'collations.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "collations.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "collations.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			collations_xsl_uri_not_void: Result /= Void
 		end
@@ -142,10 +152,10 @@ feature {NONE} -- Implementation
 	fallback_xsl_uri: UT_URI is
 			-- URI of file 'fallback.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "fallback.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "fallback.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			fallback_xsl_uri_not_void: Result /= Void
 		end
@@ -153,12 +163,20 @@ feature {NONE} -- Implementation
 	no_fallback_xsl_uri: UT_URI is
 			-- URI of file 'no_fallback.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "no_fallback.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "no_fallback.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			no_fallback_xsl_uri_not_void: Result /= Void
+		end
+
+	xtde1450: STRING is
+			-- Error XTDE1450
+		once
+			Result := Xpath_errors_uri + "#" + "XTDE1450"
+		ensure
+			xtde1450_not_void: Result /= Void
 		end
 
 end

@@ -24,91 +24,104 @@ inherit
 
 	XM_RESOLVER_FACTORY
 
+	XM_XPATH_STANDARD_NAMESPACES
+
 feature -- Test
 
 	test_splitting_xhtml_document is
 			-- Test splitting an XHTML document into h1 sections.
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (xhtml_splitter_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make (document_xhtml_uri.full_reference)
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:/")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Toc", a_configuration.output_resolver.output_destinations.item ("string:/toc.html").stream.last_output.count = 596)
-			assert ("Section 1", a_configuration.output_resolver.output_destinations.item ("string:/section1.html").stream.last_output.count = 416)
-			assert ("Section 2", a_configuration.output_resolver.output_destinations.item ("string:/section2.html").stream.last_output.count = 416)
-			assert ("Section 3", a_configuration.output_resolver.output_destinations.item ("string:/section3.html").stream.last_output.count = 422)
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (xhtml_splitter_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			create l_second_uri_source.make (document_xhtml_uri.full_reference)
+			create l_output
+			l_output.set_output_to_string
+			create l_result.make (l_output, "string:/")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Toc", l_configuration.output_resolver.output_destinations.item ("string:/toc.html").stream.last_output.count = 596)
+			assert ("Section 1", l_configuration.output_resolver.output_destinations.item ("string:/section1.html").stream.last_output.count = 416)
+			assert ("Section 2", l_configuration.output_resolver.output_destinations.item ("string:/section2.html").stream.last_output.count = 416)
+			assert ("Section 3", l_configuration.output_resolver.output_destinations.item ("string:/section3.html").stream.last_output.count = 422)
 		end
 
 	test_implicit_duplicate_destination_error is
 			-- Test error XT1490 due to implict result tree.
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (xt1490_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make (document_xhtml_uri.full_reference)
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:/")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform not successfull", a_transformer.is_error)
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)			
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (xt1490_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			create l_second_uri_source.make (document_xhtml_uri.full_reference)
+			create l_output
+			l_output.set_output_to_string
+			create l_result.make (l_output, "string:/")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform not successfull", l_transformer.is_error)
+			assert ("XTDE1490", l_error_listener.has (xtde1490))
 		end
 
 	test_duplicate_destination_error is
 			-- Test error XT1490 due to multiple result-documents.
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (xt1490_2_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make (document_xhtml_uri.full_reference)
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:/")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform not successfull", a_transformer.is_error)
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (xt1490_2_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			create l_second_uri_source.make (document_xhtml_uri.full_reference)
+			create l_output
+			l_output.set_output_to_string
+			create l_result.make (l_output, "string:/")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform not successfull", l_transformer.is_error)
+			assert ("XTDE1490", l_error_listener.has (xtde1490))
 		end
 
 feature {NONE} -- Implementation
@@ -127,10 +140,10 @@ feature {NONE} -- Implementation
 	xhtml_splitter_xsl_uri: UT_URI is
 			-- URI of file 'xhtml-splitter.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "xhtml-splitter.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "xhtml-splitter.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			xhtml_splitter_xsl_uri_not_void: Result /= Void
 		end
@@ -138,10 +151,10 @@ feature {NONE} -- Implementation
 	document_xhtml_uri: UT_URI is
 			-- URI of file 'document.xhtml'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "document.xhtml")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "document.xhtml")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			document_xhtml_uri_not_void: Result /= Void
 		end
@@ -149,10 +162,10 @@ feature {NONE} -- Implementation
 	xt1490_xsl_uri: UT_URI is
 			-- URI of file 'xt1490.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "xt1490.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "xt1490.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			xt1490_xsl_uri_not_void: Result /= Void
 		end
@@ -160,12 +173,20 @@ feature {NONE} -- Implementation
 	xt1490_2_xsl_uri: UT_URI is
 			-- URI of file 'xt1490-2.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "xt1490-2.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "xt1490-2.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			xt1490_2_xsl_uri_not_void: Result /= Void
+		end
+
+	xtde1490: STRING is
+			-- Error XTDE0430
+		once
+			Result := Xpath_errors_uri + "#" + "XTDE1490"
+		ensure
+			xtde1490_not_void: Result /= Void
 		end
 
 end

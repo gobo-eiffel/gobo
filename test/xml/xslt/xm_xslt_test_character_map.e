@@ -42,183 +42,186 @@ feature -- Test
 	test_xml_character_map is
 			-- Test use-character-maps with method=xml
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (character_map_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			a_transformer.set_initial_template ("first")
-			assert ("Initial template set", a_transformer.initial_template /= Void)
-			create an_output
-			an_output.set_output_to_string 
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (Void, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (an_output.last_output, expected_result))
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (character_map_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			l_transformer.set_initial_template ("first")
+			assert ("Initial template set", l_transformer.initial_template /= Void)
+			create l_output
+			l_output.set_output_to_string 
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (Void, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result))
 		end
 
 	test_html_character_map is
 			-- Test use-character-maps with method=html
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (character_map2_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			a_transformer.set_initial_template ("first")
-			assert ("Initial template set", a_transformer.initial_template /= Void)
-			create an_output
-			an_output.set_output_to_string 
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (Void, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", an_output.last_output.count = 299)
+			create l_configuration.make_with_defaults
+			l_configuration.set_line_numbering (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (character_map2_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			l_transformer.set_initial_template ("first")
+			assert ("Initial template set", l_transformer.initial_template /= Void)
+			create l_output
+			l_output.set_output_to_string 
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (Void, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Correct result", l_output.last_output.count = 299)
 		end
 
 	test_xhtml_character_map is
 			-- Test use-character-maps with method=xhtml
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (character_map4_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			a_transformer.set_initial_template ("first")
-			assert ("Initial template set", a_transformer.initial_template /= Void)
-			create an_output
-			an_output.set_output_to_string 
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (Void, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", an_output.last_output.count = 400)
+			create l_configuration.make_with_defaults
+			l_configuration.set_line_numbering (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (character_map4_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			l_transformer.set_initial_template ("first")
+			assert ("Initial template set", l_transformer.initial_template /= Void)
+			create l_output
+			l_output.set_output_to_string 
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (Void, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Correct result", l_output.last_output.count = 400)
 		end
 
 	test_text_character_map is
 			-- Test use-character-maps with method=text
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (character_map5_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			a_transformer.set_initial_template ("first")
-			assert ("Initial template set", a_transformer.initial_template /= Void)
-			create an_output
-			an_output.set_output_to_string 
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (Void, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", an_output.last_output.count = 93)
+			create l_configuration.make_with_defaults
+			l_configuration.set_line_numbering (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (character_map5_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			l_transformer.set_initial_template ("first")
+			assert ("Initial template set", l_transformer.initial_template /= Void)
+			create l_output
+			l_output.set_output_to_string 
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (Void, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Correct result", l_output.last_output.count = 93)
 		end
 
 	test_xhtml_character_map_with_cdata is
 			-- Test use-character-maps with method=xhtml
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (character_map6_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			a_transformer.set_initial_template ("first")
-			assert ("Initial template set", a_transformer.initial_template /= Void)
-			create an_output
-			an_output.set_output_to_string 
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (Void, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", an_output.last_output.count = 700)
+			create l_configuration.make_with_defaults
+			l_configuration.set_line_numbering (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (character_map6_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			l_transformer.set_initial_template ("first")
+			assert ("Initial template set", l_transformer.initial_template /= Void)
+			create l_output
+			l_output.set_output_to_string 
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (Void, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Correct result", l_output.last_output.count = 700)
 		end
 
 	test_qname_method is
 			-- Test use of a QName output method.
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			an_emitter_factory: XM_XSLT_GEXSLT_EXAMPLES_EMITTER_FACTORY
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_emitter_factory: XM_XSLT_GEXSLT_EXAMPLES_EMITTER_FACTORY
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			create an_emitter_factory.make
-			emitter_factory.register_extension_emitter_factory (an_emitter_factory)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (qname_output_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			a_transformer.set_initial_template ("first")
-			assert ("Initial template set", a_transformer.initial_template /= Void)
-			create an_output
-			an_output.set_output_to_string 
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (Void, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", an_output.last_output.count = 272)
+			create l_configuration.make_with_defaults
+			l_configuration.set_line_numbering (True)
+			create l_emitter_factory.make
+			emitter_factory.register_extension_emitter_factory (l_emitter_factory)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (qname_output_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			l_transformer.set_initial_template ("first")
+			assert ("Initial template set", l_transformer.initial_template /= Void)
+			create l_output
+			l_output.set_output_to_string 
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (Void, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Correct result", l_output.last_output.count = 272)
 		end
 
 feature {NONE} -- Implementation
@@ -237,10 +240,10 @@ feature {NONE} -- Implementation
 	character_map_xsl_uri: UT_URI is
 			-- URI of file 'character_map.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "character_map.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "character_map.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			character_map_uri_not_void: Result /= Void
 		end
@@ -248,10 +251,10 @@ feature {NONE} -- Implementation
 	character_map2_xsl_uri: UT_URI is
 			-- URI of file 'character_map2.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "character_map2.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "character_map2.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			character_map2_uri_not_void: Result /= Void
 		end
@@ -259,10 +262,10 @@ feature {NONE} -- Implementation
 	character_map4_xsl_uri: UT_URI is
 			-- URI of file 'character_map4.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "character_map4.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "character_map4.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			character_map4_uri_not_void: Result /= Void
 		end
@@ -270,10 +273,10 @@ feature {NONE} -- Implementation
 	character_map5_xsl_uri: UT_URI is
 			-- URI of file 'character_map5.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "character_map5.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "character_map5.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			character_map5_uri_not_void: Result /= Void
 		end
@@ -281,10 +284,10 @@ feature {NONE} -- Implementation
 	character_map6_xsl_uri: UT_URI is
 			-- URI of file 'character_map6.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "character_map6.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "character_map6.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			character_map6_uri_not_void: Result /= Void
 		end
@@ -292,10 +295,10 @@ feature {NONE} -- Implementation
 	qname_output_xsl_uri: UT_URI is
 			-- URI of file 'qname_output.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "qname_output.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "qname_output.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			qname_output_uri_not_void: Result /= Void
 		end

@@ -36,100 +36,109 @@ feature
 	test_schematron_basic is
 			-- Tests compiling schematron-basic
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output, another_output: XM_OUTPUT
-			a_test_string: STRING
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			a_catalog_resolver: XM_CATALOG_RESOLVER
-			a_string_resolver: XM_STRING_URI_RESOLVER
-			a_test_file: KL_TEXT_INPUT_FILE
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
+			l_output, l_second_output: XM_OUTPUT
+			l_test_string: STRING
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_catalog_resolver: XM_CATALOG_RESOLVER
+			l_string_resolver: XM_STRING_URI_RESOLVER
+			l_test_file: KL_TEXT_INPUT_FILE
+			l_factory: XM_XSLT_NULL_MESSAGE_EMITTER_FACTORY
 		do
-			create a_string_resolver.make
-			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (a_string_resolver)
+			create l_string_resolver.make
+			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (l_string_resolver)
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (schematron_basic_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make (wai_schema_uri.full_reference)
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:/transform")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			create l_factory
+			l_configuration.set_message_emitter_factory (l_factory)
+			l_configuration.set_line_numbering (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (schematron_basic_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			create l_second_uri_source.make (wai_schema_uri.full_reference)
+			create l_output
+			l_output.set_output_to_string
+			create l_result.make (l_output, "string:/transform")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
 
 			-- now plug the string into the bootstrap resolver so it can be found
 			--  by the XML parser
 
-			a_catalog_resolver ?= a_configuration.entity_resolver
+			l_catalog_resolver ?= l_configuration.entity_resolver
 			check
-				catalog_resolver: a_catalog_resolver /= Void
+				catalog_resolver: l_catalog_resolver /= Void
 				-- because `make_with_defaults'
 			end
 			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.resize (2 * shared_catalog_manager.bootstrap_resolver.well_known_system_ids.count)
-			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.put (an_output.last_output, "string:/transform")
+			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.put (l_output.last_output, "string:/transform")
 
 			-- now use the generated transform to produce a report
 
-			create a_stylesheet_compiler.make (a_configuration)			
-			create a_uri_source.make ("string:/transform")
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors 2", not a_stylesheet_compiler.load_stylesheet_module_failed)
-  			assert ("Stylesheet not void 2", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer 2", a_transformer /= Void)
-			create another_uri_source.make (evil_wai_uri.full_reference)
-			create another_output
-			another_output.set_output_to_string
-			create a_result.make (another_output, "string:/report")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
-			create a_test_file.make (expected_report_filename)
-			assert ("Test file exists", a_test_file /= Void)
-			a_test_file.open_read
-			assert ("Test file readable", a_test_file.is_open_read)
+			create l_stylesheet_compiler.make (l_configuration)			
+			create l_uri_source.make ("string:/transform")
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors 2", not l_stylesheet_compiler.load_stylesheet_module_failed)
+  			assert ("Stylesheet not void 2", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer 2", l_transformer /= Void)
+			create l_second_uri_source.make (evil_wai_uri.full_reference)
+			create l_second_output
+			l_second_output.set_output_to_string
+			create l_result.make (l_second_output, "string:/report")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
+			create l_test_file.make (expected_report_filename)
+			assert ("Test file exists", l_test_file /= Void)
+			l_test_file.open_read
+			assert ("Test file readable", l_test_file.is_open_read)
 			from
-				a_test_file.read_string (8000)
-				a_test_string := STRING_.cloned_string (a_test_file.last_string)
+				l_test_file.read_string (8000)
+				l_test_string := STRING_.cloned_string (l_test_file.last_string)
 			until
-				a_test_file.end_of_input
+				l_test_file.end_of_input
 			loop
-				a_test_file.read_string (8000)
-				a_test_string := STRING_.appended_string (a_test_string, a_test_file.last_string)
+				l_test_file.read_string (8000)
+				l_test_string := STRING_.appended_string (l_test_string, l_test_file.last_string)
 			end
-			a_test_file.close
-			assert ("Results same as test file", STRING_.same_string (a_test_string, another_output.last_output))	
+			l_test_file.close
+			assert ("Results same as test file", STRING_.same_string (l_test_string, l_second_output.last_output))	
 		end
 
 	test_schematron_conformance is
 			-- Tests compiling conformance1-5.xsl
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			a_string_resolver: XM_STRING_URI_RESOLVER
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_string_resolver: XM_STRING_URI_RESOLVER
 		do
-			create a_string_resolver.make
-			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (a_string_resolver)
+			create l_string_resolver.make
+			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (l_string_resolver)
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (schematron_conformance_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			l_configuration.set_line_numbering (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (schematron_conformance_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
 		end
 
 feature {NONE} -- Implementation
@@ -160,10 +169,10 @@ feature {NONE} -- Implementation
 	schematron_basic_uri: UT_URI is
 			-- URI of file 'schematron-basic.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (example_data_dirname, "schematron-basic.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (example_data_dirname, "schematron-basic.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			schematron_basic_uri_not_void: Result /= Void
 		end
@@ -171,10 +180,10 @@ feature {NONE} -- Implementation
 	schematron_conformance_uri: UT_URI is
 			-- URI of file 'conformance1-5.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (example_data_dirname, "conformance1-5.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (example_data_dirname, "conformance1-5.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			schematron_conformance_uri_not_void: Result /= Void
 		end
@@ -182,10 +191,10 @@ feature {NONE} -- Implementation
 	wai_schema_uri: UT_URI is
 			-- URI of schema for WAI
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (example_data_dirname, "wai.xml")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (example_data_dirname, "wai.xml")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			wai_schema_uri_not_void: Result /= Void
 		end
@@ -193,10 +202,10 @@ feature {NONE} -- Implementation
 	evil_wai_uri: UT_URI is
 			-- URI of file 'evil_wai.xml'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (example_data_dirname, "evil_wai.xml")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (example_data_dirname, "evil_wai.xml")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			evil_wai_uri_not_void: Result /= Void
 		end

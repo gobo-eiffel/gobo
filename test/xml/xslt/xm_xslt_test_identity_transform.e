@@ -29,29 +29,32 @@ feature -- Test
 	test_identity_transform is
 			-- Transform books.xml with identity.xsl.
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (identity_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make (books_xml_uri.full_reference)
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform successfull", not a_transformer.is_error)
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			l_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (identity_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			create l_second_uri_source.make (books_xml_uri.full_reference)
+			create l_output
+			l_output.set_output_to_string
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform successfull", not l_transformer.is_error)
 		end
 
 feature {NONE} -- Implementation
@@ -70,10 +73,10 @@ feature {NONE} -- Implementation
 	identity_xsl_uri: UT_URI is
 			-- URI of file 'identity.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "identity.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "identity.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			identity_xsl_uri_not_void: Result /= Void
 		end
@@ -92,10 +95,10 @@ feature {NONE} -- Implementation
 	books_xml_uri: UT_URI is
 			-- URI of file 'books.xml'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (xpath_data_dirname, "books.xml")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (xpath_data_dirname, "books.xml")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			books_xml_uri_not_void: Result /= Void
 		end

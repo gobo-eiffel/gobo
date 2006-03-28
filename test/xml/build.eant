@@ -178,6 +178,12 @@
 		<geant file="build.eant" target="clean" dir="general" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="eiffel"/>
 		<geant file="build.eant" target="clean" dir="eiffel" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="xpath"/>
+		<geant file="build.eant" target="clean" dir="xpath" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="xpointer"/>
+		<geant file="build.eant" target="clean" dir="xpointer" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="xslt"/>
+		<geant file="build.eant" target="clean" dir="xslt" if="${do_clean}"/>
 		<geant target="do_all_expat" if="${EXPAT}"/>
 	</target>
 

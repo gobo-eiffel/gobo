@@ -33,251 +33,252 @@ feature -- Test
 	test_simple is
 			-- Simple tree.
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			a_document_element: XM_XSLT_STYLESHEET
-			a_key: XM_XSLT_KEY
-			a_decimal_format: XM_XSLT_DECIMAL_FORMAT
-			a_variable: XM_XSLT_VARIABLE
-			a_param: XM_XSLT_PARAM
-			a_template: XM_XSLT_TEMPLATE
-			a_literal_result, another_literal_result: XM_XSLT_LITERAL_RESULT_ELEMENT
-			a_comment: XM_XSLT_COMMENT
-			a_call_template: XM_XSLT_CALL_TEMPLATE
-			a_with_param: XM_XSLT_WITH_PARAM
-			an_apply_templates: XM_XSLT_APPLY_TEMPLATES
-			a_choose: XM_XSLT_CHOOSE
-			a_when: XM_XSLT_WHEN
-			an_otherwise: XM_XSLT_OTHERWISE
-			a_value_of: XM_XSLT_VALUE_OF
-			a_text: XM_XPATH_TEXT
-			a_for_each: XM_XSLT_FOR_EACH
-			a_for_each_group: XM_XSLT_FOR_EACH_GROUP
-			a_sort: XM_XSLT_SORT
-			a_number: XM_XSLT_NUMBER
-			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_document_element: XM_XSLT_STYLESHEET
+			l_key: XM_XSLT_KEY
+			l_decimal_format: XM_XSLT_DECIMAL_FORMAT
+			l_variable: XM_XSLT_VARIABLE
+			l_param: XM_XSLT_PARAM
+			l_template: XM_XSLT_TEMPLATE
+			l_literal_result, l_second_literal_result: XM_XSLT_LITERAL_RESULT_ELEMENT
+			l_comment: XM_XSLT_COMMENT
+			l_call_template: XM_XSLT_CALL_TEMPLATE
+			l_with_param: XM_XSLT_WITH_PARAM
+			l_apply_templates: XM_XSLT_APPLY_TEMPLATES
+			l_choose: XM_XSLT_CHOOSE
+			l_when: XM_XSLT_WHEN
+			l_otherwise: XM_XSLT_OTHERWISE
+			l_value_of: XM_XSLT_VALUE_OF
+			l_text: XM_XPATH_TEXT
+			l_for_each: XM_XSLT_FOR_EACH
+			l_for_each_group: XM_XSLT_FOR_EACH_GROUP
+			l_sort: XM_XSLT_SORT
+			l_number: XM_XSLT_NUMBER
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (books_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_document_element ?= a_stylesheet_compiler.last_loaded_module.document_element
-			--print (a_document_element.error_value.error_message)
-			assert ("Stylesheet compiled without errors", not a_document_element.is_stylesheet_in_error)
-			an_error_listener ?= a_stylesheet_compiler.error_listener
-			assert ("No errors reported", an_error_listener /= Void and then an_error_listener.total_errors = 0)
-			assert ("xsl:transform", a_document_element /= Void and then STRING_.same_string (a_document_element.node_name, "xsl:transform"))
-			a_key ?= a_document_element.first_child
-			assert ("xsl:key 1", a_key /= Void)
-			a_key ?= a_key.next_sibling
-			assert ("xsl:key 2", a_key /= Void)
-			a_decimal_format ?= a_key.next_sibling
-			assert ("xsl:decimal-format", a_decimal_format /= Void)
-			a_variable ?= a_decimal_format.next_sibling
-			assert ("xsl:variable 1", a_variable /= Void)
-			a_variable ?= a_variable.next_sibling
-			assert ("xsl:variable 2", a_variable /= Void)
-			a_param ?= a_variable.next_sibling
-			assert ("xsl:param", a_param /= Void)
-			a_template ?= a_param.next_sibling
-			assert ("xsl:template", a_template /= Void)
-			a_literal_result ?= a_template.first_child
-			assert ("html", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "html"))
-			a_comment ?= a_literal_result.first_child
-			assert ("xsl:comment", a_comment /= Void)
-			a_call_template ?= a_comment.next_sibling
-			assert ("xsl:call-template", a_call_template /= Void)
-			a_with_param ?= a_call_template.first_child
-			assert ("xsl:with-param", a_with_param /= Void)
-			a_literal_result ?= a_call_template.next_sibling
-			assert ("body", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "body"))
-			an_apply_templates ?= a_literal_result.first_child
-			assert ("xsl:apply-templates", an_apply_templates /= Void)
+			create l_configuration.make_with_defaults
+			l_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (books_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_document_element ?= l_stylesheet_compiler.last_loaded_module.document_element
+			--print (l_document_element.error_value.error_message)
+			assert ("Stylesheet compiled without errors", not l_document_element.is_stylesheet_in_error)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("xsl:transform", l_document_element /= Void and then STRING_.same_string (l_document_element.node_name, "xsl:transform"))
+			l_key ?= l_document_element.first_child
+			assert ("xsl:key 1", l_key /= Void)
+			l_key ?= l_key.next_sibling
+			assert ("xsl:key 2", l_key /= Void)
+			l_decimal_format ?= l_key.next_sibling
+			assert ("xsl:decimal-format", l_decimal_format /= Void)
+			l_variable ?= l_decimal_format.next_sibling
+			assert ("xsl:variable 1", l_variable /= Void)
+			l_variable ?= l_variable.next_sibling
+			assert ("xsl:variable 2", l_variable /= Void)
+			l_param ?= l_variable.next_sibling
+			assert ("xsl:param", l_param /= Void)
+			l_template ?= l_param.next_sibling
+			assert ("xsl:template", l_template /= Void)
+			l_literal_result ?= l_template.first_child
+			assert ("html", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "html"))
+			l_comment ?= l_literal_result.first_child
+			assert ("xsl:comment", l_comment /= Void)
+			l_call_template ?= l_comment.next_sibling
+			assert ("xsl:call-template", l_call_template /= Void)
+			l_with_param ?= l_call_template.first_child
+			assert ("xsl:with-param", l_with_param /= Void)
+			l_literal_result ?= l_call_template.next_sibling
+			assert ("body", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "body"))
+			l_apply_templates ?= l_literal_result.first_child
+			assert ("xsl:apply-templates", l_apply_templates /= Void)
 
-			a_template ?= a_template.next_sibling
-			assert ("xsl:template 2", a_template /= Void)
-			a_param ?= a_template.first_child
-			assert ("xsl:param 2", a_param /= Void)
-			a_literal_result ?= a_param.next_sibling
-			assert ("head", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "head"))
-			a_choose ?=	a_literal_result.first_child
-			assert ("xsl:choose", a_choose /= Void)
-			a_when ?= a_choose.first_child
-			assert ("xsl:when", a_when /= Void)
-			a_literal_result ?= a_when.first_child
-			assert ("title", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "title"))
-			a_value_of ?= a_literal_result.first_child
-			assert ("xsl:value-of", a_value_of /= Void)
-			an_otherwise ?= a_when.next_sibling
-			assert ("xsl:otherwise", an_otherwise /= Void)
-			a_literal_result ?= an_otherwise.first_child
-			assert ("title 2", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "title"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text", a_text /= Void and then STRING_.same_string (a_text.string_value, "Untitled"))
+			l_template ?= l_template.next_sibling
+			assert ("xsl:template 2", l_template /= Void)
+			l_param ?= l_template.first_child
+			assert ("xsl:param 2", l_param /= Void)
+			l_literal_result ?= l_param.next_sibling
+			assert ("head", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "head"))
+			l_choose ?=	l_literal_result.first_child
+			assert ("xsl:choose", l_choose /= Void)
+			l_when ?= l_choose.first_child
+			assert ("xsl:when", l_when /= Void)
+			l_literal_result ?= l_when.first_child
+			assert ("title", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "title"))
+			l_value_of ?= l_literal_result.first_child
+			assert ("xsl:value-of", l_value_of /= Void)
+			l_otherwise ?= l_when.next_sibling
+			assert ("xsl:otherwise", l_otherwise /= Void)
+			l_literal_result ?= l_otherwise.first_child
+			assert ("title 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "title"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text", l_text /= Void and then STRING_.same_string (l_text.string_value, "Untitled"))
 			
-			a_template ?= a_template.next_sibling
-			assert ("xsl:template 3", a_template /= Void)
-			a_literal_result ?= a_template.first_child
-			assert ("h2", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "h2"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text 2", a_text /= Void and then STRING_.same_string (a_text.string_value, "This week's top author is "))
-			a_value_of ?= a_text.next_sibling
-			assert ("xsl:value-of 2", a_value_of /= Void)
-			a_variable ?= a_literal_result.next_sibling
-			assert ("xsl:variable 3", a_variable /= Void)
-			a_literal_result ?= a_variable.next_sibling
-			assert ("p", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "p"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text 3", a_text /= Void and then STRING_.same_string (a_text.string_value, "We stock the following "))
-			a_value_of ?= a_text.next_sibling
-			assert ("xsl:value-of 3", a_value_of /= Void)
-			a_text ?= a_value_of.next_sibling
-			assert ("xsl:text 4", a_text /= Void and then STRING_.same_string (a_text.string_value, " books by this author:"))
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("ul", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "ul"))
-			a_for_each ?= a_literal_result.first_child
-			assert ("xsl:for-each", a_for_each /= Void)
-			another_literal_result ?= a_for_each.first_child
-			assert ("li", another_literal_result /= Void and then STRING_.same_string (another_literal_result.node_name, "li"))
-			a_value_of ?= another_literal_result.first_child
-			assert ("xsl:value-of 4", a_value_of /= Void)
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("p 2", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "p"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text 5", a_text /= Void and then STRING_.same_string (a_text.string_value, "This author has written books in the following categories:"))
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("ul 2", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "ul"))
-			a_for_each ?= a_literal_result.first_child
-			assert ("xsl:for-each 2", a_for_each /= Void)
-			another_literal_result ?= a_for_each.first_child
-			assert ("li 2", another_literal_result /= Void and then STRING_.same_string (another_literal_result.node_name, "li"))
-			a_value_of ?= another_literal_result.first_child
-			assert ("xsl:value-of 5", a_value_of /= Void)
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("p 3", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "p"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text 6", a_text /= Void and then STRING_.same_string (a_text.string_value, "The average price of these books is: %N        "))
-			a_value_of ?= another_literal_result.first_child
-			assert ("xsl:value-of 6", a_value_of /= Void)
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("h2 2", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "h2"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text 7", a_text /= Void and then STRING_.same_string (a_text.string_value, "A complete list of books, grouped by author"))
-			an_apply_templates ?= a_literal_result.next_sibling
-			assert ("xsl:apply-templates 2", an_apply_templates /= Void)
-			a_literal_result ?= an_apply_templates.next_sibling
-			assert ("h2 3", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "h2"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text 8", a_text /= Void and then STRING_.same_string (a_text.string_value, "A complete list of books, grouped by category"))			
-			an_apply_templates ?= a_literal_result.next_sibling
-			assert ("xsl:apply-templates 3", an_apply_templates /= Void)
-			a_literal_result ?= an_apply_templates.next_sibling
-			assert ("h2 4", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "h2"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text 9", a_text /= Void and then STRING_.same_string (a_text.string_value, "List of categories"))
-			an_apply_templates ?= a_literal_result.next_sibling
-			assert ("xsl:apply-templates 4", an_apply_templates /= Void)
-			a_sort ?= an_apply_templates.first_child
-			assert ("sort", a_sort /= Void)
-			a_sort ?= a_sort.next_sibling
-			assert ("sort 2", a_sort /= Void)
+			l_template ?= l_template.next_sibling
+			assert ("xsl:template 3", l_template /= Void)
+			l_literal_result ?= l_template.first_child
+			assert ("h2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "h2"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text 2", l_text /= Void and then STRING_.same_string (l_text.string_value, "This week's top author is "))
+			l_value_of ?= l_text.next_sibling
+			assert ("xsl:value-of 2", l_value_of /= Void)
+			l_variable ?= l_literal_result.next_sibling
+			assert ("xsl:variable 3", l_variable /= Void)
+			l_literal_result ?= l_variable.next_sibling
+			assert ("p", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "p"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text 3", l_text /= Void and then STRING_.same_string (l_text.string_value, "We stock the following "))
+			l_value_of ?= l_text.next_sibling
+			assert ("xsl:value-of 3", l_value_of /= Void)
+			l_text ?= l_value_of.next_sibling
+			assert ("xsl:text 4", l_text /= Void and then STRING_.same_string (l_text.string_value, " books by this author:"))
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("ul", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "ul"))
+			l_for_each ?= l_literal_result.first_child
+			assert ("xsl:for-each", l_for_each /= Void)
+			l_second_literal_result ?= l_for_each.first_child
+			assert ("li", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "li"))
+			l_value_of ?= l_second_literal_result.first_child
+			assert ("xsl:value-of 4", l_value_of /= Void)
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("p 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "p"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text 5", l_text /= Void and then STRING_.same_string (l_text.string_value, "This author has written books in the following categories:"))
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("ul 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "ul"))
+			l_for_each ?= l_literal_result.first_child
+			assert ("xsl:for-each 2", l_for_each /= Void)
+			l_second_literal_result ?= l_for_each.first_child
+			assert ("li 2", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "li"))
+			l_value_of ?= l_second_literal_result.first_child
+			assert ("xsl:value-of 5", l_value_of /= Void)
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("p 3", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "p"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text 6", l_text /= Void and then STRING_.same_string (l_text.string_value, "The average price of these books is: %N        "))
+			l_value_of ?= l_second_literal_result.first_child
+			assert ("xsl:value-of 6", l_value_of /= Void)
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("h2 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "h2"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text 7", l_text /= Void and then STRING_.same_string (l_text.string_value, "A complete list of books, grouped by author"))
+			l_apply_templates ?= l_literal_result.next_sibling
+			assert ("xsl:apply-templates 2", l_apply_templates /= Void)
+			l_literal_result ?= l_apply_templates.next_sibling
+			assert ("h2 3", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "h2"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text 8", l_text /= Void and then STRING_.same_string (l_text.string_value, "A complete list of books, grouped by category"))			
+			l_apply_templates ?= l_literal_result.next_sibling
+			assert ("xsl:apply-templates 3", l_apply_templates /= Void)
+			l_literal_result ?= l_apply_templates.next_sibling
+			assert ("h2 4", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "h2"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text 9", l_text /= Void and then STRING_.same_string (l_text.string_value, "List of categories"))
+			l_apply_templates ?= l_literal_result.next_sibling
+			assert ("xsl:apply-templates 4", l_apply_templates /= Void)
+			l_sort ?= l_apply_templates.first_child
+			assert ("sort", l_sort /= Void)
+			l_sort ?= l_sort.next_sibling
+			assert ("sort 2", l_sort /= Void)
 
-			a_template ?= a_template.next_sibling
-			assert ("xsl:template 4", a_template /= Void)
-			a_literal_result ?= a_template.first_child
-			assert ("div", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "div"))
-			a_for_each_group ?= a_literal_result.first_child
-			assert ("xsl:for-each-group", a_for_each_group /= Void)
-			a_sort ?= a_for_each_group.first_child
-			assert ("sort 3", a_sort /= Void)
-			a_sort ?= a_sort.next_sibling
-			assert ("sort 4", a_sort /= Void)
-			a_literal_result ?= a_sort.next_sibling
-			assert ("h3", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "h3"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text 10", a_text /= Void and then STRING_.same_string (a_text.string_value, "AUTHOR: "))
-			a_value_of ?= a_text.next_sibling
-			assert ("xsl:value-of 7", a_value_of /= Void)
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("table", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "table"))			
-			a_for_each ?= a_literal_result.first_child
-			assert ("xsl:for-each 3", a_for_each /= Void)
-			another_literal_result ?= a_for_each.first_child
-			assert ("tr", another_literal_result /= Void and then STRING_.same_string (another_literal_result.node_name, "tr"))
-			another_literal_result ?= another_literal_result.first_child
-			assert ("td", another_literal_result /= Void and then STRING_.same_string (another_literal_result.node_name, "td"))
-			a_number ?= another_literal_result.first_child
-			assert ("xsl:number", a_number /= Void)
-			another_literal_result ?= another_literal_result.next_sibling
-			assert ("td 2", another_literal_result /= Void and then STRING_.same_string (another_literal_result.node_name, "td"))
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("hr", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "hr"))
+			l_template ?= l_template.next_sibling
+			assert ("xsl:template 4", l_template /= Void)
+			l_literal_result ?= l_template.first_child
+			assert ("div", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "div"))
+			l_for_each_group ?= l_literal_result.first_child
+			assert ("xsl:for-each-group", l_for_each_group /= Void)
+			l_sort ?= l_for_each_group.first_child
+			assert ("sort 3", l_sort /= Void)
+			l_sort ?= l_sort.next_sibling
+			assert ("sort 4", l_sort /= Void)
+			l_literal_result ?= l_sort.next_sibling
+			assert ("h3", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "h3"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text 10", l_text /= Void and then STRING_.same_string (l_text.string_value, "AUTHOR: "))
+			l_value_of ?= l_text.next_sibling
+			assert ("xsl:value-of 7", l_value_of /= Void)
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("table", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "table"))			
+			l_for_each ?= l_literal_result.first_child
+			assert ("xsl:for-each 3", l_for_each /= Void)
+			l_second_literal_result ?= l_for_each.first_child
+			assert ("tr", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "tr"))
+			l_second_literal_result ?= l_second_literal_result.first_child
+			assert ("td", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "td"))
+			l_number ?= l_second_literal_result.first_child
+			assert ("xsl:number", l_number /= Void)
+			l_second_literal_result ?= l_second_literal_result.next_sibling
+			assert ("td 2", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "td"))
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("hr", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "hr"))
 
-			a_template ?= a_template.next_sibling
-			assert ("xsl:template 5", a_template /= Void)
-			a_literal_result ?= a_template.first_child
-			assert ("div 2", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "div"))
-			a_for_each_group ?= a_literal_result.first_child
-			assert ("xsl:for-each-group 2", a_for_each_group /= Void)
-			a_sort ?= a_for_each_group.first_child
-			assert ("sort 4", a_sort /= Void)
-			a_sort ?= a_sort.next_sibling
-			assert ("sort 5", a_sort /= Void)
-			a_literal_result ?= a_sort.next_sibling
-			assert ("h3 2", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "h3"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text 10", a_text /= Void and then STRING_.same_string (a_text.string_value, "CATEGORY: "))
-			a_value_of ?= a_text.next_sibling
-			assert ("xsl:value-of 8", a_value_of /= Void)
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("ol", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "ol"))
-			a_for_each ?= a_literal_result.first_child
-			assert ("xsl:for-each 4", a_for_each /= Void)
-			another_literal_result ?= a_for_each.first_child
-			assert ("li 3", another_literal_result /= Void and then STRING_.same_string (another_literal_result.node_name, "li"))
-			a_text ?= another_literal_result.first_child
-			assert ("xsl:text 11", a_text /= Void and then STRING_.same_string (a_text.string_value, "AUTHOR: "))
-			a_value_of ?= a_text.next_sibling
-			assert ("xsl:value-of 9", a_value_of /= Void)
-			another_literal_result ?= a_value_of.next_sibling
-			assert ("br", another_literal_result /= Void and then STRING_.same_string (another_literal_result.node_name, "br"))
-			a_text ?= another_literal_result.next_sibling
-			assert ("xsl:text 12", a_text /= Void and then STRING_.same_string (a_text.string_value, "%N                TITLE: "))			
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("hr 2", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "hr"))
+			l_template ?= l_template.next_sibling
+			assert ("xsl:template 5", l_template /= Void)
+			l_literal_result ?= l_template.first_child
+			assert ("div 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "div"))
+			l_for_each_group ?= l_literal_result.first_child
+			assert ("xsl:for-each-group 2", l_for_each_group /= Void)
+			l_sort ?= l_for_each_group.first_child
+			assert ("sort 4", l_sort /= Void)
+			l_sort ?= l_sort.next_sibling
+			assert ("sort 5", l_sort /= Void)
+			l_literal_result ?= l_sort.next_sibling
+			assert ("h3 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "h3"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text 10", l_text /= Void and then STRING_.same_string (l_text.string_value, "CATEGORY: "))
+			l_value_of ?= l_text.next_sibling
+			assert ("xsl:value-of 8", l_value_of /= Void)
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("ol", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "ol"))
+			l_for_each ?= l_literal_result.first_child
+			assert ("xsl:for-each 4", l_for_each /= Void)
+			l_second_literal_result ?= l_for_each.first_child
+			assert ("li 3", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "li"))
+			l_text ?= l_second_literal_result.first_child
+			assert ("xsl:text 11", l_text /= Void and then STRING_.same_string (l_text.string_value, "AUTHOR: "))
+			l_value_of ?= l_text.next_sibling
+			assert ("xsl:value-of 9", l_value_of /= Void)
+			l_second_literal_result ?= l_value_of.next_sibling
+			assert ("br", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "br"))
+			l_text ?= l_second_literal_result.next_sibling
+			assert ("xsl:text 12", l_text /= Void and then STRING_.same_string (l_text.string_value, "%N                TITLE: "))			
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("hr 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "hr"))
 
-			a_template ?= a_template.next_sibling
-			assert ("xsl:template 6", a_template /= Void)
-			a_literal_result ?= a_template.first_child
-			assert ("h4", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "h4"))
-			a_text ?= a_literal_result.first_child
-			assert ("xsl:text 13", a_text /= Void and then STRING_.same_string (a_text.string_value, "CATEGORY "))
-			a_number ?= a_text.next_sibling
-			assert ("xsl:number 2", a_number /= Void)
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("table 2", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "table"))			
-			a_for_each ?= a_literal_result.first_child
-			assert ("xsl:for-each 5", a_for_each /= Void)
-			another_literal_result ?= a_for_each.first_child
-			assert ("tr 2", another_literal_result /= Void and then STRING_.same_string (another_literal_result.node_name, "tr"))
-			another_literal_result ?= another_literal_result.first_child
-			assert ("td 3", another_literal_result /= Void and then STRING_.same_string (another_literal_result.node_name, "td"))
-			a_value_of ?= another_literal_result.first_child
-			assert ("xsl:value-of 10", a_value_of /= Void)
-			another_literal_result ?= another_literal_result.next_sibling
-			assert ("td 4", another_literal_result /= Void and then STRING_.same_string (another_literal_result.node_name, "td"))
-			a_value_of ?= another_literal_result.first_child
-			assert ("xsl:value-of 11", a_value_of /= Void)			
-			a_literal_result ?= a_literal_result.next_sibling
-			assert ("hr 3", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "hr"))
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
+			l_template ?= l_template.next_sibling
+			assert ("xsl:template 6", l_template /= Void)
+			l_literal_result ?= l_template.first_child
+			assert ("h4", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "h4"))
+			l_text ?= l_literal_result.first_child
+			assert ("xsl:text 13", l_text /= Void and then STRING_.same_string (l_text.string_value, "CATEGORY "))
+			l_number ?= l_text.next_sibling
+			assert ("xsl:number 2", l_number /= Void)
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("table 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "table"))			
+			l_for_each ?= l_literal_result.first_child
+			assert ("xsl:for-each 5", l_for_each /= Void)
+			l_second_literal_result ?= l_for_each.first_child
+			assert ("tr 2", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "tr"))
+			l_second_literal_result ?= l_second_literal_result.first_child
+			assert ("td 3", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "td"))
+			l_value_of ?= l_second_literal_result.first_child
+			assert ("xsl:value-of 10", l_value_of /= Void)
+			l_second_literal_result ?= l_second_literal_result.next_sibling
+			assert ("td 4", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "td"))
+			l_value_of ?= l_second_literal_result.first_child
+			assert ("xsl:value-of 11", l_value_of /= Void)			
+			l_literal_result ?= l_literal_result.next_sibling
+			assert ("hr 3", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "hr"))
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
 		end
 
 feature {NONE} -- Implementation
@@ -296,10 +297,10 @@ feature {NONE} -- Implementation
 	books_xsl_uri: UT_URI is
 			-- URI of file 'books.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "books.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "books.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			books_xsl_uri_not_void: Result /= Void
 		end

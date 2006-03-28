@@ -31,61 +31,67 @@ feature -- Test
 	test_current_function is
 			-- Test of current() function.
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			a_configuration.use_tiny_tree_model (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (current_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make (books_xml_uri.full_reference)
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform successful", not a_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (an_output.last_output, expected_result_string))
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			l_configuration.set_line_numbering (True)
+			l_configuration.use_tiny_tree_model (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (current_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			create l_second_uri_source.make (books_xml_uri.full_reference)
+			create l_output
+			l_output.set_output_to_string
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform successful", not l_transformer.is_error)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string))
 		end
 
 	test_nested_current_function is
 			-- Test of current() function within nested xsl:for-each.
 		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
+			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
+			l_output: XM_OUTPUT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			a_configuration.use_tiny_tree_model (True)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make (current2_xsl_uri.full_reference)
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make (books_xml_uri.full_reference)
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (another_uri_source, a_result)
-			assert ("Transform successful", not a_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (an_output.last_output, expected_result_string))
+			create l_configuration.make_with_defaults
+			create l_error_listener.make (l_configuration.recovery_policy)
+			l_configuration.set_error_listener (l_error_listener)
+			l_configuration.set_line_numbering (True)
+			l_configuration.use_tiny_tree_model (True)
+			create l_stylesheet_compiler.make (l_configuration)
+			create l_uri_source.make (current2_xsl_uri.full_reference)
+			l_stylesheet_compiler.prepare (l_uri_source)
+			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
+			l_transformer := l_stylesheet_compiler.new_transformer
+			assert ("transformer", l_transformer /= Void)
+			create l_second_uri_source.make (books_xml_uri.full_reference)
+			create l_output
+			l_output.set_output_to_string
+			create l_result.make (l_output, "string:")
+			l_transformer.transform (l_second_uri_source, l_result)
+			assert ("Transform successful", not l_transformer.is_error)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string))
 		end
 
 	expected_result_string: STRING is "Patterns of Crime in Animal Culture"
@@ -107,10 +113,10 @@ feature {NONE} -- Implementation
 	current_xsl_uri: UT_URI is
 			-- URI of file 'current.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "current.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "current.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			current_xsl_uri_not_void: Result /= Void
 		end
@@ -118,10 +124,10 @@ feature {NONE} -- Implementation
 	current2_xsl_uri: UT_URI is
 			-- URI of file 'current2.xsl'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "current2.xsl")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "current2.xsl")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			current2_xsl_uri_not_void: Result /= Void
 		end
@@ -140,10 +146,10 @@ feature {NONE} -- Implementation
 	books_xml_uri: UT_URI is
 			-- URI of file 'books.xml'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (xpath_data_dirname, "books.xml")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (xpath_data_dirname, "books.xml")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			books_xml_uri_not_void: Result /= Void
 		end
