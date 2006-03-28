@@ -92,6 +92,7 @@ feature {NONE} -- Initialization
 			create an_error_listener.make (Recover_with_warnings, error_reporter)
 			create a_security_manager.make
 			create an_output_resolver.make (a_security_manager)
+			create message_emitter_factory
 			make (a_catalog_resolver, a_catalog_resolver, an_output_resolver, an_error_listener, an_encoder_factory)
 		end
 
@@ -167,8 +168,21 @@ feature -- Access
 			-- Last phase to be executed
 
 	estimated_nodes, estimated_attributes, estimated_namespaces, estimated_characters: INTEGER
-		-- estimates for tiny-tree parameters
-	
+		-- Estimates for tiny-tree parameters
+
+	message_emitter_factory: XM_XSLT_MESSAGE_EMITTER_FACTORY
+			-- Message-emitter factory
+
+feature -- Creation
+
+	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_outputter: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+			-- New destination for xsl:message
+		do
+			Result := message_emitter_factory.new_message_emitter (a_transformer, a_outputter, a_properties)
+		ensure
+			new_message_emitter_not_void: Result /= Void
+		end
+
 feature -- Element change
 
 	set_warns_on_default_action (a_status: BOOLEAN) is
@@ -231,6 +245,16 @@ feature -- Element change
 			trace_listener := a_trace_listener
 		ensure
 			trace_listener_set: trace_listener = a_trace_listener
+		end
+
+	set_message_emitter_factory (a_message_emitter_factory: like message_emitter_factory) is
+			-- Set `message_emitter_factory' to `a_message_emitter_factory'.
+		require
+			a_message_emitter_factory_not_void: a_message_emitter_factory /= Void
+		do
+			message_emitter_factory := a_message_emitter_factory
+		ensure
+			message_emitter_factory_set: message_emitter_factory = a_message_emitter_factory
 		end
 
 	set_entity_resolver (an_entity_resolver: like entity_resolver) is
@@ -397,5 +421,6 @@ invariant
 	final_execution_phase_in_range: final_execution_phase <= Run_to_completion and then final_execution_phase >= Stop_after_principal_source
 	media_type_map_not_void: media_type_map /= Void
 	default_action: not (default_action_suppressed and then warns_on_default_action)
+	message_emitter_factory_not_void: message_emitter_factory /= Void
 
 end

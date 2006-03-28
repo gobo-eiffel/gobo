@@ -19,6 +19,19 @@ inherit
 			start_document, set_unparsed_entity
 		end
 
+create
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Initialize `Current'.
+		do
+			-- TODO - set_system_id
+			system_id := ""
+		end
+
 feature -- Events
 
 	append_item (an_item: XM_XPATH_ITEM) is

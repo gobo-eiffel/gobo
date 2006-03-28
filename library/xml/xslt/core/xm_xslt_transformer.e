@@ -274,6 +274,14 @@ feature -- Status setting
 
 feature -- Creation
 
+	new_message_emitter (a_outputter: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+			-- New destination for xsl:message
+		do
+			Result := configuration.new_message_emitter (Current, a_outputter, a_properties)
+		ensure
+			new_message_emitter_not_void: Result /= Void
+		end
+
 	new_xpath_context: XM_XSLT_EVALUATION_CONTEXT is
 			-- New dynamic context
 		do

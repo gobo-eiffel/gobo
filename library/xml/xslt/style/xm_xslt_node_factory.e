@@ -166,7 +166,7 @@ feature -- Creation
 								create {XM_XSLT_ABSENT_EXTENSION_ELEMENT} a_style_element.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 								a_style_element.flag_as_instruction
 								create an_error.make_from_string (STRING_.concat ("Unknown extension element: ", shared_name_pool.display_name_from_name_code (a_name_code)),
-																			 Xpath_errors_uri, "XTDE14500", Static_error)
+																			 Xpath_errors_uri, "XTDE1450", Static_error)
 								a_style_element.set_validation_error (an_error, Report_if_instantiated)
 								if a_parent /= Void then
 									a_parent.replace_child (a_style_element, a_child_index)

@@ -158,62 +158,62 @@ feature -- Evaluation
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_message_emitter: XM_XSLT_MESSAGE_EMITTER
-			an_outputter: XM_OUTPUT
-			some_output_properties: XM_XSLT_OUTPUT_PROPERTIES
-			a_tree_receiver: XM_XSLT_TREE_RECEIVER
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
-			an_error: XM_XPATH_ERROR_VALUE
-			a_new_context: XM_XSLT_EVALUATION_CONTEXT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_message_emitter: XM_XPATH_RECEIVER
+			l_outputter: XM_OUTPUT
+			l_output_properties: XM_XSLT_OUTPUT_PROPERTIES
+			l_tree_receiver: XM_XSLT_TREE_RECEIVER
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_string_value: XM_XPATH_STRING_VALUE
+			l_error: XM_XPATH_ERROR_VALUE
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			last_tail_call := Void
-			a_transformer := a_context.transformer
-			create some_output_properties.make (-1000000)
-			create an_outputter
-			an_outputter.set_output_standard_error
-			some_output_properties.set_omit_xml_declaration (True, -1000000)
-			create a_message_emitter.make (a_transformer, an_outputter, some_output_properties, Void)
-			create a_tree_receiver.make (a_message_emitter)
-			a_new_context := a_context.new_minor_context
-			create a_result.make_receiver (a_tree_receiver)
-			a_new_context.change_output_destination (some_output_properties, a_result, False, Validation_strip, Void)
+			l_transformer := a_context.transformer
+			create l_output_properties.make (-1000000)
+			create l_outputter
+			l_outputter.set_output_standard_error
+			l_output_properties.set_omit_xml_declaration (True, -1000000)
+			l_message_emitter := l_transformer.new_message_emitter (l_outputter, l_output_properties)
+			create l_tree_receiver.make (l_message_emitter)
+			l_new_context := a_context.new_minor_context
+			create l_result.make_receiver (l_tree_receiver)
+			l_new_context.change_output_destination (l_output_properties, l_result, False, Validation_strip, Void)
 			select_expression.create_iterator (a_context)
-			an_iterator := select_expression.last_iterator
-			if not an_iterator.is_error then
+			l_iterator := select_expression.last_iterator
+			if not l_iterator.is_error then
 				from
-					an_iterator.start
+					l_iterator.start
 				until
-					an_iterator.is_error or else an_iterator.after
+					l_iterator.is_error or else l_iterator.after
 				loop
-					a_tree_receiver.append_item (an_iterator.item)
-					an_iterator.forth
+					l_tree_receiver.append_item (l_iterator.item)
+					l_iterator.forth
 				end
 			end
-			if an_iterator.is_error then
-				if not an_iterator.error_value.is_location_known then an_iterator.error_value.set_location (system_id, line_number) end
-				a_transformer.report_fatal_error (an_iterator.error_value)
+			if l_iterator.is_error then
+				if not l_iterator.error_value.is_location_known then l_iterator.error_value.set_location (system_id, line_number) end
+				l_transformer.report_fatal_error (l_iterator.error_value)
 			else
-				a_tree_receiver.close
+				l_tree_receiver.close
 				if terminate /= Void then
 					terminate.evaluate_as_string (a_context)
-					a_string_value := terminate.last_evaluated_string
-					if a_string_value.is_error then
-						if not a_string_value.error_value.is_location_known then a_string_value.error_value.set_location (system_id, line_number) end
-						a_transformer.report_fatal_error (a_string_value.error_value)
-					elseif STRING_.same_string (a_string_value.string_value, "no") then
+					l_string_value := terminate.last_evaluated_string
+					if l_string_value.is_error then
+						if not l_string_value.error_value.is_location_known then l_string_value.error_value.set_location (system_id, line_number) end
+						l_transformer.report_fatal_error (l_string_value.error_value)
+					elseif STRING_.same_string (l_string_value.string_value, "no") then
 						-- do_nothing
-					elseif STRING_.same_string (a_string_value.string_value, "yes") then
-						create an_error.make_from_string ("Execution terminated owing to xsl:message terminate='yes'.", Gexslt_eiffel_type_uri, "TERMINATE_MESSAGE", Dynamic_error)
-						an_error.set_location (system_id, line_number)
-						a_transformer.report_fatal_error (an_error)
+					elseif STRING_.same_string (l_string_value.string_value, "yes") then
+						create l_error.make_from_string ("Execution terminated owing to xsl:message terminate='yes'.", Gexslt_eiffel_type_uri, "TERMINATE_MESSAGE", Dynamic_error)
+						l_error.set_location (system_id, line_number)
+						l_transformer.report_fatal_error (l_error)
 					else
-						create an_error.make_from_string (STRING_.concat ("xsl:message terminate attribute must evaluate to 'yes' or 'no'. Found: ", a_string_value.string_value),
+						create l_error.make_from_string (STRING_.concat ("xsl:message terminate attribute must evaluate to 'yes' or 'no'. Found: ", l_string_value.string_value),
 																	 Gexslt_eiffel_type_uri, "INVALID_TERMINATE", Dynamic_error)
-						an_error.set_location (system_id, line_number)
-						a_transformer.report_fatal_error (an_error)
+						l_error.set_location (system_id, line_number)
+						l_transformer.report_fatal_error (l_error)
 					end
 				end
 			end
