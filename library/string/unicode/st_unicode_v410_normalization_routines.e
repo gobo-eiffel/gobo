@@ -20,6 +20,27 @@ inherit
 
 	ST_UNICODE_NORMALIZATION_INTERFACE
 
+
+feature -- Access
+
+	major_version: INTEGER is
+			-- Major version number of Unicode
+		once
+			Result := 4
+		end
+
+	minor_version: INTEGER is
+			-- Minor version number of Unicode
+		once
+			Result := 1
+		end
+
+	update_version: INTEGER is
+			-- Update version number of Unicode
+		once
+			Result := 0
+		end
+
 feature {NONE} -- Implementation
 
 	all_zero_canonical_combining_class_segment: ARRAY [INTEGER_8] is
