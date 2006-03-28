@@ -23,6 +23,27 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
+
+feature -- Access
+
+	major_version: INTEGER is
+			-- Major version number of Unicode
+		once
+			Result := 4
+		end
+
+	minor_version: INTEGER is
+			-- Minor version number of Unicode
+		once
+			Result := 1
+		end
+
+	update_version: INTEGER is
+			-- Update version number of Unicode
+		once
+			Result := 0
+		end
+
 feature {NONE} -- Implementation
 
 	upper_code_plane_0_segment_0: ARRAY [INTEGER] is

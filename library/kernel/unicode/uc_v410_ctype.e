@@ -18,10 +18,18 @@ inherit
 		export {NONE} all end
 
 	UC_V410_CTYPE_UPPERCASE
-		export {NONE} all end
+		export
+			{NONE} all
+	   undefine
+			major_version, minor_version, update_version
+		end
 
 	UC_V410_CTYPE_TITLECASE
-		export {NONE} all end
+		export
+			{NONE} all
+		undefine
+			major_version, minor_version, update_version
+		end
 
 	UC_UNICODE_CONSTANTS
 
