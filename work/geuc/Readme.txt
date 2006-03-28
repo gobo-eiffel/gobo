@@ -82,13 +82,9 @@ for the current version. If for some reason you need an archaic
 version of the Unicode Character Database, then please copy geuc.e to
 geuc-vxxx.e, and make the necessary changes.
 
-4) Run the utility to produce unversioned files:
+4) Run the utility to produce versioned files. e.g.
 
-./geuc
-
-5) Run the utility to produce versioned files. e.g.
-
-./geuc --uc_version=v410
+./geuc --uc_version=410
 
 The character string after --uc_version= will be used unchanged (apart
 from case) in the generated class names.
@@ -101,12 +97,15 @@ then the above command line will generate
 
 UC_V410_CHARACTER_CLASS_ROUTINES
 
-6) Move the generated classes to their target libraries by:
+5) Move the generated classes to their target libraries by:
 
 geant deploy
 
 The target library is $GOBO/library/string/unicode for normalization
 routines, and $GOBO/library/kernel/unicode for all other routines.
+
+6) Edit the unversioned classes to inherit from the latest
+versioned class.
 
 If any of the classes are new (which will be the case if you are
 generating a new version, or if you are adding a new facility from the

@@ -62,24 +62,31 @@ feature -- Processing
 		local
 			nb: INTEGER
 			arg: STRING
+			l_version: INTEGER
 		do
 			nb := Arguments.argument_count
-			if nb = 0 then
-				kernel_file_name_prefix := "uc_"
-				file_name_prefix := "st_unicode_"
-			elseif nb = 1 then
+			if nb = 1 then
 				arg := Arguments.argument (1)
 				if arg.count > 10 and then arg.substring (1, 13).is_equal ("--uc_version=") then
-					kernel_file_name_prefix := "uc_" + arg.substring (14, arg.count).as_lower + "_"
-					file_name_prefix := "st_unicode_" + arg.substring (14, arg.count).as_lower + "_"
+					if arg.substring (14, arg.count).is_integer then
+						l_version := arg.substring (14, arg.count).to_integer
+						if l_version < 100 then
+							report_usage_message
+						else
+							kernel_file_name_prefix := "uc_v" + arg.substring (14, arg.count).as_lower + "_"
+							file_name_prefix := "st_unicode_v" + arg.substring (14, arg.count).as_lower + "_"
+							update_version := l_version \\ 10
+							major_version := l_version // 100
+							minor_version := (l_version - major_version * 100 - update_version) // 10 
+						end
+					else
+						report_usage_message
+					end
 				else
-					report_general_message ("Usage is geuc [--uc_version=<version-prefix>]")
-					Exceptions.die (1)
+					report_usage_message
 				end
 			else
-				report_general_message ("Too many arguments")
-				report_general_message ("Usage is geuc [--uc_version=<version-prefix>]")
-				Exceptions.die (1)
+				report_usage_message
 			end
 		ensure
 			kernel_file_name_prefix_void: kernel_file_name_prefix /= Void
@@ -333,6 +340,7 @@ feature -- Code generation
 			l_output_file.put_string (class_name_prefix)
 			l_output_file.put_string ("CHARACTER_CLASS_ROUTINES%N%N")
 			l_output_file.put_string ("inherit%N%N%TST_UNICODE_CHARACTER_CLASS_INTERFACE%N%N")
+			write_versioning_routines (l_output_file)
 			l_output_file.put_string ("feature {NONE} -- Implementation%N%N")
 			write_character_class_array (l_output_file)
 			write_decimal_value_array (l_output_file)
@@ -368,7 +376,8 @@ feature -- Code generation
 			l_output_file.put_string ("class ")
 			l_output_file.put_string (kernel_class_name_prefix)
 			l_output_file.put_string ("CTYPE_LOWERCASE%N%N")
-			l_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
+			l_output_file.put_string ("inherit%N%N%TANY%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
+			write_versioning_routines (l_output_file)
 			l_output_file.put_string ("feature {NONE} -- Implementation%N%N")
 			write_lower_case_array (l_output_file)
 			l_output_file.put_string ("end%N")
@@ -399,7 +408,8 @@ feature -- Code generation
 			l_output_file.put_string ("class ")
 			l_output_file.put_string (kernel_class_name_prefix)
 			l_output_file.put_string ("CTYPE_UPPERCASE%N%N")
-			l_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
+			l_output_file.put_string ("inherit%N%N%TANY%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
+			write_versioning_routines (l_output_file)
 			l_output_file.put_string ("feature {NONE} -- Implementation%N%N")
 			write_upper_case_array (l_output_file)
 			l_output_file.put_string ("end%N")
@@ -430,7 +440,8 @@ feature -- Code generation
 			l_output_file.put_string ("class ")
 			l_output_file.put_string (kernel_class_name_prefix)
 			l_output_file.put_string ("CTYPE_TITLECASE%N%N")
-			l_output_file.put_string ("inherit%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
+			l_output_file.put_string ("inherit%N%N%TANY%N%N%TKL_IMPORTED_INTEGER_ROUTINES%N%T%Texport {NONE} all end%N%N")
+			write_versioning_routines (l_output_file)
 			l_output_file.put_string ("feature {NONE} -- Implementation%N%N")
 			write_title_case_array (l_output_file)
 			l_output_file.put_string ("end%N")
@@ -462,6 +473,7 @@ feature -- Code generation
 			l_output_file.put_string (class_name_prefix)
 			l_output_file.put_string ("NORMALIZATION_ROUTINES%N%N")
 			l_output_file.put_string ("inherit%N%N%TST_UNICODE_NORMALIZATION_INTERFACE%N%N")
+			write_versioning_routines (l_output_file)
 			l_output_file.put_string ("feature {NONE} -- Implementation%N%N")
 			write_canonical_combining_class_property_array (l_output_file)
 			create compositions.make (15000)
@@ -669,10 +681,54 @@ feature -- Composition
 			end
 		end
 
+feature -- Versioning
+
+	major_version: INTEGER
+			-- Major version number of Unicode
+
+	minor_version: INTEGER
+			-- Minor version number of Unicode
+
+	update_version: INTEGER
+			-- Update version number of Unicode
+
+	write_versioning_routines (a_output_file: KL_TEXT_OUTPUT_FILE) is
+			-- Write routines to satisfy `UC_UNICODE_VERSIONING'.
+		require
+			file_not_void: a_output_file /= Void
+			file_open_write: a_output_file.is_open_write
+		do
+			a_output_file.put_string ("%Nfeature -- Access%N%N")
+			a_output_file.put_string ("%Tmajor_version: INTEGER is%N")
+			a_output_file.put_string ("%T%T%T-- Major version number of Unicode%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%TResult := " + major_version.out + "%N")
+			a_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%Tminor_version: INTEGER is%N")
+			a_output_file.put_string ("%T%T%T-- Minor version number of Unicode%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%TResult := " + minor_version.out + "%N")
+			a_output_file.put_string ("%T%Tend%N%N")
+			a_output_file.put_string ("%Tupdate_version: INTEGER is%N")
+			a_output_file.put_string ("%T%T%T-- Update version number of Unicode%N")
+			a_output_file.put_string ("%T%Tonce%N")
+			a_output_file.put_string ("%T%T%TResult := " + update_version.out + "%N")
+			a_output_file.put_string ("%T%Tend%N%N")
+		ensure
+			file_still_open: a_output_file.is_open_write
+		end
+
 feature {NONE} -- Implementation
 
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
+
+	report_usage_message is
+			-- Report usage message.
+		do
+			report_general_message ("Usage is geuc --uc_version=nnn (where nnn is an integer > 99")
+			Exceptions.die (1)
+		end
 
 	report_general_message (a_message_string: STRING) is
 			-- Report a miscellaneous message.
