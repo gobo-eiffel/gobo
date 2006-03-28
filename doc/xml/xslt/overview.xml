@@ -133,6 +133,11 @@
 	    <classname>XM_XSLT_ENCODER_FACTORY</classname> is explained in <link linkend="configuration"><classname>XM_XSLT_CONFIGURATION</classname></link>.
 	  </para>
 	</listitem>
+	<listitem>
+	  <para>
+	    <classname>XM_XSLT_MESSAGE_EMITTER_FACTORY</classname> is explained in <link linkend="configuration"><classname>XM_XSLT_CONFIGURATION</classname></link>.
+	  </para>
+	</listitem>
       </itemizedlist>
     </para>
   </section>

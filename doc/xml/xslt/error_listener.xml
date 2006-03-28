@@ -130,9 +130,17 @@
   <section>
     <title>The default error listener: <classname>XM_XSLT_DEFAULT_ERROR_LISTENER</classname></title>
     <para>
-      This is the only concrete error listener provided by the library. It maintains error 
+      This is the chief concrete error listener provided by the library. It maintains error 
       counts. The recovery policy is passed as an argument to the creation routine, as also is
       a <classname>UT_ERROR_HANDLER</classname> to receive the warning and error messages.
+    </para>
+  </section>
+  <section>
+    <title>A testing error listener: <classname>XM_XSLT_TESTING_ERROR_LISTENER</classname></title>
+    <para>
+     This error listener supresses all output, but records which error message codes it has seen.
+     It was written for use in the XSLT test suite, so as to avoid confusing the user by diaplaying
+     error messages which are intentionally being produced.
     </para>
   </section>
 </chapter>

@@ -102,6 +102,25 @@
     </para>
   </section>
   <section>
+    <title>The Message Emitter Factory</title>
+    <para>
+     To control the destination of output fron <xslt>xsl:message</xslt> instructions, the configuration
+     supports a feature <featurename>set_message_emitter_factory</featurename>. This takes as a single argument
+     an object of type <classname>XM_XSLT_MESSAGE_EMITTER_FACTORY</classname>. The default factory creates
+     an object of type <classname>XM_XSLT_MESSAGE_EMITTER</classname>, but if you look at the source code, then 
+     you will see that the interface fror the created objects is only an <classname>XM_XPATH_RECEIVER</classname>.
+    </para>
+    <para>
+     The sole feature of the factory is <featurename>new_message_emitter</featurename>. As arguments, this receives a
+     reference to the transformer, an <classname>XM_OUTPUT</classname> for performing output (configured to write to standard error
+     by default, but you can freely change this within <featurename>new_message_emitter</featurename>), and an <classname>XM_XSLT_OUTPUT_PROPERTIES</classname>.
+     This last object is initialized to the defaults for the <xslt>xml output method</xslt>. it is present for use by an <classname>XM_XSLT_XML_EMITTER</classname>, but
+     there is currently no way that the XSLT programmer can set it's contents. If programmers see a need, then we could add a User-defined Data Element which would enable
+     stylesheet authors to code the same parameters as you can currently code on <xslt>xsl:output</xslt> or <xslt>xsl:result-document</xslt>, to affect the way in which
+     <xslt>xsl:message</xslt> output is serialized.
+    </para>
+  </section>
+  <section>
     <title>Other features of the configuration</title>
     <para>
       The following other features are of interest to the Eiffel programmer:
