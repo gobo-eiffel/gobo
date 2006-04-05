@@ -226,6 +226,13 @@ feature -- Status report
 			Result := (status_code = local_code)
 		end
 
+	is_temporary: BOOLEAN is
+			-- Is current identifier a temporary variable name?
+			-- (Used in C code generation for example.)
+		do
+			Result := (status_code = temporary_code)
+		end
+
 	is_argument: BOOLEAN is
 			-- Is current identifier a formal argument name?
 		do
@@ -256,6 +263,18 @@ feature -- Status setting
 			end
 		ensure
 			local_set: is_local = b
+		end
+
+	set_temporary (b: BOOLEAN) is
+			-- Set `is_temporary' to `b'.
+		do
+			if b then
+				status_code := temporary_code
+			else
+				status_code := no_code
+			end
+		ensure
+			temporary_set: is_temporary = b
 		end
 
 	set_argument (b: BOOLEAN) is
@@ -443,6 +462,7 @@ feature {NONE} -- Implementation
 	status_code: CHARACTER
 	local_code: CHARACTER is 'l'
 	argument_code: CHARACTER is 'a'
+	temporary_code: CHARACTER is 'v'
 	tuple_label_code: CHARACTER is 't'
 	instruction_code: CHARACTER is 'i'
 	no_code: CHARACTER is '%U'

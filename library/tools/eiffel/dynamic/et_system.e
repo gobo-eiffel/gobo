@@ -68,8 +68,10 @@ feature {NONE} -- Initialization
 			pointer_type := l_unknown_type
 			string_type := l_unknown_type
 			special_character_type := l_unknown_type
+			any_type := l_unknown_type
 			none_type := l_unknown_type
 		ensure
+			any_type_not_void: any_type /= Void
 			none_type_not_void: none_type /= Void
 			character_type_not_void: character_type /= Void
 			boolean_type_not_void: boolean_type /= Void
@@ -186,6 +188,9 @@ feature -- Types
 
 	pointer_type: ET_DYNAMIC_TYPE
 			-- Type "POINTER"
+
+	any_type: ET_DYNAMIC_TYPE
+			-- Type "ANY"
 
 	none_type: ET_DYNAMIC_TYPE
 			-- Type "NONE"
@@ -987,6 +992,8 @@ feature {NONE} -- Compilation
 					end
 				end
 			end
+				-- Type "ANY".
+			any_type := dynamic_type (universe.any_class, l_any)
 				-- Type "NONE".
 			none_type := dynamic_type (universe.none_class, l_any)
 		end
@@ -1081,6 +1088,7 @@ invariant
 	universe_not_void: universe /= Void
 	dynamic_types_not_void: dynamic_types /= Void
 	no_void_dynamic_type: not dynamic_types.has (Void)
+	any_type_not_void: any_type /= Void
 	none_type_not_void: none_type /= Void
 	character_type_not_void: character_type /= Void
 	boolean_type_not_void: boolean_type /= Void

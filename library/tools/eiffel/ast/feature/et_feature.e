@@ -267,7 +267,7 @@ feature -- Status report
 		do
 			-- Result := False
 		end
-		
+
 	is_infixable: BOOLEAN is
 			-- Can current feature have a name of
 			-- the form 'infix ...'?
@@ -297,7 +297,24 @@ feature -- Status report
 
 	is_immediate: BOOLEAN is True
 			-- Is current feature immediate?
-		
+
+feature -- Measurement
+
+	arguments_count: INTEGER is
+			-- Number of formal arguments
+		local
+			l_arguments: like arguments
+		do
+			l_arguments := arguments
+			if l_arguments /= Void then
+				Result := l_arguments.count
+			end
+		ensure
+			arguments_count_not_negative: Result >= 0
+			no_argument: arguments = Void implies Result = 0
+			with_arguments: arguments /= Void implies Result = arguments.count
+		end
+
 feature -- Implementation checking status
 
 	implementation_checked: BOOLEAN
@@ -558,7 +575,7 @@ feature -- Setting
 		ensure
 			postconditions_reset: postconditions = Void
 		end
-		
+
 feature -- Duplication
 
 	new_synonym (a_name: like extended_name): like Current is
