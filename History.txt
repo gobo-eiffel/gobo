@@ -37,6 +37,15 @@ Version 3.5 - ????
 	  upper case, and added code for conversion to title case.
 	  These are generated from the Unicode Character Database.
 	  Currently Unicode version 4.1.0 is supported.
+	* New features have been added to a new ancestor of ISE's STRING
+	  class in order to support the classes STRING_32 and STRING_8
+	  which have been introduced at ECMA. As a consequence, the
+	  following features had to be renamed in class UC_STRING:
+	      put_code -> put_item_code
+	      append_code -> append_item_code
+	      has_code -> has_item_code
+	      index_of_code -> index_of_item_code
+	  The new names are not great, but they match the feature `item_code'. 
 
 	Gobo Eiffel Math/Decimal Library:
 

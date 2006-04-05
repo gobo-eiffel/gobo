@@ -56,10 +56,10 @@ feature -- Test
 			create a_string.make_from_string ("foo")
 			assert_equal ("foo", "foo", a_string.out)
 			create uc_string.make (15)
-			uc_string.append_code (265)
-			uc_string.append_code (1021)
+			uc_string.append_item_code (265)
+			uc_string.append_item_code (1021)
 			uc_string.append_character ('f')
-			uc_string.append_code (23456)
+			uc_string.append_item_code (23456)
 			create a_string.make_from_string (uc_string)
 			assert_equal ("uc_string", "%%/265/%%/1021/f%%/23456/", a_string.out)
 		end
@@ -76,10 +76,10 @@ feature -- Test
 			a_string.make_from_string ("foo")
 			assert_equal ("foo", "foo", a_string.out)
 			create uc_string.make (15)
-			uc_string.append_code (265)
-			uc_string.append_code (1021)
+			uc_string.append_item_code (265)
+			uc_string.append_item_code (1021)
 			uc_string.append_character ('f')
-			uc_string.append_code (23456)
+			uc_string.append_item_code (23456)
 			a_string.make_from_string (uc_string)
 			assert_equal ("uc_string", "%%/265/%%/1021/f%%/23456/", a_string.out)
 		end
@@ -95,10 +95,10 @@ feature -- Test
 			create a_string.make_from_utf8 ("foo")
 			assert_equal ("foo", "foo", a_string.out)
 			create utf8.make (15)
-			utf8.append_code (265)
-			utf8.append_code (1021)
+			utf8.append_item_code (265)
+			utf8.append_item_code (1021)
 			utf8.append_character ('f')
-			utf8.append_code (23456)
+			utf8.append_item_code (23456)
 			create a_string.make_from_utf8 (utf8.to_utf8)
 			assert_equal ("utf8", "%%/265/%%/1021/f%%/23456/", a_string.out)
 		end
@@ -166,7 +166,7 @@ feature -- Test
 			assert_integers_equal ("count3", 6, a_string.count)
 			create uc_string.make (9)
 			uc_string.append_character ('g')
-			uc_string.append_code (365)
+			uc_string.append_item_code (365)
 			uc_string.append_character ('o')
 			create a_string.make_from_string (uc_string)
 			assert_integers_equal ("count4", 3, a_string.count)
@@ -186,7 +186,7 @@ feature -- Test
 			assert_integers_equal ("count3", 6, a_string.count)
 			create uc_string.make (9)
 			uc_string.append_character ('g')
-			uc_string.append_code (365)
+			uc_string.append_item_code (365)
 			uc_string.append_character ('o')
 			create {UC_STRING} a_string.make_from_string (uc_string)
 			assert_integers_equal ("count4", 3, a_string.count)
@@ -209,7 +209,7 @@ feature -- Test
 			assert ("not_valid4", not a_string.valid_index (1)) 
 			create uc_string.make (9)
 			uc_string.append_character ('b')
-			uc_string.append_code (9345)
+			uc_string.append_item_code (9345)
 			uc_string.append_character ('a')
 			uc_string.append_character ('r')
 			create a_string.make_from_string (uc_string)
@@ -238,7 +238,7 @@ feature -- Test
 			assert ("not_valid4", not a_string.valid_index (1)) 
 			create uc_string.make (9)
 			uc_string.append_character ('b')
-			uc_string.append_code (9345)
+			uc_string.append_item_code (9345)
 			uc_string.append_character ('a')
 			uc_string.append_character ('r')
 			create {UC_STRING} a_string.make_from_string (uc_string)
@@ -263,10 +263,10 @@ feature -- Test
 			assert_equal ("item2", c, a_string.unicode_item (2)) 
 			create c.make_from_character ('r')
 			assert_equal ("item3", c, a_string.unicode_item (3)) 
-			a_string.put_code (543, 2)
+			a_string.put_item_code (543, 2)
 			create c.make_from_code (543)
 			assert_equal ("item4", c, a_string.unicode_item (2)) 
-			a_string.put_code (134, 2)
+			a_string.put_item_code (134, 2)
 			create c.make_from_code (134)
 			assert_equal ("item5", c, a_string.unicode_item (2)) 
 		end
@@ -280,9 +280,9 @@ feature -- Test
 			assert_integers_equal ("item_code1", ('b').code, a_string.item_code (1)) 
 			assert_integers_equal ("item_code2", ('a').code, a_string.item_code (2)) 
 			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3)) 
-			a_string.put_code (543, 2)
+			a_string.put_item_code (543, 2)
 			assert_integers_equal ("item_code4", 543, a_string.item_code (2)) 
-			a_string.put_code (134, 2)
+			a_string.put_item_code (134, 2)
 			assert_integers_equal ("item_code5", 134, a_string.item_code (2)) 
 		end
 
@@ -298,9 +298,9 @@ feature -- Test
 			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3)) 
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (543, 2)
+			uc_string.put_item_code (543, 2)
 			assert_integers_equal ("item_code4", 543, a_string.item_code (2)) 
-			uc_string.put_code (134, 2)
+			uc_string.put_item_code (134, 2)
 			assert_integers_equal ("item_code5", 134, a_string.item_code (2)) 
 		end
 
@@ -313,7 +313,7 @@ feature -- Test
 			assert_characters_equal ("item1", 'b', a_string.item (1)) 
 			assert_characters_equal ("item2", 'a', a_string.item (2)) 
 			assert_characters_equal ("item3", 'r', a_string.item (3)) 
-			a_string.put_code (too_big_character, 2)
+			a_string.put_item_code (too_big_character, 2)
 			assert_characters_equal ("item4", '%U', a_string.item (2)) 
 		end
 
@@ -329,7 +329,7 @@ feature -- Test
 			assert_characters_equal ("item3", 'r', a_string.item (3)) 
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (too_big_character, 2)
+			uc_string.put_item_code (too_big_character, 2)
 			assert_characters_equal ("item4", '%U', a_string.item (2)) 
 		end
 
@@ -346,7 +346,7 @@ feature -- Test
 				assert_characters_equal ("item1", 'b', a_string @ 1) 
 				assert_characters_equal ("item2", 'a', a_string @ 2) 
 				assert_characters_equal ("item3", 'r', a_string @ 3) 
-				a_string.put_code (too_big_character, 2)
+				a_string.put_item_code (too_big_character, 2)
 				assert_characters_equal ("item4", '%U', a_string @ 2) 
 			end
 		end
@@ -367,7 +367,7 @@ feature -- Test
 				assert_characters_equal ("item3", 'r', a_string @ 3) 
 				uc_string ?= a_string
 				assert ("uc_string", uc_string /= Void)
-				uc_string.put_code (too_big_character, 2)
+				uc_string.put_item_code (too_big_character, 2)
 				assert_characters_equal ("item4", '%U', a_string @ 2) 
 			end
 		end
@@ -397,21 +397,21 @@ feature -- Test
 			assert_equal ("put5", "boz", a_string.out) 
 		end
 
-	test_put_code1 is
-			-- Test feature `put_code'.
+	test_put_item_code1 is
+			-- Test feature `put_item_code'.
 		local
 			a_string: UC_STRING
 		do
 			create a_string.make_from_string ("bar")
-			a_string.put_code (('f').code, 1)
+			a_string.put_item_code (('f').code, 1)
 			assert_equal ("put_code1", "far", a_string.out) 
-			a_string.put_code (('o').code, 2)
+			a_string.put_item_code (('o').code, 2)
 			assert_equal ("put_code2", "for", a_string.out) 
-			a_string.put_code (('z').code, 3)
+			a_string.put_item_code (('z').code, 3)
 			assert_equal ("put_code3", "foz", a_string.out) 
-			a_string.put_code (259, 1)
+			a_string.put_item_code (259, 1)
 			assert_equal ("put_code4", "%%/259/oz", a_string.out) 
-			a_string.put_code (('b').code, 1)
+			a_string.put_item_code (('b').code, 1)
 			assert_equal ("put_code5", "boz", a_string.out) 
 		end
 
@@ -460,10 +460,10 @@ feature -- Test
 			create a_string.make_from_string ("")
 			assert_equal ("substring5", a_string2, a_string.substring (1, 0)) 
 			create a_string.make_from_string ("bar")
-			a_string.append_code (541)
+			a_string.append_item_code (541)
 			a_string.append_string ("foo")
 			create a_string2.make_from_string ("ar")
-			a_string2.append_code (541)
+			a_string2.append_item_code (541)
 			a_string2.append_string ("fo")
 			assert_equal ("substring6", a_string2, a_string.substring (2, 6)) 
 		end
@@ -488,10 +488,10 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("bar")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.append_code (541)
+			uc_string.append_item_code (541)
 			a_string.append_string ("foo")
 			create a_string2.make_from_string ("ar")
-			a_string2.append_code (541)
+			a_string2.append_item_code (541)
 			a_string2.append_string ("fo")
 			assert_equal ("substring6", a_string2, a_string.substring (2, 6)) 
 		end
@@ -516,17 +516,17 @@ feature -- Test
 			create a_string2.make_from_string ("foo")
 			assert ("not_is_equal4", not a_string.is_equal (a_string2)) 
 			create a_string.make_from_string ("bar")
-			a_string.append_code (541)
+			a_string.append_item_code (541)
 			a_string.append_string ("foo")
 			create a_string2.make_from_string ("bar")
-			a_string2.append_code (541)
+			a_string2.append_item_code (541)
 			a_string2.append_string ("foo")
 			assert ("is_equal3", a_string.is_equal (a_string2)) 
 			create a_string.make_from_string ("")
-			a_string.append_code (541)
+			a_string.append_item_code (541)
 			a_string.append_string ("foo")
 			create a_string2.make_from_string ("")
-			a_string2.append_code (345)
+			a_string2.append_item_code (345)
 			a_string2.append_string ("foo")
 			assert ("not_is_equal5",  not a_string.is_equal (a_string2)) 
 		end
@@ -541,7 +541,7 @@ feature -- Test
 			create a_string.make_from_string ("")
 			assert_equal ("out2", "", a_string.out) 
 			create a_string.make_from_string ("foo")
-			a_string.put_code (934, 2)
+			a_string.put_item_code (934, 2)
 			assert_equal ("out3", "f%%/934/o", a_string.out) 
 		end
 
@@ -558,7 +558,7 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("foo")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (934, 2)
+			uc_string.put_item_code (934, 2)
 			assert_equal ("out3", "f%%/934/o", a_string.out) 
 		end
 
@@ -572,8 +572,8 @@ feature -- Test
 			create a_string.make_from_string ("")
 			assert_equal ("empty", "", a_string.to_utf8) 
 			create a_string.make_from_string ("foo")
-			a_string.put_code (934, 2)
-			a_string.put_code (129, 3)
+			a_string.put_item_code (934, 2)
+			a_string.put_item_code (129, 3)
 			assert_integers_equal ("foo_count", 5, a_string.to_utf8.count) 
 			assert_characters_equal ("foo_1", 'f', a_string.to_utf8.item (1)) 
 				-- 934: 11001110 10100110
@@ -754,7 +754,7 @@ feature -- Test
 			assert_equal ("copy4", "toto", a_string.out) 
 			create a_string.make_from_string ("zx")
 			create a_string2.make_from_string ("foobar")
-			a_string2.put_code (692, 3)
+			a_string2.put_item_code (692, 3)
 			a_string.copy (a_string2)
 			assert_equal ("copy4", "fo%%/692/bar", a_string.out) 
 		end
@@ -823,17 +823,17 @@ feature -- Test
 			a_string.append_string ("")
 			assert_equal ("append_string3", "foo", a_string.out) 
 			create uc_string.make (4)
-			uc_string.append_code (265)
-			uc_string.append_code (1021)
+			uc_string.append_item_code (265)
+			uc_string.append_item_code (1021)
 			uc_string.append_character ('f')
-			uc_string.append_code (23456)
+			uc_string.append_item_code (23456)
 			a_string.append_string (uc_string)
 			assert_equal ("append_string4", "foo%%/265/%%/1021/f%%/23456/", a_string.out) 
 			create a_string.make_from_string ("foo")
 			a_string.append_string (a_string)
 			assert_equal ("append_string5", "foofoo", a_string.out) 
 			create a_string.make_from_string ("bar")
-			a_string.put_code (888, 2)
+			a_string.put_item_code (888, 2)
 			a_string.append_string (a_string)
 			assert_equal ("append_string6", "b%%/888/rb%%/888/r", a_string.out) 
 		end
@@ -854,10 +854,10 @@ feature -- Test
 			a_string.append_string ("")
 			assert_equal ("append_string3", "foo", a_string.out) 
 			create uc_string.make (4)
-			uc_string.append_code (265)
-			uc_string.append_code (1021)
+			uc_string.append_item_code (265)
+			uc_string.append_item_code (1021)
 			uc_string.append_character ('f')
-			uc_string.append_code (23456)
+			uc_string.append_item_code (23456)
 			a_string.append_string (uc_string)
 			assert_equal ("append_string4", "foo%%/265/%%/1021/f%%/23456/", a_string.out) 
 			create {UC_STRING} a_string.make_from_string ("foo")
@@ -866,7 +866,7 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("bar")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (888, 2)
+			uc_string.put_item_code (888, 2)
 			a_string.append_string (a_string)
 			assert_equal ("append_string6", "b%%/888/rb%%/888/r", a_string.out) 
 		end
@@ -889,15 +889,15 @@ feature -- Test
 			create a_string2.make_from_string ("")
 			assert_equal ("append_string3", "foo", (a_string + a_string2).out) 
 			create uc_string.make (4)
-			uc_string.append_code (265)
-			uc_string.append_code (1021)
+			uc_string.append_item_code (265)
+			uc_string.append_item_code (1021)
 			uc_string.append_character ('f')
-			uc_string.append_code (23456)
+			uc_string.append_item_code (23456)
 			assert_equal ("append_string4", "foo%%/265/%%/1021/f%%/23456/", (a_string + uc_string).out) 
 			create a_string.make_from_string ("foo")
 			assert_equal ("append_string5", "foofoo", (a_string + a_string).out) 
 			create a_string.make_from_string ("bar")
-			a_string.put_code (888, 2)
+			a_string.put_item_code (888, 2)
 			assert_equal ("append_string6", "b%%/888/rb%%/888/r", (a_string + a_string).out) 
 		end
 
@@ -908,7 +908,7 @@ feature -- Test
 			c: UC_CHARACTER
 		do
 			create a_string.make_from_string ("bar")
-			a_string.put_code (345, 2)
+			a_string.put_item_code (345, 2)
 			create c.make_from_character ('b')
 			assert_integers_equal ("index_of_b1", 1, a_string.index_of_unicode (c, 1)) 
 			assert_integers_equal ("index_of_b2", 0, a_string.index_of_unicode (c, 2)) 
@@ -934,37 +934,37 @@ feature -- Test
 			assert_integers_equal ("index_of_o1", 0, a_string.index_of_unicode (c, 1)) 
 		end
 
-	test_index_of_code1 is
-			-- Test feature `index_of_code'.
+	test_index_of_item_code1 is
+			-- Test feature `index_of_item_code'.
 		local
 			a_string: UC_STRING
 			a_code: INTEGER
 		do
 			create a_string.make_from_string ("bar")
-			a_string.put_code (345, 2)
+			a_string.put_item_code (345, 2)
 			a_code := ('b').code
-			assert_integers_equal ("index_of_b1", 1, a_string.index_of_code (a_code, 1)) 
-			assert_integers_equal ("index_of_b2", 0, a_string.index_of_code (a_code, 2)) 
-			assert_integers_equal ("index_of_b3", 0, a_string.index_of_code (a_code, 3)) 
-			assert_integers_equal ("index_of_b4", 0, a_string.index_of_code (a_code, 4)) 
+			assert_integers_equal ("index_of_b1", 1, a_string.index_of_item_code (a_code, 1)) 
+			assert_integers_equal ("index_of_b2", 0, a_string.index_of_item_code (a_code, 2)) 
+			assert_integers_equal ("index_of_b3", 0, a_string.index_of_item_code (a_code, 3)) 
+			assert_integers_equal ("index_of_b4", 0, a_string.index_of_item_code (a_code, 4)) 
 			a_code := 345
-			assert_integers_equal ("index_of_345_1", 2, a_string.index_of_code (a_code, 1)) 
-			assert_integers_equal ("index_of_345_2", 2, a_string.index_of_code (a_code, 2)) 
-			assert_integers_equal ("index_of_345_3", 0, a_string.index_of_code (a_code, 3)) 
-			assert_integers_equal ("index_of_345_4", 0, a_string.index_of_code (a_code, 4)) 
+			assert_integers_equal ("index_of_345_1", 2, a_string.index_of_item_code (a_code, 1)) 
+			assert_integers_equal ("index_of_345_2", 2, a_string.index_of_item_code (a_code, 2)) 
+			assert_integers_equal ("index_of_345_3", 0, a_string.index_of_item_code (a_code, 3)) 
+			assert_integers_equal ("index_of_345_4", 0, a_string.index_of_item_code (a_code, 4)) 
 			a_code := ('r').code
-			assert_integers_equal ("index_of_r1", 3, a_string.index_of_code (a_code, 1)) 
-			assert_integers_equal ("index_of_r2", 3, a_string.index_of_code (a_code, 2)) 
-			assert_integers_equal ("index_of_r3", 3, a_string.index_of_code (a_code, 3)) 
-			assert_integers_equal ("index_of_r4", 0, a_string.index_of_code (a_code, 4)) 
+			assert_integers_equal ("index_of_r1", 3, a_string.index_of_item_code (a_code, 1)) 
+			assert_integers_equal ("index_of_r2", 3, a_string.index_of_item_code (a_code, 2)) 
+			assert_integers_equal ("index_of_r3", 3, a_string.index_of_item_code (a_code, 3)) 
+			assert_integers_equal ("index_of_r4", 0, a_string.index_of_item_code (a_code, 4)) 
 			a_code := ('z').code
-			assert_integers_equal ("index_of_z1", 0, a_string.index_of_code (a_code, 1)) 
-			assert_integers_equal ("index_of_z2", 0, a_string.index_of_code (a_code, 2)) 
-			assert_integers_equal ("index_of_z3", 0, a_string.index_of_code (a_code, 3)) 
-			assert_integers_equal ("index_of_z4", 0, a_string.index_of_code (a_code, 4)) 
+			assert_integers_equal ("index_of_z1", 0, a_string.index_of_item_code (a_code, 1)) 
+			assert_integers_equal ("index_of_z2", 0, a_string.index_of_item_code (a_code, 2)) 
+			assert_integers_equal ("index_of_z3", 0, a_string.index_of_item_code (a_code, 3)) 
+			assert_integers_equal ("index_of_z4", 0, a_string.index_of_item_code (a_code, 4)) 
 			create a_string.make_from_string ("")
 			a_code := ('o').code
-			assert_integers_equal ("index_of_o1", 0, a_string.index_of_code (a_code, 1)) 
+			assert_integers_equal ("index_of_o1", 0, a_string.index_of_item_code (a_code, 1)) 
 		end
 
 	test_index_of1 is
@@ -973,7 +973,7 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			create a_string.make_from_string ("bar")
-			a_string.put_code (too_big_character, 2)
+			a_string.put_item_code (too_big_character, 2)
 			assert_integers_equal ("index_of_b1", 1, a_string.index_of ('b', 1)) 
 			assert_integers_equal ("index_of_b2", 0, a_string.index_of ('b', 2)) 
 			assert_integers_equal ("index_of_b3", 0, a_string.index_of ('b', 3)) 
@@ -1008,7 +1008,7 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("bar")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (too_big_character, 2)
+			uc_string.put_item_code (too_big_character, 2)
 			assert_integers_equal ("index_of_b1", 1, a_string.index_of ('b', 1)) 
 			assert_integers_equal ("index_of_b2", 0, a_string.index_of ('b', 2)) 
 			assert_integers_equal ("index_of_b3", 0, a_string.index_of ('b', 3)) 
@@ -1025,7 +1025,7 @@ feature -- Test
 			assert_integers_equal ("index_of_z2", 0, a_string.index_of ('z', 2)) 
 			assert_integers_equal ("index_of_z3", 0, a_string.index_of ('z', 3)) 
 			assert_integers_equal ("index_of_z4", 0, a_string.index_of ('z', 4)) 
-			uc_string.put_code (0, 2)
+			uc_string.put_item_code (0, 2)
 			assert_integers_equal ("index_of_null1", 2, a_string.index_of ('%U', 1)) 
 			assert_integers_equal ("index_of_null2", 2, a_string.index_of ('%U', 2)) 
 			assert_integers_equal ("index_of_null3", 0, a_string.index_of ('%U', 3)) 
@@ -1041,7 +1041,7 @@ feature -- Test
 			c: UC_CHARACTER
 		do
 			create a_string.make_from_string ("bar")
-			a_string.append_code (432)
+			a_string.append_item_code (432)
 			create c.make_from_character ('b')
 			assert ("has_b", a_string.has_unicode (c)) 
 			create c.make_from_character ('a')
@@ -1061,31 +1061,31 @@ feature -- Test
 			assert ("not_has_678", not a_string.has_unicode (c)) 
 		end
 
-	test_has_code1 is
-			-- Test feature `has_code'.
+	test_has_item_code1 is
+			-- Test feature `has_item_code'.
 		local
 			a_string: UC_STRING
 			a_code: INTEGER
 		do
 			create a_string.make_from_string ("bar")
-			a_string.append_code (432)
+			a_string.append_item_code (432)
 			a_code := ('b').code
-			assert ("has_b", a_string.has_code (a_code)) 
+			assert ("has_b", a_string.has_item_code (a_code)) 
 			a_code := ('a').code
-			assert ("has_a", a_string.has_code (a_code)) 
+			assert ("has_a", a_string.has_item_code (a_code)) 
 			a_code := ('r').code
-			assert ("has_r", a_string.has_code (a_code)) 
+			assert ("has_r", a_string.has_item_code (a_code)) 
 			a_code := 432
-			assert ("has_432", a_string.has_code (a_code)) 
+			assert ("has_432", a_string.has_item_code (a_code)) 
 			a_code := ('o').code
-			assert ("not_has_o", not a_string.has_code (a_code)) 
+			assert ("not_has_o", not a_string.has_item_code (a_code)) 
 			a_code := 278
-			assert ("not_has_278", not a_string.has_code (a_code)) 
+			assert ("not_has_278", not a_string.has_item_code (a_code)) 
 			create a_string.make_from_string ("")
 			a_code := ('f').code
-			assert ("not_has_f", not a_string.has_code (a_code)) 
+			assert ("not_has_f", not a_string.has_item_code (a_code)) 
 			a_code := 678
-			assert ("not_has_678", not a_string.has_code (a_code)) 
+			assert ("not_has_678", not a_string.has_item_code (a_code)) 
 		end
 
 	test_has1 is
@@ -1094,7 +1094,7 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			create a_string.make_from_string ("bar")
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			assert ("has_b", a_string.has ('b')) 
 			assert ("has_a", a_string.has ('a')) 
 			assert ("has_r", a_string.has ('r')) 
@@ -1113,7 +1113,7 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("bar")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.append_code (too_big_character)
+			uc_string.append_item_code (too_big_character)
 			assert ("has_b", a_string.has ('b')) 
 			assert ("has_a", a_string.has ('a')) 
 			assert ("has_r", a_string.has ('r')) 
@@ -1130,9 +1130,9 @@ feature -- Test
 			c: UC_CHARACTER
 		do
 			create a_string.make_from_string ("foobar")
-			a_string.append_code (988)
-			a_string.append_code (988)
-			a_string.append_code (988)
+			a_string.append_item_code (988)
+			a_string.append_item_code (988)
+			a_string.append_item_code (988)
 			create c.make_from_character ('b')
 			assert_integers_equal ("b", 1, a_string.unicode_occurrences (c)) 
 			create c.make_from_character ('a')
@@ -1163,9 +1163,9 @@ feature -- Test
 			a_code: INTEGER
 		do
 			create a_string.make_from_string ("foobar")
-			a_string.append_code (988)
-			a_string.append_code (988)
-			a_string.append_code (988)
+			a_string.append_item_code (988)
+			a_string.append_item_code (988)
+			a_string.append_item_code (988)
 			a_code := ('b').code
 			assert_integers_equal ("b", 1, a_string.code_occurrences (a_code)) 
 			a_code := ('a').code
@@ -1195,9 +1195,9 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			create a_string.make_from_string ("foobar")
-			a_string.append_code (too_big_character)
-			a_string.append_code (too_big_character)
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
+			a_string.append_item_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			assert_integers_equal ("b", 1, a_string.occurrences ('b')) 
 			assert_integers_equal ("a", 1, a_string.occurrences ('a')) 
 			assert_integers_equal ("r", 1, a_string.occurrences ('r')) 
@@ -1219,9 +1219,9 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("foobar")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.append_code (too_big_character)
-			uc_string.append_code (too_big_character)
-			uc_string.append_code (too_big_character)
+			uc_string.append_item_code (too_big_character)
+			uc_string.append_item_code (too_big_character)
+			uc_string.append_item_code (too_big_character)
 			assert_integers_equal ("b", 1, a_string.occurrences ('b')) 
 			assert_integers_equal ("a", 1, a_string.occurrences ('a')) 
 			assert_integers_equal ("r", 1, a_string.occurrences ('r')) 
@@ -1241,8 +1241,8 @@ feature -- Test
 --			a_string: UC_STRING
 --		do
 --			create a_string.make_from_string ("foobar")
---			a_string.put_code (333, 3)
---			a_string.put_code (444, 4)
+--			a_string.put_item_code (333, 3)
+--			a_string.put_item_code (444, 4)
 --			a_string.head (10)
 --			assert_equal ("head_10", "fo%%/333/%%/444/ar", a_string.out) 
 --			a_string.head (6)
@@ -1262,8 +1262,8 @@ feature -- Test
 --			create {UC_STRING} a_string.make_from_string ("foobar")
 --			uc_string ?= a_string
 --			assert ("uc_string", uc_string /= Void)
---			uc_string.put_code (333, 3)
---			uc_string.put_code (444, 4)
+--			uc_string.put_item_code (333, 3)
+--			uc_string.put_item_code (444, 4)
 --			a_string.head (10)
 --			assert_equal ("head_10", "fo%%/333/%%/444/ar", a_string.out) 
 --			a_string.head (6)
@@ -1280,8 +1280,8 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			create a_string.make_from_string ("foobar")
-			a_string.put_code (333, 3)
-			a_string.put_code (444, 4)
+			a_string.put_item_code (333, 3)
+			a_string.put_item_code (444, 4)
 			a_string.keep_head (10)
 			assert_equal ("head_10", "fo%%/333/%%/444/ar", a_string.out) 
 			a_string.keep_head (6)
@@ -1299,8 +1299,8 @@ feature -- Test
 --			a_string: UC_STRING
 --		do
 --			create a_string.make_from_string ("foobar")
---			a_string.put_code (333, 3)
---			a_string.put_code (444, 4)
+--			a_string.put_item_code (333, 3)
+--			a_string.put_item_code (444, 4)
 --			a_string.tail (10)
 --			assert_equal ("tail_10", "fo%%/333/%%/444/ar", a_string.out) 
 --			a_string.tail (6)
@@ -1320,8 +1320,8 @@ feature -- Test
 --			create {UC_STRING} a_string.make_from_string ("foobar")
 --			uc_string ?= a_string
 --			assert ("uc_string", uc_string /= Void)
---			uc_string.put_code (333, 3)
---			uc_string.put_code (444, 4)
+--			uc_string.put_item_code (333, 3)
+--			uc_string.put_item_code (444, 4)
 --			a_string.tail (10)
 --			assert_equal ("tail_10", "fo%%/333/%%/444/ar", a_string.out) 
 --			a_string.tail (6)
@@ -1338,8 +1338,8 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			create a_string.make_from_string ("foobar")
-			a_string.put_code (333, 3)
-			a_string.put_code (444, 4)
+			a_string.put_item_code (333, 3)
+			a_string.put_item_code (444, 4)
 			a_string.keep_tail (10)
 			assert_equal ("tail_10", "fo%%/333/%%/444/ar", a_string.out) 
 			a_string.keep_tail (6)
@@ -1356,8 +1356,8 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			create a_string.make_from_string ("foobar")
-			a_string.put_code (333, 3)
-			a_string.put_code (444, 4)
+			a_string.put_item_code (333, 3)
+			a_string.put_item_code (444, 4)
 			a_string.remove_head (0)
 			assert_equal ("removed1", "fo%%/333/%%/444/ar", a_string.out) 
 			a_string.remove_head (3)
@@ -1365,8 +1365,8 @@ feature -- Test
 			a_string.remove_head (10)
 			assert_equal ("removed3", "", a_string.out) 
 			create a_string.make_from_string ("foobar")
-			a_string.put_code (333, 3)
-			a_string.put_code (444, 4)
+			a_string.put_item_code (333, 3)
+			a_string.put_item_code (444, 4)
 			a_string.remove_head (6)
 			assert_equal ("removed4", "", a_string.out) 
 		end
@@ -1377,8 +1377,8 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			create a_string.make_from_string ("foobar")
-			a_string.put_code (333, 3)
-			a_string.put_code (444, 4)
+			a_string.put_item_code (333, 3)
+			a_string.put_item_code (444, 4)
 			a_string.remove_tail (0)
 			assert_equal ("removed1", "fo%%/333/%%/444/ar", a_string.out) 
 			a_string.remove_tail (3)
@@ -1386,8 +1386,8 @@ feature -- Test
 			a_string.remove_tail (10)
 			assert_equal ("removed3", "", a_string.out) 
 			create a_string.make_from_string ("foobar")
-			a_string.put_code (333, 3)
-			a_string.put_code (444, 4)
+			a_string.put_item_code (333, 3)
+			a_string.put_item_code (444, 4)
 			a_string.remove_tail (6)
 			assert_equal ("removed4", "", a_string.out) 
 		end
@@ -1400,10 +1400,10 @@ feature -- Test
 			c: CHARACTER
 		do
 			create a_string.make_from_string ("foobar")
-			a_string.append_code (978)
+			a_string.append_item_code (978)
 			assert ("hash_code1", a_string.hash_code = a_string.hash_code) 
 			create a_string2.make_from_string ("foobar")
-			a_string2.append_code (978)
+			a_string2.append_item_code (978)
 			assert ("hash_code2", a_string.hash_code = a_string2.hash_code) 
 			s := "foobar"
 			create a_string.make_from_string (STRING_.cloned_string (s))
@@ -1433,12 +1433,12 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("foobar")
 			uc_string ?= a_string
 			assert ("uc_string1", uc_string /= Void)
-			uc_string.append_code (978)
+			uc_string.append_item_code (978)
 			assert ("hash_code1", a_string.hash_code = a_string.hash_code) 
 			create {UC_STRING} a_string2.make_from_string ("foobar")
 			uc_string ?= a_string2
 			assert ("uc_string2", uc_string /= Void)
-			uc_string.append_code (978)
+			uc_string.append_item_code (978)
 			assert ("hash_code2", a_string.hash_code = a_string2.hash_code) 
 			s := "foobar"
 			create {UC_STRING} a_string.make_from_string (STRING_.cloned_string (s))
@@ -1477,10 +1477,10 @@ feature -- Test
 			create a_string2.make_from_string ("foobar")
 			assert ("same3", a_string.same_string (a_string2))
 			create a_string.make_from_string ("foo")
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			a_string.append_string ("bar")
 			create a_string2.make_from_string ("foo")
-			a_string2.append_code (too_big_character2)
+			a_string2.append_item_code (too_big_character2)
 			a_string2.append_string ("bar")
 			assert ("same4", a_string.same_string (a_string2))
 			assert ("same5", a_string.same_string ("foo%Ubar"))
@@ -1500,15 +1500,15 @@ feature -- Test
 			create a_string2.make_from_string ("foobar")
 			assert ("same3", a_string.same_unicode_string (a_string2))
 			create a_string.make_from_string ("foo")
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			a_string.append_string ("bar")
 			create a_string2.make_from_string ("foo")
-			a_string2.append_code (too_big_character2)
+			a_string2.append_item_code (too_big_character2)
 			a_string2.append_string ("bar")
 			assert ("not_same3", not a_string.same_unicode_string (a_string2))
 			assert ("not_same4", not a_string.same_unicode_string ("foo%Ubar"))
 			create a_string2.make_from_string ("foo")
-			a_string2.append_code (too_big_character)
+			a_string2.append_item_code (too_big_character)
 			a_string2.append_string ("bar")
 			assert ("same4", a_string.same_unicode_string (a_string2))
 		end
@@ -1521,7 +1521,7 @@ feature -- Test
 			create a_string.make_from_string ("foobar")
 			assert_equal ("string1", "foobar", a_string.string)
 			create a_string.make_from_string ("foo")
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			a_string.append_string ("bar")
 			assert_equal ("string2", "foo%Ubar", a_string.string)
 			create a_string.make (0)
@@ -1613,10 +1613,10 @@ feature -- Test
 			assert_integers_equal ("index25", 0, a_string.unicode_substring_index (a_string, 3)) 
 			assert_integers_equal ("index26", 0, a_string.unicode_substring_index (a_string, 4)) 
 			create a_string.make_from_string ("foo")
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			a_string.append_string ("bar")
 			create a_string2.make_from_string ("o")
-			a_string2.append_code (too_big_character)
+			a_string2.append_item_code (too_big_character)
 			a_string2.append_string ("b")
 			assert_integers_equal ("index27", 3, a_string.unicode_substring_index (a_string2, 1)) 
 			assert_integers_equal ("index28", 3, a_string.unicode_substring_index (a_string2, 2)) 
@@ -1665,10 +1665,10 @@ feature -- Test
 			assert_integers_equal ("index25", 0, a_string.substring_index (a_string, 3)) 
 			assert_integers_equal ("index26", 0, a_string.substring_index (a_string, 4)) 
 			create a_string.make_from_string ("foo")
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			a_string.append_string ("bar")
 			create a_string2.make_from_string ("o")
-			a_string2.append_code (too_big_character)
+			a_string2.append_item_code (too_big_character)
 			a_string2.append_string ("b")
 			assert_integers_equal ("index27", 3, a_string.substring_index (a_string2, 1)) 
 			assert_integers_equal ("index28", 3, a_string.substring_index (a_string2, 2)) 
@@ -1679,10 +1679,10 @@ feature -- Test
 			assert_integers_equal ("index33", 0, a_string.substring_index (a_string2, 7)) 
 			assert_integers_equal ("index34", 0, a_string.substring_index (a_string2, 8)) 
 			create a_string.make_from_string ("foo")
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			a_string.append_string ("bar")
 			create a_string2.make_from_string ("o")
-			a_string2.append_code (too_big_character2)
+			a_string2.append_item_code (too_big_character2)
 			a_string2.append_string ("b")
 			assert_integers_equal ("index35", 3, a_string.substring_index (a_string2, 1)) 
 			assert_integers_equal ("index36", 3, a_string.substring_index (a_string2, 2)) 
@@ -1710,10 +1710,10 @@ feature -- Test
 			assert ("has3", a_string.has_unicode_substring ("")) 
 			assert ("has4", a_string.has_unicode_substring (a_string)) 
 			create a_string.make_from_string ("foo")
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			a_string.append_string ("bar")
 			create a_string2.make_from_string ("o")
-			a_string2.append_code (too_big_character)
+			a_string2.append_item_code (too_big_character)
 			a_string2.append_string ("b")
 			assert ("has5", a_string.has_unicode_substring (a_string2)) 
 		end
@@ -1734,17 +1734,17 @@ feature -- Test
 			assert ("has3", a_string.has_substring ("")) 
 			assert ("has4", a_string.has_substring (a_string)) 
 			create a_string.make_from_string ("foo")
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			a_string.append_string ("bar")
 			create a_string2.make_from_string ("o")
-			a_string2.append_code (too_big_character)
+			a_string2.append_item_code (too_big_character)
 			a_string2.append_string ("b")
 			assert ("has5", a_string.has_substring (a_string2)) 
 			create a_string.make_from_string ("foo")
-			a_string.append_code (too_big_character)
+			a_string.append_item_code (too_big_character)
 			a_string.append_string ("bar")
 			create a_string2.make_from_string ("o")
-			a_string2.append_code (too_big_character2)
+			a_string2.append_item_code (too_big_character2)
 			a_string2.append_string ("b")
 			assert ("has6", a_string.has_substring (a_string2)) 
 		end
@@ -1758,7 +1758,7 @@ feature -- Test
 			assert ("not_empty1", not a_string.is_empty)
 			create a_string.make (15)
 			assert ("empty1", a_string.is_empty)
-			a_string.append_code (345)
+			a_string.append_item_code (345)
 			assert ("not_empty2", not a_string.is_empty)
 		end
 
@@ -1971,17 +1971,17 @@ feature -- Test
 			a_string.insert_string ("", 2)
 			assert_equal ("inserted3", "foo", a_string.out) 
 			create uc_string.make (4)
-			uc_string.append_code (265)
-			uc_string.append_code (1021)
+			uc_string.append_item_code (265)
+			uc_string.append_item_code (1021)
 			uc_string.append_character ('f')
-			uc_string.append_code (23456)
+			uc_string.append_item_code (23456)
 			a_string.insert_string (uc_string, 3)
 			assert_equal ("inserted4", "fo%%/265/%%/1021/f%%/23456/o", a_string.out) 
 			create a_string.make_from_string ("foo")
 			a_string.insert_string (a_string, 2)
 			assert_equal ("inserted5", "ffoooo", a_string.out) 
 			create a_string.make_from_string ("bar")
-			a_string.put_code (888, 2)
+			a_string.put_item_code (888, 2)
 			a_string.insert_string (a_string, 1)
 			assert_equal ("inserted6", "b%%/888/rb%%/888/r", a_string.out) 
 		end
@@ -2020,7 +2020,7 @@ feature -- Test
 			a_string.wipe_out
 			assert_equal ("wiped_out2", "", a_string.out) 
 			create a_string.make_from_string ("foo")
-			a_string.append_code (888)
+			a_string.append_item_code (888)
 			a_string.append_string ("bar")
 			a_string.wipe_out
 			assert_equal ("wiped_out3", "", a_string.out) 
@@ -2041,7 +2041,7 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("foo")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.append_code (888)
+			uc_string.append_item_code (888)
 			uc_string.append_string ("bar")
 			a_string.wipe_out
 			assert_equal ("wiped_out3", "", a_string.out) 
@@ -2053,7 +2053,7 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			create a_string.make_from_string ("foobar")
-			a_string.put_code (367, 4)
+			a_string.put_item_code (367, 4)
 			a_string.remove (1)
 			assert_equal ("removed1", "oo%%/367/ar", a_string.out) 
 			a_string.remove (5)
@@ -2071,7 +2071,7 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("foobar")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (367, 4)
+			uc_string.put_item_code (367, 4)
 			a_string.remove (1)
 			assert_equal ("removed1", "oo%%/367/ar", a_string.out) 
 			a_string.remove (5)
@@ -2181,9 +2181,9 @@ feature -- Test
 			assert ("not_less5", not (a_string < a_string2))
 			assert ("not_less6", not (a_string2 < a_string))
 			create a_string.make_from_string ("foo")
-			a_string.append_code (3333)
+			a_string.append_item_code (3333)
 			create a_string2.make_from_string ("foo")
-			a_string2.append_code (9999)
+			a_string2.append_item_code (9999)
 			assert ("less4", a_string < a_string2)
 			assert ("not_less7", not (a_string2 < a_string))
 		end
@@ -2214,11 +2214,11 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("foo")
 			uc_string ?= a_string
 			assert ("uc_string1", uc_string /= Void)
-			uc_string.append_code (3333)
+			uc_string.append_item_code (3333)
 			create {UC_STRING} a_string2.make_from_string ("foo")
 			uc_string ?= a_string2
 			assert ("uc_string2", uc_string /= Void)
-			uc_string.append_code (9999)
+			uc_string.append_item_code (9999)
 			assert ("less4", a_string < a_string2)
 			assert ("not_less7", not (a_string2 < a_string))
 		end
@@ -2246,9 +2246,9 @@ feature -- Test
 			assert ("less5", a_string <= a_string2)
 			assert ("less6", a_string2 <= a_string)
 			create a_string.make_from_string ("foo")
-			a_string.append_code (3333)
+			a_string.append_item_code (3333)
 			create a_string2.make_from_string ("foo")
-			a_string2.append_code (9999)
+			a_string2.append_item_code (9999)
 			assert ("less7", a_string <= a_string2)
 			assert ("not_less4", not (a_string2 <= a_string))
 		end
@@ -2279,11 +2279,11 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("foo")
 			uc_string ?= a_string
 			assert ("uc_string1", uc_string /= Void)
-			uc_string.append_code (3333)
+			uc_string.append_item_code (3333)
 			create {UC_STRING} a_string2.make_from_string ("foo")
 			uc_string ?= a_string2
 			assert ("uc_string2", uc_string /= Void)
-			uc_string.append_code (9999)
+			uc_string.append_item_code (9999)
 			assert ("less7", a_string <= a_string2)
 			assert ("not_less4", not (a_string2 <= a_string))
 		end
@@ -2311,9 +2311,9 @@ feature -- Test
 			assert ("not_greater5", not (a_string > a_string2))
 			assert ("not_greater6", not (a_string2 > a_string))
 			create a_string.make_from_string ("foo")
-			a_string2.append_code (9999)
+			a_string2.append_item_code (9999)
 			create a_string2.make_from_string ("foo")
-			a_string.append_code (3333)
+			a_string.append_item_code (3333)
 			assert ("greater4", a_string > a_string2)
 			assert ("not_greater7", not (a_string2 > a_string))
 		end
@@ -2344,11 +2344,11 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("foo")
 			uc_string ?= a_string
 			assert ("uc_string1", uc_string /= Void)
-			uc_string.append_code (9999)
+			uc_string.append_item_code (9999)
 			create {UC_STRING} a_string2.make_from_string ("foo")
 			uc_string ?= a_string2
 			assert ("uc_string2", uc_string /= Void)
-			uc_string.append_code (3333)
+			uc_string.append_item_code (3333)
 			assert ("greater4", a_string > a_string2)
 			assert ("not_greater7", not (a_string2 > a_string))
 		end
@@ -2376,9 +2376,9 @@ feature -- Test
 			assert ("greater5", a_string >= a_string2)
 			assert ("greater6", a_string2 >= a_string)
 			create a_string.make_from_string ("foo")
-			a_string2.append_code (9999)
+			a_string2.append_item_code (9999)
 			create a_string2.make_from_string ("foo")
-			a_string.append_code (3333)
+			a_string.append_item_code (3333)
 			assert ("greater7", a_string >= a_string2)
 			assert ("not_greater4", not (a_string2 >= a_string))
 		end
@@ -2409,11 +2409,11 @@ feature -- Test
 			create {UC_STRING} a_string.make_from_string ("foo")
 			uc_string ?= a_string
 			assert ("uc_string1", uc_string /= Void)
-			uc_string.append_code (9999)
+			uc_string.append_item_code (9999)
 			create {UC_STRING} a_string2.make_from_string ("foo")
 			uc_string ?= a_string2
 			assert ("uc_string2", uc_string /= Void)
-			uc_string.append_code (3333)
+			uc_string.append_item_code (3333)
 			assert ("greater7", a_string >= a_string2)
 			assert ("not_greater4", not (a_string2 >= a_string))
 		end
@@ -2548,7 +2548,7 @@ feature -- Test
 			create a_string.make_empty
 			assert ("is_ascii2", a_string.is_ascii)
 			create a_string.make_from_string ("foo")
-			a_string.append_code (130)
+			a_string.append_item_code (130)
 			a_string.append_string ("bar")
 			assert ("not_is_ascii1", not a_string.is_ascii)
 		end

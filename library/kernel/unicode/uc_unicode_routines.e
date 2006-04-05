@@ -90,7 +90,7 @@ feature -- Status report
 				Result.append_character (INTEGER_.to_character (a_code))
 			else
 				create a_unicode.make (1)
-				a_unicode.append_code (a_code)
+				a_unicode.append_item_code (a_code)
 				Result := a_unicode
 			end
 		ensure

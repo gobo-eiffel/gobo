@@ -83,9 +83,12 @@ inherit
 			{UC_STRING_HANDLER} storage, compare;
 #endif
 #ifdef ISE
-			{STRING} share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal;
+--			{STRING} share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal;
+--			{NONE} all
 #endif
+#ifndef ISE
 			{NONE} all
+#endif
 		undefine
 #ifdef VE || SE
 			compare,
@@ -871,7 +874,7 @@ feature -- Access
 		require
 			valid_start_index: start_index >= 1 and start_index <= count + 1
 		do
-			Result := index_of_code (c.code, start_index)
+			Result := index_of_item_code (c.code, start_index)
 		ensure
 			valid_result: Result = 0 or (start_index <= Result and Result <= count)
 			zero_if_absent: (Result = 0) = not substring (start_index, count).has_unicode (c)
@@ -879,7 +882,7 @@ feature -- Access
 			none_before: substring (start_index, count).has_unicode (c) implies not substring (start_index, Result - 1).has_unicode (c)
 		end
 
-	index_of_code (a_code: INTEGER; start_index: INTEGER): INTEGER is
+	index_of_item_code (a_code: INTEGER; start_index: INTEGER): INTEGER is
 			-- Index of first occurrence of unicode character with
 			-- code `a_code' at or after `start_index'; 0 if none
 		require
@@ -916,9 +919,9 @@ feature -- Access
 			end
 		ensure
 			valid_result: Result = 0 or (start_index <= Result and Result <= count)
-			zero_if_absent: (Result = 0) = not substring (start_index, count).has_code (a_code)
-			found_if_present: substring (start_index, count).has_code (a_code) implies item_code (Result) = a_code
-			none_before: substring (start_index, count).has_code (a_code) implies not substring (start_index, Result - 1).has_code (a_code)
+			zero_if_absent: (Result = 0) = not substring (start_index, count).has_item_code (a_code)
+			found_if_present: substring (start_index, count).has_item_code (a_code) implies item_code (Result) = a_code
+			none_before: substring (start_index, count).has_item_code (a_code) implies not substring (start_index, Result - 1).has_item_code (a_code)
 		end
 
 	index_of (c: CHARACTER; start_index: INTEGER): INTEGER is
@@ -956,7 +959,7 @@ feature -- Access
 					end
 				end
 			else
-				Result := index_of_code (c.code, start_index)
+				Result := index_of_item_code (c.code, start_index)
 			end
 		end
 
@@ -1124,23 +1127,23 @@ feature -- Status report
 		require
 			c_not_void: c /= Void
 		do
-			Result := has_code (c.code)
+			Result := has_item_code (c.code)
 		ensure
 			false_if_empty: count = 0 implies not Result
 			true_if_first: count > 0 and then item_code (1) = c.code implies Result
 			recurse: (count > 0 and then item_code (1) /= c.code) implies (Result = substring (2, count).has_unicode (c))
 		end
 
-	has_code (a_code: INTEGER): BOOLEAN is
+	has_item_code (a_code: INTEGER): BOOLEAN is
 			-- Does `Current' contain the unicode character of code `a_code'?
 		require
 			valid_code: unicode.valid_code (a_code)
 		do
-			Result := (index_of_code (a_code, 1) /= 0)
+			Result := (index_of_item_code (a_code, 1) /= 0)
 		ensure
 			false_if_empty: count = 0 implies not Result
 			true_if_first: count > 0 and then item_code (1) = a_code implies Result
-			recurse: (count > 0 and then item_code (1) /= a_code) implies (Result = substring (2, count).has_code (a_code))
+			recurse: (count > 0 and then item_code (1) /= a_code) implies (Result = substring (2, count).has_item_code (a_code))
 		end
 
 	has (c: CHARACTER): BOOLEAN is
@@ -1420,7 +1423,7 @@ feature -- Element change
 			valid_index: valid_index (i)
 			c_not_void: c /= Void
 		do
-			put_code (c.code, i)
+			put_item_code (c.code, i)
 		ensure
 			stable_count: count = old count
 			replaced: item_code (i) = c.code
@@ -1428,7 +1431,7 @@ feature -- Element change
 			stable_after_i: substring (i + 1, count).is_equal (old substring (i + 1, count))
 		end
 
-	put_code (a_code: INTEGER; i: INTEGER) is
+	put_item_code (a_code: INTEGER; i: INTEGER) is
 			-- Replace unicode character at index `i'
 			-- by unicode character of code `a_code'.
 		require
@@ -1509,14 +1512,14 @@ feature -- Element change
 		require
 			c_not_void: c /= Void
 		do
-			append_code (c.code)
+			append_item_code (c.code)
 		ensure
 			new_count: count = old count + 1
 			appended: item_code (count) = c.code
 			stable_before: substring (1, count - 1).is_equal (old cloned_string)
 		end
 
-	append_code (a_code: INTEGER) is
+	append_item_code (a_code: INTEGER) is
 			-- Append unicode character of code `a_code' at end.
 		require
 			valid_item_code: unicode.valid_code (a_code)
@@ -1800,9 +1803,9 @@ feature -- Element change
 					end
 
 					check valid_pre_implies_low: utf16.is_low_surrogate (a_low_most) end
-					append_code (utf16.surrogate_from_bytes (a_most, a_least, a_low_most, a_low_least))
+					append_item_code (utf16.surrogate_from_bytes (a_most, a_least, a_low_most, a_low_least))
 				else
-					append_code (a_most * 256 + a_least)
+					append_item_code (a_most * 256 + a_least)
 				end
 				i := i + 2
 			end
@@ -1899,7 +1902,7 @@ feature -- Element change
 			new_byte_count: INTEGER
 		do
 			if i = count + 1 then
-				append_code (a_code)
+				append_item_code (a_code)
 			else
 				if count = byte_count then
 					k := i
