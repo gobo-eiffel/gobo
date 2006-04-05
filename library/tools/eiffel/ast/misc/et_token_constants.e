@@ -66,6 +66,22 @@ feature -- Class names
 			character_class_name_not_void: Result /= Void
 		end
 
+	character_8_class_name: ET_CLASS_NAME is
+			-- "CHARACTER_8" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_character_8_name)
+		ensure
+			character_8_class_name_not_void: Result /= Void
+		end
+
+	character_32_class_name: ET_CLASS_NAME is
+			-- "CHARACTER_32" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_character_32_name)
+		ensure
+			character_32_class_name_not_void: Result /= Void
+		end
+
 	double_class_name: ET_CLASS_NAME is
 			-- "DOUBLE" class name
 		once
@@ -306,6 +322,22 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 			create {ET_IDENTIFIER} Result.make (capitalized_character_ref_name)
 		ensure
 			character_ref_class_name_not_void: Result /= Void
+		end
+
+	character_8_ref_class_name: ET_CLASS_NAME is
+			-- "CHARACTER_8_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_character_8_ref_name)
+		ensure
+			character_8_ref_class_name_not_void: Result /= Void
+		end
+
+	character_32_ref_class_name: ET_CLASS_NAME is
+			-- "CHARACTER_32_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_character_32_ref_name)
+		ensure
+			character_32_ref_class_name_not_void: Result /= Void
 		end
 
 	comparable_class_name: ET_CLASS_NAME is
@@ -1926,6 +1958,8 @@ feature -- Keyword and symbol names
 	capitalized_bit_name: STRING is "BIT"
 	capitalized_boolean_name: STRING is "BOOLEAN"
 	capitalized_character_name: STRING is "CHARACTER"
+	capitalized_character_8_name: STRING is "CHARACTER_8"
+	capitalized_character_32_name: STRING is "CHARACTER_32"
 	capitalized_double_name: STRING is "DOUBLE"
 	capitalized_function_name: STRING is "FUNCTION"
 	capitalized_general_name: STRING is "GENERAL"
@@ -2149,6 +2183,8 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 
 	capitalized_boolean_ref_name: STRING is "BOOLEAN_REF"
 	capitalized_character_ref_name: STRING is "CHARACTER_REF"
+	capitalized_character_8_ref_name: STRING is "CHARACTER_8_REF"
+	capitalized_character_32_ref_name: STRING is "CHARACTER_32_REF"
 	capitalized_comparable_name: STRING is "COMPARABLE"
 	capitalized_double_ref_name: STRING is "DOUBLE_REF"
 	capitalized_hashable_name: STRING is "HASHABLE"

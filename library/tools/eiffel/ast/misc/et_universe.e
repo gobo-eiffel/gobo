@@ -109,6 +109,10 @@ feature {NONE} -- Initialization
 			boolean_class.set_in_system (True)
 			character_class := eiffel_class (tokens.character_class_name)
 			character_class.set_in_system (True)
+			character_8_class := eiffel_class (tokens.character_8_class_name)
+			character_8_class.set_in_system (True)
+			character_32_class := eiffel_class (tokens.character_32_class_name)
+			character_32_class.set_in_system (True)
 			wide_character_class := eiffel_class (tokens.wide_character_class_name)
 			wide_character_class.set_in_system (True)
 			integer_class := eiffel_class (tokens.integer_class_name)
@@ -186,6 +190,8 @@ feature {NONE} -- Initialization
 				-- Needed for compatibility with 5.6.0610 (to be removed later):
 			boolean_ref_class := eiffel_class (tokens.boolean_ref_class_name)
 			character_ref_class := eiffel_class (tokens.character_ref_class_name)
+			character_8_ref_class := eiffel_class (tokens.character_8_ref_class_name)
+			character_32_ref_class := eiffel_class (tokens.character_32_ref_class_name)
 			wide_character_ref_class := eiffel_class (tokens.wide_character_ref_class_name)
 			integer_ref_class := eiffel_class (tokens.integer_ref_class_name)
 			integer_8_ref_class := eiffel_class (tokens.integer_8_ref_class_name)
@@ -217,6 +223,8 @@ feature {NONE} -- Initialization
 			special_class_not_void: special_class /= Void
 			boolean_class_not_void: boolean_class /= Void
 			character_class_not_void: character_class /= Void
+			character_8_class_not_void: character_8_class /= Void
+			character_32_class_not_void: character_32_class /= Void
 			wide_character_class_not_void: wide_character_class /= Void
 			integer_class_not_void: integer_class /= Void
 			integer_8_class_not_void: integer_8_class /= Void
@@ -260,6 +268,8 @@ feature {NONE} -- Initialization
 			double_convert_feature_not_void: double_convert_feature /= Void
 			boolean_ref_class_not_void: boolean_ref_class /= Void
 			character_ref_class_not_void: character_ref_class /= Void
+			character_8_ref_class_not_void: character_8_ref_class /= Void
+			character_32_ref_class_not_void: character_32_ref_class /= Void
 			wide_character_ref_class_not_void: wide_character_ref_class /= Void
 			integer_ref_class_not_void: integer_ref_class /= Void
 			integer_8_ref_class_not_void: integer_8_ref_class /= Void
@@ -521,6 +531,12 @@ feature -- Basic classes
 	character_class: ET_CLASS
 			-- Class "CHARACTER"
 
+	character_8_class: ET_CLASS
+			-- Class "CHARACTER_8"
+
+	character_32_class: ET_CLASS
+			-- Class "CHARACTER_32"
+
 	wide_character_class: ET_CLASS
 			-- Class "WIDE_CHARACTER"
 
@@ -624,6 +640,12 @@ feature -- Basic classes (compatibility with 5.6.0610, to be removed later)
 
 	character_ref_class: ET_CLASS
 			-- Class "CHARACTER_REF"
+
+	character_8_ref_class: ET_CLASS
+			-- Class "CHARACTER_8_REF"
+
+	character_32_ref_class: ET_CLASS
+			-- Class "CHARACTER_32_REF"
 
 	wide_character_ref_class: ET_CLASS
 			-- Class "WIDE_CHARACTER_REF"
@@ -2448,6 +2470,8 @@ invariant
 	special_class_not_void: special_class /= Void
 	boolean_class_not_void: boolean_class /= Void
 	character_class_not_void: character_class /= Void
+	character_8_class_not_void: character_8_class /= Void
+	character_32_class_not_void: character_32_class /= Void
 	wide_character_class_not_void: wide_character_class /= Void
 	integer_class_not_void: integer_class /= Void
 	integer_8_class_not_void: integer_8_class /= Void
@@ -2499,6 +2523,8 @@ invariant
 	null_processor_not_void: null_processor /= Void
 	boolean_ref_class_not_void: boolean_ref_class /= Void
 	character_ref_class_not_void: character_ref_class /= Void
+	character_8_ref_class_not_void: character_8_ref_class /= Void
+	character_32_ref_class_not_void: character_32_ref_class /= Void
 	wide_character_ref_class_not_void: wide_character_ref_class /= Void
 	integer_ref_class_not_void: integer_ref_class /= Void
 	integer_8_ref_class_not_void: integer_8_ref_class /= Void

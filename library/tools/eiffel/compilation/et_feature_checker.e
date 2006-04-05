@@ -2287,6 +2287,12 @@ feature {NONE} -- Instruction validity
 				-- Valid with ISE Eiffel. To be checked with other compilers.
 			elseif a_value_context.same_named_type (universe.natural_64_class, current_type, universe) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif a_value_context.same_named_type (universe.character_8_class, current_type, universe) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif a_value_context.same_named_type (universe.character_32_class, current_type, universe) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif a_value_context.same_named_type (universe.wide_character_class, current_type, universe) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
 			else
 				had_error := True
 				set_fatal_error
@@ -2349,6 +2355,30 @@ feature {NONE} -- Instruction validity
 									a_choice_class = universe.integer_class)
 								then
 									-- Valid with ISE Eiffel. To be checked with other compilers.
+								elseif
+									a_value_class = universe.character_class and then
+									a_choice_class = universe.character_8_class
+								then
+									-- Valid with ISE Eiffel. To be checked with other compilers.
+								elseif
+									a_value_class = universe.character_8_class and then
+									a_choice_class = universe.character_class
+								then
+									-- Valid with ISE Eiffel. To be checked with other compilers.
+								elseif
+									a_value_class = universe.character_32_class and then
+									(a_choice_class = universe.character_class or
+									a_choice_class = universe.character_8_class or
+									a_choice_class = universe.wide_character_class)
+								then
+									-- Valid with ISE Eiffel. To be checked with other compilers.
+								elseif
+									a_value_class = universe.wide_character_class and then
+									(a_choice_class = universe.character_class or
+									a_choice_class = universe.character_8_class or
+									a_choice_class = universe.character_32_class)
+								then
+									-- Valid with ISE Eiffel. To be checked with other compilers.
 								else
 									had_error := True
 									set_fatal_error
@@ -2401,6 +2431,30 @@ feature {NONE} -- Instruction validity
 										a_choice_class = universe.integer_16_class or
 										a_choice_class = universe.integer_32_class or
 										a_choice_class = universe.integer_class)
+									then
+										-- Valid with ISE Eiffel. To be checked with other compilers.
+									elseif
+										a_value_class = universe.character_class and then
+										a_choice_class = universe.character_8_class
+									then
+										-- Valid with ISE Eiffel. To be checked with other compilers.
+									elseif
+										a_value_class = universe.character_8_class and then
+										a_choice_class = universe.character_class
+									then
+										-- Valid with ISE Eiffel. To be checked with other compilers.
+									elseif
+										a_value_class = universe.character_32_class and then
+										(a_choice_class = universe.character_class or
+										a_choice_class = universe.character_8_class or
+										a_choice_class = universe.wide_character_class)
+									then
+										-- Valid with ISE Eiffel. To be checked with other compilers.
+									elseif
+										a_value_class = universe.wide_character_class and then
+										(a_choice_class = universe.character_class or
+										a_choice_class = universe.character_8_class or
+										a_choice_class = universe.character_32_class)
 									then
 										-- Valid with ISE Eiffel. To be checked with other compilers.
 									else

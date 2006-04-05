@@ -703,6 +703,8 @@ feature {NONE} -- String handler
 				-- Needed for compatibility with 5.6.0610 (to be removed later):
 			Result.force_new (-1, tokens.capitalized_boolean_ref_name)
 			Result.force_new (-1, tokens.capitalized_character_ref_name)
+			Result.force_new (-1, tokens.capitalized_character_8_ref_name)
+			Result.force_new (-1, tokens.capitalized_character_32_ref_name)
 			Result.force_new (-1, tokens.capitalized_comparable_name)
 			Result.force_new (-1, tokens.capitalized_double_ref_name)
 			Result.force_new (-1, tokens.capitalized_hashable_name)
@@ -728,6 +730,8 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_bit_name)
 			Result.force_new (-1, tokens.capitalized_boolean_name)
 			Result.force_new (-1, tokens.capitalized_character_name)
+			Result.force_new (-1, tokens.capitalized_character_8_name)
+			Result.force_new (-1, tokens.capitalized_character_32_name)
 			Result.force_new (-1, tokens.capitalized_double_name)
 			Result.force_new (-1, tokens.capitalized_function_name)
 			Result.force_new (-1, tokens.capitalized_general_name)
