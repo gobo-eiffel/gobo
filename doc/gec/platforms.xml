@@ -57,8 +57,18 @@ has already been used successfully:
 			<entry>32-bit x86</entry>
 		</row>
 		<row>
+			<entry>Windows XP</entry>
+			<entry>msc 8 (Visual Studio .NET 2005)</entry>
+			<entry>32-bit x86</entry>
+		</row>
+		<row>
 			<entry>Linux Ubuntu 5.10 "The Breezy Badger"</entry>
 			<entry>gcc 4.0.2</entry>
+			<entry>32-bit x86</entry>
+		</row>
+		<row>
+			<entry>Debian Linux 2.6.15</entry>
+			<entry>tcc 0.9.23</entry>
 			<entry>32-bit x86</entry>
 		</row>
 		<row>
