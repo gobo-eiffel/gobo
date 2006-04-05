@@ -112,7 +112,7 @@ feature -- Execution
 				if operating_system.is_windows then
 					is_system_code := False
 				else
-						-- Under Lunix, system codes are stored on the first
+						-- Under Linux, system codes are stored on the first
 						-- 8 bits, and user codes on the higher bits.
 					if (exit_code \\ 256) = 0 then
 						exit_code := exit_code // 256
