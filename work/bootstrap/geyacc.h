@@ -61,7 +61,18 @@ typedef unsigned short uint16_t;
 typedef unsigned int uint32_t;
 typedef unsigned __int64 uint64_t;
 #else
+#if defined (__BORLANDC__) && (__BORLANDC__ < 0x600) /* Borland before 6.0 */
+typedef signed char int8_t;
+typedef signed short int16_t;
+typedef signed long int int32_t;
+typedef signed __int64 int64_t;
+typedef unsigned char int8_t;
+typedef unsigned short int16_t;
+typedef unsigned long int int32_t;
+typedef unsigned __int64 int64_t;
+#else
 #include <inttypes.h>
+#endif
 #endif
 
 /* Basic Eiffel types */
@@ -99,8 +110,18 @@ typedef uint32_t EIF_WIDE_CHAR;
 #define genat16(x) x
 #define geint32(x) x##L
 #define genat32(x) x##U
+#if defined (_MSC_VER) && (_MSC_VER < 1400) /* MSC older than v8 */
+#define geint64(x) x##i64
+#define genat64(x) x##ui64
+#else
+#if defined (__BORLANDC__) && (__BORLANDC__ < 0x600) /* Borland before 6.0 */
+#define geint64(x) x##i64
+#define genat64(x) x##ui64
+#else /* ISO C 99 */
 #define geint64(x) x##LL
 #define genat64(x) x##ULL
+#endif 
+#endif 
 
 /* Memory allocation, GC */
 #define gealloc(x) calloc((x),1)
