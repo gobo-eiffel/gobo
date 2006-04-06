@@ -375,24 +375,12 @@ feature {NONE} -- Implementation
 			-- Overflow on purpose.
 		local
 			d1: DOUBLE
-			i: INTEGER
 		once
-				-- Bug in SE 1.2r6: make sure that this once-function is
+				-- Bug in SE 1.2r7: make sure that this once-function is
 				-- not precomputed otherwise MSVC 7.1 complains about a
 				-- division by zero at compilation time.
-				-- Also, work around another problem with SE 1.2r6 where
-				-- 2.0e300 is generated in the C code as 2000...000.0
-				-- yielding a buffer overflow in the C compiler.
 			-- Result := Large_number * Large_number
-			from
-				i := 1
-				d1 := 2.0
-			until
-				i > 300
-			loop
-				d1 := d1 * 10.0
-				i := i + 1
-			end
+			d1 := Large_number
 			Result := d1 * d1
 		ensure
 			positive: Result > 0
@@ -403,33 +391,13 @@ feature {NONE} -- Implementation
 			-- Overflow on purpose.
 		local
 			d1, d2: DOUBLE
-			i: INTEGER
 		once
-				-- Bug in SE 1.2r6: make sure that this once-function is
+				-- Bug in SE 1.2r7: make sure that this once-function is
 				-- not precomputed otherwise MSVC 7.1 complains about a
 				-- division by zero at compilation time.
-				-- Also, work around another problem with SE 1.2r6 where
-				-- 2.0e300 is generated in the C code as 2000...000.0
-				-- yielding a buffer overflow in the C compiler.
 			-- Result := Large_number * Large_negative_number
-			from
-				i := 1
-				d1 := 2.0
-			until
-				i > 300
-			loop
-				d1 := d1 * 10.0
-				i := i + 1
-			end
-			from
-				i := 1
-				d2 := -2.0
-			until
-				i > 300
-			loop
-				d2 := d2 * 10.0
-				i := i + 1
-			end
+			d1 := Large_number
+			d2 := Large_negative_number
 			Result := d1 * d2
 		ensure
 			negative: Result < 0
