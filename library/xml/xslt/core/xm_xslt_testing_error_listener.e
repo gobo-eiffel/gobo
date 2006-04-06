@@ -33,10 +33,11 @@ feature {NONE} -- Initialization
 	make (a_recovery_policy: INTEGER) is
 			-- Establish invariant.
 		require
-			recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover			
+			recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
 		do
 			recovery_policy := a_recovery_policy
-			create reported_errors.make_equal (10)
+			create reported_errors.make (10)
+			reported_errors.set_equality_tester (string_equality_tester)
 		ensure
 			recovery_policy_set: recovery_policy = a_recovery_policy
 		end
@@ -90,4 +91,4 @@ invariant
 	reported_errors_not_void: reported_errors /= Void
 
 end
-	
+
