@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 		local
 			an_index: INTEGER
 		once
-			create Result.make_equal (95)
+			create Result.make (95)
 			from an_index := 32 until an_index > 126 loop
 				Result.force (INTEGER_.to_character (an_index))
 				an_index := an_index + 1
@@ -176,4 +176,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

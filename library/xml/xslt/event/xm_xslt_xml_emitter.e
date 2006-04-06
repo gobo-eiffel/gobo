@@ -83,7 +83,7 @@ feature -- Conversion
 		end
 
 feature -- Events
-	
+
 	open is
 			-- Notify start of event stream.
 		do
@@ -122,7 +122,7 @@ feature -- Events
 				if not is_output_open then
 					open_document
 				end
-				
+
 				-- Have we've seen this name before?
 
 				if a_name_code < name_lookup_table_size then
@@ -223,7 +223,7 @@ feature -- Events
 				end
 			end
 		end
-	
+
 
 	start_content is
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
@@ -287,7 +287,7 @@ feature -- Events
 						std.error.put_string ("Emitting " + normalized_string (chars) + "###")
 						std.error.put_new_line
 					end
-					output_escape (normalized_string (chars), False)					
+					output_escape (normalized_string (chars), False)
 				end
 			end
 		end
@@ -396,15 +396,15 @@ feature {NONE} -- Implementation
 			Result.put ("meta")
 			Result.put ("param")
 		end
-	
+
 	is_empty_tag (a_tag: STRING): BOOLEAN is
 			-- Is `a_tag' an empty tag?
 		require
 			tag_not_void: a_tag /= Void
-		do			
+		do
 			Result := empty_tags_set.has (a_tag.as_lower)
 		end
-	
+
 	url_attributes_set: DS_HASH_SET [STRING] is
 			-- Names of attributes that are sometimes URL valued
 		once
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			specials_in_attributes.put (True, 10) -- 'LF'
 			specials_in_attributes.put (True, 9) -- 'TAB'
 			specials_in_attributes.put (True, 34) -- '"'
-		end	
+		end
 
 	write_declaration is
 			-- Write XML declaration
@@ -481,9 +481,9 @@ feature {NONE} -- Implementation
 				STRING_.same_string (encoding, "US-ASCII") or else
 				STRING_.same_string (encoding, "ASCII"))
 			then
-				omit := False 
+				omit := False
 			end
-			
+
 			if not omit then
 				output ("<?xml version=%"" + output_properties.version + "%" " + "encoding=%"" + encoding + "%"")
 				if output_properties.standalone /= Void then
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 						if not is_error then output (normalized_string (a_value)) end
 						if not is_error then output ("%"") end
 					elseif a_mapped_string /= a_value then
-						
+
 						-- Null (0) characters will be used before and after any section of
 						--  the value where escaping is to be disabled
 
@@ -712,14 +712,14 @@ feature {NONE} -- Implementation
 			if not transformer.is_error then
 				is_output_open := True
 				if not is_declaration_written then write_declaration end
-			
+
 				a_character_representation := output_properties.character_representation
 				if STRING_.same_string (a_character_representation, "hex") then
 					is_hex_preferred := True
 				elseif STRING_.same_string (a_character_representation, "decimal") then
 					on_error ("Illegal value for gexslt:character-representation: " + a_character_representation)
 				end
-			
+
 				if STRING_.same_string (output_properties.version, "1.1") then
 					allow_undeclare_prefixes := output_properties.undeclare_prefixes
 				end
@@ -869,7 +869,7 @@ feature {NONE} -- Implementation
 		local
 			an_index: INTEGER
 		once
-			create Result.make_equal (95)
+			create Result.make (95)
 			from an_index := 32 until an_index > 126 loop
 				Result.force (INTEGER_.to_character (an_index))
 				an_index := an_index + 1
@@ -894,4 +894,4 @@ invariant
 	encoder_factory_not_void: encoder_factory /= Void
 
 end
-	
+
