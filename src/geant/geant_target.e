@@ -486,7 +486,7 @@ feature -- Processing
 						project.trace (<<"">>)
 					end
 					if obsolete_message /= Void then
-						project.log (<<"target `", project.name, ".", project.target_name (Current), "' is obsolete. ", obsolete_message>>)
+						project.log (<<"target `", project.name, ".", project.target_name (Current), "%' is obsolete. ", obsolete_message>>)
 					end
 						-- Change to the specified directory if "dir" attribute is provided:
 					if xml_element.has_attribute_by_name (Dir_attribute_name) then
@@ -498,7 +498,13 @@ feature -- Processing
 
 						project.trace_debug (<<"changing to directory: '", a_new_target_cwd, "%'">>)
 						a_old_target_cwd := file_system.current_working_directory
+						if not file_system.directory_exists (a_new_target_cwd) then
+							exit_application (1, <<"target `", project.name, ".",
+								project.target_name (Current), "%': directory %'", a_new_target_cwd,
+								"%' does not exist">>)
+						end
 						file_system.set_current_working_directory (a_new_target_cwd)
+						project.trace_debug (<<"current working directory: '", file_system.current_working_directory, "%'">>)
 					end
 
 						-- Execute nested tasks:

@@ -82,6 +82,9 @@ feature -- Execution
 				a_string_interpreter.set_variable_resolver (Project_variables_resolver)
 				a_new_task_cwd := a_string_interpreter.interpreted_string (a_new_task_cwd)
 				project.trace_debug (<<"changing to directory: '", a_new_task_cwd, "%'">>)
+				if not file_system.directory_exists (a_new_task_cwd) then
+					exit_application (1, <<"directory %'", a_new_task_cwd, "%' does not exist">>)
+				end
 				file_system.set_current_working_directory (a_new_task_cwd)
 			end
 			command.execute

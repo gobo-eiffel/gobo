@@ -45,13 +45,6 @@ feature {NONE} -- Initialization
 		do
 			create command.make (a_project)
 			task_make (command, an_xml_element)
-				-- filename:
-			if has_attribute (Filename_attribute_name) then
-				a_value := attribute_value (Filename_attribute_name)
-				if a_value.count > 0 then
-					command.set_filename (a_value)
-				end
-			end
 				-- start target:
 			if has_attribute (Start_target_attribute_name) then
 				a_value := attribute_value (Start_target_attribute_name)
@@ -63,11 +56,27 @@ feature {NONE} -- Initialization
 			if has_attribute (Reuse_variables_attribute_name) then
 				command.set_reuse_variables (boolean_value (Reuse_variables_attribute_name))
 			end
+				-- filename:
+			if has_attribute (Filename_attribute_name) then
+				a_value := attribute_value (Filename_attribute_name)
+				if a_value.count > 0 then
+					command.set_filename (a_value)
+				end
+					-- Set default value for `fork':
+				command.set_fork (True)
+			else
+					-- Set default value for `fork':
+				command.set_fork (False)
+			end
 				-- fileset:
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
 				create a_fs_element.make (project, a_xml_subelement)
 				command.set_fileset (a_fs_element.fileset)
+			end
+				-- fork:
+			if has_attribute (Fork_attribute_name) then
+				command.set_fork (boolean_value (Fork_attribute_name))
 			end
 
 				-- actual arguments:
@@ -133,6 +142,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute reuse_variables.
 		once
 			Result := "reuse_variables"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Fork_attribute_name: STRING is
+			-- Name of xml attribute fork.
+		once
+			Result := "fork"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

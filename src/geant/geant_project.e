@@ -188,6 +188,21 @@ feature -- Status report
 			end
 		end
 
+	is_builtin_variable_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' the name of a built-in variable?
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		local
+			s: STRING
+		do
+			Result := variables.is_builtin_variable_name (a_name)
+				-- Check also buildscript specific built-in variables (see `GEANT_PROJECT_ELEMENT.make'):
+			Result := Result or else STRING_.same_string (STRING_.concat (name, ".absdir"), a_name)
+			Result := Result or else STRING_.same_string (STRING_.concat (name, ".dir"), a_name)
+			Result := Result or else STRING_.same_string (STRING_.concat (name, ".filename"), a_name)
+		end
+
 feature -- Setting
 
 	set_description (a_description: STRING) is
