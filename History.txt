@@ -2,6 +2,10 @@ Version 3.5 - ????
 
 	geant:
 
+	* Task <geant> now by default spawns a new geant process if
+	  attribute 'file' has been specified. It also has a new attribute
+	  called 'fork' to control whether a new process should be spawned or not.
+
 	* Added attribute 'force' to task <xslt>. Use this attribute to
 	  generate output that already exists and is newer than the input.
 

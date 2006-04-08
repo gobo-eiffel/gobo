@@ -230,6 +230,16 @@
 					<zeroOrMore>
 				</choice>
 			</optional>
+			<optional>
+				<attribute name="fork">
+					<!-- runtime evaluation
+					<choice>
+						<value>true</value>
+						<value>false</value>
+					</choice>
+					-->
+				</attribute>
+			</optional>
 			<choice>
 				<attribute name="target"/>
 				<group>

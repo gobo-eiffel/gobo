@@ -60,6 +60,26 @@
 			</varlistentry>
 
 			<varlistentry>
+				<term>fork</term>
+				<listitem>
+					<para>
+						<emphasis>Description: </emphasis>Should a new operation system process be spawned for call?
+						<para>
+						When not specified the following default behavior applies:
+						If parameter 'file' has been specified the default value for 'fork' is 'true'. 
+						If no parameter 'file' has been specified the default value for 'fork' is 'false',
+						</para>
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>true|false</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>see description</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
 				<term>file</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>Name of build file to invoke</para>
@@ -151,6 +171,16 @@
           </element>
         <zeroOrMore>
       </choice>
+    </optional>
+    <optional>
+      <attribute name="fork">
+        <!-- runtime evaluation
+        <choice>
+          <value>true</value>
+          <value>false</value>
+        </choice>
+        -->
+      </attribute>
     </optional>
     <choice>
       <attribute name="target"/>
