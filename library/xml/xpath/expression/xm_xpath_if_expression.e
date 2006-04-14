@@ -362,11 +362,14 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is
 			-- Compute cardinality.
+		local
+			a_cardinality: INTEGER
 		do
-			clone_cardinality (then_expression)
-			set_cardinalities (merged_cardinality (else_expression.cardinalities))
-			if cardinality_allows_zero and then cardinality_allows_many then
+			a_cardinality := INTEGER_.bit_or (then_expression.cardinality, else_expression.cardinality)
+			if a_cardinality = 0 or a_cardinality > Required_cardinality_zero_or_more then
 				set_cardinality_zero_or_more
+			else
+				set_cardinality (a_cardinality)
 			end
 		end
 	

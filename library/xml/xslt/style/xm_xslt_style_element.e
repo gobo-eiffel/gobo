@@ -1576,7 +1576,7 @@ feature -- Element change
 				a_child_iterator.after
 			loop
 				a_style_element ?= a_child_iterator.item
-				if a_style_element /= Void then
+				if a_style_element /= Void and then not a_style_element.is_excluded then
 					a_style_element.process_all_attributes
 					if a_style_element.is_explaining then
 						is_explaining := True
