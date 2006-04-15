@@ -86,7 +86,7 @@ feature -- Element change
 								-- Internal error: missing open operands.
 							l_builder := a_system.dynamic_type_set_builder
 							l_builder.set_fatal_error
-							l_builder.error_handler.report_gibgh_error
+							l_builder.error_handler.report_giaaa_error
 						else
 							from i := 1 until i > nb loop
 								create l_attachment.make (l_item_type_sets.item (i), agent_type, an_attachment.attachment, i, an_attachment.current_feature, an_attachment.current_type)

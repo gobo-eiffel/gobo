@@ -275,7 +275,7 @@ feature {NONE} -- Constraint validity
 				if a_parameters = Void or else index1 > a_parameters.count then
 						-- Internal error.
 					set_fatal_error
-					error_handler.report_giaaf_error
+					error_handler.report_giaaa_error
 				elseif index1 = index2 then
 						-- The constraint of the formal parameter is
 						-- itself (e.g. "A [G -> G]"). This is not
@@ -311,7 +311,7 @@ feature {NONE} -- Constraint validity
 				if a_parameters = Void or else index1 > a_parameters.count then
 						-- Internal error.
 					set_fatal_error
-					error_handler.report_giaag_error
+					error_handler.report_giaaa_error
 				elseif index1 = index2 then
 						-- The constraint of the formal parameter is itself
 						-- (e.g. "A [G -> ARRAY [G]]"). This is not considered
@@ -429,7 +429,7 @@ feature {NONE} -- Constraint cycles
 				if a_parameters = Void then
 						-- Internal error.
 					set_fatal_error
-					error_handler.report_giaah_error
+					error_handler.report_giaaa_error
 				else
 					any_type := universe.any_class
 					a_parameters_count := a_parameters.count
@@ -443,7 +443,7 @@ feature {NONE} -- Constraint cycles
 							if an_index > a_parameters_count then
 									-- Internal error.
 								set_fatal_error
-								error_handler.report_giaai_error
+								error_handler.report_giaaa_error
 							else
 									-- We have "G -> H" and the base type of
 									-- H has already been processed (thanks to

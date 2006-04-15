@@ -124,7 +124,7 @@ feature -- Validity checking
 				if a_formals = Void or else a_formals.count /= nb then
 						-- Internal error: `a_type' is supposed to be a valid type.
 					set_fatal_error
-					error_handler.report_giaay_error
+					error_handler.report_giaaa_error
 				else
 					a_current_class := a_current_type.direct_base_class (universe)
 					a_formal_parameters := a_current_class.formal_parameters
@@ -142,7 +142,7 @@ feature -- Validity checking
 										-- a formal parameter of `a_current_type''s base class.
 									has_formal_type_error := True
 									set_fatal_error
-									error_handler.report_giabi_error
+									error_handler.report_giaaa_error
 								else
 									has_formal_type_error := False
 									a_formal_parameter := a_formal_parameters.formal_parameter (an_index)
@@ -162,7 +162,7 @@ feature -- Validity checking
 										if a_creation_procedure = Void then
 												-- Internal error: `a_type' is supposed to be a valid type.
 											set_fatal_error
-											error_handler.report_giabj_error
+											error_handler.report_giaaa_error
 										elseif a_formal_type /= Void then
 											if not has_formal_type_error then
 												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
@@ -270,13 +270,13 @@ feature -- Validity checking
 						if an_ancestor = Void then
 								-- Internal error: `a_current_class' is a descendant of `a_class_impl'.
 							set_fatal_error
-							error_handler.report_giaba_error
+							error_handler.report_giaaa_error
 						else
 							a_parameters := an_ancestor.actual_parameters
 							if a_parameters = Void then
 									-- Internal error: we said that `a_class_impl' was generic.
 								set_fatal_error
-								error_handler.report_giabb_error
+								error_handler.report_giaaa_error
 							else
 								Result := a_type.resolved_formal_parameters (a_parameters)
 							end
@@ -295,7 +295,7 @@ feature -- Validity checking
 								-- Internal error: we said that `a_current_class' was generic.
 								-- Therefore `a_current_type' is generic as well.
 							set_fatal_error
-							error_handler.report_giadz_error
+							error_handler.report_giaaa_error
 						else
 							Result := Result.resolved_formal_parameters (a_parameters)
 						end

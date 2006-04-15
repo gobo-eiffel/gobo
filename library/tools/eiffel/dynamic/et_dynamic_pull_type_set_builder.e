@@ -350,7 +350,7 @@ feature {NONE} -- Generation
 							-- feature redeclaration.
 						if not has_fatal_error then
 							set_fatal_error
-							error_handler.report_gibdo_error
+							error_handler.report_giaaa_error
 						end
 					else
 						from i := 1 until i > nb loop
@@ -375,7 +375,7 @@ feature {NONE} -- Generation
 							-- variables should be known at this stage.
 						if not has_fatal_error then
 							set_fatal_error
-							error_handler.report_gibdq_error
+							error_handler.report_giaaa_error
 						end
 					else
 						l_count := l_target.count
@@ -422,7 +422,7 @@ feature {NONE} -- CAT-calls
 					-- Internal error: there should be a feature with seed
 					-- `l_seed' in all descendants of `target_type.static_type'.
 				set_fatal_error
-				error_handler.report_gibby_error
+				error_handler.report_giaaa_error
 			else
 				l_actuals := a_call.static_call.arguments
 				if l_actuals /= Void then
@@ -436,7 +436,7 @@ feature {NONE} -- CAT-calls
 								-- that there was the same number of formal arguments in
 								-- feature redeclaration.
 							set_fatal_error
-							error_handler.report_gibbz_error
+							error_handler.report_giaaa_error
 						else
 							l_current_feature := a_call.current_feature
 							from i := 1 until i > nb loop
@@ -447,7 +447,7 @@ feature {NONE} -- CAT-calls
 										-- Internal error: the dynamic type sets of the actual
 										-- arguments should be known at this stage.
 									set_fatal_error
-									error_handler.report_gibfa_error
+									error_handler.report_giaaa_error
 								else
 									l_source_type := l_source_type_set.first_type
 									if l_source_type /= Void then
@@ -824,7 +824,7 @@ feature {NONE} -- Event handling
 						-- Internal error: the dynamic type sets of the source
 						-- and the target should be known at this stage.
 					set_fatal_error
-					error_handler.report_gibaa_error
+					error_handler.report_giaaa_error
 				elseif not l_target_type_set.is_expanded then
 					create l_attachment.make (l_source_type_set, an_instruction, current_dynamic_feature, current_dynamic_type)
 					l_target_type_set.put_source (l_attachment, current_system)
@@ -846,7 +846,7 @@ feature {NONE} -- Event handling
 						-- Internal error: the dynamic type sets of the source
 						-- and the target should be known at this stage.
 					set_fatal_error
-					error_handler.report_gibab_error
+					error_handler.report_giaaa_error
 				elseif not l_target_type_set.is_expanded then
 					create l_assignment_attempt.make (l_source_type_set, an_instruction, current_dynamic_feature, current_dynamic_type)
 					l_target_type_set.put_source (l_assignment_attempt, current_system)
@@ -883,7 +883,7 @@ feature {NONE} -- Event handling
 							-- Internal error: it has already been checked somewhere else
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
-						error_handler.report_gibae_error
+						error_handler.report_giaaa_error
 					else
 						from i := 1 until i > nb loop
 							l_actual := an_actuals.actual_argument (i)
@@ -892,7 +892,7 @@ feature {NONE} -- Event handling
 									-- Internal error: the dynamic type sets of the actual
 									-- arguments should be known at this stage.
 								set_fatal_error
-								error_handler.report_gibad_error
+								error_handler.report_giaaa_error
 							else
 								l_argument_type_set := l_argument_type_sets.item (i)
 								if not l_argument_type_set.is_expanded then
@@ -940,7 +940,7 @@ feature {NONE} -- Event handling
 							-- Internal error: it has already been checked somewhere else
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
-						error_handler.report_gibag_error
+						error_handler.report_giaaa_error
 					else
 						from i := 1 until i > nb loop
 							l_actual := l_actuals.actual_argument (i)
@@ -949,7 +949,7 @@ feature {NONE} -- Event handling
 									-- Internal error: the dynamic type sets of the actual
 									-- arguments should be known at this stage.
 								set_fatal_error
-								error_handler.report_gibaf_error
+								error_handler.report_giaaa_error
 							else
 								l_argument_type_set := l_argument_type_sets.item (i)
 								if not l_argument_type_set.is_expanded then
@@ -966,7 +966,7 @@ feature {NONE} -- Event handling
 						-- Internal error: the dynamic type sets of the
 						-- target should be known at this stage.
 					set_fatal_error
-					error_handler.report_gibah_error
+					error_handler.report_giaaa_error
 				elseif not l_target_type_set.is_expanded then
 					create l_creation.make (l_dynamic_creation_type, an_instruction, current_dynamic_feature, current_dynamic_type)
 					l_target_type_set.put_source (l_creation, current_system)
@@ -1028,7 +1028,7 @@ feature {NONE} -- Event handling
 											-- Internal error: the dynamic type set of the expressions
 											-- in the manifest array should be known at this stage.
 										set_fatal_error
-										error_handler.report_gibcf_error
+										error_handler.report_giaaa_error
 									else
 										create l_item_attachment.make (l_dynamic_type_set, l_expression, current_dynamic_feature, current_dynamic_type)
 										l_item_type_set.put_source (l_item_attachment, current_system)
@@ -1065,7 +1065,7 @@ feature {NONE} -- Event handling
 				if l_tuple_type = Void then
 						-- Internal error: the type of a manifest tuple should be a tuple type.
 					set_fatal_error
-					error_handler.report_gibfz_error
+					error_handler.report_giaaa_error
 				else
 					l_item_type_sets := l_tuple_type.item_type_sets
 					nb := an_expression.count
@@ -1073,7 +1073,7 @@ feature {NONE} -- Event handling
 							-- Internal error: the tuple type of a manifest tuple should
 							-- have the proper number of generic parameters.
 						set_fatal_error
-						error_handler.report_gibce_error
+						error_handler.report_giaaa_error
 					else
 						from i := 1 until i > nb loop
 							l_expression := an_expression.expression (i)
@@ -1082,7 +1082,7 @@ feature {NONE} -- Event handling
 									-- Internal error: the dynamic type set of the expressions
 									-- in the manifest tuple should be known at this stage.
 								set_fatal_error
-								error_handler.report_gibex_error
+								error_handler.report_giaaa_error
 							else
 								l_item_type_set := l_item_type_sets.item (i)
 								if not l_item_type_set.is_expanded then
@@ -1127,7 +1127,7 @@ feature {NONE} -- Event handling
 							-- Internal error: it has already been checked somewhere else
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
-						error_handler.report_gibat_error
+						error_handler.report_giaaa_error
 					else
 						from i := 1 until i > nb loop
 							l_actual := l_actuals.actual_argument (i)
@@ -1136,7 +1136,7 @@ feature {NONE} -- Event handling
 									-- Internal error: the dynamic type sets of the actual
 									-- arguments should be known at this stage.
 								set_fatal_error
-								error_handler.report_gibas_error
+								error_handler.report_giaaa_error
 							else
 								l_argument_type_set := l_argument_type_sets.item (i)
 								if not l_argument_type_set.is_expanded then
@@ -1152,7 +1152,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
-					error_handler.report_gibau_error
+					error_handler.report_giaaa_error
 				else
 					set_dynamic_type_set (l_dynamic_type_set, an_expression)
 				end
@@ -1189,7 +1189,7 @@ feature {NONE} -- Event handling
 							-- Internal error: it has already been checked somewhere else
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
-						error_handler.report_gibaw_error
+						error_handler.report_giaaa_error
 					else
 						from i := 1 until i > nb loop
 							l_actual := l_actuals.actual_argument (i)
@@ -1198,7 +1198,7 @@ feature {NONE} -- Event handling
 									-- Internal error: the dynamic type sets of the actual
 									-- arguments should be known at this stage.
 								set_fatal_error
-								error_handler.report_gibav_error
+								error_handler.report_giaaa_error
 							else
 								l_argument_type_set := l_argument_type_sets.item (i)
 								if not l_argument_type_set.is_expanded then
@@ -1243,7 +1243,7 @@ feature {NONE} -- Event handling
 							-- Internal error: it has already been checked somewhere else
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
-						error_handler.report_gibbi_error
+						error_handler.report_giaaa_error
 					else
 						from i := 1 until i > nb loop
 							l_actual := l_actuals.actual_argument (i)
@@ -1252,7 +1252,7 @@ feature {NONE} -- Event handling
 									-- Internal error: the dynamic type sets of the actual
 									-- arguments should be known at this stage.
 								set_fatal_error
-								error_handler.report_gibbh_error
+								error_handler.report_giaaa_error
 							else
 								l_argument_type_set := l_argument_type_sets.item (i)
 								if not l_argument_type_set.is_expanded then
@@ -1268,7 +1268,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
-					error_handler.report_gibbj_error
+					error_handler.report_giaaa_error
 				else
 					set_dynamic_type_set (l_dynamic_type_set, an_expression)
 				end
@@ -1305,7 +1305,7 @@ feature {NONE} -- Event handling
 							-- Internal error: it has already been checked somewhere else
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
-						error_handler.report_gibbl_error
+						error_handler.report_giaaa_error
 					else
 						from i := 1 until i > nb loop
 							l_actual := l_actuals.actual_argument (i)
@@ -1314,7 +1314,7 @@ feature {NONE} -- Event handling
 									-- Internal error: the dynamic type sets of the actual
 									-- arguments should be known at this stage.
 								set_fatal_error
-								error_handler.report_gibbk_error
+								error_handler.report_giaaa_error
 							else
 								l_argument_type_set := l_argument_type_sets.item (i)
 								if not l_argument_type_set.is_expanded then
@@ -1406,7 +1406,7 @@ feature {NONE} -- Event handling
 			if l_agent_type = Void then
 					-- Internal error: the dynamic type of an agent should be an agent type.
 				set_fatal_error
-				error_handler.report_gibcm_error
+				error_handler.report_giaaa_error
 			else
 				l_result_type_set := l_agent_type.result_type_set
 				if l_result_type_set /= Void then
@@ -1415,7 +1415,7 @@ feature {NONE} -- Event handling
 						if l_dynamic_type_set = Void then
 								-- Internal error: a FUNCTION should be an agent on a query.
 							set_fatal_error
-							error_handler.report_gibcn_error
+							error_handler.report_giaaa_error
 						else
 							create l_result_attachment.make (l_dynamic_type_set, an_expression.name, current_dynamic_feature, current_dynamic_type)
 							l_result_type_set.put_source (l_result_attachment, current_system)
@@ -1436,7 +1436,7 @@ feature {NONE} -- Event handling
 							-- Internal error: it has already been checked somewhere else
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
-						error_handler.report_gibep_error
+						error_handler.report_giaaa_error
 					else
 						if (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then current_dynamic_type.is_agent_type then
 								-- This is something of the form:  'agent call ([...])' or 'agent item ([...])'
@@ -1446,12 +1446,12 @@ feature {NONE} -- Event handling
 							if l_routine_type = Void then
 									-- Internal error: it has to be an agent type.
 								set_fatal_error
-								error_handler.report_gibhz_error
+								error_handler.report_giaaa_error
 							else
 								if nb /= 1 then
 										-- Internal error: 'call' or 'item' should have exactly one argument.
 									set_fatal_error
-									error_handler.report_gibeo_error
+									error_handler.report_giaaa_error
 								else
 									l_actual := l_actuals.actual_argument (1)
 									l_manifest_tuple ?= l_actual
@@ -1463,7 +1463,7 @@ feature {NONE} -- Event handling
 												-- formal argument of 'call' or 'item', so there cannot
 												-- be less items in the tuple.
 											set_fatal_error
-											error_handler.report_gibay_error
+											error_handler.report_giaaa_error
 										else
 											from i := 1 until i > nb loop
 												l_argument_type_set := l_routine_open_operand_type_sets.item (i)
@@ -1474,7 +1474,7 @@ feature {NONE} -- Event handling
 															-- Internal error: the dynamic type sets of the actual
 															-- arguments should be known at this stage.
 														set_fatal_error
-														error_handler.report_gibgc_error
+														error_handler.report_giaaa_error
 													else
 														create l_actual_attachment.make (l_dynamic_type_set, l_actual_expression, current_dynamic_feature, current_dynamic_type)
 														l_argument_type_set.put_source (l_actual_attachment, current_system)
@@ -1503,7 +1503,7 @@ feature {NONE} -- Event handling
 												-- Internal error: the dynamic type sets of the actual
 												-- arguments should be known at this stage.
 											set_fatal_error
-											error_handler.report_gibcq_error
+											error_handler.report_giaaa_error
 										else
 											create l_actual_attachment.make (l_dynamic_type_set, l_actual_expression, current_dynamic_feature, current_dynamic_type)
 											l_argument_type_set.put_source (l_actual_attachment, current_system)
@@ -1515,7 +1515,7 @@ feature {NONE} -- Event handling
 									if j > nb2 then
 											-- Internal error: missing open operands.
 										set_fatal_error
-										error_handler.report_gibch_error
+										error_handler.report_giaaa_error
 									else
 										l_argument_type_set := l_argument_type_sets.item (i)
 										if not l_argument_type_set.is_expanded then
@@ -1531,7 +1531,7 @@ feature {NONE} -- Event handling
 							if j < nb2 then
 									-- Internal error: too many open operands.
 								set_fatal_error
-								error_handler.report_gibbm_error
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -1569,7 +1569,7 @@ feature {NONE} -- Event handling
 							-- Internal error: it has already been checked somewhere else
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
-						error_handler.report_gibbp_error
+						error_handler.report_giaaa_error
 					elseif l_dynamic_query.is_builtin_function_item and then current_dynamic_type.is_agent_type then
 							-- This is something of the form:  'item ([...])'
 							-- Try to get the open operand type sets directly from the
@@ -1578,12 +1578,12 @@ feature {NONE} -- Event handling
 						if l_agent_type = Void then
 								-- Internal error: it has to be an agent type.
 							set_fatal_error
-								error_handler.report_gibgd_error
+								error_handler.report_giaaa_error
 						else
 							if nb /= 1 then
 									-- Internal error: 'item' should have exactly one argument.
 								set_fatal_error
-								error_handler.report_gibge_error
+								error_handler.report_giaaa_error
 							else
 								l_actual := l_actuals.actual_argument (1)
 								l_manifest_tuple ?= l_actual
@@ -1595,7 +1595,7 @@ feature {NONE} -- Event handling
 											-- formal argument of 'item', so there cannot be less
 											-- items in the tuple.
 										set_fatal_error
-										error_handler.report_gibhr_error
+										error_handler.report_giaaa_error
 									else
 										from i := 1 until i > nb loop
 											l_argument_type_set := l_open_operand_type_sets.item (i)
@@ -1606,7 +1606,7 @@ feature {NONE} -- Event handling
 														-- Internal error: the dynamic type sets of the actual
 														-- arguments should be known at this stage.
 													set_fatal_error
-													error_handler.report_gibhs_error
+													error_handler.report_giaaa_error
 												else
 													create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
 													l_argument_type_set.put_source (l_attachment, current_system)
@@ -1623,7 +1623,7 @@ feature {NONE} -- Event handling
 												-- Internal error: the dynamic type sets of the actual
 												-- arguments should be known at this stage.
 											set_fatal_error
-												error_handler.report_gibht_error
+												error_handler.report_giaaa_error
 										else
 											create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
 											l_argument_type_set.put_source (l_attachment, current_system)
@@ -1642,7 +1642,7 @@ feature {NONE} -- Event handling
 										-- Internal error: the dynamic type sets of the actual
 										-- arguments should be known at this stage.
 									set_fatal_error
-									error_handler.report_gibbo_error
+									error_handler.report_giaaa_error
 								else
 									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
 									l_argument_type_set.put_source (l_attachment, current_system)
@@ -1656,7 +1656,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
-					error_handler.report_gibbq_error
+					error_handler.report_giaaa_error
 				else
 					set_dynamic_type_set (l_dynamic_type_set, an_expression)
 				end
@@ -1693,7 +1693,7 @@ feature {NONE} -- Event handling
 							-- Internal error: it has already been checked somewhere else
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
-						error_handler.report_gibbs_error
+						error_handler.report_giaaa_error
 					elseif l_dynamic_procedure.is_builtin_routine_call and then current_dynamic_type.is_agent_type then
 							-- This is something of the form:  'call ([...])'
 							-- Try to get the open operand type sets directly from the
@@ -1702,12 +1702,12 @@ feature {NONE} -- Event handling
 						if l_agent_type = Void then
 								-- Internal error: it has to be an agent type.
 							set_fatal_error
-							error_handler.report_gibhu_error
+							error_handler.report_giaaa_error
 						else
 							if nb /= 1 then
 									-- Internal error: 'call' should have exactly one argument.
 								set_fatal_error
-								error_handler.report_gibhv_error
+								error_handler.report_giaaa_error
 							else
 								l_actual := l_actuals.actual_argument (1)
 								l_manifest_tuple ?= l_actual
@@ -1719,7 +1719,7 @@ feature {NONE} -- Event handling
 											-- formal argument of 'call', so there cannot be less
 											-- items in the tuple.
 										set_fatal_error
-										error_handler.report_gibhw_error
+										error_handler.report_giaaa_error
 									else
 										from i := 1 until i > nb loop
 											l_argument_type_set := l_open_operand_type_sets.item (i)
@@ -1730,7 +1730,7 @@ feature {NONE} -- Event handling
 														-- Internal error: the dynamic type sets of the actual
 														-- arguments should be known at this stage.
 													set_fatal_error
-													error_handler.report_gibgf_error
+													error_handler.report_giaaa_error
 												else
 													create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
 													l_argument_type_set.put_source (l_attachment, current_system)
@@ -1747,7 +1747,7 @@ feature {NONE} -- Event handling
 												-- Internal error: the dynamic type sets of the actual
 												-- arguments should be known at this stage.
 											set_fatal_error
-											error_handler.report_gibgg_error
+											error_handler.report_giaaa_error
 										else
 											create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
 											l_argument_type_set.put_source (l_attachment, current_system)
@@ -1766,7 +1766,7 @@ feature {NONE} -- Event handling
 										-- Internal error: the dynamic type sets of the actual
 										-- arguments should be known at this stage.
 									set_fatal_error
-									error_handler.report_gibbr_error
+									error_handler.report_giaaa_error
 								else
 									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
 									l_argument_type_set.put_source (l_attachment, current_system)
@@ -1797,7 +1797,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'twin: like Current'.
 					set_fatal_error
-					error_handler.report_gibgo_error
+					error_handler.report_giaaa_error
 				else
 					if not l_result_type_set.is_expanded then
 						create l_attachment.make (current_dynamic_type, current_dynamic_feature, current_dynamic_type)
@@ -1810,7 +1810,7 @@ feature {NONE} -- Built-in features
 							-- 'copy'. Otherwise we get an error when parsing
 							-- class ANY if there is no such feature.
 						set_fatal_error
-						error_handler.report_gibgp_error
+						error_handler.report_giaaa_error
 					else
 						l_copy_feature.set_regular (True)
 						l_dynamic_type_sets := l_copy_feature.dynamic_type_sets
@@ -1838,7 +1838,7 @@ feature {NONE} -- Implementation
 			if l_result_type_set = Void then
 					-- Internal error: it is expected that `a_query' is a query.
 				set_fatal_error
-				error_handler.report_giabv_error
+				error_handler.report_giaaa_error
 			else
 				if not l_result_type_set.is_expanded then
 					create l_attachment.make (a_source, current_dynamic_feature, current_dynamic_type)

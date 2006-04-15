@@ -98,7 +98,7 @@ feature -- Element change
 								-- Internal error: missing open operands.
 							l_builder := a_system.dynamic_type_set_builder
 							l_builder.set_fatal_error
-							l_builder.error_handler.report_gibha_error
+							l_builder.error_handler.report_giaaa_error
 						else
 							from i := 1 until i > nb loop
 								l_item_type_sets.item (i).put_target (l_open_operand_type_sets.item (i), a_system)

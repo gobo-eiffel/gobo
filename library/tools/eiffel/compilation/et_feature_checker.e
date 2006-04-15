@@ -435,7 +435,7 @@ feature -- Validity checking
 							-- processing the implementation of `feature_impl' or in
 							-- the feature flattener when redeclaring `a_feature' in an
 							-- ancestor of `a_class' or `current_class'.
-						error_handler.report_giaco_error
+						error_handler.report_giaaa_error
 					end
 				end
 			elseif l_formals = Void or else l_formals.count /= an_actuals.count then
@@ -458,7 +458,7 @@ feature -- Validity checking
 						-- processing the implementation of `feature_impl' or in
 						-- the feature flattener when redeclaring `a_feature' in an
 						-- ancestor of `a_class' or `current_class'.
-					error_handler.report_giacp_error
+					error_handler.report_giaaa_error
 				end
 			else
 				actual_context.reset (current_type)
@@ -517,7 +517,7 @@ feature -- Validity checking
 											-- Internal error: the seed of the convert feature should correspond
 											-- to a query of `a_convert_class'.
 										set_fatal_error
-										error_handler.report_gibds_error
+										error_handler.report_giaaa_error
 									end
 								elseif l_convert_feature.is_convert_from then
 									create l_convert_expression.make (l_actual, l_convert_feature)
@@ -529,7 +529,7 @@ feature -- Validity checking
 											-- Internal error: the seed of the convert feature should correspond
 											-- to a procedure of `a_convert_class'.
 										set_fatal_error
-										error_handler.report_giban_error
+										error_handler.report_giaaa_error
 									end
 								else
 									create l_convert_expression.make (l_actual, l_convert_feature)
@@ -1023,7 +1023,7 @@ feature {NONE} -- Feature validity
 				else
 						-- Internal error: no other kind of constant.
 					set_fatal_error
-					error_handler.report_giabs_error
+					error_handler.report_giaaa_error
 				end
 			end
 		end
@@ -1658,7 +1658,7 @@ feature {NONE} -- Instruction validity
 										-- Internal error: the seed of the convert feature should correspond
 										-- to a query of `a_convert_class'.
 									set_fatal_error
-									error_handler.report_gibdt_error
+									error_handler.report_giaaa_error
 								end
 							elseif l_convert_feature.is_convert_from then
 								create l_convert_expression.make (l_source, l_convert_feature)
@@ -1670,7 +1670,7 @@ feature {NONE} -- Instruction validity
 										-- Internal error: the seed of the convert feature should correspond
 										-- to a procedure of `a_convert_class'.
 									set_fatal_error
-									error_handler.report_gibam_error
+									error_handler.report_giaaa_error
 								end
 							else
 								create l_convert_expression.make (l_source, l_convert_feature)
@@ -1959,7 +1959,7 @@ feature {NONE} -- Instruction validity
 							if not has_implementation_error (feature_impl) then
 									-- Internal error: `l_name' should have been resolved in
 									-- the implementation feature.
-								error_handler.report_giacq_error
+								error_handler.report_giaaa_error
 							end
 						else
 							check_writable_validity (l_target, l_target_context)
@@ -2028,7 +2028,7 @@ feature {NONE} -- Instruction validity
 									-- Report internal error: if we got a seed, the
 									-- `l_procedure' should not be void.
 								set_fatal_error
-								error_handler.report_giabp_error
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -2088,7 +2088,7 @@ feature {NONE} -- Instruction validity
 								-- Internal error: `l_formal_parameter' is supposed
 								-- to be a formal parameter of `current_class'.
 							set_fatal_error
-							error_handler.report_giabq_error
+							error_handler.report_giaaa_error
 						else
 							l_formal_parameter := l_formal_parameters.formal_parameter (l_index)
 							l_creator := l_formal_parameter.creation_procedures
@@ -2675,7 +2675,7 @@ feature {NONE} -- Instruction validity
 				elseif not has_implementation_error (feature_impl) then
 						-- Internal error: the VDPR-1 error should have been
 						-- reported in the implementation feature.
-					error_handler.report_giadj_error
+					error_handler.report_giaaa_error
 				end
 			else
 -- TODO: make sure that `current_feature' is a procedure.
@@ -2691,7 +2691,7 @@ feature {NONE} -- Instruction validity
 						if not has_implementation_error (feature_impl) then
 								-- Internal error: Precursor should have been resolved in
 								-- the implementation feature.
-							error_handler.report_giadd_error
+							error_handler.report_giaaa_error
 						end
 					else
 						error_handler.report_vdpr3d_error (current_class, an_instruction, feature_impl)
@@ -2711,7 +2711,7 @@ feature {NONE} -- Instruction validity
 								-- already have been resolved when flattening the
 								-- features of `l_class_impl'.
 							set_fatal_error
-							error_handler.report_giacz_error
+							error_handler.report_giaaa_error
 						else
 							l_precursor_keyword := an_instruction.precursor_keyword
 							l_class := l_parent_type.direct_base_class (universe)
@@ -2721,7 +2721,7 @@ feature {NONE} -- Instruction validity
 									-- already have been resolved when flattening the
 									-- features of `l_class_impl'.
 								set_fatal_error
-								error_handler.report_giacr_error
+								error_handler.report_giaaa_error
 							else
 								if current_class = l_class_impl then
 									formal_context.reset (current_type)
@@ -2741,7 +2741,7 @@ feature {NONE} -- Instruction validity
 													-- Internal error: `l_parent_type' is an ancestor
 													-- of `l_class_impl', and hence of `current_class'.
 												set_fatal_error
-												error_handler.report_gibcs_error
+												error_handler.report_giaaa_error
 											else
 												formal_context.reset (current_type)
 												formal_context.force_last (l_ancestor)
@@ -2808,7 +2808,7 @@ feature {NONE} -- Instruction validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: `l_name' should have been resolved in
 							-- the implementation feature.
-						error_handler.report_giacg_error
+						error_handler.report_giaaa_error
 					end
 				else
 					check_expression_validity (l_target, l_context, any_type, feature_impl, current_feature, current_type)
@@ -2857,7 +2857,7 @@ feature {NONE} -- Instruction validity
 									-- Report internal error: if we got a seed, the
 									-- `l_procedure' should not be void.
 								set_fatal_error
-								error_handler.report_gibca_error
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -2906,7 +2906,7 @@ feature {NONE} -- Instruction validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VXRT error should have been
 							-- reported in the implementation feature.
-						error_handler.report_giacs_error
+						error_handler.report_giaaa_error
 					end
 				else
 					error_handler.report_vxrt0a_error (current_class, an_instruction)
@@ -2955,7 +2955,7 @@ feature {NONE} -- Instruction validity
 						if not has_implementation_error (feature_impl) then
 								-- Internal error: `l_name' should have been resolved in
 								-- the implementation feature.
-							error_handler.report_giacm_error
+							error_handler.report_giaaa_error
 						end
 					else
 						l_context.force_last (l_type)
@@ -3003,7 +3003,7 @@ feature {NONE} -- Instruction validity
 										-- Report internal error: if we got a seed, the
 										-- `l_procedure' should not be void.
 									set_fatal_error
-									error_handler.report_giabc_error
+									error_handler.report_giaaa_error
 								end
 							end
 						end
@@ -3076,7 +3076,7 @@ feature {NONE} -- Instruction validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: `l_name' should have been resolved in
 							-- the implementation feature.
-						error_handler.report_giack_error
+						error_handler.report_giaaa_error
 					end
 				else
 -- TODO: I don't think we need to check the interface of `current_class' again.
@@ -3170,7 +3170,7 @@ feature {NONE} -- Instruction validity
 								-- Report internal error: if we got a seed, the
 								-- `l_procedure' should not be void.
 							set_fatal_error
-							error_handler.report_giacj_error
+							error_handler.report_giaaa_error
 						end
 					end
 				end
@@ -3226,7 +3226,7 @@ feature {NONE} -- Instruction validity
 						if not has_implementation_error (feature_impl) then
 								-- Internal error: the VEEN-2 error should have been
 								-- reported in the implementation feature.
-							error_handler.report_giadq_error
+							error_handler.report_giaaa_error
 						end
 					end
 				else
@@ -3245,11 +3245,11 @@ feature {NONE} -- Instruction validity
 						if l_locals = Void then
 								-- Internal error.
 							set_fatal_error
-							error_handler.report_giabk_error
+							error_handler.report_giaaa_error
 						elseif l_seed < 1 or l_seed > l_locals.count then
 								-- Internal error.
 							set_fatal_error
-							error_handler.report_giabl_error
+							error_handler.report_giaaa_error
 						else
 								-- Contrary to the types appearing in the signatures, types of
 								-- local variables in the AST are those found in the implementation
@@ -3268,7 +3268,7 @@ feature {NONE} -- Instruction validity
 								-- Internal error: if we got a seed, the
 								-- `l_attribute' should not be void.
 							set_fatal_error
-							error_handler.report_giabm_error
+							error_handler.report_giaaa_error
 						elseif not l_attribute.is_attribute then
 							set_fatal_error
 							l_class_impl := feature_impl.implementation_class
@@ -3279,7 +3279,7 @@ feature {NONE} -- Instruction validity
 									-- processing the implementation `feature_impl' or in the
 									-- feature flattener when redeclaring attribute `l_attribute'
 									-- to a non-attribute in an ancestor of `current_class'.
-								error_handler.report_giabn_error
+								error_handler.report_giaaa_error
 							end
 						else
 							l_type := l_attribute.type
@@ -3296,7 +3296,7 @@ feature {NONE} -- Instruction validity
 							if not has_implementation_error (feature_impl) then
 									-- Internal error: `l_identifier' should have been resolved in
 									-- the implementation feature.
-								error_handler.report_giadr_error
+								error_handler.report_giaaa_error
 							end
 						else
 -- TODO: I don't think we need to check the interface of `current_class' again.
@@ -3346,7 +3346,7 @@ feature {NONE} -- Instruction validity
 				else
 						-- Internal error: a Writable is either a result or an identifier.
 					set_fatal_error
-					error_handler.report_giabo_error
+					error_handler.report_giaaa_error
 				end
 			end
 			if not has_fatal_error then
@@ -3555,7 +3555,7 @@ feature {NONE} -- Expression validity
 							if not has_implementation_error (feature_impl) then
 									-- Internal error: `l_name' should have been resolved in
 									-- the implementation feature.
-								error_handler.report_giacy_error
+								error_handler.report_giaaa_error
 							end
 						else
 							a_context.force_last (l_creation_type)
@@ -3611,7 +3611,7 @@ feature {NONE} -- Expression validity
 									-- Report internal error: if we got a seed, the
 									-- `l_procedure' should not be void.
 								set_fatal_error
-								error_handler.report_giaav_error
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -3655,7 +3655,7 @@ feature {NONE} -- Expression validity
 								-- Internal error: `l_formal_parameter' is supposed
 								-- to be a formal parameter of `current_class'.
 							set_fatal_error
-							error_handler.report_giabh_error
+							error_handler.report_giaaa_error
 						else
 							l_formal_parameter := l_formal_parameters.formal_parameter (l_index)
 							l_creator := l_formal_parameter.creation_procedures
@@ -3955,7 +3955,7 @@ feature {NONE} -- Expression validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
-						error_handler.report_giada_error
+						error_handler.report_giaaa_error
 					end
 				else
 					l_identifier ?= l_name
@@ -3973,7 +3973,7 @@ feature {NONE} -- Expression validity
 										-- VEEN-3: the formal argument appears in an invariant.
 										-- Internal error: the invariant has no formal argument.
 									set_fatal_error
-									error_handler.report_giaeb_error
+									error_handler.report_giaaa_error
 								else
 									report_formal_argument (l_identifier, l_argument)
 									l_typed_pointer_class := universe.typed_pointer_class
@@ -4025,7 +4025,7 @@ feature {NONE} -- Expression validity
 											-- VEEN-2: the local entity appears in an invariant.
 											-- Internal error: the invariant has no local entity.
 										set_fatal_error
-										error_handler.report_gibbu_error
+										error_handler.report_giaaa_error
 									else
 										report_local_variable (l_identifier, l_local)
 										l_typed_pointer_class := universe.typed_pointer_class
@@ -4134,7 +4134,7 @@ feature {NONE} -- Expression validity
 							-- VEEN-3: the formal argument appears in an invariant.
 							-- Internal error: the invariant has no formal argument.
 						set_fatal_error
-						error_handler.report_giaea_error
+						error_handler.report_giaaa_error
 					else
 							-- Use arguments of `current_feature' instead of `feature_impl'
 							-- because when processing inherited assertions the types of signature
@@ -4167,11 +4167,11 @@ feature {NONE} -- Expression validity
 						if l_arguments = Void then
 								-- Internal error.
 							set_fatal_error
-							error_handler.report_giaaq_error
+							error_handler.report_giaaa_error
 						elseif l_seed < 1 or l_seed > l_arguments.count then
 								-- Internal error.
 							set_fatal_error
-							error_handler.report_giaar_error
+							error_handler.report_giaaa_error
 						else
 							l_argument := l_arguments.formal_argument (l_seed)
 							l_identifier ?= l_name
@@ -4215,24 +4215,24 @@ feature {NONE} -- Expression validity
 							if not has_implementation_error (feature_impl) then
 									-- Internal error: the VEEN-2 error should have been
 									-- reported in the implementation feature.
-								error_handler.report_gibak_error
+								error_handler.report_giaaa_error
 							end
 						end
 					elseif in_invariant then
 							-- VEEN-2: the local entity appears in an invariant.
 							-- Internal error: the invariant has no local entity.
 						set_fatal_error
-						error_handler.report_gibal_error
+						error_handler.report_giaaa_error
 					else
 						l_locals := feature_impl.locals
 						if l_locals = Void then
 								-- Internal error.
 							set_fatal_error
-							error_handler.report_giaas_error
+							error_handler.report_giaaa_error
 						elseif l_seed < 1 or l_seed > l_locals.count then
 								-- Internal error.
 							set_fatal_error
-							error_handler.report_giaat_error
+							error_handler.report_giaaa_error
 						else
 							l_local := l_locals.local_variable (l_seed)
 							l_identifier ?= l_name
@@ -4316,7 +4316,7 @@ feature {NONE} -- Expression validity
 									-- Report internal error: if we got a seed, the
 									-- `a_feature' should not be void.
 								set_fatal_error
-								error_handler.report_giaau_error
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -4344,7 +4344,7 @@ feature {NONE} -- Expression validity
 					-- VEEN-3: the formal argument appears in an invariant.
 					-- Internal error: the invariant has no formal argument.
 				set_fatal_error
-				error_handler.report_giads_error
+				error_handler.report_giaaa_error
 			else
 					-- Use arguments of `current_feature' instead of `feature_impl'
 					-- because when processing inherited assertions the types of signature
@@ -4378,11 +4378,11 @@ feature {NONE} -- Expression validity
 				if l_arguments = Void then
 						-- Internal error.
 					set_fatal_error
-					error_handler.report_giaal_error
+					error_handler.report_giaaa_error
 				elseif l_seed < 1 or l_seed > l_arguments.count then
 						-- Internal error.
 					set_fatal_error
-					error_handler.report_giaam_error
+					error_handler.report_giaaa_error
 				else
 					l_formal := l_arguments.formal_argument (l_seed)
 					l_type := resolved_formal_parameters (l_formal.type, current_feature, current_type)
@@ -4581,7 +4581,7 @@ feature {NONE} -- Expression validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: `l_name' should have been resolved in
 							-- the implementation feature.
-						error_handler.report_giadb_error
+						error_handler.report_giaaa_error
 					end
 				else
 					check_expression_validity (l_target, a_context, any_type, feature_impl, current_feature, current_type)
@@ -4630,7 +4630,7 @@ feature {NONE} -- Expression validity
 									-- Report internal error: if we got a seed, the
 									-- `l_query' should not be void.
 								set_fatal_error
-								error_handler.report_giabd_error
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -4666,7 +4666,7 @@ feature {NONE} -- Expression validity
 								-- processing the implementation of `feature_impl' or in
 								-- the feature flattener when redeclaring `l_query' in an
 								-- ancestor of `l_class' or `current_class'.
-							error_handler.report_giadc_error
+							error_handler.report_giaaa_error
 						end
 					else
 						l_actual := an_expression.right
@@ -4730,7 +4730,7 @@ feature {NONE} -- Expression validity
 													-- Internal error: the seed of the convert function should correspond
 													-- to a feature of `l_convert_class'.
 												set_fatal_error
-												error_handler.report_gibdu_error
+												error_handler.report_giaaa_error
 											end
 										elseif l_convert_feature.is_convert_from then
 											create l_convert_expression.make (l_actual, l_convert_feature)
@@ -4742,7 +4742,7 @@ feature {NONE} -- Expression validity
 													-- Internal error: the seed of the convert procedure should correspond
 													-- to a feature of `l_convert_class'.
 												set_fatal_error
-												error_handler.report_gibap_error
+												error_handler.report_giaaa_error
 											end
 										else
 											create l_convert_expression.make (l_actual, l_convert_feature)
@@ -4818,7 +4818,7 @@ feature {NONE} -- Expression validity
 																	-- Internal error: the seed of the convert function should correspond
 																	-- to a feature of `l_convert_class'.
 																set_fatal_error
-																error_handler.report_gibaq_error
+																error_handler.report_giaaa_error
 															end
 														elseif l_convert_feature.is_convert_from then
 															create l_convert_expression.make (l_target, l_convert_feature)
@@ -4833,7 +4833,7 @@ feature {NONE} -- Expression validity
 																	-- Internal error: the seed of the convert procedure should correspond
 																	-- to a feature of `a_convert_class'.
 																set_fatal_error
-																error_handler.report_gibao_error
+																error_handler.report_giaaa_error
 															end
 														else
 															create l_convert_expression.make (l_target, l_convert_feature)
@@ -4958,7 +4958,7 @@ feature {NONE} -- Expression validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VEEN-2 error should have been
 							-- reported in the implementation feature.
-						error_handler.report_giado_error
+						error_handler.report_giaaa_error
 					end
 				end
 			elseif in_invariant then
@@ -4966,18 +4966,18 @@ feature {NONE} -- Expression validity
 					-- Internal error: the invariant has no local entity,
 					-- this is guaranteed by the parser.
 				set_fatal_error
-				error_handler.report_giadt_error
+				error_handler.report_giaaa_error
 			else
 				l_locals := feature_impl.locals
 				l_seed := a_name.seed
 				if l_locals = Void then
 						-- Internal error.
 					set_fatal_error
-					error_handler.report_giaan_error
+					error_handler.report_giaaa_error
 				elseif l_seed < 1 or l_seed > l_locals.count then
 						-- Internal error.
 					set_fatal_error
-					error_handler.report_giaao_error
+					error_handler.report_giaaa_error
 				else
 						-- Contrary to the types appearing in the signatures, types of
 						-- local variables in the AST are those found in the implementation
@@ -5255,7 +5255,7 @@ feature {NONE} -- Expression validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VAOL-1 error should have been
 							-- reported in the implementation feature.
-						error_handler.report_giade_error
+						error_handler.report_giaaa_error
 					end
 				end
 			end
@@ -5318,7 +5318,7 @@ feature {NONE} -- Expression validity
 				elseif not has_implementation_error (feature_impl) then
 						-- Internal error: the VDPR-1 error should have been
 						-- reported in the implementation feature.
-					error_handler.report_giadk_error
+					error_handler.report_giaaa_error
 				end
 			else
 -- TODO: make sure that `current_feature' is a function.
@@ -5334,7 +5334,7 @@ feature {NONE} -- Expression validity
 						if not has_implementation_error (feature_impl) then
 								-- Internal error: Precursor should have been resolved in
 								-- the implementation feature.
-							error_handler.report_giadx_error
+							error_handler.report_giaaa_error
 						end
 					else
 						error_handler.report_vdpr3d_error (current_class, an_expression, feature_impl)
@@ -5354,7 +5354,7 @@ feature {NONE} -- Expression validity
 								-- already have been resolved when flattening the
 								-- features of `l_class_impl'.
 							set_fatal_error
-							error_handler.report_giaap_error
+							error_handler.report_giaaa_error
 						else
 							l_precursor_keyword := an_expression.precursor_keyword
 							l_class := l_parent_type.direct_base_class (universe)
@@ -5364,7 +5364,7 @@ feature {NONE} -- Expression validity
 									-- already have been resolved when flattening the
 									-- features of `l_class_impl'.
 								set_fatal_error
-								error_handler.report_giabg_error
+								error_handler.report_giaaa_error
 							else
 								if current_class = l_class_impl then
 									formal_context.reset (current_type)
@@ -5384,7 +5384,7 @@ feature {NONE} -- Expression validity
 													-- Internal error: `l_parent_type' is an ancestor
 													-- of `l_class_impl', and hence of `current_class'.
 												set_fatal_error
-												error_handler.report_giabx_error
+												error_handler.report_giaaa_error
 											else
 												formal_context.reset (current_type)
 												formal_context.force_last (l_ancestor)
@@ -5471,7 +5471,7 @@ feature {NONE} -- Expression validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: `l_name' should have been resolved in
 							-- the implementation feature.
-						error_handler.report_giacf_error
+						error_handler.report_giaaa_error
 					end
 				else
 					check_expression_validity (l_target, a_context, any_type, feature_impl, current_feature, current_type)
@@ -5534,7 +5534,7 @@ feature {NONE} -- Expression validity
 								-- the class has to be TUPLE because it is not possible
 								-- to inherit from TUPLE.
 							set_fatal_error
-							error_handler.report_gibed_error
+							error_handler.report_giaaa_error
 						end
 					end
 				end
@@ -5547,7 +5547,7 @@ feature {NONE} -- Expression validity
 					elseif not has_implementation_error (feature_impl) then
 							-- Internal error: this error should have been reported when
 							-- processing the implementation of `feature_impl'.
-						error_handler.report_giblh_error
+						error_handler.report_giaaa_error
 					end
 				elseif l_seed > a_context.base_type_actual_count (universe) then
 						-- Report internal error: the index of the labeled
@@ -5555,7 +5555,7 @@ feature {NONE} -- Expression validity
 						-- for a Tuple type to conform to another Tuple type
 						-- it needs to have more actual parameters.
 					set_fatal_error
-					error_handler.report_gibld_error
+					error_handler.report_giaaa_error
 				else
 					l_type := a_context.base_type_actual (l_seed, universe)
 					report_tuple_label_expression (a_call, a_context)
@@ -5579,7 +5579,7 @@ feature {NONE} -- Expression validity
 									-- Report internal error: if we got a seed, the
 									-- `l_query' should not be void.
 								set_fatal_error
-								error_handler.report_giaak_error
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -5804,7 +5804,7 @@ feature {NONE} -- Expression validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VEEN-2 error should have been
 							-- reported in the implementation feature.
-						error_handler.report_giadm_error
+						error_handler.report_giaaa_error
 					end
 				end
 			elseif in_invariant then
@@ -5817,7 +5817,7 @@ feature {NONE} -- Expression validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VEEN-2 error should have been
 							-- reported in the implementation feature.
-						error_handler.report_giadv_error
+						error_handler.report_giaaa_error
 					end
 				end
 			else
@@ -5857,7 +5857,7 @@ feature {NONE} -- Expression validity
 						if not has_implementation_error (feature_impl) then
 								-- Internal error: the VEEN-2 error should have been
 								-- reported in the implementation feature.
-							error_handler.report_giadf_error
+							error_handler.report_giaaa_error
 						end
 					end
 				else
@@ -5897,7 +5897,7 @@ feature {NONE} -- Expression validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VEEN-2 error should have been
 							-- reported in the implementation feature.
-						error_handler.report_giadn_error
+						error_handler.report_giaaa_error
 					end
 				end
 			elseif in_invariant then
@@ -5910,7 +5910,7 @@ feature {NONE} -- Expression validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VEEN-2 error should have been
 							-- reported in the implementation feature.
-						error_handler.report_giadw_error
+						error_handler.report_giaaa_error
 					end
 				end
 			else
@@ -5950,7 +5950,7 @@ feature {NONE} -- Expression validity
 						if not has_implementation_error (feature_impl) then
 								-- Internal error: the VEEN-2 error should have been
 								-- reported in the implementation feature.
-							error_handler.report_giadg_error
+							error_handler.report_giaaa_error
 						end
 					end
 				else
@@ -6035,7 +6035,7 @@ feature {NONE} -- Expression validity
 						if not has_implementation_error (feature_impl) then
 								-- Internal error: `l_name' should have been resolved in
 								-- the implementation feature.
-							error_handler.report_giacl_error
+							error_handler.report_giaaa_error
 						end
 					else
 						a_context.force_last (l_type)
@@ -6082,7 +6082,7 @@ feature {NONE} -- Expression validity
 								if l_query = Void then
 										-- Internal error: if we got a seed, the `l_query' should not be void.
 									set_fatal_error
-									error_handler.report_giabc_error
+									error_handler.report_giaaa_error
 								end
 							end
 						end
@@ -6156,7 +6156,7 @@ feature {NONE} -- Expression validity
 						if not has_implementation_error (feature_impl) then
 								-- Internal error: `l_name' should have been resolved in
 								-- the implementation feature.
-							error_handler.report_giadh_error
+							error_handler.report_giaaa_error
 						end
 					else
 -- TODO: I don't think we need to check the interface of `current_class' again.
@@ -6209,7 +6209,7 @@ feature {NONE} -- Expression validity
 						if l_query = Void then
 								-- Internal error: if we got a seed, `l_query' should not be void.
 							set_fatal_error
-							error_handler.report_giaaw_error
+							error_handler.report_giaaa_error
 						else
 							if not l_query.is_attribute then
 								set_fatal_error
@@ -6221,7 +6221,7 @@ feature {NONE} -- Expression validity
 										-- processing the implementation of `feature_impl' or in
 										-- the feature flattener when redeclaring attribute `l_query'
 										-- to a non-attribute in an ancestor of `current_class'.
-									error_handler.report_giadi_error
+									error_handler.report_giaaa_error
 								end
 							end
 						end
@@ -6411,7 +6411,7 @@ feature {NONE} -- Expression validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: `l_name' should have been resolved in
 							-- the implementation feature.
-						error_handler.report_giaci_error
+						error_handler.report_giaaa_error
 					end
 				else
 -- TODO: I don't think we need to check the interface of `current_class' again.
@@ -6458,7 +6458,7 @@ feature {NONE} -- Expression validity
 													-- Internal error: the parser should not have
 													-- generated a feature call.
 												set_fatal_error
-												error_handler.report_giaby_error
+												error_handler.report_giaaa_error
 											end
 										end
 									end
@@ -6487,7 +6487,7 @@ feature {NONE} -- Expression validity
 														-- Internal error: the parser should not have
 														-- generated a feature call.
 													set_fatal_error
-													error_handler.report_giabz_error
+													error_handler.report_giaaa_error
 												end
 											end
 										end
@@ -6521,7 +6521,7 @@ feature {NONE} -- Expression validity
 								-- Report internal error: if we got a seed, the
 								-- `l_query' should not be void.
 							set_fatal_error
-							error_handler.report_giabe_error
+							error_handler.report_giaaa_error
 						end
 					end
 				end
@@ -6834,7 +6834,7 @@ feature {NONE} -- Agent validity
 					else
 							-- Internal error: no other kind of targets.
 						set_fatal_error
-						error_handler.report_giaca_error
+						error_handler.report_giaaa_error
 					end
 				end
 			end
@@ -6874,7 +6874,7 @@ feature {NONE} -- Agent validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
-						error_handler.report_giact_error
+						error_handler.report_giaaa_error
 					end
 				else
 					current_class.process (universe.interface_checker)
@@ -6993,7 +6993,7 @@ feature {NONE} -- Agent validity
 							-- Report internal error: if we got a seed, the
 							-- `l_procedure' should not be void.
 						set_fatal_error
-						error_handler.report_gibar_error
+						error_handler.report_giaaa_error
 					else
 						check_unqualified_procedure_call_agent_validity (an_expression, l_procedure, a_context)
 					end
@@ -7009,7 +7009,7 @@ feature {NONE} -- Agent validity
 							-- Report internal error: if we got a seed, the
 							-- `l_query' should not be void.
 						set_fatal_error
-						error_handler.report_giacb_error
+						error_handler.report_giaaa_error
 					else
 						check_unqualified_query_call_agent_validity (an_expression, l_query, a_context)
 					end
@@ -7173,7 +7173,7 @@ feature {NONE} -- Agent validity
 					if not has_implementation_error (feature_impl) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
-						error_handler.report_giacu_error
+						error_handler.report_giaaa_error
 					end
 				else
 -- TODO: when `a_target' is an identifier, check whether it is either
@@ -7332,7 +7332,7 @@ feature {NONE} -- Agent validity
 							-- the class has to be TUPLE because it is not possible
 							-- to inherit from TUPLE.
 						set_fatal_error
-						error_handler.report_gibli_error
+						error_handler.report_giaaa_error
 					else
 						check_qualified_tuple_label_call_agent_validity (an_expression, a_target, a_context)
 					end
@@ -7352,7 +7352,7 @@ feature {NONE} -- Agent validity
 								-- Report internal error: if we got a seed, the
 								-- `l_procedure' should not be void.
 							set_fatal_error
-							error_handler.report_giacn_error
+							error_handler.report_giaaa_error
 						else
 							check_qualified_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_class, a_context)
 						end
@@ -7373,7 +7373,7 @@ feature {NONE} -- Agent validity
 								-- Report internal error: if we got a seed, the
 								-- `l_query' should not be void.
 							set_fatal_error
-							error_handler.report_giacc_error
+							error_handler.report_giaaa_error
 						else
 							check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_class, a_context)
 						end
@@ -7569,7 +7569,7 @@ feature {NONE} -- Agent validity
 				elseif not has_implementation_error (feature_impl) then
 						-- Internal error: this error should have been reported when
 						-- processing the implementation of `feature_impl'.
-					error_handler.report_giblj_error
+					error_handler.report_giaaa_error
 				end
 			elseif l_index > a_context.base_type_actual_count (universe) then
 					-- Report internal error: the index of the labeled
@@ -7577,7 +7577,7 @@ feature {NONE} -- Agent validity
 					-- for a Tuple type to conform to another Tuple type
 					-- it needs to have more actual parameters.
 				set_fatal_error
-				error_handler.report_giblk_error
+				error_handler.report_giaaa_error
 			else
 				l_type := a_context.base_type_actual (l_index, universe)
 				l_target_type := tokens.like_current
@@ -7646,7 +7646,7 @@ feature {NONE} -- Agent validity
 						if not has_implementation_error (feature_impl) then
 								-- Internal error: `a_name' should have been resolved in
 								-- the implementation feature.
-							error_handler.report_giacv_error
+							error_handler.report_giaaa_error
 						end
 					else
 						a_context.force_last (a_target_type)
@@ -7800,7 +7800,7 @@ feature {NONE} -- Agent validity
 								-- the class has to be TUPLE because it is not possible
 								-- to inherit from TUPLE.
 							set_fatal_error
-							error_handler.report_giblo_error
+							error_handler.report_giaaa_error
 						else
 							check_typed_tuple_label_call_agent_validity (an_expression, a_target, a_context)
 						end
@@ -7819,7 +7819,7 @@ feature {NONE} -- Agent validity
 									-- Report internal error: if we got a seed, the
 									-- `l_procedure' should not be void.
 								set_fatal_error
-								error_handler.report_giach_error
+								error_handler.report_giaaa_error
 							else
 								check_typed_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_class, a_context)
 							end
@@ -7839,7 +7839,7 @@ feature {NONE} -- Agent validity
 									-- Report internal error: if we got a seed, the
 									-- `l_query' should not be void.
 								set_fatal_error
-								error_handler.report_giacd_error
+								error_handler.report_giaaa_error
 							else
 								check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_class, a_context)
 							end
@@ -8043,7 +8043,7 @@ feature {NONE} -- Agent validity
 				elseif not has_implementation_error (feature_impl) then
 						-- Internal error: this error should have been reported when
 						-- processing the implementation of `feature_impl'.
-					error_handler.report_giblj_error
+					error_handler.report_giaaa_error
 				end
 			elseif l_index > a_context.base_type_actual_count (universe) then
 					-- Report internal error: the index of the labeled
@@ -8051,7 +8051,7 @@ feature {NONE} -- Agent validity
 					-- for a Tuple type to conform to another Tuple type
 					-- it needs to have more actual parameters.
 				set_fatal_error
-				error_handler.report_giblk_error
+				error_handler.report_giaaa_error
 			else
 				l_type := a_context.base_type_actual (l_index, universe)
 				l_target_type := a_target.type
@@ -8148,7 +8148,7 @@ feature {NONE} -- Agent validity
 								-- processing the implementation of `feature_impl' or in
 								-- the feature flattener when redeclaring `a_feature' in an
 								-- ancestor of `a_class' or `current_class'.
-							error_handler.report_giacw_error
+							error_handler.report_giaaa_error
 						end
 					end
 				elseif a_formals = Void or else a_formals.count /= l_actual_list.count then
@@ -8164,7 +8164,7 @@ feature {NONE} -- Agent validity
 							-- processing the implementation of `feature_impl' or in
 							-- the feature flattener when redeclaring `a_feature' in an
 							-- ancestor of `a_class' or `current_class'.
-						error_handler.report_giacx_error
+						error_handler.report_giaaa_error
 					end
 				else
 						-- Do not use `actual_context' because it might already have
@@ -8223,7 +8223,7 @@ feature {NONE} -- Agent validity
 													-- Internal error: the seed of the convert feature should correspond
 													-- to a feature of `a_convert_class'.
 												set_fatal_error
-												error_handler.report_gibdv_error
+												error_handler.report_giaaa_error
 											end
 										elseif a_convert_feature.is_convert_from then
 											create a_convert_expression.make (an_actual, a_convert_feature)
@@ -8235,7 +8235,7 @@ feature {NONE} -- Agent validity
 													-- Internal error: the seed of the convert feature should correspond
 													-- to a feature of `a_convert_class'.
 												set_fatal_error
-												error_handler.report_gibai_error
+												error_handler.report_giaaa_error
 											end
 										else
 											create a_convert_expression.make (an_actual, a_convert_feature)
@@ -8316,7 +8316,7 @@ feature {NONE} -- Agent validity
 										-- Internal error: no other kind of agent actual arguments.
 									had_error := True
 									set_fatal_error
-									error_handler.report_giace_error
+									error_handler.report_giaaa_error
 								end
 							end
 						end

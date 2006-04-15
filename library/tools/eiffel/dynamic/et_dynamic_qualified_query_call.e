@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 					-- that the redeclaration of a query should be a query.
 				l_builder := a_system.dynamic_type_set_builder
 				l_builder.set_fatal_error
-				l_builder.error_handler.report_gibec_error
+				l_builder.error_handler.report_giaaa_error
 			else
 				l_result_type_set.put_target (result_type_set, a_system)
 			end
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 					-- Internal error: it has already been checked somewhere else
 					-- that the redeclaration of a query should be a query.
 				a_builder.set_fatal_error
-				a_builder.error_handler.report_gibbw_error
+				a_builder.error_handler.report_giaaa_error
 			elseif not result_type_set.is_expanded then
 				create l_result_attachment.make (l_result_type_set, current_feature, current_type)
 				result_type_set.put_source (l_result_attachment, a_builder.current_system)

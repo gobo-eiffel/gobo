@@ -600,7 +600,7 @@ feature -- Compilation
 							else
 									-- Internal error: the root creation feature is not a procedure.
 								set_fatal_error
-								error_handler.report_gibbn_error
+								error_handler.report_giaaa_error
 							end
 						elseif not l_class.is_creation_directly_exported_to (l_procedure.name, universe.any_class) then
 							set_fatal_error
@@ -847,7 +847,7 @@ feature {NONE} -- Compilation
 					if l_result_type_set = Void then
 							-- Internal error: an attribute should have a result type.
 						set_fatal_error
-						error_handler.report_gibig_error
+						error_handler.report_giaaa_error
 					elseif l_result_type_set.static_type /= special_character_type then
 						set_fatal_error
 						error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_type.base_type)
@@ -872,7 +872,7 @@ feature {NONE} -- Compilation
 					if l_result_type_set = Void then
 							-- Internal error: an attribute should have a result type.
 						set_fatal_error
-						error_handler.report_gibih_error
+						error_handler.report_giaaa_error
 					elseif l_result_type_set.static_type /= integer_type then
 						set_fatal_error
 						error_handler.report_gvkfe3a_error (l_class, l_count_feature, integer_type.base_type)

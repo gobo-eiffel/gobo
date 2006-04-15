@@ -489,7 +489,7 @@ feature -- AST processing
 					-- Internal error (recursive call)
 					-- This internal error is fatal.
 				set_fatal_error (a_class)
-				error_handler.report_giaae_error
+				error_handler.report_giaaa_error
 			elseif a_class /= unknown_class then
 				current_class := a_class
 				if not current_class.is_parsed then

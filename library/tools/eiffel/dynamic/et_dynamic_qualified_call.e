@@ -65,7 +65,7 @@ feature -- Element change
 						-- in all descendants of `target_type_set.static_type'.
 					l_builder := a_system.dynamic_type_set_builder
 					l_builder.set_fatal_error
-					l_builder.error_handler.report_gibea_error
+					l_builder.error_handler.report_giaaa_error
 				else
 					-- The error has already been reported somewhere else.
 				end
@@ -110,7 +110,7 @@ feature -- Element change
 					else
 							-- Internal error: the type counts are corrupted.
 						a_builder.set_fatal_error
-						a_builder.error_handler.report_gibfm_error
+						a_builder.error_handler.report_giaaa_error
 					end
 				end
 			end
@@ -132,7 +132,7 @@ feature -- Element change
 						-- Internal error: there should be a feature with that seed
 						-- in all descendants of `target_type_set.static_type'.
 					a_builder.set_fatal_error
-					a_builder.error_handler.report_gibbt_error
+					a_builder.error_handler.report_giaaa_error
 				else
 					-- The error has already been reported somewhere else.
 				end
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 							-- feature redeclaration.
 						l_builder := a_system.dynamic_type_set_builder
 						l_builder.set_fatal_error
-						l_builder.error_handler.report_gibeb_error
+						l_builder.error_handler.report_giaaa_error
 					elseif (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
 							-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
 							-- Try to get the open operand type sets directly from the
@@ -196,13 +196,13 @@ feature {NONE} -- Implementation
 								-- Internal error: it has to be an agent type.
 							l_builder := a_system.dynamic_type_set_builder
 							l_builder.set_fatal_error
-							l_builder.error_handler.report_gibhn_error
+							l_builder.error_handler.report_giaaa_error
 						else
 							if nb /= 1 then
 									-- Internal error: 'call' or 'item' should have exactly one argument.
 								l_builder := a_system.dynamic_type_set_builder
 								l_builder.set_fatal_error
-								l_builder.error_handler.report_gibho_error
+								l_builder.error_handler.report_giaaa_error
 							else
 								l_actual := l_actuals.actual_argument (1)
 								l_manifest_tuple ?= l_actual
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 												-- arguments should be known at this stage.
 											l_builder := a_system.dynamic_type_set_builder
 											l_builder.set_fatal_error
-											l_builder.error_handler.report_gibhp_error
+											l_builder.error_handler.report_giaaa_error
 										else
 											l_source_argument_type_set.put_target (l_open_operand_type_sets.item (i), a_system)
 										end
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 											-- arguments should be known at this stage.
 										l_builder := a_system.dynamic_type_set_builder
 										l_builder.set_fatal_error
-										l_builder.error_handler.report_gibhq_error
+										l_builder.error_handler.report_giaaa_error
 									else
 										l_source_argument_type_set.put_target (l_target_argument_type_sets.item (1), a_system)
 									end
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 									-- arguments should be known at this stage.
 								l_builder := a_system.dynamic_type_set_builder
 								l_builder.set_fatal_error
-								l_builder.error_handler.report_gibbd_error
+								l_builder.error_handler.report_giaaa_error
 							else
 								l_source_argument_type_set.put_target (l_target_argument_type_sets.item (i), a_system)
 							end
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 							-- that there was the same number of formal arguments in
 							-- feature redeclaration.
 						a_builder.set_fatal_error
-						a_builder.error_handler.report_gibbv_error
+						a_builder.error_handler.report_giaaa_error
 					elseif (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
 							-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
 							-- Try to get the open operand type sets directly from the
@@ -303,12 +303,12 @@ feature {NONE} -- Implementation
 						if l_agent_type = Void then
 								-- Internal error: it has to be an agent type.
 							a_builder.set_fatal_error
-							a_builder.error_handler.report_gibgr_error
+							a_builder.error_handler.report_giaaa_error
 						else
 							if nb /= 1 then
 									-- Internal error: 'call' or 'item' should have exactly one argument.
 								a_builder.set_fatal_error
-								a_builder.error_handler.report_gibgs_error
+								a_builder.error_handler.report_giaaa_error
 							else
 								l_actual := l_actuals.actual_argument (1)
 								l_manifest_tuple ?= l_actual
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 													-- Internal error: the dynamic type sets of the actual
 													-- arguments should be known at this stage.
 												a_builder.set_fatal_error
-												a_builder.error_handler.report_gibgt_error
+												a_builder.error_handler.report_giaaa_error
 											else
 												create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)
 												l_target_argument_type_set.put_source (l_attachment, l_system)
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 												-- Internal error: the dynamic type sets of the actual
 												-- arguments should be known at this stage.
 											a_builder.set_fatal_error
-											a_builder.error_handler.report_gibgu_error
+											a_builder.error_handler.report_giaaa_error
 										else
 											create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)
 											l_target_argument_type_set.put_source (l_attachment, l_system)
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 										-- Internal error: the dynamic type sets of the actual
 										-- arguments should be known at this stage.
 									a_builder.set_fatal_error
-									a_builder.error_handler.report_gibdw_error
+									a_builder.error_handler.report_giaaa_error
 								else
 									create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)
 									l_target_argument_type_set.put_source (l_attachment, l_system)

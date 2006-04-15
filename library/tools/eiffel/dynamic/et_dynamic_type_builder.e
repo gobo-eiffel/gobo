@@ -380,7 +380,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 						-- Internal error: there should be a feature with seed
 						-- `l_seed' in all descendants of `l_target_type_set.static_type'.
 					set_fatal_error
-					error_handler.report_gibfl_error
+					error_handler.report_giaaa_error
 				else
 					-- The error has already been reported somewhere else.
 				end
@@ -577,7 +577,7 @@ feature {NONE} -- CAT-calls
 					-- Internal error: there should be a feature with seed
 					-- `l_seed' in all descendants of `a_call.target_type_set.static_type'.
 				set_fatal_error
-				error_handler.report_gibcc_error
+				error_handler.report_giaaa_error
 			else
 				l_actuals := a_call.static_call.arguments
 				if l_actuals /= Void then
@@ -591,7 +591,7 @@ feature {NONE} -- CAT-calls
 								-- that there was the same number of formal arguments in
 								-- feature redeclaration.
 							set_fatal_error
-							error_handler.report_gibee_error
+							error_handler.report_giaaa_error
 						else
 							l_current_feature := a_call.current_feature
 							from i := 1 until i > nb loop
@@ -602,7 +602,7 @@ feature {NONE} -- CAT-calls
 										-- Internal error: the dynamic type sets of the actual
 										-- arguments should be known at this stage.
 									set_fatal_error
-									error_handler.report_gibba_error
+									error_handler.report_giaaa_error
 								else
 									l_source_type := l_source_type_set.first_type
 									if l_source_type /= Void then
@@ -735,7 +735,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_gibks_error
+							error_handler.report_giaaa_error
 						end
 					when builtin_special_class then
 						inspect l_builtin_code \\ builtin_capacity
@@ -751,7 +751,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_gibkt_error
+							error_handler.report_giaaa_error
 						end
 					when builtin_boolean_class then
 						inspect l_builtin_code \\ builtin_capacity
@@ -775,7 +775,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_gibkv_error
+							error_handler.report_giaaa_error
 						end
 					when builtin_pointer_class then
 						inspect l_builtin_code \\ builtin_capacity
@@ -793,7 +793,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_giblc_error
+							error_handler.report_giaaa_error
 						end
 					when builtin_arguments_class then
 						inspect l_builtin_code \\ builtin_capacity
@@ -805,7 +805,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_gibli_error
+							error_handler.report_giaaa_error
 						end
 					when builtin_platform_class then
 						inspect l_builtin_code \\ builtin_capacity
@@ -831,7 +831,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_giblq_error
+							error_handler.report_giaaa_error
 						end
 					else
 						inspect l_builtin_class
@@ -863,7 +863,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_gibkw_error
+							error_handler.report_giaaa_error
 						end
 						if l_integer_type /= Void then
 							inspect l_builtin_code \\ builtin_capacity
@@ -931,7 +931,7 @@ feature {NONE} -- Feature validity
 									-- Internal error: invalid built-in feature.
 									-- Error already reported during parsing.
 								set_fatal_error
-								error_handler.report_gibii_error
+								error_handler.report_giaaa_error
 							end
 						elseif l_character_type /= Void then
 							inspect l_builtin_code \\ builtin_capacity
@@ -943,7 +943,7 @@ feature {NONE} -- Feature validity
 									-- Internal error: invalid built-in feature.
 									-- Error already reported during parsing.
 								set_fatal_error
-								error_handler.report_gibku_error
+								error_handler.report_giaaa_error
 							end
 						elseif l_real_type /= Void then
 							inspect l_builtin_code \\ builtin_capacity
@@ -987,7 +987,7 @@ feature {NONE} -- Feature validity
 									-- Internal error: invalid built-in feature.
 									-- Error already reported during parsing.
 								set_fatal_error
-								error_handler.report_giblp_error
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -1024,7 +1024,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_gibkx_error
+							error_handler.report_giaaa_error
 						end
 					when builtin_special_class then
 						inspect l_builtin_code \\ builtin_capacity
@@ -1036,7 +1036,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_gibky_error
+							error_handler.report_giaaa_error
 						end
 					when builtin_boolean_class then
 						inspect l_builtin_code \\ builtin_capacity
@@ -1046,7 +1046,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_gibla_error
+							error_handler.report_giaaa_error
 						end
 					when builtin_pointer_class then
 						inspect l_builtin_code \\ builtin_capacity
@@ -1056,7 +1056,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_gibld_error
+							error_handler.report_giaaa_error
 						end
 					else
 						inspect l_builtin_class
@@ -1088,7 +1088,7 @@ feature {NONE} -- Feature validity
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
 							set_fatal_error
-							error_handler.report_giblb_error
+							error_handler.report_giaaa_error
 						end
 						if l_integer_type /= Void then
 							inspect l_builtin_code \\ builtin_capacity
@@ -1098,7 +1098,7 @@ feature {NONE} -- Feature validity
 									-- Internal error: invalid built-in feature.
 									-- Error already reported during parsing.
 								set_fatal_error
-								error_handler.report_gibij_error
+								error_handler.report_giaaa_error
 							end
 						elseif l_character_type /= Void then
 							inspect l_builtin_code \\ builtin_capacity
@@ -1108,7 +1108,7 @@ feature {NONE} -- Feature validity
 									-- Internal error: invalid built-in feature.
 									-- Error already reported during parsing.
 								set_fatal_error
-								error_handler.report_gibkz_error
+								error_handler.report_giaaa_error
 							end
 						elseif l_real_type /= Void then
 							inspect l_builtin_code \\ builtin_capacity
@@ -1118,7 +1118,7 @@ feature {NONE} -- Feature validity
 									-- Internal error: invalid built-in feature.
 									-- Error already reported during parsing.
 								set_fatal_error
-								error_handler.report_giblr_error
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -1197,7 +1197,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of an attribute cannot be void.
 					set_fatal_error
-					error_handler.report_gibac_error
+					error_handler.report_giaaa_error
 				else
 					set_dynamic_type_set (l_dynamic_type_set, a_writable)
 				end
@@ -1269,7 +1269,7 @@ feature {NONE} -- Event handling
 						-- Internal error: the dynamic type set of the source
 						-- should be known at this stage.
 					set_fatal_error
-					error_handler.report_gibfn_error
+					error_handler.report_giaaa_error
 				else
 					l_source_type := l_source_type_set.static_type
 					if l_source_type.base_type.conforms_to_context (a_target_type, universe) then
@@ -1294,7 +1294,7 @@ feature {NONE} -- Event handling
 									-- It has been computed in ET_FEATURE_FLATTENER or else an
 									-- error should have already been reported.
 								set_fatal_error
-								error_handler.report_gibjz_error
+								error_handler.report_giaaa_error
 							end
 						elseif l_convert_feature.is_convert_from then
 							l_seed := l_convert_feature.name.seed
@@ -1304,7 +1304,7 @@ feature {NONE} -- Event handling
 									-- It has been computed in ET_FEATURE_FLATTENER or else an
 									-- error should have already been reported.
 								set_fatal_error
-								error_handler.report_gibjy_error
+								error_handler.report_giaaa_error
 							else
 								report_creation_expression (an_expression, a_target_type.named_type (universe), l_procedure, an_expression.expression)
 							end
@@ -1727,7 +1727,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
-					error_handler.report_gibau_error
+					error_handler.report_giaaa_error
 				else
 					set_dynamic_type_set (l_dynamic_type_set, an_expression)
 				end
@@ -1765,7 +1765,7 @@ feature {NONE} -- Event handling
 						-- Internal error: the dynamic type sets of the
 						-- target should be known at this stage.
 					set_fatal_error
-					error_handler.report_gibbb_error
+					error_handler.report_giaaa_error
 				else
 					l_type := a_query.type
 					l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
@@ -1791,7 +1791,7 @@ feature {NONE} -- Event handling
 						-- Internal error: the dynamic type sets of the
 						-- target should be known at this stage.
 					set_fatal_error
-					error_handler.report_gibbe_error
+					error_handler.report_giaaa_error
 				else
 					create l_dynamic_call.make (an_instruction, l_dynamic_type_set, current_dynamic_feature, current_dynamic_type)
 					l_dynamic_type_set.static_type.put_procedure_call (l_dynamic_call)
@@ -1826,7 +1826,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_agent_type = Void then
 						-- Internal error: the dynamic type of an agent should be an agent type.
 					set_fatal_error
-					error_handler.report_gibax_error
+					error_handler.report_giaaa_error
 				else
 					l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
 					nb2 := l_open_operand_type_sets.count
@@ -1847,7 +1847,7 @@ feature {NONE} -- Event handling
 							-- Internal error: the dynamic type sets of the
 							-- target should be known at this stage.
 						set_fatal_error
-						error_handler.report_gibaz_error
+						error_handler.report_giaaa_error
 					else
 						l_dynamic_feature := l_target_type_set.static_type.dynamic_procedure (a_procedure, current_system)
 						report_agent_qualified_procedure_call (an_expression, l_target_type_set)
@@ -1864,7 +1864,7 @@ feature {NONE} -- Event handling
 									-- Internal error: it has already been checked somewhere else
 									-- that there was the same number of actual and formal arguments.
 								set_fatal_error
-								error_handler.report_gibfo_error
+								error_handler.report_giaaa_error
 							else
 								from i := 1 until i > nb loop
 									l_actual := l_actuals.actual_argument (i)
@@ -1877,7 +1877,7 @@ feature {NONE} -- Event handling
 										if j > nb2 then
 												-- Internal error: missing open operands.
 											set_fatal_error
-											error_handler.report_gibhl_error
+											error_handler.report_giaaa_error
 										else
 											l_dynamic_type_set := l_open_operand_type_sets.item (j)
 											set_dynamic_type_set (l_dynamic_type_set, l_actual)
@@ -1888,7 +1888,7 @@ feature {NONE} -- Event handling
 								if j < nb2 then
 										-- Internal error: too many open operands.
 									set_fatal_error
-									error_handler.report_gibhm_error
+									error_handler.report_giaaa_error
 								end
 							end
 						end
@@ -1925,7 +1925,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_agent_type = Void then
 						-- Internal error: the dynamic type of an agent should be an agent type.
 					set_fatal_error
-					error_handler.report_gibjq_error
+					error_handler.report_giaaa_error
 				else
 					l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
 					nb2 := l_open_operand_type_sets.count
@@ -1947,12 +1947,12 @@ feature {NONE} -- Event handling
 							-- Internal error: the dynamic type sets of the
 							-- target should be known at this stage.
 						set_fatal_error
-						error_handler.report_gibjr_error
+						error_handler.report_giaaa_error
 					elseif l_result_type_set = Void then
 							-- Internal error: if the corresponding feature is a query
 							-- then the result type set should not be Void.
 						set_fatal_error
-						error_handler.report_giaaz_error
+						error_handler.report_giaaa_error
 					else
 						l_dynamic_feature := l_target_type_set.static_type.dynamic_query (a_query, current_system)
 						report_agent_qualified_query_call (an_expression, l_target_type_set, l_result_type_set)
@@ -1969,7 +1969,7 @@ feature {NONE} -- Event handling
 									-- Internal error: it has already been checked somewhere else
 									-- that there was the same number of actual and formal arguments.
 								set_fatal_error
-								error_handler.report_gibjs_error
+								error_handler.report_giaaa_error
 							else
 								from i := 1 until i > nb loop
 									l_actual := l_actuals.actual_argument (i)
@@ -1982,7 +1982,7 @@ feature {NONE} -- Event handling
 										if j > nb2 then
 												-- Internal error: missing open operands.
 											set_fatal_error
-											error_handler.report_gibjt_error
+											error_handler.report_giaaa_error
 										else
 											l_dynamic_type_set := l_open_operand_type_sets.item (j)
 											set_dynamic_type_set (l_dynamic_type_set, l_actual)
@@ -1993,7 +1993,7 @@ feature {NONE} -- Event handling
 								if j < nb2 then
 										-- Internal error: too many open operands.
 									set_fatal_error
-									error_handler.report_gibju_error
+									error_handler.report_giaaa_error
 								end
 							end
 						end
@@ -2059,7 +2059,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a function cannot be void.
 					set_fatal_error
-					error_handler.report_gibbf_error
+					error_handler.report_giaaa_error
 				else
 					if an_expression.index = 0 and result_index.item /= 0 then
 						an_expression.set_index (result_index.item)
@@ -2083,7 +2083,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a function cannot be void.
 					set_fatal_error
-					error_handler.report_gibbg_error
+					error_handler.report_giaaa_error
 				else
 					if a_result.index = 0 and result_index.item /= 0 then
 						a_result.set_index (result_index.item)
@@ -2112,7 +2112,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
-					error_handler.report_gibcl_error
+					error_handler.report_giaaa_error
 				else
 					set_dynamic_type_set (l_dynamic_type_set, an_expression)
 				end
@@ -2192,7 +2192,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_agent_type = Void then
 						-- Internal error: the dynamic type of an agent should be an agent type.
 					set_fatal_error
-					error_handler.report_gibll_error
+					error_handler.report_giaaa_error
 				else
 					l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
 					l_target := an_expression.target
@@ -2212,12 +2212,12 @@ feature {NONE} -- Event handling
 							-- Internal error: the dynamic type sets of the
 							-- target should be known at this stage.
 						set_fatal_error
-						error_handler.report_giblm_error
+						error_handler.report_giaaa_error
 					elseif l_result_type_set = Void then
 							-- Internal error: if the corresponding feature is a query
 							-- then the result type set should not be Void.
 						set_fatal_error
-						error_handler.report_gibln_error
+						error_handler.report_giaaa_error
 					end
 				end
 			end
@@ -2240,21 +2240,21 @@ feature {NONE} -- Event handling
 						-- Internal error: the dynamic type sets of the
 						-- target should be known at this stage.
 					set_fatal_error
-					error_handler.report_gible_error
+					error_handler.report_giaaa_error
 				else
 					l_tuple_type ?= l_target_type_set.static_type
 					if l_tuple_type = Void then
 							-- Internal error: the target of a label expression
 							-- should be a Tuple.
 						set_fatal_error
-						error_handler.report_giblf_error
+						error_handler.report_giaaa_error
 					else
 						l_item_type_sets := l_tuple_type.item_type_sets
 						l_index := an_expression.name.seed
 						if not l_item_type_sets.valid_index (l_index) then
 								-- Internal error: invalid label index.
 							set_fatal_error
-							error_handler.report_giblg_error
+							error_handler.report_giaaa_error
 						else
 							l_dynamic_type_set := l_item_type_sets.item (l_index)
 							set_dynamic_type_set (l_dynamic_type_set, an_expression)
@@ -2290,7 +2290,7 @@ feature {NONE} -- Event handling
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
-					error_handler.report_gibck_error
+					error_handler.report_giaaa_error
 				else
 					set_dynamic_type_set (l_dynamic_type_set, an_expression)
 				end
@@ -2363,7 +2363,7 @@ feature {NONE} -- Event handling
 			if l_agent_type = Void then
 					-- Internal error: the dynamic type of an agent should be an agent type.
 				set_fatal_error
-				error_handler.report_gibeh_error
+				error_handler.report_giaaa_error
 			else
 					-- Set dynamic type sets of open operands.
 				l_open_operand_type_sets := l_agent_type.open_operand_type_sets
@@ -2379,7 +2379,7 @@ feature {NONE} -- Event handling
 							-- Internal error: it has already been checked somewhere else
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
-						error_handler.report_gibei_error
+						error_handler.report_giaaa_error
 					else
 						from i := 1 until i > nb loop
 							l_actual := l_actuals.actual_argument (i)
@@ -2392,7 +2392,7 @@ feature {NONE} -- Event handling
 								if j > nb2 then
 										-- Internal error: missing open operands.
 									set_fatal_error
-									error_handler.report_gibdp_error
+									error_handler.report_giaaa_error
 								else
 									l_dynamic_type_set := l_open_operand_type_sets.item (j)
 									set_dynamic_type_set (l_dynamic_type_set, l_actual)
@@ -2403,7 +2403,7 @@ feature {NONE} -- Event handling
 						if j < nb2 then
 								-- Internal error: too many open operands.
 							set_fatal_error
-							error_handler.report_gibdr_error
+							error_handler.report_giaaa_error
 						end
 					end
 				end
@@ -2446,7 +2446,7 @@ feature {NONE} -- Built-in features
 						-- 'copy'. Otherwise we get an error when parsing
 						-- class ANY if there is no such feature.
 					set_fatal_error
-					error_handler.report_gibia_error
+					error_handler.report_giaaa_error
 				else
 					l_copy_feature.set_regular (True)
 				end
@@ -2606,7 +2606,7 @@ feature {NONE} -- Built-in features
 						-- Internal error: it was already checked during parsing
 						-- that the signature should be 'item (i: INTEGER): G'.
 					set_fatal_error
-					error_handler.report_gibik_error
+					error_handler.report_giaaa_error
 				elseif l_result_type_set.is_expanded then
 					l_result_type_set.static_type.set_alive
 				end

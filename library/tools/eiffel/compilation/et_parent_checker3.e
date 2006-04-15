@@ -144,7 +144,7 @@ feature {NONE} -- Parent validity
 										-- to be a formal parameter of `current_class'.
 									has_formal_type_error := True
 									set_fatal_error
-									error_handler.report_giabt_error
+									error_handler.report_giaaa_error
 								else
 									has_formal_type_error := False
 									a_formal_parameter := a_formal_parameters.formal_parameter (an_index)
@@ -202,7 +202,7 @@ feature {NONE} -- Parent validity
 													-- parameter to its generic constraint has been
 													-- checked during the second pass.
 												set_fatal_error
-												error_handler.report_giabu_error
+												error_handler.report_giaaa_error
 											elseif a_formal_type /= Void then
 												if not has_formal_type_error then
 													if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then

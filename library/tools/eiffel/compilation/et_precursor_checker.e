@@ -310,7 +310,7 @@ feature {NONE} -- Precursor validity
 							-- should be non-void because `current_feature' has at least
 							-- one parent feature.
 						set_fatal_error
-						error_handler.report_giabw_error
+						error_handler.report_giaaa_error
 					end
 				end
 			end

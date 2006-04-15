@@ -88,7 +88,7 @@ feature -- Processing
 			elseif current_class /= unknown_class then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
-				error_handler.report_giaab_error
+				error_handler.report_giaaa_error
 				create a_processor.make (universe)
 				a_processor.process_class (a_class)
 			elseif a_class /= unknown_class then
@@ -243,7 +243,7 @@ feature {NONE} -- Feature flattening
 						-- `current_class' should be less than or equal to the
 						-- total number of queries in `current_class'.
 					set_fatal_error (current_class)
-					error_handler.report_giadp_error
+					error_handler.report_giaaa_error
 					l_declared_query_count := nb
 				end
 				if l_declared_query_count < nb then
@@ -265,7 +265,7 @@ feature {NONE} -- Feature flattening
 						-- `current_class' should be less than or equal to the
 						-- total number of procedures in `current_class'.
 					set_fatal_error (current_class)
-					error_handler.report_gibcb_error
+					error_handler.report_giaaa_error
 					l_declared_procedure_count := nb
 				end
 				if l_declared_procedure_count < nb then

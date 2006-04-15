@@ -108,7 +108,7 @@ feature -- Processing
 			elseif current_class /= unknown_class then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
-				error_handler.report_giaae_error
+				error_handler.report_giaaa_error
 				create a_processor.make (universe)
 				a_processor.process_class (a_class)
 			elseif a_class /= unknown_class then
