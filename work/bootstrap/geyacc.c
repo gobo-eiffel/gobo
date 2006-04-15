@@ -42830,7 +42830,11 @@ int main(int argc, char** argv)
 #include <stdlib.h>
 #include <ctype.h>
 #ifdef EIF_WINDOWS
+#if defined (__BORLANDC__) && (__BORLANDC__ < 0x600) /* Borland before 6.0 */
+#include <utime.h>
+#else
 #include <sys/utime.h>
+#endif
 #include <io.h> /* for access, chmod */
 #else
 #include <utime.h>
