@@ -79,7 +79,7 @@ feature -- Status report
 	is_compiled: BOOLEAN is
 			-- Was last compilation successful?
 		do
-			Result := (error_message = err_msg_0)
+			Result := STRING_.same_string (error_message, err_msg_0)
 		end
 
 	is_caseless: BOOLEAN
