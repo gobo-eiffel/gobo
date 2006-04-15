@@ -506,6 +506,7 @@ feature {TS_TEST_HANDLER} -- Files
 								a_file1.close
 								a_file2.close
 								assertions.report_error (a_message)
+								done := True
 							else
 								a_file1.close
 								a_file2.close
@@ -524,6 +525,7 @@ feature {TS_TEST_HANDLER} -- Files
 							a_file1.close
 							a_file2.close
 							assertions.report_error (a_message)
+							done := True
 						elseif not a_file1.last_string.is_equal (a_file2.last_string) then
 							create a_message.make (50)
 							a_message.append_string (a_tag)
@@ -537,6 +539,7 @@ feature {TS_TEST_HANDLER} -- Files
 							a_file1.close
 							a_file2.close
 							assertions.report_error (a_message)
+							done := True
 						end
 					end
 				else
