@@ -619,36 +619,12 @@ feature -- Status report
 			definition: Result = (declared_target /= Void)
 		end
 
-	is_target_architecture_declared: BOOLEAN is
-			-- Has 'target_architecture' option been declared?
-		do
-			Result := declared_target_architecture /= Void
-		ensure
-			definition: Result = (declared_target_architecture /= Void)
-		end
-
-	is_target_os_declared: BOOLEAN is
-			-- Has 'target_os' option been declared?
-		do
-			Result := declared_target_os /= Void
-		ensure
-			definition: Result = (declared_target_os /= Void)
-		end
-
 	is_trace_declared: BOOLEAN is
 			-- Has 'trace' option been declared?
 		do
 			Result := declared_trace /= Void and then not declared_trace.is_undefined
 		ensure
 			definition: Result = (declared_trace /= Void and then not declared_trace.is_undefined)
-		end
-
-	is_unicode_declared: BOOLEAN is
-			-- Has 'unicode' option been declared?
-		do
-			Result := declared_unicode /= Void
-		ensure
-			definition: Result = (declared_unicode /= Void)
 		end
 
 	is_use_cluster_name_as_namespace_declared: BOOLEAN is
@@ -1484,26 +1460,6 @@ feature -- Option values
 			valid_target: valid_target.has (Result)
 		end
 
-	target_architecture: STRING is
-			-- 'target_architecture' option
-		do
-			if is_target_architecture_declared then
-				Result := declared_target_architecture
-			else
-				Result := default_target_architecture
-			end
-		end
-
-	target_os: STRING is
-			-- 'target_os' option
-		do
-			if is_target_os_declared then
-				Result := declared_target_os
-			else
-				Result := default_target_os
-			end
-		end
-
 	trace: BOOLEAN is
 			-- 'trace' option
 		do
@@ -1512,18 +1468,6 @@ feature -- Option values
 			else
 				Result := default_trace
 			end
-		end
-
-	unicode: STRING is
-			-- 'unicode' option
-		do
-			if is_unicode_declared then
-				Result := declared_unicode
-			else
-				Result := default_unicode
-			end
-		ensure
-			valid_unicode: valid_unicode.has (Result)
 		end
 
 	use_cluster_name_as_namespace: BOOLEAN is
@@ -2635,28 +2579,6 @@ feature -- Modification
 			target_set: target = a_value
 		end
 
-	set_target_architecture (a_value: STRING) is
-			-- Set `target_architecture' to `a_value'.
-		require
-			a_value_not_void: a_value /= Void
-		do
-			declared_target_architecture := a_value
-		ensure
-			target_architecture_declared: is_target_architecture_declared
-			target_architecture_set: target_architecture = a_value
-		end
-
-	set_target_os (a_value: STRING) is
-			-- Set `target_os' to `a_value'.
-		require
-			a_value_not_void: a_value /= Void
-		do
-			declared_target_os := a_value
-		ensure
-			target_os_declared: is_target_os_declared
-			target_os_set: target_os = a_value
-		end
-
 	set_trace (b: BOOLEAN) is
 			-- Set `trace' to `b'.
 		do
@@ -2671,17 +2593,6 @@ feature -- Modification
 		ensure
 			trace_declared: is_trace_declared
 			trace_set: trace = b
-		end
-
-	set_unicode (a_value: STRING) is
-			-- Set `unicode' to `a_value'.
-		require
-			a_value_valid: valid_unicode.has (a_value)
-		do
-			declared_unicode := a_value
-		ensure
-			unicode_declared: is_unicode_declared
-			unicode_set: target = a_value
 		end
 
 	set_use_cluster_name_as_namespace (b: BOOLEAN) is
@@ -3367,36 +3278,12 @@ feature -- Status setting
 			target_not_declared: not is_target_declared
 		end
 
-	unset_target_architecture is
-			-- Unset `target_architecture'.
-		do
-			declared_target_architecture := Void
-		ensure
-			target_architecture_not_declared: not is_target_architecture_declared
-		end
-
-	unset_target_os is
-			-- Unset `target_os'.
-		do
-			declared_target_os := Void
-		ensure
-			target_os_not_declared: not is_target_os_declared
-		end
-
 	unset_trace is
 			-- Unset `trace'.
 		do
 			declared_trace := Void
 		ensure
 			trace_not_declared: not is_trace_declared
-		end
-
-	unset_unicode is
-			-- Unset `unicode'.
-		do
-			declared_unicode := Void
-		ensure
-			unicode_not_declared: not is_unicode_declared
 		end
 
 	unset_use_cluster_name_as_namespace is
@@ -3835,17 +3722,8 @@ feature -- Declared values
 	declared_target: STRING
 			-- Declared value for 'target' option
 
-	declared_target_architecture: STRING
-			-- Declared value for 'target_architecture' option
-
-	declared_target_os: STRING
-			-- Declared value for 'target_os' option
-
 	declared_trace: UT_TRISTATE
 			-- Declared value for 'trace' option
-
-	declared_unicode: STRING
-			-- Declared value for 'unicode' option
 
 	declared_use_cluster_name_as_namespace: UT_TRISTATE
 			-- Declared value for 'use_cluster_name_as_namespace' option
