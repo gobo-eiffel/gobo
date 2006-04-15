@@ -171,6 +171,7 @@
 			in all subdirectories.
 		</description>
 
+		<geant target="do_all_ge" if="${GOBO_EIFFEL}=ge"/>
 		<geant file="build.eant" target="${target}" dir="lexical"/>
 		<geant file="build.eant" target="clean" dir="lexical" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="kernel"/>
@@ -199,6 +200,16 @@
 		<geant file="build.eant" target="clean" dir="src" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="precomp"/>
 		<geant file="build.eant" target="clean" dir="precomp" if="${do_clean}"/>
+	</target>
+
+	<target name="do_all_ge" depend="init">
+		<description>
+			Call 'geant' with the same target ${target}
+			in all subdirectories specific to GE.
+		</description>
+
+		<geant file="build.eant" target="${target}" dir="free_elks"/>
+		<geant file="build.eant" target="clean" dir="free_elks" if="${do_clean}"/>
 	</target>
 
 </project>
