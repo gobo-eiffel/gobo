@@ -349,17 +349,19 @@ feature -- Test
 		do
 			a_name := new_filename ("gobo", ".tmp")
 			create a_file.make (a_name)
-			a_file.open_write
-			if a_file.is_open_write then
-				a_file.put_line ("This is the first line,")
-				a_file.put_line ("this is the second line.")
-				a_file.put_character ('#')
-				a_file.close
-				assert ("is_closed", a_file.is_closed)
-				assert_files_equal ("diff", gobo_filename, a_name)
-				file_system.delete_file (a_name)
-			else
-				assert ("is_opened", False)
+			if a_file.eol.is_equal (file_system.eol) then
+				a_file.open_write
+				if a_file.is_open_write then
+					a_file.put_line ("This is the first line,")
+					a_file.put_line ("this is the second line.")
+					a_file.put_character ('#')
+					a_file.close
+					assert ("is_closed", a_file.is_closed)
+					assert_files_equal ("diff", gobo_filename, a_name)
+					file_system.delete_file (a_name)
+				else
+					assert ("is_opened", False)
+				end
 			end
 		end
 
@@ -371,19 +373,21 @@ feature -- Test
 		do
 			a_name := new_filename ("gobo", ".tmp")
 			create a_file.make (a_name)
-			a_file.open_write
-			if a_file.is_open_write then
-				a_file.put_string ("This is the first line,")
-				a_file.put_new_line
-				a_file.put_string ("this is the second line.")
-				a_file.put_new_line
-				a_file.put_character ('#')
-				a_file.close
-				assert ("is_closed", a_file.is_closed)
-				assert_files_equal ("diff", gobo_filename, a_name)
-				file_system.delete_file (a_name)
-			else
-				assert ("is_opened", False)
+			if a_file.eol.is_equal (file_system.eol) then
+				a_file.open_write
+				if a_file.is_open_write then
+					a_file.put_string ("This is the first line,")
+					a_file.put_new_line
+					a_file.put_string ("this is the second line.")
+					a_file.put_new_line
+					a_file.put_character ('#')
+					a_file.close
+					assert ("is_closed", a_file.is_closed)
+					assert_files_equal ("diff", gobo_filename, a_name)
+					file_system.delete_file (a_name)
+				else
+					assert ("is_opened", False)
+				end
 			end
 		end
 
@@ -395,32 +399,34 @@ feature -- Test
 		do
 			a_name := new_filename ("gobo", ".tmp")
 			create a_file.make (a_name)
-			a_file.open_write
-			if a_file.is_open_write then
-				a_file.put_integer (0)
-				a_file.put_new_line
-				a_file.put_integer (1)
-				a_file.put_new_line
-				a_file.put_integer (-1)
-				a_file.put_new_line
-				a_file.put_integer (-123)
-				a_file.put_new_line
-				a_file.put_integer (5674)
-				a_file.put_new_line
-					-- Minimum integer value.
-					-- Note: ISE 5.4 does not like having directly -2147483648 because
-					-- it considers it as an INTEGER_64 instead of an INTEGER.
-				a_file.put_integer (-2147483647 - 1)
-				a_file.put_new_line
-					-- Maximum integer value.
-				a_file.put_integer (2147483647)
-				a_file.put_new_line
-				a_file.close
-				assert ("is_closed", a_file.is_closed)
-				assert_files_equal ("diff", integers_filename, a_name)
-				file_system.delete_file (a_name)
-			else
-				assert ("is_opened", False)
+			if a_file.eol.is_equal (file_system.eol) then
+				a_file.open_write
+				if a_file.is_open_write then
+					a_file.put_integer (0)
+					a_file.put_new_line
+					a_file.put_integer (1)
+					a_file.put_new_line
+					a_file.put_integer (-1)
+					a_file.put_new_line
+					a_file.put_integer (-123)
+					a_file.put_new_line
+					a_file.put_integer (5674)
+					a_file.put_new_line
+						-- Minimum integer value.
+						-- Note: ISE 5.4 does not like having directly -2147483648 because
+						-- it considers it as an INTEGER_64 instead of an INTEGER.
+					a_file.put_integer (-2147483647 - 1)
+					a_file.put_new_line
+						-- Maximum integer value.
+					a_file.put_integer (2147483647)
+					a_file.put_new_line
+					a_file.close
+					assert ("is_closed", a_file.is_closed)
+					assert_files_equal ("diff", integers_filename, a_name)
+					file_system.delete_file (a_name)
+				else
+					assert ("is_opened", False)
+				end
 			end
 		end
 
@@ -432,18 +438,20 @@ feature -- Test
 		do
 			a_name := new_filename ("gobo", ".tmp")
 			create a_file.make (a_name)
-			a_file.open_write
-			if a_file.is_open_write then
-				a_file.put_boolean (True)
-				a_file.put_new_line
-				a_file.put_boolean (False)
-				a_file.put_new_line
-				a_file.close
-				assert ("is_closed", a_file.is_closed)
-				assert_files_equal ("diff", booleans_filename, a_name)
-				file_system.delete_file (a_name)
-			else
-				assert ("is_opened", False)
+			if a_file.eol.is_equal (file_system.eol) then
+				a_file.open_write
+				if a_file.is_open_write then
+					a_file.put_boolean (True)
+					a_file.put_new_line
+					a_file.put_boolean (False)
+					a_file.put_new_line
+					a_file.close
+					assert ("is_closed", a_file.is_closed)
+					assert_files_equal ("diff", booleans_filename, a_name)
+					file_system.delete_file (a_name)
+				else
+					assert ("is_opened", False)
+				end
 			end
 		end
 
@@ -561,35 +569,37 @@ feature -- Test
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
 			create new_file.make (new_name)
-			new_file.open_write
-			if new_file.is_open_write then
-				new_file.put_string ("Hello gobo")
-				new_file.close
-				assert ("is_closed1", new_file.is_closed)
-				create a_file.make (old_name)
-				a_file.open_write
-				if a_file.is_open_write then
-					a_file.put_string ("This is the first line,")
-					a_file.put_new_line
-					a_file.put_string ("this is the second line.")
-					a_file.put_new_line
-					a_file.put_character ('#')
-					a_file.close
-					assert ("is_closed2", a_file.is_closed)
-					assert ("readable1", file_system.is_file_readable (old_name))
-					assert ("readable2", file_system.is_file_readable (new_name))
-					a_file.change_name (new_name)
-					assert_same ("renamed", new_name, a_file.name)
-					assert ("not_readable2", not file_system.is_file_readable (old_name))
-					assert ("readable3", file_system.is_file_readable (new_name))
-					assert_files_equal ("diff1", gobo_filename, new_name)
-					a_file.delete
-					assert ("not_readable3", not file_system.is_file_readable (new_name))
+			if new_file.eol.is_equal (file_system.eol) then
+				new_file.open_write
+				if new_file.is_open_write then
+					new_file.put_string ("Hello gobo")
+					new_file.close
+					assert ("is_closed1", new_file.is_closed)
+					create a_file.make (old_name)
+					a_file.open_write
+					if a_file.is_open_write then
+						a_file.put_string ("This is the first line,")
+						a_file.put_new_line
+						a_file.put_string ("this is the second line.")
+						a_file.put_new_line
+						a_file.put_character ('#')
+						a_file.close
+						assert ("is_closed2", a_file.is_closed)
+						assert ("readable1", file_system.is_file_readable (old_name))
+						assert ("readable2", file_system.is_file_readable (new_name))
+						a_file.change_name (new_name)
+						assert_same ("renamed", new_name, a_file.name)
+						assert ("not_readable2", not file_system.is_file_readable (old_name))
+						assert ("readable3", file_system.is_file_readable (new_name))
+						assert_files_equal ("diff1", gobo_filename, new_name)
+						a_file.delete
+						assert ("not_readable3", not file_system.is_file_readable (new_name))
+					else
+						assert ("is_opened2", False)
+					end
 				else
-					assert ("is_opened2", False)
+					assert ("is_opened1", False)
 				end
-			else
-				assert ("is_opened1", False)
 			end
 		end
 

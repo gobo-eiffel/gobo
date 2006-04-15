@@ -794,36 +794,38 @@ feature -- Test
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
 			create out_file.make (new_name)
-			out_file.open_write
-			if out_file.is_open_write then
-				out_file.put_string ("Hello gobo")
-				out_file.close
-				assert ("is_closed1", out_file.is_closed)
-				create out_file.make (old_name)
+			if out_file.eol.is_equal (file_system.eol) then
 				out_file.open_write
 				if out_file.is_open_write then
-					out_file.put_string ("This is the first line,")
-					out_file.put_new_line
-					out_file.put_string ("this is the second line.")
-					out_file.put_new_line
-					out_file.put_character ('#')
+					out_file.put_string ("Hello gobo")
 					out_file.close
-					assert ("is_closed2", out_file.is_closed)
-					assert ("readable1", file_system.is_file_readable (old_name))
-					assert ("readable2", file_system.is_file_readable (new_name))
-					create a_file.make (old_name)
-					a_file.change_name (new_name)
-					assert_same ("renamed", new_name, a_file.name)
-					assert ("not_readable2", not file_system.is_file_readable (old_name))
-					assert ("readable3", file_system.is_file_readable (new_name))
-					assert_files_equal ("diff1", gobo_filename, new_name)
-					a_file.delete
-					assert ("not_readable3", not file_system.is_file_readable (new_name))
+					assert ("is_closed1", out_file.is_closed)
+					create out_file.make (old_name)
+					out_file.open_write
+					if out_file.is_open_write then
+						out_file.put_string ("This is the first line,")
+						out_file.put_new_line
+						out_file.put_string ("this is the second line.")
+						out_file.put_new_line
+						out_file.put_character ('#')
+						out_file.close
+						assert ("is_closed2", out_file.is_closed)
+						assert ("readable1", file_system.is_file_readable (old_name))
+						assert ("readable2", file_system.is_file_readable (new_name))
+						create a_file.make (old_name)
+						a_file.change_name (new_name)
+						assert_same ("renamed", new_name, a_file.name)
+						assert ("not_readable2", not file_system.is_file_readable (old_name))
+						assert ("readable3", file_system.is_file_readable (new_name))
+						assert_files_equal ("diff1", gobo_filename, new_name)
+						a_file.delete
+						assert ("not_readable3", not file_system.is_file_readable (new_name))
+					else
+						assert ("is_opened2", False)
+					end
 				else
-					assert ("is_opened2", False)
+					assert ("is_opened1", False)
 				end
-			else
-				assert ("is_opened1", False)
 			end
 		end
 
