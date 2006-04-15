@@ -12,7 +12,7 @@
 
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  msc | bcc | lcc | gcc | no_c"
+	echo "   c_compiler:  msc | bcc | lcc | gcc | tcc | no_c"
 	echo "   eiffel_compiler:  ge | ise | se | ve"
 }
 
@@ -63,7 +63,7 @@ elif [ "$EIF" = "" ]; then
 	exit 1
 elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	CC=cl
-	CFLAGS='-O2 -nologo -D"WIN32" -w'
+	CFLAGS='-O2 -nologo -wd4049'
 	$CC $CFLAGS -o$BIN_DIR/gec$EXE gec.c
 	$RM gec$OBJ
 	$CC $CFLAGS -o$BIN_DIR/gexace$EXE gexace.c
@@ -78,7 +78,7 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	$RM gepp$OBJ
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	CC=bcc32
-	CFLAGS='-5 -w-aus -w-par -w-rvl -O2 -O-v'
+	CFLAGS='-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2'
 	$CC $CFLAGS -ogec$EXE gec.c
 	$CP gec$EXE $BIN_DIR
 	$RM gec$EXE gec.tds
@@ -97,6 +97,8 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	$CC $CFLAGS -ogepp$EXE gepp.c
 	$CP gepp$EXE $BIN_DIR
 	$RM gepp$EXE gepp.tds
+	GOBO_CC=bcc
+	export GOBO_CC
 elif [ "$CC" = "lcc" ]; then
 	CFLAGS='-O'
 	LNK='lcclnk'
@@ -119,6 +121,8 @@ elif [ "$CC" = "lcc" ]; then
 	$CC $CFLAGS gepp.c
 	$LNK $LNKFLAGS -o $BIN_DIR/gepp$EXE gepp$OBJ
 	$RM gepp$OBJ
+	GOBO_CC=lcc
+	export GOBO_CC
 elif [ "$CC" = "gcc" ]; then
 #	CFLAGS='-O2'
 	CFLAGS=''
@@ -128,6 +132,16 @@ elif [ "$CC" = "gcc" ]; then
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
 	$CC $CFLAGS -o $BIN_DIR/geyacc$EXE geyacc.c
 	$CC $CFLAGS -o $BIN_DIR/gepp$EXE gepp.c
+elif [ "$CC" = "tcc" ]; then
+	CFLAGS='-O2'
+	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
+	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
+	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
+	$CC $CFLAGS -o $BIN_DIR/geyacc$EXE geyacc.c
+	$CC $CFLAGS -o $BIN_DIR/gepp$EXE gepp.c
+	GOBO_CC=tcc
+	export GOBO_CC
 elif [ "$CC" = "no_c" ]; then
 	echo "No C compilation"
 else

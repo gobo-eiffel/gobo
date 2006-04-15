@@ -61,13 +61,14 @@ if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .lcc. goto lcc
 if .%CC%. == .gcc. goto gcc
+if .%CC%. == .tcc. goto tcc
 if .%CC%. == .no_c. goto install
 echo Unknown C compiler: %CC%
 goto exit
 
 :msc
 	set CC=cl
-	set CFLAGS=-O2 -nologo -w
+	set CFLAGS=-O2 -nologo -wd4049
 	%CC% %CFLAGS% -o%BIN_DIR%\gec%EXE% gec.c
 	%RM% gec%OBJ%
 	%CC% %CFLAGS% -o%BIN_DIR%\gexace%EXE% gexace.c
@@ -84,7 +85,7 @@ goto exit
 
 :bcc32
 	set CC=bcc32
-	set CFLAGS=-5 -w-aus -w-par -w-rvl -O2 -O-v
+	set CFLAGS=-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2
 	%CC% %CFLAGS% -ogec%EXE% gec.c
 	%CP% gec%EXE% %BIN_DIR%
 	%RM% gec%EXE% gec.tds
@@ -103,9 +104,11 @@ goto exit
 	%CC% %CFLAGS% -ogepp%EXE% gepp.c
 	%CP% gepp%EXE% %BIN_DIR%
 	%RM% gepp%EXE% gepp.tds
+	set GOBO_CC=bcc
 	goto install
 
 :lcc
+	set CC=lcc
 	set CFLAGS=-O
 	set LNK=lcclnk
 	set LNKFLAGS=-s
@@ -127,9 +130,11 @@ goto exit
 	%CC% %CFLAGS% gepp.c
 	%LNK% %LNKFLAGS% -o %BIN_DIR%\gepp%EXE% gepp%OBJ%
 	%RM% gepp%OBJ%
+	set GOBO_CC=lcc
 	goto install
 
 :gcc
+	set CC=gcc
 	set CFLAGS=-O2
 	set OBJ=.o
 	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
@@ -138,6 +143,19 @@ goto exit
 	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
 	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
 	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
+	goto install
+
+:tcc
+	set CC=tcc
+	set CFLAGS=-O2
+	set OBJ=.o
+	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
+	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
+	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
+	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
+	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
+	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
+	set GOBO_CC=tcc
 	goto install
 
 :install
@@ -183,7 +201,7 @@ goto exit
 
 :usage
 	echo "usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  msc | bcc | lcc | gcc | no_c"
+	echo "   c_compiler:  msc | bcc | lcc | gcc | tcc | no_c"
 	echo "   eiffel_compiler:  ge | ise | se | ve"
 	goto exit
 
