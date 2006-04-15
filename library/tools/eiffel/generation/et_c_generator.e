@@ -151,6 +151,7 @@ feature {NONE} -- Initialization
 			create polymorphic_type_ids.make (100)
 			create polymorphic_types.make_map (100)
 			create manifest_array_types.make (100)
+			create manifest_tuple_types.make (100)
 			create once_features.make (10000)
 			create constant_features.make_map (10000)
 			create called_features.make (1000)
@@ -244,6 +245,13 @@ feature -- Generation
 					manifest_array_types.forth
 				end
 				manifest_array_types.wipe_out
+					-- Print features which build manifest tuples.
+				from manifest_tuple_types.start until manifest_tuple_types.after loop
+					print_gemt_function (manifest_tuple_types.item_for_iteration)
+					a_file.put_new_line
+					manifest_tuple_types.forth
+				end
+				manifest_tuple_types.wipe_out
 					-- Print call-on-void-target function.
 				print_gevoid_function
 				a_file.put_new_line
@@ -417,7 +425,7 @@ feature {NONE} -- Feature generation
 					if l_type = Void then
 							-- Internal feature: a constant attribute has a type.
 						set_fatal_error
-						error_handler.report_gibdc_error
+						error_handler.report_giaaa_error
 					else
 						l_result_type := current_system.dynamic_type (l_type, l_any)
 						header_file.put_string (c_extern)
@@ -445,7 +453,7 @@ feature {NONE} -- Feature generation
 		do
 				-- Internal error: deferred features cannot be executed at run-time.
 			set_fatal_error
-			error_handler.report_gibdm_error
+			error_handler.report_giaaa_error
 		end
 
 	print_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE) is
@@ -455,7 +463,7 @@ feature {NONE} -- Feature generation
 		do
 				-- Internal error: deferred features cannot be executed at run-time.
 			set_fatal_error
-			error_handler.report_gibdn_error
+			error_handler.report_giaaa_error
 		end
 
 	print_do_function (a_feature: ET_DO_FUNCTION) is
@@ -482,7 +490,7 @@ feature {NONE} -- Feature generation
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_giadl_error
+				error_handler.report_giaaa_error
 			else
 				if current_feature.is_regular then
 					print_external_routine (a_feature, False, False)
@@ -501,7 +509,7 @@ feature {NONE} -- Feature generation
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_giadu_error
+				error_handler.report_giaaa_error
 			else
 				if current_feature.is_regular then
 					print_external_routine (a_feature, False, False)
@@ -625,7 +633,7 @@ feature {NONE} -- Feature generation
 						-- Internal error: it has already been checked somewhere else
 						-- that there was the same number of actual and formal arguments.
 					set_fatal_error
-					error_handler.report_gibdz_error
+					error_handler.report_giaaa_error
 				else
 					from i := 1 until i > nb_args loop
 						if l_comma then
@@ -1412,7 +1420,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_gibhk_error
+						error_handler.report_giaaa_error
 					end
 				when builtin_special_class then
 					inspect l_builtin_code \\ builtin_capacity
@@ -1440,7 +1448,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_gibgj_error
+						error_handler.report_giaaa_error
 					end
 				when builtin_boolean_class then
 					inspect l_builtin_code \\ builtin_capacity
@@ -1478,7 +1486,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_gibgn_error
+						error_handler.report_giaaa_error
 					end
 				when builtin_pointer_class then
 					inspect l_builtin_code \\ builtin_capacity
@@ -1512,7 +1520,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_gible_error
+						error_handler.report_giaaa_error
 					end
 				when builtin_arguments_class then
 					inspect l_builtin_code \\ builtin_capacity
@@ -1528,7 +1536,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_giblj_error
+						error_handler.report_giaaa_error
 					end
 				when builtin_platform_class then
 					inspect l_builtin_code \\ builtin_capacity
@@ -1590,7 +1598,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_gibls_error
+						error_handler.report_giaaa_error
 					end
 				else
 					inspect l_builtin_class
@@ -1622,7 +1630,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_gibgb_error
+						error_handler.report_giaaa_error
 					end
 					if l_integer_type /= Void then
 						inspect l_builtin_code \\ builtin_capacity
@@ -1810,7 +1818,7 @@ feature {NONE} -- Feature generation
 								-- Internal error: unknown built-in feature.
 								-- This error should already have been reported during parsing.
 							set_fatal_error
-							error_handler.report_gibib_error
+							error_handler.report_giaaa_error
 						end
 					elseif l_character_type /= Void then
 						inspect l_builtin_code \\ builtin_capacity
@@ -1830,7 +1838,7 @@ feature {NONE} -- Feature generation
 								-- Internal error: unknown built-in feature.
 								-- This error should already have been reported during parsing.
 							set_fatal_error
-							error_handler.report_gibfr_error
+							error_handler.report_giaaa_error
 						end
 					elseif l_real_type /= Void then
 						inspect l_builtin_code \\ builtin_capacity
@@ -1942,7 +1950,7 @@ feature {NONE} -- Feature generation
 								-- Internal error: unknown built-in feature.
 								-- This error should already have been reported during parsing.
 							set_fatal_error
-							error_handler.report_giblt_error
+							error_handler.report_giaaa_error
 						end
 					end
 				end
@@ -1961,7 +1969,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_gibgi_error
+						error_handler.report_giaaa_error
 					end
 				when builtin_special_class then
 					inspect l_builtin_code \\ builtin_capacity
@@ -1977,7 +1985,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_gibga_error
+						error_handler.report_giaaa_error
 					end
 				when builtin_boolean_class then
 					inspect l_builtin_code \\ builtin_capacity
@@ -1991,7 +1999,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_gibax_error
+						error_handler.report_giaaa_error
 					end
 				when builtin_pointer_class then
 					inspect l_builtin_code \\ builtin_capacity
@@ -2005,7 +2013,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_giblf_error
+						error_handler.report_giaaa_error
 					end
 				else
 					inspect l_builtin_class
@@ -2037,7 +2045,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
 						set_fatal_error
-						error_handler.report_gibkr_error
+						error_handler.report_giaaa_error
 					end
 					if l_integer_type /= Void then
 						inspect l_builtin_code \\ builtin_capacity
@@ -2051,7 +2059,7 @@ feature {NONE} -- Feature generation
 								-- Internal error: unknown built-in feature.
 								-- This error should already have been reported during parsing.
 							set_fatal_error
-							error_handler.report_gibib_error
+							error_handler.report_giaaa_error
 						end
 					elseif l_character_type /= Void then
 						inspect l_builtin_code \\ builtin_capacity
@@ -2065,7 +2073,7 @@ feature {NONE} -- Feature generation
 								-- Internal error: unknown built-in feature.
 								-- This error should already have been reported during parsing.
 							set_fatal_error
-							error_handler.report_giaaj_error
+							error_handler.report_giaaa_error
 						end
 					elseif l_real_type /= Void then
 						inspect l_builtin_code \\ builtin_capacity
@@ -2079,7 +2087,7 @@ feature {NONE} -- Feature generation
 								-- Internal error: unknown built-in feature.
 								-- This error should already have been reported during parsing.
 							set_fatal_error
-							error_handler.report_giblv_error
+							error_handler.report_giaaa_error
 						end
 					end
 				end
@@ -2190,7 +2198,7 @@ feature {NONE} -- Feature generation
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_gibcg_error
+				error_handler.report_giaaa_error
 			else
 				if current_feature.is_regular then
 					print_internal_routine (a_feature, False, False)
@@ -2209,7 +2217,7 @@ feature {NONE} -- Feature generation
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_gibci_error
+				error_handler.report_giaaa_error
 			else
 				if current_feature.is_regular then
 					print_internal_routine (a_feature, False, False)
@@ -2362,7 +2370,7 @@ feature {NONE} -- Feature generation
 						-- Internal error: it has already been checked somewhere else
 						-- that there was the same number of actual and formal arguments.
 					set_fatal_error
-					error_handler.report_gibdy_error
+					error_handler.report_giaaa_error
 				else
 					from i := 1 until i > nb_args loop
 						if l_comma then
@@ -2416,7 +2424,7 @@ feature {NONE} -- Feature generation
 							-- Internal error: the dynamic type of local variable
 							-- should be known at this stage.
 						set_fatal_error
-						error_handler.report_gibdx_error
+						error_handler.report_giaaa_error
 					else
 						print_indentation
 						print_type_declaration (l_local_type_set.static_type, current_file)
@@ -2598,7 +2606,7 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 					-- Internal error: the dynamic type sets of the source
 					-- and the target should be known at this stage.
 				set_fatal_error
-				error_handler.report_gibcj_error
+				error_handler.report_giaaa_error
 			else
 				nb := l_source_type_set.count
 				l_accepted_types := accepted_types
@@ -2914,7 +2922,7 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 						-- Internal error: the dynamic type sets of the
 						-- target should be known at this stage.
 					set_fatal_error
-					error_handler.report_gibck_error
+					error_handler.report_giaaa_error
 				else
 					l_dynamic_type := l_dynamic_type_set.static_type
 				end
@@ -2934,7 +2942,7 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 						-- It has been computed in ET_FEATURE_CHECKER or else an
 						-- error should have already been reported.
 					set_fatal_error
-					error_handler.report_gibcr_error
+					error_handler.report_giaaa_error
 				else
 					if l_actuals /= Void then
 						nb := l_actuals.count
@@ -3098,7 +3106,7 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 			if l_value_type_set = Void then
 					-- Internal error.
 				set_fatal_error
-				error_handler.report_giblu_error
+				error_handler.report_giaaa_error
 			else
 				l_value_type := l_value_type_set.static_type
 				print_operand (l_expression)
@@ -3336,7 +3344,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 					-- have been resolved when flattening the features of the
 					-- implementation class of current feature.
 				set_fatal_error
-				error_handler.report_gibcv_error
+				error_handler.report_giaaa_error
 			else
 				if l_parent_type.is_generic then
 					l_current_class := current_type.base_class
@@ -3354,7 +3362,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 									-- Internal error: `l_parent_type' is an ancestor
 									-- of `l_class_impl', and hence of `l_current_class'.
 								set_fatal_error
-								error_handler.report_gibcx_error
+								error_handler.report_giaaa_error
 							else
 								l_parent_type := l_ancestor
 							end
@@ -3370,7 +3378,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 							-- already have been resolved when flattening the
 							-- features of `l_class_impl'.
 						set_fatal_error
-						error_handler.report_gibcw_error
+						error_handler.report_giaaa_error
 					else
 						l_parent_dynamic_type := current_system.dynamic_type (l_parent_type, current_type.base_type)
 						l_dynamic_precursor := current_feature.dynamic_precursor (l_procedure, l_parent_dynamic_type, current_system)
@@ -3432,7 +3440,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 					-- Internal error: there should be a procedure with `l_seed'.
 					-- It has been computed in ET_FEATURE_CHECKER.
 				set_fatal_error
-				error_handler.report_giaec_error
+				error_handler.report_giaaa_error
 			else
 				print_indentation
 				if l_dynamic_feature.is_builtin then
@@ -3572,7 +3580,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 					-- Internal error: the dynamic type set of the target
 					-- should be known at this stage.
 				set_fatal_error
-				error_handler.report_gibjb_error
+				error_handler.report_giaaa_error
 			else
 				if l_target_type_set.is_expanded then
 					print_target_operand (l_target)
@@ -3749,7 +3757,7 @@ print ("ET_C_GENERATOR.print_retry_instruction%N")
 						-- It has been computed in ET_FEATURE_CHECKER or else an
 						-- error should have already been reported.
 					set_fatal_error
-					error_handler.report_gibcu_error
+					error_handler.report_giaaa_error
 				else
 					if not l_dynamic_procedure.is_generated then
 						l_dynamic_procedure.set_generated (True)
@@ -3893,6 +3901,23 @@ feature {NONE} -- Expression generation
 			print_attribute_special_item_name (a_type, current_file)
 		end
 
+	print_attribute_tuple_item_access (a_target: ET_EXPRESSION; i: INTEGER; a_type: ET_DYNAMIC_TYPE) is
+			-- Print access to `i'-th 'item' pseudo attribute of class TUPLE
+			-- applied to `a_target' of type `a_type'.
+		require
+			a_target_not_void: a_target /= Void
+			a_type_not_void: a_type /= Void
+		do
+			current_file.put_character ('(')
+			print_type_cast (a_type, current_file)
+			current_file.put_character ('(')
+			print_expression (a_target)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_string (c_arrow)
+			print_attribute_tuple_item_name (i, a_type, current_file)
+		end
+
 	print_bit_constant (a_constant: ET_BIT_CONSTANT) is
 			-- Print `a_constant'.
 		require
@@ -3974,7 +3999,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 					-- Internal error: the dynamic type set of expressions
 					-- should be known at this stage.
 				set_fatal_error
-				error_handler.report_gibhy_error
+				error_handler.report_giaaa_error
 			else
 				l_target_type := l_target_type_set.static_type
 				if l_convert_feature.is_convert_from then
@@ -3985,7 +4010,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 							-- It has been computed in ET_FEATURE_FLATTENER or else an
 							-- error should have already been reported.
 						set_fatal_error
-						error_handler.report_gibhx_error
+						error_handler.report_giaaa_error
 					else
 						print_creation_expression (l_target_type, l_dynamic_procedure, an_expression.expression)
 					end
@@ -3996,7 +4021,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 							-- Internal error: the dynamic type set of expressions
 							-- should be known at this stage.
 						set_fatal_error
-						error_handler.report_gibgl_error
+						error_handler.report_giaaa_error
 					else
 						l_source_type := l_source_type_set.static_type
 						if l_source_type.conforms_to_type (l_target_type, current_system) then
@@ -4022,7 +4047,7 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 										-- It has been computed in ET_FEATURE_FLATTENER or else an
 										-- error should have already been reported.
 									set_fatal_error
-									error_handler.report_gibjx_error
+									error_handler.report_giaaa_error
 								else
 									print_creation_expression (l_target_type, l_dynamic_procedure, an_expression.expression)
 								end
@@ -4077,7 +4102,7 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 						-- It has been computed in ET_FEATURE_CHECKER or else an
 						-- error should have already been reported.
 					set_fatal_error
-					error_handler.report_gibct_error
+					error_handler.report_giaaa_error
 				else
 					print_creation_expression (l_dynamic_type, l_dynamic_procedure, l_actuals)
 				end
@@ -4176,7 +4201,7 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 					-- Internal error: the dynamic type set of `an_expression'
 					-- should be known at this stage.
 				set_fatal_error
-				error_handler.report_gibdg_error
+				error_handler.report_giaaa_error
 			else
 				l_dynamic_type := l_dynamic_type_set.static_type
 				l_pointer := (l_dynamic_type = current_system.pointer_type)
@@ -4265,12 +4290,12 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 					-- Internal error: the dynamic type set of `an_expression.left'
 					-- should be known at this stage.
 				set_fatal_error
-				error_handler.report_gibil_error
+				error_handler.report_giaaa_error
 			elseif l_right_type_set = Void then
 					-- Internal error: the dynamic type set of `an_expression.right'
 					-- should be known at this stage.
 				set_fatal_error
-				error_handler.report_gibim_error
+				error_handler.report_giaaa_error
 			elseif l_left_type_set.static_type.is_expanded /= l_right_type_set.static_type.is_expanded then
 				if an_expression.operator.is_not_equal then
 					current_file.put_string (c_eif_true)
@@ -4380,7 +4405,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					-- Internal error: the dynamic type set of `an_expression'
 					-- should be known at this stage.
 				set_fatal_error
-				error_handler.report_gibch_error
+				error_handler.report_giaaa_error
 			else
 				l_dynamic_type := l_dynamic_type_set.static_type
 				l_pointer := (l_dynamic_type = current_system.pointer_type)
@@ -4423,7 +4448,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 								-- Internal error: it should have been checked elsewhere that
 								-- the current feature is a function.
 							set_fatal_error
-							error_handler.report_giblk_error
+							error_handler.report_giaaa_error
 						elseif l_value_type_set.is_expanded then
 							print_type_cast (current_system.pointer_type, current_file)
 							current_file.put_character ('&')
@@ -4464,7 +4489,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 								-- Internal error: it should have been checked elsewhere that
 								-- the current feature is a function.
 							set_fatal_error
-							error_handler.report_gibll_error
+							error_handler.report_giaaa_error
 						elseif l_value_type_set.is_expanded then
 							print_type_cast (current_system.pointer_type, current_file)
 							current_file.put_character ('&')
@@ -4507,7 +4532,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 								if l_value_type_set = Void then
 										-- Internal error: we know that `l_query' is an attribute.
 									set_fatal_error
-									error_handler.report_giblm_error
+									error_handler.report_giaaa_error
 								elseif l_value_type_set.is_expanded then
 									print_type_cast (current_system.pointer_type, current_file)
 									current_file.put_character ('&')
@@ -4557,7 +4582,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 									-- Internal error: It has been checked in ET_FEATURE_CHECKER that
 									-- we should have either $argument, $local or $feature_name.
 								set_fatal_error
-								error_handler.report_gibln_error
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -4587,7 +4612,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 							-- Internal error: the dynamic type set of
 							-- formal arguments should be known at this stage.
 						set_fatal_error
-						error_handler.report_gibkp_error
+						error_handler.report_giaaa_error
 					elseif l_dynamic_type_set.static_type.is_expanded then
 						current_file.put_character ('&')
 					end
@@ -4707,7 +4732,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 							-- Internal error: the dynamic type set of
 							-- local variables should be known at this stage.
 						set_fatal_error
-						error_handler.report_gibkn_error
+						error_handler.report_giaaa_error
 					elseif l_dynamic_type_set.static_type.is_expanded then
 						current_file.put_character ('&')
 					end
@@ -4735,38 +4760,32 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
-			nb := an_expression.count
-			from i := 1 until i > nb loop
-				print_operand (an_expression.expression (i))
-				i := i + 1
-			end
-			fill_call_operands (nb)
 			l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
 			if l_dynamic_type_set = Void then
 					-- Internal error: the dynamic type set of `an_expression'
 					-- should be known at this stage.
 				set_fatal_error
-				error_handler.report_gibjc_error
+				error_handler.report_giaaa_error
 			else
 				l_dynamic_type := l_dynamic_type_set.static_type
 				l_queries := l_dynamic_type.queries
 				if l_queries.is_empty then
 						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 					set_fatal_error
-					error_handler.report_giabr_error
+					error_handler.report_giaaa_error
 				else
 					l_area_type_set := l_queries.item (1).result_type_set
 					if l_area_type_set = Void then
 							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 						set_fatal_error
-						error_handler.report_giady_error
+						error_handler.report_giaaa_error
 					else
 						l_special_type ?= l_area_type_set.static_type
 						if l_special_type = Void then
 								-- Internal error: it has already been checked in ET_SYSTEM.compile_kernel
 								-- that the attribute `area' is of SPECIAL type.
 							set_fatal_error
-							error_handler.report_gibbx_error
+							error_handler.report_giaaa_error
 						else
 							l_item_type := l_special_type.item_type_set.static_type
 						end
@@ -4774,6 +4793,12 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				end
 			end
 			if l_item_type /= Void then
+				nb := an_expression.count
+				from i := 1 until i > nb loop
+					print_operand (an_expression.expression (i))
+					i := i + 1
+				end
+				fill_call_operands (nb)
 				if
 					l_item_type = current_system.boolean_type or
 					l_item_type = current_system.character_type or
@@ -4809,7 +4834,6 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					current_file.put_character ('(')
 				end
 				current_file.put_string (c_gema)
 				current_file.put_integer (l_dynamic_type.id)
@@ -4842,12 +4866,11 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				end
 				current_file.put_character (')')
 				if in_operand then
-					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
+				call_operands.wipe_out
 			end
-			call_operands.wipe_out
 		end
 
 	print_manifest_tuple (an_expression: ET_MANIFEST_TUPLE) is
@@ -4858,61 +4881,66 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_temp: ET_IDENTIFIER
 			i, nb: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_assignment_target: ET_WRITABLE
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
-			nb := an_expression.count
-			from i := 1 until i > nb loop
-				print_operand (an_expression.expression (i))
-				i := i + 1
+			l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			if l_dynamic_type_set = Void then
+					-- Internal error: the dynamic type set of `an_expression'
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_tuple_type ?= l_dynamic_type_set.static_type
+				if l_tuple_type = Void then
+						-- Internal error: the dynamic type of `an_expression'
+						-- should be a Tuple_type.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
 			end
-			fill_call_operands (nb)
-			if in_operand then
-				if l_assignment_target /= Void then
-					operand_stack.force (l_assignment_target)
-					print_indentation
-					print_writable (l_assignment_target)
-				else
-					l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of `an_expression'
-							-- should be known at this stage.
-						set_fatal_error
-						error_handler.report_gibka_error
+			if l_tuple_type /= Void then
+				nb := an_expression.count
+				from i := 1 until i > nb loop
+					print_operand (an_expression.expression (i))
+					i := i + 1
+				end
+				fill_call_operands (nb)
+				manifest_tuple_types.force_last (l_tuple_type)
+				if in_operand then
+					if l_assignment_target /= Void then
+						operand_stack.force (l_assignment_target)
+						print_indentation
+						print_writable (l_assignment_target)
 					else
-						l_dynamic_type := l_dynamic_type_set.static_type
-						l_temp := new_temp_variable (l_dynamic_type)
+						l_temp := new_temp_variable (l_tuple_type)
 						operand_stack.force (l_temp)
 						print_indentation
 						print_temp_name (l_temp, current_file)
 					end
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
 				end
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				current_file.put_string (c_gemt)
+				current_file.put_integer (l_tuple_type.id)
 				current_file.put_character ('(')
-			end
--- TODO.
-print ("ET_C_GENERATOR.print_manifest_tuple%N")
-			current_file.put_character ('(')
-			from i := 1 until i > nb loop
-				current_file.put_character ('(')
-				print_expression (call_operands.item (i))
+				from i := 1 until i > nb loop
+					if i /= 1 then
+						current_file.put_character (',')
+					end
+					print_expression (call_operands.item (i))
+					i := i + 1
+				end
 				current_file.put_character (')')
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				i := i + 1
+				if in_operand then
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				call_operands.wipe_out
 			end
-			current_file.put_string (c_eif_void)
-			current_file.put_character (')')
-			if in_operand then
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-			call_operands.wipe_out
 		end
 
 	print_manifest_type (an_expression: ET_MANIFEST_TYPE) is
@@ -5011,7 +5039,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					-- have been resolved when flattening the features of the
 					-- implementation class of current feature.
 				set_fatal_error
-				error_handler.report_gibja_error
+				error_handler.report_giaaa_error
 			else
 				if l_parent_type.is_generic then
 					l_current_class := current_type.base_class
@@ -5030,7 +5058,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 									-- Internal error: `l_parent_type' is an ancestor
 									-- of `l_class_impl', and hence of `l_current_class'.
 								set_fatal_error
-								error_handler.report_gibey_error
+								error_handler.report_giaaa_error
 							else
 								l_parent_type := l_ancestor
 							end
@@ -5046,7 +5074,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							-- already have been resolved when flattening the
 							-- features of `l_class_impl'.
 						set_fatal_error
-						error_handler.report_gibbc_error
+						error_handler.report_giaaa_error
 					else
 						if in_operand then
 							if l_assignment_target /= Void then
@@ -5059,7 +5087,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 										-- Internal error: the dynamic type set of `an_expression'
 										-- should be known at this stage.
 									set_fatal_error
-									error_handler.report_gibkb_error
+									error_handler.report_giaaa_error
 								else
 									l_dynamic_type := l_dynamic_type_set.static_type
 									l_temp := new_temp_variable (l_dynamic_type)
@@ -5155,7 +5183,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					-- Internal error: the dynamic type set of the target
 					-- should be known at this stage.
 				set_fatal_error
-				error_handler.report_gibcy_error
+				error_handler.report_giaaa_error
 			else
 				l_target_static_type := l_target_type_set.static_type
 				if
@@ -5170,7 +5198,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							-- have exactly one argument. This is guaranteed
 							-- by the fact that they are infix features.
 						set_fatal_error
-						error_handler.report_gibkj_error
+						error_handler.report_giaaa_error
 					else
 						print_indentation
 						current_file.put_string (c_if)
@@ -5284,7 +5312,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 									-- Internal error: the dynamic type set of `a_call'
 									-- should be known at this stage.
 								set_fatal_error
-								error_handler.report_gibkc_error
+								error_handler.report_giaaa_error
 							else
 								l_dynamic_type := l_dynamic_type_set.static_type
 								l_temp := new_temp_variable (l_dynamic_type)
@@ -5308,7 +5336,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 								-- Internal error: the dynamic type set of `a_call'
 								-- should be known at this stage.
 							set_fatal_error
-							error_handler.report_gibco_error
+							error_handler.report_giaaa_error
 						else
 							l_dynamic_type := l_dynamic_type_set.static_type
 							current_file.put_character ('(')
@@ -5339,7 +5367,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 								-- Internal error: there should be a query with `a_seed'.
 								-- It has been computed in ET_FEATURE_CHECKER.
 							set_fatal_error
-							error_handler.report_gibcp_error
+							error_handler.report_giaaa_error
 						else
 							l_constant_attribute ?= l_query
 							if l_constant_attribute /= Void then
@@ -5430,7 +5458,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					-- Internal error: there should be a query with `l_seed'.
 					-- It has been computed in ET_FEATURE_CHECKER.
 				set_fatal_error
-				error_handler.report_gibdb_error
+				error_handler.report_giaaa_error
 			else
 				l_constant_attribute ?= l_query
 				if l_constant_attribute /= Void then
@@ -5941,7 +5969,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							-- Internal error: the dynamic type set of
 							-- 'Result' should be known at this stage.
 						set_fatal_error
-						error_handler.report_gibkq_error
+						error_handler.report_giaaa_error
 					elseif l_dynamic_type_set.static_type.is_expanded then
 						current_file.put_character ('&')
 					end
@@ -5968,7 +5996,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					-- Internal error: the dynamic type set of `an_expression'
 					-- should be known at this stage.
 				set_fatal_error
-				error_handler.report_gibdj_error
+				error_handler.report_giaaa_error
 			else
 				l_dynamic_type := l_dynamic_type_set.static_type
 				l_pointer := (l_dynamic_type = current_system.pointer_type)
@@ -6009,7 +6037,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							-- Internal error: it should have been checked elsewhere that
 							-- the current feature is a function.
 						set_fatal_error
-						error_handler.report_gibdk_error
+						error_handler.report_giaaa_error
 					elseif l_result_type_set.is_expanded then
 						print_type_cast (current_system.pointer_type, current_file)
 						current_file.put_character ('&')
@@ -6118,7 +6146,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 								-- Internal error: the dynamic type set of `an_expression'
 								-- should be known at this stage.
 							set_fatal_error
-							error_handler.report_gibke_error
+							error_handler.report_giaaa_error
 						else
 							l_dynamic_type := l_dynamic_type_set.static_type
 							l_temp := new_temp_variable (l_dynamic_type)
@@ -6140,18 +6168,18 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 						-- It has been computed in ET_FEATURE_CHECKER or else an
 						-- error should have already been reported.
 					set_fatal_error
-					error_handler.report_gibdd_error
+					error_handler.report_giaaa_error
 				elseif l_query.is_attribute then
 						-- Internal error: no object available.
 					set_fatal_error
-					error_handler.report_gibdl_error
+					error_handler.report_giaaa_error
 				elseif l_query.is_constant_attribute then
 -- TODO: make the difference between expanded and reference "constants".
 					l_constant_attribute ?= l_query
 					if l_constant_attribute = Void then
 							-- Internal error.
 						set_fatal_error
-						error_handler.report_gibde_error
+						error_handler.report_giaaa_error
 					else
 						print_expression (l_constant_attribute.constant)
 					end
@@ -6259,7 +6287,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 							-- Internal error: the type set of temporary
 							-- variables should be known at this stage.
 						set_fatal_error
-						error_handler.report_gibko_error
+						error_handler.report_giaaa_error
 					elseif l_dynamic_type.is_expanded then
 						current_file.put_character ('&')
 					end
@@ -6512,7 +6540,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			if l_query = Void then
 					-- Internal error: there should be a query for that seed.
 				set_fatal_error
-				error_handler.report_gibkm_error
+				error_handler.report_giaaa_error
 			elseif l_query.is_attribute then
 				if in_operand then
 					operand_stack.force (a_call)
@@ -6587,7 +6615,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 								-- Internal error: the dynamic type set of `a_call'
 								-- should be known at this stage.
 							set_fatal_error
-							error_handler.report_gibkd_error
+							error_handler.report_giaaa_error
 						else
 							l_dynamic_type := l_dynamic_type_set.static_type
 							l_temp := new_temp_variable (l_dynamic_type)
@@ -6636,7 +6664,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			if l_query = Void then
 					-- Internal error: there should be a query for that seed.
 				set_fatal_error
-				error_handler.report_gibkl_error
+				error_handler.report_giaaa_error
 			elseif l_query.is_attribute then
 				if in_operand then
 					operand_stack.force (an_identifier)
@@ -6702,7 +6730,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 								-- Internal error: the dynamic type set of `an_identifier'
 								-- should be known at this stage.
 							set_fatal_error
-							error_handler.report_gibkh_error
+							error_handler.report_giaaa_error
 						else
 							l_dynamic_type := l_dynamic_type_set.static_type
 							l_temp := new_temp_variable (l_dynamic_type)
@@ -6789,7 +6817,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 							-- Internal error: there should be a query with `l_seed'.
 							-- It has been computed in ET_FEATURE_CHECKER.
 						set_fatal_error
-						error_handler.report_gibki_error
+						error_handler.report_giaaa_error
 					else
 						print_attribute_access (l_query, tokens.current_keyword, current_type)
 					end
@@ -6952,7 +6980,7 @@ feature {NONE} -- Polymorphic call generation
 										-- Internal error: there should be a query with `a_seed'.
 										-- It has been computed in ET_FEATURE_FLATTENER.
 									set_fatal_error
-									error_handler.report_gibiz_error
+									error_handler.report_giaaa_error
 								else
 										-- Print feature signature.
 									print_call_name_comment (l_static_call, l_type, header_file)
@@ -7153,7 +7181,7 @@ feature {NONE} -- Polymorphic call generation
 										-- Internal error: there should be a procedure with `a_seed'.
 										-- It has been computed in ET_FEATURE_FLATTENER.
 									set_fatal_error
-									error_handler.report_giaed_error
+									error_handler.report_giaaa_error
 								else
 										-- Print feature signature.
 									print_call_name_comment (l_static_call, l_type, header_file)
@@ -7530,7 +7558,7 @@ feature {NONE} -- Built-in feature generation
 				if l_copy_feature = Void then
 						-- Internal error: this error should already have been reported during parsing.
 					set_fatal_error
-					error_handler.report_gibic_error
+					error_handler.report_giaaa_error
 				else
 					if not l_copy_feature.is_generated then
 						l_copy_feature.set_generated (True)
@@ -7773,7 +7801,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibiw_error
+				error_handler.report_giaaa_error
 			elseif
 				a_target_type = current_system.character_type or
 				a_target_type = current_system.boolean_type or
@@ -7934,7 +7962,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibix_error
+				error_handler.report_giaaa_error
 			elseif
 				a_target_type = current_system.character_type or
 				a_target_type = current_system.boolean_type or
@@ -8021,7 +8049,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibiy_error
+				error_handler.report_giaaa_error
 			elseif l_special_type /= Void then
 -- TODO: both objects have to be of the same type.
 				l_temp := new_temp_variable (current_system.integer_type)
@@ -8148,7 +8176,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibiv_error
+				error_handler.report_giaaa_error
 			else
 				print_attribute_special_item_access (call_operands.first, a_target_type)
 				current_file.put_character ('[')
@@ -8168,7 +8196,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 3 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibiu_error
+				error_handler.report_giaaa_error
 			else
 				print_attribute_special_item_access (call_operands.first, a_target_type)
 				current_file.put_character ('[')
@@ -8210,7 +8238,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 					-- Internal error: this was already reported during parsing.
 					-- This built-in can only be in class SPECIAL (and its descendants).
 				set_fatal_error
-				error_handler.report_gibgm_error
+				error_handler.report_giaaa_error
 			else
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -8236,7 +8264,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 					-- Internal error: this was already reported during parsing.
 					-- This built-in can only be in class SPECIAL (and its descendants).
 				set_fatal_error
-				error_handler.report_gibjv_error
+				error_handler.report_giaaa_error
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parse.
 				set_fatal_error
@@ -8417,7 +8445,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibkf_error
+				error_handler.report_giaaa_error
 			elseif a_target_type = a_character_type then
 					-- Set current value.
 				print_expression (call_operands.first)
@@ -8468,7 +8496,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibda_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
@@ -8496,7 +8524,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibir_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
@@ -8524,7 +8552,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibiq_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
@@ -8552,7 +8580,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibip_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.double_type, current_file)
 				current_file.put_character ('(')
@@ -8586,7 +8614,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibio_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
@@ -8614,7 +8642,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibin_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
@@ -8642,7 +8670,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibgk_error
+				error_handler.report_giaaa_error
 			else
 				include_runtime_header_file ("ge_integer.h", header_file)
 				print_type_cast (current_system.double_type, current_file)
@@ -8714,7 +8742,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibcz_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
@@ -8950,7 +8978,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibit_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
@@ -8978,7 +9006,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibjw_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
@@ -9006,7 +9034,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibis_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
@@ -9035,7 +9063,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibji_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
@@ -9064,7 +9092,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibjh_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
@@ -9139,7 +9167,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibjj_error
+				error_handler.report_giaaa_error
 			elseif a_target_type = an_integer_type then
 					-- Set current value.
 				print_expression (call_operands.first)
@@ -9188,7 +9216,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibjk_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
@@ -9215,7 +9243,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibdf_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
@@ -9242,7 +9270,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibjl_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
@@ -9269,7 +9297,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibdh_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
@@ -9296,7 +9324,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibdi_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
@@ -9326,7 +9354,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibjm_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
@@ -9394,7 +9422,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibkg_error
+				error_handler.report_giaaa_error
 			elseif a_target_type = current_system.boolean_type then
 					-- Set current value.
 				print_expression (call_operands.first)
@@ -9443,7 +9471,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_giblh_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.pointer_type, current_file)
 				current_file.put_character ('(')
@@ -9565,7 +9593,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_giblg_error
+				error_handler.report_giaaa_error
 			elseif a_target_type = current_system.pointer_type then
 					-- Set current value.
 				print_expression (call_operands.first)
@@ -9802,7 +9830,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_giblw_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
@@ -9830,7 +9858,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_giblx_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
@@ -9858,7 +9886,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibly_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
@@ -9886,7 +9914,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_giblz_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
@@ -9914,7 +9942,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_gibla_error
+				error_handler.report_giaaa_error
 			else
 				include_runtime_header_file ("ge_real.h", header_file)
 				print_type_cast (current_system.double_type, current_file)
@@ -9986,7 +10014,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_giblo_error
+				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
@@ -10232,7 +10260,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			if call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
 				set_fatal_error
-				error_handler.report_giblc_error
+				error_handler.report_giaaa_error
 			elseif a_target_type = a_real_type then
 					-- Set current value.
 				print_expression (call_operands.first)
@@ -10508,20 +10536,20 @@ feature {NONE} -- C function generation
 					-- features 'area', 'lower' and 'upper' as first features.
 					-- Already reported in ET_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_gibjn_error
+				error_handler.report_giaaa_error
 			else
 				l_area_type_set := l_queries.first.result_type_set
 				if l_area_type_set = Void then
 						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 					set_fatal_error
-					error_handler.report_gibjo_error
+					error_handler.report_giaaa_error
 				else
 					l_special_type ?= l_area_type_set.static_type
 					if l_special_type = Void then
 							-- Internal error: it has already been checked in ET_SYSTEM.compile_kernel
 							-- that the attribute `area' is of SPECIAL type.
 						set_fatal_error
-						error_handler.report_gibjp_error
+						error_handler.report_giaaa_error
 					end
 				end
 			end
@@ -10742,6 +10770,115 @@ feature {NONE} -- C function generation
 				current_file.put_character ('}')
 				current_file.put_new_line
 			end
+		end
+
+	print_gemt_function (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE) is
+			-- Print 'gemt' function to `current_file' and its signature to `header_file'.
+			-- 'gemt<type-id>' is used to create manifest tuples of type 'type-id'.
+		require
+			a_tuple_type_not_void: a_tuple_type /= Void
+		local
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			l_item_type_sets := a_tuple_type.item_type_sets
+				-- Print signature to `header_file' and `current_file'.
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			print_type_declaration (a_tuple_type, header_file)
+			print_type_declaration (a_tuple_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			header_file.put_string (c_gemt)
+			current_file.put_string (c_gemt)
+			header_file.put_integer (a_tuple_type.id)
+			current_file.put_integer (a_tuple_type.id)
+			header_file.put_character ('(')
+			nb := l_item_type_sets.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					header_file.put_character (',')
+					header_file.put_character (' ')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+				l_item_type := l_item_type_sets.item (i).static_type
+				print_type_declaration (l_item_type, header_file)
+				print_type_declaration (l_item_type, current_file)
+				header_file.put_character (' ')
+				header_file.put_character ('a')
+				header_file.put_integer (i)
+				current_file.put_character (' ')
+				current_file.put_character ('a')
+				current_file.put_integer (i)
+				i := i + 1
+			end
+			header_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_character (')')
+			current_file.put_new_line
+				-- Print body to `current_file'.
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			print_type_declaration (a_tuple_type, current_file)
+			current_file.put_character (' ')
+			print_result_name (current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+				-- Create tuple object.
+			print_indentation
+			print_result_name (current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_type_declaration (a_tuple_type, current_file)
+			current_file.put_character (')')
+			current_file.put_string (c_gealloc)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			print_type_name (a_tuple_type, current_file)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+				-- Set type id of tuple.
+			print_indentation
+			print_attribute_type_id_access (tokens.result_keyword, a_tuple_type)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_integer (a_tuple_type.id)
+			current_file.put_character (';')
+			current_file.put_new_line
+				-- Set fields.
+			from i := 1 until i > nb loop
+				print_indentation
+				print_attribute_tuple_item_access (tokens.result_keyword, i, a_tuple_type)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('a')
+				current_file.put_integer (i)
+				current_file.put_character (';')
+				current_file.put_new_line
+				i := i + 1
+			end
+				-- Return the tuple.
+			print_indentation
+			current_file.put_string (c_return)
+			current_file.put_character (' ')
+			print_result_name (current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
 		end
 
 	print_gevoid_function is
@@ -11116,11 +11253,12 @@ feature {NONE} -- Type generation
 								l_item_type_sets := l_tuple_type.item_type_sets
 								nb2 := l_item_type_sets.count
 								from j := 1 until j > nb2 loop
-									a_file.put_character (' ')
+									a_file.put_character ('%T')
 									print_type_declaration (l_item_type_sets.item (j).static_type, a_file)
 									a_file.put_character (' ')
 									print_attribute_tuple_item_name (j, l_tuple_type, a_file)
 									a_file.put_character (';')
+									a_file.put_new_line
 									j := j + 1
 								end
 							else
@@ -12437,6 +12575,9 @@ feature {NONE} -- Access
 	manifest_array_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
 			-- Types of manifest arrays
 
+	manifest_tuple_types: DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE]
+			-- Types of manifest tuples
+
 	once_features: DS_HASH_SET [ET_FEATURE]
 			-- Once features already generated
 
@@ -12585,7 +12726,7 @@ feature {NONE} -- Implementation
 			if nb > operand_stack.count then
 					-- Internal error.
 				set_fatal_error
-				error_handler.report_gibkk_error
+				error_handler.report_giaaa_error
 					-- Put some dummy operands to preserve the postcondition.
 				from i := 1 until i > nb loop
 					call_operands.put_last (tokens.current_keyword)
@@ -12707,6 +12848,7 @@ feature {NONE} -- Constants
 	c_geint64: STRING is "geint64"
 	c_gema: STRING is "gema"
 	c_gems: STRING is "gems"
+	c_gemt: STRING is "gemt"
 	c_genat8: STRING is "genat8"
 	c_genat16: STRING is "genat16"
 	c_genat32: STRING is "genat32"
@@ -12759,6 +12901,8 @@ invariant
 	no_void_polymorphic_type: not polymorphic_types.has_item (Void)
 	manifest_array_types_not_void: manifest_array_types /= Void
 	no_void_manifest_array_type: not manifest_array_types.has (Void)
+	manifest_tuple_types_not_void: manifest_tuple_types /= Void
+	no_void_manifest_tuple_type: not manifest_tuple_types.has (Void)
 	called_features_not_void: called_features /= Void
 	no_void_called_feature: not called_features.has (Void)
 	once_features_not_void: once_features /= Void
