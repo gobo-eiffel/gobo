@@ -149,7 +149,6 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		local
-			a_target: GEANT_TARGET
 			a_filename: STRING
 			a_fork: BOOLEAN
 		do

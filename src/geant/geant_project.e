@@ -193,8 +193,6 @@ feature -- Status report
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
-		local
-			s: STRING
 		do
 			Result := variables.is_builtin_variable_name (a_name)
 				-- Check also buildscript specific built-in variables (see `GEANT_PROJECT_ELEMENT.make'):
