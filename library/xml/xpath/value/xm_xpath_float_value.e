@@ -98,7 +98,7 @@ feature -- Access
 			if is_nan then
 				Result := "NaN"
 			elseif is_infinite then
-				if value = minus_infinity then
+				if value = DOUBLE_.minus_infinity then
 					Result := "-INF"
 				else
 					Result := "INF"
@@ -190,7 +190,7 @@ feature -- Status report
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
-			Result := value = plus_infinity or else value = minus_infinity
+			Result := value = DOUBLE_.plus_infinity or else value = DOUBLE_.minus_infinity
 		end
 
 feature -- Conversion
@@ -350,9 +350,9 @@ feature -- Element change
 			STRING_.left_adjust (a_value)
 			STRING_.right_adjust (a_value)
 			if STRING_.same_string ("INF", a_value) then
-				value := plus_infinity
+				value := DOUBLE_.plus_infinity
 			elseif STRING_.same_string ("-INF", a_value) then
-				value := minus_infinity
+				value := DOUBLE_.minus_infinity
 			elseif STRING_.same_string ("NaN", a_value) then
 				internal_is_nan := True
 				value := 0.0
@@ -367,41 +367,5 @@ feature {NONE} -- Implementation
 
 	internal_is_nan: BOOLEAN
 			-- Fabricated NaN
-
-	Large_number: DOUBLE is 2.0e300 -- 2.0e35
-	Large_negative_number: DOUBLE is -2.0e300 -- -2.0e35
-
-	plus_infinity: DOUBLE is
-			-- Overflow on purpose.
-		local
-			d1: DOUBLE
-		once
-				-- Bug in SE 1.2r7: make sure that this once-function is
-				-- not precomputed otherwise MSVC 7.1 complains about a
-				-- division by zero at compilation time.
-			-- Result := Large_number * Large_number
-			d1 := Large_number
-			Result := d1 * d1
-		ensure
-			positive: Result > 0
-			infinity_reached: Result / Large_number = Result
-		end
-
-	minus_infinity: DOUBLE is
-			-- Overflow on purpose.
-		local
-			d1, d2: DOUBLE
-		once
-				-- Bug in SE 1.2r7: make sure that this once-function is
-				-- not precomputed otherwise MSVC 7.1 complains about a
-				-- division by zero at compilation time.
-			-- Result := Large_number * Large_negative_number
-			d1 := Large_number
-			d2 := Large_negative_number
-			Result := d1 * d2
-		ensure
-			negative: Result < 0
-			infinity_reached: Result / Large_number = Result
-		end
 
 end

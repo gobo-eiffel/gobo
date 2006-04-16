@@ -5,7 +5,7 @@ indexing
 		"Routines that ought to be in class DOUBLE"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -173,6 +173,85 @@ feature -- Conversion
 			end
 		ensure
 			definition: Result = d.floor
+		end
+
+feature -- Constants
+
+	plus_infinity: DOUBLE is
+			-- Positive infinity
+#ifdef ISE
+		local
+			p: MANAGED_POINTER
+		once
+				-- Binary representation of IEEE 754 '+infinity'.
+				-- See: http://en.wikipedia.org/wiki/IEEE_754
+			create p.make (8)
+			p.put_natural_8 (0, 0)
+			p.put_natural_8 (0, 1)
+			p.put_natural_8 (0, 2)
+			p.put_natural_8 (0, 3)
+			p.put_natural_8 (0, 4)
+			p.put_natural_8 (0, 5)
+			p.put_natural_8 (240, 6)
+			p.put_natural_8 (127, 7)
+			Result := p.read_real_64 (0)
+#else
+		local
+			d1: DOUBLE
+			large_number: DOUBLE
+		once
+				-- Overflow on purpose. Note that Borland bcc 5.5.1 raises
+				-- an exception when there is an overflow.
+			large_number := 2.0e300
+				-- Bug in SE 1.2r7: make sure that this once-function is
+				-- not precomputed otherwise MSVC 7.1 complains about a
+				-- division by zero at compilation time.
+			-- Result := large_number * large_number
+			d1 := large_number
+			Result := d1 * d1
+#endif
+		ensure
+			positive: Result > 0
+		end
+
+	minus_infinity: DOUBLE is
+			-- Negative infinity
+#ifdef ISE
+		local
+			p: MANAGED_POINTER
+		once
+				-- Binary representation of IEEE 754 '-infinity'.
+				-- See: http://en.wikipedia.org/wiki/IEEE_754
+			create p.make (8)
+			p.put_natural_8 (0, 0)
+			p.put_natural_8 (0, 1)
+			p.put_natural_8 (0, 2)
+			p.put_natural_8 (0, 3)
+			p.put_natural_8 (0, 4)
+			p.put_natural_8 (0, 5)
+			p.put_natural_8 (240, 6)
+			p.put_natural_8 (255, 7)
+			Result := p.read_real_64 (0)
+#else
+		local
+			d1, d2: DOUBLE
+			large_number: DOUBLE
+			large_negative_number: DOUBLE
+		once
+				-- Overflow on purpose. Note that Borland bcc 5.5.1 raises
+				-- an exception when there is an overflow.
+			large_number := 2.0e300
+			large_negative_number := -2.0e300
+				-- Bug in SE 1.2r7: make sure that this once-function is
+				-- not precomputed otherwise MSVC 7.1 complains about a
+				-- division by zero at compilation time.
+			-- Result := large_number * large_negative_number
+			d1 := large_number
+			d2 := large_negative_number
+			Result := d1 * d2
+#endif
+		ensure
+			negative: Result < 0
 		end
 
 end
