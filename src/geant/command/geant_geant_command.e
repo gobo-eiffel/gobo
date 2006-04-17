@@ -123,7 +123,7 @@ feature -- Setting
 			reuse_variables_set: reuse_variables = a_reuse_variables
 		end
 
-	set_fork(a_fork: BOOLEAN) is
+	set_fork (a_fork: BOOLEAN) is
 			-- Set `fork' to `a_fork'
 		do
 			fork := a_fork
@@ -399,4 +399,5 @@ feature {NONE} -- Implementation
 
 	has_fork_been_set: BOOLEAN
 			-- Has attribute `fork' been set?
+
 end
