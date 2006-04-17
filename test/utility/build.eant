@@ -32,8 +32,7 @@
 			Install the Gobo Eiffel Utility Library testers.
 		</description>
 
-		<set name="target" value="install"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="install,false"/>
 	</target>
 
 	<target name="test" depend="init">
@@ -43,9 +42,7 @@
 			or 'se' if this variable is not defined.
 		</description>
 
-		<set name="target" value="test"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="test,true"/>
 	</target>
 
 	<target name="test_ge" depend="init">
@@ -53,9 +50,7 @@
 			Test the Gobo Eiffel Utility Library with Gobo Eiffel.
 		</description>
 
-		<set name="target" value="test_ge"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="test_ge,true"/>
 	</target>
 
 	<target name="test_ise" depend="init">
@@ -63,9 +58,7 @@
 			Test the Gobo Eiffel Utility Library with ISE Eiffel.
 		</description>
 
-		<set name="target" value="test_ise"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="test_ise,true"/>
 	</target>
 
 	<target name="test_ve" depend="init">
@@ -73,9 +66,7 @@
 			Test the Gobo Eiffel Utility Library with Visual Eiffel.
 		</description>
 
-		<set name="target" value="test_ve"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="test_ve,true"/>
 	</target>
 
 	<target name="test_se" depend="init">
@@ -83,9 +74,7 @@
 			Test the Gobo Eiffel Utility Library with SmartEiffel.
 		</description>
 
-		<set name="target" value="test_se"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="test_se,true"/>
 	</target>
 
 	<target name="test_debug" depend="init">
@@ -95,9 +84,7 @@
 			or 'se' if this variable is not defined.
 		</description>
 
-		<set name="target" value="test_debug"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="test_debug,true"/>
 	</target>
 
 	<target name="test_debug_ge" depend="init">
@@ -105,9 +92,7 @@
 			Test the Gobo Eiffel Utility Library with Gobo Eiffel in debug mode.
 		</description>
 
-		<set name="target" value="test_debug_ge"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="test_debug_ge,true"/>
 	</target>
 
 	<target name="test_debug_ise" depend="init">
@@ -115,9 +100,7 @@
 			Test the Gobo Eiffel Utility Library with ISE Eiffel in debug mode.
 		</description>
 
-		<set name="target" value="test_debug_ise"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="test_debug_ise,true"/>
 	</target>
 
 	<target name="test_debug_ve" depend="init">
@@ -125,9 +108,7 @@
 			Test the Gobo Eiffel Utility Library with Visual Eiffel in debug mode.
 		</description>
 
-		<set name="target" value="test_debug_ve"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="test_debug_ve,true"/>
 	</target>
 
 	<target name="test_debug_se" depend="init">
@@ -135,9 +116,7 @@
 			Test the Gobo Eiffel Utility Library with SmartEiffel in debug mode.
 		</description>
 
-		<set name="target" value="test_debug_se"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="test_debug_se,true"/>
 	</target>
 
 	<target name="clean" depend="init">
@@ -145,8 +124,7 @@
 			Remove intermediary generated files.
 		</description>
 
-		<set name="target" value="clean"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="clean,false"/>
 	</target>
 
 	<target name="clobber" depend="init">
@@ -154,10 +132,8 @@
 			Remove all generated files.
 		</description>
 
-		<set name="target" value="clobber"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="clobber,false"/>
 	</target>
-
 
 <!-- Implementation -->
 
@@ -167,14 +143,23 @@
 
 	<target name="do_all" depend="init">
 		<description>
-			Call 'geant' with the same target ${target}
-			in all subdirectories.
+			Call 'geant' with the same target ${target} (first argument)
+			in all subdirectories. Call 'clean' after each target has
+			been executed if ${do_clean} (second argument) is true.
 		</description>
+		<argument name="target"/>
+		<argument name="do_clean"/>
 
+			<!--
+				The attribute "if" does not seem to interpret arguments.
+				Therefore set the variable "do_clean" with the value
+				of argument "do_clean".
+			-->
+		<set name="do_clean" value="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="uri"/>
-		<geant file="build.eant" target="clean" dir="uri" if="${do_clean}"/>
+		<geant file="build.eant" target="clean" dir="uri" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="transcoder"/>
-		<geant file="build.eant" target="clean" dir="transcoder" if="${do_clean}"/>
+		<geant file="build.eant" target="clean" dir="transcoder" if="${do_clean}=true"/>
 	</target>
 
 </project>

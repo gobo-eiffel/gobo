@@ -32,8 +32,7 @@
 			Install the Gobo Eiffel tools.
 		</description>
 
-		<set name="target" value="install"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="install"/>
 	</target>
 
 	<target name="compile" depend="init">
@@ -43,8 +42,7 @@
 			or 'se' if this variable is not defined.
 		</description>
 
-		<set name="target" value="compile"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="compile"/>
 	</target>
 
 	<target name="compile_ge" depend="init">
@@ -52,8 +50,7 @@
 			Compile Gobo tools with Gobo Eiffel.
 		</description>
 
-		<set name="target" value="compile_ge"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="compile_ge"/>
 	</target>
 
 	<target name="compile_ise" depend="init">
@@ -61,8 +58,7 @@
 			Compile Gobo tools with ISE Eiffel.
 		</description>
 
-		<set name="target" value="compile_ise"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="compile_ise"/>
 	</target>
 
 	<target name="compile_ve" depend="init">
@@ -70,8 +66,7 @@
 			Compile Gobo tools with Visual Eiffel.
 		</description>
 
-		<set name="target" value="compile_ve"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="compile_ve"/>
 	</target>
 
 	<target name="compile_se" depend="init">
@@ -79,8 +74,7 @@
 			Compile Gobo tools with SmartEiffel.
 		</description>
 
-		<set name="target" value="compile_se"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="compile_se"/>
 	</target>
 
 	<target name="compile_debug" depend="init">
@@ -90,8 +84,7 @@
 			or 'se' if this variable is not defined.
 		</description>
 
-		<set name="target" value="compile_debug"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="compile_debug"/>
 	</target>
 
 	<target name="compile_debug_ge" depend="init">
@@ -99,8 +92,7 @@
 			Compile Gobo tools with Gobo Eiffel in debug mode.
 		</description>
 
-		<set name="target" value="compile_debug_ge"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="compile_debug_ge"/>
 	</target>
 
 	<target name="compile_debug_ise" depend="init">
@@ -108,8 +100,7 @@
 			Compile Gobo tools with ISE Eiffel in debug mode.
 		</description>
 
-		<set name="target" value="compile_debug_ise"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="compile_debug_ise"/>
 	</target>
 
 	<target name="compile_debug_ve" depend="init">
@@ -117,8 +108,7 @@
 			Compile Gobo tools with Visual Eiffel in debug mode.
 		</description>
 
-		<set name="target" value="compile_debug_ve"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="compile_debug_ve"/>
 	</target>
 
 	<target name="compile_debug_se" depend="init">
@@ -126,8 +116,7 @@
 			Compile Gobo tools with SmartEiffel in debug mode.
 		</description>
 
-		<set name="target" value="compile_debug_se"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="compile_debug_se"/>
 	</target>
 
 	<target name="clean" depend="init">
@@ -135,8 +124,7 @@
 			Remove intermediary generated files.
 		</description>
 
-		<set name="target" value="clean"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="clean"/>
 	</target>
 
 	<target name="clobber" depend="init">
@@ -144,10 +132,8 @@
 			Remove all generated files.
 		</description>
 
-		<set name="target" value="clobber"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="clobber"/>
 	</target>
-
 
 <!-- Implementation -->
 
@@ -157,9 +143,10 @@
 
 	<target name="do_all" depend="init">
 		<description>
-			Call 'geant' with the same target ${target}
+			Call 'geant' with the same target ${target} (first argument)
 			in all subdirectories.
 		</description>
+		<argument name="target"/>
 
 		<geant file="build.eant" target="${target}" dir="geant"/>
 		<geant file="build.eant" target="${target}" dir="gec"/>

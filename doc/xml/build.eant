@@ -33,8 +33,7 @@
 		<geant target="xslt_and_shift" arguments="catalogs"/>
 		<geant target="xslt_and_shift" arguments="index"/>
 
-		<set name="target" value="install"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="install"/>
 	</target>
 
 	<target name="clean">
@@ -42,8 +41,7 @@
 			Remove intermediary generated files.
 		</description>
 
-		<set name="target" value="clean"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="clean"/>
 	</target>
 
 	<target name="clobber">
@@ -55,8 +53,7 @@
 		<delete file="catalogs.html"/>
 		<delete file="resolvers.html"/>
 		<delete file="using.html"/>
-		<set name="target" value="clobber"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="clobber"/>
 	</target>
 
 <!-- Implementation -->
@@ -95,9 +92,10 @@
 
 	<target name="do_all" depend="init">
 		<description>
-			Call 'geant' with the same target ${target}
+			Call 'geant' with the same target ${target} (first argument)
 			in all subdirectories.
 		</description>
+		<argument name="target"/>
 
 		<geant file="build.eant" target="${target}" dir="xslt"/>
 		<geant file="build.eant" target="${target}" dir="xpath"/>

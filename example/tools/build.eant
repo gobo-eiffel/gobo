@@ -22,8 +22,7 @@
 			Install the Gobo Eiffel Tools Library examples.
 		</description>
 
-		<set name="target" value="install"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="install"/>
 	</target>
 
 	<target name="clean" depend="init">
@@ -31,8 +30,7 @@
 			Remove intermediary generated files.
 		</description>
 
-		<set name="target" value="clean"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="clean"/>
 	</target>
 
 	<target name="clobber" depend="init">
@@ -40,10 +38,8 @@
 			Remove all generated files.
 		</description>
 
-		<set name="target" value="clobber"/>
-		<geant target="do_all"/>
+		<geant target="do_all" arguments="clobber"/>
 	</target>
-
 
 <!-- Implementation -->
 
@@ -53,9 +49,10 @@
 
 	<target name="do_all" depend="init">
 		<description>
-			Call 'geant' with the same target ${target}
+			Call 'geant' with the same target ${target} (first argument)
 			in all subdirectories.
 		</description>
+		<argument name="target"/>
 
 		<geant file="build.eant" target="${target}" dir="bang2create"/>
 	</target>
