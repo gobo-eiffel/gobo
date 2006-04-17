@@ -32,7 +32,6 @@
 		<delete file="out4"/>
 		<delete file="out5"/>
 		<delete file="out6"/>
-		<delete file="xcompile.log"/>
 	</target>
 
 	<target name="init_system">
