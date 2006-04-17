@@ -91,8 +91,8 @@
 		</description>
 		<argument name="target"/>
 
-		<geant file="build.eant" target="${target}" dir="formatter"/>
-		<geant file="build.eant" target="${target}" dir="unicode"/>
+		<geant file="build.eant" target="${target}" fork="false" dir="formatter"/>
+		<geant file="build.eant" target="${target}" fork="false" dir="unicode"/>
 	</target>
 
 </project>

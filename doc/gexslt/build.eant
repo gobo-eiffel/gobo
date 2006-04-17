@@ -102,7 +102,7 @@
 		</description>
 		<argument name="target"/>
 
-		<geant file="build.eant" target="${target}" dir="extension"/>
+		<geant file="build.eant" target="${target}" fork="false" dir="extension"/>
 	</target>
 
 </project>

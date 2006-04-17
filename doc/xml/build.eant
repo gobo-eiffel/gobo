@@ -97,8 +97,8 @@
 		</description>
 		<argument name="target"/>
 
-		<geant file="build.eant" target="${target}" dir="xslt"/>
-		<geant file="build.eant" target="${target}" dir="xpath"/>
+		<geant file="build.eant" target="${target}" fork="false" dir="xslt"/>
+		<geant file="build.eant" target="${target}" fork="false" dir="xpath"/>
 	</target>
 
 </project>
