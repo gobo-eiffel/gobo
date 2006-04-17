@@ -110,7 +110,7 @@
 			<!-- Compile geant -->
 		<geant file="build.eant" target="clobber" dir="src/geant"/>
 		<geant file="build.eant" target="install" dir="src/geant"/>
-		<geant file="../src/geant/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/geant/build.eant" target="compile" fork="false" dir="bin"/>
 		<geant file="../src/geant/build.eant" target="clean" dir="bin"/>
 	</target>
 
