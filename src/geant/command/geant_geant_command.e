@@ -383,13 +383,14 @@ feature {NONE} -- Implementation
 			cs := project.variables.new_cursor
 			from cs.start until cs.after loop
 				if not project.is_builtin_variable_name (cs.key) then
-					project.trace_debug (<<"    [geant] variable: ", cs.key, "=", cs.item	>>)
-					Result := STRING_.appended_string (Result, " -D")
+					project.trace_debug (<<"    [geant] variable: ", cs.key, "=", cs.item>>)
+					Result := STRING_.appended_string (Result, " -D%"")
 					Result := STRING_.appended_string (Result, cs.key)
 					Result := STRING_.appended_string (Result, "=")
 					Result := STRING_.appended_string (Result, cs.item)
+					Result := STRING_.appended_string (Result, "%"")
 				else
-					project.trace_debug (<<"    [geant] built-in variable: ", cs.key, "=", cs.item	>>)
+					project.trace_debug (<<"    [geant] built-in variable: ", cs.key, "=", cs.item>>)
 				end
 				cs.forth
 			end
