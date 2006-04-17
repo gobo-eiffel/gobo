@@ -185,7 +185,7 @@ goto exit
 :bootstrap
 	set PATH=%BIN_DIR%;%PATH%
 	cd %BIN_DIR%
-	%MV% geant%EXE% geant1%EXE%
+	%CP% geant%EXE% geant1%EXE%
 	cd %GOBO%
 	geant1 %VERBOSE% bootstrap1
 	if .%ERRORLEVEL%. == .. goto bootstrap2

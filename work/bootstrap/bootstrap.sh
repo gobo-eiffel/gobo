@@ -169,7 +169,7 @@ fi
 PATH=$BIN_DIR:$PATH
 export PATH
 cd $BIN_DIR
-$MV geant$EXE geant1$EXE
+$CP geant$EXE geant1$EXE
 cd $GOBO
 geant1 $VERBOSE bootstrap1
 if [ $? -gt 0 ]; then exit 1; fi
