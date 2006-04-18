@@ -5359,7 +5359,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 						end
 					elseif l_other_target_dynamic_types = Void then
 							-- Static binding.
-						print_query_call (l_target_dynamic_type, a_call.name)
+						print_query_call (l_target_dynamic_type, l_name)
 					else
 							-- Dynamic binding.
 						l_query := l_target_static_type.base_class.seeded_query (l_seed)
@@ -5371,7 +5371,9 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 						else
 							l_constant_attribute ?= l_query
 							if l_constant_attribute /= Void then
-								print_query_call (l_target_dynamic_type, a_call.name)
+								print_query_call (l_target_dynamic_type, l_name)
+							elseif l_name.is_tuple_label then
+								print_query_call (l_target_dynamic_type, l_name)
 							elseif l_other_target_dynamic_types.count /= 1 then
 								print_call_name (a_call, l_target_static_type, current_file)
 								current_file.put_character ('(')
@@ -5404,7 +5406,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 										current_file.put_character (')')
 										current_file.put_character ('?')
 									end
-									print_query_call (l_target_dynamic_type, a_call.name)
+									print_query_call (l_target_dynamic_type, l_name)
 									if j > nb2 then
 										l_target_dynamic_type := Void
 									else
@@ -5454,7 +5456,9 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 		do
 			l_seed := a_name.seed
 			l_query := a_target_type.base_class.seeded_query (l_seed)
-			if l_query = Void then
+			if a_name.is_tuple_label then
+				print_attribute_tuple_item_access (call_operands.first, a_name.seed, a_target_type)
+			elseif l_query = Void then
 					-- Internal error: there should be a query with `l_seed'.
 					-- It has been computed in ET_FEATURE_CHECKER.
 				set_fatal_error
@@ -10795,6 +10799,7 @@ feature {NONE} -- C function generation
 			header_file.put_integer (a_tuple_type.id)
 			current_file.put_integer (a_tuple_type.id)
 			header_file.put_character ('(')
+			current_file.put_character ('(')
 			nb := l_item_type_sets.count
 			from i := 1 until i > nb loop
 				if i /= 1 then
