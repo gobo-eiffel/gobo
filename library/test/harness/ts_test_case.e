@@ -80,6 +80,16 @@ feature -- Access
 	assertion_logger: TS_TEST_LOGGER
 			-- Logger of assertion checks
 
+feature -- Setting
+
+	set_assertion_logger (a_logger: like assertion_logger) is
+			-- Set `assertion_logger' to `a_logger'.
+		do
+			assertion_logger := a_logger
+		ensure
+			assertion_logger_set: assertion_logger = a_logger
+		end
+
 feature -- Measurement
 
 	count: INTEGER is 1
