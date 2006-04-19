@@ -77,17 +77,25 @@ feature -- Access
 			Result := internal_assertions
 		end
 
-	assertion_logger: TS_TEST_LOGGER
-			-- Logger of assertion checks
+	test_logger: TS_TEST_LOGGER is
+			-- Logger for tests and assertion checkings
+		do
+			if internal_test_logger = Void then
+				create {TS_NULL_TEST_LOGGER} internal_test_logger.make
+			end
+			Result := internal_test_logger
+		end
 
 feature -- Setting
 
-	set_assertion_logger (a_logger: like assertion_logger) is
-			-- Set `assertion_logger' to `a_logger'.
+	set_test_logger (a_logger: like test_logger) is
+			-- Set `test_logger' to `a_logger'.
+		require
+			a_logger_not_void: a_logger /= Void
 		do
-			assertion_logger := a_logger
+			internal_test_logger := a_logger
 		ensure
-			assertion_logger_set: assertion_logger = a_logger
+			test_logger_set: test_logger = a_logger
 		end
 
 feature -- Measurement
@@ -213,6 +221,9 @@ feature {NONE} -- Implementation
 
 	internal_assertions: TS_ASSERTIONS
 			-- Internal implementation of `assertions'
+
+	internal_test_logger: TS_TEST_LOGGER
+			-- Internal implementation of `test_logger'
 
 	deferred_feature is
 			-- VE needs at least a deferred feature in a deferred class.
