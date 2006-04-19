@@ -77,6 +77,9 @@ feature -- Access
 			Result := internal_assertions
 		end
 
+	assertion_logger: TS_TEST_LOGGER
+			-- Logger of assertion checks
+
 feature -- Measurement
 
 	count: INTEGER is 1
