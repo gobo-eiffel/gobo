@@ -1,5 +1,5 @@
 indexing
-	
+
 	description:
 
 		"Word-warp a text document to a fixed column width."
@@ -7,22 +7,22 @@ indexing
 	remark:
 
 		"This implementation replaces all existing whitespace either a %
-	   %single space or a single newline character. Words that are %
+		%single space or a single newline character. Words that are %
 		%longer than a single line will be forcefully broken at the %
 		%line length."
 		
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller and others"
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	ST_WORD_WRAPPER
+class ST_WORD_WRAPPER
 
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
-	
+
 create
 
 	make
@@ -43,17 +43,17 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	Default_maximum_text_width: INTEGER is 79
-			-- maximum_text_width is initialized to this value
-	
+			-- Default value for `maximum_text_width'
+
 	Default_new_line_indentation: INTEGER is 0
-			-- new_line_indentation is initialized to this value
-	
+			-- Default value for `new_line_indentation'
+
 	maximum_text_width: INTEGER
 			-- Maximum number of characters per line
-	
+
 	new_line_indentation: INTEGER
 			-- Indentation for all lines except for the first one
-	
+
 	text: STRING
 			-- The text for the wrapper to operate on
 
@@ -62,11 +62,11 @@ feature -- Statistics
 	forced_breaks: INTEGER
 			-- Number of times the wrapper was forced to break a word
 			-- in two during the last wrapping operation.
-	
+
 feature -- Configuration
 
 	set_maximum_text_width (a_value: INTEGER) is
-			-- Let the maximum text width be `a_value'.
+			-- Set `maximum_text_width' to `a_value'.
 		require
 			larger_than_indentation: a_value > new_line_indentation
 		do
@@ -76,10 +76,9 @@ feature -- Configuration
 		end
 
 	set_new_line_indentation (a_value: INTEGER) is
-			-- All lines except for the first one are indented by
-			-- `a_value' space characters.
+			-- Set `new_line_indendation' to `a_value'.
 		require
-			not_too_low: a_value >= 0
+			not_too_small: a_value >= 0
 			not_too_large: a_value < maximum_text_width
 		do
 			new_line_indentation := a_value
@@ -88,7 +87,7 @@ feature -- Configuration
 		end
 
 	set_text (a_text: STRING) is
-			-- Let the unwrapped text be `a_text'.
+			-- Set `text' to `a_text'.
 		require
 			not_void: a_text /= Void
 		do
@@ -115,47 +114,46 @@ feature -- Operations
 			create fill_string.make_filled (' ', new_line_indentation)
 			create text.make_empty
 			forced_breaks := 0
-
 			from
 				position := 1
 				line_length := maximum_text_width
 			until
 				position > unwrapped_text.count
 			loop
-				if position+line_length <= text_length then
+				if position + line_length <= text_length then
 					from
-						search_position := position+line_length
+						search_position := position + line_length
 					until
 						search_position = position or
-							unwrapped_text.item (search_position) = ' '
+						unwrapped_text.item (search_position) = ' '
 					loop
 						search_position := search_position - 1
 					end
 				else
-					search_position := text_length+1
+					search_position := text_length + 1
 				end
 				if search_position = position then
 					forced_breaks := forced_breaks + 1
-					search_position := position+line_length-1
+					search_position := position + line_length - 1
 					text.append_string (unwrapped_text.substring (position, search_position))
 				else
-					text.append_string (unwrapped_text.substring (position, search_position-1))
+					text.append_string (unwrapped_text.substring (position, search_position - 1))
 				end
-				position := search_position+1
+				position := search_position + 1
 				if position <= unwrapped_text.count then
 					text.append_character ('%N')
 					text.append_string (fill_string)
 				end
-				line_length := maximum_text_width-new_line_indentation
+				line_length := maximum_text_width - new_line_indentation
 			end
 		ensure
-			correct_length: text.count = forced_breaks + old text.count
+			correct_length: text.count = forced_breaks * (new_line_indentation + 1) + old text.count
 		end
 
 feature {NONE} -- Implementation
 
 	canonify_whitespace (a_text: STRING) is
-			-- Replace all whitespace characters by ' ' in a_text.
+			-- Replace all whitespace characters by ' ' in `a_text'.
 		require
 			not_void: a_text /= Void
 		local
@@ -170,8 +168,8 @@ feature {NONE} -- Implementation
 				position > text_length
 			loop
 				char := a_text.item (position)
-				if is_space (char)  then
-					a_text.put (' ',position)
+				if is_space (char) then
+					a_text.put (' ', position)
 				end
 				position := position + 1
 			end
@@ -180,14 +178,14 @@ feature {NONE} -- Implementation
 		end
 
 	is_space (a_character: CHARACTER):BOOLEAN is
-			-- Is `a_character' tab, newline, linefeed or space?
+			-- Is `a_character' a tab, a newline, a linefeed or a space?
 		do
 			Result := (a_character = ' ') or
 				(a_character = '%T') or
 				(a_character = '%N') or
 				(a_character = '%R')
 		end
-	
+
 invariant
 
 	maximum_text_width_positive: maximum_text_width >= 0
@@ -195,5 +193,5 @@ invariant
 	indentation_smaller_than_width: new_line_indentation < maximum_text_width
 	text_not_void: text /= Void
 	forced_breaks_positive: forced_breaks >= 0
-	
+
 end
