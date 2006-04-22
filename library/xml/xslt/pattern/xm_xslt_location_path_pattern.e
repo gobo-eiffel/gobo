@@ -30,7 +30,7 @@ inherit
 	XM_XSLT_SHARED_ANY_NODE_TEST
 		export {NONE} all end
 
-	MA_DECIMAL_CONSTANTS
+	MA_SHARED_DECIMAL_CONSTANTS
 		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
 			line_number_set: line_number = a_static_context.line_number
 		end
-	
+
 feature -- Access
 
 	parent_pattern: XM_XSLT_PATTERN
@@ -71,7 +71,7 @@ feature -- Access
 		do
 			Result := node_test.node_kind
 		end
-	
+
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
@@ -139,16 +139,16 @@ feature -- Optimization
 		do
 
 			-- Detect the simple cases: no parent or ancestor pattern, no predicates
-			
+
 			if parent_pattern = Void and then ancestor_pattern = Void and then filters = Void then
 				Result := node_test.cloned_object
 				-- TODO Result.set_system_id (system_id)
 				Result.set_line_number (line_number)
 			else
 				a_result_pattern := cloned_object
-				
+
 				-- Simplify each component of the pattern
-				
+
 				if parent_pattern /= Void then
 					a_result_pattern.set_parent_pattern (parent_pattern.simplified_pattern)
 					if a_result_pattern.parent_pattern.is_location_pattern then
@@ -160,7 +160,7 @@ feature -- Optimization
 						a_result_pattern.set_uses_current (a_result_pattern.ancestor_pattern.as_location_pattern.uses_current)
 					end
 				end
-				
+
 				if filters /= Void then
 					from
 						a_cursor := a_result_pattern.filters.new_cursor
@@ -201,7 +201,7 @@ feature -- Optimization
 				if parent_pattern.is_error then set_error_value (parent_pattern.error_value) end
 
 				-- TODO: Check that this step in the pattern makes sense in the context of the parent step
-	
+
 			elseif ancestor_pattern /= Void then
 				ancestor_pattern.type_check (a_context, a_context_item_type)
 				if ancestor_pattern.is_error then set_error_value (ancestor_pattern.error_value) end
@@ -228,7 +228,7 @@ feature -- Optimization
 					if not is_error then
 
 						-- If the last filter is constant true, remove it.
-					
+
 						if a_filter_expression.is_boolean_value and then a_filter_expression.as_boolean_value.value then
 							-- do nothing
 						else
@@ -245,12 +245,12 @@ feature -- Optimization
 			end
 
 			if not is_error then
-				
+
 				-- See if it's an element pattern with a single positional predicate of [1]
 
 				if node_test.node_kind = Element_node and then filters /= Void and then filters.count = 1 then
 					a_filter_expression := filters.item (1)
-					if (a_filter_expression.is_integer_value and then a_filter_expression.as_integer_value.value.is_equal (one))
+					if (a_filter_expression.is_integer_value and then a_filter_expression.as_integer_value.value.is_equal (decimal.one))
 						or else (a_filter_expression.is_position_range and then
 									(a_filter_expression.as_position_range.minimum_position = 1 and then
 									 a_filter_expression.as_position_range.maximum_position = 1)) then
@@ -262,7 +262,7 @@ feature -- Optimization
 
 				-- See if it's an element pattern with a single positional predicate
 				-- of [position()=last()]
-				
+
 				if not is_first_element_pattern and then node_test.node_kind = Element_node and then filters /= Void and then filters.count = 1 then
 					if filters.item (1).is_last_expression  and then filters.item (1).as_last_expression.condition then
 						set_last_element_pattern (True)
@@ -270,7 +270,7 @@ feature -- Optimization
 						set_filters (Void)
 					end
 				end
-				
+
 				if is_positional then
 					an_expression := make_equivalent_expression
 					an_expression.check_static_type (a_context, a_context_item_type)
@@ -378,7 +378,7 @@ feature -- Element change
 		end
 
 feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
-	
+
 	filters: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Filters applied to `node_test`
 
@@ -435,7 +435,7 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 				a_cursor.forth
 			end
 			create parent_node.make
-			create Result.make (parent_node, step) 
+			create Result.make (parent_node, step)
 		end
 
 	is_positional: BOOLEAN is
@@ -510,7 +510,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 						is_candidate_match or else another_node = Void
 					loop
 						is_candidate_match := ancestor_pattern.internal_matches (another_node, a_context)
-						another_node := another_node.parent	
+						another_node := another_node.parent
 					end
 				end
 				if is_candidate_match then
@@ -553,7 +553,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 				end
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	equivalent_expression_matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is

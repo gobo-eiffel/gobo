@@ -13,6 +13,10 @@ indexing
 
 class KL_SHARED_PLATFORM
 
+inherit
+
+	KL_ANY
+
 feature -- Access
 
 	Platform: KL_PLATFORM is

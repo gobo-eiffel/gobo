@@ -18,11 +18,11 @@ inherit
 		export {NONE} all end
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
-	
+
 	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
-	MA_DECIMAL_CONSTANTS
+	MA_SHARED_DECIMAL_CONSTANTS
 		export {NONE} all end
 
 create
@@ -193,12 +193,12 @@ feature -- Compilation
 			if a_stylesheet = Void then
 				report_error ("Top-level element of stylesheet is not xsl:stylesheet or xsl:transform or literal result element")
 			elseif not a_stylesheet.is_error then
-				if a_stylesheet.version.is_equal (one) then
+				if a_stylesheet.version.is_equal (decimal.one) then
 					error_listener.warning ("XSLT 1.0 stylesheet is being run on an XSLT 2.0 processor.", Void)
 				end
-				
+
 				-- Preprocess the stylesheet, performing validation and preparing template  definitions
-				
+
 				a_stylesheet.set_stylesheet_compiler (Current, configuration)
 				a_stylesheet.preprocess
 
@@ -237,7 +237,7 @@ feature -- Creation
 		end
 
 invariant
-	
+
 	configuration_not_void: configuration /= Void
 	error_listener_not_void: error_listener /= Void
 	node_factory_not_void: node_factory /= Void

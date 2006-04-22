@@ -19,8 +19,8 @@ inherit
 			validate
 		end
 
-	MA_DECIMAL_CONSTANTS
-	
+	MA_SHARED_DECIMAL_CONSTANTS
+
 	XM_XSLT_SHARED_ANY_NODE_TEST
 
 create {XM_XSLT_NODE_FACTORY}
@@ -40,7 +40,7 @@ feature -- Element change
 				a_cursor := attribute_collection.name_code_cursor
 				a_cursor.start
 			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				attribute_collection.number_of_attributes + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 							create static_context.make (Current, configuration)
 						end
 						create {XM_XSLT_NAME_TEST} a_pattern.make (static_context, Element_node, a_name_code, a_token)
-						stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, zero)
+						stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, decimal.zero)
 					end
 				else
 					a_message := STRING_.concat ("Element name ", a_token)
@@ -191,5 +191,5 @@ invariant
 	fingerprint: fingerprint = Xslt_preserve_space_type_code or else fingerprint = Xslt_strip_space_type_code
 
 end
-	
-	
+
+

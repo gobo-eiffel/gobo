@@ -19,7 +19,7 @@ inherit
 			evaluate_item
 		end
 
-	MA_DECIMAL_CONSTANTS
+	MA_SHARED_DECIMAL_CONSTANTS
 		export {NONE} all end
 
 	XM_XPATH_TOKENS
@@ -84,7 +84,7 @@ feature -- Evaluation
 				end
 				a_numeric_value := an_item.as_atomic_value.primitive_value.as_numeric_value
 				if a_numeric_value.is_zero then
-					create a_zero.make (zero)
+					create a_zero.make (decimal.zero)
 					last_evaluated_item := a_numeric_value.arithmetic (Plus_token, a_zero)
 				elseif a_numeric_value.is_negative then
 					last_evaluated_item := a_numeric_value.negated_value
@@ -109,4 +109,4 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 end
-	
+

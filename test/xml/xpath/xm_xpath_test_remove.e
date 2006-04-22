@@ -20,7 +20,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -29,11 +29,11 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-	MA_DECIMAL_CONSTANTS
+	MA_SHARED_DECIMAL_CONSTANTS
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -66,7 +66,7 @@ feature -- Test
 			assert ("Two values", evaluated_items /= Void and then evaluated_items.count = 2)
 			an_integer_value ?= evaluated_items.item (1)
 			assert ("First value is integer", an_integer_value /= Void)
-			assert ("First value is one", an_integer_value.value.is_equal (one))
+			assert ("First value is one", an_integer_value.value.is_equal (decimal.one))
 			an_integer_value ?= evaluated_items.item (2)
 			assert ("Second value is integer", an_integer_value /= Void)
 			assert ("Second value is three", an_integer_value.value.is_equal (three))
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
+
 	languages_xml_uri: UT_URI is
 			-- URI of file 'languages.xml'
 		local
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		ensure
 			languages_xml_uri_not_void: Result /= Void
 		end
-		
+
 end
 
-			
+

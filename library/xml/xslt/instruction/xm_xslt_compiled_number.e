@@ -11,7 +11,7 @@ indexing
 class XM_XSLT_COMPILED_NUMBER
 
 inherit
-	
+
 	XM_XSLT_INSTRUCTION
 		redefine
 			sub_expressions, compute_intrinsic_dependencies, item_type,
@@ -28,7 +28,7 @@ inherit
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 
-	MA_DECIMAL_CONSTANTS
+	MA_SHARED_DECIMAL_CONSTANTS
 		export {NONE} all end
 
 create
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
@@ -133,7 +133,7 @@ feature -- Status setting
 		end
 
 feature -- Optimization
-	
+
 	simplify is
 			-- Perform context-independent static optimizations.
 		do
@@ -377,9 +377,9 @@ feature -- Evaluation
 			if not transformer.is_error then calculate_ordinal (a_context) end
 			calculate_ordinal (a_context)
 			if integer_vector = Void and then format = Void and then group_size = 0 and then language = Void then
-				
+
 				-- fast path for the simple case
-				
+
 				a_receiver.notify_characters (value.to_scientific_string, 0)
 			else
 				if numberer = Void then
@@ -432,7 +432,7 @@ feature {XM_XSLT_EXPRESSION} -- Restricted
 		end
 
 feature {NONE} -- Implementation
-	
+
 	select_expression: XM_XPATH_EXPRESSION
 			-- Selected node
 
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 			-- Level
 
 	count_pattern: XM_XSLT_PATTERN
-			-- Nodes which are to be counted 
+			-- Nodes which are to be counted
 
 	from_pattern: XM_XSLT_PATTERN
 			-- Node from which counted is to be started
@@ -474,7 +474,7 @@ feature {NONE} -- Implementation
 
 
 	-- The following are used to communicate between `process_leaving_tail' and it's sub-routines
-	
+
 	value: MA_DECIMAL
 			-- Value of number
 
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-				
+
 	calculate_vector (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Calculate `vector'.
 		require
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 			a_source: XM_XPATH_NODE
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			create value.make_copy (minus_one)
+			create value.make_copy (decimal.minus_one)
 			if value_expression /= Void then
 				calculate_value (a_context)
 			else
@@ -625,7 +625,7 @@ feature {NONE} -- Implementation
 			finished: BOOLEAN
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE			
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
@@ -680,7 +680,7 @@ feature {NONE} -- Implementation
 				a_context.transformer.report_fatal_error (a_sequence_iterator.error_value)
 			end
 		end
-	
+
 	simple_number (a_node: XM_XPATH_NODE): MA_DECIMAL is
 			-- Simple number of `a_node';
 			-- This is defined as one plus the number of previous siblings
@@ -717,7 +717,7 @@ feature {NONE} -- Implementation
 					finished := True
 				else
 					an_iterator.forth
-					Result := Result + one
+					Result := Result + decimal.one
 				end
 				if not finished then
 					transformer.set_remembered_number (Result, a_node)
@@ -786,7 +786,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			positive_integer: Result /= Void and then Result.is_integer and then Result.is_positive
-		end			
+		end
 
 	any_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): MA_DECIMAL is
 			-- One plus number of previous nodes that match `count_pattern'
@@ -811,7 +811,7 @@ feature {NONE} -- Implementation
 			elseif count_pattern.matches (a_node, a_context) then
 				a_count := 1
 			end
-			
+
 			-- Pass part of the filtering down to the axis iterator if possible
 
 			if from_pattern = Void then
@@ -847,7 +847,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			positive_integer: Result /= Void and then Result.is_integer and then Result.is_positive
-		end			
+		end
 
 	multi_level_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): DS_ARRAYED_LIST [XM_XPATH_INTEGER_VALUE] is
 			-- Hirerarchic position of `a_node'
@@ -889,4 +889,4 @@ invariant
 	formatter: initialized and then formatter = Void implies format /= Void
 
 end
-	
+

@@ -27,7 +27,7 @@ inherit
 
 	XM_XPATH_ROLE
 
-	MA_DECIMAL_CONSTANTS
+	MA_SHARED_DECIMAL_CONSTANTS
 
 	MA_DECIMAL_CONTEXT_CONSTANTS
 
@@ -245,7 +245,7 @@ feature -- Evaluation
 				an_atomic_value := first_operand.last_evaluated_item.as_atomic_value
 				if an_atomic_value.is_untyped_atomic then
 					an_atomic_value := an_atomic_value.convert_to_type (type_factory.string_type)
-				end				
+				end
 				second_operand.evaluate_item (a_context)
 				if second_operand.last_evaluated_item = Void then
 					last_evaluated_item := Void
@@ -254,7 +254,7 @@ feature -- Evaluation
 				else
 					check
 						second_atomic_value: second_operand.last_evaluated_item.is_atomic_value
-					end				
+					end
 					another_atomic_value := second_operand.last_evaluated_item.as_atomic_value
 					if another_atomic_value.is_untyped_atomic then
 						another_atomic_value := another_atomic_value.convert_to_type (type_factory.string_type)
@@ -301,21 +301,21 @@ feature {NONE} -- Implementation
 		do
 			optimize_count (a_context, a_context_item_type)
 			if not was_expression_replaced then
-				
+
 				-- We haven't managed to optimize anything yet, so:
-				
+
 				if second_operand.is_count_function and then is_zero (first_operand) then
 					optimize_count_second_operand (a_context, second_operand.as_count_function, a_context_item_type)
 				else
-					
+
 					-- Optimise string-length(x) = 0, >0, !=0 etc.
-					
+
 					if first_operand.is_string_length_function and then is_zero (second_operand) then
 						first_operand.as_string_length_function.set_test_for_zero
 					else
-						
+
 						-- Optimise 0 = string-length(x), etc.
-						
+
 						if second_operand.is_string_length_function and then is_zero (first_operand) then
 							second_operand.as_string_length_function.set_test_for_zero
 						end
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end									
+		end
 
 	optimize_count (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimise count(x) eq 0 (or gt 0, ne 0, eq 0, etc).
@@ -389,59 +389,59 @@ feature {NONE} -- Implementation
 					a_function_library := a_context.available_functions
 					if is_zero (second_operand.as_atomic_value) then
 						if operator = Fortran_equal_token or else operator = Fortran_less_equal_token then
-							
+
 							-- Rewrite count(x)=0 as empty(x).
-							
+
 							a_function_library.bind_function (Empty_function_type_code, a_count_function.arguments, False)
 							an_expression := a_function_library.last_bound_function.as_empty_function
 						elseif operator = Fortran_not_equal_token or else operator = Fortran_greater_than_token then
-							
+
 							-- Rewrite count(x)!=0, count(x)>0 as exists(x)
-							
+
 							a_function_library.bind_function (Exists_function_type_code, a_count_function.arguments, False)
 							an_expression := a_function_library.last_bound_function.as_exists_function
 						elseif operator = Fortran_greater_equal_token then
-							
+
 							-- Rewrite count(x)>=0 as true()
-							
+
 							create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
 						else
 							check
 								less_then_or_equal_to: operator = Fortran_less_equal_token
 							end
-							
+
 							-- Rewrite count(x)<0 as false()
-							
+
 							create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (False)
-							
+
 						end
 					else
 						if second_operand.is_integer_value and then (operator = Fortran_greater_than_token or else operator = Fortran_greater_equal_token) then
-							
+
 							-- Rewrite count(x) gt n as exists(x[n+1])
 							--  and count(x) ge n as exists(x[n])
-							
+
 							an_integer := second_operand.as_integer_value.value
-							if operator = Fortran_greater_than_token then an_integer := an_integer + one	end
+							if operator = Fortran_greater_than_token then an_integer := an_integer + decimal.one end
 							create new_arguments.make (1)
 							create an_integer_value.make (an_integer)
 							create a_filter_expression.make (a_count_function.arguments.item(1), an_integer_value)
 							new_arguments.put (a_filter_expression, 1)
 							a_function_library.bind_function (Exists_function_type_code, new_arguments, False)
 							an_expression := a_function_library.last_bound_function.as_exists_function
-							
+
 						end
 					end
 					if an_expression /= Void then set_replacement (an_expression) end
 				end
 			end
-		end			
+		end
 
 	optimize_count_second_operand (a_context: XM_XPATH_STATIC_CONTEXT; a_count_function: XM_XPATH_COUNT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimise (0 eq count(x)), etc. by inversion
 		local
 			an_expression: XM_XPATH_EXPRESSION
-		do		
+		do
 			create {XM_XPATH_VALUE_COMPARISON} an_expression.make (a_count_function, inverse_operator (operator), first_operand, atomic_comparer.collator)
 			an_expression.check_static_type (a_context, a_context_item_type)
 			if an_expression.was_expression_replaced then
@@ -464,8 +464,8 @@ feature {NONE} -- Implementation
 		do
 			if first_operand.is_position_function and then second_operand.is_integer_value then
 				an_integer := second_operand.as_integer_value.value
-				if an_integer.is_negative then an_integer := zero end
-				if an_integer <= maximum_integer then
+				if an_integer.is_negative then an_integer := decimal.zero end
+				if an_integer <= decimal.maximum_integer then
 					inspect
 						operator
 					when Fortran_equal_token then
@@ -481,14 +481,14 @@ feature {NONE} -- Implementation
 					when Fortran_greater_than_token then
 						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer + 1, Platform.Maximum_integer)
 					when Fortran_less_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer)													
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer)
 					end
 					set_replacement (an_expression)
 				end
 			elseif second_operand.is_position_function and then first_operand.is_integer_value then
 				an_integer := first_operand.as_integer_value.value
-				if an_integer.is_negative then an_integer := zero end
-				if an_integer <= maximum_integer then
+				if an_integer.is_negative then an_integer := decimal.zero end
+				if an_integer <= decimal.maximum_integer then
 					inspect
 						operator
 					when Fortran_equal_token then
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 					when Fortran_less_than_token then
 						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer + 1, Platform.Maximum_integer)
 					when Fortran_greater_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer)													
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer)
 					end
 					set_replacement (an_expression)
 				end
@@ -517,9 +517,9 @@ feature {NONE} -- Implementation
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			if first_operand.is_position_function and then second_operand.is_last_function then
-				
+
 				-- Optimise position()=last() etc.
-				
+
 				inspect
 					operator
 				when Fortran_equal_token, Fortran_greater_equal_token then
@@ -529,16 +529,16 @@ feature {NONE} -- Implementation
 				when Fortran_greater_than_token then
 					create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (False)
 				when Fortran_less_equal_token then
-					create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)													
+					create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
 				end
 				set_replacement (an_expression)
 			end
-			
+
 			if not was_expression_replaced then
 				if second_operand.is_position_function and then first_operand.is_last_function then
-					
+
 					-- Optimise last()=position() etc.
-					
+
 					inspect
 						operator
 					when Fortran_equal_token, Fortran_less_equal_token then
@@ -548,7 +548,7 @@ feature {NONE} -- Implementation
 					when Fortran_less_than_token then
 						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (False)
 					when Fortran_greater_equal_token then
-						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)													
+						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
 					end
 					set_replacement (an_expression)
 				end
@@ -587,11 +587,11 @@ feature {NONE} -- Implementation
 		local
 			a_message: STRING
 		do
-			
+
 			-- This is a comparison such as (xs:integer? eq xs:date?).
 			-- This is almost certainly an error, but we need to let it through
 			--  because it will work if one of the operands is an empty sequence.
-			
+
 			a_message := STRING_.concat ("Comparison of ", a_type.conventional_name)
 			if is_first_optional then
 				a_message := STRING_.appended_string (a_message, "?")
@@ -657,4 +657,4 @@ feature {NONE} -- Implementation
 			-- Result from `check_correct_relation' if no type error
 
 end
-	
+

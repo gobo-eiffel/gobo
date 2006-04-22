@@ -19,7 +19,10 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
-	MA_DECIMAL_CONSTANTS
+	MA_SHARED_DECIMAL_CONSTANTS
+		export {NONE} all end
+
+	MA_SHARED_DECIMAL_CONTEXT
 		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
@@ -33,11 +36,11 @@ feature -- Access
 		local
 			a_character_code: INTEGER
 		do
-			if a_number < zero then
-				Result := a_number.to_scientific_string 
+			if a_number < decimal.zero then
+				Result := a_number.to_scientific_string
 			elseif a_picture.count = 0 then
-				Result := a_number.to_scientific_string 
-			elseif is_zeros_plus_one (a_picture) then				
+				Result := a_number.to_scientific_string
+			elseif is_zeros_plus_one (a_picture) then
 				Result := converted_number (a_number, decimal_digits_set (a_picture), a_picture.count, a_group_size, a_group_separator, an_ordinal)
 			elseif a_picture.count = 1 then
 				a_character_code := a_picture.item_code (1)
@@ -87,7 +90,7 @@ feature -- Access
 						end
 					else
 						Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
-					end	
+					end
 				else
 
 					-- Un-supported formatting token - use "1"
@@ -148,7 +151,7 @@ feature -- Access
 				Result := Result + " "
 			end
 		end
-		
+
 
 	half_day_name (a_minute, a_minimum_width, a_maximum_width: INTEGER): STRING is
 			-- A.M./P.M indicator
@@ -172,7 +175,7 @@ feature -- Access
 					Result := "Pm"
 				else
 					Result := "P.M."
-				end				
+				end
 			end
 		end
 
@@ -274,7 +277,7 @@ feature {NONE} -- Implementation
 			create a_string.make (0)
 
 			-- First convert `a_number' to a decimal string using `digits'
-			
+
 			from
 				create a_reduced_number.make_copy (a_number)
 				create a_base.make_from_integer (10)
@@ -342,7 +345,7 @@ feature {NONE} -- Implementation
 				Result := STRING_.appended_string (Result, roman_hundreds.item ((a_number.to_integer // 100) \\ 10))
 				Result := STRING_.appended_string (Result, roman_tens.item ((a_number.to_integer // 10) \\ 10))
 				Result := STRING_.appended_string (Result, roman_units.item (a_number.to_integer \\ 10))
-				
+
 			end
 		ensure
 			converted_number_not_void: Result /= Void
@@ -367,7 +370,7 @@ feature {NONE} -- Implementation
 				if a_number > a_range then
 					Result := STRING_.appended_string (alphabetic_number (a_number // a_range, an_alphabet), a_last_character)
 				else
-					Result := a_last_character 
+					Result := a_last_character
 				end
 			end
 		ensure

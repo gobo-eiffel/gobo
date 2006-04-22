@@ -12,6 +12,10 @@ indexing
 
 class MA_SHARED_DECIMAL_CONTEXT
 
+inherit
+
+	KL_ANY
+
 feature -- Access
 
 	shared_decimal_context: MA_DECIMAL_CONTEXT is

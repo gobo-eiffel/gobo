@@ -19,9 +19,6 @@ inherit
 			evaluate_item
 		end
 
-	MA_DECIMAL_CONSTANTS
-		export {NONE} all end
-
 	XM_XPATH_TOKENS
 		export {NONE} all end
 
@@ -96,4 +93,4 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 end
-	
+

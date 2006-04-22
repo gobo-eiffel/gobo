@@ -28,8 +28,10 @@ inherit
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
-	MA_DECIMAL_CONSTANTS
-	
+	MA_SHARED_DECIMAL_CONSTANTS
+
+	MA_SHARED_DECIMAL_CONTEXT
+
 create
 
 	make
@@ -278,7 +280,7 @@ feature -- Basic operations
 					end
 					last_nibble := bcd_parser.last_nibble
 				else
-					last_number := zero
+					last_number := decimal.zero
 				end
 				number_count := number_count + 1
 			end

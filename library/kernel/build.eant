@@ -143,6 +143,8 @@
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_clonable"/>
 		<geant target="ge2e"/>
+		<set name="gepp_file" value="kl_any"/>
+		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_eiffel_compiler"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_execution_environment"/>
