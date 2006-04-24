@@ -57,7 +57,7 @@ feature -- Statistics
 
 	broken_words: INTEGER
 			-- Number of times the wrapper was forced to break a word
-			-- in two during the last wrapping operation.
+			-- in two during the last wrapping operation
 
 feature -- Configuration
 
@@ -101,13 +101,13 @@ feature -- Text transformation
 			canonify_whitespace (unwrapped_text)
 			text_length := unwrapped_text.count
 			create fill_string.make_filled (' ', new_line_indentation)
-			create Result.make_empty
+			create Result.make (a_text.count)
 			broken_words := 0
 			from
 				position := 1
 				line_length := maximum_text_width
 			until
-				position > unwrapped_text.count
+				position > text_length
 			loop
 				if position + line_length <= text_length then
 					from
