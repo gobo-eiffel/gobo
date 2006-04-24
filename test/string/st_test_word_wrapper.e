@@ -24,11 +24,11 @@ feature -- Testing
 			-- Test with a long string.
 		local
 			wrapper: ST_WORD_WRAPPER
+			wrapped_text: STRING
 		do
 			create wrapper.make
-			wrapper.set_text (long_text)
-			wrapper.wrap
-			assert_strings_equal ("long_text", all_whitespace_removed (long_text), all_whitespace_removed (wrapper.text))
+			wrapped_text := wrapper.wrapped_string (long_text)
+			assert_strings_equal ("long_text", all_whitespace_removed (long_text), all_whitespace_removed (wrapped_text))
 		end
 
 	test_original_not_modified is
@@ -37,12 +37,12 @@ feature -- Testing
 			wrapper: ST_WORD_WRAPPER
 			string_a: STRING
 			string_b: STRING
+			dummy_string: STRING
 		do
 			string_a := STRING_.cloned_string (short_text)
 			string_b := STRING_.cloned_string (short_text)
 			create wrapper.make
-			wrapper.set_text (string_a)
-			wrapper.wrap
+			dummy_string := wrapper.wrapped_string (string_b)
 			assert_strings_equal ("original_not_modifed", string_a, string_b)
 		end
 
@@ -50,25 +50,25 @@ feature -- Testing
 			-- Test if a normal text is correctly wrapped.
 		local
 			wrapper: ST_WORD_WRAPPER
+			wrapped_text: STRING
 		do
 			create wrapper.make
-			wrapper.set_text (short_text)
 			wrapper.set_maximum_text_width (10)
-			wrapper.wrap
-			assert_strings_equal ("normal_text_wrapped", short_text_width_ten, wrapper.text)
+			wrapped_text := wrapper.wrapped_string (short_text)
+			assert_strings_equal ("normal_text_wrapped", short_text_width_ten, wrapped_text)
 		end
 
 	test_normal_text_wrapped_and_indented is
 			-- Test if a normal text is correctly wrapped with indentation.
 		local
 			wrapper: ST_WORD_WRAPPER
+			wrapped_text: STRING
 		do
 			create wrapper.make
-			wrapper.set_text (short_text)
 			wrapper.set_maximum_text_width (10)
 			wrapper.set_new_line_indentation (2)
-			wrapper.wrap
-			assert_strings_equal ("normal_text_wrapped_and_indented", short_text_width_ten_indentation_two, wrapper.text)
+			wrapped_text := wrapper.wrapped_string (short_text)
+			assert_strings_equal ("normal_text_wrapped_and_indented", short_text_width_ten_indentation_two, wrapped_text)
 		end
 
 	test_spaced_text_wrapped is
@@ -76,50 +76,46 @@ feature -- Testing
 			-- space characters.
 		local
 			wrapper: ST_WORD_WRAPPER
+			wrapped_text: STRING
 		do
 			create wrapper.make
-			wrapper.set_text (short_text_spaced)
 			wrapper.set_maximum_text_width (10)
-			wrapper.wrap
-			assert_strings_equal ("spaced_text_wrapped", short_text_width_ten, wrapper.text)
+			wrapped_text := wrapper.wrapped_string (short_text_spaced)
+			assert_strings_equal ("spaced_text_wrapped", short_text_width_ten, wrapped_text)
 		end
 
 	test_corner_cases is
 			-- Test some of the corner cases.
 		local
 			wrapper: ST_WORD_WRAPPER
+			wrapped_text: STRING
 		do
 			create wrapper.make
-			wrapper.set_text ("")
-			wrapper.wrap
-			assert_strings_equal ("empty_string", "", wrapper.text)
-			wrapper.set_text ("hello")
+			wrapped_text := wrapper.wrapped_string ("")
+			assert_strings_equal ("empty_string", "", wrapped_text)
 			wrapper.set_maximum_text_width (1)
-			wrapper.wrap
-			assert_strings_equal ("every_charcter_break", "h%Ne%Nl%Nl%No", wrapper.text)            
-			wrapper.set_text ("hello")
+			wrapped_text := wrapper.wrapped_string ("hello")
+			assert_strings_equal ("every_charcter_break", "h%Ne%Nl%Nl%No", wrapped_text)            
 			wrapper.set_maximum_text_width (2)
 			wrapper.set_new_line_indentation (1)
-			wrapper.wrap
-			assert_strings_equal ("width_two_indention_one", "he%N l%N l%N o", wrapper.text)        
+			wrapped_text := wrapper.wrapped_string ("hello")
+			assert_strings_equal ("width_two_indention_one", "he%N l%N l%N o", wrapped_text)        
 		end
 
 	test_whitespace is
 			-- Test the handling of whitespace.
 		local
 			wrapper: ST_WORD_WRAPPER
+			wrapped_text: STRING
 		do
 			create wrapper.make
-			wrapper.set_text (" ")
 			wrapper.set_maximum_text_width (4)
-			wrapper.wrap
-			assert_strings_equal ("single_space", " ", wrapper.text)
-			wrapper.set_text ("    ")
-			wrapper.wrap
-			assert_strings_equal ("full_space_line", "    ", wrapper.text)            
-			wrapper.set_text ("      ")
-			wrapper.wrap
-			assert_strings_equal ("whitespace break", "    %N ", wrapper.text)
+			wrapped_text := wrapper.wrapped_string (" ")
+			assert_strings_equal ("single_space", " ", wrapped_text)
+			wrapped_text := wrapper.wrapped_string ("    ")
+			assert_strings_equal ("full_space_line", "    ", wrapped_text)
+			wrapped_text := wrapper.wrapped_string ("      ")
+			assert_strings_equal ("whitespace break", "    %N ", wrapped_text)
 		end
 
 feature {NONE} -- Input strings

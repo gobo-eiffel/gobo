@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 		do
 			maximum_text_width := Default_maximum_text_width
 			new_line_indentation := Default_new_line_indentation
-			text := ""
 		ensure
 			width_set: maximum_text_width = Default_maximum_text_width
 			indentation_set: new_line_indentation = Default_new_line_indentation
@@ -54,12 +53,9 @@ feature -- Access
 	new_line_indentation: INTEGER
 			-- Indentation for all lines except for the first one
 
-	text: STRING
-			-- The text for the wrapper to operate on
-
 feature -- Statistics
 
-	forced_breaks: INTEGER
+	broken_words: INTEGER
 			-- Number of times the wrapper was forced to break a word
 			-- in two during the last wrapping operation.
 
@@ -86,20 +82,13 @@ feature -- Configuration
 			value_set: new_line_indentation = a_value
 		end
 
-	set_text (a_text: STRING) is
-			-- Set `text' to `a_text'.
+feature -- Text transformation
+
+	wrapped_string (a_text: STRING): STRING is
+			-- The wrapped version of `a_text', as a copy of the original
+			-- string with newlines at the correct positions
 		require
-			not_void: a_text /= Void
-		do
-			text := a_text
-		ensure
-			text_set: text = a_text
-		end
-
-feature -- Operations
-
-	wrap is
-			-- Wrap the `text'.
+			a_text_not_void: a_text /= Void
 		local
 			unwrapped_text: STRING
 			text_length: INTEGER
@@ -108,12 +97,12 @@ feature -- Operations
 			search_position: INTEGER
 			fill_string: STRING
 		do
-			unwrapped_text := STRING_.cloned_string (text)
+			unwrapped_text := STRING_.cloned_string (a_text)
 			canonify_whitespace (unwrapped_text)
 			text_length := unwrapped_text.count
 			create fill_string.make_filled (' ', new_line_indentation)
-			create text.make_empty
-			forced_breaks := 0
+			create Result.make_empty
+			broken_words := 0
 			from
 				position := 1
 				line_length := maximum_text_width
@@ -133,21 +122,22 @@ feature -- Operations
 					search_position := text_length + 1
 				end
 				if search_position = position then
-					forced_breaks := forced_breaks + 1
+					broken_words := broken_words + 1
 					search_position := position + line_length - 1
-					text.append_string (unwrapped_text.substring (position, search_position))
+					Result.append_string (unwrapped_text.substring (position, search_position))
 				else
-					text.append_string (unwrapped_text.substring (position, search_position - 1))
+					Result.append_string (unwrapped_text.substring (position, search_position - 1))
 				end
 				position := search_position + 1
 				if position <= unwrapped_text.count then
-					text.append_character ('%N')
-					text.append_string (fill_string)
+					Result.append_character ('%N')
+					Result.append_string (fill_string)
 				end
 				line_length := maximum_text_width - new_line_indentation
 			end
 		ensure
-			correct_length: text.count = forced_breaks * (new_line_indentation + 1) + old text.count
+			wrapped_string_not_void: Result /= Void
+			string_copied: Result /= a_text
 		end
 
 feature {NONE} -- Implementation
@@ -191,7 +181,6 @@ invariant
 	maximum_text_width_positive: maximum_text_width >= 0
 	new_line_indentation_positive: new_line_indentation >= 0
 	indentation_smaller_than_width: new_line_indentation < maximum_text_width
-	text_not_void: text /= Void
-	forced_breaks_positive: forced_breaks >= 0
+	broken_words_positive: broken_words >= 0
 
 end
