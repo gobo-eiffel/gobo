@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 			a_project_options: GEANT_PROJECT_OPTIONS
 			a_variables: GEANT_PROJECT_VARIABLES
 			a_target: GEANT_TARGET
-			a_arguments: GEANT_VARIABLES
 		do
 			Arguments.set_program_name ("geant")
 			create error_handler.make_standard
@@ -53,10 +52,6 @@ feature {NONE} -- Initialization
 
 				-- Create project variables:
 			create a_variables.make
-
-				-- Create dummy arguments for first call:
-			create a_arguments.make
-			target_arguments_stack.force (a_arguments)
 
 				-- Create project options:
 			create a_project_options.make
@@ -88,9 +83,8 @@ feature {NONE} -- Initialization
 			if show_target_info then
 				a_project.show_target_info
 			else
-				a_project.build (a_arguments)
-					-- Remove dummy arguments of first call:
-				target_arguments_stack.remove
+				a_target := a_project.start_target
+				a_project.build (commandline_arguments)
 			end
 
 			if not a_project.build_successful then
@@ -156,6 +150,14 @@ feature -- Access
 					end
 				elseif arg.count > 16 and then arg.substring (1, 16).is_equal ("--buildfilename=") then
 					build_filename := arg.substring (16, arg.count)
+				elseif arg.count > 1 and then arg.item (1) = '-' and then arg.item (2) = 'A' then
+					p := arg.index_of('=', 1)
+					if p > 3 and p < arg.count then
+							-- define commandline argument with value:
+						a_variable_name := arg.substring (3, p - 1)
+						a_variable_value := arg.substring (p + 1, arg.count)
+						commandline_arguments.force (a_variable_value, a_variable_name)
+					end
 				elseif arg.count > 1 and then arg.item (1) = '-' and then arg.item (2) = 'D' then
 					p := arg.index_of('=', 1)
 					if p > 3 and p < arg.count then

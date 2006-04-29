@@ -477,6 +477,7 @@ feature -- Processing
 			a_new_target_cwd: STRING
 			cs: DS_LINKED_LIST_CURSOR [XM_NODE]
 			a_string_interpreter: GEANT_STRING_INTERPRETER
+			a_arguments: GEANT_ARGUMENT_VARIABLES
 		do
 			if not execute_once or else not is_executed then
 				if is_enabled then
@@ -506,6 +507,12 @@ feature -- Processing
 						file_system.set_current_working_directory (a_new_target_cwd)
 						project.trace_debug (<<"current working directory: '", file_system.current_working_directory, "%'">>)
 					end
+
+						-- Prepare arguments:
+					a_arguments := target_arguments_stack.item
+					target_arguments_stack.remove
+					a_arguments := prepared_arguments_from_formal_arguments (a_arguments)
+					target_arguments_stack.force (a_arguments)
 
 						-- Execute nested tasks:
 					cs := xml_element.new_cursor

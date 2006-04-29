@@ -363,7 +363,7 @@ feature -- Processing
 			end
 		end
 
-	build (a_arguments: GEANT_VARIABLES) is
+	build (a_arguments: GEANT_ARGUMENT_VARIABLES) is
 			-- Build project: execute project's tasks.
 		require
 			targets_not_void: targets /= Void
@@ -400,29 +400,35 @@ feature -- Processing
 			end
 		end
 
-	build_target (a_target: GEANT_TARGET; a_arguments: GEANT_VARIABLES) is
+	build_target (a_target: GEANT_TARGET; a_arguments: GEANT_ARGUMENT_VARIABLES) is
 			-- Analyze dependencies and execute `a_target'.
 		require
 			a_target_not_void: a_target /= Void
 			a_arguments_not_void: a_arguments /= Void
 		local
 			depend_targets: DS_ARRAYED_STACK [GEANT_TARGET]
+			depend_arguments: GEANT_ARGUMENT_VARIABLES
 		do
+			target_arguments_stack.force (a_arguments)
 				-- Analyze dependencies of targets:
 			create depend_targets.make (10)
 			depend_targets.force (a_target)
 			calculate_depend_order (depend_targets)
-				-- Execute depend targets:
+				-- Execute depend targets (use empty arguments since depend does not support argument passing):
+			create depend_arguments.make
+			target_arguments_stack.force (depend_arguments)
 			from until depend_targets.count = 1 loop
-				execute_target (depend_targets.item, a_arguments, False, True)
+				execute_target (depend_targets.item, depend_arguments, False, True)
 				depend_targets.remove
 			end
+			target_arguments_stack.remove
 				-- Execute `a_target':
 			check last_target: depend_targets.item = a_target end
 			execute_target (a_target, a_arguments, True, True)
+			target_arguments_stack.remove
 		end
 
-	execute_target (a_target: GEANT_TARGET; a_arguments: GEANT_VARIABLES; a_force: BOOLEAN; a_polymorph: BOOLEAN) is
+	execute_target (a_target: GEANT_TARGET; a_arguments: GEANT_ARGUMENT_VARIABLES; a_force: BOOLEAN; a_polymorph: BOOLEAN) is
 			-- Execute `a_target' if not executed before;
 			-- Execute anyway if `a_force' is True.
 		require

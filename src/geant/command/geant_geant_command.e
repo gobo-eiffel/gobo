@@ -189,18 +189,17 @@ feature {NONE} -- Implementation
 	execute_forked_with_filename_and_target (a_filename: STRING; a_target_name: STRING) is
 			-- Spawn new geant process to execute scriptfile named `a_filename';
 			-- If `a_target_name' is not Void and not empty pass it as start target name.
-			-- TODO: support arguments
 			-- TODO: support filesets
 		local
 			cmd: STRING
 			a_level: STRING
 		do
-			project.trace (<<"  [geant] ### execute_forked_with_filename_and_target: '", a_filename, "', '", a_target_name, "'">>)
-			if Project.options.debug_mode then
+			project.trace_debug (<<"  [*geant] execute_forked_with_filename_and_target: '", a_filename, "', '", a_target_name, "'">>)
+			if project.options.debug_mode then
 				if Project_variables_resolver.has ("geant.geant.level") then
 					a_level := STRING_.concat (Project_variables_resolver.value ("geant.geant.level"), "#")
 				else
-					project.trace (<<"  [geant] no variable 'geant.geant.level' found">>)
+					project.trace_debug (<<"  [*geant] no variable 'geant.geant.level' found">>)
 					a_level := "#"
 				end
 				project.trace (<<"  [geant] geant.geant.level=", a_level>>)
@@ -211,7 +210,11 @@ feature {NONE} -- Implementation
 			end
 			create cmd.make (256)
 			cmd.append_string ("geant")
-			cmd := STRING_.appended_string (cmd, options_and_variables_for_cmdline)
+			cmd := STRING_.appended_string (cmd, options_and_arguments_for_cmdline)
+			if project.options.debug_mode then
+				cmd.append_string (" -Dgeant.geant.level=")
+				cmd := STRING_.appended_string (cmd, a_level)
+			end
 				-- Pass name of buildscript:
 			cmd.append_string (" -b ")
 			cmd := STRING_.appended_string (cmd, a_filename)
@@ -226,29 +229,16 @@ feature {NONE} -- Implementation
 
 	execute_forked_with_target (a_target_name: STRING) is
 			-- Spawn new geant process for current buildscript and execute target named `a_target_name'.
-			-- TODO: support arguments
 			-- TODO: support filesets
 		local
 			a_filename: STRING
 			a_key: STRING
-			a_level: STRING
 		do
-			project.trace (<<"  [geant] ### execute_forked_with_target: '", a_target_name, "'">>)
+			project.trace_debug (<<"  [*geant] execute_forked_with_target: '", a_target_name, "'">>)
 			if is_fileset_executable then
 				--TODO
 			else
-				if Project.options.debug_mode then
-					if Project_variables_resolver.has ("geant.geant.level") then
-						a_level := Project_variables_resolver.value ("geant.geant.level") + "#"
-					else
-						a_level := "#"
-					end
-					project.trace (<<"  [geant] geant.geant.level=", a_level>>)
-					project.variables.put (a_level, "geant.geant.level")
-					if a_level.count > 15 then
-						exit_application (1, <<"TOO MANY RECURSIVE FORKED GEANT CALLS">>)
-					end
-				end
+					-- Determine name of buildfile of current build script:
 --				a_key := STRING_.concat (project.name, ".absdir")
 --				a_filename := project.variables.item (a_key)
 --TODO:				a_filename := STRING_.concat (a_filename, project.variables.item ("path_separator"))
@@ -257,7 +247,7 @@ feature {NONE} -- Implementation
 --				a_filename := STRING_.concat (a_filename, project.variables.item (a_key))
 				a_filename := project.variables.item (a_key)
 				a_filename := file_system.pathname_from_file_system (a_filename, unix_file_system)
-				execute_forked_with_filename_and_target (a_filename, start_target_name)
+				execute_forked_with_filename_and_target (a_filename, a_target_name)
 			end
 		end
 
@@ -306,7 +296,6 @@ feature {NONE} -- Implementation
 						fileset.execute
 						from fileset.start until fileset.after or else exit_code /= 0 loop
 							a_target := a_project.start_target
-							arguments := a_target.prepared_arguments_from_formal_arguments (arguments)
 							a_project.build (arguments)
 							if not a_project.build_successful then
 								exit_code := 1
@@ -317,7 +306,6 @@ feature {NONE} -- Implementation
 					end
 				else
 					a_target := a_project.start_target
-					arguments := a_target.prepared_arguments_from_formal_arguments (arguments)
 					a_project.build (arguments)
 					if not a_project.build_successful then
 						exit_code := 1
@@ -343,17 +331,14 @@ feature {NONE} -- Implementation
 						fileset.execute
 						a_target := project.targets.item (start_target_name)
 						a_target := a_target.final_target
-						arguments := a_target.prepared_arguments_from_formal_arguments (arguments)
 						from fileset.start until fileset.after or else exit_code /= 0 loop
 							a_target.project.build_target (a_target, arguments)
-
 							fileset.forth
 						end
 					end
 				else
 					a_target := project.targets.item (start_target_name)
 					a_target := a_target.final_target
-					arguments := a_target.prepared_arguments_from_formal_arguments (arguments)
 					a_target.project.build_target (a_target, arguments)
 				end
 			else
@@ -362,8 +347,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	options_and_variables_for_cmdline: STRING is
-			-- All options and variables (without built-in ones) as STRINGs for
+	options_and_arguments_for_cmdline: STRING is
+			-- All options and arguments (without built-in ones) as STRINGs for
 			-- geant commandline call
 		local
 			cs: DS_HASH_TABLE_CURSOR [STRING, STRING]
@@ -379,23 +364,19 @@ feature {NONE} -- Implementation
 			if project.options.no_exec then
 				Result.append_string (" -n")
 			end
-				-- Pass variables:
-			cs := project.variables.new_cursor
+				-- Pass arguments:
+			cs := arguments.new_cursor
 			from cs.start until cs.after loop
-				if not project.is_builtin_variable_name (cs.key) then
-					project.trace_debug (<<"    [geant] variable: ", cs.key, "=", cs.item>>)
-					Result := STRING_.appended_string (Result, " -D%"")
-					Result := STRING_.appended_string (Result, cs.key)
-					Result := STRING_.appended_string (Result, "=")
-					Result := STRING_.appended_string (Result, cs.item)
-					Result := STRING_.appended_string (Result, "%"")
-				else
-					project.trace_debug (<<"    [geant] built-in variable: ", cs.key, "=", cs.item>>)
-				end
+				project.trace_debug (<<"    [*geant] variable: ", cs.key, "=", cs.item>>)
+				Result := STRING_.appended_string (Result, " -A%"")
+				Result := STRING_.appended_string (Result, cs.key)
+				Result := STRING_.appended_string (Result, "=")
+				Result := STRING_.appended_string (Result, cs.item)
+				Result := STRING_.appended_string (Result, "%"")
 				cs.forth
 			end
 		ensure
-			options_and_variables_for_cmdline_not_void: options_and_variables_for_cmdline /= Void
+			options_and_arguments_for_cmdline_not_void: options_and_arguments_for_cmdline /= Void
 		end
 
 	has_fork_been_set: BOOLEAN

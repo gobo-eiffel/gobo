@@ -108,12 +108,14 @@ feature -- Access/XML attribute values
 		do
 			Result := xml_element.attribute_by_name (an_attr_name).value
 			if Result.count > 0 then
-					-- Search variable in arguments (TODO: make this more efficient):
 				create a_string_interpreter.make
-				create a_variable_resolver.make
-				a_string_interpreter.set_variable_resolver (a_variable_resolver)
-				a_variable_resolver.set_variables (target_arguments_stack.item)
-				Result := a_string_interpreter.interpreted_string (Result)
+					-- Search variable in arguments if any (TODO: make this more efficient):
+				if target_arguments_stack.count > 0 then
+					create a_variable_resolver.make
+					a_string_interpreter.set_variable_resolver (a_variable_resolver)
+					a_variable_resolver.set_variables (target_arguments_stack.item)
+					Result := a_string_interpreter.interpreted_string (Result)
+				end
 
 					-- Search variable in project variables:
 				Project_variables_resolver.set_variables (project.variables)
