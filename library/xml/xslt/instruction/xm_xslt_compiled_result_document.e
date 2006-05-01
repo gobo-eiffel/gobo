@@ -332,7 +332,10 @@ feature -- Evaluation
 						an_iri_reference := escaped_uri (href.last_evaluated_string.string_value)
 						create a_uri.make_resolve (a_uri, an_iri_reference)
 						a_uri_to_use := a_uri.full_reference
-						if an_output_resolver.output_destinations.has (a_uri_to_use) then
+						if a_context.available_documents.is_document_mapped (a_uri.full_uri) then
+							create an_error.make_from_string (STRING_.concat ("Attempt to write to a URI that has already been read: ", a_uri_to_use),
+																		 Xpath_errors_uri, "XTRE1500", Dynamic_error)
+						elseif an_output_resolver.output_destinations.has (a_uri_to_use) then
 							create an_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", a_uri_to_use),
 																		 Xpath_errors_uri, "XTDE1490", Dynamic_error)
 							an_error.set_location (system_id, line_number)

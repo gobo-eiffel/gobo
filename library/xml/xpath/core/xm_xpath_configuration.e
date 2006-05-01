@@ -50,6 +50,14 @@ feature -- Status report
 			Result := True -- for Basic-level XSLT
 		end
 
+	is_uri_written (a_uri: STRING): BOOLEAN is
+			-- Has `a_uri' been written to yet?
+		require
+			a_uri_not_void: a_uri /= Void
+		do
+			-- To be redefined in XSLT
+		end
+
 feature -- Status setting
 
 	suppress_trace_output (yes_or_no: BOOLEAN) is

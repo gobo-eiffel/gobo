@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_CONFIGURATION
 		redefine
-			is_tracing, trace
+			is_tracing, trace, is_uri_written
 		end
 
 	XM_STRING_MODE
@@ -172,6 +172,19 @@ feature -- Access
 
 	message_emitter_factory: XM_XSLT_MESSAGE_EMITTER_FACTORY
 			-- Message-emitter factory
+
+feature -- Status report
+
+	is_uri_written (a_uri: STRING): BOOLEAN is
+			-- Has `a_uri' been written to yet?
+		do
+
+			-- Note that this call really only determines if the
+			--  output destination has been allocated. But this is sufficient
+			--  for the purposes of XTRE1500 - a clash is involved.
+
+			Result := output_resolver.output_destinations.has (a_uri)
+		end
 
 feature -- Creation
 

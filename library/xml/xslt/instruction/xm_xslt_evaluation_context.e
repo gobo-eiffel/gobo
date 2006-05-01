@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_CONTEXT
 		redefine
-			current_date_time, new_context, set_local_variable
+			current_date_time, new_context, set_local_variable, is_uri_written
 		end
 
 	XM_XPATH_ERROR_TYPES
@@ -259,6 +259,12 @@ feature -- Status report
 			-- Has a processing error occured?
 		do
 			Result := transformer.is_error
+		end
+
+	is_uri_written (a_uri: STRING): BOOLEAN is
+			-- Has `a_uri' been written to yet?
+		do
+			Result := STRING_.same_string (a_uri, transformer.principal_result_uri) or else Precursor (a_uri)
 		end
 
 feature -- Creation

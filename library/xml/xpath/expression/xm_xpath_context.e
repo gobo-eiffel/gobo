@@ -272,6 +272,14 @@ feature -- Status report
 		deferred
 		end
 
+	is_uri_written (a_uri: STRING): BOOLEAN is
+			-- Has `a_uri' been written to yet?
+		require
+			a_uri_not_void: a_uri /= Void
+		do
+			Result := configuration.is_uri_written (a_uri)
+		end
+
 feature -- Creation
 
 	new_context: like Current is
