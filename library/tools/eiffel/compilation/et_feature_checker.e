@@ -546,6 +546,8 @@ feature -- Validity checking
 							universe.is_ise and current_class /= l_class_impl and
 							(current_class = universe.boolean_class or
 							current_class = universe.character_class or
+							current_class = universe.character_8_class or
+							current_class = universe.character_32_class or
 							current_class = universe.wide_character_class or
 							current_class = universe.integer_class or
 							current_class = universe.integer_8_class or
@@ -1683,6 +1685,8 @@ feature {NONE} -- Instruction validity
 						universe.is_ise and current_class /= l_class_impl and
 						(current_class = universe.boolean_class or
 						current_class = universe.character_class or
+						current_class = universe.character_8_class or
+						current_class = universe.character_32_class or
 						current_class = universe.wide_character_class or
 						current_class = universe.integer_class or
 						current_class = universe.integer_8_class or
@@ -1696,7 +1700,8 @@ feature {NONE} -- Instruction validity
 						current_class = universe.natural_64_class or
 						current_class = universe.real_class or
 						current_class = universe.double_class or
-						current_class = universe.pointer_class)
+						current_class = universe.pointer_class or
+						current_class = universe.typed_pointer_class)
 					then
 						-- Compatibility with ISE 5.6.0610.
 					else
@@ -2105,12 +2110,18 @@ feature {NONE} -- Instruction validity
 					elseif not l_procedure.is_creation_exported_to (current_class, l_class, universe) then
 						if l_class.creators /= Void or else not l_procedure.has_seed (universe.default_create_seed) then
 								-- The procedure is not a creation procedure exported to `current_class'.
-							set_fatal_error
 							l_class_impl := feature_impl.implementation_class
-							if current_class = l_class_impl then
-								error_handler.report_vgcc6h_error (current_class, l_name, l_procedure, l_class)
+							if current_class /= l_class_impl and current_class.is_deferred and l_creation_context.is_like_current then
+								-- In case of flat Degree 3, it is OK to create an entity
+								-- declared of type 'like Current' in the current class
+								-- if the current class is deferred.
 							else
-								error_handler.report_vgcc6i_error (current_class, l_class_impl, l_name, l_procedure, l_class)
+								set_fatal_error
+								if current_class = l_class_impl then
+									error_handler.report_vgcc6h_error (current_class, l_name, l_procedure, l_class)
+								else
+									error_handler.report_vgcc6i_error (current_class, l_class_impl, l_name, l_procedure, l_class)
+								end
 							end
 						end
 					end
@@ -3675,12 +3686,18 @@ feature {NONE} -- Expression validity
 						if l_class.creators /= Void or else not l_procedure.has_seed (universe.default_create_seed) then
 								-- The procedure is not a creation procedure exported to `current_class',
 								-- and it is not the implicit creation procedure 'default_create'.
-							set_fatal_error
 							l_class_impl := feature_impl.implementation_class
-							if current_class = l_class_impl then
-								error_handler.report_vgcc6d_error (current_class, l_name, l_procedure, l_class)
+							if current_class /= l_class_impl and current_class.is_deferred and a_context.is_like_current then
+								-- In case of flat Degree 3, it is OK to create an entity
+								-- declared of type 'like Current' in the current class
+								-- if the current class is deferred.
 							else
-								error_handler.report_vgcc6e_error (current_class, l_class_impl, l_name, l_procedure, l_class)
+								set_fatal_error
+								if current_class = l_class_impl then
+									error_handler.report_vgcc6d_error (current_class, l_name, l_procedure, l_class)
+								else
+									error_handler.report_vgcc6e_error (current_class, l_class_impl, l_name, l_procedure, l_class)
+								end
 							end
 						end
 					end

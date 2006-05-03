@@ -293,6 +293,17 @@ feature -- Status report
 			end
 		end
 
+	is_like_current: BOOLEAN is
+			-- Is current context a 'like Current' in `root_context'?
+		local
+			l_like_current: ET_LIKE_CURRENT
+		do
+			if count = 1 then
+				l_like_current ?= first
+				Result := (l_like_current /= Void)
+			end
+		end
+
 	has_formal_type (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the named type of current context in `a_universe'
 			-- contain the formal generic parameter with index `i'?
