@@ -65,10 +65,10 @@ feature {NONE} -- Initialization
 			-- Create a new regexp compiler.
 		do
 			create byte_code.make (1024)
-			set_character_case_mapping (default_character_case_mapping)
-			set_word_set (default_word_set)
 			pattern := STRING_.cloned_string (empty_pattern)
 			reset
+			set_character_case_mapping (default_character_case_mapping)
+			set_word_set (default_word_set)
 			set_default_options
 		ensure
 			not_compiled: not is_compiled
@@ -79,7 +79,7 @@ feature -- Status report
 	is_compiled: BOOLEAN is
 			-- Was last compilation successful?
 		do
-			Result := error_message /= Void and then STRING_.same_string (error_message, err_msg_0)
+			Result := STRING_.same_string (error_message, err_msg_0)
 		end
 
 	is_caseless: BOOLEAN
