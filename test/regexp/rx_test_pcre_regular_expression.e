@@ -64,6 +64,23 @@ feature -- Test Input 1
 			assert ("not_matched4", not a_regexp.has_matched)
 		end
 
+	test_recognizes is
+			-- Test feature `recognizes'.
+		local
+			a_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create a_regexp.make
+				-- Compile pattern.
+			a_regexp.compile ("[a-z]+")
+			assert ("is_compiled", a_regexp.is_compiled)
+				-- Match string.
+			assert ("recognizes1", a_regexp.recognizes ("gobo"))
+				-- Match shorter string.
+			assert ("recognizes2", a_regexp.recognizes ("we"))
+				-- Match longer string.
+			assert ("recognizes3", a_regexp.recognizes ("eiffel"))
+		end
+
 feature -- Test replacement
 
 	test_replacement1 is
