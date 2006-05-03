@@ -642,9 +642,9 @@ create
 
 [0-9]+		{
 			}
-[0-9]{1,3}(_[0-9]{3})+	{
+[0-9]+(_+[0-9]+)+	{
 			}
-_(_*[0-9_]+_*)+	{
+_+[0-9]+(_+[0-9]+)+	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -652,14 +652,15 @@ _(_*[0-9_]+_*)+	{
 
 				last_token := E_INTERR
 			}
-(_*[0-9]+_*)+	{
-					-- Syntax error: an underscore must be followed
-					-- by three digits and there must not be any
-					-- consecutive group of four digits.
+[0-9]+(_+[0-9]+)+_+	{
+					-- Syntax error: an underscore may not be
+					-- the last character of an integer.
 				set_syntax_error
-				error_handler.report_SITD_error (filename, current_position)
+				error_handler.report_SILU_error (filename, current_position)
 
 				last_token := E_INTERR
+			}
+0[xX][0-9a-fA-F]+	{
 			}
 
 
@@ -669,9 +670,9 @@ _(_*[0-9_]+_*)+	{
 [0-9]+\.[0-9]*[eE][+-]?[0-9]+		|
 [0-9]*\.[0-9]+([eE][+-]?[0-9]+)?	{
 			}
-[0-9]{1,3}(_[0-9]{3})+\./[^.0-9]	|
-[0-9]{1,3}(_[0-9]{3})*\.([0-9]{1,3}(_[0-9]{3})*)?[eE][+-]?[0-9]{1,3}(_[0-9]{3})*	|
-([0-9]{1,3}(_[0-9]{3})*)?\.[0-9]{1,3}(_[0-9]{3})*([eE][+-]?[0-9]{1,3}(_[0-9]{3})*)?	{
+[0-9]+(_+[0-9]+)+\./[^.0-9]	|
+[0-9]+(_+[0-9]+)*\.([0-9]+(_+[0-9]+)*)?[eE][+-]?[0-9]+(_+[0-9]+)*	|
+([0-9]+(_+[0-9]+)*)?\.[0-9]+(_+[0-9]+)*([eE][+-]?[0-9]+(_+[0-9]+)*)?	{
 			}
 
 		-- The first and fourth expressions use a trailing context

@@ -778,7 +778,7 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 				more
 				set_start_condition (BREAK)
 			}
-[0-9]{1,3}(_[0-9]{3})+	{
+[0-9]+(_+[0-9]+)+	{
 				last_token := E_INTEGER
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -786,7 +786,15 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
-_(_*[0-9_]+_*)+	{
+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
+				last_text_count := text_count
+				last_literal_start := 1
+				last_literal_end := last_text_count
+				break_kind := uinteger_break
+				more
+				set_start_condition (BREAK)
+			}
+_+[0-9]+(_+[0-9]+)+	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -798,12 +806,23 @@ _(_*[0-9_]+_*)+	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
-(_*[0-9]+_*)+	{
-					-- Syntax error: an underscore must be followed
-					-- by three digits and there must not be any
-					-- consecutive group of four digits.
+_+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
+					-- Syntax error: an underscore may not be
+					-- the first character of an integer.
 				set_syntax_error
-				error_handler.report_SITD_error (filename, current_position)
+				error_handler.report_SIFU_error (filename, current_position)
+				last_text_count := text_count
+				last_literal_start := 1
+				last_literal_end := last_text_count
+				break_kind := uinteger_break
+				more
+				set_start_condition (BREAK)
+			}
+[0-9]+(_+[0-9]+)+_+	{
+					-- Syntax error: an underscore may not be
+					-- the last character of an integer.
+				set_syntax_error
+				error_handler.report_SILU_error (filename, current_position)
 				last_token := E_INTEGER
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -811,7 +830,11 @@ _(_*[0-9_]+_*)+	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
-(_*[0-9]+_*)+/([ \t\r\n]|"--")	{
+[0-9]+(_+[0-9]+)+_+/([ \t\r\n]|"--")	{
+					-- Syntax error: an underscore may not be
+					-- the last character of an integer.
+				set_syntax_error
+				error_handler.report_SILU_error (filename, current_position)
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -862,9 +885,9 @@ _(_*[0-9_]+_*)+	{
 				last_comment_end := 0
 				last_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
 			}
-[0-9]{1,3}(_[0-9]{3})+\./([ \t\r\n]|"--")	|
-[0-9]{1,3}(_[0-9]{3})*\.([0-9]{1,3}(_[0-9]{3})*)?[eE][+-]?[0-9]{1,3}(_[0-9]{3})*/([ \t\r\n]|"--")	|
-([0-9]{1,3}(_[0-9]{3})*)?\.[0-9]{1,3}(_[0-9]{3})*([eE][+-]?[0-9]{1,3}(_[0-9]{3})*)?/([ \t\r\n]|"--")	{
+[0-9]+(_+[0-9]+)+\./([ \t\r\n]|"--")	|
+[0-9]+(_+[0-9]+)*\.([0-9]+(_+[0-9]+)*)?[eE][+-]?[0-9]+(_+[0-9]+)*/([ \t\r\n]|"--")	|
+([0-9]+(_+[0-9]+)*)?\.[0-9]+(_+[0-9]+)*([eE][+-]?[0-9]+(_+[0-9]+)*)?/([ \t\r\n]|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -872,9 +895,9 @@ _(_*[0-9_]+_*)+	{
 				more
 				set_start_condition (BREAK)
 			}
-[0-9]{1,3}(_[0-9]{3})+\./[^.0-9]	|
-[0-9]{1,3}(_[0-9]{3})*\.([0-9]{1,3}(_[0-9]{3})*)?[eE][+-]?[0-9]{1,3}(_[0-9]{3})*	|
-([0-9]{1,3}(_[0-9]{3})*)?\.[0-9]{1,3}(_[0-9]{3})*([eE][+-]?[0-9]{1,3}(_[0-9]{3})*)?	{
+[0-9]+(_+[0-9]+)+\./[^.0-9]	|
+[0-9]+(_+[0-9]+)*\.([0-9]+(_+[0-9]+)*)?[eE][+-]?[0-9]+(_+[0-9]+)*	|
+([0-9]+(_+[0-9]+)*)?\.[0-9]+(_+[0-9]+)*([eE][+-]?[0-9]+(_+[0-9]+)*)?	{
 		-- The first regexp of this group uses a trailing context
 		-- to make sure that an integer followed by two dots is
 		-- not recognized as a real followed by a dot.

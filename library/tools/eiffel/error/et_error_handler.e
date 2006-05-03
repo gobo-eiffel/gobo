@@ -338,11 +338,10 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SITD_error (a_filename: STRING; p: ET_POSITION) is
-			-- An underscore must be followed by three digits
-			-- and there must not be any consecutive group of
-			-- four digits in integer constant. (ETL2 p.420)
-			-- (SITD: Syntax Integer Three Digits)
+	report_SILU_error (a_filename: STRING; p: ET_POSITION) is
+			-- An underscore may not be the last character
+			-- of an integer constant. (ECMA p.157)
+			-- (SILU: Syntax Integer Last Underscore)
 		require
 			a_filename_not_void: a_filename /= Void
 			p_not_void: p /= Void
