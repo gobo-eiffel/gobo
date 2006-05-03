@@ -61,14 +61,14 @@ feature -- Access
 
 	first_position: ET_POSITION is
 			-- Position of first character of current node in source code;
-			-- NUll position is current node is empty
+			-- Null position is current node is empty
 		do
 			Result := call_agent.name.first_position
 		end
 
 	last_position: ET_POSITION is
 			-- Position of last character of current node in source code;
-			-- NUll position is current node is empty
+			-- Null position is current node is empty
 		do
 			Result := call_agent.name.last_position
 		end

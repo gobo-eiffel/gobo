@@ -30,7 +30,7 @@ feature -- Access
 
 	first_position: ET_POSITION is
 			-- Position of first character of current node in source code;
-			-- NUll position is current node is empty
+			-- Null position is current node is empty
 		local
 			l_first_leaf: like first_leaf
 		do
@@ -46,7 +46,7 @@ feature -- Access
 
 	last_position: ET_POSITION is
 			-- Position of last character of current node in source code;
-			-- NUll position is current node is empty
+			-- Null position is current node is empty
 		local
 			l_last_leaf: like last_leaf
 		do
