@@ -78,6 +78,12 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_parenthesis.process (Current)
 		end
 
+	process_agent_implicit_current_target (a_target: ET_AGENT_IMPLICIT_CURRENT_TARGET) is
+			-- Process `a_target'.
+		do
+			-- Do nothing.
+		end
+
 	process_agent_implicit_open_argument (an_argument: ET_AGENT_IMPLICIT_OPEN_ARGUMENT) is
 			-- Process `an_argument'.
 		do
@@ -330,14 +336,12 @@ feature {ET_AST_NODE} -- Processing
 			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			a_target := an_expression.target
-			if a_target /= Void and an_expression.use_tilde then
+			if an_expression.use_tilde then
 				a_target.process (Current)
 				an_expression.agent_keyword.process (Current)
 			else
 				an_expression.agent_keyword.process (Current)
-				if a_target /= Void then
-					a_target.process (Current)
-				end
+				a_target.process (Current)
 			end
 			an_expression.qualified_name.process (Current)
 			an_arguments ?= an_expression.arguments

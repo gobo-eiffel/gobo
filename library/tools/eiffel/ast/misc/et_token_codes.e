@@ -330,8 +330,23 @@ feature -- Built-in codes
 	builtin_platform_real_bytes: INTEGER is 8
 	builtin_platform_pointer_bytes: INTEGER is 9
 
-	builtin_function_item: INTEGER is 5001
-	builtin_routine_call: INTEGER is 5101
-			-- Built-in feature codes
+	builtin_procedure_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class PROCEDURE
+		do
+			Result := builtin_procedure_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_procedure_class: INTEGER is 19
+	builtin_procedure_call: INTEGER is 1
+
+	builtin_function_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class FUNCTION
+		do
+			Result := builtin_function_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_function_class: INTEGER is 20
+	builtin_function_item: INTEGER is 1
+	builtin_function_call: INTEGER is 2
 
 end

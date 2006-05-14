@@ -1719,6 +1719,10 @@ feature {NONE} -- Built-in
 				set_builtin_arguments_function (a_feature)
 			elseif a_class = universe.platform_class then
 				set_builtin_platform_function (a_feature)
+			elseif a_class = universe.procedure_class then
+				set_builtin_procedure_function (a_feature)
+			elseif a_class = universe.function_class then
+				set_builtin_function_function (a_feature)
 			elseif a_class = universe.integer_ref_class then
 				set_builtin_sized_integer_ref_function (a_feature, universe.integer_class, tokens.builtin_integer_class)
 			elseif a_class = universe.integer_class then
@@ -2516,6 +2520,62 @@ feature {NONE} -- Built-in
 			end
 		end
 
+	set_builtin_procedure_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class PROCEDURE.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.call_feature_name) then
+					-- 'call' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs10a_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_function_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class FUNCTION.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'item (args: OPEN_ARGS): RESULT_TYPE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs11a_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.formal_parameter_2, a_class, a_class, universe) then
+						-- The signature should be 'item (args: OPEN_ARGS): RESULT_TYPE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs11a_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (tokens.formal_parameter_3, a_class, a_class, universe) then
+						-- The signature should be 'item (args: OPEN_ARGS): RESULT_TYPE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs11a_error (a_class, a_feature)
+				end
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
 	set_builtin_sized_integer_ref_function (a_feature: ET_EXTERNAL_FUNCTION; an_integer_class: ET_CLASS; a_builtin_class_code: INTEGER) is
 			-- Set built-in code of `a_feature' from the ref class of sized integer class `an_integer_class'.
 			-- `a_builtin_class_code' is the built-in code of class `an_integer_class'.
@@ -3289,6 +3349,10 @@ feature {NONE} -- Built-in
 				set_builtin_arguments_procedure (a_feature)
 			elseif a_class = universe.platform_class then
 				set_builtin_platform_procedure (a_feature)
+			elseif a_class = universe.procedure_class then
+				set_builtin_procedure_procedure (a_feature)
+			elseif a_class = universe.function_class then
+				set_builtin_function_procedure (a_feature)
 			elseif a_class = universe.integer_ref_class then
 				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_class, tokens.builtin_integer_class)
 			elseif a_class = universe.integer_class then
@@ -3783,6 +3847,58 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_real_bytes))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs9i_error (a_class, a_feature)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_procedure_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class PROCEDURE.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.call_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'call (args: OPEN_ARGS)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs10a_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.formal_parameter_2, a_class, a_class, universe) then
+						-- The signature should be 'call (args: OPEN_ARGS)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs10a_error (a_class, a_feature)
+				end
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_function_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class FUNCTION.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.item_feature_name) then
+					-- 'item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs11a_error (a_class, a_feature)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

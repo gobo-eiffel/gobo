@@ -1521,7 +1521,11 @@ feature -- AST nodes
 			-- New call agent
 		do
 			if a_name /= Void then
-				create Result.make (a_target, a_name, args)
+				if a_target = Void then
+					create Result.make_unqualified (a_name, args)
+				else
+					create Result.make (a_target, a_name, args)
+				end
 				if an_agent /= Void then
 					Result.set_agent_keyword (an_agent)
 				end

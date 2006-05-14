@@ -372,17 +372,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_base_class: ET_CLASS
-			any_type: ET_CLASS_TYPE
 		do
 			a_base_class := other.direct_base_class (a_universe)
 			if a_base_class.is_preparsed then
 				Result := conforms_from_class_type (a_base_class, other_context, a_context, a_universe)
 			end
 			if not Result then
-					-- Tuple_type conforms to "ANY", so Tuple_type conforms
-					-- to current class type if "ANY" conforms to it.
-				any_type := a_universe.any_class
-				Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
+					-- If the base class of a Tuple_type conforms to
+					-- current class type, then the Tuple_type itself
+					-- conforms to it.
+				Result := conforms_from_class_type (a_universe.tuple_class, other_context, a_context, a_universe)
 			end
 		end
 
@@ -466,17 +465,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_base_class: ET_CLASS
-			any_type: ET_CLASS_TYPE
 		do
 			a_base_class := other.direct_base_class (a_universe)
 			if a_base_class.is_preparsed then
 				Result := reference_conforms_from_class_type (a_base_class, other_context, a_context, a_universe)
 			end
 			if not Result then
-					-- Tuple_type conforms to "ANY", so Tuple_type conforms
-					-- to current class type if "ANY" conforms to it.
-				any_type := a_universe.any_class
-				Result := reference_conforms_from_class_type (any_type, other_context, a_context, a_universe)
+					-- If the base class of a Tuple_type conforms to
+					-- current class type, then the Tuple_type itself
+					-- conforms to it.
+				Result := reference_conforms_from_class_type (a_universe.tuple_class, other_context, a_context, a_universe)
 			end
 		end
 

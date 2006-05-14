@@ -5,7 +5,7 @@ indexing
 		"Eiffel call agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,16 +20,20 @@ inherit
 		end
 
 	ET_CALL_COMPONENT
+		redefine
+			is_qualified_call
+		end
 
 create
 
-	make
+	make, make_unqualified
 
 feature {NONE} -- Initialization
 
 	make (a_target: like target; a_name: like qualified_name; args: like arguments) is
 			-- Create a new call agent.
 		require
+			a_target_not_void: a_target /= Void
 			a_name_not_void: a_name /= Void
 		do
 			agent_keyword := tokens.agent_keyword
@@ -42,6 +46,21 @@ feature {NONE} -- Initialization
 			arguments_set: arguments = args
 		end
 
+	make_unqualified (a_name: like qualified_name; args: like arguments) is
+			-- Create a new unqualified call agent.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			agent_keyword := tokens.agent_keyword
+			qualified_name := a_name
+			arguments := args
+			create {ET_AGENT_IMPLICIT_CURRENT_TARGET} target.make (Current)
+		ensure
+			name_set: qualified_name = a_name
+			arguments_set: arguments = args
+			unqualified_call: not is_qualified_call
+		end
+
 feature -- Initialization
 
 	reset is
@@ -51,9 +70,7 @@ feature -- Initialization
 		do
 			name.reset
 			is_procedure := False
-			if target /= Void then
-				target.reset
-			end
+			target.reset
 			l_actuals ?= arguments
 			if l_actuals /= Void then
 				l_actuals.reset
@@ -88,14 +105,12 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if target /= Void and use_tilde then
+			if is_qualified_call and use_tilde then
 				Result := target.position
 			else
 				Result := agent_keyword.position
 				if Result.is_null then
-					if target /= Void then
-						Result := target.position
-					end
+					Result := target.position
 				end
 			end
 			if Result.is_null then
@@ -106,7 +121,7 @@ feature -- Access
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			if target /= Void and use_tilde then
+			if is_qualified_call and use_tilde then
 				Result := target.first_leaf
 			else
 				Result := agent_keyword
@@ -140,6 +155,15 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_qualified_call: BOOLEAN is
+			-- Is current call qualified?
+		local
+			l_implicit_target: ET_AGENT_IMPLICIT_CURRENT_TARGET
+		do
+			l_implicit_target ?= target
+			Result := (l_implicit_target = Void)
+		end
 
 	is_procedure: BOOLEAN
 			-- Is the associated feature a procedure?
@@ -175,7 +199,7 @@ feature -- Setting
 
 feature -- Status setting
 
-	set_procedure (b: BOOLEAN) is	
+	set_procedure (b: BOOLEAN) is
 			-- Set `is_procedure' to `b'.
 		do
 			is_procedure := b
@@ -195,5 +219,6 @@ invariant
 
 	agent_keyword_not_void: agent_keyword /= Void
 	qualified_name_not_void: qualified_name /= Void
+	target_not_void: target /= Void
 
 end

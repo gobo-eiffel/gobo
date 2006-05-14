@@ -77,4 +77,32 @@ feature -- Access
 			end
 		end
 
+feature -- Setting
+
+	set_name (a_name: like name) is
+			-- Set `name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			qualified_name := a_name
+		ensure
+			name_set: name = a_name
+		end
+
+	set_target (a_target: like target) is
+			-- Set `target' to `a_target'.
+		do
+			target := a_target
+		ensure
+			target_set: target = a_target
+		end
+
+	set_arguments (args: like arguments) is
+			-- Set `arguments' to `args'.
+		do
+			arguments := args
+		ensure
+			arguments_set: arguments = args
+		end
+
 end

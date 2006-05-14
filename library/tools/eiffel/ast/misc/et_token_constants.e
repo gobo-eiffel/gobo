@@ -1298,6 +1298,28 @@ feature -- Types
 			formal_parameter_not_void: Result /= Void
 		end
 
+	formal_parameter_2: ET_FORMAL_PARAMETER_TYPE is
+			-- Type 'G#2'
+		local
+			l_name: ET_IDENTIFIER
+		once
+			create l_name.make ("H")
+			create Result.make (l_name, 2)
+		ensure
+			formal_parameter_not_void: Result /= Void
+		end
+
+	formal_parameter_3: ET_FORMAL_PARAMETER_TYPE is
+			-- Type 'G#3'
+		local
+			l_name: ET_IDENTIFIER
+		once
+			create l_name.make ("I")
+			create Result.make (l_name, 3)
+		ensure
+			formal_parameter_not_void: Result /= Void
+		end
+
 feature -- Symbols
 
 	symbol: ET_SYMBOL is

@@ -42,7 +42,7 @@ feature -- Status report
 		do
 			Result := (target /= Void)
 		ensure
-			definition: Result = (target /= Void)
+			definition: Result implies (target /= Void)
 		end
 
 end

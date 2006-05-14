@@ -7469,6 +7469,46 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvkbs10a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-10 error: wrong signature for 'PROCEDURE.call'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs10_error (a_class) then
+				create an_error.make_gvkbs10a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs11a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-11 error: wrong signature for 'FUNCTION.item'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs11_error (a_class) then
+				create an_error.make_gvkbs11a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvkbu1a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Report GVKBU-1 error: unknown built-in routine `a_feature'
 			-- in class `a_class'.
@@ -8836,6 +8876,26 @@ feature -- Validity error status
 
 	reportable_gvkbs9_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVKBS-9 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbs10_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS-10 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbs11_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS-11 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

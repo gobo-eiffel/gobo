@@ -407,9 +407,7 @@ feature {ET_AST_NODE} -- Processing
 			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			a_target := an_expression.target
-			if a_target /= Void then
-				a_target.process (Current)
-			end
+			a_target.process (Current)
 			an_arguments ?= an_expression.arguments
 			if an_arguments /= Void then
 				process_agent_argument_operand_list (an_arguments)

@@ -343,6 +343,8 @@ create
 	make_gvkbs9g,
 	make_gvkbs9h,
 	make_gvkbs9i,
+	make_gvkbs10a,
+	make_gvkbs11a,
 	make_gvkbu1a,
 	make_gvkfe1a,
 	make_gvkfe2a,
@@ -14464,6 +14466,86 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
+	make_gvkbs10a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-10 error: wrong signature for 'PROCEDURE.call'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs10a_template_code
+			etl_code := gvkbs10_etl_code
+			default_template := gvkbs10a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs11a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-11 error: wrong signature for 'FUNCTION.item'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs11a_template_code
+			etl_code := gvkbs11_etl_code
+			default_template := gvkbs11a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
 	make_gvkbu1a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Create a new GVKBU-1 error: unknown built-in routine `a_feature'
 			-- in class `a_class'.
@@ -15321,6 +15403,8 @@ feature {NONE} -- Implementation
 	gvkbs9g_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'integer_bytes: INTEGER'."
 	gvkbs9h_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'pointer_bytes: INTEGER'."
 	gvkbs9i_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'real_bytes: INTEGER'."
+	gvkbs10a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'call (args: OPEN_ARGS)'."
+	gvkbs11a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'item (args: OPEN_ARGS): RESULT_TYPE'."
 	gvkbu1a_default_template: STRING is "[$1] class $5: unknown built-in routine `$6' in class $5."
 	gvkfe1a_default_template: STRING is "[$1] class $5: feature `$6' is missing in kernel class $5."
 	gvkfe2a_default_template: STRING is "[$1] class $5: feature `$6' in kernel class $5 is not an attribute."
@@ -15451,6 +15535,8 @@ feature {NONE} -- Implementation
 	gvkbs7_etl_code: STRING is "GVKBS-7"
 	gvkbs8_etl_code: STRING is "GVKBS-8"
 	gvkbs9_etl_code: STRING is "GVKBS-9"
+	gvkbs10_etl_code: STRING is "GVKBS-10"
+	gvkbs11_etl_code: STRING is "GVKBS-11"
 	gvkbu1_etl_code: STRING is "GVKBU-1"
 	gvkfe1_etl_code: STRING is "GVKFE-1"
 	gvkfe2_etl_code: STRING is "GVKFE-2"
@@ -15786,6 +15872,8 @@ feature {NONE} -- Implementation
 	gvkbs9g_template_code: STRING is "gvkbs9g"
 	gvkbs9h_template_code: STRING is "gvkbs9h"
 	gvkbs9i_template_code: STRING is "gvkbs9i"
+	gvkbs10a_template_code: STRING is "gvkbs10a"
+	gvkbs11a_template_code: STRING is "gvkbs11a"
 	gvkbu1a_template_code: STRING is "gvkbu1a"
 	gvkfe1a_template_code: STRING is "gvkfe1a"
 	gvkfe2a_template_code: STRING is "gvkfe2a"

@@ -321,7 +321,8 @@ feature -- Status report
 	is_builtin_routine_call: BOOLEAN is
 			-- Is current feature the built-in feature 'ROUTINE.call'?
 		do
-			Result := (builtin_code = builtin_routine_call)
+			Result := (builtin_code = builtin_function_feature (builtin_function_call)) or
+				(builtin_code = builtin_procedure_feature (builtin_procedure_call))
 		ensure
 			builtin: Result implies is_builtin
 		end
@@ -329,7 +330,7 @@ feature -- Status report
 	is_builtin_function_item: BOOLEAN is
 			-- Is current feature the built-in feature 'FUNCTION.item'?
 		do
-			Result := (builtin_code = builtin_function_item)
+			Result := (builtin_code = builtin_function_feature (builtin_function_item))
 		ensure
 			builtin: Result implies is_builtin
 		end

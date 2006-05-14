@@ -150,6 +150,13 @@ feature {NONE} -- Initialization
 			create polymorphic_seeds.make (1000)
 			create polymorphic_type_ids.make (100)
 			create polymorphic_types.make_map (100)
+			create call_agents.make (20)
+			create agent_open_operands.make (20)
+			create agent_closed_operands.make (20)
+			create agent_arguments.make_with_capacity (100)
+			create agent_instruction.make (Void, current_feature.static_feature.name, Void)
+			create agent_expression.make (Void, current_feature.static_feature.name, Void)
+			create agent_assignment.make (tokens.result_keyword, agent_expression)
 			create manifest_array_types.make (100)
 			create manifest_tuple_types.make (100)
 			create once_features.make (10000)
@@ -396,6 +403,7 @@ feature {NONE} -- Feature generation
 		local
 			old_type: ET_DYNAMIC_TYPE
 			old_feature: ET_DYNAMIC_FEATURE
+			i, nb: INTEGER
 		do
 			if not a_feature.is_semistrict then
 				old_type := current_type
@@ -403,6 +411,13 @@ feature {NONE} -- Feature generation
 				old_feature := current_feature
 				current_feature := a_feature
 				a_feature.static_feature.process (Current)
+					-- Print declaration of agents used in `a_feature'.
+				nb := call_agents.count
+				from i := 1 until i > nb loop
+					print_call_agent_declaration (i, call_agents.item (i))
+					i := i + 1
+				end
+				call_agents.wipe_out
 				current_feature := old_feature
 				current_type := old_type
 			end
@@ -1600,6 +1615,20 @@ feature {NONE} -- Feature generation
 						set_fatal_error
 						error_handler.report_giaaa_error
 					end
+				when builtin_function_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_function_item then
+						fill_call_formal_arguments (a_feature)
+						print_indentation
+						print_builtin_function_item_call (current_type)
+						current_file.put_new_line
+						call_operands.wipe_out
+					else
+							-- Internal error: unknown built-in feature.
+							-- This error should already have been reported during parsing.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					end
 				else
 					inspect l_builtin_class
 					when builtin_integer_class then
@@ -2007,6 +2036,20 @@ feature {NONE} -- Feature generation
 						fill_call_formal_arguments (a_feature)
 						print_indentation
 						print_builtin_pointer_set_item_call (current_type)
+						current_file.put_new_line
+						call_operands.wipe_out
+					else
+							-- Internal error: unknown built-in feature.
+							-- This error should already have been reported during parsing.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					end
+				when builtin_procedure_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_procedure_call then
+						fill_call_formal_arguments (a_feature)
+						print_indentation
+						print_builtin_procedure_call_call (current_type)
 						current_file.put_new_line
 						call_operands.wipe_out
 					else
@@ -3476,6 +3519,13 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 						else
 							l_printed := False
 						end
+					when builtin_procedure_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_procedure_call then
+							print_builtin_procedure_call_call (a_target_type)
+						else
+							l_printed := False
+						end
 					else
 						inspect l_builtin_class
 						when builtin_integer_class then
@@ -3901,7 +3951,7 @@ feature {NONE} -- Expression generation
 			print_attribute_special_item_name (a_type, current_file)
 		end
 
-	print_attribute_tuple_item_access (a_target: ET_EXPRESSION; i: INTEGER; a_type: ET_DYNAMIC_TYPE) is
+	print_attribute_tuple_item_access (i: INTEGER; a_target: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
 			-- Print access to `i'-th 'item' pseudo attribute of class TUPLE
 			-- applied to `a_target' of type `a_type'.
 		require
@@ -4719,13 +4769,11 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			a_name_not_void: a_name /= Void
 			a_name_local: a_name.is_local
 		local
-			l_seed: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if in_operand then
 				operand_stack.force (a_name)
 			else
-				l_seed := a_name.seed
 				if in_target then
 					l_dynamic_type_set := current_feature.dynamic_type_set (a_name)
 					if l_dynamic_type_set = Void then
@@ -5362,60 +5410,62 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 						print_query_call (l_target_dynamic_type, l_name)
 					else
 							-- Dynamic binding.
-						l_query := l_target_static_type.base_class.seeded_query (l_seed)
-						if l_query = Void then
-								-- Internal error: there should be a query with `a_seed'.
-								-- It has been computed in ET_FEATURE_CHECKER.
-							set_fatal_error
-							error_handler.report_giaaa_error
+						if l_name.is_tuple_label then
+							print_query_call (l_target_dynamic_type, l_name)
 						else
-							l_constant_attribute ?= l_query
-							if l_constant_attribute /= Void then
-								print_query_call (l_target_dynamic_type, l_name)
-							elseif l_name.is_tuple_label then
-								print_query_call (l_target_dynamic_type, l_name)
-							elseif l_other_target_dynamic_types.count /= 1 then
-								print_call_name (a_call, l_target_static_type, current_file)
-								current_file.put_character ('(')
-								if l_target_static_type.is_expanded then
-									print_target_expression (call_operands.first)
-								else
-									print_expression (call_operands.first)
-								end
-								from i := 2 until i > nb loop
-									current_file.put_character (',')
-									current_file.put_character (' ')
-									print_expression (call_operands.item (i))
-									i := i + 1
-								end
-								current_file.put_character (')')
+							l_query := l_target_static_type.base_class.seeded_query (l_seed)
+							if l_query = Void then
+									-- Internal error: there should be a query with `a_seed'.
+									-- It has been computed in ET_FEATURE_CHECKER.
+								set_fatal_error
+								error_handler.report_giaaa_error
 							else
-								from
-									j := 1
-									nb2 := l_other_target_dynamic_types.count
-									current_file.put_character ('(')
-								until
-									l_target_dynamic_type = Void
-								loop
-									if j <= nb2 then
-										current_file.put_character ('(')
-										print_attribute_type_id_access (call_operands.first, l_target_static_type)
-										current_file.put_character ('=')
-										current_file.put_character ('=')
-										current_file.put_integer (l_target_dynamic_type.id)
-										current_file.put_character (')')
-										current_file.put_character ('?')
-									end
+								l_constant_attribute ?= l_query
+								if l_constant_attribute /= Void then
 									print_query_call (l_target_dynamic_type, l_name)
-									if j > nb2 then
-										l_target_dynamic_type := Void
+								elseif l_other_target_dynamic_types.count /= 1 then
+									print_call_name (a_call, l_target_static_type, current_file)
+									current_file.put_character ('(')
+									if l_target_static_type.is_expanded then
+										print_target_expression (call_operands.first)
 									else
-										current_file.put_character (':')
-										l_target_dynamic_type := l_other_target_dynamic_types.item (j)
-										j := j + 1
+										print_expression (call_operands.first)
 									end
+									from i := 2 until i > nb loop
+										current_file.put_character (',')
+										current_file.put_character (' ')
+										print_expression (call_operands.item (i))
+										i := i + 1
+									end
+									current_file.put_character (')')
+								else
+									from
+										j := 1
+										nb2 := l_other_target_dynamic_types.count
+										current_file.put_character ('(')
+									until
+										l_target_dynamic_type = Void
+									loop
+										if j <= nb2 then
+											current_file.put_character ('(')
+											print_attribute_type_id_access (call_operands.first, l_target_static_type)
+											current_file.put_character ('=')
+											current_file.put_character ('=')
+											current_file.put_integer (l_target_dynamic_type.id)
+											current_file.put_character (')')
+											current_file.put_character ('?')
+										end
+										print_query_call (l_target_dynamic_type, l_name)
+										if j > nb2 then
+											l_target_dynamic_type := Void
+										else
+											current_file.put_character (':')
+											l_target_dynamic_type := l_other_target_dynamic_types.item (j)
+											j := j + 1
+										end
+									end
+									current_file.put_character (')')
 								end
-								current_file.put_character (')')
 							end
 						end
 					end
@@ -5455,302 +5505,311 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			l_character_type: ET_DYNAMIC_TYPE
 		do
 			l_seed := a_name.seed
-			l_query := a_target_type.base_class.seeded_query (l_seed)
 			if a_name.is_tuple_label then
-				print_attribute_tuple_item_access (call_operands.first, a_name.seed, a_target_type)
-			elseif l_query = Void then
-					-- Internal error: there should be a query with `l_seed'.
-					-- It has been computed in ET_FEATURE_CHECKER.
-				set_fatal_error
-				error_handler.report_giaaa_error
+				print_attribute_tuple_item_access (l_seed, call_operands.first, a_target_type)
 			else
-				l_constant_attribute ?= l_query
-				if l_constant_attribute /= Void then
-					l_printed := True
-					l_string_constant ?= l_constant_attribute.constant
-					if l_string_constant /= Void then
-						l_once_feature := l_constant_attribute.implementation_feature
-						constant_features.force_last (l_string_constant, l_once_feature)
-						print_once_value_name (l_once_feature, current_file)
-					else
-						print_expression (l_constant_attribute.constant)
-					end
+				l_query := a_target_type.base_class.seeded_query (l_seed)
+				if l_query = Void then
+						-- Internal error: there should be a query with `l_seed'.
+						-- It has been computed in ET_FEATURE_CHECKER.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				else
-					l_unique_attribute ?= l_query
-					if l_unique_attribute /= Void then
--- TODO: compute the values of the unique features.
+					l_constant_attribute ?= l_query
+					if l_constant_attribute /= Void then
 						l_printed := True
-						print_type_cast (current_system.integer_type, current_file)
-						current_file.put_character ('(')
-						unique_count := unique_count + 1
-						current_file.put_integer (unique_count)
-						current_file.put_character (')')
-					end
-				end
-				if not l_printed then
-					l_dynamic_feature := a_target_type.dynamic_query (l_query, current_system)
-					l_attribute ?= l_query
-					if l_attribute /= Void then
-						l_printed := True
-						print_attribute_access (l_dynamic_feature, call_operands.first, a_target_type)
-					elseif l_dynamic_feature.is_builtin then
-						l_printed := True
-						l_builtin_code := l_dynamic_feature.builtin_code
-						l_builtin_class := l_builtin_code // builtin_capacity
-						inspect l_builtin_class
-						when builtin_any_class then
-							inspect l_builtin_code \\ builtin_capacity
-							when builtin_any_same_type then
-								print_builtin_any_same_type_call (a_target_type)
-							when builtin_any_standard_is_equal then
-								print_builtin_any_standard_is_equal_call (a_target_type)
-							when builtin_any_generator then
-								print_builtin_any_generator_call (a_target_type)
-							when builtin_any_generating_type then
-								print_builtin_any_generating_type_call (a_target_type)
-							else
-								l_printed := False
-							end
-						when builtin_special_class then
-							inspect l_builtin_code \\ builtin_capacity
-							when builtin_special_item then
-								print_builtin_special_item_call (a_target_type)
-							when builtin_special_count then
-								print_builtin_special_count_call (a_target_type)
-							when builtin_special_element_size then
-								print_builtin_special_element_size_call (a_target_type)
-							else
-								l_printed := False
-							end
-						when builtin_boolean_class then
-							inspect l_builtin_code \\ builtin_capacity
-							when builtin_boolean_and then
-								print_builtin_boolean_and_call (a_target_type)
-							when builtin_boolean_and_then then
-								print_builtin_boolean_and_then_call (a_target_type)
-							when builtin_boolean_or then
-								print_builtin_boolean_or_call (a_target_type)
-							when builtin_boolean_or_else then
-								print_builtin_boolean_or_else_call (a_target_type)
-							when builtin_boolean_xor then
-								print_builtin_boolean_xor_call (a_target_type)
-							when builtin_boolean_implies then
-								print_builtin_boolean_implies_call (a_target_type)
-							when builtin_boolean_not then
-								print_builtin_boolean_not_call (a_target_type)
-							when builtin_boolean_item then
-								print_builtin_boolean_item_call (a_target_type, l_dynamic_feature)
-							else
-								l_printed := False
-							end
-						when builtin_pointer_class then
-							inspect l_builtin_code \\ builtin_capacity
-							when builtin_pointer_item then
-								print_builtin_pointer_item_call (a_target_type, l_dynamic_feature)
-							when builtin_pointer_plus then
-								print_builtin_pointer_plus_call (a_target_type)
-							when builtin_pointer_to_integer_32 then
-								print_builtin_pointer_to_integer_32_call (a_target_type)
-							when builtin_pointer_hash_code then
-								print_builtin_pointer_hash_code_call (a_target_type)
-							else
-								l_printed := False
-							end
-						when builtin_arguments_class then
-							inspect l_builtin_code \\ builtin_capacity
-							when builtin_arguments_argument_count then
-								print_builtin_arguments_argument_count_call (a_target_type)
-							else
-								l_printed := False
-							end
-						when builtin_platform_class then
-							inspect l_builtin_code \\ builtin_capacity
-							when builtin_platform_is_dotnet then
-								print_builtin_platform_is_dotnet_call (a_target_type)
-							when builtin_platform_is_unix then
-								print_builtin_platform_is_unix_call (a_target_type)
-							when builtin_platform_is_vms then
-								print_builtin_platform_is_vms_call (a_target_type)
-							when builtin_platform_is_windows then
-								print_builtin_platform_is_windows_call (a_target_type)
-							when builtin_platform_boolean_bytes then
-								print_builtin_platform_boolean_bytes_call (a_target_type)
-							when builtin_platform_character_bytes then
-								print_builtin_platform_character_bytes_call (a_target_type)
-							when builtin_platform_integer_bytes then
-								print_builtin_platform_integer_bytes_call (a_target_type)
-							when builtin_platform_pointer_bytes then
-								print_builtin_platform_pointer_bytes_call (a_target_type)
-							when builtin_platform_real_bytes then
-								print_builtin_platform_real_bytes_call (a_target_type)
-							else
-								l_printed := False
-							end
+						l_string_constant ?= l_constant_attribute.constant
+						if l_string_constant /= Void then
+							l_once_feature := l_constant_attribute.implementation_feature
+							constant_features.force_last (l_string_constant, l_once_feature)
+							print_once_value_name (l_once_feature, current_file)
 						else
-							inspect l_builtin_class
-							when builtin_integer_class then
-								l_integer_type := current_system.integer_type
-							when builtin_integer_8_class then
-								l_integer_type := current_system.integer_8_type
-							when builtin_integer_16_class then
-								l_integer_type := current_system.integer_16_type
-							when builtin_integer_64_class then
-								l_integer_type := current_system.integer_64_type
-							when builtin_natural_8_class then
-								l_integer_type := current_system.natural_8_type
-							when builtin_natural_16_class then
-								l_integer_type := current_system.natural_16_type
-							when builtin_natural_32_class then
-								l_integer_type := current_system.natural_32_type
-							when builtin_natural_64_class then
-								l_integer_type := current_system.natural_64_type
-							when builtin_character_class then
-								l_character_type := current_system.character_type
-							when builtin_wide_character_class then
-								l_character_type := current_system.wide_character_type
-							when builtin_real_class then
-								l_real_type := current_system.real_type
-							when builtin_double_class then
-								l_real_type := current_system.double_type
-							else
-								l_printed := False
-							end
-							if l_integer_type /= Void then
-								inspect l_builtin_code \\ builtin_capacity
-								when builtin_integer_plus then
-									print_builtin_sized_integer_plus_call (a_target_type, l_integer_type)
-								when builtin_integer_minus then
-									print_builtin_sized_integer_minus_call (a_target_type, l_integer_type)
-								when builtin_integer_times then
-									print_builtin_sized_integer_times_call (a_target_type, l_integer_type)
-								when builtin_integer_divide then
-									print_builtin_sized_integer_divide_call (a_target_type, l_integer_type)
-								when builtin_integer_div then
-									print_builtin_sized_integer_div_call (a_target_type, l_integer_type)
-								when builtin_integer_mod then
-									print_builtin_sized_integer_mod_call (a_target_type, l_integer_type)
-								when builtin_integer_power then
-									print_builtin_sized_integer_power_call (a_target_type, l_integer_type)
-								when builtin_integer_lt then
-									print_builtin_sized_integer_lt_call (a_target_type, l_integer_type)
-								when builtin_integer_opposite then
-									print_builtin_sized_integer_opposite_call (a_target_type, l_integer_type)
-								when builtin_integer_identity then
-									print_builtin_sized_integer_identity_call (a_target_type, l_integer_type)
-								when builtin_integer_to_character then
-									print_builtin_sized_integer_to_character_call (a_target_type, l_integer_type)
-								when builtin_integer_to_real then
-									print_builtin_sized_integer_to_real_call (a_target_type, l_integer_type)
-								when builtin_integer_to_real_32 then
-									print_builtin_sized_integer_to_real_32_call (a_target_type, l_integer_type)
-								when builtin_integer_to_real_64 then
-									print_builtin_sized_integer_to_real_64_call (a_target_type, l_integer_type)
-								when builtin_integer_to_double then
-									print_builtin_sized_integer_to_double_call (a_target_type, l_integer_type)
-								when builtin_integer_as_natural_8 then
-									print_builtin_sized_integer_as_natural_8_call (a_target_type, l_integer_type)
-								when builtin_integer_as_natural_16 then
-									print_builtin_sized_integer_as_natural_16_call (a_target_type, l_integer_type)
-								when builtin_integer_as_natural_32 then
-									print_builtin_sized_integer_as_natural_32_call (a_target_type, l_integer_type)
-								when builtin_integer_as_natural_64 then
-									print_builtin_sized_integer_as_natural_64_call (a_target_type, l_integer_type)
-								when builtin_integer_as_integer_8 then
-									print_builtin_sized_integer_as_integer_8_call (a_target_type, l_integer_type)
-								when builtin_integer_as_integer_16 then
-									print_builtin_sized_integer_as_integer_16_call (a_target_type, l_integer_type)
-								when builtin_integer_as_integer_32 then
-									print_builtin_sized_integer_as_integer_32_call (a_target_type, l_integer_type)
-								when builtin_integer_as_integer_64 then
-									print_builtin_sized_integer_as_integer_64_call (a_target_type, l_integer_type)
-								when builtin_integer_bit_or then
-									print_builtin_sized_integer_bit_or_call (a_target_type, l_integer_type)
-								when builtin_integer_bit_and then
-									print_builtin_sized_integer_bit_and_call (a_target_type, l_integer_type)
-								when builtin_integer_bit_shift_left then
-									print_builtin_sized_integer_bit_shift_left_call (a_target_type, l_integer_type)
-								when builtin_integer_bit_shift_right then
-									print_builtin_sized_integer_bit_shift_right_call (a_target_type, l_integer_type)
-								when builtin_integer_bit_xor then
-									print_builtin_sized_integer_bit_xor_call (a_target_type, l_integer_type)
-								when builtin_integer_bit_not then
-									print_builtin_sized_integer_bit_not_call (a_target_type, l_integer_type)
-								when builtin_integer_item then
-									print_builtin_sized_integer_item_call (a_target_type, l_integer_type, l_dynamic_feature)
-								else
-									l_printed := False
-								end
-							elseif l_character_type /= Void then
-								inspect l_builtin_code \\ builtin_capacity
-								when builtin_character_code then
-									print_builtin_sized_character_code_call (a_target_type, l_character_type)
-								when builtin_character_item then
-									print_builtin_sized_character_item_call (a_target_type, l_character_type, l_dynamic_feature)
-								else
-									l_printed := False
-								end
-							elseif l_real_type /= Void then
-								inspect l_builtin_code \\ builtin_capacity
-								when builtin_real_plus then
-									print_builtin_sized_real_plus_call (a_target_type, l_real_type)
-								when builtin_real_minus then
-									print_builtin_sized_real_minus_call (a_target_type, l_real_type)
-								when builtin_real_times then
-									print_builtin_sized_real_times_call (a_target_type, l_real_type)
-								when builtin_real_divide then
-									print_builtin_sized_real_divide_call (a_target_type, l_real_type)
-								when builtin_real_power then
-									print_builtin_sized_real_power_call (a_target_type, l_real_type)
-								when builtin_real_opposite then
-									print_builtin_sized_real_opposite_call (a_target_type, l_real_type)
-								when builtin_real_identity then
-									print_builtin_sized_real_identity_call (a_target_type, l_real_type)
-								when builtin_real_lt then
-									print_builtin_sized_real_lt_call (a_target_type, l_real_type)
-								when builtin_real_truncated_to_integer then
-									print_builtin_sized_real_truncated_to_integer_call (a_target_type, l_real_type)
-								when builtin_real_truncated_to_integer_64 then
-									print_builtin_sized_real_truncated_to_integer_64_call (a_target_type, l_real_type)
-								when builtin_real_truncated_to_real then
-									print_builtin_sized_real_truncated_to_real_call (a_target_type, l_real_type)
-								when builtin_real_to_double then
-									print_builtin_sized_real_to_double_call (a_target_type, l_real_type)
-								when builtin_real_ceiling_real_32 then
-									print_builtin_sized_real_ceiling_real_32_call (a_target_type, l_real_type)
-								when builtin_real_ceiling_real_64 then
-									print_builtin_sized_real_ceiling_real_64_call (a_target_type, l_real_type)
-								when builtin_real_floor_real_32 then
-									print_builtin_sized_real_floor_real_32_call (a_target_type, l_real_type)
-								when builtin_real_floor_real_64 then
-									print_builtin_sized_real_floor_real_64_call (a_target_type, l_real_type)
-								when builtin_integer_item then
-									print_builtin_sized_real_item_call (a_target_type, l_real_type, l_dynamic_feature)
-								else
-									l_printed := False
-								end
-							end
+							print_expression (l_constant_attribute.constant)
+						end
+					else
+						l_unique_attribute ?= l_query
+						if l_unique_attribute /= Void then
+-- TODO: compute the values of the unique features.
+							l_printed := True
+							print_type_cast (current_system.integer_type, current_file)
+							current_file.put_character ('(')
+							unique_count := unique_count + 1
+							current_file.put_integer (unique_count)
+							current_file.put_character (')')
 						end
 					end
 					if not l_printed then
-						if not l_dynamic_feature.is_generated then
-							l_dynamic_feature.set_generated (True)
-							called_features.force_last (l_dynamic_feature)
+						l_dynamic_feature := a_target_type.dynamic_query (l_query, current_system)
+						l_attribute ?= l_query
+						if l_attribute /= Void then
+							l_printed := True
+							print_attribute_access (l_dynamic_feature, call_operands.first, a_target_type)
+						elseif l_dynamic_feature.is_builtin then
+							l_printed := True
+							l_builtin_code := l_dynamic_feature.builtin_code
+							l_builtin_class := l_builtin_code // builtin_capacity
+							inspect l_builtin_class
+							when builtin_any_class then
+								inspect l_builtin_code \\ builtin_capacity
+								when builtin_any_same_type then
+									print_builtin_any_same_type_call (a_target_type)
+								when builtin_any_standard_is_equal then
+									print_builtin_any_standard_is_equal_call (a_target_type)
+								when builtin_any_generator then
+									print_builtin_any_generator_call (a_target_type)
+								when builtin_any_generating_type then
+									print_builtin_any_generating_type_call (a_target_type)
+								else
+									l_printed := False
+								end
+							when builtin_special_class then
+								inspect l_builtin_code \\ builtin_capacity
+								when builtin_special_item then
+									print_builtin_special_item_call (a_target_type)
+								when builtin_special_count then
+									print_builtin_special_count_call (a_target_type)
+								when builtin_special_element_size then
+									print_builtin_special_element_size_call (a_target_type)
+								else
+									l_printed := False
+								end
+							when builtin_boolean_class then
+								inspect l_builtin_code \\ builtin_capacity
+								when builtin_boolean_and then
+									print_builtin_boolean_and_call (a_target_type)
+								when builtin_boolean_and_then then
+									print_builtin_boolean_and_then_call (a_target_type)
+								when builtin_boolean_or then
+									print_builtin_boolean_or_call (a_target_type)
+								when builtin_boolean_or_else then
+									print_builtin_boolean_or_else_call (a_target_type)
+								when builtin_boolean_xor then
+									print_builtin_boolean_xor_call (a_target_type)
+								when builtin_boolean_implies then
+									print_builtin_boolean_implies_call (a_target_type)
+								when builtin_boolean_not then
+									print_builtin_boolean_not_call (a_target_type)
+								when builtin_boolean_item then
+									print_builtin_boolean_item_call (a_target_type, l_dynamic_feature)
+								else
+									l_printed := False
+								end
+							when builtin_pointer_class then
+								inspect l_builtin_code \\ builtin_capacity
+								when builtin_pointer_item then
+									print_builtin_pointer_item_call (a_target_type, l_dynamic_feature)
+								when builtin_pointer_plus then
+									print_builtin_pointer_plus_call (a_target_type)
+								when builtin_pointer_to_integer_32 then
+									print_builtin_pointer_to_integer_32_call (a_target_type)
+								when builtin_pointer_hash_code then
+									print_builtin_pointer_hash_code_call (a_target_type)
+								else
+									l_printed := False
+								end
+							when builtin_arguments_class then
+								inspect l_builtin_code \\ builtin_capacity
+								when builtin_arguments_argument_count then
+									print_builtin_arguments_argument_count_call (a_target_type)
+								else
+									l_printed := False
+								end
+							when builtin_platform_class then
+								inspect l_builtin_code \\ builtin_capacity
+								when builtin_platform_is_dotnet then
+									print_builtin_platform_is_dotnet_call (a_target_type)
+								when builtin_platform_is_unix then
+									print_builtin_platform_is_unix_call (a_target_type)
+								when builtin_platform_is_vms then
+									print_builtin_platform_is_vms_call (a_target_type)
+								when builtin_platform_is_windows then
+									print_builtin_platform_is_windows_call (a_target_type)
+								when builtin_platform_boolean_bytes then
+									print_builtin_platform_boolean_bytes_call (a_target_type)
+								when builtin_platform_character_bytes then
+									print_builtin_platform_character_bytes_call (a_target_type)
+								when builtin_platform_integer_bytes then
+									print_builtin_platform_integer_bytes_call (a_target_type)
+								when builtin_platform_pointer_bytes then
+									print_builtin_platform_pointer_bytes_call (a_target_type)
+								when builtin_platform_real_bytes then
+									print_builtin_platform_real_bytes_call (a_target_type)
+								else
+									l_printed := False
+								end
+							when builtin_function_class then
+								inspect l_builtin_code \\ builtin_capacity
+								when builtin_function_item then
+									print_builtin_function_item_call (a_target_type)
+								else
+									l_printed := False
+								end
+							else
+								inspect l_builtin_class
+								when builtin_integer_class then
+									l_integer_type := current_system.integer_type
+								when builtin_integer_8_class then
+									l_integer_type := current_system.integer_8_type
+								when builtin_integer_16_class then
+									l_integer_type := current_system.integer_16_type
+								when builtin_integer_64_class then
+									l_integer_type := current_system.integer_64_type
+								when builtin_natural_8_class then
+									l_integer_type := current_system.natural_8_type
+								when builtin_natural_16_class then
+									l_integer_type := current_system.natural_16_type
+								when builtin_natural_32_class then
+									l_integer_type := current_system.natural_32_type
+								when builtin_natural_64_class then
+									l_integer_type := current_system.natural_64_type
+								when builtin_character_class then
+									l_character_type := current_system.character_type
+								when builtin_wide_character_class then
+									l_character_type := current_system.wide_character_type
+								when builtin_real_class then
+									l_real_type := current_system.real_type
+								when builtin_double_class then
+									l_real_type := current_system.double_type
+								else
+									l_printed := False
+								end
+								if l_integer_type /= Void then
+									inspect l_builtin_code \\ builtin_capacity
+									when builtin_integer_plus then
+										print_builtin_sized_integer_plus_call (a_target_type, l_integer_type)
+									when builtin_integer_minus then
+										print_builtin_sized_integer_minus_call (a_target_type, l_integer_type)
+									when builtin_integer_times then
+										print_builtin_sized_integer_times_call (a_target_type, l_integer_type)
+									when builtin_integer_divide then
+										print_builtin_sized_integer_divide_call (a_target_type, l_integer_type)
+									when builtin_integer_div then
+										print_builtin_sized_integer_div_call (a_target_type, l_integer_type)
+									when builtin_integer_mod then
+										print_builtin_sized_integer_mod_call (a_target_type, l_integer_type)
+									when builtin_integer_power then
+										print_builtin_sized_integer_power_call (a_target_type, l_integer_type)
+									when builtin_integer_lt then
+										print_builtin_sized_integer_lt_call (a_target_type, l_integer_type)
+									when builtin_integer_opposite then
+										print_builtin_sized_integer_opposite_call (a_target_type, l_integer_type)
+									when builtin_integer_identity then
+										print_builtin_sized_integer_identity_call (a_target_type, l_integer_type)
+									when builtin_integer_to_character then
+										print_builtin_sized_integer_to_character_call (a_target_type, l_integer_type)
+									when builtin_integer_to_real then
+										print_builtin_sized_integer_to_real_call (a_target_type, l_integer_type)
+									when builtin_integer_to_real_32 then
+										print_builtin_sized_integer_to_real_32_call (a_target_type, l_integer_type)
+									when builtin_integer_to_real_64 then
+										print_builtin_sized_integer_to_real_64_call (a_target_type, l_integer_type)
+									when builtin_integer_to_double then
+										print_builtin_sized_integer_to_double_call (a_target_type, l_integer_type)
+									when builtin_integer_as_natural_8 then
+										print_builtin_sized_integer_as_natural_8_call (a_target_type, l_integer_type)
+									when builtin_integer_as_natural_16 then
+										print_builtin_sized_integer_as_natural_16_call (a_target_type, l_integer_type)
+									when builtin_integer_as_natural_32 then
+										print_builtin_sized_integer_as_natural_32_call (a_target_type, l_integer_type)
+									when builtin_integer_as_natural_64 then
+										print_builtin_sized_integer_as_natural_64_call (a_target_type, l_integer_type)
+									when builtin_integer_as_integer_8 then
+										print_builtin_sized_integer_as_integer_8_call (a_target_type, l_integer_type)
+									when builtin_integer_as_integer_16 then
+										print_builtin_sized_integer_as_integer_16_call (a_target_type, l_integer_type)
+									when builtin_integer_as_integer_32 then
+										print_builtin_sized_integer_as_integer_32_call (a_target_type, l_integer_type)
+									when builtin_integer_as_integer_64 then
+										print_builtin_sized_integer_as_integer_64_call (a_target_type, l_integer_type)
+									when builtin_integer_bit_or then
+										print_builtin_sized_integer_bit_or_call (a_target_type, l_integer_type)
+									when builtin_integer_bit_and then
+										print_builtin_sized_integer_bit_and_call (a_target_type, l_integer_type)
+									when builtin_integer_bit_shift_left then
+										print_builtin_sized_integer_bit_shift_left_call (a_target_type, l_integer_type)
+									when builtin_integer_bit_shift_right then
+										print_builtin_sized_integer_bit_shift_right_call (a_target_type, l_integer_type)
+									when builtin_integer_bit_xor then
+										print_builtin_sized_integer_bit_xor_call (a_target_type, l_integer_type)
+									when builtin_integer_bit_not then
+										print_builtin_sized_integer_bit_not_call (a_target_type, l_integer_type)
+									when builtin_integer_item then
+										print_builtin_sized_integer_item_call (a_target_type, l_integer_type, l_dynamic_feature)
+									else
+										l_printed := False
+									end
+								elseif l_character_type /= Void then
+									inspect l_builtin_code \\ builtin_capacity
+									when builtin_character_code then
+										print_builtin_sized_character_code_call (a_target_type, l_character_type)
+									when builtin_character_item then
+										print_builtin_sized_character_item_call (a_target_type, l_character_type, l_dynamic_feature)
+									else
+										l_printed := False
+									end
+								elseif l_real_type /= Void then
+									inspect l_builtin_code \\ builtin_capacity
+									when builtin_real_plus then
+										print_builtin_sized_real_plus_call (a_target_type, l_real_type)
+									when builtin_real_minus then
+										print_builtin_sized_real_minus_call (a_target_type, l_real_type)
+									when builtin_real_times then
+										print_builtin_sized_real_times_call (a_target_type, l_real_type)
+									when builtin_real_divide then
+										print_builtin_sized_real_divide_call (a_target_type, l_real_type)
+									when builtin_real_power then
+										print_builtin_sized_real_power_call (a_target_type, l_real_type)
+									when builtin_real_opposite then
+										print_builtin_sized_real_opposite_call (a_target_type, l_real_type)
+									when builtin_real_identity then
+										print_builtin_sized_real_identity_call (a_target_type, l_real_type)
+									when builtin_real_lt then
+										print_builtin_sized_real_lt_call (a_target_type, l_real_type)
+									when builtin_real_truncated_to_integer then
+										print_builtin_sized_real_truncated_to_integer_call (a_target_type, l_real_type)
+									when builtin_real_truncated_to_integer_64 then
+										print_builtin_sized_real_truncated_to_integer_64_call (a_target_type, l_real_type)
+									when builtin_real_truncated_to_real then
+										print_builtin_sized_real_truncated_to_real_call (a_target_type, l_real_type)
+									when builtin_real_to_double then
+										print_builtin_sized_real_to_double_call (a_target_type, l_real_type)
+									when builtin_real_ceiling_real_32 then
+										print_builtin_sized_real_ceiling_real_32_call (a_target_type, l_real_type)
+									when builtin_real_ceiling_real_64 then
+										print_builtin_sized_real_ceiling_real_64_call (a_target_type, l_real_type)
+									when builtin_real_floor_real_32 then
+										print_builtin_sized_real_floor_real_32_call (a_target_type, l_real_type)
+									when builtin_real_floor_real_64 then
+										print_builtin_sized_real_floor_real_64_call (a_target_type, l_real_type)
+									when builtin_integer_item then
+										print_builtin_sized_real_item_call (a_target_type, l_real_type, l_dynamic_feature)
+									else
+										l_printed := False
+									end
+								end
+							end
 						end
-						print_routine_name (l_dynamic_feature, a_target_type, current_file)
-						current_file.put_character ('(')
-						nb := call_operands.count
-						if a_target_type.is_expanded then
-							print_target_expression (call_operands.first)
-						else
-							print_expression (call_operands.first)
+						if not l_printed then
+							if not l_dynamic_feature.is_generated then
+								l_dynamic_feature.set_generated (True)
+								called_features.force_last (l_dynamic_feature)
+							end
+							print_routine_name (l_dynamic_feature, a_target_type, current_file)
+							current_file.put_character ('(')
+							nb := call_operands.count
+							if a_target_type.is_expanded then
+								print_target_expression (call_operands.first)
+							else
+								print_expression (call_operands.first)
+							end
+							from i := 2 until i > nb loop
+								current_file.put_character (',')
+								current_file.put_character (' ')
+								print_expression (call_operands.item (i))
+								i := i + 1
+							end
+							current_file.put_character (')')
 						end
-						from i := 2 until i > nb loop
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_expression (call_operands.item (i))
-							i := i + 1
-						end
-						current_file.put_character (')')
 					end
 				end
 			end
@@ -6281,8 +6340,8 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			if in_operand then
 				operand_stack.force (a_name)
 			else
-				l_seed := a_name.seed
 				if in_target then
+					l_seed := a_name.seed
 					l_dynamic_type := free_temp_variables.item (l_seed)
 					if l_dynamic_type = Void then
 						l_dynamic_type := used_temp_variables.item (l_seed)
@@ -6840,72 +6899,760 @@ feature {NONE} -- Agent generation
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			a_name: ET_FEATURE_NAME
-			an_arguments: ET_AGENT_ARGUMENT_OPERANDS
-			a_target: ET_AGENT_TARGET
-			an_expression_target: ET_EXPRESSION
-			a_type_target: ET_TARGET_TYPE
-			an_any: ANY
+			l_temp: ET_IDENTIFIER
+			i, nb: INTEGER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_assignment_target: ET_WRITABLE
+			l_agent_type: ET_DYNAMIC_TYPE
+			l_closed_operand: ET_EXPRESSION
+			l_arguments: ET_AGENT_ARGUMENT_OPERANDS
+			nb_operands: INTEGER
 		do
--- TODO.
-print ("ET_C_GENERATOR.print_call_agent%N")
-			a_name := an_expression.name
-			an_arguments := an_expression.arguments
-			a_target := an_expression.target
-			if a_target = Void then
-				print_unqualified_call_agent (a_name, an_arguments)
+			l_assignment_target := assignment_target
+			assignment_target := Void
+			l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			if l_dynamic_type_set = Void then
+					-- Internal error: the dynamic type set of `an_expression'
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
 			else
-				-- SmartEiffel 1.1 does not allow the assignment attempt
-				-- because ET_EXPRESSION does not conform to ET_AGENT_TARGET.
-				-- an_expression_target ?= a_target
-				an_any := a_target
-				an_expression_target ?= an_any
-				if an_expression_target /= Void then
-					print_qualified_call_agent (an_expression_target, a_name, an_arguments)
+				l_agent_type := l_dynamic_type_set.static_type
+				if not an_expression.is_qualified_call then
+					print_operand (tokens.current_keyword)
+					nb_operands := 1
 				else
-					-- SmartEiffel 2.1 does not allow the assignment attempt
-					-- because ET_TARGET_TYPE does not conform to ET_AGENT_TARGET.
-					-- a_type_target ?= a_target
-					an_any := a_target
-					a_type_target ?= an_any
-					if a_type_target /= Void then
-						print_typed_call_agent (a_type_target.type, a_name, an_arguments)
-					else
-							-- Internal error: no other kind of targets.
-						set_fatal_error
-						error_handler.report_giaaa_error
+					l_closed_operand ?= an_expression.target
+					if l_closed_operand /= Void then
+						print_operand (l_closed_operand)
+						nb_operands := 1
 					end
 				end
+				l_arguments := an_expression.arguments
+				if l_arguments /= Void then
+					nb := l_arguments.count
+					from i := 1 until i > nb loop
+						l_closed_operand ?= l_arguments.actual_argument (i)
+						if l_closed_operand /= Void then
+							print_operand (l_closed_operand)
+							nb_operands := nb_operands + 1
+						end
+						i := i + 1
+					end
+				end
+				fill_call_operands (nb_operands)
+				call_agents.force_last (an_expression)
+				if in_operand then
+					if l_assignment_target /= Void then
+						operand_stack.force (l_assignment_target)
+						print_indentation
+						print_writable (l_assignment_target)
+					else
+						l_temp := new_temp_variable (l_agent_type)
+						operand_stack.force (l_temp)
+						print_indentation
+						print_temp_name (l_temp, current_file)
+					end
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+				end
+				print_agent_creation_name (call_agents.count, current_feature, current_type, current_file)
+				current_file.put_character ('(')
+				from i := 1 until i > nb_operands loop
+					if i /= 1 then
+						current_file.put_character (',')
+					end
+					print_expression (call_operands.item (i))
+					i := i + 1
+				end
+				current_file.put_character (')')
+				if in_operand then
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				call_operands.wipe_out
 			end
 		end
 
-	print_unqualified_call_agent (a_name: ET_FEATURE_NAME; an_actuals: ET_AGENT_ARGUMENT_OPERANDS) is
-			-- Print unqualified call agent.
+	print_agent_open_operand (a_name: ET_IDENTIFIER) is
+			-- Print agent open operand `a_name'.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_open_operand: a_name.is_agent_open_operand
+		local
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
--- TODO.
+			if in_operand then
+				operand_stack.force (a_name)
+			else
+				if in_target then
+					l_dynamic_type_set := current_feature.dynamic_type_set (a_name)
+					if l_dynamic_type_set = Void then
+							-- Internal error: the dynamic type set of
+							-- formal arguments should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_dynamic_type_set.static_type.is_expanded then
+						current_file.put_character ('&')
+					end
+				end
+				print_agent_open_operand_name (a_name, current_file)
+			end
 		end
 
-	print_qualified_call_agent (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
-		an_actuals: ET_AGENT_ARGUMENT_OPERANDS) is
-			-- Print qualified call agent.
+	print_agent_closed_operand (a_name: ET_IDENTIFIER) is
+			-- Print agent closed operand `a_name'.
 		require
+			a_name_not_void: a_name /= Void
+			a_name_closed_operand: a_name.is_agent_closed_operand
+		local
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if in_operand then
+				operand_stack.force (a_name)
+			else
+				if in_target then
+					l_dynamic_type_set := current_feature.dynamic_type_set (a_name)
+					if l_dynamic_type_set = Void then
+							-- Internal error: the dynamic type set of
+							-- formal arguments should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_dynamic_type_set.static_type.is_expanded then
+						current_file.put_character ('&')
+					end
+				end
+				print_agent_closed_operand_access (a_name, tokens.current_keyword)
+			end
+		end
+
+	print_agent_closed_operand_access (a_name: ET_IDENTIFIER; a_target: ET_EXPRESSION) is
+			-- Print access to agent closed operand `a_name' applied to `a_target'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_closed_operand: a_name.is_agent_closed_operand
 			a_target_not_void: a_target /= Void
-			a_name_not_void: a_name /= Void
 		do
--- TODO.
+			if short_names then
+				current_file.put_character ('(')
+				print_expression (a_target)
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+				print_agent_closed_operand_name (a_name, current_file)
+			else
+-- TODO: long names
+				current_file.put_character ('(')
+				print_expression (a_target)
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+				print_agent_closed_operand_name (a_name, current_file)
+			end
 		end
 
-	print_typed_call_agent (a_type: ET_TYPE; a_name: ET_FEATURE_NAME;
-		an_actuals: ET_AGENT_ARGUMENT_OPERANDS) is
-			-- Print typed call agent.
+	print_call_agent_declaration (i: INTEGER; an_expression: ET_CALL_AGENT) is
+			-- Print declaration of `i'-th call agent `an_expression'.
 		require
-			a_type_not_void: a_type /= Void
-			a_name_not_void: a_name /= Void
+			an_expression_not_void: an_expression /= Void
+		local
+			l_target_type: ET_DYNAMIC_TYPE
+			nb_closed_operands: INTEGER
+			nb_open_operands: INTEGER
+			l_open_operand: ET_IDENTIFIER
+			l_closed_operand: ET_IDENTIFIER
+			l_target: ET_AGENT_TARGET
+			l_arguments: ET_AGENT_ARGUMENT_OPERANDS
+			l_argument: ET_AGENT_ARGUMENT_OPERAND
+			l_name: ET_FEATURE_NAME
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			j, nb: INTEGER
+			l_agent_type: ET_DYNAMIC_TYPE
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			l_query_type: ET_DYNAMIC_TYPE
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_index: INTEGER
+			l_type: ET_DYNAMIC_TYPE
+			l_open_index: INTEGER
+			l_closed_index: INTEGER
+			old_file: KI_TEXT_OUTPUT_STREAM
+			l_buffer: STRING
 		do
--- TODO.
+				--
+				-- Determine agent type.
+				--
+			l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			if l_dynamic_type_set = Void then
+					-- Internal error: the dynamic type set of `an_expression'
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_agent_type := l_dynamic_type_set.static_type
+			end
+				--
+				-- Determine target type.
+				--
+			l_target := an_expression.target
+			l_dynamic_type_set := current_feature.dynamic_type_set (l_target)
+			if l_dynamic_type_set = Void then
+					-- Internal error: the dynamic type set of `l_target'
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target_type := l_dynamic_type_set.static_type
+			end
+			if l_agent_type = Void then
+				-- Error already reported.
+			elseif l_target_type = Void then
+				-- Error already reported.
+			else
+				l_name := an_expression.name
+					--
+					-- Determine open and closed operands.
+					--
+				if l_target.is_open_operand then
+					nb_open_operands := 1
+					if agent_open_operands.count < nb_open_operands then
+						create l_open_operand.make ("a" + nb_open_operands.out)
+						l_open_operand.set_agent_open_operand (True)
+						l_open_operand.set_seed (nb_open_operands)
+						agent_open_operands.force_last (l_open_operand)
+					else
+						l_open_operand := agent_open_operands.item (nb_open_operands)
+					end
+					l_open_operand.set_index (l_target.index)
+				else
+					nb_closed_operands := 1
+					if agent_closed_operands.count < nb_closed_operands then
+						create l_closed_operand.make ("z" + nb_closed_operands.out)
+						l_closed_operand.set_agent_closed_operand (True)
+						l_closed_operand.set_seed (nb_closed_operands)
+						agent_closed_operands.force_last (l_closed_operand)
+					else
+						l_closed_operand := agent_closed_operands.item (nb_closed_operands)
+					end
+					l_closed_operand.set_index (l_target.index)
+				end
+				l_arguments := an_expression.arguments
+				if l_arguments /= Void then
+					nb := l_arguments.count
+					from j := 1 until j > nb loop
+						l_argument := l_arguments.actual_argument (j)
+						if l_argument.is_open_operand then
+							nb_open_operands := nb_open_operands + 1
+							if agent_open_operands.count < nb_open_operands then
+								create l_open_operand.make ("a" + nb_open_operands.out)
+								l_open_operand.set_agent_open_operand (True)
+								l_open_operand.set_seed (nb_open_operands)
+								agent_open_operands.force_last (l_open_operand)
+							else
+								l_open_operand := agent_open_operands.item (nb_open_operands)
+							end
+							l_open_operand.set_index (l_argument.index)
+						else
+							nb_closed_operands := nb_closed_operands + 1
+							if agent_closed_operands.count < nb_closed_operands then
+								create l_closed_operand.make ("z" + nb_closed_operands.out)
+								l_closed_operand.set_agent_closed_operand (True)
+								l_closed_operand.set_seed (nb_closed_operands)
+								agent_closed_operands.force_last (l_closed_operand)
+							else
+								l_closed_operand := agent_closed_operands.item (nb_closed_operands)
+							end
+							l_closed_operand.set_index (l_argument.index)
+						end
+						j := j + 1
+					end
+				end
+					--
+					-- Print agent type to `header_file'.
+					--
+				header_file.put_character ('/')
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string ("Agent #")
+				header_file.put_integer (i)
+				header_file.put_string (" in feature ")
+				header_file.put_string (current_type.base_type.to_text)
+				header_file.put_character ('.')
+				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
+				header_file.put_character (' ')
+				header_file.put_character ('*')
+				header_file.put_character ('/')
+				header_file.put_new_line
+				header_file.put_string (c_typedef)
+				header_file.put_character (' ')
+				header_file.put_string (c_struct)
+				header_file.put_character (' ')
+				header_file.put_character ('{')
+				header_file.put_new_line
+					-- Type id.
+				header_file.put_character ('%T')
+				header_file.put_string (c_int)
+				header_file.put_character (' ')
+				print_attribute_type_id_name (l_agent_type, header_file)
+				header_file.put_character (';')
+				header_file.put_new_line
+					-- Attributes.
+				l_queries := l_agent_type.queries
+				nb := l_queries.count
+				from j := 1 until j > nb loop
+					l_query := l_queries.item (j)
+					if l_query.is_attribute then
+						header_file.put_character ('%T')
+						print_type_declaration (l_query.result_type_set.static_type, header_file)
+						header_file.put_character (' ')
+						print_attribute_name (l_query, l_agent_type, header_file)
+						header_file.put_character (';')
+						header_file.put_character (' ')
+						header_file.put_character ('/')
+						header_file.put_character ('*')
+						header_file.put_character (' ')
+						header_file.put_string (l_query.static_feature.name.name)
+						header_file.put_character (' ')
+						header_file.put_character ('*')
+						header_file.put_character ('/')
+						header_file.put_new_line
+					end
+					j := j + 1
+				end
+					-- Function pointer.
+				header_file.put_character ('%T')
+				if an_expression.is_procedure then
+					header_file.put_string (c_void)
+				else
+					if l_name.is_tuple_label then
+						l_index := l_name.seed
+						l_actual_parameters := l_target_type.base_type.actual_parameters
+						if l_actual_parameters /= Void and then (l_index >= 1 and l_index <= l_actual_parameters.count) then
+							l_query_type := current_system.dynamic_type (l_actual_parameters.type (l_index), universe.any_type)
+						else
+								-- Internal error: this is an invalid labeled tuple.
+								-- This has been checked by ET_FEATURE_CHECKER.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
+					else
+						l_query := l_target_type.seeded_dynamic_query (l_name.seed, current_system)
+						if l_query = Void then
+								-- Internal error: there should be a query with that seed.
+								-- This has been checked by ET_FEATURE_CHECKER.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_dynamic_type_set := l_query.result_type_set
+							if l_dynamic_type_set = Void then
+									-- Internal error: a query should have a result type.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_query_type := l_dynamic_type_set.static_type
+							end
+						end
+					end
+					if l_query_type /= Void then
+						print_type_declaration (l_query_type, header_file)
+					end
+				end
+				header_file.put_character (' ')
+				header_file.put_character ('(')
+				header_file.put_character ('*')
+				header_file.put_character ('f')
+				header_file.put_character (')')
+				header_file.put_character ('(')
+				print_type_declaration (l_agent_type, header_file)
+				from j := 1 until j > nb_open_operands loop
+					l_dynamic_type_set := current_feature.dynamic_type_set (agent_open_operands.item (j))
+					if l_dynamic_type_set = Void then
+							-- Internal error: the dynamic type set of the open operand
+							-- should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_type := l_dynamic_type_set.static_type
+						header_file.put_character (',')
+						header_file.put_character (' ')
+						print_type_declaration (l_type, header_file)
+					end
+					j := j + 1
+				end
+				header_file.put_character (')')
+				header_file.put_character (';')
+				header_file.put_new_line
+					-- Closed operands.
+				from j := 1 until j > nb_closed_operands loop
+					l_closed_operand := agent_closed_operands.item (j)
+					l_dynamic_type_set := current_feature.dynamic_type_set (l_closed_operand)
+					if l_dynamic_type_set = Void then
+							-- Internal error: the dynamic type set of closed operands
+							-- should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_type := l_dynamic_type_set.static_type
+						header_file.put_character ('%T')
+						print_type_declaration (l_type, header_file)
+						header_file.put_character (' ')
+						print_agent_closed_operand_name (l_closed_operand, header_file)
+						header_file.put_character (';')
+						header_file.put_character (' ')
+						header_file.put_character ('/')
+						header_file.put_character ('*')
+						header_file.put_character (' ')
+						header_file.put_string ("Closed operand #")
+						header_file.put_integer (j)
+						header_file.put_character (' ')
+						header_file.put_character ('*')
+						header_file.put_character ('/')
+						header_file.put_new_line
+					end
+					j := j + 1
+				end
+				header_file.put_character ('}')
+				header_file.put_character (' ')
+				print_agent_type_name (i, current_feature, current_type, header_file)
+				header_file.put_character (';')
+				header_file.put_new_line
+				header_file.put_new_line
+					--
+					-- Print function associated with the agent to `current_file'.
+					--
+				old_file := current_file
+				current_file := current_function_header_buffer
+				current_file.put_character ('/')
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string ("Function for agent #")
+				current_file.put_integer (i)
+				current_file.put_string (" in feature ")
+				current_file.put_string (current_type.base_type.to_text)
+				current_file.put_character ('.')
+				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
+				current_file.put_character (' ')
+				current_file.put_character ('*')
+				current_file.put_character ('/')
+				current_file.put_new_line
+				if l_query_type /= Void then
+					print_type_declaration (l_query_type, current_file)
+				else
+					current_file.put_string (c_void)
+				end
+				current_file.put_character (' ')
+				print_agent_function_name (i, current_feature, current_type, current_file)
+				current_file.put_character ('(')
+				print_type_declaration (l_agent_type, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('a')
+				current_file.put_character ('0')
+				from j := 1 until j > nb_open_operands loop
+					l_open_operand := agent_open_operands.item (j)
+					l_dynamic_type_set := current_feature.dynamic_type_set (l_open_operand)
+					if l_dynamic_type_set = Void then
+							-- Internal error: the dynamic type set of the open operand
+							-- should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_type := l_dynamic_type_set.static_type
+						current_file.put_character (',')
+						current_file.put_character (' ')
+						print_type_declaration (l_type, current_file)
+						current_file.put_character (' ')
+						print_agent_open_operand_name (l_open_operand, current_file)
+					end
+					j := j + 1
+				end
+				current_file.put_character (')')
+				current_file.put_new_line
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				print_agent_type_name (i, current_feature, current_type, current_file)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				print_current_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_agent_type_name (i, current_feature, current_type, current_file)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('a')
+				current_file.put_character ('0')
+				current_file.put_character (';')
+				current_file.put_new_line
+				if l_query_type /= Void then
+					print_indentation
+					print_type_declaration (l_query_type, current_file)
+					current_file.put_character (' ')
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('0')
+					current_file.put_character (';')
+					current_file.put_new_line
+					current_file := current_function_body_buffer
+					if l_target.is_open_operand then
+						l_open_index := 1
+						agent_expression.set_target (agent_open_operands.item (l_open_index))
+					else
+						l_closed_index := 1
+						agent_expression.set_target (agent_closed_operands.item (l_closed_index))
+					end
+					agent_expression.set_name (l_name)
+					agent_arguments.wipe_out
+					if l_arguments /= Void then
+						nb := l_arguments.count
+						if agent_arguments.capacity < nb then
+							agent_arguments.resize (nb)
+						end
+						l_open_index := nb_open_operands
+						l_closed_index := nb_closed_operands
+						from j := nb until j < 1 loop
+							l_argument := l_arguments.actual_argument (j)
+							if l_argument.is_open_operand then
+								agent_arguments.put_first (agent_open_operands.item (l_open_index))
+								l_open_index := l_open_index - 1
+							else
+								agent_arguments.put_first (agent_closed_operands.item (l_closed_index))
+								l_closed_index := l_closed_index - 1
+							end
+							j := j - 1
+						end
+						agent_expression.set_arguments (agent_arguments)
+					else
+						agent_expression.set_arguments (Void)
+					end
+					print_assignment (agent_assignment)
+					print_indentation
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					print_result_name (current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+				else
+					current_file := current_function_body_buffer
+					if l_target.is_open_operand then
+						l_open_index := 1
+						agent_instruction.set_target (agent_open_operands.item (l_open_index))
+					else
+						l_closed_index := 1
+						agent_instruction.set_target (agent_closed_operands.item (l_closed_index))
+					end
+					agent_instruction.set_name (l_name)
+					agent_arguments.wipe_out
+					if l_arguments /= Void then
+						nb := l_arguments.count
+						if agent_arguments.capacity < nb then
+							agent_arguments.resize (nb)
+						end
+						l_open_index := nb_open_operands
+						l_closed_index := nb_closed_operands
+						from j := nb until j < 1 loop
+							l_argument := l_arguments.actual_argument (j)
+							if l_argument.is_open_operand then
+								agent_arguments.put_first (agent_open_operands.item (l_open_index))
+								l_open_index := l_open_index - 1
+							else
+								agent_arguments.put_first (agent_closed_operands.item (l_closed_index))
+								l_closed_index := l_closed_index - 1
+							end
+							j := j - 1
+						end
+						agent_instruction.set_arguments (agent_arguments)
+					else
+						agent_instruction.set_arguments (Void)
+					end
+					print_qualified_call_instruction (agent_instruction)
+				end
+				dedent
+				current_file.put_character ('}')
+				current_file.put_new_line
+				current_file.put_new_line
+				current_file := old_file
+				l_buffer := current_function_header_buffer.string
+				current_file.put_string (l_buffer)
+				STRING_.wipe_out (l_buffer)
+				l_buffer := current_function_body_buffer.string
+				current_file.put_string (l_buffer)
+				STRING_.wipe_out (l_buffer)
+				free_temp_variables.wipe_out
+				used_temp_variables.wipe_out
+					--
+					-- Print creation function of the agent.
+					--
+					-- Print signature to `header_file' and `current_file'.
+				header_file.put_character ('/')
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string ("Creation of agent #")
+				header_file.put_integer (i)
+				header_file.put_string (" in feature ")
+				header_file.put_string (current_type.base_type.to_text)
+				header_file.put_character ('.')
+				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
+				header_file.put_character (' ')
+				header_file.put_character ('*')
+				header_file.put_character ('/')
+				header_file.put_new_line
+				current_file.put_character ('/')
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string ("Creation of agent #")
+				current_file.put_integer (i)
+				current_file.put_string (" in feature ")
+				current_file.put_string (current_type.base_type.to_text)
+				current_file.put_character ('.')
+				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
+				current_file.put_character (' ')
+				current_file.put_character ('*')
+				current_file.put_character ('/')
+				current_file.put_new_line
+				header_file.put_string (c_extern)
+				header_file.put_character (' ')
+				print_type_declaration (l_agent_type, header_file)
+				print_type_declaration (l_agent_type, current_file)
+				header_file.put_character (' ')
+				current_file.put_character (' ')
+				print_agent_creation_name (i, current_feature, current_type, header_file)
+				print_agent_creation_name (i, current_feature, current_type, current_file)
+				header_file.put_character ('(')
+				current_file.put_character ('(')
+				from j := 1 until j > nb_closed_operands loop
+					if j /= 1 then
+						header_file.put_character (',')
+						header_file.put_character (' ')
+						current_file.put_character (',')
+						current_file.put_character (' ')
+					end
+					l_dynamic_type_set := current_feature.dynamic_type_set (agent_closed_operands.item (j))
+					if l_dynamic_type_set = Void then
+							-- Internal error: the dynamic type set of `l_argument'
+							-- should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_type := l_dynamic_type_set.static_type
+						print_type_declaration (l_type, header_file)
+						print_type_declaration (l_type, current_file)
+						header_file.put_character (' ')
+						current_file.put_character (' ')
+						header_file.put_character ('a')
+						current_file.put_character ('a')
+						header_file.put_integer (j)
+						current_file.put_integer (j)
+					end
+					j := j + 1
+				end
+				header_file.put_character (')')
+				current_file.put_character (')')
+				header_file.put_character (';')
+				header_file.put_new_line
+				current_file.put_new_line
+					-- Print body to `current_file'.
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				print_agent_type_name (i, current_feature, current_type, current_file)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Create agent object.
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_agent_type_name (i, current_feature, current_type, current_file)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_string (c_gealloc)
+				current_file.put_character ('(')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_agent_type_name (i, current_feature, current_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set type id of agent.
+				print_indentation
+				print_attribute_type_id_access (tokens.result_keyword, l_agent_type)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_integer (l_agent_type.id)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set function pointer.
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_string (c_arrow)
+				current_file.put_character ('f')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_agent_function_name (i, current_feature, current_type, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set closed operands.
+				from j := 1 until j > nb_closed_operands loop
+					print_indentation
+					print_agent_closed_operand_access (agent_closed_operands.item (j), tokens.result_keyword)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('a')
+					current_file.put_integer (j)
+					current_file.put_character (';')
+					current_file.put_new_line
+					j := j + 1
+				end
+					-- Return the agent object.
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_type_declaration (l_agent_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_result_name (current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				current_file.put_character ('}')
+				current_file.put_new_line
+				current_file.put_new_line
+			end
 		end
+
+	agent_instruction: ET_CALL_INSTRUCTION
+			-- Agent instruction
+
+	agent_expression: ET_CALL_EXPRESSION
+			-- Agent expression
+
+	agent_arguments: ET_ACTUAL_ARGUMENT_LIST
+			-- Agent arguments
+
+	agent_assignment: ET_ASSIGNMENT
+			-- Agent assignment
+
+	agent_open_operands: DS_ARRAYED_LIST [ET_IDENTIFIER]
+			-- Agent open operands
+
+	agent_closed_operands: DS_ARRAYED_LIST [ET_IDENTIFIER]
+			-- Agent closed operands
 
 feature {NONE} -- Polymorphic call generation
 
@@ -9821,6 +10568,133 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			current_file.put_character (')')
 		end
 
+	print_builtin_procedure_call_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'PROCEDURE.call' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_procedure_type: ET_DYNAMIC_PROCEDURE_TYPE
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_actuals: ET_ACTUAL_PARAMETER_LIST
+			l_tuple: ET_EXPRESSION
+			l_tuple_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			l_procedure_type ?= a_target_type
+			if l_procedure_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in can only be in class PROCEDURE (and its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_actuals := l_procedure_type.base_type.actual_parameters
+				if l_actuals = Void or else l_actuals.count < 2 then
+						-- Internal error: this was already reported during parsing.
+						-- The class PROCEDURE has at least 2 actual parameters.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_tuple_type := current_system.dynamic_type (l_actuals.type (2), universe.any_class)
+				end
+			end
+			if l_tuple_type = Void then
+				-- Error already reported.
+			elseif call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_type_cast (a_target_type, current_file)
+				current_file.put_character ('(')
+				print_expression (call_operands.first)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+				current_file.put_character ('f')
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_expression (call_operands.first)
+				l_tuple := call_operands.item (2)
+				l_open_operand_type_sets := l_procedure_type.open_operand_type_sets
+				nb := l_open_operand_type_sets.count
+				from i := 1 until i > nb loop
+					current_file.put_character (',')
+					print_attribute_tuple_item_access (i, l_tuple, l_tuple_type)
+					i := i + 1
+				end
+				current_file.put_character (')')
+				current_file.put_character (';')
+			end
+		end
+
+	print_builtin_function_item_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'FUNCTION.item' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_function_type: ET_DYNAMIC_FUNCTION_TYPE
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_actuals: ET_ACTUAL_PARAMETER_LIST
+			l_tuple: ET_EXPRESSION
+			l_tuple_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			l_function_type ?= a_target_type
+			if l_function_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in can only be in class FUNCTION (and its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_actuals := l_function_type.base_type.actual_parameters
+				if l_actuals = Void or else l_actuals.count < 2 then
+						-- Internal error: this was already reported during parsing.
+						-- The class FUNCTION has at least 2 actual parameters.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_tuple_type := current_system.dynamic_type (l_actuals.type (2), universe.any_class)
+				end
+			end
+			if l_tuple_type = Void then
+				-- Error already reported.
+			elseif call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_type_cast (a_target_type, current_file)
+				current_file.put_character ('(')
+				print_expression (call_operands.first)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+				current_file.put_character ('f')
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_expression (call_operands.first)
+				l_tuple := call_operands.item (2)
+				l_open_operand_type_sets := l_function_type.open_operand_type_sets
+				nb := l_open_operand_type_sets.count
+				from i := 1 until i > nb loop
+					current_file.put_character (',')
+					print_attribute_tuple_item_access (i, l_tuple, l_tuple_type)
+					i := i + 1
+				end
+				current_file.put_character (')')
+			end
+		end
+
 	print_builtin_sized_real_plus_call (a_target_type, a_real_type: ET_DYNAMIC_TYPE) is
 			-- Print call to built-in feature 'infix "+"' (static binding)
 			-- from sized real type `a_real_type' to `current_file'.
@@ -10864,7 +11738,7 @@ feature {NONE} -- C function generation
 				-- Set fields.
 			from i := 1 until i > nb loop
 				print_indentation
-				print_attribute_tuple_item_access (tokens.result_keyword, i, a_tuple_type)
+				print_attribute_tuple_item_access (i, tokens.result_keyword, a_tuple_type)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
@@ -11079,6 +11953,9 @@ feature {NONE} -- Type generation
 			l_type: ET_DYNAMIC_TYPE
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_function_type: ET_DYNAMIC_FUNCTION_TYPE
+			l_procedure_type: ET_DYNAMIC_PROCEDURE_TYPE
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
@@ -11203,6 +12080,28 @@ feature {NONE} -- Type generation
 						print_attribute_type_id_name (l_type, a_file)
 						a_file.put_character (';')
 						a_file.put_new_line
+						l_queries := l_type.queries
+						nb2 := l_queries.count
+						from j := 1 until j > nb2 loop
+							l_query := l_queries.item (j)
+							if l_query.is_attribute then
+								a_file.put_character ('%T')
+								print_type_declaration (l_query.result_type_set.static_type, a_file)
+								a_file.put_character (' ')
+								print_attribute_name (l_query, l_type, a_file)
+								a_file.put_character (';')
+								a_file.put_character (' ')
+								a_file.put_character ('/')
+								a_file.put_character ('*')
+								a_file.put_character (' ')
+								a_file.put_string (l_query.static_feature.name.name)
+								a_file.put_character (' ')
+								a_file.put_character ('*')
+								a_file.put_character ('/')
+								a_file.put_new_line
+							end
+							j := j + 1
+						end
 						l_special_type ?= l_type
 						if l_special_type /= Void then
 								-- We use the "struct hack" to represent SPECIAL
@@ -11267,27 +12166,54 @@ feature {NONE} -- Type generation
 									j := j + 1
 								end
 							else
-								l_queries := l_type.queries
-								nb2 := l_queries.count
-								from j := 1 until j > nb2 loop
-									l_query := l_queries.item (j)
-									if l_query.is_attribute then
+								l_function_type ?= l_type
+								if l_function_type /= Void then
+										-- Function pointer.
+									a_file.put_character ('%T')
+									print_type_declaration (l_function_type.result_type_set.static_type, a_file)
+									a_file.put_character (' ')
+									a_file.put_character ('(')
+									a_file.put_character ('*')
+									a_file.put_character ('f')
+									a_file.put_character (')')
+									a_file.put_character ('(')
+									print_type_declaration (l_type, a_file)
+									l_open_operand_type_sets := l_function_type.open_operand_type_sets
+									nb2 := l_open_operand_type_sets.count
+									from j := 1 until j > nb2 loop
+										a_file.put_character (',')
+										a_file.put_character (' ')
+										print_type_declaration (l_open_operand_type_sets.item (j).static_type, a_file)
+										j := j + 1
+									end
+									a_file.put_character (')')
+									a_file.put_character (';')
+									a_file.put_new_line
+								else
+									l_procedure_type ?= l_type
+									if l_procedure_type /= Void then
+											-- Function pointer.
 										a_file.put_character ('%T')
-										print_type_declaration (l_query.result_type_set.static_type, a_file)
+										a_file.put_string (c_void)
 										a_file.put_character (' ')
-										print_attribute_name (l_query, l_type, a_file)
+										a_file.put_character ('(')
+										a_file.put_character ('*')
+										a_file.put_character ('f')
+										a_file.put_character (')')
+										a_file.put_character ('(')
+										print_type_declaration (l_type, a_file)
+										l_open_operand_type_sets := l_procedure_type.open_operand_type_sets
+										nb2 := l_open_operand_type_sets.count
+										from j := 1 until j > nb2 loop
+											a_file.put_character (',')
+											a_file.put_character (' ')
+											print_type_declaration (l_open_operand_type_sets.item (j).static_type, a_file)
+											j := j + 1
+										end
+										a_file.put_character (')')
 										a_file.put_character (';')
-										a_file.put_character (' ')
-										a_file.put_character ('/')
-										a_file.put_character ('*')
-										a_file.put_character (' ')
-										a_file.put_string (l_query.static_feature.name.name)
-										a_file.put_character (' ')
-										a_file.put_character ('*')
-										a_file.put_character ('/')
 										a_file.put_new_line
 									end
-									j := j + 1
 								end
 							end
 						end
@@ -11581,11 +12507,11 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 		do
 			if short_names then
-				a_file.put_character ('a')
+				a_file.put_character ('z')
 				a_file.put_character ('2')
 			else
 -- TODO: long names
-				a_file.put_character ('a')
+				a_file.put_character ('z')
 				a_file.put_character ('2')
 			end
 		end
@@ -11598,11 +12524,11 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 		do
 			if short_names then
-				a_file.put_character ('a')
+				a_file.put_character ('z')
 				a_file.put_character ('1')
 			else
 -- TODO: long names
-				a_file.put_character ('a')
+				a_file.put_character ('z')
 				a_file.put_character ('1')
 			end
 		end
@@ -11615,11 +12541,11 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 		do
 			if short_names then
-				a_file.put_character ('a')
+				a_file.put_character ('z')
 				a_file.put_integer (i)
 			else
 -- TODO: long names
-				a_file.put_character ('a')
+				a_file.put_character ('z')
 				a_file.put_integer (i)
 			end
 		end
@@ -11698,6 +12624,42 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
+	print_agent_open_operand_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of agent open operand `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_open_operand: a_name.is_agent_open_operand
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('a')
+				a_file.put_integer (a_name.seed)
+			else
+-- TODO: long names
+				a_file.put_character ('a')
+				a_file.put_integer (a_name.seed)
+			end
+		end
+
+	print_agent_closed_operand_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of agent closed operand `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_closed_operand: a_name.is_agent_closed_operand
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('z')
+				a_file.put_integer (a_name.seed)
+			else
+-- TODO: long names
+				a_file.put_character ('z')
+				a_file.put_integer (a_name.seed)
+			end
+		end
+
 	print_current_name (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print name of 'Current' to `a_file'.
 		require
@@ -11758,6 +12720,48 @@ feature {NONE} -- Feature name generation
 			a_file.put_character ('o')
 			a_file.put_character ('v')
 			a_file.put_integer (a_feature.first_seed)
+		end
+
+	print_agent_type_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print type name of `i'-th agent appearing in `a_routine' from `a_type' to `a_file'.
+		require
+			a_routine_not_void: a_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			print_routine_name (a_routine, a_type, a_file)
+			a_file.put_character ('a')
+			a_file.put_character ('t')
+			a_file.put_integer (i)
+		end
+
+	print_agent_creation_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of creation function of `i'-th agent appearing in `a_routine' from `a_type' to `a_file'.
+		require
+			a_routine_not_void: a_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			print_routine_name (a_routine, a_type, a_file)
+			a_file.put_character ('a')
+			a_file.put_character ('c')
+			a_file.put_integer (i)
+		end
+
+	print_agent_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of function associated with `i'-th agent appearing in `a_routine' from `a_type' to `a_file'.
+		require
+			a_routine_not_void: a_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			print_routine_name (a_routine, a_type, a_file)
+			a_file.put_character ('a')
+			a_file.put_character ('f')
+			a_file.put_integer (i)
 		end
 
 	print_feature_name_comment (a_feature: ET_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -12316,6 +13320,10 @@ feature {ET_AST_NODE} -- Processing
 				print_temporary_variable (an_identifier)
 			elseif an_identifier.is_local then
 				print_local_variable (an_identifier)
+			elseif an_identifier.is_agent_open_operand then
+				print_agent_open_operand (an_identifier)
+			elseif an_identifier.is_agent_closed_operand then
+				print_agent_closed_operand (an_identifier)
 			elseif an_identifier.is_instruction then
 				print_unqualified_identifier_call_instruction (an_identifier)
 			else
@@ -12576,6 +13584,9 @@ feature {NONE} -- Access
 
 	called_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
 			-- Features being called
+
+	call_agents: DS_ARRAYED_LIST [ET_CALL_AGENT]
+			-- Agents already processed in `current_feature'
 
 	manifest_array_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
 			-- Types of manifest arrays
@@ -12904,6 +13915,16 @@ invariant
 	polymorphic_type_ids_not_void: polymorphic_type_ids /= Void
 	polymorphic_types_not_void: polymorphic_types /= Void
 	no_void_polymorphic_type: not polymorphic_types.has_item (Void)
+	call_agents_not_void: call_agents /= Void
+	no_void_call_agent: not call_agents.has (Void)
+	agent_instruction_not_void: agent_instruction /= Void
+	agent_expression_not_void: agent_expression /= Void
+	agent_arguments_not_void: agent_arguments /= Void
+	agent_assignment_not_void: agent_assignment /= Void
+	agent_open_operands_not_void: agent_open_operands /= Void
+	no_void_agent_open_operand: not agent_open_operands.has (Void)
+	agent_closed_operands_not_void: agent_closed_operands /= Void
+	no_void_agent_closed_operand: not agent_closed_operands.has (Void)
 	manifest_array_types_not_void: manifest_array_types /= Void
 	no_void_manifest_array_type: not manifest_array_types.has (Void)
 	manifest_tuple_types_not_void: manifest_tuple_types /= Void

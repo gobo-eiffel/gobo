@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			Result := precursor (a_procedure, a_system)
 			l_name := a_procedure.name
 			if l_name.same_feature_name (tokens.call_feature_name) then
-				Result.set_builtin_code (tokens.builtin_routine_call)
+				Result.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
 				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 			end
 		end

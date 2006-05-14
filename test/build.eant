@@ -50,6 +50,7 @@
 			Run Gobo tests with Gobo Eiffel.
 		</description>
 
+		<geant target="do_all_ge" arguments="test_ge,true"/>
 		<geant target="do_all" arguments="test_ge,true"/>
 	</target>
 
@@ -92,6 +93,7 @@
 			Run Gobo tests with Gobo Eiffel in debug mode.
 		</description>
 
+		<geant target="do_all_ge" arguments="test_debug_ge,true"/>
 		<geant target="do_all" arguments="test_debug_ge,true"/>
 	</target>
 
@@ -156,7 +158,6 @@
 				of argument "do_clean".
 			-->
 		<set name="do_clean" value="${do_clean}"/>
-		<geant target="do_all_ge" arguments="${target},${do_clean}" if="${GOBO_EIFFEL}=ge"/>
 		<geant file="build.eant" target="${target}" dir="lexical"/>
 		<geant file="build.eant" target="clean" dir="lexical" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="kernel"/>

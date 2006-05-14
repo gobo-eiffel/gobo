@@ -317,6 +317,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			if other_base_class = a_universe.none_class then
 					-- "NONE" conforms to any tuple type since it is a reference type.
 				Result := True
+			elseif other_base_class = a_universe.tuple_class and then actual_parameter_count = 0 then
+					-- Class type "TUPLE" conforms to Tuple_type "TUPLE".
+				Result := True
 			end
 		end
 
@@ -375,6 +378,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 			other_base_class := other.direct_base_class (a_universe)
 			if other_base_class = a_universe.none_class then
 					-- "NONE" conforms to any tuple type since it is a reference type.
+				Result := True
+			elseif other_base_class = a_universe.tuple_class and then actual_parameter_count = 0 then
+					-- Class type "TUPLE" conforms to Tuple_type "TUPLE".
 				Result := True
 			end
 		end

@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			Result := precursor (a_query, a_system)
 			l_name := a_query.name
 			if l_name.same_feature_name (tokens.item_feature_name) then
-				Result.set_builtin_code (tokens.builtin_function_item)
+				Result.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
 				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 				l_result_type_set := Result.result_type_set
 				if l_result_type_set /= Void and then l_result_type_set.static_type = result_type_set.static_type then
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			Result := precursor (a_procedure, a_system)
 			l_name := a_procedure.name
 			if l_name.same_feature_name (tokens.call_feature_name) then
-				Result.set_builtin_code (tokens.builtin_routine_call)
+				Result.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_call))
 				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 			end
 		end

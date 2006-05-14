@@ -80,6 +80,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_agent_implicit_current_target (a_target: ET_AGENT_IMPLICIT_CURRENT_TARGET) is
+			-- Process `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+		deferred
+		end
+
 	process_agent_implicit_open_argument (an_argument: ET_AGENT_IMPLICIT_OPEN_ARGUMENT) is
 			-- Process `an_argument'.
 		require

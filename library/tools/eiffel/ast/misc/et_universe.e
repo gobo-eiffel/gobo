@@ -164,6 +164,8 @@ feature {NONE} -- Initialization
 			create none_type.make (Void, none_class.name, none_class)
 				-- Type "STRING".
 			create string_type.make (Void, string_class.name, string_class)
+				-- Type "TUPLE".
+			create tuple_type.make (Void)
 				-- Type "ARRAY [ANY]".
 			create a_parameters.make_with_capacity (1)
 			a_parameters.put_first (any_class)
@@ -251,6 +253,7 @@ feature {NONE} -- Initialization
 			unknown_class_not_void: unknown_class /= Void
 			any_type_not_void: any_type /= Void
 			string_type_not_void: string_type /= Void
+			tuple_type_not_void: tuple_type /= Void
 			none_type_not_void: none_type /= Void
 			array_any_type_not_void: array_any_type /= Void
 			array_none_type_not_void: array_none_type /= Void
@@ -620,6 +623,9 @@ feature -- Basic classes
 
 	string_type: ET_CLASS_TYPE
 			-- Class type "STRING"
+
+	tuple_type: ET_TUPLE_TYPE
+			-- Class type "TUPLE"
 
 	array_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "ARRAY [ANY]"
@@ -2499,6 +2505,7 @@ invariant
 	any_type_not_void: any_type /= Void
 	none_type_not_void: none_type /= Void
 	string_type_not_void: string_type /= Void
+	tuple_type_not_void: tuple_type /= Void
 	array_any_type_not_void: array_any_type /= Void
 	array_none_type_not_void: array_none_type /= Void
 	any_parent_not_void: any_parent /= Void

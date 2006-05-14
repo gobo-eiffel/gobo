@@ -833,6 +833,16 @@ feature {NONE} -- Feature validity
 							set_fatal_error
 							error_handler.report_giaaa_error
 						end
+					when builtin_function_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_function_item then
+							report_builtin_function_item (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
 					else
 						inspect l_builtin_class
 						when builtin_integer_class then
@@ -1052,6 +1062,16 @@ feature {NONE} -- Feature validity
 						inspect l_builtin_code \\ builtin_capacity
 						when builtin_pointer_set_item then
 							report_builtin_pointer_set_item (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
+					when builtin_procedure_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_procedure_call then
+							report_builtin_procedure_call (a_feature)
 						else
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
@@ -1850,7 +1870,6 @@ feature {NONE} -- Event handling
 						error_handler.report_giaaa_error
 					else
 						l_dynamic_feature := l_target_type_set.static_type.dynamic_procedure (a_procedure, current_system)
-						report_agent_qualified_procedure_call (an_expression, l_target_type_set)
 						l_dynamic_feature.set_regular (True)
 							-- Set dynamic type sets of open operands.
 							-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
@@ -1892,6 +1911,7 @@ feature {NONE} -- Event handling
 								end
 							end
 						end
+						report_agent_qualified_procedure_call (an_expression, l_target_type_set)
 					end
 				end
 			end
@@ -1955,7 +1975,6 @@ feature {NONE} -- Event handling
 						error_handler.report_giaaa_error
 					else
 						l_dynamic_feature := l_target_type_set.static_type.dynamic_query (a_query, current_system)
-						report_agent_qualified_query_call (an_expression, l_target_type_set, l_result_type_set)
 						l_dynamic_feature.set_regular (True)
 							-- Set dynamic type sets of open operands.
 							-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
@@ -1997,6 +2016,7 @@ feature {NONE} -- Event handling
 								end
 							end
 						end
+						report_agent_qualified_query_call (an_expression, l_target_type_set, l_result_type_set)
 					end
 				end
 			end
@@ -2007,7 +2027,7 @@ feature {NONE} -- Event handling
 			-- on `a_target_type_set'.
 		require
 			an_expression_not_void: an_expression /= Void
-			qualified_call_agent: an_expression.target /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_target_type_set_not_void: a_target_type_set /= Void
 		local
 			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
@@ -2021,7 +2041,7 @@ feature {NONE} -- Event handling
 			-- on `a_target_type_set' and returns `a_result_type_set'.
 		require
 			an_expression_not_void: an_expression /= Void
-			qualified_call_agent: an_expression.target /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_target_type_set_not_void: a_target_type_set /= Void
 			a_result_type_set_not_void: a_result_type_set /= Void
 		local
@@ -2338,7 +2358,7 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
-			unqualified_call_agent: an_expression.target = Void
+			unqualified_call_agent: not an_expression.is_qualified_call
 			a_feature_not_void: a_feature /= Void
 			a_type_not_void: a_type /= Void
 			a_context_not_void: a_context /= Void
@@ -2354,6 +2374,7 @@ feature {NONE} -- Event handling
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_target: ET_AGENT_TARGET
 		do
 			a_feature.set_regular (True)
 			l_dynamic_type := current_system.dynamic_type (a_type, a_context)
@@ -2365,6 +2386,15 @@ feature {NONE} -- Event handling
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
+					-- Set dynamic type set of implicit 'Current' target.
+				l_target := an_expression.target
+				if l_target.index = 0 and current_index.item /= 0 then
+					l_target.set_index (current_index.item)
+				end
+				set_dynamic_type_set (current_dynamic_type, l_target)
+				if current_index.item = 0 then
+					current_index.put (l_target.index)
+				end
 					-- Set dynamic type sets of open operands.
 				l_open_operand_type_sets := l_agent_type.open_operand_type_sets
 				nb2 := l_open_operand_type_sets.count
@@ -3588,6 +3618,41 @@ feature {NONE} -- Built-in features
 				l_result_type := current_system.integer_type
 				l_result_type.set_alive
 				propagate_builtin_result_type (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_procedure_call (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'PROCEDURE.call' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+			end
+		end
+
+	report_builtin_function_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'FUNCTION.item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'item (i: OPEN_ARGS): RESULT_TYPE'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif l_result_type_set.is_expanded then
+					l_result_type := l_result_type_set.static_type
+					l_result_type.set_alive
+				end
 			end
 		end
 

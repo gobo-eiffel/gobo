@@ -6837,10 +6837,10 @@ feature {NONE} -- Agent validity
 			an_expression_target: ET_EXPRESSION
 			a_type_target: ET_AGENT_OPEN_TARGET
 		do
-			a_target := an_expression.target
-			if a_target = Void then
+			if not an_expression.is_qualified_call then
 				check_unqualified_call_agent_validity (an_expression, a_context)
 			else
+				a_target := an_expression.target
 				an_expression_target ?= a_target
 				if an_expression_target /= Void then
 					check_qualified_call_agent_validity (an_expression, an_expression_target, a_context)
@@ -6862,7 +6862,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
-			unqualified_call_agent: an_expression.target = Void
+			unqualified_call_agent: not an_expression.is_qualified_call
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
@@ -7039,7 +7039,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
-			unqualified_call_agent: an_expression.target = Void
+			unqualified_call_agent: not an_expression.is_qualified_call
 			query_call: not an_expression.is_procedure
 			seeded: an_expression.name.seed /= 0
 			a_query_not_void: a_query /= Void
@@ -7106,7 +7106,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
-			unqualified_call_agent: an_expression.target = Void
+			unqualified_call_agent: not an_expression.is_qualified_call
 			procedure_call: an_expression.is_procedure
 			seeded: an_expression.name.seed /= 0
 			a_procedure_not_void: a_procedure /= Void
@@ -7156,6 +7156,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
 			a_context_not_void: a_context /= Void
@@ -7404,6 +7405,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
 			query_call: not an_expression.is_procedure
@@ -7489,6 +7491,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
 			procedure_call: an_expression.is_procedure
@@ -7556,6 +7559,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
 			query_call: not an_expression.is_procedure
@@ -7613,7 +7617,7 @@ feature {NONE} -- Agent validity
 					l_agent_class := universe.function_class
 					create l_parameters.make_with_capacity (3)
 					l_parameters.put_first (l_type)
-					l_parameters.put_first (universe.tuple_class)
+					l_parameters.put_first (universe.tuple_type)
 					l_parameters.put_first (l_target_type)
 					create l_agent_type.make (Void, l_agent_class.name, l_parameters, l_agent_class)
 --				end
@@ -7627,6 +7631,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
 			a_context_not_void: a_context /= Void
@@ -7871,6 +7876,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
 			query_call: not an_expression.is_procedure
@@ -7958,6 +7964,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
 			procedure_call: an_expression.is_procedure
@@ -8028,6 +8035,7 @@ feature {NONE} -- Agent validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
 			query_call: not an_expression.is_procedure
@@ -8685,7 +8693,7 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
-			qualified_call_agent: an_expression.target /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_procedure_not_void: a_procedure /= Void
 			an_agent_type_not_void: an_agent_type /= Void
 			a_context_not_void: a_context /= Void
@@ -8699,7 +8707,7 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
-			qualified_call_agent: an_expression.target /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			a_query_not_void: a_query /= Void
 			an_agent_type_not_void: an_agent_type /= Void
 			a_context_not_void: a_context /= Void
@@ -8787,7 +8795,7 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
-			qualified_call_agent: an_expression.target /= Void
+			qualified_call_agent: an_expression.is_qualified_call
 			tuple_label: an_expression.name.is_tuple_label
 			an_agent_type_not_void: an_agent_type /= Void
 			a_context_not_void: a_context /= Void
@@ -8844,7 +8852,7 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
-			unqualified_call_agent: an_expression.target = Void
+			unqualified_call_agent: not an_expression.is_qualified_call
 			a_procedure_not_void: a_procedure /= Void
 			a_type_not_void: a_type /= Void
 			a_context_not_void: a_context /= Void
@@ -8858,7 +8866,7 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
-			unqualified_call_agent: an_expression.target = Void
+			unqualified_call_agent: not an_expression.is_qualified_call
 			a_query_not_void: a_query /= Void
 			a_type_not_void: a_type /= Void
 			a_context_not_void: a_context /= Void

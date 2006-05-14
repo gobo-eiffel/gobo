@@ -45,10 +45,6 @@ The following Eiffel constructs have not been implemented yet:
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
-		<term>Agents/Tuples</term>
-		<listitem></listitem>
-	</varlistentry>
-	<varlistentry>
 		<term><featurename>deep_*</featurename> features in <classname>ANY</classname></term>
 		<listitem></listitem>
 	</varlistentry>

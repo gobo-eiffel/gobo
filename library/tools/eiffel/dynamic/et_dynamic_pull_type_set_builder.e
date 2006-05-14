@@ -1397,6 +1397,7 @@ feature {NONE} -- Event handling
 			l_routine_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_manifest_tuple: ET_MANIFEST_TUPLE
 			l_no_manifest_tuple: BOOLEAN
+			l_target: ET_AGENT_TARGET
 		do
 			a_feature.set_regular (True)
 			l_dynamic_type := current_system.dynamic_type (a_type, a_context)
@@ -1408,6 +1409,16 @@ feature {NONE} -- Event handling
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
+					-- Set dynamic type set of implicit 'Current' target.
+				l_target := an_expression.target
+				if l_target.index = 0 and current_index.item /= 0 then
+					l_target.set_index (current_index.item)
+				end
+				set_dynamic_type_set (current_dynamic_type, l_target)
+				if current_index.item = 0 then
+					current_index.put (l_target.index)
+				end
+					-- Dynamic type set of 'Result'.
 				l_result_type_set := l_agent_type.result_type_set
 				if l_result_type_set /= Void then
 					if not l_result_type_set.is_expanded then
@@ -1422,6 +1433,7 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
+					-- Set dynamic type sets of open operands.
 				l_open_operand_type_sets := l_agent_type.open_operand_type_sets
 				nb2 := l_open_operand_type_sets.count
 					-- Dynamic type sets for arguments are stored first

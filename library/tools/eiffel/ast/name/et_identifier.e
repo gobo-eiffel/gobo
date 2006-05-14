@@ -245,6 +245,18 @@ feature -- Status report
 			Result := (status_code = tuple_label_code)
 		end
 
+	is_agent_open_operand: BOOLEAN is
+			-- Is current identifier an agent open operand?
+		do
+			Result := (status_code = agent_open_operand_code)
+		end
+
+	is_agent_closed_operand: BOOLEAN is
+			-- Is current identifier an agent closed operand?
+		do
+			Result := (status_code = agent_closed_operand_code)
+		end
+
 	is_instruction: BOOLEAN is
 			-- Is current identifier an argumentless unqualified call?
 		do
@@ -299,6 +311,30 @@ feature -- Status setting
 			end
 		ensure
 			tuple_label_set: is_tuple_label = b
+		end
+
+	set_agent_open_operand (b: BOOLEAN) is
+			-- Set `is_agent_open_operand' to `b'.
+		do
+			if b then
+				status_code := agent_open_operand_code
+			else
+				status_code := no_code
+			end
+		ensure
+			agent_open_operand_set: is_agent_open_operand = b
+		end
+
+	set_agent_closed_operand (b: BOOLEAN) is
+			-- Set `is_agent_closed_operand' to `b'.
+		do
+			if b then
+				status_code := agent_closed_operand_code
+			else
+				status_code := no_code
+			end
+		ensure
+			agent_closed_operand_set: is_agent_closed_operand = b
 		end
 
 	set_instruction (b: BOOLEAN) is
@@ -465,6 +501,8 @@ feature {NONE} -- Implementation
 	temporary_code: CHARACTER is 'v'
 	tuple_label_code: CHARACTER is 't'
 	instruction_code: CHARACTER is 'i'
+	agent_open_operand_code: CHARACTER is 'o'
+	agent_closed_operand_code: CHARACTER is 'c'
 	no_code: CHARACTER is '%U'
 			-- Status codes
 
