@@ -48,6 +48,7 @@ has already been used successfully:
 			<entry>Operating System</entry>
 			<entry>C Compiler</entry>
 			<entry>Hardware</entry>
+			<entry>Comment</entry>
 		</row>
 	</thead>
 	<tbody>
@@ -55,31 +56,46 @@ has already been used successfully:
 			<entry>Windows XP Pro</entry>
 			<entry>msc 7.1 (Visual Studio .NET 2003)</entry>
 			<entry>32-bit x86</entry>
+			<entry></entry>
 		</row>
 		<row>
 			<entry>Windows XP</entry>
 			<entry>msc 8 (Visual Studio .NET 2005)</entry>
 			<entry>32-bit x86</entry>
+			<entry></entry>
+		</row>
+		<row>
+			<entry>Windows XP Pro</entry>
+			<entry>bcc 5.5.1</entry>
+			<entry>32-bit x86</entry>
+			<entry>
+				bcc raises floating-point overflow exceptions (msc does not).
+				bcc ignores all '\r' when reading text files (msc ignores '\r' only when followed by '\n').
+			</entry>
 		</row>
 		<row>
 			<entry>Linux Ubuntu 5.10 "The Breezy Badger"</entry>
 			<entry>gcc 4.0.2</entry>
 			<entry>32-bit x86</entry>
+			<entry></entry>
 		</row>
 		<row>
 			<entry>Debian Linux 2.6.15</entry>
 			<entry>tcc 0.9.23</entry>
 			<entry>32-bit x86</entry>
+			<entry></entry>
 		</row>
 		<row>
 			<entry>Red Hat Enterprise Linux 4</entry>
 			<entry>gcc 3.4.5</entry>
 			<entry>64-bit x86</entry>
+			<entry></entry>
 		</row>
 		<row>
 			<entry>OpenBSD 3.8</entry>
 			<entry>gcc ???</entry>
 			<entry>32-bit x86</entry>
+			<entry></entry>
 		</row>
 	</tbody>
 	</tgroup>
@@ -156,34 +172,10 @@ Then, depending on your platform and your C compiler, you should run either one 
 </programlisting>
 </blockquote>
 If this completes successfully (no "BUILD FAILED!" message), you can then run
-the following tests:
-<blockquote>
-<programlisting>
-<filename>cd $GOBO/test/free_elks</filename>
-<filename>geant test_debug_ge</filename>
-</programlisting>
-</blockquote>
+the following test:
 <blockquote>
 <programlisting>
 <filename>cd $GOBO/test</filename>
-<filename>geant test_debug_ge</filename>
-</programlisting>
-</blockquote>
-<blockquote>
-<programlisting>
-<filename>cd $GOBO/test/xml/xpointer</filename>
-<filename>geant test_debug_ge</filename>
-</programlisting>
-</blockquote>
-<blockquote>
-<programlisting>
-<filename>cd $GOBO/test/xml/xpath</filename>
-<filename>geant test_debug_ge</filename>
-</programlisting>
-</blockquote>
-<blockquote>
-<programlisting>
-<filename>cd $GOBO/test/xml/xslt</filename>
 <filename>geant test_debug_ge</filename>
 </programlisting>
 </blockquote>
