@@ -51,123 +51,265 @@
 <!-- Implementation -->
 
 	<target name="install_basic">
-		<set name="gepp_dir" value="basic"/>
-		<set name="spec_dir" value="spec"/>
-		<set name="gepp_file" value="kl_any_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_array_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_character_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_double_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_fixed_array_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_imported_fixed_array_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_imported_fixed_array_type"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_imported_fixed_array_type2"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_imported_native_array_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_imported_native_array_type"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_integer_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_native_array_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_special_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_string_buffer_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_string_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="special"/>
-		<geant target="ge2e"/>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_any_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_array_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_character_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_double_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_fixed_array_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_imported_fixed_array_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_imported_fixed_array_type"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_imported_fixed_array_type2"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_imported_native_array_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_imported_native_array_type"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_integer_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_native_array_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_special_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_string_buffer_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="kl_string_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="basic"/>
+			<argument name="gepp_file" value="special"/>
+		</geant>
 	</target>
 
 	<target name="install_io">
-		<set name="gepp_dir" value="io"/>
-		<set name="spec_dir" value="spec"/>
-		<set name="gepp_file" value="ki_file_system"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_binary_input_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_binary_output_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_character_buffer"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_directory"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_file_system"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_imported_input_stream_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_imported_output_stream_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_input_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_input_stream_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_macos_input_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_output_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_output_stream_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_stderr_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_stdin_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_stdout_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_text_input_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_text_output_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_unix_input_file"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_windows_input_file"/>
-		<geant target="ge2e"/>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="ki_file_system"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_binary_input_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_binary_output_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_character_buffer"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_directory"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_file_system"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_imported_input_stream_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_imported_output_stream_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_input_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_input_stream_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_macos_input_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_output_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_output_stream_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_stderr_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_stdin_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_stdout_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_text_input_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_text_output_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_unix_input_file"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="io"/>
+			<argument name="gepp_file" value="kl_windows_input_file"/>
+		</geant>
 	</target>
 
 	<target name="install_misc">
-		<set name="gepp_dir" value="misc"/>
-		<set name="spec_dir" value="spec"/>
-		<set name="gepp_file" value="debug_output"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="ki_platform"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_clonable"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_any"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_eiffel_compiler"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_execution_environment"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_hashable_routines"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_numeric"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_operating_system"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_platform"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_shell_command"/>
-		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_system_clock"/>
-		<geant target="ge2e"/>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="debug_output"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="ki_platform"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_clonable"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_any"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_eiffel_compiler"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_execution_environment"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_hashable_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_numeric"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_operating_system"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_platform"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_shell_command"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_system_clock"/>
+		</geant>
 	</target>
 
 	<target name="install_unicode">
-		<set name="gepp_dir" value="unicode"/>
-		<set name="spec_dir" value="spec"/>
-		<set name="gepp_file" value="uc_string"/>
-		<geant target="ge2e"/>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="unicode"/>
+			<argument name="gepp_file" value="uc_string"/>
+		</geant>
 	</target>
 
 </project>

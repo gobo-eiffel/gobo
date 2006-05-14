@@ -66,10 +66,11 @@
 	</target>
 
 	<target name="install_expat">
-		<set name="gepp_dir" value="parser/expat"/>
-		<set name="spec_dir" value="parser/expat/spec"/>
-		<set name="gepp_file" value="xm_expat_api"/>
-		<geant target="ge2e"/>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="parser/expat/spec"/>
+			<argument name="gepp_dir" value="parser/expat"/>
+			<argument name="gepp_file" value="xm_expat_api"/>
+		</geant>
 	</target>
 
 </project>

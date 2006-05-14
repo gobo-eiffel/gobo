@@ -37,18 +37,22 @@
 			Install ${system} directory.
 		</description>
 
-		<unset name="gexace_output"/>
-		<unset name="gexace_system"/>
-		<set name="eiffel" value="ge"/>
-		<geant target="xace"/>
-		<set name="eiffel" value="ise"/>
-		<geant target="xace"/>
-		<set name="eiffel" value="se"/>
-		<geant target="xace"/>
-		<set name="eiffel" value="ve"/>
-		<geant target="xace"/>
-		<unset name="gexace_output"/>
-		<unset name="gexace_system"/>
+		<geant target="xace">
+			<argument name="a_compiler" value="ge"/>
+			<argument name="a_output" value=""/>
+		</geant>
+		<geant target="xace">
+			<argument name="a_compiler" value="ise"/>
+			<argument name="a_output" value=""/>
+		</geant>
+		<geant target="xace">
+			<argument name="a_compiler" value="se"/>
+			<argument name="a_output" value=""/>
+		</geant>
+		<geant target="xace">
+			<argument name="a_compiler" value="ve"/>
+			<argument name="a_output" value=""/>
+		</geant>
 		<geant target="other_install"/>
 	</target>
 
@@ -70,11 +74,10 @@
 		</description>
 
 		<set name="eiffel" value="ge"/>
-		<set name="gexace_output" value="compile_ge.ace"/>
-		<set name="gexace_system" value="ge"/>
-		<geant target="xace"/>
-		<unset name="gexace_output"/>
-		<unset name="gexace_system"/>
+		<geant target="xace">
+			<argument name="a_compiler" value="ge"/>
+			<argument name="a_output" value="compile_ge.ace"/>
+		</geant>
 		<delete file="${system}${exe}"/>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
@@ -90,11 +93,10 @@
 		</description>
 
 		<set name="eiffel" value="ise"/>
-		<set name="gexace_output" value="compile_ise.ace"/>
-		<set name="gexace_system" value="ise"/>
-		<geant target="xace"/>
-		<unset name="gexace_output"/>
-		<unset name="gexace_system"/>
+		<geant target="xace">
+			<argument name="a_compiler" value="ise"/>
+			<argument name="a_output" value="compile_ise.ace"/>
+		</geant>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
@@ -132,11 +134,10 @@
 		</description>
 
 		<set name="eiffel" value="ve"/>
-		<set name="gexace_output" value="compile_ve.xace"/>
-		<set name="gexace_system" value="ve"/>
-		<geant target="xace"/>
-		<unset name="gexace_output"/>
-		<unset name="gexace_system"/>
+		<geant target="xace">
+			<argument name="a_compiler" value="ve"/>
+			<argument name="a_output" value="compile_ve.xace"/>
+		</geant>
 		<delete file="${system}${exe}"/>
 		<ve xace="compile_ve.xace"/>
 		<ve tune="${system}${exe}" level="${vetuner}" if="${vetuner}"/>
@@ -149,11 +150,10 @@
 		</description>
 
 		<set name="eiffel" value="se"/>
-		<set name="gexace_output" value="compile_se.ace"/>
-		<set name="gexace_system" value="se"/>
-		<geant target="xace"/>
-		<unset name="gexace_output"/>
-		<unset name="gexace_system"/>
+		<geant target="xace">
+			<argument name="a_compiler" value="se"/>
+			<argument name="a_output" value="compile_se.ace"/>
+		</geant>
 		<delete file="${system}${exe}"/>
 		<se ace="compile_se.ace"/>
 	</target>
@@ -264,10 +264,11 @@
 <!-- Implementation -->
 
 	<target name="xace" depend="init">
+		<argument name="a_compiler"/>
+		<argument name="a_output"/>
 		<description>
-			Build Ace file or ESD file for Eiffel compiler ${gexace_system}
-			if specifed, ${eiffel} otherwise.
-			Generate file in ${gexace_output} if specified.
+			Build Ace file or ESD file for Eiffel compiler ${a_compiler}.
+			Generate file in ${a_output} if specified.
 			Pass $DEBUG option to 'gexace' if ${debug} is defined.
 			Pass $BOOTSTRAP option to 'gexace' if ${bootstrap} is defined.
 			Pass $GOBO_EIFFEL value to 'gexace'.
@@ -279,11 +280,7 @@
 			necessary.
 		</description>
 
-		<set name="l_gexace_output" value="" unless="${gexace_output}"/>
-		<set name="l_gexace_output" value="${gexace_output}" if="${gexace_output}"/>
-		<set name="l_gexace_system" value="${eiffel}" unless="${gexace_system}"/>
-		<set name="l_gexace_system" value="${gexace_system}" if="${gexace_system}"/>
-		<gexace system="${l_gexace_system}" output="${l_gexace_output}" xace="${system_dir}/system.xace">
+		<gexace system="${a_compiler}" output="${a_output}" xace="${system_dir}/system.xace">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
 			<define name="BOOTSTRAP" value="${bootstrap}" if="${bootstrap}"/>
 			<define name="GOBO_EIFFEL" value="${eiffel}"/>
