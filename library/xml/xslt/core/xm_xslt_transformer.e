@@ -579,7 +579,7 @@ feature -- Transformation
 					else
 						a_start_node := a_document
 					end
-				elseif configuration.is_uri_written (a_source.system_id) or a_source.system_id.is_equal (a_result.system_id) then
+				elseif configuration.is_uri_written (a_source.system_id) or STRING_.same_string (a_source.system_id, a_result.system_id) then
 					create an_error.make_from_string ("The system has already written to source URI " + a_source.system_id, Xpath_errors_uri, "XTRE1500", Dynamic_error)
 				else
 					a_parser := new_parser
