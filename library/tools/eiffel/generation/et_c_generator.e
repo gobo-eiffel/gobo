@@ -679,119 +679,273 @@ feature {NONE} -- Feature generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			if l_result_type_set /= Void then
-				print_indentation
-				print_type_declaration (l_result_type_set.static_type, current_file)
-				current_file.put_character (' ')
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('0')
-				current_file.put_character (';')
-				current_file.put_new_line
+				-- Determine the kind of external.
+			l_language := a_feature.language
+			l_language_value := l_language.manifest_string
+			l_language_string := l_language_value.value
+			nb := l_language_string.count
+				-- Remove leading spaces.
+			from
+				i := 1
+			until
+				i > nb or stop
+			loop
+				inspect l_language_string.item (i)
+				when ' ', '%R', '%T', '%N' then
+					i := i + 1
+				else
+					stop := True
+				end
 			end
-			current_file := current_function_body_buffer
-			if a_creation then
-				print_malloc_current (a_feature)
+				-- Read language name.
+			from
+				stop := False
+				create l_language_name.make (10)
+			until
+				i > nb or stop
+			loop
+				c := l_language_string.item (i)
+				inspect c
+				when ' ', '%R', '%T', '%N' then
+					stop := True
+				else
+					l_language_name.append_character (c)
+					i := i + 1
+				end
 			end
-			if a_feature.is_builtin then
-				print_external_builtin_body (a_feature)
-			else
-				l_language := a_feature.language
-				l_language_value := l_language.manifest_string
-				l_language_string := l_language_value.value
-				nb := l_language_string.count
-					-- Remove leading spaces.
-				from
-					i := 1
-				until
-					i > nb or stop
-				loop
-					inspect l_language_string.item (i)
-					when ' ', '%R', '%T', '%N' then
-						i := i + 1
-					else
-						stop := True
-					end
+				-- Remove spaces.
+			from
+				stop := False
+			until
+				i > nb or stop
+			loop
+				inspect l_language_string.item (i)
+				when ' ', '%R', '%T', '%N' then
+					i := i + 1
+				else
+					stop := True
 				end
-					-- Read language name.
-				from
-					stop := False
-					create l_language_name.make (10)
-				until
-					i > nb or stop
-				loop
-					c := l_language_string.item (i)
-					inspect c
-					when ' ', '%R', '%T', '%N' then
-						stop := True
-					else
-						l_language_name.append_character (c)
-						i := i + 1
-					end
-				end
-					-- Remove spaces.
-				from
-					stop := False
-				until
-					i > nb or stop
-				loop
-					inspect l_language_string.item (i)
-					when ' ', '%R', '%T', '%N' then
-						i := i + 1
-					else
-						stop := True
-					end
-				end
-				if l_language_name.is_empty then
+			end
+			if l_language_name.is_empty then
 -- TODO: error
-				elseif STRING_.same_case_insensitive (l_language_name, e_c) then
-						-- Look for 'blocking' keyword.
-					if i + 7 <= nb then
-						l_blocking := l_language_string.substring (i, i + 7)
-						if not STRING_.same_case_insensitive (l_blocking, e_blocking) then
-							l_blocking := Void
-						else
-								-- Remove spaces.
-							from
-								i := i + 8
-								stop := False
-							until
-								i > nb or stop
-							loop
-								inspect l_language_string.item (i)
-								when ' ', '%R', '%T', '%N' then
-									i := i + 1
-								else
-									stop := True
-								end
+			elseif STRING_.same_case_insensitive (l_language_name, e_c) then
+					-- Look for 'blocking' keyword.
+				if i + 7 <= nb then
+					l_blocking := l_language_string.substring (i, i + 7)
+					if not STRING_.same_case_insensitive (l_blocking, e_blocking) then
+						l_blocking := Void
+					else
+							-- Remove spaces.
+						from
+							i := i + 8
+							stop := False
+						until
+							i > nb or stop
+						loop
+							inspect l_language_string.item (i)
+							when ' ', '%R', '%T', '%N' then
+								i := i + 1
+							else
+								stop := True
 							end
 						end
 					end
-						-- Look for 'inline' keyword.
-					if i + 5 <= nb then
-						l_inline := l_language_string.substring (i, i + 5)
-						if not STRING_.same_case_insensitive (l_inline, e_inline) then
-							l_inline := Void
-						else
-								-- Remove spaces.
-							from
-								i := i + 6
-								stop := False
-							until
-								i > nb or stop
-							loop
-								inspect l_language_string.item (i)
-								when ' ', '%R', '%T', '%N' then
-									i := i + 1
-								else
-									stop := True
-								end
+				end
+					-- Look for 'inline' keyword.
+				if i + 5 <= nb then
+					l_inline := l_language_string.substring (i, i + 5)
+					if not STRING_.same_case_insensitive (l_inline, e_inline) then
+						l_inline := Void
+					else
+							-- Remove spaces.
+						from
+							i := i + 6
+							stop := False
+						until
+							i > nb or stop
+						loop
+							inspect l_language_string.item (i)
+							when ' ', '%R', '%T', '%N' then
+								i := i + 1
+							else
+								stop := True
 							end
 						end
 					end
-						-- Look for 'macro' keyword.
+				end
+					-- Look for 'macro' keyword.
+				if i + 4 <= nb then
+					l_macro := l_language_string.substring (i, i + 4)
+					if not STRING_.same_case_insensitive (l_macro, e_macro) then
+						l_macro := Void
+					else
+							-- Remove spaces.
+						from
+							i := i + 5
+							stop := False
+						until
+							i > nb or stop
+						loop
+							inspect l_language_string.item (i)
+							when ' ', '%R', '%T', '%N' then
+								i := i + 1
+							else
+								stop := True
+							end
+						end
+					end
+				end
+					-- Look for 'struct' keyword.
+				if i + 5 <= nb then
+					l_struct := l_language_string.substring (i, i + 5)
+					if not STRING_.same_case_insensitive (l_struct, e_struct) then
+						l_struct := Void
+					else
+							-- Look for struct type.
+						from
+							i := i + 6
+							stop := False
+							create l_struct_type.make (10)
+						until
+							i > nb or stop
+						loop
+							c := l_language_string.item (i)
+							inspect c
+							when 'a', 'A' then
+								if i + 5 <= nb then
+									l_access := l_language_string.substring (i, i + 5)
+									if not STRING_.same_case_insensitive (l_access, e_access) then
+										l_access := Void
+									else
+										i := i + 6
+										stop := True
+									end
+								end
+								if not stop then
+									l_struct_type.append_character (c)
+									i := i + 1
+								end
+							when 'g', 'G' then
+								if i + 2 <= nb then
+									l_get := l_language_string.substring (i, i + 2)
+									if not STRING_.same_case_insensitive (l_get, e_get) then
+										l_get := Void
+									else
+										i := i + 3
+										stop := True
+									end
+								end
+								if not stop then
+									l_struct_type.append_character (c)
+									i := i + 1
+								end
+							else
+								l_struct_type.append_character (c)
+								i := i + 1
+							end
+						end
+							-- Look for field name.
+						from
+							stop := False
+							create l_struct_field_name.make (10)
+						until
+							i > nb or stop
+						loop
+							c := l_language_string.item (i)
+							inspect c
+							when 't', 'T' then
+								if i + 3 <= nb then
+									l_type := l_language_string.substring (i, i + 3)
+									if not STRING_.same_case_insensitive (l_type, e_type) then
+										l_type := Void
+									else
+										i := i + 4
+										stop := True
+									end
+								end
+								if not stop then
+									l_struct_field_name.append_character (c)
+									i := i + 1
+								end
+							when 'u', 'U' then
+								if i + 2 <= nb then
+									l_use := l_language_string.substring (i, i + 2)
+									if not STRING_.same_case_insensitive (l_use, e_use) then
+										l_use := Void
+									else
+										stop := True
+									end
+								end
+								if not stop then
+									l_struct_field_name.append_character (c)
+									i := i + 1
+								end
+							else
+								l_struct_field_name.append_character (c)
+								i := i + 1
+							end
+						end
+							-- Look for field type.
+						if l_type /= Void then
+							from
+								stop := False
+								create l_struct_field_type.make (10)
+							until
+								i > nb or stop
+							loop
+								c := l_language_string.item (i)
+								inspect c
+								when 'u', 'U' then
+									if i + 2 <= nb then
+										l_use := l_language_string.substring (i, i + 2)
+										if not STRING_.same_case_insensitive (l_use, e_use) then
+											l_use := Void
+										else
+											stop := True
+										end
+									end
+									if not stop then
+										l_struct_field_type.append_character (c)
+										i := i + 1
+									end
+								else
+									l_struct_field_type.append_character (c)
+									i := i + 1
+								end
+							end
+						end
+							-- Remove spaces.
+						from
+							i := i + 6
+							stop := False
+						until
+							i > nb or stop
+						loop
+							inspect l_language_string.item (i)
+							when ' ', '%R', '%T', '%N' then
+								i := i + 1
+							else
+								stop := True
+							end
+						end
+					end
+				end
+					-- Look for old 'macro' or 'struct' syntax.
+				if i <= nb and then l_language_string.item (i) = '[' then
+						-- Remove spaces.
+					from
+						i := i + 1
+						stop := False
+					until
+						i > nb or stop
+					loop
+						inspect l_language_string.item (i)
+						when ' ', '%R', '%T', '%N' then
+							i := i + 1
+						else
+							stop := True
+						end
+					end
 					if i + 4 <= nb then
 						l_macro := l_language_string.substring (i, i + 4)
 						if not STRING_.same_case_insensitive (l_macro, e_macro) then
@@ -813,125 +967,11 @@ feature {NONE} -- Feature generation
 							end
 						end
 					end
-						-- Look for 'struct' keyword.
 					if i + 5 <= nb then
 						l_struct := l_language_string.substring (i, i + 5)
 						if not STRING_.same_case_insensitive (l_struct, e_struct) then
 							l_struct := Void
 						else
-								-- Look for struct type.
-							from
-								i := i + 6
-								stop := False
-								create l_struct_type.make (10)
-							until
-								i > nb or stop
-							loop
-								c := l_language_string.item (i)
-								inspect c
-								when 'a', 'A' then
-									if i + 5 <= nb then
-										l_access := l_language_string.substring (i, i + 5)
-										if not STRING_.same_case_insensitive (l_access, e_access) then
-											l_access := Void
-										else
-											i := i + 6
-											stop := True
-										end
-									end
-									if not stop then
-										l_struct_type.append_character (c)
-										i := i + 1
-									end
-								when 'g', 'G' then
-									if i + 2 <= nb then
-										l_get := l_language_string.substring (i, i + 2)
-										if not STRING_.same_case_insensitive (l_get, e_get) then
-											l_get := Void
-										else
-											i := i + 3
-											stop := True
-										end
-									end
-									if not stop then
-										l_struct_type.append_character (c)
-										i := i + 1
-									end
-								else
-									l_struct_type.append_character (c)
-									i := i + 1
-								end
-							end
-								-- Look for field name.
-							from
-								stop := False
-								create l_struct_field_name.make (10)
-							until
-								i > nb or stop
-							loop
-								c := l_language_string.item (i)
-								inspect c
-								when 't', 'T' then
-									if i + 3 <= nb then
-										l_type := l_language_string.substring (i, i + 3)
-										if not STRING_.same_case_insensitive (l_type, e_type) then
-											l_type := Void
-										else
-											i := i + 4
-											stop := True
-										end
-									end
-									if not stop then
-										l_struct_field_name.append_character (c)
-										i := i + 1
-									end
-								when 'u', 'U' then
-									if i + 2 <= nb then
-										l_use := l_language_string.substring (i, i + 2)
-										if not STRING_.same_case_insensitive (l_use, e_use) then
-											l_use := Void
-										else
-											stop := True
-										end
-									end
-									if not stop then
-										l_struct_field_name.append_character (c)
-										i := i + 1
-									end
-								else
-									l_struct_field_name.append_character (c)
-									i := i + 1
-								end
-							end
-								-- Look for field type.
-							if l_type /= Void then
-								from
-									stop := False
-									create l_struct_field_type.make (10)
-								until
-									i > nb or stop
-								loop
-									c := l_language_string.item (i)
-									inspect c
-									when 'u', 'U' then
-										if i + 2 <= nb then
-											l_use := l_language_string.substring (i, i + 2)
-											if not STRING_.same_case_insensitive (l_use, e_use) then
-												l_use := Void
-											else
-												stop := True
-											end
-										end
-										if not stop then
-											l_struct_field_type.append_character (c)
-											i := i + 1
-										end
-									else
-										l_struct_field_type.append_character (c)
-										i := i + 1
-									end
-								end
-							end
 								-- Remove spaces.
 							from
 								i := i + 6
@@ -948,93 +988,56 @@ feature {NONE} -- Feature generation
 							end
 						end
 					end
-						-- Look for old 'macro' or 'struct' syntax.
-					if i <= nb and then l_language_string.item (i) = '[' then
-							-- Remove spaces.
-						from
-							i := i + 1
-							stop := False
-						until
-							i > nb or stop
-						loop
-							inspect l_language_string.item (i)
-							when ' ', '%R', '%T', '%N' then
-								i := i + 1
-							else
-								stop := True
-							end
-						end
-						if i + 4 <= nb then
-							l_macro := l_language_string.substring (i, i + 4)
-							if not STRING_.same_case_insensitive (l_macro, e_macro) then
-								l_macro := Void
-							else
-									-- Remove spaces.
-								from
-									i := i + 5
-									stop := False
-								until
-									i > nb or stop
-								loop
-									inspect l_language_string.item (i)
-									when ' ', '%R', '%T', '%N' then
-										i := i + 1
-									else
-										stop := True
-									end
-								end
-							end
-						end
-						if i + 5 <= nb then
-							l_struct := l_language_string.substring (i, i + 5)
-							if not STRING_.same_case_insensitive (l_struct, e_struct) then
-								l_struct := Void
-							else
-									-- Remove spaces.
-								from
-									i := i + 6
-									stop := False
-								until
-									i > nb or stop
-								loop
-									inspect l_language_string.item (i)
-									when ' ', '%R', '%T', '%N' then
-										i := i + 1
-									else
-										stop := True
-									end
-								end
-							end
-						end
-						if l_macro = Void and l_struct = Void then
+					if l_macro = Void and l_struct = Void then
 -- TODO: syntax error
-						end
-						from
-							i := i + 1
-							stop := False
-							create l_include_filename.make (50)
-						until
-							i > nb or stop
-						loop
-							c := l_language_string.item (i)
-							inspect c
-							when ']' then
-								stop := True
-							else
-								l_include_filename.append_character (c)
-								i := i + 1
-							end
-						end
-						if i > nb then
--- TODO: error
+					end
+					from
+						i := i + 1
+						stop := False
+						create l_include_filename.make (50)
+					until
+						i > nb or stop
+					loop
+						c := l_language_string.item (i)
+						inspect c
+						when ']' then
+							stop := True
 						else
+							l_include_filename.append_character (c)
 							i := i + 1
-							STRING_.left_adjust (l_include_filename)
-							STRING_.right_adjust (l_include_filename)
-							include_header_filename (l_include_filename, header_file)
 						end
+					end
+					if i > nb then
+-- TODO: error
+					else
+						i := i + 1
+						STRING_.left_adjust (l_include_filename)
+						STRING_.right_adjust (l_include_filename)
+						include_header_filename (l_include_filename, header_file)
+					end
+						-- Remove spaces.
+					from
+						stop := False
+					until
+						i > nb or stop
+					loop
+						inspect l_language_string.item (i)
+						when ' ', '%R', '%T', '%N' then
+							i := i + 1
+						else
+							stop := True
+						end
+					end
+				end
+					-- Look for signature.
+				if i + 8 <= nb then
+					l_signature := l_language_string.substring (i, i + 8)
+					if not STRING_.same_case_insensitive (l_signature, e_signature) then
+						l_signature := Void
+					else
 							-- Remove spaces.
 						from
+							i := i + 9
 							stop := False
 						until
 							i > nb or stop
@@ -1047,304 +1050,298 @@ feature {NONE} -- Feature generation
 							end
 						end
 					end
-						-- Look for signature.
-					if i + 8 <= nb then
-						l_signature := l_language_string.substring (i, i + 8)
-						if not STRING_.same_case_insensitive (l_signature, e_signature) then
-							l_signature := Void
+				end
+				if i <= nb and then l_language_string.item (i) = '(' then
+						-- Read signature arguments.
+					from
+						i := i + 1
+						stop := False
+						create l_signature_arguments.make (50)
+					until
+						i > nb or stop
+					loop
+						c := l_language_string.item (i)
+						inspect c
+						when ')' then
+							stop := True
 						else
-								-- Remove spaces.
-							from
-								i := i + 9
-								stop := False
-							until
-								i > nb or stop
-							loop
-								inspect l_language_string.item (i)
-								when ' ', '%R', '%T', '%N' then
-									i := i + 1
+							l_signature_arguments.append_character (c)
+							i := i + 1
+						end
+					end
+					if i > nb then
+-- TODO: error
+					else
+						i := i + 1
+					end
+						-- Remove spaces.
+					from
+						stop := False
+					until
+						i > nb or stop
+					loop
+						inspect l_language_string.item (i)
+						when ' ', '%R', '%T', '%N' then
+							i := i + 1
+						else
+							stop := True
+						end
+					end
+				end
+				if i <= nb and then l_language_string.item (i) = ':' then
+						-- Read signature result.
+					from
+						i := i + 1
+						stop := False
+						create l_signature_result.make (10)
+					until
+						i > nb or stop
+					loop
+						c := l_language_string.item (i)
+						inspect c
+						when '|' then
+							stop := True
+						when 'u', 'U' then
+							if i + 2 <= nb then
+								l_use := l_language_string.substring (i, i + 2)
+								if not STRING_.same_case_insensitive (l_use, e_use) then
+									l_use := Void
 								else
 									stop := True
 								end
 							end
-						end
-					end
-					if i <= nb and then l_language_string.item (i) = '(' then
-							-- Read signature arguments.
-						from
-							i := i + 1
-							stop := False
-							create l_signature_arguments.make (50)
-						until
-							i > nb or stop
-						loop
-							c := l_language_string.item (i)
-							inspect c
-							when ')' then
-								stop := True
-							else
-								l_signature_arguments.append_character (c)
-								i := i + 1
-							end
-						end
-						if i > nb then
--- TODO: error
-						else
-							i := i + 1
-						end
-							-- Remove spaces.
-						from
-							stop := False
-						until
-							i > nb or stop
-						loop
-							inspect l_language_string.item (i)
-							when ' ', '%R', '%T', '%N' then
-								i := i + 1
-							else
-								stop := True
-							end
-						end
-					end
-					if i <= nb and then l_language_string.item (i) = ':' then
-							-- Read signature result.
-						from
-							i := i + 1
-							stop := False
-							create l_signature_result.make (10)
-						until
-							i > nb or stop
-						loop
-							c := l_language_string.item (i)
-							inspect c
-							when '|' then
-								stop := True
-							when 'u', 'U' then
-								if i + 2 <= nb then
-									l_use := l_language_string.substring (i, i + 2)
-									if not STRING_.same_case_insensitive (l_use, e_use) then
-										l_use := Void
-									else
-										stop := True
-									end
-								end
-								if not stop then
-									l_signature_result.append_character (c)
-									i := i + 1
-								end
-							else
+							if not stop then
 								l_signature_result.append_character (c)
 								i := i + 1
 							end
+						else
+							l_signature_result.append_character (c)
+							i := i + 1
 						end
 					end
-					if l_signature_arguments = Void and l_signature_result = Void then
-						if l_signature /= Void then
+				end
+				if l_signature_arguments = Void and l_signature_result = Void then
+					if l_signature /= Void then
 -- TODO: syntax error.
-						end
-					elseif l_signature = Void then
-						l_signature := e_signature
 					end
-						-- Look for use.
-					if i <= nb and then l_language_string.item (i) = '|' then
-						l_use := e_use
-						i := i + 1
-					elseif i + 2 <= nb then
-						l_use := l_language_string.substring (i, i + 2)
-						if not STRING_.same_case_insensitive (l_use, e_use) then
-							l_use := Void
-						else
-							i := i + 3
-						end
+				elseif l_signature = Void then
+					l_signature := e_signature
+				end
+					-- Look for use.
+				if i <= nb and then l_language_string.item (i) = '|' then
+					l_use := e_use
+					i := i + 1
+				elseif i + 2 <= nb then
+					l_use := l_language_string.substring (i, i + 2)
+					if not STRING_.same_case_insensitive (l_use, e_use) then
+						l_use := Void
+					else
+						i := i + 3
 					end
-					if l_use /= Void then
-						if i > nb then
+				end
+				if l_use /= Void then
+					if i > nb then
 -- TODO: syntax error
+					else
+						create l_splitter.make_with_separators (",")
+						l_list := l_splitter.split (l_language_string.substring (i, nb))
+						l_cursor := l_list.new_cursor
+						from l_cursor.start until l_cursor.after loop
+							l_include_filename := l_cursor.item
+							STRING_.left_adjust (l_include_filename)
+							STRING_.right_adjust (l_include_filename)
+							include_header_filename (l_include_filename, header_file)
+							l_cursor.forth
+						end
+					end
+				end
+			elseif not a_feature.is_builtin then
+-- TODO: not supported
+			end
+				-- Print body.
+			if l_inline = Void and l_result_type_set /= Void then
+				print_indentation
+				print_type_declaration (l_result_type_set.static_type, current_file)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			current_file := current_function_body_buffer
+			if a_creation then
+				print_malloc_current (a_feature)
+			end
+			if a_feature.is_builtin then
+				print_external_builtin_body (a_feature)
+			elseif l_inline /= Void then
+					-- external "C inline".
+				if l_signature /= Void then
+-- TODO: syntax error
+				end
+				print_external_c_inline_body (a_feature)
+			elseif l_struct /= Void then
+				if l_result_type_set /= Void then
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_type_cast (l_result_type_set.static_type, current_file)
+					current_file.put_character ('(')
+				end
+				if l_struct_type = Void then
+					if l_signature_arguments = Void then
+-- TODO: syntax error
+					else
+						create l_splitter.make_with_separators (",")
+						l_list := l_splitter.split (l_signature_arguments)
+						inspect l_list.count
+						when 1 then
+							l_struct_type := l_list.item (1)
+						when 2 then
+							l_struct_type := l_list.item (1)
+							l_struct_field_type := l_list.item (2)
 						else
-							create l_splitter.make_with_separators (",")
-							l_list := l_splitter.split (l_language_string.substring (i, nb))
-							l_cursor := l_list.new_cursor
-							from l_cursor.start until l_cursor.after loop
-								l_include_filename := l_cursor.item
-								STRING_.left_adjust (l_include_filename)
-								STRING_.right_adjust (l_include_filename)
-								include_header_filename (l_include_filename, header_file)
+-- TODO: syntax error
+						end
+					end
+					if l_signature_result /= Void then
+						l_struct_field_type := l_signature_result
+					end
+					l_alias := a_feature.alias_clause
+					if l_alias /= Void then
+						l_alias_value := l_alias.manifest_string
+						l_struct_field_name := l_alias_value.value
+					else
+						l_struct_field_name := a_feature.implementation_feature.name.lower_name
+					end
+				end
+				if l_struct_type /= Void and l_struct_field_name /= Void then
+					if not l_struct_field_name.is_empty then
+						inspect l_struct_field_name.item (1)
+						when '@' then
+							l_struct_field_name.remove_head (1)
+						when '&' then
+							l_struct_field_name.remove_head (1)
+							current_file.put_character ('&')
+						else
+						end
+					end
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					current_file.put_string (l_struct_type)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					if nb_args >= 1 then
+						l_name := l_arguments.formal_argument (1).name
+						print_argument_name (l_name, current_file)
+					else
+-- TODO: error
+					end
+					current_file.put_character (')')
+					current_file.put_character ('-')
+					current_file.put_character ('>')
+					current_file.put_string (l_struct_field_name)
+					current_file.put_character (')')
+					if l_result_type_set = Void then
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						if l_struct_field_type /= Void then
+							current_file.put_character ('(')
+							current_file.put_string (l_struct_field_type)
+							current_file.put_character (')')
+						end
+						if nb_args >= 2 then
+							l_name := l_arguments.formal_argument (2).name
+							print_argument_name (l_name, current_file)
+						else
+-- TODO: error
+						end
+					end
+				end
+				if l_result_type_set /= Void then
+					current_file.put_character (')')
+				end
+				current_file.put_character (';')
+				current_file.put_new_line
+			else
+					-- external "C".
+				print_indentation
+				if l_result_type_set /= Void then
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_type_declaration (l_result_type_set.static_type, current_file)
+					current_file.put_character (')')
+					if l_signature_result /= Void then
+						current_file.put_character ('(')
+						current_file.put_string (l_signature_result)
+						current_file.put_character (')')
+					end
+				end
+				l_alias := a_feature.alias_clause
+				if l_alias /= Void then
+					l_alias_value := l_alias.manifest_string
+					current_file.put_string (l_alias_value.value)
+				else
+					current_file.put_string (a_feature.implementation_feature.name.lower_name)
+				end
+				if nb_args > 0 then
+					current_file.put_character ('(')
+					if l_signature_arguments /= Void then
+						create l_splitter.make_with_separators (",")
+						l_list := l_splitter.split (l_signature_arguments)
+						if l_list.count /= nb_args then
+-- TODO: error
+						end
+						l_cursor := l_list.new_cursor
+						l_cursor.start
+						if not l_cursor.after then
+							current_file.put_character ('(')
+							current_file.put_string (l_cursor.item)
+							current_file.put_character (')')
+							l_cursor.forth
+						end
+						l_name := l_arguments.formal_argument (1).name
+						print_argument_name (l_name, current_file)
+						from i := 2 until i > nb_args loop
+							current_file.put_character (',')
+							if not l_cursor.after then
+								current_file.put_character ('(')
+								current_file.put_string (l_cursor.item)
+								current_file.put_character (')')
 								l_cursor.forth
 							end
+							l_name := l_arguments.formal_argument (i).name
+							print_argument_name (l_name, current_file)
+							i := i + 1
 						end
-					end
-					if l_inline /= Void then
-							-- external "C inline".
-						if l_signature /= Void then
--- TODO: syntax error
-						end
-						print_external_c_inline_body (a_feature)
---							-- No need to print "return R;", this should
---							-- already be done in the inlined code.
---						l_result_type_set := Void
-					elseif l_struct /= Void then
-						if l_result_type_set /= Void then
-							print_result_name (current_file)
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							print_type_cast (l_result_type_set.static_type, current_file)
-							current_file.put_character ('(')
-						end
-						if l_struct_type = Void then
-							if l_signature_arguments = Void then
--- TODO: syntax error
-							else
-								create l_splitter.make_with_separators (",")
-								l_list := l_splitter.split (l_signature_arguments)
-								inspect l_list.count
-								when 1 then
-									l_struct_type := l_list.item (1)
-								when 2 then
-									l_struct_type := l_list.item (1)
-									l_struct_field_type := l_list.item (2)
-								else
--- TODO: syntax error
-								end
-							end
-							if l_signature_result /= Void then
-								l_struct_field_type := l_signature_result
-							end
-							l_alias := a_feature.alias_clause
-							if l_alias /= Void then
-								l_alias_value := l_alias.manifest_string
-								l_struct_field_name := l_alias_value.value
-							else
-								l_struct_field_name := a_feature.implementation_feature.name.lower_name
-							end
-						end
-						if l_struct_type /= Void and l_struct_field_name /= Void then
-							if not l_struct_field_name.is_empty then
-								inspect l_struct_field_name.item (1)
-								when '@' then
-									l_struct_field_name.remove_head (1)
-								when '&' then
-									l_struct_field_name.remove_head (1)
-									current_file.put_character ('&')
-								else
-								end
-							end
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							current_file.put_string (l_struct_type)
-							current_file.put_character ('*')
-							current_file.put_character (')')
-							if nb_args >= 1 then
-								l_name := l_arguments.formal_argument (1).name
-								print_argument_name (l_name, current_file)
-							else
--- TODO: error
-							end
-							current_file.put_character (')')
-							current_file.put_character ('-')
-							current_file.put_character ('>')
-							current_file.put_string (l_struct_field_name)
-							current_file.put_character (')')
-							if l_result_type_set = Void then
-								current_file.put_character (' ')
-								current_file.put_character ('=')
-								current_file.put_character (' ')
-								if l_struct_field_type /= Void then
-									current_file.put_character ('(')
-									current_file.put_string (l_struct_field_type)
-									current_file.put_character (')')
-								end
-								if nb_args >= 2 then
-									l_name := l_arguments.formal_argument (2).name
-									print_argument_name (l_name, current_file)
-								else
--- TODO: error
-								end
-							end
-						end
-						if l_result_type_set /= Void then
-							current_file.put_character (')')
-						end
-						current_file.put_character (';')
-						current_file.put_new_line
 					else
-							-- external "C".
-						print_indentation
-						if l_result_type_set /= Void then
-							print_result_name (current_file)
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_type_declaration (l_result_type_set.static_type, current_file)
-							current_file.put_character (')')
-							if l_signature_result /= Void then
-								current_file.put_character ('(')
-								current_file.put_string (l_signature_result)
-								current_file.put_character (')')
-							end
+						l_name := l_arguments.formal_argument (1).name
+						print_argument_name (l_name, current_file)
+						from i := 2 until i > nb_args loop
+							current_file.put_character (',')
+							l_name := l_arguments.formal_argument (i).name
+							print_argument_name (l_name, current_file)
+							i := i + 1
 						end
-						l_alias := a_feature.alias_clause
-						if l_alias /= Void then
-							l_alias_value := l_alias.manifest_string
-							current_file.put_string (l_alias_value.value)
-						else
-							current_file.put_string (a_feature.implementation_feature.name.lower_name)
-						end
-						if nb_args > 0 then
-							current_file.put_character ('(')
-							if l_signature_arguments /= Void then
-								create l_splitter.make_with_separators (",")
-								l_list := l_splitter.split (l_signature_arguments)
-								if l_list.count /= nb_args then
--- TODO: error
-								end
-								l_cursor := l_list.new_cursor
-								l_cursor.start
-								if not l_cursor.after then
-									current_file.put_character ('(')
-									current_file.put_string (l_cursor.item)
-									current_file.put_character (')')
-									l_cursor.forth
-								end
-								l_name := l_arguments.formal_argument (1).name
-								print_argument_name (l_name, current_file)
-								from i := 2 until i > nb_args loop
-									current_file.put_character (',')
-									if not l_cursor.after then
-										current_file.put_character ('(')
-										current_file.put_string (l_cursor.item)
-										current_file.put_character (')')
-										l_cursor.forth
-									end
-									l_name := l_arguments.formal_argument (i).name
-									print_argument_name (l_name, current_file)
-									i := i + 1
-								end
-							else
-								l_name := l_arguments.formal_argument (1).name
-								print_argument_name (l_name, current_file)
-								from i := 2 until i > nb_args loop
-									current_file.put_character (',')
-									l_name := l_arguments.formal_argument (i).name
-									print_argument_name (l_name, current_file)
-									i := i + 1
-								end
-							end
-							current_file.put_character (')')
-						elseif l_macro = Void or else l_signature_arguments /= Void then
-							current_file.put_character ('(')
-							current_file.put_character (')')
-						end
-						current_file.put_character (';')
-						current_file.put_new_line
 					end
-				else
--- TODO: not supported
+					current_file.put_character (')')
+				elseif l_macro = Void or else l_signature_arguments /= Void then
+					current_file.put_character ('(')
+					current_file.put_character (')')
 				end
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
-			if l_result_type_set /= Void then
+			if l_inline = Void and l_result_type_set /= Void then
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
@@ -2154,12 +2151,20 @@ feature {NONE} -- Feature generation
 			i3, nb3: INTEGER
 			l_max: INTEGER
 			l_max_index: INTEGER
+			l_return_added: BOOLEAN
 			c, c3: CHARACTER
 		do
 			l_alias := a_feature.alias_clause
 			if l_alias /= Void then
 				l_alias_value := l_alias.manifest_string
 				l_c_code := l_alias_value.value
+				if not a_feature.is_procedure and then not l_c_code.has_substring (c_return) then
+						-- This looks like legacy code.
+						-- With ECMA we need to write the 'return' keyword in the alias clause.
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					l_return_added := True
+				end
 				l_formal_arguments := a_feature.arguments
 				if l_formal_arguments /= Void then
 					nb := l_c_code.count
@@ -2226,10 +2231,13 @@ feature {NONE} -- Feature generation
 							i := i + 1
 						end
 					end
-					current_file.put_new_line
 				else
-					current_file.put_line (l_c_code)
+					current_file.put_string (l_c_code)
 				end
+				if l_return_added then
+					current_file.put_character (';')
+				end
+				current_file.put_new_line
 			end
 		end
 
