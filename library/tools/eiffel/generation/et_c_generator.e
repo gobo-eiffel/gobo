@@ -2151,19 +2151,39 @@ feature {NONE} -- Feature generation
 			i3, nb3: INTEGER
 			l_max: INTEGER
 			l_max_index: INTEGER
-			l_return_added: BOOLEAN
+			l_semicolon_needed: BOOLEAN
 			c, c3: CHARACTER
 		do
 			l_alias := a_feature.alias_clause
 			if l_alias /= Void then
 				l_alias_value := l_alias.manifest_string
 				l_c_code := l_alias_value.value
-				if not a_feature.is_procedure and then not l_c_code.has_substring (c_return) then
+				if a_feature.is_procedure then
+						-- Check if it looks like legacy code: a C statement
+						-- with no terminating semicolon.
+					from
+						i := l_c_code.count
+					until
+						i < 1
+					loop
+						inspect l_c_code.item (i)
+						when ' ', '%N', '%R', '%T' then
+							i := i - 1
+						when ';' then
+								-- This is a terminating semicolon.
+							i := 0
+						else
+								-- There is no terminating semicolon.
+							l_semicolon_needed := True
+							i := 0
+						end
+					end
+				elseif not l_c_code.has_substring (c_return) then
 						-- This looks like legacy code.
 						-- With ECMA we need to write the 'return' keyword in the alias clause.
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
-					l_return_added := True
+					l_semicolon_needed := True
 				end
 				l_formal_arguments := a_feature.arguments
 				if l_formal_arguments /= Void then
@@ -2234,7 +2254,7 @@ feature {NONE} -- Feature generation
 				else
 					current_file.put_string (l_c_code)
 				end
-				if l_return_added then
+				if l_semicolon_needed then
 					current_file.put_character (';')
 				end
 				current_file.put_new_line
