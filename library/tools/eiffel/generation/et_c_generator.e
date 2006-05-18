@@ -13966,9 +13966,7 @@ invariant
 	temp_variables_not_void: temp_variables /= Void
 	no_void_temp_variable: not temp_variables.has (Void)
 	used_temp_variables_not_void: used_temp_variables /= Void
-	no_void_used_temp_variable: not used_temp_variables.has (Void)
 	free_temp_variables_not_void: free_temp_variables /= Void
-	no_void_free_temp_variable: not free_temp_variables.has (Void)
 	included_header_filenames_not_void: included_header_filenames /= Void
 	no_void_included_header_filename: not included_header_filenames.has (Void)
 	included_runtime_header_files_not_void: included_runtime_header_files /= Void
