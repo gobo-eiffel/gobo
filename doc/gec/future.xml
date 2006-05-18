@@ -45,7 +45,8 @@ and feature ids in order to make it possible to play with DLLs and other
 shared libraries. It will also make the incrementality of C compilation easier
 to implement. The class <classname>ET_C_GENERATOR</classname> has been
 written in such a way that it should not be that difficult to change the
-naming convention.
+naming convention. You can have a look at the callers of feature
+<featurename>short_names</featurename> as a starting point.
 </para>
 <para>
 One way to improve C compilation time could be to try to use
