@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			an_item_type_sets_not_void: an_item_type_sets /= Void
 		do
-			make_type (a_type, a_class)
 			item_type_sets := an_item_type_sets
+			make_type (a_type, a_class)
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class

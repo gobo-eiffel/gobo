@@ -39,9 +39,9 @@ feature {NONE} -- Initialization
 			an_open_operand_type_sets_not_void: an_open_operand_type_sets /= Void
 			a_result_type_set_not_void: a_result_type_set /= Void
 		do
-			make_type (a_type, a_class)
 			open_operand_type_sets := an_open_operand_type_sets
 			result_type_set := a_result_type_set
+			make_type (a_type, a_class)
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
