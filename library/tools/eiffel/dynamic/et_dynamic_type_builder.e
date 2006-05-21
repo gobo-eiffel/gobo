@@ -36,6 +36,7 @@ inherit
 			check_loop_variant_validity,
 			report_assignment,
 			report_assignment_attempt,
+			report_attribute_address,
 			report_attribute_assignment_target,
 			report_bit_constant,
 			report_boolean_constant,
@@ -48,6 +49,7 @@ inherit
 			report_double_constant,
 			report_equality_expression,
 			report_formal_argument,
+			report_function_address,
 			report_integer_constant,
 			report_integer_8_constant,
 			report_integer_16_constant,
@@ -67,6 +69,7 @@ inherit
 			report_pointer_expression,
 			report_precursor_expression,
 			report_precursor_instruction,
+			report_procedure_address,
 			report_qualified_call_expression,
 			report_qualified_call_instruction,
 			report_qualified_procedure_call_agent,
@@ -1206,6 +1209,19 @@ feature {NONE} -- Event handling
 			-- Do nothing.
 		end
 
+	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY) is
+			-- Report that attribute `an_attribute' has been processed
+			-- as target of feature address `an_expression'.
+		local
+			l_dynamic_attribute: ET_DYNAMIC_FEATURE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_dynamic_attribute := current_dynamic_type.dynamic_query (an_attribute, current_system)
+-- TODO: the dynamic type set of `l_dynamic_attribute' may be altered when
+-- its address is passed to an external routine.
+			end
+		end
+
 	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY) is
 			-- Report that attribute `a_writable' has been processed
 			-- as target of an assignment (attempt).
@@ -1431,6 +1447,20 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				a_name.set_index (a_name.seed)
+			end
+		end
+
+	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY) is
+			-- Report that function `a_query' has been processed
+			-- as target of feature address `an_expression'.
+		local
+			l_dynamic_query: ET_DYNAMIC_FEATURE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_dynamic_query := current_dynamic_type.dynamic_query (a_query, current_system)
+				l_dynamic_query.set_regular (True)
+-- TODO: the dynamic type set of the formal arguments of `l_dynamic_query'
+-- may be altered when its address is passed to an external routine.
 			end
 		end
 
@@ -1765,6 +1795,20 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_parent_type := current_system.dynamic_type (a_parent_type, current_type)
 				l_precursor := current_dynamic_feature.dynamic_precursor (a_procedure, l_parent_type, current_system)
+			end
+		end
+
+	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
+			-- Report that function `a_procedure' has been processed
+			-- as target of feature address `an_expression'.
+		local
+			l_dynamic_procedure: ET_DYNAMIC_FEATURE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_dynamic_procedure := current_dynamic_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_procedure.set_regular (True)
+-- TODO: the dynamic type set of the formal arguments of `l_dynamic_procedure'
+-- may be altered when its address is passed to an external routine.
 			end
 		end
 

@@ -4090,6 +4090,7 @@ feature {NONE} -- Expression validity
 							if l_procedure /= Void then
 								l_seed := l_procedure.first_seed
 								l_name.set_seed (l_seed)
+								report_procedure_address (an_expression, l_procedure)
 									-- $feature_name is of type POINTER, even
 									-- in ISE and its TYPED_POINTER support.
 								a_context.force_last (universe.pointer_class)
@@ -4102,6 +4103,7 @@ feature {NONE} -- Expression validity
 									l_seed := l_query.first_seed
 									l_name.set_seed (l_seed)
 									if l_query.is_attribute then
+										report_attribute_address (an_expression, l_query)
 										l_typed_pointer_class := universe.typed_pointer_class
 										if l_typed_pointer_class.is_preparsed then
 												-- Class TYPED_POINTER has been found in the universe.
@@ -4126,6 +4128,7 @@ feature {NONE} -- Expression validity
 											already_checked := True
 										end
 									else
+										report_function_address (an_expression, l_query)
 											-- $feature_name is of type POINTER, even
 											-- in ISE and its TYPED_POINTER support.
 										a_context.force_last (universe.pointer_class)
@@ -4295,6 +4298,7 @@ feature {NONE} -- Expression validity
 					else
 						l_procedure := current_class.seeded_procedure (l_seed)
 						if l_procedure /= Void then
+							report_procedure_address (an_expression, l_procedure)
 								-- $feature_name is of type POINTER, even
 								-- in ISE and its TYPED_POINTER support.
 							a_context.force_last (universe.pointer_class)
@@ -4303,6 +4307,7 @@ feature {NONE} -- Expression validity
 							l_query := current_class.seeded_query (l_seed)
 							if l_query /= Void then
 								if l_query.is_attribute then
+									report_attribute_address (an_expression, l_query)
 									l_typed_pointer_class := universe.typed_pointer_class
 									if l_typed_pointer_class.is_preparsed then
 											-- Class TYPED_POINTER has been found in the universe.
@@ -4324,6 +4329,7 @@ feature {NONE} -- Expression validity
 										report_pointer_expression (an_expression)
 									end
 								else
+									report_function_address (an_expression, l_query)
 										-- $feature_name is of type POINTER, even
 										-- in ISE and its TYPED_POINTER support.
 									a_context.force_last (universe.pointer_class)
@@ -8374,6 +8380,17 @@ feature {NONE} -- Event handling
 		do
 		end
 
+	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY) is
+			-- Report that attribute `an_attribute' has been processed
+			-- as target of feature address `an_expression'.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			an_attribute_not_void: an_attribute /= Void
+			is_attribute: an_attribute.is_attribute
+		do
+		end
+
 	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY) is
 			-- Report that attribute `a_writable' has been processed
 			-- as target of an assignment (attempt).
@@ -8486,6 +8503,17 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			a_formal_not_void: a_formal /= Void
+		do
+		end
+
+	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY) is
+			-- Report that function `a_query' has been processed
+			-- as target of feature address `an_expression'.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			a_query_not_void: a_query /= Void
+			not_attribute: not a_query.is_attribute
 		do
 		end
 
@@ -8661,6 +8689,16 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_instruction_not_void: an_instruction /= Void
 			a_parent_type_not_void: a_parent_type /= Void
+			a_procedure_not_void: a_procedure /= Void
+		do
+		end
+
+	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
+			-- Report that function `a_procedure' has been processed
+			-- as target of feature address `an_expression'.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
 			a_procedure_not_void: a_procedure /= Void
 		do
 		end

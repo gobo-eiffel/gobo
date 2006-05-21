@@ -157,6 +157,8 @@ feature {NONE} -- Initialization
 			create agent_instruction.make (Void, current_feature.static_feature.name, Void)
 			create agent_expression.make (Void, current_feature.static_feature.name, Void)
 			create agent_assignment.make (tokens.result_keyword, agent_expression)
+			create wrapper_expression.make (Void, current_feature.static_feature.name, Void)
+			create wrapper_assignment.make (tokens.result_keyword, wrapper_expression)
 			create manifest_array_types.make (100)
 			create manifest_tuple_types.make (100)
 			create once_features.make (10000)
@@ -2622,6 +2624,169 @@ feature {NONE} -- Feature generation
 			print_internal_procedure (a_feature)
 		end
 
+	print_attribute (a_feature: ET_ATTRIBUTE) is
+			-- Print function wrapper for `a_feature' to `current_file'
+			-- and its signature to `header_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_feature.static_feature /= a_feature then
+					-- Internal error: inconsistent `current_feature'.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_attribute_wrapper (a_feature, False)
+			end
+		end
+
+	print_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
+			-- Print function wrapper for `a_feature' to `current_file'
+			-- and its signature to `header_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_feature.static_feature /= a_feature then
+					-- Internal error: inconsistent `current_feature'.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				if current_feature.is_regular then
+					print_attribute_wrapper (a_feature, False)
+				end
+				if current_feature.is_static then
+					print_attribute_wrapper (a_feature, True)
+				end
+			end
+		end
+
+	print_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
+			-- Print function wrapper for `a_feature' to `current_file'
+			-- and its signature to `header_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_feature.static_feature /= a_feature then
+					-- Internal error: inconsistent `current_feature'.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				if current_feature.is_regular then
+					print_attribute_wrapper (a_feature, False)
+				end
+				if current_feature.is_static then
+					print_attribute_wrapper (a_feature, True)
+				end
+			end
+		end
+
+	print_attribute_wrapper (a_feature: ET_QUERY; a_static: BOOLEAN) is
+			-- Print function wrapper for `a_feature' to `current_file'
+			-- and its signature to `header_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			no_arguments: a_feature.arguments = Void
+			valid_feature: current_feature.static_feature = a_feature
+			is_static: a_static implies current_feature.is_static
+		local
+			old_file: KI_TEXT_OUTPUT_STREAM
+			l_buffer: STRING
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_name: ET_FEATURE_NAME
+		do
+			old_file := current_file
+			current_file := current_function_header_buffer
+				-- Print signature to `header_file' and `current_file'.
+			print_feature_name_comment (a_feature, current_type, header_file)
+			print_feature_name_comment (a_feature, current_type, current_file)
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			l_result_type_set := current_feature.result_type_set
+			if l_result_type_set = Void then
+					-- Internal error: a query has a result type set.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_type_declaration (l_result_type_set.static_type, header_file)
+				print_type_declaration (l_result_type_set.static_type, current_file)
+			end
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			if a_static then
+				print_static_routine_name (current_feature, current_type, header_file)
+				print_static_routine_name (current_feature, current_type, current_file)
+				header_file.put_character ('(')
+				current_file.put_character ('(')
+				header_file.put_string (c_void)
+				current_file.put_string (c_void)
+			else
+				print_routine_name (current_feature, current_type, header_file)
+				print_routine_name (current_feature, current_type, current_file)
+				header_file.put_character ('(')
+				current_file.put_character ('(')
+				print_type_declaration (current_type, header_file)
+				print_type_declaration (current_type, current_file)
+				if current_type.is_expanded then
+					header_file.put_character ('*')
+					current_file.put_character ('*')
+				end
+				header_file.put_character (' ')
+				current_file.put_character (' ')
+				print_current_name (header_file)
+				print_current_name (current_file)
+			end
+			header_file.put_character (')')
+			current_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+				-- Print body to `current_file'.
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			if l_result_type_set /= Void then
+				print_indentation
+				print_type_declaration (l_result_type_set.static_type, current_file)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			current_file := current_function_body_buffer
+			l_name := a_feature.name
+			l_name.set_seed (a_feature.first_seed)
+			wrapper_expression.set_name (l_name)
+			print_assignment (wrapper_assignment)
+			print_indentation
+			current_file.put_string (c_return)
+			current_file.put_character (' ')
+			print_result_name (current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+			current_file := old_file
+			l_buffer := current_function_header_buffer.string
+			current_file.put_string (l_buffer)
+			STRING_.wipe_out (l_buffer)
+			l_buffer := current_function_body_buffer.string
+			current_file.put_string (l_buffer)
+			STRING_.wipe_out (l_buffer)
+			free_temp_variables.wipe_out
+			used_temp_variables.wipe_out
+		end
+
+	wrapper_expression: ET_CALL_EXPRESSION
+			-- Wrapper expression
+
+	wrapper_assignment: ET_ASSIGNMENT
+			-- Wrapper assignment
+
 feature {NONE} -- Instruction generation
 
 	print_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
@@ -4648,12 +4813,20 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 									end
 								end
 							else
+								if not l_query.is_generated then
+									l_query.set_generated (True)
+									called_features.force_last (l_query)
+								end
 								print_type_cast (current_system.pointer_type, current_file)
 								print_routine_name (l_query, current_type, current_file)
 							end
 						else
 							l_procedure := current_type.seeded_dynamic_query (l_name.seed, current_system)
 							if l_procedure /= Void then
+								if not l_procedure.is_generated then
+									l_procedure.set_generated (True)
+									called_features.force_last (l_procedure)
+								end
 								print_type_cast (current_system.pointer_type, current_file)
 								print_routine_name (l_procedure, current_type, current_file)
 							else
@@ -13162,7 +13335,7 @@ feature {ET_AST_NODE} -- Processing
 	process_attribute (a_feature: ET_ATTRIBUTE) is
 			-- Process `a_feature'.
 		do
-			-- Do nothing.
+			print_attribute (a_feature)
 		end
 
 	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
@@ -13228,7 +13401,7 @@ feature {ET_AST_NODE} -- Processing
 	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
 			-- Process `a_feature'.
 		do
-			-- Do nothing.
+			print_constant_attribute (a_feature)
 		end
 
 	process_convert_expression (an_expression: ET_CONVERT_EXPRESSION) is
@@ -13542,7 +13715,7 @@ feature {ET_AST_NODE} -- Processing
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
 			-- Process `a_feature'.
 		do
-			-- Do nothing.
+			print_unique_attribute (a_feature)
 		end
 
 	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
@@ -13953,6 +14126,8 @@ invariant
 	no_void_agent_open_operand: not agent_open_operands.has (Void)
 	agent_closed_operands_not_void: agent_closed_operands /= Void
 	no_void_agent_closed_operand: not agent_closed_operands.has (Void)
+	wrapper_assignment_not_void: wrapper_assignment /= Void
+	wrapper_expression_not_void: wrapper_expression /= Void
 	manifest_array_types_not_void: manifest_array_types /= Void
 	no_void_manifest_array_type: not manifest_array_types.has (Void)
 	manifest_tuple_types_not_void: manifest_tuple_types /= Void
