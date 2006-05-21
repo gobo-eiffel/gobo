@@ -49,9 +49,6 @@ feature -- Access
 	attribute_set_elements: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]
 			-- Other attribute-sets referenced by `Current'
 
-	instruction: XM_XSLT_COMPILED_ATTRIBUTE_SET
-			-- Compiled version of `Current'
-
 	reference_count: INTEGER
 			-- Count of references to `Current'
 
@@ -153,6 +150,8 @@ feature -- Element change
 						a_cursor.forth
 					end
 				end
+			else
+				create used_attribute_sets.make (0)
 			end
 			validated := True
 		end
@@ -188,32 +187,41 @@ feature -- Element change
 			end
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_body: XM_XPATH_EXPRESSION
-			a_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
+			l_body: XM_XPATH_EXPRESSION
+			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
+			l_instruction: XM_XSLT_COMPILED_ATTRIBUTE_SET
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			last_generated_expression := Void
 			if reference_count > 0 then
-				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-				a_body := last_generated_expression
-				if a_body /= Void then
-					a_body.simplify
-					if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
+				compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
+				l_body := last_generated_expression
+				if l_body /= Void then
+					l_body.simplify
+					if l_body.was_expression_replaced then l_body := l_body.replacement_expression end
 					if configuration.is_tracing then
-						create a_trace_wrapper.make (a_body, an_executable, Current)
-						a_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
-						a_trace_wrapper.set_parent (Current)
-						a_body := a_trace_wrapper
+						create l_trace_wrapper.make (l_body, a_executable, Current)
+						l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+						l_trace_wrapper.set_parent (Current)
+						l_body := l_trace_wrapper
 					end
-					create {XM_XSLT_COMPILED_ATTRIBUTE_SET} instruction.make (attribute_set_name_code,
-																								 used_attribute_sets,
-																								 an_executable,
-																								 a_body,
-																								 line_number,
-																								 system_id,
-																								 slot_manager)
+					create {XM_XSLT_COMPILED_ATTRIBUTE_SET} l_instruction.make (attribute_set_name_code,
+																									used_attribute_sets,
+																									a_executable,
+																									l_body,
+																									line_number,
+																									system_id,
+																									slot_manager)
+					if a_executable.attribute_sets.has (attribute_set_name_code) then
+						create l_error.make_from_string ("Duplicate attribute-sets",
+																	Xpath_errors_uri, "XTSE0010", Static_error)
+						report_compile_error (l_error)
+					else
+						a_executable.attribute_sets.force_new (l_instruction, attribute_set_name_code)
+					end
 				end
 			end
 			last_generated_expression := Void

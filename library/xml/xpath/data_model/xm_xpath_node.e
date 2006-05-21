@@ -613,7 +613,7 @@ feature -- Element change
 		require
 			no_generated_id_yet: generated_id = Void
 		do
-			generated_id := "N" + document_number.out + "N" + sequence_number.out
+			generated_id := "N" + document_number.out + "N" + sequence_number.high_word.out + "N" + sequence_number.low_word.out
 		ensure
 			id_generated: generated_id /= Void
 		end

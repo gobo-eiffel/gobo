@@ -19,6 +19,9 @@ inherit
 			make_style_element, validate, may_contain_sequence_constructor
 		end
 
+	XM_XPATH_CARDINALITY
+		export {NONE} all end
+
 create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -130,22 +133,45 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		do
 			check_within_template
-			if use /= Void then accumulate_attribute_sets (use, Void) end
+			if use /= Void then
+				accumulate_attribute_sets (use, Void)
+			else
+				create used_attribute_sets.make (0)
+			end
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_content: XM_XPATH_EXPRESSION
+			l_content: XM_XPATH_EXPRESSION
+			l_attributes_usage: XM_XSLT_ATTRIBUTE_USAGE
+			l_if: XM_XPATH_IF_EXPRESSION
+			l_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION
+			l_condition: XM_XPATH_INSTANCE_OF_EXPRESSION
+			l_type: XM_XPATH_SEQUENCE_TYPE
+			l_empty: XM_XPATH_EMPTY_SEQUENCE
 		do
-			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-			if last_generated_expression = Void then
-				create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
-			else
-				a_content := last_generated_expression
+			compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
+			l_content := last_generated_expression
+			if not used_attribute_sets.is_empty then
+				create l_attributes_usage.make (a_executable, used_attribute_sets)
+				
+				-- The use-attribute-sets is ignored unless the context item is an element node.
+            -- So we will wrap the XM_XSLT_ATTRIBUTE_USAGE in a conditional to perform a run-time test
+				create l_context_item.make
+				create l_type.make (element_node_kind_test, Required_cardinality_exactly_one)
+				create l_condition.make (l_context_item, l_type)
+				create l_empty.make
+				create l_if.make (l_condition, l_attributes_usage, l_empty)
+				if l_content = Void then
+					l_content := l_if
+				else
+					create {XM_XSLT_BLOCK} l_content.make (a_executable, l_if, l_content, principal_stylesheet.module_number (system_id), line_number)
+				end
 			end
-			create {XM_XSLT_COMPILED_COPY} last_generated_expression.make (an_executable, a_content,
+			if l_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_content.make end
+			create {XM_XSLT_COMPILED_COPY} last_generated_expression.make (a_executable, l_content,
 																								used_attribute_sets,
 																								is_copy_namespaces,
 																								is_inherit_namespaces,

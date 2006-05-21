@@ -168,8 +168,8 @@ feature -- Access
 	static_context: XM_XSLT_EXPRESSION_CONTEXT
 			-- Static context
 
-	used_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]
-			-- Compiled attribute-sets used by `Current'
+	used_attribute_sets: DS_ARRAYED_LIST [INTEGER]
+			-- Names of attribute-sets used by `Current'
 
 	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
 			-- Is `a_style_element' a permitted child of `Current'?
@@ -518,7 +518,7 @@ feature -- Access
 		do
 			Result := principal_stylesheet.system_id_from_module_number (a_module_number)
 		end
-		
+
 feature -- Status_report
 
 	is_excluded: BOOLEAN
@@ -2079,86 +2079,84 @@ feature -- Element change
 			end
 		end
 
-	accumulate_attribute_sets (used_sets: STRING; a_usage_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]) is
+	accumulate_attribute_sets (a_sets: STRING; a_usage_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]) is
 			-- Accumulate attribute sets associated with `Current'
 		require
 			not_excluded: not is_excluded
-			used_attribute_sets_not_void: used_sets /= Void
+			used_attribute_sets_not_void: a_sets /= Void
 		local
-			a_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]
-			a_stylesheet: XM_XSLT_STYLESHEET
-			top_level_elements: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
-			a_splitter: ST_SPLITTER
-			an_attribute_set_list: DS_LIST [STRING]
-			a_cursor: DS_LIST_CURSOR [STRING]
-			a_set_name: STRING
-			a_fingerprint: INTEGER
+			l_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]
+			l_stylesheet: XM_XSLT_STYLESHEET
+			l_top_level_elements: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+			l_splitter: ST_SPLITTER
+			l_attribute_set_list: DS_LIST [STRING]
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_set_name: STRING
+			l_fingerprint: INTEGER
 			found: BOOLEAN
-			another_cursor: DS_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
-			a_third_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_ATTRIBUTE_SET]
-			an_error: XM_XPATH_ERROR_VALUE
+			l_second_cursor: DS_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			l_third_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_ATTRIBUTE_SET]
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if a_usage_list = Void then
-				create a_list.make_default
+				create l_list.make_default
 			else
-				a_list := a_usage_list
+				l_list := a_usage_list
 			end
-			a_stylesheet := principal_stylesheet
-			top_level_elements := a_stylesheet.top_level_elements
-			create a_splitter.make
-			an_attribute_set_list := a_splitter.split (used_sets)
+			l_stylesheet := principal_stylesheet
+			l_top_level_elements := l_stylesheet.top_level_elements
+			create l_splitter.make
+			l_attribute_set_list := l_splitter.split (a_sets)
 			from
-				a_cursor := an_attribute_set_list.new_cursor; a_cursor.start
+				l_cursor := l_attribute_set_list.new_cursor; l_cursor.start
 			variant
-				an_attribute_set_list.count + 1 - a_cursor.index
+				l_attribute_set_list.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_set_name := a_cursor.item
-				generate_name_code (a_set_name)
-				a_fingerprint := fingerprint_from_name_code (last_generated_name_code)
-				if a_fingerprint = -1 then
+				l_set_name := l_cursor.item
+				generate_name_code (l_set_name)
+				l_fingerprint := fingerprint_from_name_code (last_generated_name_code)
+				if l_fingerprint = -1 then
 					report_compile_error (name_code_error_value)
-					a_cursor.go_after
+					l_cursor.go_after
 				else
 					found := False
-
-					-- Ssearch for the named attribute set, using all of them if there are several with the same name
-					
+					-- Search for the named attribute set, using all of them if there are several with the same name
 					from
-						another_cursor := top_level_elements.new_cursor; another_cursor.start
+						l_second_cursor := l_top_level_elements.new_cursor; l_second_cursor.start
 					variant
-						top_level_elements.count + 1 - another_cursor.index
+						l_top_level_elements.count + 1 - l_second_cursor.index
 					until
-						another_cursor.after
+						l_second_cursor.after
 					loop
-						if another_cursor.item.is_attribute_set and then another_cursor.item.as_attribute_set.attribute_set_name_code = a_fingerprint then
+						if l_second_cursor.item.is_attribute_set and then l_second_cursor.item.as_attribute_set.attribute_set_name_code = l_fingerprint then
 							found := True
-							a_list.force_last (another_cursor.item.as_attribute_set)
+							l_list.force_last (l_second_cursor.item.as_attribute_set)
 						end
-						another_cursor.forth
+						l_second_cursor.forth
 					end
 					if not found then
-						create an_error.make_from_string (STRING_.concat ("No attribute-set exists named ", a_set_name), Xpath_errors_uri, "XTSE0710", Static_error)
-						report_compile_error (an_error)
-						a_cursor.go_after
+						create l_error.make_from_string (STRING_.concat ("No attribute-set exists named ", l_set_name), Xpath_errors_uri, "XTSE0710", Static_error)
+						report_compile_error (l_error)
+						l_cursor.go_after
 					else
-						a_cursor.forth
+						l_cursor.forth
 					end
 				end
 			end
 			if not any_compile_errors then
-				create used_attribute_sets.make (a_list.count)
+				create used_attribute_sets.make (l_list.count)
 				from
-					a_third_cursor := a_list.new_cursor; a_third_cursor.start
+					l_third_cursor := l_list.new_cursor; l_third_cursor.start
 				variant
-					a_list.count + 1 - a_third_cursor.index
+					l_list.count + 1 - l_third_cursor.index
 				until
-					a_third_cursor.after
+					l_third_cursor.after
 				loop
-					a_third_cursor.item.increment_reference_count
-					used_attribute_sets.put_last (a_third_cursor.item.instruction)
-					a_third_cursor.forth
+					l_third_cursor.item.increment_reference_count
+					used_attribute_sets.put_last (l_third_cursor.item.attribute_set_name_code)
+					l_third_cursor.forth
 				end
 			end
 		ensure

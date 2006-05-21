@@ -17,6 +17,7 @@ inherit
 	XM_XSLT_COMPILED_PROCEDURE
 
 	XM_XSLT_ATTRIBUTE_SET_ROUTINES
+		export {NONE} all end
 
 create
 
@@ -55,21 +56,22 @@ feature -- Access
 feature -- Evaluation
 
 	
-	expand (a_context: XM_XPATH_CONTEXT) is
+	expand (a_executable: XM_XSLT_EXECUTABLE; a_context: XM_XPATH_CONTEXT) is
 			-- Expand `Current' to it's constituents.
 		require
+			a_executable_not_void: a_executable /= Void
 			context_not_void: a_context /= Void
 		local
-			a_new_context: XM_XPATH_CONTEXT
+			l_new_context: XM_XPATH_CONTEXT
 		do
-			if used_attribute_sets /= Void then expand_attribute_sets (used_attribute_sets, a_context) end
+			if used_attribute_sets /= Void then expand_attribute_sets (a_executable, used_attribute_sets, a_context) end
 
 			-- Note, we can ignore the result of process_leaving_tail since an attribute set can't contain a tail call
 
 			if is_stack_frame_needed then
-				a_new_context := a_context.new_context
-				a_new_context.open_stack_frame (slot_manager)
-				body.process (a_new_context)
+				l_new_context := a_context.new_context
+				l_new_context.open_stack_frame (slot_manager)
+				body.process (l_new_context)
 			else
 				body.process (a_context)
 			end
@@ -77,7 +79,7 @@ feature -- Evaluation
 
 feature {NONE} -- Initialization
 
-	used_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]
+	used_attribute_sets: DS_ARRAYED_LIST [INTEGER]
 			-- Attribute sets used by `Current'
 
 	is_stack_frame_needed: BOOLEAN is

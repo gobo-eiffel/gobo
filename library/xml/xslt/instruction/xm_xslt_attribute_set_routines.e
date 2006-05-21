@@ -14,23 +14,24 @@ class XM_XSLT_ATTRIBUTE_SET_ROUTINES
 
 feature {NONE} -- Implementation
 
-	expand_attribute_sets (a_set: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]; a_context: XM_XPATH_CONTEXT) is
+	expand_attribute_sets (a_executable: XM_XSLT_EXECUTABLE; a_set: DS_ARRAYED_LIST [INTEGER]; a_context: XM_XPATH_CONTEXT) is
 			-- Expand attribute sets to their constituents.
 		require
+			a_executable_not_void: a_executable /= Void
 			context_not_void: a_context /= Void
 			attribute_sets_not_void: a_set /= Void
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_COMPILED_ATTRIBUTE_SET]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			from
-				a_cursor := a_set.new_cursor; a_cursor.start
+				l_cursor := a_set.new_cursor; l_cursor.start
 			variant
-				a_set.count + 1 - a_cursor.index
+				a_set.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_cursor.item.expand (a_context)
-				a_cursor.forth
+				a_executable.attribute_sets.item (l_cursor.item).expand (a_executable, a_context)
+				l_cursor.forth
 			end
 		end
 

@@ -52,6 +52,14 @@ feature -- Status report
 			Result := reported_errors.has (a_identifier)
 		end
 
+	count: INTEGER is
+			-- Number of different errors that occured (possibly recovered)
+		do
+			Result := reported_errors.count
+		ensure
+			non_negative_count: Result >= 0
+		end
+
 feature -- Events
 
 	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is

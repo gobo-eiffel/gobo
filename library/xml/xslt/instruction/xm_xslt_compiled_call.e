@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			a_use_tail_recursion: BOOLEAN) is
 			-- Establish invariant.
 		require
+			an_executable_not_void: an_executable /= Void
 			target_not_void: a_target /= Void
 			actual_parameter_list_not_void: an_actual_parameter_list /= Void
 			tunnel_parameter_list_not_void: a_tunnel_parameter_list /= Void

@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 			create character_map_index.make_default
 			create global_slot_manager.make
 			create output_properties_map.make_default
+			create attribute_sets.make_default
 			isolation_level := Serializable
 		ensure
 			rule_manager_set: rule_manager = a_rule_manager
@@ -91,6 +92,9 @@ feature -- Access
 
 	largest_pattern_stack_frame: INTEGER
 			-- Maximum local variable count within a pattern
+
+	attribute_sets: DS_HASH_TABLE [XM_XSLT_COMPILED_ATTRIBUTE_SET, INTEGER]
+			-- Attribute sets
 
 	system_id (a_module_number: INTEGER): STRING is
 			-- SYSTEM id for stylesheet module `a_module_number'
@@ -296,6 +300,7 @@ invariant
 	function_library_not_void: function_library /= Void	
 	isolation_level_small_enough: isolation_level <= Serializable
 	isolation_level_large_enough: isolation_level >= Read_uncommitted
+	attribute_sets_not_void: attribute_sets /= Void
 
 end
 	

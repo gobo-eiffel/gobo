@@ -181,19 +181,20 @@ feature -- Element change
 			end
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_fixed_element: XM_XSLT_FIXED_ELEMENT
-			a_stylesheet: XM_XSLT_STYLESHEET
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_fixed_attribute: XM_XSLT_FIXED_ATTRIBUTE
-			a_content: XM_XPATH_EXPRESSION
+			l_fixed_element: XM_XSLT_FIXED_ELEMENT
+			l_stylesheet: XM_XSLT_STYLESHEET
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_fixed_attribute: XM_XSLT_FIXED_ATTRIBUTE
+			l_content: XM_XPATH_EXPRESSION
+			l_attributes_usage: XM_XSLT_ATTRIBUTE_USAGE
 		do
 			last_generated_expression := Void
 			if not is_top_level then
-				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-				a_content := last_generated_expression
+				compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
+				l_content := last_generated_expression
 				if attribute_name_codes.count > 0 then
 
 					-- Since we cannot output an attribute once we have seen child content,
@@ -201,35 +202,43 @@ feature -- Element change
 					--  content. So we process the attributes back-to-front so they come out
 					--  in FIFO order.
 
-					a_stylesheet := principal_stylesheet
+					l_stylesheet := principal_stylesheet
 					from
-						a_cursor := attribute_name_codes.new_cursor
-						a_cursor.finish
+						l_cursor := attribute_name_codes.new_cursor
+						l_cursor.finish
 					variant
-						a_cursor.index
+						l_cursor.index
 					until
-						a_cursor.before
+						l_cursor.before
 					loop
-						create a_fixed_attribute.make (an_executable, a_cursor.item, Validation_strip, Void, -1)
-						a_fixed_attribute.set_select_expression (attribute_values.item (a_cursor.index))
+						create l_fixed_attribute.make (a_executable, l_cursor.item, Validation_strip, Void, -1)
+						l_fixed_attribute.set_select_expression (attribute_values.item (l_cursor.index))
 						check
-							module_registered: a_stylesheet.is_module_registered (system_id)
+							module_registered: l_stylesheet.is_module_registered (system_id)
 						end
-						a_fixed_attribute.set_source_location (a_stylesheet.module_number (system_id), line_number)
-						if attribute_clean_flags.item (a_cursor.index) then
-							a_fixed_attribute.set_no_special_characters
+						l_fixed_attribute.set_source_location (l_stylesheet.module_number (system_id), line_number)
+						if attribute_clean_flags.item (l_cursor.index) then
+							l_fixed_attribute.set_no_special_characters
 						end
-						if a_content = Void then
-							a_content := a_fixed_attribute
+						if l_content = Void then
+							l_content := l_fixed_attribute
 						else
-							create {XM_XSLT_BLOCK} a_content.make (an_executable, a_fixed_attribute, a_content, principal_stylesheet.module_number (system_id), line_number)
+							create {XM_XSLT_BLOCK} l_content.make (a_executable, l_fixed_attribute, l_content, principal_stylesheet.module_number (system_id), line_number)
 						end
-						a_cursor.back
+						l_cursor.back
 					end
 				end
-				if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
-				create a_fixed_element.make (an_executable, result_name_code, namespace_codes, Void, Void, validation, is_inherit_namespaces, a_content)
-				last_generated_expression := a_fixed_element
+				if not used_attribute_sets.is_empty then
+					create l_attributes_usage.make (a_executable, used_attribute_sets)
+					if l_content = Void then
+						l_content := l_attributes_usage
+					else
+						create {XM_XSLT_BLOCK} l_content.make (a_executable, l_attributes_usage, l_content, principal_stylesheet.module_number (system_id), line_number)
+					end
+				end
+				if l_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_content.make end
+				create l_fixed_element.make (a_executable, result_name_code, namespace_codes, Void, Void, validation, is_inherit_namespaces, l_content)
+				last_generated_expression := l_fixed_element
 			end
 		end
 
@@ -482,7 +491,9 @@ feature {NONE} -- Implementation
 		do
 			a_use_attribute_sets_attribute := attribute_value (Xslt_use_attribute_sets_type_code)
 			if a_use_attribute_sets_attribute /= Void then
-				todo ("validate_special_attributes", True)
+				accumulate_attribute_sets (a_use_attribute_sets_attribute, Void)
+			else
+				create used_attribute_sets.make (0)
 			end
 			a_type_attribute := attribute_value (Xslt_type_type_code)
 			if a_type_attribute /= Void then

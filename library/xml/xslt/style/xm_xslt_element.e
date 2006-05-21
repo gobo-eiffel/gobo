@@ -144,14 +144,15 @@ feature -- Element change
 			end
 			validated := True
 		end
-
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_name_code: INTEGER
-			a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT
-			an_element: XM_XSLT_COMPILED_ELEMENT
-			a_content: XM_XPATH_EXPRESSION
+			l_name_code: INTEGER
+			l_namespace_context: XM_XSLT_NAMESPACE_CONTEXT
+			l_element: XM_XSLT_COMPILED_ELEMENT
+			l_content: XM_XPATH_EXPRESSION
+			l_attributes_usage: XM_XSLT_ATTRIBUTE_USAGE
 		do
 			
 			last_generated_expression := Void
@@ -162,26 +163,26 @@ feature -- Element change
 				set_qname_parts (element_name.as_string_value)
 				if not any_compile_errors and then namespace_uri /= Void then
 					if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
-						a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
+						l_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
 					else
 						shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
-						a_name_code := shared_name_pool.last_name_code
+						l_name_code := shared_name_pool.last_name_code
 					end
 				end
 				if namespace = Void then
-					compile_fixed_element (an_executable, a_name_code)
+					compile_fixed_element (a_executable, l_name_code)
 				elseif namespace.is_string_value then
 					namespace_uri := namespace.as_string_value.string_value
 					if namespace_uri.count = 0 then
 						qname_prefix := ""
 					end
 					if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
-						a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
+						l_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
 					else
 						shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
-						a_name_code := shared_name_pool.last_name_code
+						l_name_code := shared_name_pool.last_name_code
 					end
-					compile_fixed_element (an_executable, a_name_code)
+					compile_fixed_element (a_executable, l_name_code)
 				end
 			end
 			
@@ -191,15 +192,21 @@ feature -- Element change
 				--  we need to save the namespace context of the instruction.
 				
 				if namespace = Void then
-					a_namespace_context := namespace_context
+					l_namespace_context := namespace_context
 				end
-				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-				a_content := last_generated_expression
-				if a_content = Void then
-					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+				compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
+				l_content := last_generated_expression
+				if not used_attribute_sets.is_empty then
+					create l_attributes_usage.make (a_executable, used_attribute_sets)
+					if l_content = Void then
+						l_content := l_attributes_usage
+					else
+						create {XM_XSLT_BLOCK} l_content.make (a_executable, l_attributes_usage, l_content, principal_stylesheet.module_number (system_id), line_number)
+					end
 				end
-				create an_element.make (an_executable, element_name, namespace, a_namespace_context, used_attribute_sets, Void, validation_action, is_inherit_namespaces, a_content)
-				last_generated_expression := an_element
+				if l_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_content.make end
+				create l_element.make (a_executable, element_name, namespace, l_namespace_context, used_attribute_sets, Void, validation_action, is_inherit_namespaces, l_content)
+				last_generated_expression := l_element
 			end
 		end
 
@@ -292,22 +299,22 @@ feature {NONE} -- Implementation
 			namespace_uri: namespace = Void implies namespace_uri /= Void
 		end
 
-	compile_fixed_element (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER) is
+	compile_fixed_element (a_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER) is
 			-- Compile to a fixed element.
 		require
-			executable_not_void: an_executable /= Void
+			executable_not_void: a_executable /= Void
 		local
 			a_fixed_element: XM_XSLT_FIXED_ELEMENT
 			some_namespace_codes: DS_ARRAYED_LIST [INTEGER]
 			a_content: XM_XPATH_EXPRESSION
 		do
 			create some_namespace_codes.make (0)
-			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+			compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
 			a_content := last_generated_expression
 			if a_content = Void then
 				create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
 			end
-			create a_fixed_element.make (an_executable, a_name_code, some_namespace_codes, used_attribute_sets, Void, validation_action, is_inherit_namespaces, a_content)
+			create a_fixed_element.make (a_executable, a_name_code, some_namespace_codes, used_attribute_sets, Void, validation_action, is_inherit_namespaces, a_content)
 			last_generated_expression := a_fixed_element
 		end
 

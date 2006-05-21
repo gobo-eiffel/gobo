@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; some_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET];
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; some_attribute_sets: DS_ARRAYED_LIST [INTEGER];
 			a_schema_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER; inherit_namespaces: BOOLEAN; a_content: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require

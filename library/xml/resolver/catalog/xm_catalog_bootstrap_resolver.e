@@ -31,12 +31,12 @@ inherit
 
 create
 
-	make
+	make, make_with_base_uri
 
 feature {NONE} -- Initialization
 	
 	make is
-			-- Establish invariant.
+			-- Initialize `Current' using current directory for base URI.
 		local
 			a_resolver_factory: XM_RESOLVER_FACTORY
 		do
@@ -55,6 +55,21 @@ feature {NONE} -- Initialization
 			well_known_uri_references.put (Xml_catalog_rng_1_0, Xml_catalog_rng_id_1_0)
 		end
 
+	make_with_base_uri (a_uri: UT_URI) is
+			-- Initialize `Current' using `a_uri' for base URI.
+		require
+			a_uri_not_void: a_uri /= Void
+			absolute_uri: a_uri.is_absolute
+		local
+			a_resolver_factory: XM_RESOLVER_FACTORY
+		do
+			create a_resolver_factory
+			make
+			uri_scheme_resolver := a_resolver_factory.new_resolver_with_uri (a_uri)
+		ensure
+			base_uri_set: uri_scheme_resolver.uri = a_uri
+		end
+		
 feature -- Access
 
 	uri_scheme_resolver: XM_URI_EXTERNAL_RESOLVER

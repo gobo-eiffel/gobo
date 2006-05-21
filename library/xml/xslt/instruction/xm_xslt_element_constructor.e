@@ -197,7 +197,7 @@ feature -- Evaluation
 						
 						-- Apply the content of any attribute sets mentioned in use-attribute-sets.
 						
-						if attribute_sets /= Void then expand_attribute_sets (attribute_sets, a_context) end
+						if attribute_sets /= Void then expand_attribute_sets (a_transformer.executable, attribute_sets, a_context) end
 						content.process (a_context)
 						
 						if not a_transformer.is_error then
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 
 	type: XM_XPATH_SCHEMA_TYPE
 
-	attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]
+	attribute_sets: DS_ARRAYED_LIST [INTEGER]
 			-- Used attribute sets
 
 	is_inherit_namespaces: BOOLEAN

@@ -280,6 +280,16 @@ feature -- Element change
 			end
 		end
 
+	set_bootstrap_resolver (a_resolver: like bootstrap_resolver) is
+			-- Set `bootstrap_resolver' to `a_resolver'.
+		require
+			a_resolver_not_void: a_resolver /= Void
+		do
+			bootstrap_resolver := a_resolver
+		ensure
+			bootstrap_resolver_set: bootstrap_resolver = a_resolver
+		end
+
 feature -- Output
 
 	debug_message (a_level: INTEGER; a_message, an_argument: STRING) is
