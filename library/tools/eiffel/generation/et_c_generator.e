@@ -12273,6 +12273,61 @@ feature {NONE} -- Type generation
 						a_file.put_character (' ')
 						a_file.put_string (c_struct)
 						a_file.put_character (' ')
+						print_struct_name (l_type, a_file)
+						a_file.put_character (' ')
+						print_type_name (l_type, a_file)
+						a_file.put_character (';')
+						a_file.put_new_line
+					end
+					a_file.put_new_line
+				end
+				i := i + 1
+			end
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				if l_type.is_alive then
+					if l_type = current_system.character_type then
+						-- Do nothing.
+					elseif l_type = current_system.wide_character_type then
+						-- Do nothing.
+					elseif l_type = current_system.boolean_type then
+						-- Do nothing.
+					elseif l_type = current_system.integer_8_type then
+						-- Do nothing.
+					elseif l_type = current_system.integer_16_type then
+						-- Do nothing.
+					elseif l_type = current_system.integer_type then
+						-- Do nothing.
+					elseif l_type = current_system.integer_64_type then
+						-- Do nothing.
+					elseif l_type = current_system.natural_8_type then
+						-- Do nothing.
+					elseif l_type = current_system.natural_16_type then
+						-- Do nothing.
+					elseif l_type = current_system.natural_32_type then
+						-- Do nothing.
+					elseif l_type = current_system.natural_64_type then
+						-- Do nothing.
+					elseif l_type = current_system.real_type then
+						-- Do nothing.
+					elseif l_type = current_system.double_type then
+						-- Do nothing.
+					elseif l_type = current_system.pointer_type then
+						-- Do nothing.
+					else
+						a_file.put_character ('/')
+						a_file.put_character ('*')
+						a_file.put_character (' ')
+						a_file.put_string ("Struct for type ")
+						a_file.put_string (l_type.static_type.base_type.to_text)
+						a_file.put_character (' ')
+						a_file.put_character ('*')
+						a_file.put_character ('/')
+						a_file.put_new_line
+						a_file.put_string (c_struct)
+						a_file.put_character (' ')
+						print_struct_name (l_type, a_file)
+						a_file.put_character (' ')
 						a_file.put_character ('{')
 						a_file.put_new_line
 						a_file.put_character ('%T')
@@ -12419,12 +12474,10 @@ feature {NONE} -- Type generation
 							end
 						end
 						a_file.put_character ('}')
-						a_file.put_character (' ')
-						print_type_name (l_type, a_file)
 						a_file.put_character (';')
 						a_file.put_new_line
+						a_file.put_new_line
 					end
-					a_file.put_new_line
 				end
 				i := i + 1
 			end
@@ -12529,6 +12582,23 @@ feature {NONE} -- Type generation
 			else
 -- TODO: long names
 				a_file.put_character ('T')
+				a_file.put_integer (a_type.id)
+			end
+		end
+
+	print_struct_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of C struct corresponding to `a_type' to `a_file'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('S')
+				a_file.put_integer (a_type.id)
+			else
+-- TODO: long names
+				a_file.put_character ('S')
 				a_file.put_integer (a_type.id)
 			end
 		end
