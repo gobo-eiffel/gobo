@@ -82,9 +82,9 @@ inherit
 #ifdef SE
 			{UC_STRING_HANDLER} storage, compare;
 #endif
-#ifdef ISE
---			{STRING} share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal;
---			{NONE} all
+#ifdef (ISE && ISE_5_6) || GE
+			{STRING} share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal;
+			{NONE} all
 #endif
 #ifndef ISE
 			{NONE} all
@@ -124,6 +124,9 @@ inherit
 			old_left_adjust,
 			old_right_adjust,
 			old_wipe_out,
+#ifndef ISE_5_6 || GE
+			code, append_code, put_code, has_code, index_of_code,
+#endif
 #else
 			wipe_out,
 #endif
@@ -184,6 +187,9 @@ inherit
 			old_clear_all,
 			old_left_adjust,
 			old_right_adjust,
+#ifndef ISE_5_6 || GE
+			code, append_code, put_code, has_code, index_of_code,
+#endif
 			infix "+",
 			copy, infix "@"
 		end
@@ -3351,6 +3357,39 @@ feature {UC_STRING} -- Inapplicable
 			keep_head (nb)
 		end
 
+#ifndef ISE_5_6 || GE
+	code (i: INTEGER): NATURAL_32 is
+			-- Code at position `i'
+		do
+			Result := item_code (i).as_natural_32
+		end
+
+	index_of_code (c: like code; start_index: INTEGER): INTEGER is
+			-- Position of first occurrence of `c' at or after `start_index';
+			-- 0 if none.
+		do
+			Result := index_of_item_code (c.as_integer_32, start_index)
+		end
+
+	put_code (v: like code; i: INTEGER) is
+			-- Put code `v' at position `i'.
+		do
+			put_item_code (v.as_integer_32, i)
+		end
+
+	append_code (c: like code) is
+			-- Append `c' at end.
+		do
+			append_item_code (c.as_integer_32)
+		end
+
+	has_code (c: like code): BOOLEAN is
+			-- Does string include `c'?
+		do
+			Result := has_item_code (c.as_integer_32)
+		end
+
+#endif
 #endif
 #endif
 invariant

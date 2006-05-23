@@ -276,6 +276,7 @@
 			Pass $GOBO_CC value to 'gexace' if defined.
 			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
 			Pass $GOBO_DOTNET option to 'gexace' if defined.
+			Pass $ISE_5_6 option to 'gexace' if defined.
 			To be redefined in descendant if additional options are
 			necessary.
 		</description>
@@ -288,6 +289,7 @@
 			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
 			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
+			<define name="ISE_5_6" value="true" if="${ISE_5_6}"/>
 		</gexace>
 	</target>
 

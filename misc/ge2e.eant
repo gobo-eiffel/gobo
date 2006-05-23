@@ -27,6 +27,7 @@
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ise/${gepp_file}.e" lines="true">
 			<define name="ISE"/>
 			<define name="GOBO_DOTNET" if="${GOBO_DOTNET}"/>
+			<define name="ISE_5_6" if="${ISE_5_6}"/>
 		</gepp>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/se/${gepp_file}.e" lines="true">
 			<define name="SE"/>
