@@ -131,6 +131,8 @@ feature -- Element change
 			check_within_template
 			if use_attribute_sets /= Void then
 				accumulate_attribute_sets (use_attribute_sets, Void)
+			else
+				create used_attribute_sets.make (0)
 			end
 			type_check_expression ("name", element_name)
 			if element_name.was_expression_replaced then

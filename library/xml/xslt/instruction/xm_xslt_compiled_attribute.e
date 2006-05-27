@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			executable_not_void: an_executable /= Void
 			name_not_void: an_attribute_name /= Void
 			validation: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
+			namespace_context_not_void: a_namespace = Void implies namespace_context /= Void
 		do
 			executable := an_executable
 			set_attribute_name (an_attribute_name)
@@ -98,8 +99,19 @@ feature -- Status report
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
+				local
+			a_string: STRING
 		do
-			todo ("display", False)
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:attribute ")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			a_string := STRING_.appended_string (indentation (a_level + 1), "name ")
+			std.error.put_string (a_string)
+			if namespace /= Void then
+				namespace.display (a_level + 2)
+			end
+			attribute_name.display (a_level + 2)
+			std.error.put_new_line
 		end
 
 feature -- Status_setting
@@ -199,7 +211,13 @@ feature -- Evaluation
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			last_tail_call := Void
-			todo ("process_leaving_tale", False)
+			evaluate_name_code (a_context)
+			if not is_error then
+				expand_children (a_context)
+				if not is_error then
+					a_context.current_receiver.notify_attribute (last_name_code, 0, last_string_value, options)
+				end
+			end
 		end
 	
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -235,8 +253,98 @@ feature {NONE} -- Implementation
 
 	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate name code.
+		local
+			l_item: XM_XPATH_ITEM
+			l_error: XM_XPATH_ERROR_VALUE
+			l_qname: XM_XPATH_STRING_VALUE
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_prefix, l_local: STRING
 		do
-			todo ("evaluate_name_code", False)
+			attribute_name.evaluate_item (a_context)
+			l_item := attribute_name.last_evaluated_item
+			if l_item = Void then
+				create l_error.make_from_string ("Attribute 'name' must be a string", Xpath_errors_uri, "XPTY0004", Dynamic_error)
+				set_last_error (l_error)
+			elseif l_item.is_error then
+				set_last_error (l_item.error_value)
+			elseif not l_item.is_string_value then
+				create l_error.make_from_string ("Attribute 'name' must be a string", Xpath_errors_uri, "XPTY0004", Dynamic_error)
+				set_last_error (l_error)
+			else
+				l_qname := l_item.as_string_value
+				create l_parser.make (l_qname.string_value)
+				if not l_parser.is_valid then
+					create l_error.make_from_string ("Attribute 'name' must be a lexical QName", Xpath_errors_uri, "XTDE0850", Dynamic_error)
+					set_last_error (l_error)
+				elseif namespace = Void and STRING_.same_string (l_qname.string_value, Xmlns) then
+					create l_error.make_from_string ("Attribute 'name' cannot be 'xmlns'", Xpath_errors_uri, "XTDE0855", Dynamic_error)
+					set_last_error (l_error)
+				else
+					l_prefix := l_parser.optional_prefix
+					l_local := l_parser.local_name
+					if STRING_.same_string (l_prefix, Xmlns) then
+						if namespace = Void then
+							create l_error.make_from_string ("Attribute 'name' cannot be a namespace declaration", Xpath_errors_uri, "XTDE0860", Dynamic_error)
+							set_last_error (l_error)
+						else
+							l_prefix := "" -- i.e. we will ignore it
+						end
+					else
+						evaluate_name_code_stage2 (l_prefix, l_local, a_context)
+					end
+				end
+			end
+		end
+
+	evaluate_name_code_stage2 (a_prefix, a_local: STRING; a_context: XM_XPATH_CONTEXT) is
+			-- Complete evaluation of name code.
+		require
+			a_prefix_not_void: a_prefix /= Void
+			a_local_not_void: a_local /= Void
+			a_context_not_void: a_context /= Void
+			no_error_yet: not is_error
+		local
+			l_uri, l_prefix: STRING
+			l_error: XM_XPATH_ERROR_VALUE
+		do
+			l_prefix := a_prefix.twin
+			if namespace = Void then
+				if l_prefix.is_empty then
+					l_uri := ""
+				else
+					l_uri := namespace_context.uri_for_defaulted_prefix (l_prefix, False)
+				end
+				if l_uri = Void then
+					create l_error.make_from_string ("Undeclared prefix in attribute 'name'", Xpath_errors_uri, "XTDE0860", Dynamic_error)
+					set_last_error (l_error)
+				end
+			else
+				namespace.evaluate_as_string (a_context)
+				if namespace.last_evaluated_string.is_error then
+					set_last_error (namespace.last_evaluated_string.error_value)
+				else
+					l_uri := namespace.last_evaluated_string.string_value
+					if l_uri.count = 0 then
+						l_prefix := ""
+					elseif l_prefix.count = 0 then
+						l_prefix := shared_name_pool.suggested_prefix_for_uri (l_uri)
+						if l_prefix = Void then
+							-- the following arbitrary prefix will be change if it clashes
+							l_prefix := "ns0"
+						end
+					end
+				end
+			end
+			if not is_error then
+				if shared_name_pool.is_name_code_allocated (l_prefix, l_uri, a_local) then
+					last_name_code := shared_name_pool.name_code (l_prefix, l_uri, a_local)
+				else
+					shared_name_pool.allocate_name (l_prefix, l_uri, a_local)
+					last_name_code := shared_name_pool.last_name_code
+				end
+			end
+		ensure
+			error_or_name_code_set: is_error or else last_name_code >= -1
 		end
 
 invariant

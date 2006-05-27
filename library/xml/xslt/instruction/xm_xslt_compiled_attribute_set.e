@@ -64,7 +64,7 @@ feature -- Evaluation
 		local
 			l_new_context: XM_XPATH_CONTEXT
 		do
-			if used_attribute_sets /= Void then expand_attribute_sets (a_executable, used_attribute_sets, a_context) end
+			expand_attribute_sets (a_executable, used_attribute_sets, a_context)
 
 			-- Note, we can ignore the result of process_leaving_tail since an attribute set can't contain a tail call
 

@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	Maximum_hash_chain_depth: INTEGER is 1024
+	Maximum_hash_chain_depth: INTEGER is 2048
 			-- Maximum depth for same `hash_code' chains
 
 	namespace_code (an_xml_prefix: STRING; a_uri: STRING): INTEGER is
@@ -259,19 +259,21 @@ feature -- Access
 			an_index: INTEGER
 			possible_prefixes: STRING
 		do
-			a_uri_code := code_for_uri (a_uri)
-			if a_uri_code = -1 then
-				Result := Void
-			else
-				possible_prefixes := prefixes_for_uri.item (a_uri_code + 1)
-				an_index := possible_prefixes.index_of (' ', 1)
-				if an_index = 0 then
+			if is_code_for_uri_allocated (a_uri) then
+				a_uri_code := code_for_uri (a_uri)
+				if a_uri_code = -1 then
 					Result := Void
 				else
+					possible_prefixes := prefixes_for_uri.item (a_uri_code + 1)
+					an_index := possible_prefixes.index_of (' ', 1)
+					if an_index = 0 then
+						Result := Void
+					else
 						check
 							not_just_a_blank: an_index > 1
 						end
-					Result := possible_prefixes.substring (1, an_index - 1)
+						Result := possible_prefixes.substring (1, an_index - 1)
+					end
 				end
 			end
 		end
@@ -384,9 +386,12 @@ feature -- Access
 			found, finished: BOOLEAN
 			an_entry, next_entry: XM_XPATH_NAME_ENTRY
 		do
+			Result := -1
 			if is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
 				Result := type_factory.standard_fingerprint (a_uri, a_local_name)
-			else
+			end
+			if Result = -1 then
+				Result := 0
 				from
 					a_uri_code := -1
 					a_counter := 1
@@ -499,12 +504,15 @@ feature -- Status report
 		do
 			if a_name_code < 0 then
 				Result := False
-			elseif type_factory.is_built_in_fingerprint (fingerprint_from_name_code (a_name_code)) then
-				a_prefix_index := name_code_to_prefix_index (a_name_code)
-				Result := a_prefix_index >= 0 and then a_prefix_index <= prefixes_used
 			else
-				an_entry := name_entry (a_name_code)
-				Result :=  an_entry /= Void
+				if type_factory.is_built_in_fingerprint (fingerprint_from_name_code (a_name_code)) then
+					a_prefix_index := name_code_to_prefix_index (a_name_code)
+					Result := a_prefix_index >= 0 and then a_prefix_index <= prefixes_used
+				end
+				if Result = False then
+					an_entry := name_entry (a_name_code)
+					Result :=  an_entry /= Void
+				end
 			end
 		end
 

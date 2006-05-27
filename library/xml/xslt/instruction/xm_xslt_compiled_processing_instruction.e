@@ -139,25 +139,14 @@ feature -- Evaluation
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			last_tail_call := Void
-			todo ("process_leaving_tail", False)
-			-- TODOevaluate_name (a_context)
-		end
-
-feature {NONE} -- Implementation
-
-	name: XM_XPATH_EXPRESSION
-			-- Name
-
-	check_content (a_content: STRING; a_context: XM_XPATH_CONTEXT) is
-			-- Check and possibly modify `a_content' for conformance to node kind.
-		do
-			todo ("check_content", False)
-		end
-
-	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate name code.
-		do
-			todo ("evaluate_name_code", False)
+			evaluate_name (a_context)
+			if not is_error then
+				expand_children (a_context)
+				if not is_error then
+					check_content (last_string_value, a_context)
+					a_context.current_receiver.notify_processing_instruction (evaluated_name, last_string_value, 0)
+				end
+			end
 		end
 
 feature {XM_XSLT_EXPRESSION} -- Restricted
@@ -166,6 +155,58 @@ feature {XM_XSLT_EXPRESSION} -- Restricted
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
+		end
+
+feature {NONE} -- Implementation
+
+	name: XM_XPATH_EXPRESSION
+			-- Name
+
+	evaluated_name: STRING
+			-- Result of calling `evaluate_name'
+
+	check_content (a_content: STRING; a_context: XM_XPATH_CONTEXT) is
+			-- Check and possibly modify `a_content' for conformance to node kind.
+		do
+			last_string_value := STRING_.replaced_all_substrings (a_content, "?>", "? >")
+		end
+
+	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate name code.
+		do
+			evaluate_name (a_context)
+			if not is_error then
+				if shared_name_pool.is_name_code_allocated ("", "", evaluated_name) then
+					shared_name_pool.allocate_name ("", "", evaluated_name)
+					last_name_code := shared_name_pool.last_name_code
+				else
+					last_name_code := shared_name_pool.name_code ("", "", evaluated_name)
+				end
+			end
+		end
+
+	evaluate_name (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate name of PI.
+		require
+			a_context_not_void: a_context /= Void
+			no_error: not is_error
+		local
+			l_message: STRING
+		do
+			name.evaluate_as_string (a_context)
+			if name.last_evaluated_string.is_error then
+				set_last_error (name.last_evaluated_string.error_value)
+			else
+				evaluated_name := name.last_evaluated_string.string_value
+				if not is_ncname (evaluated_name) then
+					l_message := STRING_.concat ("Invalid processing instruction name ", evaluated_name)
+					set_last_error_from_string (l_message, Xpath_errors_uri, "XTDE0890", Dynamic_error)
+				elseif STRING_.same_case_insensitive (Xml_prefix, evaluated_name) then
+					set_last_error_from_string ("Processing instructions cannot be named 'xml' in any combination of upper/lower case", Xpath_errors_uri, "XTDE0890", Dynamic_error)
+				end
+			end
+		ensure
+			no_error_implies_evaluated_name_not_void: not is_error implies evaluated_name /= Void
 		end
 
 invariant

@@ -309,9 +309,37 @@ feature {NONE} -- Implementation
 		end
 
 	choose_arbitrary_qname_prefix is
-			-- Choose an arbitrary XML prefix.
+			-- choose an arbitrary XML prefix.
+		require
+			namespace_uri_not_void: namespace_uri /= Void
+			namespace_uri_not_empty: not namespace_uri.is_empty
+			qname_prefix_not_void: qname_prefix /= Void
+			empty_prefix: qname_prefix.is_empty
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			found: BOOLEAN
 		do
-			todo ("choose arbitrary_qname_prefix", False)
+			-- First see if we already have a binding in the stylesheet
+			from l_cursor := namespace_codes_in_scope.new_cursor; l_cursor.start until l_cursor.after loop
+				if STRING_.same_string (shared_name_pool.uri_from_namespace_code (l_cursor.item), namespace_uri) then
+					qname_prefix := shared_name_pool.prefix_from_namespace_code (l_cursor.item)
+					found := True
+					l_cursor.go_after
+				else
+					l_cursor.forth
+				end
+			end
+			-- Maybe the namespace is already known to the name pool
+			if not found then
+				qname_prefix := shared_name_pool.suggested_prefix_for_uri (namespace_uri)
+				if qname_prefix = Void then
+					-- the following arbitrary prefix will be change if it clashes
+					qname_prefix := "ns0"
+				end
+			end
+		ensure
+			chosen_prefix_not_void: qname_prefix /= Void
+			chosen_prefix_not_empty: not qname_prefix.is_empty
 		end
 
 end

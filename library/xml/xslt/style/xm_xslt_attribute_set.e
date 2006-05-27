@@ -193,7 +193,6 @@ feature -- Element change
 			l_body: XM_XPATH_EXPRESSION
 			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
 			l_instruction: XM_XSLT_COMPILED_ATTRIBUTE_SET
-			l_error: XM_XPATH_ERROR_VALUE
 		do
 			last_generated_expression := Void
 			if reference_count > 0 then
@@ -208,20 +207,14 @@ feature -- Element change
 						l_trace_wrapper.set_parent (Current)
 						l_body := l_trace_wrapper
 					end
-					create {XM_XSLT_COMPILED_ATTRIBUTE_SET} l_instruction.make (attribute_set_name_code,
-																									used_attribute_sets,
-																									a_executable,
-																									l_body,
-																									line_number,
-																									system_id,
-																									slot_manager)
-					if a_executable.attribute_sets.has (attribute_set_name_code) then
-						create l_error.make_from_string ("Duplicate attribute-sets",
-																	Xpath_errors_uri, "XTSE0010", Static_error)
-						report_compile_error (l_error)
-					else
-						a_executable.attribute_sets.force_new (l_instruction, attribute_set_name_code)
-					end
+					create l_instruction.make (fingerprint_from_name_code (attribute_set_name_code),
+														used_attribute_sets,
+														a_executable,
+														l_body,
+														line_number,
+														system_id,
+														slot_manager)
+					a_executable.attribute_set_manager.add_attributes (l_instruction, attribute_set_name_code)
 				end
 			end
 			last_generated_expression := Void

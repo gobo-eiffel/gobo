@@ -90,9 +90,11 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		do
 			check_within_template
-			type_check_expression ("select", select_expression)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
+			if select_expression /= Void then
+				type_check_expression ("select", select_expression)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
 			end
 			type_check_expression ("name", name)
 			if name.was_expression_replaced then
@@ -104,20 +106,14 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
-			a_pi: XM_XSLT_COMPILED_PROCESSING_INSTRUCTION
-			a_separator: STRING
+			l_string_value: XM_XPATH_STRING_VALUE
+			l_pi: XM_XSLT_COMPILED_PROCESSING_INSTRUCTION
+			l_separator: STRING
 		do
-			create a_pi.make (an_executable, name)
-			if select_expression.is_string_value then
-				a_string_value := select_expression.as_string_value
-				a_separator := " "
-			else
-				a_separator := ""
-			end
-			create a_string_value.make (a_separator)
-			compile_content (an_executable, a_pi, a_string_value)
-			last_generated_expression := a_pi
+			create l_pi.make (an_executable, name)
+			create l_string_value.make (" ")
+			compile_content (an_executable, l_pi, l_string_value)
+			last_generated_expression := l_pi
 		end
 
 end

@@ -2130,7 +2130,7 @@ feature -- Element change
 					until
 						l_second_cursor.after
 					loop
-						if l_second_cursor.item.is_attribute_set and then l_second_cursor.item.as_attribute_set.attribute_set_name_code = l_fingerprint then
+						if l_second_cursor.item.is_attribute_set and then fingerprint_from_name_code (l_second_cursor.item.as_attribute_set.attribute_set_name_code) = l_fingerprint then
 							found := True
 							l_list.force_last (l_second_cursor.item.as_attribute_set)
 						end

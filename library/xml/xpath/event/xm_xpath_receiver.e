@@ -20,7 +20,7 @@ inherit
 		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
-		export {NONE} all end
+
 
 	-- This is an interface to receive XML events.
 	-- It is based on XM_CALLBACKS, XM_DTD_CALLBACKS and XM_DTD_ATTRIBUTE_CONTENT,
@@ -95,7 +95,7 @@ feature -- Events
 			-- Notify the start of an element.
 		require
 			opened: is_open
-			valid_name_code: is_name_code_ok_for_start_element (a_name_code)
+			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code) and is_name_code_ok_for_start_element (a_name_code)
 		deferred
 		end
 
@@ -117,7 +117,7 @@ feature -- Events
 			--  children. Namespaces and attributes may be intermingled
 		require
 			opened: is_open
-			positive_name_code: a_name_code >= 0
+			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
 			value_not_void: a_value /= Void
 		deferred
 		end
