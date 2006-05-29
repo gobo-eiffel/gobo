@@ -815,9 +815,8 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 		local
-			a_path: XM_XPATH_PATH_EXPRESSION
-			an_expression: XM_XPATH_EXPRESSION
-			path_not_void: BOOLEAN
+			l_path: XM_XPATH_PATH_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
 		do
 			if step.non_creating then
 				
@@ -831,43 +830,41 @@ feature {NONE} -- Implementation
 				
 				-- Try to simplify descendant expressions such as a//b
 				
-				a_path := simplified_descendant_path
-				path_not_void := a_path /= Void
-				if path_not_void then
+				l_path := simplified_descendant_path
+				if l_path /= Void then
 					
 					-- Descendant expressions such as a//b were simplified
 					
-					a_path.simplify
-					if a_path.was_expression_replaced then
-						an_expression := a_path.replacement_expression
+					l_path.simplify
+					if l_path.was_expression_replaced then
+						l_expression := l_path.replacement_expression
 					else
-						an_expression := a_path
+						l_expression := l_path
 					end
-					if not an_expression.is_error then
+					if not l_expression.is_error then
 						check
-							path_expression: a_path.is_path_expression
+							path_expression: l_path.is_path_expression
 						end
-						a_path := an_expression.as_path_expression
-						a_path.check_static_type (a_context, a_context_item_type)
-						if a_path.was_expression_replaced then
-							set_replacement (a_path.replacement_expression)
+						l_path := l_expression.as_path_expression
+						l_path.check_static_type (a_context, a_context_item_type)
+						if l_path.was_expression_replaced then
+							set_replacement (l_path.replacement_expression)
 						else
-							set_replacement (a_path)
+							set_replacement (l_path)
 						end
 					end
-					if not is_error and then not was_expression_replaced then
-						
-						-- Decide whether the result needs to be wrapped in a sorting
-						-- expression to deliver the results in document order
-						
-						if a_path.ordered_nodeset and then a_path /= Current then
-							set_replacement (an_expression)
-						elseif a_path.reverse_document_order then
-							create {XM_XPATH_REVERSER} an_expression.make (an_expression)
-							set_replacement (an_expression)
+				elseif not is_error and then not was_expression_replaced then
+					
+					-- Decide whether the result needs to be wrapped in a sorting
+					-- expression to deliver the results in document order
+					
+					if not ordered_nodeset then
+						if reverse_document_order then
+							create {XM_XPATH_REVERSER} l_expression.make (Current)
+							set_replacement (l_expression)
 						else
-							create {XM_XPATH_DOCUMENT_SORTER} an_expression.make (an_expression)
-							set_replacement (an_expression)
+							create {XM_XPATH_DOCUMENT_SORTER} l_expression.make (Current)
+							set_replacement (l_expression)
 						end
 					end
 				end

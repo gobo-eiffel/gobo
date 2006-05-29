@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		require
 			string_value_not_void: a_string_value /= Void
 			parent_not_void: a_parent /= Void
-			system_id_not_void: system_id /= Void
+			system_id_not_void: a_system_id /= Void
 		do
 			string_value := a_string_value
 			system_id := a_system_id

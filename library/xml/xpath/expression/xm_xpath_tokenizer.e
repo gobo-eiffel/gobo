@@ -45,6 +45,9 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
+	next_token_start_index: INTEGER
+			-- The position in the expression of the start of the next token
+
 	last_token: INTEGER is
 			-- The number identifying the most recently read token
 		require
@@ -454,7 +457,7 @@ feature {NONE} -- Status setting
 							loop
 								if input.item (input_index) = '%N' then
 									next_line_number := next_line_number + 1
-								elseif input.item (input_index) = ':'  and then input.item (input_index + 1) = '%)'  then
+								elseif input.item (input_index) = ':'  and then input.item (input_index + 1) = ')'  then
 									nesting_depth := nesting_depth - 1
 									input_index := input_index + 1
 								elseif input.item (input_index) = '('  and then input.item (input_index + 1) = ':'  then
@@ -803,9 +806,6 @@ feature {NONE} -- Implementation
 	next_token_value: STRING
 		-- The string value of the next token to be read
 		
-	next_token_start_index: INTEGER
-			-- The position in the expression of the start of the next token
-
 	input_index: INTEGER
 			-- The current position within the input string
 

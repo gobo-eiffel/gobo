@@ -141,7 +141,7 @@ feature -- Optimization
 		local
 			a_parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
 		do
-			if axis = Parent_axis and then (not node_test.is_name_test or else node_test = any_node_test) then
+			if axis = Parent_axis and then (node_test = Void or else node_test = any_node_test) then
 				create  a_parent_node.make
 				set_replacement (a_parent_node)
 			end
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			an_origin, a_kind: INTEGER
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_message, an_article: STRING
-			a_schema_type: XM_XPATH_SCHEMA_TYPE
+			--	a_schema_type: XM_XPATH_SCHEMA_TYPE
 		do
 			an_origin := a_node_test.primitive_type
 			if an_origin /= Any_node and then is_axis_always_empty (axis, an_origin) then
@@ -320,13 +320,8 @@ feature {NONE} -- Implementation
 					a_message := STRING_.appended_string (a_message, " node")
 					a_context.issue_warning (a_message)
 				else
-					a_schema_type := a_node_test.content_type
-					if a_schema_type /= any_type then
-						-- TODO: schema-aware version
-						check
-							schema_aware: False
-						end
-					end
+					--a_schema_type := a_node_test.content_type
+					-- TODO: schema-aware version
 				end
 			end
 		end

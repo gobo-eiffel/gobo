@@ -126,6 +126,11 @@ feature {NONE} -- Implementation
 					elseif not results.after then
 						results.forth
 					end
+					if not finished and results.is_error then
+						finished := True
+						create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
+						set_last_error (results.error_value)
+					end
 					if not results.is_error then
 						if not results.after then
 							item := results.item

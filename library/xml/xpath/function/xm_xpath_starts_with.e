@@ -73,6 +73,7 @@ feature -- Evaluation
 			todo ("evaluate-item", False)
 		end
 
+	
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
 		do

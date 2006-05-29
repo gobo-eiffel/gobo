@@ -41,15 +41,15 @@ feature {NONE} -- Initialization
 			executable_not_void: an_executable /= Void
 			name_not_void: an_attribute_name /= Void
 			validation: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
-			namespace_context_not_void: a_namespace = Void implies namespace_context /= Void
+			namespace_context_not_void: a_namespace = Void implies a_namespace_context /= Void
 		do
 			executable := an_executable
-			set_attribute_name (an_attribute_name)
+			namespace_context := a_namespace_context
 			set_namespace (a_namespace)
+			set_attribute_name (an_attribute_name)
 			validation_action := a_validation_action
 			type := a_simple_type
 			type_annotation := a_type_annotation
-			namespace_context := a_namespace_context
 			options := 0
 			compute_static_properties
 			initialized := True
@@ -351,6 +351,7 @@ invariant
 
 	validation: initialized implies validation_action >= Validation_strict  and then Validation_strip <= validation_action
 	name_not_void: initialized implies attribute_name /= Void
+	namespace_context_not_void: namespace = Void implies namespace_context /= Void
 
 end
 	

@@ -188,24 +188,23 @@ feature -- Access
 	default_xpath_namespace_code: INTEGER is
 			-- Namespace code of default XPath namespace
 		local
-			a_style_element: XM_XSLT_STYLE_ELEMENT
-			a_namespace: STRING
+			l_style_element: XM_XSLT_STYLE_ELEMENT
+			l_namespace: STRING
 			finished: BOOLEAN
 		do
 			from
-				a_style_element := Current
+				l_style_element := Current
 			until
-				finished or else a_style_element = Void or else a_namespace /= Void	
+				finished or else l_style_element = Void or else l_namespace /= Void	
 			loop
-				a_namespace := a_style_element.default_xpath_namespace
-				if a_namespace = Void then
-					a_style_element ?= a_style_element.parent_node
+				l_namespace := l_style_element.default_xpath_namespace
+				if l_namespace = Void then
+					l_style_element ?= l_style_element.parent_node
 				else
-					check
-						code_allocated: shared_name_pool.is_code_for_uri_allocated (a_namespace)
-						-- TODO: We must allocate it somewhere, when `default_xpath_namespace' is first set
+					if not shared_name_pool.is_code_for_uri_allocated (l_namespace) then
+						shared_name_pool.allocate_code_for_uri (l_namespace)
 					end
-					Result := shared_name_pool.code_for_uri (a_namespace)
+					Result := shared_name_pool.code_for_uri (l_namespace)
 					finished := True
 				end
 			end
@@ -1239,94 +1238,34 @@ feature -- Creation
 			trace_wrapper_not_void: Result /= Void
 		end
 
-	generate_attribute_value_template (an_avt_expression: STRING; a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
+	generate_attribute_value_template (a_avt: STRING; a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
 			-- Generate an attribute-valued-template.
 			-- The static context may be altered as a result of parsing.
 		require
-			avt_not_void: an_avt_expression /= Void
+			avt_not_void: a_avt /= Void
 			static_context_not_void: a_static_context /= Void
 		local
-			components: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			a_leading_character, a_left_curly_brace, a_right_curly_brace, a_behaviour: INTEGER
-			a_left_double_curly_brace, a_right_double_curly_brace: BOOLEAN
-			a_parser: XM_XSLT_PATTERN_PARSER
-			a_concat_function: XM_XPATH_CONCAT
-			an_expression: XM_XPATH_EXPRESSION
+			l_avt: XM_XSLT_AVT_PARSER
+			l_concat_function: XM_XPATH_CONCAT
 		do
-			create components.make (5)
-			components.set_equality_tester (expression_tester)
-			from
-				a_leading_character := 1
-			variant
-				an_avt_expression.count + 1 - a_leading_character
-			until
-				a_leading_character > an_avt_expression.count
-			loop
-				a_left_curly_brace := an_avt_expression.index_of ('{', a_leading_character)
-				a_left_double_curly_brace := a_left_curly_brace > 0 and then an_avt_expression.index_of ('{', a_left_curly_brace + 1) = a_left_curly_brace + 1
-				a_right_curly_brace := an_avt_expression.index_of ('}', a_leading_character)
-				a_right_double_curly_brace := a_right_curly_brace > 0 and then an_avt_expression.index_of ('}', a_right_curly_brace + 1) = a_right_curly_brace + 1
+			create l_avt.make (a_avt, a_static_context, configuration.are_all_nodes_untyped)
+			l_avt.parse_components (line_number)
 
-				if a_left_curly_brace = 0 and then a_right_curly_brace = 0 then
-					a_behaviour := Fixed_component
-				elseif a_left_double_curly_brace and then  a_right_double_curly_brace then
-					if a_left_curly_brace < a_right_curly_brace then
-						a_behaviour := Left_double_curly_brace_component
-					else
-						a_behaviour := Right_double_curly_brace_component
-					end
-				elseif a_left_double_curly_brace then
-					a_behaviour := Left_double_curly_brace_component
-				elseif a_right_double_curly_brace then
-					a_behaviour := Right_double_curly_brace_component					
-				elseif a_left_curly_brace > 0 and then a_right_curly_brace > a_left_curly_brace then
-					a_behaviour := Avt_component
-				else
-					a_behaviour := Avt_component + 1 -- logic error
-				end
-
-				inspect
-					a_behaviour
-				when Fixed_component then
-					append_fixed_component (components, an_avt_expression.substring (a_leading_character, an_avt_expression.count))
-					a_leading_character := an_avt_expression.count + 1
-				when Right_double_curly_brace_component then
-					append_fixed_component (components, an_avt_expression.substring (a_leading_character, a_right_curly_brace))
-					a_leading_character := a_right_curly_brace + 2
-				when Left_double_curly_brace_component then
-					append_fixed_component (components, an_avt_expression.substring (a_leading_character, a_left_curly_brace))
-					a_leading_character := a_left_curly_brace + 2
-				when Avt_component then
-					if a_leading_character < a_left_curly_brace then
-						append_fixed_component (components, an_avt_expression.substring (a_leading_character, a_left_curly_brace - 1))
-					end
-					create a_parser.make
-					a_parser.parse (an_avt_expression, a_static_context, a_left_curly_brace + 1, Right_curly_token, line_number)
-					if not a_parser.is_parse_error then
-						a_parser.last_parsed_expression.simplify
-						if a_parser.last_parsed_expression.was_expression_replaced then
-							an_expression := a_parser.last_parsed_expression.replacement_expression
-						else
-							an_expression := a_parser.last_parsed_expression
-						end
-						append_parsed_expression (components, an_expression)
-					else
-						create {XM_XPATH_INVALID_VALUE} last_generated_expression.make_from_string (a_parser.first_parse_error, Xpath_errors_uri, "XTSE0360", Static_error)
-					end
-					a_leading_character := a_right_curly_brace + 1
-				end
-			end
-
-			if components.count = 0 then
+			if l_avt.error_value /= Void then
+				create {XM_XPATH_INVALID_VALUE} last_generated_expression.make (l_avt.error_value)
+			elseif l_avt.components.count = 0 then
 				create {XM_XPATH_STRING_VALUE} last_generated_expression.make ("")
-			elseif components.count = 1 then
-				last_generated_expression := components.item (1)
+			elseif l_avt.components.count = 1 then
+				last_generated_expression := l_avt.components.item (1)
 			elseif a_static_context.is_backwards_compatible_mode then
-				last_generated_expression := components.item (1)
+				last_generated_expression := l_avt.components.item (1)
 			else
-				create a_concat_function.make
-				a_concat_function.set_arguments (components)
-				last_generated_expression := a_concat_function
+				create l_concat_function.make
+				l_concat_function.set_arguments (l_avt.components)
+				last_generated_expression := l_concat_function
+			end
+			if last_generated_expression.is_error then
+				report_compile_error (last_generated_expression.error_value)
 			end
 		ensure
 			attribute_value_template_not_void: last_generated_expression /= Void
@@ -2362,12 +2301,6 @@ feature {XM_XSLT_NODE_FACTORY} -- Status setting
 
 feature {NONE} -- Implementation
 
-	Fixed_component: INTEGER is 1
-	Left_double_curly_brace_component: INTEGER is 2
-	Right_double_curly_brace_component: INTEGER is 3
-	Avt_component: INTEGER is 4
-			-- Constants used by `generate_attribute_value_template'
-
 	local_default_collation_name: STRING
 			-- list of possible default collation names (optional)
 
@@ -2405,72 +2338,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			common_child_item_type_not_void: Result /= Void	
-		end
-
-	append_fixed_component (components: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; a_string_component: STRING) is
-			--	Append `a_string_component' onto `components'.
-		require
-			components_not_void: components /= Void
-			string_component_not_void: a_string_component /= Void
-		local
-			a_string_value: XM_XPATH_STRING_VALUE
-		do
-			create a_string_value.make (a_string_component)
-			if not components.extendible (1) then
-				components.resize (2 * components.count)
-			end
-			components.put_last (a_string_value)
-		ensure
-			one_more: components.count = old components.count + 1
-		end
-
-	append_parsed_expression (components: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; an_expression: XM_XPATH_EXPRESSION) is
-			-- Append `an_expression' onto `components'.
-		require
-			components_not_void: components /= Void
-			expression_not_void: an_expression /= Void
-		local
-			a_result_expression: XM_XPATH_EXPRESSION
-			an_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
-			a_first_item_expression: XM_XPATH_FIRST_ITEM_EXPRESSION
-			an_atomic_sequence_converter: XM_XPATH_ATOMIC_SEQUENCE_CONVERTER
-			a_string_join_function: XM_XPATH_STRING_JOIN
-			arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			a_blank: XM_XPATH_STRING_VALUE
-		do
-			if is_backwards_compatible_processing_enabled then
-				if is_sub_type (an_expression.item_type, type_factory.any_atomic_type) then
-					a_result_expression := an_expression
-				else
-					create an_atomizer.make (an_expression, configuration.are_all_nodes_untyped)
-					a_result_expression := an_atomizer
-				end
-				if a_result_expression.cardinality_allows_many then
-					create a_first_item_expression.make (a_result_expression)
-					a_result_expression := a_first_item_expression
-				end
-				if not is_sub_type (a_result_expression.item_type, type_factory.string_type) then
-					create an_atomic_sequence_converter.make (a_result_expression, type_factory.string_type)
-					a_result_expression := an_atomic_sequence_converter
-				end
-			else
-				create an_atomizer.make (an_expression, configuration.are_all_nodes_untyped)
-				create an_atomic_sequence_converter.make (an_atomizer, type_factory.string_type)
-				create a_string_join_function.make
-				create arguments.make (2)
-				arguments.set_equality_tester (expression_tester)
-				arguments.put (an_atomic_sequence_converter, 1)
-				create a_blank.make (" ")
-				arguments.put (a_blank, 2)
-				a_string_join_function.set_arguments (arguments)
-				a_result_expression := a_string_join_function
-			end
-			if not components.extendible (1) then
-				components.resize (2 * components.count)
-			end
-			components.put_last (a_result_expression)
-		ensure
-			at_least_one_more: components.count > old components.count
 		end
 
 	decimal_two: MA_DECIMAL is

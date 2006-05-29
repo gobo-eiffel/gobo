@@ -23,7 +23,7 @@ inherit
 		undefine
 			local_part
 		redefine
-			name_code, sequence_number, parent, line_number
+			name_code, sequence_number, parent, line_number, root
 		end
 	
 create
@@ -67,6 +67,13 @@ feature -- Access
 		do		
 			a_node := tree.retrieve_node (tree.attribute_parent (node_number))
 			if a_node.is_tiny_composite_node then Result := a_node.as_tiny_composite_node end
+		end
+
+	root: XM_XPATH_NODE is
+			-- The root node for `Current';
+			-- This is not necessarily a Document node.
+		do
+			Result := parent.root
 		end
 
 	string_value: STRING is

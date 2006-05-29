@@ -62,6 +62,11 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Access
+
+	tokenizer: XM_XPATH_TOKENIZER
+			-- Lexical scanner
+	
 feature -- Status report
 
 	first_parse_error: STRING is
@@ -129,6 +134,7 @@ feature -- Parsers
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies last_parsed_expression /= Void
 			static_context_not_void: environment /= Void
+			tokenizer_not_void: tokenizer /= Void									  
 		end
 
 feature -- Creation
@@ -2320,11 +2326,7 @@ feature {NONE} -- Implementation
 		ensure
 			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
 		end
-
 			
-	tokenizer: XM_XPATH_TOKENIZER
-			-- Lexical scanner
-	
 	environment: XM_XPATH_STATIC_CONTEXT
 			-- Current static context
 

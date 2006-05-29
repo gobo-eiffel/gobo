@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		require
 			range_variable_not_void: a_range_variable /= Void
 			sequence_not_void: a_sequence_expression /= Void
-			strictly_positive_line_number: a_line_number > 0
+			nearly_positive_line_number: a_line_number >= -1
 		do
 			range_variable := a_range_variable
 			sequence := a_sequence_expression
@@ -49,6 +49,6 @@ invariant
 	
 	range_variable_not_void: range_variable /= Void
 	sequence_not_void: sequence /= Void
-	strictly_positive_line_number: line_number > 0
+	nearly_positive_line_number: line_number >= -1
 
 end
