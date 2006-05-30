@@ -5,7 +5,7 @@ indexing
 		"Eiffel integer constants in hexadecimal format"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,7 +52,7 @@ feature -- Basic operations
 				-- TODO: deal with overflow and underflow.
 			if is_negative then
 				from i := 3 until i > nb loop
-					v := 10 * v
+					v := 16 * v
 					inspect literal.item (i)
 					when '0' then
 					when '1' then
@@ -90,7 +90,7 @@ feature -- Basic operations
 				end
 			else
 				from i := 3 until i > nb loop
-					v := 10 * v
+					v := 16 * v
 					inspect literal.item (i)
 					when '0' then
 					when '1' then
