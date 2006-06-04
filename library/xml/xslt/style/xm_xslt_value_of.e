@@ -28,58 +28,59 @@ feature -- Element change
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_name_code: INTEGER
-			an_expanded_name, a_select_attribute, a_disable_attribute, a_separator_attribute: STRING
-			an_error: XM_XPATH_ERROR_VALUE
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_name_code: INTEGER
+			l_expanded_name, l_select_attribute, l_disable_attribute, l_separator_attribute: STRING
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
+				l_cursor := attribute_collection.name_code_cursor
+				l_cursor.start
 			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				attribute_collection.number_of_attributes + 1 - l_cursor.index				
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Select_attribute) then
-					a_select_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_select_attribute)
-					STRING_.left_adjust (a_select_attribute)
-				elseif STRING_.same_string (an_expanded_name, Disable_output_escaping_attribute) then
-					a_disable_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_disable_attribute)
-					STRING_.right_adjust (a_disable_attribute)
-				elseif STRING_.same_string (an_expanded_name, Separator_attribute) then
-					a_separator_attribute := attribute_value_by_index (a_cursor.index)
+				l_name_code := l_cursor.item
+				l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
+				if STRING_.same_string (l_expanded_name, Select_attribute) then
+					l_select_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_select_attribute)
+					STRING_.left_adjust (l_select_attribute)
+				elseif STRING_.same_string (l_expanded_name, Disable_output_escaping_attribute) then
+					l_disable_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_disable_attribute)
+					STRING_.right_adjust (l_disable_attribute)
+				elseif STRING_.same_string (l_expanded_name, Separator_attribute) then
+					l_separator_attribute := attribute_value_by_index (l_cursor.index)
 				else
-					check_unknown_attribute (a_name_code)
+					check_unknown_attribute (l_name_code)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
-			if a_select_attribute /= Void then
-				generate_expression (a_select_attribute)
+			if l_select_attribute /= Void then
+				generate_expression (l_select_attribute)
 				select_expression := last_generated_expression
 				if select_expression.is_error then
 					report_compile_error (select_expression.error_value)
 				end
 			end
-			if a_disable_attribute /= Void then
-				if STRING_.same_string (a_disable_attribute, "no") then
+			if l_disable_attribute /= Void then
+				if STRING_.same_string (l_disable_attribute, "no") then
 					-- do nothing
-				elseif STRING_.same_string (a_disable_attribute, "yes") then
-					if STRING_.same_string (a_disable_attribute, "yes") then
-						report_compile_warning ("Disable Output Escaping is not supported by this implementation (ignored).%NUse character maps instead if you really need this feature.")
-					elseif not STRING_.same_string (a_disable_attribute, "no") then
-						create an_error.make_from_string ("disable-output-escaping attribute must be either 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
-						report_compile_error (an_error)
+				elseif STRING_.same_string (l_disable_attribute, "yes") then
+					if STRING_.same_string (l_disable_attribute, "yes") then
+						create l_error.make_from_string ("disable-output-escaping is not supported", Xpath_errors_uri, "XTRE1620", Dynamic_error)
+						report_compile_error (l_error)
+					elseif not STRING_.same_string (l_disable_attribute, "no") then
+						create l_error.make_from_string ("disable-output-escaping attribute must be either 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+						report_compile_error (l_error)
 					end
 				end
 			end
 
-			if a_separator_attribute /= Void then
-				generate_attribute_value_template (a_separator_attribute, static_context)
+			if l_separator_attribute /= Void then
+				generate_attribute_value_template (l_separator_attribute, static_context)
 				separator_expression := last_generated_expression
 				if separator_expression.is_error then
 					report_compile_error (separator_expression.error_value)

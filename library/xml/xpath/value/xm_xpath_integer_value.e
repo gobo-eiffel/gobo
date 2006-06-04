@@ -223,6 +223,8 @@ feature -- Conversion
 				Result := Current
 			elseif  a_required_type = type_factory.integer_type then
 				Result := Current
+			elseif  a_required_type = type_factory.numeric_type then
+				Result := Current
 			elseif  a_required_type = type_factory.double_type then
 				create {XM_XPATH_DOUBLE_VALUE} Result.make (as_double)
 			elseif  a_required_type = type_factory.float_type then

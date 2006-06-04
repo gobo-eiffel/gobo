@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		require
 			strictly_positive_operand: an_operand > 0
 			container_not_void: a_container /= Void and then a_container.count > 0
-			kind_in_range: Function_role <= a_kind and then a_kind <= Order_by_role
+			kind_in_range: Function_role <= a_kind and then a_kind <= Template_result_role
 			namespace_uri_not_void: a_namespace_uri /= Void
 			error_code_not_void: an_error_code /= Void
 		do
@@ -134,7 +134,7 @@ invariant
 
 	strictly_positive_operand: operand > 0
 	container_not_void: container /= Void and then container.count > 0
-	kind_in_range: Function_role <= kind and then kind <= Order_by_role
+	kind_in_range: Function_role <= kind and then kind <= Template_result_role
 	namespace_uri_not_void: namespace_uri /= Void
 	error_code_not_void: error_code /= Void
 

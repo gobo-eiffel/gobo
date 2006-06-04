@@ -193,7 +193,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_five))
 		end
 
-	expected_result_string_one: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><table><tr><th>Position</th><th>Country</th><th>City List</th><th>Population</th></tr><tr><td>1</td><td>Italia</td><td>Milano, Venezia</td><td/></tr><tr><td>2</td><td>France</td><td>Paris, Lyon</td><td/></tr><tr><td>3</td><td>Deutschland</td><td>M%%/252/nchen</td><td/></tr></table>"
+	expected_result_string_one: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><table><tr><th>Position</th><th>Country</th><th>City List</th><th>Population</th></tr><tr><td>1</td><td>Italia</td><td>Milano, Venezia</td><td>6</td></tr><tr><td>2</td><td>France</td><td>Paris, Lyon</td><td>9</td></tr><tr><td>3</td><td>Deutschland</td><td>M%%/252/nchen</td><td>4</td></tr></table>"
 
 	expected_result_string_two: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><chapter><section title=%"Introduction%"><para>XSLT is used to write stylesheets.</para><para>XQuery is used to query XML databases.</para></section><section title=%"What is a stylesheet?%"><para>A stylesheet is an XML document used to define a transformation.</para><para>Stylesheets may be written in XSLT.</para><para>XSLT 2.0 introduces new grouping constructs.</para></section></chapter>"
 

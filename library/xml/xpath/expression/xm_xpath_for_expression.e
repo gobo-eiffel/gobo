@@ -169,6 +169,7 @@ feature -- Evaluation
 		local
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_mapping_function: XM_XPATH_MAPPING_ACTION
+			a_node_mapping_function: XM_XPATH_NODE_MAPPING_ACTION
 		do
 			
 			-- First create an iteration of the base sequence.
@@ -185,8 +186,13 @@ feature -- Evaluation
 				--  expression, wrapped in a mapping action object that is responsible also for
 				--  setting the range variable at each step. TODO: mapping_action?
 
-				create a_mapping_function.make (a_context, slot_number, action)
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_base_iterator, a_mapping_function, Void)
+				if a_base_iterator.is_node_iterator and action.is_node_sequence then
+					create a_node_mapping_function.make (a_context, slot_number, action)
+					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (a_base_iterator.as_node_iterator, a_node_mapping_function, Void)
+				else
+					create a_mapping_function.make (a_context, slot_number, action)
+					create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_base_iterator, a_mapping_function, Void)
+				end
 			end
 		end
 

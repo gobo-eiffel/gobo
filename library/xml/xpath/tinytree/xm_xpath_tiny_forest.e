@@ -547,15 +547,13 @@ feature -- Element change
 		require
 			document_node_not_void: a_document_node /= Void
 		do
-			root_index := root_index + 1
 			document_list.force_last (a_document_node)
 			if number_of_nodes = 0 then
 				shared_serial_number_generator.generate_next_serial_number
 				document_number := shared_serial_number_generator.last_generated_serial_number
 			end
 			a_document_node.set_document_number (document_number) -- all documents in `Current' have the same document number
-			add_node (Document_node, 1, root_index, 0, -1)
-			root_indices.force (last_node_added, root_index)
+			add_node (Document_node, 1, root_index + 1, 0, -1)
 		end
 
 	add_node (a_new_node_type: INTEGER; a_depth_value: INTEGER; an_alpha_value: INTEGER;  a_beta_value: INTEGER; a_new_name_code: INTEGER) is
@@ -586,6 +584,10 @@ feature -- Element change
 			name_codes.put (a_new_name_code, number_of_nodes) 
 			set_next_sibling (-1, number_of_nodes) -- safety precaution
 			last_node_added := number_of_nodes
+			if a_depth_value = 1 then
+				root_index := root_index + 1
+				root_indices.force (last_node_added, root_index)
+			end
 		ensure
 			one_more_node: number_of_nodes = old number_of_nodes + 1 and last_node_added = number_of_nodes
 			correct_node_kinds: node_kinds.item (number_of_nodes) = a_new_node_type

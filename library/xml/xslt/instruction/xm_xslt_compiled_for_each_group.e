@@ -417,6 +417,7 @@ feature -- Evaluation
 				a_group_iterator.error_value.set_location (system_id, line_number)
 				an_evaluation_context.transformer.report_fatal_error (a_group_iterator.error_value)
 			else
+				-- TODO: node_iterator version of XM_XSLT_GROUP_ITERATOR needed
 				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_group_iterator, Current, a_new_context)
 			end
 		end

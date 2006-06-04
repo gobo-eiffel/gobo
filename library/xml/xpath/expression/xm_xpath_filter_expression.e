@@ -696,6 +696,9 @@ feature {NONE} -- Implementation
 
 	promote_sub_expressions  (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is				
 			-- This causes them to be evaluated once, outside the path  expression.
+		require
+			not_in_error: not is_error
+			not_replaced: not was_expression_replaced
 		local
 			an_offer: XM_XPATH_PROMOTION_OFFER
 			a_let_expression: XM_XPATH_LET_EXPRESSION
@@ -715,7 +718,7 @@ feature {NONE} -- Implementation
 					an_offer.set_containing_expression (a_let_expression.replacement_expression)
 				end
 			end
-			if not is_error and then an_offer.containing_expression /= Current then
+			if not is_error and then an_offer.containing_expression /= Current and then not was_expression_replaced then
 				set_replacement (an_offer.containing_expression)
 			end
 		end

@@ -141,19 +141,26 @@ feature {NONE} -- Implementation
 			second_string_not_void: s2 /= Void
 			collator_not_void: a_collator /= Void
 		local
-			an_index: INTEGER
-			a_substring: STRING
+			l_index, l_ct_1, l_ct_2: INTEGER
+			l_substring: STRING
 		do
-			from
-				an_index := 1
-			variant
-				s1.count - s2.count + 2 - an_index
-			until
-				Result or else an_index > s1.count - s2.count + 1
-			loop
-				a_substring := s1.substring (an_index, an_index + s2.count - 1)
-				Result := a_collator.three_way_comparison (a_substring, s2) = 0
-				an_index := an_index + 1
+			-- Implementation for Unicode code point collator only
+			l_ct_1 := s1.count
+			l_ct_2 := s2.count
+			if l_ct_1 = l_ct_2 then
+				Result := STRING_.same_string (s1, s2)
+			elseif l_ct_2 < l_ct_1 then
+				from
+					l_index := 1
+				variant
+					l_ct_1 - l_ct_2 + 2 - l_index
+				until
+					Result or else l_index > l_ct_1 - l_ct_2 + 1
+				loop
+					l_substring := s1.substring (l_index, l_index + l_ct_2 - 1)
+					Result := a_collator.three_way_comparison (l_substring, s2) = 0
+					l_index := l_index + 1
+				end
 			end
 		end
 	

@@ -163,6 +163,8 @@ feature -- Evaluation
 			an_iterator := base_expression.last_iterator
 			if an_iterator.is_error then
 				last_iterator := an_iterator
+			elseif an_iterator.is_node_iterator then
+				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, Current, Void)
 			else
 				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
 			end

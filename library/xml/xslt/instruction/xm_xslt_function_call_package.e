@@ -160,6 +160,7 @@ feature -- Evaluation
 				last_iterator := a_value.last_iterator
 			else
 				create a_flattener.make
+				-- TODO: need a node_iterator version
 				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_value.last_iterator, a_flattener, a_context)
 			end
 		ensure

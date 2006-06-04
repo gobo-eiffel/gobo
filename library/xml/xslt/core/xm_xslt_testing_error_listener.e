@@ -42,6 +42,11 @@ feature {NONE} -- Initialization
 			recovery_policy_set: recovery_policy = a_recovery_policy
 		end
 
+feature -- Access
+
+	reported_errors: DS_HASH_SET [STRING]
+			-- Error identifiers seen
+
 feature -- Status report
 
 	has (a_identifier: STRING): BOOLEAN is
@@ -88,11 +93,6 @@ feature -- Events
 		do
 			error (a_error)
 		end
-
-feature {NONE} -- Implementation
-
-	reported_errors: DS_HASH_SET [STRING]
-			-- Error identifiers seen
 
 invariant
 

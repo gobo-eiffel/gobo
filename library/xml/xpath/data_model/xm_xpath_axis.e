@@ -122,11 +122,13 @@ feature -- Access
 		do
 			if	an_axis = Attribute_axis then
 				Result := Attribute_node
+			elseif	an_axis = Namespace_axis then
+				Result := Namespace_node
 			else
 				Result := Element_node
 			end
 		ensure
-			axis_number_in_range: Result = Attribute_node or else Result = Element_node			
+			axis_number_in_range: Result = Attribute_node or else Result = Namespace_node or else Result = Element_node
 		end
 
 feature -- Status report

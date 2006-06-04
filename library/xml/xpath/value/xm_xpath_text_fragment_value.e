@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			system_id := a_system_id
 			shared_serial_number_generator.generate_next_serial_number
 			set_document_number (shared_serial_number_generator.last_generated_serial_number)
+			node_type := Document_node
 		ensure
 			text_set: text = a_value
 			system_id_set: system_id = a_system_id
@@ -248,6 +249,7 @@ feature {NONE} -- Implementation
 invariant
 
 	value_not_void: text /= Void
-	
+	document_node: node_type = Document_node
+
 end
 	

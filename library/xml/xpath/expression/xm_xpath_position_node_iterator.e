@@ -105,7 +105,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			create Result.make (base_iterator, minimum, maximum)
+			create Result.make (base_iterator.another, minimum, maximum)
 		end
 
 feature {NONE} -- Implementation

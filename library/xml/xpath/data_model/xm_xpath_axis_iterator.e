@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [G]
 		redefine
-			is_node_iterator, is_invulnerable,
+			is_node_iterator, is_invulnerable, as_node_iterator,
 			is_axis_iterator, as_axis_iterator
 		end
 
@@ -26,6 +26,14 @@ feature -- Access
 			-- Value or node at the current position
 		do
 			Result := current_item
+		end
+	
+feature -- Status report
+
+	is_invulnerable: BOOLEAN is
+			-- Is `Current' guarenteed free of implicit errors?
+		do
+			Result := True
 		end
 
 	is_node_iterator: BOOLEAN is
@@ -40,24 +48,24 @@ feature -- Access
 			Result := True
 		end
 
+	after: BOOLEAN is
+			-- Are there any more items in the sequence?
+		do
+			Result := not before and then current_item = Void
+		end
+
+feature -- Conversion
+
 	as_axis_iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as an axis iterator
 		do
 			Result ?= ANY_.to_any (Current)
 		end
-	
-feature -- Status report
 
-	is_invulnerable: BOOLEAN is
-			-- Is `Current' guarenteed free of implicit errors?
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as a node iterator
 		do
-			Result := True
-		end
-
-	after: BOOLEAN is
-			-- Are there any more items in the sequence?
-		do
-			Result := not before and then current_item = Void
+			Result ?= ANY_.to_any (Current)
 		end
 
 feature {NONE} -- Implementation

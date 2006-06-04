@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, create_iterator, compute_special_properties, is_repeated_sub_expression 
+			simplify, create_iterator, compute_special_properties, is_repeated_sub_expression,
+			sub_expressions
 		end
 
 create
@@ -109,6 +110,37 @@ feature -- Access
 			end
 		end
 
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
+			l_sort_key: XM_XSLT_SORT_KEY_DEFINITION 
+		do
+			create Result.make (7)
+			Result.set_equality_tester (expression_tester)
+			Result.force_last (select_expression)
+			from l_cursor := sort_key_list.new_cursor; l_cursor.start until l_cursor.after loop
+				l_sort_key := l_cursor.item
+				Result.force_last (l_sort_key.sort_key)
+				if l_sort_key.order_expression /= Void then
+					Result.force_last (l_sort_key.order_expression)
+				end
+				if l_sort_key.case_order_expression /= Void then
+					Result.force_last (l_sort_key.case_order_expression)
+				end
+				if l_sort_key.language_expression /= Void then
+					Result.force_last (l_sort_key.language_expression)
+				end
+				if l_sort_key.data_type_expression /= Void then
+					Result.force_last (l_sort_key.data_type_expression)
+				end
+				if l_sort_key.collation_name_expression /= Void then
+					Result.force_last (l_sort_key.collation_name_expression)
+				end
+				l_cursor.forth
+			end
+		end
+	
 feature -- Status report
 
 	display (a_level: INTEGER) is

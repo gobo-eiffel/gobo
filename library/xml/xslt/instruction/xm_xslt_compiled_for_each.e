@@ -298,7 +298,11 @@ feature -- Evaluation
 			a_new_context.set_current_template (Void)
 			a_new_context.set_current_iterator (last_iterator)
 			if not last_iterator.is_error then
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (last_iterator, Current, a_new_context)
+				if last_iterator.is_node_iterator then
+					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (last_iterator.as_node_iterator, Current, a_new_context)
+				else
+					create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (last_iterator, Current, a_new_context)
+				end
 			end
 		end
 	
@@ -323,8 +327,8 @@ feature -- Evaluation
 			end
 			a_new_context.set_current_template (Void)
 			a_new_context.set_current_iterator (last_iterator)
-			if not last_iterator.is_error then
-				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (last_node_iterator, Current, a_new_context)
+			if not last_node_iterator.is_error then
+				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (last_node_iterator, Current, a_new_context)
 			end
 		end
 	

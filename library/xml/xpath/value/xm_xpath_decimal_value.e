@@ -272,6 +272,8 @@ feature -- Conversion
 				end
 			elseif  a_required_type = type_factory.decimal_type then
 				Result := Current
+			elseif  a_required_type = type_factory.numeric_type then
+				Result := Current
 			elseif  a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 			end

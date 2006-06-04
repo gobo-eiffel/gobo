@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
-			select_expression_not_void: a_select_expression /= Void
 		local
 			a_string_value: XM_XPATH_STRING_VALUE
 			is_special: BOOLEAN
@@ -45,7 +44,8 @@ feature {NONE} -- Initialization
 		do
 			set_source_location (a_module_number, a_line_number)
 			executable := an_executable
-			select_expression := a_select_expression; adopt_child_expression (select_expression)
+			select_expression := a_select_expression
+			if select_expression /= Void then adopt_child_expression (select_expression) end
 			is_special := True
 			a_string_value ?= select_expression
 			if a_string_value /= Void then
@@ -110,6 +110,10 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), instruction_name)
 			std.error.put_string (a_string)
 			std.error.put_new_line
+			check
+				select_expression_not_void: select_expression /= Void
+				-- Compiling ensures this
+			end
 			select_expression.display (a_level + 1)
 		end
 

@@ -108,7 +108,6 @@ feature -- Element change
 		local
 			l_string_value: XM_XPATH_STRING_VALUE
 			l_pi: XM_XSLT_COMPILED_PROCESSING_INSTRUCTION
-			l_separator: STRING
 		do
 			create l_pi.make (an_executable, name)
 			create l_string_value.make (" ")

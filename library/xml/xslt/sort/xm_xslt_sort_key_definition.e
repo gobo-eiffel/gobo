@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 	
 invariant
 
-	sort_key_not_void: sort_key /= Void -- for now - this will have to change to support a sequence constructor
+	sort_key_not_void: sort_key /= Void
 
 end
 

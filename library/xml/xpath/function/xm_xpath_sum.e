@@ -116,7 +116,7 @@ feature -- Evaluation
 					elseif a_sum.is_duration_value then
 						a_duration_value := a_sum.as_duration_value
 						if not a_duration_value.is_months_duration and then not a_duration_value.is_seconds_duration then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a duration value that is neither xdt:yearMonthDuration nor xdt:dayTimeDuration",
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a duration value that is neither xs:yearMonthDuration nor xs:dayTimeDuration",
 																														Xpath_errors_uri, "FORG0006", Dynamic_error)
 						end
 					end
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 					else
 						a_duration_value := an_item.as_atomic_value.as_duration_value
 						if a_duration_value.is_months_duration /= is_year_month then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains mixed xdt:yearMonthDuration and xdt:dayTimeDuration values",
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains mixed xs:yearMonthDuration and xs:dayTimeDuration values",
 																														Xpath_errors_uri, "FORG0006", Dynamic_error)
 						end
 					end

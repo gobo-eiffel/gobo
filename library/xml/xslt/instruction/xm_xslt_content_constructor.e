@@ -89,8 +89,10 @@ feature -- Optimization
 	simplify is
 			-- Preform context-independent static optimizations
 		do
-			select_expression.simplify
-			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+			if not select_expression.is_error then
+				select_expression.simplify
+				if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+			end
 			separator_expression.simplify
 			if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end
 		end
@@ -98,8 +100,10 @@ feature -- Optimization
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			select_expression.check_static_type (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+			if not select_expression.is_error then
+				select_expression.check_static_type (a_context, a_context_item_type)
+				if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+			end
 			separator_expression.check_static_type (a_context, a_context_item_type)
 			if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end
 			if not select_expression.cardinality_allows_many then is_singleton := True	end
@@ -108,8 +112,10 @@ feature -- Optimization
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			select_expression.optimize (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+			if not select_expression.is_error then
+				select_expression.optimize (a_context, a_context_item_type)
+				if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+			end
 			separator_expression.optimize (a_context, a_context_item_type)
 			if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end
 		end	
@@ -136,7 +142,9 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			last_evaluated_item := Void
-			if is_singleton then
+			if select_expression.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (select_expression.error_value)
+			elseif is_singleton then
 
 				-- common case, so optimize
 	

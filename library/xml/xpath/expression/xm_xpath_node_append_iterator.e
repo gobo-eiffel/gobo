@@ -15,6 +15,9 @@ class XM_XPATH_NODE_APPEND_ITERATOR
 inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+		redefine
+			is_node_iterator, as_node_iterator
+		end
 
 create
 
@@ -68,6 +71,12 @@ feature -- Status report
 			end
 		end
 
+	is_node_iterator: BOOLEAN is
+			-- Does `Current' yield a node sequence?
+		do
+			Result := True
+		end
+
 feature -- Cursor movement
 
 	forth is
@@ -87,6 +96,14 @@ feature -- Cursor movement
 					set_last_error (current_iterator.error_value)
 				end
 			end
+		end
+
+feature -- Conversion
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as a node iterator
+		do
+			Result ?= ANY_.to_any (Current)
 		end
 
 feature -- Duplication

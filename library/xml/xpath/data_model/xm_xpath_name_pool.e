@@ -369,7 +369,9 @@ feature -- Access
 				std.error.put_string (", result is ")
 				std.error.put_string (result.out)
 				std.error.put_new_line
-			end	
+			end
+		ensure
+			valid_name_code: is_valid_name_code (Result)
 		end
 	
 	fingerprint (a_uri: STRING; a_local_name: STRING): INTEGER is
@@ -647,27 +649,27 @@ feature -- Status report
 			Result := is_code_for_prefix_allocated (a_prefix)
 		end
 		
-	is_name_code_allocated (an_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING): BOOLEAN is
+	is_name_code_allocated (a_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING): BOOLEAN is
 			-- Has a name code been allocated for `an_xml_prefix' with `a_uri' and `a_local_name'?
 		require
-			prefix_not_void: an_xml_prefix /= Void
+			prefix_not_void: a_xml_prefix /= Void
 			uri_not_void: a_uri /= Void
 			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 		local
-			a_uri_code: INTEGER -- should be INTEGER_16
-			a_fingerprint: INTEGER
+			l_uri_code: INTEGER -- should be INTEGER_16
+			l_fingerprint: INTEGER
 		do
 			if is_code_for_uri_allocated (a_uri) = False then Result := False
 			else
-				a_uri_code := code_for_uri (a_uri)
-				if is_standard_uri_code (a_uri_code) then
-					a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
-					if type_factory.is_built_in_fingerprint (a_fingerprint) then
-						Result := True
+				l_uri_code := code_for_uri (a_uri)
+				if is_standard_uri_code (l_uri_code) then
+					l_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
+					if type_factory.is_built_in_fingerprint (l_fingerprint) then
+						Result := prefix_index (l_uri_code, a_xml_prefix) /= -1
 					end
 				end
 				if not Result then
-					Result := is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
+					Result := is_name_code_allocated_using_uri_code (a_xml_prefix, l_uri_code, a_local_name)
 				end
 			end
 		end
@@ -1129,6 +1131,7 @@ feature -- Element change
 			end
 		ensure
 			name_allocated: is_name_code_allocated (an_xml_prefix, a_uri, a_local_name)
+			valid_name_code: is_valid_name_code (last_name_code)
 		end
 
 	allocate_name_using_uri_code (an_xml_prefix: STRING; a_uri_code: INTEGER; a_local_name: STRING) is
@@ -1191,6 +1194,7 @@ feature -- Element change
 			last_name_code := (a_prefix_index * bits_20) + (a_depth * bits_11) + a_hash_code
 		ensure
 			name_allocated: is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
+			valid_name_code: is_valid_name_code (last_name_code)
 		end
 
 	allocate_expanded_name (an_expanded_name: STRING) is

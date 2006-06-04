@@ -66,7 +66,7 @@ feature -- Optimization
 	simplify is
 			-- Preform context-independent static optimizations
 		do
-			if select_expression /= Void then
+			if select_expression /= Void and then not select_expression.is_error then
 				select_expression.simplify
 				if select_expression.was_expression_replaced then
 					set_select_expression (select_expression.replacement_expression)
@@ -82,7 +82,7 @@ feature -- Optimization
 		do
 			mark_unreplaced
 			type_check (a_context, a_context_item_type)
-			if select_expression /= Void then
+			if select_expression /= Void and then not select_expression.is_error then
 				select_expression.check_static_type (a_context, a_context_item_type)
 				if select_expression.was_expression_replaced then
 					set_select_expression (select_expression.replacement_expression)
@@ -102,7 +102,7 @@ feature -- Optimization
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			if select_expression /= Void then
+			if select_expression /= Void and then not select_expression.is_error then
 				select_expression.optimize (a_context, a_context_item_type)
 				if select_expression.was_expression_replaced then
 					set_select_expression (select_expression.replacement_expression)
@@ -113,7 +113,7 @@ feature -- Optimization
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		do
-			if select_expression /= Void then
+			if select_expression /= Void and then not select_expression.is_error then
 				select_expression.promote (an_offer)
 				if select_expression.was_expression_replaced then
 					set_select_expression (select_expression.replacement_expression)

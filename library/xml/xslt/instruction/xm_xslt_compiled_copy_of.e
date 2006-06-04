@@ -248,6 +248,8 @@ feature {NONE} -- Implementation
 				if not a_validator.is_document_started then a_validator.start_document end
 				a_node.copy_node (a_validator, which_namespaces, True)
 				a_validator.end_document
+			when Namespace_node then
+				a_node.copy_node (a_receiver, No_namespaces, False)
 			end
 		end
 

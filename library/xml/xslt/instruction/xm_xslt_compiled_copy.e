@@ -128,6 +128,8 @@ feature -- Evaluation
 				when Document_node then
 					a_document ?= a_node
 					copy_document (a_document, a_new_context, a_transformer, a_receiver)
+				when Namespace_node then
+					a_node.copy_node (a_receiver, No_namespaces, False)
 				end
 			end
 		end
@@ -171,7 +173,9 @@ feature {NONE} -- Implementation
 			if a_validator /= a_receiver then
 				todo ("copy_document (validation)", True)
 			end
-			a_receiver.start_document
+			if not a_receiver.is_document_started then
+				a_receiver.start_document
+			end
 			content.process (a_context)
 			a_receiver.end_document
 		end

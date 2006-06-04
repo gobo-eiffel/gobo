@@ -70,6 +70,8 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			l_name: STRING
 		do
 			arguments.item (1).evaluate_item (a_context)
 			if arguments.item (1).last_evaluated_item = Void then
@@ -78,7 +80,9 @@ feature -- Evaluation
 				if not arguments.item (1).last_evaluated_item.is_node then
 					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 				else
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (arguments.item (1).last_evaluated_item.as_node.node_name)
+					l_name := arguments.item (1).last_evaluated_item.as_node.node_name
+					if l_name = Void then l_name := "" end
+					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (l_name)
 				end
 			end
 		end

@@ -216,6 +216,8 @@ feature -- Conversion
 				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value))
 			elseif  a_required_type = type_factory.float_type then
 				Result := Current
+			elseif  a_required_type = type_factory.numeric_type then
+				Result := Current
 			elseif  a_required_type = type_factory.double_type then
 				create {XM_XPATH_DOUBLE_VALUE} Result.make (value)
 			elseif  a_required_type = type_factory.decimal_type then

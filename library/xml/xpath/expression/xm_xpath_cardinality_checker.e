@@ -145,6 +145,7 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_stopper: XM_XPATH_OBJECT_VALUE
 			a_cardinality_checking_function: XM_XPATH_CARDINALITY_CHECKING_FUNCTION
+			a_cardinality_node_checking_function: XM_XPATH_NODE_CARDINALITY_CHECKING_FUNCTION
 		do
 			base_expression.create_iterator (a_context)
 			an_iterator := base_expression.last_iterator
@@ -157,11 +158,21 @@ feature -- Evaluation
 					-- and will be ignored otherwise.
 			
 					create a_stopper.make (Current)
-					a_stopper.create_iterator (a_context)
-					create {XM_XPATH_APPEND_ITERATOR} an_iterator.make (an_iterator, a_stopper.last_iterator, a_context)
+					if an_iterator.is_node_iterator then
+						a_stopper.create_node_iterator (a_context)
+						create {XM_XPATH_NODE_APPEND_ITERATOR} an_iterator.make (an_iterator.as_node_iterator, a_stopper.last_node_iterator, a_context)
+					else
+						a_stopper.create_iterator (a_context)
+						create {XM_XPATH_APPEND_ITERATOR} an_iterator.make (an_iterator, a_stopper.last_iterator, a_context)
+					end
 				end
-				create a_cardinality_checking_function.make (an_iterator, role_locator, required_cardinality)
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, a_cardinality_checking_function, Void)
+				if an_iterator.is_node_iterator then
+					create a_cardinality_node_checking_function.make (an_iterator.as_node_iterator, role_locator, required_cardinality)
+					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (an_iterator, a_cardinality_node_checking_function, Void)
+				else
+					create a_cardinality_checking_function.make (an_iterator, role_locator, required_cardinality)
+					create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, a_cardinality_checking_function, Void)
+				end
 			else
 				last_iterator := an_iterator 
 			end

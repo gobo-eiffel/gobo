@@ -286,8 +286,8 @@ feature -- Access
 					if a_style_element /= Void then
 						if a_style_element.is_template then
 							Result := a_style_element.as_template
-						elseif a_style_element.is_xslt_variable then
-							Result := a_style_element.as_xslt_variable
+						elseif a_style_element.is_xslt_variable_declaration then
+							Result := a_style_element.as_xslt_variable_declaration
 						elseif a_style_element.is_attribute_set then
 							Result := a_style_element.as_attribute_set
 						elseif a_style_element.is_xslt_function then
@@ -863,13 +863,13 @@ feature -- Status setting
 			report_compile_error (an_error)
 		end
 
-	report_compile_error (an_error: XM_XPATH_ERROR_VALUE) is
+	report_compile_error (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Report a compile error.
 		require
-			validation_message_not_void: an_error /= Void
+			validation_message_not_void: a_error /= Void
 		do
-			if not system_id.is_empty and then not an_error.is_location_known then an_error.set_location (system_id, line_number) end
-			error_listener.fatal_error (an_error)
+			if not system_id.is_empty and then not a_error.is_location_known then a_error.set_location (system_id, line_number) end
+			error_listener.fatal_error (a_error)
 			principal_stylesheet.set_compile_errors
 		ensure
 			compile_errors: any_compile_errors

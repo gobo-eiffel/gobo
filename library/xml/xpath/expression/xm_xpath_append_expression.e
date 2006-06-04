@@ -152,7 +152,11 @@ feature -- Evaluation
 				if second_operand.last_iterator.is_error then
 					last_iterator := second_operand.last_iterator
 				else
-					create {XM_XPATH_APPEND_ITERATOR} last_iterator.make (first_operand.last_iterator, second_operand.last_iterator, a_context)
+					if first_operand.last_iterator.is_node_iterator and second_operand.last_iterator.is_node_iterator then
+						create {XM_XPATH_NODE_APPEND_ITERATOR} last_iterator.make (first_operand.last_iterator.as_node_iterator, second_operand.last_iterator.as_node_iterator, a_context)
+					else
+						create {XM_XPATH_APPEND_ITERATOR} last_iterator.make (first_operand.last_iterator, second_operand.last_iterator, a_context)
+					end
 				end
 			end
 		end

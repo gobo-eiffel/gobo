@@ -209,7 +209,7 @@ feature -- Conversion
 	is_param: BOOLEAN is
 			-- Is `Current' an xsl:param?
 		do
-			Result := False
+			Result := True
 		end
 
 end

@@ -73,8 +73,9 @@ feature -- Events
 			-- New document
 		do
 			is_document_started := True
-		ensure then
-			not_yet_committed: not committed
+			if committed then
+				base_receiver.start_document
+			end
 		end
 
 	end_document is
@@ -82,7 +83,7 @@ feature -- Events
 		do
 			if not committed then
 
-				-- empty output: must send a beginDocument()/endDocument() pair to the content handler
+				-- empty output: must send a begin_document/end_document pair to the content handler
 
 				switch_to_xml
 			end
@@ -90,6 +91,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.end_document
+			is_document_started := False
 		ensure then
 			committed: committed
 		end
@@ -244,7 +246,7 @@ feature {NONE} -- Implementation
 			an_xml_indenter: XM_XSLT_XML_INDENTER
 			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
-			output_properties.set_xml_defaults (0)
+			output_properties.set_xml_defaults (1000000)
 			create an_xml_emitter.make (transformer, outputter, output_properties, character_map_expander)
 			base_receiver := an_xml_emitter
 			if output_properties.indent then
@@ -268,7 +270,7 @@ feature {NONE} -- Implementation
 			an_html_emitter: XM_XSLT_HTML_EMITTER
 			an_html_indenter: XM_XSLT_HTML_INDENTER
 		do
-			output_properties.set_html_defaults (0)
+			output_properties.set_html_defaults (1000000)
 			create an_html_emitter.make (transformer, outputter, output_properties, character_map_expander)
 			base_receiver := an_html_emitter
 			if output_properties.indent then
@@ -289,7 +291,7 @@ feature {NONE} -- Implementation
 			an_html_indenter: XM_XSLT_XHTML_INDENTER
 			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
-			output_properties.set_xhtml_defaults (0)
+			output_properties.set_xhtml_defaults (1000000)
 			create an_xhtml_emitter.make (transformer, outputter, output_properties, character_map_expander)
 			base_receiver := an_xhtml_emitter
 			if output_properties.indent then

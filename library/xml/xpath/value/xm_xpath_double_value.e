@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			make_atomic_value
 			value := a_value
 		ensure
-			value_set: value = a_value
+			-- value_set: is_nan or else value = a_value
 		end
 
 	make_from_string (a_value: STRING) is
@@ -213,6 +213,8 @@ feature -- Conversion
 			elseif  a_required_type = type_factory.integer_type then
 				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value))
 			elseif  a_required_type = type_factory.double_type then
+				Result := Current
+			elseif  a_required_type = type_factory.numeric_type then
 				Result := Current
 			elseif  a_required_type = type_factory.decimal_type then
 				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_string (value.out)
