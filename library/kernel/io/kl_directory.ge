@@ -38,7 +38,8 @@ inherit
 			exists as old_exists,
 			close as old_close,
 			delete as old_delete,
-			recursive_delete as old_recursive_delete
+			recursive_delete as old_recursive_delete,
+			is_empty as old_is_empty
 		export
 			{NONE} all
 		end
@@ -231,6 +232,40 @@ feature -- Status report
 					end
 				end
 #endif
+			end
+		end
+
+	is_empty: BOOLEAN is
+			-- Does current directory contain no entry apart from
+			-- the parent and current directory entries?
+			-- Return False if not able to open current directory.
+		local
+			a_name: STRING
+		do
+			if is_closed then
+				open_read
+				if is_open_read then
+					from
+						Result := True
+						read_entry
+					until
+						not Result or end_of_input
+					loop
+						a_name := last_entry
+						if
+							not STRING_.same_string (a_name, file_system.relative_current_directory) and then
+							not STRING_.same_string (a_name, file_system.relative_parent_directory)
+						then
+							Result := False
+						else
+							read_entry
+						end
+					end
+					close
+				end
+			else
+				tmp_directory.reset (string_name)
+				Result := tmp_directory.is_empty
 			end
 		end
 

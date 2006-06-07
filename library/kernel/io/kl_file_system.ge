@@ -345,6 +345,18 @@ feature -- Directory handling
 			Result := tmp_directory.exists
 		end
 
+	is_directory_empty (a_dirname: STRING): BOOLEAN is
+			-- Does directory named `a_dirname' contain no entry apart
+			-- from the parent and current directory entries?
+			-- Return False if not able to open current directory.
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		do
+			tmp_directory.reset (a_dirname)
+			Result := tmp_directory.is_empty
+		end
+
 	create_directory (a_dirname: STRING) is
 			-- Create a new directory named `a_dirname'.
 			-- Do nothing if the directory could not

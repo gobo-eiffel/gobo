@@ -66,6 +66,13 @@ feature -- Access
 
 feature -- Status report
 
+	is_empty: BOOLEAN is
+			-- Does current directory contain no entry apart from
+			-- the parent and current directory entries?
+			-- Return False if not able to open current directory.
+		deferred
+		end
+
 	valid_unread_entry (an_entry: STRING): BOOLEAN is
 			-- Can `an_entry' be put back in input stream?
 		do
