@@ -3841,14 +3841,20 @@ feature {NONE} -- Expression validity
 								-- It is OK to compare integer values of various sizes.
 							report_equality_expression (an_expression)
 						else
-							set_fatal_error
-							left_named_type := left_context.named_type (universe)
-							right_named_type := right_context.named_type (universe)
 							l_class_impl := feature_impl.implementation_class
-							if l_class_impl = current_class then
-								error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
+							if l_class_impl /= current_class then
+									-- We consider that VWEQ is not taken into
+									-- account in flat Degree 3 mode.
+								report_equality_expression (an_expression)
 							else
-								error_handler.report_vweq0b_error (current_class, l_class_impl, an_expression, left_named_type, right_named_type)
+								set_fatal_error
+								left_named_type := left_context.named_type (universe)
+								right_named_type := right_context.named_type (universe)
+--								if l_class_impl = current_class then
+									error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
+--								else
+--									error_handler.report_vweq0b_error (current_class, l_class_impl, an_expression, left_named_type, right_named_type)
+--								end
 							end
 						end
 					end
