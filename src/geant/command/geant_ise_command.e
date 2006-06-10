@@ -144,7 +144,7 @@ feature -- Execution
 		local
 			cmd: STRING
 			old_cwd: STRING
-			eifgen, project_dir: STRING
+			eifgen, old_eifgen, project_dir: STRING
 			a_filename: STRING
 		do
 			create cmd.make (128)
@@ -158,8 +158,13 @@ feature -- Execution
 				cmd.append_string (" -finalize")
 			end
 			a_filename := system_name + ".epr"
-			eifgen := "EIFGEN"
-			if file_system.file_exists (a_filename) and file_system.directory_exists (eifgen) then
+			eifgen := file_system.pathname ("EIFGENs", system_name)
+			old_eifgen := "EIFGEN"
+			if
+				file_system.file_exists (a_filename) and
+				(file_system.directory_exists (eifgen) or
+				file_system.directory_exists (old_eifgen))
+			then
 				cmd.append_string (" -project ")
 				cmd := STRING_.appended_string (cmd, a_filename)
 			end
@@ -172,8 +177,14 @@ feature -- Execution
 			if exit_code = 0 and then finish_freezing then
 				if finalize_mode then
 					project_dir := file_system.pathname (eifgen, "F_code")
+					if not file_system.directory_exists (project_dir) then
+						project_dir := file_system.pathname (old_eifgen, "F_code")
+					end
 				else
 					project_dir := file_system.pathname (eifgen, "W_code")
+					if not file_system.directory_exists (project_dir) then
+						project_dir := file_system.pathname (old_eifgen, "W_code")
+					end
 				end
 				project.trace (<<"  [ise] cd ", project_dir>>)
 				old_cwd := file_system.cwd
@@ -254,6 +265,16 @@ feature -- Execution
 				project.trace (<<"  [ise] delete ", a_name>>)
 				if not project.options.no_exec then
 					file_system.delete_file (a_name)
+				end
+			end
+			a_name := file_system.pathname ("EIFGENs", clean)
+			if file_system.directory_exists (a_name) then
+				project.trace (<<"  [ise] delete ", a_name>>)
+				if not project.options.no_exec then
+					file_system.recursive_delete_directory (a_name)
+					if file_system.is_directory_empty ("EIFGENs") then
+						file_system.delete_directory ("EIFGENs")
+					end
 				end
 			end
 			if file_system.directory_exists ("EIFGEN") then

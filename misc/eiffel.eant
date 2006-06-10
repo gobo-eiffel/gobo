@@ -108,7 +108,26 @@
 		<ise ace="compile_ise.ace" system="${system}" finalize="${finalize}" finish_freezing="true"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
-		<move file="EIFGEN/${codedir}/${system}${exe}" to_directory="."/>
+			<!-- ISE 5.7 -->
+		<available resource="EIFGENs/${system}/${codedir}/${system}${exe}" variable="file_available"/>
+		<move file="EIFGENs/${system}/${codedir}/${system}${exe}" to_directory="." if="${file_available}=true"/>
+		<available resource="EIFGENs/${system}/${codedir}/lib${system}.dll" variable="file_available"/>
+		<copy file="EIFGENs/${system}/${codedir}/lib${system}.dll" to_directory="." if="${file_available}=true"/>
+		<available resource="EIFGENs/${system}/${codedir}/${system}.melted" variable="file_available"/>
+		<copy file="EIFGENs/${system}/${codedir}/${system}.melted" to_directory="." if="${file_available}=true"/>
+		<copy to_directory=".">
+			<fileset include="EIFGENs/${system}/${codedir}/?(${system}_)module_*.dll">
+				<map type="flat"/>
+			</fileset>
+		</copy>
+		<copy to_directory=".">
+			<fileset include="EIFGENs/${system}/${codedir}/Assemblies/*.@(dll|exe)">
+				<map type="flat"/>
+			</fileset>
+		</copy>
+			<!-- ISE 5.6 -->
+		<available resource="EIFGEN/${codedir}/${system}${exe}" variable="file_available"/>
+		<move file="EIFGEN/${codedir}/${system}${exe}" to_directory="." if="${file_available}=true"/>
 		<available resource="EIFGEN/${codedir}/lib${system}.dll" variable="file_available"/>
 		<copy file="EIFGEN/${codedir}/lib${system}.dll" to_directory="." if="${file_available}=true"/>
 		<available resource="EIFGEN/${codedir}/${system}.melted" variable="file_available"/>
@@ -232,6 +251,7 @@
 		<ve clean="${system}" recursive="true"/>
 		<delete file="compile_ge.ace"/>
 		<delete file="compile_ise.ace"/>
+		<delete file="compile_ise.ecf"/>
 		<delete file="compile_se.ace"/>
 		<delete file="compile_ve.esd"/>
 		<delete file="compile_ve.xace"/>
