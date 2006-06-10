@@ -44,7 +44,7 @@ feature -- Status report
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	root_node: XM_DOCUMENT is
 			-- Root node of current node
 		do
@@ -76,7 +76,7 @@ feature -- Status report
 		ensure
 			definition: Result = (parent = Void)
 		end
-	
+
 	is_first: BOOLEAN is
 			-- Is this node the first in its parent's child list,
 			-- or the root node?
@@ -85,7 +85,7 @@ feature -- Status report
 		ensure
 			definition: Result = (is_root_node or else (parent.first = Current))
 		end
-		
+
 	is_last: BOOLEAN is
 			-- Is this node the last in its parent's child list,
 			-- or the root node?
@@ -123,11 +123,11 @@ feature {NONE} -- Implementation
 	Default_ns: XM_NAMESPACE is
 			-- Shared default namespace constant object.
 		once
-			!! Result.make_default
+			create Result.make_default
 		ensure
 			definition: Result.uri.count = 0
 		end
-		
+
 feature -- Processing
 
 	process (a_processor: XM_NODE_PROCESSOR) is
