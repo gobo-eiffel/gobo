@@ -14,6 +14,8 @@ class XM_XSLT_AVT_PARSER
 
 inherit
 
+	ANY
+
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 		export {NONE} all end
 
