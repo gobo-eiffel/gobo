@@ -16,8 +16,6 @@ inherit
 
 	TS_TEST_CASE
 
-	KL_IMPORTED_STRING_ROUTINES
-
 	XM_XPATH_SHARED_CONFORMANCE
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
@@ -25,7 +23,7 @@ inherit
 	XM_XPATH_SHARED_NAME_POOL
 
 	XM_RESOLVER_FACTORY
-	
+
 feature -- Test
 
 	test_grouping_nodes_based_on_common_values is
@@ -58,7 +56,7 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_one))
+			assert_strings_equal ("Correct result", expected_result_string_one, l_output.last_output.out)
 		end
 
 	test_grouping_starting_with is
@@ -91,9 +89,9 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_two))
+			assert_strings_equal ("Correct result", expected_result_string_two, l_output.last_output.out)
 		end
-	
+
 	test_current_grouping_key is
 			-- Test fn:current-grouping-key() and fn:current-group().
 		local
@@ -124,9 +122,9 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_three))
+			assert_strings_equal ("Correct result", expected_result_string_three, l_output.last_output.out)
 		end
-	
+
 	test_group_adjacent is
 			-- Test group-adjacent, fn:current-grouping-key() and fn:current-group().
 		local
@@ -157,7 +155,7 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_four))
+			assert_strings_equal ("Correct result", expected_result_string_four, l_output.last_output.out)
 		end
 
 	test_group_ending_with is
@@ -190,7 +188,7 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_five))
+			assert_strings_equal ("Correct result", expected_result_string_five, l_output.last_output.out)
 		end
 
 	expected_result_string_one: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><table><tr><th>Position</th><th>Country</th><th>City List</th><th>Population</th></tr><tr><td>1</td><td>Italia</td><td>Milano, Venezia</td><td>6</td></tr><tr><td>2</td><td>France</td><td>Paris, Lyon</td><td>9</td></tr><tr><td>3</td><td>Deutschland</td><td>M%%/252/nchen</td><td>4</td></tr></table>"
@@ -209,7 +207,7 @@ feature -- Test
 
     expected_result_string_five: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><doc><pageset><page>Some text</page><page>More text</page><page>Yet more text</page></pageset><pageset><page>Some words</page><page>More words</page><page>Yet more words</page></pageset></doc>"
 
-	
+
 feature {NONE} -- Implementation
 
 	data_dirname: STRING is
@@ -222,7 +220,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
+
 	group_by_one_xsl_uri: UT_URI is
 			-- URI of file 'group_by_one.xsl'
 		local
@@ -266,7 +264,7 @@ feature {NONE} -- Implementation
 		ensure
 			xslt_intro_xml_uri_not_void: Result /= Void
 		end
-	
+
 	current_group_xsl_uri: UT_URI is
 			-- URI of file 'current_group.xsl'
 		local
