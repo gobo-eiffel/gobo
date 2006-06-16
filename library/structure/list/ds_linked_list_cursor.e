@@ -122,7 +122,7 @@ feature {DS_LINKED_LIST} -- Implementation
 	set (a_cell: like current_cell; b, a: BOOLEAN) is
 			-- Set cursor.
 		require
-			consistent: (a_cell = Void) implies (a or b)
+			consistent: (a_cell /= Void) xor (a or b)
 			not_both: not (a and b)
 		do
 			current_cell := a_cell
