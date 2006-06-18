@@ -56,10 +56,10 @@ feature {NONE} -- Initialization
 			error_listener_not_void: an_error_listener /= Void
 			encoder_factory_not_void: 	an_encoder_factory /= Void
 		do
+			create message_emitter_factory
 			make_configuration
 			encoder_factory := an_encoder_factory
 			set_string_mode_mixed
-			recovery_policy := Recover_with_warnings
 			entity_resolver := an_entity_resolver
 			uri_resolver := a_uri_resolver
 			output_resolver := an_output_resolver
@@ -92,7 +92,6 @@ feature {NONE} -- Initialization
 			create an_error_listener.make (Recover_with_warnings, error_reporter)
 			create a_security_manager.make
 			create an_output_resolver.make (a_security_manager)
-			create message_emitter_factory
 			make (a_catalog_resolver, a_catalog_resolver, an_output_resolver, an_error_listener, an_encoder_factory)
 		end
 
@@ -125,9 +124,14 @@ feature -- Access
 	is_reporting_tiny_tree_statistics: BOOLEAN
 			-- Do we report statistics on tiny-tree source documents?
 
-	recovery_policy: INTEGER
+	recovery_policy: INTEGER is
 			-- Recovery policy when warnings or errors are encountered
-
+		do
+			Result := error_listener.recovery_policy
+		ensure
+			recovery_policy_in_range: Result >= Recover_silently and Result <= Do_not_recover
+		end
+		
 	extension_functions: DS_ARRAYED_LIST [XM_XPATH_FUNCTION_LIBRARY]
 			-- Libraries of extension functions
 	
@@ -305,8 +309,7 @@ feature -- Element change
 		require
 			valid_recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
 		do
-			recovery_policy := a_recovery_policy
-			error_listener.set_recovery_policy (recovery_policy)
+			error_listener.set_recovery_policy (a_recovery_policy)
 		ensure
 			recovery_policy_set: recovery_policy = a_recovery_policy
 		end
@@ -317,7 +320,6 @@ feature -- Element change
 			error_listener_not_void: an_error_listener /= Void
 		do
 			error_listener := an_error_listener
-			error_listener.set_recovery_policy (recovery_policy)
 		end
 
 	use_tiny_tree_model (true_or_false: BOOLEAN) is
@@ -429,7 +431,6 @@ invariant
 	error_listener_not_void: error_listener /= Void
 	error_reporter_not_void: error_reporter /= Void
 	encoder_factory_not_void: encoder_factory /= Void
-	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
 	extension_functions_not_void: extension_functions /= Void
 	final_execution_phase_in_range: final_execution_phase <= Run_to_completion and then final_execution_phase >= Stop_after_principal_source
 	media_type_map_not_void: media_type_map /= Void

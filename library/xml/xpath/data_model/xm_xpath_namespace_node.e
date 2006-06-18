@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE
 		redefine
-			base_uri, uri, is_namespace, as_namespace
+			base_uri, uri, is_namespace, as_namespace, three_way_comparison
 		end
 
 		-- Note: Namespace axis is only supported in XPath 1.0 compatibility mode.
@@ -237,8 +237,28 @@ feature -- Comparison
 	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
 			-- Does `Current' represent the same node in the tree as `other'?
 		do
-			Result := node_type = Namespace_node and then
-			namespace_code = other.as_namespace.namespace_code
+			Result := other.is_namespace
+				and then element.is_same_node (other.as_namespace.element)
+				and then namespace_code = other.as_namespace.namespace_code
+		end
+
+	three_way_comparison (other: XM_XPATH_NODE): INTEGER is
+			-- If current object equal to other, 0;
+			-- if smaller, -1; if greater, 1
+		do
+			if other.is_namespace and then element.is_same_node (other.as_namespace.element) then
+				if position < other.as_namespace.position then
+					Result := -1
+				elseif position > other.as_namespace.position then
+					Result := 1
+				else
+					Result := 0
+				end
+			elseif element.is_same_node (other) then
+				Result := 1
+			else
+				Result := element.three_way_comparison (other)
+			end
 		end
 
 feature -- Duplication

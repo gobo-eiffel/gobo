@@ -123,87 +123,91 @@ feature -- Element change
 
 				-- Check that there isn't another character-map with the same name and import precedence.
 
-				a_stylesheet := principal_stylesheet
-				another_character_map := a_stylesheet.character_map (character_map_fingerprint)
-				if another_character_map /= Current then
-					if precedence = another_character_map.precedence then
-						create an_error.make_from_string ("There are two character-maps with the same name and import precedence",
-																	 Xpath_errors_uri, "XTSE1580", Static_error)
-						report_compile_error (an_error)
-					else
-						if precedence < another_character_map.precedence then
-							is_redundant := True
+				if not any_compile_errors then
+					a_stylesheet := principal_stylesheet
+					another_character_map := a_stylesheet.character_map (character_map_fingerprint)
+					if another_character_map /= Current then
+						if precedence = another_character_map.precedence then
+							create an_error.make_from_string ("There are two character-maps with the same name and import precedence",
+																		 Xpath_errors_uri, "XTSE1580", Static_error)
+							report_compile_error (an_error)
+						else
+							if precedence < another_character_map.precedence then
+								is_redundant := True
+							end
 						end
 					end
-				end
-
-				if used_character_maps /= Void then
-
-					-- Identify any character maps to which `Current' refers.
-
-					create a_splitter.make
-					character_maps := a_splitter.split (used_character_maps)
-					create character_maps_used.make (character_maps.count)
-					from
-						a_cursor := character_maps.new_cursor; a_cursor.start
-					variant
-						character_maps.count + 1 - a_cursor.index
-					until
-						a_cursor.after
-					loop
-						create a_parser.make (a_cursor.item)
-						if not a_parser.is_valid then
-							create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), Xpath_errors_uri, "XTSE1590", Static_error)
-							report_compile_error (an_error)
-							a_cursor.go_after
-						else
-							if not a_parser.is_prefix_present then
-								a_uri := ""
-							else
-								a_uri := uri_for_prefix (a_parser.optional_prefix, False)
-							end
-							if shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
-								a_name_code := shared_name_pool.name_code (a_parser.optional_prefix, a_uri, a_parser.local_name)
-							else
-								shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
-								a_name_code := shared_name_pool.last_name_code
-							end
-							if a_name_code = -1 then
-								create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), Xpath_errors_uri, "XTSE1590", Static_error)
-								report_compile_error (an_error)
-								a_cursor.go_after
-							else
-								a_name_code := shared_name_pool.fingerprint_from_name_code (a_name_code)
-								another_character_map := a_stylesheet.character_map (a_name_code)
-								if another_character_map = Void then
-									a_message := STRING_.concat ("No character map named ", shared_name_pool.display_name_from_name_code (a_name_code))
-									a_message := STRING_.appended_string (a_message, "has been defined.")
-									create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1590", Static_error)
+					
+					if not any_compile_errors then
+						if used_character_maps /= Void then
+							
+							-- Identify any character maps to which `Current' refers.
+							
+							create a_splitter.make
+							character_maps := a_splitter.split (used_character_maps)
+							create character_maps_used.make (character_maps.count)
+							from
+								a_cursor := character_maps.new_cursor; a_cursor.start
+							variant
+								character_maps.count + 1 - a_cursor.index
+							until
+								a_cursor.after
+							loop
+								create a_parser.make (a_cursor.item)
+								if not a_parser.is_valid then
+									create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), Xpath_errors_uri, "XTSE1590", Static_error)
 									report_compile_error (an_error)
-
 									a_cursor.go_after
 								else
-									character_maps_used.put_last (another_character_map)
-									a_cursor.forth
+									if not a_parser.is_prefix_present then
+										a_uri := ""
+									else
+										a_uri := uri_for_prefix (a_parser.optional_prefix, False)
+									end
+									if shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
+										a_name_code := shared_name_pool.name_code (a_parser.optional_prefix, a_uri, a_parser.local_name)
+									else
+										shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
+										a_name_code := shared_name_pool.last_name_code
+									end
+									if a_name_code = -1 then
+										create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), Xpath_errors_uri, "XTSE1590", Static_error)
+										report_compile_error (an_error)
+										a_cursor.go_after
+									else
+										a_name_code := shared_name_pool.fingerprint_from_name_code (a_name_code)
+										another_character_map := a_stylesheet.character_map (a_name_code)
+										if another_character_map = Void then
+											a_message := STRING_.concat ("No character map named ", shared_name_pool.display_name_from_name_code (a_name_code))
+											a_message := STRING_.appended_string (a_message, "has been defined.")
+											create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1590", Static_error)
+											report_compile_error (an_error)
+											
+											a_cursor.go_after
+										else
+											character_maps_used.put_last (another_character_map)
+											a_cursor.forth
+										end
+									end
 								end
 							end
-						end
-					end
+							
+							-- Check for circularity.
 
-					-- Check for circularity.
-
-					from
-						another_cursor := character_maps_used.new_cursor; another_cursor.start
-					variant
-						character_maps_used.count + 1 - another_cursor.index
-					until
-						another_cursor.after
-					loop
-						another_cursor.item.check_circularity (Current)
-						if any_compile_errors then
-							another_cursor.go_after
-						else
-							another_cursor.forth
+							from
+								another_cursor := character_maps_used.new_cursor; another_cursor.start
+							variant
+								character_maps_used.count + 1 - another_cursor.index
+							until
+								another_cursor.after
+							loop
+								another_cursor.item.check_circularity (Current)
+								if any_compile_errors then
+									another_cursor.go_after
+								else
+									another_cursor.forth
+								end
+							end
 						end
 					end
 				end

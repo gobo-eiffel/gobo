@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			make_atomic_value
 			value := a_value
 		ensure
-			-- value_set: is_nan or else value = a_value
+			value_set: not is_nan implies value = a_value
 		end
 
 	make_from_string (a_value: STRING) is
@@ -173,9 +173,15 @@ feature -- Status report
 
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
+		local
+			l_value: DOUBLE
 		do
-			if internal_is_nan or else not is_zero and then value = 2.0 * value then
-				Result := True
+			l_value := value
+			Result := value /= l_value
+			if not Result then
+				if internal_is_nan or else not is_zero and then value = 2.0 * value then
+					Result := True
+				end
 			end
 		end
 

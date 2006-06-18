@@ -618,7 +618,7 @@ feature {NONE} -- Implementation
 						elseif a_code = 13 then
 							output ("&#xD;")
 						elseif a_code = 9 then
-							output ("&#0;")
+							output ("&#9;")
 						else
 							check
 								error_in_escaping_logic: False

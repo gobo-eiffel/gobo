@@ -457,7 +457,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 				end
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 								a_string := appended_with_blanks (a_string)
 							end
 						elseif a_string.count > maximum_width then
-							a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+							a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 						end
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
@@ -537,7 +537,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 				end
@@ -574,7 +574,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 				end
 				STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation
 								a_string := appended_with_blanks (a_string)
 							end
 						elseif a_string.count > maximum_width then
-							a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+							a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 						end
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
@@ -655,7 +655,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 				end
 				STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
@@ -692,7 +692,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 				end
 				STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
@@ -729,7 +729,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 				end
@@ -766,7 +766,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 				end
@@ -830,7 +830,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 				end
@@ -867,7 +867,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 				end
@@ -904,7 +904,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 				end
@@ -940,7 +940,7 @@ feature {NONE} -- Implementation
 							a_string := appended_with_blanks (a_string)
 						end
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 				end
@@ -968,7 +968,7 @@ feature {NONE} -- Implementation
 					if a_string.count < minimum_width then
 						a_string := appended_with_blanks (a_string)
 					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 				end
@@ -1000,7 +1000,7 @@ feature {NONE} -- Implementation
 				if a_string.count < minimum_width then
 					a_string := appended_with_blanks (a_string)
 				elseif a_string.count > maximum_width then
-					a_string := a_string.substring (a_string.count - maximum_width, a_string.count)
+					a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 				end
 				STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 			end

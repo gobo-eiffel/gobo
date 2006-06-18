@@ -541,7 +541,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not are_cardinalities_computed then
-				if filter.is_last_expression then
+				if filter.is_last_expression and then filter.as_last_expression.condition then
 					set_cardinality_optional
 				elseif base_expression.cardinality_allows_one_or_more then
 					set_cardinality_zero_or_more
