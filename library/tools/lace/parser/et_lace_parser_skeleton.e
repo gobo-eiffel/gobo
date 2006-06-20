@@ -109,6 +109,26 @@ feature -- Access
 
 feature {NONE} -- AST factory
 
+	new_assembly (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_ASSEMBLY is
+			-- New assembly
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := ast_factory.new_assembly (a_name, a_pathname)
+		ensure
+			assembly_not_void: Result /= Void
+		end
+
+	new_assemblies (an_assembly: ET_LACE_ASSEMBLY): ET_LACE_ASSEMBLIES is
+			-- New assembly list
+		require
+			an_assembly_not_void: an_assembly /= Void
+		do
+			Result := ast_factory.new_assemblies (an_assembly)
+		ensure
+			assemblies_not_void: Result /= Void
+		end
+
 	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_CLUSTER is
 			-- New cluster
 		require
@@ -128,6 +148,20 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_clusters (a_cluster)
 		ensure
 			clusters_not_void: Result /= Void
+		end
+
+	new_gac_assembly (a_name: ET_IDENTIFIER; an_assembly_name, a_version, a_culture, a_public_key_token: ET_IDENTIFIER): ET_LACE_GAC_ASSEMBLY is
+			-- New GAC assembly
+		require
+			a_name_not_void: a_name /= Void
+			an_assembly_name_not_void: an_assembly_name /= Void
+		do
+			Result := ast_factory.new_gac_assembly (a_name, an_assembly_name)
+			Result.set_assembly_version (a_version)
+			Result.set_assembly_culture (a_culture)
+			Result.set_assembly_public_key_token (a_public_key_token)
+		ensure
+			assembly_not_void: Result /= Void
 		end
 
 	new_qualified_subcluster (a_name: ET_IDENTIFIER; a_parent: ET_IDENTIFIER;

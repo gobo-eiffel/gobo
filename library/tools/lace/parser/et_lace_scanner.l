@@ -6,7 +6,7 @@ indexing
 		"Scanners for Lace parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,6 +55,7 @@ create
 										last_token := L_ALL
 										last_et_identifier_value := new_identifier (text)
 									}
+[aA][sS][sS][eE][mM][bB][lL][yY]	last_token := L_ASSEMBLY
 [cC][lL][uU][sS][tT][eE][rR]		last_token := L_CLUSTER
 [dD][eE][fF][aA][uU][lL][tT]		last_token := L_DEFAULT
 [eE][nN][dD]						last_token := L_END
@@ -63,6 +64,7 @@ create
 [gG][eE][nN][eE][rR][aA][tT][eE]	last_token := L_GENERATE
 [lL][iI][bB][rR][aA][rR][yY]		last_token := L_LIBRARY
 [oO][pP][tT][iI][oO][nN]			last_token := L_OPTION
+[pP][rR][eE][fF][iI][xX]			last_token := L_PREFIX
 [rR][oO][oO][tT]					last_token := L_ROOT
 [sS][yY][sS][tT][eE][mM]			last_token := L_SYSTEM
 [vV][iI][sS][iI][bB][lL][eE]		last_token := L_VISIBLE

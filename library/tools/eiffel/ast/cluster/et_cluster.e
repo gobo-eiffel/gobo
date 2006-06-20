@@ -5,7 +5,7 @@ indexing
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,8 +14,13 @@ deferred class ET_CLUSTER
 
 inherit
 
-	HASHABLE
-	DEBUG_OUTPUT
+	ET_GROUP
+		redefine
+			is_cluster, cluster,
+			full_name, full_lower_name, 
+			full_pathname, full_unix_pathname
+		end
+
 	KL_SHARED_OPERATING_SYSTEM
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_FILE_SYSTEM
@@ -23,6 +28,9 @@ inherit
 	KL_IMPORTED_ARRAY_ROUTINES
 
 feature -- Status report
+
+	is_cluster: BOOLEAN is True
+			-- Is current group a cluster?
 
 	is_abstract: BOOLEAN
 			-- Is there no classes in current cluster?
@@ -84,7 +92,7 @@ feature -- Status report
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			l_parent: ET_CLUSTER
+			l_parent: ET_GROUP
 		do
 			from
 				l_parent := a_cluster.parent
@@ -118,52 +126,6 @@ feature -- Status report
 
 feature -- Access
 
-	name: STRING is
-			-- Name
-		deferred
-		ensure
-			name_not_void: Result /= Void
-			name_not_empty: Result.count > 0
-		end
-
-	lower_name: STRING is
-			-- Lower-name of cluster
-			-- (May return the same object as `name' if already in lower case.)
-		local
-			i, nb: INTEGER
-			c: CHARACTER
-		do
-			Result := name
-			nb := Result.count
-			from i := 1 until i > nb loop
-				c := Result.item (i)
-				if c >= 'A' and c <= 'Z' then
-					Result := Result.as_lower
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
-		ensure
-			lower_name_not_void: Result /= Void
-			lower_name_not_empty: Result.count > 0
-			definition: Result.is_equal (name.as_lower)
-		end
-
-	prefixed_name: STRING is
-			-- Cluster name with possible prefixes
-		do
-			Result := name
-		ensure
-			prefixed_name_not_void: Result /= Void
-			prefixed_name_not_empty: Result.count > 0
-		end
-
-	pathname: STRING is
-			-- Directory pathname (may be Void)
-		deferred
-		end
-
 	full_name (a_separator: CHARACTER): STRING is
 			-- Full name (use `a_separator' as separator
 			-- between parents' names)
@@ -181,9 +143,6 @@ feature -- Access
 			else
 				Result := name
 			end
-		ensure
-			full_name_not_void: Result /= Void
-			full_name_not_empty: Result.count > 0
 		end
 
 	full_lower_name (a_separator: CHARACTER): STRING is
@@ -203,10 +162,6 @@ feature -- Access
 			else
 				Result := lower_name
 			end
-		ensure
-			full_lower_name_not_void: Result /= Void
-			full_lower_name_not_empty: Result.count > 0
-			definition: Result.is_equal (full_name (a_separator).as_lower)
 		end
 
 	full_pathname: STRING is
@@ -230,9 +185,6 @@ feature -- Access
 			else
 				Result := name
 			end
-		ensure
-			full_pathname_not_void: Result /= Void
-			full_pathname_not_empty: Result.count > 0
 		end
 
 	full_unix_pathname: STRING is
@@ -256,19 +208,15 @@ feature -- Access
 			else
 				Result := name
 			end
-		ensure
-			full_unix_pathname_not_void: Result /= Void
-			full_unix_pathname_not_empty: Result.count > 0
 		end
 
-	hash_code: INTEGER is
-			-- Hash code value
+	cluster: ET_CLUSTER is
+			-- Current group viewed as a cluster
 		do
-			Result := name.hash_code
+			Result := Current
+		ensure then
+			definition: Result = Current
 		end
-
-	data: ANY
-			-- Arbitrary user data
 
 feature -- Nested
 
@@ -460,14 +408,6 @@ feature -- Setting
 			subclusters_set: subclusters = a_subclusters
 		end
 
-	set_data (a_data: like data) is
-			-- Set `data' to `a_data'.
-		do
-			data := a_data
-		ensure
-			data_set: data = a_data
-		end
-
 	set_provider_constraint (a_constraint: like provider_constraint) is
 			-- Set `provider_constraint' to `a_constraint'.
 		do
@@ -587,14 +527,6 @@ feature {ET_CLUSTER, ET_CLUSTERS} -- Setting
 			end
 		ensure
 			parent_set: parent = a_parent
-		end
-
-feature -- Output
-
-	debug_output: STRING is
-			-- String that should be displayed in debugger to represent `Current'
-		do
-			Result := full_name ('.')
 		end
 
 feature {NONE} -- Implementation

@@ -5,7 +5,7 @@ indexing
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -317,8 +317,8 @@ feature -- Preparsing
 	filename: STRING
 			-- Filename
 
-	cluster: ET_CLUSTER
-			-- Cluster to which current class belongs
+	group: ET_GROUP
+			-- Group (e.g. cluster or assembly) to which current class belongs
 
 	time_stamp: INTEGER
 			-- Time stamp of the file when it was last parsed
@@ -326,16 +326,16 @@ feature -- Preparsing
 	overridden_class: ET_CLASS
 			-- Class that has the same name as current class
 			-- (Name clash is resolved if current class is in an
-			-- override cluster and `overridden_class' is not.)
+			-- override group and `overridden_class' is not.)
 
 	non_override_overridden_class: ET_CLASS is
-			-- First overridden class that is not in an override cluster;
+			-- First overridden class that is not in an override group;
 			-- Void if no such class
 		do
 			from
 				Result := overridden_class
 			until
-				Result = Void or else not Result.is_in_override_cluster
+				Result = Void or else not Result.is_in_override_group
 			loop
 				Result := Result.overridden_class
 			end
@@ -355,14 +355,14 @@ feature -- Preparsing
 			filename_set: filename = a_name
 		end
 
-	set_cluster (a_cluster: like cluster) is
-			-- Set `cluster' to `a_cluster'.
+	set_group (a_group: like group) is
+			-- Set `group' to `a_group'.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		do
-			cluster := a_cluster
+			group := a_group
 		ensure
-			cluster_set: cluster = a_cluster
+			group_set: group = a_group
 		end
 
 	set_time_stamp (a_time_stamp: INTEGER) is
@@ -417,28 +417,46 @@ feature -- Preparsing status
 
 	is_preparsed: BOOLEAN is
 			-- Has current class been preparsed (i.e. its filename
-			-- and cluster are already known but the class has not
+			-- and group are already known but the class has not
 			-- necessarily been parsed yet)?
 		do
-			Result := (filename /= Void and cluster /= Void)
+			Result := (filename /= Void and group /= Void)
 		ensure
 			filename_not_void: Result implies filename /= Void
-			cluster_not_void: Result implies cluster /= Void
+			group_not_void: Result implies group /= Void
 		end
 
-	is_in_cluster (a_cluster: ET_CLUSTER): BOOLEAN is
-			-- Is current class in `a_cluster' or recursively
-			-- in one of its subclusters?
+	is_in_group (a_group: ET_GROUP): BOOLEAN is
+			-- Is current class in `a_group' or recursively
+			-- in one of its subgroups?
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		do
-			if cluster /= Void then
-				if cluster = a_cluster then
+			if group /= Void then
+				if group = a_group then
 					Result := True
 				else
-					Result := a_cluster.has_subcluster (cluster)
+					Result := a_group.has_subgroup (group)
 				end
 			end
+		end
+
+	is_in_cluster: BOOLEAN is
+			-- Is current class in a cluster?
+		do
+			Result := group /= Void and then group.is_cluster
+		ensure
+			group_not_void: Result implies group /= Void
+			is_cluster: Result implies group.is_cluster
+		end
+
+	is_in_assembly: BOOLEAN is
+			-- Is current class in an assembly?
+		do
+			Result := group /= Void and then group.is_assembly
+		ensure
+			group_not_void: Result implies group /= Void
+			is_assembly: Result implies group.is_assembly
 		end
 
 	is_override: BOOLEAN is
@@ -449,12 +467,23 @@ feature -- Preparsing status
 			Result := is_in_override_cluster
 		end
 
+	is_in_override_group: BOOLEAN is
+			-- Is current class in an override group?
+		do
+			Result := group /= Void and then group.is_override
+		ensure
+			group_not_void: Result implies group /= Void
+			is_override: Result implies group.is_override
+		end
+
 	is_in_override_cluster: BOOLEAN is
 			-- Is current class in an override cluster?
 		do
-			if cluster /= Void then
-				Result := cluster.is_override
-			end
+			Result := group /= Void and then (group.is_cluster and group.is_override)
+		ensure
+			group_not_void: Result implies group /= Void
+			is_cluster: Result implies group.is_cluster
+			is_override: Result implies group.is_override
 		end
 
 	is_overridden: BOOLEAN is
@@ -475,12 +504,12 @@ feature -- Preparsing status
 
 	has_name_clash: BOOLEAN is
 			-- Is there two classes with the same name?
-			-- (Override clusters are taken into account in order to
+			-- (Override groups are taken into account in order to
 			-- determine whether it is a real name clash or not.)
 		local
 			a_class: ET_CLASS
 		do
-			if not is_in_override_cluster then
+			if not is_in_override_group then
 				Result := (overridden_class /= Void)
 			else
 				from
@@ -488,7 +517,7 @@ feature -- Preparsing status
 				until
 					a_class = Void
 				loop
-					if a_class.is_in_override_cluster then
+					if a_class.is_in_override_group then
 						Result := True
 						a_class := Void -- Jump out of the loop.
 					else
@@ -502,7 +531,7 @@ feature -- Preparsing status
 			-- Set `is_preparsed' to False.
 		do
 			filename := Void
-			cluster := Void
+			group := Void
 			time_stamp := no_time_stamp
 		ensure
 			not_preparsed: not is_preparsed

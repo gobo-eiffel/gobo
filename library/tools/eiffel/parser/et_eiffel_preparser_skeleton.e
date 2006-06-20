@@ -119,44 +119,52 @@ feature -- Parsing
 							a_class := universe.eiffel_class (a_classname)
 							if a_class.is_preparsed then
 								if a_cluster.is_override then
-									if a_class.is_in_override_cluster then
-											-- Two classes with the same name in two override clusters.
+									if a_class.group.is_override then
+											-- Two classes with the same name in two override groups.
 										l_other_class := a_class.cloned_class
 										l_other_class.reset_all
 										l_other_class.set_filename (a_filename)
-										l_other_class.set_cluster (a_cluster)
+										l_other_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
-										error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+										if a_class.is_in_assembly then
+											error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
+										else
+											error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+										end
 									else
 											-- Override.
 										l_other_class := a_class.cloned_class
 										l_other_class.reset
 										a_class.reset_all
 										a_class.set_filename (a_filename)
-										a_class.set_cluster (a_cluster)
+										a_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
 										l_overriding_added := True
 									end
-								elseif not a_class.is_in_override_cluster then
-										-- Two classes with the same name in two non-override clusters.
+								elseif not a_class.group.is_override then
+										-- Two classes with the same name in two non-override groups.
 									l_other_class := a_class.cloned_class
 									l_other_class.reset_all
 									l_other_class.set_filename (a_filename)
-									l_other_class.set_cluster (a_cluster)
+									l_other_class.set_group (a_cluster)
 									a_class.set_overridden_class (l_other_class)
-									error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+									if a_class.is_in_assembly then
+										error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
+									else
+										error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+									end
 								else
 										-- Overridden.
 									l_other_class := a_class.cloned_class
 									l_other_class.reset_all
 									l_other_class.set_filename (a_filename)
-									l_other_class.set_cluster (a_cluster)
+									l_other_class.set_group (a_cluster)
 									l_other_class.set_overridden_class (Void)
 									a_class.add_overridden_class (l_other_class)
 								end
 							else
 								a_class.set_filename (a_filename)
-								a_class.set_cluster (a_cluster)
+								a_class.set_group (a_cluster)
 							end
 						elseif a_cluster.is_recursive and then a_cluster.is_valid_directory_name (s) then
 							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
@@ -245,7 +253,7 @@ feature -- Parsing
 						if a_cluster.is_valid_eiffel_filename (s) then
 							a_filename := file_system.pathname (dir_name, s)
 							if l_classes = Void then
-								l_classes := universe.classes_by_cluster (a_cluster)
+								l_classes := universe.classes_by_group (a_cluster)
 							end
 							a_class := Void
 							nb := l_classes.count
@@ -265,38 +273,46 @@ feature -- Parsing
 								a_class := universe.eiffel_class (a_classname)
 								if a_class.is_preparsed then
 									if a_cluster.is_override then
-										if a_class.is_in_override_cluster then
-												-- Two classes with the same name in two override clusters.
+										if a_class.group.is_override then
+												-- Two classes with the same name in two override groups.
 											l_other_class := a_class.cloned_class
 											l_other_class.reset_all
 											l_other_class.set_filename (a_filename)
-											l_other_class.set_cluster (a_cluster)
+											l_other_class.set_group (a_cluster)
 											a_class.set_overridden_class (l_other_class)
-											error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+											if a_class.is_in_assembly then
+												error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
+											else
+												error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+											end
 										else
 												-- Override.
 											l_other_class := a_class.cloned_class
 											l_other_class.reset
 											a_class.reset_all
 											a_class.set_filename (a_filename)
-											a_class.set_cluster (a_cluster)
+											a_class.set_group (a_cluster)
 											a_class.set_overridden_class (l_other_class)
 											l_overriding_added := True
 										end
-									elseif not a_class.is_in_override_cluster then
-											-- Two classes with the same name in two non-override clusters.
+									elseif not a_class.group.is_override then
+											-- Two classes with the same name in two non-override groups.
 										l_other_class := a_class.cloned_class
 										l_other_class.reset_all
 										l_other_class.set_filename (a_filename)
-										l_other_class.set_cluster (a_cluster)
+										l_other_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
-										error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+										if a_class.is_in_assembly then
+											error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
+										else
+											error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+										end
 									else
 											-- Overridden.
 										l_other_class := a_class.cloned_class
 										l_other_class.reset_all
 										l_other_class.set_filename (a_filename)
-										l_other_class.set_cluster (a_cluster)
+										l_other_class.set_group (a_cluster)
 										l_other_class.set_overridden_class (Void)
 										a_class.add_overridden_class (l_other_class)
 									end
@@ -306,7 +322,7 @@ feature -- Parsing
 										-- flags may have been set in that case).
 									a_class.reset_all
 									a_class.set_filename (a_filename)
-									a_class.set_cluster (a_cluster)
+									a_class.set_group (a_cluster)
 								end
 							end
 						elseif a_cluster.is_recursive and then a_cluster.is_valid_directory_name (s) then
@@ -405,15 +421,19 @@ feature -- Parsing
 				a_class := universe.eiffel_class (last_classname)
 				if a_class.is_preparsed then
 					if a_cluster.is_override then
-						if a_class.is_in_override_cluster then
-								-- Two classes with the same name in two override clusters.
+						if a_class.group.is_override then
+								-- Two classes with the same name in two override groups.
 							l_other_class := a_class.cloned_class
 							l_other_class.reset_all
 							l_other_class.set_filename (a_filename)
 							l_other_class.set_time_stamp (a_time_stamp)
-							l_other_class.set_cluster (a_cluster)
+							l_other_class.set_group (a_cluster)
 							a_class.set_overridden_class (l_other_class)
-							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+							if a_class.is_in_assembly then
+								error_handler.report_vscn0b_error (a_class, a_cluster, filename)
+							else
+								error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+							end
 						else
 								-- Override.
 							l_other_class := a_class.cloned_class
@@ -421,26 +441,30 @@ feature -- Parsing
 							a_class.reset_all
 							a_class.set_filename (a_filename)
 							a_class.set_time_stamp (a_time_stamp)
-							a_class.set_cluster (a_cluster)
+							a_class.set_group (a_cluster)
 							a_class.set_overridden_class (l_other_class)
 							overriding_class_added := True
 						end
-					elseif not a_class.is_in_override_cluster then
-							-- Two classes with the same name in two non-override clusters.
+					elseif not a_class.group.is_override then
+							-- Two classes with the same name in two non-override groups.
 						l_other_class := a_class.cloned_class
 						l_other_class.reset_all
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
-						l_other_class.set_cluster (a_cluster)
+						l_other_class.set_group (a_cluster)
 						a_class.set_overridden_class (l_other_class)
-						error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+						if a_class.is_in_assembly then
+							error_handler.report_vscn0b_error (a_class, a_cluster, filename)
+						else
+							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+						end
 					else
 							-- Overridden.
 						l_other_class := a_class.cloned_class
 						l_other_class.reset_all
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
-						l_other_class.set_cluster (a_cluster)
+						l_other_class.set_group (a_cluster)
 						l_other_class.set_overridden_class (Void)
 						a_class.add_overridden_class (l_other_class)
 					end
@@ -451,7 +475,7 @@ feature -- Parsing
 					a_class.reset_all
 					a_class.set_filename (a_filename)
 					a_class.set_time_stamp (a_time_stamp)
-					a_class.set_cluster (a_cluster)
+					a_class.set_group (a_cluster)
 				end
 			else
 					-- No class name found.
@@ -597,7 +621,7 @@ feature -- Parsing
 						if a_cluster.is_valid_eiffel_filename (s) then
 							a_filename := file_system.pathname (dir_name, s)
 							if l_classes = Void then
-								l_classes := universe.classes_by_cluster (a_cluster)
+								l_classes := universe.classes_by_group (a_cluster)
 							end
 							l_class := Void
 							nb := l_classes.count
@@ -735,15 +759,19 @@ feature -- Parsing
 				a_class := universe.eiffel_class (last_classname)
 				if a_class.is_preparsed then
 					if a_cluster.is_override then
-						if a_class.is_in_override_cluster then
-								-- Two classes with the same name in two override clusters.
+						if a_class.group.is_override then
+								-- Two classes with the same name in two override groups.
 							l_other_class := a_class.cloned_class
 							l_other_class.reset_all
 							l_other_class.set_filename (a_filename)
 							l_other_class.set_time_stamp (a_time_stamp)
-							l_other_class.set_cluster (a_cluster)
+							l_other_class.set_group (a_cluster)
 							a_class.set_overridden_class (l_other_class)
-							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+							if a_class.is_in_assembly then
+								error_handler.report_vscn0b_error (a_class, a_cluster, filename)
+							else
+								error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+							end
 						else
 								-- Override.
 							l_other_class := a_class.cloned_class
@@ -751,26 +779,30 @@ feature -- Parsing
 							a_class.reset_all
 							a_class.set_filename (a_filename)
 							a_class.set_time_stamp (a_time_stamp)
-							a_class.set_cluster (a_cluster)
+							a_class.set_group (a_cluster)
 							a_class.set_overridden_class (l_other_class)
 							overriding_class_added := True
 						end
-					elseif not a_class.is_in_override_cluster then
-							-- Two classes with the same name in two non-override clusters.
+					elseif not a_class.group.is_override then
+							-- Two classes with the same name in two non-override groups.
 						l_other_class := a_class.cloned_class
 						l_other_class.reset_all
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
-						l_other_class.set_cluster (a_cluster)
+						l_other_class.set_group (a_cluster)
 						a_class.set_overridden_class (l_other_class)
-						error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+						if a_class.is_in_assembly then
+							error_handler.report_vscn0b_error (a_class, a_cluster, filename)
+						else
+							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+						end
 					else
 							-- Overridden.
 						l_other_class := a_class.cloned_class
 						l_other_class.reset_all
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
-						l_other_class.set_cluster (a_cluster)
+						l_other_class.set_group (a_cluster)
 						l_other_class.set_overridden_class (Void)
 						a_class.add_overridden_class (l_other_class)
 					end
@@ -781,7 +813,7 @@ feature -- Parsing
 					a_class.reset_all
 					a_class.set_filename (a_filename)
 					a_class.set_time_stamp (a_time_stamp)
-					a_class.set_cluster (a_cluster)
+					a_class.set_group (a_cluster)
 				end
 				class_keyword_found := False
 				last_classname := Void
@@ -926,7 +958,7 @@ feature -- Parsing
 						if a_cluster.is_valid_eiffel_filename (s) then
 							a_filename := file_system.pathname (dir_name, s)
 							if l_classes = Void then
-								l_classes := universe.classes_by_cluster (a_cluster)
+								l_classes := universe.classes_by_group (a_cluster)
 							end
 							l_class := Void
 							nb := l_classes.count

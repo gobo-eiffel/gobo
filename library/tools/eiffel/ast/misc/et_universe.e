@@ -364,17 +364,17 @@ feature -- Status report
 	is_dotnet: BOOLEAN is
 			-- Does current universe contain Eiffel for .NET kernel classes?
 			-- Hence follow Eiffel for .NET validity rules.
-			-- (We just check whether class "SYSTEM_OBJECT" is in the universe,
-			-- so you will need to call one of the [pre]parse routines before
-			-- calling this routine.)
 		do
-			Result := system_object_class.is_preparsed
+			Result := assemblies /= Void and then assemblies.count > 0
 		end
 
 feature -- Access
 
 	clusters: ET_CLUSTERS
 			-- Clusters
+
+	assemblies: ET_ASSEMBLIES
+			-- Assemblies
 
 	root_class: ET_CLASS
 			-- Root class
@@ -421,16 +421,16 @@ feature -- Access
 			end
 		end
 
-	classes_by_cluster (a_cluster: ET_CLUSTER): DS_ARRAYED_LIST [ET_CLASS] is
-			-- Classes in universe which are in `a_cluster';
+	classes_by_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
+			-- Classes in universe which are in `a_group';
 			-- Create a new list at each call
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 		do
-			create Result.make (initial_classes_by_cluster_capacity)
+			create Result.make (initial_classes_by_group_capacity)
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				from
@@ -438,7 +438,7 @@ feature -- Access
 				until
 					a_class = Void
 				loop
-					if a_class.cluster = a_cluster then
+					if a_class.group = a_group then
 						Result.force_last (a_class)
 					end
 					a_class := a_class.overridden_class
@@ -450,13 +450,13 @@ feature -- Access
 			no_void_class: not Result.has (Void)
 		end
 
-	classes_by_clusters: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_CLUSTER] is
-			-- Classes in universe indexed by clusters;
+	classes_by_groups: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
+			-- Classes in universe indexed by groups;
 			-- Create a new data structure at each call
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
-			l_cluster: ET_CLUSTER
+			l_group: ET_GROUP
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 		do
 			create Result.make_map (cluster_count)
@@ -467,13 +467,13 @@ feature -- Access
 				until
 					l_class = Void
 				loop
-					l_cluster := l_class.cluster
-					Result.search (l_cluster)
+					l_group := l_class.group
+					Result.search (l_group)
 					if Result.found then
 						l_classes := Result.found_item
 					else
-						create l_classes.make (initial_classes_by_cluster_capacity)
-						Result.force_last (l_classes, l_cluster)
+						create l_classes.make (initial_classes_by_group_capacity)
+						Result.force_last (l_classes, l_group)
 					end
 					l_classes.force_last (l_class)
 					l_class := l_class.overridden_class
@@ -890,6 +890,14 @@ feature -- Setting
 			clusters_set: clusters = a_clusters
 		end
 
+	set_assemblies (a_assemblies: like assemblies) is
+			-- Set `a_assemblies' to `assemblies'.
+		do
+			assemblies := a_assemblies
+		ensure
+			assemblies_set: assemblies = a_assemblies
+		end
+
 	set_error_handler (a_handler: like error_handler) is
 			-- Set `error_handler' to `a_handler'.
 		require
@@ -1145,6 +1153,7 @@ feature -- Parsing
 			a_class, a_class1, a_class2: ET_CLASS
 			a_modified: BOOLEAN
 			a_time_stamp: INTEGER
+			a_cluster: ET_CLUSTER
 		do
 			if not is_preparsed then
 				preparse_shallow
@@ -1160,24 +1169,33 @@ feature -- Parsing
 						a_class2 = Void
 					loop
 						if a_class2.is_preparsed then
-							if a_class2.cluster.is_read_only then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							elseif a_class2.cluster.is_abstract then
-								a_class2 := a_class2.overridden_class
-								a_class1.set_overridden_class (a_class2)
-							elseif a_class2.is_parsed then
-								a_time_stamp := a_class2.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+							if a_class2.is_in_cluster then
+								a_cluster := a_class2.group.cluster
+								if a_cluster.is_read_only then
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_abstract then
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								elseif a_class2.is_parsed then
+									a_time_stamp := a_class2.time_stamp
+									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+										a_class2 := a_class2.overridden_class
+										a_class1.set_overridden_class (a_class2)
+									else
+										a_class1 := a_class2
+										a_class2 := a_class1.overridden_class
+									end
+								elseif not file_system.file_exists (a_class2.filename) then
 									a_class2 := a_class2.overridden_class
 									a_class1.set_overridden_class (a_class2)
 								else
 									a_class1 := a_class2
 									a_class2 := a_class1.overridden_class
 								end
-							elseif not file_system.file_exists (a_class2.filename) then
-								a_class2 := a_class2.overridden_class
-								a_class1.set_overridden_class (a_class2)
+							elseif a_class2.is_in_assembly then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
 							else
 								a_class1 := a_class2
 								a_class2 := a_class1.overridden_class
@@ -1188,19 +1206,30 @@ feature -- Parsing
 						end
 					end
 					if a_class.is_preparsed then
-						if a_class.cluster.is_read_only then
-							-- Do nothing.
-						elseif a_class.cluster.is_abstract then
-							a_modified := True
-							a_class2 := a_class.overridden_class
-							if a_class2 /= Void then
-								a_class.copy (a_class2)
-							else
-								a_class.reset_all
-							end
-						elseif a_class.is_parsed then
-							a_time_stamp := a_class.time_stamp
-							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+						if a_class.is_in_cluster then
+							a_cluster := a_class.group.cluster
+							if a_cluster.is_read_only then
+								-- Do nothing.
+							elseif a_cluster.is_abstract then
+								a_modified := True
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset_all
+								end
+							elseif a_class.is_parsed then
+								a_time_stamp := a_class.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+									a_modified := True
+									a_class2 := a_class.overridden_class
+									if a_class2 /= Void then
+										a_class.copy (a_class2)
+									else
+										a_class.reset_all
+									end
+								end
+							elseif not file_system.file_exists (a_class.filename) then
 								a_modified := True
 								a_class2 := a_class.overridden_class
 								if a_class2 /= Void then
@@ -1209,14 +1238,10 @@ feature -- Parsing
 									a_class.reset_all
 								end
 							end
-						elseif not file_system.file_exists (a_class.filename) then
-							a_modified := True
-							a_class2 := a_class.overridden_class
-							if a_class2 /= Void then
-								a_class.copy (a_class2)
-							else
-								a_class.reset_all
-							end
+						elseif a_class.is_in_assembly then
+							-- Do nothing.
+						else
+							-- Do nothing.
 						end
 					else
 						a_class2 := a_class.overridden_class
@@ -1253,6 +1278,7 @@ feature -- Parsing
 			a_class, a_class1, a_class2: ET_CLASS
 			a_time_stamp: INTEGER
 			a_modified: BOOLEAN
+			a_cluster: ET_CLUSTER
 		do
 			if not is_preparsed then
 				preparse_single
@@ -1269,21 +1295,30 @@ feature -- Parsing
 						a_class2 = Void
 					loop
 						if a_class2.is_preparsed then
-							if a_class2.cluster.is_read_only then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							elseif a_class2.cluster.is_abstract then
-								a_class2 := a_class2.overridden_class
-								a_class1.set_overridden_class (a_class2)
-							else
-								a_time_stamp := a_class2.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+							if a_class2.is_in_cluster then
+								a_cluster := a_class2.group.cluster
+								if a_cluster.is_read_only then
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_abstract then
 									a_class2 := a_class2.overridden_class
 									a_class1.set_overridden_class (a_class2)
 								else
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
+									a_time_stamp := a_class2.time_stamp
+									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+										a_class2 := a_class2.overridden_class
+										a_class1.set_overridden_class (a_class2)
+									else
+										a_class1 := a_class2
+										a_class2 := a_class1.overridden_class
+									end
 								end
+							elseif a_class2.is_in_assembly then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							else
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
 							end
 						else
 							a_class2 := a_class2.overridden_class
@@ -1291,19 +1326,11 @@ feature -- Parsing
 						end
 					end
 					if a_class.is_preparsed then
-						if a_class.cluster.is_read_only then
-							-- Do nothing.
-						elseif a_class.cluster.is_abstract then
-							a_modified := True
-							a_class2 := a_class.overridden_class
-							if a_class2 /= Void then
-								a_class.copy (a_class2)
-							else
-								a_class.reset_all
-							end
-						else
-							a_time_stamp := a_class.time_stamp
-							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+						if a_class.is_in_cluster then
+							a_cluster := a_class.group.cluster
+							if a_cluster.is_read_only then
+								-- Do nothing.
+							elseif a_cluster.is_abstract then
 								a_modified := True
 								a_class2 := a_class.overridden_class
 								if a_class2 /= Void then
@@ -1311,7 +1338,22 @@ feature -- Parsing
 								else
 									a_class.reset_all
 								end
+							else
+								a_time_stamp := a_class.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+									a_modified := True
+									a_class2 := a_class.overridden_class
+									if a_class2 /= Void then
+										a_class.copy (a_class2)
+									else
+										a_class.reset_all
+									end
+								end
 							end
+						elseif a_class.is_in_assembly then
+							-- Do nothing.
+						else
+							-- Do nothing.
 						end
 					else
 						a_class2 := a_class.overridden_class
@@ -1348,6 +1390,7 @@ feature -- Parsing
 			a_class, a_class1, a_class2: ET_CLASS
 			a_time_stamp: INTEGER
 			a_modified: BOOLEAN
+			a_cluster: ET_CLUSTER
 		do
 			if not is_preparsed then
 				preparse_single
@@ -1367,21 +1410,30 @@ feature -- Parsing
 						a_class2 = Void
 					loop
 						if a_class2.is_preparsed then
-							if a_class2.cluster.is_read_only then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							elseif a_class2.cluster.is_abstract then
-								a_class2 := a_class2.overridden_class
-								a_class1.set_overridden_class (a_class2)
-							else
-								a_time_stamp := a_class2.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+							if a_class2.is_in_cluster then
+								a_cluster := a_class2.group.cluster
+								if a_cluster.is_read_only then
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_abstract then
 									a_class2 := a_class2.overridden_class
 									a_class1.set_overridden_class (a_class2)
 								else
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
+									a_time_stamp := a_class2.time_stamp
+									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+										a_class2 := a_class2.overridden_class
+										a_class1.set_overridden_class (a_class2)
+									else
+										a_class1 := a_class2
+										a_class2 := a_class1.overridden_class
+									end
 								end
+							elseif a_class2.is_in_assembly then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							else
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
 							end
 						else
 							a_class2 := a_class2.overridden_class
@@ -1389,19 +1441,11 @@ feature -- Parsing
 						end
 					end
 					if a_class.is_preparsed then
-						if a_class.cluster.is_read_only then
-							-- Do nothing.
-						elseif a_class.cluster.is_abstract then
-							a_modified := True
-							a_class2 := a_class.overridden_class
-							if a_class2 /= Void then
-								a_class.copy (a_class2)
-							else
-								a_class.reset_all
-							end
-						else
-							a_time_stamp := a_class.time_stamp
-							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+						if a_class.is_in_cluster then
+							a_cluster := a_class.group.cluster
+							if a_cluster.is_read_only then
+								-- Do nothing.
+							elseif a_cluster.is_abstract then
 								a_modified := True
 								a_class2 := a_class.overridden_class
 								if a_class2 /= Void then
@@ -1409,7 +1453,22 @@ feature -- Parsing
 								else
 									a_class.reset_all
 								end
+							else
+								a_time_stamp := a_class.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+									a_modified := True
+									a_class2 := a_class.overridden_class
+									if a_class2 /= Void then
+										a_class.copy (a_class2)
+									else
+										a_class.reset_all
+									end
+								end
 							end
+						elseif a_class.is_in_assembly then
+							-- Do nothing.
+						else
+							-- Do nothing.
 						end
 					else
 						a_class2 := a_class.overridden_class
@@ -1446,6 +1505,7 @@ feature -- Parsing
 			a_class, a_class1, a_class2: ET_CLASS
 			a_modified: BOOLEAN
 			a_time_stamp: INTEGER
+			a_cluster: ET_CLUSTER
 		do
 			if not is_preparsed then
 				preparse_shallow
@@ -1460,22 +1520,38 @@ feature -- Parsing
 					until
 						a_class2 = Void
 					loop
-						if a_class2.is_preparsed and then a_class2.cluster.is_override and then not a_class2.cluster.is_read_only then
-							if a_class2.cluster.is_abstract then
-								a_class2 := a_class2.overridden_class
-								a_class1.set_overridden_class (a_class2)
-							elseif a_class2.is_parsed then
-								a_time_stamp := a_class2.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+						if a_class2.is_preparsed then
+							if a_class2.is_in_cluster then
+								a_cluster := a_class2.group.cluster
+								if not a_cluster.is_override then
+										-- Skip.
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_read_only then
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_abstract then
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								elseif a_class2.is_parsed then
+									a_time_stamp := a_class2.time_stamp
+									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+										a_class2 := a_class2.overridden_class
+										a_class1.set_overridden_class (a_class2)
+									else
+										a_class1 := a_class2
+										a_class2 := a_class1.overridden_class
+									end
+								elseif not file_system.file_exists (a_class2.filename) then
 									a_class2 := a_class2.overridden_class
 									a_class1.set_overridden_class (a_class2)
 								else
 									a_class1 := a_class2
 									a_class2 := a_class1.overridden_class
 								end
-							elseif not file_system.file_exists (a_class2.filename) then
-								a_class2 := a_class2.overridden_class
-								a_class1.set_overridden_class (a_class2)
+							elseif a_class2.is_in_assembly then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
 							else
 								a_class1 := a_class2
 								a_class2 := a_class1.overridden_class
@@ -1485,18 +1561,33 @@ feature -- Parsing
 							a_class2 := a_class1.overridden_class
 						end
 					end
-					if a_class.is_preparsed and then a_class.cluster.is_override and then not a_class.cluster.is_read_only then
-						if a_class.cluster.is_abstract then
-							a_modified := True
-							a_class2 := a_class.overridden_class
-							if a_class2 /= Void then
-								a_class.copy (a_class2)
-							else
-								a_class.reset_all
-							end
-						elseif a_class.is_parsed then
-							a_time_stamp := a_class.time_stamp
-							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+					if a_class.is_preparsed then
+						if a_class.is_in_cluster then
+							a_cluster := a_class.group.cluster
+							if not a_cluster.is_override then
+								-- Skip
+							elseif a_cluster.is_read_only then
+								-- Do nothing.
+							elseif a_cluster.is_abstract then
+								a_modified := True
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset_all
+								end
+							elseif a_class.is_parsed then
+								a_time_stamp := a_class.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+									a_modified := True
+									a_class2 := a_class.overridden_class
+									if a_class2 /= Void then
+										a_class.copy (a_class2)
+									else
+										a_class.reset_all
+									end
+								end
+							elseif not file_system.file_exists (a_class.filename) then
 								a_modified := True
 								a_class2 := a_class.overridden_class
 								if a_class2 /= Void then
@@ -1505,14 +1596,10 @@ feature -- Parsing
 									a_class.reset_all
 								end
 							end
-						elseif not file_system.file_exists (a_class.filename) then
-							a_modified := True
-							a_class2 := a_class.overridden_class
-							if a_class2 /= Void then
-								a_class.copy (a_class2)
-							else
-								a_class.reset_all
-							end
+						elseif a_class.is_in_assembly then
+							-- Do nothing.
+						else
+							-- Do nothing.
 						end
 					end
 					a_cursor.forth
@@ -1538,6 +1625,7 @@ feature -- Parsing
 			a_class, a_class1, a_class2: ET_CLASS
 			a_time_stamp: INTEGER
 			a_modified: BOOLEAN
+			a_cluster: ET_CLUSTER
 		do
 			if not is_preparsed then
 				preparse_single
@@ -1553,37 +1641,49 @@ feature -- Parsing
 					until
 						a_class2 = Void
 					loop
-						if a_class2.is_preparsed and then a_class2.cluster.is_override and then not a_class2.cluster.is_read_only then
-							if a_class2.cluster.is_abstract then
-								a_class2 := a_class2.overridden_class
-								a_class1.set_overridden_class (a_class2)
-							else
-								a_time_stamp := a_class2.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+						if a_class2.is_preparsed then
+							if a_class2.is_in_cluster then
+								a_cluster := a_class2.group.cluster
+								if not a_cluster.is_override then
+										-- Skip.
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_read_only then
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_abstract then
 									a_class2 := a_class2.overridden_class
 									a_class1.set_overridden_class (a_class2)
 								else
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
+									a_time_stamp := a_class2.time_stamp
+									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+										a_class2 := a_class2.overridden_class
+										a_class1.set_overridden_class (a_class2)
+									else
+										a_class1 := a_class2
+										a_class2 := a_class1.overridden_class
+									end
 								end
+							elseif a_class2.is_in_assembly then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							else
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
 							end
 						else
 							a_class1 := a_class2
 							a_class2 := a_class1.overridden_class
 						end
 					end
-					if a_class.is_preparsed and then a_class.cluster.is_override and then not a_class.cluster.is_read_only then
-						if a_class.cluster.is_abstract then
-							a_modified := True
-							a_class2 := a_class.overridden_class
-							if a_class2 /= Void then
-								a_class.copy (a_class2)
-							else
-								a_class.reset_all
-							end
-						else
-							a_time_stamp := a_class.time_stamp
-							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+					if a_class.is_preparsed then
+						if a_class.is_in_cluster then
+							a_cluster := a_class.group.cluster
+							if not a_class.group.is_override then
+								-- Skip.
+							elseif a_cluster.is_read_only then
+								-- Do nothing.
+							elseif a_cluster.is_abstract then
 								a_modified := True
 								a_class2 := a_class.overridden_class
 								if a_class2 /= Void then
@@ -1591,7 +1691,22 @@ feature -- Parsing
 								else
 									a_class.reset_all
 								end
+							else
+								a_time_stamp := a_class.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+									a_modified := True
+									a_class2 := a_class.overridden_class
+									if a_class2 /= Void then
+										a_class.copy (a_class2)
+									else
+										a_class.reset_all
+									end
+								end
 							end
+						elseif a_class.is_in_assembly then
+							-- Do nothing.
+						else
+							-- Do nothing.
 						end
 					end
 					a_cursor.forth
@@ -1617,6 +1732,7 @@ feature -- Parsing
 			a_class, a_class1, a_class2: ET_CLASS
 			a_time_stamp: INTEGER
 			a_modified: BOOLEAN
+			a_cluster: ET_CLUSTER
 		do
 			if not is_preparsed then
 				preparse_single
@@ -1635,37 +1751,49 @@ feature -- Parsing
 					until
 						a_class2 = Void
 					loop
-						if a_class2.is_preparsed and then a_class2.cluster.is_override and then not a_class2.cluster.is_read_only then
-							if a_class2.cluster.is_abstract then
-								a_class2 := a_class2.overridden_class
-								a_class1.set_overridden_class (a_class2)
-							else
-								a_time_stamp := a_class2.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+						if a_class2.is_preparsed then
+							if a_class2.is_in_cluster then
+								a_cluster := a_class2.group.cluster
+								if not a_cluster.is_override then
+										-- Skip.
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_read_only then
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_abstract then
 									a_class2 := a_class2.overridden_class
 									a_class1.set_overridden_class (a_class2)
 								else
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
+									a_time_stamp := a_class2.time_stamp
+									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+										a_class2 := a_class2.overridden_class
+										a_class1.set_overridden_class (a_class2)
+									else
+										a_class1 := a_class2
+										a_class2 := a_class1.overridden_class
+									end
 								end
+							elseif a_class2.is_in_assembly then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							else
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
 							end
 						else
 							a_class1 := a_class2
 							a_class2 := a_class1.overridden_class
 						end
 					end
-					if a_class.is_preparsed and then a_class.cluster.is_override and then not a_class.cluster.is_read_only then
-						if a_class.cluster.is_abstract then
-							a_modified := True
-							a_class2 := a_class.overridden_class
-							if a_class2 /= Void then
-								a_class.copy (a_class2)
-							else
-								a_class.reset_all
-							end
-						else
-							a_time_stamp := a_class.time_stamp
-							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+					if a_class.is_preparsed then
+						if a_class.is_in_cluster then
+							a_cluster := a_class.group.cluster
+							if not a_cluster.is_override then
+								-- Skip.
+							elseif a_cluster.is_read_only then
+								-- Do nothing.
+							elseif a_cluster.is_abstract then
 								a_modified := True
 								a_class2 := a_class.overridden_class
 								if a_class2 /= Void then
@@ -1673,7 +1801,22 @@ feature -- Parsing
 								else
 									a_class.reset_all
 								end
+							else
+								a_time_stamp := a_class.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+									a_modified := True
+									a_class2 := a_class.overridden_class
+									if a_class2 /= Void then
+										a_class.copy (a_class2)
+									else
+										a_class.reset_all
+									end
+								end
 							end
+						elseif a_class.is_in_assembly then
+							-- Do nothing.
+						else
+							-- Do nothing.
 						end
 					end
 					a_cursor.forth
@@ -1713,6 +1856,7 @@ feature -- Parsing
 			a_class, a_class1, a_class2: ET_CLASS
 			a_time_stamp: INTEGER
 			a_modified: BOOLEAN
+			a_cluster: ET_CLUSTER
 		do
 			if not is_preparsed then
 				parse_all
@@ -1731,42 +1875,43 @@ feature -- Parsing
 					until
 						a_class2 = Void
 					loop
-						if a_class2.is_preparsed and a_class2.is_parsed then
-							if a_class2.cluster.is_read_only then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							elseif a_class2.cluster.is_abstract then
-								a_class2 := a_class2.overridden_class
-								a_class1.set_overridden_class (a_class2)
-							else
-								a_time_stamp := a_class2.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+						if a_class2.is_preparsed and then a_class2.is_parsed then
+							if a_class2.is_in_cluster then
+								a_cluster := a_class2.group.cluster
+								if a_cluster.is_read_only then
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_abstract then
 									a_class2 := a_class2.overridden_class
 									a_class1.set_overridden_class (a_class2)
 								else
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
+									a_time_stamp := a_class2.time_stamp
+									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+										a_class2 := a_class2.overridden_class
+										a_class1.set_overridden_class (a_class2)
+									else
+										a_class1 := a_class2
+										a_class2 := a_class1.overridden_class
+									end
 								end
+							elseif a_class2.is_in_assembly then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							else
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
 							end
 						else
 							a_class2 := a_class2.overridden_class
 							a_class1.set_overridden_class (a_class2)
 						end
 					end
-					if a_class.is_preparsed and a_class.is_parsed then
-						if a_class.cluster.is_read_only then
-							-- Do nothing.
-						elseif a_class.cluster.is_abstract then
-							a_modified := True
-							a_class2 := a_class.overridden_class
-							if a_class2 /= Void then
-								a_class.copy (a_class2)
-							else
-								a_class.reset_all
-							end
-						else
-							a_time_stamp := a_class.time_stamp
-							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+					if a_class.is_preparsed and then a_class.is_parsed then
+						if a_class.is_in_cluster then
+							a_cluster := a_class.group.cluster
+							if a_cluster.is_read_only then
+								-- Do nothing.
+							elseif a_cluster.is_abstract then
 								a_modified := True
 								a_class2 := a_class.overridden_class
 								if a_class2 /= Void then
@@ -1774,7 +1919,22 @@ feature -- Parsing
 								else
 									a_class.reset_all
 								end
+							else
+								a_time_stamp := a_class.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+									a_modified := True
+									a_class2 := a_class.overridden_class
+									if a_class2 /= Void then
+										a_class.copy (a_class2)
+									else
+										a_class.reset_all
+									end
+								end
 							end
+						elseif a_class.is_in_assembly then
+							-- Do nothing.
+						else
+							-- Do nothing.
 						end
 					else
 						a_modified := True
@@ -1808,6 +1968,7 @@ feature -- Parsing
 			a_class, a_class1, a_class2: ET_CLASS
 			a_time_stamp: INTEGER
 			a_modified: BOOLEAN
+			a_cluster: ET_CLUSTER
 		do
 			if not is_preparsed then
 				parse_all
@@ -1826,37 +1987,49 @@ feature -- Parsing
 					until
 						a_class2 = Void
 					loop
-						if a_class2.is_preparsed and a_class2.is_parsed and then a_class2.cluster.is_override and then not a_class2.cluster.is_read_only then
-							if a_class2.cluster.is_abstract then
-								a_class2 := a_class2.overridden_class
-								a_class1.set_overridden_class (a_class2)
-							else
-								a_time_stamp := a_class2.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+						if a_class2.is_preparsed and then a_class2.is_parsed then
+							if a_class2.is_in_cluster then
+								a_cluster := a_class2.group.cluster
+								if not a_cluster.is_override then
+										-- Skip.
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_read_only then
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								elseif a_cluster.is_abstract then
 									a_class2 := a_class2.overridden_class
 									a_class1.set_overridden_class (a_class2)
 								else
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
+									a_time_stamp := a_class2.time_stamp
+									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+										a_class2 := a_class2.overridden_class
+										a_class1.set_overridden_class (a_class2)
+									else
+										a_class1 := a_class2
+										a_class2 := a_class1.overridden_class
+									end
 								end
+							elseif a_class2.is_in_assembly then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							else
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
 							end
 						else
 							a_class1 := a_class2
 							a_class2 := a_class1.overridden_class
 						end
 					end
-					if a_class.is_preparsed and a_class.is_parsed and then a_class.cluster.is_override and then not a_class.cluster.is_read_only then
-						if a_class.cluster.is_abstract then
-							a_modified := True
-							a_class2 := a_class.overridden_class
-							if a_class2 /= Void then
-								a_class.copy (a_class2)
-							else
-								a_class.reset_all
-							end
-						else
-							a_time_stamp := a_class.time_stamp
-							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+					if a_class.is_preparsed and then a_class.is_parsed then
+						if a_class.is_in_cluster then
+							a_cluster := a_class.group.cluster
+							if not a_cluster.is_override then
+								-- Skip.
+							elseif a_cluster.is_read_only then
+								-- Do nothing.
+							elseif a_cluster.is_abstract then
 								a_modified := True
 								a_class2 := a_class.overridden_class
 								if a_class2 /= Void then
@@ -1864,7 +2037,22 @@ feature -- Parsing
 								else
 									a_class.reset_all
 								end
+							else
+								a_time_stamp := a_class.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+									a_modified := True
+									a_class2 := a_class.overridden_class
+									if a_class2 /= Void then
+										a_class.copy (a_class2)
+									else
+										a_class.reset_all
+									end
+								end
 							end
+						elseif a_class.is_in_assembly then
+							-- Do nothing.
+						else
+							-- Do nothing.
 						end
 					end
 					a_cursor.forth
@@ -2452,8 +2640,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	initial_classes_by_cluster_capacity: INTEGER is
-			-- Initial capacity for `classes_by_cluster'
+	initial_classes_by_group_capacity: INTEGER is
+			-- Initial capacity for `classes_by_group'
 		once
 			Result := 20
 		ensure

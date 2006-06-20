@@ -107,8 +107,8 @@ feature -- Test
 					(not eiffel_compiler.is_ise or else not a_class.name.name.same_string ("ANY"))
 						-- Class ANY in ISE 5.4 has 'Void' as a feature and not as a keyword.
 				then
-					if a_class.is_preparsed then
-						a_prefixed_name := a_class.cluster.prefixed_name
+					if a_class.is_preparsed and then a_class.is_in_cluster then
+						a_prefixed_name := a_class.group.prefixed_name
 						if a_full_test or else (a_prefixed_name.count > 2 and then (a_prefixed_name.item (1) = 'd' and a_prefixed_name.item (2) = 't')) then
 							if not a_class.is_parsed then
 									-- If the class has already been parsed, this means that it

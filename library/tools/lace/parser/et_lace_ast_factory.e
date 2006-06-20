@@ -25,6 +25,26 @@ feature {NONE} -- Initialization
 
 feature -- AST factory
 
+	new_assembly (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_ASSEMBLY is
+			-- New assembly
+		require
+			a_name_not_void: a_name /= Void
+		do
+			create Result.make (a_name, a_pathname)
+		ensure
+			assembly_not_void: Result /= Void
+		end
+
+	new_assemblies (an_assembly: ET_LACE_ASSEMBLY): ET_LACE_ASSEMBLIES is
+			-- New assembly list
+		require
+			an_assembly_not_void: an_assembly /= Void
+		do
+			create Result.make (an_assembly)
+		ensure
+			assemblies_not_void: Result /= Void
+		end
+
 	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_CLUSTER is
 			-- New cluster
 		require
@@ -43,6 +63,17 @@ feature -- AST factory
 			create Result.make (a_cluster)
 		ensure
 			clusters_not_void: Result /= Void
+		end
+
+	new_gac_assembly (a_name: ET_IDENTIFIER; an_assembly_name: ET_IDENTIFIER): ET_LACE_GAC_ASSEMBLY is
+			-- New GAC assembly
+		require
+			a_name_not_void: a_name /= Void
+			an_assembly_name_not_void: an_assembly_name /= Void
+		do
+			create Result.make (a_name, an_assembly_name)
+		ensure
+			assembly_not_void: Result /= Void
 		end
 
 	new_universe (a_clusters: ET_LACE_CLUSTERS; a_factory: ET_AST_FACTORY;

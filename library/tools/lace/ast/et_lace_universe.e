@@ -16,7 +16,7 @@ inherit
 
 	ET_UNIVERSE
 		redefine
-			clusters
+			clusters, assemblies
 		end
 
 create
@@ -27,5 +27,8 @@ feature -- Access
 
 	clusters: ET_LACE_CLUSTERS
 			-- Clusters
+
+	assemblies: ET_LACE_ASSEMBLIES
+			-- Assemblies
 
 end

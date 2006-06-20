@@ -361,7 +361,7 @@ feature -- Parsing
 							if a_cluster.is_valid_eiffel_filename (s) then
 								a_filename := file_system.pathname (dir_name, s)
 								if l_classes = Void then
-									l_classes := universe.classes_by_cluster (a_cluster)
+									l_classes := universe.classes_by_group (a_cluster)
 								end
 								l_class := Void
 								nb := l_classes.count
@@ -497,24 +497,28 @@ feature -- AST processing
 						universe.preparse
 					end
 					if current_class.is_preparsed then
-						a_filename := current_class.filename
-						a_cluster := current_class.cluster
-						current_class.reset_all
-						a_file := tmp_file
-						a_file.reset (a_filename)
-						if eiffel_compiler.is_se then
-								-- KL_FILE.time_stamp is too slow with SE.
-							a_time_stamp := -1
-						else
-							a_time_stamp := a_file.time_stamp
-						end
-						a_file.open_read
-						if a_file.is_open_read then
-							parse_file (a_file, a_filename, a_time_stamp, a_cluster)
-							a_file.close
-						else
-							set_fatal_error (current_class)
-							error_handler.report_gcaab_error (a_cluster, a_filename)
+						if current_class.is_in_cluster then
+							a_filename := current_class.filename
+							a_cluster := current_class.group.cluster
+							current_class.reset_all
+							a_file := tmp_file
+							a_file.reset (a_filename)
+							if eiffel_compiler.is_se then
+									-- KL_FILE.time_stamp is too slow with SE.
+								a_time_stamp := -1
+							else
+								a_time_stamp := a_file.time_stamp
+							end
+							a_file.open_read
+							if a_file.is_open_read then
+								parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+								a_file.close
+							else
+								set_fatal_error (current_class)
+								error_handler.report_gcaab_error (a_cluster, a_filename)
+							end
+						elseif current_class.is_in_assembly then
+							current_class.set_parsed
 						end
 					end
 					if not current_class.is_parsed then
@@ -1570,7 +1574,7 @@ feature {NONE} -- AST factory
 						l_other_class := Result.cloned_class
 						l_other_class.reset_all
 						l_other_class.set_filename (filename)
-						l_other_class.set_cluster (cluster)
+						l_other_class.set_group (cluster)
 						l_other_class.set_name (a_name)
 						l_other_class.set_parsed
 						l_other_class.set_time_stamp (time_stamp)
@@ -1585,7 +1589,7 @@ feature {NONE} -- AST factory
 						l_other_class.reset
 						Result.reset_all
 						Result.set_filename (filename)
-						Result.set_cluster (cluster)
+						Result.set_group (cluster)
 						Result.set_name (a_name)
 						Result.set_parsed
 						Result.set_time_stamp (time_stamp)
@@ -1604,7 +1608,7 @@ feature {NONE} -- AST factory
 					l_other_class := Result.cloned_class
 					l_other_class.reset_all
 					l_other_class.set_filename (filename)
-					l_other_class.set_cluster (cluster)
+					l_other_class.set_group (cluster)
 					l_other_class.set_name (a_name)
 					l_other_class.set_parsed
 					l_other_class.set_time_stamp (time_stamp)
@@ -1618,7 +1622,7 @@ feature {NONE} -- AST factory
 					Result.set_in_system (True)
 					l_other_class.reset_all
 					l_other_class.set_filename (filename)
-					l_other_class.set_cluster (cluster)
+					l_other_class.set_group (cluster)
 					l_other_class.set_name (a_name)
 					l_other_class.set_parsed
 					l_other_class.set_time_stamp (time_stamp)
@@ -1634,7 +1638,7 @@ feature {NONE} -- AST factory
 				end
 			else
 				Result.set_filename (filename)
-				Result.set_cluster (cluster)
+				Result.set_group (cluster)
 				Result.set_name (a_name)
 				Result.set_parsed
 				Result.set_time_stamp (time_stamp)

@@ -41,7 +41,7 @@ feature -- Processing
 			a_processor: like Current
 		do
 			if a_class = none_class then
-				a_class.set_interface_checked
+				-- Do nothing.
 			elseif current_class /= unknown_class then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
@@ -91,23 +91,25 @@ feature {NONE} -- Cluster dependence constraints
 	check_cluster_dependence_constraints is
 			-- Check of cluster dependence constraints.
 		local
-			l_cluster: ET_CLUSTER
+			l_group: ET_GROUP
 			l_providers: DS_HASH_SET [ET_CLASS]
 			l_providers_cursor: DS_HASH_SET_CURSOR [ET_CLASS]
 			l_provider: ET_CLASS
-			l_provider_cluster: ET_CLUSTER
+			l_provider_group: ET_GROUP
 			l_dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
 			l_provider_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
 			l_overridden_class: ET_CLASS
 		do
 			if current_class.is_preparsed then
-				l_cluster := current_class.cluster
-				l_provider_constraint := l_cluster.provider_constraint
+				l_group := current_class.group
+				if l_group.is_cluster then
+					l_provider_constraint := l_group.cluster.provider_constraint
+				end
 				l_overridden_class := current_class.non_override_overridden_class
-				if l_overridden_class /= Void and then l_overridden_class.cluster /= Void then
-					l_cluster := l_overridden_class.cluster
-					if l_provider_constraint = Void then
-						l_provider_constraint := l_cluster.provider_constraint
+				if l_overridden_class /= Void then
+					l_group := l_overridden_class.group
+					if l_provider_constraint = Void and then l_group.is_cluster then
+						l_provider_constraint := l_group.cluster.provider_constraint
 					end
 				end
 				l_providers := current_class.providers
@@ -119,20 +121,22 @@ feature {NONE} -- Cluster dependence constraints
 							universe.preparse
 						end
 						if l_provider.is_preparsed then
-							l_provider_cluster := l_provider.cluster
-							l_dependant_constraint := l_provider_cluster.dependant_constraint
+							l_provider_group := l_provider.group
+							if l_provider_group.is_cluster then
+								l_dependant_constraint := l_provider_group.cluster.dependant_constraint
+							end
 							l_overridden_class := l_provider.non_override_overridden_class
-							if l_overridden_class /= Void and then l_overridden_class.cluster /= Void then
-								l_provider_cluster := l_overridden_class.cluster
-								if l_dependant_constraint = Void then
-									l_dependant_constraint := l_provider_cluster.dependant_constraint
+							if l_overridden_class /= Void then
+								l_provider_group := l_overridden_class.group
+								if l_dependant_constraint = Void and then l_provider_group.is_cluster then
+									l_dependant_constraint := l_provider_group.cluster.dependant_constraint
 								end
 							end
-							if l_provider_constraint /= Void and then not l_provider_constraint.has_cluster (l_provider_cluster) then
+							if l_provider_constraint /= Void and then not l_provider_constraint.has_group (l_provider_group) then
 								set_fatal_error (current_class)
 								error_handler.report_gcpro_error (l_provider_constraint.current_cluster, current_class, l_provider, l_provider_constraint)
 							end
-							if l_dependant_constraint /= Void and then not l_dependant_constraint.has_cluster (l_cluster) then
+							if l_dependant_constraint /= Void and then not l_dependant_constraint.has_group (l_group) then
 								set_fatal_error (current_class)
 								error_handler.report_gcdep_error (l_dependant_constraint.current_cluster, l_provider, current_class, l_dependant_constraint)
 							end

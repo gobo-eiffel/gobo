@@ -6,7 +6,7 @@ indexing
 		"Lace parsers"
   
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,12 +32,15 @@ create
 %token L_SYSTEM L_ROOT L_END L_CLUSTER
 %token L_DEFAULT L_EXTERNAL L_GENERATE L_OPTION
 %token L_ABSTRACT L_EXCLUDE L_VISIBLE L_LIBRARY
+%token L_ASSEMBLY L_PREFIX
 %token L_STRERR
 
 %type <ET_LACE_CLUSTER> Cluster Nested_cluster Recursive_cluster Subcluster Qualified_subcluster
 %type <ET_LACE_CLUSTERS> Cluster_list Clusters_opt Subclusters_opt Subcluster_list
 %type <ET_LACE_EXCLUDE> Excludes Exclude_list Cluster_options_opt
-%type <ET_IDENTIFIER> Identifier Root_cluster_opt Creation_procedure_opt
+%type <ET_IDENTIFIER> Identifier Root_cluster_opt Creation_procedure_opt Prefix_opt
+%type <ET_LACE_ASSEMBLY> Assembly
+%type <ET_LACE_ASSEMBLIES> Assembly_list Assemblies_opt
 
 %start Ace
 
@@ -45,9 +48,10 @@ create
 --------------------------------------------------------------------------------
 
 Ace: L_SYSTEM Identifier L_ROOT Identifier Root_cluster_opt Creation_procedure_opt
-	Defaults_opt Clusters_opt Externals_opt Generates_opt L_END
+	Defaults_opt Clusters_opt Assemblies_opt Externals_opt Generates_opt L_END
 		{
 			last_universe := new_universe ($8)
+			last_universe.set_assemblies ($9)
 			last_universe.set_system_name ($2.name)
 			last_universe.set_root_class ($4)
 			last_universe.set_root_creation ($6)
@@ -272,6 +276,49 @@ Visible: Identifier
 	;
 
 Visible_separator: -- Empty
+	| ';'
+	;
+
+Assemblies_opt: -- Empty
+		-- { $$ := Void }
+	| L_ASSEMBLY
+		-- { $$ := Void }
+	| L_ASSEMBLY Assembly_list Assembly_terminator
+		{ $$ := $2 }
+	;
+
+Assembly_list: Assembly
+		{ $$ := new_assemblies ($1) }
+	| Assembly_list Assembly_separator Assembly
+		{
+			$$ := $1
+			$1.put_last ($3)
+		}
+	;
+
+Assembly: Identifier ':' Identifier Prefix_opt
+		{
+			$$ := new_assembly ($1, $3)
+			$$.set_class_prefix ($4)
+		}
+	| Identifier ':' Identifier ',' Identifier ',' Identifier ',' Identifier Prefix_opt
+		{
+			$$ := new_gac_assembly ($1, $3, $5, $7, $9)
+			$$.set_class_prefix ($10)
+		}
+	;
+
+Prefix_opt: -- Empty
+		-- { $$ := Void }
+	| L_PREFIX Identifier L_END
+		{ $$ := $2 }
+	;
+
+Assembly_terminator: -- Empty
+	| ';'
+	;
+
+Assembly_separator: -- Empty
 	| ';'
 	;
 

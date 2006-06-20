@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 		local
 			i, nb: INTEGER
 			a_string: STRING
-			l_cluster_names: DS_ARRAYED_LIST [STRING]
+			l_group_names: DS_ARRAYED_LIST [STRING]
 		do
 			code := gcdep_template_code
 			etl_code := gcdep_etl_code
@@ -95,17 +95,17 @@ feature {NONE} -- Initialization
 			parameters.put (etl_code, 1)
 			parameters.put (cluster.full_name ('.'), 2)
 			parameters.put (a_class.name.name, 3)
-			parameters.put (a_class.cluster.full_name ('.'), 4)
+			parameters.put (a_class.group.full_name ('.'), 4)
 			parameters.put (a_dependant.name.name, 5)
-			parameters.put (a_dependant.cluster.full_name ('.'), 6)
-			l_cluster_names := a_constraint.cluster_names
-			nb := l_cluster_names.count
+			parameters.put (a_dependant.group.full_name ('.'), 6)
+			l_group_names := a_constraint.group_names
+			nb := l_group_names.count
 			if nb = 0 then
 				a_string := a_constraint.current_cluster.full_name ('.')
 			else
 				create a_string.make (50)
 				from i := 1 until i > nb loop
-					a_string.append_string (l_cluster_names.item (i))
+					a_string.append_string (l_group_names.item (i))
 					a_string.append_string (", ")
 					i := i + 1
 				end
@@ -118,9 +118,9 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 			-- dollar2: $2 = cluster full name
 			-- dollar3: $3 = class name
-			-- dollar3: $4 = class' cluster full name
+			-- dollar3: $4 = class' group full name
 			-- dollar5: $5 = dependant name
-			-- dollar6: $6 = dependant's cluster full name
+			-- dollar6: $6 = dependant's group full name
 			-- dollar7: $7 = constraint cluster list
 		end
 
@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 		local
 			i, nb: INTEGER
 			a_string: STRING
-			l_cluster_names: DS_ARRAYED_LIST [STRING]
+			l_group_names: DS_ARRAYED_LIST [STRING]
 		do
 			code := gcpro_template_code
 			etl_code := gcpro_etl_code
@@ -148,17 +148,17 @@ feature {NONE} -- Initialization
 			parameters.put (etl_code, 1)
 			parameters.put (cluster.full_name ('.'), 2)
 			parameters.put (a_class.name.name, 3)
-			parameters.put (a_class.cluster.full_name ('.'), 4)
+			parameters.put (a_class.group.full_name ('.'), 4)
 			parameters.put (a_provider.name.name, 5)
-			parameters.put (a_provider.cluster.full_name ('.'), 6)
-			l_cluster_names := a_constraint.cluster_names
-			nb := l_cluster_names.count
+			parameters.put (a_provider.group.full_name ('.'), 6)
+			l_group_names := a_constraint.group_names
+			nb := l_group_names.count
 			if nb = 0 then
 				a_string := a_constraint.current_cluster.full_name ('.')
 			else
 				create a_string.make (50)
 				from i := 1 until i > nb loop
-					a_string.append_string (l_cluster_names.item (i))
+					a_string.append_string (l_group_names.item (i))
 					a_string.append_string (", ")
 					i := i + 1
 				end
@@ -171,9 +171,9 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 			-- dollar2: $2 = cluster full name
 			-- dollar3: $3 = class name
-			-- dollar3: $4 = class' cluster full name
+			-- dollar3: $4 = class' group full name
 			-- dollar5: $5 = provider name
-			-- dollar6: $6 = provider's cluster full name
+			-- dollar6: $6 = provider's group full name
 			-- dollar7: $7 = constraint cluster list
 		end
 

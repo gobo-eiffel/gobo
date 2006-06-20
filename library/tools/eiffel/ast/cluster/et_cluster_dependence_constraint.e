@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_cluster: like current_cluster; a_names: like cluster_names) is
+	make (a_cluster: like current_cluster; a_names: like group_names) is
 			-- Create a dependence constraint for `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -33,32 +33,32 @@ feature {NONE} -- Initialization
 			no_void_name: not a_names.has (Void)
 		do
 			current_cluster := a_cluster
-			cluster_names := a_names
+			group_names := a_names
 		ensure
 			current_cluster_set: current_cluster = a_cluster
-			cluster_names_set: cluster_names = a_names
+			group_names_set: group_names = a_names
 		end
 
 feature -- Status report
 
-	has_cluster (a_cluster: ET_CLUSTER): BOOLEAN is
-			-- Is `a_cluster' or one of its ancestors part of
+	has_group (a_group: ET_GROUP): BOOLEAN is
+			-- Is `a_group' or one of its ancestors part of
 			-- the current dependence constraint?
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		local
 			l_name: STRING
 			i, nb: INTEGER
-			l_parent: ET_CLUSTER
+			l_parent: ET_GROUP
 		do
-			if a_cluster = current_cluster then
+			if a_group = current_cluster then
 				Result := True
 			else
-				nb := cluster_names.count
+				nb := group_names.count
 				if nb > 0 then
-					l_name := a_cluster.full_name ('.')
+					l_name := a_group.full_name ('.')
 					from i := 1 until i > nb loop
-						if STRING_.same_case_insensitive (cluster_names.item (i), l_name) then
+						if STRING_.same_case_insensitive (group_names.item (i), l_name) then
 							Result := True
 							i := nb + 1
 						else
@@ -67,9 +67,9 @@ feature -- Status report
 					end
 				end
 				if not Result then
-					l_parent := a_cluster.parent
+					l_parent := a_group.parent
 					if l_parent /= Void then
-						Result := has_cluster (l_parent)
+						Result := has_group (l_parent)
 					end
 				end
 			end
@@ -78,17 +78,17 @@ feature -- Status report
 feature -- Access
 
 	current_cluster: ET_CLUSTER
-			-- Current cluster for which `cluster_names'
+			-- Current cluster for which `group_names'
 			-- have been specified
 
-	cluster_names: DS_ARRAYED_LIST [STRING]
-			-- Names of cluster that should be the only providers
+	group_names: DS_ARRAYED_LIST [STRING]
+			-- Names of groups that should be the only providers
 			-- or the only dependants of `current_cluster'
 
 invariant
 
 	current_cluster_not_void: current_cluster /= Void
-	cluster_names_not_void: cluster_names /= Void
-	no_void_cluster_name: not cluster_names.has (Void)
+	group_names_not_void: group_names /= Void
+	no_void_group_name: not group_names.has (Void)
 
 end

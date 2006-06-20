@@ -4681,8 +4681,7 @@ feature -- Validity errors
 		end
 
 	report_vscn0a_error (a_class: ET_CLASS; other_cluster: ET_CLUSTER; other_filename: STRING) is
-			-- Report VSCN error: `a_class' also appears in
-			-- `other_cluster'.
+			-- Report VSCN error: `a_class' also appears in `other_cluster'.
 			--
 			-- ETL2: p.38
 		require
@@ -4695,6 +4694,25 @@ feature -- Validity errors
 		do
 			if reportable_vscn_error (a_class) then
 				create an_error.make_vscn0a (a_class, other_cluster, other_filename)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0b_error (a_class: ET_CLASS; other_cluster: ET_CLUSTER; other_filename: STRING) is
+			-- Report VSCN error: `a_class' also appears in `other_cluster'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_class_in_assembly: a_class.is_in_assembly
+			other_cluster_not_void: other_cluster /= Void
+			other_filename_not_void: other_filename /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0b (a_class, other_cluster, other_filename)
 				report_validity_error (an_error)
 			end
 		end

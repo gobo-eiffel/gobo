@@ -206,6 +206,7 @@ create
 	make_vrle1a,
 	make_vrle2a,
 	make_vscn0a,
+	make_vscn0b,
 	make_vtat1a,
 	make_vtat1b,
 	make_vtat2a,
@@ -8679,8 +8680,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vscn0a (a_class: like current_class; other_cluster: ET_CLUSTER; other_filename: STRING) is
-			-- Create a new VSCN error: `a_class' also appears in
-			-- `other_cluster'.
+			-- Create a new VSCN error: `a_class' also appears in `other_cluster'.
 			--
 			-- ETL2: p.38
 		require
@@ -8701,7 +8701,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class.cluster.full_pathname, 6)
+			parameters.put (a_class.group.full_pathname, 6)
 			parameters.put (a_class.filename, 7)
 			parameters.put (other_cluster.full_pathname, 8)
 			parameters.put (other_filename, 9)
@@ -8717,7 +8717,52 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = first cluster pathname
+			-- dollar6: $6 = first group pathname
+			-- dollar7: $7 = first class filename
+			-- dollar8: $8 = second cluster pathname
+			-- dollar9: $9 = second class filename
+		end
+
+	make_vscn0b (a_class: like current_class; other_cluster: ET_CLUSTER; other_filename: STRING) is
+			-- Create a new VSCN error: `a_class' also appears in `other_cluster'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_class_in_assenbly: a_class.is_in_assembly
+			other_cluster_not_void: other_cluster /= Void
+			other_filename_not_void: other_filename /= Void
+		do
+			code := vscn0b_template_code
+			etl_code := vscn_etl_code
+			default_template := vscn0b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := null_position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class.group.full_pathname, 6)
+			parameters.put (a_class.filename, 7)
+			parameters.put (other_cluster.full_pathname, 8)
+			parameters.put (other_filename, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first group pathname
 			-- dollar7: $7 = first class filename
 			-- dollar8: $8 = second cluster pathname
 			-- dollar9: $9 = second class filename
@@ -15266,6 +15311,7 @@ feature {NONE} -- Implementation
 	vrle1a_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in feature `$7' is also the final name of feature."
 	vrle2a_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in feature `$7' is also the name of a formal argument of this feature."
 	vscn0a_default_template: STRING is "[$1] class $5: class appears in files '$7' and '$9'."
+	vscn0b_default_template: STRING is "[$1] class $5: class appears in assembly '$7' and file '$9'."
 	vtat1a_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
 	vtat1b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query, or an argument of routine `$8'."
 	vtat2a_default_template: STRING is "[$1] class $5 ($3,$4): anchor cycle $6."
@@ -15735,6 +15781,7 @@ feature {NONE} -- Implementation
 	vrle1a_template_code: STRING is "vrle1a"
 	vrle2a_template_code: STRING is "vrle2a"
 	vscn0a_template_code: STRING is "vscn0a"
+	vscn0b_template_code: STRING is "vscn0b"
 	vtat1a_template_code: STRING is "vtat1a"
 	vtat1b_template_code: STRING is "vtat1b"
 	vtat2a_template_code: STRING is "vtat2a"
