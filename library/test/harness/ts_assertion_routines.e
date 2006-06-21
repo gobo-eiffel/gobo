@@ -742,6 +742,7 @@ feature {TS_TEST_HANDLER} -- Containers
 						new_tag.append_string ("-item #")
 						INTEGER_.append_decimal_integer (i, new_tag)
 						a_message := assert_equal_message (new_tag, expected_item, actual_item)
+						i := nb + 1
 					else
 						i1 := i1 + 1
 						i2 := i2 + 1
@@ -804,6 +805,7 @@ feature {TS_TEST_HANDLER} -- Containers
 						new_tag.append_string ("-item #")
 						INTEGER_.append_decimal_integer (i, new_tag)
 						a_message := assert_equal_message (new_tag, expected_item, actual_item)
+						i := nb + 1
 					else
 						i1 := i1 + 1
 						i2 := i2 + 1
@@ -879,6 +881,7 @@ feature {TS_TEST_HANDLER} -- Containers
 						new_tag.append_string ("-item #")
 						INTEGER_.append_decimal_integer (i, new_tag)
 						a_message := assert_strings_equal_message (new_tag, expected_item.out, actual_item.out)
+						i := nb + 1
 					else
 						i1 := i1 + 1
 						i2 := i2 + 1
