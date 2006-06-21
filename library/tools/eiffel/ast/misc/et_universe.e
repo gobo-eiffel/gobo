@@ -1099,10 +1099,14 @@ feature -- Parsing
 			-- class names and filenames in each cluster. Classes
 			-- are added to `classes', but are not parsed.
 			-- Filenames are supposed to be of the form 'classname.e'.
+			-- Also consume assemblies.
 		do
 			if not is_preparsed then
 				if clusters /= Void then
 					eiffel_preparser.preparse_clusters_shallow (clusters)
+				end
+				if assemblies /= Void then
+					assembly_consumer.consume_assemblies (assemblies)
 				end
 				is_preparsed := True
 			end
@@ -1116,10 +1120,14 @@ feature -- Parsing
 			-- are added to `classes', but are not parsed.
 			-- Each Eiffel file is supposed to contain exactly
 			-- one class.
+			-- Also consume assemblies.
 		do
 			if not is_preparsed then
 				if clusters /= Void then
 					eiffel_preparser.preparse_clusters_single (clusters)
+				end
+				if assemblies /= Void then
+					assembly_consumer.consume_assemblies (assemblies)
 				end
 				is_preparsed := True
 			end
@@ -1132,10 +1140,14 @@ feature -- Parsing
 			-- class names and filenames in each cluster. Classes
 			-- are added to `classes', but are not parsed.
 			-- Each Eiffel file can contain more than one class.
+			-- Also consume assemblies.
 		do
 			if not is_preparsed then
 				if clusters /= Void then
 					eiffel_preparser.preparse_clusters_multiple (clusters)
+				end
+				if assemblies /= Void then
+					assembly_consumer.consume_assemblies (assemblies)
 				end
 				is_preparsed := True
 			end
@@ -1837,9 +1849,13 @@ feature -- Parsing
 			-- There is not need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway.
+			-- Also consume assemblies.
 		do
 			if clusters /= Void then
 				eiffel_parser.parse_clusters (clusters)
+			end
+			if assemblies /= Void then
+				assembly_consumer.consume_assemblies (assemblies)
 			end
 			is_preparsed := True
 		ensure
@@ -2513,6 +2529,18 @@ feature -- Processors
 			eiffel_parser_not_void: Result /= Void
 		end
 
+	assembly_consumer: ET_ASSEMBLY_CONSUMER is
+			-- Assembly consumer
+		do
+			Result := internal_assembly_consumer
+			if Result = Void then
+				create {ET_NULL_ASSEMBLY_CONSUMER} Result.make (Current)
+				internal_assembly_consumer := Result
+			end
+		ensure
+			assembly_consumer_not_void: Result /= Void
+		end
+
 	provider_checker: ET_AST_PROCESSOR
 			-- Provider checker
 
@@ -2554,6 +2582,16 @@ feature -- Processors
 			if implementation_checker = null_processor then
 				create {ET_IMPLEMENTATION_CHECKER} implementation_checker.make (Current)
 			end
+		end
+
+	set_assembly_consumer (a_consumer: like assembly_consumer) is
+			-- Set `assembly_consumer' to `a_consumer'.
+		require
+			a_consumer_not_void: a_consumer /= Void
+		do
+			internal_assembly_consumer := a_consumer
+		ensure
+			assembly_consumer_set: assembly_consumer = a_consumer
 		end
 
 	set_provider_checker (a_provider_checker: like provider_checker) is
@@ -2637,6 +2675,9 @@ feature {NONE} -- Implementation
 
 	internal_eiffel_parser: ET_EIFFEL_PARSER
 			-- Eiffel parser
+
+	internal_assembly_consumer: ET_ASSEMBLY_CONSUMER
+			-- Assembly consumer
 
 feature {NONE} -- Constants
 
