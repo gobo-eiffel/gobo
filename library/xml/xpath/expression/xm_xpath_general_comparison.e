@@ -235,7 +235,7 @@ feature -- Evaluation
 			last_evaluated_item := last_boolean_value
 		end
 
-feature {XM_XSLT_EXPRESSION} -- Restricted
+feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is
 			-- Compute cardinality.

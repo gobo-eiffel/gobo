@@ -249,7 +249,7 @@ feature -- Evaluation
 			create last_mapped_item.make_item (item_to_double (an_item))
 		end
 
-feature {XM_XSLT_EXPRESSION} -- Restricted
+feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is
 			-- Compute cardinality.

@@ -204,7 +204,7 @@ feature -- Element change
 			set: select_expression = a_select_expression
 		end
 
-feature {XM_XSLT_EXPRESSION} -- Restricted
+feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_special_properties is
 			-- Compute special properties.

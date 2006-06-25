@@ -256,7 +256,7 @@ feature -- Element change
 			second_operand_not_replaced: not second_operand.was_expression_replaced
 		end
 
-feature {XM_XSLT_EXPRESSION} -- Restricted
+feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is
 			-- Compute cardinality.

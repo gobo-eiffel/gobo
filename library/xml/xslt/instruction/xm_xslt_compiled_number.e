@@ -423,7 +423,7 @@ feature -- Evaluation
 			end
 		end
 
-feature {XM_XSLT_EXPRESSION} -- Restricted
+feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is
 			-- Compute cardinality.
