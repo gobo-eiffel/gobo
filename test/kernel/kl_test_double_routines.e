@@ -95,4 +95,24 @@ feature -- Test
 			assert_integers_equal ("negative_exact", -47, r.rounded_to_integer (-47.0))
 		end
 
+	test_plus_infinity is
+			-- Test feature `plus_infinity'.
+		local
+			r: KL_DOUBLE_ROUTINES
+		do
+			create r
+			assert ("positive", r.plus_infinity > 0)
+			assert ("infinity1", r.plus_infinity - 1 = r.plus_infinity)
+		end
+
+	test_minus_infinity is
+			-- Test feature `minus_infinity'.
+		local
+			r: KL_DOUBLE_ROUTINES
+		do
+			create r
+			assert ("negative", r.minus_infinity < 0)
+			assert ("infinity1", r.minus_infinity + 1 = r.minus_infinity)
+		end
+
 end

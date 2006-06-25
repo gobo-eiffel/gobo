@@ -196,6 +196,22 @@ feature -- Constants
 			p.put_natural_8 (127, 7)
 			Result := p.read_real_64 (0)
 #else
+#ifdef VE
+		local
+			p: RTS_MEMORY_MAPPED_AREA_ARRAY [CHARACTER]
+		once
+				-- Binary representation of IEEE 754 '+infinity'.
+				-- See: http://en.wikipedia.org/wiki/IEEE_754
+			create p.make ($Result, 8)
+			p.put ('%/0/', 1)
+			p.put ('%/0/', 2)
+			p.put ('%/0/', 3)
+			p.put ('%/0/', 4)
+			p.put ('%/0/', 5)
+			p.put ('%/0/', 6)
+			p.put ('%/240/', 7)
+			p.put ('%/127/', 8)
+#else
 		local
 			d1: DOUBLE
 			large_number: DOUBLE
@@ -209,6 +225,7 @@ feature -- Constants
 			-- Result := large_number * large_number
 			d1 := large_number
 			Result := d1 * d1
+#endif
 #endif
 		ensure
 			positive: Result > 0
@@ -233,6 +250,22 @@ feature -- Constants
 			p.put_natural_8 (255, 7)
 			Result := p.read_real_64 (0)
 #else
+#ifdef VE
+		local
+			p: RTS_MEMORY_MAPPED_AREA_ARRAY [CHARACTER]
+		once
+				-- Binary representation of IEEE 754 '+infinity'.
+				-- See: http://en.wikipedia.org/wiki/IEEE_754
+			create p.make ($Result, 8)
+			p.put ('%/0/', 1)
+			p.put ('%/0/', 2)
+			p.put ('%/0/', 3)
+			p.put ('%/0/', 4)
+			p.put ('%/0/', 5)
+			p.put ('%/0/', 6)
+			p.put ('%/240/', 7)
+			p.put ('%/255/', 8)
+#else
 		local
 			d1, d2: DOUBLE
 			large_number: DOUBLE
@@ -249,6 +282,7 @@ feature -- Constants
 			d1 := large_number
 			d2 := large_negative_number
 			Result := d1 * d2
+#endif
 #endif
 		ensure
 			negative: Result < 0
