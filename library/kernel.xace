@@ -22,6 +22,7 @@
 			<option name="exclude" value="table_eiffel3"/>
 			<option name="exclude" value="desc"/>
 			<option name="exclude" value="classic" if="${GOBO_DOTNET}"/>
+			<option name="exclude" value="dotnet" unless="${GOBO_DOTNET}"/>
 			<option name="exclude" value="structures" if="${GOBO_EIFFELBASE}"/>
 			<option name="exclude" value="event" if="${GOBO_EIFFELBASE}"/>
 			<option name="exclude" value="serialization" if="${GOBO_EIFFELBASE}"/>
@@ -56,6 +57,8 @@
 		</cluster>
 		<cluster name="time" unless="${GOBO_EIFFELBASE}">
 			<option name="read_only" value="true"/>
+			<cluster name="classic" unless="${GOBO_DOTNET}"/>
+			<cluster name="dotnet" if="${GOBO_DOTNET}"/>
 			<cluster name="format">
 				<cluster name="english"/>
 			</cluster>
