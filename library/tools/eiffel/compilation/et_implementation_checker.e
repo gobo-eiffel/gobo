@@ -145,6 +145,7 @@ feature {NONE} -- Processing
 			old_class: ET_CLASS
 			a_parents: ET_PARENT_LIST
 			a_parent_class: ET_CLASS
+			a_error_in_parent: BOOLEAN
 			i, nb: INTEGER
 		do
 			old_class := current_class
@@ -174,16 +175,15 @@ feature {NONE} -- Processing
 							a_parent_class := a_parents.parent (i).type.direct_base_class (universe)
 							internal_process_class (a_parent_class)
 							if a_parent_class.has_implementation_error then
+								a_error_in_parent := True
 								set_fatal_error (current_class)
 							end
 							i := i + 1
 						end
 					end
-					if not current_class.has_implementation_error then
-						error_handler.report_compilation_status (Current, current_class)
-						check_features_validity
-						check_invariants_validity
-					end
+					error_handler.report_compilation_status (Current, current_class)
+					check_features_validity (a_error_in_parent)
+					check_invariants_validity (a_error_in_parent)
 				else
 					set_fatal_error (current_class)
 				end
@@ -195,7 +195,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Feature validity
 
-	check_features_validity is
+	check_features_validity (a_error_in_parent: BOOLEAN) is
 			-- Check validity of immediate and redeclared features
 			-- of `current_class'.
 		local
@@ -206,7 +206,7 @@ feature {NONE} -- Feature validity
 			i, nb: INTEGER
 		do
 			l_queries := current_class.queries
-			if flat_mode then
+			if flat_mode and not a_error_in_parent then
 				nb := l_queries.count
 			else
 				nb := l_queries.declared_count
@@ -217,11 +217,11 @@ feature {NONE} -- Feature validity
 				if feature_checker.has_fatal_error then
 					set_fatal_error (current_class)
 				end
-				check_assertions_validity (l_query, l_query)
+				check_assertions_validity (l_query, l_query, a_error_in_parent)
 				i := i + 1
 			end
 			l_procedures := current_class.procedures
-			if flat_mode then
+			if flat_mode and not a_error_in_parent then
 				nb := l_procedures.count
 			else
 				nb := l_procedures.declared_count
@@ -232,7 +232,7 @@ feature {NONE} -- Feature validity
 				if feature_checker.has_fatal_error then
 					set_fatal_error (current_class)
 				end
-				check_assertions_validity (l_procedure, l_procedure)
+				check_assertions_validity (l_procedure, l_procedure, a_error_in_parent)
 				i := i + 1
 			end
 		end
@@ -242,7 +242,7 @@ feature {NONE} -- Feature validity
 
 feature {NONE} -- Assertion validity
 
-	check_assertions_validity (a_feature_impl, a_feature: ET_FEATURE) is
+	check_assertions_validity (a_feature_impl, a_feature: ET_FEATURE; a_error_in_parent: BOOLEAN) is
 			-- Check validity of pre- and postconditions of `a_feature_impl' in `current_class'.
 			-- `a_feature' is the version of `a_feature_impl' in `current_class' (useful
 			-- when processing inherited assertions).
@@ -281,15 +281,15 @@ feature {NONE} -- Assertion validity
 					a_feature.set_assertions_error
 				end
 			end
-			if flat_dbc_mode or flat_mode then
+			if (flat_dbc_mode or flat_mode) and not a_error_in_parent then
 				l_first_precursor := a_feature_impl.first_precursor
 				if l_first_precursor /= Void then
-					check_assertions_validity (l_first_precursor, a_feature)
+					check_assertions_validity (l_first_precursor, a_feature, a_error_in_parent)
 					l_other_precursors := a_feature_impl.other_precursors
 					if l_other_precursors /= Void then
 						nb := l_other_precursors.count
 						from i := 1 until i > nb loop
-							check_assertions_validity (l_other_precursors.item (i), a_feature)
+							check_assertions_validity (l_other_precursors.item (i), a_feature, a_error_in_parent)
 							i := i + 1
 						end
 					end
@@ -297,7 +297,7 @@ feature {NONE} -- Assertion validity
 			end
 		end
 
-	check_invariants_validity is
+	check_invariants_validity (a_error_in_parent: BOOLEAN) is
 			-- Check validity of invariants of `current_class',
 			-- and of its proper ancestors in flat mode.
 		local
@@ -313,7 +313,7 @@ feature {NONE} -- Assertion validity
 					set_fatal_error (current_class)
 				end
 			end
-			if flat_mode then
+			if flat_mode and not a_error_in_parent then
 				an_ancestors := current_class.ancestors
 				nb := an_ancestors.count
 				from i := 1 until i > nb loop
