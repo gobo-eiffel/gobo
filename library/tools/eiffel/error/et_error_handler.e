@@ -4858,9 +4858,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtcg3a_error (a_class: ET_CLASS; an_actual, a_constraint: ET_TYPE) is
+	report_vtcg3a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual, a_constraint: ET_TYPE) is
 			-- Report VTCG-3 error: actual generic paramater
-			-- `an_actual' in `a_class' does not conform to
+			-- `an_actual' of `a_type' in `a_class' does not conform to
 			-- constraint `a_constraint'.
 			--
 			-- ETL2: p.203
@@ -4868,13 +4868,14 @@ feature -- Validity errors
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_constraint_not_void: a_constraint /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vtcg3_error (a_class) then
-				create an_error.make_vtcg3a (a_class, an_actual, a_constraint)
+				create an_error.make_vtcg3a (a_class, a_type, an_actual, a_constraint)
 				report_validity_error (an_error)
 			end
 		end
@@ -7648,8 +7649,8 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvtcg5a_error (a_class: ET_CLASS; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
-			-- Report GVTCG-5 error: actual generic paramater `an_actual' in
+	report_gvtcg5a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+			-- Report GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
 			-- `a_class' is not a reference type but the corresponding formal parameter
 			-- `a_formal' is marked as reference.
 			--
@@ -7657,19 +7658,20 @@ feature -- Validity errors
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_formal_not_void: a_formal /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_gvtcg5_error (a_class) then
-				create an_error.make_gvtcg5a (a_class, an_actual, a_formal)
+				create an_error.make_gvtcg5a (a_class, a_type, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_gvtcg5b_error (a_class: ET_CLASS; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
-			-- Report GVTCG-5 error: actual generic paramater `an_actual' in
+	report_gvtcg5b_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+			-- Report GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
 			-- `a_class' is not expanded type but the corresponding formal parameter
 			-- `a_formal' is marked as expanded.
 			--
@@ -7677,13 +7679,14 @@ feature -- Validity errors
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_formal_not_void: a_formal /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_gvtcg5_error (a_class) then
-				create an_error.make_gvtcg5b (a_class, an_actual, a_formal)
+				create an_error.make_gvtcg5b (a_class, a_type, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end

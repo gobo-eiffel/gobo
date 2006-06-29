@@ -221,12 +221,12 @@ feature {NONE} -- Constraint validity
 						l_formal := a_formals.formal_parameter (i)
 						if l_formal.is_expanded then
 							if not l_actual.is_type_expanded (current_class, universe) then
-								error_handler.report_gvtcg5b_error (current_class, l_actual, l_formal)
+								error_handler.report_gvtcg5b_error (current_class, a_type, l_actual, l_formal)
 								set_fatal_error
 							end
 						elseif l_formal.is_reference then
 							if not l_actual.is_type_reference (current_class, universe) then
-								error_handler.report_gvtcg5a_error (current_class, l_actual, l_formal)
+								error_handler.report_gvtcg5a_error (current_class, a_type, l_actual, l_formal)
 								set_fatal_error
 							end
 						end
@@ -316,7 +316,7 @@ feature {NONE} -- Constraint validity
 						-- The constraint of the formal parameter is itself
 						-- (e.g. "A [G -> ARRAY [G]]"). This is not considered
 						-- as a fatal error by gelint. The base class of this
-						-- formal parameter will be the base class of its 
+						-- formal parameter will be the base class of its
 						-- constraint ("ARRAY" in the example above).
 					error_handler.report_vcfg3h_error (current_class, a_formal, a_type)
 				elseif index1 > index2 then

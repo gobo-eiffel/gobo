@@ -797,12 +797,12 @@ feature {NONE} -- Validity checking
 							a_formal := a_formals.formal_parameter (i)
 							if a_formal.is_expanded then
 								if not an_actual.is_type_expanded (current_type, universe) then
-									error_handler.report_gvtcg5b_error (current_class, an_actual, a_formal)
+									error_handler.report_gvtcg5b_error (current_class, a_type, an_actual, a_formal)
 									set_fatal_error
 								end
 							elseif a_formal.is_reference then
 								if not an_actual.is_type_reference (current_type, universe) then
-									error_handler.report_gvtcg5a_error (current_class, an_actual, a_formal)
+									error_handler.report_gvtcg5a_error (current_class, a_type, an_actual, a_formal)
 									set_fatal_error
 								end
 							end
@@ -833,10 +833,10 @@ feature {NONE} -- Validity checking
 									-- constraint of its corresponding formal parameter.
 								set_fatal_error
 								if current_class = a_class_impl then
-									error_handler.report_vtcg3a_error (current_class, an_actual, a_constraint)
+									error_handler.report_vtcg3a_error (current_class, a_type, an_actual, a_constraint)
 								else
 -- TODO
-									error_handler.report_vtcg3a_error (a_class_impl, an_actual, a_constraint)
+									error_handler.report_vtcg3a_error (a_class_impl, a_type, an_actual, a_constraint)
 								end
 							end
 							i := i + 1

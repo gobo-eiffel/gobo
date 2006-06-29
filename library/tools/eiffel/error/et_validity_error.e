@@ -9149,9 +9149,9 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = invalid type
 		end
 
-	make_vtcg3a (a_class: like current_class; an_actual, a_constraint: ET_TYPE) is
+	make_vtcg3a (a_class: like current_class; a_type: ET_CLASS_TYPE; an_actual, a_constraint: ET_TYPE) is
 			-- Create a new VTCG-3 error: actual generic paramater
-			-- `an_actual' in `a_class' does not conform to
+			-- `an_actual' of `a_type' in `a_class' does not conform to
 			-- constraint `a_constraint'.
 			--
 			-- ETL2: p.203
@@ -9159,6 +9159,7 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_constraint_not_void: a_constraint /= Void
 		do
@@ -9168,7 +9169,7 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := an_actual.position
-			create parameters.make (1, 7)
+			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9176,6 +9177,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.name.name, 5)
 			parameters.put (an_actual.to_text, 6)
 			parameters.put (a_constraint.to_text, 7)
+			parameters.put (a_type.to_text, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9190,6 +9192,7 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = actual generic parameter
 			-- dollar7: $7 = generic constraint
+			-- dollar8: $8 = generic type
 		end
 
 	make_vtcg4a (a_class: like current_class; a_position: ET_POSITION; an_actual_index: INTEGER;
@@ -14841,8 +14844,8 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
-	make_gvtcg5a (a_class: like current_class; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
-			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' in
+	make_gvtcg5a (a_class: like current_class; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
 			-- `a_class' is not a reference type but the corresponding formal parameter
 			-- `a_formal' is marked as reference.
 			--
@@ -14850,6 +14853,7 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_formal_not_void: a_formal /= Void
 		do
@@ -14859,13 +14863,14 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := an_actual.position
-			create parameters.make (1, 6)
+			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
 			parameters.put (an_actual.to_text, 6)
+			parameters.put (a_type.to_text, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -14879,10 +14884,11 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = actual generic parameter
+			-- dollar7: $7 = generic type
 		end
 
-	make_gvtcg5b (a_class: like current_class; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
-			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' in
+	make_gvtcg5b (a_class: like current_class; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
 			-- `a_class' is not expanded type but the corresponding formal parameter
 			-- `a_formal' is marked as expanded.
 			--
@@ -14890,6 +14896,7 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_formal_not_void: a_formal /= Void
 		do
@@ -14899,13 +14906,14 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := an_actual.position
-			create parameters.make (1, 6)
+			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
 			parameters.put (an_actual.to_text, 6)
+			parameters.put (a_type.to_text, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -14919,6 +14927,7 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = actual generic parameter
+			-- dollar7: $7 = generic type
 		end
 
 	make_gvuaa0a (a_class: like current_class; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
@@ -15319,7 +15328,7 @@ feature {NONE} -- Implementation
 	vtbt0b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': `$7' is not the final name of a feature."
 	vtbt0c_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': bit size must be a positive integer constant."
 	vtbt0d_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': bit size must be a positive integer constant."
-	vtcg3a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' does not conform to constraint '$7'."
+	vtcg3a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' in type '$8' does not conform to constraint '$7'."
 	vtcg4a_default_template: STRING is "[$1] class $5 ($3,$4): base class $8 of the $6-th actual generic parameter of $9 does not make feature `$7' available as creation procedure to class $9."
 	vtcg4b_default_template: STRING is "[$1] class $5 ($6,$3,$4): base class $9 of the $7-th actual generic parameter of $10 does not make feature `$8' available as creation procedure to class $10."
 	vtcg4c_default_template: STRING is "[$1] class $5 ($3,$4): the $6-th actual generic parameter of $9, which is the $8-th formal generic parameter of class $5, does not list feature `$7' as creation procedure in its generic constraint."
@@ -15457,8 +15466,8 @@ feature {NONE} -- Implementation
 	gvkfe3a_default_template: STRING is "[$1] class $5: attribute `$6' in kernel class $5 has not the expected type '$7'."
 	gvkfe4a_default_template: STRING is "[$1] class $5: feature `$6' in kernel class $5 is not a procedure."
 	gvkfe5a_default_template: STRING is "[$1] class $5: feature `$6' in kernel class $5 is not a query."
-	gvtcg5a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' is not a reference type but the corresponding formal parameter is marked as reference."
-	gvtcg5b_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' is not expanded type but the corresponding formal parameter is marked as expanded."
+	gvtcg5a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' in type '$7' is not a reference type but the corresponding formal parameter is marked as reference."
+	gvtcg5b_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' in type '$7' is not expanded type but the corresponding formal parameter is marked as expanded."
 	gvuaa0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot have actual arguments."
 	gvual0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a local variable of feature `$7' and hence cannot have actual arguments."
 	gvuia0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot be an instruction."
