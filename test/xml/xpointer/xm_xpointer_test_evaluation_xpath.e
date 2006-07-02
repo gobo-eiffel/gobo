@@ -131,6 +131,39 @@ feature -- Test
 			assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
 		end
 
+	test_xpath_scheme is
+			-- Test W3C xpath() scheme.
+			local
+			a_processor: XM_XPATH_XPOINTER
+			a_document: XM_XPATH_DOCUMENT
+			system_id: STRING
+			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+			an_element: XM_XPATH_ELEMENT
+			an_xpath_scheme: XM_XPATH_XPOINTER_XPATH_SCHEME
+			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
+		do
+			conformance.set_basic_xslt_processor
+			system_id := books_xml_uri.full_reference
+			make_parser
+			parser.parse_from_system (system_id)
+			assert ("No parsing error", not tree_pipe.tree.has_error)
+			a_document := tree_pipe.document
+			assert ("Document not void", a_document /= Void)
+			create a_processor.make (True)
+			create an_xpath_scheme.make_w3c
+			a_processor.register_scheme (an_xpath_scheme)
+			create an_xmlns_scheme.make
+			a_processor.register_scheme (an_xmlns_scheme)
+			a_processor.evaluate ("xpath2(/BOOKLIST/CATEGORIES/CATEGORY[1])", a_document)
+			assert ("Evaluated without error", a_processor.value /= Void and then not a_processor.value.is_error)
+			a_sequence_extent ?= a_processor.value
+			assert ("Sequence_extent", a_sequence_extent /= Void)
+			assert ("One item", a_sequence_extent.count = 1)
+			an_element ?= a_sequence_extent.item_at (1)
+			assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
+			assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+		end
+
 feature {NONE} -- Implementation
 
 	make_parser is

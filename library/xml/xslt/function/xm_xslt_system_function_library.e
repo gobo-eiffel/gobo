@@ -56,6 +56,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = System_property_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Type_available_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Unparsed_entity_uri_function_type_code and then not is_restricted then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Unparsed_entity_public_id_function_type_code and then not is_restricted then
@@ -105,6 +107,8 @@ feature -- Element change
 				create {XM_XSLT_REGEX_GROUP} a_function_call.make				
 			elseif a_fingerprint = System_property_function_type_code then
 				create {XM_XSLT_SYSTEM_PROPERTY} a_function_call.make				
+			elseif a_fingerprint = Type_available_function_type_code then
+				create {XM_XSLT_TYPE_AVAILABLE} a_function_call.make				
 			elseif a_fingerprint = Unparsed_entity_uri_function_type_code then
 				create {XM_XSLT_UNPARSED_ENTITY_URI} a_function_call.make								
 			elseif a_fingerprint = Unparsed_entity_public_id_function_type_code then

@@ -667,6 +667,7 @@ feature {NONE} -- Implementation
 			bind_fn_name (Key_function_type_code, "key")
 			bind_fn_name (Regex_group_function_type_code, "regex-group")
 			bind_fn_name (System_property_function_type_code, "system-property")
+			bind_fn_name (Type_available_function_type_code, "type-available")
 			bind_fn_name (Unparsed_entity_public_id_function_type_code, "unparsed-enitiy-public-id")
 			bind_fn_name (Unparsed_entity_uri_function_type_code, "unparsed-entity-uri")
 			bind_fn_name (Unparsed_text_function_type_code, "unparsed-text")

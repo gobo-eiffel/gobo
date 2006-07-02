@@ -79,7 +79,11 @@ feature -- Evaluation
 					a_context.set_local_variable (conversion.last_evaluation, slot_number)
 				end
 			else
-				if is_required_parameter then
+				if is_implicitly_required_parameter then
+					create an_invalid_item.make_from_string (STRING_.concat ("No value supplied for implicitly required parameter: ", variable_name),
+																		  Xpath_errors_uri, "XTDE0610", Dynamic_error)
+					a_context.current_receiver.append_item (an_invalid_item)
+				elseif is_required_parameter then
 					create an_invalid_item.make_from_string (STRING_.concat ("No value supplied for required parameter: ", variable_name),
 																		  Xpath_errors_uri, "XTDE0700", Dynamic_error)
 					a_context.current_receiver.append_item (an_invalid_item)

@@ -88,6 +88,7 @@ feature -- Events
 				output_escaping_enabled: not is_output_escaping_disabled (properties)
 			end
 			character_buffer := STRING_.appended_string (character_buffer, chars)
+			is_written := True
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is

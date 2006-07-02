@@ -321,11 +321,12 @@ feature {NONE} -- Implementation
 				end
 			else
 				from
-					all_nodes_iterator := a_document.new_axis_iterator (Descendant_axis); all_nodes_iterator.start
+					all_nodes_iterator := a_document.new_axis_iterator_with_node_test (Descendant_axis, match.node_test); all_nodes_iterator.start
 				until
 					all_nodes_iterator.after
 				loop
 					a_node := all_nodes_iterator.item
+					-- If `match' is a node test, we avoid testing it a second time
 					a_node_test ?= match
 					if a_node_test /= Void or else match.matches (a_node, a_new_context) then
 						process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)

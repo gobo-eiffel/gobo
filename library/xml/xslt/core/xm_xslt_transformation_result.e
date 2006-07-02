@@ -113,9 +113,9 @@ feature -- Status report
 			-- Possible error message from output resolver
 
 	is_document_started: BOOLEAN is
-			-- Has the result document been started yet?
+			-- Has the result document been written to yet?
 		do
-			Result := principal_receiver /= Void and then principal_receiver.is_document_started
+			Result := principal_receiver /= Void and then principal_receiver.is_written
 		end
 
 feature -- Element change

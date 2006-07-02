@@ -103,8 +103,6 @@ feature -- Access
 
 	key_manager: XM_XSLT_KEY_MANAGER is
 			-- Key manager
-		require
-			executable_not_void: executable /= Void
 		do
 			Result := executable.key_manager
 		ensure
@@ -529,7 +527,6 @@ feature -- Transformation
 	transform (a_source: XM_XSLT_SOURCE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
 			-- Transform `a_source' to `a_result' using `executable'.
 		require
-			executable_not_void: executable /= Void
 			initial_template_or_source_not_void: a_source = Void implies initial_template /= Void
 			result_not_void: a_result /= Void
 			no_error_yet: not is_error
@@ -545,10 +542,10 @@ feature -- Transformation
 			a_date_time: DT_DATE_TIME
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
-			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
+			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now)) -- reset for each transformations
 			create a_time_zone.make (implicit_timezone.fixed_offset)
 			create a_date_time.make_from_epoch (0)
-			create current_date_time.make (a_date_time, a_time_zone)
+			create current_date_time.make (a_date_time, a_time_zone) -- reset for each transformations
 			if a_source /= Void then
 				a_source.ignore_media_types
 				if	document_pool.is_document_mapped (a_source.system_id) then
@@ -635,7 +632,6 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER} -- Transformation in
 	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
 			-- Transform document supplied as in-memory tree.
 		require
-			executable_not_void: executable /= Void
 			initial_template_or_start_node_not_void: a_start_node = Void implies initial_template /= Void
 			destination_result_not_void: a_result /= Void
 			no_error_yet: not is_error
@@ -828,8 +824,6 @@ feature -- Implementation
 
 	initialize_transformer (a_start_node: XM_XPATH_NODE) is
 			-- Initialize in preparation for a transformation.
-		require
-			executable_not_void: executable /= Void
 		local
 			an_error: XM_XPATH_ERROR_VALUE
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
@@ -983,6 +977,8 @@ invariant
 	user_data_table_not_void: user_data_table /= Void
 	transformer_factory_not_void: transformer_factory /= Void
 	implicit_timezone_not_void: implicit_timezone /= Void
+	current_date_time_not_void: current_date_time /= Void
+	output_resolver_not_void: output_resolver /= Void
 
 end
 	

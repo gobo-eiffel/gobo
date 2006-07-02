@@ -25,14 +25,22 @@ inherit
 
 create
 
-	make, make_with_copy
+	make, make_stripper, make_with_copy
 
 feature {NONE} -- Initialization
 
 	make is
-			-- Establish invariant.
+			-- Create default rules.
 		do
 			create rule_dictionary.make (1, Number_of_buckets + Document_node + 1)
+		end
+
+
+	make_stripper is
+			-- Create mode for stripper rules.
+		do
+			make
+			is_stripper := True
 		end
 
 	make_with_copy (other: XM_XSLT_MODE) is
@@ -320,6 +328,9 @@ feature -- Status report
 			Result := internal_name = Void
 		end
 
+	is_stripper: BOOLEAN
+			-- Is `Current' being used for the space stripper?
+
 feature -- Element change
 
 	set_name (a_name: STRING) is
@@ -456,7 +467,7 @@ feature {NONE} -- Implementation
 			rules_not_void: a_rule /= Void and then another_rule /= Void
 		local
 			a_pattern, another_pattern: XM_XSLT_PATTERN
-			a_message: STRING
+			a_message, l_path, l_code: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 
@@ -465,7 +476,12 @@ feature {NONE} -- Implementation
 			if a_rule /= another_rule then
 				a_pattern := a_rule.pattern
 				another_pattern := another_rule.pattern
-				a_message := STRING_.concat ("Ambiguous rule match for ", a_node.path)
+				if is_stripper then
+					l_path := "xsl:strip-space"
+				else
+					l_path := a_node.path
+				end
+				a_message := STRING_.concat ("Ambiguous rule match for ", l_path)
 				a_message := STRING_.appended_string (a_message, "%NMatches both %"")
 				a_message := STRING_.appended_string (a_message, a_pattern.original_text)
 				a_message := STRING_.appended_string (a_message, " on line ")
@@ -478,7 +494,12 @@ feature {NONE} -- Implementation
 				a_message := STRING_.appended_string (a_message, another_pattern.line_number.out)
 				a_message := STRING_.appended_string (a_message, " of ")
 				a_message := STRING_.appended_string (a_message, another_pattern.system_id)
-				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTRE0540", Dynamic_error)
+				if is_stripper then
+					l_code := "XTRE0270"
+				else
+					l_code := "XTRE0540"
+				end
+				create an_error.make_from_string (a_message, Xpath_errors_uri, l_code, Dynamic_error)
 				a_transformer.report_recoverable_error (an_error)
 			end
 		end

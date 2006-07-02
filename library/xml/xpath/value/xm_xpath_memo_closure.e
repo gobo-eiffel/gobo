@@ -279,7 +279,7 @@ invariant
 	reservoir_not_void: not is_node_sequence implies reservoir /= Void
 	node_reservoir_not_void: is_node_sequence implies node_reservoir /= Void
 	input_iterator: state /= Unread_state implies input_iterator /= Void
-	node_iterator: is_node_sequence and then input_iterator /= Void implies input_iterator.is_node_iterator
+	node_iterator: is_node_sequence and then input_iterator /= Void implies input_iterator.is_error or else input_iterator.is_node_iterator
 	empty_reservoir: reservoir /= Void and then reservoir.count = 0 and then input_iterator /= Void implies input_iterator.off
 	empty_node_reservoir: node_reservoir /= Void and then node_reservoir.count = 0 and then input_iterator /= Void implies input_iterator.off
 

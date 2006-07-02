@@ -91,6 +91,7 @@ feature -- Events
 					end
 				end
 			end
+			is_written := True
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -101,6 +102,7 @@ feature -- Events
 			else
 				Precursor (a_name_code, a_type_code, a_value, properties)
 			end
+			is_written := True
 		end
 
 	start_content is
@@ -125,6 +127,7 @@ feature -- Events
 			if not in_meta_tag then
 				Precursor
 			end
+			is_written := True
 		end
 	
 	end_element is
@@ -172,6 +175,7 @@ feature -- Events
 				level := level - 1
 				Precursor
 			end
+			is_written := True
 		end
 
 feature {NONE} -- Implementation

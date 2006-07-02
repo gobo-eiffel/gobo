@@ -30,10 +30,10 @@ feature -- Access
 		end
 
 	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
-			-- Fingerprint of `a_qname'
+			-- Fingerprint of `a_qname';
+			-- Returns -2 if no namespace decalaration in scope for prefix.
 		require
 			valid_qname: a_qname /= Void and then is_qname (a_qname)
-			namespace_prefix_declared: shared_name_pool.is_prefix_declared (a_qname)
 		deferred
 		end
 

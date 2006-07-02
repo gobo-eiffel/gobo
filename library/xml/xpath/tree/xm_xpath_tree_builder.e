@@ -91,6 +91,7 @@ feature -- Events
 			if not has_error then
 				tree_document.set_unparsed_entity (a_name, a_system_id, a_public_id)
 			end
+			is_written := True
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
@@ -103,6 +104,7 @@ feature -- Events
 			if not has_error then
 				pending_element_name_code := a_name_code
 			end
+			is_written := True
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
@@ -116,6 +118,7 @@ feature -- Events
 				end
 				pending_namespaces.put_last (a_namespace_code)
 			end
+			is_written := True
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -131,6 +134,7 @@ feature -- Events
 					pending_attributes.add_attribute (a_name_code, a_type_code, a_value)
 				end
 			end
+			is_written := True
 		end
 
 	start_content is
@@ -161,6 +165,7 @@ feature -- Events
 			end
 			pending_namespaces := Void
 			pending_attributes := Void
+			is_written := True
 		end
 
 	end_element is
@@ -170,6 +175,7 @@ feature -- Events
 				current_depth := current_depth - 1
 				current_composite_node := current_composite_node.parent
 			end
+			is_written := True
 		end
 
 	notify_characters (a_character_string: STRING; properties: INTEGER) is
@@ -192,6 +198,7 @@ feature -- Events
 					end
 				end
 			end
+			is_written := True
 		end
 
 	notify_processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER) is
@@ -215,6 +222,7 @@ feature -- Events
 
 				a_processing_instruction.set_location (locator.system_id, locator.line_number)
 			end
+			is_written := True
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
@@ -226,6 +234,7 @@ feature -- Events
 				create a_comment.make (tree_document, a_content_string)
 				current_composite_node.add_child (a_comment)
 			end
+			is_written := True
 		end
 
 	end_document is

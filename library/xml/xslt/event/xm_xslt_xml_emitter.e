@@ -157,6 +157,7 @@ feature -- Events
 					is_open_start_tag := True
 				end
 			end
+			is_written := True
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
@@ -188,6 +189,7 @@ feature -- Events
 					end
 				end
 			end
+			is_written := True
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -222,6 +224,7 @@ feature -- Events
 					if not is_error then output_attribute (current_element_name_code, a_display_name, a_value, properties) end
 				end
 			end
+			is_written := True
 		end
 
 
@@ -229,6 +232,7 @@ feature -- Events
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			-- Don't add ">" to the start tag until we know whether the element has content.
+			is_written := True
 		end
 
 	end_element is
@@ -247,6 +251,7 @@ feature -- Events
 					if not is_error then output (">") end
 				end
 			end
+			is_written := True
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
@@ -290,6 +295,7 @@ feature -- Events
 					output_escape (normalized_string (chars), False)
 				end
 			end
+			is_written := True
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
@@ -312,6 +318,7 @@ feature -- Events
 				a_string := STRING_.appended_string (a_string, "?>")
 				output (a_string)
 			end
+			is_written := True
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
@@ -328,6 +335,7 @@ feature -- Events
 				if not is_error then output (a_content_string) end
 				if not is_error then output ("-->") end
 			end
+			is_written := True
 		end
 
 

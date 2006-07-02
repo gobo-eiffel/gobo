@@ -38,7 +38,7 @@ inherit
 
 create
 
-	make
+	make, make_w3c
 
 feature {NONE} -- Implementation
 
@@ -54,6 +54,17 @@ feature {NONE} -- Implementation
 			create a_constructor_function_library.make
 			function_library.add_function_library (a_core_function_library)
 			function_library.add_function_library (a_constructor_function_library)
+		ensure
+			gexslt_xpath_scheme: not is_w3c
+		end
+
+	make_w3c is
+			-- Create W3C xpath scheme.
+		do
+			make
+			is_w3c := True
+		ensure
+			w3c_xpath_scheme: is_w3c
 		end
 
 feature -- Access
@@ -61,7 +72,11 @@ feature -- Access
 	expanded_name: STRING is 
 			-- Expanded name of implemented scheme
 		do
-			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, "xpath")
+			if is_w3c then
+				Result := "xpath2"
+			else
+				Result := expanded_name_from_components (Gexslt_eiffel_type_uri, "xpath")
+			end
 		end
 
 	value: XM_XPATH_VALUE
@@ -74,7 +89,10 @@ feature -- Status report
 
 	is_error: BOOLEAN
 			-- Did a syntax or evaluation error occur?
-			
+
+	is_w3c: BOOLEAN
+			-- Is `Current' the W3C scheme, or gexslt (no semantic differences)?
+
 feature -- Element change
 
 	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is

@@ -494,6 +494,9 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			-- Compute special properties.
 		do
 			clone_special_properties (action_expression)
+			if not sequence.non_creating then
+				set_creating
+			end
 		end
 
 feature {NONE} -- Implementation

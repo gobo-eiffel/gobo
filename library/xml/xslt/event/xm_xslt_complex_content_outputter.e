@@ -129,6 +129,7 @@ feature -- Events
 				current_simple_type := a_type_code
 				previous_atomic := False
 			end
+			is_written := True
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
@@ -205,6 +206,7 @@ feature -- Events
 					end
 				end
 			end
+			is_written := True
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -261,6 +263,7 @@ feature -- Events
 					end
 				end
 			end
+			is_written := True
 		end
 
 	start_content is
@@ -312,6 +315,7 @@ feature -- Events
 				pending_attributes_lists_size := 0
 				previous_atomic := False
 			end
+			is_written := True
 		end
 
 	end_element is
@@ -320,6 +324,7 @@ feature -- Events
 			if pending_start_tag /= -1 then start_content end
 			next_receiver.end_element
 			previous_atomic := False
+			is_written := True
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
@@ -330,6 +335,7 @@ feature -- Events
 				if pending_start_tag /= -1 then start_content end
 				next_receiver.notify_characters (chars, properties)
 			end
+			is_written := True
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
@@ -337,7 +343,8 @@ feature -- Events
 		do
 			if pending_start_tag /= -1 then start_content end
 			next_receiver.notify_processing_instruction (a_name, a_data_string, properties)
-			previous_atomic := False	
+			previous_atomic := False
+			is_written := True
 		end
 	
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
@@ -345,7 +352,8 @@ feature -- Events
 		do
 			if pending_start_tag /= -1 then start_content end
 			next_receiver.notify_comment (a_content_string, properties)
-			previous_atomic := False			
+			previous_atomic := False
+			is_written := True
 		end
 
 	end_document is
@@ -353,7 +361,7 @@ feature -- Events
 		do
 			next_receiver.end_document
 			is_document_started := False
-			previous_atomic := False			
+			previous_atomic := False
 		end
 
 	

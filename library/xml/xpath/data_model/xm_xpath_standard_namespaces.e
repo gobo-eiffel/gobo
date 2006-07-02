@@ -441,10 +441,11 @@ feature -- Access
 	Key_function_type_code: INTEGER is 1931
 	Regex_group_function_type_code: INTEGER is 1932
 	System_property_function_type_code: INTEGER is 1933
-	Unparsed_entity_public_id_function_type_code: INTEGER is 1934
-	Unparsed_entity_uri_function_type_code: INTEGER is 1935
-	Unparsed_text_function_type_code: INTEGER is 1936
-	Unparsed_text_available_function_type_code: INTEGER is 1937
+	Type_available_function_type_code: INTEGER is 1934
+	Unparsed_entity_public_id_function_type_code: INTEGER is 1935
+	Unparsed_entity_uri_function_type_code: INTEGER is 1936
+	Unparsed_text_function_type_code: INTEGER is 1937
+	Unparsed_text_available_function_type_code: INTEGER is 1938
 
 
 

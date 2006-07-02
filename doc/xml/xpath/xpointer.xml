@@ -88,7 +88,7 @@
 	<term><classname>XM_XPOINTER_XPATH_XPATH_SCHEME</classname></term>
 	<listitem>
 	<para>
-	  The  <xpath>&program_name;:xpath</xpath> scheme.
+	  The  W3C <xpath>xpath2</xpath> scheme or the <xpath>&program_name;:xpath</xpath> schemes.
 	</para>
 	</listitem>
       </varlistentry>
@@ -143,6 +143,12 @@
   <para>
     Of course, if you want to use any namespace prefixes (other than "xml", which is always declared) within your XPath expression, then you will
     need to declare them also using further <xpath>xmlns</xpath> statements.
+  </para>
+  <para>
+   Since writing the above documentation, the W3C have approved an identical scheme (I'm a trend-setter! :-), except (of course), it is in no namespace.
+   It is also named xpath2 rather than xpath.
+   Just call <featurename>make_w3c</featurename> instead of <featurename>make</featurename>. This is the recommended alternative, as it is much more
+   portable, and it requires less typing in your URIs.
   </para>
 </section>
 <section id="xpointer_error_api">

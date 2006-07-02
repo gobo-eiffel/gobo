@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			encoder_factory_not_void: 	an_encoder_factory /= Void
 		do
 			create message_emitter_factory
+			if error_reporter = Void then create error_reporter.make_null end
 			make_configuration
 			encoder_factory := an_encoder_factory
 			set_string_mode_mixed

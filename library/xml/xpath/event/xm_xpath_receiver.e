@@ -44,6 +44,9 @@ feature -- Ststus report
 	is_document_started: BOOLEAN
 			-- Has `start_document' been called yet?
 
+	is_written: BOOLEAN
+			-- Has any output been written yet?
+
 	is_name_code_ok_for_start_element (a_name_code: INTEGER): BOOLEAN is
 			-- Is `a_name_code' valid for `start_element'?
 		do
@@ -69,6 +72,7 @@ feature -- Events
 		deferred
 		ensure
 			opened: is_open
+			not_started: not is_document_started
 		end
 	
 	start_document is
@@ -84,19 +88,21 @@ feature -- Events
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
 			-- Notify an unparsed entity URI.
 		require
-			opened: is_open
 			name_not_void: a_name /= Void
 			system_id_not_void: a_system_id /= Void
 			public_id_not_void: a_public_id /= Void
 		deferred
+		ensure
+			not_empty: is_written
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element.
 		require
-			opened: is_open
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code) and is_name_code_ok_for_start_element (a_name_code)
 		deferred
+		ensure
+			not_empty: is_written
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
@@ -106,9 +112,10 @@ feature -- Events
 			--  to include those that are different from the parent element; however, duplicates may be reported.
 			-- A namespace must not conflict with any namespaces already used for element or attribute names.
 		require
-			opened: is_open
 			positive_namespace_code: a_namespace_code >= 0
 		deferred
+		ensure
+			not_empty: is_written
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -116,10 +123,11 @@ feature -- Events
 			-- Attributes are notified after the `start_element' event, and before any
 			--  children. Namespaces and attributes may be intermingled
 		require
-			opened: is_open
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
 			value_not_void: a_value /= Void
 		deferred
+		ensure
+			not_empty: is_written
 		end
 
 	start_content is
@@ -128,9 +136,10 @@ feature -- Events
 			--  it has to detect it itself. Note that this event is reported for every element even if it has
 			--  no attributes, no namespaces, and no content.
 		require
-			opened: is_open
 			element_open: True -- In general, we won't occur the overhead of maintaining a stack to prove this
 		deferred
+		ensure
+			not_empty: is_written
 		end
 
 	end_element is
@@ -138,9 +147,10 @@ feature -- Events
 			-- The receiver must maintain a stack if it needs to know which
 			--  element is ending.
 		require
-			opened: is_open
 			element_open: True -- In general, we won't occur the overhead of maintaining a stack to prove this
 		deferred
+		ensure
+			not_empty: is_written
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
@@ -148,44 +158,47 @@ feature -- Events
 			-- Note that some receivers may require the character data to be
 			--  sent in a single event, but in general this is not a requirement.
 		require
-			opened: is_open
 			element_open: True -- In general, we won't occur the overhead of maintaining a stack to prove this
 			data_not_void: chars /= Void
 		deferred
+		ensure
+			not_empty: is_written
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
 		require
-			opened: is_open
 			name_not_void: a_name /= Void
 			data_not_void: a_data_string /= Void
 		deferred
+		ensure
+			not_empty: is_written
 		end
 	
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
 			-- Comments are only notified if they are outside the DTD.
 		require
-			opened: is_open
 			content_not_void: a_content_string /= Void
 		deferred
+		ensure
+			not_empty: is_written
 		end
 
 	end_document is
 			-- Notify end of document node.
 		require
-			opened: is_open
 			document_started: is_document_started
 		deferred
 		ensure
-			document_closed: not is_document_started
+			document_ended: not is_document_started
 		end
 
 	close is
 			-- Notify end of event stream.
 		require
 			opened: is_open
+			document_ended: not is_document_started
 		deferred
 		ensure
 			not_open: not is_open
@@ -212,6 +225,8 @@ feature -- Element change
 invariant
 
 	system_id_not_void: system_id /= Void
+	not_open_implies_not_started: not is_open implies not is_document_started
+	started_implies_open: is_document_started implies is_open
 
 end
 

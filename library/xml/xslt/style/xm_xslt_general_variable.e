@@ -106,6 +106,9 @@ feature -- Status report
 	is_required_parameter: BOOLEAN
 			-- Is this a required parameter?
 
+	is_implicitly_required_parameter: BOOLEAN
+			-- Is this a parameter where default value does not match required type?
+
 	is_tunnel_parameter: BOOLEAN
 			-- Is this a tunnel parameter?
 
@@ -194,7 +197,7 @@ feature -- Status setting
 			if select_expression /= Void and then has_child_nodes then
 				a_message := STRING_.concat ("An ", node_name)
 				a_message := STRING_.appended_string (a_message, " element with a select attribute must be empty")
-				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0010", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0620", Static_error)
 				report_compile_error (an_error)
 			else
 				if as_type /= Void then check_against_required_type (as_type) end
@@ -215,15 +218,15 @@ feature -- Status setting
 										-- The implicit default value () is not valid for the required type,
 										--  so we treat it as if there is no default
 										
-										is_required_parameter := True 
+										is_implicitly_required_parameter := True 
 									end
-								else -- not an xsl:param
-									if as_type.cardinality_allows_zero then
-											create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
-									else
-										create an_error.make_from_string ("Default value () is not valid for the declared type", Xpath_errors_uri, "XTTE0570", Type_error)
-										report_compile_error (an_error)
-									end
+								end
+							else -- not an xsl:param
+								if as_type.cardinality_allows_zero then
+									create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
+								else
+									create an_error.make_from_string ("Default value () is not valid for the declared type", Xpath_errors_uri, "XTTE0590", Type_error)
+									report_compile_error (an_error)
 								end
 							end
 						else -- at least one child node
@@ -259,17 +262,23 @@ feature -- Status setting
 			no_compile_errors: not any_compile_errors
 			required_type_not_void: a_required_type /= Void
 		local
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_error: STRING
 		do
-			create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0570")
+			if is_param then
+				l_error := "XTTE0600"
+			else
+				l_error := "XTTE0570"
+			end
+			create l_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, l_error)
 			if select_expression /= Void then
-				create a_type_checker
-				a_type_checker.static_type_check (static_context, select_expression, a_required_type, False, a_role)
-				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error)
+				create l_type_checker
+				l_type_checker.static_type_check (static_context, select_expression, a_required_type, False, l_role)
+				if l_type_checker.is_static_type_check_error	then
+					report_compile_error (l_type_checker.static_type_check_error)
 				else
-					select_expression := a_type_checker.checked_expression
+					select_expression := l_type_checker.checked_expression
 				end
 			else
 				-- do the check later
@@ -297,18 +306,19 @@ feature {NONE} -- Implementation
 	constant_text: STRING
 			-- Value of `Current' when it has a single text node child
 
-	initialize_instruction (an_executable: XM_XSLT_EXECUTABLE; a_variable: XM_XSLT_COMPILED_GENERAL_VARIABLE) is
+	initialize_instruction (a_executable: XM_XSLT_EXECUTABLE; a_variable: XM_XSLT_COMPILED_GENERAL_VARIABLE) is
 			-- Initialize - common code called from the `compile' routine of all subclasses.
 		require
-			executable_not_void: an_executable /= Void
+			executable_not_void: a_executable /= Void
 			variable_not_void: a_variable /= Void
 		local
-			a_document: XM_XSLT_COMPILED_DOCUMENT
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
+			l_document: XM_XSLT_COMPILED_DOCUMENT
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
 		do
 			a_variable.initialize_variable (select_expression, as_type, variable_fingerprint)
 			a_variable.set_required_parameter (is_required_parameter)
+			a_variable.set_implicitly_required_parameter (is_implicitly_required_parameter)
 			a_variable.set_tunnel_parameter (is_tunnel_parameter)
 
 			-- Handle the "temporary tree" case by creating a Document sub-instruction
@@ -316,13 +326,13 @@ feature {NONE} -- Implementation
 
 			if has_child_nodes then
 				if as_type = Void then
-					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+					compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
 					if last_generated_expression = Void then create {XM_XPATH_EMPTY_SEQUENCE} last_generated_expression.make end
-					create a_document.make (an_executable, is_text_only, constant_text, base_uri, last_generated_expression)
-					select_expression := a_document
-					a_variable.set_selector (a_document)
+					create l_document.make (a_executable, is_text_only, constant_text, base_uri, last_generated_expression)
+					select_expression := l_document
+					a_variable.set_selector (l_document)
 				else
-					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+					compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
 					if last_generated_expression = Void then
 						create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 					else
@@ -334,13 +344,13 @@ feature {NONE} -- Implementation
 						if select_expression.is_error then
 							report_compile_error (select_expression.error_value)
 						else
-							create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0570")
-							create a_type_checker
-							a_type_checker.static_type_check (static_context, select_expression, as_type, False, a_role)
-							if a_type_checker.is_static_type_check_error	then
-								report_compile_error (a_type_checker.static_type_check_error)
+							create l_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0570")
+							create l_type_checker
+							l_type_checker.static_type_check (static_context, select_expression, as_type, False, l_role)
+							if l_type_checker.is_static_type_check_error	then
+								report_compile_error (l_type_checker.static_type_check_error)
 							else
-								select_expression := a_type_checker.checked_expression
+								select_expression := l_type_checker.checked_expression
 							end
 						end
 						a_variable.set_selector (select_expression)
@@ -348,15 +358,15 @@ feature {NONE} -- Implementation
 				end
 			end
 			if is_global_variable then
-				initialize_global_variable (a_variable.as_global_variable, an_executable)
+				initialize_global_variable (a_variable.as_global_variable, a_executable)
 			end
 		end
 
-	initialize_global_variable (a_global_variable: XM_XSLT_GLOBAL_VARIABLE; an_executable: XM_XSLT_EXECUTABLE) is
+	initialize_global_variable (a_global_variable: XM_XSLT_GLOBAL_VARIABLE; a_executable: XM_XSLT_EXECUTABLE) is
 			-- Initialize global variable.
 		require
 			global_variable: is_global_variable and then a_global_variable /= Void
-			executable_not_void: an_executable /= Void
+			executable_not_void: a_executable /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			a_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
@@ -386,7 +396,7 @@ feature {NONE} -- Implementation
 						report_compile_error (an_expression.error_value)
 					else
 						if configuration.is_tracing then
-							create a_trace_wrapper.make (an_expression, an_executable, Current)
+							create a_trace_wrapper.make (an_expression, a_executable, Current)
 							a_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
 							an_expression := a_trace_wrapper
 						end

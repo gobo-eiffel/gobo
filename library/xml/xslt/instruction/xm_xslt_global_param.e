@@ -84,9 +84,15 @@ feature -- Evaluation
 			end
 			last_evaluated_binding := a_bindery.global_variable_value (slot_number)
 			if last_evaluated_binding = Void then
-				if not was_supplied and then is_required_parameter then
-					create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("No value supplied for global parameter: ", variable_name),
-																													 Xpath_errors_uri, "XTDE0050", Dynamic_error)
+				if not was_supplied and then (is_required_parameter or is_implicitly_required_parameter) then
+					if is_implicitly_required_parameter then
+						create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("No value supplied for implicitly required parameter: ", variable_name),
+																														 Xpath_errors_uri, "XTDE0610", Dynamic_error)
+
+					else
+						create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("No value supplied for global parameter: ", variable_name),
+																														 Xpath_errors_uri, "XTDE0050", Dynamic_error)
+					end
 				else
 					
 					-- This is the first reference to a global parameter; try to evaluate it now.

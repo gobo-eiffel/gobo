@@ -407,19 +407,11 @@ feature -- Element change
 			included: was_included = True
 		end
 
-	set_stripper_rules (a_stripper_rules_set: XM_XSLT_MODE) is
-			-- Set strip/preserve whitespace rules
-		do
-			stripper_rules := a_stripper_rules_set
-		ensure
-			stripper_rules_set: stripper_rules = a_stripper_rules_set
-		end
-
 	ensure_stripper_rules is
 			-- Ensure strip/preserve whitespace rules exist
 		do
 			if stripper_rules = Void then
-				create stripper_rules.make
+				create stripper_rules.make_stripper
 			end
 		ensure
 			stripper_rules_not_void: stripper_rules /= Void

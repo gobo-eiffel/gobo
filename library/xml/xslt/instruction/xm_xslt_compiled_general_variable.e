@@ -66,7 +66,10 @@ feature -- Access
 feature -- Status report
 
 	is_required_parameter: BOOLEAN
-			-- Is `Current' a required paramter?
+			-- Is `Current' a required parameter?
+
+	is_implicitly_required_parameter: BOOLEAN
+			-- Is `Current' treates as a required parameter?
 
 	is_tunnel_parameter: BOOLEAN
 			-- Is `Current' a tunnel paramter?
@@ -96,6 +99,14 @@ feature -- Status setting
 			is_required_parameter := is_required
 		ensure
 			set: is_required_parameter = is_required
+		end
+
+	set_implicitly_required_parameter (is_required: BOOLEAN) is
+			-- Set implicitly required parameter.
+		do
+			is_implicitly_required_parameter := is_required
+		ensure
+			set: is_implicitly_required_parameter = is_required
 		end
 
 	set_tunnel_parameter (is_tunnel: BOOLEAN) is

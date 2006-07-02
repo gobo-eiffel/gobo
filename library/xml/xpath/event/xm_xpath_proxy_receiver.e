@@ -49,54 +49,63 @@ feature -- Events
 			-- Notify an unparsed entity URI.
 		do
 			base_receiver.set_unparsed_entity (a_name, a_system_id, a_public_id)
+			is_written := True
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
 		do
 			base_receiver.start_element (a_name_code, a_type_code, properties)
+			is_written := True
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace.
 		do
 			base_receiver.notify_namespace (a_namespace_code, properties)
+			is_written := True
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
 			-- Notify an attribute.
 		do
 			base_receiver.notify_attribute (a_name_code, a_type_code, a_value, properties)
+			is_written := True
 		end
 
 	start_content is
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			base_receiver.start_content
+			is_written := True
 		end
 
 	end_element is
 			-- Notify the end of an element.
 		do
 			base_receiver.end_element
+			is_written := True
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
 			-- Notify character data.
 		do
 			base_receiver.	notify_characters (chars, properties)
+			is_written := True
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
 		do
 			base_receiver.notify_processing_instruction (a_name, a_data_string, properties)
+			is_written := True
 		end
 	
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
 		do
 			base_receiver.	notify_comment (a_content_string, properties)
+			is_written := True
 		end
 
 	end_document is

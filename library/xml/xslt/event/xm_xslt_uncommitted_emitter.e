@@ -111,6 +111,7 @@ feature -- Events
 			else
 				base_receiver.notify_characters (chars, properties)
 			end
+			is_written := True
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
@@ -125,6 +126,7 @@ feature -- Events
 			else
 				base_receiver.notify_processing_instruction (a_name, a_data_string, properties)
 			end
+			is_written := True
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
@@ -139,6 +141,7 @@ feature -- Events
 			else
 				base_receiver.notify_comment (a_content_string, properties)
 			end
+			is_written := True
 		end	
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
@@ -165,6 +168,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.start_element (a_name_code, a_type_code, properties)
+			is_written := True
 		ensure then
 			committed: committed			
 		end
@@ -176,6 +180,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.notify_namespace (a_namespace_code, properties)
+			is_written := True
 		ensure then
 			committed: committed
 		end
@@ -187,6 +192,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.notify_attribute (a_name_code, a_type_code, a_value, properties)
+			is_written := True
 		ensure then
 			committed: committed
 		end
@@ -198,6 +204,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.start_content
+			is_written := True
 		ensure then
 			committed: committed
 		end
@@ -209,6 +216,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.end_element
+			is_written := True
 		ensure then
 			committed: committed
 		end

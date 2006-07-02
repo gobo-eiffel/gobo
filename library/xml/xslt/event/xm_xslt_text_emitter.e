@@ -81,6 +81,7 @@ feature -- Events
 					output (normalized_string (chars))
 				end
 			end
+			is_written := True
 		end
 
 	-- Remaining events are no-ops
@@ -88,31 +89,37 @@ feature -- Events
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
 		do
+			is_written := True
 		end
 
 	end_element is
 			-- Notify the end of an element.
 		do
+			is_written := True
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace declaration.
 		do
+			is_written := True
 		end
 	
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
 			-- Notify an attribute.
 		do
+			is_written := True
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
 		do
+			is_written := True
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
 		do
+			is_written := True
 		end
 
 end

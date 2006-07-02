@@ -174,6 +174,7 @@ feature -- Events
 				std.error.put_new_line
 			end
 			strip_stack.force (a_preservation_status)
+			is_written := True
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -259,6 +260,7 @@ feature -- Events
 					end
 				end
 			end
+			is_written := True
 		end
 
 feature -- Duplication

@@ -85,7 +85,11 @@ feature -- Access
 		do
 			create a_parser.make (a_qname)
 			a_uri := uri_for_defaulted_prefix (a_parser.optional_prefix, use_default_namespace)
-			Result := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+			if a_uri = Void then
+				Result := -2
+			else
+				Result := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+			end
 		end
 
 invariant

@@ -79,6 +79,7 @@ feature -- Events
 			if is_open_start_tag then
 				close_start_tag ("", False) -- prevent <xxx/> syntax
 			end
+			is_written := True
 		end
 
 	end_element is
@@ -92,6 +93,7 @@ feature -- Events
 			else
 				Precursor
 			end
+			is_written := True
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
@@ -121,6 +123,7 @@ feature -- Events
 				a_string := STRING_.appended_string (a_string, ">")
 				output (a_string)
 			end
+			is_written := True
 		end
 
 feature {NONE} -- Implementation

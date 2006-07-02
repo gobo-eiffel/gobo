@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			l_uri, l_prefix: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			l_prefix := a_prefix.twin
+			l_prefix := STRING_.cloned_string (a_prefix)
 			if namespace = Void then
 				if l_prefix.is_empty then
 					l_uri := ""
