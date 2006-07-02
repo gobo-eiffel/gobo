@@ -1880,6 +1880,8 @@ feature {NONE} -- Instruction validity
 			l_identifier: ET_IDENTIFIER
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_local_seed: INTEGER
+			l_name_identifier: ET_IDENTIFIER
+			l_name_position: ET_POSITION
 		do
 			has_fatal_error := False
 			actual_context.reset (current_type)
@@ -2099,6 +2101,14 @@ feature {NONE} -- Instruction validity
 							l_creator := l_formal_parameter.creation_procedures
 							if l_creator = Void or else not l_creator.has_feature (l_procedure) then
 								set_fatal_error
+								if l_name = tokens.default_create_feature_name then
+										-- The creation has no call part. Make sure that
+										-- the error message will give a valid position.
+									create l_name_identifier.make (l_name.name)
+									l_name_position := an_instruction.last_position
+									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
+									l_name := l_name_identifier
+								end
 								l_class_impl := feature_impl.implementation_class
 								if current_class = l_class_impl then
 									error_handler.report_vgcc8c_error (current_class, l_name, l_procedure, l_class, l_formal_parameter)
@@ -2117,6 +2127,14 @@ feature {NONE} -- Instruction validity
 								-- if the current class is deferred.
 							else
 								set_fatal_error
+								if l_name = tokens.default_create_feature_name then
+										-- The creation has no call part. Make sure that
+										-- the error message will give a valid position.
+									create l_name_identifier.make (l_name.name)
+									l_name_position := an_instruction.last_position
+									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
+									l_name := l_name_identifier
+								end
 								if current_class = l_class_impl then
 									error_handler.report_vgcc6h_error (current_class, l_name, l_procedure, l_class)
 								else
@@ -2129,6 +2147,9 @@ feature {NONE} -- Instruction validity
 					if l_call /= Void then
 						check_sub_actual_arguments_validity (l_call.arguments, l_creation_context, l_name, l_procedure, l_class)
 					else
+-- TODO: `l_name' is "default_create". It may be a shared identifier not holding the correct
+-- position! A solution could be to inline `check_sub_actual_arguments_validity' here. It's
+-- not a big deal: just checking that `l_procedure' has no formal arguments.
 						check_sub_actual_arguments_validity (Void, l_creation_context, l_name, l_procedure, l_class)
 					end
 					if had_error then
@@ -3542,6 +3563,8 @@ feature {NONE} -- Expression validity
 			l_seed: INTEGER
 			l_name: ET_FEATURE_NAME
 			had_error: BOOLEAN
+			l_name_identifier: ET_IDENTIFIER
+			l_name_position: ET_POSITION
 		do
 			has_fatal_error := False
 			l_creation_type := a_type
@@ -3674,6 +3697,14 @@ feature {NONE} -- Expression validity
 									-- The creation procedure of the expression is not
 									-- one of those declared with the associated constraint.
 								set_fatal_error
+								if l_name = tokens.default_create_feature_name then
+										-- The creation has no call part. Make sure that
+										-- the error message will give a valid position.
+									create l_name_identifier.make (l_name.name)
+									l_name_position := an_expression.last_position
+									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
+									l_name := l_name_identifier
+								end
 								l_class_impl := feature_impl.implementation_class
 								if current_class = l_class_impl then
 									error_handler.report_vgcc8a_error (current_class, l_name, l_procedure, l_class, l_formal_parameter)
@@ -3693,6 +3724,14 @@ feature {NONE} -- Expression validity
 								-- if the current class is deferred.
 							else
 								set_fatal_error
+								if l_name = tokens.default_create_feature_name then
+										-- The creation has no call part. Make sure that
+										-- the error message will give a valid position.
+									create l_name_identifier.make (l_name.name)
+									l_name_position := an_expression.last_position
+									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
+									l_name := l_name_identifier
+								end
 								if current_class = l_class_impl then
 									error_handler.report_vgcc6d_error (current_class, l_name, l_procedure, l_class)
 								else
@@ -3702,6 +3741,9 @@ feature {NONE} -- Expression validity
 						end
 					end
 					had_error := has_fatal_error
+-- TODO: When `a_name' is Void, then `l_name' is "default_create". It may be a shared identifier
+-- not holding the correct position! A solution could be to inline `check_sub_actual_arguments_validity'
+-- here. It's not a big deal: just checking that `l_procedure' has no formal arguments.
 					check_sub_actual_arguments_validity (an_actuals, a_context, l_name, l_procedure, l_class)
 					if had_error then
 						set_fatal_error
