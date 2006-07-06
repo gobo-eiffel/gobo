@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Xace file for the Eiffel compilers' kernel libraries"
-		copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -56,12 +56,12 @@
 			<option name="prefix" value="XML_"/>
 		</cluster>
 		<cluster name="time" unless="${GOBO_EIFFELBASE}">
+			<option name="recursive" value="true"/>
 			<option name="read_only" value="true"/>
-			<cluster name="classic" unless="${GOBO_DOTNET}"/>
-			<cluster name="dotnet" if="${GOBO_DOTNET}"/>
-			<cluster name="format">
-				<cluster name="english"/>
-			</cluster>
+			<option name="exclude" value="french"/>
+			<option name="exclude" value="german"/>
+			<option name="exclude" value="classic" if="${GOBO_DOTNET}"/>
+			<option name="exclude" value="dotnet" unless="${GOBO_DOTNET}"/>
 		</cluster>
 	</cluster>
 
