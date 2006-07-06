@@ -131,10 +131,16 @@ feature -- Pathname
 				end
 			end
 			nb := a_pathname.count
-			create a_path.make (nb + 1)
+			if a_pathname.sharename /= Void then
+				create a_path.make (nb + 2)
+			else
+				create a_path.make (nb + 1)
+			end
 			if a_pathname.drive /= Void then
 					-- If drive present first item is path.
 				a_path.put_last (pathname_to_uri_component (a_pathname.drive))
+			elseif a_pathname.sharename /= Void then
+				a_path.put_last (pathname_to_uri_component (a_pathname.sharename))
 			end
 			from i := 1 until i > nb loop
 				a_path.put_last (pathname_to_uri_component (a_pathname.item (i)))
