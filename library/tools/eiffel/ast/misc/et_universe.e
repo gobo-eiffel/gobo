@@ -317,6 +317,27 @@ feature -- Initialization
 			end
 		end
 
+	reset_errors is
+			-- Reset classes as they were before their first error was reported.
+			-- Errors will be reported again if classes are processed again.
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			l_class: ET_CLASS
+		do
+			l_cursor := classes.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				from
+					l_class := l_cursor.item
+				until
+					l_class = Void
+				loop
+					l_class.reset_errors
+					l_class := l_class.overridden_class
+				end
+				l_cursor.forth
+			end
+		end
+
 feature -- Status report
 
 	has_class (a_name: ET_CLASS_NAME): BOOLEAN is

@@ -126,9 +126,37 @@ feature -- Initialization
 			same_id: id = old id
 		end
 
+	reset_errors is
+			-- Reset current class as it was before the first error was reported.
+			-- Errors will be reported again if current class is processed again.
+			-- (Do not alter `overridden_class' and `master_class'.)
+		do
+			if has_syntax_error then
+				reset_implementation_checked
+				reset_interface_checked
+				reset_features_flattened
+				reset_ancestors_built
+				reset_parsed
+			elseif has_ancestors_error then
+				reset_implementation_checked
+				reset_interface_checked
+				reset_features_flattened
+				reset_ancestors_built
+			elseif has_flattening_error then
+				reset_implementation_checked
+				reset_interface_checked
+				reset_features_flattened
+			elseif has_interface_error then
+				reset_implementation_checked
+				reset_interface_checked
+			elseif has_implementation_error then
+				reset_implementation_checked
+			end
+		end
+
 	reset_all is
 			-- Reset current class as it was when it was created
-			-- i.e. before it was preparsed or parsed).
+			-- (i.e. before it was preparsed or parsed).
 			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			reset_implementation_checked
