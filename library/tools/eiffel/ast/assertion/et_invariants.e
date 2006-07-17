@@ -74,6 +74,12 @@ feature -- Access
 	invariant_keyword: ET_KEYWORD
 			-- 'invariant' keyword
 
+	header_break: ET_BREAK is
+			-- Break which appears where the header comment is expected
+		do
+			-- Result := Void
+		end
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code

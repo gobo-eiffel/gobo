@@ -32,6 +32,12 @@ feature -- Access
 	is_keyword: ET_KEYWORD
 			-- 'is' keyword
 
+	header_break: ET_BREAK is
+			-- Break which appears where the header comment is expected
+		do
+			Result := is_keyword.break
+		end
+
 	obsolete_message: ET_OBSOLETE
 			-- Obsolete message
 
@@ -47,13 +53,21 @@ feature -- Access
 	last_leaf: ET_AST_LEAF is
 			-- Last leaf node in current node
 		do
-			Result := end_keyword
+			if semicolon /= Void then
+				Result := semicolon
+			else
+				Result := end_keyword
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := end_keyword.break
+			if semicolon /= Void then
+				Result := semicolon.break
+			else
+				Result := end_keyword.break
+			end
 		end
 
 feature -- Setting

@@ -62,16 +62,34 @@ feature -- Status report
 
 feature -- Access
 
+	header_break: ET_BREAK is
+			-- Break which appears where the header comment is expected
+		do
+			if semicolon /= Void then
+				Result := semicolon.break
+			else
+				Result := declared_type.break
+			end
+		end
+
 	last_leaf: ET_AST_LEAF is
 			-- Last leaf node in current node
 		do
-			Result := declared_type.last_leaf
+			if semicolon /= Void then
+				Result := semicolon
+			else
+				Result := declared_type.last_leaf
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := declared_type.break
+			if semicolon /= Void then
+				Result := semicolon.break
+			else
+				Result := declared_type.break
+			end
 		end
 
 feature -- Duplication

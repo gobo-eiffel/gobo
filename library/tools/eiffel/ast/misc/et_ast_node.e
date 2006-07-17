@@ -92,7 +92,7 @@ feature -- Status report
 		do
 			a_break := break
 			if a_break /= Void then
-				Result := a_break.text.has ('-')
+				Result := a_break.has_comment
 			end
 		end
 

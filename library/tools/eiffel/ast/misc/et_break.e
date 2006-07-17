@@ -33,6 +33,14 @@ feature -- Access
 	text: STRING
 			-- Text of break
 
+feature -- Status report
+
+	has_comment: BOOLEAN is
+			-- Does current break contain a comment?
+		do
+			Result := text.has ('-')
+		end
+
 invariant
 
 	text_not_void: text /= Void

@@ -93,6 +93,11 @@ feature -- Access
 		do
 		end
 
+	header_break: ET_BREAK is
+			-- Break which appears where the header comment is expected
+		deferred
+		end
+
 	preconditions: ET_PRECONDITIONS is
 			-- Preconditions;
 			-- Void if not a routine or a routine with no preconditions
@@ -208,6 +213,17 @@ feature -- Status report
 			Result := (id > 0)
 		ensure
 			definition: Result = (id > 0)
+		end
+
+	has_header_comment: BOOLEAN is
+			-- Does current feature have a header comment?
+		local
+			a_break: like break
+		do
+			a_break := header_break
+			if a_break /= Void then
+				Result := a_break.has_comment
+			end
 		end
 
 	is_frozen: BOOLEAN is

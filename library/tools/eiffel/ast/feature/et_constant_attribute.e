@@ -63,16 +63,34 @@ feature -- Access
 	constant: ET_CONSTANT
 			-- Constant value
 
+	header_break: ET_BREAK is
+			-- Break which appears where the header comment is expected
+		do
+			if semicolon /= Void then
+				Result := semicolon.break
+			else
+				Result := constant.break
+			end
+		end
+
 	last_leaf: ET_AST_LEAF is
 			-- Last leaf node in current node
 		do
-			Result := constant.last_leaf
+			if semicolon /= Void then
+				Result := semicolon
+			else
+				Result := constant.last_leaf
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := constant.break
+			if semicolon /= Void then
+				Result := semicolon.break
+			else
+				Result := constant.break
+			end
 		end
 
 feature -- Status report
