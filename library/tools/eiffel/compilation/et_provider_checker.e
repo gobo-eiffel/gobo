@@ -122,6 +122,7 @@ feature {NONE} -- Cluster dependence constraints
 						end
 						if l_provider.is_preparsed then
 							l_provider_group := l_provider.group
+							l_dependant_constraint := Void
 							if l_provider_group.is_cluster then
 								l_dependant_constraint := l_provider_group.cluster.dependant_constraint
 							end

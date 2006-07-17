@@ -47,9 +47,9 @@ feature -- Initialization
 	reset is
 			-- Reset constant as it was when it was first parsed.
 		do
-			precision := '%/0/'
+			type := Void
 			if cast_type /= Void then
-				type.reset
+				cast_type.type.reset
 			end
 		end
 
@@ -68,15 +68,9 @@ feature -- Access
 	cast_type: ET_TARGET_TYPE
 			-- Cast type
 
-	type: ET_TYPE is
-			-- Type of integer when casted
-		do
-			if cast_type /= Void then
-				Result := cast_type.type
-			end
-		ensure
-			definition: cast_type /= Void implies Result = cast_type.type
-		end
+	type: ET_CLASS_TYPE
+			-- Type of integer constant;
+			-- Void if not determined yet
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -131,66 +125,6 @@ feature -- Status report
 			end
 		end
 
-	is_integer: BOOLEAN is
-			-- Is current constant a signed integer?
-		do
-			Result := precision = '%/201/'
-		end
-
-	is_integer_8: BOOLEAN is
-			-- Is current constant an 8-bit signed integer?
-		do
-			Result := precision = '%/8/'
-		end
-
-	is_integer_16: BOOLEAN is
-			-- Is current constant a 16-bit signed integer?
-		do
-			Result := precision = '%/16/'
-		end
-
-	is_integer_32: BOOLEAN is
-			-- Is current constant a 32-bit signed integer?
-		do
-			Result := precision = '%/32/'
-		end
-
-	is_integer_64: BOOLEAN is
-			-- Is current constant a 64-bit signed integer?
-		do
-			Result := precision = '%/64/'
-		end
-
-	is_natural: BOOLEAN is
-			-- Is current constant an unsigned integer?
-		do
-			Result := precision = '%/202/'
-		end
-
-	is_natural_8: BOOLEAN is
-			-- Is current constant an 8-bit unsigned integer?
-		do
-			Result := precision = '%/108/'
-		end
-
-	is_natural_16: BOOLEAN is
-			-- Is current constant a 16-bit unsigned integer?
-		do
-			Result := precision = '%/116/'
-		end
-
-	is_natural_32: BOOLEAN is
-			-- Is current constant a 32-bit unsigned integer?
-		do
-			Result := precision = '%/132/'
-		end
-
-	is_natural_64: BOOLEAN is
-			-- Is current constant a 64-bit unsigned integer?
-		do
-			Result := precision = '%/164/'
-		end
-
 	is_integer_constant: BOOLEAN is True
 			-- Is current constant an integer constant?
 
@@ -216,86 +150,12 @@ feature -- Setting
 			cast_type_set: cast_type = a_type
 		end
 
-feature -- Status setting
-
-	set_integer is
-			-- Set current constant as a signed integer.
+	set_type (a_type: like type) is
+			-- Set `type' to `a_type'.
 		do
-			precision := '%/201/'
+			type := a_type
 		ensure
-			is_integer: is_integer
-		end
-
-	set_integer_8 is
-			-- Set current constant as an 8-bit signed integer.
-		do
-			precision := '%/8/'
-		ensure
-			is_integer_8: is_integer_8
-		end
-
-	set_integer_16 is
-			-- Set current constant as a 16-bit signed integer.
-		do
-			precision := '%/16/'
-		ensure
-			is_integer_16: is_integer_16
-		end
-
-	set_integer_32 is
-			-- Set current constant as a 32-bit signed integer.
-		do
-			precision := '%/32/'
-		ensure
-			is_integer_32: is_integer_32
-		end
-
-	set_integer_64 is
-			-- Set current constant as a 64-bit signed integer.
-		do
-			precision := '%/64/'
-		ensure
-			is_integer_64: is_integer_64
-		end
-
-	set_natural is
-			-- Set current constant as an unsigned integer.
-		do
-			precision := '%/202/'
-		ensure
-			is_natural: is_natural
-		end
-
-	set_natural_8 is
-			-- Set current constant as an 8-bit unsigned integer.
-		do
-			precision := '%/108/'
-		ensure
-			is_natural_8: is_natural_8
-		end
-
-	set_natural_16 is
-			-- Set current constant as a 16-bit unsigned integer.
-		do
-			precision := '%/116/'
-		ensure
-			is_natural_16: is_natural_16
-		end
-
-	set_natural_32 is
-			-- Set current constant as a 32-bit unsigned integer.
-		do
-			precision := '%/132/'
-		ensure
-			is_natural_32: is_natural_32
-		end
-
-	set_natural_64 is
-			-- Set current constant as a 64-bit unsigned integer.
-		do
-			precision := '%/164/'
-		ensure
-			is_natural_64: is_natural_64
+			type_set: type = a_type
 		end
 
 feature -- Basic operations
@@ -307,11 +167,6 @@ feature -- Basic operations
 			-- underflow occurred during computation.
 		deferred
 		end
-
-feature {NONE} -- Implementation
-
-	precision: CHARACTER
-			-- Precision code
 
 invariant
 

@@ -74,6 +74,8 @@ feature -- Execution
 					is_silent := True
 				elseif arg.is_equal ("--void") then
 					void_feature := True
+				elseif arg.is_equal ("--ecma") then
+					is_ecma := True
 				elseif i = nb then
 					a_filename := arg
 				else
@@ -161,6 +163,7 @@ feature -- Status report
 	is_flat: BOOLEAN
 	is_flat_dbc: BOOLEAN
 	is_cat: BOOLEAN
+	is_ecma: BOOLEAN
 	is_silent: BOOLEAN
 	void_feature: BOOLEAN
 			-- Command-line options
@@ -188,6 +191,12 @@ feature {NONE} -- Processing
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
 			a_universe.set_ise (True)
+			if is_ecma then
+				a_universe.set_ecma (True)
+			else
+				a_universe.set_non_aliased_sized_basic_classes
+				a_universe.set_ecma (False)
+			end
 			if not is_verbose then
 			end
 			a_universe.set_use_assign_keyword (True)
@@ -248,7 +257,7 @@ feature -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gelint usage message.
 		once
-			create Result.make ("[--flat][--noflatdbc][--cat][--define=variables][--void][--silent][--verbose] ace_filename")
+			create Result.make ("[--flat][--noflatdbc][--cat][--define=variables][--void][--ecma][--silent][--verbose] ace_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

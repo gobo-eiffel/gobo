@@ -99,24 +99,26 @@ feature {NONE} -- Initialization
 			tuple_class.set_in_system (True)
 			bit_class := eiffel_class (tokens.bit_class_name)
 			bit_class.set_in_system (True)
-			string_class := eiffel_class (tokens.string_class_name)
-			string_class.set_in_system (True)
+			string_8_class := eiffel_class (tokens.string_8_class_name)
+			string_8_class.set_in_system (True)
+			string_32_class := eiffel_class (tokens.string_32_class_name)
+			string_32_class.set_in_system (True)
+			string_class := string_8_class
+			classes.force_last (string_class, tokens.string_class_name)
 			array_class := eiffel_class (tokens.array_class_name)
 			array_class.set_in_system (True)
 			special_class := eiffel_class (tokens.special_class_name)
 			special_class.set_in_system (True)
 			boolean_class := eiffel_class (tokens.boolean_class_name)
 			boolean_class.set_in_system (True)
-			character_class := eiffel_class (tokens.character_class_name)
-			character_class.set_in_system (True)
 			character_8_class := eiffel_class (tokens.character_8_class_name)
 			character_8_class.set_in_system (True)
 			character_32_class := eiffel_class (tokens.character_32_class_name)
 			character_32_class.set_in_system (True)
-			wide_character_class := eiffel_class (tokens.wide_character_class_name)
-			wide_character_class.set_in_system (True)
-			integer_class := eiffel_class (tokens.integer_class_name)
-			integer_class.set_in_system (True)
+			character_class := character_8_class
+			classes.force_last (character_class, tokens.character_class_name)
+			wide_character_class := character_32_class
+			classes.force_last (wide_character_class, tokens.wide_character_class_name)
 			integer_8_class := eiffel_class (tokens.integer_8_class_name)
 			integer_8_class.set_in_system (True)
 			integer_16_class := eiffel_class (tokens.integer_16_class_name)
@@ -125,8 +127,6 @@ feature {NONE} -- Initialization
 			integer_32_class.set_in_system (True)
 			integer_64_class := eiffel_class (tokens.integer_64_class_name)
 			integer_64_class.set_in_system (True)
-			natural_class := eiffel_class (tokens.natural_class_name)
-			natural_class.set_in_system (True)
 			natural_8_class := eiffel_class (tokens.natural_8_class_name)
 			natural_8_class.set_in_system (True)
 			natural_16_class := eiffel_class (tokens.natural_16_class_name)
@@ -135,10 +135,18 @@ feature {NONE} -- Initialization
 			natural_32_class.set_in_system (True)
 			natural_64_class := eiffel_class (tokens.natural_64_class_name)
 			natural_64_class.set_in_system (True)
-			real_class := eiffel_class (tokens.real_class_name)
-			real_class.set_in_system (True)
-			double_class := eiffel_class (tokens.double_class_name)
-			double_class.set_in_system (True)
+			integer_class := integer_32_class
+			classes.force_last (integer_class, tokens.integer_class_name)
+			natural_class := natural_32_class
+			classes.force_last (natural_class, tokens.natural_class_name)
+			real_32_class := eiffel_class (tokens.real_32_class_name)
+			real_32_class.set_in_system (True)
+			real_64_class := eiffel_class (tokens.real_64_class_name)
+			real_64_class.set_in_system (True)
+			real_class := real_32_class
+			classes.force_last (real_class, tokens.real_class_name)
+			double_class := real_64_class
+			classes.force_last (double_class, tokens.double_class_name)
 			pointer_class := eiffel_class (tokens.pointer_class_name)
 			pointer_class.set_in_system (True)
 			typed_pointer_class := eiffel_class (tokens.typed_pointer_class_name)
@@ -162,8 +170,6 @@ feature {NONE} -- Initialization
 			create any_type.make (Void, any_class.name, any_class)
 				-- Type "NONE".
 			create none_type.make (Void, none_class.name, none_class)
-				-- Type "STRING".
-			create string_type.make (Void, string_class.name, string_class)
 				-- Type "TUPLE".
 			create tuple_type.make (Void)
 				-- Type "ARRAY [ANY]".
@@ -179,32 +185,46 @@ feature {NONE} -- Initialization
 			create any_parents.make_with_capacity (1)
 			any_parents.put_first (any_parent)
 				-- Built-in conversion features.
+			create integer_convert_feature.make (integer_class)
 			create integer_8_convert_feature.make (integer_8_class)
 			create integer_16_convert_feature.make (integer_16_class)
-			create integer_convert_feature.make (integer_class)
+			create integer_32_convert_feature.make (integer_32_class)
 			create integer_64_convert_feature.make (integer_64_class)
+			create natural_convert_feature.make (natural_class)
 			create natural_8_convert_feature.make (natural_8_class)
 			create natural_16_convert_feature.make (natural_16_class)
 			create natural_32_convert_feature.make (natural_32_class)
 			create natural_64_convert_feature.make (natural_64_class)
 			create real_convert_feature.make (real_class)
 			create double_convert_feature.make (double_class)
+			create real_32_convert_feature.make (real_32_class)
+			create real_64_convert_feature.make (real_64_class)
 				-- Needed for compatibility with 5.6.0610 (to be removed later):
 			boolean_ref_class := eiffel_class (tokens.boolean_ref_class_name)
-			character_ref_class := eiffel_class (tokens.character_ref_class_name)
 			character_8_ref_class := eiffel_class (tokens.character_8_ref_class_name)
 			character_32_ref_class := eiffel_class (tokens.character_32_ref_class_name)
-			wide_character_ref_class := eiffel_class (tokens.wide_character_ref_class_name)
-			integer_ref_class := eiffel_class (tokens.integer_ref_class_name)
+			character_ref_class := character_8_ref_class
+			classes.force_last (character_ref_class, tokens.character_ref_class_name)
+			wide_character_ref_class := character_32_ref_class
+			classes.force_last (wide_character_ref_class, tokens.wide_character_ref_class_name)
 			integer_8_ref_class := eiffel_class (tokens.integer_8_ref_class_name)
 			integer_16_ref_class := eiffel_class (tokens.integer_16_ref_class_name)
+			integer_32_ref_class := eiffel_class (tokens.integer_32_ref_class_name)
 			integer_64_ref_class := eiffel_class (tokens.integer_64_ref_class_name)
 			natural_8_ref_class := eiffel_class (tokens.natural_8_ref_class_name)
 			natural_16_ref_class := eiffel_class (tokens.natural_16_ref_class_name)
 			natural_32_ref_class := eiffel_class (tokens.natural_32_ref_class_name)
 			natural_64_ref_class := eiffel_class (tokens.natural_64_ref_class_name)
-			real_ref_class := eiffel_class (tokens.real_ref_class_name)
-			double_ref_class := eiffel_class (tokens.double_ref_class_name)
+			integer_ref_class := integer_32_ref_class
+			classes.force_last (integer_ref_class, tokens.integer_ref_class_name)
+			natural_ref_class := natural_32_ref_class
+			classes.force_last (natural_ref_class, tokens.natural_ref_class_name)
+			real_32_ref_class := eiffel_class (tokens.real_32_ref_class_name)
+			real_64_ref_class := eiffel_class (tokens.real_64_ref_class_name)
+			real_ref_class := real_32_ref_class
+			classes.force_last (real_ref_class, tokens.real_ref_class_name)
+			double_ref_class := real_64_ref_class
+			classes.force_last (double_ref_class, tokens.double_ref_class_name)
 			pointer_ref_class := eiffel_class (tokens.pointer_ref_class_name)
 			numeric_class := eiffel_class (tokens.numeric_class_name)
 			comparable_class := eiffel_class (tokens.comparable_class_name)
@@ -221,6 +241,8 @@ feature {NONE} -- Initialization
 			tuple_class_not_void: tuple_class /= Void
 			bit_class_not_void: bit_class /= Void
 			string_class_not_void: string_class /= Void
+			string_8_class_not_void: string_8_class /= Void
+			string_32_class_not_void: string_32_class /= Void
 			array_class_not_void: array_class /= Void
 			special_class_not_void: special_class /= Void
 			boolean_class_not_void: boolean_class /= Void
@@ -239,6 +261,8 @@ feature {NONE} -- Initialization
 			natural_32_class_not_void: natural_32_class /= Void
 			natural_64_class_not_void: natural_64_class /= Void
 			real_class_not_void: real_class /= Void
+			real_32_class_not_void: real_32_class /= Void
+			real_64_class_not_void: real_64_class /= Void
 			double_class_not_void: double_class /= Void
 			pointer_class_not_void: pointer_class /= Void
 			typed_pointer_class_not_void: typed_pointer_class /= Void
@@ -252,22 +276,25 @@ feature {NONE} -- Initialization
 			system_object_class_not_void: system_object_class /= Void
 			unknown_class_not_void: unknown_class /= Void
 			any_type_not_void: any_type /= Void
-			string_type_not_void: string_type /= Void
 			tuple_type_not_void: tuple_type /= Void
 			none_type_not_void: none_type /= Void
 			array_any_type_not_void: array_any_type /= Void
 			array_none_type_not_void: array_none_type /= Void
 			any_parent_not_void: any_parent /= Void
 			any_parents_not_void: any_parents /= Void
+			integer_convert_feature_not_void: integer_convert_feature /= Void
 			integer_8_convert_feature_not_void: integer_8_convert_feature /= Void
 			integer_16_convert_feature_not_void: integer_16_convert_feature /= Void
-			integer_convert_feature_not_void: integer_convert_feature /= Void
+			integer_32_convert_feature_not_void: integer_32_convert_feature /= Void
 			integer_64_convert_feature_not_void: integer_64_convert_feature /= Void
 			natural_8_convert_feature_not_void: natural_8_convert_feature /= Void
+			natural_convert_feature_not_void: natural_convert_feature /= Void
 			natural_16_convert_feature_not_void: natural_16_convert_feature /= Void
 			natural_32_convert_feature_not_void: natural_32_convert_feature /= Void
 			natural_64_convert_feature_not_void: natural_64_convert_feature /= Void
 			real_convert_feature_not_void: real_convert_feature /= Void
+			real_32_convert_feature_not_void: real_32_convert_feature /= Void
+			real_64_convert_feature_not_void: real_64_convert_feature /= Void
 			double_convert_feature_not_void: double_convert_feature /= Void
 			boolean_ref_class_not_void: boolean_ref_class /= Void
 			character_ref_class_not_void: character_ref_class /= Void
@@ -277,12 +304,16 @@ feature {NONE} -- Initialization
 			integer_ref_class_not_void: integer_ref_class /= Void
 			integer_8_ref_class_not_void: integer_8_ref_class /= Void
 			integer_16_ref_class_not_void: integer_16_ref_class /= Void
+			integer_32_ref_class_not_void: integer_16_ref_class /= Void
 			integer_64_ref_class_not_void: integer_64_ref_class /= Void
+			natural_ref_class_not_void: natural_ref_class /= Void
 			natural_8_ref_class_not_void: natural_8_ref_class /= Void
 			natural_16_ref_class_not_void: natural_16_ref_class /= Void
 			natural_32_ref_class_not_void: natural_32_ref_class /= Void
 			natural_64_ref_class_not_void: natural_64_ref_class /= Void
 			real_ref_class_not_void: real_ref_class /= Void
+			real_32_ref_class_not_void: real_32_ref_class /= Void
+			real_64_ref_class_not_void: real_64_ref_class /= Void
 			double_ref_class_not_void: double_ref_class /= Void
 			pointer_ref_class_not_void: pointer_ref_class /= Void
 			numeric_class_not_void: numeric_class /= Void
@@ -543,6 +574,12 @@ feature -- Basic classes
 	string_class: ET_CLASS
 			-- Class "STRING"
 
+	string_8_class: ET_CLASS
+			-- Class "STRING_8"
+
+	string_32_class: ET_CLASS
+			-- Class "STRING_32"
+
 	array_class: ET_CLASS
 			-- Class "ARRAY"
 
@@ -597,6 +634,12 @@ feature -- Basic classes
 	real_class: ET_CLASS
 			-- Class "REAL"
 
+	real_32_class: ET_CLASS
+			-- Class "REAL_32"
+
+	real_64_class: ET_CLASS
+			-- Class "REAL_64"
+
 	double_class: ET_CLASS
 			-- Class "DOUBLE"
 
@@ -642,9 +685,6 @@ feature -- Basic classes
 	none_type: ET_CLASS_TYPE
 			-- Class type "NONE"
 
-	string_type: ET_CLASS_TYPE
-			-- Class type "STRING"
-
 	tuple_type: ET_TUPLE_TYPE
 			-- Class type "TUPLE"
 
@@ -686,8 +726,14 @@ feature -- Basic classes (compatibility with 5.6.0610, to be removed later)
 	integer_16_ref_class: ET_CLASS
 			-- Class "INTEGER_16_REF"
 
+	integer_32_ref_class: ET_CLASS
+			-- Class "INTEGER_32_REF"
+
 	integer_64_ref_class: ET_CLASS
 			-- Class "INTEGER_64_REF"
+
+	natural_ref_class: ET_CLASS
+			-- Class "NATURAL_REF"
 
 	natural_8_ref_class: ET_CLASS
 			-- Class "NATURAL_8_REF"
@@ -703,6 +749,12 @@ feature -- Basic classes (compatibility with 5.6.0610, to be removed later)
 
 	real_ref_class: ET_CLASS
 			-- Class "REAL_REF"
+
+	real_32_ref_class: ET_CLASS
+			-- Class "REAL_32_REF"
+
+	real_64_ref_class: ET_CLASS
+			-- Class "REAL_64_REF"
 
 	double_ref_class: ET_CLASS
 			-- Class "DOUBLE_REF"
@@ -724,17 +776,23 @@ feature -- Basic classes (compatibility with 5.6.0610, to be removed later)
 
 feature -- Feature access
 
+	integer_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to INTEGER
+
 	integer_8_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Built-in conversion feature to INTEGER_8
 
 	integer_16_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Built-in conversion feature to INTEGER_16
 
-	integer_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to INTEGER
+	integer_32_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to INTEGER_32
 
 	integer_64_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Built-in conversion feature to INTEGER_64
+
+	natural_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to NATURAL
 
 	natural_8_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Built-in conversion feature to NATURAL_8
@@ -750,6 +808,12 @@ feature -- Feature access
 
 	real_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Built-in conversion feature to REAL
+
+	real_32_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to REAL_32
+
+	real_64_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to REAL_64
 
 	double_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Built-in conversion feature to DOUBLE
@@ -874,6 +938,106 @@ feature -- Measurement
 		end
 
 feature -- Setting
+
+	set_non_aliased_sized_basic_classes is
+			-- Set sized basic types (STRING, CHARACTER, WIDE_CHARACTER,
+			-- INTEGER, NATURAL, REAL, DOUBLE) to be non-aliased.
+		local
+			l_name: ET_CLASS_NAME
+			l_class: ET_CLASS
+		do
+				-- Class "STRING".
+			l_name := tokens.string_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			string_class := l_class
+				-- Class "CHARACTER".
+			l_name := tokens.character_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			character_class := l_class
+				-- Class "CHARACTER_REF".
+			l_name := tokens.character_ref_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			character_ref_class := l_class
+				-- Class "WIDE_CHARACTER".
+			l_name := tokens.wide_character_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			wide_character_class := l_class
+				-- Class "WIDE_CHARACTER_REF".
+			l_name := tokens.wide_character_ref_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			wide_character_ref_class := l_class
+				-- Class "INTEGER".
+			l_name := tokens.integer_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			integer_class := l_class
+				-- Class "INTEGER_REF".
+			l_name := tokens.integer_ref_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			integer_ref_class := l_class
+				-- Class "NATURAL".
+			l_name := tokens.natural_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			natural_class := l_class
+				-- Class "NATURAL_REF".
+			l_name := tokens.natural_ref_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			natural_ref_class := l_class
+				-- Class "REAL".
+			l_name := tokens.real_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			real_class := l_class
+				-- Class "REAL_REF".
+			l_name := tokens.real_ref_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			real_ref_class := l_class
+				-- Class "DOUBLE".
+			l_name := tokens.double_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			double_class := l_class
+				-- Class "DOUBLE_REF".
+			l_name := tokens.double_ref_class_name
+			l_class := ast_factory.new_class (l_name, classes.count + 1)
+			classes.remove (l_name)
+			classes.force_last (l_class, l_name)
+			l_class.set_in_system (True)
+			double_ref_class := l_class
+		end
 
 	set_root_class (a_name: ET_CLASS_NAME) is
 			-- Set `root_class'.
@@ -2722,6 +2886,8 @@ invariant
 	tuple_class_not_void: tuple_class /= Void
 	bit_class_not_void: bit_class /= Void
 	string_class_not_void: string_class /= Void
+	string_8_class_not_void: string_8_class /= Void
+	string_32_class_not_void: string_32_class /= Void
 	array_class_not_void: array_class /= Void
 	special_class_not_void: special_class /= Void
 	boolean_class_not_void: boolean_class /= Void
@@ -2740,6 +2906,8 @@ invariant
 	natural_32_class_not_void: natural_32_class /= Void
 	natural_64_class_not_void: natural_64_class /= Void
 	real_class_not_void: real_class /= Void
+	real_32_class_not_void: real_32_class /= Void
+	real_64_class_not_void: real_64_class /= Void
 	double_class_not_void: double_class /= Void
 	pointer_class_not_void: pointer_class /= Void
 	typed_pointer_class_not_void: typed_pointer_class /= Void
@@ -2754,20 +2922,23 @@ invariant
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
 	none_type_not_void: none_type /= Void
-	string_type_not_void: string_type /= Void
 	tuple_type_not_void: tuple_type /= Void
 	array_any_type_not_void: array_any_type /= Void
 	array_none_type_not_void: array_none_type /= Void
 	any_parent_not_void: any_parent /= Void
 	any_parents_not_void: any_parents /= Void
+	integer_convert_feature_not_void: integer_convert_feature /= Void
 	integer_8_convert_feature_not_void: integer_8_convert_feature /= Void
 	integer_16_convert_feature_not_void: integer_16_convert_feature /= Void
-	integer_convert_feature_not_void: integer_convert_feature /= Void
+	integer_32_convert_feature_not_void: integer_32_convert_feature /= Void
 	integer_64_convert_feature_not_void: integer_64_convert_feature /= Void
+	natural_convert_feature_not_void: natural_convert_feature /= Void
 	natural_8_convert_feature_not_void: natural_8_convert_feature /= Void
 	natural_16_convert_feature_not_void: natural_16_convert_feature /= Void
 	natural_32_convert_feature_not_void: natural_32_convert_feature /= Void
 	natural_64_convert_feature_not_void: natural_64_convert_feature /= Void
+	real_32_convert_feature_not_void: real_32_convert_feature /= Void
+	real_64_convert_feature_not_void: real_64_convert_feature /= Void
 	real_convert_feature_not_void: real_convert_feature /= Void
 	double_convert_feature_not_void: double_convert_feature /= Void
 	default_create_seed_non_negative: default_create_seed >= 0
@@ -2786,12 +2957,16 @@ invariant
 	integer_ref_class_not_void: integer_ref_class /= Void
 	integer_8_ref_class_not_void: integer_8_ref_class /= Void
 	integer_16_ref_class_not_void: integer_16_ref_class /= Void
+	integer_32_ref_class_not_void: integer_32_ref_class /= Void
 	integer_64_ref_class_not_void: integer_64_ref_class /= Void
+	natural_ref_class_not_void: natural_ref_class /= Void
 	natural_8_ref_class_not_void: natural_8_ref_class /= Void
 	natural_16_ref_class_not_void: natural_16_ref_class /= Void
 	natural_32_ref_class_not_void: natural_32_ref_class /= Void
 	natural_64_ref_class_not_void: natural_64_ref_class /= Void
 	real_ref_class_not_void: real_ref_class /= Void
+	real_32_ref_class_not_void: real_32_ref_class /= Void
+	real_64_ref_class_not_void: real_64_ref_class /= Void
 	double_ref_class_not_void: double_ref_class /= Void
 	pointer_ref_class_not_void: pointer_ref_class /= Void
 	numeric_class_not_void: numeric_class /= Void

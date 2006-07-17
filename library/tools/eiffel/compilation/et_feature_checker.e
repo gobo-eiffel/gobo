@@ -561,6 +561,8 @@ feature -- Validity checking
 							current_class = universe.natural_64_class or
 							current_class = universe.real_class or
 							current_class = universe.double_class or
+							current_class = universe.real_32_class or
+							current_class = universe.real_64_class or
 							current_class = universe.pointer_class or
 							current_class = universe.typed_pointer_class)
 						then
@@ -941,34 +943,34 @@ feature {NONE} -- Feature validity
 					check is_integer_constant: an_integer_constant /= Void end
 					if a_type.same_named_type (universe.integer_class, current_type, current_type, universe) then
 							-- OK.
-						an_integer_constant.set_integer
+						an_integer_constant.set_type (universe.integer_class)
 					elseif a_type.same_named_type (universe.integer_8_class, current_type, current_type, universe) then
 							-- Valid with ISE Eiffel. To be checked with other compilers.
-						an_integer_constant.set_integer_8
+						an_integer_constant.set_type (universe.integer_8_class)
 					elseif a_type.same_named_type (universe.integer_16_class, current_type, current_type, universe) then
 							-- Valid with ISE Eiffel. To be checked with other compilers.
-						an_integer_constant.set_integer_16
+						an_integer_constant.set_type (universe.integer_16_class)
 					elseif a_type.same_named_type (universe.integer_32_class, current_type, current_type, universe) then
 							-- Valid with ISE Eiffel. To be checked with other compilers.
-						an_integer_constant.set_integer_32
+						an_integer_constant.set_type (universe.integer_32_class)
 					elseif a_type.same_named_type (universe.integer_64_class, current_type, current_type, universe) then
 							-- Valid with ISE Eiffel. To be checked with other compilers.
-						an_integer_constant.set_integer_64
+						an_integer_constant.set_type (universe.integer_64_class)
 					elseif a_type.same_named_type (universe.natural_class, current_type, current_type, universe) then
 							-- Valid with ISE Eiffel. To be checked with other compilers.
-						an_integer_constant.set_natural
+						an_integer_constant.set_type (universe.natural_class)
 					elseif a_type.same_named_type (universe.natural_8_class, current_type, current_type, universe) then
 							-- Valid with ISE Eiffel. To be checked with other compilers.
-						an_integer_constant.set_natural_8
+						an_integer_constant.set_type (universe.natural_8_class)
 					elseif a_type.same_named_type (universe.natural_16_class, current_type, current_type, universe) then
 							-- Valid with ISE Eiffel. To be checked with other compilers.
-						an_integer_constant.set_natural_16
+						an_integer_constant.set_type (universe.natural_16_class)
 					elseif a_type.same_named_type (universe.natural_32_class, current_type, current_type, universe) then
 							-- Valid with ISE Eiffel. To be checked with other compilers.
-						an_integer_constant.set_natural_32
+						an_integer_constant.set_type (universe.natural_32_class)
 					elseif a_type.same_named_type (universe.natural_64_class, current_type, current_type, universe) then
 							-- Valid with ISE Eiffel. To be checked with other compilers.
-						an_integer_constant.set_natural_64
+						an_integer_constant.set_type (universe.natural_64_class)
 					else
 						set_fatal_error
 						a_class_impl := a_feature.implementation_class
@@ -983,10 +985,16 @@ feature {NONE} -- Feature validity
 					check is_real_constant: a_real_constant /= Void end
 					if a_type.same_named_type (universe.real_class, current_type, current_type, universe) then
 							-- OK.
-						a_real_constant.set_real_32
+						a_real_constant.set_type (universe.real_class)
 					elseif a_type.same_named_type (universe.double_class, current_type, current_type, universe) then
 							-- OK.
-						a_real_constant.set_double_64
+						a_real_constant.set_type (universe.double_class)
+					elseif a_type.same_named_type (universe.real_32_class, current_type, current_type, universe) then
+							-- OK.
+						a_real_constant.set_type (universe.real_32_class)
+					elseif a_type.same_named_type (universe.real_64_class, current_type, current_type, universe) then
+							-- OK.
+						a_real_constant.set_type (universe.real_64_class)
 					else
 						set_fatal_error
 						a_class_impl := a_feature.implementation_class
@@ -998,7 +1006,6 @@ feature {NONE} -- Feature validity
 					end
 				elseif a_constant.is_string_constant then
 					if
-						not a_type.same_named_type (universe.string_type, current_type, current_type, universe) and
 						not a_type.same_named_type (universe.string_class, current_type, current_type, universe)
 					then
 						set_fatal_error
@@ -1700,6 +1707,8 @@ feature {NONE} -- Instruction validity
 						current_class = universe.natural_64_class or
 						current_class = universe.real_class or
 						current_class = universe.double_class or
+						current_class = universe.real_32_class or
+						current_class = universe.real_64_class or
 						current_class = universe.pointer_class or
 						current_class = universe.typed_pointer_class)
 					then
@@ -4478,58 +4487,62 @@ feature {NONE} -- Expression validity
 			l_class: ET_CLASS
 			l_type: ET_TYPE
 			l_literal: STRING
-			l_cast_type: ET_TYPE
+			l_cast_type: ET_TARGET_TYPE
 		do
 			has_fatal_error := False
-			l_cast_type := a_constant.type
+			l_cast_type := a_constant.cast_type
 			if l_cast_type /= Void then
 -- TODO: make sure that `l_cast_type' is a valid type.
 -- For example 'INTEGER [STRING]' is not valid.
-				l_class_type ?= l_cast_type.named_type (current_class, universe)
+				l_class_type ?= l_cast_type.type.named_type (current_class, universe)
 			else
 				l_class_type ?= current_target_type.named_type (universe)
 			end
 			if l_class_type /= Void then
 				l_class := l_class_type.direct_base_class (universe)
-				if l_class = universe.integer_8_class then
+				if l_class = universe.integer_class then
 					l_type := l_class
-					a_constant.set_integer_8
+					a_constant.set_type (l_class)
+					report_integer_constant (a_constant)
+				elseif l_class = universe.integer_8_class then
+					l_type := l_class
+					a_constant.set_type (l_class)
 					report_integer_8_constant (a_constant)
 				elseif l_class = universe.integer_16_class then
 					l_type := l_class
-					a_constant.set_integer_16
+					a_constant.set_type (l_class)
 					report_integer_16_constant (a_constant)
 				elseif l_class = universe.integer_class then
 					l_type := l_class
-					a_constant.set_integer
+					a_constant.set_type (l_class)
 					report_integer_constant (a_constant)
 				elseif l_class = universe.integer_32_class then
 					l_type := l_class
-					a_constant.set_integer_32
+					a_constant.set_type (l_class)
 					report_integer_32_constant (a_constant)
 				elseif l_class = universe.integer_64_class then
 					l_type := l_class
-					a_constant.set_integer_64
+					a_constant.set_type (l_class)
 					report_integer_64_constant (a_constant)
 				elseif l_class = universe.natural_class then
 					l_type := l_class
-					a_constant.set_natural
+					a_constant.set_type (l_class)
 					report_natural_constant (a_constant)
 				elseif l_class = universe.natural_8_class then
 					l_type := l_class
-					a_constant.set_natural_8
+					a_constant.set_type (l_class)
 					report_natural_8_constant (a_constant)
 				elseif l_class = universe.natural_16_class then
 					l_type := l_class
-					a_constant.set_natural_16
+					a_constant.set_type (l_class)
 					report_natural_16_constant (a_constant)
 				elseif l_class = universe.natural_32_class then
 					l_type := l_class
-					a_constant.set_natural_32
+					a_constant.set_type (l_class)
 					report_natural_32_constant (a_constant)
 				elseif l_class = universe.natural_64_class then
 					l_type := l_class
-					a_constant.set_natural_64
+					a_constant.set_type (l_class)
 					report_natural_64_constant (a_constant)
 				end
 			end
@@ -4542,27 +4555,27 @@ feature {NONE} -- Expression validity
 				when 4 then
 						-- 0[xX][a-fA-F0-9]{2}
 					l_type := universe.integer_8_class
-					a_constant.set_integer_8
+					a_constant.set_type (universe.integer_8_class)
 					report_integer_8_constant (a_constant)
 				when 6 then
 						-- 0[xX][a-fA-F0-9]{4}
 					l_type := universe.integer_16_class
-					a_constant.set_integer_16
+					a_constant.set_type (universe.integer_16_class)
 					report_integer_16_constant (a_constant)
 				when 10 then
 						-- 0[xX][a-fA-F0-9]{8}
 					l_type := universe.integer_class
 -- TODO: should probably be INTEGER_32, but stay compatible with ISE.
-					a_constant.set_integer
+					a_constant.set_type (universe.integer_class)
 					report_integer_constant (a_constant)
 				when 18 then
 						-- 0[xX][a-fA-F0-9]{16}
 					l_type := universe.integer_64_class
-					a_constant.set_integer_64
+					a_constant.set_type (universe.integer_64_class)
 					report_integer_64_constant (a_constant)
 				else
 					l_type := universe.integer_class
-					a_constant.set_integer
+					a_constant.set_type (universe.integer_class)
 					report_integer_constant (a_constant)
 				end
 			end
@@ -5730,54 +5743,58 @@ feature {NONE} -- Expression validity
 			l_class_type: ET_CLASS_TYPE
 			l_class: ET_CLASS
 			l_type: ET_TYPE
-			l_cast_type: ET_TYPE
+			l_cast_type: ET_TARGET_TYPE
 		do
 			has_fatal_error := False
-			l_cast_type := a_constant.type
+			l_cast_type := a_constant.cast_type
 			if l_cast_type /= Void then
 -- TODO: make sure that `l_cast_type' is a valid type.
 -- For example 'INTEGER [STRING]' is not valid.
-				l_class_type ?= l_cast_type.named_type (a_context, universe)
+				l_class_type ?= l_cast_type.type.named_type (a_context, universe)
 			else
 				l_class_type ?= current_target_type.named_type (universe)
 			end
 			if l_class_type /= Void then
 				l_class := l_class_type.direct_base_class (universe)
-				if l_class = universe.integer_8_class then
+				if l_class = universe.integer_class then
 					l_type := l_class
-					a_constant.set_integer_8
+					a_constant.set_type (l_class)
+					report_integer_constant (a_constant)
+				elseif l_class = universe.integer_8_class then
+					l_type := l_class
+					a_constant.set_type (l_class)
 					report_integer_8_constant (a_constant)
 				elseif l_class = universe.integer_16_class then
 					l_type := l_class
-					a_constant.set_integer_16
+					a_constant.set_type (l_class)
 					report_integer_16_constant (a_constant)
 				elseif l_class = universe.integer_32_class then
 					l_type := l_class
-					a_constant.set_integer_32
+					a_constant.set_type (l_class)
 					report_integer_32_constant (a_constant)
 				elseif l_class = universe.integer_64_class then
 					l_type := l_class
-					a_constant.set_integer_64
+					a_constant.set_type (l_class)
 					report_integer_64_constant (a_constant)
 				elseif l_class = universe.natural_class then
 					l_type := l_class
-					a_constant.set_natural
+					a_constant.set_type (l_class)
 					report_natural_constant (a_constant)
 				elseif l_class = universe.natural_8_class then
 					l_type := l_class
-					a_constant.set_natural_8
+					a_constant.set_type (l_class)
 					report_natural_8_constant (a_constant)
 				elseif l_class = universe.natural_16_class then
 					l_type := l_class
-					a_constant.set_natural_16
+					a_constant.set_type (l_class)
 					report_natural_16_constant (a_constant)
 				elseif l_class = universe.natural_32_class then
 					l_type := l_class
-					a_constant.set_natural_32
+					a_constant.set_type (l_class)
 					report_natural_32_constant (a_constant)
 				elseif l_class = universe.natural_64_class then
 					l_type := l_class
-					a_constant.set_natural_64
+					a_constant.set_type (l_class)
 					report_natural_64_constant (a_constant)
 				end
 			end
@@ -5786,7 +5803,7 @@ feature {NONE} -- Expression validity
 -- TODO: invalid cast type, it should be an integer type.
 				end
 				l_type := universe.integer_class
-				a_constant.set_integer
+				a_constant.set_type (universe.integer_class)
 				report_integer_constant (a_constant)
 			end
 			a_context.force_last (l_type)
@@ -5802,7 +5819,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_last (universe.string_type)
+			a_context.force_last (universe.string_class)
 			report_string_constant (a_string)
 		end
 
@@ -5818,14 +5835,14 @@ feature {NONE} -- Expression validity
 			l_class_type: ET_CLASS_TYPE
 			l_class: ET_CLASS
 			l_type: ET_TYPE
-			l_cast_type: ET_TYPE
+			l_cast_type: ET_TARGET_TYPE
 		do
 			has_fatal_error := False
-			l_cast_type := a_constant.type
+			l_cast_type := a_constant.cast_type
 			if l_cast_type /= Void then
 -- TODO: make sure that `l_cast_type' is a valid type.
 -- For example 'REAL [STRING]' is not valid.
-				l_class_type ?= l_cast_type.named_type (a_context, universe)
+				l_class_type ?= l_cast_type.type.named_type (a_context, universe)
 			else
 				l_class_type ?= current_target_type.named_type (universe)
 			end
@@ -5833,20 +5850,28 @@ feature {NONE} -- Expression validity
 				l_class := l_class_type.direct_base_class (universe)
 				if l_class = universe.real_class then
 					l_type := l_class
-					a_constant.set_real_32
+					a_constant.set_type (l_class)
 					report_real_constant (a_constant)
 				elseif l_class = universe.double_class then
 					l_type := l_class
-					a_constant.set_double_64
+					a_constant.set_type (l_class)
+					report_double_constant (a_constant)
+				elseif l_class = universe.real_32_class then
+					l_type := l_class
+					a_constant.set_type (l_class)
+					report_real_constant (a_constant)
+				elseif l_class = universe.real_64_class then
+					l_type := l_class
+					a_constant.set_type (l_class)
 					report_double_constant (a_constant)
 				end
 			end
 			if l_type = Void then
 				if l_cast_type /= Void then
--- TODO: invalid cast type, it should be an integer type.
+-- TODO: invalid cast type, it should be a real type.
 				end
 				l_type := universe.double_class
-				a_constant.set_double_64
+				a_constant.set_type (universe.double_class)
 				report_double_constant (a_constant)
 			end
 			a_context.force_last (l_type)
@@ -6062,7 +6087,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_last (universe.string_type)
+			a_context.force_last (universe.string_class)
 			report_string_constant (a_string)
 		end
 
@@ -6332,54 +6357,58 @@ feature {NONE} -- Expression validity
 			l_class_type: ET_CLASS_TYPE
 			l_class: ET_CLASS
 			l_type: ET_TYPE
-			l_cast_type: ET_TYPE
+			l_cast_type: ET_TARGET_TYPE
 		do
 			has_fatal_error := False
-			l_cast_type := a_constant.type
+			l_cast_type := a_constant.cast_type
 			if l_cast_type /= Void then
 -- TODO: make sure that `l_cast_type' is a valid type.
 -- For example 'INTEGER [STRING]' is not valid.
-				l_class_type ?= l_cast_type.named_type (a_context, universe)
+				l_class_type ?= l_cast_type.type.named_type (a_context, universe)
 			else
 				l_class_type ?= current_target_type.named_type (universe)
 			end
 			if l_class_type /= Void then
 				l_class := l_class_type.direct_base_class (universe)
-				if l_class = universe.integer_8_class then
+				if l_class = universe.integer_class then
 					l_type := l_class
-					a_constant.set_integer_8
+					a_constant.set_type (l_class)
+					report_integer_constant (a_constant)
+				elseif l_class = universe.integer_8_class then
+					l_type := l_class
+					a_constant.set_type (l_class)
 					report_integer_8_constant (a_constant)
 				elseif l_class = universe.integer_16_class then
 					l_type := l_class
-					a_constant.set_integer_16
+					a_constant.set_type (l_class)
 					report_integer_16_constant (a_constant)
 				elseif l_class = universe.integer_32_class then
 					l_type := l_class
-					a_constant.set_integer_32
+					a_constant.set_type (l_class)
 					report_integer_32_constant (a_constant)
 				elseif l_class = universe.integer_64_class then
 					l_type := l_class
-					a_constant.set_integer_64
+					a_constant.set_type (l_class)
 					report_integer_64_constant (a_constant)
 				elseif l_class = universe.natural_class then
 					l_type := l_class
-					a_constant.set_natural
+					a_constant.set_type (l_class)
 					report_natural_constant (a_constant)
 				elseif l_class = universe.natural_8_class then
 					l_type := l_class
-					a_constant.set_natural_8
+					a_constant.set_type (l_class)
 					report_natural_8_constant (a_constant)
 				elseif l_class = universe.natural_16_class then
 					l_type := l_class
-					a_constant.set_natural_16
+					a_constant.set_type (l_class)
 					report_natural_16_constant (a_constant)
 				elseif l_class = universe.natural_32_class then
 					l_type := l_class
-					a_constant.set_natural_32
+					a_constant.set_type (l_class)
 					report_natural_32_constant (a_constant)
 				elseif l_class = universe.natural_64_class then
 					l_type := l_class
-					a_constant.set_natural_64
+					a_constant.set_type (l_class)
 					report_natural_64_constant (a_constant)
 				end
 			end
@@ -6388,7 +6417,7 @@ feature {NONE} -- Expression validity
 -- TODO: invalid cast type, it should be an integer type.
 				end
 				l_type := universe.integer_class
-				a_constant.set_integer
+				a_constant.set_type (universe.integer_class)
 				report_integer_constant (a_constant)
 			end
 			a_context.force_last (l_type)
@@ -6406,14 +6435,14 @@ feature {NONE} -- Expression validity
 			l_class_type: ET_CLASS_TYPE
 			l_class: ET_CLASS
 			l_type: ET_TYPE
-			l_cast_type: ET_TYPE
+			l_cast_type: ET_TARGET_TYPE
 		do
 			has_fatal_error := False
-			l_cast_type := a_constant.type
+			l_cast_type := a_constant.cast_type
 			if l_cast_type /= Void then
 -- TODO: make sure that `l_cast_type' is a valid type.
 -- For example 'REAL [STRING]' is not valid.
-				l_class_type ?= l_cast_type.named_type (a_context, universe)
+				l_class_type ?= l_cast_type.type.named_type (a_context, universe)
 			else
 				l_class_type ?= current_target_type.named_type (universe)
 			end
@@ -6421,20 +6450,28 @@ feature {NONE} -- Expression validity
 				l_class := l_class_type.direct_base_class (universe)
 				if l_class = universe.real_class then
 					l_type := l_class
-					a_constant.set_real_32
+					a_constant.set_type (l_class)
 					report_real_constant (a_constant)
 				elseif l_class = universe.double_class then
 					l_type := l_class
-					a_constant.set_double_64
+					a_constant.set_type (l_class)
+					report_double_constant (a_constant)
+				elseif l_class = universe.real_32_class then
+					l_type := l_class
+					a_constant.set_type (l_class)
+					report_real_constant (a_constant)
+				elseif l_class = universe.real_64_class then
+					l_type := l_class
+					a_constant.set_type (l_class)
 					report_double_constant (a_constant)
 				end
 			end
 			if l_type = Void then
 				if l_cast_type /= Void then
--- TODO: invalid cast type, it should be an integer type.
+-- TODO: invalid cast type, it should be a real type.
 				end
 				l_type := universe.double_class
-				a_constant.set_double_64
+				a_constant.set_type (universe.double_class)
 				report_double_constant (a_constant)
 			end
 			a_context.force_last (l_type)
@@ -6657,7 +6694,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_last (universe.string_type)
+			a_context.force_last (universe.string_class)
 			report_string_constant (a_string)
 		end
 

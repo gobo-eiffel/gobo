@@ -39,7 +39,10 @@ feature -- Initialization
 	reset is
 			-- Reset constant as it was when it was first parsed.
 		do
-			precision := '%/0/'
+			type := Void
+			if cast_type /= Void then
+				cast_type.type.reset
+			end
 		end
 
 feature -- Access
@@ -53,15 +56,9 @@ feature -- Access
 	cast_type: ET_TARGET_TYPE
 			-- Cast type
 
-	type: ET_TYPE is
-			-- Type of real when casted
-		do
-			if cast_type /= Void then
-				Result := cast_type.type
-			end
-		ensure
-			definition: cast_type /= Void implies Result = cast_type.type
-		end
+	type: ET_CLASS_TYPE
+			-- Type of real constant;
+			-- Void if not determined yet
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -116,18 +113,6 @@ feature -- Status report
 			end
 		end
 
-	is_real_32: BOOLEAN is
-			-- Is current constant a 32-bit signed real?
-		do
-			Result := precision = '%/32/'
-		end
-
-	is_double_64: BOOLEAN is
-			-- Is current constant a 64-bit signed double?
-		do
-			Result := precision = '%/64/'
-		end
-
 	is_real_constant: BOOLEAN is True
 			-- Is current constant a real constant?
 
@@ -149,28 +134,13 @@ feature -- Setting
 			cast_type_set: cast_type = a_type
 		end
 
-feature -- Status setting
-
-	set_real_32 is
-			-- Set current constant as a 32-bit signed real.
+	set_type (a_type: like type) is
+			-- Set `type' to `a_type'.
 		do
-			precision := '%/32/'
+			type := a_type
 		ensure
-			is_real_32: is_real_32
+			type_set: type = a_type
 		end
-
-	set_double_64 is
-			-- Set current constant as a 64-bit signed double.
-		do
-			precision := '%/64/'
-		ensure
-			is_double_64: is_double_64
-		end
-
-feature {NONE} -- Implementation
-
-	precision: CHARACTER
-			-- Precision code
 
 invariant
 

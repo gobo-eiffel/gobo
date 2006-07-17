@@ -383,6 +383,7 @@ feature -- Type conversion
 						if
 								-- Needed by ISE Eiffel 5.4.
 							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class or
 								-- Needed by ISE Eiffel 5.6.
 							a_source_base_class = universe.integer_8_ref_class
 						then
@@ -393,6 +394,7 @@ feature -- Type conversion
 							a_source_base_class = universe.integer_8_class or
 								-- Needed by ISE Eiffel 5.4.
 							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class or
 								-- Needed by ISE Eiffel 5.6.
 							a_source_base_class = universe.integer_16_ref_class
 						then
@@ -403,15 +405,27 @@ feature -- Type conversion
 							a_source_base_class = universe.integer_8_class or
 							a_source_base_class = universe.integer_16_class or
 								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.integer_ref_class
+							a_source_base_class = universe.integer_ref_class or
+							a_source_base_class = universe.integer_32_ref_class
 						then
 							Result := universe.integer_convert_feature
+						end
+					elseif a_target_base_class = universe.integer_32_class then
+						if
+							a_source_base_class = universe.integer_8_class or
+							a_source_base_class = universe.integer_16_class or
+								-- Needed by ISE Eiffel 5.6.
+							a_source_base_class = universe.integer_ref_class or
+							a_source_base_class = universe.integer_32_ref_class
+						then
+							Result := universe.integer_32_convert_feature
 						end
 					elseif a_target_base_class = universe.integer_64_class then
 						if
 							a_source_base_class = universe.integer_8_class or
 							a_source_base_class = universe.integer_16_class or
 							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class or
 								-- Needed by ISE Eiffel 5.6.
 							a_source_base_class = universe.integer_64_ref_class
 						then
@@ -419,38 +433,59 @@ feature -- Type conversion
 						end
 					elseif a_target_base_class = universe.natural_8_class then
 							-- Needed by ISE Eiffel 5.6.
-						if a_source_base_class = universe.integer_class then
+						if
+							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class
+						then
 							Result := universe.natural_8_convert_feature
 						end
 					elseif a_target_base_class = universe.natural_16_class then
 							-- Needed by ISE Eiffel 5.6.
-						if a_source_base_class = universe.integer_class then
+						if
+							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class
+						then
 							Result := universe.natural_16_convert_feature
 						end
 					elseif a_target_base_class = universe.natural_32_class then
 							-- Needed by ISE Eiffel 5.6.
-						if a_source_base_class = universe.integer_class then
+						if
+							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class
+						then
 							Result := universe.natural_32_convert_feature
 						end
 					elseif a_target_base_class = universe.natural_64_class then
 							-- Needed by ISE Eiffel 5.6.
 						if
 							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class or
 							a_source_base_class = universe.integer_8_class or
 							a_source_base_class = universe.integer_64_class
 						then
 							Result := universe.natural_64_convert_feature
+						end
+					elseif a_target_base_class = universe.natural_class then
+							-- Needed by ISE Eiffel 5.6.
+						if
+							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class
+						then
+							Result := universe.natural_convert_feature
 						end
 					elseif a_target_base_class = universe.real_class then
 						if
 							a_source_base_class = universe.integer_8_class or
 							a_source_base_class = universe.integer_16_class or
 							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class or
 							a_source_base_class = universe.integer_64_class or
 								-- Needed by ISE Eiffel 5.4.
 							a_source_base_class = universe.double_class or
+							a_source_base_class = universe.real_64_class or
 								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.real_ref_class
+							a_source_base_class = universe.real_ref_class or
+							a_source_base_class = universe.real_32_ref_class
 						then
 							Result := universe.real_convert_feature
 						end
@@ -459,12 +494,46 @@ feature -- Type conversion
 							a_source_base_class = universe.integer_8_class or
 							a_source_base_class = universe.integer_16_class or
 							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class or
 							a_source_base_class = universe.integer_64_class or
 							a_source_base_class = universe.real_class or
+							a_source_base_class = universe.real_32_class or
 								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.double_ref_class
+							a_source_base_class = universe.double_ref_class or
+							a_source_base_class = universe.real_64_ref_class
 						then
 							Result := universe.double_convert_feature
+						end
+					elseif a_target_base_class = universe.real_32_class then
+						if
+							a_source_base_class = universe.integer_8_class or
+							a_source_base_class = universe.integer_16_class or
+							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class or
+							a_source_base_class = universe.integer_64_class or
+								-- Needed by ISE Eiffel 5.4.
+							a_source_base_class = universe.double_class or
+							a_source_base_class = universe.real_64_class or
+								-- Needed by ISE Eiffel 5.6.
+							a_source_base_class = universe.real_ref_class or
+							a_source_base_class = universe.real_32_ref_class
+						then
+							Result := universe.real_32_convert_feature
+						end
+					elseif a_target_base_class = universe.real_64_class then
+						if
+							a_source_base_class = universe.integer_8_class or
+							a_source_base_class = universe.integer_16_class or
+							a_source_base_class = universe.integer_class or
+							a_source_base_class = universe.integer_32_class or
+							a_source_base_class = universe.integer_64_class or
+							a_source_base_class = universe.real_class or
+							a_source_base_class = universe.real_32_class or
+								-- Needed by ISE Eiffel 5.6.
+							a_source_base_class = universe.double_ref_class or
+							a_source_base_class = universe.real_64_ref_class
+						then
+							Result := universe.real_64_convert_feature
 						end
 					elseif a_source_base_class = universe.boolean_class then
 							-- Needed by ISE Eiffel 5.6.
@@ -501,6 +570,7 @@ feature -- Type conversion
 							-- Needed by ISE Eiffel 5.6.
 						if
 							a_target_base_class = universe.integer_ref_class or
+							a_target_base_class = universe.integer_32_ref_class or
 							a_target_base_class = universe.numeric_class or
 							a_target_base_class = universe.hashable_class or
 							a_target_base_class = universe.comparable_class or
@@ -508,6 +578,19 @@ feature -- Type conversion
 							a_target_base_class = universe.any_class
 						then
 							Result := universe.integer_convert_feature
+						end
+					elseif a_source_base_class = universe.integer_32_class then
+							-- Needed by ISE Eiffel 5.6.
+						if
+							a_target_base_class = universe.integer_ref_class or
+							a_target_base_class = universe.integer_32_ref_class or
+							a_target_base_class = universe.numeric_class or
+							a_target_base_class = universe.hashable_class or
+							a_target_base_class = universe.comparable_class or
+							a_target_base_class = universe.part_comparable_class or
+							a_target_base_class = universe.any_class
+						then
+							Result := universe.integer_32_convert_feature
 						end
 					elseif a_source_base_class = universe.integer_8_class then
 							-- Needed by ISE Eiffel 5.6.
@@ -549,6 +632,7 @@ feature -- Type conversion
 							-- Needed by ISE Eiffel 5.6.
 						if
 							a_target_base_class = universe.real_ref_class or
+							a_target_base_class = universe.real_32_ref_class or
 							a_target_base_class = universe.numeric_class or
 							a_target_base_class = universe.hashable_class or
 							a_target_base_class = universe.comparable_class or
@@ -561,6 +645,7 @@ feature -- Type conversion
 							-- Needed by ISE Eiffel 5.6.
 						if
 							a_target_base_class = universe.double_ref_class or
+							a_target_base_class = universe.real_64_ref_class or
 							a_target_base_class = universe.numeric_class or
 							a_target_base_class = universe.hashable_class or
 							a_target_base_class = universe.comparable_class or
@@ -568,6 +653,32 @@ feature -- Type conversion
 							a_target_base_class = universe.any_class
 						then
 							Result := universe.double_convert_feature
+						end
+					elseif a_source_base_class = universe.real_32_class then
+							-- Needed by ISE Eiffel 5.6.
+						if
+							a_target_base_class = universe.real_ref_class or
+							a_target_base_class = universe.real_32_ref_class or
+							a_target_base_class = universe.numeric_class or
+							a_target_base_class = universe.hashable_class or
+							a_target_base_class = universe.comparable_class or
+							a_target_base_class = universe.part_comparable_class or
+							a_target_base_class = universe.any_class
+						then
+							Result := universe.real_32_convert_feature
+						end
+					elseif a_source_base_class = universe.real_64_class then
+							-- Needed by ISE Eiffel 5.6.
+						if
+							a_target_base_class = universe.double_ref_class or
+							a_target_base_class = universe.real_64_ref_class or
+							a_target_base_class = universe.numeric_class or
+							a_target_base_class = universe.hashable_class or
+							a_target_base_class = universe.comparable_class or
+							a_target_base_class = universe.part_comparable_class or
+							a_target_base_class = universe.any_class
+						then
+							Result := universe.real_64_convert_feature
 						end
 					elseif a_source_base_class = universe.pointer_class then
 							-- Needed by ISE Eiffel 5.6.

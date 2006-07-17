@@ -6026,28 +6026,17 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			l_negative: BOOLEAN
 			l_buffer: STRING
 			l_temp: ET_IDENTIFIER
+			l_type: ET_CLASS_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_any: ET_CLASS
 		do
+			l_any := universe.any_class
 			if in_operand then
 				if in_target then
 					in_operand := False
-					if a_constant.is_integer_8 then
-						l_temp := new_temp_variable (current_system.integer_8_type)
-					elseif a_constant.is_integer_16 then
-						l_temp := new_temp_variable (current_system.integer_16_type)
-					elseif a_constant.is_integer_32 then
-						l_temp := new_temp_variable (current_system.integer_32_type)
-					elseif a_constant.is_integer_64 then
-						l_temp := new_temp_variable (current_system.integer_64_type)
-					elseif a_constant.is_natural then
-						l_temp := new_temp_variable (current_system.natural_type)
-					elseif a_constant.is_natural_8 then
-						l_temp := new_temp_variable (current_system.natural_8_type)
-					elseif a_constant.is_natural_16 then
-						l_temp := new_temp_variable (current_system.natural_16_type)
-					elseif a_constant.is_natural_32 then
-						l_temp := new_temp_variable (current_system.natural_32_type)
-					elseif a_constant.is_natural_64 then
-						l_temp := new_temp_variable (current_system.natural_64_type)
+					l_type := a_constant.type
+					if l_type /= Void then
+						l_temp := new_temp_variable (current_system.dynamic_type (l_type, l_any))
 					else
 						l_temp := new_temp_variable (current_system.integer_type)
 					end
@@ -6065,45 +6054,33 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					operand_stack.force (a_constant)
 				end
 			else
-				if a_constant.is_integer_8 then
-					print_type_cast (current_system.integer_8_type, current_file)
-					current_file.put_character ('(')
+				l_type := a_constant.type
+				if l_type /= Void then
+					l_dynamic_type := current_system.dynamic_type (l_type, l_any)
+				else
+					l_dynamic_type := current_system.integer_type
+				end
+				print_type_cast (l_dynamic_type, current_file)
+				current_file.put_character ('(')
+				if l_dynamic_type = current_system.integer_8_type then
 					current_file.put_string (c_geint8)
-				elseif a_constant.is_integer_16 then
-					print_type_cast (current_system.integer_16_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.integer_16_type then
 					current_file.put_string (c_geint16)
-				elseif a_constant.is_integer_32 then
-					print_type_cast (current_system.integer_32_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.integer_32_type then
 					current_file.put_string (c_geint32)
-				elseif a_constant.is_integer_64 then
-					print_type_cast (current_system.integer_64_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.integer_64_type then
 					current_file.put_string (c_geint64)
-				elseif a_constant.is_natural then
-					print_type_cast (current_system.natural_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.natural_type then
 					current_file.put_string (c_genat32)
-				elseif a_constant.is_natural_8 then
-					print_type_cast (current_system.natural_8_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.natural_8_type then
 					current_file.put_string (c_genat8)
-				elseif a_constant.is_natural_16 then
-					print_type_cast (current_system.natural_16_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.natural_16_type then
 					current_file.put_string (c_genat16)
-				elseif a_constant.is_natural_32 then
-					print_type_cast (current_system.natural_32_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.natural_32_type then
 					current_file.put_string (c_genat32)
-				elseif a_constant.is_natural_64 then
-					print_type_cast (current_system.natural_64_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.natural_64_type then
 					current_file.put_string (c_genat64)
 				else
-					print_type_cast (current_system.integer_type, current_file)
-					current_file.put_character ('(')
 					current_file.put_string (c_geint32)
 				end
 				current_file.put_character ('(')
@@ -6180,12 +6157,16 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			a_constant_not_void: a_constant /= Void
 		local
 			l_temp: ET_IDENTIFIER
+			l_type: ET_CLASS_TYPE
+			l_any: ET_CLASS
 		do
+			l_any := universe.any_class
 			if in_operand then
 				if in_target then
 					in_operand := False
-					if a_constant.is_real_32 then
-						l_temp := new_temp_variable (current_system.real_type)
+					l_type := a_constant.type
+					if l_type /= Void then
+						l_temp := new_temp_variable (current_system.dynamic_type (l_type, l_any))
 					else
 						l_temp := new_temp_variable (current_system.double_type)
 					end
@@ -6203,8 +6184,9 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					operand_stack.force (a_constant)
 				end
 			else
-				if a_constant.is_real_32 then
-					print_type_cast (current_system.real_type, current_file)
+				l_type := a_constant.type
+				if l_type /= Void then
+					print_type_cast (current_system.dynamic_type (l_type, l_any), current_file)
 				else
 					print_type_cast (current_system.double_type, current_file)
 				end
@@ -6597,28 +6579,17 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			l_negative: BOOLEAN
 			l_buffer: STRING
 			l_temp: ET_IDENTIFIER
+			l_type: ET_CLASS_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_any: ET_CLASS
 		do
+			l_any := universe.any_class
 			if in_operand then
 				if in_target then
 					in_operand := False
-					if a_constant.is_integer_8 then
-						l_temp := new_temp_variable (current_system.integer_8_type)
-					elseif a_constant.is_integer_16 then
-						l_temp := new_temp_variable (current_system.integer_16_type)
-					elseif a_constant.is_integer_32 then
-						l_temp := new_temp_variable (current_system.integer_32_type)
-					elseif a_constant.is_integer_64 then
-						l_temp := new_temp_variable (current_system.integer_64_type)
-					elseif a_constant.is_natural then
-						l_temp := new_temp_variable (current_system.natural_type)
-					elseif a_constant.is_natural_8 then
-						l_temp := new_temp_variable (current_system.natural_8_type)
-					elseif a_constant.is_natural_16 then
-						l_temp := new_temp_variable (current_system.natural_16_type)
-					elseif a_constant.is_natural_32 then
-						l_temp := new_temp_variable (current_system.natural_32_type)
-					elseif a_constant.is_natural_64 then
-						l_temp := new_temp_variable (current_system.natural_64_type)
+					l_type := a_constant.type
+					if l_type /= Void then
+						l_temp := new_temp_variable (current_system.dynamic_type (l_type, l_any))
 					else
 						l_temp := new_temp_variable (current_system.integer_type)
 					end
@@ -6636,45 +6607,33 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 					operand_stack.force (a_constant)
 				end
 			else
-				if a_constant.is_integer_8 then
-					print_type_cast (current_system.integer_8_type, current_file)
-					current_file.put_character ('(')
+				l_type := a_constant.type
+				if l_type /= Void then
+					l_dynamic_type := current_system.dynamic_type (l_type, l_any)
+				else
+					l_dynamic_type := current_system.integer_type
+				end
+				print_type_cast (l_dynamic_type, current_file)
+				current_file.put_character ('(')
+				if l_dynamic_type = current_system.integer_8_type then
 					current_file.put_string (c_geint8)
-				elseif a_constant.is_integer_16 then
-					print_type_cast (current_system.integer_16_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.integer_16_type then
 					current_file.put_string (c_geint16)
-				elseif a_constant.is_integer_32 then
-					print_type_cast (current_system.integer_32_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.integer_32_type then
 					current_file.put_string (c_geint32)
-				elseif a_constant.is_integer_64 then
-					print_type_cast (current_system.integer_64_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.integer_64_type then
 					current_file.put_string (c_geint64)
-				elseif a_constant.is_natural then
-					print_type_cast (current_system.natural_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.natural_type then
 					current_file.put_string (c_genat32)
-				elseif a_constant.is_natural_8 then
-					print_type_cast (current_system.natural_8_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.natural_8_type then
 					current_file.put_string (c_genat8)
-				elseif a_constant.is_natural_16 then
-					print_type_cast (current_system.natural_16_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.natural_16_type then
 					current_file.put_string (c_genat16)
-				elseif a_constant.is_natural_32 then
-					print_type_cast (current_system.natural_32_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.natural_32_type then
 					current_file.put_string (c_genat32)
-				elseif a_constant.is_natural_64 then
-					print_type_cast (current_system.natural_64_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.natural_64_type then
 					current_file.put_string (c_genat64)
 				else
-					print_type_cast (current_system.integer_type, current_file)
-					current_file.put_character ('(')
 					current_file.put_string (c_geint32)
 				end
 				current_file.put_character ('(')
@@ -6736,12 +6695,16 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			i, nb: INTEGER
 			l_literal: STRING
 			l_temp: ET_IDENTIFIER
+			l_type: ET_CLASS_TYPE
+			l_any: ET_CLASS
 		do
+			l_any := universe.any_class
 			if in_operand then
 				if in_target then
 					in_operand := False
-					if a_constant.is_real_32 then
-						l_temp := new_temp_variable (current_system.real_type)
+					l_type := a_constant.type
+					if l_type /= Void then
+						l_temp := new_temp_variable (current_system.dynamic_type (l_type, l_any))
 					else
 						l_temp := new_temp_variable (current_system.double_type)
 					end
@@ -6759,8 +6722,9 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 					operand_stack.force (a_constant)
 				end
 			else
-				if a_constant.is_real_32 then
-					print_type_cast (current_system.real_type, current_file)
+				l_type := a_constant.type
+				if l_type /= Void then
+					print_type_cast (current_system.dynamic_type (l_type, l_any), current_file)
 				else
 					print_type_cast (current_system.double_type, current_file)
 				end

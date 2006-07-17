@@ -234,6 +234,22 @@ feature -- Class names
 			real_class_name_not_void: Result /= Void
 		end
 
+	real_32_class_name: ET_CLASS_NAME is
+			-- "REAL_32" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_real_32_name)
+		ensure
+			real_32_class_name_not_void: Result /= Void
+		end
+
+	real_64_class_name: ET_CLASS_NAME is
+			-- "REAL_64" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_real_64_name)
+		ensure
+			real_64_class_name_not_void: Result /= Void
+		end
+
 	routine_class_name: ET_CLASS_NAME is
 			-- "ROUTINE" class name
 		once
@@ -256,6 +272,22 @@ feature -- Class names
 			create {ET_IDENTIFIER} Result.make (capitalized_string_name)
 		ensure
 			string_class_name_not_void: Result /= Void
+		end
+
+	string_8_class_name: ET_CLASS_NAME is
+			-- "STRING_8" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_string_8_name)
+		ensure
+			string_8_class_name_not_void: Result /= Void
+		end
+
+	string_32_class_name: ET_CLASS_NAME is
+			-- "STRING_32" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_string_32_name)
+		ensure
+			string_32_class_name_not_void: Result /= Void
 		end
 
 	system_object_class_name: ET_CLASS_NAME is
@@ -388,12 +420,28 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 			integer_16_ref_class_name_not_void: Result /= Void
 		end
 
+	integer_32_ref_class_name: ET_CLASS_NAME is
+			-- "INTEGER_32_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_integer_32_ref_name)
+		ensure
+			integer_32_ref_class_name_not_void: Result /= Void
+		end
+
 	integer_64_ref_class_name: ET_CLASS_NAME is
 			-- "INTEGER_64_REF" class name
 		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_64_ref_name)
 		ensure
 			integer_64_ref_class_name_not_void: Result /= Void
+		end
+
+	natural_ref_class_name: ET_CLASS_NAME is
+			-- "NATURAL_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_natural_ref_name)
+		ensure
+			natural_ref_class_name_not_void: Result /= Void
 		end
 
 	natural_8_ref_class_name: ET_CLASS_NAME is
@@ -458,6 +506,22 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 			create {ET_IDENTIFIER} Result.make (capitalized_real_ref_name)
 		ensure
 			real_ref_class_name_not_void: Result /= Void
+		end
+
+	real_32_ref_class_name: ET_CLASS_NAME is
+			-- "REAL_32_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_real_32_ref_name)
+		ensure
+			real_32_ref_class_name_not_void: Result /= Void
+		end
+
+	real_64_ref_class_name: ET_CLASS_NAME is
+			-- "REAL_64_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_real_64_ref_name)
+		ensure
+			real_64_ref_class_name_not_void: Result /= Void
 		end
 
 	wide_character_ref_class_name: ET_CLASS_NAME is
@@ -2001,9 +2065,13 @@ feature -- Keyword and symbol names
 	capitalized_predicate_name: STRING is "PREDICATE"
 	capitalized_procedure_name: STRING is "PROCEDURE"
 	capitalized_real_name: STRING is "REAL"
+	capitalized_real_32_name: STRING is "REAL_32"
+	capitalized_real_64_name: STRING is "REAL_64"
 	capitalized_routine_name: STRING is "ROUTINE"
 	capitalized_special_name: STRING is "SPECIAL"
 	capitalized_string_name: STRING is "STRING"
+	capitalized_string_8_name: STRING is "STRING_8"
+	capitalized_string_32_name: STRING is "STRING_32"
 	capitalized_system_object_name: STRING is "SYSTEM_OBJECT"
 	capitalized_tuple_name: STRING is "TUPLE"
 	capitalized_type_name: STRING is "TYPE"
@@ -2213,7 +2281,9 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 	capitalized_integer_ref_name: STRING is "INTEGER_REF"
 	capitalized_integer_8_ref_name: STRING is "INTEGER_8_REF"
 	capitalized_integer_16_ref_name: STRING is "INTEGER_16_REF"
+	capitalized_integer_32_ref_name: STRING is "INTEGER_32_REF"
 	capitalized_integer_64_ref_name: STRING is "INTEGER_64_REF"
+	capitalized_natural_ref_name: STRING is "NATURAL_REF"
 	capitalized_natural_8_ref_name: STRING is "NATURAL_8_REF"
 	capitalized_natural_16_ref_name: STRING is "NATURAL_16_REF"
 	capitalized_natural_32_ref_name: STRING is "NATURAL_32_REF"
@@ -2222,6 +2292,8 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 	capitalized_part_comparable_name: STRING is "PART_COMPARABLE"
 	capitalized_pointer_ref_name: STRING is "POINTER_REF"
 	capitalized_real_ref_name: STRING is "REAL_REF"
+	capitalized_real_32_ref_name: STRING is "REAL_32_REF"
+	capitalized_real_64_ref_name: STRING is "REAL_64_REF"
 	capitalized_wide_character_ref_name: STRING is "WIDE_CHARACTER_REF"
 		-- Eiffel class names
 
