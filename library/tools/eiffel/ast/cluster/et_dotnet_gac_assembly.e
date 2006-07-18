@@ -10,11 +10,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_GAC_ASSEMBLY
+deferred class ET_DOTNET_GAC_ASSEMBLY
 
 inherit
 
-	ET_ASSEMBLY
+	ET_DOTNET_ASSEMBLY
+		redefine
+			consume
+		end
 
 feature -- Access
 
@@ -39,6 +42,14 @@ feature -- Access
 	assembly_public_key_token: STRING is
 			-- Public key of current assembly (may be Void)
 		deferred
+		end
+
+feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Consuming
+
+	consume (a_consumer: ET_DOTNET_ASSEMBLY_CONSUMER) is
+			-- Consume current assembly using `a_consumer'.
+		do
+			a_consumer.consume_gac_assembly (Current)
 		end
 
 end

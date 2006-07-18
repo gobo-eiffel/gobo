@@ -346,7 +346,7 @@ feature -- Preparsing
 			-- Filename
 
 	group: ET_GROUP
-			-- Group (e.g. cluster or assembly) to which current class belongs
+			-- Group (e.g. cluster or .NET assembly) to which current class belongs
 
 	time_stamp: INTEGER
 			-- Time stamp of the file when it was last parsed
@@ -478,13 +478,13 @@ feature -- Preparsing status
 			is_cluster: Result implies group.is_cluster
 		end
 
-	is_in_assembly: BOOLEAN is
-			-- Is current class in an assembly?
+	is_in_dotnet_assembly: BOOLEAN is
+			-- Is current class in a .NET assembly?
 		do
-			Result := group /= Void and then group.is_assembly
+			Result := group /= Void and then group.is_dotnet_assembly
 		ensure
 			group_not_void: Result implies group /= Void
-			is_assembly: Result implies group.is_assembly
+			is_dotnet_assembly: Result implies group.is_dotnet_assembly
 		end
 
 	is_override: BOOLEAN is

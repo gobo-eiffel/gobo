@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		".NET assemblies lists"
+		".NET assembly lists"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_ASSEMBLIES
+class ET_DOTNET_ASSEMBLIES
 
 inherit
 
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	assembly (i: INTEGER): ET_ASSEMBLY is
+	assembly (i: INTEGER): ET_DOTNET_ASSEMBLY is
 			-- `i'-th assembly
 		require
 			i_large_enough: i >= 1
@@ -58,7 +58,7 @@ feature -- Access
 			assembly_not_void: Result /= Void
 		end
 
-	assembly_by_name (a_name: STRING): ET_ASSEMBLY is
+	assembly_by_name (a_name: STRING): ET_DOTNET_ASSEMBLY is
 			-- Assembly with name `a_name';
 			-- Void if not such assembly
 		require
@@ -66,7 +66,7 @@ feature -- Access
 			a_name_not_empty: a_name.count > 0
 		local
 			i, nb: INTEGER
-			l_assembly: ET_ASSEMBLY
+			l_assembly: ET_DOTNET_ASSEMBLY
 		do
 			nb := assemblies.count
 			from i := nb until i < 1 loop

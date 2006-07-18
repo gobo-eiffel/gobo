@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		".NET assemblies lists read from Ace file"
+		".NET assembly lists read from Ace file"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
@@ -10,11 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_LACE_ASSEMBLIES
+class ET_LACE_DOTNET_ASSEMBLIES
 
 inherit
 
-	ET_ASSEMBLIES
+	ET_DOTNET_ASSEMBLIES
 		redefine
 			assembly
 		end
@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	assembly (i: INTEGER): ET_LACE_ASSEMBLY is
+	assembly (i: INTEGER): ET_LACE_DOTNET_ASSEMBLY is
 			-- `i'-th assembly
 		do
 			Result := assemblies.item (i)

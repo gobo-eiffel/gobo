@@ -126,7 +126,7 @@ feature -- Parsing
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
-										if a_class.is_in_assembly then
+										if a_class.is_in_dotnet_assembly then
 											error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
 										else
 											error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
@@ -148,7 +148,7 @@ feature -- Parsing
 									l_other_class.set_filename (a_filename)
 									l_other_class.set_group (a_cluster)
 									a_class.set_overridden_class (l_other_class)
-									if a_class.is_in_assembly then
+									if a_class.is_in_dotnet_assembly then
 										error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
 									else
 										error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
@@ -280,7 +280,7 @@ feature -- Parsing
 											l_other_class.set_filename (a_filename)
 											l_other_class.set_group (a_cluster)
 											a_class.set_overridden_class (l_other_class)
-											if a_class.is_in_assembly then
+											if a_class.is_in_dotnet_assembly then
 												error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
 											else
 												error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
@@ -302,7 +302,7 @@ feature -- Parsing
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
-										if a_class.is_in_assembly then
+										if a_class.is_in_dotnet_assembly then
 											error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
 										else
 											error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
@@ -429,7 +429,7 @@ feature -- Parsing
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_group (a_cluster)
 							a_class.set_overridden_class (l_other_class)
-							if a_class.is_in_assembly then
+							if a_class.is_in_dotnet_assembly then
 								error_handler.report_vscn0b_error (a_class, a_cluster, filename)
 							else
 								error_handler.report_vscn0a_error (a_class, a_cluster, filename)
@@ -453,7 +453,7 @@ feature -- Parsing
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_group (a_cluster)
 						a_class.set_overridden_class (l_other_class)
-						if a_class.is_in_assembly then
+						if a_class.is_in_dotnet_assembly then
 							error_handler.report_vscn0b_error (a_class, a_cluster, filename)
 						else
 							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
@@ -767,7 +767,7 @@ feature -- Parsing
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_group (a_cluster)
 							a_class.set_overridden_class (l_other_class)
-							if a_class.is_in_assembly then
+							if a_class.is_in_dotnet_assembly then
 								error_handler.report_vscn0b_error (a_class, a_cluster, filename)
 							else
 								error_handler.report_vscn0a_error (a_class, a_cluster, filename)
@@ -791,7 +791,7 @@ feature -- Parsing
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_group (a_cluster)
 						a_class.set_overridden_class (l_other_class)
-						if a_class.is_in_assembly then
+						if a_class.is_in_dotnet_assembly then
 							error_handler.report_vscn0b_error (a_class, a_cluster, filename)
 						else
 							error_handler.report_vscn0a_error (a_class, a_cluster, filename)

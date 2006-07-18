@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_ASSEMBLY_CONSUMER
+deferred class ET_DOTNET_ASSEMBLY_CONSUMER
 
 feature {NONE} -- Initialization
 
@@ -29,23 +29,40 @@ feature -- Access
 	universe: ET_UNIVERSE
 			-- Surrounding universe
 
+	error_handler: ET_ERROR_HANDLER is
+			-- Error handler
+		do
+			Result := universe.error_handler
+		ensure
+			error_handler_not_void: Result /= Void
+		end
+
 feature -- Consuming
 
-	consume_assemblies (an_assemblies: ET_ASSEMBLIES) is
+	consume_assemblies (an_assemblies: ET_DOTNET_ASSEMBLIES) is
 			-- Consume `an_assemblies' and put the classes in `universe'.
 		require
 			an_assemblies_not_void: an_assemblies /= Void
-		deferred
+		local
+			i, nb: INTEGER
+		do
+			nb := an_assemblies.count
+			from i := 1 until i > nb loop
+				an_assemblies.assembly (i).consume (Current)
+				i := i + 1
+			end
 		end
 
-	consume_assembly (an_assembly: ET_ASSEMBLY) is
+feature {ET_DOTNET_ASSEMBLY} -- Consuming
+
+	consume_assembly (an_assembly: ET_DOTNET_ASSEMBLY) is
 			-- Consume `an_assembly' and put the classes in `universe'.
 		require
 			an_assembly_not_void: an_assembly /= Void
 		deferred
 		end
 
-	consume_gac_assembly (an_assembly: ET_GAC_ASSEMBLY) is
+	consume_gac_assembly (an_assembly: ET_DOTNET_GAC_ASSEMBLY) is
 			-- Consume `an_assembly' and put the classes in `universe'.
 		require
 			an_assembly_not_void: an_assembly /= Void

@@ -10,19 +10,19 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_ASSEMBLY
+deferred class ET_DOTNET_ASSEMBLY
 
 inherit
 
 	ET_GROUP
 		redefine
-			is_assembly
+			is_dotnet_assembly
 		end
 
 feature -- Status report
 
-	is_assembly: BOOLEAN is True
-			-- Is current group an assembly?
+	is_dotnet_assembly: BOOLEAN is True
+			-- Is current group a .NET assembly?
 
 	is_override: BOOLEAN is False
 			-- Is current group an override group?
@@ -38,7 +38,7 @@ feature -- Status report
 
 feature -- Access
 
-	class_prefix: STRING is
+	classname_prefix: STRING is
 			-- Prefix for classnames of current assembly
 			-- (may be Void)
 		deferred
@@ -46,10 +46,20 @@ feature -- Access
 
 feature -- Nested
 
-	parent: ET_ASSEMBLY is
+	parent: ET_DOTNET_ASSEMBLY is
 			-- Parent group
 		do
 			-- Result := Void
+		end
+
+feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Consuming
+
+	consume (a_consumer: ET_DOTNET_ASSEMBLY_CONSUMER) is
+			-- Consume current assembly using `a_consumer'.
+		require
+			a_consumer_not_void: a_consumer /= Void
+		do
+			a_consumer.consume_assembly (Current)
 		end
 
 end

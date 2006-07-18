@@ -39,8 +39,8 @@ create
 %type <ET_LACE_CLUSTERS> Cluster_list Clusters_opt Subclusters_opt Subcluster_list
 %type <ET_LACE_EXCLUDE> Excludes Exclude_list Cluster_options_opt
 %type <ET_IDENTIFIER> Identifier Root_cluster_opt Creation_procedure_opt Prefix_opt
-%type <ET_LACE_ASSEMBLY> Assembly
-%type <ET_LACE_ASSEMBLIES> Assembly_list Assemblies_opt
+%type <ET_LACE_DOTNET_ASSEMBLY> Assembly
+%type <ET_LACE_DOTNET_ASSEMBLIES> Assembly_list Assemblies_opt
 
 %start Ace
 
@@ -51,7 +51,7 @@ Ace: L_SYSTEM Identifier L_ROOT Identifier Root_cluster_opt Creation_procedure_o
 	Defaults_opt Clusters_opt Assemblies_opt Externals_opt Generates_opt L_END
 		{
 			last_universe := new_universe ($8)
-			last_universe.set_assemblies ($9)
+			last_universe.set_dotnet_assemblies ($9)
 			last_universe.set_system_name ($2.name)
 			last_universe.set_root_class ($4)
 			last_universe.set_root_creation ($6)
@@ -299,12 +299,12 @@ Assembly_list: Assembly
 Assembly: Identifier ':' Identifier Prefix_opt
 		{
 			$$ := new_assembly ($1, $3)
-			$$.set_class_prefix ($4)
+			$$.set_classname_prefix ($4)
 		}
 	| Identifier ':' Identifier ',' Identifier ',' Identifier ',' Identifier Prefix_opt
 		{
 			$$ := new_gac_assembly ($1, $3, $5, $7, $9)
-			$$.set_class_prefix ($10)
+			$$.set_classname_prefix ($10)
 		}
 	;
 

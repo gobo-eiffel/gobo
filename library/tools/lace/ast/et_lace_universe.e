@@ -16,7 +16,7 @@ inherit
 
 	ET_UNIVERSE
 		redefine
-			clusters, assemblies
+			clusters, dotnet_assemblies
 		end
 
 create
@@ -28,7 +28,7 @@ feature -- Access
 	clusters: ET_LACE_CLUSTERS
 			-- Clusters
 
-	assemblies: ET_LACE_ASSEMBLIES
-			-- Assemblies
+	dotnet_assemblies: ET_LACE_DOTNET_ASSEMBLIES
+			-- .NET assemblies
 
 end

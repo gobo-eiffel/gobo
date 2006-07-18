@@ -26,8 +26,8 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_assembly: BOOLEAN is
-			-- Is current group an assembly?
+	is_dotnet_assembly: BOOLEAN is
+			-- Is current group a .NET assembly?
 		do
 			-- Result := False
 		end

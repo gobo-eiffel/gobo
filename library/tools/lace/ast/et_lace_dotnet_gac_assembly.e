@@ -10,15 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_LACE_GAC_ASSEMBLY
+class ET_LACE_DOTNET_GAC_ASSEMBLY
 
 inherit
 
-	ET_GAC_ASSEMBLY
+	ET_DOTNET_GAC_ASSEMBLY
 
-	ET_LACE_ASSEMBLY
+	ET_LACE_DOTNET_ASSEMBLY
 		rename
 			make as make_assembly
+		undefine
+			consume
 		end
 
 create

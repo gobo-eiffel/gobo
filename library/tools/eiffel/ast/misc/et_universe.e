@@ -417,7 +417,7 @@ feature -- Status report
 			-- Does current universe contain Eiffel for .NET kernel classes?
 			-- Hence follow Eiffel for .NET validity rules.
 		do
-			Result := assemblies /= Void and then assemblies.count > 0
+			Result := dotnet_assemblies /= Void and then dotnet_assemblies.count > 0
 		end
 
 feature -- Access
@@ -425,8 +425,8 @@ feature -- Access
 	clusters: ET_CLUSTERS
 			-- Clusters
 
-	assemblies: ET_ASSEMBLIES
-			-- Assemblies
+	dotnet_assemblies: ET_DOTNET_ASSEMBLIES
+			-- .NET assemblies
 
 	root_class: ET_CLASS
 			-- Root class
@@ -1075,12 +1075,12 @@ feature -- Setting
 			clusters_set: clusters = a_clusters
 		end
 
-	set_assemblies (a_assemblies: like assemblies) is
-			-- Set `a_assemblies' to `assemblies'.
+	set_dotnet_assemblies (a_assemblies: like dotnet_assemblies) is
+			-- Set `a_assemblies' to `dotnet_assemblies'.
 		do
-			assemblies := a_assemblies
+			dotnet_assemblies := a_assemblies
 		ensure
-			assemblies_set: assemblies = a_assemblies
+			dotnet_assemblies_set: dotnet_assemblies = a_assemblies
 		end
 
 	set_error_handler (a_handler: like error_handler) is
@@ -1284,14 +1284,14 @@ feature -- Parsing
 			-- class names and filenames in each cluster. Classes
 			-- are added to `classes', but are not parsed.
 			-- Filenames are supposed to be of the form 'classname.e'.
-			-- Also consume assemblies.
+			-- Also consume .NET assemblies.
 		do
 			if not is_preparsed then
 				if clusters /= Void then
 					eiffel_preparser.preparse_clusters_shallow (clusters)
 				end
-				if assemblies /= Void then
-					assembly_consumer.consume_assemblies (assemblies)
+				if dotnet_assemblies /= Void then
+					dotnet_assembly_consumer.consume_assemblies (dotnet_assemblies)
 				end
 				is_preparsed := True
 			end
@@ -1305,14 +1305,14 @@ feature -- Parsing
 			-- are added to `classes', but are not parsed.
 			-- Each Eiffel file is supposed to contain exactly
 			-- one class.
-			-- Also consume assemblies.
+			-- Also consume .NET assemblies.
 		do
 			if not is_preparsed then
 				if clusters /= Void then
 					eiffel_preparser.preparse_clusters_single (clusters)
 				end
-				if assemblies /= Void then
-					assembly_consumer.consume_assemblies (assemblies)
+				if dotnet_assemblies /= Void then
+					dotnet_assembly_consumer.consume_assemblies (dotnet_assemblies)
 				end
 				is_preparsed := True
 			end
@@ -1325,14 +1325,14 @@ feature -- Parsing
 			-- class names and filenames in each cluster. Classes
 			-- are added to `classes', but are not parsed.
 			-- Each Eiffel file can contain more than one class.
-			-- Also consume assemblies.
+			-- Also consume .NET assemblies.
 		do
 			if not is_preparsed then
 				if clusters /= Void then
 					eiffel_preparser.preparse_clusters_multiple (clusters)
 				end
-				if assemblies /= Void then
-					assembly_consumer.consume_assemblies (assemblies)
+				if dotnet_assemblies /= Void then
+					dotnet_assembly_consumer.consume_assemblies (dotnet_assemblies)
 				end
 				is_preparsed := True
 			end
@@ -1390,7 +1390,7 @@ feature -- Parsing
 									a_class1 := a_class2
 									a_class2 := a_class1.overridden_class
 								end
-							elseif a_class2.is_in_assembly then
+							elseif a_class2.is_in_dotnet_assembly then
 								a_class1 := a_class2
 								a_class2 := a_class1.overridden_class
 							else
@@ -1435,7 +1435,7 @@ feature -- Parsing
 									a_class.reset_all
 								end
 							end
-						elseif a_class.is_in_assembly then
+						elseif a_class.is_in_dotnet_assembly then
 							-- Do nothing.
 						else
 							-- Do nothing.
@@ -1510,7 +1510,7 @@ feature -- Parsing
 										a_class2 := a_class1.overridden_class
 									end
 								end
-							elseif a_class2.is_in_assembly then
+							elseif a_class2.is_in_dotnet_assembly then
 								a_class1 := a_class2
 								a_class2 := a_class1.overridden_class
 							else
@@ -1547,7 +1547,7 @@ feature -- Parsing
 									end
 								end
 							end
-						elseif a_class.is_in_assembly then
+						elseif a_class.is_in_dotnet_assembly then
 							-- Do nothing.
 						else
 							-- Do nothing.
@@ -1625,7 +1625,7 @@ feature -- Parsing
 										a_class2 := a_class1.overridden_class
 									end
 								end
-							elseif a_class2.is_in_assembly then
+							elseif a_class2.is_in_dotnet_assembly then
 								a_class1 := a_class2
 								a_class2 := a_class1.overridden_class
 							else
@@ -1662,7 +1662,7 @@ feature -- Parsing
 									end
 								end
 							end
-						elseif a_class.is_in_assembly then
+						elseif a_class.is_in_dotnet_assembly then
 							-- Do nothing.
 						else
 							-- Do nothing.
@@ -1746,7 +1746,7 @@ feature -- Parsing
 									a_class1 := a_class2
 									a_class2 := a_class1.overridden_class
 								end
-							elseif a_class2.is_in_assembly then
+							elseif a_class2.is_in_dotnet_assembly then
 								a_class1 := a_class2
 								a_class2 := a_class1.overridden_class
 							else
@@ -1793,7 +1793,7 @@ feature -- Parsing
 									a_class.reset_all
 								end
 							end
-						elseif a_class.is_in_assembly then
+						elseif a_class.is_in_dotnet_assembly then
 							-- Do nothing.
 						else
 							-- Do nothing.
@@ -1861,7 +1861,7 @@ feature -- Parsing
 										a_class2 := a_class1.overridden_class
 									end
 								end
-							elseif a_class2.is_in_assembly then
+							elseif a_class2.is_in_dotnet_assembly then
 								a_class1 := a_class2
 								a_class2 := a_class1.overridden_class
 							else
@@ -1900,7 +1900,7 @@ feature -- Parsing
 									end
 								end
 							end
-						elseif a_class.is_in_assembly then
+						elseif a_class.is_in_dotnet_assembly then
 							-- Do nothing.
 						else
 							-- Do nothing.
@@ -1971,7 +1971,7 @@ feature -- Parsing
 										a_class2 := a_class1.overridden_class
 									end
 								end
-							elseif a_class2.is_in_assembly then
+							elseif a_class2.is_in_dotnet_assembly then
 								a_class1 := a_class2
 								a_class2 := a_class1.overridden_class
 							else
@@ -2010,7 +2010,7 @@ feature -- Parsing
 									end
 								end
 							end
-						elseif a_class.is_in_assembly then
+						elseif a_class.is_in_dotnet_assembly then
 							-- Do nothing.
 						else
 							-- Do nothing.
@@ -2034,13 +2034,13 @@ feature -- Parsing
 			-- There is not need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway.
-			-- Also consume assemblies.
+			-- Also consume .NET assemblies.
 		do
 			if clusters /= Void then
 				eiffel_parser.parse_clusters (clusters)
 			end
-			if assemblies /= Void then
-				assembly_consumer.consume_assemblies (assemblies)
+			if dotnet_assemblies /= Void then
+				dotnet_assembly_consumer.consume_assemblies (dotnet_assemblies)
 			end
 			is_preparsed := True
 		ensure
@@ -2095,7 +2095,7 @@ feature -- Parsing
 										a_class2 := a_class1.overridden_class
 									end
 								end
-							elseif a_class2.is_in_assembly then
+							elseif a_class2.is_in_dotnet_assembly then
 								a_class1 := a_class2
 								a_class2 := a_class1.overridden_class
 							else
@@ -2132,7 +2132,7 @@ feature -- Parsing
 									end
 								end
 							end
-						elseif a_class.is_in_assembly then
+						elseif a_class.is_in_dotnet_assembly then
 							-- Do nothing.
 						else
 							-- Do nothing.
@@ -2211,7 +2211,7 @@ feature -- Parsing
 										a_class2 := a_class1.overridden_class
 									end
 								end
-							elseif a_class2.is_in_assembly then
+							elseif a_class2.is_in_dotnet_assembly then
 								a_class1 := a_class2
 								a_class2 := a_class1.overridden_class
 							else
@@ -2250,7 +2250,7 @@ feature -- Parsing
 									end
 								end
 							end
-						elseif a_class.is_in_assembly then
+						elseif a_class.is_in_dotnet_assembly then
 							-- Do nothing.
 						else
 							-- Do nothing.
@@ -2714,16 +2714,16 @@ feature -- Processors
 			eiffel_parser_not_void: Result /= Void
 		end
 
-	assembly_consumer: ET_ASSEMBLY_CONSUMER is
-			-- Assembly consumer
+	dotnet_assembly_consumer: ET_DOTNET_ASSEMBLY_CONSUMER is
+			-- .NET assembly consumer
 		do
-			Result := internal_assembly_consumer
+			Result := internal_dotnet_assembly_consumer
 			if Result = Void then
-				create {ET_NULL_ASSEMBLY_CONSUMER} Result.make (Current)
-				internal_assembly_consumer := Result
+				create {ET_DOTNET_ASSEMBLY_CLASSIC_CONSUMER} Result.make (Current)
+				internal_dotnet_assembly_consumer := Result
 			end
 		ensure
-			assembly_consumer_not_void: Result /= Void
+			dotnet_assembly_consumer_not_void: Result /= Void
 		end
 
 	provider_checker: ET_AST_PROCESSOR
@@ -2769,14 +2769,14 @@ feature -- Processors
 			end
 		end
 
-	set_assembly_consumer (a_consumer: like assembly_consumer) is
-			-- Set `assembly_consumer' to `a_consumer'.
+	set_dotnet_assembly_consumer (a_consumer: like dotnet_assembly_consumer) is
+			-- Set `dotnet_assembly_consumer' to `a_consumer'.
 		require
 			a_consumer_not_void: a_consumer /= Void
 		do
-			internal_assembly_consumer := a_consumer
+			internal_dotnet_assembly_consumer := a_consumer
 		ensure
-			assembly_consumer_set: assembly_consumer = a_consumer
+			dotnet_assembly_consumer_set: dotnet_assembly_consumer = a_consumer
 		end
 
 	set_provider_checker (a_provider_checker: like provider_checker) is
@@ -2861,8 +2861,8 @@ feature {NONE} -- Implementation
 	internal_eiffel_parser: ET_EIFFEL_PARSER
 			-- Eiffel parser
 
-	internal_assembly_consumer: ET_ASSEMBLY_CONSUMER
-			-- Assembly consumer
+	internal_dotnet_assembly_consumer: ET_DOTNET_ASSEMBLY_CONSUMER
+			-- .NET assembly consumer
 
 feature {NONE} -- Constants
 

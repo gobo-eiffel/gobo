@@ -10,11 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_LACE_ASSEMBLY
+class ET_LACE_DOTNET_ASSEMBLY
 
 inherit
 
-	ET_ASSEMBLY
+	ET_DOTNET_ASSEMBLY
 
 create
 
@@ -50,12 +50,12 @@ feature -- Access
 			end
 		end
 
-	class_prefix: STRING is
+	classname_prefix: STRING is
 			-- Prefix for classnames of current assembly
 			-- (may be Void)
 		do
-			if class_prefix_id /= Void then
-				Result := class_prefix_id.name
+			if classname_prefix_id /= Void then
+				Result := classname_prefix_id.name
 			end
 		end
 
@@ -65,17 +65,17 @@ feature -- Access
 	pathname_id: ET_IDENTIFIER
 			-- Assembly pathname identifier (may be Void)
 
-	class_prefix_id: ET_IDENTIFIER
-			-- Class prefix identifier (may be Void)
+	classname_prefix_id: ET_IDENTIFIER
+			-- Classname prefix identifier (may be Void)
 
 feature -- Setting
 
-	set_class_prefix (a_prefix: like class_prefix_id) is
-			-- Set `class_prefix_id' to `a_prefix'.
+	set_classname_prefix (a_prefix: like classname_prefix_id) is
+			-- Set `classname_prefix_id' to `a_prefix'.
 		do
-			class_prefix_id := a_prefix
+			classname_prefix_id := a_prefix
 		ensure
-			class_prefix_id_set: class_prefix_id = a_prefix
+			classname_prefix_id_set: classname_prefix_id = a_prefix
 		end
 
 invariant

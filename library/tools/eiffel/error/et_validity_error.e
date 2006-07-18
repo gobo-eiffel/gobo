@@ -8730,7 +8730,7 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_class_in_assenbly: a_class.is_in_assembly
+			a_class_in_dotnet_assenbly: a_class.is_in_dotnet_assembly
 			other_cluster_not_void: other_cluster /= Void
 			other_filename_not_void: other_filename /= Void
 		do

@@ -517,7 +517,7 @@ feature -- AST processing
 								set_fatal_error (current_class)
 								error_handler.report_gcaab_error (a_cluster, a_filename)
 							end
-						elseif current_class.is_in_assembly then
+						elseif current_class.is_in_dotnet_assembly then
 							current_class.set_parsed
 						end
 					end

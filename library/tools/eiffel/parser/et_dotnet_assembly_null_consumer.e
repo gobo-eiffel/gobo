@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Null .NET assembly consumers"
+		"Null consumers of .NET assemblies"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
@@ -10,31 +10,25 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_NULL_ASSEMBLY_CONSUMER
+class ET_DOTNET_ASSEMBLY_NULL_CONSUMER
 
 inherit
 
-	ET_ASSEMBLY_CONSUMER
+	ET_DOTNET_ASSEMBLY_CONSUMER
 
 create
 
 	make
 
-feature -- Consuming
+feature {ET_DOTNET_ASSEMBLY} -- Consuming
 
-	consume_assemblies (an_assemblies: ET_ASSEMBLIES) is
-			-- Consume `an_assemblies' and put the classes in `universe'.
-		do
-			-- Do nothing.
-		end
-
-	consume_assembly (an_assembly: ET_ASSEMBLY) is
+	consume_assembly (an_assembly: ET_DOTNET_ASSEMBLY) is
 			-- Consume `an_assembly' and put the classes in `universe'.
 		do
 			-- Do nothing.
 		end
 
-	consume_gac_assembly (an_assembly: ET_GAC_ASSEMBLY) is
+	consume_gac_assembly (an_assembly: ET_DOTNET_GAC_ASSEMBLY) is
 			-- Consume `an_assembly' and put the classes in `universe'.
 		do
 			-- Do nothing.

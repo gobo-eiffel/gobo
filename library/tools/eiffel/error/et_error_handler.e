@@ -227,6 +227,44 @@ feature -- Cluster error status
 			Result := True
 		end
 
+feature -- .NET assembly errors
+
+	report_assembly_error (an_error: ET_DOTNET_ASSEMBLY_ERROR) is
+			-- Report .NET assembly error.
+		require
+			an_error_not_void: an_error /= Void
+		do
+			has_eiffel_error := True
+			report_info (an_error)
+			if info_file = std.output then
+				info_file.put_line ("----")
+			end
+		end
+
+	report_gaaaa_error (an_assembly: ET_DOTNET_ASSEMBLY) is
+			-- Report GAAAA error: .NET assemblies not supported.
+		require
+			an_assembly_not_void: an_assembly /= Void
+		local
+			an_error: ET_DOTNET_ASSEMBLY_ERROR
+		do
+			if reportable_gaaaa_error (an_assembly) then
+				create an_error.make_gaaaa (an_assembly)
+				report_assembly_error (an_error)
+			end
+		end
+
+feature -- .NET assembly error status
+
+	reportable_gaaaa_error (an_assembly: ET_DOTNET_ASSEMBLY): BOOLEAN is
+			-- Can a GAAAA error be reported when it
+			-- appears in `an_assembly'?
+		require
+			an_assembly_not_void: an_assembly /= Void
+		do
+			Result := True
+		end
+
 feature -- Syntax errors
 
 	report_syntax_error (a_filename: STRING; p: ET_POSITION) is
@@ -4705,7 +4743,7 @@ feature -- Validity errors
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_class_in_assembly: a_class.is_in_assembly
+			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
 			other_cluster_not_void: other_cluster /= Void
 			other_filename_not_void: other_filename /= Void
 		local
