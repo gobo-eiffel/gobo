@@ -3448,7 +3448,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 									current_file.put_string (c_case)
 									current_file.put_character (' ')
 									print_type_cast (l_value_type, current_file)
-									print_expression (l_choice.lower.expression)
+									print_expression (l_choice.lower)
 									current_file.put_character (':')
 									current_file.put_new_line
 								end
@@ -4640,6 +4640,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_temp: ET_IDENTIFIER
 			l_pointer: BOOLEAN
 			l_name: ET_FEATURE_NAME
+			l_name_expression: ET_EXPRESSION
 			l_query: ET_DYNAMIC_FEATURE
 			l_procedure: ET_DYNAMIC_FEATURE
 		do
@@ -4686,7 +4687,8 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					current_file.put_character ('(')
 					l_name := an_expression.name
 					if l_name.is_argument then
-						l_value_type_set := current_feature.dynamic_type_set (l_name)
+						l_name_expression := l_name.argument_name
+						l_value_type_set := current_feature.dynamic_type_set (l_name_expression)
 						if l_value_type_set = Void then
 								-- Internal error: it should have been checked elsewhere that
 								-- the current feature is a function.
@@ -4695,27 +4697,27 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						elseif l_value_type_set.is_expanded then
 							print_type_cast (current_system.pointer_type, current_file)
 							current_file.put_character ('&')
-							print_expression (l_name)
+							print_expression (l_name_expression)
 						else
 							l_special_type := l_value_type_set.special_type
 							if l_special_type /= Void then
 								current_file.put_character ('(')
-								print_expression (l_name)
+								print_expression (l_name_expression)
 								current_file.put_character ('?')
 								print_type_cast (current_system.pointer_type, current_file)
 								current_file.put_character ('(')
 								current_file.put_string (c_getypes)
 								current_file.put_character ('[')
-								print_attribute_type_id_access (l_name, l_value_type_set.static_type)
+								print_attribute_type_id_access (l_name_expression, l_value_type_set.static_type)
 								current_file.put_character (']')
 								current_file.put_character ('.')
 								current_file.put_string (c_is_special)
 								current_file.put_character ('?')
 								print_type_cast (current_system.pointer_type, current_file)
-								print_attribute_special_item_access (l_name, l_special_type)
+								print_attribute_special_item_access (l_name_expression, l_special_type)
 								current_file.put_character (':')
 								print_type_cast (current_system.pointer_type, current_file)
-								print_expression (l_name)
+								print_expression (l_name_expression)
 								current_file.put_character (')')
 								current_file.put_character (':')
 								print_type_cast (current_system.pointer_type, current_file)
@@ -4723,11 +4725,12 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 								current_file.put_character (')')
 							else
 								print_type_cast (current_system.pointer_type, current_file)
-								print_expression (l_name)
+								print_expression (l_name_expression)
 							end
 						end
 					elseif l_name.is_local then
-						l_value_type_set := current_feature.dynamic_type_set (l_name)
+						l_name_expression := l_name.local_name
+						l_value_type_set := current_feature.dynamic_type_set (l_name_expression)
 						if l_value_type_set = Void then
 								-- Internal error: it should have been checked elsewhere that
 								-- the current feature is a function.
@@ -4736,27 +4739,27 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						elseif l_value_type_set.is_expanded then
 							print_type_cast (current_system.pointer_type, current_file)
 							current_file.put_character ('&')
-							print_expression (l_name)
+							print_expression (l_name_expression)
 						else
 							l_special_type := l_value_type_set.special_type
 							if l_special_type /= Void then
 								current_file.put_character ('(')
-								print_expression (l_name)
+								print_expression (l_name_expression)
 								current_file.put_character ('?')
 								print_type_cast (current_system.pointer_type, current_file)
 								current_file.put_character ('(')
 								current_file.put_string (c_getypes)
 								current_file.put_character ('[')
-								print_attribute_type_id_access (l_name, l_value_type_set.static_type)
+								print_attribute_type_id_access (l_name_expression, l_value_type_set.static_type)
 								current_file.put_character (']')
 								current_file.put_character ('.')
 								current_file.put_string (c_is_special)
 								current_file.put_character ('?')
 								print_type_cast (current_system.pointer_type, current_file)
-								print_attribute_special_item_access (l_name, l_special_type)
+								print_attribute_special_item_access (l_name_expression, l_special_type)
 								current_file.put_character (':')
 								print_type_cast (current_system.pointer_type, current_file)
-								print_expression (l_name)
+								print_expression (l_name_expression)
 								current_file.put_character (')')
 								current_file.put_character (':')
 								print_type_cast (current_system.pointer_type, current_file)
@@ -4764,7 +4767,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 								current_file.put_character (')')
 							else
 								print_type_cast (current_system.pointer_type, current_file)
-								print_expression (l_name)
+								print_expression (l_name_expression)
 							end
 						end
 					else
@@ -4785,20 +4788,27 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 								else
 									l_special_type := l_value_type_set.special_type
 									if l_special_type /= Void then
+										l_temp := new_temp_variable (l_value_type_set.static_type)
 										current_file.put_character ('(')
+										current_file.put_character ('(')
+										print_temp_name (l_temp, current_file)
+										current_file.put_character (' ')
+										current_file.put_character ('=')
+										current_file.put_character (' ')
 										print_attribute_access (l_query, tokens.current_keyword, current_type)
+										current_file.put_character (')')
 										current_file.put_character ('?')
 										print_type_cast (current_system.pointer_type, current_file)
 										current_file.put_character ('(')
 										current_file.put_string (c_getypes)
 										current_file.put_character ('[')
-										print_attribute_type_id_access (l_name, l_value_type_set.static_type)
+										print_attribute_type_id_access (l_temp, l_value_type_set.static_type)
 										current_file.put_character (']')
 										current_file.put_character ('.')
 										current_file.put_string (c_is_special)
 										current_file.put_character ('?')
 										print_type_cast (current_system.pointer_type, current_file)
-										print_attribute_special_item_access (l_name, l_special_type)
+										print_attribute_special_item_access (l_temp, l_special_type)
 										current_file.put_character (':')
 										print_type_cast (current_system.pointer_type, current_file)
 										print_attribute_access (l_query, tokens.current_keyword, current_type)
@@ -4807,6 +4817,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 										print_type_cast (current_system.pointer_type, current_file)
 										current_file.put_character ('0')
 										current_file.put_character (')')
+										mark_temp_variable_free (l_temp)
 									else
 										print_type_cast (current_system.pointer_type, current_file)
 										print_attribute_access (l_query, tokens.current_keyword, current_type)
@@ -13919,6 +13930,19 @@ feature {NONE} -- Implementation
 			l_seed := a_temp.seed
 			used_temp_variables.replace (free_temp_variables.item (l_seed), l_seed)
 			free_temp_variables.replace (Void, l_seed)
+		end
+
+	mark_temp_variable_free (a_temp: ET_IDENTIFIER) is
+			-- Mark temporary variable `a_temp' as free.
+		require
+			a_temp_not_void: a_temp /= Void
+			used: used_temp_variables.item (a_temp.seed) /= Void
+		local
+			l_seed: INTEGER
+		do
+			l_seed := a_temp.seed
+			free_temp_variables.replace (used_temp_variables.item (l_seed), l_seed)
+			used_temp_variables.replace (Void, l_seed)
 		end
 
 	temp_variables: DS_ARRAYED_LIST [ET_IDENTIFIER]

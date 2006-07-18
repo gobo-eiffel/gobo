@@ -20,13 +20,6 @@ inherit
 
 	ET_QUALIFIED_FEATURE_NAME
 
-	ET_CHOICE_CONSTANT
-		rename
-			expression as expression_item
-		undefine
-			reset
-		end
-
 feature -- Access
 
 	feature_name: ET_FEATURE_NAME is

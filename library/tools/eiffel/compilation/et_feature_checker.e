@@ -2359,8 +2359,7 @@ feature {NONE} -- Instruction validity
 					from j := 1 until j > nb2 loop
 						a_choice := a_choices.choice (j)
 						a_choice_constant := a_choice.lower
-						an_expression := a_choice_constant.expression
-						check_subexpression_validity (an_expression, a_choice_context, a_value_context)
+						check_subexpression_validity (a_choice_constant, a_choice_context, a_value_context)
 						if has_fatal_error then
 							had_error := True
 						elseif not had_value_error then
@@ -2437,8 +2436,7 @@ feature {NONE} -- Instruction validity
 						a_choice_context.wipe_out
 						if a_choice.is_range then
 							a_choice_constant := a_choice.upper
-							an_expression := a_choice_constant.expression
-							check_subexpression_validity (an_expression, a_choice_context, a_value_context)
+							check_subexpression_validity (a_choice_constant, a_choice_context, a_value_context)
 							if has_fatal_error then
 								had_error := True
 							elseif not had_value_error then

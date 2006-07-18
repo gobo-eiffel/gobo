@@ -16,6 +16,11 @@ inherit
 
 	ET_CHOICE
 
+	ET_EXPRESSION
+		undefine
+			reset
+		end
+
 feature -- Access
 
 	lower: ET_CHOICE_CONSTANT is
@@ -28,15 +33,6 @@ feature -- Access
 			-- Upper bound
 		do
 			Result := Current
-		end
-
-	expression: ET_EXPRESSION is
-			-- Expression version of current choice constant
-		deferred
-		ensure
-			-- Note: the following assertion is commented out
-			-- because of VWEQ.
-			-- definition: Result = Current
 		end
 
 end

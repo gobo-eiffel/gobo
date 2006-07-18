@@ -23,8 +23,7 @@ inherit
 
 	ET_CALL_NAME
 		undefine
-			first_position, last_position,
-			is_semicolon
+			first_position, last_position
 		redefine
 			is_bracket
 		end

@@ -21,7 +21,7 @@ inherit
 			is_alias as is_alias_keyword,
 			is_local as is_local_keyword
 		undefine
-			is_precursor, is_current
+			is_precursor
 		redefine
 			process
 		end

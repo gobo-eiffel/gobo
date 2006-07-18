@@ -14,14 +14,9 @@ class ET_RESULT
 
 inherit
 
-	ET_EXPRESSION
-		undefine
-			first_position, last_position
-		end
-
 	ET_WRITABLE
 		undefine
-			reset, first_position, last_position
+			first_position, last_position
 		end
 
 	ET_KEYWORD

@@ -20,7 +20,8 @@ inherit
 		redefine
 			reset, is_tuple_label,
 			is_local, is_argument,
-			is_identifier, is_equal
+			is_identifier, is_equal,
+			local_name, argument_name
 		end
 
 	ET_CLASS_NAME
@@ -54,6 +55,12 @@ inherit
 		end
 
 	ET_WRITABLE
+		undefine
+			first_position, last_position,
+			reset, is_equal
+		end
+
+	ET_CHOICE_CONSTANT
 		undefine
 			first_position, last_position,
 			reset, is_equal
@@ -449,6 +456,20 @@ feature -- Comparison
 			if ANY_.same_types (Current, other) then
 				Result := same_identifier (other)
 			end
+		end
+
+feature -- Conversion
+
+	local_name: ET_LOCAL_NAME is
+			-- Current name viewed as a local name
+		do
+			Result := Current
+		end
+
+	argument_name: ET_ARGUMENT_NAME is
+			-- Current name viewed as an argument name
+		do
+			Result := Current
 		end
 
 feature -- Processing

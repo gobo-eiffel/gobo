@@ -14,15 +14,7 @@ deferred class ET_CALL_NAME
 
 inherit
 
-	ET_EXPRESSION
-		redefine
-			reset
-		end
-
-	ET_INSTRUCTION
-		undefine
-			reset
-		end
+	ET_AST_NODE
 
 	HASHABLE
 
@@ -280,11 +272,31 @@ feature -- Comparison
 feature -- Conversion
 
 	precursor_keyword: ET_PRECURSOR_KEYWORD is
-			-- Current feature name viewed as a 'precursor' keyword
+			-- Current name viewed as a 'precursor' keyword
 		require
 			is_precursor: is_precursor
 		do
-			check no_precursor: not is_precursor end
+			check is_precursor: is_precursor end
+		ensure
+			definition: ANY_.same_objects (Result, Current)
+		end
+
+	local_name: ET_LOCAL_NAME is
+			-- Current name viewed as a local name
+		require
+			is_local: is_local
+		do
+			check is_local: is_local end
+		ensure
+			definition: ANY_.same_objects (Result, Current)
+		end
+
+	argument_name: ET_ARGUMENT_NAME is
+			-- Current name viewed as an argument name
+		require
+			is_argument: is_argument
+		do
+			check is_argument: is_argument end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

@@ -22,8 +22,6 @@ inherit
 		end
 
 	ET_CHOICE_CONSTANT
-		rename
-			expression as expression_item
 		undefine
 			reset, first_position, last_position
 		end

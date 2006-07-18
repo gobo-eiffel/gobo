@@ -21,7 +21,7 @@ inherit
 
 	ET_OPERATOR
 		undefine
-			is_semicolon, first_position, last_position
+			first_position, last_position
 		redefine
 			is_infix,
 			is_infix_div,
