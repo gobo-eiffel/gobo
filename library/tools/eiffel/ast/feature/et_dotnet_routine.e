@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Queries (functions or attributes) implemented in .NET"
+		"Routines implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
@@ -10,18 +10,23 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_DOTNET_QUERY
+deferred class ET_DOTNET_ROUTINE
 
 inherit
 
-	ET_QUERY
+	ET_ROUTINE
 		undefine
 			is_dotnet
 		end
 
 	ET_DOTNET_FEATURE
 		undefine
-			type
+			obsolete_message,
+			arguments,
+			preconditions,
+			postconditions,
+			reset_preconditions,
+			reset_postconditions
 		end
 
 end

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Procedures implemented in .NET"
+		"Functions implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
@@ -10,16 +10,34 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DOTNET_PROCEDURE
+class ET_DOTNET_FUNCTION
 
 inherit
 
-	ET_PROCEDURE
+	ET_FUNCTION
 		undefine
 			is_dotnet
 		end
 
+	ET_DOTNET_QUERY
+		undefine
+			arguments,
+			preconditions,
+			postconditions,
+			reset_preconditions,
+			reset_postconditions,
+			obsolete_message,
+			is_function,
+			is_prefixable, is_infixable,
+			is_bracketable, undefined_feature,
+			resolve_inherited_signature
+		end
+
 	ET_DOTNET_ROUTINE
+		undefine
+			type, is_prefixable, is_infixable,
+			is_bracketable, is_function
+		end
 
 create
 
@@ -27,17 +45,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like extended_name; args: like arguments; a_clients: like clients;
-		a_class: like implementation_class) is
-			-- Create a new .NET procedure.
+	make (a_name: like extended_name; args: like arguments; a_type: like declared_type;
+		a_clients: like clients; a_class: like implementation_class) is
+			-- Create a new .NET function.
 		require
 			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 		do
 			extended_name := a_name
 			hash_code := name.hash_code
 			arguments := args
+			declared_type := a_type
 			is_keyword := tokens.is_keyword
 			end_keyword := tokens.end_keyword
 			clients := a_clients
@@ -56,7 +76,7 @@ feature -- Duplication
 	new_synonym (a_name: like extended_name): like Current is
 			-- Synonym feature
 		do
-			create Result.make (a_name, arguments, clients, implementation_class)
+			create Result.make (a_name, arguments, declared_type, clients, implementation_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
@@ -70,7 +90,7 @@ feature -- Conversion
 	renamed_feature (a_name: like extended_name): like Current is
 			-- Renamed version of current feature
 		do
-			create Result.make (a_name, arguments, clients, implementation_class)
+			create Result.make (a_name, arguments, declared_type, clients, implementation_class)
 			Result.set_implementation_feature (implementation_feature)
 			Result.set_first_precursor (first_precursor)
 			Result.set_other_precursors (other_precursors)

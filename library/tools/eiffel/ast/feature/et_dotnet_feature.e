@@ -15,5 +15,13 @@ deferred class ET_DOTNET_FEATURE
 inherit
 
 	ET_FEATURE
+		redefine
+			is_dotnet
+		end
+
+feature -- Status report
+
+	is_dotnet: BOOLEAN is True
+			-- Is current feature a .NET feature?
 
 end
