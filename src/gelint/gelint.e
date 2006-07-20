@@ -47,6 +47,8 @@ feature -- Execution
 			a_universe: ET_UNIVERSE
 			i, nb: INTEGER
 			arg: STRING
+			a_ise_version: STRING
+			a_ise_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
 			Arguments.set_program_name ("gelint")
 			create error_handler.make_standard
@@ -76,6 +78,28 @@ feature -- Execution
 					void_feature := True
 				elseif arg.is_equal ("--ecma") then
 					is_ecma := True
+				elseif arg.is_equal ("--ise") then
+					create ise_version.make_unknown
+				elseif arg.count > 6 and then arg.substring (1, 6).is_equal ("--ise=") then
+					a_ise_version := arg.substring (7, arg.count)
+					create a_ise_regexp.make
+					a_ise_regexp.compile ("([0-9]+)(\.([0-9]+))?(\.([0-9]+))?")
+					if a_ise_regexp.recognizes (a_ise_version) then
+						inspect a_ise_regexp.match_count
+						when 2 then
+							create ise_version.make_major (a_ise_regexp.captured_substring (1).to_integer)
+						when 4 then
+							create ise_version.make_major_minor (a_ise_regexp.captured_substring (1).to_integer, a_ise_regexp.captured_substring (3).to_integer)
+						when 6 then
+							create ise_version.make (a_ise_regexp.captured_substring (1).to_integer, a_ise_regexp.captured_substring (3).to_integer, a_ise_regexp.captured_substring (5).to_integer)
+						else
+							report_usage_message
+							Exceptions.die (1)
+						end
+					else
+						report_usage_message
+						Exceptions.die (1)
+					end
 				elseif i = nb then
 					a_filename := arg
 				else
@@ -164,6 +188,7 @@ feature -- Status report
 	is_flat_dbc: BOOLEAN
 	is_cat: BOOLEAN
 	is_ecma: BOOLEAN
+	ise_version: UT_VERSION
 	is_silent: BOOLEAN
 	void_feature: BOOLEAN
 			-- Command-line options
@@ -190,12 +215,13 @@ feature {NONE} -- Processing
 			end
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
-			a_universe.set_ise (True)
-			if is_ecma then
-				a_universe.set_ecma (True)
-			else
+			if ise_version = Void then
+				create ise_version.make_unknown
+			end
+			a_universe.set_ise_version (ise_version)
+			a_universe.set_ecma (is_ecma)
+			if not is_ecma or ise_version < ise_5_7_60362 then
 				a_universe.set_non_aliased_sized_basic_classes
-				a_universe.set_ecma (False)
 			end
 			if not is_verbose then
 			end
@@ -257,9 +283,20 @@ feature -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gelint usage message.
 		once
-			create Result.make ("[--flat][--noflatdbc][--cat][--define=variables][--void][--ecma][--silent][--verbose] ace_filename")
+			create Result.make ("[--ecma][--ise[=major[.minor[.build]]]][--define=variables]%N%
+				%%T[--flat][--noflatdbc][--cat][--void][--silent][--verbose] ace_filename")
 		ensure
 			usage_message_not_void: Result /= Void
+		end
+
+feature {NONE} -- Constants
+
+	ise_5_7_60362: UT_VERSION is
+			-- ISE 5.7.60362
+		once
+			create Result.make (5, 7, 60362)
+		ensure
+			version_not_void: Result /= Void
 		end
 
 invariant

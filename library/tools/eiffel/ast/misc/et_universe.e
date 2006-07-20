@@ -2324,8 +2324,17 @@ feature -- Compilation status report
 	is_ecma: BOOLEAN
 			-- Should the compilation process use ECMA's semantics?
 
-	is_ise: BOOLEAN
+	is_ise: BOOLEAN is
 			-- Should the compilation process use ISE's semantics?
+		do
+			Result := (ise_version /= Void)
+		ensure
+			definition: Result = (ise_version /= Void)
+		end
+
+	ise_version: UT_VERSION
+			-- ISE version, if any, whose semantics should be
+			-- used by the compilation process
 
 feature -- Compilation setting
 
@@ -2337,12 +2346,12 @@ feature -- Compilation setting
 			ecma_set: is_ecma = b
 		end
 
-	set_ise (b: BOOLEAN) is
-			-- Set `is_ise' to `b'.
+	set_ise_version (a_version: like ise_version) is
+			-- Set `ise_version' to `a_version'.
 		do
-			is_ise := b
+			ise_version := a_version
 		ensure
-			ise_set: is_ise = b
+			ise_version_set: ise_version = a_version
 		end
 
 feature -- Compilation
