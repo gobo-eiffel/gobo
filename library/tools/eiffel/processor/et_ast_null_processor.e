@@ -357,6 +357,26 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_dotnet_attribute (a_feature: ET_DOTNET_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+		end
+
+	process_dotnet_constant_attribute (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+		end
+
+	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION) is
+			-- Process `a_feature'.
+		do
+		end
+
+	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE) is
+			-- Process `a_feature'.
+		do
+		end
+
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART) is
 			-- Process `an_elseif_part'.
 		do

@@ -110,7 +110,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR) is
 			-- Process current node.
 		do
-			-- TODO
+			a_processor.process_dotnet_function (Current)
 		end
 
 end

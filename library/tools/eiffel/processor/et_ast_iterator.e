@@ -1053,6 +1053,98 @@ feature {ET_AST_NODE} -- Processing
 			a_name.feature_name.process (Current)
 		end
 
+	process_dotnet_attribute (a_feature: ET_DOTNET_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+			process_attribute (a_feature)
+		end
+
+	process_dotnet_constant_attribute (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+			process_constant_attribute (a_feature)
+		end
+
+	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION) is
+			-- Process `a_feature'.
+		local
+			a_frozen_keyword: ET_TOKEN
+			a_synonym: ET_FEATURE
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_semicolon: ET_SEMICOLON_SYMBOL
+			an_assigner: ET_ASSIGNER
+		do
+			a_frozen_keyword := a_feature.frozen_keyword
+			if a_frozen_keyword /= Void then
+				a_frozen_keyword.process (Current)
+			end
+			a_feature.extended_name.process (Current)
+			from
+				a_synonym := a_feature.synonym
+			until
+				a_synonym = Void
+			loop
+				a_frozen_keyword := a_synonym.frozen_keyword
+				if a_frozen_keyword /= Void then
+					a_frozen_keyword.process (Current)
+				end
+				a_synonym.extended_name.process (Current)
+				a_synonym := a_synonym.synonym
+			end
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				an_arguments.process (Current)
+			end
+			a_feature.declared_type.process (Current)
+			an_assigner := a_feature.assigner
+			if an_assigner /= Void then
+				an_assigner.process (Current)
+			end
+			a_feature.is_keyword.process (Current)
+			a_feature.end_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
+		end
+
+	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE) is
+			-- Process `a_feature'.
+		local
+			a_frozen_keyword: ET_TOKEN
+			a_synonym: ET_FEATURE
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_semicolon: ET_SEMICOLON_SYMBOL
+		do
+			a_frozen_keyword := a_feature.frozen_keyword
+			if a_frozen_keyword /= Void then
+				a_frozen_keyword.process (Current)
+			end
+			a_feature.extended_name.process (Current)
+			from
+				a_synonym := a_feature.synonym
+			until
+				a_synonym = Void
+			loop
+				a_frozen_keyword := a_synonym.frozen_keyword
+				if a_frozen_keyword /= Void then
+					a_frozen_keyword.process (Current)
+				end
+				a_synonym.extended_name.process (Current)
+				a_synonym := a_synonym.synonym
+			end
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				an_arguments.process (Current)
+			end
+			a_feature.is_keyword.process (Current)
+			a_feature.end_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
+		end
+
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART) is
 			-- Process `an_elseif_part'.
 		local
