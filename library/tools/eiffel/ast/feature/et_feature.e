@@ -284,7 +284,7 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_dotnet: BOOLEAN
+	is_dotnet: BOOLEAN is
 			-- Is current feature a .NET feature?
 		do
 			-- Result := False
