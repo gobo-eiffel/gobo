@@ -197,6 +197,7 @@ feature {NONE} -- Processing
 				a_universe.set_error_handler (l_null_error_handler)
 			end
 			a_universe.error_handler.set_ise
+			a_universe.set_non_aliased_sized_basic_classes
 			if is_verbose then
 -- TODO.
 			end
