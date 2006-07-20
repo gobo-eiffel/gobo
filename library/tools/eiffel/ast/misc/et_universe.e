@@ -88,12 +88,15 @@ feature {NONE} -- Initialization
 			-- Create basic classes.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			a_none_group: ET_BUILTIN_GROUP
 		do
 				-- Basic classes.
 			any_class := eiffel_class (tokens.any_class_name)
 			any_class.set_in_system (True)
 			general_class := eiffel_class (tokens.general_class_name)
 			none_class := eiffel_class (tokens.none_class_name)
+			create a_none_group.make ("none")
+			none_class.set_group (a_none_group)
 			none_class.set_in_system (True)
 			tuple_class := eiffel_class (tokens.tuple_class_name)
 			tuple_class.set_in_system (True)
@@ -382,10 +385,10 @@ feature -- Status report
 			classes.search (a_name)
 			if classes.found then
 				l_class := classes.found_item
-				Result := l_class.is_preparsed or l_class = none_class
+				Result := l_class.is_preparsed
 			end
 		ensure
-			is_preparsed: Result implies (eiffel_class (a_name).is_preparsed or eiffel_class (a_name) = none_class)
+			is_preparsed: Result implies eiffel_class (a_name).is_preparsed
 		end
 
 	has_cluster (a_cluster: ET_CLUSTER): BOOLEAN is

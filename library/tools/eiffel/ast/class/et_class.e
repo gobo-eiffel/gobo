@@ -444,13 +444,12 @@ feature -- Preparsing
 feature -- Preparsing status
 
 	is_preparsed: BOOLEAN is
-			-- Has current class been preparsed (i.e. its filename
-			-- and group are already known but the class has not
-			-- necessarily been parsed yet)?
+			-- Has current class been preparsed (i.e. its group is already
+			-- known but the class has not necessarily been parsed yet)?
+			-- This means that the class is in the universe.
 		do
-			Result := (filename /= Void and group /= Void)
+			Result := (group /= Void)
 		ensure
-			filename_not_void: Result implies filename /= Void
 			group_not_void: Result implies group /= Void
 		end
 
@@ -472,10 +471,11 @@ feature -- Preparsing status
 	is_in_cluster: BOOLEAN is
 			-- Is current class in a cluster?
 		do
-			Result := group /= Void and then group.is_cluster
+			Result := (filename /= Void and then group /= Void and then group.is_cluster)
 		ensure
 			group_not_void: Result implies group /= Void
 			is_cluster: Result implies group.is_cluster
+			filename_not_void: Result implies filename /= Void
 		end
 
 	is_in_dotnet_assembly: BOOLEAN is
@@ -561,6 +561,7 @@ feature -- Preparsing status
 			filename := Void
 			group := Void
 			time_stamp := no_time_stamp
+			is_interface := False
 		ensure
 			not_preparsed: not is_preparsed
 		end
@@ -569,6 +570,9 @@ feature -- Parsing status
 
 	is_parsed: BOOLEAN
 			-- Has current class been parsed?
+			-- Note that when reporting VTCT errors on a class,
+			-- `is_parsed' is set to True even if it was not
+			-- preparsed (and hence not actually parsed).
 
 	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
@@ -666,8 +670,34 @@ feature -- Class header
 			definition: Result = has_external_mark
 		end
 
+	is_dotnet: BOOLEAN is
+			-- Is current class a .NET class?
+		do
+			Result := is_in_dotnet_assembly
+		end
+
+	is_interface: BOOLEAN
+			-- Is current class an interface?
+			-- (useful for .NET classes)
+
+	set_interface (b: BOOLEAN) is
+			-- Set `is_interface' to `b'.
+		do
+			is_interface := b
+		ensure
+			interface_set: is_interface = b
+		end
+
 	has_deferred_features: BOOLEAN
 			-- Does current class contain deferred features?
+
+	set_has_deferred_features (b: BOOLEAN) is
+			-- Set `has_deferred_features' to `b'.
+		do
+			has_deferred_features := b
+		ensure
+			has_deferred_features: has_deferred_features = b
+		end
 
 	has_deferred_mark: BOOLEAN is
 			-- Has class been declared as deferred?
@@ -748,14 +778,6 @@ feature -- Class header
 			external_keyword := an_external
 		ensure
 			external_keyword_set: external_keyword = an_external
-		end
-
-	set_has_deferred_features (b: BOOLEAN) is
-			-- Set `has_deferred_features' to `b'.
-		do
-			has_deferred_features := b
-		ensure
-			has_deferred_features: has_deferred_features = b
 		end
 
 feature -- Genericity

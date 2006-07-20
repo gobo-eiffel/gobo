@@ -1567,7 +1567,10 @@ feature {NONE} -- AST factory
 					-- and not its overriding class if any.
 				Result := current_class
 			end
-			if Result.is_parsed and Result.is_preparsed then
+			if Result = none_class then
+-- TODO: class "NONE" should be built-in.
+				Result := Void
+			elseif Result.is_parsed and Result.is_preparsed then
 				if cluster.is_override then
 					if Result.is_in_override_cluster then
 							-- Two classes with the same name in two override clusters.
@@ -1595,14 +1598,8 @@ feature {NONE} -- AST factory
 						Result.set_time_stamp (time_stamp)
 						Result.set_in_system (True)
 						Result.set_overridden_class (l_other_class)
-						old_class := current_class
-						current_class := Result
-						error_handler.report_compilation_status (Current, current_class)
-						current_class := old_class
-						queries.wipe_out
-						procedures.wipe_out
-						overriding_class_added := True
 					end
+					overriding_class_added := True
 				elseif not Result.is_in_override_cluster then
 						-- Two classes with the same name in two non-override clusters.
 					l_other_class := Result.cloned_class
@@ -1629,13 +1626,13 @@ feature {NONE} -- AST factory
 					l_other_class.set_overridden_class (Void)
 					Result.add_overridden_class (l_other_class)
 					Result := l_other_class
-					old_class := current_class
-					current_class := Result
-					error_handler.report_compilation_status (Current, current_class)
-					current_class := old_class
-					queries.wipe_out
-					procedures.wipe_out
 				end
+				old_class := current_class
+				current_class := Result
+				error_handler.report_compilation_status (Current, current_class)
+				current_class := old_class
+				queries.wipe_out
+				procedures.wipe_out
 			else
 				Result.set_filename (filename)
 				Result.set_group (cluster)
