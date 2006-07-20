@@ -15108,7 +15108,11 @@ feature -- Access
 	filename: STRING is
 			-- Name of file where current error occurred
 		do
-			Result := class_impl.filename
+			if class_impl.is_in_cluster then
+				Result := class_impl.filename
+			else
+				Result := "not in a cluster"
+			end
 		end
 
 feature -- Setting
