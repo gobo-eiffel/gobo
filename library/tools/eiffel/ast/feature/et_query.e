@@ -35,6 +35,16 @@ feature -- Access
 	assigner: ET_ASSIGNER
 			-- Assigner procedure
 
+feature -- Setting
+
+	set_assigner (an_assigner: like assigner) is
+			-- Set `assigner' to `an_assigner'.
+		do
+			assigner := an_assigner
+		ensure
+			assigner_set: assigner = an_assigner
+		end
+
 feature -- Conversion
 
 	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION is

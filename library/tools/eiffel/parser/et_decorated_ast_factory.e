@@ -1709,7 +1709,9 @@ feature -- AST nodes
 			-- New attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, a_type, an_assigner, a_clients, a_class)
+				create Result.make (a_name, a_type, a_class)
+				Result.set_assigner (an_assigner)
+				Result.set_clients (a_clients)
 				Result.set_semicolon (a_semicolon)
 				Result.set_feature_clause (a_feature_clause)
 			end
@@ -1860,7 +1862,9 @@ feature -- AST nodes
 			-- New constant attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_constant /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, a_type, an_assigner, a_constant, a_clients, a_class)
+				create Result.make (a_name, a_type, a_constant, a_class)
+				Result.set_assigner (an_assigner)
+				Result.set_clients (a_clients)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
@@ -3299,7 +3303,9 @@ feature -- AST nodes
 			-- New unique attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, a_type, an_assigner, a_clients, a_class)
+				create Result.make (a_name, a_type, a_class)
+				Result.set_assigner (an_assigner)
+				Result.set_clients (a_clients)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
