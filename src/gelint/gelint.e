@@ -216,7 +216,7 @@ feature {NONE} -- Processing
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
 			if ise_version = Void then
-				create ise_version.make_unknown
+				ise_version := ise_5_6
 			end
 			a_universe.set_ise_version (ise_version)
 			a_universe.set_ecma (is_ecma)
@@ -290,6 +290,14 @@ feature -- Error handling
 		end
 
 feature {NONE} -- Constants
+
+	ise_5_6: UT_VERSION is
+			-- ISE 5.6
+		once
+			create Result.make_major_minor (5, 6)
+		ensure
+			version_not_void: Result /= Void
+		end
 
 	ise_5_7_60362: UT_VERSION is
 			-- ISE 5.7.60362
