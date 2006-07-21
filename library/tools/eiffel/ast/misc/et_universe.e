@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 			feature_flattener := null_processor
 			interface_checker := null_processor
 			implementation_checker := null_processor
+			flat_implementation_checker := null_processor
 		ensure
 			clusters_set: clusters = a_clusters
 			ast_factory_set: ast_factory = a_factory
@@ -1234,7 +1235,11 @@ feature -- Implementation checking status setting
 			a_checker: ET_IMPLEMENTATION_CHECKER
 		do
 			flat_mode := b
-			a_checker ?= implementation_checker
+			if b then
+				a_checker ?= flat_implementation_checker
+			else
+				a_checker ?= implementation_checker
+			end
 			if a_checker /= Void then
 				a_checker.set_flat_mode (b)
 			end
@@ -1249,6 +1254,10 @@ feature -- Implementation checking status setting
 		do
 			flat_dbc_mode := b
 			a_checker ?= implementation_checker
+			if a_checker /= Void then
+				a_checker.set_flat_dbc_mode (b)
+			end
+			a_checker ?= flat_implementation_checker
 			if a_checker /= Void then
 				a_checker.set_flat_dbc_mode (b)
 			end
@@ -2533,9 +2542,15 @@ feature -- Compilation
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 			a_checker: ET_IMPLEMENTATION_CHECKER
+			a_processor: ET_AST_PROCESSOR
 		do
 				-- Check implementation.
-			a_checker ?= implementation_checker
+			if flat_mode then
+				a_processor := flat_implementation_checker
+			else
+				a_processor := implementation_checker
+			end
+			a_checker ?= a_processor
 			if a_checker /= Void then
 				a_checker.set_flat_mode (flat_mode)
 				a_checker.set_flat_dbc_mode (flat_dbc_mode)
@@ -2544,7 +2559,7 @@ feature -- Compilation
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if a_class.interface_checked then
-					a_class.process (implementation_checker)
+					a_class.process (a_processor)
 				end
 				a_cursor.forth
 			end
@@ -2753,6 +2768,9 @@ feature -- Processors
 	implementation_checker: ET_AST_PROCESSOR
 			-- Implementation checker
 
+	flat_implementation_checker: ET_AST_PROCESSOR
+			-- Implementation checker in flat mode
+
 	null_processor: ET_AST_NULL_PROCESSOR
 			-- Null processor
 
@@ -2761,6 +2779,7 @@ feature -- Processors
 		local
 			l_feature_flattener: ET_FEATURE_FLATTENER
 			l_interface_checker: ET_INTERFACE_CHECKER
+			l_implementation_checker: ET_IMPLEMENTATION_CHECKER
 		do
 			if provider_checker = null_processor then
 				create {ET_PROVIDER_CHECKER} provider_checker.make (Current)
@@ -2778,6 +2797,11 @@ feature -- Processors
 			end
 			if implementation_checker = null_processor then
 				create {ET_IMPLEMENTATION_CHECKER} implementation_checker.make (Current)
+			end
+			if flat_implementation_checker = null_processor then
+				create l_implementation_checker.make (Current)
+				l_implementation_checker.set_flat_mode (True)
+				flat_implementation_checker := l_implementation_checker
 			end
 		end
 
@@ -2839,6 +2863,16 @@ feature -- Processors
 			implementation_checker := a_checker
 		ensure
 			implementation_checker_set: implementation_checker = a_checker
+		end
+
+	set_flat_implementation_checker (a_checker: like flat_implementation_checker) is
+			-- Set `flat_implementation_chcker' to `a_checker'.
+		require
+			a_checker_not_void: a_checker /= Void
+		do
+			flat_implementation_checker := a_checker
+		ensure
+			flat_implementation_checker_set: flat_implementation_checker = a_checker
 		end
 
 feature -- Timing
@@ -2960,6 +2994,7 @@ invariant
 	feature_flattener_not_void: feature_flattener /= Void
 	interface_checker_not_void: interface_checker /= Void
 	implementation_checker_not_void: implementation_checker /= Void
+	flat_implementation_checker_not_void: flat_implementation_checker /= Void
 	null_processor_not_void: null_processor /= Void
 	boolean_ref_class_not_void: boolean_ref_class /= Void
 	character_ref_class_not_void: character_ref_class /= Void

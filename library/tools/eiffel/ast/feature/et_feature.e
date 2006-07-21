@@ -367,6 +367,17 @@ feature -- Implementation checking status
 			has_implementation_error := True
 		ensure
 			has_implementation_error: has_implementation_error
+
+		end
+
+	reset_implementation_checked is
+			-- Set `implementation_checked' to False.
+		do
+			has_implementation_error := False
+			implementation_checked := False
+		ensure
+			implementation_not_checked: not implementation_checked
+			no_implementation_error: not has_implementation_error
 		end
 
 	set_assertions_checked is
@@ -383,6 +394,16 @@ feature -- Implementation checking status
 			has_assertions_error := True
 		ensure
 			has_assertions_error: has_assertions_error
+		end
+
+	reset_assertions_checked is
+			-- Set `assertions_checked' to False.
+		do
+			has_assertions_error := False
+			assertions_checked := False
+		ensure
+			assertions_not_checked: not assertions_checked
+			no_assertions_error: not has_assertions_error
 		end
 
 feature -- Export status
