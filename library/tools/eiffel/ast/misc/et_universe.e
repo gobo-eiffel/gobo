@@ -506,6 +506,36 @@ feature -- Access
 			no_void_class: not Result.has (Void)
 		end
 
+	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
+			-- Classes in universe which are in `a_group'
+			-- or recursively in one of its subgroups;
+			-- Create a new list at each call
+		require
+			a_group_not_void: a_group /= Void
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class: ET_CLASS
+		do
+			create Result.make (initial_classes_by_group_capacity)
+			a_cursor := classes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				from
+					a_class := a_cursor.item
+				until
+					a_class = Void
+				loop
+					if a_class.is_in_group (a_group) then
+						Result.force_last (a_class)
+					end
+					a_class := a_class.overridden_class
+				end
+				a_cursor.forth
+			end
+		ensure
+			classes_not_void: Result /= Void
+			no_void_class: not Result.has (Void)
+		end
+
 	classes_by_groups: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
 			-- Classes in universe indexed by groups;
 			-- Create a new data structure at each call
