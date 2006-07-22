@@ -33,9 +33,15 @@ feature -- Duplication
 	new_synonym (a_name: like extended_name): like Current is
 			-- Synonym feature
 		do
-			create Result.make (a_name, arguments, declared_type, assigner,
-				obsolete_message, preconditions, locals, compound, postconditions,
-				rescue_clause, clients, implementation_class)
+			create Result.make (a_name, arguments, declared_type, implementation_class)
+			Result.set_assigner (assigner)
+			Result.set_obsolete_message (obsolete_message)
+			Result.set_preconditions (preconditions)
+			Result.set_locals (locals)
+			Result.set_compound (compound)
+			Result.set_postconditions (postconditions)
+			Result.set_rescue_clause (rescue_clause)
+			Result.set_clients (clients)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
@@ -49,9 +55,15 @@ feature -- Conversion
 	renamed_feature (a_name: like extended_name): like Current is
 			-- Renamed version of current feature
 		do
-			create Result.make (a_name, arguments, declared_type, assigner,
-				obsolete_message, preconditions, locals, compound, postconditions,
-				rescue_clause, clients, implementation_class)
+			create Result.make (a_name, arguments, declared_type, implementation_class)
+			Result.set_assigner (assigner)
+			Result.set_obsolete_message (obsolete_message)
+			Result.set_preconditions (preconditions)
+			Result.set_locals (locals)
+			Result.set_compound (compound)
+			Result.set_postconditions (postconditions)
+			Result.set_rescue_clause (rescue_clause)
+			Result.set_clients (clients)
 			Result.set_implementation_feature (implementation_feature)
 			Result.set_first_precursor (first_precursor)
 			Result.set_other_precursors (other_precursors)

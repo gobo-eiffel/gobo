@@ -24,6 +24,16 @@ feature -- Access
 	alias_clause: ET_EXTERNAL_ALIAS
 			-- Alias clause
 
+feature -- Setting
+
+	set_alias_clause (an_alias: like alias_clause) is
+			-- Set `alias_clause' to `an_alias'.
+		do
+			alias_clause := an_alias
+		ensure
+			alias_clause_set: alias_clause = an_alias
+		end
+
 feature -- Built-in
 
 	is_builtin: BOOLEAN is

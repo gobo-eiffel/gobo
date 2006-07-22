@@ -15,6 +15,9 @@ class ET_EXTERNAL_PROCEDURE
 inherit
 
 	ET_PROCEDURE
+		rename
+			make as make_procedure
+		end
 
 	ET_EXTERNAL_ROUTINE
 
@@ -25,40 +28,27 @@ create
 feature {NONE} -- Initialization
 
 	make (a_name: like extended_name; args: like arguments;
-		an_obsolete: like obsolete_message; a_preconditions: like preconditions;
-		a_language: like language; an_alias: like alias_clause;
-		a_postconditions: like postconditions; a_clients: like clients;
-		a_class: like implementation_class) is
+		a_language: like language; a_class: like implementation_class) is
 			-- Create a new external procedure.
 		require
 			a_name_not_void: a_name /= Void
 			a_language_not_void: a_language /= Void
-			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 		do
 			extended_name := a_name
 			hash_code := name.hash_code
 			arguments := args
 			is_keyword := tokens.is_keyword
-			obsolete_message := an_obsolete
-			preconditions := a_preconditions
 			language := a_language
-			alias_clause := an_alias
-			postconditions := a_postconditions
 			end_keyword := tokens.end_keyword
-			clients := a_clients
+			clients := tokens.any_clients
 			implementation_class := a_class
 			implementation_feature := Current
 			builtin_code := tokens.builtin_not_builtin
 		ensure
 			extended_name_set: extended_name = a_name
 			arguments_set: arguments = args
-			obsolete_message_set: obsolete_message = an_obsolete
-			preconditions_set: preconditions = a_preconditions
 			language_set: language = a_language
-			alias_clause_set: alias_clause = an_alias
-			postconditions_set: postconditions = a_postconditions
-			clients_set: clients = a_clients
 			implementation_class_set: implementation_class = a_class
 			implementation_feature_set: implementation_feature = Current
 		end
@@ -68,8 +58,12 @@ feature -- Duplication
 	new_synonym (a_name: like extended_name): like Current is
 			-- Synonym feature
 		do
-			create Result.make (a_name, arguments, obsolete_message, preconditions,
-				language, alias_clause, postconditions, clients, implementation_class)
+			create Result.make (a_name, arguments, language, implementation_class)
+			Result.set_obsolete_message (obsolete_message)
+			Result.set_preconditions (preconditions)
+			Result.set_postconditions (postconditions)
+			Result.set_alias_clause (alias_clause)
+			Result.set_clients (clients)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
@@ -89,8 +83,12 @@ feature -- Conversion
 	renamed_feature (a_name: like extended_name): like Current is
 			-- Renamed version of current feature
 		do
-			create Result.make (a_name, arguments, obsolete_message, preconditions,
-				language, alias_clause, postconditions, clients, implementation_class)
+			create Result.make (a_name, arguments, language, implementation_class)
+			Result.set_obsolete_message (obsolete_message)
+			Result.set_preconditions (preconditions)
+			Result.set_postconditions (postconditions)
+			Result.set_alias_clause (alias_clause)
+			Result.set_clients (clients)
 			Result.set_implementation_feature (implementation_feature)
 			Result.set_first_precursor (first_precursor)
 			Result.set_other_precursors (other_precursors)

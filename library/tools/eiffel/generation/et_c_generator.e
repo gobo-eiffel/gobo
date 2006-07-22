@@ -14059,7 +14059,7 @@ feature {NONE} -- Implementation
 			l_feature: ET_FEATURE
 		once
 			create {ET_IDENTIFIER} l_name.make ("**dummy**")
-			create {ET_DO_PROCEDURE} l_feature.make (l_name, Void, Void, Void, Void, Void, Void, Void, tokens.any_clients, current_type.base_class)
+			create {ET_DO_PROCEDURE} l_feature.make (l_name, Void, current_type.base_class)
 			create Result.make (l_feature, current_type, current_system)
 		ensure
 			dummy_feature_not_void: Result /= Void

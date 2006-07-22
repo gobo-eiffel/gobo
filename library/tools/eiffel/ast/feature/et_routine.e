@@ -92,6 +92,30 @@ feature -- Setting
 			end_keyword_set: end_keyword = an_end
 		end
 
+	set_obsolete_message (a_message: like obsolete_message) is
+			-- Set `obsolete_message' to `a_message'.
+		do
+			obsolete_message := a_message
+		ensure
+			obsolete_message_set: obsolete_message = a_message
+		end
+
+	set_preconditions (a_preconditions: like preconditions) is
+			-- Set `preconditions' to `a_preconditions'.
+		do
+			preconditions := a_preconditions
+		ensure
+			preconditions_set: preconditions = a_preconditions
+		end
+
+	set_postconditions (a_postconditions: like postconditions) is
+			-- Set `postconditions' to `a_postconditions'.
+		do
+			postconditions := a_postconditions
+		ensure
+			postconditions_set: postconditions = a_postconditions
+		end
+
 	reset_preconditions is
 			-- Set `preconditions' to Void.
 		do

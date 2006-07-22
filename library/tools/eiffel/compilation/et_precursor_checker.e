@@ -831,13 +831,11 @@ feature {NONE} -- Implementation
 			-- Dummy feature
 		local
 			a_name: ET_FEATURE_NAME
-			a_clients: ET_NONE_CLIENTS
 			a_feature: ET_FEATURE
 			a_parent_feature: ET_PARENT_FEATURE
 		once
 			create {ET_IDENTIFIER} a_name.make ("**dummy**")
-			create a_clients.make (tokens.left_brace_symbol, tokens.right_brace_symbol)
-			create {ET_DEFERRED_PROCEDURE} a_feature.make (a_name, Void, Void, Void, Void, a_clients, current_class)
+			create {ET_DEFERRED_PROCEDURE} a_feature.make (a_name, Void, current_class)
 			create a_parent_feature.make (a_feature, universe.any_parent)
 			create Result.make (a_feature, a_parent_feature)
 		ensure

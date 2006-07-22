@@ -166,7 +166,8 @@ feature -- Conversion
 	undefined_feature (a_name: like extended_name): ET_DEFERRED_ROUTINE is
 			-- Undefined version of current feature
 		do
-			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, Void, Void, Void, clients, implementation_class)
+			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, implementation_class)
+			Result.set_clients (clients)
 			Result.set_first_precursor (Current)
 		end
 

@@ -2079,8 +2079,12 @@ feature -- AST nodes
 			-- New deferred function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, a_type, an_assigner, an_obsolete, a_preconditions,
-					a_postconditions, a_clients, a_class)
+				create Result.make (a_name, args, a_type, a_class)
+				Result.set_assigner (an_assigner)
+				Result.set_obsolete_message (an_obsolete)
+				Result.set_preconditions (a_preconditions)
+				Result.set_postconditions (a_postconditions)
+				Result.set_clients (a_clients)
 				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -2104,8 +2108,11 @@ feature -- AST nodes
 			-- New deferred procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, an_obsolete, a_preconditions,
-					a_postconditions, a_clients, a_class)
+				create Result.make (a_name, args, a_class)
+				Result.set_obsolete_message (an_obsolete)
+				Result.set_preconditions (a_preconditions)
+				Result.set_postconditions (a_postconditions)
+				Result.set_clients (a_clients)
 				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -2143,8 +2150,15 @@ feature -- AST nodes
 			-- New do function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, a_type, an_assigner, an_obsolete, a_preconditions, a_locals,
-					a_compound, a_postconditions, a_rescue, a_clients, a_class)
+				create Result.make (a_name, args, a_type, a_class)
+				Result.set_assigner (an_assigner)
+				Result.set_obsolete_message (an_obsolete)
+				Result.set_preconditions (a_preconditions)
+				Result.set_locals (a_locals)
+				Result.set_compound (a_compound)
+				Result.set_postconditions (a_postconditions)
+				Result.set_rescue_clause (a_rescue)
+				Result.set_clients (a_clients)
 				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -2166,8 +2180,14 @@ feature -- AST nodes
 			-- New do procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
-					a_compound, a_postconditions, a_rescue, a_clients, a_class)
+				create Result.make (a_name, args, a_class)
+				Result.set_obsolete_message (an_obsolete)
+				Result.set_preconditions (a_preconditions)
+				Result.set_locals (a_locals)
+				Result.set_compound (a_compound)
+				Result.set_postconditions (a_postconditions)
+				Result.set_rescue_clause (a_rescue)
+				Result.set_clients (a_clients)
 				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -2262,8 +2282,13 @@ feature -- AST nodes
 			-- New external function
 		do
 			if a_name /= Void and a_type /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, a_type, an_assigner, an_obsolete, a_preconditions,
-					a_language, an_alias, a_postconditions, a_clients, a_class)
+				create Result.make (a_name, args, a_type, a_language, a_class)
+				Result.set_assigner (an_assigner)
+				Result.set_obsolete_message (an_obsolete)
+				Result.set_preconditions (a_preconditions)
+				Result.set_postconditions (a_postconditions)
+				Result.set_alias_clause (an_alias)
+				Result.set_clients (a_clients)
 				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -2295,8 +2320,12 @@ feature -- AST nodes
 			-- New external procedure
 		do
 			if a_name /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, an_obsolete, a_preconditions,
-					a_language, an_alias, a_postconditions, a_clients, a_class)
+				create Result.make (a_name, args, a_language, a_class)
+				Result.set_obsolete_message (an_obsolete)
+				Result.set_preconditions (a_preconditions)
+				Result.set_postconditions (a_postconditions)
+				Result.set_alias_clause (an_alias)
+				Result.set_clients (a_clients)
 				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -2935,8 +2964,15 @@ feature -- AST nodes
 			-- New once function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, a_type, an_assigner, an_obsolete, a_preconditions, a_locals,
-					a_compound, a_postconditions, a_rescue, a_clients, a_class)
+				create Result.make (a_name, args, a_type, a_class)
+				Result.set_assigner (an_assigner)
+				Result.set_obsolete_message (an_obsolete)
+				Result.set_preconditions (a_preconditions)
+				Result.set_locals (a_locals)
+				Result.set_compound (a_compound)
+				Result.set_postconditions (a_postconditions)
+				Result.set_rescue_clause (a_rescue)
+				Result.set_clients (a_clients)
 				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -2969,8 +3005,14 @@ feature -- AST nodes
 			-- New once procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
-					a_compound, a_postconditions, a_rescue, a_clients, a_class)
+				create Result.make (a_name, args, a_class)
+				Result.set_obsolete_message (an_obsolete)
+				Result.set_preconditions (a_preconditions)
+				Result.set_locals (a_locals)
+				Result.set_compound (a_compound)
+				Result.set_postconditions (a_postconditions)
+				Result.set_rescue_clause (a_rescue)
+				Result.set_clients (a_clients)
 				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)

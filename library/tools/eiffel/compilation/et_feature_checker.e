@@ -9535,7 +9535,7 @@ feature {NONE} -- Implementation
 			a_name: ET_FEATURE_NAME
 		once
 			create {ET_IDENTIFIER} a_name.make ("**dummy**")
-			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, Void, Void, Void, tokens.any_clients, current_class)
+			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, current_class)
 		ensure
 			dummy_feature_not_void: Result /= Void
 		end

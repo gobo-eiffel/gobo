@@ -43,40 +43,13 @@ create
 
 	make
 
-feature {NONE} -- Initialization
-
-	make (a_name: like extended_name; args: like arguments; a_type: like declared_type;
-		a_clients: like clients; a_class: like implementation_class) is
-			-- Create a new .NET function.
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		do
-			extended_name := a_name
-			hash_code := name.hash_code
-			arguments := args
-			declared_type := a_type
-			is_keyword := tokens.is_keyword
-			end_keyword := tokens.end_keyword
-			clients := a_clients
-			implementation_class := a_class
-			implementation_feature := Current
-		ensure
-			extended_name_set: extended_name = a_name
-			arguments_set: arguments = args
-			clients_set: clients = a_clients
-			implementation_class_set: implementation_class = a_class
-			implementation_feature_set: implementation_feature = Current
-		end
-
 feature -- Duplication
 
 	new_synonym (a_name: like extended_name): like Current is
 			-- Synonym feature
 		do
-			create Result.make (a_name, arguments, declared_type, clients, implementation_class)
+			create Result.make (a_name, arguments, declared_type, implementation_class)
+			Result.set_clients (clients)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
@@ -90,7 +63,8 @@ feature -- Conversion
 	renamed_feature (a_name: like extended_name): like Current is
 			-- Renamed version of current feature
 		do
-			create Result.make (a_name, arguments, declared_type, clients, implementation_class)
+			create Result.make (a_name, arguments, declared_type, implementation_class)
+			Result.set_clients (clients)
 			Result.set_implementation_feature (implementation_feature)
 			Result.set_first_precursor (first_precursor)
 			Result.set_other_precursors (other_precursors)
