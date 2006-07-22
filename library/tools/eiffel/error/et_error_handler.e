@@ -100,6 +100,9 @@ feature -- Compilation report
 				elseif a_processor = a_universe.implementation_checker then
 					info_file.put_string ("Degree 3 class ")
 					info_file.put_line (a_class.name.name)
+				elseif a_processor = a_universe.flat_implementation_checker then
+					info_file.put_string ("Degree 3 (flat) class ")
+					info_file.put_line (a_class.name.name)
 				end
 			end
 			end
