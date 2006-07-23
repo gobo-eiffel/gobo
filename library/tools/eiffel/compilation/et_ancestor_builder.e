@@ -202,10 +202,17 @@ feature {NONE} -- Topological sort
 							-- Use ANY as class root now.
 						a_class.set_ancestors_built
 					elseif not class_sorter.has (a_class) then
-						if a_class.is_dotnet and a_class /= universe.system_object_class then
-							system_object_class := universe.system_object_class
+						system_object_class := universe.system_object_class
+						if a_class.is_dotnet and a_class /= system_object_class then
 							if not system_object_class.is_preparsed then
-									-- Error: class SYSTEM_OBJECT not in universe (GVHSO, not in ETL2).
+									-- Error: class SYSTEM_OBJECT not in universe (GVHSO-1, not in ETL2).
+									-- The validity error will be reported in `set_ancestors'
+									-- (for that to work we need to add `a_class' to the
+									-- class sorter despite the error).
+								set_fatal_error (system_object_class)
+								class_sorter.force (a_class)
+							elseif not system_object_class.is_dotnet then
+									-- Error: class SYSTEM_OBJECT not a .NET class (GVHSO-2, not in ETL2).
 									-- The validity error will be reported in `set_ancestors'
 									-- (for that to work we need to add `a_class' to the
 									-- class sorter despite the error).
@@ -303,12 +310,15 @@ feature {NONE} -- Ancestors
 								-- Error: class ANY not in universe (VHAY, ETL2 p.88).
 							error_handler.report_vhay0a_error (current_class)
 						elseif a_parents = universe.system_object_parents then
-								-- Error: class SYSTEM_OBJECT not in universe (GVHSO, not in ETL2).
-							error_handler.report_gvhso0a_error (current_class)
+								-- Error: class SYSTEM_OBJECT not in universe (GVHSO-1, not in ETL2).
+							error_handler.report_gvhso1a_error (current_class)
 						else
 								-- Error: class not in universe (VTCT, ETL2 p.199).
 							error_handler.report_vtct0a_error (current_class, a_type)
 						end
+					elseif a_parents = universe.system_object_parents and not a_class.is_dotnet then
+							-- Error: class SYSTEM_OBJECT not a .NET class (GVHSO-2, not in ETL2).
+						error_handler.report_gvhso2a_error (current_class)
 					end
 					has_error := True
 				elseif not has_error then

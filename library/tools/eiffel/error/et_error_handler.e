@@ -5603,8 +5603,8 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvhso0a_error (a_class: ET_CLASS) is
-			-- Report GVHSO error: `a_class' implicitly inherits
+	report_gvhso1a_error (a_class: ET_CLASS) is
+			-- Report GVHSO-1 error: `a_class' implicitly inherits
 			-- from unknown class SYSTEM_OBJECT.
 			--
 			-- Not in ETL
@@ -5615,8 +5615,26 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_gvhso_error (a_class) then
-				create an_error.make_gvhso0a (a_class)
+			if reportable_gvhso1_error (a_class) then
+				create an_error.make_gvhso1a (a_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvhso2a_error (a_class: ET_CLASS) is
+			-- Report GVHSO-2 error: `a_class' implicitly inherits
+			-- from class SYSTEM_OBJECT but SYSTEM_OBJECT is not a .NET class.
+			--
+			-- Not in ETL
+			-- GVHSO: see VHAY
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvhso2_error (a_class) then
+				create an_error.make_gvhso2a (a_class)
 				report_validity_error (an_error)
 			end
 		end
@@ -8874,8 +8892,18 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvhso_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVHSO error be reported when it
+	reportable_gvhso1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVHSO-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvhso2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVHSO-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
