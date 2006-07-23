@@ -25,7 +25,7 @@ inherit
 	MA_SHARED_DECIMAL_CONSTANTS
 		export {NONE} all end
 
-create
+create {XM_XSLT_TRANSFORMER_FACTORY, XM_XSLT_TEST_STYLESHEET_BUILDER}
 
 	make
 
@@ -85,13 +85,14 @@ feature -- Status setting
 
 feature -- Compilation
 
-	prepare (a_source: XM_XSLT_SOURCE) is
+	prepare (a_source: XM_XSLT_SOURCE; a_uri: UT_URI) is
 			-- Prepare a stylesheet from a source document.
 		require
 			source_not_void: a_source /= Void
 			stylesheet_not_yet_compiled: executable = Void
+			absolute_base_uri: a_uri /= Void and then a_uri.is_absolute
 		do
-			load_principal_stylesheet_module (a_source)
+			load_principal_stylesheet_module (a_source, a_uri)
 			if not load_stylesheet_module_failed then
 				create_style_sheet_executable (last_loaded_module)
 			end
@@ -135,12 +136,13 @@ feature -- Compilation
 			stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void and then last_loaded_module = Void
 		end
 
-	load_principal_stylesheet_module (a_source: XM_XSLT_SOURCE) is
+	load_principal_stylesheet_module (a_source: XM_XSLT_SOURCE; a_uri: UT_URI) is
 			-- Create a tree-representation of principal stylesheet module
 		require
 			source_not_void: a_source /= Void
 			no_error_loading_previous_stylesheet_modules: not load_stylesheet_module_failed
 			stylesheet_not_yet_compiled: executable = Void
+			absolute_base_uri: a_uri /= Void and then a_uri.is_absolute
 		local
 			a_stylesheet_stripper: XM_XSLT_STYLESHEET_STRIPPER
 			a_comment_stripper: XM_XSLT_COMMENT_STRIPPER
@@ -159,7 +161,7 @@ feature -- Compilation
 			a_tree_builder.set_line_numbering (configuration.is_line_numbering)
 			create a_stylesheet_stripper.make (a_tree_builder)
 			create a_comment_stripper.make (a_stylesheet_stripper)
-			a_source.send (a_parser, a_comment_stripper, True)
+			a_source.send (a_parser, a_comment_stripper, a_uri, True)
 			if a_tree_builder.has_error then
 				report_error (a_tree_builder.last_error)
 			else
@@ -226,12 +228,13 @@ feature -- Compilation
 
 feature -- Creation
 
-	new_transformer: XM_XSLT_TRANSFORMER is
+	new_transformer (a_factory: XM_XSLT_TRANSFORMER_FACTORY): XM_XSLT_TRANSFORMER is
 			-- New transformer for this stylesheet
 		require
 			executable: executable /= Void
+			a_factory_not_void: a_factory /= Void
 		do
-			create Result.make (configuration, executable)
+			create Result.make (configuration, executable, a_factory)
 		ensure
 			result_not_void: Result /= Void
 		end

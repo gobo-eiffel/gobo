@@ -137,7 +137,8 @@ feature -- Optimization
 						if a_qname_cast.is_error then
 							set_last_error (a_qname_cast.error_value)
 						else
-							set_replacement (a_qname_cast)
+							check replaced: a_qname_cast.was_expression_replaced end
+							set_replacement (a_qname_cast.replacement_expression)
 						end
 					else
 						if an_expression.is_atomic_value then

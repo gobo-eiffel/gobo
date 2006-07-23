@@ -21,7 +21,7 @@ feature -- Access
 			--  then `resolve' must set `last_result' to `Void' and set
 			--  `error_message' to an explanatory message.
 
-	output_destinations: DS_TABLE [XM_XSLT_TRANSFORMATION_RESULT, STRING]
+	output_destinations: DS_HASH_TABLE [XM_XSLT_TRANSFORMATION_RESULT, STRING]
 			-- Allocated output destinations indexed by absolute URI
 	
 feature -- Status report

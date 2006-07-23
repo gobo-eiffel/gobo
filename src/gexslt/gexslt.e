@@ -417,6 +417,7 @@ feature -- Error handling
 									  "       --do-not-recover%N" +
 									  "       --no-line-numbers%N" +
 									  "       --no-output-extensions%N" +
+									  "       --no-extension-functions%N" +
 									  "       --no-gc%N" +
 									  "       --no-network-protocols%N" +
 									  "       --no-catalogs%N" +
@@ -468,6 +469,9 @@ feature {NONE} -- Implementation
 
 	suppress_output_extensions: BOOLEAN
 			-- Suppress QName methods for xsl:output.
+
+	suppress_extension_functions: BOOLEAN
+			-- Suppress all extension functions
 
 	suppress_network_protocols: BOOLEAN
 			-- Suppress URI schemes that access the network.
@@ -597,6 +601,8 @@ feature {NONE} -- Implementation
 				process_file (an_option.substring (6, an_option.count))
 			elseif an_option.is_equal ("no-output-extensions") then
 				suppress_output_extensions := True
+			elseif an_option.is_equal ("no-extension-functions") then
+				suppress_extension_functions := True
 			elseif an_option.is_equal ("no-network-protocols") then
 					suppress_network_protocols := True
 			elseif an_option.is_equal ("no-catalogs") then
@@ -693,8 +699,11 @@ feature {NONE} -- Implementation
 			-- Add a URI-valued argument to `uris'.
 		require
 			at_least_one_character: a_uri /= Void and then a_uri.count > 0
+		local
+			l_uri: UT_URI
 		do
-			uris.put_last (a_uri)
+			create l_uri.make_resolve (current_directory_base, a_uri)
+			uris.put_last (l_uri.full_reference)
 		end
 
 	process_file_or_uri (a_file_or_uri: STRING) is
@@ -723,9 +732,9 @@ feature {NONE} -- Implementation
 			uri_list_valid: uris /= Void
 				and then uris.count = 2 or else  uris.count = 1
 		local
-			a_source: XM_XSLT_URI_SOURCE
-			a_stylesheet_source: XM_XSLT_SOURCE
-			a_chooser: XM_XSLT_PI_CHOOSER
+			l_source: XM_XSLT_URI_SOURCE
+			l_stylesheet_source: XM_XSLT_SOURCE
+			l_chooser: XM_XSLT_PI_CHOOSER
 		do
 			conformance.set_basic_xslt_processor
 			configuration.use_tiny_tree_model (is_tiny_tree_model)
@@ -739,13 +748,16 @@ feature {NONE} -- Implementation
 			if not suppress_output_extensions then
 				register_output_extensions
 			end
+			if not suppress_extension_functions then
+				register_extension_functions
+			end
 			if not suppress_network_protocols then
 				register_network_protocols
 			end
 			register_non_network_protocols
 			create transformer_factory.make (configuration)
 			if use_processing_instruction then
-				create a_source.make (uris.item (1))
+				create l_source.make (uris.item (1))
 				if medium = Void then
 					medium := "screen"
 				elseif medium.is_equal ("all") then
@@ -758,19 +770,19 @@ feature {NONE} -- Implementation
 					end
 				end
 				if title = Void then
-					create {XM_XSLT_PREFERRED_PI_CHOOSER} a_chooser.make
+					create {XM_XSLT_PREFERRED_PI_CHOOSER} l_chooser.make
 				else
-					create {XM_XSLT_PI_CHOOSER_BY_NAME} a_chooser.make (title)
+					create {XM_XSLT_PI_CHOOSER_BY_NAME} l_chooser.make (title)
 				end
-				a_stylesheet_source := transformer_factory.associated_stylesheet (a_source.system_id, medium, a_chooser)
-				if a_stylesheet_source = Void then
+				l_stylesheet_source := transformer_factory.associated_stylesheet (l_source.system_id, medium, l_chooser)
+				if l_stylesheet_source = Void then
 					report_processing_error ("Unable to compile stylesheet",  "Xml-stylesheet processing instuction(s) did not lead to a stylesheet being compiled sucessfully..")
 					Exceptions.die (2)
 				end
 			else
-				create {XM_XSLT_URI_SOURCE} a_stylesheet_source.make (uris.item (1))
+				create {XM_XSLT_URI_SOURCE} l_stylesheet_source.make (uris.item (1))
 			end
-			transformer_factory.create_new_transformer (a_stylesheet_source)
+			transformer_factory.create_new_transformer (l_stylesheet_source, current_directory_base)
 			if transformer_factory.was_error then
 				report_processing_error ("Could not compile stylesheet", transformer_factory.last_error_message)
 				Exceptions.die (2)
@@ -983,6 +995,18 @@ feature {NONE} -- Implementation
 			emitter_factory.register_extension_emitter_factory (an_emitter_factory)
 			create another_emitter_factory.make
 			emitter_factory.register_extension_emitter_factory (another_emitter_factory)
+		end
+
+	register_extension_functions is
+			-- Register extension functions.
+			-- Descendants are encouraged to redefine this routine.
+		require
+			extension_functions_not_suppressed: not suppress_extension_functions
+		local
+			l_function_library: XM_XSLT_BUILTIN_EXTENSION_FUNCTIONS
+		do
+			create l_function_library.make
+			configuration.add_extension_function_library (l_function_library)
 		end
 
 	register_non_network_protocols is

@@ -2456,7 +2456,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	inherited_version: version_attribute_processed implies version /= Void
 	validation_reporting: Report_always <= reporting_circumstances and then reporting_circumstances <= Report_if_instantiated
 	error_listener_not_void: error_listener /= Void
 	default_collation_name_not_void: default_collation_name /= Void

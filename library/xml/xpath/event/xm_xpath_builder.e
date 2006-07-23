@@ -15,6 +15,9 @@ deferred class XM_XPATH_BUILDER
 inherit
 
 	XM_XPATH_RECEIVER
+		redefine
+			is_builder, as_builder
+		end
 
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
@@ -40,6 +43,12 @@ feature -- Status report
 
 	is_line_numbering: BOOLEAN
 			-- Is line-numbering turned on?
+
+	is_builder: BOOLEAN is
+			-- Is `Current' an `XM_XPATH_BUILDER'?
+		do
+			Result := True
+		end
 
 	show_size is
 			-- Print tree size information.
@@ -105,6 +114,14 @@ feature -- Element change
 			locator := a_locator
 		ensure then
 			locator_set: locator = a_locator
+		end
+
+feature -- Conversion
+
+	as_builder: XM_XPATH_BUILDER is
+			-- `Current' as a builder
+		do
+			Result := Current
 		end
 
 feature {NONE} -- Implementation

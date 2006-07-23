@@ -29,7 +29,7 @@ feature -- Test
 	test_grouping_nodes_based_on_common_values is
 			-- Test group-by, and simplified stylesheet.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -43,12 +43,11 @@ feature -- Test
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
 			l_configuration.use_tiny_tree_model (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (group_by_one_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (cities_xml_uri.full_reference)
 			create l_output
@@ -62,7 +61,7 @@ feature -- Test
 	test_grouping_starting_with is
 			-- Test group-starting-with, and simplified stylesheet.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -76,12 +75,11 @@ feature -- Test
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
 			l_configuration.use_tiny_tree_model (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (group_starting_with_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (xslt_intro_xml_uri.full_reference)
 			create l_output
@@ -95,7 +93,7 @@ feature -- Test
 	test_current_grouping_key is
 			-- Test fn:current-grouping-key() and fn:current-group().
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -109,12 +107,11 @@ feature -- Test
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
 			l_configuration.use_tiny_tree_model (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (current_group_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (titles_xml_uri.full_reference)
 			create l_output
@@ -128,7 +125,7 @@ feature -- Test
 	test_group_adjacent is
 			-- Test group-adjacent, fn:current-grouping-key() and fn:current-group().
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -142,12 +139,11 @@ feature -- Test
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
 			l_configuration.use_tiny_tree_model (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (group_adjacent_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (mobile_xml_uri.full_reference)
 			create l_output
@@ -161,7 +157,7 @@ feature -- Test
 	test_group_ending_with is
 			-- Test group-ending-with and fn:current-group().
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -175,12 +171,11 @@ feature -- Test
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
 			l_configuration.use_tiny_tree_model (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (group_ending_with_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (continued_xml_uri.full_reference)
 			create l_output
@@ -219,6 +214,14 @@ feature {NONE} -- Implementation
 		ensure
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
+		end
+
+	dummy_uri: UT_URI is
+			-- Dummy URI
+		once
+			create Result.make ("dummy:")
+		ensure
+			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
 
 	group_by_one_xsl_uri: UT_URI is

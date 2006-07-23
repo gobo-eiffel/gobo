@@ -31,7 +31,7 @@ feature -- Tests
 	test_replacing_characters is
 			-- Test replacing all newline characters in the abstract element by empty br elements.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -45,12 +45,11 @@ feature -- Tests
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
 			l_configuration.use_tiny_tree_model (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (abstract_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (abstract_xml_uri.full_reference)
 			create l_output
@@ -64,7 +63,7 @@ feature -- Tests
 	test_regex_group_one is
 			-- Test simple use of fn:regex-group().
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -78,12 +77,11 @@ feature -- Tests
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
 			l_configuration.use_tiny_tree_model (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (cite_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (cite_xml_uri.full_reference)
 			create l_output
@@ -97,7 +95,7 @@ feature -- Tests
 	test_regex_group_two is
 			-- Test use of fn:regex-group() for formatting dates.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -110,13 +108,12 @@ feature -- Tests
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			l_configuration.use_tiny_tree_model (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			l_configuration.use_tiny_tree_model (True)			
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (dates_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (dates_xml_uri.full_reference)
 			create l_output
@@ -148,7 +145,15 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
+
+	dummy_uri: UT_URI is
+			-- Dummy URI
+		once
+			create Result.make ("dummy:")
+		ensure
+			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
+		end
+
 	abstract_xsl_uri: UT_URI is
 			-- URI of file 'abstract.xsl'
 		local

@@ -42,7 +42,7 @@ feature -- Test
 	test_xml_character_map is
 			-- Test use-character-maps with method=xml
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -54,12 +54,11 @@ feature -- Test
 			create l_configuration.make_with_defaults
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (character_map_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
@@ -74,7 +73,7 @@ feature -- Test
 	test_html_character_map is
 			-- Test use-character-maps with method=html
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_uri_source: XM_XSLT_URI_SOURCE
@@ -84,12 +83,11 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (character_map2_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
@@ -104,7 +102,7 @@ feature -- Test
 	test_xhtml_character_map is
 			-- Test use-character-maps with method=xhtml
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_uri_source: XM_XSLT_URI_SOURCE
@@ -114,12 +112,11 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (character_map4_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
@@ -134,7 +131,7 @@ feature -- Test
 	test_text_character_map is
 			-- Test use-character-maps with method=text
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_uri_source: XM_XSLT_URI_SOURCE
@@ -144,12 +141,11 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (character_map5_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
@@ -164,7 +160,7 @@ feature -- Test
 	test_xhtml_character_map_with_cdata is
 			-- Test use-character-maps with method=xhtml
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_uri_source: XM_XSLT_URI_SOURCE
@@ -174,12 +170,11 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (character_map6_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
@@ -194,7 +189,7 @@ feature -- Test
 	test_qname_method is
 			-- Test use of a QName output method.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_uri_source: XM_XSLT_URI_SOURCE
@@ -207,12 +202,11 @@ feature -- Test
 			l_configuration.set_line_numbering (True)
 			create l_emitter_factory.make
 			emitter_factory.register_extension_emitter_factory (l_emitter_factory)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (qname_output_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
@@ -235,6 +229,14 @@ feature {NONE} -- Implementation
 		ensure
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
+		end
+
+	dummy_uri: UT_URI is
+			-- Dummy URI
+		once
+			create Result.make ("dummy:")
+		ensure
+			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
 		
 	character_map_xsl_uri: UT_URI is

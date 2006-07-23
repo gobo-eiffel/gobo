@@ -94,32 +94,30 @@ feature -- Status setting
 
 feature -- Creation
 
-	create_new_transformer (a_source: XM_XSLT_SOURCE) is
+	create_new_transformer (a_source: XM_XSLT_SOURCE; a_uri: UT_URI) is
 			-- New transformer
 		require
 			source_not_void: a_source /= Void
+			absolute_base_uri: a_uri /= Void and then a_uri.is_absolute
 		local
-			a_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_uri: STRING
+			l_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_uri: UT_URI
 		do
 			was_error := False
-			a_uri := a_source.system_id
-			if a_source.fragment_identifier /= Void then
-				a_uri := a_uri + "#" + a_source.fragment_identifier
-			end
-			if is_stylesheet_cached (a_uri) then
-				create created_transformer.make (configuration, cached_stylesheet (a_uri))
+			create l_uri.make_resolve (a_uri, a_source.uri_reference)
+			if is_stylesheet_cached (l_uri.full_reference) then
+				create created_transformer.make (configuration, cached_stylesheet (l_uri.full_reference), Current)
 			else
-				create a_compiler.make (configuration)
-				a_compiler.prepare (a_source)
-				if a_compiler.load_stylesheet_module_failed then
+				create l_compiler.make (configuration)
+				l_compiler.prepare (a_source, a_uri)
+				if l_compiler.load_stylesheet_module_failed then
 					was_error := True
-					last_error_message := a_compiler.load_stylesheet_module_error
+					last_error_message := l_compiler.load_stylesheet_module_error
 				else
 					if is_caching then
-						stylesheet_cache.force_new (a_compiler.executable, a_uri)
+						stylesheet_cache.force_new (l_compiler.executable, l_uri.full_reference)
 					end
-					created_transformer := a_compiler.new_transformer
+					created_transformer := l_compiler.new_transformer (Current)
 				end
 			end
 		ensure
@@ -127,7 +125,7 @@ feature -- Creation
 		end
 
 	associated_stylesheet (a_uri: STRING; a_medium: STRING; a_chooser: XM_XSLT_PI_CHOOSER): XM_XSLT_SOURCE is
-			-- Stylesheet associated with `a_source'
+			-- Stylesheet associated with `a_uri'
 		require
 			source_uri_not_a_fragment: a_uri /= Void and then a_uri.index_of ('#', 1) = 0
 			medium_not_void: a_medium /= Void

@@ -33,7 +33,7 @@ feature -- Test
 	test_range_variable_in_global_variable is
 			-- Test use of range variables within the select expression of a global variable.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -46,12 +46,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var15_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (var25_xml_uri.full_reference)
 			create l_output
@@ -65,7 +64,7 @@ feature -- Test
 	test_type_conversion_on_apply is
 			-- Test type conversion of parameters in an xsl:apply-templates call.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -78,13 +77,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var16_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var25_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -97,7 +94,7 @@ feature -- Test
 	test_as_attribute_on_with_param is
 			-- Test as attribute on xsl:with-param.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -110,13 +107,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var17_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var25_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -129,7 +124,7 @@ feature -- Test
 	test_tunnel_parameters is
 			-- Basic test of tunnel parameters.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -142,13 +137,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var20_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var20_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -161,7 +154,7 @@ feature -- Test
 	test_override_tunnel_parameter is
 			-- Test overriding a tunnel parameter.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -174,13 +167,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var21_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var20_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -193,7 +184,7 @@ feature -- Test
 	test_tunnel_parameters_with_call_template is
 			-- Test tunnel parameters with xsl:call-template.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -206,13 +197,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
-			create l_uri_source.make (var22_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			create l_transformer_factory.make (l_configuration)
+			create l_uri_source.make (var21_xsl_uri.full_reference)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var20_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -225,7 +214,7 @@ feature -- Test
 	test_normal_versus_tunnel_parameters is
 			-- Test normal parameters not clashing with tunnel parameters.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -238,13 +227,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var23_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var20_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -257,7 +244,7 @@ feature -- Test
 	test_tunnel_parameters_with_variable_contents is
 			-- Test tunnel parameters passed to match on variable contents.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -270,13 +257,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var25_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var25_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -289,7 +274,7 @@ feature -- Test
 	test_supplied_tunnel_parameter is
 			-- Test supplied tunnel parameter.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -302,13 +287,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var26_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var25_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -321,7 +304,7 @@ feature -- Test
 	test_supplied_required_tunnel_parameter is
 			-- Test supplied required tunnel parameter.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -334,13 +317,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var27_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var25_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -353,7 +334,7 @@ feature -- Test
 	test_required_tunnel_parameter_missing is
 			-- Test missing required tunnel parameter.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -366,13 +347,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var905err_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var20_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -385,7 +364,7 @@ feature -- Test
 	test_type_error_on_tunnel_parameter is
 			-- Test tunnel parameter with wrong type.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -398,13 +377,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var906err_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var20_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -417,7 +394,7 @@ feature -- Test
 	test_duplicate_parameter_names is
 			-- Test two parameters with same name.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_uri_source: XM_XSLT_URI_SOURCE
@@ -427,16 +404,16 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var901err_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("XTSE0580", l_stylesheet_compiler.load_stylesheet_module_failed)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("XTSE0580", l_transformer_factory.was_error)
 		end
 
 	test_missing_required_global_parameter is
 			-- Test missing required global parameter.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -449,26 +426,23 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var902err_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
-			create l_second_uri_source.make (var25_xml_uri.full_reference)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer			create l_second_uri_source.make (var25_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("XTDE0050", l_transformer.is_error)
-			assert ("XTDE0050", l_error_listener.has (xtde0050))
+			assert ("XTDE0050a", l_error_listener.has (xtde0050))
 		end
 
 	test_variable_with_incorrect_supplied_type is
 			-- Test variable with wrong type for supplied data..
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_uri_source: XM_XSLT_URI_SOURCE
@@ -478,16 +452,16 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var903err_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("XTTE0570", l_stylesheet_compiler.load_stylesheet_module_failed)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("XTTE0570", l_transformer_factory.was_error)
 		end
 
 	test_type_error_on_local_parameter is
 			-- Test missing required global parameter.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -500,13 +474,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var904err_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var25_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -519,7 +491,7 @@ feature -- Test
 	test_variable_with_missing_typed_value is
 			-- Test missing value for integer-valued varaible.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -532,13 +504,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var907err_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var25_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -551,7 +521,7 @@ feature -- Test
 	test_variable_with_incorrect_complex_type is
 			-- Test variable with wrong (element) type for supplied data..
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_uri_source: XM_XSLT_URI_SOURCE
@@ -561,16 +531,16 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var908err_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("XTTE0570", l_stylesheet_compiler.load_stylesheet_module_failed)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("XTTE0570", l_transformer_factory.was_error)
 		end
 
 	test_variable_with_incorrect_cardinality is
 			-- Test variable with incorrect cardinality.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -583,13 +553,11 @@ feature -- Test
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (var909err_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
-			assert ("transformer", l_transformer /= Void)
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			create l_second_uri_source.make (var25_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -639,6 +607,14 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 		
+	dummy_uri: UT_URI is
+			-- Dummy URI
+		once
+			create Result.make ("dummy:")
+		ensure
+			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
+		end
+				
 	var15_xsl_uri: UT_URI is
 			-- URI of file 'var15.xsl'
 		local

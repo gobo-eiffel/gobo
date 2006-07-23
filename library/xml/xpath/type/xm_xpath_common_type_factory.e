@@ -527,6 +527,7 @@ feature {NONE} -- Implementation
 			bind_gexslt_name (Gexslt_collation_type_code, "collation")
 			bind_gexslt_name (Memo_function_type_code, "memo-function")
 			bind_gexslt_name (Gexslt_isolation_level_type_code, "isolation-level")
+			bind_gexslt_name (Transformation_function_type_code, "transformation")
 		end
 	
 	bind_xdt_names is

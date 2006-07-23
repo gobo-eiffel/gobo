@@ -15,6 +15,9 @@ class	XM_XPATH_PROXY_RECEIVER
 inherit
 
 	XM_XPATH_RECEIVER
+		redefine
+			is_proxy, as_proxy
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -22,6 +25,14 @@ inherit
 feature -- Access
 
 	base_receiver: XM_XPATH_RECEIVER
+
+feature -- Status report
+
+	is_proxy: BOOLEAN is
+			-- Is `Current' an `XM_XPATH_PROXY_RECEIVER'?
+		do
+			Result := True
+		end
 
 feature -- Events
 
@@ -139,6 +150,14 @@ feature -- Element change
 			-- Set the locator.
 		do
 			base_receiver.set_document_locator (a_locator)			
+		end
+
+feature -- Conversion
+
+	as_proxy: XM_XPATH_PROXY_RECEIVER is
+			-- `Current' as a proxy
+		do
+			Result := Current
 		end
 
 invariant

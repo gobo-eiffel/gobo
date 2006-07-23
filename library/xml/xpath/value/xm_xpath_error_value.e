@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			local_part_not_void: a_error_code /= Void
 			ascii_code: is_ascii_string (a_error_code)
 		local
-			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_empty_sequence: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]
 		do
 			create l_empty_sequence.make
 			make ("()", a_namespace_uri, a_error_code, l_empty_sequence, a_error_type)
@@ -89,9 +89,11 @@ feature {NONE} -- Initialization
 			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
 		local
 			l_string_value: XM_XPATH_STRING_VALUE
+			l_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 		do
 			create l_string_value.make (a_description)
-			make (a_description, a_namespace_uri, a_error_code, l_string_value, a_error_type)
+			create l_iterator.make (l_string_value)
+			make (a_description, a_namespace_uri, a_error_code, l_iterator, a_error_type)
 		ensure
 			description_set: description = a_description
 			namespace_set: namespace_uri = a_namespace_uri
@@ -102,7 +104,7 @@ feature {NONE} -- Initialization
 	make_unknown is
 			-- Create an unknown error
 		local
-			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_empty_sequence: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]
 		do
 			create l_empty_sequence.make
 			make ("Unknown error", Xpath_errors_uri, "FOER0000", l_empty_sequence, Dynamic_error)
@@ -126,7 +128,7 @@ feature -- Access
 	type: INTEGER
 			-- Type of error
 
-	value: XM_XPATH_VALUE
+	value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Error value
 
 	system_id: STRING

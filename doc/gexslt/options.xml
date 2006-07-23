@@ -618,6 +618,14 @@
 	  </para>
 	</listitem>
       </varlistentry>
+      <varlistentry>
+	<term>--no-extension-functions</term>
+	<listitem>
+	  <para>
+	    Disables use of extension functions.
+	  </para>
+	</listitem>
+      </varlistentry>
     </variablelist>
     </para>
   </section>

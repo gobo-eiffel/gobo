@@ -12,16 +12,37 @@ indexing
 
 class XM_XSLT_MESSAGE_EMITTER_FACTORY
 
+feature -- Access
+
+	outputter: XM_OUTPUT
+			-- Destination for xsl:message output
+
+feature -- element change
+
+	
+	set_outputter (a_outputter: like outputter) is
+			-- Set `outputter' to `a_outputter'.
+		require
+			a_outputter_not_void: a_outputter /= Void
+		do
+			outputter := a_outputter
+		ensure
+			outputter_set: outputter = a_outputter
+		end
+
 feature -- Creation
 
-	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_outputter: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
 			-- New destination for xsl:message
 		require
 			a_transformer_not_void: a_transformer /= Void
-			a_outputter_not_void: a_outputter /= Void
 			a_properties_not_void: a_properties /= Void
 		do
-			create {XM_XSLT_MESSAGE_EMITTER} Result.make (a_transformer, a_outputter, a_properties, Void)
+			if outputter = void then
+				create outputter
+				outputter.set_output_standard_error
+			end
+			create {XM_XSLT_MESSAGE_EMITTER} Result.make (a_transformer, outputter, a_properties, Void)
 		ensure
 			new_message_emitter_not_void: Result /= Void
 		end

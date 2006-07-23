@@ -149,7 +149,7 @@ feature -- Status setting
 				input_length := an_end - a_start + 1
 			end
 			if not is_input_stream_exhausted then look_ahead end
-			next
+			if not is_lexical_error then next end
 		end
 
 

@@ -56,6 +56,13 @@
 	  <term><exmlsyntax>memo-function</exmlsyntax></term>
 	  <listitem>
 	    <para>
+	      <warning>
+	       This attribute makes gexslt non-compliant, and support will be dropped without warning in the future.
+	       The first stage of dropping support will be to issue a warning saying the attribute is ignored. If you have used
+	       it correctly, this will only make a performance change. Later, it might be changed to issue an error message.
+	      </warning>
+	    </para>
+	    <para>
 	      This attribute may be set on any xsl:function declaration in the stylesheet. The permitted values are "yes" and "no". 
 	      If the value is "yes", then the result of calling the function with a given set of parameters is cached.
 	    </para>
@@ -173,7 +180,7 @@
  <section>
     <title>Extension instructions</title>
     <para>
-      None are provided at present.
+      None are provided at present. <xslt>gexslt:serialize</xslt> will be defined in the future.
     </para>
  </section>
  <section>
@@ -193,9 +200,73 @@
  </section>
  <section>
     <title>Extension functions</title>
-    <para>
-      None are provided at present.
-    </para>
+    <section>
+     <title>gexslt:transformation</title>
+     <para>
+      This function allows you to run an XSLT transformation from within your current XSLT transformation. Syntax
+      is <xpath>gexslt:transformation ($trans-uri as xs:string, 
+      $initial-context as node()?, 
+      $initial-template as xs:QName?, 
+      $initial-mode as xs:QName?,
+      $parameter-names as xs:QName*,
+      $parameter-values as item()*,
+      $features as xs:string?) as item()+</xpath></para>
+      <para>or
+      <xpath> gexslt:transformation ($trans-uri as xs:string, $initial-context as node()) as item()+</xpath>
+     </para>
+     <para>
+      The two-argument form is equivalent to passing () for all remaining arguments.
+     </para>
+     <para>
+      The meaning of the arguments is as follows:
+     </para>
+     <orderedlist>
+      <listitem><para>The URI of the transformation to be run</para></listitem>
+      <listitem><para>An optional initial context node</para></listitem>
+      <listitem><para>An optional initial template</para></listitem>
+      <listitem><para>An optional initial mode</para></listitem>
+      <listitem>
+       <para>
+	The $parameter-names are names of global stylesheet parameters.
+       </para>
+       </listitem>
+      <listitem>
+       <para>
+	The $parameter-values lists must be of the same length as the $parameter-names list.
+	It contains values of the stylesheet parameter named in the corresponding position in the $parameter-names list.
+       </para>
+       </listitem>
+      <listitem>
+       <para>
+	The $features string consists of a white-space separated list of <xpath>xs:QName</xpath>-valued features.
+	No features are defined at this stage. I have various stylesheet-caching control features in mind, and general
+	options such as which tree-model to use.
+       </para>
+      </listitem>
+     </orderedlist>
+     <para>
+      If the stylesheet fails to compile, then the error return value will be COMPILE_FAILED in the gexslt namespace.
+      If there is no initial template, and no initial context node, then the error return value will be NO_INITIAL_TEMPLATE in the gexslt namespace.
+      If the number of parameter names and values are unequal, then the error return value will be PARAMETER_MISMATCH in the gexslt namespace.
+      If an unrecognized feature name is supplied, then the error return value will be UNRECOGNIZED_FEATURE in the gexslt namespace.
+      Otherwise, the error return value will be a standard XPath or XSLT error code, or a normal gexslt error code,
+     </para>
+     <para>
+      The result sequence has one of two forms:
+      <orderedlist>
+       <listitem>
+	<para>
+	 An <xpath>xs:QName</xpath>,  followed by an <xpath>xs:string</xpath> forllowed by <xpath>item()*</xpath>
+         representing the components of the error from the transformation (see <xpath>fn:error()</xpath>).
+       </para>
+       </listitem>
+       <listitem><para>Zero or one<xpath>document-node()</xpath>s. The document will be the implicit result document if one exists.</para></listitem>
+      </orderedlist>
+     </para>
+     <para>
+      Result documents can be serialized using the <xslt>gexslt:serialize</xslt> extension instruction.
+     </para>
+    </section>
  </section>
 
 </chapter>

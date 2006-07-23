@@ -83,9 +83,8 @@ feature -- Evaluation
 			a_namespace_uri, an_error_code, a_description: STRING
 			an_item: XM_XPATH_ITEM
 			a_qname: XM_XPATH_QNAME_VALUE
-			an_error_sequence: XM_XPATH_VALUE
+			an_error_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_error_value: XM_XPATH_ERROR_VALUE
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			a_namespace_uri := Xpath_errors_uri
 			an_error_code := "FOER0000"
@@ -130,9 +129,7 @@ feature -- Evaluation
 			end
 			if arguments.count = 3 then
 				arguments.item (3).create_iterator (a_context)
-				an_iterator := arguments.item (3).last_iterator
-				expression_factory.create_sequence_extent (an_iterator)
-				an_error_sequence := expression_factory.last_created_closure
+				an_error_sequence := arguments.item (3).last_iterator
 			end
 			create an_error_value.make (a_description, a_namespace_uri, an_error_code, an_error_sequence, Dynamic_error)
 			an_error_value.set_location (system_id, line_number)

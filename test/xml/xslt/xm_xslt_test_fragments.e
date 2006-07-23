@@ -32,7 +32,7 @@ feature
 	test_shorthand_pointer is
 			-- Transform books3.xml with books1.xsl.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -46,12 +46,11 @@ feature
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			l_configuration.use_tiny_tree_model (False)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (books1_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (books3_xml_uri.full_reference + "#S")
 			create l_output
@@ -65,7 +64,7 @@ feature
 	test_element_scheme_pointer is
 			-- Transform books3.xml with books1.xsl.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -79,12 +78,11 @@ feature
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			l_configuration.use_tiny_tree_model (False)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (books1_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (books3_xml_uri.full_reference + "#element(/1/1/1/1)")
 			create l_output
@@ -98,7 +96,7 @@ feature
 	test_gexslt_xpath_scheme_pointer is
 			-- Transform books3.xml with books1.xsl.
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -113,12 +111,11 @@ feature
 			l_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			l_configuration.use_tiny_tree_model (False)
 			l_configuration.set_recovery_policy (Do_not_recover)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (books1_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (books3_xml_uri.full_reference + "#xmlns(gexslt=http://www.gobosoft.com/eiffel/gobo/gexslt/extension)gexslt:xpath(/descendant::AUTHOR%%5B1%%5D)")
 			create l_output
@@ -132,7 +129,7 @@ feature
 	test_embedded_stylesheet is
 			-- Transform embedded.xml by itself, without using xml-stylesheet-pi
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -146,12 +143,11 @@ feature
 			l_configuration.set_error_listener (l_error_listener)			
 			l_configuration.set_string_mode_ascii
 			l_configuration.use_tiny_tree_model (False)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (embedded_xml_uri.full_reference + "#style1")
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (embedded_xml_uri.full_reference)
 			create l_output
@@ -187,7 +183,7 @@ feature
 			create l_chooser.make
 			l_stylesheet_source := l_transformer_factory.associated_stylesheet (l_uri_source.system_id, "print", l_chooser)
 			assert ("Stylesheet found", l_stylesheet_source /= Void)
-			l_transformer_factory.create_new_transformer (l_stylesheet_source)
+			l_transformer_factory.create_new_transformer (l_stylesheet_source, dummy_uri)
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("Transformer not void", l_transformer /= Void)
@@ -224,7 +220,7 @@ feature
 			create l_chooser.make ("Alternate")
 			l_stylesheet_source := l_transformer_factory.associated_stylesheet (l_uri_source.system_id, "screen", l_chooser)
 			assert ("Stylesheet found", l_stylesheet_source /= Void)
-			l_transformer_factory.create_new_transformer (l_stylesheet_source)
+			l_transformer_factory.create_new_transformer (l_stylesheet_source, dummy_uri)
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("Transformer not void", l_transformer /= Void)
@@ -239,7 +235,7 @@ feature
 	test_next_in_chain is
 			-- Test gexslt:next-in-chain
 		local
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -253,12 +249,11 @@ feature
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			l_configuration.use_tiny_tree_model (False)
-			create l_stylesheet_compiler.make (l_configuration)
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (example0_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
-			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
+			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
+			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			create l_output
 			l_output.set_output_to_string
@@ -285,6 +280,14 @@ feature {NONE} -- Implementation
 		ensure
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
+		end
+
+	dummy_uri: UT_URI is
+			-- Dummy URI
+		once
+			create Result.make ("dummy:")
+		ensure
+			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
 		
 	books1_xsl_uri: UT_URI is

@@ -68,12 +68,12 @@ feature -- Access
 
 feature -- Events
 
-	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
+	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; a_uri: UT_URI; is_stylesheet: BOOLEAN) is
 			-- Generate and send  events to `a_receiver'
 		local
-			a_locator: XM_XPATH_RESOLVER_LOCATOR
-			a_resolver: XM_URI_EXTERNAL_RESOLVER
-			a_uri: UT_URI
+			l_locator: XM_XPATH_RESOLVER_LOCATOR
+			l_resolver: XM_URI_EXTERNAL_RESOLVER
+			l_uri: UT_URI
 		do
 			shared_catalog_manager.reset_pi_catalogs
 			error := a_parser.new_stop_on_error_filter
@@ -83,8 +83,8 @@ feature -- Events
 			create attributes.set_next (namespace_resolver)
 			create content.set_next (attributes)
 			create oasis_xml_catalog_filter.set_next (content, content_emitter)
-			a_resolver ?= a_parser.entity_resolver
-			create xpointer_filter.make (" ", default_media_type, a_resolver, oasis_xml_catalog_filter, oasis_xml_catalog_filter)
+			l_resolver ?= a_parser.entity_resolver
+			create xpointer_filter.make (" ", default_media_type, l_resolver, oasis_xml_catalog_filter, oasis_xml_catalog_filter)
 			if fragment_identifier = Void or else not is_stylesheet then
 				xpointer_filter.set_no_filtering
 			else
@@ -97,13 +97,13 @@ feature -- Events
 				end
 			end
 			create start.set_next (xpointer_filter)
-			create a_locator.make (a_parser)
-			a_receiver.set_document_locator (a_locator)
+			create l_locator.make (a_parser)
+			a_receiver.set_document_locator (l_locator)
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (xpointer_filter)
-			if a_resolver /= Void then
-				create a_uri.make (system_id)
-				a_resolver.push_uri (a_uri)
+			if l_resolver /= Void then
+				create l_uri.make (system_id)
+				l_resolver.push_uri (l_uri)
 			end
 			a_parser.parse_from_string (source_text)
 			media_type := xpointer_filter.media_type

@@ -57,19 +57,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: XM_XSLT_CONFIGURATION; an_executable: XM_XSLT_EXECUTABLE) is
+	make (a_configuration: like configuration; a_executable: like executable; a_factory: like transformer_factory) is
 			-- Establish invariant.
 		require
-			configuration_not_void: a_configuration /= Void
-			executable_not_void: an_executable /= Void
+			a_configuration_not_void: a_configuration /= Void
+			a_executable_not_void: a_executable /= Void
+			a_factory_not_void: a_factory /= Void
 		local
-			a_date_time: DT_DATE_TIME
-			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			l_date_time: DT_DATE_TIME
+			l_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
+			transformer_factory := a_factory
 			configuration := a_configuration
 			output_resolver := a_configuration.output_resolver
 			error_listener := configuration.error_listener
-			executable := an_executable
+			executable := a_executable
 			rule_manager := executable.rule_manager
 			decimal_format_manager := executable.decimal_format_manager
 			clear_document_pool
@@ -77,15 +79,15 @@ feature {NONE} -- Initialization
 			recovery_policy := Recover_with_warnings
 			create parser_factory
 			create user_data_table.make_default
-			create a_date_time.make_from_epoch (0)
-			utc_system_clock.set_date_time_to_now (a_date_time)
+			create l_date_time.make_from_epoch (0)
+			utc_system_clock.set_date_time_to_now (l_date_time)
 			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
-			create a_time_zone.make (implicit_timezone.fixed_offset)
-			create current_date_time.make (a_date_time, a_time_zone)
-			create transformer_factory.make (configuration)
+			create l_time_zone.make (implicit_timezone.fixed_offset)
+			create current_date_time.make (l_date_time, l_time_zone)
 		ensure
 			configuration_set: configuration = a_configuration
-			executable_set: executable = an_executable
+			executable_set: executable = a_executable
+			transformer_factory_set: transformer_factory = a_factory
 		end
 			
 feature -- Access
@@ -227,17 +229,14 @@ feature -- Status setting
 		require
 			error_not_void: an_error /= Void
 		do
-			if an_error.type = Type_error or else (an_error.type = Dynamic_error and then STRING_.same_string (an_error.namespace_uri, Xpath_errors_uri)
-																and then STRING_.same_string (an_error.code.substring (1, 4), "XTDE")) then
-
-				-- XSLT recoverable error codes start with XTRE, not XTDE
-
-				report_fatal_error (an_error)
-			else
+			if an_error.type = Dynamic_error and then STRING_.same_string (an_error.namespace_uri, Xpath_errors_uri)
+				and then STRING_.same_string (an_error.code.substring (1, 4), "XTRE") then
 				error_listener.error (an_error)
 				if not error_listener.recovered then
 					is_error := True
 				end
+			else
+				report_fatal_error (an_error)
 			end
 		end
 
@@ -272,10 +271,10 @@ feature -- Status setting
 
 feature -- Creation
 
-	new_message_emitter (a_outputter: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+	new_message_emitter (a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
 			-- New destination for xsl:message
 		do
-			Result := configuration.new_message_emitter (Current, a_outputter, a_properties)
+			Result := configuration.new_message_emitter (Current, a_properties)
 		ensure
 			new_message_emitter_not_void: Result /= Void
 		end
@@ -472,24 +471,24 @@ feature -- Element change
 			initial_result_not_void: a_result /= Void
 			no_previous_error: not is_error
 		local
-			an_absolute_uri, a_uri: UT_URI
-			a_uri_source: XM_XSLT_URI_SOURCE
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_transformer_receiver: XM_XSLT_TRANSFORMER_RECEIVER
-			an_error: XM_XPATH_ERROR_VALUE
+			l_absolute_uri, l_uri: UT_URI
+			l_uri_source: XM_XSLT_URI_SOURCE
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer_receiver: XM_XSLT_TRANSFORMER_RECEIVER
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			next_resolved_destination := Void
-			create a_uri.make (a_base_uri)
-			create an_absolute_uri.make_resolve (a_uri, a_system_id)
-			create a_uri_source.make (an_absolute_uri.full_reference)
-			transformer_factory.create_new_transformer (a_uri_source)
+			create l_uri.make (a_base_uri)
+			create l_absolute_uri.make_resolve (l_uri, a_system_id)
+			create l_uri_source.make (l_absolute_uri.full_reference)
+			transformer_factory.create_new_transformer (l_uri_source, l_absolute_uri)
 			if transformer_factory.was_error then
-				create an_error.make_from_string (transformer_factory.last_error_message, Gexslt_eiffel_type_uri, "CREATE_TRANSFORMER", Dynamic_error)
-				report_fatal_error (an_error)
+				create l_error.make_from_string (transformer_factory.last_error_message, Gexslt_eiffel_type_uri, "CREATE_TRANSFORMER", Dynamic_error)
+				report_fatal_error (l_error)
 			else
-				a_transformer := transformer_factory.created_transformer
-				create a_transformer_receiver.make (a_transformer, principal_result_uri, a_result)
-				create next_resolved_destination.make_receiver (a_transformer_receiver)
+				l_transformer := transformer_factory.created_transformer
+				create l_transformer_receiver.make (l_transformer, principal_result_uri, a_result)
+				create next_resolved_destination.make_receiver (l_transformer_receiver)
 			end
 		ensure
 			error_or_destination_not_void: not is_error implies next_resolved_destination /= Void
@@ -541,6 +540,7 @@ feature -- Transformation
 			a_fragment_id: STRING
 			a_date_time: DT_DATE_TIME
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			a_uri: UT_URI
 		do
 			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now)) -- reset for each transformations
 			create a_time_zone.make (implicit_timezone.fixed_offset)
@@ -581,7 +581,8 @@ feature -- Transformation
 				else
 					a_parser := new_parser
 					a_builder := new_builder (a_parser)
-					a_source.send (a_parser, new_stripper (a_builder), False)
+					create a_uri.make (a_source.uri_reference)
+					a_source.send (a_parser, new_stripper (a_builder), a_uri, False)
 					a_media_type := a_source.media_type
 					if a_builder.has_error then
 						create an_error.make_from_string (a_builder.last_error, Gexslt_eiffel_type_uri, "BUILD_ERROR", Static_error)
@@ -627,7 +628,7 @@ feature -- Transformation
 			configuration.reset_entity_resolver
 		end
 
-feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER} -- Transformation internals
+feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATION} -- Transformation internals
 
 	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
 			-- Transform document supplied as in-memory tree.
@@ -825,7 +826,6 @@ feature -- Implementation
 	initialize_transformer (a_start_node: XM_XPATH_NODE) is
 			-- Initialize in preparation for a transformation.
 		local
-			an_error: XM_XPATH_ERROR_VALUE
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 		do
 			trace_listener := configuration.trace_listener
@@ -843,21 +843,15 @@ feature -- Implementation
 				create a_singleton_iterator.make (principal_source_document)
 				initial_context.set_current_iterator (a_singleton_iterator)
 				initial_context.current_iterator.start
+			end
 
-				-- If XPath parameters were supplied, set them up
-				
-				if xpath_parameters /= Void then
-					if parameters = Void then
-						create parameters.make_empty
-					end
-					apply_xpath_parameters (new_xpath_context)
+			-- If XPath parameters were supplied, set them up
+			
+			if xpath_parameters /= Void then
+				if parameters = Void then
+					create parameters.make_empty
 				end
-			elseif xpath_parameters /= Void then
-
-				-- TODO: well, why shouldn't it be OK? No good reason. An empty context item is fine.
-				
-				create an_error.make_from_string ("XPath parameters cannot be specified without a source document", Gexslt_eiffel_type_uri, "PARAMETERS_WITHOUT_SOURCE_DOCUMENT", Dynamic_error)
-				report_fatal_error (an_error)
+				apply_xpath_parameters (new_xpath_context)
 			end
 
 			-- If parameters were supplied, set them up
@@ -979,6 +973,6 @@ invariant
 	implicit_timezone_not_void: implicit_timezone /= Void
 	current_date_time_not_void: current_date_time /= Void
 	output_resolver_not_void: output_resolver /= Void
-
+	
 end
 	

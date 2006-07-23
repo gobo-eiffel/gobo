@@ -19,6 +19,9 @@ inherit
 	XM_XPATH_RECEIVER_OPTIONS
 		export {NONE} all end
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 	XM_XPATH_SHARED_NAME_POOL
 
 
@@ -46,6 +49,16 @@ feature -- Ststus report
 
 	is_written: BOOLEAN
 			-- Has any output been written yet?
+
+	is_builder: BOOLEAN is
+			-- Is `Current' an `XM_XPATH_BUILDER'?
+		do
+		end
+
+	is_proxy: BOOLEAN is
+			-- Is `Current' an `XM_XPATH_PROXY_RECEIVER'?
+		do
+		end
 
 	is_name_code_ok_for_start_element (a_name_code: INTEGER): BOOLEAN is
 			-- Is `a_name_code' valid for `start_element'?
@@ -220,6 +233,26 @@ feature -- Element change
 			not_open: not is_open
 			locator_not_void: a_locator /= Void
 		deferred
+		end
+
+feature -- Conversion
+
+	as_builder: XM_XPATH_BUILDER is
+			-- `Current' as a builder
+		require
+			builder: is_builder
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	as_proxy: XM_XPATH_PROXY_RECEIVER is
+			-- `Current' as a proxy
+		require
+			proxy: is_proxy
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
 		end
 
 invariant

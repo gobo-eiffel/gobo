@@ -162,8 +162,15 @@ feature -- Status report
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
 		do
-			todo ("display", False)
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:for-each-group")
+			std.error.put_string (a_string); std.error.put_new_line
+			select_expression.display (a_level + 1)
+			a_string := STRING_.appended_string (indentation (a_level), "return")
+			std.error.put_string (a_string); std.error.put_new_line
+			action.display (a_level + 1)
 		end
 
 feature -- Status setting

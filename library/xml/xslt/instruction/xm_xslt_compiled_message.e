@@ -160,7 +160,6 @@ feature -- Evaluation
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_message_emitter: XM_XPATH_RECEIVER
-			l_outputter: XM_OUTPUT
 			l_output_properties: XM_XSLT_OUTPUT_PROPERTIES
 			l_tree_receiver: XM_XSLT_TREE_RECEIVER
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -172,10 +171,8 @@ feature -- Evaluation
 			last_tail_call := Void
 			l_transformer := a_context.transformer
 			create l_output_properties.make (-1000000)
-			create l_outputter
-			l_outputter.set_output_standard_error
 			l_output_properties.set_omit_xml_declaration (True, -1000000)
-			l_message_emitter := l_transformer.new_message_emitter (l_outputter, l_output_properties)
+			l_message_emitter := l_transformer.new_message_emitter (l_output_properties)
 			create l_tree_receiver.make (l_message_emitter)
 			l_new_context := a_context.new_minor_context
 			create l_result.make_receiver (l_tree_receiver)

@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			register_scheme (a_file_resolver, "file")
 			create a_string_resolver.make
 			register_scheme (a_string_resolver, "string")			
-			create {DS_HASH_TABLE [XM_XSLT_TRANSFORMATION_RESULT, STRING]} output_destinations.make_with_equality_testers (10, Void, string_equality_tester)
+			create output_destinations.make_with_equality_testers (10, Void, string_equality_tester)
 		ensure
 			security_manager_set: security_manager = a_security_manager
 		end

@@ -33,6 +33,7 @@ feature -- Test
 	test_simple is
 			-- Simple tree.
 		local
+			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
@@ -64,9 +65,10 @@ feature -- Test
 			l_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
+			create l_transformer_factory.make (l_configuration)
 			create l_stylesheet_compiler.make (l_configuration)
 			create l_uri_source.make (books_xsl_uri.full_reference)
-			l_stylesheet_compiler.prepare (l_uri_source)
+			l_stylesheet_compiler.prepare (l_uri_source, dummy_uri)
 			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
 			l_document_element ?= l_stylesheet_compiler.last_loaded_module.document_element
@@ -277,7 +279,7 @@ feature -- Test
 			assert ("xsl:value-of 11", l_value_of /= Void)			
 			l_literal_result ?= l_literal_result.next_sibling
 			assert ("hr 3", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "hr"))
-			l_transformer := l_stylesheet_compiler.new_transformer
+			l_transformer := l_stylesheet_compiler.new_transformer (l_transformer_factory)
 			assert ("transformer", l_transformer /= Void)
 		end
 
@@ -292,6 +294,14 @@ feature {NONE} -- Implementation
 		ensure
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
+		end
+
+	dummy_uri: UT_URI is
+			-- Dummy URI
+		once
+			create Result.make ("dummy:")
+		ensure
+			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
 		
 	books_xsl_uri: UT_URI is

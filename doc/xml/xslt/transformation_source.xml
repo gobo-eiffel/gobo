@@ -63,6 +63,14 @@
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
+	  <term><featurename>a_uri: UT_URI</featurename></term>
+	  <listitem>
+	    <para>
+	     An absolute URI for resolving relative URIs. 
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
 	  <term><featurename>is_stylesheet: BOOLEAN</featurename></term>
 	  <listitem>
 	    <para>

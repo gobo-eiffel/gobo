@@ -97,6 +97,21 @@ feature -- Access
 			prefix_not_void: Result /= Void
 		end
 
+	expanded_name: STRING is
+			-- Expanded name in namespace-uri#local-name format
+		local
+			l_uri: STRING
+		do
+			l_uri := namespace_uri
+			if l_uri.is_empty then
+				Result := local_name
+			else
+				Result := l_uri + "#" + local_name
+			end
+		ensure
+			expanded_name: is_valid_expanded_name (Result)
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is

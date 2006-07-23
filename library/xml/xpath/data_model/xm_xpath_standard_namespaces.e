@@ -241,6 +241,7 @@ feature -- Access
 	Memo_function_type_code: INTEGER is 1032
 	Next_in_chain_type_code: INTEGER is 1033
 	Gexslt_isolation_level_type_code: INTEGER is 1034
+	Transformation_function_type_code: INTEGER is 1035
 
 			-- Codes in XSLT namespace (`Xslt_uri_code' * 256 + 0..n)
 

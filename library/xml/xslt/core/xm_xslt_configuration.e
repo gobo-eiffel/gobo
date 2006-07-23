@@ -193,10 +193,10 @@ feature -- Status report
 
 feature -- Creation
 
-	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_outputter: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
 			-- New destination for xsl:message
 		do
-			Result := message_emitter_factory.new_message_emitter (a_transformer, a_outputter, a_properties)
+			Result := message_emitter_factory.new_message_emitter (a_transformer, a_properties)
 		ensure
 			new_message_emitter_not_void: Result /= Void
 		end
