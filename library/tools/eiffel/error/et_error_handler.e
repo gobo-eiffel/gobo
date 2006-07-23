@@ -5603,6 +5603,24 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvhso0a_error (a_class: ET_CLASS) is
+			-- Report GVHSO error: `a_class' implicitly inherits
+			-- from unknown class SYSTEM_OBJECT.
+			--
+			-- Not in ETL
+			-- GVHSO: see VHAY
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvhso_error (a_class) then
+				create an_error.make_gvhso0a (a_class)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvkbs1a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Report GVKBS-1 error: wrong signature for 'ANY.twin' built-in
 			-- routine `a_feature' in class `a_class'.
@@ -8848,6 +8866,16 @@ feature -- Validity error status
 
 	reportable_gvhpr5_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVHPR-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvhso_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVHSO error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

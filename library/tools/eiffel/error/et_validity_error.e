@@ -248,6 +248,7 @@ create
 	make_gvagp0a,
 	make_gvhpr4a,
 	make_gvhpr5a,
+	make_gvhso0a,
 	make_gvkbs1a,
 	make_gvkbs1b,
 	make_gvkbs1c,
@@ -5346,7 +5347,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vhay0a (a_class: like current_class) is
-			-- Create a new VTCT error: `a_class' implicitly inherits
+			-- Create a new VHAY error: `a_class' implicitly inherits
 			-- from unknown class ANY.
 			--
 			-- ETL2: p.88
@@ -10656,6 +10657,42 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = parent
 		end
 
+	make_gvhso0a (a_class: like current_class) is
+			-- Create a new GVHSO error: `a_class' implicitly inherits
+			-- from unknown class SYSTEM_OBJECT.
+			--
+			-- Not in ETL
+			-- GVHSO: see VHAY
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			code := gvhso0a_template_code
+			etl_code := gvhso_etl_code
+			default_template := gvhso0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := null_position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+		end
+
 	make_gvkbs1a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Create a new GVKBS-1 error: wrong signature for 'ANY.twin' built-in
 			-- routine `a_feature' in class `a_class'.
@@ -15366,6 +15403,7 @@ feature {NONE} -- Implementation
 	gvagp0a_default_template: STRING is "[$1] class $5: ancestors with generic parameter mismatch: '$6' and '$7'."
 	gvhpr4a_default_template: STRING is "[$1] class $5: cannot inherit from Bit_type '$6'."
 	gvhpr5a_default_template: STRING is "[$1] class $5: cannot inherit from Tuple_type '$6'."
+	gvhso0a_default_template: STRING is "[$1] class $5: implicitly inherits from unknown class SYSTEM_OBJECT."
 	gvkbs1a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'twin: like Current'."
 	gvkbs1b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'standard_is_equal (other: like Current): BOOLEAN'."
 	gvkbs1c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'standard_copy (other: like Current)'."
@@ -15585,6 +15623,7 @@ feature {NONE} -- Implementation
 	gvagp_etl_code: STRING is "GVAGP"
 	gvhpr4_etl_code: STRING is "GVHPR-4"
 	gvhpr5_etl_code: STRING is "GVHPR-5"
+	gvhso_etl_code: STRING is "GVHSO"
 	gvkbs1_etl_code: STRING is "GVKBS-1"
 	gvkbs2_etl_code: STRING is "GVKBS-2"
 	gvkbs3_etl_code: STRING is "GVKBS-3"
@@ -15836,6 +15875,7 @@ feature {NONE} -- Implementation
 	gvagp0a_template_code: STRING is "gvagp0a"
 	gvhpr4a_template_code: STRING is "gvhpr4a"
 	gvhpr5a_template_code: STRING is "gvhpr5a"
+	gvhso0a_template_code: STRING is "gvhso0a"
 	gvkbs1a_template_code: STRING is "gvkbs1a"
 	gvkbs1b_template_code: STRING is "gvkbs1b"
 	gvkbs1c_template_code: STRING is "gvkbs1c"

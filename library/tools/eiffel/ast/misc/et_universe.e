@@ -90,6 +90,7 @@ feature {NONE} -- Initialization
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			a_none_group: ET_BUILTIN_GROUP
+			a_system_object_parent: ET_PARENT
 		do
 				-- Basic classes.
 			any_class := eiffel_class (tokens.any_class_name)
@@ -188,6 +189,10 @@ feature {NONE} -- Initialization
 			create any_parent.make (any_type, Void, Void, Void, Void, Void)
 			create any_parents.make_with_capacity (1)
 			any_parents.put_first (any_parent)
+				-- Implicit parent "SYSTEM_OBJECT".
+			create a_system_object_parent.make (system_object_class, Void, Void, Void, Void, Void)
+			create system_object_parents.make_with_capacity (1)
+			system_object_parents.put_first (a_system_object_parent)
 				-- Built-in conversion features.
 			create integer_convert_feature.make (integer_class)
 			create integer_8_convert_feature.make (integer_8_class)
@@ -286,6 +291,7 @@ feature {NONE} -- Initialization
 			array_none_type_not_void: array_none_type /= Void
 			any_parent_not_void: any_parent /= Void
 			any_parents_not_void: any_parents /= Void
+			system_object_parents_not_void: system_object_parents /= Void
 			integer_convert_feature_not_void: integer_convert_feature /= Void
 			integer_8_convert_feature_not_void: integer_8_convert_feature /= Void
 			integer_16_convert_feature_not_void: integer_16_convert_feature /= Void
@@ -733,6 +739,9 @@ feature -- Basic classes
 
 	any_parents: ET_PARENT_LIST
 			-- Default parents
+
+	system_object_parents: ET_PARENT_LIST
+			-- Default parents under .NET
 
 feature -- Basic classes (compatibility with 5.6.0610, to be removed later)
 
@@ -3003,6 +3012,7 @@ invariant
 	array_none_type_not_void: array_none_type /= Void
 	any_parent_not_void: any_parent /= Void
 	any_parents_not_void: any_parents /= Void
+	system_object_parents_not_void: system_object_parents /= Void
 	integer_convert_feature_not_void: integer_convert_feature /= Void
 	integer_8_convert_feature_not_void: integer_8_convert_feature /= Void
 	integer_16_convert_feature_not_void: integer_16_convert_feature /= Void
