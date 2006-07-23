@@ -107,6 +107,8 @@ feature {NONE} -- Processing
 								-- ISE Eiffel has no GENERAL class anymore.
 								-- Use ANY as class root now.
 							a_parents := Void
+						elseif current_class.is_dotnet and current_class /= universe.system_object_class then
+							a_parents := universe.system_object_parents
 						else
 							a_parents := universe.any_parents
 						end
@@ -125,8 +127,11 @@ feature {NONE} -- Processing
 					end
 					if not current_class.has_interface_error then
 						error_handler.report_compilation_status (Current, current_class)
-						check_constraint_creations_validity
-						check_parents_validity
+						if not current_class.is_dotnet then
+								-- No need to check validity of .NET classes.
+							check_constraint_creations_validity
+							check_parents_validity
+						end
 					end
 				else
 					set_fatal_error (current_class)
