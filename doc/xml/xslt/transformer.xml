@@ -39,7 +39,8 @@
     Then you call <featurename>create_new_transformer</featurename>. This takes a <classname>XM_XSLT_SOURCE</classname> as a parameter,
     so you first have to create one to represent your stylesheet. If you are starting with XML text, then you do this by creating an
     <link linkend="transformation_source"><classname>XM_XSLT_URI_SOURCE</classname></link>, 
-    passing it the <exmlsyntax>URI</exmlsyntax> of your text file, as an absolute URI.
+    passing it the <exmlsyntax>URI</exmlsyntax> of your text file. You must also pass an absolute URI as the base URI for the application. This
+    will be used to resolve the first argument if it is relative, amongst other things.
   </para>
   <para>
     If instead, you wish to transform a source document according to any xml-stylesheet processing instructions contained within it, then
