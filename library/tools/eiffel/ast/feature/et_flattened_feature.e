@@ -48,6 +48,12 @@ feature -- Status report
 			definition: Result = (is_inherited or is_redeclared)
 		end
 
+	is_dotnet: BOOLEAN is
+			-- Is current feature a .NET feature?
+		do
+			-- Result := False
+		end
+
 	has_seed (a_seed: INTEGER): BOOLEAN is
 			-- Does current feature have `a_seed'?
 		do
@@ -87,7 +93,7 @@ feature -- Status report
 				end
 			end
 		end
-		
+
 feature -- Access
 
 	name: ET_FEATURE_NAME is

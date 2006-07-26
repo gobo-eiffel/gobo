@@ -16,7 +16,10 @@ inherit
 
 	ET_PROCEDURE
 		undefine
-			is_dotnet
+			is_frozen, is_dotnet,
+			is_deferred
+		redefine
+			make
 		end
 
 	ET_DOTNET_ROUTINE
@@ -24,6 +27,19 @@ inherit
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: like extended_name; args: like arguments; a_class: like implementation_class) is
+			-- Create a new .NET procedure.
+		do
+			precursor (a_name, args, a_class)
+			dotnet_name := name.name
+			overloaded_name := name.name
+		ensure then
+			dotnet_name_set: dotnet_name.same_string (name.name)
+			overloaded_name_set: overloaded_name.same_string (name.name)
+		end
 
 feature -- Duplication
 

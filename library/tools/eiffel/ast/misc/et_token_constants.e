@@ -146,6 +146,14 @@ feature -- Class names
 			integer_64_class_name_not_void: Result /= Void
 		end
 
+	native_array_class_name: ET_CLASS_NAME is
+			-- "NATIVE_ARRAY" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_native_array_name)
+		ensure
+			native_array_class_name_not_void: Result /= Void
+		end
+
 	natural_class_name: ET_CLASS_NAME is
 			-- "NATURAL" class name
 		once
@@ -2054,6 +2062,7 @@ feature -- Keyword and symbol names
 	capitalized_integer_16_name: STRING is "INTEGER_16"
 	capitalized_integer_32_name: STRING is "INTEGER_32"
 	capitalized_integer_64_name: STRING is "INTEGER_64"
+	capitalized_native_array_name: STRING is "NATIVE_ARRAY"
 	capitalized_natural_name: STRING is "NATURAL"
 	capitalized_natural_8_name: STRING is "NATURAL_8"
 	capitalized_natural_16_name: STRING is "NATURAL_16"

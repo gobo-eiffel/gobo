@@ -43,15 +43,16 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_universe)
 			create named_features.make_map (400)
+			named_features.set_key_equality_tester (feature_name_tester)
 			create queries.make (400)
 			create procedures.make (400)
-			named_features.set_key_equality_tester (feature_name_tester)
 			create aliased_features.make_map (50)
 			aliased_features.set_key_equality_tester (alias_name_tester)
 			create clients_list.make (20)
 			create client_names.make (20)
 			client_names.set_equality_tester (class_name_tester)
 			create feature_adaptation_resolver.make (a_universe)
+			create dotnet_feature_adaptation_resolver.make (a_universe)
 			create identifier_type_resolver.make (a_universe)
 			create anchored_type_checker.make (a_universe)
 			create signature_checker.make (a_universe)
@@ -132,6 +133,8 @@ feature {NONE} -- Processing
 								-- ISE Eiffel has no GENERAL class anymore.
 								-- Use ANY as class root now.
 							a_parents := Void
+						elseif current_class.is_dotnet and current_class /= universe.system_object_class then
+							a_parents := universe.system_object_parents
 						else
 							a_parents := universe.any_parents
 						end
@@ -152,8 +155,11 @@ feature {NONE} -- Processing
 						error_handler.report_compilation_status (Current, current_class)
 							-- Check validity rules of the parents and of formal
 							-- generic parameters of `current_class'.
-						check_formal_parameters_validity
-						check_parents_validity
+						if not current_class.is_dotnet then
+								-- No need to check validity of .NET classes.
+							check_formal_parameters_validity
+							check_parents_validity
+						end
 						if not current_class.has_flattening_error then
 							flatten_features
 						end
@@ -167,7 +173,7 @@ feature {NONE} -- Processing
 			features_flattened: a_class.features_flattened
 		end
 
-feature -- Features
+feature {NONE} -- Features
 
 	named_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
@@ -186,13 +192,23 @@ feature {NONE} -- Feature adaptation
 	feature_adaptation_resolver: ET_FEATURE_ADAPTATION_RESOLVER
 			-- Feature adaptation resolver
 
+	dotnet_feature_adaptation_resolver: ET_DOTNET_FEATURE_ADAPTATION_RESOLVER
+			-- Feature adaptation resolver for .NET classes
+
 	resolve_feature_adaptations is
 			-- Resolve the feature adaptations of the inheritance clause of
 			-- `current_class' and put resulting features in `named_features'.
 		do
-			feature_adaptation_resolver.resolve_feature_adaptations (current_class, named_features)
-			if feature_adaptation_resolver.has_fatal_error then
-				set_fatal_error (current_class)
+			if current_class.is_dotnet then
+				dotnet_feature_adaptation_resolver.resolve_feature_adaptations (current_class, named_features)
+				if dotnet_feature_adaptation_resolver.has_fatal_error then
+					set_fatal_error (current_class)
+				end
+			else
+				feature_adaptation_resolver.resolve_feature_adaptations (current_class, named_features)
+				if feature_adaptation_resolver.has_fatal_error then
+					set_fatal_error (current_class)
+				end
 			end
 		end
 
@@ -545,10 +561,12 @@ feature {NONE} -- Feature processing
 			if a_feature.is_immediate then
 				flatten_immediate_feature (a_feature.immediate_feature)
 			else
-				an_adapted_feature := a_feature.adapted_feature
-				if an_adapted_feature.has_selected_feature and not an_adapted_feature.is_selected then
-						-- This is not a fatal error for gelint.
-					error_handler.report_vmss3a_error (current_class, an_adapted_feature.selected_feature)
+				if not current_class.is_dotnet then
+					an_adapted_feature := a_feature.adapted_feature
+					if an_adapted_feature.has_selected_feature and not an_adapted_feature.is_selected then
+							-- This is not a fatal error for gelint.
+						error_handler.report_vmss3a_error (current_class, an_adapted_feature.selected_feature)
+					end
 				end
 				if a_feature.is_redeclared then
 					flatten_redeclared_feature (a_feature.redeclared_feature)
@@ -564,7 +582,9 @@ feature {NONE} -- Feature processing
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			-- Do nothing.
+			if a_feature.implementation_class /= current_class then
+-- TODO: error: this can happen when processing .NET features.
+			end
 		end
 
 	flatten_redeclared_feature (a_feature: ET_REDECLARED_FEATURE) is
@@ -584,11 +604,22 @@ feature {NONE} -- Feature processing
 			l_first_precursor: ET_FEATURE
 			l_other_precursors: ET_FEATURE_LIST
 			l_found: BOOLEAN
+			l_dotnet: BOOLEAN
 			i, nb: INTEGER
 		do
 			l_flattened_feature := a_feature.flattened_feature
-			if a_feature.is_replicated then
-				process_replicated_seeds (a_feature, l_flattened_feature.id)
+			l_dotnet := (current_class.is_dotnet and then l_flattened_feature.is_dotnet)
+			if l_dotnet then
+				if
+					l_flattened_feature.implementation_class /= current_class and then
+					l_flattened_feature.implementation_feature = l_flattened_feature
+				then
+-- TODO: error
+				end
+			else
+				if a_feature.is_replicated then
+					process_replicated_seeds (a_feature, l_flattened_feature.id)
+				end
 			end
 			l_flattened_feature.set_first_seed (a_feature.first_seed)
 			l_flattened_feature.set_other_seeds (a_feature.other_seeds)
@@ -617,7 +648,9 @@ feature {NONE} -- Feature processing
 			until
 				l_parent_feature = Void
 			loop
-				check_redeclaration_validity (l_parent_feature, l_flattened_feature, l_has_redefine)
+				if not l_dotnet then
+					check_redeclaration_validity (l_parent_feature, l_flattened_feature, l_has_redefine)
+				end
 				l_precursor := l_parent_feature.precursor_feature
 				if l_first_precursor = Void then
 					l_first_precursor := l_precursor
@@ -642,17 +675,19 @@ feature {NONE} -- Feature processing
 			end
 			l_flattened_feature.set_first_precursor (l_first_precursor)
 			l_flattened_feature.set_other_precursors (l_other_precursors)
-			l_preconditions := l_flattened_feature.preconditions
-			if l_preconditions /= Void and then not l_preconditions.is_require_else then
-					-- This is not a fatal error.
-				error_handler.report_vdrd3a_error (current_class, l_preconditions, l_flattened_feature)
+			if not l_dotnet then
+				l_preconditions := l_flattened_feature.preconditions
+				if l_preconditions /= Void and then not l_preconditions.is_require_else then
+						-- This is not a fatal error.
+					error_handler.report_vdrd3a_error (current_class, l_preconditions, l_flattened_feature)
+				end
+				l_postconditions := l_flattened_feature.postconditions
+				if l_postconditions /= Void and then not l_postconditions.is_ensure_then then
+						-- This is not a fatal error.
+					error_handler.report_vdrd3b_error (current_class, l_postconditions, l_flattened_feature)
+				end
+				check_precursor_validity (a_feature)
 			end
-			l_postconditions := l_flattened_feature.postconditions
-			if l_postconditions /= Void and then not l_postconditions.is_ensure_then then
-					-- This is not a fatal error.
-				error_handler.report_vdrd3b_error (current_class, l_postconditions, l_flattened_feature)
-			end
-			check_precursor_validity (a_feature)
 		end
 
 	flatten_inherited_feature (a_feature: ET_INHERITED_FEATURE) is
@@ -1597,6 +1632,7 @@ invariant
 	client_names_not_void: client_names /= Void
 	no_void_client_name: not client_names.has (Void)
 	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void
+	dotnet_feature_adaptation_resolver_not_void: dotnet_feature_adaptation_resolver /= Void
 	identifier_type_resolver_not_void: identifier_type_resolver /= Void
 	anchored_type_checker_not_void: anchored_type_checker /= Void
 	signature_checker_not_void: signature_checker /= Void

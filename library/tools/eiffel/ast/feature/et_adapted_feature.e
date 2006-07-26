@@ -18,6 +18,7 @@ inherit
 		redefine
 			is_immediate,
 			is_adapted,
+			is_dotnet,
 			adapted_feature
 		end
 
@@ -36,6 +37,14 @@ feature -- Status report
 
 	is_immediate: BOOLEAN is False
 			-- Is current feature immediate?
+
+	is_dotnet: BOOLEAN is
+			-- Is current feature a .NET feature?
+		do
+			Result := flattened_feature.is_dotnet
+		ensure then
+			definition: Result = flattened_feature.is_dotnet
+		end
 
 	is_selected: BOOLEAN
 			-- Has an inherited feature been selected

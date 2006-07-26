@@ -16,7 +16,10 @@ inherit
 
 	ET_FUNCTION
 		undefine
-			is_dotnet
+			is_frozen, is_dotnet,
+			is_deferred
+		redefine
+			make
 		end
 
 	ET_DOTNET_QUERY
@@ -30,7 +33,8 @@ inherit
 			is_function,
 			is_prefixable, is_infixable,
 			is_bracketable, undefined_feature,
-			resolve_inherited_signature
+			resolve_inherited_signature,
+			is_deferred
 		end
 
 	ET_DOTNET_ROUTINE
@@ -42,6 +46,19 @@ inherit
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class) is
+			-- Create a new .NET function.
+		do
+			precursor (a_name, args, a_type, a_class)
+			dotnet_name := name.name
+			overloaded_name := name.name
+		ensure then
+			dotnet_name_set: dotnet_name.same_string (name.name)
+			overloaded_name_set: overloaded_name.same_string (name.name)
+		end
 
 feature -- Duplication
 

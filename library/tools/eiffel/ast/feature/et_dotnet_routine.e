@@ -16,7 +16,9 @@ inherit
 
 	ET_ROUTINE
 		undefine
-			is_dotnet
+			is_frozen, is_dotnet
+		redefine
+			is_deferred
 		end
 
 	ET_DOTNET_FEATURE
@@ -26,7 +28,23 @@ inherit
 			preconditions,
 			postconditions,
 			reset_preconditions,
-			reset_postconditions
+			reset_postconditions,
+			is_deferred
+		end
+
+feature -- Status report
+
+	is_deferred: BOOLEAN
+			-- Has feature been declared as deferred?
+
+feature -- Status setting
+
+	set_deferred (b: BOOLEAN) is
+			-- Set `is_deferred' to `b'.
+		do
+			is_deferred := b
+		ensure
+			deferred_set: is_deferred = b
 		end
 
 end

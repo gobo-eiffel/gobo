@@ -285,12 +285,8 @@ feature {NONE} -- Feature recording
 					if a_named_feature.is_immediate then
 						a_redeclared_feature := new_redeclared_feature (a_named_feature.immediate_feature, a_parent_feature)
 						a_features.replace_found_item (a_redeclared_feature)
-					elseif a_named_feature.is_redeclared then
-						a_redeclared_feature := a_named_feature.redeclared_feature
-						a_redeclared_feature.put_parent_feature (a_parent_feature)
-					elseif a_named_feature.is_inherited then
-						an_inherited_feature := a_named_feature.inherited_feature
-						an_inherited_feature.put_parent_feature (a_parent_feature)
+					else
+						a_named_feature.adapted_feature.put_parent_feature (a_parent_feature)
 					end
 				else
 					an_inherited_feature := new_inherited_feature (a_parent_feature)
@@ -357,12 +353,8 @@ feature {NONE} -- Feature recording
 					if a_named_feature.is_immediate then
 						a_redeclared_feature := new_redeclared_feature (a_named_feature.immediate_feature, a_parent_feature)
 						a_features.replace_found_item (a_redeclared_feature)
-					elseif a_named_feature.is_redeclared then
-						a_redeclared_feature := a_named_feature.redeclared_feature
-						a_redeclared_feature.put_parent_feature (a_parent_feature)
-					elseif a_named_feature.is_inherited then
-						an_inherited_feature := a_named_feature.inherited_feature
-						an_inherited_feature.put_parent_feature (a_parent_feature)
+					else
+						a_named_feature.adapted_feature.put_parent_feature (a_parent_feature)
 					end
 				else
 					an_inherited_feature := new_inherited_feature (a_parent_feature)
@@ -833,7 +825,7 @@ feature {NONE} -- Implementation
 		end
 
 	new_redeclared_feature (a_feature: ET_FEATURE; a_parent_feature: ET_PARENT_FEATURE): ET_REDECLARED_FEATURE is
-			-- Reset redeclared feature.
+			-- New redeclared feature.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_parent_feature_not_void: a_parent_feature /= Void

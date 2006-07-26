@@ -16,9 +16,9 @@ inherit
 
 	ET_ATTRIBUTE
 		undefine
-			is_dotnet
+			is_frozen, is_dotnet
 		redefine
-			process
+			process, make
 		end
 
 	ET_DOTNET_QUERY
@@ -30,6 +30,19 @@ inherit
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: like extended_name; a_type: like declared_type; a_class: like implementation_class) is
+			-- Create a new .NET attribute.
+		do
+			precursor (a_name, a_type, a_class)
+			dotnet_name := name.name
+			overloaded_name := name.name
+		ensure then
+			dotnet_name_set: dotnet_name.same_string (name.name)
+			overloaded_name_set: overloaded_name.same_string (name.name)
+		end
 
 feature -- Processing
 

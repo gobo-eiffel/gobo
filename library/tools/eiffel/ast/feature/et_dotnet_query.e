@@ -16,7 +16,7 @@ inherit
 
 	ET_QUERY
 		undefine
-			is_dotnet
+			is_frozen, is_dotnet
 		end
 
 	ET_DOTNET_FEATURE

@@ -284,12 +284,6 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_dotnet: BOOLEAN is
-			-- Is current feature a .NET feature?
-		do
-			-- Result := False
-		end
-
 	is_infixable: BOOLEAN is
 			-- Can current feature have a name of
 			-- the form 'infix ...'?

@@ -744,6 +744,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_integer_16_name)
 			Result.force_new (-1, tokens.capitalized_integer_32_name)
 			Result.force_new (-1, tokens.capitalized_integer_64_name)
+			Result.force_new (-1, tokens.capitalized_native_array_name)
 			Result.force_new (-1, tokens.capitalized_natural_name)
 			Result.force_new (-1, tokens.capitalized_natural_8_name)
 			Result.force_new (-1, tokens.capitalized_natural_16_name)
