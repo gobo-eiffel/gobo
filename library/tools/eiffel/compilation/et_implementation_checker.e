@@ -191,7 +191,7 @@ feature {NONE} -- Processing
 			-- Then check the immediate and redeclared features
 			-- of `a_class' and its invariants after having done
 			-- so for its parent classes recursively.
-			-- ALso check the inherited features when `flat_mode'
+			-- Also check the inherited features when `flat_mode'
 			-- is True.
 		require
 			a_class_not_void: a_class /= Void
@@ -267,7 +267,7 @@ feature {NONE} -- Processing
 						if not a_class.has_implementation_error then
 							l_suppliers.remove (none_class)
 							create l_suppliers2.make (l_suppliers.count)
-							l_suppliers.extend (l_suppliers)
+							l_suppliers2.extend (l_suppliers)
 							current_class.set_suppliers (l_suppliers2)
 						else
 							current_class.set_suppliers (no_suppliers)
