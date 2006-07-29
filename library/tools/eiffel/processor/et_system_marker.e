@@ -49,6 +49,10 @@ inherit
 			process_deferred_procedure,
 			process_do_function,
 			process_do_procedure,
+			process_dotnet_attribute,
+			process_dotnet_constant_attribute,
+			process_dotnet_function,
+			process_dotnet_procedure,
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
@@ -621,6 +625,41 @@ feature {ET_AST_NODE} -- Processing
 			a_compound := a_feature.rescue_clause
 			if a_compound /= Void then
 				process_compound (a_compound)
+			end
+		end
+
+	process_dotnet_attribute (a_feature: ET_DOTNET_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+			process_attribute (a_feature)
+		end
+
+	process_dotnet_constant_attribute (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+			process_constant_attribute (a_feature)
+		end
+
+	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION) is
+			-- Process `a_feature'.
+		local
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
+		do
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				process_formal_argument_list (an_arguments)
+			end
+			a_feature.type.process (Current)
+		end
+
+	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE) is
+			-- Process `a_feature'.
+		local
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
+		do
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				process_formal_argument_list (an_arguments)
 			end
 		end
 

@@ -43,6 +43,10 @@ inherit
 			process_deferred_procedure,
 			process_do_function,
 			process_do_procedure,
+			process_dotnet_attribute,
+			process_dotnet_constant_attribute,
+			process_dotnet_function,
+			process_dotnet_procedure,
 			process_equality_expression,
 			process_expression_address,
 			process_external_function,
@@ -1160,6 +1164,66 @@ feature {NONE} -- Feature validity
 			end
 			if had_error then
 				set_fatal_error
+			end
+		end
+
+	check_dotnet_attribute_validity (a_feature: ET_DOTNET_ATTRIBUTE) is
+			-- Check validity of `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			check_attribute_validity (a_feature)
+		end
+
+	check_dotnet_constant_attribute_validity (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE) is
+			-- Check validity of `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			check_constant_attribute_validity (a_feature)
+		end
+
+	check_dotnet_function_validity (a_feature: ET_DOTNET_FUNCTION) is
+			-- Check validity of `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_type: ET_TYPE
+			had_error: BOOLEAN
+		do
+			has_fatal_error := False
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				check_formal_arguments_validity (an_arguments)
+				had_error := has_fatal_error
+			end
+			a_type := a_feature.type
+			check_signature_type_validity (a_type)
+			had_error := had_error or has_fatal_error
+			if not had_error then
+				report_result_declaration (a_type)
+				universe.report_result_supplier (a_type, current_class, a_feature)
+			else
+				set_fatal_error
+			end
+		end
+
+	check_dotnet_procedure_validity (a_feature: ET_DOTNET_PROCEDURE) is
+			-- Check validity of `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
+		do
+			has_fatal_error := False
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				check_formal_arguments_validity (an_arguments)
 			end
 		end
 
@@ -9159,6 +9223,30 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature'.
 		do
 			check_do_procedure_validity (a_feature)
+		end
+
+	process_dotnet_attribute (a_feature: ET_DOTNET_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+			check_dotnet_attribute_validity (a_feature)
+		end
+
+	process_dotnet_constant_attribute (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+			check_dotnet_constant_attribute_validity (a_feature)
+		end
+
+	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION) is
+			-- Process `a_feature'.
+		do
+			check_dotnet_function_validity (a_feature)
+		end
+
+	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE) is
+			-- Process `a_feature'.
+		do
+			check_dotnet_procedure_validity (a_feature)
 		end
 
 	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
