@@ -1272,6 +1272,9 @@ feature -- Implementation checking status report
 			-- Should the inherited pre- and postconditions be
 			-- checked again in the redeclaration of features?
 
+	suppliers_enabled: BOOLEAN
+			-- Should suppliers of classes be computed?
+
 feature -- Implementation checking status setting
 
 	set_flat_mode (b: BOOLEAN) is
@@ -1308,6 +1311,24 @@ feature -- Implementation checking status setting
 			end
 		ensure
 			flat_dbc_mode_set: flat_dbc_mode = b
+		end
+
+	set_suppliers_enabled (b: BOOLEAN) is
+			-- Set `suppliers_enabled' to `b'.
+		local
+			a_checker: ET_IMPLEMENTATION_CHECKER
+		do
+			suppliers_enabled := b
+			a_checker ?= implementation_checker
+			if a_checker /= Void then
+				a_checker.set_suppliers_enabled (b)
+			end
+			a_checker ?= flat_implementation_checker
+			if a_checker /= Void then
+				a_checker.set_suppliers_enabled (b)
+			end
+		ensure
+			suppliers_enabled_set: suppliers_enabled = b
 		end
 
 feature -- Element change
@@ -2599,6 +2620,7 @@ feature -- Compilation
 			if a_checker /= Void then
 				a_checker.set_flat_mode (flat_mode)
 				a_checker.set_flat_dbc_mode (flat_dbc_mode)
+				a_checker.set_suppliers_enabled (suppliers_enabled)
 			end
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
