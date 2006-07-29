@@ -26,12 +26,12 @@ inherit
 
 create
 
-	make, make_major, make_major_minor, make_unknown
+	make, make_major, make_major_minor, make_latest
 
 feature {NONE} -- Initialization
 
 	make (a_major: like major; a_minor: like minor; a_build: like build) is
-			-- Make new version.
+			-- Make new version of the form "major.minor.build".
 		require
 			a_major_not_negative: a_major >= 0
 			a_minor_not_negative: a_minor >= 0
@@ -50,7 +50,9 @@ feature {NONE} -- Initialization
 		end
 
 	make_major (a_major: like major) is
-			-- Make new version.
+			-- Make new version of the form "major".
+			-- Note that this version is greater than any other
+			-- version of the form "major.xxx" or "major.xxx.yyy".
 		require
 			a_major_not_negative: a_major >= 0
 		do
@@ -65,7 +67,9 @@ feature {NONE} -- Initialization
 		end
 
 	make_major_minor (a_major: like major; a_minor: like minor) is
-			-- Make new version.
+			-- Make new version of the form "major.minor".
+			-- Note that this version is greater than any other
+			-- version of the form "major.minor.xxx".
 		require
 			a_major_not_negative: a_major >= 0
 			a_minor_not_negative: a_minor >= 0
@@ -81,8 +85,9 @@ feature {NONE} -- Initialization
 			no_build: not has_build
 		end
 
-	make_unknown is
-			-- Make new version.
+	make_latest is
+			-- Make new version which is greater than any other
+			-- version.
 		do
 			internal_major := -1
 			internal_minor := -1
