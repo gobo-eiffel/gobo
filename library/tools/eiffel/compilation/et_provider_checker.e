@@ -92,6 +92,7 @@ feature {NONE} -- Cluster dependence constraints
 			-- Check of cluster dependence constraints.
 		local
 			l_group: ET_GROUP
+			l_cluster: ET_CLUSTER
 			l_providers: DS_HASH_SET [ET_CLASS]
 			l_providers_cursor: DS_HASH_SET_CURSOR [ET_CLASS]
 			l_provider: ET_CLASS
@@ -103,13 +104,18 @@ feature {NONE} -- Cluster dependence constraints
 			if current_class.is_preparsed then
 				l_group := current_class.group
 				if l_group.is_cluster then
-					l_provider_constraint := l_group.cluster.provider_constraint
-				end
-				l_overridden_class := current_class.non_override_overridden_class
-				if l_overridden_class /= Void then
-					l_group := l_overridden_class.group
-					if l_provider_constraint = Void and then l_group.is_cluster then
-						l_provider_constraint := l_group.cluster.provider_constraint
+					l_cluster := l_group.cluster
+					l_provider_constraint := l_cluster.provider_constraint
+					if l_cluster.overridden_constraint_enabled then
+						l_overridden_class := current_class.non_override_overridden_class
+						if l_overridden_class /= Void then
+							l_group := l_overridden_class.group
+							if l_group.is_cluster then
+								l_provider_constraint := l_group.cluster.provider_constraint
+							else
+								l_provider_constraint := Void
+							end
+						end
 					end
 				end
 				l_providers := current_class.providers
@@ -121,16 +127,21 @@ feature {NONE} -- Cluster dependence constraints
 							universe.preparse
 						end
 						if l_provider.is_preparsed then
-							l_provider_group := l_provider.group
 							l_dependant_constraint := Void
+							l_provider_group := l_provider.group
 							if l_provider_group.is_cluster then
-								l_dependant_constraint := l_provider_group.cluster.dependant_constraint
-							end
-							l_overridden_class := l_provider.non_override_overridden_class
-							if l_overridden_class /= Void then
-								l_provider_group := l_overridden_class.group
-								if l_dependant_constraint = Void and then l_provider_group.is_cluster then
-									l_dependant_constraint := l_provider_group.cluster.dependant_constraint
+								l_cluster := l_provider_group.cluster
+								l_dependant_constraint := l_cluster.dependant_constraint
+								if l_cluster.overridden_constraint_enabled then
+									l_overridden_class := l_provider.non_override_overridden_class
+									if l_overridden_class /= Void then
+										l_provider_group := l_overridden_class.group
+										if l_provider_group.is_cluster then
+											l_dependant_constraint := l_provider_group.cluster.dependant_constraint
+										else
+											l_dependant_constraint := Void
+										end
+									end
 								end
 							end
 							if l_provider_constraint /= Void and then not l_provider_constraint.has_group (l_provider_group) then

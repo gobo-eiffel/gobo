@@ -17,7 +17,7 @@ inherit
 	ET_GROUP
 		redefine
 			is_cluster, cluster,
-			full_name, full_lower_name, 
+			full_name, full_lower_name,
 			full_pathname, full_unix_pathname
 		end
 
@@ -298,6 +298,11 @@ feature -- Dependence constraints
 			-- tabs or newlines). Otherwise `dependant_constraint' is set to be the
 			-- `dependant_constraint' of current cluster's parent cluster if any.
 
+	overridden_constraint_enabled: BOOLEAN
+			-- When overriding, should classes of current cluster (and recursively
+			-- of its subclusters) be considered as part of the cluster of their
+			-- overridden classes when dealing with provider/dependant constraints?
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -390,6 +395,17 @@ feature -- Status setting
 			is_implicit := b
 		ensure
 			implicit_set: is_implicit = b
+		end
+
+	set_overridden_constraint_enabled (b: BOOLEAN) is
+			-- Set `overridden_constraint_enabled' to `b'.
+		do
+			overridden_constraint_enabled := b
+			if subclusters /= Void then
+				subclusters.set_overridden_constraint_enabled (b)
+			end
+		ensure
+			overridden_constraint_enabled_set: overridden_constraint_enabled = b
 		end
 
 feature -- Setting

@@ -243,6 +243,20 @@ feature -- Measurement
 			read_write_count_non_negative: Result >= 0
 		end
 
+feature -- Status setting
+
+	set_overridden_constraint_enabled (b: BOOLEAN) is
+			-- Set `overridden_constraint_enabled' of all clusters to `b'.
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).set_overridden_constraint_enabled (b)
+				i := i + 1
+			end
+		end
+
 feature -- Setting
 
 	set_provider_constraint (a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT) is
