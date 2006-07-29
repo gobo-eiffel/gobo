@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			cluster := a_cluster
 			create parameters.make (1, 3)
 			parameters.put (etl_code, 1)
-			parameters.put (cluster.full_name ('.'), 2)
+			parameters.put (cluster.full_lower_name ('.'), 2)
 			parameters.put (a_dirname, 3)
 		ensure
 			cluster_set: cluster = a_cluster
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			cluster := a_cluster
 			create parameters.make (1, 3)
 			parameters.put (etl_code, 1)
-			parameters.put (cluster.full_name ('.'), 2)
+			parameters.put (cluster.full_lower_name ('.'), 2)
 			parameters.put (a_filename, 3)
 		ensure
 			cluster_set: cluster = a_cluster
@@ -93,15 +93,15 @@ feature {NONE} -- Initialization
 			cluster := a_cluster
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
-			parameters.put (cluster.full_name ('.'), 2)
+			parameters.put (cluster.full_lower_name ('.'), 2)
 			parameters.put (a_class.name.name, 3)
-			parameters.put (a_class.group.full_name ('.'), 4)
+			parameters.put (a_class.group.full_lower_name ('.'), 4)
 			parameters.put (a_dependant.name.name, 5)
-			parameters.put (a_dependant.group.full_name ('.'), 6)
+			parameters.put (a_dependant.group.full_lower_name ('.'), 6)
 			l_group_names := a_constraint.group_names
 			nb := l_group_names.count
 			if nb = 0 then
-				a_string := a_constraint.current_cluster.full_name ('.')
+				a_string := a_constraint.current_cluster.full_lower_name ('.')
 			else
 				create a_string.make (50)
 				from i := 1 until i > nb loop
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 					a_string.append_string (", ")
 					i := i + 1
 				end
-				a_string.append_string (a_constraint.current_cluster.full_name ('.'))
+				a_string.append_string (a_constraint.current_cluster.full_lower_name ('.'))
 			end
 			parameters.put (a_string, 7)
 		ensure
@@ -146,15 +146,15 @@ feature {NONE} -- Initialization
 			cluster := a_cluster
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
-			parameters.put (cluster.full_name ('.'), 2)
+			parameters.put (cluster.full_lower_name ('.'), 2)
 			parameters.put (a_class.name.name, 3)
-			parameters.put (a_class.group.full_name ('.'), 4)
+			parameters.put (a_class.group.full_lower_name ('.'), 4)
 			parameters.put (a_provider.name.name, 5)
-			parameters.put (a_provider.group.full_name ('.'), 6)
+			parameters.put (a_provider.group.full_lower_name ('.'), 6)
 			l_group_names := a_constraint.group_names
 			nb := l_group_names.count
 			if nb = 0 then
-				a_string := a_constraint.current_cluster.full_name ('.')
+				a_string := a_constraint.current_cluster.full_lower_name ('.')
 			else
 				create a_string.make (50)
 				from i := 1 until i > nb loop
@@ -162,7 +162,7 @@ feature {NONE} -- Initialization
 					a_string.append_string (", ")
 					i := i + 1
 				end
-				a_string.append_string (a_constraint.current_cluster.full_name ('.'))
+				a_string.append_string (a_constraint.current_cluster.full_lower_name ('.'))
 			end
 			parameters.put (a_string, 7)
 		ensure
