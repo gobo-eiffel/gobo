@@ -23,6 +23,9 @@ inherit
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 create
 
 	execute
@@ -79,7 +82,7 @@ feature -- Execution
 				elseif arg.is_equal ("--ecma") then
 					is_ecma := True
 				elseif arg.is_equal ("--ise") then
-					create ise_version.make_unknown
+					ise_version := ise_latest
 				elseif arg.count > 6 and then arg.substring (1, 6).is_equal ("--ise=") then
 					a_ise_version := arg.substring (7, arg.count)
 					create a_ise_regexp.make
@@ -216,7 +219,7 @@ feature {NONE} -- Processing
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
 			if ise_version = Void then
-				ise_version := ise_5_6
+				ise_version := ise_5_6_latest
 			end
 			a_universe.set_ise_version (ise_version)
 			a_universe.set_ecma (is_ecma)
@@ -287,24 +290,6 @@ feature -- Error handling
 				%%T[--flat][--noflatdbc][--cat][--void][--silent][--verbose] ace_filename")
 		ensure
 			usage_message_not_void: Result /= Void
-		end
-
-feature {NONE} -- Constants
-
-	ise_5_6: UT_VERSION is
-			-- ISE 5.6
-		once
-			create Result.make_major_minor (5, 6)
-		ensure
-			version_not_void: Result /= Void
-		end
-
-	ise_5_7_60362: UT_VERSION is
-			-- ISE 5.7.60362
-		once
-			create Result.make (5, 7, 60362)
-		ensure
-			version_not_void: Result /= Void
 		end
 
 invariant
