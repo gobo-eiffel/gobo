@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<library name="argument" prfix="ap_">
+	<description>
+		description: "Xace file for the GOBO argument parser"
+		library: "AP"
+		copyright: "Copyright (c) 2006 Bernd Schoeller (bernd@fams.de)"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="argument" prefix="ap_" 
+		 location="${GOBO}/library/argument"/>
+</library>

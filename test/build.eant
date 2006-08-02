@@ -186,6 +186,8 @@
 		<geant file="build.eant" target="clean" dir="src" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="precomp"/>
 		<geant file="build.eant" target="clean" dir="precomp" if="${do_clean}=true"/>
+		<geant file="build.eant" target="${target}" dir="argument"/>
+		<geant file="build.eant" target="clean" dir="argument" if="${do_clean}=true"/>
 	</target>
 
 	<target name="do_all_ge" depend="init">

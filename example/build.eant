@@ -51,6 +51,7 @@
 		</description>
 		<argument name="target"/>
 
+		<geant file="build.eant" target="${target}" dir="argument"/>
 		<geant file="build.eant" target="${target}" dir="gexmlsplit"/>
 		<geant file="build.eant" target="${target}" dir="lexical"/>
 		<geant file="build.eant" target="${target}" dir="math"/>
