@@ -264,6 +264,7 @@ inherit
 			new_manifest_string_list,
 			new_manifest_tuple,
 			new_manifest_type,
+			new_none_clients,
 			new_null_export,
 			new_null_instruction,
 			new_obsolete_message,
@@ -2906,6 +2907,18 @@ feature -- AST nodes
 				if a_right /= Void then
 					Result.set_right_brace (a_right)
 				end
+			end
+		end
+
+	new_none_clients (a_left, a_right: ET_SYMBOL): ET_CLIENTS is
+			-- Client list of the form {}
+		do
+			create Result.make
+			if a_left /= Void then
+				Result.set_left_brace (a_left)
+			end
+			if a_right /= Void then
+				Result.set_right_brace (a_right)
 			end
 		end
 

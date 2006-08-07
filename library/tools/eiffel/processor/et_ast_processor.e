@@ -990,13 +990,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_none_clients (a_list: ET_NONE_CLIENTS) is
-			-- Process `a_list'.
-		require
-			a_list_not_void: a_list /= Void
-		deferred
-		end
-
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Process `an_expression'.
 		require

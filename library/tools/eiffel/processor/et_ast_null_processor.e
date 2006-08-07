@@ -697,11 +697,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_none_clients (a_list: ET_NONE_CLIENTS) is
-			-- Process `a_list'.
-		do
-		end
-
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Process `an_expression'.
 		do

@@ -2705,11 +2705,12 @@ feature -- AST nodes
 			end
 		end
 
-	new_none_clients (a_left, a_right: ET_SYMBOL): ET_NONE_CLIENTS is
+	new_none_clients (a_left, a_right: ET_SYMBOL): ET_CLIENTS is
 			-- Client list of the form {}
 		do
-			if a_left /= Void and a_right /= Void then
-				create Result.make (a_left, a_right)
+			create Result.make
+			if a_left /= Void and then not a_left.is_null then
+				Result.set_left_brace (a_left)
 			end
 		end
 

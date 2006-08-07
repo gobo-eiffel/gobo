@@ -1981,13 +1981,6 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right_brace.process (Current)
 		end
 
-	process_none_clients (a_list: ET_NONE_CLIENTS) is
-			-- Process `a_list'.
-		do
-			a_list.left_brace.process (Current)
-			a_list.right_brace.process (Current)
-		end
-
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Process `an_expression'.
 		do
