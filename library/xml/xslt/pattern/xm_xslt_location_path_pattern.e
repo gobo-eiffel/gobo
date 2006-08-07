@@ -139,7 +139,7 @@ feature -- Access
 				Result.put (True, 8)
 			end
 		end
-	
+
 feature -- Status report
 
 	is_constructed: BOOLEAN
@@ -172,7 +172,6 @@ feature -- Optimization
 			l_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
 			l_filter_expression: XM_XPATH_EXPRESSION
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_dependencies: ARRAY [BOOLEAN]
 		do
 
 			-- Detect the simple cases: no parent or ancestor pattern, no predicates
