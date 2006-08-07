@@ -66,6 +66,14 @@ feature -- Status report
 
 feature -- Access
 
+	name: ET_FEATURE_NAME is
+			-- Feature name
+		do
+			Result := parent_feature.name
+		ensure then
+			definition: Result = parent_feature.name
+		end
+
 	inherited_feature: ET_INHERITED_FEATURE is
 			-- Current feature viewed as an inherited feature
 		do

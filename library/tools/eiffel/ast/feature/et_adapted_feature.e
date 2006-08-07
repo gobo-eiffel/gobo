@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_ADAPTED_FEATURE
+deferred class ET_ADAPTED_FEATURE
 
 inherit
 
@@ -23,12 +23,6 @@ inherit
 		end
 
 	ET_REPLICABLE_FEATURE
-
-create
-
-	-- This is a deferred class but it has no deferred
-	-- features (allowed in ETL3 but not supported yet
-	-- by VE 1.1).
 
 feature -- Status report
 
@@ -76,22 +70,6 @@ feature -- Status report
 		end
 
 feature -- Access
-
-	name: ET_FEATURE_NAME is
-			-- Feature name
-		do
-			Result := parent_feature.name
-		ensure then
-			definition: Result = parent_feature.name
-		end
-
-	alias_name: ET_ALIAS_NAME is
-			-- Alias name, if any
-		do
-			Result := parent_feature.alias_name
-		ensure
-			definition: Result = parent_feature.alias_name
-		end
 
 	type: ET_TYPE is
 			-- Return type;

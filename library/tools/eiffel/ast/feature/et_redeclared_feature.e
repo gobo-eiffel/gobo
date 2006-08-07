@@ -68,6 +68,14 @@ feature -- Status report
 
 feature -- Access
 
+	name: ET_FEATURE_NAME is
+			-- Feature name
+		do
+			Result := flattened_feature.name
+		ensure then
+			definition: Result = flattened_feature.name
+		end
+
 	redeclared_feature: ET_REDECLARED_FEATURE is
 			-- Current feature viewed as a redeclared feature
 		do
