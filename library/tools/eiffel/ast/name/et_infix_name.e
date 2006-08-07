@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 	default_keyword: ET_KEYWORD is
 			-- Default keyword
 		once
-			Result := tokens.prefix_keyword
+			Result := tokens.infix_keyword
 		end
 
 invariant
