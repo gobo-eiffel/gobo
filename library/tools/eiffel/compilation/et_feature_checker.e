@@ -8408,7 +8408,7 @@ feature {NONE} -- Agent validity
 											a_convert_name := a_convert_feature.name
 											l_conversion_procedure := a_convert_class.seeded_procedure (a_convert_name.seed)
 											if l_conversion_procedure /= Void then
-												report_creation_expression (a_convert_to_expression, l_formal_context.named_type (universe), l_conversion_procedure, an_actual)
+												report_creation_expression (a_convert_expression, l_formal_context.named_type (universe), l_conversion_procedure, an_actual)
 											else
 													-- Internal error: the seed of the convert feature should correspond
 													-- to a feature of `a_convert_class'.
@@ -9517,7 +9517,8 @@ feature {NONE} -- Access
 
 	feature_impl: ET_FEATURE
 			-- Feature where the code being processed comes from;
-			-- It might be different from `current_feature' when
+			-- It might be different from `current_feature' or from
+			-- `current_feature.implementation_feature' when
 			-- processing inherited assertions. For example:
 			--    deferred class A
 			--    feature
