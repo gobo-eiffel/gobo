@@ -26,6 +26,9 @@ inherit
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
+	UT_SHARED_ECMA_VERSIONS
+		export {NONE} all end
+
 create
 
 	execute
@@ -80,7 +83,7 @@ feature -- Execution
 				elseif arg.is_equal ("--void") then
 					void_feature := True
 				elseif arg.is_equal ("--ecma") then
-					is_ecma := True
+					ecma_version := ecma_367_latest
 				elseif arg.is_equal ("--ise") then
 					ise_version := ise_latest
 				elseif arg.count > 6 and then arg.substring (1, 6).is_equal ("--ise=") then
@@ -190,7 +193,7 @@ feature -- Status report
 	is_flat: BOOLEAN
 	is_flat_dbc: BOOLEAN
 	is_cat: BOOLEAN
-	is_ecma: BOOLEAN
+	ecma_version: UT_VERSION
 	ise_version: UT_VERSION
 	is_silent: BOOLEAN
 	void_feature: BOOLEAN
@@ -222,8 +225,8 @@ feature {NONE} -- Processing
 				ise_version := ise_5_6_latest
 			end
 			a_universe.set_ise_version (ise_version)
-			a_universe.set_ecma (is_ecma)
-			if not is_ecma or ise_version < ise_5_7_60362 then
+			a_universe.set_ecma_version (ecma_version)
+			if (ecma_version = Void) and ise_version < ise_5_7_60362 then
 				a_universe.set_non_aliased_sized_basic_classes
 			end
 			if not is_verbose then
