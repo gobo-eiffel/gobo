@@ -198,6 +198,7 @@ feature -- Optimization
 					if action.was_expression_replaced then
 						action := action.replacement_expression
 						adopt_child_expression (action)
+						reset_static_properties
 					end
 					a_let_expression ?= a_promotion_offer.containing_expression
 					if a_let_expression /= Void then
@@ -231,11 +232,13 @@ feature -- Optimization
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
+				reset_static_properties
 			end
 			action.promote (an_offer)
 			if action.was_expression_replaced then
 				action := action.replacement_expression
 				adopt_child_expression (action)
+				reset_static_properties
 			end
 		end	
 

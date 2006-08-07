@@ -134,6 +134,7 @@ feature -- Optimization
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
+				reset_static_properties
 			end
 		end
 

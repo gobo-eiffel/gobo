@@ -117,7 +117,7 @@ feature -- Test
 		end
 
 	test_avg_error_two is
-			-- Test fn:avg(((3, 4, 5), xdt:yearMonthDuration('P10M'))) returns error FORG0006.
+			-- Test fn:avg(((3, 4, 5), xs:yearMonthDuration('P10M'))) returns error FORG0006.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -125,13 +125,13 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("avg(((3, 4, 5), xdt:yearMonthDuration('P10M')))")
+			an_evaluator.evaluate ("avg(((3, 4, 5), xs:yearMonthDuration('P10M')))")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
 	test_avg_year_month is
-			-- Test fn:avg((xdt:yearMonthDuration('P20Y'), xdt:yearMonthDuration('P10M'))) returns a yearMonthDuration with value 125 months.
+			-- Test fn:avg((xs:yearMonthDuration('P20Y'), xs:yearMonthDuration('P10M'))) returns a yearMonthDuration with value 125 months.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -141,7 +141,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("avg((xdt:yearMonthDuration('P20Y'), xdt:yearMonthDuration('P10M')))")
+			an_evaluator.evaluate ("avg((xs:yearMonthDuration('P20Y'), xs:yearMonthDuration('P10M')))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
@@ -227,7 +227,7 @@ feature -- Test
 		end
 
 	test_sum_year_month is
-			-- Test fn:sum((xdt:yearMonthDuration('P20Y'), xdt:yearMonthDuration('P10M'))) returns a yearMonthDuration with value 125 months.
+			-- Test fn:sum((xs:yearMonthDuration('P20Y'), xs:yearMonthDuration('P10M'))) returns a yearMonthDuration with value 125 months.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -237,7 +237,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("sum((xdt:yearMonthDuration('P20Y'), xdt:yearMonthDuration('P10M')))")
+			an_evaluator.evaluate ("sum((xs:yearMonthDuration('P20Y'), xs:yearMonthDuration('P10M')))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
@@ -247,7 +247,7 @@ feature -- Test
 		end
 
 	test_mixed_sum_error is
-			-- Test fn:sum((xdt:yearMonthDuration('P20Y'), 9E1)) returns error FORG0006.
+			-- Test fn:sum((xs:yearMonthDuration('P20Y'), 9E1)) returns error FORG0006.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -255,7 +255,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("sum((xdt:yearMonthDuration('P20Y'), 9E1))")
+			an_evaluator.evaluate ("sum((xs:yearMonthDuration('P20Y'), 9E1))")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end

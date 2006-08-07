@@ -247,7 +247,6 @@ feature -- Element change
 			declare_namespace ("xml", Xml_uri)
 			declare_namespace ("xsl", Xslt_uri)
 			declare_namespace ("xs", Xml_schema_uri)
-			declare_namespace ("xdt", Xpath_defined_datatypes_uri)
 			declare_namespace ("", Null_uri)
 		end
 

@@ -282,6 +282,7 @@ feature -- Optimization
 					if a_cursor.item.was_expression_replaced then
 						a_cursor.replace (a_cursor.item.replacement_expression)
 						a_cursor.item.mark_unreplaced
+						reset_static_properties
 					end
 					a_cursor.forth
 				end

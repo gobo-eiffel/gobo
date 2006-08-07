@@ -126,11 +126,20 @@ feature -- Optimization
 			an_offer.accept (Current)
 			if an_offer.accepted_expression /= Void then
 				set_replacement (an_offer.accepted_expression)
+				reset_static_properties
 			else
 				select_expression.promote (an_offer)
-				if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+					adopt_child_expression (select_expression)
+					reset_static_properties
+				end
 				separator_expression.promote (an_offer)
-				if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end				
+				if separator_expression.was_expression_replaced then
+					separator_expression := separator_expression.replacement_expression
+					adopt_child_expression (separator_expression)
+					reset_static_properties
+				end				
 			end
 		end
 		

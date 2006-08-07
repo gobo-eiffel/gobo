@@ -45,8 +45,7 @@ feature -- Access
 		do
 			if an_arity = -1 or else an_arity = 1 then
 				a_uri_code := shared_name_pool.uri_code_from_name_code (a_fingerprint)
-				if a_uri_code = Xml_schema_uri_code or else
-					a_uri_code = Xpath_defined_datatypes_uri_code then
+				if a_uri_code = Xml_schema_uri_code then
 					Result := type_factory.is_built_in_fingerprint (a_fingerprint)
 				end
 			end

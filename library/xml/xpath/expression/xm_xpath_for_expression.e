@@ -160,6 +160,7 @@ feature -- Optimization
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
+			-- TODO - plenty of optimization chanes here - see e.g. quantified expression
 		end
 
 feature -- Evaluation

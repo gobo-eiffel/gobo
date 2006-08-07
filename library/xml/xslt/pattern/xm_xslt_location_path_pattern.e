@@ -17,7 +17,8 @@ inherit
 	XM_XSLT_PATTERN
 		redefine
 			fingerprint, simplified_pattern, type_check, internal_matches, node_kind,
-			sub_expressions, is_location_pattern, as_location_pattern
+			sub_expressions, is_location_pattern, as_location_pattern,
+			computed_dependencies, promote
 		end
 
 	XM_XPATH_AXIS
@@ -50,6 +51,7 @@ feature {NONE} -- Initialization
 			system_id := a_static_context.system_id
 			line_number := a_static_context.line_number
 			node_test := any_xslt_node_test
+			initialize_dependencies
 		ensure
 			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
 			line_number_set: line_number = a_static_context.line_number
@@ -74,8 +76,22 @@ feature -- Access
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			todo ("sub_expressions", False)
+			Result := Precursor
+			if parent_pattern /= Void then
+				Result.append_last (parent_pattern.sub_expressions)
+			end
+			if ancestor_pattern /= Void then
+				Result.append_last (ancestor_pattern.sub_expressions)
+			end
+			if filters /= Void then
+				from l_cursor := filters.new_cursor; l_cursor.start until l_cursor.after loop
+					Result.append_last (l_cursor.item.sub_expressions)
+					l_cursor.forth
+				end
+			end
 		end
 
 	original_text: STRING is
@@ -98,22 +114,42 @@ feature -- Access
 			Result := node_test.fingerprint
 		end
 
+	computed_dependencies: ARRAY [BOOLEAN] is
+			-- Dependencies which restrict optimizations
+		local
+			l_depends: BOOLEAN
+			l_cursor:  DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			Result := Precursor
+			if parent_pattern /= Void and then parent_pattern.depends_upon_local_variables then
+				l_depends := True
+			elseif ancestor_pattern /= Void and then ancestor_pattern.depends_upon_local_variables then
+				l_depends := True
+			else
+				from l_cursor := filters.new_cursor; l_cursor.start until l_cursor.after loop
+					if l_cursor.item.depends_upon_local_variables then
+						l_depends := True
+						l_cursor.go_after
+					else
+						l_cursor.forth
+					end
+				end
+			end
+			if l_depends then
+				Result.put (True, 8)
+			end
+		end
+	
+feature -- Status report
+
+	is_constructed: BOOLEAN
+			-- Has the pattern finished construction?
+
 	is_location_pattern: BOOLEAN is
 			-- Is `Current' a location-path pattern?
 		do
 			Result := True
 		end
-
-	as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN is
-			-- `Current' seen as a location-path pattern
-		do
-			Result := Current
-		end
-
-feature -- Status report
-
-	is_constructed: BOOLEAN
-			-- Has the pattern finished construction?
 
 feature -- Status setting
 
@@ -133,9 +169,10 @@ feature -- Optimization
 			-- Simplify a pattern by applying any context-independent optimizations;
 			-- Default implementation does nothing
 		local
-			a_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
-			a_filter_expression: XM_XPATH_EXPRESSION
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
+			l_filter_expression: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_dependencies: ARRAY [BOOLEAN]
 		do
 
 			-- Detect the simple cases: no parent or ancestor pattern, no predicates
@@ -145,44 +182,44 @@ feature -- Optimization
 				-- TODO Result.set_system_id (system_id)
 				Result.set_line_number (line_number)
 			else
-				a_result_pattern := cloned_object
+				l_result_pattern := cloned_object
 
 				-- Simplify each component of the pattern
 
 				if parent_pattern /= Void then
-					a_result_pattern.set_parent_pattern (parent_pattern.simplified_pattern)
-					if a_result_pattern.parent_pattern.is_location_pattern then
-						a_result_pattern.set_uses_current (a_result_pattern.parent_pattern.as_location_pattern.uses_current)
+					l_result_pattern.set_parent_pattern (parent_pattern.simplified_pattern)
+					if l_result_pattern.parent_pattern.is_location_pattern then
+						l_result_pattern.set_uses_current (l_result_pattern.parent_pattern.as_location_pattern.uses_current)
 					end
 				elseif ancestor_pattern /= Void then
-					a_result_pattern.set_ancestor_pattern (ancestor_pattern.simplified_pattern)
-					if a_result_pattern.ancestor_pattern.is_location_pattern then
-						a_result_pattern.set_uses_current (a_result_pattern.ancestor_pattern.as_location_pattern.uses_current)
+					l_result_pattern.set_ancestor_pattern (ancestor_pattern.simplified_pattern)
+					if l_result_pattern.ancestor_pattern.is_location_pattern then
+						l_result_pattern.set_uses_current (l_result_pattern.ancestor_pattern.as_location_pattern.uses_current)
 					end
 				end
 
 				if filters /= Void then
 					from
-						a_cursor := a_result_pattern.filters.new_cursor
-						a_cursor.start
+						l_cursor := l_result_pattern.filters.new_cursor
+						l_cursor.start
 					variant
-						a_result_pattern.filters.count + 1 - a_cursor.index
+						l_result_pattern.filters.count + 1 - l_cursor.index
 					until
-						a_cursor.after
+						l_cursor.after
 					loop
-						a_filter_expression := a_cursor.item
-						a_filter_expression.simplify
-						if a_filter_expression.was_expression_replaced then
-							a_filter_expression := a_filter_expression.replacement_expression
+						l_filter_expression := l_cursor.item
+						l_filter_expression.simplify
+						if l_filter_expression.was_expression_replaced then
+							l_filter_expression := l_filter_expression.replacement_expression
 						end
-						a_cursor.replace (a_filter_expression)
-						if a_filter_expression.depends_upon_current_item then
-							a_result_pattern.set_uses_current (True)
+						l_cursor.replace (l_filter_expression)
+						if l_filter_expression.depends_upon_current_item then
+							l_result_pattern.set_uses_current (True)
 						end
-						a_cursor.forth
+						l_cursor.forth
 					end
 				end
-				Result := a_result_pattern
+				Result := l_result_pattern
 			end
 		end
 
@@ -288,6 +325,28 @@ feature -- Optimization
 			end
 		end
 
+	promote (a_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote sub-expressions of `Current'.
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			if parent_pattern /= Void then
+				parent_pattern.promote (a_offer)
+			end
+			if ancestor_pattern /= Void then
+				ancestor_pattern.promote (a_offer)
+			end
+			if filters /= Void then
+				from l_cursor := filters.new_cursor; l_cursor.start until l_cursor.after loop
+					l_cursor.item.promote (a_offer)
+					if l_cursor.item.was_expression_replaced then
+						l_cursor.replace (l_cursor.item.replacement_expression)
+					end
+					l_cursor.forth
+				end
+			end
+		end
+
 feature -- Matching
 
 	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
@@ -375,6 +434,14 @@ feature -- Element change
 			node_test := a_node_test
 		ensure
 			node_test_set: node_test = a_node_test
+		end
+
+feature -- Conversion
+
+	as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN is
+			-- `Current' seen as a location-path pattern
+		do
+			Result := Current
 		end
 
 feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local

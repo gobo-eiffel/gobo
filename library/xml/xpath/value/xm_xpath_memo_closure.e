@@ -158,10 +158,30 @@ feature -- Access
 			end
 		end
 
+	materialized: XM_XPATH_SEQUENCE_EXTENT is
+			-- `Current' materialized as a sequence extent
+		require
+			all_read: is_all_read
+		do
+			if is_node_sequence then
+				create Result.make_from_list (node_reservoir)
+			else
+				create Result.make_from_list (reservoir)
+			end
+					ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 	is_node_sequence: BOOLEAN
 			-- Do we deliver a node sequence?
+
+	is_all_read: BOOLEAN is
+			-- Is `Current' in `All_read_state'?
+		do
+			Result := state = All_read_state
+		end
 
 feature -- Comparison
 
@@ -256,12 +276,6 @@ feature {XM_XPATH_MEMO_CLOSURE} -- Local
 			-- List of nodes already read
 
 feature {XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR} -- restricted
-
-	is_all_read: BOOLEAN is
-			-- Is `Current' in `All_read_state'?
-		do
-			Result := state = All_read_state
-		end
 
 	mark_as_all_read is
 			-- Set `Current' to `All_read_state'.

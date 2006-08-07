@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 			prefixes.put ("xdt", Xpath_defined_datatypes_prefix_index)
 			uris.put (Xpath_defined_datatypes_uri, Xpath_defined_datatypes_prefix_index)			
 			prefixes_for_uri.put ("xdt ", Xpath_defined_datatypes_prefix_index)
-
+						
 			prefixes.put ("gexslt", Gexslt_uri_prefix_index)
 			uris.put (Gexslt_eiffel_type_uri, Gexslt_uri_prefix_index)			
 			prefixes_for_uri.put ("gexslt ", Gexslt_uri_prefix_index)

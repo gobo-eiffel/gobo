@@ -254,6 +254,7 @@ feature -- Optimization
 			if element_name.was_expression_replaced then
 				element_name := element_name.replacement_expression
 				adopt_child_expression (element_name)
+				reset_static_properties
 			end
 			if element_name.is_error then set_last_error (element_name.error_value) end
 			if not is_error and then namespace /= Void then
@@ -261,6 +262,7 @@ feature -- Optimization
 				if namespace.was_expression_replaced then
 					namespace := namespace.replacement_expression
 					adopt_child_expression (namespace)
+					reset_static_properties
 				end
 				if namespace.is_error then set_last_error (namespace.error_value) end
 			end

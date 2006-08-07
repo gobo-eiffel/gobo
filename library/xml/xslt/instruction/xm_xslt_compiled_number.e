@@ -99,6 +99,8 @@ feature -- Access
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
+		local
+			l_bridge: XM_XSLT_PATTERN_BRIDGE
 		do
 			create Result.make (10)
 			Result.set_equality_tester (expression_tester)
@@ -110,7 +112,14 @@ feature -- Access
 			if letter_value /= Void then Result.put_last (letter_value) end
 			if ordinal /= Void then Result.put_last (ordinal) end
 			if language /= Void then Result.put_last (language) end
-			-- TODO: add pattern expressions for count_pattern and from_pattern
+			if count_pattern /= Void then
+				create l_bridge.make (count_pattern, Current)
+				Result.put_last (l_bridge)
+			end
+			if from_pattern /= Void then
+				create l_bridge.make (from_pattern, Current)
+				Result.put_last (l_bridge)
+			end			
 		end
 
 feature -- Status report
@@ -309,48 +318,56 @@ feature -- Optimization
 					select_expression.promote (an_offer)
 					if select_expression.was_expression_replaced then
 						select_expression := select_expression.replacement_expression;	adopt_child_expression (select_expression)
+						reset_static_properties
 					end
 				end
 				if value_expression /= Void then
 					value_expression.promote (an_offer)
 					if value_expression.was_expression_replaced then
 						value_expression := value_expression.replacement_expression;	adopt_child_expression (value_expression)
+						reset_static_properties
 					end
 				end
 				if format /= Void then
 					format.promote (an_offer)
 					if format.was_expression_replaced then
 						format := format.replacement_expression;	adopt_child_expression (format)
+						reset_static_properties
 					end
 				end
 				if grouping_size /= Void then
 					grouping_size.promote (an_offer)
 					if grouping_size.was_expression_replaced then
 						grouping_size := grouping_size.replacement_expression;	adopt_child_expression (grouping_size)
+						reset_static_properties
 					end
 				end
 				if grouping_separator /= Void then
 					grouping_separator.promote (an_offer)
 					if grouping_separator.was_expression_replaced then
 						grouping_separator := grouping_separator.replacement_expression;	adopt_child_expression (grouping_separator)
+						reset_static_properties
 					end
 				end
 				if letter_value /= Void then
 					letter_value.promote (an_offer)
 					if letter_value.was_expression_replaced then
 						letter_value := letter_value.replacement_expression;	adopt_child_expression (letter_value)
+						reset_static_properties
 					end
 				end
 				if ordinal /= Void then
 					ordinal.promote (an_offer)
 					if ordinal.was_expression_replaced then
 						ordinal := ordinal.replacement_expression;	adopt_child_expression (ordinal)
+						reset_static_properties
 					end
 				end
 				if language /= Void then
 					language.promote (an_offer)
 					if language.was_expression_replaced then
 						language := language.replacement_expression;	adopt_child_expression (language)
+						reset_static_properties
 					end
 				end
 				-- TODO: promote count_pattern and from_pattern

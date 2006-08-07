@@ -284,7 +284,10 @@ feature {NONE} -- Implementation
 			create an_offer.make (Range_independent, a_binding_list, Current, False, False)
 			action_expression.mark_unreplaced
 			action_expression.promote (an_offer)
-			if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
+			if action_expression.was_expression_replaced then
+				replace_action (action_expression.replacement_expression)
+				reset_static_properties
+			end
 			if an_offer.containing_expression.is_let_expression then
 				a_let_expression := an_offer.containing_expression.as_let_expression
 				a_let_expression.check_static_type (a_context, a_context_item_type)

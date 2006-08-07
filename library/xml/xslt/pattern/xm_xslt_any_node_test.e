@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 		do
 			system_id := ""
 			line_number := -1
+			initialize_dependencies
 			make_xpath
 		end
 	

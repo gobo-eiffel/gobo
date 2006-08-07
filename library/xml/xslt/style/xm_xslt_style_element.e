@@ -50,8 +50,8 @@ inherit
 feature {NONE} -- Initialization
 
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
-		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+	an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+	a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		require
 			error_listener_not_void: an_error_listener /= Void
@@ -118,7 +118,7 @@ feature -- Access
 				from
 					a_cursor := some_collation_names.new_cursor; a_cursor.start
 				variant
-					some_collation_names.count + 1 - a_cursor.index
+				some_collation_names.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -252,8 +252,8 @@ feature -- Access
 			until
 				another_stylesheet = Void
 			loop
-					Result := another_stylesheet
-					another_stylesheet := Result.importer
+				Result := another_stylesheet
+				another_stylesheet := Result.importer
 			end
 		ensure
 			prinicpal_stylesheet_not_void: Result /= Void
@@ -467,14 +467,14 @@ feature -- Access
 			from
 				a_cursor := a_top_level_element_list.new_cursor; a_cursor.finish
 			variant
-				a_cursor.index
+			a_cursor.index
 			until
 				a_cursor.before
 			loop
 				if a_cursor.item.is_xslt_function and then a_cursor.item.as_xslt_function.function_fingerprint = a_fingerprint
 					and then (an_arity = -1 or else a_cursor.item.as_xslt_function.arity = an_arity) then
-					Result := a_cursor.item.as_xslt_function
-					a_cursor.go_before
+						Result := a_cursor.item.as_xslt_function
+						a_cursor.go_before
 				else
 					a_cursor.back
 				end
@@ -592,7 +592,7 @@ feature -- Status_report
 					a_cursor := children.new_cursor
 					a_cursor.start
 				variant
-					children.count + 1 - a_cursor.index
+				children.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -651,7 +651,7 @@ feature -- Status_report
 					a_cursor := excluded_namespaces.new_cursor
 					a_cursor.start
 				variant
-					excluded_namespaces.count + 1 - a_cursor.index
+				excluded_namespaces.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -841,8 +841,8 @@ feature -- Status setting
 		do
 			if validation_error = Void
 				or else a_condition < reporting_circumstances then
-				validation_error := an_error
-				reporting_circumstances := a_condition
+					validation_error := an_error
+					reporting_circumstances := a_condition
 			end
 		ensure
 			validation_error_not_void: validation_error /= Void
@@ -902,7 +902,7 @@ feature -- Status setting
 
 			if STRING_.same_string (an_attribute_uri, Gexslt_eiffel_type_uri) and then
 				STRING_.same_string (a_local_name, Gexslt_explain_name) then
-				an_explain_value := attribute_value_by_expanded_name (Gexslt_explain_attribute)
+					an_explain_value := attribute_value_by_expanded_name (Gexslt_explain_attribute)
 				if an_explain_value /= Void and then STRING_.same_string (an_explain_value, "no") then
 					is_explaining := False
 				elseif an_explain_value /= Void and then STRING_.same_string (an_explain_value, "yes") then

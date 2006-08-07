@@ -116,10 +116,22 @@ feature -- Optimization
 			Precursor
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		do
-			-- Do nothing.
+			if select_expression /= Void then
+				select_expression.promote (a_offer)
+				if select_expression.was_expression_replaced then
+					set_select_expression (select_expression.replacement_expression)
+					reset_static_properties					
+				end
+			end
+			name.promote (a_offer)
+			if name.was_expression_replaced then
+				name := name.replacement_expression;  adopt_child_expression (name)
+				reset_static_properties
+			end
+			Precursor (a_offer)
 		end
 
 feature -- Evaluation

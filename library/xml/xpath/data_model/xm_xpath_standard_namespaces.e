@@ -43,9 +43,9 @@ feature -- Access
 	Xml_schema_prefix_index: INTEGER is 3
 			-- Numeric code representing the XML Schema namespace
 	
-	Xpath_defined_datatypes_prefix_index: INTEGER is 4
-			-- Numeric code representing the XPath datatypes namespace
-
+	Xpath_defined_datatypes_prefix_index: INTEGER is 3
+			-- Numeric code representing the XML Schema namespace
+	
 	Gexslt_uri_prefix_index: INTEGER is 5
 			-- Numeric code representing the gexslt namespace
 
@@ -93,7 +93,7 @@ feature -- Access
 			-- The XML Schema instance document namespace (xsi)
 
 	Xpath_defined_datatypes_uri: STRING is "http://www.w3.org/2005/xpath-datatypes"
-			-- Namespace for additional XPath-defined data types (xdt)
+			-- former namespace for additional XPath-defined data types (xdt)
 
 	Xpath_standard_functions_uri: STRING is "http://www.w3.org/2005/xpath-functions"
 			-- XPath standard functions and operators (fn)
@@ -220,14 +220,11 @@ feature -- Access
 	
 	Any_type_code: INTEGER is 557
 	Any_simple_type_code: INTEGER is 558
-
-			-- Codes in XPath datatypes namespace (`Xpath_defined_datatypes_uri_code' * 256 + 1..n)
-
-	Untyped_type_code: INTEGER is 769
-	Untyped_atomic_type_code: INTEGER is 770
-	Any_atomic_type_code: INTEGER is 771
-	Year_month_duration_type_code: INTEGER is 772
-	Day_time_duration_type_code: INTEGER is 773
+	Untyped_type_code: INTEGER is 559
+	Untyped_atomic_type_code: INTEGER is 560
+	Any_atomic_type_code: INTEGER is 561
+	Year_month_duration_type_code: INTEGER is 562
+	Day_time_duration_type_code: INTEGER is 563
 
 			-- Codes in Gobo XPath/XSLT namespace (`Gexslt_uri_code' * 256 + 1..n)
 
@@ -621,7 +618,6 @@ feature -- Status report
 				or else STRING_.same_string (a_uri, Xml_uri)
 				or else STRING_.same_string (a_uri, Xml_schema_uri)
 				or else STRING_.same_string (a_uri, Xml_schema_datatypes_uri)
-				or else STRING_.same_string (a_uri, Xpath_defined_datatypes_uri)
 				or else STRING_.same_string (a_uri, Xml_schema_instance_uri)
 		end
 

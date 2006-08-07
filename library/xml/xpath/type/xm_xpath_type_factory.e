@@ -67,8 +67,6 @@ feature -- Access
 				Result := Xml_uri
 			when Xml_schema_uri_code then
 				Result := Xml_schema_uri
-			when Xpath_defined_datatypes_uri_code then
-				Result := Xpath_defined_datatypes_uri
 			when Gexslt_uri_code then
 				Result := Gexslt_eiffel_type_uri
 			when Xslt_uri_code then
@@ -508,8 +506,6 @@ feature -- Status report
 				Result := "xml:"
 			when Xml_schema_uri_code then
 				Result := "xs:"
-			when Xpath_defined_datatypes_uri_code then
-				Result := "xdt:"
 			when Gexslt_uri_code then
 				Result := "gexslt:"
 			when Xslt_uri_code then

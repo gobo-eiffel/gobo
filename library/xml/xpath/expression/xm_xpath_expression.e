@@ -14,6 +14,8 @@ deferred class XM_XPATH_EXPRESSION
 
 inherit
 
+	XM_XPATH_STATIC_PROPERTY
+
 	XM_XPATH_TYPE
 		export {NONE} all end
 
@@ -22,8 +24,6 @@ inherit
 
 	XM_XPATH_NAME_UTILITIES
 		export {NONE} all end
-
-	XM_XPATH_STATIC_PROPERTY
 
 	XM_XPATH_PROMOTION_ACTIONS
 		export {NONE} all end
@@ -59,6 +59,9 @@ inherit
 		export {NONE} all end
 
 	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
+	KL_IMPORTED_BOOLEAN_ROUTINES
 		export {NONE} all end
 
 	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
@@ -158,6 +161,12 @@ feature -- Access
 
 	is_current_function: BOOLEAN is
 			-- Is `Current' the XSLT "current()" function?
+		do
+			Result := False
+		end
+
+	is_pattern_bridge: BOOLEAN is
+			-- Is `Current' a bridge to an XSLT pattern?
 		do
 			Result := False
 		end
@@ -1961,7 +1970,7 @@ invariant
 
 	replacement_expression: was_expression_replaced implies replacement_expression /= Void
 	no_replacement: not was_expression_replaced implies replacement_expression = Void
-	value_or_computed_expression: is_value xor is_computed_expression
+	value_or_computed_expression: BOOLEAN_.nxor (<<is_value, is_computed_expression, is_pattern_bridge>>)
 
 end
 	

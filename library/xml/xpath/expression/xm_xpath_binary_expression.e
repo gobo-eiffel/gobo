@@ -222,9 +222,15 @@ feature -- Optimization
 				set_replacement (a_promotion)
 			elseif an_offer.action /= Unordered then
 				first_operand.promote (an_offer)
-				if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
+				if first_operand.was_expression_replaced then
+					set_first_operand (first_operand.replacement_expression)
+					reset_static_properties
+				end
 				second_operand.promote (an_offer)
-				if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
+				if second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
+					reset_static_properties
+				end
 			end
 		end
 

@@ -291,6 +291,7 @@ feature -- Optimization
 					an_expression.promote (an_offer)
 					if an_expression.was_expression_replaced then
 						a_cursor.replace (an_expression.replacement_expression)
+						reset_static_properties
 					end
 					a_cursor.forth
 				end
@@ -303,6 +304,7 @@ feature -- Optimization
 					an_expression.promote (an_offer)
 					if an_expression.was_expression_replaced then
 						a_cursor.replace (an_expression.replacement_expression)
+						reset_static_properties
 					end
 					a_cursor.forth
 				end
@@ -314,6 +316,7 @@ feature -- Optimization
 				an_expression.promote (an_offer)
 				if an_expression.was_expression_replaced then
 					conditions.replace (an_expression.replacement_expression, 1)
+					reset_static_properties
 				end
 			end
 		end

@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			positive_name_code: a_name_code >= 0
 			original_text_not_void: an_original_text /= Void
 		do
+			initialize_dependencies
 			make_xpath (a_node_type, a_name_code, an_original_text)
 			system_id := a_static_context.system_id
 			line_number := a_static_context.line_number

@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			simplify, create_iterator, compute_special_properties, is_repeated_sub_expression,
-			sub_expressions
+			sub_expressions -- TODO promote
 		end
 
 create

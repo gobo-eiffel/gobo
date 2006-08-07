@@ -2,8 +2,8 @@ indexing
 
 	description:
 
-	"Objects whose content template produces a text value:%
-%xsl:attribute, xsl:comment, xsl:namespace, xsl:text, xsl:value-of and xsl:processing-instruction"
+		"Objects whose content template produces a text value:%
+		%xsl:attribute, xsl:comment, xsl:namespace, xsl:text, xsl:value-of and xsl:processing-instruction"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

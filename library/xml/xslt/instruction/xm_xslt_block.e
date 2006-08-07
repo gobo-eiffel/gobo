@@ -327,6 +327,7 @@ feature -- Optimization
 				a_child.promote (an_offer)
 				if a_child.was_expression_replaced then
 					a_cursor.replace (a_child.replacement_expression)
+					reset_static_properties
 				end
 				a_cursor.forth
 			end	

@@ -64,7 +64,10 @@ feature -- Optimization
 				set_replacement (a_promotion)
 			else
 				base_expression.promote (an_offer)
-				if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression ) end
+				if base_expression.was_expression_replaced then
+					set_base_expression (base_expression.replacement_expression )
+					reset_static_properties
+				end
 			end
 		end
 

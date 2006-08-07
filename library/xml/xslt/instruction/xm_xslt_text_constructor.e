@@ -117,6 +117,7 @@ feature -- Optimization
 				select_expression.promote (an_offer)
 				if select_expression.was_expression_replaced then
 					set_select_expression (select_expression.replacement_expression)
+					reset_static_properties
 				end
 			end
 			Precursor (an_offer)

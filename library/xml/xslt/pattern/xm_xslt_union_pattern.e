@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 				pattern_two_not_void: a_pattern_two /= Void
 				static_context_not_void: a_static_context /= Void
 		do
+			initialize_dependencies
 			left_hand_side := a_pattern_one
 			right_hand_side := a_pattern_two
 			if a_pattern_one.node_kind = a_pattern_two.node_kind then

@@ -120,7 +120,7 @@ feature -- Status report
 			std.error.put_string (a_string)
 			std.error.put_string ("[reference count=" + reference_count.out + "]%N")
 			sequence.display (a_level + 1)
-			a_string := STRING_.appended_string (indentation (a_level), "return")
+			a_string := STRING_.appended_string (indentation (a_level), "in")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			action_expression.display (a_level + 1)
@@ -252,7 +252,6 @@ feature -- Optimization
 			-- Promote this subexpression.
 		local
 			a_promotion: XM_XPATH_EXPRESSION
-			another_offer: XM_XPATH_PROMOTION_OFFER
 			a_saved_binding_list, a_new_binding_list: DS_LIST [XM_XPATH_BINDING]
 			a_cursor: DS_LIST_CURSOR [XM_XPATH_BINDING]
 		do
@@ -266,7 +265,10 @@ feature -- Optimization
 
 				sequence.mark_unreplaced
 				sequence.promote (an_offer)
-				if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
+				if sequence.was_expression_replaced then
+					set_sequence (sequence.replacement_expression)
+					reset_static_properties
+				end
 				
 				if an_offer.action = Inline_variable_references	or else an_offer.action = Unordered
 					or else an_offer.action = Replace_current then
@@ -276,7 +278,10 @@ feature -- Optimization
 					
 					action_expression.mark_unreplaced
 					action_expression.promote (an_offer)
-					if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
+					if action_expression.was_expression_replaced then
+						replace_action (action_expression.replacement_expression)
+						reset_static_properties
+					end
 				elseif an_offer.action = Range_independent then
 
 					-- Pass the offer to the action expression only if the action isn't depending on the
@@ -292,6 +297,7 @@ feature -- Optimization
 					action.promote (an_offer)
 					if action.was_expression_replaced then
 						replace_action (action.replacement_expression)
+						reset_static_properties
 					end
 					an_offer.set_binding_list (a_saved_binding_list)
 				end
@@ -301,33 +307,28 @@ feature -- Optimization
 				-- returning the action part.
 
 				if sequence.is_variable_reference then
-					create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} a_new_binding_list.make (1)
-					a_new_binding_list.put (Current, 1)
-					create another_offer.make (Inline_variable_references, a_new_binding_list, sequence.as_variable_reference, False, False)
-					action_expression.promote (another_offer)
+					replace_variable (sequence.as_variable_reference)
 					if action_expression.was_expression_replaced then
 						set_replacement (action_expression.replacement_expression)
 					else
 						set_replacement (action_expression)
 					end
+					if replacement_expression.is_computed_expression then replacement_expression.as_computed_expression.reset_static_properties end
 				end
 
 				-- Similarly, for (let $x := lazy($y) return Z)
 
 				if sequence.is_lazy_expression and then sequence.as_lazy_expression.base_expression.is_variable_reference then
-					create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} a_new_binding_list.make (1)
-					a_new_binding_list.put (Current, 1)
-					create another_offer.make (Inline_variable_references, a_new_binding_list, sequence.as_lazy_expression.base_expression.as_variable_reference, False, False)
-					action_expression.promote (another_offer)
+					replace_variable (sequence.as_lazy_expression.base_expression.as_variable_reference)
 					if action_expression.was_expression_replaced then
 						set_replacement (action_expression.replacement_expression)
 					else
 						set_replacement (action_expression)
 					end
+					if replacement_expression.is_computed_expression then replacement_expression.as_computed_expression.reset_static_properties end
 				end
 			end
 		end
-
 
 feature -- Evaluation
 
@@ -508,6 +509,23 @@ feature {NONE} -- Implementation
 		end
 
 	Maximum_optimization_attempts: INTEGER is 5
+
+	replace_variable (a_var_ref: XM_XPATH_VARIABLE_REFERENCE) is
+			-- Replace `a_var_ref' with it's value.
+		require
+			reference_not_void: a_var_ref /= Void
+		local
+			l_binding_list: DS_LIST [XM_XPATH_BINDING]
+			l_offer: XM_XPATH_PROMOTION_OFFER
+		do
+			create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} l_binding_list.make (1)
+			l_binding_list.put (Current, 1)
+			create l_offer.make (Inline_variable_references, l_binding_list, a_var_ref, False, False)
+			action_expression.promote (l_offer)
+			if l_offer.accepted_expression /= Void then
+				replace_variable (a_var_ref)
+			end
+		end
 
 invariant
 

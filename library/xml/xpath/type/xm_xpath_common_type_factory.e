@@ -80,9 +80,9 @@ feature -- Access
 		end
 
 	any_atomic_type: XM_XPATH_ATOMIC_TYPE is
-			-- xdt:anyAtomicType
+			-- xs:anyAtomicType
 		once
-			create Result.make (Xpath_defined_datatypes_uri,"anyAtomicType", any_simple_type, Any_atomic_type_code)
+			create Result.make (Xml_schema_uri, "anyAtomicType", any_simple_type, Any_atomic_type_code)
 		end
 
 	numeric_type: XM_XPATH_ATOMIC_TYPE is
@@ -134,9 +134,9 @@ feature -- Access
 		end
 
 	untyped_atomic_type: XM_XPATH_ATOMIC_TYPE is
-			-- xdt:untypedAtomic
+			-- xs:untypedAtomic
 		once
-			create Result.make (Xpath_defined_datatypes_uri, "untypedAtomic", any_atomic_type, Untyped_atomic_type_code)
+			create Result.make (Xml_schema_uri, "untypedAtomic", any_atomic_type, Untyped_atomic_type_code)
 		end
 
 	decimal_type: XM_XPATH_ATOMIC_TYPE is
@@ -170,7 +170,7 @@ feature -- Access
 		end
 
 	untyped_type: XM_XPATH_UNTYPED_TYPE is
-			-- xdt:untyped
+			-- xs:untyped
 		once
 			create Result.make
 		end
@@ -182,15 +182,15 @@ feature -- Access
 		end
 
 	year_month_duration_type: XM_XPATH_ATOMIC_TYPE is
-			-- xdt:yearMonthDuration
+			-- xs:yearMonthDuration
 		once
-			create Result.make (Xpath_defined_datatypes_uri, "yearMonthDuration", duration_type, Year_month_duration_type_code)
+			create Result.make (Xml_schema_uri, "yearMonthDuration", duration_type, Year_month_duration_type_code)
 		end
 
 	day_time_duration_type: XM_XPATH_ATOMIC_TYPE is
-			-- xdt:dayTimeDuration
+			-- xs:dayTimeDuration
 		once
-			create Result.make (Xpath_defined_datatypes_uri, "dayTimeDuration", duration_type, Day_time_duration_type_code)
+			create Result.make (Xml_schema_uri, "dayTimeDuration", duration_type, Day_time_duration_type_code)
 		end
 
 	g_year_month_type: XM_XPATH_ATOMIC_TYPE is
@@ -395,21 +395,6 @@ feature {NONE} -- Implementation
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
 		end
 
-	bind_xdt_name (a_fingerprint: INTEGER; a_local_name: STRING) is
-			-- Bind `a_local_name' to `a_fingerprint' in the XPath datatypes namespace.
-		require
-			local_name_not_void: a_local_name /= void and then a_local_name.count > 0
-			system_fingerprint: is_built_in_fingerprint (a_fingerprint)
-			name_not_bound: not fingerprint_map.has (expanded_qname (Xpath_defined_datatypes_uri, a_local_name))
-			local_name_not_mapped: not local_names.has (a_fingerprint)
-		do
-			fingerprint_map.put (a_fingerprint, expanded_qname (Xpath_defined_datatypes_uri, a_local_name))
-			local_names.put (a_local_name, a_fingerprint)
-		ensure
-			name_bound: fingerprint_map.has (expanded_qname (Xpath_defined_datatypes_uri, a_local_name)) and then fingerprint_map.item (expanded_qname (Xpath_defined_datatypes_uri, a_local_name)) = a_fingerprint
-			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
-		end
-
 	bind_fn_name (a_fingerprint: INTEGER; a_local_name: STRING) is
 			-- Bind `a_local_name' to `a_fingerprint' in the XPath functionss namespace.
 		require
@@ -509,7 +494,6 @@ feature {NONE} -- Implementation
 			bind_xslt_names
 			bind_xml_names
 			bind_xsi_names
-			bind_xdt_names
 			bind_fn_names
 			bind_gexslt_names
 			bind_xml_schema_names
@@ -530,16 +514,6 @@ feature {NONE} -- Implementation
 			bind_gexslt_name (Transformation_function_type_code, "transformation")
 		end
 	
-	bind_xdt_names is
-			-- Bind names in the XPath datatypes namespace to their fingerprints.
-		do
-			bind_xdt_name (Any_atomic_type_code, "anyAtomicType")
-			bind_xdt_name (Untyped_atomic_type_code, "untypedAtomic")
-			bind_xdt_name (Untyped_type_code, "untyped")
-			bind_xdt_name (Year_month_duration_type_code, "yearMonthDuration")
-			bind_xdt_name (Day_time_duration_type_code, "dayTimeDuration")
-		end
-
 	bind_fn_names is
 			-- Bind names in the XPath functions namespace to their fingerprints.
 		do
@@ -676,7 +650,7 @@ feature {NONE} -- Implementation
 		end
 	
 	bind_xsi_names is
-			-- Bind names in the XML Shcema Instance namespace to their fingerprints.
+			-- Bind names in the XML Schema Instance namespace to their fingerprints.
 		do
 			bind_xsi_name (Xsi_type_type_code, "type")
 			bind_xsi_name (Xsi_nil_type_code, "nil")
@@ -806,6 +780,11 @@ feature {NONE} -- Implementation
 			bind_xs_name (Entities_type_code, "ENTITIES")
 			bind_xs_name (Any_type_code, "any")
 			bind_xs_name (Any_simple_type_code, "anySimpleType")
+			bind_xs_name (Any_atomic_type_code, "anyAtomicType")
+			bind_xs_name (Untyped_atomic_type_code, "untypedAtomic")
+			bind_xs_name (Untyped_type_code, "untyped")
+			bind_xs_name (Year_month_duration_type_code, "yearMonthDuration")
+			bind_xs_name (Day_time_duration_type_code, "dayTimeDuration")
 		end
 
 invariant

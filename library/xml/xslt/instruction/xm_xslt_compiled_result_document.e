@@ -267,11 +267,13 @@ feature -- Optimization
 			content.promote (an_offer)
 			if content.was_expression_replaced then
 				content := content.replacement_expression; adopt_child_expression (content)
+				reset_static_properties
 			end
 			if href /= Void then
 				href.promote (an_offer)
 				if href.was_expression_replaced then
 					href := href.replacement_expression; adopt_child_expression (href)
+					reset_static_properties
 				end
 			end
 			from
@@ -283,6 +285,7 @@ feature -- Optimization
 				an_attribute.promote (an_offer)
 				if an_attribute.was_expression_replaced then
 					an_attribute := an_attribute.replacement_expression; adopt_child_expression (an_attribute)
+					reset_static_properties
 					a_cursor.replace (an_attribute)
 				end
 				a_cursor.forth

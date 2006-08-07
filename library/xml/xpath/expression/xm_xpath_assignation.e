@@ -116,7 +116,10 @@ feature -- Optimization
 				set_replacement (a_promotion)
 			else
 				sequence.promote (an_offer)
-				if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
+				if sequence.was_expression_replaced then
+					set_sequence (sequence.replacement_expression)
+					reset_static_properties
+				end
 				if an_offer.action = Inline_variable_references or else an_offer.action = Unordered
 					or else an_offer.action = Replace_current then
 
@@ -125,7 +128,10 @@ feature -- Optimization
 					-- outer context or the inner context.
 					
 					action_expression.promote (an_offer)
-					if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
+					if action_expression.was_expression_replaced then
+						replace_action (action_expression.replacement_expression)
+						reset_static_properties
+					end
 				elseif an_offer.action = Range_independent then
 
 					-- Pass the offer to the action expression only if the action isn't dependent on the
@@ -141,6 +147,7 @@ feature -- Optimization
 					action.promote (an_offer)
 					if action.was_expression_replaced then
 						replace_action (action.replacement_expression)
+						reset_static_properties
 					end
 					an_offer.set_binding_list (a_saved_binding_list)		
 				end
@@ -153,6 +160,10 @@ feature -- Evaluation
 			-- Evaluate variable
 		do
 			last_evaluated_binding := a_context.evaluated_local_variable (slot_number)
+			if last_evaluated_binding.is_memo_closure
+				and then last_evaluated_binding.as_memo_closure.is_all_read then
+				a_context.set_local_variable (last_evaluated_binding.as_memo_closure.materialized, slot_number)
+			end
 		end
 
 feature -- Element change

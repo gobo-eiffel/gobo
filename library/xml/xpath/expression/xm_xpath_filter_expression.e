@@ -378,7 +378,10 @@ feature -- Optimization
 			else
 				if not (an_offer.action = Unordered and then filter_is_positional) then
 					base_expression.promote (an_offer)
-					if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression) end
+					if base_expression.was_expression_replaced then
+						set_base_expression (base_expression.replacement_expression)
+						reset_static_properties
+					end
 				end
 				if an_offer.action = Inline_variable_references
 				 or else an_offer.action = Replace_current then
@@ -388,7 +391,10 @@ feature -- Optimization
 					--  outer context or the inner context.
 
 					filter.promote (an_offer)
-					if filter.was_expression_replaced then set_filter (filter.replacement_expression) end
+					if filter.was_expression_replaced then
+						set_filter (filter.replacement_expression)
+						reset_static_properties
+					end
 				end
 			end
 		end	
@@ -705,7 +711,10 @@ feature {NONE} -- Implementation
 		do
 			create an_offer.make (Focus_independent, Void, Current, False, base_expression.context_document_nodeset)
 			filter.promote (an_offer)
-			if filter.was_expression_replaced then set_filter(filter.replacement_expression) end
+			if filter.was_expression_replaced then
+				set_filter(filter.replacement_expression)
+				reset_static_properties
+			end
 			if an_offer.containing_expression.is_let_expression then
 				a_let_expression := an_offer.containing_expression.as_let_expression
 				a_let_expression.check_static_type (a_context, a_context_item_type) 

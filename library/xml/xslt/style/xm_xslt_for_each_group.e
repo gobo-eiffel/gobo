@@ -161,39 +161,38 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			algorithm: INTEGER
-			a_key, an_action: XM_XPATH_EXPRESSION
-			-- TODO: a_key_pattern: XM_XSLT_PATTERN_EXPRESSION
-			a_key_pattern: XM_XSLT_PATTERN
-			is_pattern: BOOLEAN
+			l_algorithm: INTEGER
+			l_key, l_action: XM_XPATH_EXPRESSION
+			l_key_pattern: XM_XSLT_PATTERN
+			l_pattern: BOOLEAN
 		do
 			if group_by /= Void then
-				algorithm := Group_by_algorithm
-				a_key := group_by
+				l_algorithm := Group_by_algorithm
+				l_key := group_by
 			elseif group_adjacent /= Void then
-				algorithm := Group_adjacent_algorithm
-				a_key := group_adjacent
+				l_algorithm := Group_adjacent_algorithm
+				l_key := group_adjacent
 			elseif group_starting_with /= Void then
-				algorithm := Group_starting_with_algorithm
-				-- TODO: create a_key_pattern.make (group_starting_with)
-				a_key_pattern := group_starting_with
-				is_pattern := True
+				l_algorithm := Group_starting_with_algorithm
+				-- TODO: create l_key_pattern.make (group_starting_with)
+				l_key_pattern := group_starting_with
+				l_pattern := True
 			elseif group_ending_with /= Void then
-				algorithm := Group_ending_with_algorithm
-				-- TODO: create a_key_pattern.make (group_ending_with)
-				a_key_pattern := group_ending_with
-				is_pattern := True
+				l_algorithm := Group_ending_with_algorithm
+				-- TODO: create l_key_pattern.make (group_ending_with)
+				l_key_pattern := group_ending_with
+				l_pattern := True
 			end
-			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-			an_action := last_generated_expression
-			if an_action = Void then create {XM_XPATH_EMPTY_SEQUENCE} an_action.make end
-			if is_pattern then
-				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make_pattern (an_executable, select_expression, an_action, a_key_pattern, algorithm, sort_keys, collation_name, default_collation_name)
+			compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
+			l_action := last_generated_expression
+			if l_action = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_action.make end
+			if l_pattern then
+				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make_pattern (a_executable, select_expression, l_action, l_key_pattern, l_algorithm, sort_keys, collation_name, default_collation_name)
 			else
-				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make (an_executable, select_expression, an_action, a_key, algorithm, sort_keys, collation_name, default_collation_name)
+				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make (a_executable, select_expression, l_action, l_key, l_algorithm, sort_keys, collation_name, default_collation_name)
 			end
 		end
 

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			local_name := "untyped"
-			namespace_uri := Xpath_defined_datatypes_uri
+			namespace_uri := Xml_schema_uri
 			fingerprint := Untyped_type_code
 		end
 

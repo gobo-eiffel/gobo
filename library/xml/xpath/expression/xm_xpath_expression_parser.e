@@ -2592,8 +2592,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if not is_parse_error then
-					if STRING_.same_string (a_uri, Xml_schema_uri) or else
-						STRING_.same_string (a_uri, Xpath_defined_datatypes_uri) then
+					if STRING_.same_string (a_uri, Xml_schema_uri) then
 						an_item_type := built_in_item_type (a_uri, a_local_name)
 						if an_item_type = Void then
 							report_parse_error (STRING_.concat ("Unknown atomic type ", a_qname), "XPST0051")

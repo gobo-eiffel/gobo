@@ -24,86 +24,74 @@ inherit
 
 		-- TODO: `create_node_iterator' needs re-defining to avoid possible bugs
 	
-		-- TODO: use XM_XSLT_PATTERN_EXPRESSION, when it is completed
-
 create
 
 	make, make_pattern
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression, an_action: XM_XPATH_EXPRESSION; a_key_expression: XM_XPATH_EXPRESSION;
-		an_algorithm: INTEGER; some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION];
+	make (a_executable: XM_XSLT_EXECUTABLE; a_select_expression, a_action: XM_XPATH_EXPRESSION; a_key_expression: XM_XPATH_EXPRESSION;
+		a_algorithm: INTEGER; a_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION];
 		a_collation_name: XM_XPATH_EXPRESSION; a_default_collation_name: STRING) is
 			-- Establish invariant.
 		require
-			executable_not_void: an_executable /= Void
+			executable_not_void: a_executable /= Void
 			select_expression_not_void: a_select_expression /= Void
-			action_not_void: an_action /= Void
+			action_not_void: a_action /= Void
 			key_expression_not_void: a_key_expression /= Void
-			expression_algorithm: an_algorithm = Group_by_algorithm  or an_algorithm = Group_adjacent_algorithm
-			sort_keys: some_sort_keys /= Void
+			expression_algorithm: a_algorithm >= Group_by_algorithm and a_algorithm <= Group_ending_with_algorithm
+			sort_keys: a_sort_keys /= Void
 			default_collation_name_not_void: a_default_collation_name /= Void
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			executable := an_executable
+			executable := a_executable
 			select_expression := a_select_expression
-			adopt_child_expression (select_expression)
-			action := an_action
-			adopt_child_expression (action)
+			action := a_action
 			key_expression := a_key_expression
-			adopt_child_expression (key_expression)
-			algorithm := an_algorithm
-			sort_keys := some_sort_keys
+			algorithm := a_algorithm
+			sort_keys := a_sort_keys
 			collation_name := a_collation_name
 			default_collation_name := a_default_collation_name
 			compute_static_properties
 			initialized := True
+			from l_cursor := sub_expressions.new_cursor; l_cursor.start until l_cursor.after loop
+				adopt_child_expression (l_cursor.item)
+				l_cursor.forth
+			end
+			
 		ensure
-			executable_set: executable = an_executable
+			executable_set: executable = a_executable
 			select_expression_set: select_expression = a_select_expression
-			action_set: action = an_action
+			action_set: action = a_action
 			key_expression_set: key_expression = a_key_expression
-			algorithm_set: algorithm = an_algorithm
-			sort_keys_set: sort_keys = some_sort_keys
+			algorithm_set: algorithm = a_algorithm
+			sort_keys_set: sort_keys = a_sort_keys
 			collation_name_set: collation_name = a_collation_name
 			default_collation_name_set: default_collation_name = a_default_collation_name
 		end
-
-	-- TODO: use XM_XSLT_PATTERN_EXPRESSION
 	
-	make_pattern (an_executable: XM_XSLT_EXECUTABLE; a_select_expression, an_action: XM_XPATH_EXPRESSION; a_key_pattern: XM_XSLT_PATTERN;
-		an_algorithm: INTEGER; some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION];
+	make_pattern (a_executable: XM_XSLT_EXECUTABLE; a_select_expression, a_action: XM_XPATH_EXPRESSION; a_key_pattern: XM_XSLT_PATTERN;
+		a_algorithm: INTEGER; a_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION];
 		a_collation_name: XM_XPATH_EXPRESSION; a_default_collation_name: STRING) is
 			-- Establish invariant.
 		require
-			executable_not_void: an_executable /= Void
+			executable_not_void: a_executable /= Void
 			select_expression_not_void: a_select_expression /= Void
-			action_not_void: an_action /= Void
+			action_not_void: a_action /= Void
 			key_expression_not_void: a_key_pattern /= Void
-			expression_algorithm: an_algorithm = Group_starting_with_algorithm  or an_algorithm = Group_ending_with_algorithm
-			sort_keys: some_sort_keys /= Void
+			expression_algorithm: a_algorithm = Group_starting_with_algorithm  or a_algorithm = Group_ending_with_algorithm
+			sort_keys: a_sort_keys /= Void
 			default_collation_name_not_void: a_default_collation_name /= Void
 		do
-			executable := an_executable
-			select_expression := a_select_expression
-			adopt_child_expression (select_expression)
-			action := an_action
-			adopt_child_expression (action)
-			key_pattern := a_key_pattern
-			-- TODO: adopt_child_expression (key_pattern)
-			algorithm := an_algorithm
-			sort_keys := some_sort_keys
-			collation_name := a_collation_name
-			default_collation_name := a_default_collation_name
-			compute_static_properties
-			initialized := True
+			create {XM_XSLT_PATTERN_BRIDGE} key_expression .make (a_key_pattern, Current)
+			make (a_executable, a_select_expression, a_action, key_expression, a_algorithm, a_sort_keys, a_collation_name, a_default_collation_name)
 		ensure
-			executable_set: executable = an_executable
+			executable_set: executable = a_executable
 			select_expression_set: select_expression = a_select_expression
-			action_set: action = an_action
-			key_pattern_set: key_pattern = a_key_pattern
-			algorithm_set: algorithm = an_algorithm
-			sort_keys_set: sort_keys = some_sort_keys
+			action_set: action = a_action
+			algorithm_set: algorithm = a_algorithm
+			sort_keys_set: sort_keys = a_sort_keys
 			collation_name_set: collation_name = a_collation_name
 			default_collation_name_set: default_collation_name = a_default_collation_name
 		end
@@ -114,10 +102,6 @@ feature -- Access
 			-- Data type of the expression, when known
 		do
 			Result := action.item_type
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
 		end
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
@@ -126,15 +110,11 @@ feature -- Access
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			an_index: INTEGER
 		do
-			create Result.make (3 + sort_keys.count * 5)
+			create Result.make (4 + sort_keys.count * 5)
 			Result.set_equality_tester (expression_tester)
 			Result.put (select_expression, 1)
 			Result.put (action, 2)
-			if key_expression /= Void then
-				Result.put (key_expression, 3)
--- TODO:			else
---				Result.put (key_pattern, 3)
-			end
+			Result.put (key_expression, 3)
 			from
 				an_index := 4
 				a_cursor := sort_keys.new_cursor; a_cursor.start
@@ -149,6 +129,9 @@ feature -- Access
 				Result.put (a_cursor.item.data_type_expression, an_index); an_index := an_index + 1
 				Result.put (a_cursor.item.language_expression, an_index); an_index := an_index + 1
 				a_cursor.forth
+			end
+			if collation_name /= Void then
+				Result.put_last (collation_name)
 			end
 		end
 
@@ -180,23 +163,20 @@ feature -- Status setting
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+			l_focus: BOOLEAN
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
 			if not select_expression.are_dependencies_computed then select_expression.as_computed_expression.compute_dependencies end
 			set_dependencies (select_expression.dependencies)
 			if not action.are_dependencies_computed then action.as_computed_expression.compute_dependencies end
 			merge_dependencies (action.dependencies)
-			if key_expression /= Void then
-				if not select_expression.depends_upon_current_group and then not  key_expression.depends_upon_current_group then
-					set_current_group_independent
-				end
-				if not key_expression.are_dependencies_computed then key_expression.as_computed_expression.compute_dependencies end
-				merge_dependencies (key_expression.dependencies)
-			else
-				if not select_expression.depends_upon_current_group then -- TODO: and then not  key_pattern.depends_upon_current_group then
-					set_current_group_independent
-				end
-				-- TODO: merge_dependencies (key_pattern.dependencies)
+			if not key_expression.are_dependencies_computed then key_expression.as_computed_expression.compute_dependencies end
+			merge_dependencies (key_expression.dependencies)
+			if not select_expression.depends_upon_current_group and not key_expression.depends_upon_current_group then
+				set_current_group_independent
+			end
+			if not select_expression.depends_upon_focus then
+				set_focus_independent
 			end
 			from
 				a_cursor := sort_keys.new_cursor; a_cursor.start
@@ -208,21 +188,13 @@ feature -- Status setting
 				a_computed_expression ?= a_cursor.item.sort_key
 				if a_computed_expression /= Void then
 					if not a_computed_expression.are_dependencies_computed then a_computed_expression.compute_dependencies end
+					l_focus := depends_upon_focus
 					merge_dependencies (a_computed_expression.dependencies)
+					if not depends_upon_focus then
+						set_focus_independent
+					end
 				end
 				a_cursor.forth
-			end
-			if not select_expression.depends_upon_context_item then
-				set_context_item_independent
-			end
-			if not select_expression.depends_upon_position then
-				set_position_independent
-			end
-			if not select_expression.depends_upon_last then
-				set_last_independent
-			end
-			if not select_expression.depends_upon_context_document then
-				set_context_document_independent
 			end
 			from
 				a_cursor := sort_keys.new_cursor; a_cursor.start
@@ -244,7 +216,10 @@ feature -- Status setting
 					merge_dependencies (a_computed_expression.dependencies)
 				end
 				a_cursor.forth
-			end			
+			end
+			if collation_name /= Void then
+				merge_dependencies (collation_name.dependencies)
+			end
 		end
 
 feature -- Optimization
@@ -262,12 +237,10 @@ feature -- Optimization
 				action := action.replacement_expression
 				adopt_child_expression (action)
 			end
-			if key_expression /= Void then
-				key_expression.simplify
-				if key_expression.was_expression_replaced then
-					key_expression := key_expression.replacement_expression
-					adopt_child_expression (key_expression)
-				end
+			key_expression.simplify
+			if key_expression.was_expression_replaced then
+				key_expression := key_expression.replacement_expression
+				adopt_child_expression (key_expression)
 			end
 		end
 
@@ -280,7 +253,6 @@ feature -- Optimization
 			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
-				adopt_child_expression (select_expression)
 			end
 			an_empty_sequence ?= select_expression
 			if an_empty_sequence /= Void then
@@ -289,18 +261,14 @@ feature -- Optimization
 				action.check_static_type (a_context, select_expression.item_type)
 				if action.was_expression_replaced then
 					action := action.replacement_expression
-					adopt_child_expression (action)
 				end
 				an_empty_sequence ?= action
 				if an_empty_sequence /= Void then
 					set_replacement (an_empty_sequence) -- NOP
 				else
-					if key_expression /= Void then
-						key_expression.check_static_type (a_context, select_expression.item_type)
-						if key_expression.was_expression_replaced then
-							key_expression := key_expression.replacement_expression
-							adopt_child_expression (key_expression)
-						end
+					key_expression.check_static_type (a_context, select_expression.item_type)
+					if key_expression.was_expression_replaced then
+						key_expression := key_expression.replacement_expression
 					end
 				end
 			end
@@ -315,7 +283,6 @@ feature -- Optimization
 			select_expression.optimize (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
-				adopt_child_expression (select_expression)
 			end
 			an_empty_sequence ?= select_expression
 			if an_empty_sequence /= Void then
@@ -324,37 +291,45 @@ feature -- Optimization
 				action.optimize (a_context, select_expression.item_type)
 				if action.was_expression_replaced then
 					action := action.replacement_expression
-					adopt_child_expression (action)
 				end
 				an_empty_sequence ?= action
 				if an_empty_sequence /= Void then
 					set_replacement (an_empty_sequence) -- NOP
 				else
-					if key_expression /= Void then
-						key_expression.optimize (a_context, select_expression.item_type)
-						if key_expression.was_expression_replaced then
-							key_expression := key_expression.replacement_expression
-							adopt_child_expression (key_expression)
-						end
+					key_expression.optimize (a_context, select_expression.item_type)
+					if key_expression.was_expression_replaced then
+						key_expression := key_expression.replacement_expression
 					end
 				end
 			end
+			if not was_expression_replaced then
+				adopt_child_expression (select_expression)
+				adopt_child_expression (action)
+				adopt_child_expression (key_expression)
+			end
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		do
-			select_expression.promote (an_offer)
+			select_expression.promote (a_offer)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
+				reset_static_properties
 			end
-			action.promote (an_offer)
+			action.promote (a_offer)
 			if action.was_expression_replaced then
 				action := action.replacement_expression
 				adopt_child_expression (action)
+				reset_static_properties
 			end
-			reset_static_properties
+			key_expression.promote (a_offer)
+			if key_expression.was_expression_replaced then
+				key_expression := key_expression.replacement_expression
+				adopt_child_expression (key_expression)
+				reset_static_properties
+			end
 		end	
 	
 feature -- Evaluation
@@ -451,12 +426,7 @@ feature {NONE} -- Implementation
 			-- Action to be taken for each group
 	
 	key_expression: XM_XPATH_EXPRESSION
-			-- Key for `Group_by' or `Group_adjacent'
-
-			-- TODO: key_pattern: XM_XSLT_PATTERN_EXPRESSION
-	
-	key_pattern: XM_XSLT_PATTERN
-			-- Key for `Group_starting_with' or `Group_ending_with'
+			-- Key for all algorithms
 
 	sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
 			-- Sort keys
@@ -503,6 +473,7 @@ feature {NONE} -- Implementation
 			a_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 			a_group_iterator: XM_XSLT_GROUP_ITERATOR
+			l_pattern: XM_XSLT_PATTERN_BRIDGE
 		do
 			select_expression.create_iterator (a_context)
 			a_population := select_expression.last_iterator
@@ -522,9 +493,11 @@ feature {NONE} -- Implementation
 				when Group_adjacent_algorithm then
 					create {XM_XSLT_GROUP_ADJACENT_ITERATOR} a_group_iterator.make (a_population, key_expression, a_context, collator (a_context))
 				when Group_starting_with_algorithm then
-					create {XM_XSLT_GROUP_STARTING_WITH_ITERATOR} a_group_iterator.make (a_population, key_pattern, a_context, Current)
+					l_pattern ?= key_expression
+					create {XM_XSLT_GROUP_STARTING_WITH_ITERATOR} a_group_iterator.make (a_population, l_pattern.pattern, a_context, Current)
 				when Group_ending_with_algorithm then
-					create {XM_XSLT_GROUP_ENDING_WITH_ITERATOR} a_group_iterator.make (a_population, key_pattern, a_context, Current)
+					l_pattern ?= key_expression
+					create {XM_XSLT_GROUP_ENDING_WITH_ITERATOR} a_group_iterator.make (a_population, l_pattern.pattern, a_context, Current)
 				end
 				
 				-- Now iterate over the leading nodes of the groups.
@@ -557,9 +530,10 @@ feature {NONE} -- Implementation
 invariant
 
 	select_expression_not_void: initialized implies select_expression /= Void
-	key: initialized implies key_expression /= Void xor key_pattern /= Void
+	key: initialized implies key_expression /= Void
 	sort_keys: initialized implies sort_keys /= Void
-	algorithm: initialized implies algorithm >= Group_by_algorithm and then algorithm <= Group_ending_with_algorithm
+	algorithm: initialized implies algorithm >= Group_by_algorithm and algorithm <= Group_ending_with_algorithm
+	pattern: (algorithm = Group_ending_with_algorithm or algorithm = Group_starting_with_algorithm) implies key_expression.is_pattern_bridge
 	collation: initialized implies algorithm >= Group_starting_with_algorithm implies collation_name = Void
 	default_collation_name_not_void: initialized implies default_collation_name /= Void
 

@@ -192,13 +192,17 @@ feature -- Optimization
 			-- Promote this instruction.
 		do
 			attribute_name.promote (an_offer)
-			if attribute_name.was_expression_replaced then set_attribute_name (attribute_name.replacement_expression) end
+			if attribute_name.was_expression_replaced then
+				set_attribute_name (attribute_name.replacement_expression)
+				reset_static_properties
+			end
 			if attribute_name.is_error then set_last_error (attribute_name.error_value) end
 			if not is_error and then namespace /= Void then
 				namespace.promote (an_offer)
 				if namespace.was_expression_replaced then
 					namespace := namespace.replacement_expression
 					adopt_child_expression (namespace)
+					reset_static_properties
 				end
 				if namespace.is_error then set_last_error (namespace.error_value) end
 			end

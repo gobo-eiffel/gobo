@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
+			initialize_dependencies
 			system_id := ""
 			line_number := -1
 			make_xpath

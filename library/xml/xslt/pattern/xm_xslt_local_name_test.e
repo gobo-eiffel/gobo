@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 		do
 			system_id := a_static_context.system_id
 			line_number := a_static_context.line_number
+			initialize_dependencies
 			make_xpath (a_node_type, a_local_name, an_original_text)
 		ensure
 			node_kind_set: node_kind = a_node_type

@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			valid_node_type: is_node_type (a_node_type) and then a_node_type /= Any_node
 			static_context_not_void: a_static_context /= Void
 		do
+			initialize_dependencies
 			make_xpath (a_node_type)
 			system_id := a_static_context.system_id
 			line_number := a_static_context.line_number

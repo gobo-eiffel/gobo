@@ -241,13 +241,22 @@ feature -- Optimization
 				set_replacement (a_promotion)
 			else
 				condition.promote (an_offer)
-				if condition.was_expression_replaced then set_condition (condition.replacement_expression) end
+				if condition.was_expression_replaced then
+					set_condition (condition.replacement_expression)
+					reset_static_properties
+				end
 				if an_offer.action = Unordered or else an_offer.action = Inline_variable_references
 					or else an_offer.action = Replace_current then
 					then_expression.promote (an_offer)
-					if then_expression.was_expression_replaced then set_then_expression (then_expression.replacement_expression) end
+					if then_expression.was_expression_replaced then
+						set_then_expression (then_expression.replacement_expression)
+						reset_static_properties
+					end
 					else_expression.promote (an_offer)
-					if else_expression.was_expression_replaced then set_else_expression (else_expression.replacement_expression) end					
+					if else_expression.was_expression_replaced then
+						set_else_expression (else_expression.replacement_expression)
+						reset_static_properties
+					end					
 				end
 			end
 		end

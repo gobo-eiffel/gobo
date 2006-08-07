@@ -368,7 +368,10 @@ feature -- Optimization
 				set_replacement (a_promotion)
 			else
 				start.promote (an_offer)
-				if start.was_expression_replaced then set_start (start.replacement_expression) end
+				if start.was_expression_replaced then
+					set_start (start.replacement_expression)
+					reset_static_properties
+				end
 				
 				if an_offer.action = Inline_variable_references
 					or else an_offer.action = Replace_current then
@@ -378,8 +381,10 @@ feature -- Optimization
 					--  outer context or the inner context.
 
 					step.promote (an_offer)
-					if step.was_expression_replaced then set_step (step.replacement_expression) end
-					reset_static_properties
+					if step.was_expression_replaced then
+						set_step (step.replacement_expression)
+						reset_static_properties
+					end
 				end
 			end
 		end
@@ -882,6 +887,7 @@ feature {NONE} -- Implementation
 			step.promote (an_offer)
 			if step.was_expression_replaced then
 				set_step (step.replacement_expression)
+				reset_static_properties
 			end
 			if step.is_error then
 				set_last_error (step.error_value)

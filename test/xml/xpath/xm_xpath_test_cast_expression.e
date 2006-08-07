@@ -38,7 +38,7 @@ inherit
 feature -- Test
 
 	test_untyped_atomic_to_untyped_atomic is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xdt:untypedAtomic.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:untypedAtomic.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -47,7 +47,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xdt:untypedAtomic")
+			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:untypedAtomic")
 --			diagnose_evaluation_error (an_evaluator)
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -56,7 +56,7 @@ feature -- Test
 		end
 
 	test_untyped_atomic_to_string is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:string.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:string.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -65,7 +65,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:string")
+			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:string")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
@@ -73,7 +73,7 @@ feature -- Test
 		end
 
 	test_untyped_atomic_to_any_uri is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:anyURI
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:anyURI
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -82,7 +82,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:anyURI")
+			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:anyURI")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
@@ -90,7 +90,7 @@ feature -- Test
 		end
 
 	test_untyped_atomic_to_notation is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:NOTATION.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:NOTATION.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -98,13 +98,13 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:NOTATION")
+			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:NOTATION")
 			-- xs:NOTATION not supported by basic-level processor
 			assert ("Evaluation error", an_evaluator.is_error) 
 		end
 
 	test_untyped_atomic_to_bad_float is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:float.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:float.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -112,12 +112,12 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:float")
+			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:float")
 			assert ("Evaluation error", an_evaluator.is_error)
 		end
 
 	test_untyped_atomic_to_float is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:float.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:float.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -127,7 +127,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic (' 17.5E-12') cast as xs:float")
+			an_evaluator.evaluate ("xs:untypedAtomic (' 17.5E-12') cast as xs:float")
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_float_value ?= evaluated_items.item (1)
@@ -135,7 +135,7 @@ feature -- Test
 		end	
 
 	test_untyped_atomic_to_double_unsucessful is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:double, with invalid value.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:double, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -143,12 +143,12 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:double")
+			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:double")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
 	test_untyped_atomic_to_double is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:double.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:double.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -158,7 +158,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic (' 17.5E-12') cast as xs:double")
+			an_evaluator.evaluate ("xs:untypedAtomic (' 17.5E-12') cast as xs:double")
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_double_value ?= evaluated_items.item (1)
@@ -166,7 +166,7 @@ feature -- Test
 		end	
 
 	test_untyped_atomic_to_decimal_unsucessful is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:decimal, with invalid value.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:decimal, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -174,12 +174,12 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:decimal")
+			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:decimal")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
 	test_untyped_atomic_to_decimal is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:decimal
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:decimal
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -190,7 +190,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic (' 256.7198003 ') cast as xs:decimal")
+			an_evaluator.evaluate ("xs:untypedAtomic (' 256.7198003 ') cast as xs:decimal")
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			create a_decimal.make_from_string ("256.7198003")
@@ -199,7 +199,7 @@ feature -- Test
 		end
 	
 	test_untyped_atomic_to_integer_unsucessful is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:integer, with invalid value.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:integer, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -207,12 +207,12 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:integer")
+			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:integer")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
 	test_untyped_atomic_to_integer is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:integer
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:integer
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -223,7 +223,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic (' 56 ') cast as xs:integer")
+			an_evaluator.evaluate ("xs:untypedAtomic (' 56 ') cast as xs:integer")
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			an_integer_value ?= evaluated_items.item (1)
@@ -232,7 +232,7 @@ feature -- Test
 		end
 
 	test_untyped_atomic_to_boolean_unsucessful is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:boolean, with invalid value.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:boolean, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -240,12 +240,12 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:boolean")
+			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:boolean")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
 	test_untyped_atomic_to_boolean is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:boolean.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:boolean.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -255,7 +255,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic (' true ') cast as xs:boolean")
+			an_evaluator.evaluate ("xs:untypedAtomic (' true ') cast as xs:boolean")
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
@@ -263,7 +263,7 @@ feature -- Test
 		end	
 
 	test_untyped_atomic_to_qname_unsucessful is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:QName, with invalid value.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:QName, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -271,12 +271,12 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('xs:b:fred') cast as xs:QName")
+			an_evaluator.evaluate ("xs:untypedAtomic ('xs:b:fred') cast as xs:QName")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
 	test_untyped_atomic_to_qname_2 is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:QName.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:QName.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -284,12 +284,12 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('xdt:untypedAtomic') cast as xs:QName")
+			an_evaluator.evaluate ("xs:untypedAtomic ('xs:untypedAtomic') cast as xs:QName")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end	
 
 	test_untyped_atomic_to_date is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:date.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:date.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -299,7 +299,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09-08Z') cast as xs:date")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005-09-08Z') cast as xs:date")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_date_value ?= evaluated_items.item (1)
@@ -307,7 +307,7 @@ feature -- Test
 		end	
 
 	test_untyped_atomic_to_zoneless_date is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:date.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:date.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -317,7 +317,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09-08') cast as xs:date")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005-09-08') cast as xs:date")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_date_value ?= evaluated_items.item (1)
@@ -325,7 +325,7 @@ feature -- Test
 		end	
 
 	test_untyped_atomic_to_date_unsucessful is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:date, with invalid value.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:date, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -333,12 +333,12 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:date")
+			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:date")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
 	test_untyped_atomic_to_zoneless_time is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:time.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:time.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -348,7 +348,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('12:05:35.465987') cast as xs:time")
+			an_evaluator.evaluate ("xs:untypedAtomic ('12:05:35.465987') cast as xs:time")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_time_value ?= evaluated_items.item (1)
@@ -356,7 +356,7 @@ feature -- Test
 		end	
 
 	test_untyped_atomic_to_date_time is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:dateTime.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:dateTime.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -366,7 +366,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09-08T12:07:40.5Z') cast as xs:dateTime")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005-09-08T12:07:40.5Z') cast as xs:dateTime")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_date_time_value ?= evaluated_items.item (1)
@@ -374,7 +374,7 @@ feature -- Test
 		end	
 
 	test_untyped_atomic_to_duration is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:duration.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -384,7 +384,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('P2Y5MT12H09M08.5674S') cast as xs:duration")
+			an_evaluator.evaluate ("xs:untypedAtomic ('P2Y5MT12H09M08.5674S') cast as xs:duration")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_duration_value ?= evaluated_items.item (1)
@@ -392,7 +392,7 @@ feature -- Test
 		end	
 
 	test_untyped_atomic_to_year_month_duration is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xdt:yearMonthDuration.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:yearMonthDuration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -402,7 +402,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('P2Y5M') cast as xdt:yearMonthDuration")
+			an_evaluator.evaluate ("xs:untypedAtomic ('P2Y5M') cast as xs:yearMonthDuration")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_duration_value ?= evaluated_items.item (1)
@@ -410,7 +410,7 @@ feature -- Test
 		end	
 
 	test_untyped_atomic_to_day_time_duration is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xdt:dayTimeDuration.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:dayTimeDuration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -420,7 +420,7 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('P3DT4H7M') cast as xdt:dayTimeDuration")
+			an_evaluator.evaluate ("xs:untypedAtomic ('P3DT4H7M') cast as xs:dayTimeDuration")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_duration_value ?= evaluated_items.item (1)
@@ -428,7 +428,7 @@ feature -- Test
 		end	
 
 	test_untyped_atomic_to_g_year_month is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:gYearMonth.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:gYearMonth.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -439,17 +439,17 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09') castable as xs:gYearMonth")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005-09') castable as xs:gYearMonth")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09') cast as xs:gYearMonth")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005-09') cast as xs:gYearMonth")
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_value ?= evaluated_items.item (1)
 			assert ("gYearMonth value", a_value /= Void)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005--09') castable as xs:gYearMonth")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005--09') castable as xs:gYearMonth")
 			assert ("No evaluation error 3", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
@@ -457,7 +457,7 @@ feature -- Test
 		end
 
 	test_untyped_atomic_to_g_year is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:gYear.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:gYear.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -468,17 +468,17 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005') castable as xs:gYear")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005') castable as xs:gYear")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005') cast as xs:gYear")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005') cast as xs:gYear")
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_value ?= evaluated_items.item (1)
 			assert ("gYear value", a_value /= Void)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005--09') castable as xs:gYear")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005--09') castable as xs:gYear")
 			assert ("No evaluation error 3", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
@@ -486,7 +486,7 @@ feature -- Test
 		end
 
 	test_untyped_atomic_to_g_month is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:gMonth.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:gMonth.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -497,17 +497,17 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('--09') castable as xs:gMonth")
+			an_evaluator.evaluate ("xs:untypedAtomic ('--09') castable as xs:gMonth")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('--09') cast as xs:gMonth")
+			an_evaluator.evaluate ("xs:untypedAtomic ('--09') cast as xs:gMonth")
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_value ?= evaluated_items.item (1)
 			assert ("gMonth value", a_value /= Void)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005--09') castable as xs:gMonth")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005--09') castable as xs:gMonth")
 			assert ("No evaluation error 3", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
@@ -515,7 +515,7 @@ feature -- Test
 		end
 
 	test_untyped_atomic_to_g_month_day is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:gMonthDay.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:gMonthDay.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -526,17 +526,17 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('--05-09') castable as xs:gMonthDay")
+			an_evaluator.evaluate ("xs:untypedAtomic ('--05-09') castable as xs:gMonthDay")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('--05-09') cast as xs:gMonthDay")
+			an_evaluator.evaluate ("xs:untypedAtomic ('--05-09') cast as xs:gMonthDay")
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_value ?= evaluated_items.item (1)
 			assert ("gMonthDay value", a_value /= Void)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005--09') castable as xs:gMonthDay")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005--09') castable as xs:gMonthDay")
 			assert ("No evaluation error 3", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
@@ -544,7 +544,7 @@ feature -- Test
 		end
 
 	test_untyped_atomic_to_g_day is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:gDay.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:gDay.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -555,17 +555,17 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('---09') castable as xs:gDay")
+			an_evaluator.evaluate ("xs:untypedAtomic ('---09') castable as xs:gDay")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('---09') cast as xs:gDay")
+			an_evaluator.evaluate ("xs:untypedAtomic ('---09') cast as xs:gDay")
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_value ?= evaluated_items.item (1)
 			assert ("gDay value", a_value /= Void)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('2005--09') castable as xs:gDay")
+			an_evaluator.evaluate ("xs:untypedAtomic ('2005--09') castable as xs:gDay")
 			assert ("No evaluation error 3", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
@@ -573,7 +573,7 @@ feature -- Test
 		end
 
 	test_untyped_atomic_to_base64 is
-			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:base64Binary.
+			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:base64Binary.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -584,12 +584,12 @@ feature -- Test
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('" + encoded_string + "') castable as xs:base64Binary")
+			an_evaluator.evaluate ("xs:untypedAtomic ('" + encoded_string + "') castable as xs:base64Binary")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
-			an_evaluator.evaluate ("xdt:untypedAtomic ('" + encoded_string + "') cast as xs:base64Binary")
+			an_evaluator.evaluate ("xs:untypedAtomic ('" + encoded_string + "') cast as xs:base64Binary")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_value ?= evaluated_items.item (1)

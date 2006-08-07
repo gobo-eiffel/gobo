@@ -111,7 +111,10 @@ feature -- Optimization
 			else
 				base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
 				base_expression.promote (an_offer)
-				if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression ) end
+				if base_expression.was_expression_replaced then
+					set_base_expression (base_expression.replacement_expression )
+					reset_static_properties
+				end
 			end
 		end
 

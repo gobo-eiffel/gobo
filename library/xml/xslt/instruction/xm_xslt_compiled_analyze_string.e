@@ -240,22 +240,26 @@ feature -- Optimization
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
+				reset_static_properties
 			end
 			regex_expression.promote (an_offer)
 			if regex_expression.was_expression_replaced then
 				regex_expression := regex_expression.replacement_expression
 				adopt_child_expression (regex_expression)
+				reset_static_properties
 			end
 			flags_expression.promote (an_offer)
 			if flags_expression.was_expression_replaced then
 				flags_expression := flags_expression.replacement_expression
 				adopt_child_expression (flags_expression)
+				reset_static_properties
 			end
 			if matching_block /= Void then
 				matching_block.promote (an_offer)
 				if matching_block.was_expression_replaced then
 					matching_block := matching_block.replacement_expression
 					adopt_child_expression (matching_block)
+					reset_static_properties
 				end
 			end
 			if non_matching_block /= Void then
@@ -263,9 +267,9 @@ feature -- Optimization
 				if non_matching_block.was_expression_replaced then
 					non_matching_block := non_matching_block.replacement_expression
 					adopt_child_expression (non_matching_block)
+					reset_static_properties
 				end
 			end			
-			reset_static_properties
 		end
 
 feature -- Evaluation

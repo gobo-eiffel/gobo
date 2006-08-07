@@ -198,24 +198,25 @@ feature -- Element change
 			if reference_count > 0 then
 				compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
 				l_body := last_generated_expression
-				if l_body /= Void then
-					l_body.simplify
-					if l_body.was_expression_replaced then l_body := l_body.replacement_expression end
-					if configuration.is_tracing then
-						create l_trace_wrapper.make (l_body, a_executable, Current)
-						l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
-						l_trace_wrapper.set_parent (Current)
-						l_body := l_trace_wrapper
-					end
-					create l_instruction.make (fingerprint_from_name_code (attribute_set_name_code),
-														used_attribute_sets,
-														a_executable,
-														l_body,
-														line_number,
-														system_id,
-														slot_manager)
-					a_executable.attribute_set_manager.add_attributes (l_instruction, attribute_set_name_code)
+				if l_body = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} l_body.make
 				end
+				l_body.simplify
+				if l_body.was_expression_replaced then l_body := l_body.replacement_expression end
+				if configuration.is_tracing then
+					create l_trace_wrapper.make (l_body, a_executable, Current)
+					l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+					l_trace_wrapper.set_parent (Current)
+					l_body := l_trace_wrapper
+				end
+				create l_instruction.make (fingerprint_from_name_code (attribute_set_name_code),
+													used_attribute_sets,
+													a_executable,
+													l_body,
+													line_number,
+													system_id,
+													slot_manager)
+				a_executable.attribute_set_manager.add_attributes (l_instruction, attribute_set_name_code)
 			end
 			last_generated_expression := Void
 		end

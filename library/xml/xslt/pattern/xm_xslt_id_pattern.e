@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			type_check, node_kind, sub_expressions
+			type_check, node_kind, sub_expressions, computed_dependencies, promote
 		end
 
 create
@@ -73,6 +73,15 @@ feature -- Access
 			Result.put (id_expression, 1)
 		end
 
+	computed_dependencies: ARRAY [BOOLEAN] is
+			-- Dependencies which restrict optimizations
+		do
+			if not id_expression.are_dependencies_computed and id_expression.is_computed_expression then
+				id_expression.as_computed_expression.compute_dependencies
+			end
+			Result := id_expression.dependencies
+		end
+
 feature -- Optimization
 
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -85,6 +94,15 @@ feature -- Optimization
 			if id_expression.is_error then
 				set_error_value (id_expression.error_value)
 			end			
+		end
+
+	promote (a_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote sub-expressions of `Current'.
+		do
+			id_expression.promote (a_offer)
+			if id_expression.was_expression_replaced then
+				id_expression := id_expression.replacement_expression
+			end
 		end
 
 feature -- Matching

@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			system_id := a_static_context.system_id
 			line_number := a_static_context.line_number
 			original_text := "child::node()"
+			initialize_dependencies
 		ensure
 			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
 			line_number_set: line_number = a_static_context.line_number

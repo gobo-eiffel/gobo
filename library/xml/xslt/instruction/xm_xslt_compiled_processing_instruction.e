@@ -129,6 +129,7 @@ feature -- Optimization
 			name.promote (an_offer)
 			if name.was_expression_replaced then
 				name := name.replacement_expression;  adopt_child_expression (name)
+				reset_static_properties
 			end
 			Precursor (an_offer)
 		end

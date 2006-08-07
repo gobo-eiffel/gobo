@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_TYPE
 
+	XM_XPATH_STATIC_PROPERTY
+
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 		export {NONE} all end
 
@@ -63,21 +65,17 @@ feature -- Access
 			
 			create Result.make_default
 			Result.set_equality_tester (expression_tester)
+		ensure
+			expression_tester: Result /= Void and then Result.equality_tester /= Void and then Result.equality_tester.is_equal (expression_tester)
 		end
 	
-	is_location_pattern: BOOLEAN is
-			-- Is `Current' a location-path pattern?
+	computed_dependencies: ARRAY [BOOLEAN] is
+			-- Dependencies which restrict optimizations
 		do
-			Result := False
-		end
-
-	as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN is
-			-- `Current' seen as a location-path pattern
-		require
-			location_path_pattern: is_location_pattern
-		do
+			create Result.make (1, Dependency_flag_count)
 		ensure
-			same_object: ANY_.same_objects (Result, Current)
+			result_not_void: Result /= Void
+			correct_count: Result.count = Dependency_flag_count
 		end
 
 feature -- Status report
@@ -103,6 +101,12 @@ feature -- Status report
 
 	is_node_test: BOOLEAN is
 			-- Is `Current' a node test?
+		do
+			Result := False
+		end
+
+	is_location_pattern: BOOLEAN is
+			-- Is `Current' a location-path pattern?
 		do
 			Result := False
 		end
@@ -159,6 +163,14 @@ feature -- Optimization
 			-- do nothing
 		end
 
+	promote (a_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote sub-expressions of `Current'.
+		require
+			a_offer_not_void: a_offer /= Void
+		do
+			-- do nothing by default
+		end
+
 feature -- Matching
 
 	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
@@ -172,6 +184,18 @@ feature -- Matching
 			context_not_void: a_context /= Void
 		deferred
 		end
+
+feature -- Conversion
+
+		as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN is
+			-- `Current' seen as a location-path pattern
+		require
+			location_path_pattern: is_location_pattern
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 
 feature {XM_XSLT_PATTERN} -- Local
 
