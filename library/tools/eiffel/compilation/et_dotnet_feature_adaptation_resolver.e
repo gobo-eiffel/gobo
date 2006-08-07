@@ -31,9 +31,11 @@ feature {NONE} -- Initialization
 		do
 			universe := a_universe
 			current_class := a_universe.unknown_class
-			create dotnet_features.make_map (400)
+			create dotnet_features.make (400)
 			create l_dotnet_signature_tester.make (a_universe)
-			dotnet_features.set_key_equality_tester (l_dotnet_signature_tester)
+			dotnet_features.set_equality_tester (l_dotnet_signature_tester)
+			create other_dotnet_features.make_map (400)
+			other_dotnet_features.set_key_equality_tester (l_dotnet_signature_tester)
 		ensure
 			universe_set: universe = a_universe
 		end
@@ -72,10 +74,6 @@ feature -- Feature adaptation resolving
 			old_class: ET_CLASS
 			a_parents: ET_PARENT_LIST
 			i, nb: INTEGER
-			l_feature: ET_FLATTENED_FEATURE
-			other_feature: ET_FLATTENED_FEATURE
-			l_any: ET_CLASS
-			l_name: ET_FEATURE_NAME
 		do
 			has_fatal_error := False
 			old_class := current_class
@@ -83,7 +81,7 @@ feature -- Feature adaptation resolving
 				-- Under .NET the features that we get from the assembly
 				-- consumer are not only those declared in `current_class'
 				-- but also those inherited from other .NET classes.
-			add_current_features
+			add_current_features (a_features)
 				-- Traverse parents' .NET features in order to build back
 				-- the inheritance links with the features in `current_class'.
 				-- Using `dotnet_features' helps here because it takes into
@@ -101,36 +99,15 @@ feature -- Feature adaptation resolving
 			if a_parents /= Void then
 				nb := a_parents.count
 				from i := 1 until i > nb loop
-					add_inherited_features (a_parents.parent (i))
+					add_inherited_features (a_parents.parent (i), a_features)
 					i := i + 1
 				end
-			end
-			l_any := universe.any_class
-			nb := dotnet_features.count + l_any.queries.count + l_any.procedures.count
-			if a_features.capacity < nb then
-				a_features.resize (nb)
-			end
-			from dotnet_features.start until dotnet_features.after loop
-				l_feature := dotnet_features.item_for_iteration
-				l_name := l_feature.name
-				a_features.search (l_name)
-				if a_features.found then
-						-- Error: two features with the same name. This is
-						-- doe to a bad design decision in the metadata consumer
-						-- which for each 'x' field introduces a setter 'set_x_field'
-						-- without checking whether this name is not already used.
-					set_fatal_error
-					other_feature := a_features.found_item
-					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, l_feature.flattened_feature)
-				else
-					a_features.put_last (l_feature, l_name)
-				end
-				dotnet_features.forth
 			end
 				-- Add to `a_features' features inherited from ANY.
 			add_any_features (a_features)
 				-- Clean up.
 			dotnet_features.wipe_out
+			other_dotnet_features.wipe_out
 			free_parent_feature := parent_feature_list
 			free_inherited_feature := inherited_feature_list
 			free_redeclared_feature := redeclared_feature_list
@@ -141,16 +118,18 @@ feature -- Feature adaptation resolving
 
 feature {NONE} -- Feature recording
 
-	add_current_features is
-			-- Add to `dotnet_features' the .NET features of `current_class'
+	add_current_features (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+			-- Add to `a_features' the .NET features of `current_class'
 			-- declared in its assembly.
+		require
+			a_features_not_void: a_features /= Void
+			no_void_feature: not a_features.has_item (Void)
 		local
 			l_query: ET_QUERY
 			l_queries: ET_QUERY_LIST
 			l_procedure: ET_PROCEDURE
 			l_procedures: ET_PROCEDURE_LIST
 			l_dotnet_feature: ET_DOTNET_FEATURE
-			other_feature: ET_FLATTENED_FEATURE
 			i, nb, nb2: INTEGER
 		do
 			l_queries := current_class.queries
@@ -160,19 +139,14 @@ feature {NONE} -- Feature recording
 			if dotnet_features.capacity < nb2 then
 				dotnet_features.resize (nb2)
 			end
+			if a_features.capacity < nb2 then
+				a_features.resize (nb2)
+			end
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
 				l_dotnet_feature ?= l_query
 				if l_dotnet_feature /= Void then
-					dotnet_features.search (l_dotnet_feature)
-					if dotnet_features.found then
-							-- Error: two features with the same .NET name and signature.
-						set_fatal_error
-						other_feature := dotnet_features.found_item
-						error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, l_dotnet_feature)
-					else
-						dotnet_features.put_last (l_dotnet_feature, l_dotnet_feature)
-					end
+					add_current_feature (l_dotnet_feature, a_features)
 				else
 						-- Internal error: should be a .NET feature.
 					set_fatal_error
@@ -185,15 +159,7 @@ feature {NONE} -- Feature recording
 				l_procedure := l_procedures.item (i)
 				l_dotnet_feature ?= l_procedure
 				if l_dotnet_feature /= Void then
-					dotnet_features.search (l_dotnet_feature)
-					if dotnet_features.found then
-							-- Error: two features with the same .NET name and signature.
-						set_fatal_error
-						other_feature := dotnet_features.found_item
-						error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, l_dotnet_feature)
-					else
-						dotnet_features.put_last (l_dotnet_feature, l_dotnet_feature)
-					end
+					add_current_feature (l_dotnet_feature, a_features)
 				else
 						-- Internal error: should be a .NET feature.
 					set_fatal_error
@@ -201,78 +167,87 @@ feature {NONE} -- Feature recording
 				end
 				i := i + 1
 			end
+		ensure
+			no_void_feature: not a_features.has_item (Void)
 		end
 
-	add_inherited_features (a_parent: ET_PARENT) is
-			-- Add to `dotnet_features' the .NET features inherited from `a_parent'.
+	add_current_feature (a_feature: ET_DOTNET_FEATURE; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+			-- Add to `a_features' the .NET feature `a_feature' of `current_class'
+			-- declared in its assembly.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_features_not_void: a_features /= Void
+			no_void_feature: not a_features.has_item (Void)
+		local
+			l_name: ET_FEATURE_NAME
+			other_feature: ET_FLATTENED_FEATURE
+			l_feature_list: DS_LINKED_LIST [ET_DOTNET_FEATURE]
+		do
+			l_name := a_feature.name
+			a_features.search (l_name)
+			if a_features.found then
+					-- Error: two features with the same name. This is
+					-- due to a bad design decision in the metadata consumer
+					-- which for each 'x' field introduces a setter 'set_x_field'
+					-- without checking whether this name is not already used.
+				set_fatal_error
+				other_feature := a_features.found_item
+				error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, a_feature)
+			else
+				a_features.force_last (a_feature, l_name)
+				dotnet_features.search (a_feature)
+				if dotnet_features.found then
+						-- Two features with the same .NET name and signature.
+					other_dotnet_features.search (a_feature)
+					if other_dotnet_features.found then
+						other_dotnet_features.found_item.force_last (a_feature)
+					else
+						create l_feature_list.make
+						l_feature_list.force_last (a_feature)
+						other_dotnet_features.force_last (l_feature_list, a_feature)
+					end
+				else
+					dotnet_features.force_last (a_feature)
+				end
+			end
+		ensure
+			no_void_feature: not a_features.has_item (Void)
+		end
+
+	add_inherited_features (a_parent: ET_PARENT; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+			-- Add to `a_features' the .NET features inherited from `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
+			a_features_not_void: a_features /= Void
+			no_void_feature: not a_features.has_item (Void)
 		local
 			l_class: ET_CLASS
 			l_queries: ET_QUERY_LIST
 			l_query: ET_QUERY
 			l_procedures: ET_PROCEDURE_LIST
 			l_procedure: ET_PROCEDURE
-			l_flattened_feature: ET_FLATTENED_FEATURE
-			l_redeclared_feature: ET_REDECLARED_FEATURE
-			l_parent_feature: ET_PARENT_FEATURE
-			l_parent_query: ET_DOTNET_QUERY
-			l_parent_procedure: ET_DOTNET_PROCEDURE
-			l_heir_feature: ET_DOTNET_FEATURE
-			l_parent_class_impl: ET_CLASS
-			l_heir_class_impl: ET_CLASS
+			l_dotnet_feature: ET_DOTNET_FEATURE
+			l_feature_list: DS_LINKED_LIST [ET_DOTNET_FEATURE]
 			i, nb: INTEGER
 		do
 			l_class := a_parent.type.direct_base_class (universe)
 			l_queries := l_class.queries
 			l_procedures := l_class.procedures
-			nb := l_queries.declared_count + l_procedures.declared_count + dotnet_features.count
-			if dotnet_features.capacity < nb then
-				dotnet_features.resize (nb)
-			end
 			nb := l_queries.declared_count
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
-				l_parent_query ?= l_query
-				if l_parent_query /= Void then
+				l_dotnet_feature ?= l_query
+				if l_dotnet_feature /= Void then
 						-- Look for .NET feature with the same .NET name and the same signature.
-					dotnet_features.search (l_parent_query)
+					dotnet_features.search (l_dotnet_feature)
 					if dotnet_features.found then
-						l_flattened_feature := Void
-						l_heir_feature := dotnet_features.found_key
-						l_heir_class_impl := l_heir_feature.implementation_class
-						l_parent_class_impl := l_parent_query.implementation_class
-						if not l_heir_feature.is_virtual then
-							if l_parent_class_impl = l_heir_class_impl then
-								l_flattened_feature := dotnet_features.found_item
-								l_heir_feature.set_implementation_feature (l_parent_query.implementation_feature)
-								l_heir_feature.set_version (l_parent_query.version)
-							else
--- TODO: this feature does not seem to exist anymore in `current_class',
--- it's the joy of .NET.
-							end
-						elseif current_class.is_interface and l_heir_feature.is_deferred and l_heir_class_impl /= l_parent_class_impl then
--- TODO: an interface and a parent interface defined a feature with the same .NET name
--- and signature, they are considered as two different unrelated features.
-						elseif l_parent_query.is_frozen and l_heir_class_impl /= l_parent_class_impl then
--- TODO: if the feature is frozen in the parent then they should be declared in the same class.
--- If not then they are two different routines.
-						elseif not l_heir_class_impl.conforms_to_type (l_parent_class_impl, current_class, current_class, universe) then
--- TODO: there is no guarantee that these two features are related.
-						else
-							l_flattened_feature := dotnet_features.found_item
-							if l_parent_class_impl = l_heir_class_impl then
-								l_heir_feature.set_implementation_feature (l_parent_query.implementation_feature)
-								l_heir_feature.set_version (l_parent_query.version)
-							end
-						end
-						if l_flattened_feature /= Void then
-							l_parent_feature := new_parent_feature (l_parent_query, a_parent)
-							if l_flattened_feature.is_immediate then
-								l_redeclared_feature := new_redeclared_feature (l_heir_feature, l_parent_feature)
-								dotnet_features.replace_found_item (l_redeclared_feature)
-							else
-								l_flattened_feature.adapted_feature.put_parent_feature (l_parent_feature)
+						add_inherited_feature (a_parent, l_dotnet_feature, dotnet_features.found_item, a_features)
+						other_dotnet_features.search (l_dotnet_feature)
+						if other_dotnet_features.found then
+							l_feature_list := other_dotnet_features.found_item
+							from l_feature_list.start until l_feature_list.after loop
+								add_inherited_feature (a_parent, l_dotnet_feature, l_feature_list.item_for_iteration, a_features)
+								l_feature_list.forth
 							end
 						end
 					else
@@ -289,46 +264,18 @@ feature {NONE} -- Feature recording
 			nb := l_procedures.declared_count
 			from i := 1 until i > nb loop
 				l_procedure := l_procedures.item (i)
-				l_parent_procedure ?= l_procedure
-				if l_parent_procedure /= Void then
+				l_dotnet_feature ?= l_procedure
+				if l_dotnet_feature /= Void then
 						-- Look for .NET feature with the same .NET name and the same signature.
-					dotnet_features.search (l_parent_procedure)
+					dotnet_features.search (l_dotnet_feature)
 					if dotnet_features.found then
-						l_flattened_feature := Void
-						l_heir_feature := dotnet_features.found_key
-						l_heir_class_impl := l_heir_feature.implementation_class
-						l_parent_class_impl := l_parent_procedure.implementation_class
-						if not l_heir_feature.is_virtual then
-							if l_parent_class_impl = l_heir_class_impl then
-								l_flattened_feature := dotnet_features.found_item
-								l_heir_feature.set_implementation_feature (l_parent_procedure.implementation_feature)
-								l_heir_feature.set_version (l_parent_procedure.version)
-							else
--- TODO: this feature does not seem to exist anymore in `current_class',
--- it's the joy of .NET.
-							end
-						elseif current_class.is_interface and l_heir_feature.is_deferred and l_heir_class_impl /= l_parent_class_impl then
--- TODO: an interface and a parent interface defined a feature with the same .NET name
--- and signature, they are considered as two different unrelated features.
-						elseif l_parent_procedure.is_frozen and l_heir_class_impl /= l_parent_class_impl then
--- TODO: if the feature is frozen in the parent then they should be declared in the same class.
--- If not then they are two different routines.
-						elseif not l_heir_class_impl.conforms_to_type (l_parent_class_impl, current_class, current_class, universe) then
--- TODO: there is no guarantee that these two features are related.
-						else
-							l_flattened_feature := dotnet_features.found_item
-							if l_parent_class_impl = l_heir_class_impl then
-								l_heir_feature.set_implementation_feature (l_parent_procedure.implementation_feature)
-								l_heir_feature.set_version (l_parent_procedure.version)
-							end
-						end
-						if l_flattened_feature /= Void then
-							l_parent_feature := new_parent_feature (l_parent_procedure, a_parent)
-							if l_flattened_feature.is_immediate then
-								l_redeclared_feature := new_redeclared_feature (l_heir_feature, l_parent_feature)
-								dotnet_features.replace_found_item (l_redeclared_feature)
-							else
-								l_flattened_feature.adapted_feature.put_parent_feature (l_parent_feature)
+						add_inherited_feature (a_parent, l_dotnet_feature, dotnet_features.found_item, a_features)
+						other_dotnet_features.search (l_dotnet_feature)
+						if other_dotnet_features.found then
+							l_feature_list := other_dotnet_features.found_item
+							from l_feature_list.start until l_feature_list.after loop
+								add_inherited_feature (a_parent, l_dotnet_feature, l_feature_list.item_for_iteration, a_features)
+								l_feature_list.forth
 							end
 						end
 					else
@@ -342,6 +289,72 @@ feature {NONE} -- Feature recording
 				end
 				i := i + 1
 			end
+		ensure
+			no_void_feature: not a_features.has_item (Void)
+		end
+
+	add_inherited_feature (a_parent: ET_PARENT; a_parent_feature, a_heir_feature: ET_DOTNET_FEATURE; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+			-- Add to `a_features' .NET feature `a_parent_feature' inherited from `a_parent'
+			-- if we can figure out that its version in `current_class' is `a_heir_feature'.
+		require
+			a_parent_not_void: a_parent /= Void
+			a_parent_feature_not_void: a_parent_feature /= Void
+			a_heir_feature_not_void: a_heir_feature /= Void
+			a_features_not_void: a_features /= Void
+			no_void_feature: not a_features.has_item (Void)
+		local
+			l_parent_class_impl: ET_CLASS
+			l_heir_class_impl: ET_CLASS
+			l_flattened_feature: ET_FLATTENED_FEATURE
+			l_redeclared_feature: ET_REDECLARED_FEATURE
+			l_parent_feature: ET_PARENT_FEATURE
+			found: BOOLEAN
+		do
+			l_heir_class_impl := a_heir_feature.implementation_class
+			l_parent_class_impl := a_parent_feature.implementation_class
+			if not a_heir_feature.is_virtual then
+				if l_parent_class_impl = l_heir_class_impl then
+					a_heir_feature.set_implementation_feature (a_parent_feature.implementation_feature)
+					a_heir_feature.set_version (a_parent_feature.version)
+					found := True
+				else
+-- TODO: this feature does not seem to exist anymore in `current_class',
+-- it's the joy of .NET.
+				end
+			elseif current_class.is_interface and a_heir_feature.is_deferred and l_heir_class_impl /= l_parent_class_impl then
+-- TODO: an interface and a parent interface defined a feature with the same .NET name
+-- and signature, they are considered as two different unrelated features.
+			elseif a_parent_feature.is_frozen and l_heir_class_impl /= l_parent_class_impl then
+-- TODO: if the feature is frozen in the parent then they should be declared in the same class.
+-- If not then they are two different routines.
+			elseif not l_heir_class_impl.conforms_to_type (l_parent_class_impl, current_class, current_class, universe) then
+-- TODO: there is no guarantee that these two features are related.
+			else
+				found := True
+				if l_parent_class_impl = l_heir_class_impl then
+					a_heir_feature.set_implementation_feature (a_parent_feature.implementation_feature)
+					a_heir_feature.set_version (a_parent_feature.version)
+				end
+			end
+			if found then
+				a_features.search (a_heir_feature.name)
+				if a_features.found then
+					l_flattened_feature := a_features.found_item
+					l_parent_feature := new_parent_feature (a_parent_feature, a_parent)
+					if l_flattened_feature.is_immediate then
+						l_redeclared_feature := new_redeclared_feature (a_heir_feature, l_parent_feature)
+						a_features.replace_found_item (l_redeclared_feature)
+					else
+						l_flattened_feature.adapted_feature.put_parent_feature (l_parent_feature)
+					end
+				else
+						-- Internal error: features in `dotnet_features' should be in `a_features'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+			end
+		ensure
+			no_void_feature: not a_features.has_item (Void)
 		end
 
 	add_any_features (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
@@ -445,8 +458,14 @@ feature {NONE} -- Feature recording
 
 feature {NONE} -- Features
 
-	dotnet_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_DOTNET_FEATURE]
-			-- Features indexed by their flattened feature's .NET name and signature
+	dotnet_features: DS_HASH_SET [ET_DOTNET_FEATURE]
+			-- Features indexed by .NET name and signature
+
+	other_dotnet_features: DS_HASH_TABLE [DS_LINKED_LIST [ET_DOTNET_FEATURE], ET_DOTNET_FEATURE]
+			-- Other features indexed by their .NET name and signature
+			-- when there are more than one such feature declared
+			-- (which can happen because of weirdness either in .NET
+			-- or in the metadata consumer)
 
 feature {NONE} -- Error handling
 
@@ -544,7 +563,10 @@ invariant
 	universe_not_void: universe /= Void
 	current_class_not_void: current_class /= Void
 	dotnet_features_not_void: dotnet_features /= Void
-	no_void_dotnet_feature: not dotnet_features.has_item (Void)
+	no_void_dotnet_feature: not dotnet_features.has (Void)
 	-- no_inherited: for all f in dotnet_features, not f.is_inherited
+	other_dotnet_features_not_void: other_dotnet_features /= Void
+	no_void_other_dotnet_features: not other_dotnet_features.has_item (Void)
+	-- no_other_inherited: for all l in other_dotnet_features, l /= Void and then not l.has (Void) and then for all f in l, not f.is_inherited
 
 end
