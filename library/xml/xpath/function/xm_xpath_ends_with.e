@@ -84,15 +84,17 @@ feature -- Evaluation
 				if an_item /= Void and then an_item.is_error then
 					last_evaluated_item := an_item
 				else
-					if not an_item.is_atomic_value then
+					if an_item = Void then
 						create {XM_XPATH_STRING_VALUE} an_atomic_value.make ("")
-					else
+						else
 						an_atomic_value := an_item.as_atomic_value
 					end
 					arguments.item (2).evaluate_item (a_context)
 					an_item := arguments.item (2).last_evaluated_item
 					if an_item /= Void and then an_item.is_error then
 						last_evaluated_item := an_item
+					elseif an_item = Void then
+						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (True)
 					else
 						if not an_item.is_atomic_value then
 							create {XM_XPATH_STRING_VALUE} another_atomic_value.make ("")
