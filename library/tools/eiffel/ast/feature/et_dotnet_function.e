@@ -19,7 +19,7 @@ inherit
 			is_frozen, is_dotnet,
 			is_deferred
 		redefine
-			make
+			make, is_prefixable, is_infixable
 		end
 
 	ET_DOTNET_QUERY
@@ -58,6 +58,22 @@ feature {NONE} -- Initialization
 		ensure then
 			dotnet_name_set: dotnet_name.same_string (name.name)
 			overloaded_name_set: overloaded_name.same_string (name.name)
+		end
+
+feature -- status report
+
+	is_infixable: BOOLEAN is
+			-- Can current feature have a name of
+			-- the form 'infix ...'?
+		do
+			Result := arguments /= Void and then (arguments.count = 1 or (is_static and arguments.count = 2))
+		end
+
+	is_prefixable: BOOLEAN is
+			-- Can current feature have a name of
+			-- the form 'prefix ...'?
+		do
+			Result := arguments = Void or else (arguments.count = 0 or (is_static and arguments.count = 1))
 		end
 
 feature -- Duplication
