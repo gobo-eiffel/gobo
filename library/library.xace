@@ -4,12 +4,13 @@
 
 	<description>
 		description: "Xace file for the Gobo Eiffel Library libraries"
-		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
+	<mount location="${GOBO}/library/argument/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
 	<mount location="${GOBO}/library/math/library.xace"/>
@@ -23,5 +24,4 @@
 	<mount location="${GOBO}/library/tools/library.xace"/>
 	<mount location="${GOBO}/library/utility/library.xace"/>
 	<mount location="${GOBO}/library/xml/library.xace"/>
-	<mount location="${GOBO}/library/argument/library.xace"/>
 </library>

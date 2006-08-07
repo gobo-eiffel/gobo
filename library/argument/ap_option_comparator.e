@@ -2,10 +2,10 @@ indexing
 
 	description: 
 
-		"A comparator for ordering options"
+		"Comparators for ordering options"
 
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller (bernd@fams.de) and others"
+	library: "Gobo Eiffel Argument Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,13 +16,13 @@ inherit
 
 	KL_COMPARATOR [AP_OPTION]
 	KL_IMPORTED_STRING_ROUTINES
-	
+
 feature -- Status report
 
 	less_than (u, v: AP_OPTION): BOOLEAN is
 			-- Is `u' considered less than `v'?
 		local
-			u_string,v_string:STRING
+			u_string, v_string:STRING
 		do
 			if u.has_long_form then
 				u_string := u.long_form
@@ -34,7 +34,7 @@ feature -- Status report
 			else
 				v_string := v.short_form.out
 			end
-			Result := STRING_.three_way_comparison (u_string,v_string) = -1
+			Result := STRING_.three_way_comparison (u_string, v_string) = -1
 		end
-	
+
 end

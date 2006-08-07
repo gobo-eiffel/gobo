@@ -1,0 +1,2 @@
+The command line was used with the alternative set of options.
+The alternative string option was passed the parameter "gobo"

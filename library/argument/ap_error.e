@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Errors that can occure during argument parsing"
+		"Errors that can occur during argument parsing"
 
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller (bernd@fams.de) and others"
+	library: "Gobo Eiffel Argument Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,11 +26,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make_invalid_parameter_error (an_option: AP_OPTION; a_string:STRING) is
+	make_invalid_parameter_error (an_option: AP_OPTION; a_string: STRING) is
 			-- The option `an_option' was supplied with an invalid parameter `a_string'.
 		require
-			option_not_void: an_option /= Void
-			string_not_void: a_string /= Void
+			an_option_not_void: an_option /= Void
+			a_string_not_void: a_string /= Void
 		do
 			create parameters.make (1, 2)
 			parameters.put (an_option.name, 1)
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 	make_missing_option_error (an_option: AP_OPTION) is
 			-- The mandatory option `an_option' was missing.
 		require
-			not_void: an_option /= Void
+			an_option_not_void: an_option /= Void
 		do
 			create parameters.make (1, 1)
 			parameters.put (an_option.name, 1)
@@ -53,18 +53,18 @@ feature {NONE} -- Initialization
 	make_missing_parameter_error (an_option: AP_OPTION) is
 			-- The option `an_option' was missing a needed parameter.
 		require
-			not_void: an_option /= Void
+			an_option_not_void: an_option /= Void
 		do
 			create parameters.make (1, 1)
 			parameters.put (an_option.name, 1)
 			default_template := missing_parameter_error_template
-			code := missing_parameter_error_code			
+			code := missing_parameter_error_code
 		end
 
 	make_unknown_option_error (a_string: STRING) is
 			-- A non-existing option `a_string' was requested.
 		require
-			not_void: a_string /= Void
+			an_option_not_void: a_string /= Void
 		do
 			create parameters.make (1, 1)
 			parameters.put (a_string, 1)
@@ -72,11 +72,11 @@ feature {NONE} -- Initialization
 			code := unknown_option_error_code
 		end
 
-	make_unnecessary_parameter_error (an_option: AP_OPTION; a_string:STRING) is
+	make_unnecessary_parameter_error (an_option: AP_OPTION; a_string: STRING) is
 			-- The option `an_option' was supplied with an unnecessary parameter `a_string'.
 		require
-			option_not_void: an_option /= Void
-			string_not_void: a_string /= Void
+			an_option_not_void: an_option /= Void
+			a_string_not_void: a_string /= Void
 		do
 			create parameters.make (1, 2)
 			parameters.put (an_option.name, 1)
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 feature -- Templates
 
 	default_template: STRING
-		-- Default template
+			-- Default template
 
 	invalid_parameter_error_template: STRING is "The value '$2' is not valid for the option '$1'."
 	missing_option_error_template: STRING is "The mandatory option '$1' is missing."
@@ -98,18 +98,18 @@ feature -- Templates
 
 feature -- Error Codes
 
-	code:STRING
-		-- Error code
+	code: STRING
+			-- Error code
 
-	invalid_parameter_error_code: STRING is "IPAR"
-	missing_option_error_code: STRING is "MOPT"
-	missing_parameter_error_code: STRING is "MPAR"
-	unknown_option_error_code: STRING is "UOPT"
-	unnecessary_parameter_error_code: STRING is "UPAR"
+	invalid_parameter_error_code: STRING is "APIPAR"
+	missing_option_error_code: STRING is "APMOPT"
+	missing_parameter_error_code: STRING is "APMPAR"
+	unknown_option_error_code: STRING is "APUOPT"
+	unnecessary_parameter_error_code: STRING is "APUPAR"
 
 invariant
 
-	code_not_void: code /= Void	
+	code_not_void: code /= Void
 	default_template_not_void: default_template /= Void
 
 end

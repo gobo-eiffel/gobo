@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"A flag that will generate a help text and terminate the application"
+		"flags that will generate a help text and terminate the application"
 	
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller (bernd@fams.de) and others"
+	library: "Gobo Eiffel Argument Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	AP_CONSTANTS
+class AP_CONSTANTS
 
 feature -- Help Constants
 
@@ -54,6 +54,6 @@ feature -- Other Constants
 
 invariant
 
-	reasonable_application_name: maximum_application_name <= terminal_width-10
+	reasonable_application_name: maximum_application_name <= terminal_width - 10
 
 end

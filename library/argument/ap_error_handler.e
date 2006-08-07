@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"A universal error handler for parsing arguments"
+		"Universal error handlers for parsing arguments"
 
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller (bernd@fams.de) and others"
+	library: "Gobo Eiffel Argument Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,7 @@ create
 feature -- Error detection
 
 	has_error: BOOLEAN
+			-- Has an error been detected?
 
 	reset is
 			-- Reset `has_errors' to false.
@@ -42,7 +43,7 @@ feature -- Error reporting
 			-- Report `an_error'.
 		do
 			has_error := True
-			Precursor {UT_ERROR_HANDLER} (an_error)
+			Precursor (an_error)
 		end
 
 end

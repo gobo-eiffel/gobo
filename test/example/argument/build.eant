@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<project name="argument" default="help">
+
+	<description>
+		system: "Gobo Eiffel Argument Examples Tester"
+		copyright: "Copyright (c) 2006, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tap_example"/>
+	</target>
+
+	<target name="init_system">
+		<set name="system" value="xargument"/>
+		<set name="library" value="argument"/>
+		<set name="system_dir" value="${GOBO}/test/example/${library}"/>
+	</target>
+
+</project>

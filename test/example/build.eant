@@ -158,6 +158,8 @@
 				of argument "do_clean".
 			-->
 		<set name="do_clean" value="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="argument"/>
+		<geant file="build.eant" target="clean" dir="argument" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="lexical"/>
 		<geant file="build.eant" target="clean" dir="lexical" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="math"/>

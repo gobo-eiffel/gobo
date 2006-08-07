@@ -1,0 +1,2 @@
+The example integer option was passed the parameter 5
+The boolean option was set to true.

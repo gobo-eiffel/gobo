@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"An option that needs an integer argument"
+		"Options that need an integer argument"
 
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller (bernd@fams.de) and others"
+	library: "Gobo Eiffel Argument Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,15 +28,16 @@ create
 feature {NONE} -- Initialization
 
 	initialize is
-			-- Perform the common initializtion steps.
+			-- Perform the common initialization steps.
 		do
-			Precursor -- {AP_OPTION_WITH_PARAMETER [INTEGER]}
+			Precursor
 			set_parameter_description ("int")
 		end
 
 feature -- Access
 
 	parameters: DS_LIST [INTEGER]
+			-- All parameters given to the option
 
 feature {AP_PARSER} -- Parser Interface
 

@@ -1,10 +1,10 @@
 indexing
 	description:
 
-		"A flag (an option that does not require extra arguments)"
+		"Flags (options that do not require extra arguments)"
 
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller (bernd@fams.de) and others"
+	library: "Gobo Eiffel Argument Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ create
 feature -- Access
 
 	occurrences: INTEGER
-		-- Number of times this flag was encountered
+			-- Number of times this flag was encountered
 
 feature -- Status report
 
@@ -34,11 +34,10 @@ feature -- Status report
 			Result := False
 		end
 
-feature{AP_PARSER} -- Parser Interface
+feature {AP_PARSER} -- Parser Interface
 
 	record_occurrence (a_parser: AP_PARSER) is
 			-- This option was found during parsing.
-			-- (export status {AP_PARSER})
 		do
 			occurrences := occurrences + 1
 		end

@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"A list of alternative options, introduced by a special option"
+		"Lists of alternative options, introduced by a special option"
 	
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller (bernd@fams.de) and others"
+	library: "Gobo Eiffel Argument Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,20 +23,20 @@ create
 
 	make
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	make (an_option: AP_OPTION) is
 			-- Initialize with `an_option' as the `introduction_option'.
 		require
-			not_void: an_option /= Void
+			an_option_not_void: an_option /= Void
 		do
-			old_make
 			set_introduction_option (an_option)
 			set_parameters_description ("")
+			old_make
 		ensure
 			option_set: introduction_option = an_option
 		end
-	
+
 feature -- Access
 
 	introduction_option: AP_OPTION
@@ -44,13 +44,13 @@ feature -- Access
 
 	parameters_description: STRING
 			-- Description of the parameters
-	
+
 feature -- Element change
 
 	set_introduction_option (an_option: AP_OPTION) is
 			-- Set `introduction_option' to `an_option'.
 		require
-			not_void: an_option /= Void
+			an_option_not_void: an_option /= Void
 		do
 			introduction_option := an_option
 		ensure
@@ -60,16 +60,16 @@ feature -- Element change
 	set_parameters_description (a_string: STRING) is
 			-- Set the description for parameters to `a_string'.
 		require
-			not_void: a_string /= Void
+			a_string_not_void: a_string /= Void
 		do
 			parameters_description := a_string
 		ensure
-			name_set: parameters_description = a_string
+			parameters_description_set: parameters_description = a_string
 		end
-	
+
 invariant
-	
+
 	introduction_option_not_void: introduction_option /= Void
 	paramters_description_not_void: parameters_description /= Void
-	
+
 end

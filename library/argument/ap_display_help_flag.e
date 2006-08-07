@@ -2,10 +2,10 @@ indexing
 
 	description: 
 
-		"A flag that will generate a help text and terminate the application"
+		"Flags that will generate a help text and terminate the application"
 
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller (bernd@fams.de) and others"
+	library: "Gobo Eiffel Argument Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,12 +67,12 @@ feature -- Help Display
 			Exceptions.die (0)
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	full_help_text (a_parser: AP_PARSER): STRING is
 			-- Full help text for `a_parser'
 		require
-			parser_not_void: a_parser /= Void
+			a_parser_not_void: a_parser /= Void
 		local
 			max_indent: INTEGER
 			all_options: DS_LIST [AP_OPTION]
@@ -85,13 +85,8 @@ feature{NONE} -- Implementation
 			Result := usage_instruction (a_parser)
 			Result.append_character ('%N')
 			alt_list := a_parser.alternative_options_lists
-			from
-				alt_list.start
-			until
-				alt_list.off
-			loop
-				Result.append_string (alternative_usage_instruction (a_parser,
-					alt_list.item_for_iteration))
+			from alt_list.start until alt_list.after loop
+				Result.append_string (alternative_usage_instruction (a_parser, alt_list.item_for_iteration))
 				Result.append_character ('%N')
 				alt_list.forth
 			end
@@ -100,68 +95,63 @@ feature{NONE} -- Implementation
 				wrapper.set_new_line_indentation (0)
 				Result.append_string (wrapper.wrapped_string (a_parser.application_description))
 				Result.append_string (text_below_description)
-			end				
+			end
 			Result.append_string (text_before_options)
 			all_options := a_parser.all_options
 			sorter.sort (all_options)
-			from
-				max_indent := 0
-				all_options.start
-			until
-				all_options.off
-			loop
+			max_indent := 0
+			from all_options.start until all_options.after loop
 				max_indent := all_options.item_for_iteration.names.count.max (max_indent)
 				all_options.forth
 			end
-			from
-				all_options.start
-			until
-				all_options.off
-			loop
-				Result.append_string (option_help_text (all_options.item_for_iteration,
-					max_indent + 1))
+			from all_options.start until all_options.after loop
+				Result.append_string (option_help_text (all_options.item_for_iteration, max_indent + 1))
 				if not all_options.is_last then
 					Result.append_character ('%N')
 				end
 				all_options.forth
-			end			
+			end
+		ensure
+			full_help_text_not_void: Result /= Void
 		end
 
 	usage_instruction (a_parser: AP_PARSER): STRING is
 			-- Short usage instruction for the programs standard options
+		require
+			a_parser_not_void: a_parser /= Void
 		local
 			args: STRING
 			option: AP_OPTION
+			l_options: DS_LIST [AP_OPTION]
 			application_name: STRING
 		do
 			create args.make_empty
-			from
-				a_parser.options.start
-			until
-				a_parser.options.off
-			loop
-				option := a_parser.options.item_for_iteration
+			l_options := a_parser.options
+			from l_options.start until l_options.after loop
+				option := l_options.item_for_iteration
 				args.append_string (option.example)
 				args.append_character (' ')
-				a_parser.options.forth
+				l_options.forth
 			end
 			args.append_string (a_parser.parameters_description)
-
 			application_name := file_system.basename (Arguments.program_name)
 			application_name.keep_head (maximum_application_name)
-
-			create Result.make_empty
+			create Result.make (20)
 			Result.append_string (usage_header)
 			Result.append_string (application_name)
 			Result.append_character (' ')
 			Result.append_string (args)
-			wrapper.set_new_line_indentation (usage_header.count+application_name.count+1)
+			wrapper.set_new_line_indentation (usage_header.count + application_name.count + 1)
 			Result := wrapper.wrapped_string (Result)
+		ensure
+			usage_instruction_not_void: Result /= Void
 		end
 
 	alternative_usage_instruction (a_parser: AP_PARSER; a_list: AP_ALTERNATIVE_OPTIONS_LIST): STRING is
-			-- Short usage instruction for the programs alternative 
-			-- options
+			-- Short usage instruction for the programs alternative options
+		require
+			a_parser_not_void: a_parser /= Void
+			a_list_not_void: a_list /= Void
 		local
 			args: STRING
 			option: AP_OPTION
@@ -170,35 +160,31 @@ feature{NONE} -- Implementation
 			create args.make_empty
 			args.append_string (a_list.introduction_option.name)
 			args.append_character (' ')
-			from
-				a_list.start
-			until
-				a_list.off
-			loop
+			from a_list.start until a_list.after loop
 				option := a_list.item_for_iteration
 				args.append_string (option.example)
 				args.append_character (' ')
 				a_list.forth
 			end
 			args.append_string (a_list.parameters_description)
-			
 			application_name := file_system.basename (Arguments.program_name)
 			application_name.keep_head (maximum_application_name)
-
-			create Result.make_filled (' ',usage_header.count)
+			create Result.make_filled (' ', usage_header.count)
 			Result.append_string (application_name)
 			Result.append_character (' ')
 			Result.append_string (args)
 			wrapper.set_new_line_indentation (usage_header.count+application_name.count+1)
 			Result := wrapper.wrapped_string (Result)
+		ensure
+			alternative_usage_instruction_not_void: Result /= Void
 		end
 
-	
-	option_help_text (an_option:AP_OPTION;indent:INTEGER): STRING is
+	option_help_text (an_option:AP_OPTION; indent:INTEGER): STRING is
 			-- Help text of `an_option', calculated from the option_names 
 			-- and the description, assuming an indention of `indent' is 
 			-- required for correct formating
 		require
+			an_option_not_void: an_option /= Void
 			indent_not_too_small: indent >= an_option.names.count
 			indent_not_too_large: indent <= terminal_width
 		local
@@ -206,7 +192,9 @@ feature{NONE} -- Implementation
 		do
 			create spaces.make_filled (' ', indent-an_option.names.count)
 			wrapper.set_new_line_indentation (indent)
-			Result := wrapper.wrapped_string (an_option.names+spaces+an_option.description)
+			Result := wrapper.wrapped_string (an_option.names + spaces + an_option.description)
+		ensure
+			option_help_text_not_void: Result /= Void
 		end
 
 	wrapper: ST_WORD_WRAPPER is
@@ -214,6 +202,8 @@ feature{NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_maximum_text_width (terminal_width)
+		ensure
+			wrapper_not_void: Result /= Void
 		end
 
 invariant

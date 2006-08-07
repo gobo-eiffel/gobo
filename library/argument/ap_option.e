@@ -2,10 +2,10 @@ indexing
 	
 	description:
 
-		"Abstract representation of an option, that might or might not require an extra argument"
+		"Abstract representations of an option, that might or might not require an extra argument"
 
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller (bernd@fams.de) and others"
+	library: "Gobo Eiffel Argument Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ inherit
 
 	AP_CONSTANTS
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize is
 			-- Perform the common initialization steps.
@@ -24,10 +24,12 @@ feature{NONE} -- Initialization
 			description := ""
 			reset
 		end
-	
+
 	make (a_short_form: CHARACTER; a_long_form: STRING) is
 			-- Make an option that has `a_short_form' as short form and `a_long_form'
 			-- as long form.
+		require
+			a_long_form_not_void: a_long_form /= Void
 		do
 			set_short_form (a_short_form)
 			set_long_form (a_long_form)
@@ -46,9 +48,11 @@ feature{NONE} -- Initialization
 			short_form_set: has_short_form and short_form = a_short_form
 			no_long_form: not has_long_form
 		end
-				
+
 	make_with_long_form (a_long_form: STRING) is
 			-- Make an option that `a_long_form' as long form.
+		require
+			a_long_form_not_void: a_long_form /= Void
 		do
 			set_long_form (a_long_form)
 			initialize
@@ -60,15 +64,14 @@ feature{NONE} -- Initialization
 feature -- Access
 
 	description: STRING
-		-- Description of this option
+			-- Description of this option
 
 	example: STRING is
 			-- Example for the usage of the option (short preferred)
 		do
-			if is_mandatory then
-				create Result.make_empty
-			else
-				Result := "["
+			create Result.make (20)
+			if not is_mandatory then
+				Result.append_character ('[')
 			end
 			Result.append_character (short_option_introduction)
 			if has_short_form then
@@ -80,22 +83,25 @@ feature -- Access
 			if not is_mandatory then
 				Result.append_character (']')
 			end
+		ensure
+			example_not_void: Result /= Void
 		end
 
 	long_form: STRING
-		-- Long form
-		
+			-- Long form
+
 	name: STRING is
 			-- Name of the option (short or long from)
 		do
 			if has_long_form then
-				Result := short_option_introduction.out+long_option_introduction.out+long_form
+				Result := short_option_introduction.out + long_option_introduction.out + long_form
 			else
-				Result := short_option_introduction.out+short_form.out
+				Result := short_option_introduction.out + short_form.out
 			end
+		ensure
+			name_not_void: Result /= Void
+		end
 
-		end	
-	
 	names: STRING is
 			-- Names of the option (short and long)
 		do
@@ -113,13 +119,15 @@ feature -- Access
 				Result.append_character (long_option_introduction)
 				Result.append_string (long_form)
 			end
+		ensure
+			names_not_void: Result /= Void
 		end
-	
+
 	occurrences: INTEGER is
 			-- Number of times this flag was encountered
 		deferred
 		end
-		
+
 	short_form: CHARACTER
 			-- Short form
 
@@ -129,10 +137,12 @@ feature -- Status report
 			-- Does this option have a long form?
 		do
 			Result := (long_form /= Void)
+		ensure
+			definition: Result = (long_form /= Void)
 		end
 
 	has_short_form: BOOLEAN
-		-- Does this option have a short form?
+			-- Does this option have a short form?
 
 	is_mandatory: BOOLEAN
 			-- Is the option not optional?
@@ -147,7 +157,7 @@ feature -- Status report
 		do
 			Result := occurrences > 0
 		ensure
-			definition: was_found = (occurrences > 0)
+			definition: Result = (occurrences > 0)
 		end
 
 feature -- Element change
@@ -155,7 +165,7 @@ feature -- Element change
 	set_description (a_string: STRING) is
 			-- Let the text `a_string' describe the option.
 		require
-			not_void: a_string /= Void
+			a_string_not_void: a_string /= Void
 		do
 			description := a_string
 		ensure
@@ -164,11 +174,13 @@ feature -- Element change
 
 	set_long_form (a_long_form: STRING) is
 			-- Make `a_long_form' the long form.
+		require
+			a_long_form_not_void: a_long_form /= Void
 		do
 			long_form := a_long_form
 		ensure
-			long_form_set: long_form = a_long_form
 			has_long_form: has_long_form
+			long_form_set: long_form = a_long_form
 		end
 
 	set_short_form (a_short_form: CHARACTER) is
@@ -177,26 +189,26 @@ feature -- Element change
 			short_form := a_short_form
 			has_short_form := True
 		ensure
-			short_form_set: short_form = a_short_form
 			has_short_form: has_short_form
+			short_form_set: short_form = a_short_form
 		end
 
 	enable_mandatory is
-			-- Mark the option as mandatory.
+			-- Make the option mandatory.
 		do
 			is_mandatory := True
 		ensure
 			mandatory: is_mandatory
 		end
-	
+
 	disable_mandatory is
-			-- Mark the option as mandatory.
+			-- Make the option not mandatory.
 		do
 			is_mandatory := True
 		ensure
-			mandatory: not is_mandatory
+			not_mandatory: not is_mandatory
 		end
-	
+
 feature -- Removal
 
 	remove_long_form is
@@ -224,7 +236,7 @@ feature {AP_PARSER} -- Parser Interface
 	record_occurrence (a_parser: AP_PARSER) is
 			-- This option was found during parsing by `a_parser'.
 		require
-			parser_available: a_parser /= Void
+			a_parser_not_void: a_parser /= Void
 		deferred
 		ensure
 			occurrences_increased: occurrences = old occurrences + 1
@@ -240,8 +252,6 @@ feature {AP_PARSER} -- Parser Interface
 invariant
 
 	has_short_or_long: has_long_form or has_short_form
-	occurrences_positive: occurrences >= 0
-	name_not_void: name /= Void
-	example_not_void: example /= Void
+	occurrences_not_negative: occurrences >= 0
 
 end

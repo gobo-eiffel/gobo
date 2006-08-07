@@ -1,10 +1,10 @@
 indexing
 	description: 
 
-		"Options that take arbritrary string arguments"
+		"Options that take arbitrary string arguments"
 
-	author: "Bernd Schoeller"
-	copyright: "(c) 2006 Bernd Schoeller (bernd@fams.de) and others"
+	library: "Gobo Eiffel Argument Library"
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,7 +12,7 @@ indexing
 class AP_STRING_OPTION
 
 inherit
-	
+
 	AP_OPTION_WITH_PARAMETER [STRING]
 
 create
@@ -22,9 +22,9 @@ create
 	make_with_short_form
 
 feature -- Access
-		
+
 	parameters: DS_LIST [STRING]
-		-- List of parameters that were give to this option
+			-- List of parameters that were give to this option
 
 feature {AP_PARSER} -- Parser Interface
 
