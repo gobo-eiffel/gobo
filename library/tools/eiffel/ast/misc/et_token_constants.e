@@ -1780,6 +1780,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	frozen_keyword: ET_KEYWORD is
+			-- 'frozen' keyword
+		once
+			create Result.make_frozen
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	if_keyword: ET_KEYWORD is
 			-- 'if' keyword
 		once
@@ -2404,17 +2412,8 @@ feature -- Features
 
 feature -- Clients
 
-	empty_clients: ET_CLASS_NAME_LIST is
-			-- Shared empty clients
-		once
-			create Result.make_with_capacity (0)
-		ensure
-			clients_not_void: Result /= Void
-			clients_empty: Result.is_empty
-		end
-
 	any_clients: ET_CLASS_NAME_LIST is
-			-- Shared ANY clients
+			-- Shared "ANY" clients
 		once
 			create Result.make_with_capacity (1)
 			Result.put_first (any_class_name)
@@ -2422,6 +2421,26 @@ feature -- Clients
 			clients_not_void: Result /= Void
 			one_client: Result.count = 1
 			any_clients: Result.class_name (1) = any_class_name
+		end
+
+	none_clients: ET_CLASS_NAME_LIST is
+			-- Shared "NONE" clients
+		once
+			create Result.make_with_capacity (1)
+			Result.put_first (none_class_name)
+		ensure
+			clients_not_void: Result /= Void
+			one_client: Result.count = 1
+			none_clients: Result.class_name (1) = none_class_name
+		end
+
+	empty_clients: ET_CLASS_NAME_LIST is
+			-- Shared empty clients
+		once
+			create Result.make
+		ensure
+			clients_not_void: Result /= Void
+			clients_empty: Result.is_empty
 		end
 
 end
