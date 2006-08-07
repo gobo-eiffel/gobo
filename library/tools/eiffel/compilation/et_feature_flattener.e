@@ -323,7 +323,7 @@ feature {NONE} -- Feature flattening
 						end
 					elseif l_feature_name.is_infix then
 						if not l_query.is_infixable then
-								-- A feature with a Infix name should be 
+								-- A feature with a Infix name should be
 								-- a function with exactly one argument.
 							set_fatal_error (current_class)
 							error_handler.report_vffd6a_error (current_class, l_query)
@@ -333,7 +333,7 @@ feature {NONE} -- Feature flattening
 						if l_alias_name /= Void then
 							if l_alias_name.is_bracket then
 								if not l_query.is_bracketable then
-										-- A feature with a Bracket alias should be 
+										-- A feature with a Bracket alias should be
 										-- a function with one or more argument.
 									set_fatal_error (current_class)
 									error_handler.report_vfav2a_error (current_class, l_query)
@@ -342,7 +342,7 @@ feature {NONE} -- Feature flattening
 								if l_alias_name.is_prefixable then
 									l_alias_name.set_prefix
 								else
-										-- A feature with a binary Operator alias should be 
+										-- A feature with a binary Operator alias should be
 										-- a function with exactly one argument.
 									set_fatal_error (current_class)
 									error_handler.report_vfav1a_error (current_class, l_query)
@@ -351,19 +351,19 @@ feature {NONE} -- Feature flattening
 								if l_alias_name.is_infixable then
 									l_alias_name.set_infix
 								else
-										-- A feature with a unary Operator alias should be 
+										-- A feature with a unary Operator alias should be
 										-- a query with no argument.
 									set_fatal_error (current_class)
 									error_handler.report_vfav1b_error (current_class, l_query)
 								end
 							elseif l_alias_name.is_infix then
-									-- A feature with a binary Operator alias should be 
+									-- A feature with a binary Operator alias should be
 									-- a function with exactly one argument.
 								set_fatal_error (current_class)
 								error_handler.report_vfav1a_error (current_class, l_query)
 							else
 								check is_prefix: l_alias_name.is_prefix end
-									-- A feature with a unary Operator alias should be 
+									-- A feature with a unary Operator alias should be
 									-- a query with no argument.
 								set_fatal_error (current_class)
 								error_handler.report_vfav1b_error (current_class, l_query)
@@ -408,7 +408,7 @@ feature {NONE} -- Feature flattening
 						set_fatal_error (current_class)
 						error_handler.report_vffd5a_error (current_class, l_procedure)
 					elseif l_feature_name.is_infix then
-							-- A feature with a Infix name should be 
+							-- A feature with a Infix name should be
 							-- a function with exactly one argument.
 						set_fatal_error (current_class)
 						error_handler.report_vffd6a_error (current_class, l_procedure)
@@ -416,18 +416,18 @@ feature {NONE} -- Feature flattening
 						l_alias_name := l_procedure.alias_name
 						if l_alias_name /= Void then
 							if l_alias_name.is_bracket then
-									-- A feature with a Bracket alias should be 
+									-- A feature with a Bracket alias should be
 									-- a function with one or more argument.
 								set_fatal_error (current_class)
 								error_handler.report_vfav2a_error (current_class, l_procedure)
 							elseif l_alias_name.is_infix then
-									-- A feature with a binary Operator alias should be 
+									-- A feature with a binary Operator alias should be
 									-- a function with exactly one argument.
 								set_fatal_error (current_class)
 								error_handler.report_vfav1a_error (current_class, l_procedure)
 							else
 								check is_prefix: l_alias_name.is_prefix end
-									-- A feature with a unary Operator alias should be 
+									-- A feature with a unary Operator alias should be
 									-- a query with no argument.
 								set_fatal_error (current_class)
 								error_handler.report_vfav1b_error (current_class, l_procedure)
@@ -1251,7 +1251,7 @@ feature {NONE} -- Feature adaptation validity
 							-- Check VHRC-4, ECMA p. 46.
 						if l_alias_name.is_bracket then
 							if not l_precursor_feature.is_bracketable then
-									-- A feature with a Bracket alias should be 
+									-- A feature with a Bracket alias should be
 									-- a function with one or more argument.
 								set_fatal_error (current_class)
 								error_handler.report_vhrc4b_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
@@ -1260,7 +1260,7 @@ feature {NONE} -- Feature adaptation validity
 							if l_alias_name.is_prefixable then
 								l_alias_name.set_prefix
 							else
-									-- A feature with a binary Operator alias should be 
+									-- A feature with a binary Operator alias should be
 									-- a function with exactly one argument.
 								set_fatal_error (current_class)
 								error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
@@ -1269,19 +1269,19 @@ feature {NONE} -- Feature adaptation validity
 							if l_alias_name.is_infixable then
 								l_alias_name.set_infix
 							else
-									-- A feature with a unary Operator alias should be 
+									-- A feature with a unary Operator alias should be
 									-- a query with no argument.
 								set_fatal_error (current_class)
 								error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
 							end
 						elseif l_alias_name.is_infix then
-								-- A feature with a binary Operator alias should be 
+								-- A feature with a binary Operator alias should be
 								-- a function with exactly one argument.
 							set_fatal_error (current_class)
 							error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
 						else
 							check is_prefix: l_alias_name.is_prefix end
-								-- A feature with a unary Operator alias should be 
+								-- A feature with a unary Operator alias should be
 								-- a query with no argument.
 							set_fatal_error (current_class)
 							error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
@@ -1411,7 +1411,7 @@ feature {NONE} -- Signature resolving
 						end
 						j := j + 1
 					end
-					if named_features.has (a_name) then
+					if not current_class.is_dotnet and then named_features.has (a_name) then
 							-- This argument has the same name as the
 							-- final name of a feature in `current_class'.
 						other_feature := named_features.item (a_name).flattened_feature
