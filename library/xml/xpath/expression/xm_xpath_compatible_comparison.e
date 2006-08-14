@@ -145,7 +145,9 @@ feature -- Optimization
 							boolean_value: last_evaluated_item.is_boolean_value
 							-- We are guarenteed a boolean value
 						end
-						set_replacement (last_evaluated_item.as_boolean_value)
+						if not is_error then
+							set_replacement (last_evaluated_item.as_boolean_value)
+						end
 					else
 						optimize_stage_2 (a_context, a_context_item_type)
 					end

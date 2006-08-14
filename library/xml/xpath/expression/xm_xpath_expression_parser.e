@@ -2318,7 +2318,20 @@ feature {NONE} -- Implementation
 						end
 					end
 				elseif tokenizer.last_token = Comma_token then
-						report_parse_error ("Named node-kind tests with type name not implemented yet. Sorry.", "XPST0003")
+					if is_schema_declaration then
+						report_parse_error ("schema-attribute(...) or schema-element(...) may only have one argument", "XPST0003")
+					else
+						next_token ("In create_named_node_kind_test looking for type name")
+						if tokenizer.is_lexical_error then
+							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+						elseif tokenizer.last_token = Name_token then
+							create_named_node_kind_test_with_type_name (a_name_code, a_node_name, is_attribute)
+						else
+							a_message := STRING_.concat ("Unexpected ", display_current_token)
+							a_message := STRING_.appended_string (a_message, " after ',' in named node-kind test.")
+							report_parse_error (a_message, "XPST0003")
+						end
+					end
 				else
 					a_message := STRING_.concat ("Expected ',' or ')', found ", display_current_token)
 					a_message := STRING_.appended_string (a_message, " in named node-kind test.")
@@ -2334,6 +2347,7 @@ feature {NONE} -- Implementation
 		require
 			positive_name_code: a_name_code >= 0
 			node_name_not_void: a_node_name /= Void
+			no_error_yet: not is_parse_error
 		local
 			an_original_text: STRING
 		do
@@ -2345,6 +2359,89 @@ feature {NONE} -- Implementation
 				an_original_text := STRING_.concat ("element(", a_node_name)
 				an_original_text := STRING_.appended_string (an_original_text, ")")
 				create  {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (Element_node, a_name_code, an_original_text)
+			end
+		ensure
+			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
+		end
+
+	create_named_node_kind_test_with_type_name (a_name_code: INTEGER; a_node_name: STRING; is_attribute: BOOLEAN) is
+			-- Create a named node-kind test with type name.
+		require
+			positive_name_code: a_name_code >= 0
+			node_name_not_void: a_node_name /= Void
+			no_error_yet: not is_parse_error
+		local
+			l_uri, l_type_name, l_local_name, l_original_text, l_message: STRING
+			l_type_code: INTEGER
+			l_schema_type: XM_XPATH_SCHEMA_TYPE
+			l_content_test: XM_XPATH_CONTENT_TYPE_TEST
+			l_node_kind: INTEGER
+			l_name_test: XM_XPATH_NAME_TEST
+		do
+			l_type_name := tokenizer.last_token_value
+			if is_qname (l_type_name) then
+				generate_name_code (l_type_name, True)
+				l_type_code := fingerprint_from_name_code (last_generated_name_code)
+				if not is_parse_error then
+					if type_factory.is_built_in_fingerprint (l_type_code) then
+						l_uri := shared_name_pool.namespace_uri_from_name_code (l_type_code)
+						l_local_name := shared_name_pool.local_name_from_name_code (l_type_code)
+						if STRING_.same_string (l_uri, Xml_schema_uri) then
+							l_schema_type := type_factory.schema_type (l_type_code)
+							if l_schema_type = Void then
+								report_parse_error (STRING_.concat ("Unknown type name: ", l_local_name), "XPST0003")
+							elseif is_attribute and l_schema_type.is_complex_type then
+								report_parse_error ("An attribute cannot have a complex type", "XPST0003")
+							else
+								if is_attribute then
+									l_node_kind := Attribute_node
+								else
+									l_node_kind := Element_node
+								end
+								create l_content_test.make (l_node_kind, l_schema_type)
+								if a_name_code = -1 then
+									-- element(*,T) or attribute(*,T)
+									internal_last_parsed_node_test := l_content_test
+									next_token ("After element(*,T) or attribute(*,T)")
+									if not is_attribute and not is_parse_error then
+										if tokenizer.last_token = Question_mark_token then
+											l_content_test.set_nillable (True)
+											next_token ("After element(*,T?)")
+										end
+									end
+								else
+									if is_attribute then
+										l_original_text := "attribute()"
+									else
+										l_original_text := "element()"
+									end
+									create l_name_test.make (l_node_kind, a_name_code, l_original_text)
+									create {XM_XPATH_COMBINED_NODE_TEST} internal_last_parsed_node_test.make (l_name_test, Intersect_token, l_content_test)
+									next_token ("After element(name,T) or attribute(name,T)")
+									if not is_parse_error and not is_attribute then
+										if tokenizer.last_token = Question_mark_token then
+											l_content_test.set_nillable (True)
+											next_token ("After element(*,T?)")
+										end
+									end
+								end
+							end
+							if tokenizer.last_token /= Right_parenthesis_token then
+			               l_message := STRING_.concat ("expected %")%", found ", display_current_token)
+								report_parse_error (l_message, "XPST0003")
+							else
+								next_token ("At end of create_named_node_kind_test_with_type_name")
+							end
+						else
+							report_parse_error (STRING_.concat (l_type_name, " is not valid for a basic-level XSLT processor"),  "XPST0003")
+						end
+					else
+						report_parse_error (STRING_.concat (l_type_name, " is not valid for a basic-level XSLT processor"),  "XPST0003")
+					end
+				end
+			else
+				l_message := STRING_.concat (display_current_token, " is not a lexical QName")
+				report_parse_error (l_message, "XPST0003")
 			end
 		ensure
 			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void

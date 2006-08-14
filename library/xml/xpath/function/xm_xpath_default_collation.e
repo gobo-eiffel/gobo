@@ -63,6 +63,7 @@ feature -- Evaluation
 			-- Pre-evaluate `Current' at compile time.
 		do
 			create {XM_XPATH_STRING_VALUE} last_evaluation.make (a_context.default_collation_name)
+			set_replacement (last_evaluation)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

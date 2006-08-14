@@ -126,14 +126,27 @@ feature -- Optimization
 			end
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
+			elseif base_expression.cardinality_is_empty then
+				-- no type checking needed
+				set_replacement (base_expression)
 			else
 				a_relation := type_relationship (required_item_type, base_expression.item_type)
 				if a_relation = Same_item_type or else a_relation = Subsuming_type then
 					set_replacement (base_expression)
 				elseif a_relation = Disjoint_types then
-					a_message := "Required type of " + role_locator.message + " is "
-					+ required_item_type.conventional_name + "; supplied value has type " + base_expression.item_type.conventional_name
-					set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
+					if base_expression.cardinality_allows_zero then
+						a_context.issue_warning (STRING_.concat ("The only value that can pass type-checking is an empty sequence. ", role_locator.message))
+					elseif required_item_type = type_factory.string_type and is_sub_type (base_expression.item_type, type_factory.any_uri_type)  then
+						-- URI promotion will take care of this at run-time
+						if base_expression.is_computed_expression then
+							base_expression.as_computed_expression.set_parent (parent)
+						end
+						set_replacement (base_expression)
+					else
+						a_message := "Required type of " + role_locator.message + " is "
+							+ required_item_type.conventional_name + "; supplied value has type " + base_expression.item_type.conventional_name
+						set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
+					end
 				end
 			end
 		end
@@ -197,12 +210,12 @@ feature -- Evaluation
 			if not an_item.is_error then
 				test_conformance (an_item)
 				if an_item.is_error then
-					create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (an_item.error_value)
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (an_item.error_value)
 				else
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (an_item.as_node)
 				end
 			else
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (an_item.error_value)
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (an_item.error_value)
 			end
 		end
 

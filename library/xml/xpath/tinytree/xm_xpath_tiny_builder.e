@@ -73,11 +73,11 @@ feature -- Events
 				else
 					create tree.make_with_defaults
 				end
-				current_depth := 1
 				if is_line_numbering then
 					tree.set_line_numbering
 				end
 			end
+			current_depth := 1
 			create previously_at_depth.make (1, 100)
 			Precursor
 		ensure then

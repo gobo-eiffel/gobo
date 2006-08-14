@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-			original_text := "void()"
+			original_text := "empty-sequence()"
 		end
 
 feature -- Access

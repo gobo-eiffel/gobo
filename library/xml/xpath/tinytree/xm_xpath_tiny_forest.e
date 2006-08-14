@@ -782,9 +782,9 @@ feature -- Element change
 			-- Not necessarily same as base URI
 		require
 			system_id_not_void: a_system_id /= Void
-			valid_node_number: (a_node_number = 1 and last_node_added = 0) or else is_node_number_valid (a_node_number)
+			valid_node_number: a_node_number > 0
 		do
-			system_id_map.set_system_id(a_node_number, a_system_id)
+			system_id_map.set_system_id (a_node_number, a_system_id)
 		end
 		
 feature -- Conversion

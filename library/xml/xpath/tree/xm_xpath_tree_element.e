@@ -16,12 +16,12 @@ inherit
 	
 	XM_XPATH_ELEMENT
 		undefine
-			document_element, next_sibling, previous_sibling, type_annotation, first_child, last_child, has_child_nodes, is_tree_node, as_tree_node
+			document_element, next_sibling, previous_sibling, first_child, last_child, has_child_nodes, is_tree_node, as_tree_node
 		end
 
 	XM_XPATH_TREE_COMPOSITE_NODE
 		undefine
-			is_nilled, local_part, base_uri, is_element, as_element
+			is_nilled, local_part, base_uri, is_element, as_element, type_annotation
 		redefine
 			name_code, system_id, line_number, is_tree_element, as_tree_element
 		end

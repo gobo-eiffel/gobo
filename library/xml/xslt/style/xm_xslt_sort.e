@@ -101,7 +101,7 @@ feature -- Element change
 		do
 			if select_expression /= Void then
 				if has_child_nodes then
-					create an_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", Xpath_errors_uri, "XTSE0010", Static_error)
+					create an_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", Xpath_errors_uri, "XTSE0015", Static_error)
 				else
 					a_style_element ?= parent
 					if a_style_element = Void or else

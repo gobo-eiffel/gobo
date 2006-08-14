@@ -17,7 +17,7 @@ inherit
 	XM_XSLT_STYLE_ELEMENT
 		redefine
 			validate, returned_item_type, is_permitted_child,
-			may_contain_sequence_constructor
+			may_contain_sequence_constructor, is_perform_sort
 		end
 
 create {XM_XSLT_NODE_FACTORY}
@@ -36,6 +36,12 @@ feature -- Status report
 			-- Is `a_style_element' a permitted child of `Current'?
 		do
 			Result := a_style_element.is_sort
+		end
+
+	is_perform_sort: BOOLEAN is
+			-- Is `Current' an xsl:perform-sort?
+		do
+			Result := True
 		end
 
 feature -- Element change

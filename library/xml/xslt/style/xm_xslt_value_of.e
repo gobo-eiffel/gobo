@@ -117,14 +117,16 @@ feature -- Element change
 		do
 			if separator_expression = Void and then select_expression /= Void
 				and then is_backwards_compatible_processing_enabled then
-				if not is_sub_type (select_expression.item_type, type_factory.any_atomic_type) then
-					create {XM_XPATH_ATOMIZER_EXPRESSION} select_expression.make (select_expression, static_context.configuration.are_all_nodes_untyped)
-				end
-				if select_expression.cardinality_allows_many then
-					create {XM_XPATH_FIRST_ITEM_EXPRESSION} select_expression.make (select_expression)
-				end
-				if not is_sub_type (select_expression.item_type, type_factory.string_type) then
-					create {XM_XPATH_ATOMIC_SEQUENCE_CONVERTER} select_expression.make (select_expression, type_factory.string_type)
+				if not select_expression.is_error then
+					if not is_sub_type (select_expression.item_type, type_factory.any_atomic_type) then
+						create {XM_XPATH_ATOMIZER_EXPRESSION} select_expression.make (select_expression, static_context.configuration.are_all_nodes_untyped)
+					end
+					if select_expression.cardinality_allows_many then
+						create {XM_XPATH_FIRST_ITEM_EXPRESSION} select_expression.make (select_expression)
+					end
+					if not is_sub_type (select_expression.item_type, type_factory.string_type) then
+						create {XM_XPATH_ATOMIC_SEQUENCE_CONVERTER} select_expression.make (select_expression, type_factory.string_type)
+					end
 				end
 			end
 			if separator_expression = Void then

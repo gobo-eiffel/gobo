@@ -142,67 +142,40 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_stopper: XM_XPATH_OBJECT_VALUE
-			a_cardinality_checking_function: XM_XPATH_CARDINALITY_CHECKING_FUNCTION
-			a_cardinality_node_checking_function: XM_XPATH_NODE_CARDINALITY_CHECKING_FUNCTION
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if not an_iterator.is_error then
+			l_iterator := base_expression.last_iterator
+			if not l_iterator.is_error then
 				if not is_cardinality_allows_zero (required_cardinality) then
-
-					-- To check for an empty sequence, we add a special item to the base
-					-- iteration, to ensure that the mapping function gets called at least
-					-- once. This item will cause an error if it is the first in the sequence,
-					-- and will be ignored otherwise.
-			
-					create a_stopper.make (Current)
-					if an_iterator.is_node_iterator then
-						a_stopper.create_node_iterator (a_context)
-						create {XM_XPATH_NODE_APPEND_ITERATOR} an_iterator.make (an_iterator.as_node_iterator, a_stopper.last_node_iterator, a_context)
+					if l_iterator.is_node_iterator then
+						create {XM_XPATH_NON_EMPTY_NODE_ITERATOR} last_iterator.make (l_iterator.as_node_iterator, role_locator, required_cardinality)
 					else
-						a_stopper.create_iterator (a_context)
-						create {XM_XPATH_APPEND_ITERATOR} an_iterator.make (an_iterator, a_stopper.last_iterator, a_context)
+						create {XM_XPATH_NON_EMPTY_ITERATOR} last_iterator.make (l_iterator, role_locator, required_cardinality)
 					end
-				end
-				if an_iterator.is_node_iterator then
-					create a_cardinality_node_checking_function.make (an_iterator.as_node_iterator, role_locator, required_cardinality)
-					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (an_iterator, a_cardinality_node_checking_function, Void)
 				else
-					create a_cardinality_checking_function.make (an_iterator, role_locator, required_cardinality)
-					create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, a_cardinality_checking_function, Void)
+					last_iterator := l_iterator 
 				end
 			else
-				last_iterator := an_iterator 
+				last_iterator := l_iterator 
 			end
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence.
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_stopper: XM_XPATH_OBJECT_VALUE
-			a_cardinality_checking_function: XM_XPATH_NODE_CARDINALITY_CHECKING_FUNCTION
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			base_expression.create_node_iterator (a_context)
-			an_iterator := base_expression.last_node_iterator
-			if not an_iterator.is_error then
+			l_iterator := base_expression.last_node_iterator
+			if not l_iterator.is_error then
 				if not is_cardinality_allows_zero (required_cardinality) then
-					
-					-- To check for an empty sequence, we add a special item to the base
-					-- iteration, to ensure that the mapping function gets called at least
-					-- once. This item will cause an error if it is the first in the sequence,
-					-- and will be ignored otherwise.
-					
-					create a_stopper.make (Current)
-					a_stopper.create_node_iterator (a_context)
-					create {XM_XPATH_NODE_APPEND_ITERATOR} an_iterator.make (an_iterator, a_stopper.last_node_iterator, a_context)
+					create {XM_XPATH_NON_EMPTY_NODE_ITERATOR} last_node_iterator.make (l_iterator.as_node_iterator, role_locator, required_cardinality)
+				else
+					last_node_iterator := l_iterator 
 				end
-				create a_cardinality_checking_function.make (an_iterator, role_locator, required_cardinality)
-				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (an_iterator, a_cardinality_checking_function, Void)
 			else
-				last_node_iterator := an_iterator
+				last_node_iterator := l_iterator 
 			end
 		end
 

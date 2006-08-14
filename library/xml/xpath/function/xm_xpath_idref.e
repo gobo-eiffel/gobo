@@ -124,6 +124,7 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
+			-- Suppress compile-time evaluation
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is

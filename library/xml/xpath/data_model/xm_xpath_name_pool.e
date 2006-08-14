@@ -936,6 +936,14 @@ feature -- Status report
 				a_uri_count := a_uri_count + 1
 			end
 		end
+
+feature -- Status setting
+
+	clear is
+			-- Clear out all entries and reset to initial state.
+		do
+			make
+		end
 	
 feature -- Element change
 

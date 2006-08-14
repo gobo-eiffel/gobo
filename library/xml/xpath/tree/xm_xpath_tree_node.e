@@ -321,15 +321,8 @@ feature -- Access
 
 	atomized_value: XM_XPATH_VALUE is
 			-- Typed value as atomic value or (unusually) sequence of atomic values.
-		local
-			an_annotation: INTEGER
 		do
-			an_annotation := type_annotation
-			if an_annotation /= type_factory.untyped_atomic_type.fingerprint then
-				todo ("atomized_value", True)
-			else
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
-			end
+			create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
 		end
 
 feature -- Comparison

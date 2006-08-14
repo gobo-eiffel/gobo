@@ -26,6 +26,9 @@ create
 
 	make
 
+		-- TODO:
+		-- Make use of `is_nillable' in schema-aware version
+
 feature {NONE} -- Initialization
 
 	make (a_node_kind: INTEGER; a_type: XM_XPATH_SCHEMA_TYPE) is
@@ -70,12 +73,25 @@ feature -- Access
 
 feature -- Status report
 
+	is_nillable: BOOLEAN
+			-- Can `Current' match nillable nodes?
+
 	allows_text_nodes: BOOLEAN is
 			-- Does this node test allow text nodes?
 		do
 			Result := False
 		end
-	
+
+feature -- Status setting
+
+	set_nillable (a_nillable: BOOLEAN) is
+			-- Set `is_nillable' to `a_nillable'.
+		do
+			is_nillable := a_nillable
+		ensure
+			set: is_nillable = a_nillable
+		end
+
 feature -- Matching
 
 	matches_node (a_node_kind: INTEGER; a_name_code: INTEGER; a_node_type: INTEGER): BOOLEAN is

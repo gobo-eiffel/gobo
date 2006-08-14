@@ -230,6 +230,7 @@ feature {NONE} -- Implementation
 			context_not_void: a_context /= Void
 		local
 			a_validator: XM_XPATH_RECEIVER
+			l_was_open: BOOLEAN
 		do
 			inspect
 				a_node.node_type
@@ -246,9 +247,12 @@ feature {NONE} -- Implementation
 				a_receiver.notify_comment (STRING_.cloned_string (a_node.string_value), 0)
 			when Document_node then
 				a_validator := a_context.transformer.configuration.document_validator (a_receiver, a_node.base_uri, Validation_strip)
+				l_was_open := a_validator.is_open
+				if not l_was_open  then a_validator.open end
 				if not a_validator.is_document_started then a_validator.start_document end
 				a_node.copy_node (a_validator, which_namespaces, True)
 				a_validator.end_document
+				if not l_was_open  then a_validator.close end
 			when Namespace_node then
 				a_node.copy_node (a_receiver, No_namespaces, False)
 			end

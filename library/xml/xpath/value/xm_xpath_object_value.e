@@ -10,6 +10,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+			-- TODO: This is now only used by XM_XSLT_FUNCTION_CALL_PACKAGE, so remove it.
+
 class XM_XPATH_OBJECT_VALUE
 
 inherit

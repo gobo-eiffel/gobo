@@ -158,7 +158,7 @@ feature -- Evaluation
 				loop
 					an_item := an_iterator.item
 					counter := counter + 1
-					if not is_sub_type (an_item.item_type, target_type.primary_type) then
+					if not target_type.primary_type.matches_item (an_item) then
 						create last_boolean_value.make (False); finished := True
 					elseif counter = 2 and then not target_type.cardinality_allows_many then
 						create last_boolean_value.make (False)

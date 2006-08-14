@@ -109,7 +109,7 @@ feature -- Access
 		end
 
 	any_atomic_type: XM_XPATH_ATOMIC_TYPE is
-			-- xdt:anyAtomicType
+			-- xs:anyAtomicType
 		deferred
 		ensure
 			any_atomic_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
@@ -235,7 +235,7 @@ feature -- Access
 		end
 
 	untyped_atomic_type: XM_XPATH_ATOMIC_TYPE is
-			-- xdt:untypedAtomic
+			-- xs:untypedAtomic
 		deferred
 		ensure
 			untyped_atomic_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
@@ -354,14 +354,14 @@ feature -- Access
 		end
 
 	year_month_duration_type: XM_XPATH_ATOMIC_TYPE is
-			-- xdt:yearMonthDuration
+			-- xs:yearMonthDuration
 		deferred
 		ensure
 			year_month_duration_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
 
 	day_time_duration_type: XM_XPATH_ATOMIC_TYPE is
-			-- xdt:dayTimeDuration
+			-- xs:dayTimeDuration
 		deferred
 		ensure
 			day_time_duration_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
@@ -459,7 +459,7 @@ feature -- Access
 		end
 
 	untyped_type: XM_XPATH_UNTYPED_TYPE is
-			-- xdt:untyped
+			-- xs:untyped
 		deferred
 		ensure
 			untyped_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)

@@ -1545,6 +1545,8 @@ feature -- Element change
 		do
 			a_use_when_attribute := attribute_value_by_expanded_name (an_attribute_name)
 			if a_use_when_attribute /= Void then
+				STRING_.left_adjust (a_use_when_attribute)
+				STRING_.right_adjust (a_use_when_attribute)
 				create a_static_context.make_restricted (Current, configuration)
 				expression_factory.make_expression (a_use_when_attribute, a_static_context, 1, Eof_token, line_number, system_id)
 				if expression_factory.is_parse_error then
@@ -1587,6 +1589,10 @@ feature -- Element change
 							  or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
 		do
 			default_xpath_namespace := attribute_value_by_expanded_name (an_attribute_name)
+			if default_xpath_namespace /= Void then
+				STRING_.left_adjust (default_xpath_namespace)
+				STRING_.right_adjust (default_xpath_namespace)
+			end
 		end
 
 	process_version_attribute (an_attribute_name: STRING; a_condition: INTEGER) is
@@ -1609,6 +1615,8 @@ feature -- Element change
 		do
 			a_version := attribute_value_by_expanded_name (an_attribute_name)
 			if a_version /= Void then
+				STRING_.left_adjust (a_version)
+				STRING_.right_adjust (a_version)
 				if a_version.index_of ('e', 1) > 0 or else a_version.index_of ('E', 1) > 0 then
 					create an_error.make_from_string ("The version attribute must be a decimal literal", Xpath_errors_uri, "XTSE0110", Static_error)
 					set_validation_error (an_error, a_condition)

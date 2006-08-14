@@ -164,6 +164,7 @@ feature -- Events
 			if tree = Void then
 				create_tree
 			end
+			if not tree.is_open then tree.open end
 			if level = 0 then tree.start_document end
 			level := level + 1
 		end
