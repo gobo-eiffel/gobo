@@ -94,6 +94,23 @@ feature -- Access
 			end
 		end
 
+feature -- Measurement
+
+	arguments_count: INTEGER is
+			-- Number of arguments
+		local
+			l_arguments: like arguments
+		do
+			l_arguments := arguments
+			if l_arguments /= Void then
+				Result := l_arguments.count
+			end
+		ensure
+			arguments_count_not_negative: Result >= 0
+			no_argument: arguments = Void implies Result = 0
+			with_arguments: arguments /= Void implies Result = arguments.count
+		end
+		
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is

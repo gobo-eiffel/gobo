@@ -20,7 +20,7 @@ inherit
 		rename
 			make as make_qualified_call
 		undefine
-			process
+			process, arguments_count
 		redefine
 			reset, position, first_leaf
 		end
