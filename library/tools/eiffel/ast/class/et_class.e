@@ -1163,6 +1163,30 @@ feature -- Features
 			registered: Result /= Void implies Result.is_registered
 		end
 
+	add_overloaded_queries (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [ET_QUERY]) is
+			-- Add to `a_list' queries whose name or overloaded name is `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has (Void)
+		do
+			queries.add_overloaded_features (a_name, a_list)
+		ensure
+			no_void_item: not a_list.has (Void)
+		end
+
+	add_overloaded_procedures (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [ET_PROCEDURE]) is
+			-- Add to `a_list' procedures whose name or overloaded name is `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has (Void)
+		do
+			procedures.add_overloaded_features (a_name, a_list)
+		ensure
+			no_void_item: not a_list.has (Void)
+		end
+
 	queries: ET_QUERY_LIST
 			-- Queries
 

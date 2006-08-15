@@ -183,6 +183,59 @@ feature -- Setting
 			declared_count_set: declared_count = a_count
 		end
 
+feature -- Basic operations
+
+	add_overloaded_features (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [like item]) is
+			-- Add to `a_list' features whose name or overloaded name is `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has (Void)
+		local
+			i: INTEGER
+			l_feature: like item
+			l_id: ET_IDENTIFIER
+			l_hash_code: INTEGER
+			l_alias_name: ET_ALIAS_NAME
+			l_overloaded_alias_name: ET_ALIAS_NAME
+			l_found: BOOLEAN
+		do
+				-- The code below takes advantage of the fact that the features
+				-- are stored in `storage' from 'count - 1' to '0'.
+				--
+				-- This assignment attempt is to avoid too many polymorphic
+				-- calls to `same_feature_name'.
+			l_id ?= a_name
+			if l_id /= Void then
+				l_hash_code := l_id.hash_code
+				from i := count - 1 until i < 0 loop
+					l_feature := storage.item (i)
+					if not l_found and then l_hash_code = l_feature.hash_code and then l_id.same_feature_name (l_feature.name) then
+						a_list.force_last (l_feature)
+						l_found := True
+					elseif l_id.same_feature_name (l_feature.overloaded_name) then
+						a_list.force_last (l_feature)
+					end
+					i := i - 1
+				end
+			else
+				from i := count - 1 until i < 0 loop
+					l_feature := storage.item (i)
+					l_alias_name := l_feature.alias_name
+					l_overloaded_alias_name := l_feature.overloaded_alias_name
+					if not l_found and then l_alias_name /= Void and then l_alias_name.same_call_name (a_name) then
+						a_list.force_last (l_feature)
+						l_found := True
+					elseif l_overloaded_alias_name /= Void and then l_overloaded_alias_name.same_call_name (a_name) then
+						a_list.force_last (l_feature)
+					end
+					i := i - 1
+				end
+			end
+		ensure
+			no_void_item: not a_list.has (Void)
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_SPECIAL_ROUTINES [ET_FEATURE] is

@@ -121,6 +121,9 @@ feature {NONE} -- Initialization
 			current_type := current_class
 			current_feature := dummy_feature
 			feature_impl := dummy_feature
+			create overloaded_procedures.make (10)
+			create overloaded_queries.make (10)
+			create best_overloaded_features.make (10)
 			create actual_context.make_with_capacity (current_type, 10)
 			create formal_context.make_with_capacity (current_type, 10)
 			create instruction_context.make_with_capacity (current_type, 10)
@@ -141,6 +144,9 @@ feature {NONE} -- Initialization
 				current_type := current_class
 				current_feature := dummy_feature
 				feature_impl := dummy_feature
+				create overloaded_procedures.make (10)
+				create overloaded_queries.make (10)
+				create best_overloaded_features.make (10)
 				create actual_context.make_with_capacity (current_type, 10)
 				create formal_context.make_with_capacity (current_type, 10)
 				create instruction_context.make_with_capacity (current_type, 10)
@@ -1955,6 +1961,9 @@ feature {NONE} -- Instruction validity
 			l_local_seed: INTEGER
 			l_name_identifier: ET_IDENTIFIER
 			l_name_position: ET_POSITION
+			i, nb: INTEGER
+			nb_args: INTEGER
+			l_actuals: ET_ACTUAL_ARGUMENTS
 		do
 			has_fatal_error := False
 			actual_context.reset (current_type)
@@ -2029,6 +2038,7 @@ feature {NONE} -- Instruction validity
 				l_call := an_instruction.creation_call
 				if l_call /= Void then
 					l_name := l_call.name
+					l_actuals := l_call.arguments
 					l_seed := l_name.seed
 					if l_seed = 0 then
 							-- We need to resolve `l_name' in the implementation
@@ -2056,21 +2066,76 @@ feature {NONE} -- Instruction validity
 								if not l_class.interface_checked or else l_class.has_interface_error then
 									set_fatal_error
 								else
-									l_procedure := l_class.named_procedure (l_name)
-									if l_procedure /= Void then
-										l_seed := l_procedure.first_seed
-										l_name.set_seed (l_seed)
-									else
-										l_query := l_class.named_query (l_name)
-										if l_query /= Void then
-												-- This is not a procedure.
-											set_fatal_error
-											error_handler.report_vgcc6f_error (current_class, l_name, l_query, l_class)
+									if l_class.is_dotnet then
+										l_class.add_overloaded_procedures (l_name, overloaded_procedures)
+										nb := overloaded_procedures.count
+										if nb = 0 then
+											-- The error is reported later.
+										elseif nb = 1 then
+											l_procedure := overloaded_procedures.first
+											l_seed := l_procedure.first_seed
+											l_name.set_seed (l_seed)
 										else
-											set_fatal_error
-												-- ISE Eiffel 5.4 reports this error as a VEEN,
-												-- but it is in fact a VUEX-2 (ETL2 p.368).
-											error_handler.report_vuex2a_error (l_class_impl, l_name, l_class)
+												-- More than one procedure with that name.
+												-- Start to remove those with the wrong number of arguments
+												-- or which are not creators.
+											nb_args := l_call.arguments_count
+											from i := nb until i < 1 loop
+-- TODO: remove non-creators
+												if overloaded_procedures.item (i).arguments_count /= nb_args then
+													overloaded_procedures.remove (i)
+												end
+												i := i - 1
+											end
+											nb := overloaded_procedures.count
+											if nb = 0 then
+												-- The error is reported later.
+											elseif nb = 1 then
+												l_procedure := overloaded_procedures.first
+												l_seed := l_procedure.first_seed
+												l_name.set_seed (l_seed)
+											elseif nb_args = 0 then
+													-- Ambiguity in overloaded procedures.
+-- TODO: report VIOF
+											else
+												keep_best_overloaded_features (overloaded_procedures, l_actuals, l_creation_context)
+												if not has_fatal_error then
+													nb := overloaded_procedures.count
+													if nb = 0 then
+														-- The error is reported later.
+													elseif nb = 1 then
+														l_procedure := overloaded_procedures.first
+														l_seed := l_procedure.first_seed
+														l_name.set_seed (l_seed)
+													else
+															-- Ambiguity in overloaded procedures.
+-- TODO: report VIOF
+													end
+												end
+											end
+										end
+										overloaded_procedures.wipe_out
+									end
+									if l_procedure = Void and not has_fatal_error then
+										l_procedure := l_class.named_procedure (l_name)
+										if l_procedure /= Void then
+											l_procedure := l_class.named_procedure (l_name)
+											if l_procedure /= Void then
+												l_seed := l_procedure.first_seed
+												l_name.set_seed (l_seed)
+											else
+												l_query := l_class.named_query (l_name)
+												if l_query /= Void then
+														-- This is not a procedure.
+													set_fatal_error
+													error_handler.report_vgcc6f_error (current_class, l_name, l_query, l_class)
+												else
+													set_fatal_error
+														-- ISE Eiffel 5.4 reports this error as a VEEN,
+														-- but it is in fact a VUEX-2 (ETL2 p.368).
+													error_handler.report_vuex2a_error (l_class_impl, l_name, l_class)
+												end
+											end
 										end
 									end
 								end
@@ -2218,7 +2283,7 @@ feature {NONE} -- Instruction validity
 					end
 					had_error := has_fatal_error
 					if l_call /= Void then
-						check_sub_actual_arguments_validity (l_call.arguments, l_creation_context, l_name, l_procedure, l_class)
+						check_sub_actual_arguments_validity (l_actuals, l_creation_context, l_name, l_procedure, l_class)
 					else
 -- TODO: `l_name' is "default_create". It may be a shared identifier not holding the correct
 -- position! A solution could be to inline `check_sub_actual_arguments_validity' here. It's
@@ -2888,6 +2953,8 @@ feature {NONE} -- Instruction validity
 			l_seed: INTEGER
 			any_type: ET_CLASS_TYPE
 			had_error: BOOLEAN
+			i, nb: INTEGER
+			nb_args: INTEGER
 		do
 			has_fatal_error := False
 			l_target := a_call.target
@@ -2921,21 +2988,71 @@ feature {NONE} -- Instruction validity
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						else
-							l_procedure := l_class.named_procedure (l_name)
-							if l_procedure /= Void then
-								l_seed := l_procedure.first_seed
-								l_name.set_seed (l_seed)
-							else
-								l_query := l_class.named_query (l_name)
-								if l_query /= Void then
-										-- In a call instruction, the feature has to be a procedure.
-									set_fatal_error
-									error_handler.report_vkcn1a_error (current_class, l_name, l_query, l_class)
+							if l_class.is_dotnet then
+								l_class.add_overloaded_procedures (l_name, overloaded_procedures)
+								nb := overloaded_procedures.count
+								if nb = 0 then
+									-- The error is reported later.
+								elseif nb = 1 then
+									l_procedure := overloaded_procedures.first
+									l_seed := l_procedure.first_seed
+									l_name.set_seed (l_seed)
 								else
-									set_fatal_error
-										-- ISE Eiffel 5.4 reports this error as a VEEN,
-										-- but it is in fact a VUEX-2 (ETL2 p.368).
-									error_handler.report_vuex2a_error (current_class, l_name, l_class)
+										-- More than one procedure with that name.
+										-- Start to remove those with the wrong number of arguments.
+									nb_args := a_call.arguments_count
+									from i := nb until i < 1 loop
+										if overloaded_procedures.item (i).arguments_count /= nb_args then
+											overloaded_procedures.remove (i)
+										end
+										i := i - 1
+									end
+									nb := overloaded_procedures.count
+									if nb = 0 then
+										-- The error is reported later.
+									elseif nb = 1 then
+										l_procedure := overloaded_procedures.first
+										l_seed := l_procedure.first_seed
+										l_name.set_seed (l_seed)
+									elseif nb_args = 0 then
+											-- Ambiguity in overloaded procedures.
+-- TODO: report VIOF
+									else
+										keep_best_overloaded_features (overloaded_procedures, l_actuals, l_context)
+										if not has_fatal_error then
+											nb := overloaded_procedures.count
+											if nb = 0 then
+												-- The error is reported later.
+											elseif nb = 1 then
+												l_procedure := overloaded_procedures.first
+												l_seed := l_procedure.first_seed
+												l_name.set_seed (l_seed)
+											else
+													-- Ambiguity in overloaded procedures.
+-- TODO: report VIOF
+											end
+										end
+									end
+								end
+								overloaded_procedures.wipe_out
+							end
+							if l_procedure = Void and not has_fatal_error then
+								l_procedure := l_class.named_procedure (l_name)
+								if l_procedure /= Void then
+									l_seed := l_procedure.first_seed
+									l_name.set_seed (l_seed)
+								else
+									l_query := l_class.named_query (l_name)
+									if l_query /= Void then
+											-- In a call instruction, the feature has to be a procedure.
+										set_fatal_error
+										error_handler.report_vkcn1a_error (current_class, l_name, l_query, l_class)
+									else
+										set_fatal_error
+											-- ISE Eiffel 5.4 reports this error as a VEEN,
+											-- but it is in fact a VUEX-2 (ETL2 p.368).
+										error_handler.report_vuex2a_error (current_class, l_name, l_class)
+									end
 								end
 							end
 						end
@@ -3034,6 +3151,10 @@ feature {NONE} -- Instruction validity
 			l_name: ET_FEATURE_NAME
 			l_seed: INTEGER
 			had_error: BOOLEAN
+			i, nb: INTEGER
+			nb_args: INTEGER
+			l_dotnet_procedure: ET_DOTNET_PROCEDURE
+			l_actuals: ET_ACTUAL_ARGUMENTS
 		do
 			has_fatal_error := False
 			l_context := instruction_context
@@ -3048,6 +3169,7 @@ feature {NONE} -- Instruction validity
 					report_current_type_needed
 				end
 				l_name := an_instruction.name
+				l_actuals := an_instruction.arguments
 				l_seed := l_name.seed
 				if l_seed = 0 then
 						-- We need to resolve `l_name' in the implementation
@@ -3067,21 +3189,73 @@ feature {NONE} -- Instruction validity
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						else
-							l_procedure := l_class.named_procedure (l_name)
-							if l_procedure /= Void then
-								l_seed := l_procedure.first_seed
-								l_name.set_seed (l_seed)
-							else
-								l_query := l_class.named_query (l_name)
-								if l_query /= Void then
-										-- In a call instruction, the feature has to be a procedure.
-									set_fatal_error
-									error_handler.report_vkcn1a_error (current_class, l_name, l_query, l_class)
+							if l_class.is_dotnet then
+								l_class.add_overloaded_procedures (l_name, overloaded_procedures)
+								nb := overloaded_procedures.count
+								if nb = 0 then
+									-- The error is reported later.
+								elseif nb = 1 then
+									l_procedure := overloaded_procedures.first
+									l_seed := l_procedure.first_seed
+									l_name.set_seed (l_seed)
 								else
-									set_fatal_error
-										-- ISE Eiffel 5.4 reports this error as a VEEN,
-										-- but it is in fact a VUEX-2 (ETL2 p.368).
-									error_handler.report_vuex2a_error (current_class, l_name, l_class)
+										-- More than one procedure with that name.
+										-- Start to remove those with the wrong number of arguments
+										-- or which are not declared as static.
+									nb_args := an_instruction.arguments_count
+									from i := nb until i < 1 loop
+										l_dotnet_procedure ?= overloaded_procedures.item (i)
+										if l_dotnet_procedure = Void or else not l_dotnet_procedure.is_static or else l_dotnet_procedure.arguments_count /= nb_args then
+											overloaded_procedures.remove (i)
+										end
+										i := i - 1
+									end
+									nb := overloaded_procedures.count
+									if nb = 0 then
+										-- The error is reported later.
+									elseif nb = 1 then
+										l_procedure := overloaded_procedures.first
+										l_seed := l_procedure.first_seed
+										l_name.set_seed (l_seed)
+									elseif nb_args = 0 then
+											-- Ambiguity in overloaded procedures.
+-- TODO: report VIOF
+									else
+										keep_best_overloaded_features (overloaded_procedures, l_actuals, l_context)
+										if not has_fatal_error then
+											nb := overloaded_procedures.count
+											if nb = 0 then
+												-- The error is reported later.
+											elseif nb = 1 then
+												l_procedure := overloaded_procedures.first
+												l_seed := l_procedure.first_seed
+												l_name.set_seed (l_seed)
+											else
+													-- Ambiguity in overloaded procedures.
+-- TODO: report VIOF
+											end
+										end
+									end
+								end
+								overloaded_procedures.wipe_out
+							end
+							if l_procedure = Void and not has_fatal_error then
+								l_procedure := l_class.named_procedure (l_name)
+								if l_procedure /= Void then
+									l_seed := l_procedure.first_seed
+									l_name.set_seed (l_seed)
+								else
+									l_query := l_class.named_query (l_name)
+									if l_query /= Void then
+											-- In a call instruction, the feature has to be a procedure.
+										set_fatal_error
+										error_handler.report_vkcn1a_error (current_class, l_name, l_query, l_class)
+									else
+										set_fatal_error
+											-- ISE Eiffel 5.4 reports this error as a VEEN,
+											-- but it is in fact a VUEX-2 (ETL2 p.368).
+										error_handler.report_vuex2a_error (current_class, l_name, l_class)
+									end
 								end
 							end
 						end
@@ -3129,7 +3303,7 @@ feature {NONE} -- Instruction validity
 						if has_fatal_error then
 							had_error := True
 						end
-						check_sub_actual_arguments_validity (an_instruction.arguments, l_context, l_name, l_procedure, l_class)
+						check_sub_actual_arguments_validity (l_actuals, l_context, l_name, l_procedure, l_class)
 						if had_error then
 							set_fatal_error
 						end
@@ -3636,6 +3810,8 @@ feature {NONE} -- Expression validity
 			had_error: BOOLEAN
 			l_name_identifier: ET_IDENTIFIER
 			l_name_position: ET_POSITION
+			i, nb: INTEGER
+			nb_args: INTEGER
 		do
 			has_fatal_error := False
 			l_creation_type := a_type
@@ -3669,21 +3845,75 @@ feature {NONE} -- Expression validity
 							if not l_class.interface_checked or else l_class.has_interface_error then
 								set_fatal_error
 							else
-								l_procedure := l_class.named_procedure (l_name)
-								if l_procedure /= Void then
-									l_seed := l_procedure.first_seed
-									l_name.set_seed (l_seed)
-								else
-									l_query := l_class.named_query (l_name)
-									if l_query /= Void then
-											-- This is not a procedure.
-										set_fatal_error
-										error_handler.report_vgcc6b_error (current_class, l_name, l_query, l_class)
+								if l_class.is_dotnet then
+									l_class.add_overloaded_procedures (l_name, overloaded_procedures)
+									nb := overloaded_procedures.count
+									if nb = 0 then
+										-- The error is reported later.
+									elseif nb = 1 then
+										l_procedure := overloaded_procedures.first
+										l_seed := l_procedure.first_seed
+										l_name.set_seed (l_seed)
 									else
-										set_fatal_error
-											-- ISE Eiffel 5.4 reports this error as a VEEN,
-											-- but it is in fact a VUEX-2 (ETL2 p.368).
-										error_handler.report_vuex2a_error (current_class, l_name, l_class)
+											-- More than one procedure with that name.
+											-- Start to remove those with the wrong number of arguments
+											-- or which are not creators.
+										if an_actuals /= Void then
+											nb_args := an_actuals.count
+										end
+										from i := nb until i < 1 loop
+-- TODO: remove non-creators
+											if overloaded_procedures.item (i).arguments_count /= nb_args then
+												overloaded_procedures.remove (i)
+											end
+											i := i - 1
+										end
+										nb := overloaded_procedures.count
+										if nb = 0 then
+											-- The error is reported later.
+										elseif nb = 1 then
+											l_procedure := overloaded_procedures.first
+											l_seed := l_procedure.first_seed
+											l_name.set_seed (l_seed)
+										elseif nb_args = 0 then
+												-- Ambiguity in overloaded procedures.
+-- TODO: report VIOF
+										else
+											keep_best_overloaded_features (overloaded_procedures, an_actuals, a_context)
+											if not has_fatal_error then
+												nb := overloaded_procedures.count
+												if nb = 0 then
+													-- The error is reported later.
+												elseif nb = 1 then
+													l_procedure := overloaded_procedures.first
+													l_seed := l_procedure.first_seed
+													l_name.set_seed (l_seed)
+												else
+														-- Ambiguity in overloaded procedures.
+-- TODO: report VIOF
+												end
+											end
+										end
+									end
+									overloaded_procedures.wipe_out
+								end
+								if l_procedure = Void and not has_fatal_error then
+									l_procedure := l_class.named_procedure (l_name)
+									if l_procedure /= Void then
+										l_seed := l_procedure.first_seed
+										l_name.set_seed (l_seed)
+									else
+										l_query := l_class.named_query (l_name)
+										if l_query /= Void then
+												-- This is not a procedure.
+											set_fatal_error
+											error_handler.report_vgcc6b_error (current_class, l_name, l_query, l_class)
+										else
+											set_fatal_error
+												-- ISE Eiffel 5.4 reports this error as a VEEN,
+												-- but it is in fact a VUEX-2 (ETL2 p.368).
+											error_handler.report_vuex2a_error (current_class, l_name, l_class)
+										end
 									end
 								end
 							end
@@ -5596,6 +5826,8 @@ feature {NONE} -- Expression validity
 			l_actual: ET_EXPRESSION
 			l_convert_expression: ET_CONVERT_EXPRESSION
 			l_builtin: ET_BUILTIN_CONVERT_FEATURE
+			i, nb: INTEGER
+			nb_args: INTEGER
 		do
 			has_fatal_error := False
 			l_target := a_call.target
@@ -5627,33 +5859,83 @@ feature {NONE} -- Expression validity
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						else
-							l_query := l_class.named_query (l_name)
-							if l_query /= Void then
-								l_seed := l_query.first_seed
-								l_name.set_seed (l_seed)
-							else
-								if l_class = universe.tuple_class then
-										-- Check whether this is a tuple label.
-									l_label ?= l_name
-									if l_label /= Void then
-										l_seed := a_context.base_type_index_of_label (l_label, universe)
-										if l_seed /= 0 then
-											l_label.set_tuple_label (True)
-											l_label.set_seed (l_seed)
+							if l_class.is_dotnet then
+								l_class.add_overloaded_queries (l_name, overloaded_queries)
+								nb := overloaded_queries.count
+								if nb = 0 then
+									-- The error is reported later.
+								elseif nb = 1 then
+									l_query := overloaded_queries.first
+									l_seed := l_query.first_seed
+									l_name.set_seed (l_seed)
+								else
+										-- More than one query with that name.
+										-- Start to remove those with the wrong number of arguments.
+									nb_args := a_call.arguments_count
+									from i := nb until i < 1 loop
+										if overloaded_queries.item (i).arguments_count /= nb_args then
+											overloaded_queries.remove (i)
+										end
+										i := i - 1
+									end
+									nb := overloaded_queries.count
+									if nb = 0 then
+										-- The error is reported later.
+									elseif nb = 1 then
+										l_query := overloaded_queries.first
+										l_seed := l_query.first_seed
+										l_name.set_seed (l_seed)
+									elseif nb_args = 0 then
+											-- Ambiguity in overloaded queries.
+-- TODO: report VIOF
+									else
+										keep_best_overloaded_features (overloaded_queries, l_actuals, a_context)
+										if not has_fatal_error then
+											nb := overloaded_queries.count
+											if nb = 0 then
+												-- The error is reported later.
+											elseif nb = 1 then
+												l_query := overloaded_queries.first
+												l_seed := l_query.first_seed
+												l_name.set_seed (l_seed)
+											else
+													-- Ambiguity in overloaded queries.
+-- TODO: report VIOF
+											end
 										end
 									end
 								end
-								if l_seed = 0 then
-									l_procedure := l_class.named_procedure (l_name)
-									if l_procedure /= Void then
-											-- In a call expression, the feature has to be a query.
-										set_fatal_error
-										error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
-									else
-										set_fatal_error
-											-- ISE Eiffel 5.4 reports this error as a VEEN,
-											-- but it is in fact a VUEX-2 (ETL2 p.368).
-										error_handler.report_vuex2a_error (current_class, l_name, l_class)
+								overloaded_queries.wipe_out
+							end
+							if l_query = Void and not has_fatal_error then
+								l_query := l_class.named_query (l_name)
+								if l_query /= Void then
+									l_seed := l_query.first_seed
+									l_name.set_seed (l_seed)
+								else
+									if l_class = universe.tuple_class then
+											-- Check whether this is a tuple label.
+										l_label ?= l_name
+										if l_label /= Void then
+											l_seed := a_context.base_type_index_of_label (l_label, universe)
+											if l_seed /= 0 then
+												l_label.set_tuple_label (True)
+												l_label.set_seed (l_seed)
+											end
+										end
+									end
+									if l_seed = 0 then
+										l_procedure := l_class.named_procedure (l_name)
+										if l_procedure /= Void then
+												-- In a call expression, the feature has to be a query.
+											set_fatal_error
+											error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
+										else
+											set_fatal_error
+												-- ISE Eiffel 5.4 reports this error as a VEEN,
+												-- but it is in fact a VUEX-2 (ETL2 p.368).
+											error_handler.report_vuex2a_error (current_class, l_name, l_class)
+										end
 									end
 								end
 							end
@@ -6171,6 +6453,10 @@ feature {NONE} -- Expression validity
 			l_name: ET_FEATURE_NAME
 			l_seed: INTEGER
 			had_error: BOOLEAN
+			i, nb: INTEGER
+			nb_args: INTEGER
+			l_dotnet_query: ET_DOTNET_QUERY
+			l_actuals: ET_ACTUAL_ARGUMENTS
 		do
 			has_fatal_error := False
 			l_type := an_expression.type
@@ -6183,6 +6469,7 @@ feature {NONE} -- Expression validity
 					report_current_type_needed
 				end
 				l_name := an_expression.name
+				l_actuals := an_expression.arguments
 				l_seed := l_name.seed
 				if l_seed = 0 then
 						-- We need to resolve `l_name' in the implementation
@@ -6202,21 +6489,73 @@ feature {NONE} -- Expression validity
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						else
-							l_query := l_class.named_query (l_name)
-							if l_query /= Void then
-								l_seed := l_query.first_seed
-								l_name.set_seed (l_seed)
-							else
-								l_procedure := l_class.named_procedure (l_name)
-								if l_procedure /= Void then
-										-- In a call expression, ther feature has to be a query.
-									set_fatal_error
-									error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
+							if l_class.is_dotnet then
+								l_class.add_overloaded_queries (l_name, overloaded_queries)
+								nb := overloaded_queries.count
+								if nb = 0 then
+									-- The error is reported later.
+								elseif nb = 1 then
+									l_query := overloaded_queries.first
+									l_seed := l_query.first_seed
+									l_name.set_seed (l_seed)
 								else
-									set_fatal_error
-										-- ISE Eiffel 5.4 reports this error as a VEEN,
-										-- but it is in fact a VUEX-2 (ETL2 p.368).
-									error_handler.report_vuex2a_error (current_class, l_name, l_class)
+										-- More than one query with that name.
+										-- Start to remove those with the wrong number of arguments
+										-- or which are not declared as static.
+									nb_args := an_expression.arguments_count
+									from i := nb until i < 1 loop
+										l_dotnet_query ?= overloaded_queries.item (i)
+										if l_dotnet_query = Void or else not l_dotnet_query.is_static or else l_dotnet_query.arguments_count /= nb_args then
+											overloaded_queries.remove (i)
+										end
+										i := i - 1
+									end
+									nb := overloaded_queries.count
+									if nb = 0 then
+										-- The error is reported later.
+									elseif nb = 1 then
+										l_query := overloaded_queries.first
+										l_seed := l_query.first_seed
+										l_name.set_seed (l_seed)
+									elseif nb_args = 0 then
+											-- Ambiguity in overloaded queries.
+-- TODO: report VIOF
+									else
+										keep_best_overloaded_features (overloaded_queries, l_actuals, a_context)
+										if not has_fatal_error then
+											nb := overloaded_queries.count
+											if nb = 0 then
+												-- The error is reported later.
+											elseif nb = 1 then
+												l_query := overloaded_queries.first
+												l_seed := l_query.first_seed
+												l_name.set_seed (l_seed)
+											else
+													-- Ambiguity in overloaded queries.
+-- TODO: report VIOF
+											end
+										end
+									end
+								end
+								overloaded_queries.wipe_out
+							end
+							if l_query = Void and not has_fatal_error then
+								l_query := l_class.named_query (l_name)
+								if l_query /= Void then
+									l_seed := l_query.first_seed
+									l_name.set_seed (l_seed)
+								else
+									l_procedure := l_class.named_procedure (l_name)
+									if l_procedure /= Void then
+											-- In a call expression, ther feature has to be a query.
+										set_fatal_error
+										error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
+									else
+										set_fatal_error
+											-- ISE Eiffel 5.4 reports this error as a VEEN,
+											-- but it is in fact a VUEX-2 (ETL2 p.368).
+										error_handler.report_vuex2a_error (current_class, l_name, l_class)
+									end
 								end
 							end
 						end
@@ -6949,6 +7288,7 @@ feature {NONE} -- Expression validity
 			-- Note: do not call `check_actual_arguments_validity' directly because when checking
 			-- nested expressions we don't want the context attributes of the current checker
 			-- to be overwritten. Therefore `check_actual_arguments_validity' is called on another
+			-- feature checker.
 		require
 			a_context_not_void: a_context /= Void
 			a_name_not_void: a_name /= Void
@@ -9601,7 +9941,224 @@ feature {ET_FEATURE_CHECKER} -- Status report
 			in_precursor_set: in_precursor = other.in_precursor
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Overloading (useful in .NET)
+
+	keep_best_overloaded_features (a_features: DS_ARRAYED_LIST [ET_FEATURE]; an_actuals: ET_ACTUAL_ARGUMENTS; a_target_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Remove from `a_features' the features whose signature cannot
+			-- accommodate `an_actuals'. As a result `a_features' can be
+			-- empty if no feature is applicable.
+			-- Then keep only the best matches. There can be several
+			-- of them, in which case there is an ambiguity that should be
+			-- reported by the caller of this feature.
+			-- `a_target_context' is the context in which the formal argument
+			-- types of features in `a_features' should be considered.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_features_not_void: a_features /= Void
+			no_void_feature: not a_features.has (Void)
+			an_actuals_not_void: an_actuals /= Void
+			-- same_arguments_count: for all f in a_features, f.arguments_count = an_actuals.count
+			a_target_context_not_void: a_target_context /= Void
+		local
+			l_actual_context: ET_NESTED_TYPE_CONTEXT
+			l_formal_context1: ET_NESTED_TYPE_CONTEXT
+			l_any: ET_CLASS
+			had_error: BOOLEAN
+			j, nb_args: INTEGER
+			i, nb: INTEGER
+			k: INTEGER
+			l_actual: ET_EXPRESSION
+			l_type1: ET_TYPE
+			l_type2: ET_TYPE
+			l_feature1: ET_FEATURE
+			l_feature2: ET_FEATURE
+			l_same_type_mode: BOOLEAN
+			l_conformance_mode: BOOLEAN
+			l_conversion_mode: BOOLEAN
+			l_to_be_added: BOOLEAN
+			l_invalid_found: BOOLEAN
+			nb_all: INTEGER
+			nb_one: INTEGER
+		do
+			has_fatal_error := False
+				-- Do not use `actual_context' because it might already have
+				-- been used in `check_actual_arguments_validity'. Use
+				-- `expression_context' instead.
+			l_actual_context := expression_context
+			l_actual_context.reset (current_type)
+			l_any := universe.any_class
+			nb := a_features.count
+			nb_args := an_actuals.count
+			from j := 1 until j > nb_args loop
+				l_actual := an_actuals.actual_argument (j)
+				check_subexpression_validity (l_actual, l_actual_context, l_any)
+				if has_fatal_error then
+					had_error := True
+				end
+				if not had_error then
+					l_same_type_mode := False
+					l_conformance_mode := False
+					l_conversion_mode := True
+					from i := nb until i < 1 loop
+						l_feature1 := a_features.item (i)
+						l_type1 := l_feature1.arguments.formal_argument (j).type
+						if l_actual_context.same_named_type (l_type1, a_target_context, universe) then
+								-- The type of the actual argument is the same as
+								-- the type of the formal argument of `l_feature'.
+							if l_same_type_mode then
+								best_overloaded_features.force_last (l_feature1)
+							else
+								l_same_type_mode := True
+								l_conformance_mode := False
+								l_conversion_mode := False
+								best_overloaded_features.wipe_out
+								best_overloaded_features.force_last (l_feature1)
+							end
+						elseif l_actual_context.conforms_to_type (l_type1, a_target_context, universe) then
+								-- The type of the actual argument conforms to
+								-- the type of the formal argument of `l_feature1'.
+							if l_same_type_mode then
+								-- Do nothing.
+							elseif l_conformance_mode then
+								l_to_be_added := True
+								k := best_overloaded_features.count
+								from until k < 1 loop
+									l_feature2 := best_overloaded_features.item (k)
+									l_type2 := l_feature2.arguments.formal_argument (j).type
+									if l_type2.same_named_type (l_type1, a_target_context, a_target_context, universe) then
+											-- No difference between `l_feature1' and `l_feature2'.
+											-- If `l_feature2' is considered as one of the best choices,
+											-- `l_feature1' should be as well.
+										k := 0 -- Jump out of the loop.
+									elseif l_type2.conforms_to_type (l_type1, a_target_context, a_target_context, universe) then
+											-- `l_feature2' is a better choice.
+										l_to_be_added := False
+										k := 0 -- Jump out of the loop.
+									elseif l_type1.conforms_to_type (l_type2, a_target_context, a_target_context, universe) then
+											-- `l_feature1' is a better choice.
+										best_overloaded_features.remove (k)
+									end
+									k := k - 1
+								end
+								if l_to_be_added then
+									best_overloaded_features.force_last (l_feature1)
+								end
+							else
+								l_same_type_mode := False
+								l_conformance_mode := True
+								l_conversion_mode := False
+								best_overloaded_features.wipe_out
+								best_overloaded_features.force_last (l_feature1)
+							end
+						else
+							l_formal_context1 := a_target_context
+							l_formal_context1.force_last (l_type1)
+							if type_checker.convert_feature (l_actual_context, l_formal_context1) /= Void then
+									-- The type of the actual argument converts to
+									-- the type of the formal argument of `l_feature1'.
+								if l_conversion_mode then
+									best_overloaded_features.force_last (l_feature1)
+								end
+							else
+									-- The type of the actual argument does not conform nor
+									-- convert to the formal argument of `l_feature1'.
+									-- Remove this feature from the list.
+								a_features.remove (i)
+								nb := nb - 1
+								if i <= nb_all then
+									l_invalid_found := True
+									nb_all := nb_all - 1
+									nb_one := nb_one - 1
+								elseif i <= nb_one then
+									l_invalid_found := True
+									nb_one := nb_one - 1
+								end
+							end
+							l_formal_context1.remove_last
+						end
+						i := i - 1
+					end
+					if not l_invalid_found then
+							-- Features are sorted in `a_features' as follows:
+							-- * from 1 to `nb_all': features which were part of the best
+							-- overloaded features for all arguments processed so far.
+							-- * from `nb_all' + 1 to `nb_one': features which were part
+							-- of the best overloaded features for at least one argument
+							-- processed so far.
+							-- * from `nb_one' + 1 to `nb': features which were not part
+							-- of the best overloaded features for none of the arguments
+							-- processed so far.
+						if j = 1 then
+							nb_all := best_overloaded_features.count
+							from i := 1 until nb_one = nb_all loop
+								if best_overloaded_features.has (a_features.item (i)) then
+									nb_one := nb_one + 1
+									a_features.swap (i, nb_one)
+								end
+								i := i + 1
+							end
+						else
+							from i := 1 until i > nb_all loop
+								if best_overloaded_features.has (a_features.item (i)) then
+									i := i + 1
+								else
+									a_features.swap (i, nb_all)
+									nb_all := nb_all - 1
+								end
+							end
+							from i := nb_one + 1 until i > nb loop
+								if best_overloaded_features.has (a_features.item (i)) then
+									nb_one := nb_one + 1
+									a_features.swap (i, nb_one)
+								end
+								i := i + 1
+							end
+						end
+					else
+							-- We found invalid features (i.e. with wrong signature) which were
+							-- selected as one of the best choices for at least one of the previous
+							-- arguments. We need to run the process again on all arguments because
+							-- other features may qualify as best choice now that we removed these
+							-- invalid features.
+						l_invalid_found := False
+						nb_all := 0
+						nb_one := 0
+						j := 0
+					end
+					best_overloaded_features.wipe_out
+				end
+				l_actual_context.wipe_out
+				j := j + 1
+			end
+			if had_error then
+				set_fatal_error
+				a_features.wipe_out
+			elseif nb_args > 0 then
+				if nb_all > 0 then
+					a_features.keep_first (nb_all)
+				elseif nb_one > 0 then
+					a_features.keep_first (nb_one)
+				else
+					a_features.wipe_out
+				end
+			end
+		ensure
+			no_void_feature: not a_features.has (Void)
+		end
+
+	overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
+			-- List of overloaded procedures for a given name
+			-- (useful in .NET)
+
+	overloaded_queries: DS_ARRAYED_LIST [ET_QUERY]
+			-- List of overloaded queries for a given name
+			-- (useful in .NET)
+
+	best_overloaded_features: DS_ARRAYED_LIST [ET_FEATURE]
+			-- List of best overloaded features for a given argument
+			-- (useful in .NET)
+
+feature {NONE} -- Type contexts
 
 	actual_context: ET_NESTED_TYPE_CONTEXT
 			-- Actual context
@@ -9617,6 +10174,8 @@ feature {NONE} -- Implementation
 
 	assertion_context: ET_NESTED_TYPE_CONTEXT
 			-- Assertion context
+
+feature {NONE} -- Constants
 
 	dummy_feature: ET_FEATURE is
 			-- Dummy feature
@@ -9639,6 +10198,12 @@ invariant
 	current_class_definition: current_class = current_type.direct_base_class (universe)
 	-- implementation_checked: if inherited, then the code being analyzed has already been checked in implementation class of `feature_impl'
 	type_checker_not_void: type_checker /= Void
+	overloaded_procedures_not_void: overloaded_procedures /= Void
+	no_void_overloaded_procedure: not overloaded_procedures.has (Void)
+	overloaded_queries_not_void: overloaded_queries /= Void
+	no_void_overloaded_queries: not overloaded_queries.has (Void)
+	best_overloaded_features_not_void: best_overloaded_features /= Void
+	no_void_best_overloaded_feature: not best_overloaded_features.has (Void)
 	actual_context_not_void: actual_context /= Void
 	formal_context_not_void: formal_context /= Void
 	instruction_context_not_void: instruction_context /= Void
