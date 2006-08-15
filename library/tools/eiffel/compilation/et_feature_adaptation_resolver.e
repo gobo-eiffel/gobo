@@ -127,14 +127,15 @@ feature {NONE} -- Feature recording
 			l_procedures: ET_PROCEDURE_LIST
 			other_feature: ET_FLATTENED_FEATURE
 			a_name: ET_FEATURE_NAME
-			i, nb, nb2: INTEGER
+			i, nb, nb2, nb3: INTEGER
 		do
 			l_queries := current_class.queries
 			l_procedures := current_class.procedures
 			nb := l_queries.declared_count
-			nb2 := nb + l_procedures.declared_count
-			if a_features.capacity < nb2 then
-				a_features.resize (nb2)
+			nb2 := l_procedures.declared_count
+			nb3 := nb + nb2 + a_features.count
+			if a_features.capacity < nb3 then
+				a_features.resize (nb3)
 			end
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
@@ -149,8 +150,7 @@ feature {NONE} -- Feature recording
 				end
 				i := i + 1
 			end
-			nb := nb2 - nb
-			from i := 1 until i > nb loop
+			from i := 1 until i > nb2 loop
 				l_procedure := l_procedures.item (i)
 				a_name := l_procedure.name
 				a_features.search (a_name)
@@ -196,7 +196,7 @@ feature {NONE} -- Feature recording
 			a_parent_feature: ET_PARENT_FEATURE
 			a_name: ET_FEATURE_NAME
 			a_rename: ET_RENAME
-			i, nb: INTEGER
+			i, nb, nb2, nb3: INTEGER
 		do
 			if a_parent.renames /= Void then
 				fill_rename_table (a_parent)
@@ -223,11 +223,13 @@ feature {NONE} -- Feature recording
 			end
 			a_class := a_parent.type.direct_base_class (universe)
 			l_queries := a_class.queries
-			nb := l_queries.count + a_class.procedures.count + a_features.count
-			if a_features.capacity < nb then
-				a_features.resize (nb)
-			end
+			l_procedures := a_class.procedures
 			nb := l_queries.count
+			nb2 := l_procedures.count
+			nb3 := nb + nb2 + a_features.count
+			if a_features.capacity < nb3 then
+				a_features.resize (nb3)
+			end
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
 				a_parent_feature := new_parent_feature (l_query, a_parent)
@@ -294,9 +296,7 @@ feature {NONE} -- Feature recording
 				end
 				i := i + 1
 			end
-			l_procedures := a_class.procedures
-			nb := l_procedures.count
-			from i := 1 until i > nb loop
+			from i := 1 until i > nb2 loop
 				l_procedure := l_procedures.item (i)
 				a_parent_feature := new_parent_feature (l_procedure, a_parent)
 				a_name := l_procedure.name
