@@ -16,9 +16,11 @@ inherit
 
 	ET_CONSTANT_ATTRIBUTE
 		undefine
-			is_frozen, is_dotnet
+			is_frozen, is_dotnet,
+			overloaded_extended_name
 		redefine
-			process, make
+			process, make,
+			new_synonym, renamed_feature
 		end
 
 	ET_DOTNET_QUERY
@@ -38,10 +40,30 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_name, a_type, a_constant, a_class)
 			dotnet_name := name.name
-			overloaded_name := name.name
+			overloaded_extended_name := a_name
 		ensure then
 			dotnet_name_set: dotnet_name.same_string (name.name)
-			overloaded_name_set: overloaded_name.same_string (name.name)
+			overloaded_extended_name_set: overloaded_extended_name = a_name
+		end
+
+feature -- Duplication
+
+	new_synonym (a_name: like extended_name): like Current is
+			-- Synonym feature
+		do
+			Result := precursor (a_name)
+			Result.set_overloaded_extended_name (overloaded_extended_name)
+			Result.set_dotnet_name (dotnet_name)
+		end
+
+feature -- Conversion
+
+	renamed_feature (a_name: like extended_name): like Current is
+			-- Renamed version of current feature
+		do
+			Result := precursor (a_name)
+			Result.set_overloaded_extended_name (overloaded_extended_name)
+			Result.set_dotnet_name (dotnet_name)
 		end
 
 feature -- Processing

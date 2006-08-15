@@ -81,6 +81,31 @@ feature -- Access
 	extended_name: ET_EXTENDED_FEATURE_NAME
 			-- Extended feature name (possibly followed by comma for synomyms)
 
+	overloaded_extended_name: ET_EXTENDED_FEATURE_NAME is
+			-- Possibly overloaded extended Eiffel feature name
+			-- (useful in .NET)
+		do
+			Result := extended_name
+		ensure
+			overloaded_extended_name_not_void: Result /= Void
+		end
+
+	overloaded_name: ET_FEATURE_NAME is
+			-- Possibly overloaded Eiffel feature name
+			-- (useful in .NET)
+		do
+			Result := overloaded_extended_name.feature_name
+		ensure
+			overloaded_name_not_void: Result /= Void
+		end
+
+	overloaded_alias_name: ET_ALIAS_NAME is
+			-- Possibly overloaded Eiffel alias name, if any
+			-- (useful in .NET)
+		do
+			Result := overloaded_extended_name.alias_name
+		end
+
 	type: ET_TYPE is
 			-- Return type;
 			-- Void for procedures

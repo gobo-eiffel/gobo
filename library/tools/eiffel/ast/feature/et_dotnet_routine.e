@@ -16,7 +16,8 @@ inherit
 
 	ET_ROUTINE
 		undefine
-			is_frozen, is_dotnet
+			is_frozen, is_dotnet,
+			overloaded_extended_name
 		redefine
 			is_deferred
 		end

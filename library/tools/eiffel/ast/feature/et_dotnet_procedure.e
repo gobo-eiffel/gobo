@@ -17,7 +17,8 @@ inherit
 	ET_PROCEDURE
 		undefine
 			is_frozen, is_dotnet,
-			is_deferred
+			is_deferred,
+			overloaded_extended_name
 		redefine
 			make
 		end
@@ -35,10 +36,10 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_name, args, a_class)
 			dotnet_name := name.name
-			overloaded_name := name.name
+			overloaded_extended_name := a_name
 		ensure then
 			dotnet_name_set: dotnet_name.same_string (name.name)
-			overloaded_name_set: overloaded_name.same_string (name.name)
+			overloaded_extended_name_set: overloaded_extended_name = a_name
 		end
 
 feature -- Duplication
@@ -48,6 +49,8 @@ feature -- Duplication
 		do
 			create Result.make (a_name, arguments, implementation_class)
 			Result.set_clients (clients)
+			Result.set_overloaded_extended_name (overloaded_extended_name)
+			Result.set_dotnet_name (dotnet_name)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
@@ -64,6 +67,8 @@ feature -- Conversion
 			create Result.make (a_name, arguments, implementation_class)
 			Result.set_clients (clients)
 			Result.set_implementation_feature (implementation_feature)
+			Result.set_overloaded_extended_name (overloaded_extended_name)
+			Result.set_dotnet_name (dotnet_name)
 			Result.set_first_precursor (first_precursor)
 			Result.set_other_precursors (other_precursors)
 			Result.set_is_keyword (is_keyword)
