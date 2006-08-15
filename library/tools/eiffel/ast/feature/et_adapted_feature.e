@@ -226,7 +226,7 @@ feature -- Element change
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_not_merged: a_feature.merged_feature = Void
-			same_name: a_feature.name.same_feature_name (name)
+			same_name: not is_dotnet implies a_feature.name.same_feature_name (name)
 		local
 			a_seeds: like other_seeds
 			a_seed: INTEGER
