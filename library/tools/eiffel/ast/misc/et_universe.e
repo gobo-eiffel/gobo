@@ -171,6 +171,7 @@ feature {NONE} -- Initialization
 			arguments_class := eiffel_class (tokens.arguments_class_name)
 			platform_class := eiffel_class (tokens.platform_class_name)
 			system_object_class := eiffel_class (tokens.system_object_class_name)
+			system_string_class := eiffel_class (tokens.system_string_class_name)
 				-- Unknown class.
 			create unknown_class.make_unknown (tokens.unknown_class_name)
 				-- Type "ANY".
@@ -286,6 +287,7 @@ feature {NONE} -- Initialization
 			arguments_class_not_void: arguments_class /= Void
 			platform_class_not_void: platform_class /= Void
 			system_object_class_not_void: system_object_class /= Void
+			system_string_class_not_void: system_string_class /= Void
 			unknown_class_not_void: unknown_class /= Void
 			any_type_not_void: any_type /= Void
 			tuple_type_not_void: tuple_type /= Void
@@ -718,6 +720,9 @@ feature -- Basic classes
 
 	system_object_class: ET_CLASS
 			-- Class "SYSTEM_OBJECT" (in Eiffel for .NET)
+
+	system_string_class: ET_CLASS
+			-- Class "SYSTEM_STRING" (in Eiffel for .NET)
 
 	unknown_class: ET_CLASS
 			-- Class "*UNKNOWN*"
@@ -3042,6 +3047,7 @@ invariant
 	arguments_class_not_void: arguments_class /= Void
 	platform_class_not_void: platform_class /= Void
 	system_object_class_not_void: system_object_class /= Void
+	system_string_class_not_void: system_string_class /= Void
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
 	none_type_not_void: none_type /= Void

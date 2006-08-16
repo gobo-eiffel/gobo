@@ -939,7 +939,13 @@ feature {NONE} -- Feature validity
 						end
 					end
 				elseif a_constant.is_character_constant then
-					if not a_type.same_named_type (universe.character_class, current_type, current_type, universe) then
+					if a_type.same_named_type (universe.character_class, current_type, current_type, universe) then
+						-- OK.
+					elseif a_type.same_named_type (universe.character_8_class, current_type, current_type, universe) then
+						-- OK.
+					elseif a_type.same_named_type (universe.character_32_class, current_type, current_type, universe) then
+						-- OK.
+					else
 						set_fatal_error
 						a_class_impl := a_feature.implementation_class
 						if current_class = a_class_impl then
@@ -1015,9 +1021,15 @@ feature {NONE} -- Feature validity
 						end
 					end
 				elseif a_constant.is_string_constant then
-					if
-						not a_type.same_named_type (universe.string_class, current_type, current_type, universe)
-					then
+					if a_type.same_named_type (universe.string_class, current_type, current_type, universe) then
+						-- OK.
+					elseif a_type.same_named_type (universe.string_8_class, current_type, current_type, universe) then
+						-- OK.
+					elseif a_type.same_named_type (universe.string_32_class, current_type, current_type, universe) then
+						-- OK.
+					elseif a_type.same_named_type (universe.system_string_class, current_type, current_type, universe) then
+						-- OK: this is an Eiffel for .NET extension.
+					else
 						set_fatal_error
 						a_class_impl := a_feature.implementation_class
 						if current_class = a_class_impl then

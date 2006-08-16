@@ -763,6 +763,8 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_string_name)
 			Result.force_new (-1, tokens.capitalized_string_8_name)
 			Result.force_new (-1, tokens.capitalized_string_32_name)
+			Result.force_new (-1, tokens.capitalized_system_object_name)
+			Result.force_new (-1, tokens.capitalized_system_string_name)
 			Result.force_new (-1, tokens.capitalized_tuple_name)
 			Result.force_new (-1, tokens.capitalized_type_name)
 			Result.force_new (-1, tokens.capitalized_typed_pointer_name)

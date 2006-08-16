@@ -306,6 +306,14 @@ feature -- Class names
 			system_object_class_name_not_void: Result /= Void
 		end
 
+	system_string_class_name: ET_CLASS_NAME is
+			-- "SYSTEM_STRING" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_system_string_name)
+		ensure
+			system_string_class_name_not_void: Result /= Void
+		end
+
 	tuple_class_name: ET_CLASS_NAME is
 			-- "TUPLE" class name
 		once
@@ -2090,6 +2098,7 @@ feature -- Keyword and symbol names
 	capitalized_string_8_name: STRING is "STRING_8"
 	capitalized_string_32_name: STRING is "STRING_32"
 	capitalized_system_object_name: STRING is "SYSTEM_OBJECT"
+	capitalized_system_string_name: STRING is "SYSTEM_STRING"
 	capitalized_tuple_name: STRING is "TUPLE"
 	capitalized_type_name: STRING is "TYPE"
 	capitalized_typed_pointer_name: STRING is "TYPED_POINTER"
