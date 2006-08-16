@@ -126,6 +126,7 @@
 			Remove intermediary generated files.
 		</description>
 
+		<geant target="do_all_ge" arguments="clean,false"/>
 		<geant target="do_all" arguments="clean,false"/>
 	</target>
 
@@ -134,6 +135,7 @@
 			Remove all generated files.
 		</description>
 
+		<geant target="do_all_ge" arguments="clobber,false"/>
 		<geant target="do_all" arguments="clobber,false"/>
 	</target>
 
