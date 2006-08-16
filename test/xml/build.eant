@@ -16,7 +16,6 @@
 		<echo message="   geant test"/>
 		<echo message="   geant test_ge"/>
 		<echo message="   geant test_ise"/>
-		<echo message="   geant test_ise"/>
 		<echo message="   geant test_se"/>
 		<echo message="   geant test_ve"/>
 		<echo message="   geant test_debug"/>
@@ -157,8 +156,7 @@
 				of argument "do_clean".
 			-->
 		<set name="do_clean" value="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="oasis"/>
-		<geant file="build.eant" target="clean" dir="oasis" if="${do_clean}=true"/>
+		<geant target="do_all_oasis" arguments="${target},${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="general"/>
 		<geant file="build.eant" target="clean" dir="general" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="eiffel"/>
@@ -170,6 +168,35 @@
 		<geant file="build.eant" target="${target}" dir="xslt"/>
 		<geant file="build.eant" target="clean" dir="xslt" if="${do_clean}=true"/>
 		<geant target="do_all_expat" arguments="${target},${do_clean}" if="${EXPAT}"/>
+	</target>
+
+	<target name="do_all_oasis" depend="init">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			in all subdirectories. Call 'clean' after each target has
+			been executed if ${do_clean} (second argument) is true.
+		</description>
+		<argument name="target"/>
+		<argument name="do_clean"/>
+
+			<!--
+				The attribute "if" does not seem to interpret arguments.
+				Therefore set the variable "do_clean" with the value
+				of argument "do_clean".
+			-->
+		<set name="do_clean" value="${do_clean}"/>
+			<!--
+				This test fails with assertions ON.
+			-->
+		<geant file="build.eant" target="${target}" dir="oasis" if="${target}=install"/>
+		<geant file="build.eant" target="${target}" dir="oasis" if="${target}=clean"/>
+		<geant file="build.eant" target="${target}" dir="oasis" if="${target}=clobber"/>
+		<geant file="build.eant" target="${target}" dir="oasis" if="${target}=test"/>
+		<geant file="build.eant" target="${target}" dir="oasis" if="${target}=test_ge"/>
+		<geant file="build.eant" target="${target}" dir="oasis" if="${target}=test_ise"/>
+		<geant file="build.eant" target="${target}" dir="oasis" if="${target}=test_se"/>
+		<geant file="build.eant" target="${target}" dir="oasis" if="${target}=test_ve"/>
+		<geant file="build.eant" target="clean" dir="oasis" if="${do_clean}=true"/>
 	</target>
 
 	<target name="do_all_expat" depend="init">
