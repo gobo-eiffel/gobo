@@ -96,7 +96,7 @@
 					<para><emphasis>Description: </emphasis>verbose</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis></para>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
