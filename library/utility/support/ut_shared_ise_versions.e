@@ -52,6 +52,17 @@ feature -- Access
 			ise_5_7_0827_not_void: Result /= Void
 		end
 
+	ise_5_7_59914: UT_VERSION is
+			-- ISE 5.7.59914
+			-- First release with:
+			-- * optional 'is' keyword
+			-- * bracket expression as target of qualified calls
+		once
+			create Result.make (5, 7, 60362)
+		ensure
+			ise_5_7_59914_not_void: Result /= Void
+		end
+
 	ise_5_7_60362: UT_VERSION is
 			-- ISE 5.7.60362
 			-- First release with basic type mapping:

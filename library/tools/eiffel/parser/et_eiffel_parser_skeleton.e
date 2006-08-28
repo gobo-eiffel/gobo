@@ -49,6 +49,9 @@ inherit
 	ET_SHARED_FEATURE_NAME_TESTER
 		export {NONE} all end
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make (a_universe: ET_UNIVERSE; an_error_handler: like error_handler) is

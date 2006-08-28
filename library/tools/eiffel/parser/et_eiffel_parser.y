@@ -175,7 +175,7 @@ create
 %type <ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
 %type <ET_INTEGER_CONSTANT> Integer_constant Typed_integer_constant Untyped_integer_constant Signed_integer_constant
 %type <ET_INVARIANTS> Invariant_clause Invariant_clause_opt
-%type <ET_KEYWORD> Frozen_opt External_opt
+%type <ET_KEYWORD> Frozen_opt External_opt Is_opt
 %type <ET_KEYWORD_FEATURE_NAME_LIST> Keyword_feature_name_list Select_clause Select_clause_opt
 %type <ET_KEYWORD_FEATURE_NAME_LIST> Undefine_clause Undefine_clause_opt Redefine_clause Redefine_clause_opt
 %type <ET_LIKE_TYPE> Anchored_type
@@ -211,7 +211,7 @@ create
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 52
+%expect 53
 %start Class_declarations
 
 %%
@@ -490,13 +490,13 @@ Class_header: Frozen_opt External_opt E_CLASS Identifier
 		}
 	;
 
-Frozen_opt: -- Empty.
+Frozen_opt: -- Empty
 		-- { $$ := Void }
 	| E_FROZEN
 		{ $$ := $1 }
 	;
 
-External_opt: -- Empty.
+External_opt: -- Empty
 		-- { $$ := Void }
 	| E_EXTERNAL
 		{ $$ := $1 }
@@ -1738,66 +1738,170 @@ Procedure_declaration: Single_procedure_declaration
 		}
 	;
 
-Single_query_declaration: Extended_feature_name ':' Type Assigner_opt Semicolon_opt
+Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
+		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, Void, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name ':' Type Assigner_opt ';'
 		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt E_IS Manifest_constant Semicolon_opt
 		{ $$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name ':' Type Assigner_opt '=' Manifest_constant Semicolon_opt
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
+			end
+		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS E_UNIQUE Semicolon_opt
 		{ $$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name ':' Type Assigner_opt '=' E_UNIQUE Semicolon_opt
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
+			end
+		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
+			end
+		}
 	| Extended_feature_name Formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name Formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	Obsolete_opt Precondition_opt Local_declarations_opt
+	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
+			end
+		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
+			end
+		}
 	| Extended_feature_name Formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name Formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	Obsolete_opt Precondition_opt Local_declarations_opt
+	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
+			end
+		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class)
+			end
+		}
 	| Extended_feature_name Formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name Formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := ast_factory.new_deferred_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class)
+			end
+		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, ast_factory.new_external_language ($9, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
+	External_name_opt Postcondition_opt E_END Semicolon_opt
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, ast_factory.new_external_language ($8, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
+			end
+		}
 	| Extended_feature_name Formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, ast_factory.new_external_language ($10, $11), $12, $13, $14, $15, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name Formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
+	External_name_opt Postcondition_opt E_END Semicolon_opt
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, ast_factory.new_external_language ($9, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
+			end
+		}
 	;
 
-Single_procedure_declaration: Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
+	| Extended_feature_name Formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
+	| Extended_feature_name Formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
+	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
+	| Extended_feature_name Formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
+	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_procedure ($1, Void, $2, $3, $4, $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
+	| Extended_feature_name Formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_procedure ($1, $2, $3, $4, $5, $6, ast_factory.new_external_language ($7, $8), $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
+	;
+
+Is_opt: -- Empty
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := Void
+			end
+		}
+	| E_IS
+		{ $$ := $1 }
 	;
 
 Semicolon_opt: -- Empty
@@ -2891,6 +2995,14 @@ Call_chain: Identifier Actuals_opt
 		{ $$ := $1 }
 	| Precursor_expression
 		{ $$ := $1 }
+	| Bracket_expression
+		{
+			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+				abort
+			else
+				$$ := $1
+			end
+		}
 	| Static_call_expression
 		{ $$ := $1 }
 	| Call_chain '.' Identifier Actuals_opt
