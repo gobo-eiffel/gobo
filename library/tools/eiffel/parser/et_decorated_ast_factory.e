@@ -1857,7 +1857,7 @@ feature -- AST nodes
 		end
 
 	new_constant_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;
-		an_is: ET_KEYWORD; a_constant: ET_CONSTANT; a_semicolon: ET_SEMICOLON_SYMBOL;
+		an_is: ET_AST_LEAF; a_constant: ET_CONSTANT; a_semicolon: ET_SEMICOLON_SYMBOL;
 		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
 		a_class: ET_CLASS): ET_CONSTANT_ATTRIBUTE is
 			-- New constant attribute declaration
@@ -3352,7 +3352,7 @@ feature -- AST nodes
 		end
 
 	new_unique_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE;
-		an_assigner: ET_ASSIGNER; an_is, a_unique: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
+		an_assigner: ET_ASSIGNER; an_is: ET_AST_LEAF; a_unique: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
 		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
 		a_class: ET_CLASS): ET_UNIQUE_ATTRIBUTE is
 			-- New unique attribute declaration

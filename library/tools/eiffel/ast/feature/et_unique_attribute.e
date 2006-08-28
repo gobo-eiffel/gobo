@@ -59,8 +59,8 @@ feature -- Status report
 
 feature -- Access
 
-	is_keyword: ET_KEYWORD
-			-- 'is' keyword
+	is_keyword: ET_AST_LEAF
+			-- 'is' keyword or '=' symbol
 
 	unique_keyword: ET_KEYWORD
 			-- 'unique' keyword
