@@ -179,6 +179,8 @@ feature -- Parser
 
 	parse_arguments is
 			-- Parse the command line arguments.
+		require
+			valid_options: options_valid
 		local
 			args: DS_ARRAYED_LIST [STRING]
 			i, nb: INTEGER
@@ -197,6 +199,7 @@ feature -- Parser
 		require
 			an_array_not_void: an_array /= Void
 			no_void_argument: not STRING_ARRAY_.has (an_array, Void)
+			valid_options: options_valid
 		local
 			args: DS_ARRAYED_LIST [STRING]
 		do
@@ -209,6 +212,7 @@ feature -- Parser
 		require
 			a_list_not_void: a_list /= Void
 			no_void_argument: not a_list.has (Void)
+			valid_options: options_valid
 		do
 			reset_parser
 			argument_list := a_list
@@ -296,12 +300,30 @@ feature -- Validity checks
 			until
 				i > length or not Result
 			loop
-				Result := valid_short_form (a_list.item (i).short_form) and
+				Result := (a_list.item (i) /= Void) and then
+					valid_short_form (a_list.item (i).short_form) and
 					valid_long_form (a_list.item (i).long_form)
 				i := i + 1
 			end
 		end
 
+	options_valid: BOOLEAN is
+			-- Are all options correctly set up?
+		do
+			Result := all_valid_short_and_long_form(options)
+			from
+				alternative_options_lists.start
+			until
+				alternative_options_lists.off or not Result
+			loop
+				Result := (alternative_options_lists /= Void)
+				if Result then
+					Result := all_valid_short_and_long_form(alternative_options_lists.item_for_iteration)
+				end
+				alternative_options_lists.forth
+			end
+		end
+	
 feature {NONE} -- Implementation
 
 	argument_list: DS_LIST [STRING]
