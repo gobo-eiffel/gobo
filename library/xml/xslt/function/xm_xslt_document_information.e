@@ -82,9 +82,7 @@ feature -- Evaluation
 				parse_document (an_item.string_value, a_base_uri, a_context)
 				if last_evaluated_document.is_error then
 					transformer.report_recoverable_error (last_evaluated_document.error_value)
-					if not transformer.is_error then
-						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
-					end
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
 				else
 					check
 						document: last_evaluated_document.is_document

@@ -1278,18 +1278,18 @@ feature -- Creation
 		require
 			valid_qname: a_qname /= Void and then is_qname (a_qname)
 		local
-			a_parser: XM_XPATH_QNAME_PARSER
-			a_uri, a_message: STRING
-			a_uri_code: INTEGER			
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_uri, l_message: STRING
+			l_uri_code: INTEGER			
 		do
 			last_generated_name_code := -1
-			create a_parser.make (a_qname)
-			if not a_parser.is_prefix_present then
-				if shared_name_pool.is_name_code_allocated_using_uri_code ("", a_uri_code, a_parser.local_name) then
-					last_generated_name_code := shared_name_pool.name_code ("", shared_name_pool.uri_from_uri_code (a_uri_code), a_parser.local_name)
+			create l_parser.make (a_qname)
+			if not l_parser.is_prefix_present then
+				if shared_name_pool.is_name_code_allocated_using_uri_code ("", l_uri_code, l_parser.local_name) then
+					last_generated_name_code := shared_name_pool.name_code ("", shared_name_pool.uri_from_uri_code (l_uri_code), l_parser.local_name)
 				else
-					if not shared_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_parser.local_name) then
-						shared_name_pool.allocate_name_using_uri_code ("", a_uri_code, a_parser.local_name)
+					if not shared_name_pool.is_name_pool_full_using_uri_code (l_uri_code, l_parser.local_name) then
+						shared_name_pool.allocate_name_using_uri_code ("", l_uri_code, l_parser.local_name)
 						last_generated_name_code := shared_name_pool.last_name_code
 					else
 						create name_code_error_value.make_from_string (STRING_.concat ("Name pool has no room to allocate ", a_qname), Gexslt_eiffel_type_uri, "NAME_POOL", Static_error)
@@ -1297,24 +1297,28 @@ feature -- Creation
 					end
 				end
 			else
-				a_uri := uri_for_prefix (a_parser.optional_prefix, False)
-				if is_reserved_namespace (a_uri) then
-					a_message := STRING_.concat ("Namespace prefix ", a_parser.optional_prefix)
-					a_message := STRING_.appended_string (a_message, " refers to a reserved namespace")
-					create name_code_error_value.make_from_string (a_message, Xpath_errors_uri, "XTSE0080", Static_error)
+				l_uri := uri_for_prefix (l_parser.optional_prefix, False)
+				if l_uri = Void then
+					l_message := STRING_.concat ("Namespace prefix ", l_parser.optional_prefix)
+					l_message := STRING_.appended_string (l_message, " does not have an in-scope binding")
+					create name_code_error_value.make_from_string (l_message, Xpath_errors_uri, "XTSE0280", Static_error)
+				elseif is_reserved_namespace (l_uri) then
+					l_message := STRING_.concat ("Namespace prefix ", l_parser.optional_prefix)
+					l_message := STRING_.appended_string (l_message, " refers to a reserved namespace")
+					create name_code_error_value.make_from_string (l_message, Xpath_errors_uri, "XTSE0080", Static_error)
 					last_generated_name_code := -1
 				else
-					if shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
-						last_generated_name_code := shared_name_pool.name_code (a_parser.optional_prefix, a_uri, a_parser.local_name)
+					if shared_name_pool.is_name_code_allocated (l_parser.optional_prefix, l_uri, l_parser.local_name) then
+						last_generated_name_code := shared_name_pool.name_code (l_parser.optional_prefix, l_uri, l_parser.local_name)
 					else
-						if not shared_name_pool.is_name_pool_full (a_uri, a_parser.local_name) then
-							shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
+						if not shared_name_pool.is_name_pool_full (l_uri, l_parser.local_name) then
+							shared_name_pool.allocate_name (l_parser.optional_prefix, l_uri, l_parser.local_name)
 							last_generated_name_code := shared_name_pool.last_name_code
 						else
-							a_message := STRING_.concat ("Name pool has no room to allocate ", a_uri)
-							a_message := STRING_.appended_string (a_message, "#")
-							a_message := STRING_.appended_string (a_message, a_parser.local_name)
-							create name_code_error_value.make_from_string (a_message, Gexslt_eiffel_type_uri, "NAME_POOL", Static_error)
+							l_message := STRING_.concat ("Name pool has no room to allocate ", l_uri)
+							l_message := STRING_.appended_string (l_message, "#")
+							l_message := STRING_.appended_string (l_message, l_parser.local_name)
+							create name_code_error_value.make_from_string (l_message, Gexslt_eiffel_type_uri, "NAME_POOL", Static_error)
 							last_generated_name_code := -1
 						end
 					end
@@ -1683,6 +1687,8 @@ feature -- Element change
 			a_splitter: ST_SPLITTER
 			an_extension_list: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]
+			a_code: INTEGER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			extensions := attribute_value_by_expanded_name (an_attribute_name)
 			if extensions /= Void then
@@ -1702,8 +1708,15 @@ feature -- Element change
 						if STRING_.same_string (an_extension, "#default") then
 							an_extension := ""
 						end
-						extension_namespaces.put_last (uri_code_for_prefix (an_extension))
-						a_cursor.forth
+						a_code := uri_code_for_prefix (an_extension)
+						if a_code = - 1 then
+							create an_error.make_from_string (STRING_.concat ("Prefix in extension-element-prefixes is not bound to a namespace: ", an_extension), Xpath_errors_uri, "XTSE1430", Static_error)
+							report_compile_error (an_error)
+							a_cursor.go_after
+						else
+							extension_namespaces.put_last (a_code)
+							a_cursor.forth
+						end
 					end
 				end
 			end
@@ -1839,7 +1852,7 @@ feature -- Element change
 						a_message := STRING_.appended_string (a_message, " element.")
 						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
-					else
+					elseif not a_style_element.is_excluded then
 						a_style_element.validate_subtree
 						a_last_child := a_style_element
 					end
@@ -1908,7 +1921,7 @@ feature -- Element change
 				elseif not is_error and then not any_compile_errors then
 					if a_style_element /= Void and then a_style_element.is_xslt_variable then
 						compile_variable (an_executable, a_style_element.as_xslt_variable, an_axis_iterator, include_parameters)
-					elseif a_style_element /= Void then
+					elseif a_style_element /= Void and not a_style_element.is_excluded then
 						compile_style_element (an_executable, a_style_element, an_axis_iterator, include_parameters)
 					end
 				end
@@ -2062,34 +2075,40 @@ feature -- Element change
 				l_cursor.after
 			loop
 				l_set_name := l_cursor.item
-				generate_name_code (l_set_name)
-				l_fingerprint := fingerprint_from_name_code (last_generated_name_code)
-				if l_fingerprint = -1 then
-					report_compile_error (name_code_error_value)
-					l_cursor.go_after
-				else
-					found := False
-					-- Search for the named attribute set, using all of them if there are several with the same name
-					from
-						l_second_cursor := l_top_level_elements.new_cursor; l_second_cursor.start
-					variant
-						l_top_level_elements.count + 1 - l_second_cursor.index
-					until
-						l_second_cursor.after
-					loop
-						if l_second_cursor.item.is_attribute_set and then fingerprint_from_name_code (l_second_cursor.item.as_attribute_set.attribute_set_name_code) = l_fingerprint then
-							found := True
-							l_list.force_last (l_second_cursor.item.as_attribute_set)
-						end
-						l_second_cursor.forth
-					end
-					if not found then
-						create l_error.make_from_string (STRING_.concat ("No attribute-set exists named ", l_set_name), Xpath_errors_uri, "XTSE0710", Static_error)
-						report_compile_error (l_error)
+				if is_qname (l_set_name) then
+					generate_name_code (l_set_name)
+					l_fingerprint := fingerprint_from_name_code (last_generated_name_code)
+					if l_fingerprint = -1 then
+						report_compile_error (name_code_error_value)
 						l_cursor.go_after
 					else
-						l_cursor.forth
+						found := False
+						-- Search for the named attribute set, using all of them if there are several with the same name
+						from
+							l_second_cursor := l_top_level_elements.new_cursor; l_second_cursor.start
+						variant
+							l_top_level_elements.count + 1 - l_second_cursor.index
+						until
+							l_second_cursor.after
+						loop
+							if l_second_cursor.item.is_attribute_set and then fingerprint_from_name_code (l_second_cursor.item.as_attribute_set.attribute_set_name_code) = l_fingerprint then
+								found := True
+								l_list.force_last (l_second_cursor.item.as_attribute_set)
+							end
+							l_second_cursor.forth
+						end
+						if not found then
+							create l_error.make_from_string (STRING_.concat ("No attribute-set exists named ", l_set_name), Xpath_errors_uri, "XTSE0710", Static_error)
+							report_compile_error (l_error)
+							l_cursor.go_after
+						else
+							l_cursor.forth
+						end
 					end
+				else
+					create l_error.make_from_string (STRING_.concat ("Attribute-set name is not a valid lexical QName: ", l_set_name), Xpath_errors_uri, "XTSE0710", Static_error)
+					report_compile_error (l_error)
+					l_cursor.go_after
 				end
 			end
 			if not any_compile_errors then
@@ -2435,7 +2454,7 @@ feature {NONE} -- Implementation
 		do
 			if a_style_element.validation_error /= Void then
 				fallback_processing (an_executable, a_style_element)
-			else
+			elseif not a_style_element.is_excluded then
 				a_style_element.compile (an_executable)
 				a_child := a_style_element.last_generated_expression
 				if a_child /= Void and then a_child.is_computed_expression then 

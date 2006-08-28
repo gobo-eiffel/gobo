@@ -311,47 +311,55 @@ feature -- Element change
 			if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
 			a_body.check_static_type (static_context, Void)
 			if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
-			a_body.optimize (static_context, Void)
-			if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
-			if result_type /= Void then
-				create a_role.make (Function_result_role, function_name, 1, Xpath_errors_uri, "XPTY0004")
-				create a_type_checker
-				a_type_checker.static_type_check (static_context, a_body, result_type, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					report_compile_error (a_type_checker.static_type_check_error)
+			if a_body.is_error then
+				report_compile_error (a_body.error_value)
+			else
+				a_body.optimize (static_context, Void)
+				if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
+				if a_body.is_error then
+					report_compile_error (a_body.error_value)
 				else
-					a_body := a_type_checker.checked_expression
-				end
-			end
-			if configuration.is_tracing then
-				create a_trace_wrapper.make (a_body, an_executable, Current)
-				a_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
-				a_body := a_trace_wrapper
-			end
-			allocate_slots (a_body, slot_manager)
-			a_body.mark_tail_function_calls
-			create compiled_function.make (an_executable, a_body, function_name, system_id, line_number, slot_manager, result_type, is_memo_function)
-			set_parameter_definitions (compiled_function)
-			fixup_instruction (compiled_function)
-			if is_explaining then
-				std.error.put_string ("Optimized expression tree for function '")
-				std.error.put_string (function_name)
-				std.error.put_string ("' at line ")
-				std.error.put_string (line_number.out)
-				std.error.put_string (" in ")
-				std.error.put_string (system_id)
-				std.error.put_new_line
-				if not a_body.is_error then
-					std.error.put_string ("Static type: ")
-					std.error.put_string (a_body.item_type.conventional_name)
-					std.error.put_string (a_body.occurence_indicator)
-					std.error.put_new_line
-					std.error.put_string ("Optimized expression tree:%N")
-					a_body.display (10)
-				else
-					std.error.put_string ("Function body is in error%N")
-					std.error.put_string (a_body.error_value.error_message)
-					std.error.put_new_line
+					if result_type /= Void then
+						create a_role.make (Function_result_role, function_name, 1, Xpath_errors_uri, "XPTY0004")
+						create a_type_checker
+						a_type_checker.static_type_check (static_context, a_body, result_type, False, a_role)
+						if a_type_checker.is_static_type_check_error then
+							report_compile_error (a_type_checker.static_type_check_error)
+						else
+							a_body := a_type_checker.checked_expression
+						end
+					end
+					if configuration.is_tracing then
+						create a_trace_wrapper.make (a_body, an_executable, Current)
+						a_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+						a_body := a_trace_wrapper
+					end
+					allocate_slots (a_body, slot_manager)
+					a_body.mark_tail_function_calls
+					create compiled_function.make (an_executable, a_body, function_name, system_id, line_number, slot_manager, result_type, is_memo_function)
+					set_parameter_definitions (compiled_function)
+					fixup_instruction (compiled_function)
+					if is_explaining then
+						std.error.put_string ("Optimized expression tree for function '")
+						std.error.put_string (function_name)
+						std.error.put_string ("' at line ")
+						std.error.put_string (line_number.out)
+						std.error.put_string (" in ")
+						std.error.put_string (system_id)
+						std.error.put_new_line
+						if not a_body.is_error then
+							std.error.put_string ("Static type: ")
+							std.error.put_string (a_body.item_type.conventional_name)
+							std.error.put_string (a_body.occurence_indicator)
+							std.error.put_new_line
+							std.error.put_string ("Optimized expression tree:%N")
+							a_body.display (10)
+						else
+							std.error.put_string ("Function body is in error%N")
+							std.error.put_string (a_body.error_value.error_message)
+							std.error.put_new_line
+						end
+					end
 				end
 			end
 		end

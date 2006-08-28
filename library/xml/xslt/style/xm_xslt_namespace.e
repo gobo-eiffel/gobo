@@ -39,6 +39,12 @@ feature -- Access
 	name: XM_XPATH_EXPRESSION
 			-- Name (prefix) to be generated
 
+	select_and_content_error: STRING is
+			-- Error code when both select expression and content are mutually exclusive
+		do
+			Result := "XTSE0910"
+		end
+
 feature -- Element change
 
 	prepare_attributes is

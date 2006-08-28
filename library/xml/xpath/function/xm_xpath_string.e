@@ -83,7 +83,7 @@ feature -- Optimization
 		do
 			mark_unreplaced
 			Precursor (a_context, a_context_item_type)
-			if not is_error then
+			if not is_error and not was_expression_replaced then
 				if arguments.item (1).item_type.is_same_type (type_factory.string_type)
 					and then arguments.item (1).cardinality_exactly_one then
 					set_replacement (arguments.item (1))

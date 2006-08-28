@@ -84,16 +84,20 @@ feature -- Optimization
 			type_check (a_context, a_context_item_type)
 			if select_expression /= Void and then not select_expression.is_error then
 				select_expression.check_static_type (a_context, a_context_item_type)
-				if select_expression.was_expression_replaced then
+				if select_expression.is_error then
+					set_last_error (select_expression.error_value)
+				elseif select_expression.was_expression_replaced then
 					set_select_expression (select_expression.replacement_expression)
 				end
-				if not is_sub_type (select_expression.item_type, type_factory.any_atomic_type) then
-					create an_atomizer.make (select_expression, a_context.configuration.are_all_nodes_untyped)
-					set_select_expression (an_atomizer)
-				end
-				if not is_sub_type (select_expression.item_type, type_factory.string_type) then
-					create an_atomic_converter.make (select_expression, type_factory.string_type)
-					set_select_expression (an_atomic_converter)
+				if not is_error then
+					if not is_sub_type (select_expression.item_type, type_factory.any_atomic_type) then
+						create an_atomizer.make (select_expression, a_context.configuration.are_all_nodes_untyped)
+						set_select_expression (an_atomizer)
+					end
+					if not is_sub_type (select_expression.item_type, type_factory.string_type) then
+						create an_atomic_converter.make (select_expression, type_factory.string_type)
+						set_select_expression (an_atomic_converter)
+					end
 				end
 			end
 		end
@@ -130,6 +134,7 @@ feature -- Evaluation
 		local
 			a_content: STRING
 			an_orphan: XM_XPATH_ORPHAN
+			l_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			last_evaluated_item := Void
 			if select_expression = Void then
@@ -150,6 +155,13 @@ feature -- Evaluation
 						create an_orphan.make (item_type.primitive_type, last_string_value)
 						an_orphan.set_name_code (last_name_code)
 						last_evaluated_item := an_orphan
+					else
+						l_context ?= a_context
+						check
+							xslt_context: l_context /= Void
+							-- this is XSLT
+						end
+						l_context.transformer.report_fatal_error (error_value)
 					end
 				end
 			end

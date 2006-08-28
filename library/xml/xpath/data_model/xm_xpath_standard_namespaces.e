@@ -86,9 +86,6 @@ feature -- Access
 	Xml_schema_uri: STRING is "http://www.w3.org/2001/XMLSchema"
 			-- The XML Schemas namespace (xs)
 
-	Xml_schema_datatypes_uri: STRING is "http://www.w3.org/2001/XMLSchema-datatypes" 
-			-- The XML Schemas datatypes namespace (xs)
-
 	Xml_schema_instance_uri: STRING is "http://www.w3.org/2001/XMLSchema-instance"
 			-- The XML Schema instance document namespace (xsi)
 
@@ -617,7 +614,6 @@ feature -- Status report
 				or else STRING_.same_string (a_uri, Xpath_standard_functions_uri)
 				or else STRING_.same_string (a_uri, Xml_uri)
 				or else STRING_.same_string (a_uri, Xml_schema_uri)
-				or else STRING_.same_string (a_uri, Xml_schema_datatypes_uri)
 				or else STRING_.same_string (a_uri, Xml_schema_instance_uri)
 		end
 

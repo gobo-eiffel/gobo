@@ -164,16 +164,21 @@ feature -- Evaluation
 				else
 					if not a_parser.is_prefix_present then
 						a_uri := Xpath_standard_functions_uri
-					else
+					elseif a_context.is_prefix_declared (a_parser.optional_prefix) then
 						a_uri := a_context.uri_for_prefix (a_parser.optional_prefix)
+					else
+						set_last_error_from_string ("Prefix in first argument to 'function-available' is not bound to an in-scope namespace",
+															 Xpath_errors_uri, "XTDE1400", Static_error)
 					end
-					if not shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
-						shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
+					if not is_error then
+						if not shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
+							shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
+						end
+						a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+						a_boolean := a_context.available_functions.is_function_available (a_fingerprint, an_arity, a_context.is_restricted)
+						create a_boolean_value.make (a_boolean)
+						set_replacement (a_boolean_value)
 					end
-					a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
-					a_boolean := a_context.available_functions.is_function_available (a_fingerprint, an_arity, a_context.is_restricted)
-					create a_boolean_value.make (a_boolean)
-					set_replacement (a_boolean_value)
 				end
 			end
 		end

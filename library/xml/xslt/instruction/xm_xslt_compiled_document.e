@@ -188,7 +188,7 @@ feature -- Evaluation
 				a_receiver := a_new_context.current_receiver
 				a_receiver.start_document
 				content.process (a_new_context)
-				a_receiver.end_document
+				if a_receiver.is_document_started then a_receiver.end_document end
 				a_receiver.close
 				if a_builder.has_error then
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_builder.last_error, Xpath_errors_uri, "FOER0000", Dynamic_error)

@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			promote, create_iterator, evaluate_item, compute_special_properties,
+			promote, create_iterator, create_node_iterator, evaluate_item, compute_special_properties,
 			mark_tail_function_calls, action, is_let_expression, as_let_expression,
 			is_tail_recursive, process, is_tail_call, as_tail_call
 		end
@@ -401,6 +401,42 @@ feature -- Evaluation
 			else
 				a_let_expression.action.create_iterator (a_context)
 				last_iterator := a_let_expression.action.last_iterator
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Iterator over the values of a node sequence
+		local
+			a_let_expression: XM_XPATH_LET_EXPRESSION
+			a_value: XM_XPATH_VALUE
+			finished: BOOLEAN
+		do
+						
+			--  Minimize stack consumption by evaluating nested LET expressions iteratively
+
+			from
+				a_let_expression := current
+			until
+				is_error or else finished
+			loop
+				a_let_expression.sequence.lazily_evaluate (a_context, a_let_expression.reference_count)
+				a_value := a_let_expression.sequence.last_evaluation
+				if a_value.is_error then
+					set_last_error (a_value.error_value)
+				else
+					a_context.set_local_variable (a_value, a_let_expression.slot_number)
+					if a_let_expression.action.is_let_expression then
+						a_let_expression := a_let_expression.action.as_let_expression
+					else
+						finished := True
+					end
+				end
+			end
+			if is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (error_value)
+			else
+				a_let_expression.action.create_node_iterator (a_context)
+				last_node_iterator := a_let_expression.action.last_node_iterator
 			end
 		end
 

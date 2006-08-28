@@ -148,7 +148,7 @@ feature -- Access
 			create a_parser.make (a_qname)
 			if not a_parser.is_prefix_present then
 				if use_default_namespace then
-					a_uri := uri_for_prefix (a_parser.optional_prefix)
+					a_uri := style_element.uri_for_prefix (a_parser.optional_prefix, True)
 				else
 					a_uri := ""
 				end
@@ -210,7 +210,11 @@ feature -- Status report
 				valid_parse: a_parser.is_valid
 				-- from pre-condition
 			end
-			a_uri := uri_for_prefix (a_parser.optional_prefix)
+			if a_parser.optional_prefix.is_empty then
+				a_uri := style_element.uri_for_prefix (a_parser.optional_prefix, True)
+			else
+				a_uri := uri_for_prefix (a_parser.optional_prefix)
+			end
 			Result := style_element.stylesheet_compiler.node_factory.is_element_available (a_uri, a_parser.local_name)
 		end
 

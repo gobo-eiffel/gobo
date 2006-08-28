@@ -92,7 +92,7 @@ feature -- Basic operations
 					l_leading_character := avt.count + 1
 				elseif l_right_curly_brace > 0 and (l_left_curly_brace = 0 or  l_right_curly_brace < l_left_curly_brace) then
 					if l_right_curly_brace /= l_right_double_curly_brace then
-						create error_value.make_from_string ("Literal closing curly brace in attribute value template must be doubled", Xpath_errors_uri, "XTSE0350", Static_error)
+						create error_value.make_from_string ("Literal closing curly brace in attribute value template must be doubled", Xpath_errors_uri, "XTSE0370", Static_error)
 						l_leading_character := avt.count + 1
 					else
 						append_fixed_component (avt.substring (l_leading_character, l_right_double_curly_brace))
@@ -104,6 +104,9 @@ feature -- Basic operations
 				elseif l_left_curly_brace > 0 then
 					if l_left_curly_brace = l_avt_length then
 						create error_value.make_from_string ("Literal opening curly brace at end of attribute value template must be doubled", Xpath_errors_uri, "XTSE0350", Static_error)
+						l_leading_character := avt.count + 1
+					elseif l_right_curly_brace < l_left_curly_brace then
+						create error_value.make_from_string ("Opening curly brace is not matched by a closing curly brace", Xpath_errors_uri, "XTSE0350", Static_error)
 						l_leading_character := avt.count + 1
 					else
 						if l_left_curly_brace > l_leading_character then

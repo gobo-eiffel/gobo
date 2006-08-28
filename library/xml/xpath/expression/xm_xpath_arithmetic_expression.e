@@ -76,41 +76,41 @@ feature -- Optimization
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
-			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			an_expression: XM_XPATH_EXPRESSION
+			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
+			l_role, another_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_expression: XM_XPATH_EXPRESSION
 		do
 			mark_unreplaced
 			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
 
 			-- TODO: this is using the function call rules. Arithetic expressions have slightly different rules.
 
-			create a_sequence_type.make_optional_atomic
-			create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-			create a_type_checker
-			a_type_checker.static_type_check (a_context, first_operand, a_sequence_type, is_backwards_compatible_mode, a_role)
-			if a_type_checker.is_static_type_check_error then
-				set_last_error (a_type_checker.static_type_check_error)
+			create l_sequence_type.make_optional_atomic
+			create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
+			create l_type_checker
+			l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, is_backwards_compatible_mode, l_role)
+			if l_type_checker.is_static_type_check_error then
+				set_last_error (l_type_checker.static_type_check_error)
 			else
-				set_first_operand (a_type_checker.checked_expression)
+				set_first_operand (l_type_checker.checked_expression)
 				create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-				a_type_checker.static_type_check (a_context, second_operand, a_sequence_type, is_backwards_compatible_mode, another_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error (a_type_checker.static_type_check_error)
+				l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, is_backwards_compatible_mode, another_role)
+				if l_type_checker.is_static_type_check_error then
+					set_last_error (l_type_checker.static_type_check_error)
 				else
-					set_second_operand (a_type_checker.checked_expression)
+					set_second_operand (l_type_checker.checked_expression)
 					Precursor (a_context, a_context_item_type)
 
 					-- Now, we may or may not still be an arithmetic expression.
 
 					if was_expression_replaced then
-						an_expression := replacement_expression
+						l_expression := replacement_expression
 					else
-						an_expression := Current
+						l_expression := Current
 					end
-					if an_expression.is_arithmetic_expression then
-						an_expression.as_arithmetic_expression.type_check_arithmetic_expression (a_context)
+					if l_expression.is_arithmetic_expression and not l_expression.is_error then
+						l_expression.as_arithmetic_expression.type_check_arithmetic_expression (a_context)
 					end
 				end
 			end
@@ -232,6 +232,10 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 	
 	type_check_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static type checking of `Current' and its subexpressions
+		require
+			a_context_not_void: a_context /= Void
+			first_operand_not_in_error: not first_operand.is_error
+			second_operand_not_in_error: not second_operand.is_error
 		local
 			a_type, another_type: XM_XPATH_ITEM_TYPE
 			an_action: INTEGER

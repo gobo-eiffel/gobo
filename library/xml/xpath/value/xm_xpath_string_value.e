@@ -143,8 +143,8 @@ feature -- Status report
 				if a_string.index_of ('e', 1) > 0 or else a_string.index_of ('E', 1) > 0 then
 					Result := a_string.is_double
 				elseif  a_string.index_of ('.', 1) > 0 then
-					Result := True -- but you may get NaN TODO
-					todo ("is-convertible (to decimal)", True)
+					Result := True -- but you may get NaN
+					-- Maybe this is correct behaviour todo ("is-convertible (to decimal)", True)
 				else
 					Result := a_string.is_integer
 				end

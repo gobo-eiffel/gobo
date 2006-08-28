@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 	make (a_description, a_namespace_uri, a_error_code: STRING; a_value: like value; a_error_type: like type) is
 			-- Create a general error value.
 		require
-			error_value_not_void: a_value /= Void
 			namespace_uri_not_void: a_namespace_uri /= Void
 			ascii_uri: is_ascii_string (a_namespace_uri)
 			local_part_not_void: a_error_code /= Void
@@ -45,7 +44,11 @@ feature {NONE} -- Initialization
 			description_not_void: a_description /= Void
 			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
 		do
-			value := a_value
+			if a_value = Void then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} value.make
+			else
+				value := a_value
+			end
 			namespace_uri := a_namespace_uri
 			code := a_error_code
 			type := a_error_type
@@ -53,7 +56,7 @@ feature {NONE} -- Initialization
 			initialize_location
 		ensure
 			description_set: description = a_description
-			value_set: value = a_value
+			value_set: a_value /= Void implies value = a_value
 			namespace_set: namespace_uri = a_namespace_uri
 			code_set: code = a_error_code
 			type_set: type = a_error_type

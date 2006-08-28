@@ -71,16 +71,16 @@ feature -- Evaluation
 			arguments.item (1).evaluate_item (a_context)
 			if arguments.item (1).last_evaluated_item.is_error then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Argument to 'element-available' is not a lexical QName",
-																											Xpath_errors_uri, "XTDE1400", Dynamic_error)
+																											Xpath_errors_uri, "XTDE1440", Dynamic_error)
 			else
 				if not arguments.item (1).last_evaluated_item.is_atomic_value then
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Argument to 'element-available' is not a lexical QName",
-																												Xpath_errors_uri, "XTDE1400", Dynamic_error)
+																												Xpath_errors_uri, "XTDE1440", Dynamic_error)
 				else
 					create a_parser.make (arguments.item (1).last_evaluated_item.as_atomic_value.string_value)
 					if not a_parser.is_valid then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Argument to 'element-available' is not a lexical QName",
-																													Xpath_errors_uri, "XTDE1400", Dynamic_error)
+																													Xpath_errors_uri, "XTDE1440", Dynamic_error)
 					else
 						if not a_parser.is_prefix_present then
 							a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, True)
@@ -91,7 +91,7 @@ feature -- Evaluation
 						end
 						if a_uri = Void then
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("QName prefix in argument to 'element-available' has not been declared.",
-																														Xpath_errors_uri, "XTDE1400", Dynamic_error)
+																														Xpath_errors_uri, "XTDE1440", Dynamic_error)
 						else
 							an_evaluation_context ?= a_context
 							a_boolean := is_element_available (a_uri, a_parser.local_name, an_evaluation_context)
@@ -118,7 +118,7 @@ feature -- Evaluation
 			create a_parser.make (arguments.item (1).as_string_value.string_value)
 			if not a_parser.is_valid then
 				set_last_error_from_string ("Argument to 'element-available' is not a lexical QName",
-													 Xpath_errors_uri, "XTDE1400", Static_error)
+													 Xpath_errors_uri, "XTDE1440", Static_error)
 			else
 				an_expression_context ?= a_context
 				a_boolean := an_expression_context.is_element_available (arguments.item (1).as_string_value.string_value)

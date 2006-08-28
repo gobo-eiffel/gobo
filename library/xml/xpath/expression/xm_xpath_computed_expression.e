@@ -205,6 +205,7 @@ feature -- Status setting
 			-- Compute the static properties
 		require
 			not_yet_computed: not are_static_properties_computed
+			not_in_error: not is_error
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			an_expression: XM_XPATH_COMPUTED_EXPRESSION
@@ -264,6 +265,7 @@ feature -- Status setting
 			-- Determine the intrinsic dependencies of an expression.
 		require
 			not_yet_computed: not are_intrinsic_dependencies_computed
+			not_in_error: not is_error
 		do
 			initialize_intrinsic_dependencies
 		ensure
@@ -277,6 +279,7 @@ feature -- Status setting
 		require
 			not_yet_computed: not are_dependencies_computed
 			all_sub_expressions_computed: sub_expressions_have_dependencies
+			not_in_error: not is_error
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
@@ -304,6 +307,7 @@ feature -- Status setting
 		require
 			dependencies_previously_computed: are_dependencies_computed
 			not_replaced: not was_expression_replaced
+			not_in_error: not is_error
 		do
 			are_dependencies_computed := False
 			compute_dependencies
@@ -311,12 +315,13 @@ feature -- Status setting
 			intrinsic_computed: are_intrinsic_dependencies_computed and then intrinsic_dependencies /= Void
 			computed: are_dependencies_computed and then dependencies /= Void
 		end
-
+ 
 	reset_static_properties is
 			-- Re-compute all static properties.
 		require
 			static_properties_previously_computed: are_static_properties_computed
 			not_replaced: not was_expression_replaced
+			not_in_error: not is_error
 		do
 			are_dependencies_computed := False
 			are_intrinsic_dependencies_computed := False
@@ -325,7 +330,8 @@ feature -- Status setting
 			compute_static_properties
 			if container /= Void and then container.is_computed_expression
 				and then not container.as_computed_expression.was_expression_replaced
-				and then container.as_computed_expression.are_static_properties_computed then
+				and then container.as_computed_expression.are_static_properties_computed
+				and then not container.as_computed_expression.is_error then
 				container.as_computed_expression.reset_static_properties
 			end
 		end

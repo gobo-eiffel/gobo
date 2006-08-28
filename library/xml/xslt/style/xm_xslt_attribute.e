@@ -23,6 +23,14 @@ create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 
+feature -- Access
+
+	select_and_content_error: STRING is
+			-- Error code when both select expression and content are mutually exclusive
+		do
+			Result := "XTSE0840"
+		end
+
 feature -- Element change
 
 	prepare_attributes is
@@ -154,6 +162,8 @@ feature -- Element change
 			a_name_code: INTEGER
 			a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			an_attribute: XM_XSLT_COMPILED_ATTRIBUTE
+			l_uri: UT_URI
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			last_generated_expression := Void
 			
@@ -172,6 +182,12 @@ feature -- Element change
 						compile_fixed_attribute (an_executable, a_name_code)
 					elseif namespace.is_string_value then
 						namespace_uri := namespace.as_string_value.string_value
+						if Url_encoding.has_excluded_characters (namespace_uri) then
+							create l_error.make_from_string ("Namespace does not conform to xs:anyURI", Xpath_errors_uri, "XTDE0865", Dynamic_error)
+							set_last_error (l_error)
+						else
+							create l_uri.make (namespace_uri)
+						end
 						if namespace_uri.count = 0 then
 							qname_prefix := ""
 						elseif qname_prefix.count = 0 then
@@ -339,7 +355,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			chosen_prefix_not_void: qname_prefix /= Void
-			chosen_prefix_not_empty: not qname_prefix.is_empty
 		end
 
 end

@@ -253,9 +253,9 @@ feature -- Element change
 			if an_xslt_prefix = Void then
 				if STRING_.same_string (local_part, "transform")
 					or else STRING_.same_string (local_part, "stylesheet") then
-					a_compiler.report_error ("Namespace for stylesheet element should be " + Xslt_uri)
+					a_compiler.report_fatal_error ("Namespace for stylesheet element should be " + Xslt_uri, "XTSE0165")
 				else
-					a_compiler.report_error ("The document does not appear to be a stylesheet")
+					a_compiler.report_fatal_error ("The document does not appear to be a stylesheet", "XTSE0165")
 				end
 			else
 
@@ -263,7 +263,7 @@ feature -- Element change
 
 				a_version := attribute_value (Xslt_version_type_code)
 				if a_version = Void then
-					a_compiler.report_error ("Simplified stylesheet: xsl:version attribute is missing")
+					a_compiler.report_fatal_error ("Simplified stylesheet: xsl:version attribute is missing", "XTSE0150")
 				else
 					Result := grafted_stylesheet (a_compiler, a_version)
 				end

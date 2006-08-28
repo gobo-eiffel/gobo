@@ -169,8 +169,10 @@ feature -- Evaluation
 				--  exhausted before the problem manifests itself
 
 				last_iterator := an_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+			elseif an_iterator.is_node_iterator then
+				create {XM_XPATH_NODE_TAIL_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, start)
 			else
-				create {XM_XPATH_TAIL_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (an_iterator, start)
+				create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (an_iterator, start)
 			end
 		end
 	
@@ -190,7 +192,7 @@ feature -- Evaluation
 
 				last_node_iterator := an_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
 			else
-				create {XM_XPATH_TAIL_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make (an_iterator, start)
+				create {XM_XPATH_NODE_TAIL_ITERATOR} last_node_iterator.make (an_iterator, start)
 			end
 		end
 	

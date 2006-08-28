@@ -102,10 +102,20 @@ feature -- Optimization
 		do
 			if not select_expression.is_error then
 				select_expression.check_static_type (a_context, a_context_item_type)
-				if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+				if select_expression.is_error then
+					set_last_error (select_expression.error_value)
+				elseif select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
 			end
-			separator_expression.check_static_type (a_context, a_context_item_type)
-			if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end
+			if not is_error and not separator_expression.is_error then
+				separator_expression.check_static_type (a_context, a_context_item_type)
+				if separator_expression.is_error then
+					set_last_error (separator_expression.error_value)
+				elseif separator_expression.was_expression_replaced then
+					separator_expression := separator_expression.replacement_expression
+				end
+			end
 			if not select_expression.cardinality_allows_many then is_singleton := True	end
 		end
 

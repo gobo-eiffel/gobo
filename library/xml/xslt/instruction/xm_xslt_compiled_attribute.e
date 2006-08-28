@@ -221,6 +221,8 @@ feature -- Evaluation
 				if not is_error then
 					a_context.current_receiver.notify_attribute (last_name_code, 0, last_string_value, options)
 				end
+			else
+				a_context.transformer.report_fatal_error (error_value)
 			end
 		end
 	
@@ -310,6 +312,7 @@ feature {NONE} -- Implementation
 		local
 			l_uri, l_prefix: STRING
 			l_error: XM_XPATH_ERROR_VALUE
+			l_namespace_uri: UT_URI
 		do
 			l_prefix := STRING_.cloned_string (a_prefix)
 			if namespace = Void then
@@ -328,13 +331,19 @@ feature {NONE} -- Implementation
 					set_last_error (namespace.last_evaluated_string.error_value)
 				else
 					l_uri := namespace.last_evaluated_string.string_value
-					if l_uri.count = 0 then
-						l_prefix := ""
-					elseif l_prefix.count = 0 then
-						l_prefix := shared_name_pool.suggested_prefix_for_uri (l_uri)
-						if l_prefix = Void then
-							-- the following arbitrary prefix will be change if it clashes
-							l_prefix := "ns0"
+					if Url_encoding.has_excluded_characters (l_uri) then
+						create l_error.make_from_string ("Namespace does not conform to xs:anyURI", Xpath_errors_uri, "XTDE0865", Dynamic_error)
+						set_last_error (l_error)
+					else
+						create l_namespace_uri.make (l_uri)
+						if l_uri.count = 0 then
+							l_prefix := ""
+						elseif l_prefix.count = 0 then
+							l_prefix := shared_name_pool.suggested_prefix_for_uri (l_uri)
+							if l_prefix = Void then
+								-- the following arbitrary prefix will be change if it clashes
+								l_prefix := "ns0"
+							end
 						end
 					end
 				end

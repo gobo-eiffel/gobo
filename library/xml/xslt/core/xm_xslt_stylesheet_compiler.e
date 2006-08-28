@@ -25,6 +25,12 @@ inherit
 	MA_SHARED_DECIMAL_CONSTANTS
 		export {NONE} all end
 
+	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
+
+	XM_XPATH_ERROR_TYPES
+		export {NONE} all end
+
 create {XM_XSLT_TRANSFORMER_FACTORY, XM_XSLT_TEST_STYLESHEET_BUILDER}
 
 	make
@@ -71,16 +77,32 @@ feature -- Status report
 
 feature -- Status setting
 
-	report_error (a_message: STRING) is
+	report_error (l_message: STRING) is
 			-- Report an error.
 		require
-			error_message_not_void: a_message /= Void
+			error_message_not_void: l_message /= Void
 		do
 			load_stylesheet_module_failed := True
-			load_stylesheet_module_error := a_message
+			load_stylesheet_module_error := l_message
 		ensure
 			error_raised: load_stylesheet_module_failed
-			message_set: load_stylesheet_module_error = a_message
+			message_set: load_stylesheet_module_error = l_message
+		end
+
+	report_fatal_error (l_message, l_code: STRING) is
+			-- Report an error, passing it on to `error_listener'.
+		require
+			error_message_not_void: l_message /= Void
+			l_code_not_void: l_code /= Void
+		local
+			l_error: XM_XPATH_ERROR_VALUE
+		do
+			report_error (l_message)
+			create l_error.make_from_string (l_message, Xpath_errors_uri, l_code, Static_error)
+			error_listener.fatal_error (l_error)
+		ensure
+			error_raised: load_stylesheet_module_failed
+			message_set: load_stylesheet_module_error = l_message
 		end
 
 feature -- Compilation
@@ -191,35 +213,37 @@ feature -- Compilation
 			if a_top_node /= Void then
 				a_stylesheet_document := a_top_node.constructed_stylesheet (Current)
 			end
-			a_stylesheet ?= a_stylesheet_document.document_element
-			if a_stylesheet = Void then
-				report_error ("Top-level element of stylesheet is not xsl:stylesheet or xsl:transform or literal result element")
-			elseif not a_stylesheet.is_error then
-				if a_stylesheet.version.is_equal (decimal.one) then
-					error_listener.warning ("XSLT 1.0 stylesheet is being run on an XSLT 2.0 processor.", Void)
-				end
-
-				-- Preprocess the stylesheet, performing validation and preparing template  definitions
-
-				a_stylesheet.set_stylesheet_compiler (Current, configuration)
-				a_stylesheet.preprocess
-
-				-- Compile the stylesheet, retaining the resulting  executable
-
-				if not a_stylesheet.any_compile_errors then
-					a_stylesheet.compile_stylesheet (configuration)
-				end
-				if a_stylesheet.any_compile_errors then
-					report_error ("There were error compiling the stylesheet")
-				else
-					executable := a_stylesheet.executable
-					check
-						executable: executable /= Void
-						-- as {XM_XSLT_STYLESHEET}.compile produces an executable if no error.
+			if not load_stylesheet_module_failed	then
+				a_stylesheet ?= a_stylesheet_document.document_element
+				if a_stylesheet = Void then
+					report_error ("Top-level element of stylesheet is not xsl:stylesheet or xsl:transform or literal result element")
+				elseif not a_stylesheet.is_error then
+					if a_stylesheet.version.is_equal (decimal.one) then
+						error_listener.warning ("XSLT 1.0 stylesheet is being run on an XSLT 2.0 processor.", Void)
 					end
-					executable.set_whitespace_stripping (a_stylesheet.strips_whitespace)
-					executable.save_static_context (a_stylesheet.static_context)
-					executable.rule_manager.rank_all_rules
+					
+					-- Preprocess the stylesheet, performing validation and preparing template  definitions
+					
+					a_stylesheet.set_stylesheet_compiler (Current, configuration)
+					a_stylesheet.preprocess
+					
+					-- Compile the stylesheet, retaining the resulting  executable
+					
+					if not a_stylesheet.any_compile_errors then
+						a_stylesheet.compile_stylesheet (configuration)
+					end
+					if a_stylesheet.any_compile_errors then
+						report_error ("There were error compiling the stylesheet")
+					else
+						executable := a_stylesheet.executable
+						check
+							executable: executable /= Void
+							-- as {XM_XSLT_STYLESHEET}.compile produces an executable if no error.
+						end
+						executable.set_whitespace_stripping (a_stylesheet.strips_whitespace)
+						executable.save_static_context (a_stylesheet.static_context)
+						executable.rule_manager.rank_all_rules
+					end
 				end
 			end
 		ensure

@@ -129,7 +129,7 @@ feature -- Test
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("doc('boooks.xsl')/child::*[1]/attribute::version eq '2.0'")
 			assert ("No evaluation error", an_evaluator.is_error)
-			assert ("FODC0002", STRING_.same_string (an_evaluator.error_value.code, "FODC0002"))
+			assert ("FODC0005", STRING_.same_string (an_evaluator.error_value.code, "FODC0005"))
 		end
 
 	set_up is

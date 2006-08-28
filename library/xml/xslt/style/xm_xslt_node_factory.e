@@ -89,6 +89,8 @@ feature -- Status report
 				Xslt_result_document_type_code
 			 then
 				Result := True
+			else
+				Result := False
 			end
 		end
 

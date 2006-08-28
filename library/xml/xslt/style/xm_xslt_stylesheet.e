@@ -731,6 +731,8 @@ feature -- Element change
 				end
 				a_child_iterator.forth
 			end
+		ensure
+			top_level_elements_created: top_level_elements /= Void
 		end
 
 	process_all_attributes is
@@ -741,19 +743,23 @@ feature -- Element change
 		do
 			create static_context.make (Current, configuration)
 			process_attributes
-			from
-				a_cursor := top_level_elements.new_cursor
-				a_cursor.start
-			variant
-				top_level_elements.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				a_style_element := a_cursor.item
-				if not a_style_element.is_excluded then
-					a_style_element.process_all_attributes
+			if top_level_elements /= Void then
+				from
+					a_cursor := top_level_elements.new_cursor
+					a_cursor.start
+				variant
+					top_level_elements.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					a_style_element := a_cursor.item
+					if not a_style_element.is_excluded then
+						a_style_element.process_all_attributes
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
+			else
+				-- then validation will fail later, and report the error
 			end
 			includes_processed := True
 		ensure then

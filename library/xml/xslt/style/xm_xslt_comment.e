@@ -23,6 +23,14 @@ create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 
+feature -- Access
+
+	select_and_content_error: STRING is
+			-- Error code when both select expression and content are mutually exclusive
+		do
+			Result := "XTSE0940"
+		end
+
 feature -- Element change
 
 	prepare_attributes is

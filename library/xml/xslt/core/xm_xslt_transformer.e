@@ -158,7 +158,7 @@ feature -- Access
 		require
 			node_not_void: a_node /= Void
 		do
-			if a_node.is_same_node (last_remembered_node) then
+			if last_remembered_node /= Void and then a_node.is_same_node (last_remembered_node) then
 				Result := last_remembered_number
 			end
 		end

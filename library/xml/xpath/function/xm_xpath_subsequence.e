@@ -111,8 +111,10 @@ feature -- Evaluation
 					if arguments.count = 2 then
 						if a_starting_location <= 1 then
 							last_iterator := an_iterator
+						elseif an_iterator.is_node_iterator then
+							create {XM_XPATH_NODE_TAIL_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, a_starting_location)
 						else
-							create {XM_XPATH_TAIL_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (an_iterator, a_starting_location)
+							create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (an_iterator, a_starting_location)
 						end
 					else
 						arguments.item (3).evaluate_item (a_context)

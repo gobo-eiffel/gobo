@@ -68,7 +68,7 @@ feature -- Evaluation
 					a_message := STRING_.concat ("Failed to parse ", a_uri.full_uri)
 					a_message := STRING_.appended_string (a_message, ". ")
 					a_message := STRING_.appended_string (a_message, a_context.last_build_error)
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (a_message, Xpath_errors_uri, "FODC0002", Dynamic_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (a_message, Xpath_errors_uri, "FODC0005", Dynamic_error)
 					if a_context.available_documents.isolation_level = Serializable then
 						a_context.available_documents.add (Void, Void, a_uri.full_uri)
 					end

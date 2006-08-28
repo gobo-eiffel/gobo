@@ -338,7 +338,7 @@ feature -- Optimization
 				if start.is_error then
 					set_last_error (start.error_value)
 				else
-					step.optimize (a_context, a_context_item_type)
+					step.optimize (a_context, start.item_type)
 					if step.was_expression_replaced then
 						set_step (step.replacement_expression)
 					end
