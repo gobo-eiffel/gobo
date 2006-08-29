@@ -436,13 +436,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				if other_base_class = a_universe.none_class then
 						-- "NONE" conforms to any class type that is not expanded.
 					Result := True
-				elseif other.is_expanded and then (a_universe.ise_version /= Void and then a_universe.ise_version <= ise_5_6_latest) then
+				elseif other.is_expanded and then (not a_universe.is_ise or else a_universe.ise_version <= ise_5_6_latest) then
 						-- This test is needed for compatibility with ISE 5.6.0610:
 						-- expanded types don't conform to reference types, they
 						-- possibly convert to them.
 					Result := False
 				elseif
-					other_base_class = a_universe.boolean_class or
+					(a_universe.is_ise and then a_universe.ise_version <= ise_5_7_62488) and then
+					(other_base_class = a_universe.boolean_class or
 					other_base_class = a_universe.character_class or
 					other_base_class = a_universe.wide_character_class or
 					other_base_class = a_universe.character_8_class or
@@ -462,10 +463,12 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					other_base_class = a_universe.real_32_class or
 					other_base_class = a_universe.real_64_class or
 					other_base_class = a_universe.pointer_class or
-					other_base_class = a_universe.typed_pointer_class
+					other_base_class = a_universe.typed_pointer_class)
 				then
-						-- In ISE 5.7 expanded types conforms to there reference ancestors
+						-- In ISE 5.7, expanded types conform to there reference ancestors
 						-- expect for basic types (which might convert to them).
+						-- In ISE 5.7.62488, expanded basic types conform to there reference
+						-- ancestors as well.
 					Result := False
 				else
 					other_base_class.process (a_universe.ancestor_builder)

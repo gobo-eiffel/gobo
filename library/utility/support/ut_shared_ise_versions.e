@@ -58,7 +58,7 @@ feature -- Access
 			-- * optional 'is' keyword
 			-- * bracket expression as target of qualified calls
 		once
-			create Result.make (5, 7, 60362)
+			create Result.make (5, 7, 59914)
 		ensure
 			ise_5_7_59914_not_void: Result /= Void
 		end
@@ -73,6 +73,16 @@ feature -- Access
 			create Result.make (5, 7, 60362)
 		ensure
 			ise_5_7_60362_not_void: Result /= Void
+		end
+
+	ise_5_7_62488: UT_VERSION is
+			-- ISE 5.7.62488
+			-- First release with expanded basic types conforming to
+			-- their reference ancestors (instead of converting to them)
+		once
+			create Result.make (5, 7, 62488)
+		ensure
+			ise_5_7_62488_not_void: Result /= Void
 		end
 
 	ise_5_7_latest: UT_VERSION is
