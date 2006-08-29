@@ -180,7 +180,7 @@ feature -- Parser
 	parse_arguments is
 			-- Parse the command line arguments.
 		require
-			valid_options: options_valid
+			valid_options: valid_options
 		local
 			args: DS_ARRAYED_LIST [STRING]
 			i, nb: INTEGER
@@ -199,7 +199,7 @@ feature -- Parser
 		require
 			an_array_not_void: an_array /= Void
 			no_void_argument: not STRING_ARRAY_.has (an_array, Void)
-			valid_options: options_valid
+			valid_options: valid_options
 		local
 			args: DS_ARRAYED_LIST [STRING]
 		do
@@ -212,7 +212,7 @@ feature -- Parser
 		require
 			a_list_not_void: a_list /= Void
 			no_void_argument: not a_list.has (Void)
-			valid_options: options_valid
+			valid_options: valid_options
 		do
 			reset_parser
 			argument_list := a_list
@@ -254,24 +254,27 @@ feature -- Validity checks
 			-- Allowed character: alpha_numeric, dash (not twice in
 			-- a row and not at beginning or end)
 		local
-			length: INTEGER
-			i: INTEGER
+			i, nb: INTEGER
 		do
 			if a_string = Void then
 				Result := False
 			else
-				length := a_string.count
-				Result := length >= 1
-				from
-					i := 1
-				until
-					i > length or not Result
-				loop
-					Result := is_alpha_numeric (a_string.item (i)) or
-						(i > 1 and i < length and then
-						 a_string.item (i) = short_option_introduction and
-						 a_string.item (i - 1) /= short_option_introduction)
-					i := i + 1
+				nb := a_string.count
+				if nb >= 1 then
+					Result := True
+					from i := 1 until i > nb loop
+						if
+							is_alpha_numeric (a_string.item (i)) or
+							(i > 1 and i < nb and then
+						 	a_string.item (i) = short_option_introduction and
+						 	a_string.item (i - 1) /= short_option_introduction)
+						then
+							i := i + 1
+						else
+							Result := False
+							i := nb + 1 -- Jump out of the loop.
+						end
+					end
 				end
 			end
 		ensure
@@ -291,39 +294,42 @@ feature -- Validity checks
 		require
 			a_list_not_void: a_list /= Void
 		local
-			i, length: INTEGER
+			i, nb: INTEGER
+			l_option: AP_OPTION
 		do
-			from
-				i := 1
-				length := a_list.count
-				Result := True
-			until
-				i > length or not Result
-			loop
-				Result := (a_list.item (i) /= Void) and then
-					valid_short_form (a_list.item (i).short_form) and
-					valid_long_form (a_list.item (i).long_form)
-				i := i + 1
+			Result := True
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				l_option := a_list.item (i)
+				if
+					(l_option /= Void) and then
+					(l_option.has_short_form implies valid_short_form (l_option.short_form)) and
+					(l_option.has_long_form implies valid_long_form (l_option.long_form))
+				then
+					i := i + 1
+				else
+					Result := False
+					i := nb + 1 -- Jump out of the loop.
+				end
 			end
 		end
 
-	options_valid: BOOLEAN is
+	valid_options: BOOLEAN is
 			-- Are all options correctly set up?
 		do
-			Result := all_valid_short_and_long_form(options)
-			from
-				alternative_options_lists.start
-			until
-				alternative_options_lists.off or not Result
-			loop
-				Result := (alternative_options_lists /= Void)
-				if Result then
-					Result := all_valid_short_and_long_form(alternative_options_lists.item_for_iteration)
+			if all_valid_short_and_long_form (options) then
+				Result := True
+				from alternative_options_lists.start until alternative_options_lists.after loop
+					if not all_valid_short_and_long_form (alternative_options_lists.item_for_iteration) then
+						Result := False
+						alternative_options_lists.go_after
+					else
+						alternative_options_lists.forth
+					end
 				end
-				alternative_options_lists.forth
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	argument_list: DS_LIST [STRING]
