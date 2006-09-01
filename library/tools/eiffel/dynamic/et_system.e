@@ -530,12 +530,12 @@ feature -- Compilation
 			has_fatal_error := False
 			universe.activate_processors
 			activate_dynamic_type_set_builder
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			universe.preparse_single
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				universe.print_time (dt1, "Degree 6")
 			end
 			compile_kernel
@@ -635,22 +635,22 @@ feature -- Compilation
 			has_fatal_error := False
 			universe.activate_processors
 			activate_dynamic_type_set_builder
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			universe.parse_all
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				universe.print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			universe.compile_degree_4
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				universe.print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			universe.compile_degree_3
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				universe.print_time (dt1, "Degree 3")
 				dt1 := l_clock.system_clock.date_time_now
 			end
@@ -682,7 +682,7 @@ feature -- Compilation
 				l_cursor.forth
 			end
 			build_dynamic_type_sets
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				universe.print_time (dt1, "Degree Dynamic Type Set")
 			end
 		end

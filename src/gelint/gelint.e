@@ -221,6 +221,8 @@ feature {NONE} -- Processing
 			end
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
+			a_universe.error_handler.set_verbose (is_verbose)
+			a_universe.error_handler.set_benchmark_shown (True)
 			if ise_version = Void then
 				ise_version := ise_5_6_latest
 			end
@@ -228,8 +230,6 @@ feature {NONE} -- Processing
 			a_universe.set_ecma_version (ecma_version)
 			if (ecma_version = Void) and ise_version < ise_5_7_60362 then
 				a_universe.set_non_aliased_sized_basic_classes
-			end
-			if not is_verbose then
 			end
 			a_universe.set_use_assign_keyword (True)
 			a_universe.set_use_attribute_keyword (False)

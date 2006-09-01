@@ -16,7 +16,6 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_ARRAY_ROUTINES
-	KL_SHARED_STANDARD_FILES
 	KL_SHARED_FILE_SYSTEM
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	ET_SHARED_CLASS_NAME_TESTER
@@ -2470,37 +2469,37 @@ feature -- Compilation
 			dt1: DT_DATE_TIME
 		do
 			activate_processors
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			preparse_single
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				print_time (dt1, "Degree 6")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			parse_system
-			debug ("ericb")
-				std.output.put_string ("Preparsed ")
-				std.output.put_integer (classes.count)
-				std.output.put_line (" classes")
-				std.output.put_string ("Parsed ")
-				std.output.put_integer (parsed_classes_count)
-				std.output.put_line (" classes")
-				std.output.put_integer (feature_count)
-				std.output.put_line (" features")
+			if error_handler.benchmark_shown then
+				error_handler.info_file.put_string ("Preparsed ")
+				error_handler.info_file.put_integer (classes.count)
+				error_handler.info_file.put_line (" classes")
+				error_handler.info_file.put_string ("Parsed ")
+				error_handler.info_file.put_integer (parsed_classes_count)
+				error_handler.info_file.put_line (" classes")
+				error_handler.info_file.put_integer (feature_count)
+				error_handler.info_file.put_line (" features")
 			end
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_4
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_3
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				print_time (dt1, "Degree 3")
 			end
 		end
@@ -2516,29 +2515,29 @@ feature -- Compilation
 			dt1: DT_DATE_TIME
 		do
 			activate_processors
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
 --			preparse_single
---			debug ("ericb")
+--			if error_handler.benchmark_shown then
 --				print_time (dt1, "Degree 6")
 --				dt1 := l_clock.system_clock.date_time_now
 --			end
 --			compile_degree_5
 			parse_all
 			check_provider_validity
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_4
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_3
-			debug ("ericb")
+			if error_handler.benchmark_shown then
 				print_time (dt1, "Degree 3")
 			end
 		end
@@ -2561,12 +2560,12 @@ feature -- Compilation
 				a_cursor.forth
 			end
 			check_provider_validity
-			debug ("ericb")
-				std.output.put_string ("Parsed ")
-				std.output.put_integer (classes.count)
-				std.output.put_line (" classes")
-				std.output.put_integer (feature_count)
-				std.output.put_line (" features")
+			if error_handler.benchmark_shown then
+				error_handler.info_file.put_string ("Parsed ")
+				error_handler.info_file.put_integer (classes.count)
+				error_handler.info_file.put_line (" classes")
+				error_handler.info_file.put_integer (feature_count)
+				error_handler.info_file.put_line (" features")
 			end
 		end
 
@@ -2603,12 +2602,12 @@ feature -- Compilation
 				end
 				a_cursor.forth
 			end
-			debug ("ericb")
-				std.output.put_string ("Flattened ")
-				std.output.put_integer (nb)
-				std.output.put_line (" classes")
-				std.output.put_integer (feature_count)
-				std.output.put_line (" features")
+			if error_handler.benchmark_shown then
+				error_handler.info_file.put_string ("Flattened ")
+				error_handler.info_file.put_integer (nb)
+				error_handler.info_file.put_line (" classes")
+				error_handler.info_file.put_integer (feature_count)
+				error_handler.info_file.put_line (" features")
 			end
 		end
 
@@ -2972,9 +2971,9 @@ feature -- Timing
 			dt2 := l_clock.system_clock.date_time_now
 			dtd := dt2 - a_start
 			dtd.set_canonical (a_start)
-			std.output.put_string (a_degree)
-			std.output.put_string (": ")
-			std.output.put_line (dtd.out)
+			error_handler.info_file.put_string (a_degree)
+			error_handler.info_file.put_string (": ")
+			error_handler.info_file.put_line (dtd.out)
 			debug ("stop")
 				io.read_line
 			end

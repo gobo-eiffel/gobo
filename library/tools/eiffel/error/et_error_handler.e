@@ -16,6 +16,7 @@ inherit
 
 	UT_ERROR_HANDLER
 		redefine
+			is_verbose,
 			report_error_message
 		end
 
@@ -37,6 +38,12 @@ feature -- Status report
 
 	is_pedantic: BOOLEAN
 
+	is_verbose: BOOLEAN
+			-- Should status be reported for each class processed?
+
+	benchmark_shown: BOOLEAN
+			-- Should benchmark be shown for each Degree?
+
 	has_error: BOOLEAN
 			-- Has an error been reported?
 
@@ -45,6 +52,8 @@ feature -- Status report
 
 	has_internal_error: BOOLEAN
 			-- Has an internal error been reported?
+
+feature -- Status setting
 
 	set_ise is
 		do
@@ -59,6 +68,22 @@ feature -- Status report
 			is_ge := True
 		end
 
+	set_verbose (b: BOOLEAN) is
+			-- Set `is_verbose' to `b'.
+		do
+			is_verbose := b
+		ensure
+			verbose_set: is_verbose = b
+		end
+
+	set_benchmark_shown (b: BOOLEAN) is
+			-- Set `benchmark_shown' to `b'.
+		do
+			benchmark_shown := b
+		ensure
+			benchmark_shown_set: benchmark_shown = b
+		end
+
 feature -- Compilation report
 
 	report_preparsing_status (a_cluster: ET_CLUSTER) is
@@ -66,11 +91,11 @@ feature -- Compilation report
 		require
 			a_cluster_not_void: a_cluster /= Void
 		do
-			if False then
-			if info_file /= Void then
-				info_file.put_string ("Degree 6 cluster ")
-				info_file.put_line (a_cluster.full_name ('.'))
-			end
+			if is_verbose then
+				if info_file /= Void then
+					info_file.put_string ("Degree 6 cluster ")
+					info_file.put_line (a_cluster.full_name ('.'))
+				end
 			end
 		end
 
@@ -82,29 +107,29 @@ feature -- Compilation report
 		local
 			a_universe: ET_UNIVERSE
 		do
-			if False then
-			if info_file /= Void then
-				a_universe := a_processor.universe
-				if a_processor = a_universe.eiffel_parser then
-					info_file.put_string ("Degree 5 class ")
-					info_file.put_line (a_class.name.name)
-				elseif a_processor = a_universe.ancestor_builder then
-					info_file.put_string ("Degree 4.3 class ")
-					info_file.put_line (a_class.name.name)
-				elseif a_processor = a_universe.feature_flattener then
-					info_file.put_string ("Degree 4.2 class ")
-					info_file.put_line (a_class.name.name)
-				elseif a_processor = a_universe.interface_checker then
-					info_file.put_string ("Degree 4.1 class ")
-					info_file.put_line (a_class.name.name)
-				elseif a_processor = a_universe.implementation_checker then
-					info_file.put_string ("Degree 3 class ")
-					info_file.put_line (a_class.name.name)
-				elseif a_processor = a_universe.flat_implementation_checker then
-					info_file.put_string ("Degree 3 (flat) class ")
-					info_file.put_line (a_class.name.name)
+			if is_verbose then
+				if info_file /= Void then
+					a_universe := a_processor.universe
+					if a_processor = a_universe.eiffel_parser then
+						info_file.put_string ("Degree 5 class ")
+						info_file.put_line (a_class.name.name)
+					elseif a_processor = a_universe.ancestor_builder then
+						info_file.put_string ("Degree 4.3 class ")
+						info_file.put_line (a_class.name.name)
+					elseif a_processor = a_universe.feature_flattener then
+						info_file.put_string ("Degree 4.2 class ")
+						info_file.put_line (a_class.name.name)
+					elseif a_processor = a_universe.interface_checker then
+						info_file.put_string ("Degree 4.1 class ")
+						info_file.put_line (a_class.name.name)
+					elseif a_processor = a_universe.implementation_checker then
+						info_file.put_string ("Degree 3 class ")
+						info_file.put_line (a_class.name.name)
+					elseif a_processor = a_universe.flat_implementation_checker then
+						info_file.put_string ("Degree 3 (flat) class ")
+						info_file.put_line (a_class.name.name)
+					end
 				end
-			end
 			end
 		end
 
