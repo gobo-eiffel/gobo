@@ -3,7 +3,7 @@
 <library name="precomp">
 	<description>
 		system: "Gobo Eiffel Libraries precompilation"
-		copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+		copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -15,6 +15,7 @@
 	</option>
 
 	<cluster name="precomp_ve" location="." if="${GOBO_EIFFEL}=ve"/>
+	<mount location="${GOBO}/library/argument/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
 	<mount location="${GOBO}/library/math/library.xace"/>
