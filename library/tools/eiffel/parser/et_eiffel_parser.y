@@ -204,6 +204,7 @@ create
 %type <ET_SEMICOLON_SYMBOL> Semicolon_opt
 %type <ET_STATIC_CALL_EXPRESSION> Static_call_expression
 %type <ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
+%type <ET_SYMBOL> Left_parenthesis
 %type <ET_TYPE> Type Type_no_class_name Type_no_identifier
 %type <ET_TYPE_ITEM> Type_comma
 %type <ET_TYPE_LIST> Convert_types Convert_type_list
@@ -212,7 +213,7 @@ create
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 68
+%expect 65
 %start Class_declarations
 
 %%
@@ -2067,16 +2068,22 @@ Alias_name: E_ALIAS E_STRNOT
 
 Formal_arguments: '(' ')'
 		{ $$ := new_formal_arguments ($1, $2, 0) }
-	| '('
+	| Left_parenthesis Formal_argument_list
 		{
-			add_symbol ($1)
-			add_counter
-		}
-	  Formal_argument_list
-		{
-			$$ := $3
+			$$ := $2
 			remove_symbol
 			remove_counter
+		}
+	;
+
+Left_parenthesis: '('
+		{
+			-- Needed to solve ambiguity when parsing:
+			--   agent (a).f
+			--   agent (a: A) do ... end
+			$$ := $1
+			add_symbol ($$)
+			add_counter
 		}
 	;
 
@@ -3257,8 +3264,12 @@ Bracket_actual_list: Expression ']'
 		}
 	;
 
-Parenthesized_expression: '(' Expression ')'
-		{ $$ := ast_factory.new_parenthesized_expression ($1, $2, $3) }
+Parenthesized_expression: Left_parenthesis Expression ')'
+		{
+			remove_symbol
+			remove_counter
+		 	$$ := ast_factory.new_parenthesized_expression ($1, $2, $3)
+		 }
 	;
 
 Manifest_type: '{' Type '}'
