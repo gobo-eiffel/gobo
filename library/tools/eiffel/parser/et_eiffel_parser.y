@@ -171,6 +171,7 @@ create
 %type <ET_INDEXING_TERM> Index_value
 %type <ET_INDEXING_TERM_ITEM> Index_value_comma
 %type <ET_INDEXING_TERM_LIST> Index_terms
+%type <ET_EXPRESSION> Inline_agent
 %type <ET_INSPECT_INSTRUCTION> Multi_branch
 %type <ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
 %type <ET_INTEGER_CONSTANT> Integer_constant Typed_integer_constant Untyped_integer_constant Signed_integer_constant
@@ -211,7 +212,7 @@ create
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 53
+%expect 68
 %start Class_declarations
 
 %%
@@ -3182,6 +3183,8 @@ Bracket_target: Call_expression
 		{ $$ := $1 }
 	| Call_agent
 		{ $$ := $1 }
+	| Inline_agent
+		{ $$ := $1 }
 	| E_VOID
 		{ $$ := $1 }
 	| Character_constant
@@ -3427,6 +3430,72 @@ Tilde_call_agent: '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
 	| '{' Type '}' '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_agent_open_target ($1, $2, $3), $5, $6) }
+	;
+
+Inline_agent:
+-- There is a syntactical ambiguity with attribute inline agents.
+--	E_AGENT ':' Type Assigner_opt Agent_actuals_opt
+--		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, Void, last_clients, last_feature_clause, last_class) }
+	E_AGENT ':' Type Assigner_opt Precondition_opt Local_declarations_opt
+	Do_compound Postcondition_opt Rescue_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
+	| E_AGENT Formal_arguments ':' Type Assigner_opt Precondition_opt
+	Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
+	| E_AGENT ':' Type Assigner_opt Precondition_opt Local_declarations_opt
+	Once_compound Postcondition_opt Rescue_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
+	| E_AGENT Formal_arguments ':' Type Assigner_opt Precondition_opt
+	Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
+	| E_AGENT ':' Type Assigner_opt Precondition_opt E_EXTERNAL Manifest_string
+	External_name_opt Postcondition_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, ast_factory.new_external_language ($8, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
+	| E_AGENT Formal_arguments ':' Type Assigner_opt Precondition_opt
+	E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, ast_factory.new_external_language ($9, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
+	| E_AGENT Precondition_opt Local_declarations_opt Do_compound
+	Postcondition_opt Rescue_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := ast_factory.new_do_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
+	| E_AGENT Formal_arguments Precondition_opt Local_declarations_opt
+	Do_compound Postcondition_opt Rescue_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := ast_factory.new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
+	| E_AGENT Precondition_opt Local_declarations_opt Once_compound
+	Postcondition_opt Rescue_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
+	| E_AGENT Formal_arguments Precondition_opt Local_declarations_opt
+	Once_compound Postcondition_opt Rescue_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
+	| E_AGENT Precondition_opt E_EXTERNAL Manifest_string
+	External_name_opt Postcondition_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := new_external_procedure ($1, Void, $2, $3, $4, $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
+	| E_AGENT Formal_arguments Precondition_opt E_EXTERNAL Manifest_string
+	External_name_opt Postcondition_opt E_END Agent_actuals_opt
+-- TODO:
+		{ $$ := tokens.void_keyword }
+--		{ $$ := new_external_procedure ($1, $2, $3, $4, $5, $6, ast_factory.new_external_language ($7, $8), $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
 	;
 
 Agent_target: Identifier
