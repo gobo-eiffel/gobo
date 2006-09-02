@@ -102,6 +102,9 @@ inherit
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 create
 
 	make
@@ -1836,7 +1839,7 @@ feature {NONE} -- Instruction validity
 				had_error := True
 				a_target_context.wipe_out
 				a_target_context.force_last (universe.any_type)
-			elseif not universe.is_dotnet and not a_target_context.is_type_reference (universe) then
+			elseif not (universe.is_dotnet or (universe.is_ise and then universe.ise_version >= ise_5_7_0)) and not a_target_context.is_type_reference (universe) then
 					-- Assignment attempts with expanded sources
 					-- are allowed in Eiffel for .NET.
 				a_class_impl := feature_impl.implementation_class
