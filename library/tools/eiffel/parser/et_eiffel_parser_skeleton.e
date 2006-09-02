@@ -78,6 +78,8 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			create counters.make (Initial_counters_capacity)
+			create last_formal_arguments_stack.make (Initial_last_formal_arguments_stack_capacity)
+			create last_local_variables_stack.make (Initial_last_local_variables_stack_capacity)
 			create last_keywords.make (Initial_last_keywords_capacity)
 			create last_symbols.make (Initial_last_symbols_capacity)
 			create assertions.make (Initial_assertions_capacity)
@@ -102,6 +104,8 @@ feature -- Initialization
 			precursor
 			Eiffel_buffer.set_end_of_file
 			counters.wipe_out
+			last_formal_arguments_stack.wipe_out
+			last_local_variables_stack.wipe_out
 			last_keywords.wipe_out
 			last_symbols.wipe_out
 			providers.wipe_out
@@ -113,8 +117,6 @@ feature -- Initialization
 			last_clients := Void
 			last_export_clients := Void
 			last_feature_clause := Void
-			last_local_variables := Void
-			last_formal_arguments := Void
 			cluster := Void
 		end
 
@@ -546,8 +548,8 @@ feature {NONE} -- Basic operations
 			end
 				-- Reset local variables and formal arguments
 				-- before reading the next feature.
-			last_local_variables := Void
-			last_formal_arguments := Void
+			last_formal_arguments_stack.wipe_out
+			last_local_variables_stack.wipe_out
 		end
 
 	register_query_synonym (a_query: ET_QUERY) is
@@ -573,8 +575,8 @@ feature {NONE} -- Basic operations
 			end
 				-- Reset local variables and formal arguments
 				-- before reading the next feature.
-			last_local_variables := Void
-			last_formal_arguments := Void
+			last_formal_arguments_stack.wipe_out
+			last_local_variables_stack.wipe_out
 		end
 
 	register_procedure_synonym (a_procedure: ET_PROCEDURE) is
@@ -1239,7 +1241,7 @@ feature {NONE} -- AST factory
 			nb_positive: nb >= 0
 		do
 			Result := ast_factory.new_formal_arguments (a_left, a_right, nb)
-			last_formal_arguments := Result
+			last_formal_arguments_stack.force (Result)
 		end
 
 	new_invalid_alias_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME is
@@ -1303,7 +1305,7 @@ feature {NONE} -- AST factory
 			nb_positive: nb >= 0
 		do
 			Result := ast_factory.new_local_variables (a_local, nb)
-			last_local_variables := Result
+			last_local_variables_stack.force (Result)
 		end
 
 	new_loop_invariants (an_invariant: ET_KEYWORD): ET_LOOP_INVARIANTS is
@@ -4291,11 +4293,31 @@ feature {NONE} -- Access
 	last_class: ET_CLASS
 			-- Class being parsed
 
-	last_local_variables: ET_LOCAL_VARIABLE_LIST
-			-- Last local variable clause read
+feature {NONE} -- Local variables
 
-	last_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+	last_local_variables: ET_LOCAL_VARIABLE_LIST is
+			-- Last local variable clause read
+		do
+			if not last_local_variables_stack.is_empty then
+				Result := last_local_variables_stack.item
+			end
+		end
+
+	last_local_variables_stack: DS_ARRAYED_STACK [ET_LOCAL_VARIABLE_LIST]
+			-- Stack of last local variable clause read
+
+feature {NONE} -- Formal arguments
+
+	last_formal_arguments: ET_FORMAL_ARGUMENT_LIST is
 			-- Last formal argument clause read
+		do
+			if not last_formal_arguments_stack.is_empty then
+				Result := last_formal_arguments_stack.item
+			end
+		end
+
+	last_formal_arguments_stack: DS_ARRAYED_STACK [ET_FORMAL_ARGUMENT_LIST]
+			-- Stack of last formal argument clause read
 
 feature {NONE} -- Last keyword
 
@@ -4415,6 +4437,12 @@ feature {NONE} -- Constants
 	Initial_counters_capacity: INTEGER is 10
 			-- Initial capacity for `counters'
 
+	Initial_last_formal_arguments_stack_capacity: INTEGER is 5
+			-- Initial capacity for `last_formal_arguments_stack'
+
+	Initial_last_local_variables_stack_capacity: INTEGER is 5
+			-- Initial capacity for `last_local_variables_stack'
+
 	Initial_last_keywords_capacity: INTEGER is 5
 			-- Initial capacity for `last_keywords'
 
@@ -4484,6 +4512,8 @@ feature {NONE} -- Implementation
 invariant
 
 	counters_not_void: counters /= Void
+	last_formal_arguments_stack_not_void: last_formal_arguments_stack /= Void
+	last_local_variables_stack_not_void: last_local_variables_stack /= Void
 	last_keywords_not_void: last_keywords /= Void
 	last_symbols_not_void: last_symbols /= Void
 	assertions_not_void: assertions /= Void
