@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 				from
 					base_iterator.start
 				until
-					base_iterator.is_error or else base_iterator.after
+					context.transformer.is_error or else base_iterator.after
 				loop
 					if node_keys.is_full then
 						node_keys.resize (node_keys.count * 2)
@@ -274,10 +274,14 @@ feature {NONE} -- Implementation
 					loop
 						a_cursor.item.sort_key.evaluate_item (context)
 						if a_cursor.item.sort_key.last_evaluated_item /= Void then
-							check
-								sort_key_is_atomic: a_cursor.item.sort_key.last_evaluated_item.is_atomic_value
+							if a_cursor.item.sort_key.last_evaluated_item.is_error then
+								context.transformer.report_fatal_error (a_cursor.item.sort_key.last_evaluated_item.error_value)
+							else
+								check
+									sort_key_is_atomic: a_cursor.item.sort_key.last_evaluated_item.is_atomic_value
+								end
+								a_sort_key := a_cursor.item.sort_key.last_evaluated_item.as_atomic_value
 							end
-							a_sort_key := a_cursor.item.sort_key.last_evaluated_item.as_atomic_value
 						else
 							a_sort_key := Void  -- = () - an empty sequence
 						end

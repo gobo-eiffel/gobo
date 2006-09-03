@@ -108,7 +108,9 @@ feature -- Optimization
 			mark_unreplaced
 			if select_expression /= Void and then not select_expression.is_error then
 				select_expression.optimize (a_context, a_context_item_type)
-				if select_expression.was_expression_replaced then
+				if select_expression.is_error then
+					set_last_error (select_expression.error_value)
+				elseif select_expression.was_expression_replaced then
 					set_select_expression (select_expression.replacement_expression)
 				end
 			end

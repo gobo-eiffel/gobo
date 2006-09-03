@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			end
 			compute_static_properties
 			initialized := True
+			context_item_type := type_factory.string_type
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
@@ -180,26 +181,36 @@ feature -- Optimization
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			select_expression.check_static_type (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then
+			if select_expression.is_error then
+				set_last_error (select_expression.error_value)
+			elseif select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression)
 			end
 			regex_expression.check_static_type (a_context, a_context_item_type)
-			if regex_expression.was_expression_replaced then
+			if regex_expression.is_error then
+				set_last_error (regex_expression.error_value)
+			elseif regex_expression.was_expression_replaced then
 				regex_expression := regex_expression.replacement_expression; adopt_child_expression (regex_expression)
 			end
 			flags_expression.check_static_type (a_context, a_context_item_type)
-			if flags_expression.was_expression_replaced then
+			if flags_expression.is_error then
+				set_last_error (flags_expression.error_value)
+			elseif flags_expression.was_expression_replaced then
 				flags_expression := flags_expression.replacement_expression; adopt_child_expression (flags_expression)
 			end
 			if matching_block /= Void then
-				matching_block.check_static_type (a_context, a_context_item_type)
-				if matching_block.was_expression_replaced then
+				matching_block.check_static_type (a_context, context_item_type)
+				if matching_block.is_error then
+					set_last_error (matching_block.error_value)
+				elseif matching_block.was_expression_replaced then
 					matching_block := matching_block.replacement_expression; adopt_child_expression (matching_block)
 				end
 			end
 			if non_matching_block /= Void then
-				non_matching_block.check_static_type (a_context, a_context_item_type)
-				if non_matching_block.was_expression_replaced then
+				non_matching_block.check_static_type (a_context, context_item_type)
+				if non_matching_block.is_error then
+					set_last_error (non_matching_block.error_value)
+				elseif non_matching_block.was_expression_replaced then
 					non_matching_block := non_matching_block.replacement_expression; adopt_child_expression (non_matching_block)
 				end
 			end
@@ -208,26 +219,37 @@ feature -- Optimization
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			if select_expression.was_expression_replaced then
+			select_expression.optimize (a_context, a_context_item_type)
+			if select_expression.is_error then
+				set_last_error (select_expression.error_value)
+			elseif select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression)
 			end
 			regex_expression.optimize (a_context, a_context_item_type)
-			if regex_expression.was_expression_replaced then
+			if regex_expression.is_error then
+				set_last_error (regex_expression.error_value)
+			elseif regex_expression.was_expression_replaced then
 				regex_expression := regex_expression.replacement_expression; adopt_child_expression (regex_expression)
 			end
 			flags_expression.optimize (a_context, a_context_item_type)
-			if flags_expression.was_expression_replaced then
+			if flags_expression.is_error then
+				set_last_error (flags_expression.error_value)
+			elseif flags_expression.was_expression_replaced then
 				flags_expression := flags_expression.replacement_expression; adopt_child_expression (flags_expression)
 			end
 			if matching_block /= Void then
-				matching_block.optimize (a_context, a_context_item_type)
-				if matching_block.was_expression_replaced then
+				matching_block.optimize (a_context, context_item_type)
+				if matching_block.is_error then
+					set_last_error (matching_block.error_value)
+				elseif matching_block.was_expression_replaced then
 					matching_block := matching_block.replacement_expression; adopt_child_expression (matching_block)
 				end
 			end
 			if non_matching_block /= Void then
-				non_matching_block.optimize (a_context, a_context_item_type)
-				if non_matching_block.was_expression_replaced then
+				non_matching_block.optimize (a_context, context_item_type)
+				if non_matching_block.is_error then
+					set_last_error (non_matching_block.error_value)
+				elseif non_matching_block.was_expression_replaced then
 					non_matching_block := non_matching_block.replacement_expression; adopt_child_expression (non_matching_block)
 				end
 			end
@@ -323,6 +345,9 @@ feature {NONE} -- Implementation
 	
 	non_matching_block: XM_XPATH_EXPRESSION
 			-- Expression called for non-matching substrings
+
+	context_item_type: XM_XPATH_ITEM_TYPE
+			-- Known context item type for xsl:(non-)matching-substring
 
 	regexp_iterator (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_REGEXP_ITERATOR is
 			-- Iterator over substrings in regular expression;

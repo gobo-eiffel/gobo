@@ -306,7 +306,9 @@ feature -- Duplication
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			a_receiver.start_document
+			if not a_receiver.is_document_started then
+				a_receiver.start_document
+			end
 			
 			-- output the children
 

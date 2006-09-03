@@ -190,9 +190,6 @@ feature -- Evaluation
 
 				last_iterator := input_iterator.another
 			end
-			check
-				before: not last_iterator.is_error implies last_iterator.before
-			end
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
@@ -269,30 +266,32 @@ feature {NONE} -- Implementation
 						create a_saved_local_variable_frame.make_fixed_size (a_local_variable_frame.variables.count)
 						an_index := 1
 					variant
-						a_local_variable_frame.variables.count + 1 - an_index
+						slots_used.count + 1 - an_index
 					until
 						is_error or else an_index > slots_used.count
 					loop
 						a_slot_number := slots_used.item (an_index)
-						a_value := a_local_variable_frame.variables.item (a_slot_number)
-						if a_value /= Void and then a_value.is_closure then
-							a_closure := a_value.as_closure
-							a_depth := a_closure.depth
-							if a_depth >= Maximum_closure_nesting_depth then
-								a_closure.eagerly_evaluate (a_context)
-								a_value := a_closure.last_evaluation
-								if a_value.is_error then
-									set_last_error (a_value.error_value)
+						if a_slot_number <=  a_local_variable_frame.variables.count then
+							a_value := a_local_variable_frame.variables.item (a_slot_number)
+							if a_value /= Void and then a_value.is_closure then
+								a_closure := a_value.as_closure
+								a_depth := a_closure.depth
+								if a_depth >= Maximum_closure_nesting_depth then
+									a_closure.eagerly_evaluate (a_context)
+									a_value := a_closure.last_evaluation
+									if a_value.is_error then
+										set_last_error (a_value.error_value)
+									else
+										
+									end
 								else
-
-								end
-							else
-								if a_depth + 1 > depth then
-									depth := a_depth + 1
+									if a_depth + 1 > depth then
+										depth := a_depth + 1
+									end
 								end
 							end
+							a_saved_local_variable_frame.set_variable (a_value, a_slot_number)
 						end
-						a_saved_local_variable_frame.set_variable (a_value, a_slot_number)
 						an_index := an_index + 1
 					end
 					saved_xpath_context.set_stack_frame (a_saved_local_variable_frame)

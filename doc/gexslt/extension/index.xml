@@ -81,12 +81,20 @@
 	    </para>
 	  </listitem>
 	</varlistentry>
+      </variablelist>
+      <section>
+       <title>Extension attributes for xsl:output</title>
+       <variablelist>
 	<varlistentry>
 	  <term><exmlsyntax>character-representation</exmlsyntax></term>
 	  <listitem>
 	    <para>
 	      This tells the serializer how to serialize non-ASCII characters, and characters that are not representable
 	      in the selected encoding.
+	      <warning>
+		This may need to b e dropped - I have to check the serialization specs, but I think they have been tightened to disallow
+		some of this.
+	      </warning>
 	    </para>
 	    <para>
 	      When the output method is "xml" or "xhtml" <warning>(Hm.maybe xhtml should follow the html behaviour)</warning>,
@@ -129,11 +137,13 @@
 	  <term><exmlsyntax>next-in-chain</exmlsyntax></term>
 	  <listitem>
 	    <para>
-	      To be documented. (See the programs in $GOBO/test/xml/xslt for an example of how to use it).
+	      This is only allowed in conjunction with the <xslt>gexslt:chain</xslt> output method.
+	      It's value is the URI of the next transformation to be run over the output.
 	    </para>
 	  </listitem>
 	</varlistentry>
       </variablelist>
+      </section>
     </para>
   </section>
  <section>
@@ -180,16 +190,19 @@
  <section>
     <title>Extension instructions</title>
     <para>
-      None are provided at present. <xslt>gexslt:serialize</xslt> will be defined in the future.
+      None are provided at present. <xslt>gexslt:serialize</xslt> may be defined in the future. Or maybe not.
+      Users can always use <ulink url="http://xmlportfolio.com/xml-to-string/">Evan Lenz's serializer written in XSLT 1.0</ulink>.
     </para>
  </section>
  <section>
     <title>Additional output methods</title>
     <para>
-      None are provided in the extension namespace.
+      The only supplied method is <xslt>gexslt:chain</xslt>, which delegates serialization to a further
+      transformation, sepecified by the <xslt>gexslt:next-in-chain</xslt> attribute. Consquently all other
+      attributes on the <xslt>xslt:output</xslt> element are ignored.
     </para>
     <para>
-      However, there is an example provided to show Eiffel programmers
+     Also, there is an example provided to show Eiffel programmers
       how to write their own output methods. This is in the namespace 
       <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example</uri>, and has
       a local name of <exmlsyntax>xml</exmlsyntax>. It functions identically to the standard

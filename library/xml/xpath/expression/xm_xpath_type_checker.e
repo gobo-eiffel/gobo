@@ -163,7 +163,6 @@ feature -- Optimization
 							if a_relationship /= Same_item_type and then a_relationship /= Subsumed_type then
 								an_expression := checked_expression
 								create an_item_checker.make (an_expression, required_item_type, a_role_locator)
-								an_item_checker.set_error_code ("XPTY0004")
 								an_item_checker.adopt_child_expression (an_expression)
 								checked_expression := an_item_checker
 							end

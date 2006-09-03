@@ -155,15 +155,16 @@ feature -- Element change
 			a_child.set_parent (Current, children.count)
 		end
 
-	replace_child (a_child: XM_XPATH_TREE_NODE;an_index: INTEGER) is
+	replace_child (a_child: XM_XPATH_TREE_NODE; a_index: INTEGER) is
 			-- Replace child at `an_index' with `a_child'
 		require
 			child_not_void: a_child /= Void
-			valid_index: is_valid_child_index (an_index)
+			valid_index: is_valid_child_index (a_index)
 		do
-			children.replace (a_child, an_index)
-			a_child.set_parent (Current, an_index)
+			children.replace (a_child, a_index)
+			a_child.set_parent (Current, a_index)
 		end
+
 
 feature {NONE} -- Implementation
 
@@ -172,6 +173,17 @@ feature {NONE} -- Implementation
 
 	sequence_number_high_word: INTEGER
 			-- High_word of the sequence number
+
+	update_indices is
+			-- Update child indices to reflect removal.
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NODE]
+		do
+			from l_cursor := children.new_cursor; l_cursor.start until l_cursor.after loop
+				l_cursor.item.set_child_index (l_cursor.index)
+				l_cursor.forth
+			end
+		end
 
 invariant
 

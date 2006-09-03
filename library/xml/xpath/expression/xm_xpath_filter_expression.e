@@ -320,7 +320,7 @@ feature -- Optimization
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			else
-				filter.optimize (a_context, a_context_item_type)
+				filter.optimize (a_context, base_expression.item_type)
 				if filter.was_expression_replaced then
 					set_filter (filter.replacement_expression)
 				end

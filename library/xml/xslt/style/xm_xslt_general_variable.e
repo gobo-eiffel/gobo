@@ -199,6 +199,9 @@ feature -- Status setting
 				a_message := STRING_.appended_string (a_message, " element with a select attribute must be empty")
 				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0620", Static_error)
 				report_compile_error (an_error)
+			elseif has_child_nodes and then not allows_value then
+				create an_error.make_from_string ("Function parameters must be empty", Xpath_errors_uri, "XTSE0760", Static_error)
+				report_compile_error (an_error)
 			else
 				if as_type /= Void then check_against_required_type (as_type) end
 				if not any_compile_errors then

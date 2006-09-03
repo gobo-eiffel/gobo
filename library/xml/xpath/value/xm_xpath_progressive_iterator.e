@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			reservoir_set: reservoir = a_reservoir
 			base_iterator_set: base_iterator = a_base_iterator
 			closure_set: closure = a_closure
+			before: before
 		end
 
 feature -- Access

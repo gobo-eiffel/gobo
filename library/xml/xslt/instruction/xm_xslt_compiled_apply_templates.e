@@ -161,7 +161,9 @@ feature -- Optimization
 			check_with_params (tunnel_parameters, a_context, a_context_item_type)
 			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
-			if select_expression.is_empty_sequence then set_replacement (select_expression.as_empty_sequence) end
+			if select_expression.is_empty_sequence or select_expression.is_error then
+				set_replacement (select_expression)
+			end
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -170,15 +172,19 @@ feature -- Optimization
 			optimize_with_params (actual_parameters, a_context, a_context_item_type)
 			optimize_with_params (tunnel_parameters, a_context, a_context_item_type)
 
-			-- More information is avialble, so:
+			-- More information is availble, so:
 
 			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
-			select_expression.check_static_type (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
-			select_expression.optimize (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
-			if select_expression.is_empty_sequence then set_replacement (select_expression.as_empty_sequence) end
+			if select_expression.is_empty_sequence or select_expression.is_error then
+				set_replacement (select_expression)
+			else
+				select_expression.optimize (a_context, a_context_item_type)
+				if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
+				if select_expression.is_empty_sequence or select_expression.is_error then
+					set_replacement (select_expression)
+				end
+			end
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is

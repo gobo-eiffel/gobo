@@ -144,19 +144,13 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 			if not checked then
 				Precursor (a_context)
 				if not arguments.item (1).is_value then
-					if arguments.count = 1 then
-						namespaces_needed := True
-					elseif arguments.item (2).is_value then
-						namespaces_needed := True
+					namespaces_needed := True
+					an_expression_context ?= a_context
+					check
+						expression_context: an_expression_context /= Void
+						-- as this is XSLT
 					end
-					if namespaces_needed then
-						an_expression_context ?= a_context
-						check
-							expression_context: an_expression_context /= Void
-							-- as this is XSLT
-						end
-						namespace_context := an_expression_context.namespace_context
-					end
+					namespace_context := an_expression_context.namespace_context
 				end
 				checked := True
 			end

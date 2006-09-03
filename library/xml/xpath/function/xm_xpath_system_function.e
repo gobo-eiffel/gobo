@@ -200,7 +200,11 @@ feature {NONE} -- Implementation
 				an_argument := a_type_checker.checked_expression
 				an_argument.simplify
 				if an_argument.is_error then
-					set_last_error_from_string (an_argument.error_value.error_message, Xpath_errors_uri, argument_error_code, Type_error)
+					if an_argument.error_value.type = Type_error then
+						set_last_error_from_string (an_argument.error_value.error_message, Xpath_errors_uri, argument_error_code, Type_error)
+					else
+						set_last_error (an_argument.error_value)
+					end
 				else
 					if an_argument.was_expression_replaced then
 						arguments.replace (an_argument.replacement_expression, argument_number)

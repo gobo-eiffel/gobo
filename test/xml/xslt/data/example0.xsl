@@ -4,7 +4,7 @@
   xmlns:gexslt="http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
   version="2.0">
 
-<xsl:output method="xml" gexslt:next-in-chain="./example.xsl"/>
+<xsl:output method="gexslt:chain" gexslt:next-in-chain="./example.xsl"/>
 
 
 <xsl:template name="initial">

@@ -174,15 +174,19 @@ feature -- Optimization
 
 feature -- Evaluation
 
+
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over the values of a sequence
+		local
+			l_binding: like last_evaluated_binding
 		do
 			evaluate_variable (a_context)
 			if last_evaluated_binding.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_binding.error_value)
 			else
-				last_evaluated_binding.create_iterator (a_context)
-				last_iterator := last_evaluated_binding.last_iterator
+				l_binding := last_evaluated_binding
+				l_binding.create_iterator (a_context)
+				last_iterator := l_binding.last_iterator
 			end
 		end
 

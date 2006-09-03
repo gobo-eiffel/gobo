@@ -113,7 +113,7 @@ feature -- Access
 				from
 					an_integer := 1
 				until
-					an_integer > an_index or else last_iterator.is_error or else last_iterator.after
+					an_integer > an_index or else last_iterator.is_error or else (not last_iterator.before and then last_iterator.after)
 				loop
 					if an_integer = 1 then last_iterator.start else last_iterator.forth end
 					an_integer := an_integer + 1

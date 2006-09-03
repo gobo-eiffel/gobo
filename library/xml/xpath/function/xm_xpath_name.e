@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			initialized := True
+			set_argument_error_code ("XPTY0004")
 		end
 
 feature -- Access

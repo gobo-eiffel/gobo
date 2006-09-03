@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 				role_locator_not_void: a_role_locator /= Void
 				item_type_not_void: an_item_type /= Void
 		do
-			error_code := "XPDY0050" -- for genuine "treat as" expressions
+			error_code := a_role_locator.error_code
 			make_unary (a_sequence)
 			role_locator := a_role_locator
 			required_item_type := an_item_type
@@ -145,7 +145,7 @@ feature -- Optimization
 					else
 						a_message := "Required type of " + role_locator.message + " is "
 							+ required_item_type.conventional_name + "; supplied value has type " + base_expression.item_type.conventional_name
-						set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
+						set_last_error_from_string (a_message, Xpath_errors_uri, error_code, Type_error)
 					end
 				end
 			end

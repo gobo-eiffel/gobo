@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		do
-			number_of_arguments := -1
 			internal_function_fingerprint := -1
 			is_overriding := True
 			create references.make_default
@@ -58,31 +57,24 @@ feature -- Access
 
 	arity: INTEGER is
 			-- Arity of function;
-			-- CAUTION: not pure - memo function
-		require
-			attributes_prepared: attributes_prepared
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			finished: BOOLEAN
 			a_param: XM_XSLT_PARAM
 		do
-			if number_of_arguments = -1 then
-				number_of_arguments := 0
-				from
-					an_iterator := new_axis_iterator (Child_axis); an_iterator.start
-				until
-					finished or else an_iterator.after
-				loop
-					a_param ?= an_iterator.item
-					if a_param /= Void then
-						number_of_arguments := number_of_arguments + 1
-						an_iterator.forth
-					else
-						finished := True
-					end
+			from
+				an_iterator := new_axis_iterator (Child_axis); an_iterator.start
+			until
+				finished or else an_iterator.after
+			loop
+				a_param ?= an_iterator.item
+				if a_param /= Void then
+					Result := Result + 1
+					an_iterator.forth
+				else
+					finished := True
 				end
 			end
-			Result := number_of_arguments
 		ensure
 			positive_arity: Result >= 0
 		end
@@ -201,7 +193,11 @@ feature -- Element change
 						STRING_.right_adjust (function_name)
 						generate_name_code (function_name)
 						internal_function_fingerprint := fingerprint_from_name_code (last_generated_name_code)
-						-- TODO: do we need name code also?
+						if internal_function_fingerprint = -1 then
+							-- Must be because the namespace is reserved
+							create an_error.make_from_string ("Xsl:function name may not use a reserved namespace", Xpath_errors_uri, "XTSE0080", Static_error)
+							report_compile_error (an_error)							
+						end
 					end
 				elseif STRING_.same_string (an_expanded_name, As_attribute) then
 					an_as_attribute := attribute_value_by_index (a_cursor.index)
@@ -320,7 +316,7 @@ feature -- Element change
 					report_compile_error (a_body.error_value)
 				else
 					if result_type /= Void then
-						create a_role.make (Function_result_role, function_name, 1, Xpath_errors_uri, "XPTY0004")
+						create a_role.make (Function_result_role, function_name, 1, Xpath_errors_uri, "XTTE0780")
 						create a_type_checker
 						a_type_checker.static_type_check (static_context, a_body, result_type, False, a_role)
 						if a_type_checker.is_static_type_check_error then
@@ -383,9 +379,6 @@ feature {NONE} -- Implementation
 	internal_function_fingerprint: INTEGER
 			-- Fingerprint of function's QName (-1 = forward reference)
 
-	number_of_arguments: INTEGER
-			-- Number of arguments (-1 = not yet known)
-
 	result_type: XM_XPATH_SEQUENCE_TYPE
 			-- Type of result
 
@@ -424,7 +417,7 @@ feature {NONE} -- Implementation
 			a_param: XM_XSLT_PARAM
 			a_function_param: XM_XSLT_USER_FUNCTION_PARAMETER
 		do
-			create some_parameters.make (number_of_arguments)
+			create some_parameters.make (arity)
 			a_user_function.set_parameter_definitions (some_parameters)
 			from
 				an_iterator := new_axis_iterator (Child_axis); an_iterator.start

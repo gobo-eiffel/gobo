@@ -101,7 +101,7 @@ feature -- Evaluation
 			a_string: STRING
 		do
 			arguments.item (1).evaluate_item (a_context)
-			if not arguments.item (1).last_evaluated_item.is_atomic_value then
+			if arguments.item (1).last_evaluated_item = Void or else not arguments.item (1).last_evaluated_item.is_atomic_value then
 				create {XM_XPATH_STRING_VALUE} an_atomic_value.make ("")
 			else
 				an_atomic_value := arguments.item (1).last_evaluated_item.as_atomic_value

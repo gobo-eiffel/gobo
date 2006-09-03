@@ -57,7 +57,7 @@ feature -- Status report
 				Result := False
 			else
 				last_iterator.forth
-				if last_iterator.is_error or else last_iterator.after then
+				if last_iterator.is_error or else not last_iterator.after then
 					Result := False
 				else
 					Result := True

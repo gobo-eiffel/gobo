@@ -218,7 +218,7 @@ feature -- Element change
 			until
 				is_type_error or else an_index > an_argument_count
 			loop
-				create a_role.make (Function_role, expanded_name, an_index, Xpath_errors_uri, "XPTY0004")
+				create a_role.make (Function_role, expanded_name, an_index, Xpath_errors_uri, "XTTE0790")
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, arguments.item (an_index), some_required_types.item (an_index), False, a_role)
 				if a_type_checker.is_static_type_check_error then

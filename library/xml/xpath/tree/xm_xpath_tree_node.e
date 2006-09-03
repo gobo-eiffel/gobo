@@ -353,6 +353,19 @@ feature -- Element change
 			parent_set: parent_node = a_parent
 		end
 
+feature {XM_XPATH_TREE_COMPOSITE_NODE} -- Element change
+	
+	set_child_index (a_index: INTEGER) is
+			-- Set `child_index' to `a_index'.
+		require
+			strictly_positive_index: a_index > 0
+			parented: parent /= Void
+		do
+			child_index := a_index
+		ensure
+			child_index_set: child_index = a_index
+		end
+
 feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 
 	previous_node_in_document_order: XM_XPATH_TREE_NODE is
@@ -437,7 +450,6 @@ feature {XM_XPATH_TREE_NODE} -- Local
 
 	parent_node: XM_XPATH_TREE_COMPOSITE_NODE
 			-- Possible parent
-
 
 feature {NONE} -- Implementation
 

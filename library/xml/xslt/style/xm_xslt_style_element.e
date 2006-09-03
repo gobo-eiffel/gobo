@@ -1777,6 +1777,32 @@ feature -- Element change
 			end
 		end
 
+	prune_children is
+			-- Remove all child elements excluded by [xsl:]use-when processing.
+		local
+			l_style_element: XM_XSLT_STYLE_ELEMENT
+			l_child_iterator: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NODE]
+			l_pruned: BOOLEAN
+		do
+			from
+				l_child_iterator := children.new_cursor
+				l_child_iterator.start
+			until
+				l_child_iterator.after
+			loop
+				l_style_element ?= l_child_iterator.item
+				if l_style_element /= Void and then l_style_element.is_excluded then
+					l_child_iterator.remove
+					l_pruned := True
+				else
+					l_child_iterator.forth
+				end
+			end
+			if l_pruned then
+				update_indices
+			end
+		end
+
 	validate is
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.

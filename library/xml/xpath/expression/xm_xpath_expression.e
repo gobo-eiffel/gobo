@@ -1468,9 +1468,11 @@ feature -- Status setting
 			end
 			if an_expression.is_computed_expression then
 				an_expression.as_computed_expression.copy_location_identifier (Current)
-				from a_cursor := an_expression.sub_expressions.new_cursor; a_cursor.start until a_cursor.after loop
-					if a_cursor.item.is_computed_expression then a_cursor.item.as_computed_expression.set_parent (an_expression.as_computed_expression) end
-					a_cursor.forth
+				if not an_expression.is_error then
+					from a_cursor := an_expression.sub_expressions.new_cursor; a_cursor.start until a_cursor.after loop
+						if a_cursor.item.is_computed_expression then a_cursor.item.as_computed_expression.set_parent (an_expression.as_computed_expression) end
+						a_cursor.forth
+					end
 				end
 			end
 			replacement_expression := an_expression

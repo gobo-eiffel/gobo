@@ -146,8 +146,8 @@ feature -- Optimization
 				adopt_child_expression (select_expression)
 			end
 			an_empty_sequence ?= select_expression
-			if an_empty_sequence /= Void then
-				set_replacement (an_empty_sequence) -- NOP
+			if an_empty_sequence /= Void or select_expression.is_error then
+				set_replacement (select_expression)
 			else
 				action.check_static_type (a_context, select_expression.item_type)
 				if action.was_expression_replaced then
@@ -155,8 +155,8 @@ feature -- Optimization
 					adopt_child_expression (action)
 				end
 				an_empty_sequence ?= action
-				if an_empty_sequence /= Void then
-					set_replacement (an_empty_sequence) -- NOP
+				if an_empty_sequence /= Void or action.is_error then
+					set_replacement (action)
 				end
 			end
 		end
@@ -176,8 +176,8 @@ feature -- Optimization
 				adopt_child_expression (select_expression)
 			end
 			an_empty_sequence ?= select_expression
-			if an_empty_sequence /= Void then
-				set_replacement (an_empty_sequence) -- NOP
+			if an_empty_sequence /= Void or select_expression.is_error then
+				set_replacement (select_expression)
 			else
 				action.optimize (a_context, select_expression.item_type)
 				if action.was_expression_replaced then
@@ -185,8 +185,8 @@ feature -- Optimization
 					adopt_child_expression (action)
 				end
 				an_empty_sequence ?= action
-				if an_empty_sequence /= Void then
-					set_replacement (an_empty_sequence) -- NOP
+				if an_empty_sequence /= Void or action.is_error then
+					set_replacement (action)
 				else
 
 					-- If any subexpressions within the body of the for-each are not dependent on the focus,

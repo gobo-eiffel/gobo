@@ -141,7 +141,19 @@ feature -- Access
 	atomized_value: XM_XPATH_VALUE is
 			-- Typed value as atomic value or (unusually) sequence of atomic values.
 		do
-			todo ("atomized_value", False)
+			inspect
+				node_type
+			when Element_node then
+				if type_annotation = type_factory.untyped_type.fingerprint or else type_annotation = type_factory.untyped_atomic_type.fingerprint then
+					create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				else
+					todo ("atomized_value", True)
+				end
+			when Text_node then
+				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+			else
+				todo ("atomized_value", True)
+			end
 		end
 			
 	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is

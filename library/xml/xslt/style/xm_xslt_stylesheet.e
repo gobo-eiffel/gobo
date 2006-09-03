@@ -595,7 +595,6 @@ feature -- Element change
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
-
 			-- Process any xsl:include and xsl:import elements.
 
 			splice_includes
@@ -665,6 +664,7 @@ feature -- Element change
 			an_included_stylesheet: XM_XSLT_STYLESHEET
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			prune_children
 			create top_level_elements.make
 			minimum_import_precedence := import_precedence
 			a_previous_style_element := Current
@@ -696,32 +696,31 @@ feature -- Element change
 						end
 						if a_previous_style_element.is_module then
 							a_module := a_previous_style_element.as_module
-							if not a_module.is_excluded then
-								a_module.create_static_context
-								a_module.process_attributes
+							a_module.create_static_context
+							a_module.process_attributes
+							if a_module.is_import then
+								if found_non_import then
+									create an_error.make_from_string ("xsl:import elements must come first", Xpath_errors_uri, "XTSE0200", Static_error)
+									a_module.report_compile_error (an_error)
+								end
+							else
+								found_non_import := True
+							end
+							an_included_stylesheet := a_module.included_stylesheet (Current, import_precedence)
+							if an_included_stylesheet /= Void then
+								an_included_stylesheet.prune_children
+								
+								-- After processing the imported stylesheet and any others it brought in,
+								--  adjust the import precedence of this stylesheet if necessary.
+								
 								if a_module.is_import then
-									if found_non_import then
-										create an_error.make_from_string ("xsl:import elements must come first", Xpath_errors_uri, "XTSE0200", Static_error)
-										a_module.report_compile_error (an_error)
-									end
+									import_precedence := an_included_stylesheet.precedence + 1
 								else
-									found_non_import := True
+									import_precedence := an_included_stylesheet.precedence
+									an_included_stylesheet.set_minimum_import_precedence (minimum_import_precedence)
+									an_included_stylesheet.set_was_included
 								end
-								an_included_stylesheet := a_module.included_stylesheet (Current, import_precedence)
-								if an_included_stylesheet /= Void then
-									
-									-- After processing the imported stylesheet and any others it brought in,
-									--  adjust the import precedence of this stylesheet if necessary.
-									
-									if a_module.is_import then
-										import_precedence := an_included_stylesheet.precedence + 1
-									else
-										import_precedence := an_included_stylesheet.precedence
-										an_included_stylesheet.set_minimum_import_precedence (minimum_import_precedence)
-										an_included_stylesheet.set_was_included
-									end
-									copy_top_level_elements (an_included_stylesheet)
-								end
+								copy_top_level_elements (an_included_stylesheet)
 							end
 						else
 							found_non_import := True

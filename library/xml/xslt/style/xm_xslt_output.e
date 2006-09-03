@@ -127,6 +127,7 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
+			a_message: STRING
 		do
 			check_top_level (Void)
 			check_empty
@@ -148,7 +149,26 @@ feature -- Element change
 				elseif not is_qname (method) then
 						create an_error.make_from_string ("xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'", Xpath_errors_uri, "XTSE1570", Static_error)
 						report_compile_error (an_error)
+				else
+					create method_qname_parser.make (method)
+					if not method_qname_parser.is_valid then
+						a_message := STRING_.concat (method, " is not a lexical QName.")
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1570", Static_error)
+						report_compile_error (an_error)
+					else
+						if STRING_.same_string (uri_for_prefix (method_qname_parser.optional_prefix, False), Gexslt_eiffel_type_uri)
+							and STRING_.same_string (method_qname_parser.local_name, "chain") then
+							is_chain := True
+						end
+					end
 				end
+			end
+			if is_chain and next_in_chain = Void then
+				create an_error.make_from_string ("Output method gexslt:chain requires gexslt:next-in-chain attribute", Gexslt_eiffel_type_uri, "NEXT_IN_CHAIN_ABSENT", Static_error)
+				report_compile_error (an_error)
+			elseif not is_chain and next_in_chain /= Void then
+				create an_error.make_from_string ("The gexslt:next-in-chain attribute is only permitted when the output method is gexslt:chian", Gexslt_eiffel_type_uri, "NEXT_IN_CHAIN_PRESENT", Static_error)
+				report_compile_error (an_error)
 			end
 			if indent /= Void then
 				if STRING_.same_string (indent, "yes") or STRING_.same_string (indent, "no") then
@@ -254,9 +274,9 @@ feature -- Element change
 			some_character_maps: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]
 			a_uri, a_message, an_expanded_name: STRING
-			a_parser: XM_XPATH_QNAME_PARSER
 			a_character_map: XM_XSLT_CHARACTER_MAP
 			an_error: XM_XPATH_ERROR_VALUE
+			a_parser: XM_XPATH_QNAME_PARSER
 		do
 			an_import_precedence := precedence
 			if method /= Void then
@@ -288,30 +308,22 @@ feature -- Element change
 						not STRING_.same_string (method, a_property_set.method) then
 						a_property_set.set_duplication_error (Method_attribute)
 					end
-				else
-					create a_parser.make (method)
-					if not a_parser.is_valid then
-						a_message := STRING_.concat ("XTSE1570: ", method)
-						a_message := STRING_.appended_string (a_message, " is not a lexical QName.")
-						create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", Xpath_errors_uri, "XTSE1570", Static_error)
+				elseif not is_chain then
+					a_uri := uri_for_prefix (method_qname_parser.optional_prefix, False)
+					if a_uri = Void then
+						create an_error.make_from_string (STRING_.concat (method_qname_parser.optional_prefix, " is not an in-scope namespace prefix."), Xpath_errors_uri, "XTSE1570", Static_error)
 						report_compile_error (an_error)
 					else
-						a_uri := uri_for_prefix (a_parser.optional_prefix, False)
-						if a_uri = Void then
-							create an_error.make_from_string (STRING_.concat (a_parser.optional_prefix, " is not an in-scope namespace prefix."), Xpath_errors_uri, "XTSE1570", Static_error)
-							report_compile_error (an_error)
-						else
-							if emitter_factory.is_valid_output_method (a_uri, a_parser.local_name) then
-								if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
-									emitter_factory.set_defaults (a_uri, a_parser.local_name, a_property_set, an_import_precedence)
-								elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
-									not STRING_.same_string (method, a_property_set.method) then
-									a_property_set.set_duplication_error (Method_attribute)
-								end
-							else
-								create an_error.make_from_string (STRING_.concat (method, " is not supported by this XSLT configuration/processor."), Xpath_errors_uri, "XTSE1570", Static_error)
-								report_compile_error (an_error)
+						if emitter_factory.is_valid_output_method (a_uri, method_qname_parser.local_name) then
+							if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
+								emitter_factory.set_defaults (a_uri, method_qname_parser.local_name, a_property_set, an_import_precedence)
+							elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
+								not STRING_.same_string (method, a_property_set.method) then
+								a_property_set.set_duplication_error (Method_attribute)
 							end
+						else
+							create an_error.make_from_string (STRING_.concat (method, " is not supported by this XSLT configuration/processor."), Xpath_errors_uri, "XTSE1570", Static_error)
+							report_compile_error (an_error)
 						end
 					end
 				end
@@ -592,6 +604,12 @@ feature {NONE} -- Implementation
 
 	extension_attributes: DS_HASH_TABLE [STRING, STRING]
 			-- Extension attributs for use by QName methods
+
+	is_chain: BOOLEAN
+			-- Is `method' gexslt:chain?
+
+	method_qname_parser: XM_XPATH_QNAME_PARSER
+			-- Parser for method name
 
 invariant
 

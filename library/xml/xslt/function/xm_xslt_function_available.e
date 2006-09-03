@@ -108,6 +108,10 @@ feature -- Evaluation
 								a_uri := Xpath_standard_functions_uri
 								an_xml_prefix := ""
 							else
+								check
+									namespace_context_saved: namespaces_needed and namespace_context /= Void
+									-- from `check_arguments'.
+								end
 								an_xml_prefix := a_parser.optional_prefix
 								a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, False)
 							end
@@ -194,30 +198,27 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			namespaces_needed: BOOLEAN
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
 			if not checked then
 				Precursor (a_context)
-				if not arguments.item (1).is_value then
-					if arguments.count = 1 then
-						namespaces_needed := True
-					elseif arguments.item (2).is_value then
-						namespaces_needed := True
+				if not arguments.item (1).is_value or else
+					(arguments.count = 2 and then not arguments.item (2).is_value) then
+					namespaces_needed := True
+				end
+				if namespaces_needed then
+					an_expression_context ?= a_context
+					check
+						expression_context: an_expression_context /= Void
+						-- as this is XSLT
 					end
-					if namespaces_needed then
-						an_expression_context ?= a_context
-						check
-							expression_context: an_expression_context /= Void
-							-- as this is XSLT
-						end
-						namespace_context := an_expression_context.namespace_context
-					end
+					namespace_context := an_expression_context.namespace_context
 				end
 				checked := True
 			end
 		ensure then
 			arguments_cheked: checked
+			namespace_context_saved: namespaces_needed implies namespace_context /= Void
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -230,11 +231,18 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
+	namespaces_needed: BOOLEAN
+			-- Is namespace context needed at run-time?
+
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			-- Saved namespace context
 
 	checked: BOOLEAN
 			-- Has `check_arguments' been called already?
+
+invariant
+
+	namespaces_needed: namespaces_needed implies namespace_context /= Void
 
 end
 	

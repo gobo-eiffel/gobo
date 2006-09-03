@@ -202,26 +202,31 @@ feature -- Output
 
 			from a_function_package := Current until finished loop
 				a_function_package.call
-				a_function_package.last_called_value.create_iterator (Void)
-				an_iterator := a_function_package.last_called_value.last_iterator
-				from an_iterator.start until finished or else an_iterator.after loop
-					if an_iterator.is_error then
-						create an_invalid_item.make (an_iterator.error_value); finished := True
-						a_receiver.append_item (an_invalid_item)
-					else
-						if an_iterator.item.is_function_package then
-							a_function_package ?= an_iterator.item
+				if a_function_package.last_called_value.is_error then
+					finished := True
+					a_receiver.on_error (a_function_package.last_called_value.error_value.error_message)
+				else
+					a_function_package.last_called_value.create_iterator (Void)
+					an_iterator := a_function_package.last_called_value.last_iterator
+					from an_iterator.start until finished or else an_iterator.after loop
+						if an_iterator.is_error then
+							create an_invalid_item.make (an_iterator.error_value); finished := True
+							a_receiver.append_item (an_invalid_item)
 						else
-							a_function_package := Void
-							a_receiver.append_item (an_iterator.item)
+							if an_iterator.item.is_function_package then
+								a_function_package ?= an_iterator.item
+							else
+								a_function_package := Void
+								a_receiver.append_item (an_iterator.item)
+							end
+						end
+						an_iterator.forth
+						check
+							nothing_after_function_package: a_function_package /= Void implies an_iterator.after
 						end
 					end
-					an_iterator.forth
-					check
-						nothing_after_function_package: a_function_package /= Void implies an_iterator.after
-					end
+					if a_function_package = Void then finished := True end
 				end
-				if a_function_package = Void then finished := True end
 			end
 		end
 

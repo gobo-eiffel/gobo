@@ -678,18 +678,19 @@ feature {NONE} -- Implementation
 			strictly_positive_code: a_code > 0
 			document_opened: is_output_open
 		local
-			a_string: STRING
+			l_string: STRING
 		do
 			if not is_error then
-				create a_string.make (10)
+				create l_string.make (10)
 				if is_hex_preferred then
-					a_string := "&#x"
-					a_string.append_string (INTEGER_.to_hexadecimal (a_code, True))
+					l_string := "&#x"
+					l_string.append_string (INTEGER_.to_hexadecimal (a_code, True))
 				else
-					a_string := "&#"
-					a_string.append_string (a_code.out)
+					l_string := "&#"
+					l_string.append_string (a_code.out)
 				end
-				output (a_string)
+				l_string.append_character (';')
+				output (l_string)
 			end
 		end
 
