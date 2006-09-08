@@ -248,11 +248,15 @@ feature {NONE} -- Implementation
 			when Document_node then
 				a_validator := a_context.transformer.configuration.document_validator (a_receiver, a_node.base_uri, Validation_strip)
 				l_was_open := a_validator.is_open
-				if not l_was_open  then a_validator.open end
-				if not a_validator.is_document_started then a_validator.start_document end
+				if not l_was_open then
+					a_validator.open
+					a_validator.start_document
+				end
 				a_node.copy_node (a_validator, which_namespaces, True)
-				if a_validator.is_document_started then a_validator.end_document end
-				if not l_was_open  then a_validator.close end
+				if not l_was_open then
+					a_validator.end_document
+					a_validator.close
+				end
 			when Namespace_node then
 				a_node.copy_node (a_receiver, No_namespaces, False)
 			end

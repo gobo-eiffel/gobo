@@ -184,9 +184,13 @@ feature -- Evaluation
 				create a_result.make_receiver (a_builder)
 				a_new_context.change_output_destination (Void, a_result, False, Validation_strip, Void)
 				a_receiver := a_new_context.current_receiver
+				check
+					receiver_opened: a_receiver.is_open
+					-- `change_output_destination' guarentees this
+				end
 				a_receiver.start_document
 				content.process (a_new_context)
-				if a_receiver.is_document_started then a_receiver.end_document end
+				a_receiver.end_document
 				a_receiver.close
 				if a_builder.has_error then
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_builder.last_error, Xpath_errors_uri, "FOER0000", Dynamic_error)

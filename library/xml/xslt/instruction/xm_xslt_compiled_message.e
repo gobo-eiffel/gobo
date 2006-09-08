@@ -195,7 +195,6 @@ feature -- Evaluation
 				if not l_iterator.error_value.is_location_known then l_iterator.error_value.set_location (system_id, line_number) end
 				l_transformer.report_fatal_error (l_iterator.error_value)
 			else
-				if l_tree_receiver.is_document_started then l_tree_receiver.end_document end
 				l_tree_receiver.close
 				if terminate /= Void then
 					terminate.evaluate_as_string (a_context)

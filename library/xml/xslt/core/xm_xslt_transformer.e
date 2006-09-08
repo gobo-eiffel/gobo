@@ -642,6 +642,7 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 			a_transformation_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_context: XM_XSLT_EVALUATION_CONTEXT
 			a_parameter_set: XM_XSLT_PARAMETER_SET
+			a_saved_receiver: XM_XPATH_SEQUENCE_RECEIVER
 		do
 			principal_result := a_result
 			principal_result_uri := a_result.system_id
@@ -660,7 +661,12 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 				end
 				if not is_error then
 					initial_context.change_output_destination (properties, a_transformation_result, True, Validation_preserve, Void)
-					initial_context.current_receiver.start_document
+					a_saved_receiver := initial_context.current_receiver
+					check
+						opened: a_saved_receiver.is_open
+						-- change_output_destination ensures this
+					end
+					a_saved_receiver.start_document
 
 					-- Process the source document using the handlers that have been set up.
 					
@@ -680,8 +686,8 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 						trace_listener.stop_tracing
 					end
 					
-					if initial_context.current_receiver.is_document_started then initial_context.current_receiver.end_document end
-					if initial_context.current_receiver.is_open then initial_context.current_receiver.close end
+					a_saved_receiver.end_document
+					a_saved_receiver.close
 					std.output.flush
 					if a_transformation_result.error_message /= Void then
 						report_warning (a_transformation_result.error_message, Void)

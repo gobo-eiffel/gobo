@@ -306,9 +306,6 @@ feature -- Duplication
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			if not a_receiver.is_document_started then
-				a_receiver.start_document
-			end
 			
 			-- output the children
 
@@ -320,7 +317,6 @@ feature -- Duplication
 				an_iterator.item.copy_node (a_receiver, which_namespaces, copy_annotations)
 				an_iterator.forth
 			end
-			a_receiver.end_document
 		end
 
 feature {XM_XPATH_NODE} -- Restricted

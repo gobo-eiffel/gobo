@@ -173,11 +173,7 @@ feature {NONE} -- Implementation
 			if a_validator /= a_receiver then
 				todo ("copy_document (validation)", True)
 			end
-			if not a_receiver.is_document_started then
-				a_receiver.start_document
-			end
 			content.process (a_context)
-			a_receiver.end_document
 		end
 
 end

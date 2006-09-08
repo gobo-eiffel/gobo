@@ -267,6 +267,11 @@ feature -- Status report
 			Result := STRING_.same_string (a_uri, transformer.principal_result_uri) or else Precursor (a_uri)
 		end
 
+feature {NONE} -- Implementation
+
+	saved_receiver: like current_receiver
+			-- Previous value for `current_receiver'
+
 feature -- Creation
 
 	new_context: like Current is
@@ -548,6 +553,9 @@ feature -- Element change
 					current_receiver := a_complex_outputter
 				end
 			end
+		ensure
+			current_receiver_opened: not transformer.is_error implies current_receiver /= Void
+				and then current_receiver.is_open		
 		end
 
 	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE) is

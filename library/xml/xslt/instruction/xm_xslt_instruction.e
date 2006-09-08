@@ -289,8 +289,7 @@ feature -- Evaluation
 			create a_receiver.make (another_context.transformer)
 			another_context.change_to_sequence_output_destination (a_receiver)
 			process (another_context)
-			if a_receiver.is_document_started then a_receiver.end_document end
-			if a_receiver.is_open then a_receiver.close end
+			a_receiver.close
 			Result := a_receiver.sequence
 		end
 
