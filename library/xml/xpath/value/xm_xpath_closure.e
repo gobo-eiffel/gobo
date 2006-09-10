@@ -178,8 +178,13 @@ feature -- Evaluation
 			-- An iterator over the values of a sequence
 		do
 			if input_iterator = Void then
-				base_expression.create_iterator (saved_xpath_context)
-				input_iterator := base_expression.last_iterator
+				if base_expression.is_node_sequence then
+					base_expression.create_node_iterator (saved_xpath_context)
+					input_iterator := base_expression.last_node_iterator
+				else
+					base_expression.create_iterator (saved_xpath_context)
+					input_iterator := base_expression.last_iterator
+				end
 				last_iterator := input_iterator
 			elseif input_iterator.is_error then
 				last_iterator := input_iterator

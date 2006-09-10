@@ -185,12 +185,15 @@ feature -- Element change
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
 					function_name := attribute_value_by_index (a_cursor.index)
+					STRING_.left_adjust (function_name)
+						STRING_.right_adjust (function_name)
 					if function_name.index_of (':', 2) = 0 then
 						create an_error.make_from_string ("Xsl:function name must have a namespace prefix", Xpath_errors_uri, "XTSE0740", Static_error)
 						report_compile_error (an_error)
+					elseif not is_qname (function_name) then
+						create an_error.make_from_string ("Xsl:function name must be a lexical QName", Xpath_errors_uri, "XTSE0020", Static_error)
+						report_compile_error (an_error)						
 					else
-						STRING_.left_adjust (function_name)
-						STRING_.right_adjust (function_name)
 						generate_name_code (function_name)
 						internal_function_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 						if internal_function_fingerprint = -1 then

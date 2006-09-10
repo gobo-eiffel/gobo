@@ -80,6 +80,19 @@ feature -- Status report
 			Result := slot_manager.number_of_variables > 0
 		end
 
+	has_required_parameters: BOOLEAN
+			-- Does `Current' have any required parameters?
+
+feature -- Status setting
+
+	set_has_required_parameters (a_status: BOOLEAN) is
+			-- Set `has_required_parameters' to `a_status'.
+		do
+			has_required_parameters := a_status
+		ensure
+			has_required_parameters_set: has_required_parameters = a_status
+		end
+
 feature -- Evaluation
 
 	process (a_context: XM_XSLT_EVALUATION_CONTEXT) is

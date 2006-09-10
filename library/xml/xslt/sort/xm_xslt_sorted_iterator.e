@@ -35,8 +35,9 @@ feature {NONE} -- Initialization
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 		do
-			context := a_context
+			context := a_context.new_minor_context
 			base_iterator := a_base_iterator
+			context.set_current_iterator (base_iterator)
 			sort_keys := some_sort_keys
 			from
 				create key_comparers.make (sort_keys.count)
@@ -54,7 +55,6 @@ feature {NONE} -- Initialization
 			--  sometimes the user only wants to know whether the collection is empty.
 
 		ensure
-			context_set: context = a_context
 			base_iterator_set: base_iterator = a_base_iterator
 			sort_keys_set: sort_keys = some_sort_keys
 		end

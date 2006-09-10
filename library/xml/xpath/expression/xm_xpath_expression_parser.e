@@ -2026,8 +2026,10 @@ feature {NONE} -- Implementation
 				next_token ("In parse_node_test - prefix: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				else
+				elseif is_ncname (a_token_value) and then is_prefix_declared (a_token_value) then
 					internal_last_parsed_node_test := make_namespace_test (a_node_type, a_token_value)
+				else
+					report_parse_error (STRING_.concat ("Prefix is not an in-scope namespace prefix: ", a_token_value), "XPST0003")
 				end
 			when Suffix_token then
 				next_token ("In parse_node_test - suffix: current token is ")

@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 								a_value := an_element.attribute_value_by_index (an_index)
 								if is_ncname (a_value) then
 									if not cached_id_table.has (a_value) then
-										cached_id_table.put (an_element, a_value)
+										cached_id_table.force_new (an_element, a_value)
 									end
 								end
 							end

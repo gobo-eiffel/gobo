@@ -205,12 +205,12 @@ feature -- Evaluation
 					elseif STRING_.same_string (l_string_value.string_value, "no") then
 						-- do_nothing
 					elseif STRING_.same_string (l_string_value.string_value, "yes") then
-						create l_error.make_from_string ("Execution terminated owing to xsl:message terminate='yes'.", Gexslt_eiffel_type_uri, "TERMINATE_MESSAGE", Dynamic_error)
+						create l_error.make_from_string ("Execution terminated owing to xsl:message terminate='yes'.", Gexslt_eiffel_type_uri, "TERMINATE", Dynamic_error)
 						l_error.set_location (system_id, line_number)
 						l_transformer.report_fatal_error (l_error)
 					else
 						create l_error.make_from_string (STRING_.concat ("xsl:message terminate attribute must evaluate to 'yes' or 'no'. Found: ", l_string_value.string_value),
-																	 Gexslt_eiffel_type_uri, "INVALID_TERMINATE", Dynamic_error)
+																	 Xpath_errors_uri, "XTDE0030", Dynamic_error)
 						l_error.set_location (system_id, line_number)
 						l_transformer.report_fatal_error (l_error)
 					end

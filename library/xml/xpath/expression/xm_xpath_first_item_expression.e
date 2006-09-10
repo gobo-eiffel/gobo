@@ -81,18 +81,23 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+			if base_expression.is_node_sequence then
+				base_expression.create_node_iterator (a_context)
+				l_iterator := base_expression.last_node_iterator
 			else
-				an_iterator.start
-				if an_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
-				elseif not an_iterator.after then
-					last_evaluated_item := an_iterator.item
+				base_expression.create_iterator (a_context)
+				l_iterator := base_expression.last_iterator
+			end
+			if l_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
+			else
+				l_iterator.start
+				if l_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
+				elseif not l_iterator.after then
+					last_evaluated_item := l_iterator.item
 				else
 					last_evaluated_item := Void
 				end

@@ -18,7 +18,7 @@ inherit
 		redefine
 			simplify, optimize, compute_special_properties, promote, create_iterator,
 			calculate_effective_boolean_value, is_document_sorter, as_document_sorter,
-			item_type
+			item_type, create_node_iterator
 		end
 
 create
@@ -139,6 +139,20 @@ feature -- Evaluation
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Unexpected sequence", Gexslt_eiffel_type_uri, "NON_NODE_SEQUENCE", Dynamic_error)
 					end
 				end
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Iterator over a node sequence
+		local
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+		do
+			base_expression.create_node_iterator (a_context)
+			l_iterator := base_expression.last_node_iterator
+			if l_iterator.is_error then
+				last_node_iterator := l_iterator
+			else
+				create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_node_iterator.make (l_iterator, comparer)
 			end
 		end
 

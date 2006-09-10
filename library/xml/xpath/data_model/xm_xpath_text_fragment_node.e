@@ -60,7 +60,7 @@ feature -- Access
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
 			-- Node sequence number (in document order).
 		do
-			create Result.make (0, 0)
+			create Result.make (1, 0)
 		end
 	
 	document_number: INTEGER

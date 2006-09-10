@@ -367,6 +367,10 @@ feature -- Element change
 			a_compiled_templates_index := executable.compiled_templates_index
 			if a_compiled_templates_index.has (a_fingerprint) then
 				initial_template := a_compiled_templates_index.item (a_fingerprint)
+				if initial_template.has_required_parameters then
+					create an_error.make_from_string (("Initial template must not have any required parameters"), Xpath_errors_uri, "XTDE0060", Dynamic_error)
+					report_fatal_error (an_error)
+				end				
 			else
 				initial_template := Void
 				create an_error.make_from_string (STRING_.concat ("Unable to locate a template named ", a_template_name), Xpath_errors_uri, "XTDE0040", Dynamic_error)

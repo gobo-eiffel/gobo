@@ -793,7 +793,7 @@ feature {NONE} -- Implementation
 		end
 
 	perform_transformation is
-			-- Preform transformation.
+			-- Perform transformation.
 		require
 			transformer_factory_not_void: transformer_factory /= Void
 			no_error: not transformer_factory.was_error
@@ -819,32 +819,34 @@ feature {NONE} -- Implementation
 			if initial_template_name /= Void then
 				a_transformer.set_initial_template (initial_template_name)
 			end
-			if initial_mode_name /= Void then
+			if not a_transformer.is_error and initial_mode_name /= Void then
 				a_transformer.set_initial_mode (initial_mode_name)
 			end
-			create a_destination -- To standard output
-			if output_destination /= Void then
-				create a_stream.make (output_destination)
-				a_stream.open_write
-				a_destination.set_output_stream (a_stream)
-				a_cwd := file_system.current_working_directory
-				if file_system /= unix_file_system then
-					a_pathname := file_system.string_to_pathname (a_cwd)
-					a_cwd := unix_file_system.pathname_to_string (a_pathname)
-					a_drive := a_pathname.drive
-					if a_drive /= Void then
-						a_cwd := STRING_.concat (a_drive, a_cwd)
-						a_cwd := STRING_.concat ("/", a_cwd)
+			if not a_transformer.is_error then
+				create a_destination -- To standard output
+				if output_destination /= Void then
+					create a_stream.make (output_destination)
+					a_stream.open_write
+					a_destination.set_output_stream (a_stream)
+					a_cwd := file_system.current_working_directory
+					if file_system /= unix_file_system then
+						a_pathname := file_system.string_to_pathname (a_cwd)
+						a_cwd := unix_file_system.pathname_to_string (a_pathname)
+						a_drive := a_pathname.drive
+						if a_drive /= Void then
+							a_cwd := STRING_.concat (a_drive, a_cwd)
+							a_cwd := STRING_.concat ("/", a_cwd)
+						end
 					end
+					a_string := STRING_.concat ("file://", a_cwd)
+					create a_uri.make (STRING_.concat (a_string, "/"))
+					create a_uri.make_resolve (a_uri, output_destination)
+					a_destination_system_id := a_uri.full_reference
+				else
+					a_destination_system_id := "stdout:"
 				end
-				a_string := STRING_.concat ("file://", a_cwd)
-				create a_uri.make (STRING_.concat (a_string, "/"))
-				create a_uri.make_resolve (a_uri, output_destination)
-				a_destination_system_id := a_uri.full_reference
-			else
-				a_destination_system_id := "stdout:"
+				create a_result.make (a_destination, a_destination_system_id)
 			end
-			create a_result.make (a_destination, a_destination_system_id)
 			if not a_transformer.is_error then
 				a_transformer.transform (a_source, a_result)
 			end

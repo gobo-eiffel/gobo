@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_VARIABLE_DECLARATION
 		redefine
-			make_style_element, validate, allows_required, allows_value, is_param
+			make_style_element, validate, allows_required, allows_value, is_param, as_param
 		end
 
 	XM_XSLT_STRING_ROUTINES
@@ -210,6 +210,12 @@ feature -- Conversion
 			-- Is `Current' an xsl:param?
 		do
 			Result := True
+		end
+	
+	as_param: XM_XSLT_PARAM is
+			-- `Current' seen as an xsl:param
+		do
+			Result := Current
 		end
 
 end

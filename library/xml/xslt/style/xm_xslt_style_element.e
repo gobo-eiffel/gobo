@@ -2165,6 +2165,15 @@ feature -- Conversion
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
+	
+	as_param: XM_XSLT_PARAM is
+			-- `Current' seen as an xsl:param
+		require
+			parameter: is_param
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
 
 	as_key: XM_XSLT_KEY is
 			-- `Current' seen as an xsl:key

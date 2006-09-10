@@ -48,6 +48,7 @@ feature {NONE} -- Implementation
 			handler := other.handler
 			precedence := other.precedence
 			priority := other.priority
+			priority_rank := other.priority_rank
 			sequence_number := other.sequence_number
 			if other.next_rule /= Void then
 				create next_rule.make_with_copy (other.next_rule)

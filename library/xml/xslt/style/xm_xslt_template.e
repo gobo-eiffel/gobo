@@ -200,6 +200,10 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
+		local
+			l_has_required_parameters: BOOLEAN
+			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_style_element: XM_XSLT_STYLE_ELEMENT
 		do
 			check_top_level (Void)
 			if match /= Void then
@@ -208,6 +212,20 @@ feature -- Element change
 			mark_tail_calls
 			validated := True
 			create compiled_template.make -- so `{XM_XSLT_CALL_TEMPLATE}.compile' can forward-referenece to it
+			from
+				l_child_iterator := new_axis_iterator (Child_axis)
+				l_child_iterator.start
+			until
+				l_child_iterator.after
+			loop
+				l_style_element ?= l_child_iterator.item
+				if l_style_element /= Void and then l_style_element.is_param
+				 and then l_style_element.as_param.is_required_parameter then
+				 l_has_required_parameters := True
+				end
+				l_child_iterator.forth
+			end	
+			compiled_template.set_has_required_parameters (l_has_required_parameters)
 		end
 
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
