@@ -186,12 +186,6 @@ feature -- Status report
 	is_named_type: BOOLEAN is True
 			-- Is current type only made up of named types?
 
-	is_none: BOOLEAN is
-			-- Is current class a "NONE" class?
-		do
-			Result := name.is_none
-		end
-
 feature -- Access
 
 	obsolete_message: ET_OBSOLETE
