@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			is_relative := (a_pathname = Void)
 			library_prefix := empty_prefix
 			cluster_prefix := empty_prefix
+			set_overridden_constraint_enabled (True)
 		ensure
 			name_set: name = a_name
 			pathname_set: pathname = a_pathname
@@ -46,6 +47,7 @@ feature {NONE} -- Initialization
 			is_relative: is_relative = (a_pathname = Void)
 			no_library_prefix: library_prefix.count = 0
 			no_cluster_prefix: cluster_prefix.count = 0
+			overridden_constraint_enabled: overridden_constraint_enabled
 		end
 
 feature -- Access
