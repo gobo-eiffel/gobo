@@ -3,7 +3,7 @@
 <!--
 	description:
 
-		"Gobo Eiffel Argument Parser documentation"
+		"Gobo Eiffel Argument Parsing Library documentation"
 
 	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -24,10 +24,10 @@
 	<date>14 September 2006</date>
 </chapterinfo>
 
-<title>Gobo Eiffel Argument Parser</title>
+<title>Gobo Eiffel Argument Parsing Library</title>
 
 <para>
-The <libraryname>Gobo Eiffel Argument Parser</libraryname> is a
+The <libraryname>Gobo Eiffel Argument Parsing Library</libraryname> is a
 library to facilitate parsing of command line arguments for Eiffel
 applications.
 </para>

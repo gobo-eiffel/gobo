@@ -27,7 +27,7 @@
 <title>Argument Parser Introduction</title>
 
 <para>
-	The argument parser library gives you the ability to parse the
+	The argument parsing library gives you the ability to parse the
 	command line arguments that are passed to your application. It
 	is a feature-rich library that tries to achieve the maximum
 	comfort for the developer and for the user of the application
