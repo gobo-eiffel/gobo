@@ -32,7 +32,7 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_none: BOOLEAN
+	is_none: BOOLEAN is
 			-- Is current group a built-in group for class NONE?
 		do
 			-- Result := False
