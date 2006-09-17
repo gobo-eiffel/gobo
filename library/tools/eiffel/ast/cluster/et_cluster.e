@@ -592,4 +592,8 @@ feature {NONE} -- Constants
 	dot_dot_directory_name: STRING is ".."
 			-- Directory names
 
+invariant
+
+	is_cluster: is_cluster
+
 end

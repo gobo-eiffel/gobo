@@ -1573,12 +1573,29 @@ feature {NONE} -- AST factory
 				Result := current_class
 			end
 			if Result = none_class then
--- TODO: class "NONE" should be built-in.
-				Result := Void
+				if cluster.is_override then
+						-- Cannot override built-in class NONE.
+					l_other_class := Result.cloned_class
+					l_other_class.reset_all
+					l_other_class.set_filename (filename)
+					l_other_class.set_group (cluster)
+					Result.set_overridden_class (l_other_class)
+					error_handler.report_vscn0h_error (l_other_class)
+					Result := l_other_class
+				else
+						-- Error: class "NONE" should be built-in.
+					l_other_class := Result.cloned_class
+					l_other_class.reset_all
+					l_other_class.set_filename (filename)
+					l_other_class.set_group (cluster)
+					Result.set_overridden_class (l_other_class)
+					error_handler.report_vscn0f_error (l_other_class)
+					Result := l_other_class
+				end
 			elseif Result.is_parsed and Result.is_preparsed then
 				if cluster.is_override then
-					if Result.is_in_override_cluster then
-							-- Two classes with the same name in two override clusters.
+					if Result.group.is_override then
+							-- Two classes with the same name in two override groups.
 						l_other_class := Result.cloned_class
 						l_other_class.reset_all
 						l_other_class.set_filename (filename)
@@ -1589,7 +1606,27 @@ feature {NONE} -- AST factory
 						l_other_class.set_in_system (True)
 						l_other_class.set_overridden_class (Result.overridden_class)
 						Result.set_overridden_class (l_other_class)
-						error_handler.report_vscn0a_error (Result, cluster, filename)
+						if Result.is_in_cluster then
+							error_handler.report_vscn0a_error (l_other_class, Result)
+						elseif Result.is_in_dotnet_assembly then
+							error_handler.report_vscn0b_error (l_other_class, Result)
+						else
+							error_handler.report_vscn0c_error (l_other_class, Result)
+						end
+						Result := l_other_class
+					elseif Result.is_in_dotnet_assembly then
+							-- Cannot override .NET assembly classes.
+						l_other_class := Result.cloned_class
+						l_other_class.reset_all
+						l_other_class.set_filename (filename)
+						l_other_class.set_group (cluster)
+						l_other_class.set_name (a_name)
+						l_other_class.set_parsed
+						l_other_class.set_time_stamp (time_stamp)
+						l_other_class.set_in_system (True)
+						l_other_class.set_overridden_class (Result.overridden_class)
+						Result.set_overridden_class (l_other_class)
+						error_handler.report_vscn0j_error (Result, l_other_class)
 						Result := l_other_class
 					else
 							-- Override.
@@ -1606,7 +1643,7 @@ feature {NONE} -- AST factory
 					end
 					overriding_class_added := True
 				elseif not Result.is_in_override_cluster then
-						-- Two classes with the same name in two non-override clusters.
+						-- Two classes with the same name in two non-override groups.
 					l_other_class := Result.cloned_class
 					l_other_class.reset_all
 					l_other_class.set_filename (filename)
@@ -1616,7 +1653,13 @@ feature {NONE} -- AST factory
 					l_other_class.set_time_stamp (time_stamp)
 					l_other_class.set_in_system (True)
 					Result.set_overridden_class (l_other_class)
-					error_handler.report_vscn0a_error (Result, cluster, filename)
+					if Result.is_in_cluster then
+						error_handler.report_vscn0a_error (l_other_class, Result)
+					elseif Result.is_in_dotnet_assembly then
+						error_handler.report_vscn0b_error (l_other_class, Result)
+					else
+						error_handler.report_vscn0c_error (l_other_class, Result)
+					end
 					Result := l_other_class
 				else
 						-- Overridden.

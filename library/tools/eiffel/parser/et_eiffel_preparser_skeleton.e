@@ -126,11 +126,31 @@ feature -- Parsing
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
-										if a_class.is_in_dotnet_assembly then
-											error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
+										if a_class.is_in_cluster then
+											error_handler.report_vscn0a_error (l_other_class, a_class)
+										elseif a_class.is_in_dotnet_assembly then
+											error_handler.report_vscn0b_error (l_other_class, a_class)
+										elseif a_class.is_none then
+											error_handler.report_vscn0f_error (l_other_class)
 										else
-											error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+											error_handler.report_vscn0c_error (l_other_class, a_class)
 										end
+									elseif a_class.is_in_dotnet_assembly then
+											-- Cannot override .NET assembly classes.
+										l_other_class := a_class.cloned_class
+										l_other_class.reset_all
+										l_other_class.set_filename (a_filename)
+										l_other_class.set_group (a_cluster)
+										a_class.set_overridden_class (l_other_class)
+										error_handler.report_vscn0j_error (a_class, l_other_class)
+									elseif a_class.is_none then
+											-- Cannot override built-in class NONE.
+										l_other_class := a_class.cloned_class
+										l_other_class.reset_all
+										l_other_class.set_filename (a_filename)
+										l_other_class.set_group (a_cluster)
+										a_class.set_overridden_class (l_other_class)
+										error_handler.report_vscn0h_error (l_other_class)
 									else
 											-- Override.
 										l_other_class := a_class.cloned_class
@@ -148,10 +168,14 @@ feature -- Parsing
 									l_other_class.set_filename (a_filename)
 									l_other_class.set_group (a_cluster)
 									a_class.set_overridden_class (l_other_class)
-									if a_class.is_in_dotnet_assembly then
-										error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
+									if a_class.is_in_cluster then
+										error_handler.report_vscn0a_error (l_other_class, a_class)
+									elseif a_class.is_in_dotnet_assembly then
+										error_handler.report_vscn0b_error (l_other_class, a_class)
+									elseif a_class.is_none then
+										error_handler.report_vscn0f_error (l_other_class)
 									else
-										error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+										error_handler.report_vscn0c_error (l_other_class, a_class)
 									end
 								else
 										-- Overridden.
@@ -280,11 +304,31 @@ feature -- Parsing
 											l_other_class.set_filename (a_filename)
 											l_other_class.set_group (a_cluster)
 											a_class.set_overridden_class (l_other_class)
-											if a_class.is_in_dotnet_assembly then
-												error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
+											if a_class.is_in_cluster then
+												error_handler.report_vscn0a_error (l_other_class, a_class)
+											elseif a_class.is_in_dotnet_assembly then
+												error_handler.report_vscn0b_error (l_other_class, a_class)
+											elseif a_class.is_none then
+												error_handler.report_vscn0f_error (l_other_class)
 											else
-												error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+												error_handler.report_vscn0c_error (l_other_class, a_class)
 											end
+										elseif a_class.is_in_dotnet_assembly then
+												-- Cannot override .NET assembly classes.
+											l_other_class := a_class.cloned_class
+											l_other_class.reset_all
+											l_other_class.set_filename (a_filename)
+											l_other_class.set_group (a_cluster)
+											a_class.set_overridden_class (l_other_class)
+											error_handler.report_vscn0j_error (a_class, l_other_class)
+										elseif a_class.is_none then
+												-- Cannot override built-in class NONE.
+											l_other_class := a_class.cloned_class
+											l_other_class.reset_all
+											l_other_class.set_filename (a_filename)
+											l_other_class.set_group (a_cluster)
+											a_class.set_overridden_class (l_other_class)
+											error_handler.report_vscn0h_error (l_other_class)
 										else
 												-- Override.
 											l_other_class := a_class.cloned_class
@@ -302,10 +346,14 @@ feature -- Parsing
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
-										if a_class.is_in_dotnet_assembly then
-											error_handler.report_vscn0b_error (a_class, a_cluster, a_filename)
+										if a_class.is_in_cluster then
+											error_handler.report_vscn0a_error (l_other_class, a_class)
+										elseif a_class.is_in_dotnet_assembly then
+											error_handler.report_vscn0b_error (l_other_class, a_class)
+										elseif a_class.is_none then
+											error_handler.report_vscn0f_error (l_other_class)
 										else
-											error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+											error_handler.report_vscn0c_error (l_other_class, a_class)
 										end
 									else
 											-- Overridden.
@@ -429,11 +477,33 @@ feature -- Parsing
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_group (a_cluster)
 							a_class.set_overridden_class (l_other_class)
-							if a_class.is_in_dotnet_assembly then
-								error_handler.report_vscn0b_error (a_class, a_cluster, filename)
+							if a_class.is_in_cluster then
+								error_handler.report_vscn0a_error (l_other_class, a_class)
+							elseif a_class.is_in_dotnet_assembly then
+								error_handler.report_vscn0b_error (l_other_class, a_class)
+							elseif a_class.is_none then
+								error_handler.report_vscn0f_error (l_other_class)
 							else
-								error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+								error_handler.report_vscn0c_error (l_other_class, a_class)
 							end
+						elseif a_class.is_in_dotnet_assembly then
+								-- Cannot override .NET assembly classes.
+							l_other_class := a_class.cloned_class
+							l_other_class.reset_all
+							l_other_class.set_filename (a_filename)
+							l_other_class.set_time_stamp (a_time_stamp)
+							l_other_class.set_group (a_cluster)
+							a_class.set_overridden_class (l_other_class)
+							error_handler.report_vscn0j_error (a_class, l_other_class)
+						elseif a_class.is_none then
+								-- Cannot override built-in class NONE.
+							l_other_class := a_class.cloned_class
+							l_other_class.reset_all
+							l_other_class.set_filename (a_filename)
+							l_other_class.set_time_stamp (a_time_stamp)
+							l_other_class.set_group (a_cluster)
+							a_class.set_overridden_class (l_other_class)
+							error_handler.report_vscn0h_error (l_other_class)
 						else
 								-- Override.
 							l_other_class := a_class.cloned_class
@@ -453,10 +523,14 @@ feature -- Parsing
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_group (a_cluster)
 						a_class.set_overridden_class (l_other_class)
-						if a_class.is_in_dotnet_assembly then
-							error_handler.report_vscn0b_error (a_class, a_cluster, filename)
+						if a_class.is_in_cluster then
+							error_handler.report_vscn0a_error (l_other_class, a_class)
+						elseif a_class.is_in_dotnet_assembly then
+							error_handler.report_vscn0b_error (l_other_class, a_class)
+						elseif a_class.is_none then
+							error_handler.report_vscn0f_error (l_other_class)
 						else
-							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+							error_handler.report_vscn0c_error (l_other_class, a_class)
 						end
 					else
 							-- Overridden.
@@ -767,11 +841,33 @@ feature -- Parsing
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_group (a_cluster)
 							a_class.set_overridden_class (l_other_class)
-							if a_class.is_in_dotnet_assembly then
-								error_handler.report_vscn0b_error (a_class, a_cluster, filename)
+							if a_class.is_in_cluster then
+								error_handler.report_vscn0a_error (l_other_class, a_class)
+							elseif a_class.is_in_dotnet_assembly then
+								error_handler.report_vscn0b_error (l_other_class, a_class)
+							elseif a_class.is_none then
+								error_handler.report_vscn0f_error (l_other_class)
 							else
-								error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+								error_handler.report_vscn0c_error (l_other_class, a_class)
 							end
+						elseif a_class.is_in_dotnet_assembly then
+								-- Cannot override .NET assembly classes.
+							l_other_class := a_class.cloned_class
+							l_other_class.reset_all
+							l_other_class.set_filename (a_filename)
+							l_other_class.set_time_stamp (a_time_stamp)
+							l_other_class.set_group (a_cluster)
+							a_class.set_overridden_class (l_other_class)
+							error_handler.report_vscn0j_error (a_class, l_other_class)
+						elseif a_class.is_none then
+								-- Cannot override built-in class NONE.
+							l_other_class := a_class.cloned_class
+							l_other_class.reset_all
+							l_other_class.set_filename (a_filename)
+							l_other_class.set_time_stamp (a_time_stamp)
+							l_other_class.set_group (a_cluster)
+							a_class.set_overridden_class (l_other_class)
+							error_handler.report_vscn0h_error (l_other_class)
 						else
 								-- Override.
 							l_other_class := a_class.cloned_class
@@ -791,10 +887,14 @@ feature -- Parsing
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_group (a_cluster)
 						a_class.set_overridden_class (l_other_class)
-						if a_class.is_in_dotnet_assembly then
-							error_handler.report_vscn0b_error (a_class, a_cluster, filename)
+						if a_class.is_in_cluster then
+							error_handler.report_vscn0a_error (l_other_class, a_class)
+						elseif a_class.is_in_dotnet_assembly then
+							error_handler.report_vscn0b_error (l_other_class, a_class)
+						elseif a_class.is_none then
+							error_handler.report_vscn0f_error (l_other_class)
 						else
-							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+							error_handler.report_vscn0c_error (l_other_class, a_class)
 						end
 					else
 							-- Overridden.

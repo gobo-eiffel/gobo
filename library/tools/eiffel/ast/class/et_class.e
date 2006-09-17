@@ -186,6 +186,14 @@ feature -- Status report
 	is_named_type: BOOLEAN is True
 			-- Is current type only made up of named types?
 
+	is_none: BOOLEAN is
+			-- Is current class a "NONE" class?
+		do
+			Result := group /= Void and then group.is_none
+		ensure
+			definition: Result = (group /= Void and then group.is_none)
+		end
+
 feature -- Access
 
 	obsolete_message: ET_OBSOLETE
@@ -510,11 +518,10 @@ feature -- Preparsing status
 	is_in_override_cluster: BOOLEAN is
 			-- Is current class in an override cluster?
 		do
-			Result := group /= Void and then (group.is_cluster and group.is_override)
+			Result := filename /= Void and then group /= Void and then (group.is_cluster and group.is_override)
 		ensure
-			group_not_void: Result implies group /= Void
-			is_cluster: Result implies group.is_cluster
-			is_override: Result implies group.is_override
+			is_cluster: Result implies is_in_cluster
+			is_override: Result implies is_in_override_group
 		end
 
 	is_overridden: BOOLEAN is

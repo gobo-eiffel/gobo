@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			-- Create basic classes.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			a_none_group: ET_BUILTIN_GROUP
+			a_none_group: ET_NONE_GROUP
 			a_system_object_parent: ET_PARENT
 		do
 				-- Basic classes.
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			any_class.set_in_system (True)
 			general_class := eiffel_class (tokens.general_class_name)
 			none_class := eiffel_class (tokens.none_class_name)
-			create a_none_group.make ("none")
+			create a_none_group.make
 			none_class.set_group (a_none_group)
 			none_class.set_in_system (True)
 			tuple_class := eiffel_class (tokens.tuple_class_name)
