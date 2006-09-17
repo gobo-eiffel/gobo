@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"The Argument Parser"
+
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/parser">
+<chapterinfo>
+	<copyright>
+		<year>2001-2006</year>
+		<holder>Bernd Schoeller</holder>
+	</copyright>
+	<author>
+		<firstname>Bernd</firstname><surname>Schoeller</surname>
+	</author>
+	<email>bernd@fams.de</email>
+	<date>14 September 2006</date>
+</chapterinfo>
+
+<title>The Argument Parser</title>
+
+<para>
+	To be written ...
+</para>
+
+</chapter>

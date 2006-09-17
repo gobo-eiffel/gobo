@@ -54,6 +54,7 @@
 		</description>
 		<argument name="target"/>
 
+		<geant file="build.eant" target="${target}" dir="argument"/>
 		<geant file="build.eant" target="${target}" dir="geant"/>
 		<geant file="build.eant" target="${target}" dir="gec"/>
 		<geant file="build.eant" target="${target}" dir="gelint"/>

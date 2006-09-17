@@ -1,0 +1,354 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Argument Parser Introduction"
+
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/introduction">
+<chapterinfo>
+	<copyright>
+		<year>2001-2006</year>
+		<holder>Bernd Schoeller</holder>
+	</copyright>
+	<author>
+		<firstname>Bernd</firstname><surname>Schoeller</surname>
+	</author>
+	<email>bernd@fams.de</email>
+	<date>14 September 2006</date>
+</chapterinfo>
+
+<title>Argument Parser Introduction</title>
+
+<para>
+	The argument parser library give you the ability to parse the
+	command line arguments that are passed to your application. It
+	is a feature-rich library that tries to achieve the maximum
+	comfort for the developer and for the user of the application
+	at the same time.
+</para>
+
+<section id="arguments">
+
+	<title>About arguments</title>
+
+	<para>
+		Arguments normally come in two different forms:
+		<emphasis>options</emphasis> and
+		<emphasis>parameters</emphasis>. Parameters (sometimes
+		also called operands) are the main inputs to the
+		program, for example the filename give to a text
+		editor or the URL that a web-browser should open on
+		startup.
+	</para>
+	
+	<programlisting>myprog parameter1 parameter2 ... parameterX</programlisting>
+	
+	<para>
+		Options - on the other hand - are normally not mandatory for
+		the proper operation of the application. They are introduced
+		with the - (minus) character.
+	</para>
+	
+	<para>
+		There are short options and there are long
+		options. <emphasis>Short options</emphasis> are
+		introduced by a - (a single minus) followed by a
+		single character. <emphasis>Long options</emphasis>
+		are introduced by -- (two minus) and the name of the
+		option.
+	</para>
+
+	<programlisting>myprog -o --foo --bar=HALLO</programlisting>
+
+	<para>
+		In the given example, -o and --foo are so-called
+		<emphasis>flags</emphasis> to the program. The option --bar is
+		an option that takes an argument, in this case the string HALLO.
+	</para>
+
+	<para>
+		Options and parameters can be mixed together and there are
+		ways to combine options. This can create creating complex
+		command lines. The following is an example call of the
+		<emphasis>GNU ls</emphasis> command available on most Linux
+		systems:
+	</para>
+
+	<programlisting>/bin/ls -Al /tmp -I '*~' -I*.bak --color=always</programlisting>
+
+	<para>
+		Here, /tmp is the only parameter. The flags -A and -l
+		have been merged into a single option. The option -I
+		is set with the argument 'iso' and the option --color
+		is set with the argument 'always' (note that the
+		command line parser does not care whether the
+		arguments to a short options are introduced by a space or
+		follow directly).
+	</para>
+</section>
+
+<section id="goals">
+
+	<title>Design decisions and goals</title>
+
+	<para>
+		The main focus of a developer is to create a program
+		that provides the needed functionality. Comfortable
+		command line parsing is difficult. Many programmers
+		regard it as dispensable and few invest the necessary
+		time to get it right.
+	</para>
+
+	<para>
+		As a consequence, the command line behavior of command
+		line tools varies a lot. There are probably as many
+		ways to parse the command line as there are developers
+		writing applications. Often you have difficulties to
+		use a tool because you wrote the command line
+		arguments wrong. If also a useful help text message is
+		missing, then the user wastes unnecessary time
+		browsing through man pages and application
+		documentation, or just uses trial-and-error until the
+		command line arguments are OK.
+	</para>
+
+	<para>
+		The <emphasis>Gobo Eiffel Argument Parser</emphasis>
+		tries to take the burden off the developer to bother
+		himself with command line parsing. Instead, she or he
+		just defines a number of options that the application
+		should have, calls the parser and checks which options
+		were supplied and what the applications parameters
+		are.
+	</para>
+
+	<para>
+		The goal is: It should be easier to parse the command
+		line of the application with the library than to write
+		a manual test, even if the application only has one or
+		two options. Only this can motivate developers to use
+		the library for their applications. At the same time,
+		the library should provide a maximum in comfort for
+		the user of the application, including support for
+		many option styles, abbreviation facilities, and a
+		useful, automatically generated help text.
+	</para>
+
+	<para>
+		With this goals in mind, there are a number of
+		properties that the library has, that will not satisfy
+		every need for software development. Specially, the
+		library imposes a certain, standard way of command
+		line parsing onto the application. If you want a very
+		different way of command line parsing, perhaps because
+		you want to be 'backward compatible' with another
+		application, the argument parsing library might not be
+		the best choice for you. Also, if you have a very
+		complex application that requires complex argument
+		patterns, then you will need a significant amount of
+		extra work to parse them using this library.
+	</para>
+
+	<para>
+		This being said, it is my firm belief that the library
+		should be suited for most application needs. And it
+		enforces a consistent behavior of different
+		applications, something that users appreciate when
+		confronted with many different tools.
+	</para>
+
+</section>
+
+<section id="features">
+
+	<title>Feature overview</title>
+	
+	<para>
+		To get the buzz-words right, here is a short overview
+		of what you get when you are using the library.
+	</para>
+	
+	<itemizedlist>
+		<listitem><para>bla</para></listitem>
+		<listitem><para>foo</para></listitem>
+	</itemizedlist>
+
+</section>
+
+<section id="strategy">
+
+	<title>Usage strategy</title>
+
+	<para>
+		The general usage strategy of the argument parser
+		library always involves the following four steps:
+	</para>
+
+	<orderedlist>
+		<listitem><para>
+			Create an instance of <classname>AP_PARSER</classname> and configure
+			it (for example setting up a descriptions of the application).
+		</para></listitem>
+		<listitem><para>
+			Create instances of options types, that is of the classes that
+			inherit from <classname>AP_OPTION</classname>. Configure these instances 
+			(for example with a help text for this option). Register these options
+			at the parser.
+		</para></listitem>
+		<listitem><para>
+			Parse the command line, most of the time by just calling 
+			<featurename>parse_arguments</featurename> on the parser.
+		</para></listitem>
+		<listitem><para>
+			See if options were found by calling <featurename>was_found</featurename>
+			in its instances. Get the parameters (non-option arguments) from the parser
+			itself by querying it for <featurename>parameters</featurename>.
+		</para></listitem>		
+	</orderedlist>
+
+</section>
+
+<section id="example">
+
+	<title>An example</title>
+
+	<para>
+		Lets go for an example that shows how to apply these
+		four steps in practice. The example is rather lengthy,
+		but it shows most of the possibilities of the library.
+		The different steps in the usage strategy above have
+		been marked by comments.
+	</para>
+
+	<para>
+		As an example we look again at the <emphasis>GNU
+		ls</emphasis> and implement command line parsing for
+		only the four options we already used above.
+	</para>
+
+<programlisting>
+feature -- Options and Flags
+   
+   allmost_all_flag: AP_FLAG
+   long_format_flag: AP_FLAG
+   color_option: AP_ENUMERATION_OPTION
+   ignore_option: AP_STRING_OPTION
+
+feature -- Main
+
+   make is
+         -- Main routine, called when the program is executed.
+      local
+         parser: AP_PARSER
+      do
+            -- STEP 1: Creation and configuration of the parser
+   
+         create parser.make
+         parser.set_application_description
+            ("List information about the FILEs (the current directory by default).")
+         parser.set_parameters_description ("[file] ...")
+   
+            -- STEP 2: Creation and configuration of the flags
+   
+         create allmost_all_flag.make ('A',"allmost-all")
+         allmost_all_flag.set_description ("do not list implied . and ..")
+         parser.options.force_last (allmost_all_flag)
+   
+         create long_format_flag.make_with_short_form ('l')
+         long_format_flag.set_description ("use a long listing format")
+         parser.options.force_last (long_format_flag)
+   
+         create color_option.make_with_long_form ("color")
+         color_option.set_description ("control whether color is used to distinguish file types.")
+         color_option.extend ("never")
+         color_option.extend ("always")
+         color_option.extend ("auto")
+         parser.options.force_last (color_option)
+   
+         create ignore_option.make ('I',"ignore")
+         ignore_option.set_description ("do not list implied entries matching shell PATTERN")
+         ignore_option.set_parameter_description ("PATTERN")
+         parser.options.force_last (ignore_option)
+   
+            -- STEP 3: Parse the arguments
+   
+         parser.parse_arguments
+   
+            -- STEP 4: Read results
+   
+         if allmost_all_flag.was_found then
+            print ("list allmost all%N")
+         end
+         if long_format_flag.was_found then
+            print ("use long format%N")
+         end
+         if color_option.was_found then
+            print ("use coloring "+color_option.parameter+"%N")
+         end
+         
+         if ignore_option.was_found then
+            from
+               ignore_option.parameters.start
+            until ignore_option.parameters.off loop
+               print ("ignore pattern: "+
+                      ignore_option.parameters.item_for_iteration+"%N")
+               ignore_option.parameters.forth
+            end
+         end
+         from
+            parser.parameters.start
+         until parser.parameters.off loop
+            print ("parameter: "+
+                   parser.parameters.item_for_iteration+"%N")
+         parser.parameters.forth
+         end
+      end
+</programlisting>
+
+	<para>
+		If we now call the application with the arguments are
+		given in the example above, we get the following output:
+	</para>
+
+<programlisting>
+$ ./my_ls -Al /tmp -I '*~' -I*.bak --color=always
+list allmost all
+use long format
+use coloring always
+ignore pattern: *~
+ignore pattern: *.bak
+parameter: /tmp
+</programlisting>
+
+	<para>
+		Also, we get a full help text for free. See what
+		happens when we call the application with '-h'.
+	</para>
+
+<programlisting>
+$ ./my_ls -h
+usage: ls_example [-A] [-l] [--color=never|always|auto] [-I PATTERN] [file] ...
+       ls_example --help
+
+List information about the FILEs (the current directory by default). 
+
+Options:
+-A, --allmost-all             do not list implied . and ..
+    --color=never|always|auto control whether color is used to distinguish
+                              file types.
+-h, --help                    Display this help text.
+-I, --ignore=PATTERN          do not list implied entries matching shell
+                              PATTERN
+-l                            use a long listing format
+</programlisting>
+
+</section>
+
+</chapter>

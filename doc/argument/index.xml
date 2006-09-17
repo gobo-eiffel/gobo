@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gobo Eiffel Argument Parser documentation"
+
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/index">
+<chapterinfo>
+	<copyright>
+		<year>2001-2006</year>
+		<holder>Bernd Schoeller</holder>
+	</copyright>
+	<author>
+		<firstname>Bernd</firstname><surname>Schoeller</surname>
+	</author>
+	<email>bernd@fams.de</email>
+	<date>14 September 2006</date>
+</chapterinfo>
+
+<title>Gobo Eiffel Argument Parser</title>
+
+<para>
+The <libraryname>Gobo Eiffel Argument Parser</libraryname> is a
+library to facilitate parsing of command line arguments for Eiffel
+applications.
+</para>
+
+<para>
+This document is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<ulink url="introduction.html">Introduction</ulink>
+		</term>
+		<listitem><para>
+			
+			A short guide into the argument parsing
+			library and an example with explanations.
+			
+		</para></listitem>
+	</varlistentry>
+	
+	<varlistentry>
+		<term>
+			<ulink url="parser.html">Parser</ulink>
+		</term>
+		<listitem><para>
+
+			A guide to the interface of the argument
+			parser and a description of important
+			features.
+
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<ulink url="options.html">Options</ulink>
+		</term>
+		<listitem><para>
+
+			An overview of available options and a guide
+			on how to create own option types.
+		  
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<ulink url="alternate.html">Alternate options lists</ulink>
+		</term>
+		<listitem><para>
+
+			Alternate options lists are an advanced way to
+			specify options sets that are used for
+			different operation modes of the application.
+
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<ulink url="help.html">Help text generation</ulink>
+		</term>
+		<listitem><para>
+
+			A guide on how the argument parsing library
+			generates a help text and a description on how
+			you can modify the display to match your needs.
+
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<ulink url="error.html">Error handling</ulink>
+		</term>
+		<listitem><para>
+
+			A short description how the argument parser
+			handles errors during parsing.
+
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>

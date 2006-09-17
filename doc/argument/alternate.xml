@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Alternate Options Lists"
+
+	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/alternate">
+<chapterinfo>
+	<copyright>
+		<year>2001-2006</year>
+		<holder>Bernd Schoeller</holder>
+	</copyright>
+	<author>
+		<firstname>Bernd</firstname><surname>Schoeller</surname>
+	</author>
+	<email>bernd@fams.de</email>
+	<date>14 September 2006</date>
+</chapterinfo>
+
+<title>Alternate Options Lists</title>
+
+<para>
+	To be written ...
+</para>
+
+</chapter>
