@@ -228,15 +228,6 @@ feature {NONE} -- Processing
 			end
 			a_universe.set_ise_version (ise_version)
 			a_universe.set_ecma_version (ecma_version)
-			if (ecma_version = Void) and ise_version < ise_5_7_60362 then
-				a_universe.set_non_aliased_sized_basic_classes
-			end
-			a_universe.set_use_assign_keyword (True)
-			a_universe.set_use_attribute_keyword (False)
-			a_universe.set_use_convert_keyword (True)
-			a_universe.set_use_create_keyword (True)
-			a_universe.set_use_recast_keyword (False)
-			a_universe.set_use_reference_keyword (True)
 			if void_feature then
 				a_universe.set_use_void_keyword (False)
 			else

@@ -14,12 +14,27 @@ class ET_UNIVERSE
 
 inherit
 
-	KL_IMPORTED_STRING_ROUTINES
+	ANY
+
 	KL_IMPORTED_ARRAY_ROUTINES
+
+	KL_IMPORTED_STRING_ROUTINES
+			export {NONE} all end
+
 	KL_SHARED_FILE_SYSTEM
+			export {NONE} all end
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
+			export {NONE} all end
+
 	ET_SHARED_CLASS_NAME_TESTER
+			export {NONE} all end
+
 	ET_SHARED_TOKEN_CONSTANTS
+			export {NONE} all end
+
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
 
 create
 
@@ -63,13 +78,7 @@ feature {NONE} -- Initialization
 			classes.set_key_equality_tester (class_name_tester)
 			error_handler := an_error_handler
 			ast_factory := a_factory
-			set_use_assign_keyword (True)
-			set_use_attribute_keyword (True)
-			set_use_convert_keyword (True)
-			set_use_create_keyword (True)
-			set_use_recast_keyword (True)
-			set_use_reference_keyword (True)
-			set_use_void_keyword (True)
+			set_default_keyword_usage
 			make_basic_classes
 			create null_processor.make (Current)
 			provider_checker := null_processor
@@ -109,6 +118,7 @@ feature {NONE} -- Initialization
 			string_32_class.set_in_system (True)
 			string_class := string_8_class
 			classes.force_last (string_class, tokens.string_class_name)
+			string_class_id := classes.count
 			array_class := eiffel_class (tokens.array_class_name)
 			array_class.set_in_system (True)
 			special_class := eiffel_class (tokens.special_class_name)
@@ -123,8 +133,10 @@ feature {NONE} -- Initialization
 			character_32_class.set_in_system (True)
 			character_class := character_8_class
 			classes.force_last (character_class, tokens.character_class_name)
+			character_class_id := classes.count
 			wide_character_class := character_32_class
 			classes.force_last (wide_character_class, tokens.wide_character_class_name)
+			wide_character_class_id := classes.count
 			integer_8_class := eiffel_class (tokens.integer_8_class_name)
 			integer_8_class.set_in_system (True)
 			integer_16_class := eiffel_class (tokens.integer_16_class_name)
@@ -133,6 +145,9 @@ feature {NONE} -- Initialization
 			integer_32_class.set_in_system (True)
 			integer_64_class := eiffel_class (tokens.integer_64_class_name)
 			integer_64_class.set_in_system (True)
+			integer_class := integer_32_class
+			classes.force_last (integer_class, tokens.integer_class_name)
+			integer_class_id := classes.count
 			natural_8_class := eiffel_class (tokens.natural_8_class_name)
 			natural_8_class.set_in_system (True)
 			natural_16_class := eiffel_class (tokens.natural_16_class_name)
@@ -141,18 +156,19 @@ feature {NONE} -- Initialization
 			natural_32_class.set_in_system (True)
 			natural_64_class := eiffel_class (tokens.natural_64_class_name)
 			natural_64_class.set_in_system (True)
-			integer_class := integer_32_class
-			classes.force_last (integer_class, tokens.integer_class_name)
 			natural_class := natural_32_class
 			classes.force_last (natural_class, tokens.natural_class_name)
+			natural_class_id := classes.count
 			real_32_class := eiffel_class (tokens.real_32_class_name)
 			real_32_class.set_in_system (True)
 			real_64_class := eiffel_class (tokens.real_64_class_name)
 			real_64_class.set_in_system (True)
 			real_class := real_32_class
 			classes.force_last (real_class, tokens.real_class_name)
+			real_class_id := classes.count
 			double_class := real_64_class
 			classes.force_last (double_class, tokens.double_class_name)
+			double_class_id := classes.count
 			pointer_class := eiffel_class (tokens.pointer_class_name)
 			pointer_class.set_in_system (True)
 			typed_pointer_class := eiffel_class (tokens.typed_pointer_class_name)
@@ -216,26 +232,32 @@ feature {NONE} -- Initialization
 			character_32_ref_class := eiffel_class (tokens.character_32_ref_class_name)
 			character_ref_class := character_8_ref_class
 			classes.force_last (character_ref_class, tokens.character_ref_class_name)
+			character_ref_class_id := classes.count
 			wide_character_ref_class := character_32_ref_class
 			classes.force_last (wide_character_ref_class, tokens.wide_character_ref_class_name)
+			wide_character_ref_class_id := classes.count
 			integer_8_ref_class := eiffel_class (tokens.integer_8_ref_class_name)
 			integer_16_ref_class := eiffel_class (tokens.integer_16_ref_class_name)
 			integer_32_ref_class := eiffel_class (tokens.integer_32_ref_class_name)
 			integer_64_ref_class := eiffel_class (tokens.integer_64_ref_class_name)
+			integer_ref_class := integer_32_ref_class
+			classes.force_last (integer_ref_class, tokens.integer_ref_class_name)
+			integer_ref_class_id := classes.count
 			natural_8_ref_class := eiffel_class (tokens.natural_8_ref_class_name)
 			natural_16_ref_class := eiffel_class (tokens.natural_16_ref_class_name)
 			natural_32_ref_class := eiffel_class (tokens.natural_32_ref_class_name)
 			natural_64_ref_class := eiffel_class (tokens.natural_64_ref_class_name)
-			integer_ref_class := integer_32_ref_class
-			classes.force_last (integer_ref_class, tokens.integer_ref_class_name)
 			natural_ref_class := natural_32_ref_class
 			classes.force_last (natural_ref_class, tokens.natural_ref_class_name)
+			natural_ref_class_id := classes.count
 			real_32_ref_class := eiffel_class (tokens.real_32_ref_class_name)
 			real_64_ref_class := eiffel_class (tokens.real_64_ref_class_name)
 			real_ref_class := real_32_ref_class
 			classes.force_last (real_ref_class, tokens.real_ref_class_name)
+			real_ref_class_id := classes.count
 			double_ref_class := real_64_ref_class
 			classes.force_last (double_ref_class, tokens.double_ref_class_name)
+			double_ref_class_id := classes.count
 			pointer_ref_class := eiffel_class (tokens.pointer_ref_class_name)
 			numeric_class := eiffel_class (tokens.numeric_class_name)
 			comparable_class := eiffel_class (tokens.comparable_class_name)
@@ -1000,96 +1022,209 @@ feature -- Setting
 			l_class: ET_CLASS
 		do
 				-- Class "STRING".
-			l_name := tokens.string_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			string_class := l_class
+			if string_class.id /= string_class_id then
+				l_name := tokens.string_class_name
+				l_class := ast_factory.new_class (l_name, string_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				string_class := l_class
+			end
 				-- Class "CHARACTER".
-			l_name := tokens.character_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			character_class := l_class
+			if character_class.id /= character_class_id then
+				l_name := tokens.character_class_name
+				l_class := ast_factory.new_class (l_name, character_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				character_class := l_class
+			end
 				-- Class "CHARACTER_REF".
-			l_name := tokens.character_ref_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			character_ref_class := l_class
+			if character_ref_class.id /= character_ref_class_id then
+				l_name := tokens.character_ref_class_name
+				l_class := ast_factory.new_class (l_name, character_ref_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				character_ref_class := l_class
+			end
 				-- Class "WIDE_CHARACTER".
-			l_name := tokens.wide_character_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			wide_character_class := l_class
+			if wide_character_class.id /= wide_character_class_id then
+				l_name := tokens.wide_character_class_name
+				l_class := ast_factory.new_class (l_name, wide_character_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				wide_character_class := l_class
+			end
 				-- Class "WIDE_CHARACTER_REF".
-			l_name := tokens.wide_character_ref_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			wide_character_ref_class := l_class
+			if wide_character_ref_class.id /= wide_character_ref_class_id then
+				l_name := tokens.wide_character_ref_class_name
+				l_class := ast_factory.new_class (l_name, wide_character_ref_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				wide_character_ref_class := l_class
+			end
 				-- Class "INTEGER".
-			l_name := tokens.integer_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			integer_class := l_class
+			if integer_class.id /= integer_class_id then
+				l_name := tokens.integer_class_name
+				l_class := ast_factory.new_class (l_name, integer_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				integer_class := l_class
+			end
 				-- Class "INTEGER_REF".
-			l_name := tokens.integer_ref_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			integer_ref_class := l_class
+			if integer_ref_class.id /= integer_class_id then
+				l_name := tokens.integer_ref_class_name
+				l_class := ast_factory.new_class (l_name, integer_ref_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				integer_ref_class := l_class
+			end
 				-- Class "NATURAL".
-			l_name := tokens.natural_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			natural_class := l_class
+			if natural_class.id /= natural_class_id then
+				l_name := tokens.natural_class_name
+				l_class := ast_factory.new_class (l_name, natural_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				natural_class := l_class
+			end
 				-- Class "NATURAL_REF".
-			l_name := tokens.natural_ref_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			natural_ref_class := l_class
+			if natural_ref_class.id /= natural_ref_class_id then
+				l_name := tokens.natural_ref_class_name
+				l_class := ast_factory.new_class (l_name, natural_ref_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				natural_ref_class := l_class
+			end
 				-- Class "REAL".
-			l_name := tokens.real_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			real_class := l_class
+			if real_class.id /= real_class_id then
+				l_name := tokens.real_class_name
+				l_class := ast_factory.new_class (l_name, real_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				real_class := l_class
+			end
 				-- Class "REAL_REF".
-			l_name := tokens.real_ref_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			real_ref_class := l_class
+			if real_ref_class.id /= real_ref_class_id then
+				l_name := tokens.real_ref_class_name
+				l_class := ast_factory.new_class (l_name, real_ref_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				real_ref_class := l_class
+			end
 				-- Class "DOUBLE".
-			l_name := tokens.double_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			double_class := l_class
+			if double_class.id /= double_class_id then
+				l_name := tokens.double_class_name
+				l_class := ast_factory.new_class (l_name, double_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				double_class := l_class
+			end
 				-- Class "DOUBLE_REF".
-			l_name := tokens.double_ref_class_name
-			l_class := ast_factory.new_class (l_name, classes.count + 1)
-			classes.remove (l_name)
-			classes.force_last (l_class, l_name)
-			l_class.set_in_system (True)
-			double_ref_class := l_class
+			if double_ref_class.id /= double_ref_class_id then
+				l_name := tokens.double_ref_class_name
+				l_class := ast_factory.new_class (l_name, double_ref_class_id)
+				classes.force_last (l_class, l_name)
+				l_class.set_in_system (True)
+				double_ref_class := l_class
+			end
+		end
+
+	set_default_aliased_sized_basic_classes is
+			-- Set sized basic types (STRING, CHARACTER, WIDE_CHARACTER,
+			-- INTEGER, NATURAL, REAL, DOUBLE) to be aliased to their default.
+		local
+			l_name: ET_CLASS_NAME
+			l_class: ET_CLASS
+		do
+				-- Class "STRING".
+			if string_class.id = string_class_id then
+				l_name := tokens.string_class_name
+				l_class := string_8_class
+				classes.force_last (l_class, l_name)
+				string_class := l_class
+			end
+				-- Class "CHARACTER".
+			if character_class.id = character_class_id then
+				l_name := tokens.character_class_name
+				l_class := character_8_class
+				classes.force_last (l_class, l_name)
+				character_class := l_class
+			end
+				-- Class "CHARACTER_REF".
+			if character_ref_class.id = character_ref_class_id then
+				l_name := tokens.character_ref_class_name
+				l_class := character_8_ref_class
+				classes.force_last (l_class, l_name)
+				character_ref_class := l_class
+			end
+				-- Class "WIDE_CHARACTER".
+			if wide_character_class.id = wide_character_class_id then
+				l_name := tokens.wide_character_class_name
+				l_class := character_32_class
+				classes.force_last (l_class, l_name)
+				wide_character_class := l_class
+			end
+				-- Class "WIDE_CHARACTER_REF".
+			if wide_character_ref_class.id = wide_character_ref_class_id then
+				l_name := tokens.wide_character_ref_class_name
+				l_class := character_32_ref_class
+				classes.force_last (l_class, l_name)
+				wide_character_ref_class := l_class
+			end
+				-- Class "INTEGER".
+			if integer_class.id = integer_class_id then
+				l_name := tokens.integer_class_name
+				l_class := integer_32_class
+				classes.force_last (l_class, l_name)
+				integer_class := l_class
+			end
+				-- Class "INTEGER_REF".
+			if integer_ref_class.id = integer_class_id then
+				l_name := tokens.integer_ref_class_name
+				l_class := integer_32_ref_class
+				classes.force_last (l_class, l_name)
+				integer_ref_class := l_class
+			end
+				-- Class "NATURAL".
+			if natural_class.id = natural_class_id then
+				l_name := tokens.natural_class_name
+				l_class := natural_32_class
+				classes.force_last (l_class, l_name)
+				natural_class := l_class
+			end
+				-- Class "NATURAL_REF".
+			if natural_ref_class.id = natural_ref_class_id then
+				l_name := tokens.natural_ref_class_name
+				l_class := natural_32_ref_class
+				classes.force_last (l_class, l_name)
+				natural_ref_class := l_class
+			end
+				-- Class "REAL".
+			if real_class.id = real_class_id then
+				l_name := tokens.real_class_name
+				l_class := real_32_class
+				classes.force_last (l_class, l_name)
+				real_class := l_class
+			end
+				-- Class "REAL_REF".
+			if real_ref_class.id = real_ref_class_id then
+				l_name := tokens.real_ref_class_name
+				l_class := real_32_ref_class
+				classes.force_last (l_class, l_name)
+				real_ref_class := l_class
+			end
+				-- Class "DOUBLE".
+			if double_class.id = double_class_id then
+				l_name := tokens.double_class_name
+				l_class := real_64_class
+				classes.force_last (l_class, l_name)
+				double_class := l_class
+			end
+				-- Class "DOUBLE_REF".
+			if double_ref_class.id = double_ref_class_id then
+				l_name := tokens.double_ref_class_name
+				l_class := real_64_ref_class
+				classes.force_last (l_class, l_name)
+				double_ref_class := l_class
+			end
 		end
 
 	set_root_class (a_name: ET_CLASS_NAME) is
@@ -1248,6 +1383,18 @@ feature -- Parser setting
 			use_void_keyword := b
 		ensure
 			use_void_keyword_set: use_void_keyword = b
+		end
+
+	set_default_keyword_usage is
+			-- Set default keyword usage.
+		do
+			set_use_assign_keyword (True)
+			set_use_attribute_keyword (True)
+			set_use_convert_keyword (True)
+			set_use_create_keyword (True)
+			set_use_recast_keyword (False)
+			set_use_reference_keyword (True)
+			set_use_void_keyword (True)
 		end
 
 	set_providers_enabled (b: BOOLEAN) is
@@ -2430,6 +2577,21 @@ feature -- Compilation setting
 			-- Set `ecma_version' to `a_version'.
 		do
 			ecma_version := a_version
+			if ecma_version /= Void then
+				set_use_assign_keyword (True)
+				set_use_attribute_keyword (True)
+				set_use_convert_keyword (True)
+				set_use_create_keyword (True)
+				set_use_recast_keyword (False)
+				set_use_reference_keyword (True)
+				set_use_void_keyword (True)
+				set_default_aliased_sized_basic_classes
+			elseif ise_version /= Void then
+				set_ise_version (ise_version)
+			else
+				set_default_keyword_usage
+				set_default_aliased_sized_basic_classes
+			end
 		ensure
 			ecma_version_set: ecma_version = a_version
 		end
@@ -2438,6 +2600,25 @@ feature -- Compilation setting
 			-- Set `ise_version' to `a_version'.
 		do
 			ise_version := a_version
+			if ise_version /= Void then
+				set_use_assign_keyword (True)
+				set_use_attribute_keyword (False)
+				set_use_convert_keyword (True)
+				set_use_create_keyword (True)
+				set_use_recast_keyword (False)
+				set_use_reference_keyword (True)
+				set_use_void_keyword (True)
+				if ise_version < ise_5_7_60362 then
+					set_non_aliased_sized_basic_classes
+				else
+					set_default_aliased_sized_basic_classes
+				end
+			elseif ecma_version /= Void then
+				set_ecma_version (ecma_version)
+			else
+				set_default_keyword_usage
+				set_default_aliased_sized_basic_classes
+			end
 		ensure
 			ise_version_set: ise_version = a_version
 		end
@@ -2979,6 +3160,47 @@ feature -- Timing
 			end
 		end
 
+feature {NONE} -- Basic class aliasing
+
+	string_class_id: INTEGER
+			-- Id of class "STRING" when not aliased
+
+	character_class_id: INTEGER
+			-- Id of class "CHARACTER" when not aliased
+
+	wide_character_class_id: INTEGER
+			-- Id of class "WIDE_CHARACTER" when not aliased
+
+	integer_class_id: INTEGER
+			-- Id of class "INTEGER" when not aliased
+
+	natural_class_id: INTEGER
+			-- Id of class "NATURAL" when not aliased
+
+	real_class_id: INTEGER
+			-- Id of class "REAL" when not aliased
+
+	double_class_id: INTEGER
+			-- Id of class "DOUBLE" when not aliased	
+
+	character_ref_class_id: INTEGER
+			-- Id of class "CHARACTER_REF" when not aliased
+
+	wide_character_ref_class_id: INTEGER
+			-- Id of class "WIDE_CHARACTER_REF" when not aliased
+
+	integer_ref_class_id: INTEGER
+			-- Id of class "INTEGER_REF" when not aliased
+
+	natural_ref_class_id: INTEGER
+			-- Id of class "NATURAL_REF" when not aliased
+
+	real_ref_class_id: INTEGER
+			-- Id of class "REAL_REF" when not aliased
+
+	double_ref_class_id: INTEGER
+			-- Id of class "DOUBLE_REF" when not aliased
+
 feature {NONE} -- Implementation
 
 	internal_eiffel_preparser: ET_EIFFEL_PREPARSER
@@ -3107,5 +3329,18 @@ invariant
 	character_convert_feature_not_void: character_convert_feature /= Void
 	wide_character_convert_feature_not_void: wide_character_convert_feature /= Void
 	pointer_convert_feature_not_void: pointer_convert_feature /= Void
+	string_class_id_positive: string_class_id > 0
+	character_class_id_positive: character_class_id > 0
+	wide_character_class_id_positive: wide_character_class_id > 0
+	integer_class_id_positive: integer_class_id > 0
+	natural_class_id_positive: natural_class_id > 0
+	real_class_id_positive: real_class_id > 0
+	double_class_id_positive: double_class_id > 0
+	character_ref_class_id_positive: character_ref_class_id > 0
+	wide_character_ref_class_id_positive: wide_character_ref_class_id > 0
+	integer_ref_class_id_positive: integer_ref_class_id > 0
+	natural_ref_class_id_positive: natural_ref_class_id > 0
+	real_ref_class_id_positive: real_ref_class_id > 0
+	double_ref_class_id_positive: double_ref_class_id > 0
 
 end

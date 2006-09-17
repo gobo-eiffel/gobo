@@ -27,6 +27,9 @@ inherit
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 create
 
 	execute
@@ -197,17 +200,10 @@ feature {NONE} -- Processing
 				a_universe.set_error_handler (l_null_error_handler)
 			end
 			a_universe.error_handler.set_ise
-			a_universe.set_non_aliased_sized_basic_classes
+			a_universe.set_ise_version (ise_5_6_latest)
 			if is_verbose then
 -- TODO.
 			end
-			a_universe.set_use_assign_keyword (True)
-			a_universe.set_use_attribute_keyword (False)
-			a_universe.set_use_convert_keyword (True)
-			a_universe.set_use_create_keyword (True)
-			a_universe.set_use_recast_keyword (False)
-			a_universe.set_use_reference_keyword (True)
-			a_universe.set_use_void_keyword (True)
 			create l_system.make (a_universe)
 			l_system.set_catcall_mode (is_cat)
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system)
