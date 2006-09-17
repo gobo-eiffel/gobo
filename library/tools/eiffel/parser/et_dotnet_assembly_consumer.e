@@ -53,6 +53,14 @@ feature -- Consuming
 			end
 		end
 
+	consume_class (a_class: ET_CLASS) is
+			-- Consume `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_dotnet: a_class.is_in_dotnet_assembly
+		deferred
+		end
+
 feature {ET_DOTNET_ASSEMBLY} -- Consuming
 
 	consume_assembly (an_assembly: ET_DOTNET_ASSEMBLY) is

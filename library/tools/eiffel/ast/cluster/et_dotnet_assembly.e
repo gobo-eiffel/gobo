@@ -16,7 +16,8 @@ inherit
 
 	ET_GROUP
 		redefine
-			is_dotnet_assembly
+			is_dotnet_assembly,
+			dotnet_assembly
 		end
 
 feature -- Status report
@@ -44,6 +45,14 @@ feature -- Access
 		deferred
 		end
 
+	dotnet_assembly: ET_DOTNET_ASSEMBLY is
+			-- Current group viewed as a .NET assembly
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
+
 feature -- Nested
 
 	parent: ET_DOTNET_ASSEMBLY is
@@ -61,5 +70,9 @@ feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Consuming
 		do
 			a_consumer.consume_assembly (Current)
 		end
+
+invariant
+
+	is_dotnet_assembly: is_dotnet_assembly
 
 end

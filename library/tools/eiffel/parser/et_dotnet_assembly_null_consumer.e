@@ -20,6 +20,14 @@ create
 
 	make
 
+feature -- Consuming
+
+	consume_class (a_class: ET_CLASS) is
+			-- Consume `a_class'.
+		do
+			-- Do nothing.
+		end
+
 feature {ET_DOTNET_ASSEMBLY} -- Consuming
 
 	consume_assembly (an_assembly: ET_DOTNET_ASSEMBLY) is
