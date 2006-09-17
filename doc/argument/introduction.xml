@@ -27,7 +27,7 @@
 <title>Argument Parser Introduction</title>
 
 <para>
-	The argument parser library give you the ability to parse the
+	The argument parser library gives you the ability to parse the
 	command line arguments that are passed to your application. It
 	is a feature-rich library that tries to achieve the maximum
 	comfort for the developer and for the user of the application
@@ -69,8 +69,10 @@
 
 	<para>
 		In the given example, -o and --foo are so-called
-		<emphasis>flags</emphasis> to the program. The option --bar is
-		an option that takes an argument, in this case the string HALLO.
+		<emphasis>flags</emphasis> to the program. Flags are
+		options that do not take any argument. The option
+		--bar is an option that takes an argument, in this
+		case the string HALLO.  
 	</para>
 
 	<para>
@@ -107,16 +109,17 @@
 	</para>
 
 	<para>
-		As a consequence, the command line behavior of command
-		line tools varies a lot. There are probably as many
-		ways to parse the command line as there are developers
-		writing applications. Often you have difficulties to
-		use a tool because you wrote the command line
-		arguments wrong. If also a useful help text message is
-		missing, then the user wastes unnecessary time
-		browsing through man pages and application
-		documentation, or just uses trial-and-error until the
-		command line arguments are OK.
+		As a consequence, the command line behavior of tools
+		varies a lot. There are probably as many ways to parse
+		the command line as there are developers writing
+		applications. Often you have difficulties to use a
+		tool because you wrote the command line arguments
+		wrong, as the tool required them in a very specific form. 
+		If also a useful help text message is missing,
+		the user wastes unnecessary time browsing through
+		man pages and application documentation, or just uses
+		trial-and-error until the command line arguments are
+		OK.
 	</para>
 
 	<para>
@@ -151,7 +154,7 @@
 		you want to be 'backward compatible' with another
 		application, the argument parsing library might not be
 		the best choice for you. Also, if you have a very
-		complex application that requires complex argument
+		large application that requires complex argument
 		patterns, then you will need a significant amount of
 		extra work to parse them using this library.
 	</para>
@@ -160,8 +163,7 @@
 		This being said, it is my firm belief that the library
 		should be suited for most application needs. And it
 		enforces a consistent behavior of different
-		applications, something that users appreciate when
-		confronted with many different tools.
+		applications, something that your users will appreciate.
 	</para>
 
 </section>
@@ -176,8 +178,39 @@
 	</para>
 	
 	<itemizedlist>
-		<listitem><para>bla</para></listitem>
-		<listitem><para>foo</para></listitem>
+		<listitem><para>
+			Different types of options: flags, strings, integers, booleans ...
+		</para></listitem>
+		<listitem><para>
+			Long (--make-love) and short (-l) options are supported.
+		</para></listitem>
+		<listitem><para>
+			Short form can be joined (-abc instead of -a -b -c), assuming that
+			every one but the last is a flag (does not require an argument).
+		</para></listitem>
+		<listitem><para>
+			Arguments to the short form can be added with or without space
+			(-ltoday or -l today).
+		</para></listitem>
+		<listitem><para>
+			Arguments to the long form can be added with '=' or with a space
+			(--make-love=today or --make-love today)
+		</para></listitem>
+		<listitem><para>
+			Option termination introduced by '--'.
+		</para></listitem>
+		<listitem><para>
+			Usage instructions and a help text will be generated automatically
+			from the options.
+		</para></listitem>
+		<listitem><para>
+			Good default values, minimal code is required for standard
+			applications.
+		</para></listitem>
+		<listitem><para>
+			No special 'option description language' is required. It is all just
+			plain Eiffel code.	
+		</para></listitem>
 	</itemizedlist>
 
 </section>
@@ -188,7 +221,7 @@
 
 	<para>
 		The general usage strategy of the argument parser
-		library always involves the following four steps:
+		library involves the following four steps:
 	</para>
 
 	<orderedlist>
@@ -328,7 +361,7 @@ parameter: /tmp
 </programlisting>
 
 	<para>
-		Also, we get a full help text for free. See what
+		Also, we get a full help text for free (!). See what
 		happens when we call the application with '-h'.
 	</para>
 
@@ -348,6 +381,11 @@ Options:
                               PATTERN
 -l                            use a long listing format
 </programlisting>
+
+	<para>
+		A second example is provided in the <classname>$GOBO/example/argument</classname>
+		directory.
+	</para>
 
 </section>
 

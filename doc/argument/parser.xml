@@ -27,7 +27,230 @@
 <title>The Argument Parser</title>
 
 <para>
-	To be written ...
-</para>
+
+	The argument parser is provided through the class
+	<classname>AP_PARSER</classname>. The parser will parse
+	through the command line arguments, and look for matching
+	options within the set of registered options. If a matching
+	option is found, the parser will notify the option of the
+	occurrence, supplying it (through the
+	<featurename>last_option_parameter</featurename> query) with a
+	parameter that was given to the option if the option required
+	it.
+
+ </para>
+
+<section id="creation">
+
+	<title>Creation</title>
+
+	<variablelist>
+
+		<varlistentry><term>
+			<featurename>make</featurename>
+		</term><listitem><para>
+			
+			This is the normal creation routine that
+			initializes the parser with sane defaults.
+
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>
+			<featurename>make_empty</featurename>
+		</term><listitem><para>
+			
+			This creation routine does not create a help
+			option. It should be used if an own or no help
+			flag should be used.
+
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>
+			<featurename>help_option</featurename>
+		</term><listitem><para>
+			
+			This query allows access to the instance of
+			<classname>AP_DISPLAY_HELP_FLAG</classname>
+			that is created by the creation with
+			<featurename>make</featurename>. If the
+			instance was created with
+			<featurename>make_empty</featurename>, the
+			result of this query will be Void.
+
+		</para></listitem></varlistentry>
+
+	</variablelist>
+
+</section>
+
+<section id="settings">
+
+	<title>Parser settings</title>
+
+	<para>
+
+		The <classname>AP_PARSER</classname> is the class that
+		captures the global options of the parsing process.
+
+	</para>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>
+			<featurename>application_description</featurename>
+		</term><listitem><para>
+			The application description describes the
+			overall purpose of the application. It is used
+			for the generation of help texts and can be
+			set by the
+			<featurename>set_application_description</featurename>
+			feature.
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry><term>
+			<featurename>parameters_description</featurename>
+		</term><listitem><para>
+			
+			This text is a short description of the kind
+			of (non-option) parameters are expected by the
+			application. The default value is 'parameters
+			...', but should be set to a more descriptive text.		
+			It can be set by the
+			<featurename>set_parameters_description</featurename>
+			feature and is also used for the generation of the help
+			text.
+
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>
+			<featurename>options</featurename>
+		</term><listitem><para>
+			
+			This is the <classname>DS_LIST</classname> of
+			options that is used for command line
+			parsing. New options are registered with the
+			parser by adding them to the list (for example
+			with
+			<featurename>force_last</featurename>. Also,
+			other operations from
+			<classname>DS_LIST</classname> are valid, like
+			removing or sorting options. The validity of
+			all options can be checked at any time with
+			the <featurename>valid_options</featurename>
+			query.
+
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>
+			<featurename>alternative_options_lists</featurename>
+		</term><listitem><para>
+			
+			The purpose of this list is described in
+			section <ulink url="alternate.html">Alternative options
+			lists</ulink>. It is also a <classname>DS_LIST</classname>
+			and also changed directly, as with the <featurename>options</featurename>
+			query. The validity of all options provided with
+			alternative options list can be checked at any
+			time with the
+			<featurename>valid_options</featurename>
+			query, too.
+
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>
+			<featurename>error_handler</featurename>
+		</term><listitem><para>
+			
+			This query returns the current error handler of the parser. A default
+			error handler is provided through object creation. The error handler
+			can be changed using the <featurename>set_error_handler</featurename>
+			command.			
+
+		</para></listitem></varlistentry>
+
+	</variablelist>
+
+</section>
+
+<section id="parsing">
+
+	<title>Parsing arguments</title>
+
+	<para>
+		The parser offers the following calls to start the parser.
+		Any of these calls with call <featurename>reset_parser</featurename>
+		prior to parsing, that will reset the parser and the registered
+		options.
+	</para>
+	
+	<variablelist>
+
+		<varlistentry><term>
+			<featurename>parse_arguments</featurename>
+		</term><listitem><para>
+			
+			The parser parses the arguments passed to the
+			application. The arguments are read directly
+			from the shared
+			<classname>KL_ARGUMENTS</classname> class. 
+
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>
+			<featurename>parse_array</featurename>
+		</term><listitem><para>
+			
+			The parser parses the arguments from a
+			supplied <classname>ARRAY</classname>.
+
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>
+			<featurename>parse_list</featurename>
+		</term><listitem><para>
+			
+			The parser parses the arguments from a
+			supplied <classname>DS_LIST</classname>. The
+			cursor on the list will be used during parsing
+			to mark the current argument that is parsed
+			and should not be moved by other parts
+			classes.
+
+		</para></listitem></varlistentry>
+
+	</variablelist>
+
+</section>
+
+
+
+<section id="results">
+
+	<title>Results of parsing</title>
+
+	<para>
+		Options and their arguments can be directly read from the
+		corresponding instances. The other results of the parsing
+		process are provided through the following queries:
+	</para>
+	
+	<variablelist>
+
+		<varlistentry><term>
+			<featurename>parameters</featurename>
+		</term><listitem><para>
+			
+			This <featurename>DS_LIST</featurename>
+			collects all non-option arguments that were
+			encountered during parsing of the command
+			line.
+
+		</para></listitem></varlistentry>
+
+	</variablelist>
+
+</section>
 
 </chapter>
