@@ -32,6 +32,12 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_none: BOOLEAN
+			-- Is current group a built-in group for class NONE?
+		do
+			-- Result := False
+		end
+
 	is_override: BOOLEAN is
 			-- Is current group an override group?
 			-- In other words, do classes in this group and other override
@@ -173,6 +179,16 @@ feature -- Access
 			is_cluster: is_cluster
 		do
 			check is_cluster: is_cluster end
+		ensure
+			definition: ANY_.same_objects (Result, Current)
+		end
+
+	dotnet_assembly: ET_DOTNET_ASSEMBLY is
+			-- Current group viewed as a .NET assembly
+		require
+			is_dotnet_assembly: is_dotnet_assembly
+		do
+			check is_dotnet_assembly: is_dotnet_assembly end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

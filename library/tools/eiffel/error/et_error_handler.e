@@ -86,15 +86,22 @@ feature -- Status setting
 
 feature -- Compilation report
 
-	report_preparsing_status (a_cluster: ET_CLUSTER) is
-			-- Report that `a_cluster' is currently being preparsed.
+	report_preparsing_status (a_group: ET_GROUP) is
+			-- Report that `a_group' is currently being preparsed.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		do
 			if is_verbose then
 				if info_file /= Void then
-					info_file.put_string ("Degree 6 cluster ")
-					info_file.put_line (a_cluster.full_name ('.'))
+					info_file.put_string ("Degree 6 ")
+					if a_group.is_cluster then
+						info_file.put_string ("cluster ")
+					elseif a_group.is_dotnet_assembly then
+						info_file.put_string ("assembly ")
+					else
+						info_file.put_string ("group ")
+					end
+					info_file.put_line (a_group.full_name ('.'))
 				end
 			end
 		end
@@ -4746,39 +4753,227 @@ feature -- Validity errors
 			end
 		end
 
-	report_vscn0a_error (a_class: ET_CLASS; other_cluster: ET_CLUSTER; other_filename: STRING) is
-			-- Report VSCN error: `a_class' also appears in `other_cluster'.
+	report_vscn0a_error (a_class, other_class: ET_CLASS) is
+			-- Report VSCN error: two different classes `a_class'
+			-- and `other_class' with the same name.
 			--
 			-- ETL2: p.38
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			other_cluster_not_void: other_cluster /= Void
-			other_filename_not_void: other_filename /= Void
+			a_class_in_cluster: a_class.is_in_cluster
+			other_class_not_void: other_class /= Void
+			other_class_in_cluster: other_class.is_in_cluster
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0a (a_class, other_cluster, other_filename)
+				create an_error.make_vscn0a (a_class, other_class)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vscn0b_error (a_class: ET_CLASS; other_cluster: ET_CLUSTER; other_filename: STRING) is
-			-- Report VSCN error: `a_class' also appears in `other_cluster'.
+	report_vscn0b_error (a_class, other_class: ET_CLASS) is
+			-- Report VSCN error: two different classes `a_class'
+			-- and `other_class' with the same name.
 			--
 			-- ETL2: p.38
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			other_cluster_not_void: other_cluster /= Void
-			other_filename_not_void: other_filename /= Void
+			a_class_in_cluster: a_class.is_in_cluster
+			other_class_not_void: other_class /= Void
+			other_class_in_dotnet_assenbly: other_class.is_in_dotnet_assembly
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0b (a_class, other_cluster, other_filename)
+				create an_error.make_vscn0b (a_class, other_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0c_error (a_class, other_class: ET_CLASS) is
+			-- Report VSCN error: two different classes `a_class'
+			-- and `other_class' with the same name.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_in_cluster: a_class.is_in_cluster
+			other_class_not_void: other_class /= Void
+			other_class_preparsed: other_class.is_preparsed
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0c (a_class, other_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0d_error (a_class, other_class: ET_CLASS) is
+			-- Report VSCN error: two different classes `a_class'
+			-- and `other_class' with the same name.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
+			other_class_not_void: other_class /= Void
+			other_class_in_dotnet_assembly: other_class.is_in_dotnet_assembly
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0d (a_class, other_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0e_error (a_class, other_class: ET_CLASS) is
+			-- Report VSCN error: two different classes `a_class'
+			-- and `other_class' with the same name.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_in_dotnet_assenbly: a_class.is_in_dotnet_assembly
+			other_class_not_void: other_class /= Void
+			other_class_in_preparsed: other_class.is_preparsed
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0e (a_class, other_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0f_error (a_class: ET_CLASS) is
+			-- Report VSCN error: two different classes with the
+			-- same name: built-in class NONE and `a_class'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_in_cluster: a_class.is_in_cluster
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0f (a_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0g_error (a_class: ET_CLASS) is
+			-- Report VSCN error: two different classes with the
+			-- same name: built-in class NONE and `a_class'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0g (a_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0h_error (a_class: ET_CLASS) is
+			-- Report VSCN error: built-in class NONE cannot
+			-- be overridden by `a_class'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_in_cluster: a_class.is_in_cluster
+			a_class_in_override: a_class.is_in_override_group
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0h (a_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0i_error (a_class: ET_CLASS) is
+			-- Report VSCN error: built-in class NONE cannot
+			-- be overridden by `a_class'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
+			a_class_in_override: a_class.is_in_override_group
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0i (a_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0j_error (a_class, other_class: ET_CLASS) is
+			-- Report VSCN error: `a_class' in a .NET assembly
+			-- cannot be overridden by `other_class'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
+			other_class_not_void: other_class /= Void
+			other_class_in_cluster: other_class.is_in_cluster
+			other_class_in_override: other_class.is_in_override_group
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0j (a_class, other_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0k_error (a_class, other_class: ET_CLASS) is
+			-- Report VSCN error: `a_class' in a .NET assembly
+			-- cannot be overridden by `other_class'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
+			other_class_not_void: other_class /= Void
+			other_class_in_dotnet_assembly: other_class.is_in_dotnet_assembly
+			other_class_in_override: other_class.is_in_override_group
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0k (a_class, other_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vscn0l_error (a_class, other_class: ET_CLASS) is
+			-- Report VSCN error: `a_class' in a .NET assembly
+			-- cannot be overridden by `other_class'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
+			other_class_not_void: other_class /= Void
+			other_class_preparsed: other_class.is_preparsed
+			other_class_in_override: other_class.is_in_override_group
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0l (a_class, other_class)
 				report_validity_error (an_error)
 			end
 		end
