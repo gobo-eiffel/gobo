@@ -6,7 +6,7 @@ indexing
 		%which should supply their hashing mechanisms."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,7 @@ inherit
 			make as make_sparse_container,
 			has as has_item
 		redefine
-			search, new_cursor
+			search, new_cursor, copy
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
@@ -137,10 +137,19 @@ feature {NONE} -- Initialization
 			-- Use `a_key_tester' as comparison criterion for keys.
 		require
 			positive_n: n >= 0
+		local
+			l_cursor: like new_cursor
 		do
 			equality_tester := an_item_tester
 			key_equality_tester := a_key_tester
 			make_sparse_container (n)
+				-- Set `initialized' to False to make sure that
+				-- the invariant is not violated before the object
+				-- is fully created.
+			l_cursor := internal_cursor
+			internal_cursor := Void
+			create internal_linear_keys.make (Current)
+			internal_cursor := l_cursor
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -195,6 +204,14 @@ feature -- Access
 			-- Equality tester for keys;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
+
+	as_linear_keys: DS_BILINEAR [K] is
+			-- View of current table as a linear representation of its keys
+		do
+			Result := internal_linear_keys
+		ensure
+			as_linear_keys_not_void: Result /= Void
+		end
 
 feature -- Status report
 
@@ -273,6 +290,7 @@ feature -- Setting
 			key_equality_tester_settable: key_equality_tester_settable (a_tester)
 		do
 			key_equality_tester := a_tester
+			internal_linear_keys.internal_set_equality_tester (a_tester)
 		ensure
 			key_equality_tester_set: key_equality_tester = a_tester
 		end
@@ -492,6 +510,19 @@ feature -- Element change
 			last: (not old has (k)) implies last = v
 		end
 
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy `other' to current container.
+			-- Move all cursors `off' (unless `other = Current').
+		local
+			l_linear_keys: like internal_linear_keys
+		do
+			l_linear_keys := internal_linear_keys
+			precursor {DS_SPARSE_CONTAINER} (other)
+			internal_linear_keys := l_linear_keys
+		end
+
 feature {NONE} -- Implementation
 
 	internal_set_key_equality_tester (a_tester: like key_equality_tester) is
@@ -499,7 +530,11 @@ feature {NONE} -- Implementation
 			-- (No precondition, to be used internally only.)
 		do
 			key_equality_tester := a_tester
+			internal_linear_keys.internal_set_equality_tester (a_tester)
 		end
+
+	internal_linear_keys: DS_SPARSE_TABLE_KEYS [G, K]
+			-- View of current table as a linear representation of its keys
 
 feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
 
@@ -512,5 +547,10 @@ feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
 		do
 			Result := keys_item (a_cursor.position)
 		end
+
+invariant
+
+	internal_linear_keys_not_void: initialized implies internal_linear_keys /= Void
+	internal_linear_keys_consistent: initialized implies internal_linear_keys.table = Current
 
 end

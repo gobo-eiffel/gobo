@@ -58,4 +58,20 @@ feature -- Test
 			assert_iarrays_same ("items9", <<INTEGER_.to_integer (8)>>, a_table.to_array)
 		end
 
+	test_as_linear_keys is
+			-- Test feature 'as_linear_keys'.
+		local
+			l_table: DS_HASH_TABLE [STRING, INTEGER]
+			l_list: DS_ARRAYED_LIST [INTEGER]
+		do
+			create l_table.make (5)
+			l_table.put_last ("five", 5)
+			l_table.put_last ("four", 4)
+			l_table.put_last ("three", 3)
+			l_table.put_last ("two", 2)
+			l_table.put_last ("one", 1)
+			create l_list.make_from_linear (l_table.as_linear_keys)
+			assert_iarrays_same ("keys", <<INTEGER_.to_integer (5), 4, 3, 2, 1>>, l_list.to_array)
+		end
+
 end
