@@ -340,7 +340,7 @@ feature -- Main
          until parser.parameters.off loop
             print ("parameter: "+
                    parser.parameters.item_for_iteration+"%N")
-         parser.parameters.forth
+            parser.parameters.forth
          end
       end
 </programlisting>

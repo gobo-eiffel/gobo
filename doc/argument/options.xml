@@ -27,7 +27,120 @@
 <title>Options</title>
 
 <para>
-	To be written ...
+	<classname>AP_OPTION</classname> is the common superclass of
+	all options. It defines the fact that options can have a short
+	and a long form and a descriptive text. It also can count the
+	occurrencies of an option and can mark the option as
+	mandatory.
 </para>
+
+<para>
+	<classname>AP_OPTION_WITH_PARAMETER[G]</classname> extends
+	<classname>AP_OPTION</classname> with the possibility of
+	recoding parameters of type <classname>G</classname>. All
+	options except for <classname>AP_FLAG</classname> inherit from
+	this class.
+</para>
+
+<section id="available">
+	
+	<title>Available option types</title>
+
+	<para>
+		The following standard option types are available:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+			<term>
+				<classname>AP_FLAG</classname>
+			</term>
+			<listitem><para>
+				A simple flag that does not take an
+				argument.
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>
+				<classname>AP_STRING_OPTION</classname>
+			</term>
+			<listitem><para>
+				A flag that takes an arbitrary string
+				as argument.
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>
+				<classname>AP_BOOLEAN_OPTION</classname>
+			</term>
+			<listitem><para>
+				
+				The flag needs to be supplied by a
+				boolean value. The strings
+				'yes','y','1','true' and 't' are
+				regarded as true. The strings
+				'no','n','0','false' and 'f' are
+				regarded as false.
+
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>
+				<classname>AP_ENUMERATION_OPTION</classname>
+			</term>
+			<listitem><para>
+
+				The enumeration options allows to
+				choose one string out of a fixed set
+				of choices. Available choices can be
+				added to the option through the
+				<featurename>extend</featurename>
+				call.
+
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>
+				<classname>AP_INTEGER_OPTION</classname>
+			</term>
+			<listitem><para>
+
+				This option takes an integer as an
+				argument. Parsing will yield an error
+				if no integer value is passed.
+
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>
+				<classname>AP_DISPLAY_HELP_FLAG</classname>
+			</term>
+			<listitem><para>
+
+				This is a special flag to display a
+				help message. It is normally added
+				automatically through the call of
+				<featurename>make</featurename> in
+				<classname>AP_PARSER</classname>.
+
+			</para></listitem>
+		</varlistentry>
+	</variablelist>
+
+</section>
+
+<section id="ownoptions">
+	
+	<title>Defining own option types</title>
+
+	<para>
+		It should be easy to implement own option types do
+		define own parameters, for example for file names or
+		dates. It is best to inherit form
+		<classname>AP_OPTION_WITH_PARAMETER</classname> or one
+		of its decedents.
+	</para>
+
+</section>
 
 </chapter>
