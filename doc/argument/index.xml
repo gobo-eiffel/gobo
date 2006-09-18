@@ -76,12 +76,12 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="alternate.html">Alternate options lists</ulink>
+			<ulink url="alternate.html">Alternative options lists</ulink>
 		</term>
 		<listitem><para>
 
-			Alternate options lists are an advanced way to
-			specify options sets that are used for
+			Alternative options lists are an advanced way
+			to specify options sets that are used for
 			different operation modes of the application.
 
 		</para></listitem>
