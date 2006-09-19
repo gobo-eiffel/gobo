@@ -26,7 +26,8 @@ inherit
 			make as make_sparse_container,
 			has as has_item
 		redefine
-			search, new_cursor, copy
+			search, new_cursor, copy,
+			initialized
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
@@ -137,19 +138,11 @@ feature {NONE} -- Initialization
 			-- Use `a_key_tester' as comparison criterion for keys.
 		require
 			positive_n: n >= 0
-		local
-			l_cursor: like new_cursor
 		do
 			equality_tester := an_item_tester
 			key_equality_tester := a_key_tester
 			make_sparse_container (n)
-				-- Set `initialized' to False to make sure that
-				-- the invariant is not violated before the object
-				-- is fully created.
-			l_cursor := internal_cursor
-			internal_cursor := Void
 			create internal_linear_keys.make (Current)
-			internal_cursor := l_cursor
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -535,6 +528,17 @@ feature {NONE} -- Implementation
 
 	internal_linear_keys: DS_SPARSE_TABLE_KEYS [G, K]
 			-- View of current table as a linear representation of its keys
+
+	initialized: BOOLEAN is
+			-- Some Eiffel compilers check invariants even when the
+			-- execution of the creation procedure is not completed.
+			-- (In this case, checking the assertions of the being
+			-- created `internal_cursor' and `internal_linear_keys'
+			-- triggers the invariants on the current container.
+			-- So these invariants need to be protected.)
+		do
+			Result := (internal_cursor /= Void and internal_linear_keys /= Void)
+		end
 
 feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
 
