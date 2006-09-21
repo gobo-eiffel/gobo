@@ -146,7 +146,7 @@ feature -- Status report
 
 	is_hidden: BOOLEAN
 			-- Is the options hidden and should not show up in help texts?
-	
+
 	is_mandatory: BOOLEAN
 			-- Is the option not optional?
 

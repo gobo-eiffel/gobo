@@ -126,7 +126,7 @@ feature -- Text Generation
 		require
 			a_parser_not_void: a_parser /= Void
 		local
-			alt_list: DS_LIST[AP_ALTERNATIVE_OPTIONS_LIST]
+			alt_list: DS_LIST [AP_ALTERNATIVE_OPTIONS_LIST]
 		do
 			Result := usage_instruction (a_parser)
 			Result.append_character ('%N')
@@ -138,10 +138,12 @@ feature -- Text Generation
 				Result.append_character ('%N')
 				alt_list.forth
 			end
+		ensure
+			full_usage_instruction_not_void: Result /= Void
 		end
-	
+
 feature {NONE} -- Implementation
-	
+
 	usage_instruction (a_parser: AP_PARSER): STRING is
 			-- Short usage instruction for the programs standard options
 		require
