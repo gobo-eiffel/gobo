@@ -73,7 +73,7 @@ feature -- Access
 		do
 			search_position (v)
 			check hash_v: position /= No_position end
-			Result := items_item (position)
+			Result := item_storage_item (position)
 		end
 
 	new_cursor: DS_SPARSE_SET_CURSOR [G] is
@@ -121,7 +121,7 @@ feature -- Status report
 					not Result or i < 1
 				loop
 					if clashes_item (i) > Free_watermark then
-						an_item := items_item (i)
+						an_item := item_storage_item (i)
 						Result := other.has (an_item)
 					end
 					i := i - 1
@@ -147,7 +147,7 @@ feature -- Status report
 					not Result or i < 1
 				loop
 					if clashes_item (i) > Free_watermark then
-						an_item := items_item (i)
+						an_item := item_storage_item (i)
 						Result := not other.has (an_item)
 					end
 					i := i - 1
@@ -191,7 +191,7 @@ feature -- Comparison
 					not Result or i < 1
 				loop
 					if clashes_item (i) > Free_watermark then
-						an_item := items_item (i)
+						an_item := item_storage_item (i)
 						Result := other.has (an_item)
 					end
 					i := i - 1
@@ -212,7 +212,7 @@ feature -- Element change
 			unset_found_item
 			search_position (v)
 			if position /= No_position then
-				items_put (v, position)
+				item_storage_put (v, position)
 			else
 				i := free_slot
 				if i = No_position then
@@ -224,7 +224,7 @@ feature -- Element change
 				h := slots_position
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
-				items_put (v, i)
+				item_storage_put (v, i)
 				count := count + 1
 			end
 		end
@@ -248,7 +248,7 @@ feature -- Element change
 			h := hash_position (v)
 			clashes_put (slots_item (h), i)
 			slots_put (i, h)
-			items_put (v, i)
+			item_storage_put (v, i)
 			count := count + 1
 		end
 
@@ -264,7 +264,7 @@ feature -- Element change
 			unset_found_item
 			search_position (v)
 			if position /= No_position then
-				items_put (v, position)
+				item_storage_put (v, position)
 			else
 				i := last_position + 1
 				if i > capacity then
@@ -274,7 +274,7 @@ feature -- Element change
 				h := slots_position
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
-				items_put (v, i)
+				item_storage_put (v, i)
 				last_position := i
 				count := count + 1
 			end
@@ -294,7 +294,7 @@ feature -- Element change
 			unset_found_item
 			search_position (v)
 			if position /= No_position then
-				items_put (v, position)
+				item_storage_put (v, position)
 			else
 				if count = capacity then
 					resize (new_capacity (count + 1))
@@ -311,7 +311,7 @@ feature -- Element change
 				end
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
-				items_put (v, i)
+				item_storage_put (v, i)
 				count := count + 1
 			end
 		end
@@ -339,7 +339,7 @@ feature -- Element change
 			h := hash_position (v)
 			clashes_put (slots_item (h), i)
 			slots_put (i, h)
-			items_put (v, i)
+			item_storage_put (v, i)
 			count := count + 1
 		end
 
@@ -356,7 +356,7 @@ feature -- Element change
 			unset_found_item
 			search_position (v)
 			if position /= No_position then
-				items_put (v, position)
+				item_storage_put (v, position)
 			else
 				i := last_position + 1
 				if i > capacity then
@@ -367,7 +367,7 @@ feature -- Element change
 				end
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
-				items_put (v, i)
+				item_storage_put (v, i)
 				last_position := i
 				count := count + 1
 			end
@@ -490,7 +490,7 @@ feature -- Basic operations
 				i := last_position
 				from until i < 1 loop
 					if clashes_item (i) > Free_watermark then
-						an_item := items_item (i)
+						an_item := item_storage_item (i)
 						if not other.has (an_item) then
 							remove_position (i)
 						end
@@ -520,7 +520,7 @@ feature -- Basic operations
 				i := last_position
 				from until i < 1 loop
 					if clashes_item (i) > Free_watermark then
-						an_item := items_item (i)
+						an_item := item_storage_item (i)
 						if other.has (an_item) then
 							remove_position (i)
 						end
@@ -571,10 +571,10 @@ feature -- Basic operations
 
 feature {DS_SPARSE_SET_CURSOR} -- Implementation
 
-	keys_item (i: INTEGER): G is
-			-- Item at position `i' in `keys'
+	key_storage_item (i: INTEGER): G is
+			-- Item at position `i' in `key_storage'
 		do
-			Result := items_item (i)
+			Result := item_storage_item (i)
 		end
 
 feature {NONE} -- Implementation
@@ -594,29 +594,29 @@ feature {NONE} -- Implementation
 			equality_tester := a_tester
 		end
 
-	make_keys (n: INTEGER) is
+	make_key_storage (n: INTEGER) is
 			-- Create storage for keys of the set indexed
 			-- from 0 to `n-1' (position 0 is not used).
 		do
 		end
 
-	keys_put (k: G; i: INTEGER) is
-			-- Put `k' at position `i' in `keys'.
+	key_storage_put (k: G; i: INTEGER) is
+			-- Put `k' at position `i' in `key_storage'.
 		do
 		end
 
-	clone_keys is
-			-- Clone `keys'.
+	clone_key_storage is
+			-- Clone `key_storage'.
 		do
 		end
 
-	keys_resize (n: INTEGER) is
-			-- Resize `keys'.
+	key_storage_resize (n: INTEGER) is
+			-- Resize `key_storage'.
 		do
 		end
 
-	keys_wipe_out is
-			-- Wipe out items in `keys'.
+	key_storage_wipe_out is
+			-- Wipe out items in `key_storage'.
 		do
 		end
 

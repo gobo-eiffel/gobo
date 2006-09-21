@@ -35,22 +35,22 @@ feature -- Access
 
 feature {DS_ARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 
-	items_item (i: INTEGER): G is
-			-- Item at position `i' in `items'
+	item_storage_item (i: INTEGER): G is
+			-- Item at position `i' in `item_storage'
 		do
-			Result := items.item (i)
+			Result := item_storage.item (i)
 		end
 
-	items_put (v: G; i: INTEGER) is
-			-- Put `v' at position `i' in `items'.
+	item_storage_put (v: G; i: INTEGER) is
+			-- Put `v' at position `i' in `item_storage'.
 		do
-			items.put (v, i)
+			item_storage.put (v, i)
 		end
 
-	keys_item (i: INTEGER): K is
-			-- Item at position `i' in `keys'
+	key_storage_item (i: INTEGER): K is
+			-- Item at position `i' in `key_storage'
 		do
-			Result := keys.item (i)
+			Result := key_storage.item (i)
 		end
 
 	clashes_item (i: INTEGER): INTEGER is
@@ -61,82 +61,82 @@ feature {DS_ARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	items: SPECIAL [G]
+	item_storage: SPECIAL [G]
 			-- Storage for items of the table indexed from 1 to `capacity'
 
-	make_items (n: INTEGER) is
-			-- Create `items'.
+	make_item_storage (n: INTEGER) is
+			-- Create `item_storage'.
 		do
 			create special_item_routines
-			items := special_item_routines.make (n)
+			item_storage := special_item_routines.make (n)
 		end
 
-	clone_items is
-			-- Clone `items'.
+	clone_item_storage is
+			-- Clone `item_storage'.
 		do
-			items := items.twin
+			item_storage := item_storage.twin
 		end
 
-	items_resize (n: INTEGER) is
-			-- Resize `items'.
+	item_storage_resize (n: INTEGER) is
+			-- Resize `item_storage'.
 		do
-			items := special_item_routines.resize (items, n)
+			item_storage := special_item_routines.resize (item_storage, n)
 		end
 
-	items_wipe_out is
-			-- Wipe out items in `items'.
+	item_storage_wipe_out is
+			-- Wipe out items in `item_storage'.
 		local
 			i: INTEGER
 			dead_item: G
 		do
 			from i := last_position until i < 1 loop
-				items.put (dead_item, i)
+				item_storage.put (dead_item, i)
 				i := i - 1
 			end
 		end
 
-	keys: SPECIAL [K]
+	key_storage: SPECIAL [K]
 			-- Storage for keys of the table indexed from 1 to `capacity'
 
-	make_keys (n: INTEGER) is
-			-- Create `keys'.
+	make_key_storage (n: INTEGER) is
+			-- Create `key_storage'.
 		do
 			create special_key_routines
-			keys := special_key_routines.make (n)
+			key_storage := special_key_routines.make (n)
 		end
 
-	keys_put (k: K; i: INTEGER) is
-			-- Put `k' at position `i' in `keys'.
+	key_storage_put (k: K; i: INTEGER) is
+			-- Put `k' at position `i' in `key_storage'.
 		do
-			keys.put (k, i)
+			key_storage.put (k, i)
 		end
 
-	clone_keys is
-			-- Clone `keys'.
+	clone_key_storage is
+			-- Clone `key_storage'.
 		do
-			keys := keys.twin
+			key_storage := key_storage.twin
 		end
 
-	keys_resize (n: INTEGER) is
-			-- Resize `keys'.
+	key_storage_resize (n: INTEGER) is
+			-- Resize `key_storage'.
 		do
-			keys := special_key_routines.resize (keys, n)
+			key_storage := special_key_routines.resize (key_storage, n)
 		end
 
-	keys_wipe_out is
-			-- Wipe out items in `keys'.
+	key_storage_wipe_out is
+			-- Wipe out items in `key_storage'.
 		local
 			i: INTEGER
 			dead_key: K
 		do
 			from i := last_position until i < 1 loop
-				keys.put (dead_key, i)
+				key_storage.put (dead_key, i)
 				i := i - 1
 			end
 		end
 
 	clashes: SPECIAL [INTEGER]
-			-- Indexes in `items' and `keys' when there are clashes
+			-- Indexes in `item_storage' and `key_storage' when there are clashes
 			-- in `slots'. Each entry points to the next alternative
 			-- until `No_position' is reached. Also keep track of free
 			-- slot positions located before or at `last_position' with
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 		end
 
 	slots: SPECIAL [INTEGER]
-			-- Indexes in `items' and `keys', indexed by hash codes
+			-- Indexes in `item_storage' and `key_storage', indexed by hash codes
 			-- from 0 to `modulus' (the entry at index `modulus'
 			-- being reserved for void items)
 
@@ -231,10 +231,10 @@ feature {NONE} -- Implementation
 
 invariant
 
-	items_not_void: items /= Void
-	items_count: items.count = capacity + 1
-	keys_not_void: keys /= Void
-	keys_count: keys.count = capacity + 1
+	item_storage_not_void: item_storage /= Void
+	item_storage_count: item_storage.count = capacity + 1
+	key_storage_not_void: key_storage /= Void
+	key_storage_count: key_storage.count = capacity + 1
 	clashes_not_void: clashes /= Void
 	clashes_count: clashes.count = capacity + 1
 	slots_not_void: slots /= Void

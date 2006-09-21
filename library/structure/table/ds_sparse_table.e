@@ -142,7 +142,7 @@ feature {NONE} -- Initialization
 			equality_tester := an_item_tester
 			key_equality_tester := a_key_tester
 			make_sparse_container (n)
-			create internal_linear_keys.make (Current)
+			create internal_keys.make (Current)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -158,7 +158,7 @@ feature -- Access
 		do
 			search_position (k)
 			check hash_k: position /= No_position end
-			Result := items_item (position)
+			Result := item_storage_item (position)
 		end
 
 	key (k: K): K is
@@ -168,7 +168,7 @@ feature -- Access
 		do
 			search_position (k)
 			check hash_k: position /= No_position end
-			Result := keys_item (position)
+			Result := key_storage_item (position)
 		end
 
 	found_key: K is
@@ -176,7 +176,7 @@ feature -- Access
 		require
 			key_found: found
 		do
-			Result := keys_item (found_position)
+			Result := key_storage_item (found_position)
 		end
 
 	key_for_iteration: K is
@@ -198,12 +198,12 @@ feature -- Access
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
 
-	as_linear_keys: DS_BILINEAR [K] is
+	keys: DS_BILINEAR [K] is
 			-- View of current table as a linear representation of its keys
 		do
-			Result := internal_linear_keys
+			Result := internal_keys
 		ensure
-			as_linear_keys_not_void: Result /= Void
+			keys_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -264,9 +264,9 @@ feature -- Comparison
 					not Result or i < 1
 				loop
 					if clashes_item (i) > Free_watermark then
-						a_key := keys_item (i)
+						a_key := key_storage_item (i)
 						Result := other.has (a_key) and then
-							other.item (a_key) = items_item (i)
+							other.item (a_key) = item_storage_item (i)
 					end
 					i := i - 1
 				end
@@ -283,7 +283,7 @@ feature -- Setting
 			key_equality_tester_settable: key_equality_tester_settable (a_tester)
 		do
 			key_equality_tester := a_tester
-			internal_linear_keys.internal_set_equality_tester (a_tester)
+			internal_keys.internal_set_equality_tester (a_tester)
 		ensure
 			key_equality_tester_set: key_equality_tester = a_tester
 		end
@@ -297,7 +297,7 @@ feature -- Element change
 			unset_found_item
 			search_position (k)
 			check has_k: position /= No_position end
-			items_put (v, position)
+			item_storage_put (v, position)
 		end
 
 	replace_found_item (v: G) is
@@ -307,7 +307,7 @@ feature -- Element change
 		require
 			item_found: found
 		do
-			items_put (v, found_position)
+			item_storage_put (v, found_position)
 		ensure
 			replaced: found_item = v
 			same_count: count = old count
@@ -324,7 +324,7 @@ feature -- Element change
 			unset_found_item
 			search_position (k)
 			if position /= No_position then
-				items_put (v, position)
+				item_storage_put (v, position)
 			else
 				i := free_slot
 				if i = No_position then
@@ -336,8 +336,8 @@ feature -- Element change
 				h := slots_position
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
-				items_put (v, i)
-				keys_put (k, i)
+				item_storage_put (v, i)
+				key_storage_put (k, i)
 				count := count + 1
 			end
 		ensure
@@ -366,8 +366,8 @@ feature -- Element change
 			h := hash_position (k)
 			clashes_put (slots_item (h), i)
 			slots_put (i, h)
-			items_put (v, i)
-			keys_put (k, i)
+			item_storage_put (v, i)
+			key_storage_put (k, i)
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
@@ -387,7 +387,7 @@ feature -- Element change
 			unset_found_item
 			search_position (k)
 			if position /= No_position then
-				items_put (v, position)
+				item_storage_put (v, position)
 			else
 				i := last_position + 1
 				if i > capacity then
@@ -397,8 +397,8 @@ feature -- Element change
 				h := slots_position
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
-				items_put (v, i)
-				keys_put (k, i)
+				item_storage_put (v, i)
+				key_storage_put (k, i)
 				last_position := i
 				count := count + 1
 			end
@@ -419,7 +419,7 @@ feature -- Element change
 			unset_found_item
 			search_position (k)
 			if position /= No_position then
-				items_put (v, position)
+				item_storage_put (v, position)
 			else
 				if count = capacity then
 					resize (new_capacity (count + 1))
@@ -436,8 +436,8 @@ feature -- Element change
 				end
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
-				items_put (v, i)
-				keys_put (k, i)
+				item_storage_put (v, i)
+				key_storage_put (k, i)
 				count := count + 1
 			end
 		end
@@ -463,8 +463,8 @@ feature -- Element change
 			h := hash_position (k)
 			clashes_put (slots_item (h), i)
 			slots_put (i, h)
-			items_put (v, i)
-			keys_put (k, i)
+			item_storage_put (v, i)
+			key_storage_put (k, i)
 			count := count + 1
 		end
 
@@ -480,7 +480,7 @@ feature -- Element change
 			unset_found_item
 			search_position (k)
 			if position /= No_position then
-				items_put (v, position)
+				item_storage_put (v, position)
 			else
 				i := last_position + 1
 				if i > capacity then
@@ -491,8 +491,8 @@ feature -- Element change
 				end
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
-				items_put (v, i)
-				keys_put (k, i)
+				item_storage_put (v, i)
+				key_storage_put (k, i)
 				last_position := i
 				count := count + 1
 			end
@@ -509,11 +509,11 @@ feature -- Duplication
 			-- Copy `other' to current container.
 			-- Move all cursors `off' (unless `other = Current').
 		local
-			l_linear_keys: like internal_linear_keys
+			l_keys: like internal_keys
 		do
-			l_linear_keys := internal_linear_keys
+			l_keys := internal_keys
 			precursor {DS_SPARSE_CONTAINER} (other)
-			internal_linear_keys := l_linear_keys
+			internal_keys := l_keys
 		end
 
 feature {NONE} -- Implementation
@@ -523,21 +523,21 @@ feature {NONE} -- Implementation
 			-- (No precondition, to be used internally only.)
 		do
 			key_equality_tester := a_tester
-			internal_linear_keys.internal_set_equality_tester (a_tester)
+			internal_keys.internal_set_equality_tester (a_tester)
 		end
 
-	internal_linear_keys: DS_SPARSE_TABLE_KEYS [G, K]
+	internal_keys: DS_SPARSE_TABLE_KEYS [G, K]
 			-- View of current table as a linear representation of its keys
 
 	initialized: BOOLEAN is
 			-- Some Eiffel compilers check invariants even when the
 			-- execution of the creation procedure is not completed.
 			-- (In this case, checking the assertions of the being
-			-- created `internal_cursor' and `internal_linear_keys'
+			-- created `internal_cursor' and `internal_keys'
 			-- triggers the invariants on the current container.
 			-- So these invariants need to be protected.)
 		do
-			Result := (internal_cursor /= Void and internal_linear_keys /= Void)
+			Result := (internal_cursor /= Void and internal_keys /= Void)
 		end
 
 feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
@@ -549,12 +549,12 @@ feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
 			a_cursor_valid: valid_cursor (a_cursor)
 			a_cursor_not_off: not cursor_off (a_cursor)
 		do
-			Result := keys_item (a_cursor.position)
+			Result := key_storage_item (a_cursor.position)
 		end
 
 invariant
 
-	internal_linear_keys_not_void: initialized implies internal_linear_keys /= Void
-	internal_linear_keys_consistent: initialized implies internal_linear_keys.table = Current
+	internal_keys_not_void: initialized implies internal_keys /= Void
+	internal_keys_consistent: initialized implies internal_keys.table = Current
 
 end

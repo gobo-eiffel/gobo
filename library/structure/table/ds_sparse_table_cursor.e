@@ -46,7 +46,7 @@ feature -- Element change
 	replace (v: G) is
 			-- Replace item at cursor position by `v'.
 		do
-			container.items_put (v, position)
+			container.item_storage_put (v, position)
 		end
 
 feature {DS_SPARSE_TABLE} -- Implementation

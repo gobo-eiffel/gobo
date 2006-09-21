@@ -267,38 +267,38 @@ feature -- Measurement
 
 feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 
-	items_item (i: INTEGER): G is
-			-- Item at position `i' in `items'
+	item_storage_item (i: INTEGER): G is
+			-- Item at position `i' in `item_storage'
 		local
 			subitems: SPECIAL [G]
 		do
-			subitems := items.item (i // chunk_size)
+			subitems := item_storage.item (i // chunk_size)
 			if subitems /= Void then
 				Result := subitems.item (i \\ chunk_size)
 			end
 		end
 
-	items_put (v: G; i: INTEGER) is
-			-- Put `v' at position `i' in `items'.
+	item_storage_put (v: G; i: INTEGER) is
+			-- Put `v' at position `i' in `item_storage'.
 		local
 			subitems: SPECIAL [G]
 			j: INTEGER
 		do
 			j := i // chunk_size
-			subitems := items.item (j)
+			subitems := item_storage.item (j)
 			if subitems = Void then
 				subitems := special_item_routines.make (chunk_size)
-				items.put (subitems, j)
+				item_storage.put (subitems, j)
 			end
 			subitems.put (v, i \\ chunk_size)
 		end
 
-	keys_item (i: INTEGER): K is
-			-- Item at position `i' in `keys'
+	key_storage_item (i: INTEGER): K is
+			-- Item at position `i' in `key_storage'
 		local
 			subkeys: SPECIAL [K]
 		do
-			subkeys := keys.item (i // chunk_size)
+			subkeys := key_storage.item (i // chunk_size)
 			if subkeys /= Void then
 				Result := subkeys.item (i \\ chunk_size)
 			end
@@ -317,115 +317,115 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	items: ARRAY [SPECIAL [G]]
+	item_storage: ARRAY [SPECIAL [G]]
 			-- Storage for items of the table indexed from 1 to `capacity'
 
-	make_items (n: INTEGER) is
-			-- Create `items'.
+	make_item_storage (n: INTEGER) is
+			-- Create `item_storage'.
 		do
 			create special_item_routines
 			create array_special_item_routines
-			create items.make (0, ((n - 1) // chunk_size))
+			create item_storage.make (0, ((n - 1) // chunk_size))
 		end
 
-	clone_items is
-			-- Clone `items'.
+	clone_item_storage is
+			-- Clone `item_storage'.
 		local
 			i, nb: INTEGER
 			subitems: SPECIAL [G]
 		do
-			items := array_special_item_routines.cloned_array (items)
-			nb := items.upper
+			item_storage := array_special_item_routines.cloned_array (item_storage)
+			nb := item_storage.upper
 			from i := 0 until i > nb loop
-				subitems := items.item (i)
+				subitems := item_storage.item (i)
 				if subitems /= Void then
-					items.put (subitems.twin, i)
+					item_storage.put (subitems.twin, i)
 				end
 				i := i + 1
 			end
 		end
 
-	items_resize (n: INTEGER) is
-			-- Resize `items'.
+	item_storage_resize (n: INTEGER) is
+			-- Resize `item_storage'.
 		do
-			array_special_item_routines.resize (items, 0, ((n - 1) // chunk_size))
+			array_special_item_routines.resize (item_storage, 0, ((n - 1) // chunk_size))
 		end
 
-	items_wipe_out is
-			-- Wipe out items in `items'.
+	item_storage_wipe_out is
+			-- Wipe out items in `item_storage'.
 		local
 			i, nb: INTEGER
 		do
-			nb := items.upper
+			nb := item_storage.upper
 			from i := 0 until i > nb loop
-				items.put (Void, i)
+				item_storage.put (Void, i)
 				i := i + 1
 			end
 		end
 
-	keys: ARRAY [SPECIAL [K]]
+	key_storage: ARRAY [SPECIAL [K]]
 			-- Storage for keys of the table indexed from 1 to `capacity'
 
-	make_keys (n: INTEGER) is
-			-- Create `keys'.
+	make_key_storage (n: INTEGER) is
+			-- Create `key_storage'.
 		do
 			create special_key_routines
 			create array_special_key_routines
-			create keys.make (0, ((n - 1) // chunk_size))
+			create key_storage.make (0, ((n - 1) // chunk_size))
 		end
 
-	keys_put (k: K; i: INTEGER) is
-			-- Put `k' at position `i' in `keys'.
+	key_storage_put (k: K; i: INTEGER) is
+			-- Put `k' at position `i' in `key_storage'.
 		local
 			subkeys: SPECIAL [K]
 			j: INTEGER
 		do
 			j := i // chunk_size
-			subkeys := keys.item (j)
+			subkeys := key_storage.item (j)
 			if subkeys = Void then
 				subkeys := special_key_routines.make (chunk_size)
-				keys.put (subkeys, j)
+				key_storage.put (subkeys, j)
 			end
 			subkeys.put (k, i \\ chunk_size)
 		end
 
-	clone_keys is
-			-- Clone `keys'.
+	clone_key_storage is
+			-- Clone `key_storage'.
 		local
 			i, nb: INTEGER
 			subkeys: SPECIAL [K]
 		do
-			keys := array_special_key_routines.cloned_array (keys)
-			nb := keys.upper
+			key_storage := array_special_key_routines.cloned_array (key_storage)
+			nb := key_storage.upper
 			from i := 0 until i > nb loop
-				subkeys := keys.item (i)
+				subkeys := key_storage.item (i)
 				if subkeys /= Void then
-					keys.put (subkeys.twin, i)
+					key_storage.put (subkeys.twin, i)
 				end
 				i := i + 1
 			end
 		end
 
-	keys_resize (n: INTEGER) is
-			-- Resize `keys'.
+	key_storage_resize (n: INTEGER) is
+			-- Resize `key_storage'.
 		do
-			array_special_key_routines.resize (keys, 0, ((n - 1) // chunk_size))
+			array_special_key_routines.resize (key_storage, 0, ((n - 1) // chunk_size))
 		end
 
-	keys_wipe_out is
-			-- Wipe out items in `keys'.
+	key_storage_wipe_out is
+			-- Wipe out items in `key_storage'.
 		local
 			i, nb: INTEGER
 		do
-			nb := keys.upper
+			nb := key_storage.upper
 			from i := 0 until i > nb loop
-				keys.put (Void, i)
+				key_storage.put (Void, i)
 				i := i + 1
 			end
 		end
 
 	clashes: ARRAY [SPECIAL [INTEGER]]
-			-- Indexes in `items' and `keys'  when there are clashes
+			-- Indexes in `item_storage' and `key_storage'  when there are clashes
 			-- in `slots'. Each entry points to the next alternative
 			-- until `No_position' is reached. Also keep track of free
 			-- slot positions located before or at `last_position' with
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 		end
 
 	slots: ARRAY [SPECIAL [INTEGER]]
-			-- Indexes in `items' and `keys', indexed by hash codes
+			-- Indexes in `item_storage' and `key_storage', indexed by hash codes
 			-- from 0 to `modulus' (the entry at index `modulus'
 			-- being reserved for void items)
 
@@ -574,14 +574,14 @@ feature {NONE} -- Implementation
 invariant
 
 	chunk_size_positive: chunk_size > 0
-	items_not_void: items /= Void
-	items_count1: capacity = 0 implies items.count = 0
-	items_count2: capacity > 0 implies (items.count = ((capacity) // chunk_size) + 1)
+	item_storage_not_void: item_storage /= Void
+	item_storage_count1: capacity = 0 implies item_storage.count = 0
+	item_storage_count2: capacity > 0 implies (item_storage.count = ((capacity) // chunk_size) + 1)
 	special_item_routines_not_void: special_item_routines /= Void
 	array_special_item_routines_not_void: array_special_item_routines /= Void
-	keys_not_void: keys /= Void
-	keys_count1: capacity = 0 implies keys.count = 0
-	keys_count2: capacity > 0 implies (keys.count = ((capacity) // chunk_size) + 1)
+	key_storage_not_void: key_storage /= Void
+	key_storage_count1: capacity = 0 implies key_storage.count = 0
+	key_storage_count2: capacity > 0 implies (key_storage.count = ((capacity) // chunk_size) + 1)
 	special_key_routines_not_void: special_key_routines /= Void
 	array_special_key_routines_not_void: array_special_key_routines /= Void
 	clashes_not_void: clashes /= Void

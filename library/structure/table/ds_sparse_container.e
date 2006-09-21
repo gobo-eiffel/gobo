@@ -37,8 +37,8 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 		do
 			capacity := n
-			make_items (n + 1)
-			make_keys (n + 1)
+			make_item_storage (n + 1)
+			make_key_storage (n + 1)
 			make_clashes (n + 1)
 			modulus := new_modulus (n)
 			make_slots (modulus + 1)
@@ -60,7 +60,7 @@ feature -- Access
 		require
 			item_found: found
 		do
-			Result := items_item (found_position)
+			Result := item_storage_item (found_position)
 		end
 
 	first: G is
@@ -73,7 +73,7 @@ feature -- Access
 			loop
 				i := i + 1
 			end
-			Result := items_item (i)
+			Result := item_storage_item (i)
 		end
 
 	last: G is
@@ -88,7 +88,7 @@ feature -- Access
 			loop
 				i := i - 1
 			end
-			Result := items_item (i)
+			Result := item_storage_item (i)
 		end
 
 	new_cursor: DS_SPARSE_CONTAINER_CURSOR [G, K] is
@@ -118,7 +118,7 @@ feature -- Measurement
 			if a_tester /= Void then
 				from until i < 1 loop
 					if clashes_item (i) > Free_watermark then
-						if a_tester.test (items_item (i), v) then
+						if a_tester.test (item_storage_item (i), v) then
 							Result := Result + 1
 						end
 					end
@@ -128,7 +128,7 @@ feature -- Measurement
 					-- Use `=' as comparison criterion.
 				from until i < 1 loop
 					if clashes_item (i) > Free_watermark then
-						if items_item (i) = v then
+						if item_storage_item (i) = v then
 							Result := Result + 1
 						end
 					end
@@ -153,7 +153,7 @@ feature -- Status report
 				from until i < 1 loop
 					if
 						clashes_item (i) > Free_watermark and then
-						a_tester.test (items_item (i), v)
+						a_tester.test (item_storage_item (i), v)
 					then
 						Result := True
 						i := 0  -- Jump out of the loop.
@@ -166,7 +166,7 @@ feature -- Status report
 				from until i < 1 loop
 					if
 						clashes_item (i) > Free_watermark and then
-						items_item (i) = v
+						item_storage_item (i) = v
 					then
 						Result := True
 						i := 0  -- Jump out of the loop.
@@ -218,8 +218,8 @@ feature -- Duplication
 					internal_cursor := new_cursor
 				end
 				unset_found_item
-				clone_items
-				clone_keys
+				clone_item_storage
+				clone_key_storage
 				clone_slots
 				clone_clashes
 			end
@@ -257,8 +257,8 @@ feature -- Removal
 			move_all_cursors_after
 			unset_found_item
 			if count > 0 then
-				items_wipe_out
-				keys_wipe_out
+				item_storage_wipe_out
+				key_storage_wipe_out
 				clashes_wipe_out
 				slots_wipe_out
 				last_position := 0
@@ -288,14 +288,14 @@ feature -- Resizing
 			modulus := m
 			from i := last_position until i < 1 loop
 				if clashes_item (i) > Free_watermark then
-					h := hash_position (keys_item (i))
+					h := hash_position (key_storage_item (i))
 					clashes_put (slots_item (h), i)
 					slots_put (i, h)
 				end
 				i := i - 1
 			end
-			items_resize (n + 1)
-			keys_resize (n + 1)
+			item_storage_resize (n + 1)
+			key_storage_resize (n + 1)
 			clashes_resize (n + 1)
 			capacity := n
 			position := No_position
@@ -319,23 +319,23 @@ feature -- Optimization
 					if clashes_item (i) > Free_watermark then
 						j := j + 1
 						if j /= i then
-							items_put (items_item (i), j)
-							keys_put (keys_item (i), j)
+							item_storage_put (item_storage_item (i), j)
+							key_storage_put (key_storage_item (i), j)
 							move_all_cursors (i, j)
 						end
 					end
 					i := i + 1
 				end
 				from j := j + 1 until j > nb loop
-					items_put (dead_item, j)
-					keys_put (dead_key, j)
+					item_storage_put (dead_item, j)
+					key_storage_put (dead_key, j)
 					j := j + 1
 				end
 				clashes_wipe_out
 				slots_wipe_out
 				nb := count
 				from i := 1 until i > nb loop
-					h := hash_position (keys_item (i))
+					h := hash_position (key_storage_item (i))
 					clashes_put (slots_item (h), i)
 					slots_put (i, h)
 					i := i + 1
@@ -355,26 +355,26 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 			-- All slots to the right of this position
 			-- are guaranteed to be free
 
-	items_item (i: INTEGER): G is
-			-- Item at position `i' in `items'
+	item_storage_item (i: INTEGER): G is
+			-- Item at position `i' in `item_storage'
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= capacity
 		deferred
 		end
 
-	items_put (v: G; i: INTEGER) is
-			-- Put `v' at position `i' in `items'.
+	item_storage_put (v: G; i: INTEGER) is
+			-- Put `v' at position `i' in `item_storage'.
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= capacity
 		deferred
 		ensure
-			inserted: items_item (i) = v
+			inserted: item_storage_item (i) = v
 		end
 
-	keys_item (i: INTEGER): K is
-			-- Item at position `i' in `keys'
+	key_storage_item (i: INTEGER): K is
+			-- Item at position `i' in `key_storage'
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= capacity
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 				if a_tester /= Void then
 					if
 						position = No_position or else
-						not a_tester.test (k, keys_item (position)) or else
+						not a_tester.test (k, key_storage_item (position)) or else
 						a_tester.test (k, dead_key)
 					then
 						from
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 						until
 							i = No_position
 						loop
-							if a_tester.test (k, keys_item (i)) then
+							if a_tester.test (k, key_storage_item (i)) then
 								position := i
 								i := No_position -- Jump out of the loop.
 							else
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 				else
 					if
 						position = No_position or else
-						k /= keys_item (position) or else
+						k /= key_storage_item (position) or else
 						k = dead_key
 					then
 						from
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 						until
 							i = No_position
 						loop
-							if k = keys_item (i) then
+							if k = key_storage_item (i) then
 								position := i
 								i := No_position -- Jump out of the loop.
 							else
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 			a_tester: like key_equality_tester
 		do
 			if i /= position then
-				k := keys_item (i)
+				k := key_storage_item (i)
 				h := hash_position (k)
 				if slots_item (h) = i then
 					position := i
@@ -539,8 +539,8 @@ feature {NONE} -- Implementation
 			else
 				clashes_put (clashes_item (position), clashes_previous_position)
 			end
-			items_put (dead_item, position)
-			keys_put (dead_key, position)
+			item_storage_put (dead_item, position)
+			key_storage_put (dead_key, position)
 			if free_slot = No_position and position = last_position then
 				last_position := last_position - 1
 				clashes_put (No_position, position)
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 			one_less: count = old count - 1
 		end
 
-	make_items (n: INTEGER) is
+	make_item_storage (n: INTEGER) is
 			-- Create storage for items of the table indexed
 			-- from 0 to `n-1' (position 0 is not used).
 		require
@@ -561,24 +561,24 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	clone_items is
-			-- Clone `items'.
+	clone_item_storage is
+			-- Clone `item_storage'.
 		deferred
 		end
 
-	items_resize (n: INTEGER) is
-			-- Resize `items'.
+	item_storage_resize (n: INTEGER) is
+			-- Resize `item_storage'.
 		require
 			n_large_enough: n > capacity
 		deferred
 		end
 
-	items_wipe_out is
-			-- Wipe out items in `items'.
+	item_storage_wipe_out is
+			-- Wipe out items in `item_storage'.
 		deferred
 		end
 
-	make_keys (n: INTEGER) is
+	make_key_storage (n: INTEGER) is
 			-- Create storage for keys of the set indexed
 			-- from 0 to `n-1' (position 0 is not used).
 		require
@@ -586,33 +586,33 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	keys_put (k: K; i: INTEGER) is
-			-- Put `k' at position `i' in `keys'.
+	key_storage_put (k: K; i: INTEGER) is
+			-- Put `k' at position `i' in `key_storage'.
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= capacity
 		deferred
 		end
 
-	clone_keys is
-			-- Clone `keys'.
+	clone_key_storage is
+			-- Clone `key_storage'.
 		deferred
 		end
 
-	keys_resize (n: INTEGER) is
-			-- Resize `keys'.
+	key_storage_resize (n: INTEGER) is
+			-- Resize `key_storage'.
 		require
 			n_large_enough: n > capacity
 		deferred
 		end
 
-	keys_wipe_out is
-			-- Wipe out items in `keys'.
+	key_storage_wipe_out is
+			-- Wipe out items in `key_storage'.
 		deferred
 		end
 
 	make_clashes (n: INTEGER) is
-			-- Create table of indexes in `items' and `keys' when there are
+			-- Create table of indexes in `item_storage' and `key_storage' when there are
 			-- clashes in `slots'. Each entry points to the next alternative
 			-- until `No_position' is reached. Also keep track of free
 			-- slot positions located before or at `last_position' with
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 		end
 
 	make_slots (n: INTEGER) is
-			-- Create table of indexes in `items' and `keys', indexed
+			-- Create table of indexes in `item_storage' and `key_storage', indexed
 			-- by hash codes from 0 to `n-1' (the entry at index
 			-- `n-1' being reserved for void keys)
 		require
@@ -697,12 +697,12 @@ feature {NONE} -- Implementation
 			-- Upper bound of `slots'
 
 	free_slot: INTEGER
-			-- Index of first free slot in `items' and `keys';
+			-- Index of first free slot in `item_storage' and `key_storage';
 			-- `No_position' if there is no free slot at positions
 			-- between 1 and `last_position'
 
 	position: INTEGER
-			-- Last position in `keys' and `items'
+			-- Last position in `key_storage' and `item_storage'
 			-- found by `search_position'
 
 	slots_position: INTEGER
@@ -828,7 +828,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 	cursor_item (a_cursor: like new_cursor): G is
 			-- Item at `a_cursor' position
 		do
-			Result := items_item (a_cursor.position)
+			Result := item_storage_item (a_cursor.position)
 		end
 
 	cursor_after (a_cursor: like new_cursor): BOOLEAN is
