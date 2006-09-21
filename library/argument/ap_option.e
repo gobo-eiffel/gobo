@@ -144,6 +144,9 @@ feature -- Status report
 	has_short_form: BOOLEAN
 			-- Does this option have a short form?
 
+	is_hidden: BOOLEAN
+			-- Is the options hidden and should not show up in help texts?
+	
 	is_mandatory: BOOLEAN
 			-- Is the option not optional?
 
@@ -207,6 +210,22 @@ feature -- Element change
 			is_mandatory := True
 		ensure
 			not_mandatory: not is_mandatory
+		end
+
+	hide_in_help_text is
+			-- Hide the option in help texts.
+		do
+			is_hidden := True
+		ensure
+			is_hidden: is_hidden
+		end
+
+	show_in_help_text is
+			-- Show the option in help texts.
+		do
+			is_hidden := False
+		ensure
+			not_hidden: not is_hidden
 		end
 
 feature -- Removal

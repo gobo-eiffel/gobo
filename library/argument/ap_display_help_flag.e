@@ -67,7 +67,14 @@ feature -- Help Display
 			Exceptions.die (0)
 		end
 
-feature {NONE} -- Implementation
+	display_usage (a_parser: AP_PARSER) is
+			-- Display only the usage instructions (and die afterwards).
+		do
+			a_parser.error_handler.report_info_message (full_usage_instruction (a_parser))
+			Exceptions.die (0)
+		end
+
+feature -- Text Generation
 
 	full_help_text (a_parser: AP_PARSER): STRING is
 			-- Full help text for `a_parser'
@@ -78,18 +85,11 @@ feature {NONE} -- Implementation
 			all_options: DS_LIST [AP_OPTION]
 			comparator: AP_OPTION_COMPARATOR
 			sorter: DS_QUICK_SORTER [AP_OPTION]
-			alt_list: DS_LIST[AP_ALTERNATIVE_OPTIONS_LIST]
+			is_not_first: BOOLEAN
 		do
 			create comparator
 			create sorter.make (comparator)
-			Result := usage_instruction (a_parser)
-			Result.append_character ('%N')
-			alt_list := a_parser.alternative_options_lists
-			from alt_list.start until alt_list.after loop
-				Result.append_string (alternative_usage_instruction (a_parser, alt_list.item_for_iteration))
-				Result.append_character ('%N')
-				alt_list.forth
-			end
+			Result := full_usage_instruction (a_parser)
 			if not a_parser.application_description.is_empty then
 				Result.append_string (text_before_description)
 				wrapper.set_new_line_indentation (0)
@@ -101,13 +101,18 @@ feature {NONE} -- Implementation
 			sorter.sort (all_options)
 			max_indent := 0
 			from all_options.start until all_options.after loop
-				max_indent := all_options.item_for_iteration.names.count.max (max_indent)
+				if not all_options.item_for_iteration.is_hidden then
+					max_indent := all_options.item_for_iteration.names.count.max (max_indent)
+				end
 				all_options.forth
 			end
 			from all_options.start until all_options.after loop
-				Result.append_string (option_help_text (all_options.item_for_iteration, max_indent + 1))
-				if not all_options.is_last then
-					Result.append_character ('%N')
+				if not all_options.item_for_iteration.is_hidden then
+					if is_not_first then
+						Result.append_character ('%N')
+					end
+					Result.append_string (option_help_text (all_options.item_for_iteration, max_indent + 1))
+					is_not_first := True
 				end
 				all_options.forth
 			end
@@ -115,6 +120,28 @@ feature {NONE} -- Implementation
 			full_help_text_not_void: Result /= Void
 		end
 
+	full_usage_instruction (a_parser: AP_PARSER): STRING is
+			-- Usage instruction for the programs standard and 
+			-- alternative options
+		require
+			a_parser_not_void: a_parser /= Void
+		local
+			alt_list: DS_LIST[AP_ALTERNATIVE_OPTIONS_LIST]
+		do
+			Result := usage_instruction (a_parser)
+			Result.append_character ('%N')
+			alt_list := a_parser.alternative_options_lists
+			from alt_list.start until alt_list.after loop
+				if not alt_list.item_for_iteration.introduction_option.is_hidden then
+					Result.append_string (alternative_usage_instruction (a_parser, alt_list.item_for_iteration))
+				end
+				Result.append_character ('%N')
+				alt_list.forth
+			end
+		end
+	
+feature {NONE} -- Implementation
+	
 	usage_instruction (a_parser: AP_PARSER): STRING is
 			-- Short usage instruction for the programs standard options
 		require
@@ -129,8 +156,10 @@ feature {NONE} -- Implementation
 			l_options := a_parser.options
 			from l_options.start until l_options.after loop
 				option := l_options.item_for_iteration
-				args.append_string (option.example)
-				args.append_character (' ')
+				if not option.is_hidden then
+					args.append_string (option.example)
+					args.append_character (' ')
+				end
 				l_options.forth
 			end
 			args.append_string (a_parser.parameters_description)
@@ -162,8 +191,10 @@ feature {NONE} -- Implementation
 			args.append_character (' ')
 			from a_list.start until a_list.after loop
 				option := a_list.item_for_iteration
-				args.append_string (option.example)
-				args.append_character (' ')
+				if not option.is_hidden then
+					args.append_string (option.example)
+					args.append_character (' ')
+				end
 				a_list.forth
 			end
 			args.append_string (a_list.parameters_description)
