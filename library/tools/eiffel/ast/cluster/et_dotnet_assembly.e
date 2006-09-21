@@ -37,6 +37,10 @@ feature -- Status report
 			-- not taken into account when repreparsing or reparsing
 			-- the universe? (see 'library' in ISE's LACE.)
 
+	is_implicit: BOOLEAN
+			-- Has current assembly not been explicitly declared
+			-- but is instead the result of assembly dependences?
+
 feature -- Access
 
 	classname_prefix: STRING is
@@ -51,6 +55,44 @@ feature -- Access
 			Result := Current
 		ensure then
 			definition: Result = Current
+		end
+
+	classname_mapping: DS_HASH_TABLE [ET_CLASS_NAME, STRING]
+			-- Mapping between names of .NET classes provided
+			-- in current assembly and their Eiffel class name
+			-- counterparts
+
+	referenced_assemblies: ET_DOTNET_ASSEMBLIES
+			-- Assemblies referenced by current assembly
+
+feature -- Status setting
+
+	set_implicit (b: BOOLEAN) is
+			-- Set `is_implicit' to `b'.
+		do
+			is_implicit := b
+		ensure
+			implicit_set: is_implicit = b
+		end
+
+feature -- Setting
+
+	set_classname_mapping (a_mapping: like classname_mapping) is
+			-- Set `classname_mapping' to `a_mapping'.
+		require
+			no_void_classname: a_mapping /= Void implies not a_mapping.has_item (Void)
+		do
+			classname_mapping := a_mapping
+		ensure
+			classname_mapping_set: classname_mapping = a_mapping
+		end
+
+	set_referenced_assemblies (a_assemblies: like referenced_assemblies) is
+			-- Set `referenced_assemblies' to `a_assemblies'.
+		do
+			referenced_assemblies := a_assemblies
+		ensure
+			referenced_assemblies_set: referenced_assemblies = a_assemblies
 		end
 
 feature -- Nested
@@ -74,5 +116,6 @@ feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Consuming
 invariant
 
 	is_dotnet_assembly: is_dotnet_assembly
+	no_void_classname: classname_mapping /= Void implies not classname_mapping.has_item (Void)
 
 end

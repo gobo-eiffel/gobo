@@ -523,7 +523,7 @@ feature -- AST processing
 								error_handler.report_gcaab_error (a_cluster, a_filename)
 							end
 						elseif current_class.is_in_dotnet_assembly then
-							current_class.set_parsed
+							universe.dotnet_assembly_consumer.consume_class (current_class)
 						end
 					end
 					if not current_class.is_parsed then
@@ -1640,8 +1640,8 @@ feature {NONE} -- AST factory
 						Result.set_time_stamp (time_stamp)
 						Result.set_in_system (True)
 						Result.set_overridden_class (l_other_class)
+						overriding_class_added := True
 					end
-					overriding_class_added := True
 				elseif not Result.is_in_override_cluster then
 						-- Two classes with the same name in two non-override groups.
 					l_other_class := Result.cloned_class

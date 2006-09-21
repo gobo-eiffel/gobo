@@ -25,7 +25,9 @@ feature -- Consuming
 	consume_class (a_class: ET_CLASS) is
 			-- Consume `a_class'.
 		do
-			-- Do nothing.
+				-- Enforce postcondition.
+			a_class.set_parsed
+			a_class.set_syntax_error
 		end
 
 feature {ET_DOTNET_ASSEMBLY} -- Consuming

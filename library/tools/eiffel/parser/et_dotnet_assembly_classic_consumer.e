@@ -25,6 +25,8 @@ feature -- Consuming
 	consume_class (a_class: ET_CLASS) is
 			-- Consume `a_class'.
 		do
+			a_class.set_parsed
+			a_class.set_syntax_error
 			error_handler.report_gaaaa_error (a_class.group.dotnet_assembly)
 		end
 

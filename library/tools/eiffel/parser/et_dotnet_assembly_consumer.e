@@ -59,6 +59,8 @@ feature -- Consuming
 			a_class_not_void: a_class /= Void
 			a_class_dotnet: a_class.is_in_dotnet_assembly
 		deferred
+		ensure
+			a_class_parsed: a_class.is_parsed
 		end
 
 feature {ET_DOTNET_ASSEMBLY} -- Consuming
