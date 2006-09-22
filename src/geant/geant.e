@@ -23,9 +23,6 @@ inherit
 	KL_SHARED_ARGUMENTS
 		export {NONE} all end
 
-	KL_SHARED_EXCEPTIONS
-		export {NONE} all end
-
 create
 
 	make
@@ -115,6 +112,8 @@ feature -- Access
 
 	no_exec: BOOLEAN
 			-- Do not execute commands (only show what they would do)?
+
+feature {NONE} -- Command line parsing
 
 	read_command_line is
 			-- Read command line arguments.
@@ -218,6 +217,9 @@ feature -- Access
 			end
 			if arg_parser.parameters.count = 1 then
 				start_target_name := arg_parser.parameters.first
+			end
+			if arg_parser.parameters.count > 1 then
+				exit_application (1, << "Too many targets." >>)
 			end
 		end
 
