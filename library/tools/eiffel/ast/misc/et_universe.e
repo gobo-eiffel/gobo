@@ -979,7 +979,7 @@ feature -- Measurement
 				a_cursor.forth
 			end
 		ensure
-			parsed_classes_count_non_negative: Result >= 0
+			parsed_classes_count_not_negative: Result >= 0
 		end
 
 	cluster_count: INTEGER is
@@ -989,7 +989,7 @@ feature -- Measurement
 				Result := clusters.count
 			end
 		ensure
-			cluster_count_non_negavite: Result >= 0
+			cluster_count_not_negavite: Result >= 0
 		end
 
 	override_cluster_count: INTEGER is
@@ -999,7 +999,7 @@ feature -- Measurement
 				Result := clusters.override_count
 			end
 		ensure
-			override_cluster_count_non_negavite: Result >= 0
+			override_cluster_count_not_negavite: Result >= 0
 		end
 
 	read_write_cluster_count: INTEGER is
@@ -1009,7 +1009,17 @@ feature -- Measurement
 				Result := clusters.read_write_count
 			end
 		ensure
-			read_write_cluster_count_non_negavite: Result >= 0
+			read_write_cluster_count_not_negavite: Result >= 0
+		end
+
+	dotnet_assembly_count: INTEGER is
+			-- Number of .NET assemblies
+		do
+			if dotnet_assemblies /= Void then
+				Result := dotnet_assemblies.count
+			end
+		ensure
+			dotnet_assembly_count_not_negavite: Result >= 0
 		end
 
 feature -- Setting
