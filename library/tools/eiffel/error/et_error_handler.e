@@ -101,7 +101,7 @@ feature -- Compilation report
 					else
 						info_file.put_string ("group ")
 					end
-					info_file.put_line (a_group.full_lower_name ('.'))
+					info_file.put_line (a_group.full_lower_name ('/'))
 				end
 			end
 		end

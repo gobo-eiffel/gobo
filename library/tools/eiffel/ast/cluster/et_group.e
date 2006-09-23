@@ -224,7 +224,7 @@ feature -- Output
 	debug_output: STRING is
 			-- String that should be displayed in debugger to represent `Current'
 		do
-			Result := full_name ('.')
+			Result := full_name ('/')
 		end
 
 end

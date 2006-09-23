@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			assembly := an_assembly
 			create parameters.make (1, 2)
 			parameters.put (etl_code, 1)
-			parameters.put (assembly.full_name ('.'), 2)
+			parameters.put (assembly.full_lower_name ('/'), 2)
 		ensure
 			assembly_set: assembly = an_assembly
 			-- dollar0: $0 = program name
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			assembly := an_assembly
 			create parameters.make (1, 3)
 			parameters.put (etl_code, 1)
-			parameters.put (assembly.full_name ('.'), 2)
+			parameters.put (assembly.full_lower_name ('/'), 2)
 			parameters.put (a_message, 3)
 		ensure
 			assembly_set: assembly = an_assembly
