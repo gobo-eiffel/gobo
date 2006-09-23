@@ -107,6 +107,17 @@ feature -- Access
 	ast_factory: ET_LACE_AST_FACTORY
 			-- Abstract Syntax Tree factory
 
+feature -- Default options
+
+	metadata_cache_path_value: ET_IDENTIFIER
+			-- Value of 'metadata_cache_path' default option, if any
+
+	msil_clr_version_value: ET_IDENTIFIER
+			-- Value of 'msil_clr_version' default option, if any
+
+	override_cluster_names: DS_HASH_SET [ET_IDENTIFIER]
+			-- Override cluster names, if any
+
 feature {NONE} -- AST factory
 
 	new_assembly (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_DOTNET_ASSEMBLY is
@@ -257,6 +268,20 @@ feature {NONE} -- AST factory
 		do
 			if a_name.same_identifier (override_cluster_option) then
 				override_cluster_names.force_last (a_value)
+			elseif a_name.same_identifier (msil_clr_version_option) then
+				if msil_clr_version_value /= Void then
+						-- TODO: better error handling
+					report_error ("Option 'msil_clr_version' already set to '" + msil_clr_version_value.name + "'.")
+				else
+					msil_clr_version_value := a_value
+				end
+			elseif a_name.same_identifier (metadata_cache_path_option) then
+				if metadata_cache_path_value /= Void then
+						-- TODO: better error handling
+					report_error ("Option 'metadata_cache_path' already set to '" + metadata_cache_path_value.name + "'.")
+				else
+					metadata_cache_path_value := a_value
+				end
 			end
 		end
 
@@ -264,17 +289,6 @@ feature {NONE} -- Implementation
 
 	named_clusters: DS_HASH_TABLE [ET_LACE_CLUSTER, ET_IDENTIFIER]
 			-- Named clusters
-
-	override_cluster_names: DS_HASH_SET [ET_IDENTIFIER]
-			-- Override cluster names
-
-	override_cluster_option: ET_IDENTIFIER is
-			-- 'override_cluster' default option name
-		once
-			Result := new_identifier ("override_cluster")
-		ensure
-			override_cluster_option_not_void: Result /= Void
-		end
 
 feature -- Error handling
 
@@ -298,6 +312,32 @@ feature -- Error handling
 			a_lined_message.append_string (a_message)
 			create an_error.make (a_lined_message)
 			error_handler.report_error (an_error)
+		end
+
+feature {NONE} -- Constants
+
+	metadata_cache_path_option: ET_IDENTIFIER is
+			-- 'metadata_cache_path' default option name
+		once
+			Result := new_identifier ("metadata_cache_path")
+		ensure
+			metadata_cache_path_option_not_void: Result /= Void
+		end
+
+	msil_clr_version_option: ET_IDENTIFIER is
+			-- 'msil_clr_version' default option name
+		once
+			Result := new_identifier ("msil_clr_version")
+		ensure
+			msil_clr_version_option_not_void: Result /= Void
+		end
+
+	override_cluster_option: ET_IDENTIFIER is
+			-- 'override_cluster' default option name
+		once
+			Result := new_identifier ("override_cluster")
+		ensure
+			override_cluster_option_not_void: Result /= Void
 		end
 
 invariant
