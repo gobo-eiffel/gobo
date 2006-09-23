@@ -289,10 +289,33 @@ feature -- .NET assembly errors
 			end
 		end
 
+	report_gazzz_error (an_assembly: ET_DOTNET_ASSEMBLY; a_message: STRING) is
+			-- Report GAZZZ error: error explained as plain text in `a_message'.
+		require
+			an_assembly_not_void: an_assembly /= Void
+			a_message_not_void: a_message /= Void
+		local
+			an_error: ET_DOTNET_ASSEMBLY_ERROR
+		do
+			if reportable_gazzz_error (an_assembly) then
+				create an_error.make_gazzz (an_assembly, a_message)
+				report_assembly_error (an_error)
+			end
+		end
+
 feature -- .NET assembly error status
 
 	reportable_gaaaa_error (an_assembly: ET_DOTNET_ASSEMBLY): BOOLEAN is
 			-- Can a GAAAA error be reported when it
+			-- appears in `an_assembly'?
+		require
+			an_assembly_not_void: an_assembly /= Void
+		do
+			Result := True
+		end
+
+	reportable_gazzz_error (an_assembly: ET_DOTNET_ASSEMBLY): BOOLEAN is
+			-- Can a GAZZZ error be reported when it
 			-- appears in `an_assembly'?
 		require
 			an_assembly_not_void: an_assembly /= Void
