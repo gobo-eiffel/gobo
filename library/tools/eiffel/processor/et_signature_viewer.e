@@ -132,7 +132,7 @@ feature {ET_AST_NODE} -- Processing
 								output_file.put_string ("No feature `")
 								output_file.put_string (a_name)
 								output_file.put_string ("' in class ")
-								output_file.put_string (a_class.name.name)
+								output_file.put_string (a_class.upper_name)
 								output_file.put_character ('.')
 								output_file.put_new_line
 							end

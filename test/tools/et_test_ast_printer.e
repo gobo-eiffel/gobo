@@ -102,9 +102,9 @@ feature -- Test
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if
-					(not eiffel_compiler.is_ve or else not a_class.name.name.same_string ("SORTED_ARRAY")) and
+					(not eiffel_compiler.is_ve or else not a_class.upper_name.same_string ("SORTED_ARRAY")) and
 						-- Class SORTED_ARRAY in VE 4.0 has a feature named `create'.
-					(not eiffel_compiler.is_ise or else not a_class.name.name.same_string ("ANY"))
+					(not eiffel_compiler.is_ise or else not a_class.upper_name.same_string ("ANY"))
 						-- Class ANY in ISE 5.4 has 'Void' as a feature and not as a keyword.
 				then
 					if a_class.is_in_cluster then
@@ -116,8 +116,8 @@ feature -- Test
 									-- text (allowed in VE). This is case is not handled by the
 									-- current test.
 								a_class.process (a_universe.eiffel_parser)
-								assert (a_class.name.name + "_parsed", a_class.is_parsed)
-								assert (a_class.name.name + "_no_syntax_error", not a_class.has_syntax_error)
+								assert (a_class.lower_name + "_parsed", a_class.is_parsed)
+								assert (a_class.lower_name + "_no_syntax_error", not a_class.has_syntax_error)
 								if eiffel_compiler.is_ve then
 									new_count := a_universe.parsed_classes_count
 								else
@@ -133,7 +133,7 @@ feature -- Test
 									a_class.process (a_printer)
 									a_printer.set_null_file
 									a_file.close
-									assert_files_equal (a_class.name.name + "_diff", a_class.filename, "gobo.txt")
+									assert_files_equal (a_class.lower_name + "_diff", a_class.filename, "gobo.txt")
 								end
 								old_count := new_count
 							end

@@ -94,9 +94,9 @@ feature {NONE} -- Initialization
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (cluster.full_lower_name ('/'), 2)
-			parameters.put (a_class.name.name, 3)
+			parameters.put (a_class.upper_name, 3)
 			parameters.put (a_class.group.full_lower_name ('/'), 4)
-			parameters.put (a_dependant.name.name, 5)
+			parameters.put (a_dependant.upper_name, 5)
 			parameters.put (a_dependant.group.full_lower_name ('/'), 6)
 			l_group_names := a_constraint.group_names
 			nb := l_group_names.count
@@ -147,9 +147,9 @@ feature {NONE} -- Initialization
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (cluster.full_lower_name ('/'), 2)
-			parameters.put (a_class.name.name, 3)
+			parameters.put (a_class.upper_name, 3)
 			parameters.put (a_class.group.full_lower_name ('/'), 4)
-			parameters.put (a_provider.name.name, 5)
+			parameters.put (a_provider.upper_name, 5)
 			parameters.put (a_provider.group.full_lower_name ('/'), 6)
 			l_group_names := a_constraint.group_names
 			nb := l_group_names.count

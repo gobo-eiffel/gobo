@@ -89,7 +89,7 @@ feature -- Generation
 			i: INTEGER
 			a_cursor: DS_LIST_CURSOR [STRING]
 		do
-			a_class_name := a_class.name.upper_name
+			a_class_name := a_class.upper_name
 			create new_name.make (a_class_name.count + class_prefix.count)
 			new_name.append_string (class_prefix)
 			new_name.append_string (a_class_name)
@@ -253,7 +253,7 @@ feature -- Generation
 				a_file.put_string (class_name)
 				a_file.put_line ("%", variables)")
 				from a_cursor.start until a_cursor.after loop
-					test_name := a_cursor.key.name.upper_name
+					test_name := a_cursor.key.upper_name
 					a_pair := a_cursor.item
 					nb := a_pair.first.count
 					from i := 1 until i > nb loop

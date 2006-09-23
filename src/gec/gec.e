@@ -217,7 +217,7 @@ feature {NONE} -- Processing
 				l_base_name := a_universe.system_name
 				if l_base_name = Void then
 				else
-					l_base_name := l_class.name.lower_name
+					l_base_name := l_class.lower_name
 				end
 				l_filename := l_base_name + ".c"
 				create l_file.make (l_filename)

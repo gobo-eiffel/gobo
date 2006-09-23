@@ -16,7 +16,9 @@ inherit
 
 	ET_BASE_TYPE
 		rename
-			name as bit_keyword
+			name as bit_keyword,
+			upper_name as bit_keyword_upper_name,
+			lower_name as bit_keyword_lower_name
 		redefine
 			bit_keyword,
 			same_syntactical_bit_type,

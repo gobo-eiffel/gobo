@@ -527,7 +527,7 @@ feature {NONE} -- CAT-calls
 			l_message.append_string (" (")
 			l_class_impl := a_call.current_feature.static_feature.implementation_class
 			if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-				l_message.append_string (l_class_impl.name.name)
+				l_message.append_string (l_class_impl.upper_name)
 				l_message.append_character (',')
 			end
 			l_position := a_call.position
@@ -567,7 +567,7 @@ feature {NONE} -- CAT-calls
 					l_message.append_string (" (")
 					l_class_impl := a_call.current_feature.static_feature.implementation_class
 					if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-						l_message.append_string (l_class_impl.name.name)
+						l_message.append_string (l_class_impl.upper_name)
 						l_message.append_character (',')
 					end
 					l_target := a_call.static_call.target
@@ -589,7 +589,7 @@ feature {NONE} -- CAT-calls
 							l_message.append_string (" (")
 							l_class_impl := l_source.current_feature.static_feature.implementation_class
 							if l_source.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-								l_message.append_string (l_class_impl.name.name)
+								l_message.append_string (l_class_impl.upper_name)
 								l_message.append_character (',')
 							end
 							l_position := l_source.position
@@ -691,7 +691,7 @@ feature {NONE} -- CAT-calls
 							l_message.append_string (" (")
 							l_class_impl := l_source.current_feature.static_feature.implementation_class
 							if l_source.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-								l_message.append_string (l_class_impl.name.name)
+								l_message.append_string (l_class_impl.upper_name)
 								l_message.append_character (',')
 							end
 							l_position := l_source.position

@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			default_template := vsrc1a_default_template
 			create parameters.make (1, 2)
 			parameters.put (etl_code, 1)
-			parameters.put (a_class.name.name, 2)
+			parameters.put (a_class.upper_name, 2)
 		ensure
 			-- dollar0: $0 = program name
 			-- dollar1: $1 = ETL code
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			default_template := gvknl1a_default_template
 			create parameters.make (1, 2)
 			parameters.put (etl_code, 1)
-			parameters.put (a_class.name.name, 2)
+			parameters.put (a_class.upper_name, 2)
 		ensure
 			-- dollar0: $0 = program name
 			-- dollar1: $1 = ETL code
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			default_template := gvsrc4a_default_template
 			create parameters.make (1, 2)
 			parameters.put (etl_code, 1)
-			parameters.put (a_class.name.name, 2)
+			parameters.put (a_class.upper_name, 2)
 		ensure
 			-- dollar0: $0 = program name
 			-- dollar1: $1 = ETL code
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 			default_template := gvsrc5a_default_template
 			create parameters.make (1, 3)
 			parameters.put (etl_code, 1)
-			parameters.put (a_class.name.name, 2)
+			parameters.put (a_class.upper_name, 2)
 			parameters.put (a_feature_name.name, 3)
 		ensure
 			-- dollar0: $0 = program name
@@ -142,7 +142,7 @@ feature {NONE} -- Initialization
 			default_template := gvsrc6a_default_template
 			create parameters.make (1, 3)
 			parameters.put (etl_code, 1)
-			parameters.put (a_class.name.name, 2)
+			parameters.put (a_class.upper_name, 2)
 			parameters.put (a_feature_name.name, 3)
 		ensure
 			-- dollar0: $0 = program name

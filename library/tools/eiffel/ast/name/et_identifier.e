@@ -161,7 +161,8 @@ feature -- Access
 
 	lower_name: STRING is
 			-- Lower-name of identifier
-			-- (May return the same object as `name' if already in lower case.)
+			-- (May return the same object as `name' if already in lower case,
+			-- otherwise return a new object at each call.)
 		local
 			i, nb: INTEGER
 			c: CHARACTER
@@ -181,7 +182,8 @@ feature -- Access
 
 	upper_name: STRING is
 			-- Upper-name of identifer
-			-- (May return the same object as `name' if already in upper case.)
+			-- (May return the same object as `name' if already in upper case,
+			-- otherwise return a new object at each call.)
 		local
 			i, nb: INTEGER
 			c: CHARACTER

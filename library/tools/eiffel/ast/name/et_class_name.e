@@ -30,7 +30,8 @@ feature -- Access
 
 	upper_name: STRING is
 			-- Upper-name of class
-			-- (May return the same object as `name' if already in upper case.)
+			-- (May return the same object as `name' if already in upper case,
+			-- otherwise return a new object at each call.)
 		deferred
 		ensure
 			upper_name_not_void: Result /= Void
@@ -40,7 +41,8 @@ feature -- Access
 
 	lower_name: STRING is
 			-- Lower-name of class
-			-- (May return the same object as `name' if already in upper case.)
+			-- (May return the same object as `name' if already in upper case,
+			-- otherwise return a new object at each call.)
 		deferred
 		ensure
 			upper_name_not_void: Result /= Void

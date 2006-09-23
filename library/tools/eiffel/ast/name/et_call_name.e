@@ -41,7 +41,8 @@ feature -- Access
 
 	lower_name: STRING is
 			-- Lower-name of feature call
-			-- (May return the same object as `name' if already in lower case.)
+			-- (May return the same object as `name' if already in lower case,
+			-- otherwise return a new object at each call.)
 		deferred
 		ensure
 			lower_name_not_void: Result /= Void

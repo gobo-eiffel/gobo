@@ -391,7 +391,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -428,7 +428,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -469,11 +469,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			parameters.put (a_pre_feature.name.name, 8)
-			parameters.put (a_client.name.name, 9)
+			parameters.put (a_client.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -520,12 +520,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (a_pre_feature.name.name, 9)
-			parameters.put (a_client.name.name, 10)
+			parameters.put (a_client.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -573,12 +573,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target_class.name.name, 8)
+			parameters.put (a_target_class.upper_name, 8)
 			parameters.put (a_pre_feature.name.name, 9)
-			parameters.put (a_client.name.name, 10)
+			parameters.put (a_client.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -628,13 +628,13 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target_class.name.name, 9)
+			parameters.put (a_target_class.upper_name, 9)
 			parameters.put (a_pre_feature.name.name, 10)
-			parameters.put (a_client.name.name, 11)
+			parameters.put (a_client.upper_name, 11)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -681,11 +681,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			parameters.put (a_pre_feature.name.name, 8)
-			parameters.put (a_client.name, 9)
+			parameters.put (a_client.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -732,12 +732,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (a_pre_feature.name.name, 9)
-			parameters.put (a_client.name, 10)
+			parameters.put (a_client.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -785,12 +785,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target_class.name.name, 8)
+			parameters.put (a_target_class.upper_name, 8)
 			parameters.put (a_pre_feature.name.name, 9)
-			parameters.put (a_client.name, 10)
+			parameters.put (a_client.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -840,13 +840,13 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target_class.name.name, 9)
+			parameters.put (a_target_class.upper_name, 9)
 			parameters.put (a_pre_feature.name.name, 10)
-			parameters.put (a_client.name, 11)
+			parameters.put (a_client.upper_name, 11)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -890,7 +890,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -932,8 +932,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_type.to_text, 7)
 			set_compilers (True)
 		ensure
@@ -975,7 +975,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -1020,9 +1020,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name.name, 6)
-			parameters.put (f.parent_feature.parent.type.name.name, 7)
+			parameters.put (f.parent_feature.parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -1060,7 +1060,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -1100,8 +1100,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_formal.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_formal.upper_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -1140,8 +1140,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_formal1.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_formal1.upper_name, 6)
 			parameters.put (a_formal1.index.out, 7)
 			parameters.put (a_formal2.index.out, 8)
 			set_compilers (True)
@@ -1182,7 +1182,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -1220,7 +1220,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -1258,7 +1258,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -1298,8 +1298,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_formal.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_formal.upper_name, 6)
 			parameters.put (a_constraint.to_text, 7)
 			set_compilers (True)
 		ensure
@@ -1342,8 +1342,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_formal.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_formal.upper_name, 6)
 			parameters.put (a_constraint.to_text, 7)
 			set_compilers (True)
 		ensure
@@ -1387,13 +1387,13 @@ feature {NONE} -- Initialization
 				create a_string.make (20)
 				a_cursor := a_cycle.new_cursor
 				a_cursor.start
-				a_string.append_string (a_cursor.item.name.name)
+				a_string.append_string (a_cursor.item.upper_name)
 				a_cursor.forth
 			until
 				a_cursor.after
 			loop
 				a_string.append_string (" -> ")
-				a_string.append_string (a_cursor.item.name.name)
+				a_string.append_string (a_cursor.item.upper_name)
 				a_cursor.forth
 			end
 			create parameters.make (1, 6)
@@ -1401,7 +1401,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
@@ -1441,8 +1441,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_formal.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_formal.upper_name, 6)
 			parameters.put (a_type.to_text, 7)
 			set_compilers (True)
 		ensure
@@ -1486,13 +1486,13 @@ feature {NONE} -- Initialization
 				create a_string.make (20)
 				a_cursor := a_cycle.new_cursor
 				a_cursor.start
-				a_string.append_string (a_cursor.item.name.name)
+				a_string.append_string (a_cursor.item.upper_name)
 				a_cursor.forth
 			until
 				a_cursor.after
 			loop
 				a_string.append_string (" -> ")
-				a_string.append_string (a_cursor.item.name.name)
+				a_string.append_string (a_cursor.item.upper_name)
 				a_cursor.forth
 			end
 			create parameters.make (1, 6)
@@ -1500,7 +1500,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
@@ -1540,10 +1540,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
-			parameters.put (f2.parent.type.name.name, 8)
+			parameters.put (f1.parent.type.upper_name, 7)
+			parameters.put (f2.parent.type.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -1584,10 +1584,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
-			parameters.put (f2.parent.type.name.name, 8)
+			parameters.put (f1.parent.type.upper_name, 7)
+			parameters.put (f2.parent.type.upper_name, 8)
 			parameters.put (arg.out, 9)
 			set_compilers (True)
 		ensure
@@ -1630,10 +1630,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
-			parameters.put (f2.parent.type.name.name, 8)
+			parameters.put (f1.parent.type.upper_name, 7)
+			parameters.put (f2.parent.type.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -1675,11 +1675,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
 			parameters.put (f1.alias_name.name, 7)
-			parameters.put (f1.parent.type.name.name, 8)
-			parameters.put (f2.parent.type.name.name, 9)
+			parameters.put (f1.parent.type.upper_name, 8)
+			parameters.put (f2.parent.type.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -1723,12 +1723,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
 			parameters.put (f1.alias_name.name, 7)
-			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f1.parent.type.upper_name, 8)
 			parameters.put (f2.alias_name.name, 9)
-			parameters.put (f2.parent.type.name.name, 10)
+			parameters.put (f2.parent.type.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -1769,7 +1769,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -1801,7 +1801,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -1841,8 +1841,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_name.upper_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -1882,7 +1882,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.precursor_feature.name.name, 6)
 			parameters.put (f1.parent.type.to_text, 7)
 			parameters.put (f2.precursor_feature.name.name, 8)
@@ -1928,7 +1928,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_redefined_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -1972,9 +1972,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_redefined_feature.name.name, 6)
-			parameters.put (a_class_name.name, 7)
+			parameters.put (a_class_name.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2013,7 +2013,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -2055,9 +2055,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
-			parameters.put (a_parent.name.name, 7)
+			parameters.put (a_parent.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2103,9 +2103,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
-			parameters.put (a_parent.name.name, 7)
+			parameters.put (a_parent.upper_name, 7)
 			parameters.put (arg.out, 8)
 			parameters.put (an_actual.to_text, 9)
 			parameters.put (a_formal.to_text, 10)
@@ -2159,10 +2159,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_parent.name.name, 8)
+			parameters.put (a_parent.upper_name, 8)
 			parameters.put (arg.out, 9)
 			parameters.put (an_actual.to_text, 10)
 			parameters.put (a_formal.to_text, 11)
@@ -2210,10 +2210,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
 			parameters.put (f2.precursor_feature.name.name, 7)
-			parameters.put (f2.parent.type.name.name, 8)
+			parameters.put (f2.parent.type.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2256,11 +2256,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f1.parent.type.upper_name, 7)
 			parameters.put (f2.precursor_feature.name.name, 8)
-			parameters.put (f2.parent.type.name.name, 9)
+			parameters.put (f2.parent.type.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2304,10 +2304,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
 			parameters.put (f2.precursor_feature.name.name, 7)
-			parameters.put (f2.parent.type.name.name, 8)
+			parameters.put (f2.parent.type.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2351,11 +2351,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f1.parent.type.upper_name, 7)
 			parameters.put (f2.precursor_feature.name.name, 8)
-			parameters.put (f2.parent.type.name.name, 9)
+			parameters.put (f2.parent.type.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2398,7 +2398,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -2439,7 +2439,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -2483,9 +2483,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f1.parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2529,9 +2529,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f1.parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2575,9 +2575,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f1.parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2621,9 +2621,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f1.parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2664,9 +2664,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f1.parent.type.upper_name, 7)
 			parameters.put (f2.name.name, 8)
 			set_compilers (True)
 		ensure
@@ -2709,9 +2709,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f1.parent.type.upper_name, 7)
 			parameters.put (f2.name.name, 8)
 			set_compilers (True)
 		ensure
@@ -2754,9 +2754,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f1.parent.type.upper_name, 7)
 			parameters.put (f2.name.name, 8)
 			parameters.put (f2.alias_name.name, 9)
 			set_compilers (True)
@@ -2801,10 +2801,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
 			parameters.put (f1.alias_name.name, 7)
-			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f1.parent.type.upper_name, 8)
 			parameters.put (f2.name.name, 9)
 			set_compilers (True)
 		ensure
@@ -2849,10 +2849,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
 			parameters.put (f1.alias_name.name, 7)
-			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f1.parent.type.upper_name, 8)
 			parameters.put (f2.name.name, 9)
 			parameters.put (f2.alias_name.name, 10)
 			set_compilers (True)
@@ -2898,9 +2898,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2941,9 +2941,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2984,9 +2984,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3027,9 +3027,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f2.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3070,9 +3070,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.redefine_name.name, 6)
-			parameters.put (a_feature.parent.type.name.name, 7)
+			parameters.put (a_feature.parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3116,9 +3116,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_deferred.redefine_name.name, 6)
-			parameters.put (a_deferred.parent.type.name.name, 7)
+			parameters.put (a_deferred.parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3160,9 +3160,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3203,9 +3203,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3246,9 +3246,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3289,9 +3289,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3333,9 +3333,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f2.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3377,7 +3377,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_identifier.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -3420,7 +3420,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -3459,7 +3459,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -3499,7 +3499,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_local.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -3539,7 +3539,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3578,7 +3578,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			parameters.put (a_feature.alias_name.name, 7)
 			set_compilers (True)
@@ -3621,7 +3621,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			parameters.put (a_feature.alias_name.name, 7)
 			set_compilers (True)
@@ -3666,7 +3666,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature1.name.name, 6)
 			parameters.put (a_feature1.alias_name.name, 7)
 			parameters.put (a_feature2.name.name, 8)
@@ -3715,12 +3715,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature1.name.name, 6)
 			parameters.put (a_feature1.alias_name.name, 7)
 			parameters.put (a_feature2.name.name, 8)
 			parameters.put (a_feature2.alias_name.name, 9)
-			parameters.put (a_feature2.parent.type.name.name, 10)
+			parameters.put (a_feature2.parent.type.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3766,13 +3766,13 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature1.name.name, 6)
 			parameters.put (a_feature1.alias_name.name, 7)
-			parameters.put (a_feature1.parent.type.name.name, 8)
+			parameters.put (a_feature1.parent.type.upper_name, 8)
 			parameters.put (a_feature2.name.name, 9)
 			parameters.put (a_feature2.alias_name.name, 10)
-			parameters.put (a_feature2.parent.type.name.name, 11)
+			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3819,7 +3819,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature1.name.name, 6)
 			parameters.put (a_feature1.alias_name.name, 7)
 			parameters.put (a_feature2.name.name, 8)
@@ -3868,12 +3868,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature1.name.name, 6)
 			parameters.put (a_feature1.alias_name.name, 7)
 			parameters.put (a_feature2.name.name, 8)
 			parameters.put (a_feature2.alias_name.name, 9)
-			parameters.put (a_feature2.parent.type.name.name, 10)
+			parameters.put (a_feature2.parent.type.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3919,13 +3919,13 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature1.name.name, 6)
 			parameters.put (a_feature1.alias_name.name, 7)
-			parameters.put (a_feature1.parent.type.name.name, 8)
+			parameters.put (a_feature1.parent.type.upper_name, 8)
 			parameters.put (a_feature2.name.name, 9)
 			parameters.put (a_feature2.alias_name.name, 10)
-			parameters.put (a_feature2.parent.type.name.name, 11)
+			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3970,7 +3970,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			parameters.put (a_feature.alias_name.name, 7)
 			set_compilers (True)
@@ -4015,7 +4015,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature1.name.name, 6)
 			parameters.put (a_feature1.alias_name.name, 7)
 			parameters.put (a_feature2.name.name, 8)
@@ -4064,12 +4064,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature1.name.name, 6)
 			parameters.put (a_feature1.alias_name.name, 7)
 			parameters.put (a_feature2.name.name, 8)
 			parameters.put (a_feature2.alias_name.name, 9)
-			parameters.put (a_feature2.parent.type.name.name, 10)
+			parameters.put (a_feature2.parent.type.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4115,13 +4115,13 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature1.name.name, 6)
 			parameters.put (a_feature1.alias_name.name, 7)
-			parameters.put (a_feature1.parent.type.name.name, 8)
+			parameters.put (a_feature1.parent.type.upper_name, 8)
 			parameters.put (a_feature2.name.name, 9)
 			parameters.put (a_feature2.alias_name.name, 10)
-			parameters.put (a_feature2.parent.type.name.name, 11)
+			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4164,7 +4164,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -4204,7 +4204,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -4244,7 +4244,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -4284,7 +4284,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -4324,7 +4324,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -4368,7 +4368,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_creation_named_type.to_text, 6)
 			parameters.put (a_target_named_type.to_text, 7)
 			set_compilers (True)
@@ -4416,8 +4416,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_creation_named_type.to_text, 7)
 			parameters.put (a_target_named_type.to_text, 8)
 			set_compilers (True)
@@ -4460,8 +4460,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_target.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_target.upper_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4502,9 +4502,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (class_impl.name.name, 6)
-			parameters.put (a_target.name.name, 7)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_target.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4544,8 +4544,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_target.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_target.upper_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4586,9 +4586,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (class_impl.name.name, 6)
-			parameters.put (a_target.name.name, 7)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_target.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4631,7 +4631,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (cp.name, 6)
 			set_compilers (True)
 		ensure
@@ -4671,10 +4671,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4716,10 +4716,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4762,11 +4762,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
+			parameters.put (a_target.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4808,10 +4808,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4853,10 +4853,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4899,11 +4899,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
+			parameters.put (a_target.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4948,10 +4948,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			parameters.put (a_formal.index.out, 9)
 			set_compilers (True)
 		ensure
@@ -4998,11 +4998,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
+			parameters.put (a_target.upper_name, 9)
 			parameters.put (a_formal.index.out, 10)
 			set_compilers (True)
 		ensure
@@ -5049,10 +5049,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			parameters.put (a_formal.index.out, 9)
 			set_compilers (True)
 		ensure
@@ -5099,11 +5099,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
+			parameters.put (a_target.upper_name, 9)
 			parameters.put (a_formal.index.out, 10)
 			set_compilers (True)
 		ensure
@@ -5145,7 +5145,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5181,7 +5181,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (cp.name, 6)
 			set_compilers (True)
 		ensure
@@ -5222,7 +5222,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (cp.name, 6)
 			set_compilers (True)
 		ensure
@@ -5261,7 +5261,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f2.name, 6)
 			set_compilers (True)
 		ensure
@@ -5300,7 +5300,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f2.name, 6)
 			set_compilers (True)
 		ensure
@@ -5340,7 +5340,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f2.name, 6)
 			set_compilers (True)
 		ensure
@@ -5377,7 +5377,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5417,13 +5417,13 @@ feature {NONE} -- Initialization
 				create a_string.make (20)
 				a_cursor := a_cycle.new_cursor
 				a_cursor.start
-				a_string.append_string (a_cursor.item.name.name)
+				a_string.append_string (a_cursor.item.upper_name)
 				a_cursor.forth
 			until
 				a_cursor.after
 			loop
 				a_string.append_string (" -> ")
-				a_string.append_string (a_cursor.item.name.name)
+				a_string.append_string (a_cursor.item.upper_name)
 				a_cursor.forth
 			end
 			create parameters.make (1, 6)
@@ -5431,7 +5431,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
@@ -5469,7 +5469,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_none.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -5507,7 +5507,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -5545,7 +5545,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -5583,7 +5583,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -5625,9 +5625,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_rename.old_name.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5670,9 +5670,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_rename2.old_name.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5714,10 +5714,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_rename.new_name.feature_name.name, 6)
 			parameters.put (f.name.name, 7)
-			parameters.put (a_parent.type.name.name, 8)
+			parameters.put (a_parent.type.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5763,11 +5763,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_rename.new_name.feature_name.name, 6)
 			parameters.put (a_rename.new_name.alias_name.name, 7)
 			parameters.put (f.name.name, 8)
-			parameters.put (a_parent.type.name.name, 9)
+			parameters.put (a_parent.type.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5814,11 +5814,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_rename.new_name.feature_name.name, 6)
 			parameters.put (a_rename.new_name.alias_name.name, 7)
 			parameters.put (f.name.name, 8)
-			parameters.put (a_parent.type.name.name, 9)
+			parameters.put (a_parent.type.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5865,11 +5865,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_rename.new_name.feature_name.name, 6)
 			parameters.put (a_rename.new_name.alias_name.name, 7)
 			parameters.put (f.name.name, 8)
-			parameters.put (a_parent.type.name.name, 9)
+			parameters.put (a_parent.type.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5912,10 +5912,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_rename.new_name.feature_name.name, 6)
 			parameters.put (f.name.name, 7)
-			parameters.put (a_parent.type.name.name, 8)
+			parameters.put (a_parent.type.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5958,7 +5958,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_source_type.to_text, 6)
 			parameters.put (a_target_type.to_text, 7)
 			set_compilers (True)
@@ -6004,8 +6004,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_source_type.to_text, 7)
 			parameters.put (a_target_type.to_text, 8)
 			set_compilers (True)
@@ -6047,7 +6047,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -6088,7 +6088,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -6131,7 +6131,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_target_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -6174,8 +6174,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_target_type.to_text, 7)
 			set_compilers (True)
 		ensure
@@ -6217,10 +6217,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6261,7 +6261,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -6304,10 +6304,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6348,7 +6348,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -6390,8 +6390,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_parent.type.upper_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6430,9 +6430,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6472,9 +6472,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f2.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6514,7 +6514,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f2.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -6556,10 +6556,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f2.name.name, 6)
 			parameters.put (f1.precursor_feature.name.name, 7)
-			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f1.parent.type.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6604,11 +6604,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.precursor_feature.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f1.parent.type.upper_name, 7)
 			parameters.put (f2.precursor_feature.name.name, 8)
-			parameters.put (f2.parent.type.name.name, 9)
+			parameters.put (f2.parent.type.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6651,11 +6651,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
 			parameters.put (f1.alias_name.name, 7)
-			parameters.put (f1.parent.type.name.name, 8)
-			parameters.put (f2.parent.type.name.name, 9)
+			parameters.put (f1.parent.type.upper_name, 8)
+			parameters.put (f2.parent.type.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6699,12 +6699,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f1.name.name, 6)
 			parameters.put (f1.alias_name.name, 7)
-			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f1.parent.type.upper_name, 8)
 			parameters.put (f2.alias_name.name, 9)
-			parameters.put (f2.parent.type.name.name, 10)
+			parameters.put (f2.parent.type.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6754,7 +6754,7 @@ feature {NONE} -- Initialization
 				create a_string.make (20)
 				a_cursor.start
 				a_feature := a_cursor.item
-				a_string.append_string (a_feature.parent.type.name.name)
+				a_string.append_string (a_feature.parent.type.upper_name)
 				a_string.append_character ('.')
 				a_string.append_string (a_feature.precursor_feature.name.name)
 				a_cursor.forth
@@ -6763,7 +6763,7 @@ feature {NONE} -- Initialization
 			loop
 				a_string.append_string (", ")
 				a_feature := a_cursor.item
-				a_string.append_string (a_feature.parent.type.name.name)
+				a_string.append_string (a_feature.parent.type.upper_name)
 				a_string.append_character ('.')
 				a_string.append_string (a_feature.precursor_feature.name.name)
 				a_cursor.forth
@@ -6773,7 +6773,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
@@ -6821,7 +6821,7 @@ feature {NONE} -- Initialization
 				create a_string.make (20)
 				a_cursor.start
 				a_feature := a_cursor.item
-				a_string.append_string (a_feature.parent.type.name.name)
+				a_string.append_string (a_feature.parent.type.upper_name)
 				a_string.append_character ('.')
 				a_string.append_string (a_feature.precursor_feature.name.name)
 				a_cursor.forth
@@ -6830,7 +6830,7 @@ feature {NONE} -- Initialization
 			loop
 				a_string.append_string (", ")
 				a_feature := a_cursor.item
-				a_string.append_string (a_feature.parent.type.name.name)
+				a_string.append_string (a_feature.parent.type.upper_name)
 				a_string.append_character ('.')
 				a_string.append_string (a_feature.precursor_feature.name.name)
 				a_cursor.forth
@@ -6840,7 +6840,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
@@ -6881,9 +6881,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6924,9 +6924,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (f2.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			parameters.put (a_parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -6967,9 +6967,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.select_name.name, 6)
-			parameters.put (a_feature.parent.type.name.name, 7)
+			parameters.put (a_feature.parent.type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -7009,7 +7009,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -7050,8 +7050,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_type.to_text, 7)
 			set_compilers (True)
 		ensure
@@ -7093,7 +7093,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_constant_type.to_text, 6)
 			parameters.put (a_value_type.to_text, 7)
 			set_compilers (True)
@@ -7139,8 +7139,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_constant_type.to_text, 7)
 			parameters.put (a_value_type.to_text, 8)
 			set_compilers (True)
@@ -7184,7 +7184,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			set_compilers (True)
 		ensure
@@ -7226,9 +7226,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
-			parameters.put (a_target.name.name, 7)
+			parameters.put (a_target.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -7269,10 +7269,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -7316,11 +7316,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
+			parameters.put (a_target.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -7364,10 +7364,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -7408,7 +7408,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -7456,10 +7456,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			parameters.put (arg.out, 9)
 			parameters.put (an_actual.to_text, 10)
 			parameters.put (a_formal.to_text, 11)
@@ -7514,11 +7514,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
+			parameters.put (a_target.upper_name, 9)
 			parameters.put (arg.out, 10)
 			parameters.put (an_actual.to_text, 11)
 			parameters.put (a_formal.to_text, 12)
@@ -7571,7 +7571,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			parameters.put (arg.out, 8)
@@ -7626,8 +7626,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (arg.out, 9)
@@ -7683,10 +7683,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			parameters.put (arg.out, 9)
 			parameters.put (an_actual.to_text, 10)
 			parameters.put (a_formal.to_text, 11)
@@ -7741,11 +7741,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
+			parameters.put (a_target.upper_name, 9)
 			parameters.put (arg.out, 10)
 			parameters.put (an_actual.to_text, 11)
 			parameters.put (a_formal.to_text, 12)
@@ -7799,7 +7799,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			parameters.put (arg.out, 8)
@@ -7854,8 +7854,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (arg.out, 9)
@@ -7903,7 +7903,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_attribute.name.name, 6)
 			parameters.put (an_attribute.type.to_text, 7)
 			set_compilers (True)
@@ -7946,8 +7946,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (an_attribute.name.name, 7)
 			parameters.put (an_attribute.type.to_text, 8)
 			set_compilers (True)
@@ -7989,7 +7989,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_attribute.name.name, 6)
 			parameters.put (an_attribute.type.to_text, 7)
 			set_compilers (True)
@@ -8032,8 +8032,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (an_attribute.name.name, 7)
 			parameters.put (an_attribute.type.to_text, 8)
 			set_compilers (True)
@@ -8075,7 +8075,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_attribute.name.name, 6)
 			parameters.put (an_attribute.type.to_text, 7)
 			set_compilers (True)
@@ -8118,8 +8118,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (an_attribute.name.name, 7)
 			parameters.put (an_attribute.type.to_text, 8)
 			set_compilers (True)
@@ -8161,7 +8161,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_attribute.name.name, 6)
 			parameters.put (an_attribute.type.to_text, 7)
 			set_compilers (True)
@@ -8204,8 +8204,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (an_attribute.name.name, 7)
 			parameters.put (an_attribute.type.to_text, 8)
 			set_compilers (True)
@@ -8247,7 +8247,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_attribute.name.name, 6)
 			parameters.put (an_attribute.type.to_text, 7)
 			set_compilers (True)
@@ -8290,8 +8290,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (an_attribute.name.name, 7)
 			parameters.put (an_attribute.type.to_text, 8)
 			set_compilers (True)
@@ -8333,7 +8333,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_attribute.name.name, 6)
 			parameters.put (an_attribute.type.to_text, 7)
 			set_compilers (True)
@@ -8376,8 +8376,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (an_attribute.name.name, 7)
 			parameters.put (an_attribute.type.to_text, 8)
 			set_compilers (True)
@@ -8417,7 +8417,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_unique.name.name, 6)
 			parameters.put (a_unique.type.to_text, 7)
 			set_compilers (True)
@@ -8459,8 +8459,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_unique.name.name, 7)
 			parameters.put (a_unique.type.to_text, 8)
 			set_compilers (True)
@@ -8503,7 +8503,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (arg2.name.name, 6)
 			parameters.put (f.name.name, 7)
 			set_compilers (True)
@@ -8545,7 +8545,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (local2.name.name, 6)
 			parameters.put (f.name.name, 7)
 			set_compilers (True)
@@ -8587,7 +8587,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (arg.name.name, 6)
 			parameters.put (f1.name.name, 7)
 			set_compilers (True)
@@ -8629,7 +8629,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_local.name.name, 6)
 			parameters.put (f1.name.name, 7)
 			set_compilers (True)
@@ -8672,7 +8672,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_local.name.name, 6)
 			parameters.put (f.name.name, 7)
 			set_compilers (True)
@@ -8713,8 +8713,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class.group.full_name ('.'), 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class.group.full_lower_name ('.'), 6)
 			parameters.put (a_class.filename, 7)
 			parameters.put (other_class.group.full_lower_name ('/'), 8)
 			parameters.put (other_class.filename, 9)
@@ -8758,7 +8758,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
 			parameters.put (a_class.filename, 7)
 			parameters.put (other_class.group.full_lower_name ('/'), 8)
@@ -8803,7 +8803,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
 			parameters.put (a_class.filename, 7)
 			parameters.put (other_class.group.full_lower_name ('/'), 8)
@@ -8848,7 +8848,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
 			parameters.put (a_class.group.full_pathname, 7)
 			parameters.put (other_class.group.full_lower_name ('/'), 8)
@@ -8893,7 +8893,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
 			parameters.put (a_class.group.full_pathname, 7)
 			parameters.put (other_class.group.full_lower_name ('/'), 8)
@@ -8936,7 +8936,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
 			parameters.put (a_class.filename, 7)
 			set_compilers (True)
@@ -8975,9 +8975,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
-			parameters.put (a_class.group.pathname, 7)
+			parameters.put (a_class.group.full_pathname, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9015,7 +9015,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
 			parameters.put (a_class.filename, 7)
 			set_compilers (True)
@@ -9055,9 +9055,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
-			parameters.put (a_class.group.pathname, 7)
+			parameters.put (a_class.group.full_pathname, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9097,7 +9097,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
 			parameters.put (a_class.group.full_pathname, 7)
 			parameters.put (other_class.group.full_lower_name ('/'), 8)
@@ -9143,7 +9143,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
 			parameters.put (a_class.group.full_pathname, 7)
 			parameters.put (other_class.group.full_lower_name ('/'), 8)
@@ -9189,7 +9189,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_class.group.full_lower_name ('/'), 6)
 			parameters.put (a_class.group.full_pathname, 7)
 			parameters.put (other_class.group.full_lower_name ('/'), 8)
@@ -9234,7 +9234,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			parameters.put (a_type.name.name, 7)
 			set_compilers (True)
@@ -9277,7 +9277,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			parameters.put (a_type.name.name, 7)
 			parameters.put (a_feature.name.name, 8)
@@ -9416,7 +9416,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
@@ -9455,9 +9455,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
-			parameters.put (a_type.name.name, 7)
+			parameters.put (a_type.name.lower_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9495,9 +9495,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
-			parameters.put (a_type.name.name, 7)
+			parameters.put (a_type.name.lower_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9536,7 +9536,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -9576,7 +9576,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -9618,7 +9618,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_actual.to_text, 6)
 			parameters.put (a_constraint.to_text, 7)
 			parameters.put (a_type.to_text, 8)
@@ -9664,11 +9664,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_actual_index.out, 6)
 			parameters.put (a_name.name, 7)
-			parameters.put (an_actual_base_class.name.name, 8)
-			parameters.put (a_generic_class.name.name, 9)
+			parameters.put (an_actual_base_class.upper_name, 8)
+			parameters.put (a_generic_class.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9713,12 +9713,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
 			parameters.put (an_actual_index.out, 7)
 			parameters.put (a_name.name, 8)
-			parameters.put (an_actual_base_class.name.name, 9)
-			parameters.put (a_generic_class.name.name, 10)
+			parameters.put (an_actual_base_class.upper_name, 9)
+			parameters.put (a_generic_class.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9763,11 +9763,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_actual_index.out, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (an_actual.index.out, 8)
-			parameters.put (a_generic_class.name.name, 9)
+			parameters.put (a_generic_class.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9812,12 +9812,12 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
 			parameters.put (an_actual_index.out, 7)
 			parameters.put (a_name.name, 8)
 			parameters.put (an_actual.index.out, 9)
-			parameters.put (a_generic_class.name.name, 10)
+			parameters.put (a_generic_class.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9859,8 +9859,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_type.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_type.upper_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9898,8 +9898,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_type.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_type.upper_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9938,9 +9938,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (cp.name, 6)
-			parameters.put (a_constraint.name.name, 7)
+			parameters.put (a_constraint.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9983,9 +9983,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (cp.name, 6)
-			parameters.put (a_constraint.name.name, 7)
+			parameters.put (a_constraint.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -10025,9 +10025,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
-			parameters.put (a_type.name.name, 7)
+			parameters.put (a_type.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -10067,7 +10067,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -10109,10 +10109,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -10153,7 +10153,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -10191,7 +10191,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_label.name, 6)
 			set_compilers (True)
 		ensure
@@ -10237,10 +10237,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			parameters.put (arg.out, 9)
 			parameters.put (an_actual.to_text, 10)
 			parameters.put (a_formal.to_text, 11)
@@ -10295,11 +10295,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
+			parameters.put (a_target.upper_name, 9)
 			parameters.put (arg.out, 10)
 			parameters.put (an_actual.to_text, 11)
 			parameters.put (a_formal.to_text, 12)
@@ -10352,7 +10352,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			parameters.put (arg.out, 8)
@@ -10407,8 +10407,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (arg.out, 9)
@@ -10456,7 +10456,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			set_compilers (True)
 		ensure
@@ -10495,7 +10495,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			set_compilers (True)
 		ensure
@@ -10535,9 +10535,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
-			parameters.put (a_target.name.name, 7)
+			parameters.put (a_target.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -10578,10 +10578,10 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.upper_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -10624,11 +10624,11 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
+			parameters.put (a_target.upper_name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -10669,7 +10669,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -10711,8 +10711,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (a_type.to_text, 7)
 			set_compilers (True)
 		ensure
@@ -10755,7 +10755,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_expression.operator.text, 6)
 			parameters.put (a_type1.to_text, 7)
 			parameters.put (a_type2.to_text, 8)
@@ -10802,8 +10802,8 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
 			parameters.put (an_expression.operator.text, 7)
 			parameters.put (a_type1.to_text, 8)
 			parameters.put (a_type2.to_text, 9)
@@ -10847,7 +10847,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			set_compilers (True)
 		ensure
@@ -10887,7 +10887,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -10928,7 +10928,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name2.name, 6)
 			set_compilers (True)
 		ensure
@@ -10966,7 +10966,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -11005,7 +11005,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (anc1.to_text, 6)
 			parameters.put (anc2.to_text, 7)
 			set_compilers (True)
@@ -11045,7 +11045,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_parent.position.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -11083,7 +11083,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_parent.position.to_text, 6)
 			set_compilers (True)
 		ensure
@@ -11121,7 +11121,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -11157,7 +11157,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -11195,7 +11195,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11235,7 +11235,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11275,7 +11275,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11315,7 +11315,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11355,7 +11355,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11395,7 +11395,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11435,7 +11435,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11475,7 +11475,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11515,7 +11515,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11555,7 +11555,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11595,7 +11595,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11635,7 +11635,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11675,7 +11675,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11715,7 +11715,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11755,7 +11755,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11795,7 +11795,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11835,7 +11835,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11875,7 +11875,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -11916,9 +11916,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
-			parameters.put (a_character_class.name.upper_name, 7)
+			parameters.put (a_character_class.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -11959,9 +11959,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
-			parameters.put (a_character_class.name.upper_name, 7)
+			parameters.put (a_character_class.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -12001,7 +12001,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12041,7 +12041,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12081,7 +12081,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12121,7 +12121,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12161,7 +12161,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12201,7 +12201,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12241,7 +12241,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12281,7 +12281,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12321,7 +12321,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12361,7 +12361,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12401,7 +12401,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12441,7 +12441,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12481,7 +12481,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12521,7 +12521,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12561,7 +12561,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12602,9 +12602,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
-			parameters.put (an_integer_class.name.upper_name, 7)
+			parameters.put (an_integer_class.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -12645,9 +12645,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
-			parameters.put (an_integer_class.name.upper_name, 7)
+			parameters.put (an_integer_class.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -12687,7 +12687,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12727,7 +12727,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12767,7 +12767,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12807,7 +12807,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12847,7 +12847,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12887,7 +12887,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12927,7 +12927,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -12967,7 +12967,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13007,7 +13007,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13047,7 +13047,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13087,7 +13087,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13127,7 +13127,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13167,7 +13167,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13207,7 +13207,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13247,7 +13247,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13287,7 +13287,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13327,7 +13327,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13367,7 +13367,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13407,7 +13407,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13447,7 +13447,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13487,7 +13487,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13527,7 +13527,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13567,7 +13567,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13607,7 +13607,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13647,7 +13647,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13687,7 +13687,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13727,7 +13727,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13767,7 +13767,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13807,7 +13807,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13847,7 +13847,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13887,7 +13887,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -13928,9 +13928,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
-			parameters.put (a_real_class.name.upper_name, 7)
+			parameters.put (a_real_class.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -13971,9 +13971,9 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
-			parameters.put (a_real_class.name.upper_name, 7)
+			parameters.put (a_real_class.upper_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -14013,7 +14013,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14053,7 +14053,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14093,7 +14093,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14133,7 +14133,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14173,7 +14173,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14213,7 +14213,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14253,7 +14253,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14293,7 +14293,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14333,7 +14333,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14373,7 +14373,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14413,7 +14413,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14453,7 +14453,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14493,7 +14493,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14533,7 +14533,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14573,7 +14573,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14613,7 +14613,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14653,7 +14653,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14693,7 +14693,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14733,7 +14733,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14773,7 +14773,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14813,7 +14813,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14853,7 +14853,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14893,7 +14893,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14933,7 +14933,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -14973,7 +14973,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -15013,7 +15013,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -15053,7 +15053,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -15093,7 +15093,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -15133,7 +15133,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -15172,7 +15172,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			set_compilers (True)
 		ensure
@@ -15216,7 +15216,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -15262,7 +15262,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			parameters.put (a_type.to_text, 7)
 			set_compilers (True)
@@ -15303,7 +15303,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -15343,7 +15343,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_feature.name.name, 6)
 			set_compilers (True)
 		ensure
@@ -15384,7 +15384,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_actual.to_text, 6)
 			parameters.put (a_type.to_text, 7)
 			set_compilers (True)
@@ -15427,7 +15427,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (an_actual.to_text, 6)
 			parameters.put (a_type.to_text, 7)
 			set_compilers (True)
@@ -15470,7 +15470,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -15513,7 +15513,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -15555,7 +15555,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)
@@ -15597,7 +15597,7 @@ feature {NONE} -- Initialization
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
+			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			set_compilers (True)

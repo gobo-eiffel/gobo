@@ -206,7 +206,7 @@ feature -- Generation
 			if current_system.universe.system_name /= Void then
 				l_header_filename := current_system.universe.system_name + ".h"
 			else
-				l_header_filename := current_system.universe.root_class.name.name + ".h"
+				l_header_filename := current_system.universe.root_class.lower_name + ".h"
 			end
 			create l_header_file.make (l_header_filename)
 			l_header_file.open_write
@@ -8846,7 +8846,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 		local
 			l_string: STRING
 		do
-			l_string := a_target_type.base_class.name.upper_name
+			l_string := a_target_type.base_class.upper_name
 			current_file.put_string (c_gems)
 			current_file.put_character ('(')
 			print_escaped_string (l_string)

@@ -1614,7 +1614,7 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
-			a_string.append_string (name.upper_name)
+			a_string.append_string (upper_name)
 		end
 
 feature -- Processing

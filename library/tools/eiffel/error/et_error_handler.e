@@ -119,22 +119,22 @@ feature -- Compilation report
 					a_universe := a_processor.universe
 					if a_processor = a_universe.eiffel_parser then
 						info_file.put_string ("Degree 5 class ")
-						info_file.put_line (a_class.name.upper_name)
+						info_file.put_line (a_class.upper_name)
 					elseif a_processor = a_universe.ancestor_builder then
 						info_file.put_string ("Degree 4.3 class ")
-						info_file.put_line (a_class.name.upper_name)
+						info_file.put_line (a_class.upper_name)
 					elseif a_processor = a_universe.feature_flattener then
 						info_file.put_string ("Degree 4.2 class ")
-						info_file.put_line (a_class.name.upper_name)
+						info_file.put_line (a_class.upper_name)
 					elseif a_processor = a_universe.interface_checker then
 						info_file.put_string ("Degree 4.1 class ")
-						info_file.put_line (a_class.name.upper_name)
+						info_file.put_line (a_class.upper_name)
 					elseif a_processor = a_universe.implementation_checker then
 						info_file.put_string ("Degree 3 class ")
-						info_file.put_line (a_class.name.upper_name)
+						info_file.put_line (a_class.upper_name)
 					elseif a_processor = a_universe.flat_implementation_checker then
 						info_file.put_string ("Degree 3 (flat) class ")
-						info_file.put_line (a_class.name.upper_name)
+						info_file.put_line (a_class.upper_name)
 					end
 				end
 			end
