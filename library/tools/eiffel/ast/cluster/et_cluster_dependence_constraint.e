@@ -47,7 +47,8 @@ feature -- Status report
 		require
 			a_group_not_void: a_group /= Void
 		local
-			l_name: STRING
+			l_dot_name: STRING
+			l_slash_name: STRING
 			i, nb: INTEGER
 			l_parent: ET_GROUP
 		do
@@ -56,9 +57,13 @@ feature -- Status report
 			else
 				nb := group_names.count
 				if nb > 0 then
-					l_name := a_group.full_name ('.')
+					l_dot_name := a_group.full_name ('.')
+					l_slash_name := a_group.full_name ('/')
 					from i := 1 until i > nb loop
-						if STRING_.same_case_insensitive (group_names.item (i), l_name) then
+						if STRING_.same_case_insensitive (group_names.item (i), l_dot_name) then
+							Result := True
+							i := nb + 1
+						elseif STRING_.same_case_insensitive (group_names.item (i), l_slash_name) then
 							Result := True
 							i := nb + 1
 						else
