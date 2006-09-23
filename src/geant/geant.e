@@ -135,16 +135,16 @@ feature {NONE} -- Command line parsing
 			error: AP_ERROR
 		do
 			create arg_parser.make
-			arg_parser.set_application_description ("Geant is a build tool specifically tailored for the Eiffel programming language.")
-			arg_parser.set_parameters_description ("[target]")
+			arg_parser.set_application_description ("Geant is a general software build tool comparable to 'make' or 'ant'. In addition to it's general, programming language indepedent build capabilities, it has built-in support for the Eiffel programming language which makes it especially useful as a build tool for Eiffel projects.")
+			arg_parser.set_parameters_description ("[starttarget]")
 
 			create argument_option.make_with_short_form ('A')
-			argument_option.set_description ("Defines argument named 'variable' with value 'value' for the current target.")
+			argument_option.set_description ("Define argument named 'variable' with value 'value' for 'starttarget'.")
 			argument_option.set_parameter_description ("<variable>=<value>")
 			arg_parser.options.force_last (argument_option)
 
 			create define_option.make_with_short_form ('D')
-			define_option.set_description ("Defines variable named 'variable' with value 'value'. If no value is supplied, True is assumed as value.")
+			define_option.set_description ("Define variable named 'variable' with value 'value'. If no value is supplied, True is assumed as value.")
 			define_option.set_parameter_description ("<variable>[=<value>]")
 			arg_parser.options.force_last (define_option)
 
