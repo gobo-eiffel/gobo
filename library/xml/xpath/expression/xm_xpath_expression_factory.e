@@ -17,6 +17,9 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
+	XM_XPATH_ROLE
+		export {NONE} all end
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_CARDINALITY
@@ -117,36 +120,21 @@ feature -- Creation
 			error_or_expression: internal_parsed_expression = Void implies parsed_error_value /= Void
 		end
 
-	created_treat_expression (a_sequence: XM_XPATH_EXPRESSION; a_sequence_type: XM_XPATH_SEQUENCE_TYPE): XM_XPATH_EXPRESSION is
+	created_treat_expression (a_sequence: XM_XPATH_EXPRESSION; a_sequence_type: XM_XPATH_SEQUENCE_TYPE): XM_XPATH_ITEM_CHECKER is
 			-- New treat expression
 		require
 			sequence_not_void: a_sequence /= Void
 			sequence_type_not_void: a_sequence_type /= Void
+		local
+			l_role: XM_XPATH_ROLE_LOCATOR
 		do
-			todo ("created_treat_expression", False)
+			create l_role.make (Type_operation_role, "treat as", 1, Xpath_errors_uri, "XPDY0050")
+			create Result.make (created_cardinality_checker (a_sequence, a_sequence_type.cardinality, l_role), a_sequence_type.primary_type, l_role)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	created_item_position_iterator (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_min, a_max: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- New position iterator;
-			--  unless `a_base_sequence' is an array iterator, in which case create a:
-			-- New array iterator directly over underlying array.
-			-- This optimization is important when doing recursion over a node-set using
-			--  repeated calls of $nodes[position()>1]
-		require
-			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
-		do
-			if a_base_iterator.is_array_iterator then
-				Result := a_base_iterator.as_array_iterator.new_slice_iterator (a_min, a_max)
-			else
-				create {XM_XPATH_POSITION_ITERATOR} Result.make (a_base_iterator, a_min, a_max)
-			end
-		ensure
-			iterator_created: Result /= Void
-		end
-
-	created_node_position_iterator (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_min, a_max: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	created_position_iterator (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_min, a_max: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- New position iterator;
 			--  unless `a_base_sequence' is an array iterator, in which case create a:
 			-- New array iterator directly over underlying array.
@@ -157,8 +145,10 @@ feature -- Creation
 		do
 			if a_base_iterator.is_array_iterator then
 				Result := a_base_iterator.as_array_iterator.new_slice_iterator (a_min, a_max)
+			elseif a_base_iterator.is_node_iterator then
+				create {XM_XPATH_POSITION_NODE_ITERATOR} Result.make (a_base_iterator.as_node_iterator, a_min, a_max)
 			else
-				create {XM_XPATH_POSITION_NODE_ITERATOR} Result.make (a_base_iterator, a_min, a_max)
+				create {XM_XPATH_POSITION_ITERATOR} Result.make (a_base_iterator, a_min, a_max)
 			end
 		ensure
 			iterator_created: Result /= Void
@@ -219,7 +209,7 @@ feature -- Creation
 				end
 			end
 		ensure
-			result_not_void: last_created_closure /= Void
+			last_created_closure_not_void: last_created_closure /= Void
 		end
 
 	create_sequence_extent (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
@@ -237,11 +227,11 @@ feature -- Creation
 				create {XM_XPATH_SEQUENCE_EXTENT} last_created_closure.make (an_iterator)
 			end
 		ensure
-			result_not_void: last_created_closure /= Void
+			last_created_closure_not_void: last_created_closure /= Void
 		end
 
 	created_cardinality_checker (a_sequence: XM_XPATH_EXPRESSION; a_requested_cardinality: INTEGER; a_role: XM_XPATH_ROLE_LOCATOR): XM_XPATH_COMPUTED_EXPRESSION is
-			-- Cardinality checker of singleton atomizer over `a_sequence'
+			-- Cardinality checker or singleton atomizer over `a_sequence'
 		require
 			underlying_expression_not_void: a_sequence /= Void
 			role_locator_not_void: a_role /= void

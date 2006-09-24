@@ -134,7 +134,7 @@ feature -- Evaluation
 							a_length := a_double_value.as_integer
 							a_final_position := a_length + a_starting_location - 1
 							if a_starting_location <= 1 then a_starting_location := 1 end
-							create {XM_XPATH_POSITION_ITERATOR} last_iterator.make (an_iterator, a_starting_location, a_final_position)
+							last_iterator := expression_factory.created_position_iterator (an_iterator, a_starting_location, a_final_position)
 						end
 					end
 				end

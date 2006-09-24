@@ -140,10 +140,12 @@ feature -- Status setting
 			create acceptable_media_types.make_default
 			acceptable_media_types.set_equality_tester (media_type_tester)
 			are_media_type_ignored := False
+			create namespace_bindings_stack.make
 		ensure
 			filtering: is_filtering
 			acceptable_media_types_table_created: acceptable_media_types /= Void
 			media_types_not_ignored: are_media_type_ignored = False
+			namespace_bindings_stack_not_void: namespace_bindings_stack /= Void
 		end
 
 	add_media_type (a_media_type: UT_MEDIA_TYPE) is
@@ -314,10 +316,14 @@ feature -- Tag
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of start tag.
 		local
-			an_element_qname, an_xml_prefix: STRING
+			l_element_qname, l_prefix: STRING
 		do
 			if is_filtering then
 				is_forwarding_processing_instructions := is_forwarding
+				if not is_shorthand_found or is_shorthand_element then
+					create namespace_bindings.make
+					namespace_bindings_stack.put (namespace_bindings)
+				end
 			end
 			if not is_filtering then
 				Precursor (a_namespace, a_prefix, a_local_part)
@@ -325,9 +331,9 @@ feature -- Tag
 				pending_namespace := Void; pending_prefix := Void; pending_local_part := Void
 				if not is_shorthand_found then
 					if a_prefix = Void then
-						an_xml_prefix := ""
+						l_prefix := ""
 					else
-						an_xml_prefix := a_prefix
+						l_prefix := a_prefix
 					end
 					is_forwarding := False; is_forwarding_processing_instructions := False
 					pending_namespace := a_namespace; pending_prefix := a_prefix; pending_local_part := a_local_part
@@ -335,14 +341,14 @@ feature -- Tag
 					create pending_attribute_prefixes.make
 					create pending_attribute_local_parts.make
 					create pending_attribute_values.make
-					if an_xml_prefix.count = 0 then
-						an_element_qname := a_local_part
+					if l_prefix.count = 0 then
+						l_element_qname := a_local_part
 					else
-						an_element_qname := STRING_.cloned_string (an_xml_prefix)
-						an_element_qname := STRING_.appended_string (an_element_qname, ":")
-						an_element_qname := STRING_.appended_string (an_element_qname, a_local_part)
+						l_element_qname := STRING_.cloned_string (l_prefix)
+						l_element_qname := STRING_.appended_string (l_element_qname, ":")
+						l_element_qname := STRING_.appended_string (l_element_qname, a_local_part)
 					end
-					current_element_name := an_element_qname
+					current_element_name := l_element_qname
 				elseif is_forwarding then
 					Precursor (a_namespace, a_prefix, a_local_part)
 				end
@@ -356,11 +362,21 @@ feature -- Tag
 			an_attribute_model: XM_DTD_ATTRIBUTE_CONTENT
 			an_attribute_qname, an_xml_prefix: STRING
 		do
+			if is_filtering and (not is_shorthand_found or is_shorthand_element) then
+				if a_namespace = Void and a_prefix = Void and STRING_.same_string (Xmlns, a_local_part) then
+					namespace_bindings.bind ("", a_value)
+				elseif a_namespace = Void and a_prefix /= Void and then STRING_.same_string (Xmlns, a_prefix) then
+					namespace_bindings.bind (a_local_part, a_value)
+				end
+			end
 			if not is_filtering or else is_forwarding then
 				Precursor (a_namespace, a_prefix, a_local_part, a_value)
 			elseif not is_error and then not is_shorthand_found then
 				if a_prefix /= Void and then Xml_prefix.is_equal (a_prefix) and then Xml_id.is_equal (a_local_part) then
 					is_shorthand_found := STRING_.same_string (shorthand, a_value)
+					if is_shorthand_found then
+						is_shorthand_element := True
+					end
 				else
 					if attribute_types.has (current_element_name) then
 						an_attribute_table := attribute_types.item (current_element_name)
@@ -388,6 +404,9 @@ feature -- Tag
 							end
 							if an_attribute_model.is_id then
 								is_shorthand_found := STRING_.same_string (shorthand, a_value)
+								if is_shorthand_found then
+									is_shorthand_element := True
+								end
 							end
 						end
 					end
@@ -412,7 +431,34 @@ feature -- Tag
 
 	on_start_tag_finish is
 			-- End of start tag.
+		local
+			l_namespaces: XM_XPOINTER_NAMESPACE_CONTEXT
+			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			l_prefix, l_uri: STRING
 		do
+			if is_shorthand_element then
+				l_namespaces := namespace_bindings_stack.item
+				from 
+					namespace_bindings_stack.remove
+				until
+					namespace_bindings_stack.is_empty
+				loop
+					l_cursor := namespace_bindings_stack.item.namespace_cursor
+					from l_cursor.start until l_cursor.after loop
+						l_prefix := l_cursor.key
+						l_uri := l_cursor.item
+						if not l_namespaces.is_prefix_declared (l_prefix) then
+							if l_prefix.is_empty then
+								on_attribute (Void, Void, Xmlns, l_uri)
+							else
+								on_attribute (Void, Xmlns, l_prefix, l_uri)
+							end
+						end
+						l_cursor.forth
+					end
+					namespace_bindings_stack.remove
+				end
+			end
 			if not is_filtering or else is_forwarding then Precursor end
 		end
 
@@ -423,25 +469,31 @@ feature -- Tag
 		do
 			if not is_filtering then
 				Precursor (a_namespace, a_prefix, a_local_part)
-			elseif is_forwarding then
-				Precursor (a_namespace, a_prefix, a_local_part)
-				if a_prefix = Void then
-					an_xml_prefix := ""
-				else
-					an_xml_prefix := a_prefix
+			else
+				if not is_shorthand_found then
+					namespace_bindings_stack.remove
 				end
-				if an_xml_prefix.count = 0 then
-					an_element_qname := a_local_part
-				else
-					an_element_qname := STRING_.cloned_string (an_xml_prefix)
-					an_element_qname := STRING_.appended_string (an_element_qname, ":")
-					an_element_qname := STRING_.appended_string (an_element_qname, a_local_part)
-				end
-				if STRING_.same_string (an_element_qname, current_element_name) then
-					is_forwarding := False
-					is_forwarding_processing_instructions := False
+				if is_forwarding then
+					Precursor (a_namespace, a_prefix, a_local_part)
+					if a_prefix = Void then
+						an_xml_prefix := ""
+					else
+						an_xml_prefix := a_prefix
+					end
+					if an_xml_prefix.count = 0 then
+						an_element_qname := a_local_part
+					else
+						an_element_qname := STRING_.cloned_string (an_xml_prefix)
+						an_element_qname := STRING_.appended_string (an_element_qname, ":")
+						an_element_qname := STRING_.appended_string (an_element_qname, a_local_part)
+					end
+					if STRING_.same_string (an_element_qname, current_element_name) then
+						is_forwarding := False
+						is_forwarding_processing_instructions := False
+					end
 				end
 			end
+			is_shorthand_element := False
 		end
 
 feature -- Content
@@ -496,11 +548,20 @@ feature {NONE} -- Implementation
 	is_shorthand_found: BOOLEAN
 			-- Have we found the shorthand element?
 
+	is_shorthand_element: BOOLEAN
+			-- Are we currently processing the shorthand-selected element?
+
 	is_error: BOOLEAN
 			-- Did XPointer processing flag an error?
 
 	acceptable_media_types: DS_HASH_SET [UT_MEDIA_TYPE]
 			-- Acceptable media types for current fragment-processing semantics
+
+	namespace_bindings_stack: DS_LINKED_STACK [XM_XPOINTER_NAMESPACE_CONTEXT]
+			-- Namespace declarations in scope
+
+	namespace_bindings: XM_XPOINTER_NAMESPACE_CONTEXT
+			-- Current namespace binding context
 
 invariant
 

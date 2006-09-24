@@ -431,11 +431,7 @@ feature -- Evaluation
 						
 						if filter.is_position_range then
 							a_position_range := filter.as_position_range
-							if a_base_iterator.is_node_iterator then
-								last_iterator := expression_factory.created_node_position_iterator (a_base_iterator.as_node_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
-							else
-								last_iterator := expression_factory.created_item_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
-							end
+							last_iterator := expression_factory.created_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
 						else
 							if filter_is_positional then
 								if a_base_iterator.is_node_iterator then
@@ -484,7 +480,7 @@ feature -- Evaluation
 						
 					if filter.is_position_range then
 						a_position_range := filter.as_position_range
-						last_node_iterator := expression_factory.created_node_position_iterator (a_base_iterator.as_node_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
+						last_node_iterator := expression_factory.created_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position).as_node_iterator
 					else
 						if filter_is_positional then
 							create {XM_XPATH_NODE_FILTER_ITERATOR} last_node_iterator.make (a_base_iterator.as_node_iterator, filter, a_context)
@@ -623,11 +619,7 @@ feature {NONE} -- Implementation
 				if a_number.is_platform_integer then
 					a_position := a_number.as_integer
 					if a_position >= 1 then
-						if a_base_iterator.is_node_iterator then
-							last_iterator := expression_factory.created_node_position_iterator (a_base_iterator.as_node_iterator, a_position, a_position)
-						else
-							last_iterator := expression_factory.created_item_position_iterator (a_base_iterator, a_position, a_position)
-						end
+						last_iterator := expression_factory.created_position_iterator (a_base_iterator, a_position, a_position)
 					else
 					
 						-- Index is less than one, no items will be selected

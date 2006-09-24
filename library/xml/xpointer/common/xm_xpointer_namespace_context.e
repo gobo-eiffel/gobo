@@ -39,7 +39,7 @@ feature -- Access
 	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
 			-- Is there a binding for `an_xml_prefix'?
 		require
-			ncname: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
+			ncname: an_xml_prefix /= Void and then (an_xml_prefix.is_empty or is_ncname (an_xml_prefix))
 		do
 			if STRING_.same_string (an_xml_prefix, Xml_prefix) then
 				Result := True
@@ -53,7 +53,7 @@ feature -- Access
 	is_prefix_proscribed (an_xml_prefix: STRING): BOOLEAN is
 			-- Is it forbidden to create a binding for `an_xml_prefix'?
 		require
-			ncname: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
+			ncname: an_xml_prefix /= Void and then (an_xml_prefix.is_empty or is_ncname (an_xml_prefix))
 		do
 			Result := STRING_.same_string (an_xml_prefix, Xmlns) or else STRING_.same_string (an_xml_prefix, Xml_prefix)
 		end
@@ -61,7 +61,7 @@ feature -- Access
 	is_namespace_proscribed (a_namespace_uri: STRING): BOOLEAN is
 			-- Is it forbidden to create a binding onto `a_namespace_uri'?
 		require
-			namespace_uri_not_empty: a_namespace_uri /= Void and then a_namespace_uri.count > 0
+			namespace_uri_not_empty: a_namespace_uri /= Void
 		do
 			Result := STRING_.same_string (a_namespace_uri, Xml_prefix_namespace) or else STRING_.same_string (a_namespace_uri, Xmlns_namespace)
 		end
@@ -69,7 +69,7 @@ feature -- Access
 	namespace_uri (an_xml_prefix: STRING): STRING is
 			-- Namespace URI for `an_xml_prefix'
 		require
-			ncname: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
+			ncname: an_xml_prefix /= Void and then (an_xml_prefix.is_empty or is_ncname (an_xml_prefix))
 			prefix_declared: is_prefix_declared (an_xml_prefix)
 		do
 			if STRING_.same_string (an_xml_prefix, Xml_prefix) then
@@ -81,7 +81,7 @@ feature -- Access
 			namespace_uri_not_emoty: Result /= Void and then Result.count > 0
 		end
 
-	namespace_cursor:  DS_HASH_TABLE_CURSOR [STRING, STRING] is
+	namespace_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING] is
 			-- Cursor over declared namespace other than 'xml'
 		do
 			Result := bindings.new_cursor
@@ -94,7 +94,7 @@ feature -- Element change
 	bind (an_xml_prefix, a_namespace_uri: STRING) is
 			-- Bind `an_xml_prefix' to `a_namespace_uri'.
 		require
-			ncname: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
+			ncname: an_xml_prefix /= Void and then (an_xml_prefix.is_empty or is_ncname (an_xml_prefix))
 			namespace_uri_not_empty: a_namespace_uri /= Void and then a_namespace_uri.count > 0
 			prefix_not_declared: not is_prefix_declared (an_xml_prefix)
 			uri_not_proscribed: not is_namespace_proscribed (a_namespace_uri)
