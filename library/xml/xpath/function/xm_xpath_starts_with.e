@@ -69,10 +69,51 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			a_collator: ST_COLLATOR
+			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
+			s1, s2: STRING
+			an_item: XM_XPATH_ITEM
 		do
-			todo ("evaluate-item", False)
+			a_collator := collator (3, a_context, True)
+			if a_collator = Void then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
+			else
+				arguments.item (1).evaluate_item (a_context)
+				an_item := arguments.item (1).last_evaluated_item
+				if an_item /= Void and then an_item.is_error then
+					last_evaluated_item := an_item
+				else
+					if an_item = Void then
+						create {XM_XPATH_STRING_VALUE} an_atomic_value.make ("")
+					else
+						an_atomic_value := an_item.as_atomic_value
+					end
+					arguments.item (2).evaluate_item (a_context)
+					an_item := arguments.item (2).last_evaluated_item
+					if an_item /= Void and then an_item.is_error then
+						last_evaluated_item := an_item
+					elseif an_item = Void then
+						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (True)
+					else
+						if not an_item.is_atomic_value then
+							create {XM_XPATH_STRING_VALUE} another_atomic_value.make ("")
+						else
+							another_atomic_value := an_item.as_atomic_value
+						end
+						s1 := an_atomic_value.string_value
+						s2 := another_atomic_value.string_value
+						if s2.count = 0 then
+							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (True)
+						elseif s1.count = 0 then
+							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+						else
+							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (starts_with (s1, s2, a_collator))
+						end
+					end
+				end
+			end
 		end
-
 	
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
@@ -86,6 +127,27 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
+		end
+
+feature {NONE} -- Implementation
+
+	starts_with (s1, s2: STRING; a_collator: ST_COLLATOR): BOOLEAN is
+			-- Does `s1' start with `s2' according to the rules of `a_collator'?
+		require
+			first_string_not_void: s1 /= Void
+			second_string_not_void: s2 /= Void
+			collator_not_void: a_collator /= Void
+		local
+			l_substring: STRING
+		do
+
+			-- TODO: In general, this algorithm does not work, as a collation
+			--       may specify ignorable collation units, but for now it will do
+
+			if s2.count <= s1.count then
+				l_substring := s1.substring (1, s2.count)
+				Result := a_collator.three_way_comparison (l_substring, s2) = 0
+			end
 		end
 
 end

@@ -203,10 +203,12 @@ feature -- Creation
 					end
 				else
 					a_message := STRING_.concat ("Prefix is not declared: ", an_xml_prefix)
-					report_parse_error (a_message, "XPST0003")
+					report_parse_error (a_message, "XPST0081")
 					last_generated_name_code := -2
 				end
 			end
+		ensure
+			error_or_non_negative_name_code: not is_parse_error implies last_generated_name_code >= 0			
 		end
 
 	generate_name_test (a_node_type: INTEGER; a_qname: STRING; use_default_namespace: BOOLEAN) is
@@ -221,7 +223,7 @@ feature -- Creation
 				create {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (a_node_type, last_generated_name_code, a_qname)
 			end
 		ensure
-			last_generated_name_code_not_void: not is_parse_error implies last_Generated_Name_Code >= 0
+			error_or_non_negative_name_code: not is_parse_error implies last_generated_name_code >= 0
 		end
 
 	make_local_name_test (a_node_type: INTEGER; a_local_name: STRING): XM_XPATH_LOCAL_NAME_TEST is
@@ -281,7 +283,7 @@ feature {NONE} -- Implementation
 					else
 						a_message := STRING_.concat ("Prefix ", a_parser.optional_prefix)
 						a_message := STRING_.appended_string (a_message, " has not been declared as an in-scope namespace.")
-						report_parse_error (a_message, "XPST0003")
+						report_parse_error (a_message, "XPST0081")
 					end
 					if not is_parse_error then
 						a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
@@ -1961,7 +1963,7 @@ feature {NONE} -- Implementation
 								else
 									a_message := STRING_.concat ("Prefix ", an_xml_prefix)
 									a_message := STRING_.appended_string (a_message, " has not been declared as an in-scope namespace.")
-									report_parse_error (a_message, "XPST0003")
+									report_parse_error (a_message, "XPST0081")
 								end
 							end
 						end
@@ -2029,7 +2031,7 @@ feature {NONE} -- Implementation
 				elseif is_ncname (a_token_value) and then is_prefix_declared (a_token_value) then
 					internal_last_parsed_node_test := make_namespace_test (a_node_type, a_token_value)
 				else
-					report_parse_error (STRING_.concat ("Prefix is not an in-scope namespace prefix: ", a_token_value), "XPST0003")
+					report_parse_error (STRING_.concat ("Prefix is not an in-scope namespace prefix: ", a_token_value), "XPST0081")
 				end
 			when Suffix_token then
 				next_token ("In parse_node_test - suffix: current token is ")
@@ -2687,7 +2689,7 @@ feature {NONE} -- Implementation
 					else
 						a_message := STRING_.concat ("Prefix ", a_parser.optional_prefix)
 						a_message := STRING_.appended_string (a_message, " is not in scope.")
-						report_parse_error (a_message, "XPST0003")
+						report_parse_error (a_message, "XPST0081")
 					end
 				end
 				if not is_parse_error then

@@ -175,6 +175,7 @@ feature -- Status setting
 			error_value_not_void: an_error_value /= Void
 		do
 			error_value := an_error_value
+			is_error := True
 		ensure
 			set: error_value = an_error_value
 			in_error: is_error
@@ -190,6 +191,7 @@ feature -- Status setting
 			not_in_error: not is_error			
 		do
 			create error_value.make_from_string (a_message, a_namespace_uri, a_code, an_error_type)
+			is_error := True
 		ensure
 			valid_error: error_value /= Void
 				and then STRING_.same_string (error_value.code, a_code)
@@ -324,7 +326,7 @@ feature {NONE} -- Implementation
 				until
 					an_index > a_count
 				loop
-					integral_grouping_separator_positions.put (maximum_integral_part_size - integral_part_positions.item (a_count - an_index), an_index)
+					integral_grouping_separator_positions.put (maximum_integral_part_size - integral_part_positions.item (a_count - an_index + 1), an_index)
 					an_index := an_index + 1
 				end
 				if a_count > 1 then
@@ -514,7 +516,7 @@ feature {NONE} -- Implementation
 						if an_index < a_point and then INTEGER_.mod (an_index , a_grouping_index) = 0 then
 							a_string := STRING_.appended_string (a_string, a_decimal_format.grouping_separator)
 						end
-						a_string := STRING_.appended_string (a_string, Result.substring (an_index, an_index))
+						a_string := STRING_.appended_string (a_string, a_value.substring (an_index, an_index))
 						an_index := an_index + 1
 					end
 					Result := a_string
@@ -533,7 +535,7 @@ feature {NONE} -- Implementation
 							a_string := STRING_.appended_string (a_string, a_decimal_format.grouping_separator)
 							a_grouping_position := a_grouping_position + 1
 						end
-						a_string := STRING_.appended_string (a_string, Result.substring (an_index, an_index))
+						a_string := STRING_.appended_string (a_string, a_value.substring (an_index, an_index))
 						an_index := an_index + 1
 					end
 					Result := a_string

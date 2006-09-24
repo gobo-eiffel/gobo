@@ -200,6 +200,22 @@ feature -- Element change
 			key_definition_added: True -- TODO
 		end
 
+	allocate_slots is
+			-- Allocate stack-frame slots in bodies of all key definitions.
+		local
+			l_table_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [XM_XSLT_KEY_DEFINITION], INTEGER]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_KEY_DEFINITION]
+		do
+			from l_table_cursor := key_map.new_cursor; l_table_cursor.start until l_table_cursor.after loop
+				from l_cursor := l_table_cursor.item.new_cursor; l_cursor.start until l_cursor.after loop
+					l_cursor.item.allocate_slots
+					l_cursor.forth
+				end
+				l_table_cursor.forth
+			end
+		end
+
+			
 feature {NONE} -- Implementation
 
 	key_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XSLT_KEY_DEFINITION], INTEGER]
@@ -290,7 +306,7 @@ feature {NONE} -- Implementation
 				from
 					all_nodes_iterator := a_document.new_axis_iterator (Descendant_or_self_axis); all_nodes_iterator.start
 				until
-					all_nodes_iterator.after
+					a_context.transformer.is_error or all_nodes_iterator.after
 				loop
 					a_node := all_nodes_iterator.item
 					if a_node.node_type = Element_node then
@@ -323,7 +339,7 @@ feature {NONE} -- Implementation
 				from
 					all_nodes_iterator := a_document.new_axis_iterator_with_node_test (Descendant_axis, match.node_test); all_nodes_iterator.start
 				until
-					all_nodes_iterator.after
+					a_context.transformer.is_error or all_nodes_iterator.after
 				loop
 					a_node := all_nodes_iterator.item
 					-- If `match' is a node test, we avoid testing it a second time

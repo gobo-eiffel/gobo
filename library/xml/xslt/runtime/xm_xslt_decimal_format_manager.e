@@ -91,7 +91,7 @@ feature -- Status report
 	is_duplicate_format (a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): BOOLEAN is
 			-- Does `a_format' differ from all other formats by any value?
 		require
-			is_not_a_default_format: a_format /= Void and then a_format.fingerprint > - 1 and then has (a_format.fingerprint)
+			is_not_a_default_format: a_format /= Void and then a_format.fingerprint > - 1 and then has_named_format (a_format.fingerprint)
 		do
 			Result := not a_format.is_different_from (named_format (a_format.fingerprint))
 		end

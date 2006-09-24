@@ -17,7 +17,7 @@ feature -- Access
 	outputter: XM_OUTPUT
 			-- Destination for xsl:message output
 
-feature -- element change
+feature -- Element change
 
 	
 	set_outputter (a_outputter: like outputter) is

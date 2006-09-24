@@ -115,7 +115,12 @@ feature -- Evaluation
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Prefix is not declared during resolve-qname()",
 																														Xpath_errors_uri, "FONS0004", Dynamic_error)
 						else
-							resolve_qname (an_element, a_prefix, a_local_part)
+							if is_ncname (a_local_part) then
+								resolve_qname (an_element, a_prefix, a_local_part)
+							else
+								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Invalid local name in resolve-qname()",
+																															Xpath_errors_uri, "FOCA0002", Dynamic_error)
+							end
 						end
 					end
 				end
@@ -138,12 +143,12 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	resolve_qname (an_element: XM_XPATH_ELEMENT; a_prefix, a_local_part: STRING; ) is
+	resolve_qname (an_element: XM_XPATH_ELEMENT; a_prefix, a_local_part: STRING) is
 			-- Resolve qname in scope of `an_element'.
 		require
 			element_not_void: an_element /= Void
 			prefix_not_void: a_prefix /= Void
-			local_name_not_void: a_local_part /= Void
+			valid_local_part: a_local_part /= Void and then (a_local_part.count > 0 implies is_ncname (a_local_part))
 		local
 			found: BOOLEAN
 			a_name_code, a_namespace_code, a_prefix_code, a_uri_code: INTEGER

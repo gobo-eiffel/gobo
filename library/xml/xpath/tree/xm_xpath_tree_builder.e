@@ -53,6 +53,19 @@ feature -- Access
 	tree_document: XM_XPATH_TREE_DOCUMENT
 			-- Created ocument
 
+	last_xpath_error: XM_XPATH_ERROR_VALUE
+			-- Last error value
+
+feature -- Status report
+
+	has_xpath_error: BOOLEAN is
+			-- Has an XPath error value been reported?
+		do
+			Result := last_xpath_error /= Void
+		ensure
+			error_value: Result implies last_xpath_error /= Void
+		end
+		
 feature -- Events
 
 	on_error (a_message: STRING) is
@@ -148,6 +161,7 @@ feature -- Events
 				if an_element.is_error then
 					has_error := True
 					last_error := an_element.error_value.error_message
+					last_xpath_error := an_element.error_value
 				else
 					if not locator.system_id.is_empty then
 						tree_document.set_system_id_for_node (next_node_number, locator.system_id)

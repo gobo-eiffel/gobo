@@ -210,13 +210,14 @@ feature -- Element change
 		end
 
 	set_pattern_slot_space (a_pattern_slot_count: INTEGER) is
-			-- Set space requirements for pattern variables
+			-- Set space requirements for pattern variables and allocate slots for key expressions.
 		require
 			positive_pattern_slot_count: a_pattern_slot_count >= 0
 			slots_not_yet_allocated: not are_slots_allocated
 		do
 			largest_pattern_stack_frame := a_pattern_slot_count
 			are_slots_allocated := True
+			key_manager.allocate_slots
 		ensure
 			slots_allocated: are_slots_allocated and then largest_pattern_stack_frame = a_pattern_slot_count
 		end

@@ -64,6 +64,14 @@ feature -- Access
 	collation_uri: STRING
 			-- Name of `collator'
 
+feature -- Element change
+	
+	allocate_slots is
+			-- Allocate slot numbers for all range variable in `body' and it's sub-expresions.
+		do
+			body.allocate_slots (1, slot_manager)
+		end
+											  
 invariant
 
 	match: match /= Void

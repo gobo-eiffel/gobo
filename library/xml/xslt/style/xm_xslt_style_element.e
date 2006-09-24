@@ -68,7 +68,20 @@ feature {NONE} -- Initialization
 			configuration_set: configuration = a_configuration
 			name_code_set: name_code = a_name_code
 		end			
-			
+
+feature {XM_XSLT_NODE_FACTORY} -- Validation
+
+	check_default_collation_name is
+			-- Check default collation_name is valid.
+		local
+			l_error: XM_XPATH_ERROR_VALUE
+		do
+			if local_default_collation_name /= Void and then default_collation_name.is_empty then
+				create l_error.make_from_string (STRING_.concat ("None of the following are recognized as a collation URI by this implementation: ", local_default_collation_name), Xpath_errors_uri, "XTSE0125", Static_error)
+				set_last_error (l_error)
+			end
+		end
+
 feature -- Access
 	
 	construct_type: INTEGER is
@@ -110,7 +123,6 @@ feature -- Access
 			a_cursor: DS_LIST_CURSOR [STRING]
 			a_collation_name: STRING
 			a_style_element: XM_XSLT_STYLE_ELEMENT
-			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if local_default_collation_name /= Void then
 				create a_splitter.make
@@ -131,8 +143,7 @@ feature -- Access
 					end
 				end
 				if Result = Void then
-					create an_error.make_from_string (STRING_.concat ("None of the following are recognized as a collation URI by this implementation: ", local_default_collation_name), Xpath_errors_uri, "XTSE0125", Static_error)
-					report_compile_error (an_error)
+					Result := ""
 				end
 			else
 				a_style_element ?= parent
@@ -149,12 +160,6 @@ feature -- Access
 
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
-
-	extension_namespaces: DS_ARRAYED_LIST [INTEGER]
-			-- Namespace URI codes of extension elements
-
-	excluded_namespaces: DS_ARRAYED_LIST [INTEGER]
-			-- Namespace URI codes to be excluded from output
 
 	default_xpath_namespace: STRING
 			-- Default XPath namespace
@@ -483,15 +488,6 @@ feature -- Access
 			function_may_not_be_available: True
 		end
 
-	is_defined_extension_instruction_namespace (a_uri_code: INTEGER): BOOLEAN is
-			-- Is `a_uri_code' defined as an extension instruction namespace in `Current'?
-		local
-		do
-			if extension_namespaces /= Void then
-				Result := extension_namespaces.has (a_uri_code)
-			end
-		end
-
 	is_extension_instruction_namespace (a_uri_code: INTEGER): BOOLEAN is
 			-- Is `a_uri_code' an in-scope extension instruction namespace?
 		local
@@ -639,30 +635,6 @@ feature -- Status_report
 		do
 			Result :=  is_local_variable_declared (a_fingerprint)
 				or else is_global_variable_declared (a_fingerprint)
-		end
-
-	is_defined_excluded_namespace (a_uri_code: INTEGER): BOOLEAN is
-			-- Is `a_uri_code' defined as an excluded namespace within `Current'?
-		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-		do
-			if excluded_namespaces /= Void then
-				from
-					a_cursor := excluded_namespaces.new_cursor
-					a_cursor.start
-				variant
-				excluded_namespaces.count + 1 - a_cursor.index
-				until
-					a_cursor.after
-				loop
-					if a_cursor.item = a_uri_code then
-						Result := True
-						a_cursor.go_after
-					else
-						a_cursor.forth
-					end
-				end
-			end
 		end
 
 	is_excluded_namespace (a_uri_code: INTEGER): BOOLEAN is
@@ -1011,7 +983,7 @@ feature -- Status setting
 				a_message := STRING_.appended_string (node_name, " must be empty when the '")
 				a_message := STRING_.appended_string (a_message, an_attribute_name)
 				a_message := STRING_.appended_string (a_message, "' attribute is supplied.")
-				create an_error.make_from_string (a_message, "", an_error_code, Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, an_error_code, Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -1029,7 +1001,7 @@ feature -- Status setting
 				a_message := STRING_.appended_string (node_name, " must not be empty when the '")
 				a_message := STRING_.appended_string (a_message, an_attribute_name)
 				a_message := STRING_.appended_string (a_message, "' attribute is not supplied.")
-				create an_error.make_from_string (a_message, "", an_error_code, Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, an_error_code, Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -1666,8 +1638,8 @@ feature -- Element change
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
 				and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Default_collation_attribute)
-				and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
-							  or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
+				and then (namespace_uri_from_expanded_name (an_attribute_name).count = 0
+							 or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
 		do
 			local_default_collation_name := attribute_value_by_expanded_name (an_attribute_name)
 		end
@@ -1937,7 +1909,9 @@ feature -- Element change
 					create a_text.make (an_executable, a_string_value, False, principal_stylesheet.module_number (a_node.system_id), a_line_number)
 					if not is_error and then not any_compile_errors then
 						compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
-						if last_generated_expression = Void then
+						if any_compile_errors then
+							-- nothing else to do
+						elseif last_generated_expression = Void then
 							last_generated_expression := a_text
 						else
 							create a_block.make (an_executable, a_text, last_generated_expression, principal_stylesheet.module_number (a_node.system_id), a_line_number)
@@ -2000,7 +1974,7 @@ feature -- Element change
 						a_let_expression.set_source_location (principal_stylesheet.module_number (a_variable.system_id), a_variable.line_number)
 						-- TODO: tracing
 						last_generated_expression := a_let_expression
-					else
+					elseif not any_compile_errors then
 						check
 							local_variable_without_following_instructions: False
 							-- because in that case, the variable's compile would have done nothing
@@ -2276,6 +2250,39 @@ feature -- Conversion
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Local
 
+	is_defined_excluded_namespace (a_uri_code: INTEGER): BOOLEAN is
+			-- Is `a_uri_code' defined as an excluded namespace within `Current'?
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+			if excluded_namespaces /= Void then
+				from
+					a_cursor := excluded_namespaces.new_cursor
+					a_cursor.start
+				variant
+				excluded_namespaces.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					if a_cursor.item = a_uri_code then
+						Result := True
+						a_cursor.go_after
+					else
+						a_cursor.forth
+					end
+				end
+			end
+		end
+
+	is_defined_extension_instruction_namespace (a_uri_code: INTEGER): BOOLEAN is
+			-- Is `a_uri_code' defined as an extension instruction namespace in `Current'?
+		local
+		do
+			if extension_namespaces /= Void then
+				Result := extension_namespaces.has (a_uri_code)
+			end
+		end
+
 	is_local_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
 			-- Does `a_fingerprint' represent an in-scope local variable?
 		require
@@ -2365,6 +2372,12 @@ feature {NONE} -- Implementation
 
 	local_default_collation_name: STRING
 			-- list of possible default collation names (optional)
+
+	excluded_namespaces: DS_ARRAYED_LIST [INTEGER]
+			-- Namespace URI codes to be excluded from output
+
+	extension_namespaces: DS_ARRAYED_LIST [INTEGER]
+			-- Namespace URI codes of extension elements
 
 	common_child_item_type: XM_XPATH_ITEM_TYPE is
 			-- Most general type of item returned by the children of this instruction
@@ -2491,27 +2504,31 @@ feature {NONE} -- Implementation
 				fallback_processing (an_executable, a_style_element)
 			elseif not a_style_element.is_excluded then
 				a_style_element.compile (an_executable)
-				a_child := a_style_element.last_generated_expression
-				if a_child /= Void and then a_child.is_computed_expression then 
-					a_child.as_computed_expression.set_source_location (principal_stylesheet.module_number (a_style_element.system_id), a_style_element.line_number)
-				end
-				if a_child /= Void and then configuration.is_tracing and then (include_parameters or else not a_style_element.is_param) then
-					a_child := new_trace_wrapper (a_child, an_executable, a_style_element)
-				end
-				compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
-				a_tail := last_generated_expression
-				if a_tail = Void then
-					last_generated_expression := a_child
-				elseif a_child /= Void then
-					if a_child.is_computed_expression then
-						a_system_id := a_child.as_computed_expression.system_id
-						a_line_number := a_child.as_computed_expression.line_number
-					else
-						a_system_id := a_style_element.system_id
-						a_line_number := a_style_element.line_number
+				if not any_compile_errors then
+					a_child := a_style_element.last_generated_expression
+					if a_child /= Void and then a_child.is_computed_expression then 
+						a_child.as_computed_expression.set_source_location (principal_stylesheet.module_number (a_style_element.system_id), a_style_element.line_number)
 					end
-					create a_block.make (an_executable, a_child, a_tail, principal_stylesheet.module_number (a_system_id), a_line_number)
-					last_generated_expression := a_block
+					if a_child /= Void and then configuration.is_tracing and then (include_parameters or else not a_style_element.is_param) then
+						a_child := new_trace_wrapper (a_child, an_executable, a_style_element)
+					end
+					compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
+					if not any_compile_errors then
+						a_tail := last_generated_expression
+						if a_tail = Void then
+							last_generated_expression := a_child
+						elseif a_child /= Void then
+							if a_child.is_computed_expression then
+								a_system_id := a_child.as_computed_expression.system_id
+								a_line_number := a_child.as_computed_expression.line_number
+							else
+								a_system_id := a_style_element.system_id
+								a_line_number := a_style_element.line_number
+							end
+							create a_block.make (an_executable, a_child, a_tail, principal_stylesheet.module_number (a_system_id), a_line_number)
+							last_generated_expression := a_block
+						end
+					end
 				end
 			end
 		end

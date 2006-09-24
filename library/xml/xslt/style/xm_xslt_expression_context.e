@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 		require
 			style_element_not_void:	a_style_element /= Void
 			configuration_not_void: a_configuration /= Void
+			known_collation: a_style_element.principal_stylesheet.collation_map.has (a_style_element.default_collation_name)
 		do
 			configuration := a_configuration
 			style_element := a_style_element
@@ -57,6 +58,7 @@ feature {NONE} -- Initialization
 		require
 			style_element_not_void:	a_style_element /= Void
 			configuration_not_void: a_configuration /= Void
+			known_collation: a_style_element.principal_stylesheet.collation_map.has (a_style_element.default_collation_name)
 		do
 			configuration := a_configuration
 			style_element := a_style_element
@@ -152,10 +154,14 @@ feature -- Access
 				else
 					a_uri := ""
 				end
-			else
+			elseif is_prefix_declared (a_parser.optional_prefix) then
 				a_uri := uri_for_prefix (a_parser.optional_prefix)
+			else
+				Result := -1
 			end
-			Result := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+			if Result /= -1 then
+				Result := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+			end
 		end
 
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT is

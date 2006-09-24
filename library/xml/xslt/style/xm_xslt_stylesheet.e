@@ -124,9 +124,8 @@ feature -- Access
 		local
 			an_index: INTEGER
 		do
-			if not has_namespace_aliases then
-				Result := -1
-			else
+			Result := -1
+			if has_namespace_aliases then
 			
 				-- if there are several matches, the last in stylesheet takes priority;
 				-- but the list is in reverse stylesheet order

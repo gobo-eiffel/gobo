@@ -181,27 +181,28 @@ feature -- Element change
 			if not a_decimal_format.are_all_distinct then
 				create an_error.make_from_string ("Not all picture characters are distinct.", Xpath_errors_uri, "XTSE1300", Static_error)
 				report_compile_error (an_error)
-			end
-			a_format_manager := principal_stylesheet.decimal_format_manager
-			if a_fingerprint = -1 then
-				if a_format_manager.is_default_format_set then
-					if a_format_manager.is_different_from_default_format (a_decimal_format) then
-						create an_error.make_from_string ("Cannot define a default xsl:decimal-format twice, unless all attributes are identical", Xpath_errors_uri, "XTSE1290", Static_error)
-						report_compile_error (an_error)
-					end
-				else
-					a_format_manager.set_default_format (a_decimal_format)
-				end
 			else
-				if a_format_manager.has (a_fingerprint) then
-					if not a_format_manager.is_duplicate_format (a_decimal_format) then
-						a_message := STRING_.concat ("Cannot define xsl:decimal-format named ", name)
-						a_message := STRING_.appended_string (a_message, " twice, unless all values are identical")
-						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1290", Static_error)
-						report_compile_error (an_error)
+				a_format_manager := principal_stylesheet.decimal_format_manager
+				if a_fingerprint = -1 then
+					if a_format_manager.is_default_format_set then
+						if a_format_manager.is_different_from_default_format (a_decimal_format) then
+							create an_error.make_from_string ("Cannot define a default xsl:decimal-format twice, unless all attributes are identical", Xpath_errors_uri, "XTSE1290", Static_error)
+							report_compile_error (an_error)
+						end
+					else
+						a_format_manager.set_default_format (a_decimal_format)
 					end
 				else
-					a_format_manager.set_named_format (a_decimal_format)
+					if a_format_manager.has_named_format (a_fingerprint) then
+						if not a_format_manager.is_duplicate_format (a_decimal_format) then
+							a_message := STRING_.concat ("Cannot define xsl:decimal-format named ", name)
+							a_message := STRING_.appended_string (a_message, " twice, unless all values are identical")
+							create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1290", Static_error)
+							report_compile_error (an_error)
+						end
+					else
+						a_format_manager.set_named_format (a_decimal_format)
+					end
 				end
 			end
 			last_generated_expression := Void

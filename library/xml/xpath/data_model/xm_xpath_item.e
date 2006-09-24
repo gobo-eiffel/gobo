@@ -312,7 +312,7 @@ feature -- Status setting
 			-- Set `error_value'.
 		require
 			item_not_in_error: not is_error
-			error_value_not_void: an_error_value /= Void and then an_error_value.type /= Static_error
+			error_value_not_void: an_error_value /= Void -- removed 11/09/2006 - can't think why it was there: and then an_error_value.type /= Static_error
 		deferred
 		ensure
 			item_in_error: is_error

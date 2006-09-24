@@ -488,7 +488,11 @@ feature -- Evaluation
 			if is_evaluate_item_supported then
 				evaluate_item (a_context)
 				if last_evaluated_item /= Void then
-					last_evaluated_item.send (a_context.current_receiver)
+					if last_evaluated_item.is_error then
+						a_context.report_fatal_error (last_evaluated_item.error_value)
+					else
+						last_evaluated_item.send (a_context.current_receiver)
+					end
 				end
 			elseif is_iterator_supported then
 				create_iterator (a_context)

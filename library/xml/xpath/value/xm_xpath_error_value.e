@@ -193,7 +193,6 @@ feature -- Element change
 	set_location (a_system_id: like system_id; a_line_number: like line_number) is
 			-- Set location information.
 		require
-			location_unknown: not is_location_known
 			system_id_known: not a_system_id.is_empty
 		do
 			system_id := a_system_id

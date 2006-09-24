@@ -325,6 +325,7 @@ feature {NONE} -- Implementation
 					Result.process_version_attribute (Version_attribute, Report_always)
 					Result.process_default_xpath_namespace_attribute (Xpath_default_namespace_attribute)
 					Result.process_default_collation_attribute (Default_collation_attribute)
+					Result.check_default_collation_name
 				end
 			end
 		end

@@ -130,7 +130,9 @@ feature -- Element change
 							last_generated_expression := last_generated_expression.replacement_expression
 						end
 					end
-					if not last_generated_expression.is_error then
+					if last_generated_expression.is_error then
+						report_compile_error (last_generated_expression.error_value)
+					else
 						last_generated_expression.optimize (static_context, any_item)
 						if last_generated_expression.was_expression_replaced then
 							last_generated_expression := last_generated_expression.replacement_expression

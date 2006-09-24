@@ -200,6 +200,7 @@ feature -- Element change
 					-- we defer reporting an error until run time
 
 					sub_pictures := Void
+					error_value := Void
 				end
 			end
 		end
@@ -246,12 +247,17 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 						else
 							a_uri := Null_uri
 						end
-						a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
-						a_dfm.register_usage (a_fingerprint, Current)
-					else
-						set_last_error_from_string (STRING_.appended_string (arguments.item (3).as_string_value.string_value, " is not a lexical QName"),
-															 Xpath_errors_uri, "XTDE1280", Static_error)
-					end
+						if not is_error then
+							if not shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
+								shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
+							end
+								a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+								a_dfm.register_usage (a_fingerprint, Current)
+							else
+								set_last_error_from_string (STRING_.appended_string (arguments.item (3).as_string_value.string_value, " is not a lexical QName"),
+																	 Xpath_errors_uri, "XTDE1280", Static_error)
+							end
+						end
 				else
 					
 					-- we need to save the namespace context
@@ -309,8 +315,12 @@ feature {NONE} -- Implementation
 				a_separator_index := a_picture.index_of (a_format.pattern_separator.item (1), 1)
 				if a_separator_index = 0 then
 					create a_sub_picture.make (a_picture, a_format)
-					sub_pictures.put (a_sub_picture, 1)
-					sub_pictures.put (Void, 2)
+					if a_sub_picture.is_error then
+						set_last_error (a_sub_picture.error_value)
+					else
+						sub_pictures.put (a_sub_picture, 1)
+						sub_pictures.put (Void, 2)
+					end
 				else
 					if a_separator_index = a_picture.count then
 						set_last_error_from_string ("second subpicture is zero-length", Xpath_errors_uri, "XTDE1310", Dynamic_error)

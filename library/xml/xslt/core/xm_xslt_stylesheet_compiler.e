@@ -148,7 +148,10 @@ feature -- Compilation
 			create a_stylesheet_stripper.make (a_tree_builder)
 			create a_comment_stripper.make (a_stylesheet_stripper)
 			a_source.send_from_stream (a_stream, a_system_id, a_parser, a_comment_stripper, True)
-			if a_tree_builder.has_error then
+			if a_tree_builder.has_xpath_error then
+				error_listener.fatal_error (a_tree_builder.last_xpath_error)
+				report_error (a_tree_builder.last_xpath_error.error_message)
+			elseif a_tree_builder.has_error then
 				report_error (a_tree_builder.last_error)
 			else
 				last_loaded_module := a_tree_builder.tree_document
@@ -184,7 +187,10 @@ feature -- Compilation
 			create a_stylesheet_stripper.make (a_tree_builder)
 			create a_comment_stripper.make (a_stylesheet_stripper)
 			a_source.send (a_parser, a_comment_stripper, a_uri, True)
-			if a_tree_builder.has_error then
+			if a_tree_builder.has_xpath_error then
+				error_listener.fatal_error (a_tree_builder.last_xpath_error)
+				report_error (a_tree_builder.last_xpath_error.error_message)
+			elseif a_tree_builder.has_error then
 				report_error (a_tree_builder.last_error)
 			else
 				last_loaded_module := a_tree_builder.tree_document

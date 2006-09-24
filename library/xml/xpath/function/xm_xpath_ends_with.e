@@ -86,7 +86,7 @@ feature -- Evaluation
 				else
 					if an_item = Void then
 						create {XM_XPATH_STRING_VALUE} an_atomic_value.make ("")
-						else
+					else
 						an_atomic_value := an_item.as_atomic_value
 					end
 					arguments.item (2).evaluate_item (a_context)

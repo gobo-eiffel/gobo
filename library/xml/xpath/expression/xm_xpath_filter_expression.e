@@ -740,50 +740,56 @@ feature {NONE} -- Implementation
 			context_not_void: a_context /= Void
 			last_iterator_not_set: last_iterator = Void
 		local
-			a_position: INTEGER
-			a_start_value, a_filter_value: XM_XPATH_VALUE
+			l_position: INTEGER
+			l_start_value, l_filter_value: XM_XPATH_VALUE
+			l_item: XM_XPATH_ITEM
 		do
 			if start_expression.is_value then
-				a_start_value := start_expression.as_value
+				l_start_value := start_expression.as_value
 			elseif start_expression.is_variable_reference then
 				start_expression.as_variable_reference.evaluate_variable (a_context)
-				a_start_value := start_expression.as_variable_reference.last_evaluated_binding
+				l_start_value := start_expression.as_variable_reference.last_evaluated_binding
 			end
-			if a_start_value /= Void then
-				start_expression := a_start_value
+			if l_start_value /= Void then
+				start_expression := l_start_value
 			end
 			if start_expression.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (start_expression.error_value)
-			elseif a_start_value /= Void and then a_start_value.is_empty_sequence then
+			elseif l_start_value /= Void and then l_start_value.is_empty_sequence then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 			else
 				if filter.is_value then
-					a_filter_value := filter.as_value
+					l_filter_value := filter.as_value
 				elseif filter.is_variable_reference then
 					filter.as_variable_reference.evaluate_variable (a_context)
-					a_filter_value := filter.as_variable_reference.last_evaluated_binding
+					l_filter_value := filter.as_variable_reference.last_evaluated_binding
 				end
 
 				-- Handle the case where the filter is a value. Because of earlier static rewriting, this covers
 				--  all cases where the filter expression is independent of the context, that is, where the
 				--  value of the filter expression is the same for all items in the sequence being filtered.
 
-				if a_filter_value /= Void then
-					a_filter_value.reduce
-					a_filter_value := a_filter_value.last_reduced_value
-					if a_filter_value.is_numeric_value then
-						if a_filter_value.as_numeric_value.is_whole_number then
-							if a_filter_value.as_numeric_value.is_platform_integer then
-								a_position := a_filter_value.as_numeric_value.as_integer
-								if a_start_value /= Void then
-									if a_start_value.is_singleton_node then
-										if a_position = 1 then
-											create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (a_start_value.as_singleton_node.node)
+				if l_filter_value /= Void then
+					l_filter_value.reduce
+					l_filter_value := l_filter_value.last_reduced_value
+					if l_filter_value.is_numeric_value then
+						if l_filter_value.as_numeric_value.is_whole_number then
+							if l_filter_value.as_numeric_value.is_platform_integer then
+								l_position := l_filter_value.as_numeric_value.as_integer
+								if l_start_value /= Void then
+									if l_start_value.is_singleton_node then
+										if l_position = 1 then
+											create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_start_value.as_singleton_node.node)
 										else
 											create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 										end
-									elseif a_position > 0 and then a_position <= a_start_value.count then
-										create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (a_start_value.item_at (a_position))
+									elseif l_position > 0 and then l_position <= l_start_value.count then
+										l_item := l_start_value.item_at (l_position)
+										if l_item.is_node then
+											create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_item.as_node)
+										else
+											create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_item)
+										end
 									else
 										create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 									end
@@ -797,15 +803,15 @@ feature {NONE} -- Implementation
 
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						end
-					elseif a_filter_value.is_singleton_node then
+					elseif l_filter_value.is_singleton_node then
 						base_expression.create_iterator (a_context)
 						last_iterator := base_expression.last_iterator
 					else
 
 						-- non-numeric filter value, so we can treat it as a boolean
 
-						a_filter_value.calculate_effective_boolean_value (a_context)
-						if a_filter_value.last_boolean_value.value then
+						l_filter_value.calculate_effective_boolean_value (a_context)
+						if l_filter_value.last_boolean_value.value then
 							base_expression.create_iterator (a_context)
 							last_iterator := base_expression.last_iterator
 						else
