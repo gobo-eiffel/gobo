@@ -5,7 +5,7 @@ indexing
 		"Gobo Eiffel Ant: build tool for Eiffel, based on the concepts of Jakarta Ant"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2006, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,7 +89,6 @@ feature {NONE} -- Initialization
 			end
 		end
 
-
 feature -- Access
 
 	error_handler: UT_ERROR_HANDLER
@@ -128,97 +127,102 @@ feature {NONE} -- Command line parsing
 			targets_flag: AP_FLAG
 			argument_option: AP_STRING_OPTION
 			arg_parser: AP_PARSER
-			i,p: INTEGER
+			l_cursor: DS_LIST_CURSOR [STRING]
+			p: INTEGER
 			arg: STRING
 			a_variable_name: STRING
 			a_variable_value: STRING
 			error: AP_ERROR
 		do
 			create arg_parser.make
-			arg_parser.set_application_description ("Geant is a general software build tool comparable to 'make' or 'ant'. In addition to it's general, programming language indepedent build capabilities, it has built-in support for the Eiffel programming language which makes it especially useful as a build tool for Eiffel projects.")
+			arg_parser.set_application_description ("Geant is a general software build tool comparable to 'make' or 'ant'. In addition to its general purpose build capabilities, it has built-in support for the Eiffel programming language which makes it especially useful as a build tool for Eiffel projects.")
 			arg_parser.set_parameters_description ("[starttarget]")
-
+				-- Option -A.
 			create argument_option.make_with_short_form ('A')
 			argument_option.set_description ("Define argument named 'variable' with value 'value' for 'starttarget'.")
 			argument_option.set_parameter_description ("<variable>=<value>")
 			arg_parser.options.force_last (argument_option)
-
+				-- Option -D.
 			create define_option.make_with_short_form ('D')
 			define_option.set_description ("Define variable named 'variable' with value 'value'. If no value is supplied, True is assumed as value.")
 			define_option.set_parameter_description ("<variable>[=<value>]")
 			arg_parser.options.force_last (define_option)
-
+				-- Option --version.
 			create version_flag.make_with_long_form ("version")
 			version_flag.set_description ("Show version")
 			create version_aol.make (version_flag)
 			arg_parser.alternative_options_lists.force_last (version_aol)
-
+				-- Option --verbose.
 			create verbose_flag.make ('v', "verbose")
 			verbose_flag.set_description ("Turn on verbose output")
 			arg_parser.options.force_last (verbose_flag)
-
+				-- Option --buildfilename.
 			create buildfilename_option.make ('b', "buildfilename")
 			buildfilename_option.set_description ("Specify buildfile (default: 'build.eant')")
 			buildfilename_option.set_parameter_description ("<file>")
 			arg_parser.options.force_last (buildfilename_option)
-
+				-- Option --noexec.
 			create noexec_flag.make ('n', "noexec")
 			noexec_flag.set_description ("Do not execute tasks, just show what they would do")
 			arg_parser.options.force_last (noexec_flag)
-
+				-- Option --debug.
 			create debug_flag.make ('d', "debug")
 			debug_flag.set_description ("Show internal messages")
 			arg_parser.options.force_last (debug_flag)
-
+				-- Option --targets.
 			create targets_flag.make ('t', "targets")
 			targets_flag.set_description ("List all targets")
 			arg_parser.options.force_last (targets_flag)
-
+				-- Parse command-line.
 			arg_parser.parse_arguments
-
+				-- Process options.
 			if version_flag.was_found then
 				report_version_number
 			end
-			set_verbose(verbose_flag.was_found)
+			set_verbose (verbose_flag.was_found)
 			set_no_exec (noexec_flag.was_found)
 			set_debug_mode (debug_flag.was_found)
 			if buildfilename_option.was_found then
 				build_filename := buildfilename_option.parameter
 			end
 			set_show_target_info (targets_flag.was_found)
-			from i := 1 until i > argument_option.parameters.count loop
-				arg := argument_option.parameters.item (i)
-				p := arg.index_of('=', 1)
+			l_cursor := argument_option.parameters.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				arg := l_cursor.item
+				p := arg.index_of ('=', 1)
 				if p > 0 then
-					-- define commandline argument with value:
-					a_variable_name := arg.substring (1, p-1)
-					a_variable_value := arg.substring (p+1, arg.count)
+						-- Define commandline argument with value.
+					a_variable_name := arg.substring (1, p - 1)
+					a_variable_value := arg.substring (p + 1, arg.count)
 					Commandline_arguments.force (a_variable_value, a_variable_name)
 				else
 					create error.make_invalid_parameter_error (argument_option, arg)
 					arg_parser.error_handler.report_error (error)
 					arg_parser.final_error_action
 				end
-				i := i + 1
+				l_cursor.forth
 			end
-			from i := 1 until i > define_option.parameters.count loop
-				arg := define_option.parameters.item (i)
-				p := arg.index_of('=', 1)
+			l_cursor := define_option.parameters.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				arg := l_cursor.item
+				p := arg.index_of ('=', 1)
 				if p > 0 then
-					-- define commandline variable with value:
-					a_variable_name := arg.substring (1, p-1)
-					a_variable_value := arg.substring (p+1, arg.count)
+						-- Define commandline variable with value.
+					a_variable_name := arg.substring (1, p - 1)
+					a_variable_value := arg.substring (p + 1, arg.count)
 					Commandline_variables.force (a_variable_value, a_variable_name)
 				else
-					-- define commandline variable:
+						-- Define commandline variable.
 					Commandline_variables.force ("true", arg)
 				end
-				i := i + 1
+				l_cursor.forth
 			end
-			if arg_parser.parameters.count = 1 then
+			inspect arg_parser.parameters.count
+			when 0 then
+				-- Do nothing.
+			when 1 then
 				start_target_name := arg_parser.parameters.first
-			end
-			if arg_parser.parameters.count > 1 then
+			else
 				exit_application (1, << "Too many targets." >>)
 			end
 		end
