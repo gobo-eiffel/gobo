@@ -132,8 +132,6 @@
 		<geant target="clobber"/>
 		<geant file="build.eant" target="install" dir="library"/>
 		<geant file="build.eant" target="install" dir="src"/>
-		<geant file="../src/gexmlsplit/build.eant" target="compile" dir="bin"/>
-		<geant file="../src/gexmlsplit/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/getest/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/getest/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="compile" dir="bin"/>

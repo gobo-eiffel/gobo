@@ -155,7 +155,6 @@
 		<geant file="build.eant" target="${target}" dir="gepp"/>
 		<geant file="build.eant" target="${target}" dir="getest"/>
 		<geant file="build.eant" target="${target}" dir="gexace"/>
-		<geant file="build.eant" target="${target}" dir="gexmlsplit"/>
 		<geant file="build.eant" target="${target}" dir="gexslt"/>
 		<geant file="build.eant" target="${target}" dir="geyacc"/>
 	</target>

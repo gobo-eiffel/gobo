@@ -50,7 +50,6 @@ and nine utilities:
     . Gobo Eiffel XSLT Processor  (gexslt)
     . Gobo Eiffel Lint (gelint)
     . Gobo Eiffel Preprocessor (gepp)
-    . Gobo Eiffel XML Splitter (gexmlsplit)
 
 Note that these utilities are not needed if you just want to use the
 library classes provided in this package (unless you got the classes
@@ -125,7 +124,6 @@ In this distribution:
     doc/time                    Gobo Eiffel Time Library documentation
     doc/xml                     Gobo Eiffel XML Library documentation
     example/geant               geant examples
-    example/gexmlsplit          gexmlsplit examples
     example/lexical             examples for Gobo Eiffel Lexical Library
     example/math                examples for Gobo Eiffel Math Library
     example/parse               examples for Gobo Eiffel Parse Library
@@ -156,7 +154,6 @@ In this distribution:
     src/gepp                    gepp source code
     src/getest                  getest source code
     src/gexace                  gexace source code
-    src/gexmlsplit              gexmlsplit source code
     src/gexslt                  gexslt source code (still under development)
     src/geyacc                  geyacc source code
     test/common                 classes used by other tests
