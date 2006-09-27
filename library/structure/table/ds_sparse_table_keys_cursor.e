@@ -5,7 +5,7 @@ indexing
 		"Cursors for keys of sparse tables, viewed as linear containers."
 
 	remark:
-	
+
 		"Ideally the sparse tables should be descendants of both %
 		% DS_LINEAR [G] and DS_LINEAR [K], but this does not work %
 		%in Eiffel."
@@ -22,7 +22,7 @@ inherit
 
 	DS_BILINEAR_CURSOR [K]
 		redefine
-			container, next_cursor
+			next_cursor
 		end
 
 create {DS_SPARSE_TABLE_KEYS}

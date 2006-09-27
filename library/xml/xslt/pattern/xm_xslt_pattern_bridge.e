@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_EXPRESSION
 		redefine
-			container, is_pattern_bridge, calculate_effective_boolean_value
+			is_pattern_bridge, calculate_effective_boolean_value
 		end
 
 create
@@ -199,4 +199,4 @@ invariant
 
 end
 
-					
+

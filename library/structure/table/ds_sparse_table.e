@@ -30,15 +30,6 @@ inherit
 			initialized
 		end
 
-	KL_IMPORTED_ANY_ROUTINES
-		export
-			{NONE} all
-		undefine
-			copy
-		redefine
-			is_equal
-		end
-
 feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
@@ -512,7 +503,7 @@ feature -- Duplication
 			l_keys: like internal_keys
 		do
 			l_keys := internal_keys
-			precursor {DS_SPARSE_CONTAINER} (other)
+			precursor (other)
 			internal_keys := l_keys
 		end
 

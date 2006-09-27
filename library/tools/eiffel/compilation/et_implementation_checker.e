@@ -179,7 +179,7 @@ feature -- Error handling
 		do
 			a_class.set_flat_implementation_checked
 			a_class.set_flat_implementation_error
-		ensure then
+		ensure
 			flat_implementation_checked: a_class.flat_implementation_checked
 			has_flat_implementation_error: a_class.has_flat_implementation_error
 		end
