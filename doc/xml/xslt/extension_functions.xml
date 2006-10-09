@@ -206,8 +206,7 @@
        <term><featurename>is_function_available</featurename></term>
        <listitem>
 	<para>
-	 You must return <featurename>False</featurename> if <featurename>is_restricted</featurename> is <featurename>True</featurename>.
-	 Otherwise, if <featurename>a_fingerprint</featurename> is equal to the value of <featurename>fingerprint</featurename> for your function,
+	 If <featurename>a_fingerprint</featurename> is equal to the value of <featurename>fingerprint</featurename> for your function,
 	 then you should return <featurename>True</featurename> if <featurename>an_arity</featurename> is -1, or if it lies (inclusively)
 	 between the values that you set for <featurename>minimum_argument_count</featurename> and <featurename>maximum_argument_count</featurename>
 	 for your function.
@@ -221,6 +220,12 @@
 	 You should create the function that matches <featurename>a_fingerprint</featurename>.
 	 Then call <featurecall><featurename>set_arguments</featurename><arguments><argument>some_arguments</argument></arguments></featurecall>.
 	 Then you should set <featurename>last_bound_function</featurename> to the created function.
+	</para>
+	<para>
+	  If the argument <featurename>is_restricted</featurename> is <featurename>True</featurename>, then your function is being
+	  bound within an [xsl:]use-when context. If it is sensible for your function to be callable in such a context, then
+	  by all means ignore this argument. Otherwise you should create an instance of <classname>XM_XSLT_DEFERRED_ERROR</classname>.
+	  See <classname>XM_XSLT_BUILTIN_EXTENSION_FUNCTIONS</classname> for an example.
 	</para>
        </listitem>
       </varlistentry>

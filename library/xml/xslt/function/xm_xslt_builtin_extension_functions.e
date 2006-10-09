@@ -18,6 +18,9 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
+	XM_XPATH_ERROR_TYPES
+		export {NONE} all end
+
 create
 
 	make
@@ -33,11 +36,11 @@ feature -- Access
 
 	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN is
 			-- Does `a_fingerprint' represent an available function with `an_arity'?
+			-- Note that all extension functions are said to be "available" at use-when time,
+			--  although they are not designed to be used then.
 		do
-			if not is_restricted then
-				if a_fingerprint = Transformation_function_type_code then
-					Result := an_arity = -1 or else an_arity = 2 or else an_arity = 7
-				end
+			if a_fingerprint = Transformation_function_type_code then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 7
 			end
 		end
 	
@@ -46,16 +49,23 @@ feature -- Element change
 	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN) is
 			-- Bind `a_fingerprint' to it's definition as `last_bound_function'.
 		local
-			a_function_call: XM_XPATH_FUNCTION_CALL
+			l_function_call: XM_XPATH_FUNCTION_CALL
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if a_fingerprint = Transformation_function_type_code then
-				create {XM_XSLT_TRANSFORMATION} a_function_call.make
-				check
-					function_bound: a_function_call /= Void
-					-- From pre-condition
+				if is_restricted then
+					create l_error.make_from_string ("Extension function gexslt:transformation may not be used in [xsl:]use-when processing",
+																Gexslt_eiffel_type_uri, "USE_WHEN", Dynamic_error)
+					create {XM_XSLT_DEFERRED_ERROR} last_bound_function.make (l_error, "gexslt:transformation")
+				else
+					create {XM_XSLT_TRANSFORMATION} l_function_call.make
+					check
+						function_bound: l_function_call /= Void
+						-- From pre-condition
+					end
+					l_function_call.set_arguments (some_arguments)
+					last_bound_function := l_function_call
 				end
-				a_function_call.set_arguments (some_arguments)
-				last_bound_function := a_function_call
 			end
 		end
 

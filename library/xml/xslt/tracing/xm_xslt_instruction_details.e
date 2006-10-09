@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make (a_construct_type, a_line_number: INTEGER; a_system_id: STRING) is
 			-- Initialize.
 		require
-			positive_construct_type: a_construct_type >= 0
+			non_negative_construct_type: a_construct_type >= 0
 			positive_line_number: a_line_number >= 0
 			system_id_not_void: a_system_id /= Void
 		do
@@ -83,6 +83,7 @@ feature {NONE} -- Implementation
 invariant
 
 	property_map_not_void: property_map /= Void
+	non_negative_construct_type: construct_type >= 0
 
 end
 	

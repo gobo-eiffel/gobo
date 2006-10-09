@@ -16,6 +16,9 @@ inherit
 
 	XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER
 
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -51,7 +54,7 @@ feature -- Action
 				absolute_path: a_uri.has_absolute_path
 				-- as `a_uri' is absolute, and scheme is "file"
 			end
-			create a_stream.make (a_uri.path)
+			create a_stream.make (File_uri.uri_to_filename (a_uri))
 			a_stream.open_write
 			if a_stream.is_open_write then
 				create an_output

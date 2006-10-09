@@ -806,10 +806,6 @@ feature {NONE} -- Implementation
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_stream: KL_TEXT_OUTPUT_FILE
 			a_uri: UT_URI
-			a_cwd: STRING
-			a_pathname: KI_PATHNAME
-			a_drive, a_string: STRING
-
 		do
 			a_transformer := transformer_factory.created_transformer
 			process_parameters (a_transformer)
@@ -828,19 +824,8 @@ feature {NONE} -- Implementation
 					create a_stream.make (output_destination)
 					a_stream.open_write
 					a_destination.set_output_stream (a_stream)
-					a_cwd := file_system.current_working_directory
-					if file_system /= unix_file_system then
-						a_pathname := file_system.string_to_pathname (a_cwd)
-						a_cwd := unix_file_system.pathname_to_string (a_pathname)
-						a_drive := a_pathname.drive
-						if a_drive /= Void then
-							a_cwd := STRING_.concat (a_drive, a_cwd)
-							a_cwd := STRING_.concat ("/", a_cwd)
-						end
-					end
-					a_string := STRING_.concat ("file://", a_cwd)
-					create a_uri.make (STRING_.concat (a_string, "/"))
-					create a_uri.make_resolve (a_uri, output_destination)
+					create a_uri.make_resolve_uri (current_directory_base,
+														File_uri.filename_to_uri (output_destination))
 					a_destination_system_id := a_uri.full_reference
 				else
 					a_destination_system_id := "stdout:"

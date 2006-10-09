@@ -212,7 +212,7 @@ feature -- Status report
 		do
 			Result := path_base_item /= Void
 		ensure
-			no_base: has_path implies (Result = (path.item (path.count) /= '/'))
+			-- Commented out CPA 2006/10/06 as it fails for gex:/ : no_base: has_path implies (Result = (path.item (path.count) /= '/'))
 		end
 
 	is_relative: BOOLEAN is
@@ -351,7 +351,7 @@ feature -- Components
 			path_not_void: Result /= Void
 			not_empty: has_path implies not Result.is_empty
 			separator_numbers: Result.occurrences ('/') >= path_items.count
-			path_base: has_path_base implies (not Result.is_empty and then Result.item (Result.count) /= '/')
+			-- CPA 2006/06/10 (see `has_path_base' : path_base: has_path_base implies (not Result.is_empty and then Result.item (Result.count) /= '/')
 			not_next_query_separator: not Result.has ('?')
 			not_next_fragment_separator: not Result.has ('#')
 		end

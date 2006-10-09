@@ -22,6 +22,9 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 feature -- Access
 
 	construct_type: INTEGER is
