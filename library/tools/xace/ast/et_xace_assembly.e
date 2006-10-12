@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make (a_tag: like tag; a_name: like assembly_name; a_version: like version;
 		a_culture: like culture; a_public_key_token: like public_key_token;
 		a_prefix: like class_prefix) is
-				-- Create a new assembly.
+			-- Create a new assembly.
 		require
 			a_tag_not_void: a_tag /= Void
 			a_tag_not_empty: a_tag.count > 0

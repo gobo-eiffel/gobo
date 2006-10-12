@@ -19,7 +19,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_cluster_name: like cluster_name; a_pathname: like pathname) is
-				-- Create a new component.
+			-- Create a new component.
 		require
 			a_cluster_name_not_void: a_cluster_name /= Void
 			a_cluster_name_not_empty: a_cluster_name.count > 0
