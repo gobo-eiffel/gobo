@@ -194,7 +194,7 @@ feature {NONE} -- Command line parsing
 						-- Define commandline argument with value.
 					a_variable_name := arg.substring (1, p - 1)
 					a_variable_value := arg.substring (p + 1, arg.count)
-					Commandline_arguments.force (a_variable_value, a_variable_name)
+					commandline_arguments.force (a_variable_value, a_variable_name)
 				else
 					create error.make_invalid_parameter_error (argument_option, arg)
 					arg_parser.error_handler.report_error (error)
