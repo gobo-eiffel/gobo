@@ -311,10 +311,10 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (a_boolean_value.error_value)
 			elseif a_boolean_value.value then
 				then_expression.create_node_iterator (a_context)
-				last_iterator := then_expression.last_node_iterator
+				last_node_iterator := then_expression.last_node_iterator
 			else
 				else_expression.create_node_iterator (a_context)
-				last_iterator := else_expression.last_node_iterator
+				last_node_iterator := else_expression.last_node_iterator
 			end
 		end
 
