@@ -112,10 +112,10 @@ generating a new version, or if you are adding a new facility from the
 database), then don't forget to add the files to CVS (contrary to the
 rest of Gobo, with geuc, we store the GENERATED files, and not the
 source files). Also create by hand and add to CVS a shared access class.
-E.g. UC_CHARACTER_CLASS_ROUTINES has a corresponding shared access
-class UC_IMPORTED_CHARACTER_CLASS_ROUTINES, and
-UC_V410_CHARACTER_CLASS_ROUTINES has
-UC_IMPORTED_V410_CHARACTER_CLASS_ROUTINES 
+E.g. ST_UNICODE_CHARACTER_CLASS_ROUTINES has a corresponding shared access
+class ST_IMPORTED_UNICODE_CHARACTER_CLASS_ROUTINES, and
+ST_UNICODE_V410_CHARACTER_CLASS_ROUTINES has
+ST_IMPORTED_UNICODE_V410_CHARACTER_CLASS_ROUTINES 
 
 7) Fetch the file:
 

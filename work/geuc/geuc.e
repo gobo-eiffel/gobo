@@ -192,6 +192,7 @@ feature -- Processing
 									set_upper_case_property (l_fields.item (1))
 								elseif STRING_.same_string (l_property, Xid_start_property) then
 								elseif STRING_.same_string (l_property, Xid_continue_property) then
+								elseif STRING_.same_string (l_property, Grapheme_link_property) then
 								else
 									report_general_message ("Unknown property name " + l_property + " in " + Derived_core_properties)
 									Exceptions.die (1)
@@ -506,6 +507,7 @@ feature -- Access
 	Lowercase_property: STRING is "Lowercase"
 	Grapheme_base_property: STRING is "Grapheme_Base"
 	Grapheme_extend_property: STRING is "Grapheme_Extend"
+	Grapheme_link_property: STRING is "Grapheme_Link"
 	Id_start_property: STRING is "ID_Start"
 	Id_continue_property: STRING is "ID_Continue"
 	Math_property: STRING is "Math"

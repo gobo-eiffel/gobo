@@ -15,7 +15,7 @@ class ST_IMPORTED_UNICODE_V410_NORMALIZATION_ROUTINES
 feature -- Access
 
 	normalization_v410: ST_UNICODE_V410_NORMALIZATION_ROUTINES is
-			-- Unicode character class routines
+			-- Unicode V 4.1.0 normalization routines
 		once
 			create Result
 		ensure
