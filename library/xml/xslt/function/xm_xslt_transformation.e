@@ -89,6 +89,8 @@ feature -- Evaluation
 			l_context: XM_XSLT_EVALUATION_CONTEXT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
 			l_builder: XM_XPATH_TINY_BUILDER
+			l_config: XM_XSLT_CONFIGURATION
+			l_tracer: XM_XSLT_TRACE_LISTENER
 		do
 			last_iterator := Void
 			last_error := Void
@@ -103,7 +105,11 @@ feature -- Evaluation
 			else
 				create l_builder.make
 				create l_result.make_receiver (l_builder)
+				l_config := transformer.configuration
+				l_tracer := l_config.trace_listener
+				l_config.set_trace_listener (Void)
 				transformer.transform_document (initial_context, l_result)
+				l_config.set_trace_listener (l_tracer)
 				last_iterator := result_iterator
 			end
 		end
