@@ -166,13 +166,15 @@ feature -- Element change
 		end
 
 
+feature {XM_XPATH_TREE_BUILDER} -- Restricted
+	
+	sequence_number_high_word: INTEGER
+			-- High_word of the sequence number
+
 feature {NONE} -- Implementation
 
 	children: DS_ARRAYED_LIST [XM_XPATH_TREE_NODE]
 			-- Child_nodes
-
-	sequence_number_high_word: INTEGER
-			-- High_word of the sequence number
 
 	update_indices is
 			-- Update child indices to reflect removal.

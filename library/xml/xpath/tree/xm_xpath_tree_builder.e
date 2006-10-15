@@ -187,6 +187,9 @@ feature -- Events
 		do
 			if not has_error then
 				current_depth := current_depth - 1
+				if is_line_numbering then
+					tree_document.set_closing_line_number_for_node (current_composite_node.sequence_number_high_word, locator.line_number)
+				end
 				current_composite_node := current_composite_node.parent
 			end
 			is_written := True

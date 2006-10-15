@@ -104,6 +104,12 @@ feature -- Access
 			Result := document.line_number_for_node (sequence_number_high_word)
 		end
 
+	closing_line_number: INTEGER is
+			-- Line number of element end tag (or 0 if not known)
+		do
+			Result := document.closing_line_number_for_node (sequence_number_high_word)
+		end
+	
 	name_code: INTEGER
 			-- Name code of this node - used in displaying names
 

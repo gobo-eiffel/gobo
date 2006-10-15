@@ -228,6 +228,14 @@ feature -- Access
 			end
 		end
 
+	closing_line_number_for_node (a_node_number: INTEGER): INTEGER is
+			-- Line number of end of `a_node_number' in original source document, or 0 if not known
+		do
+			if closing_line_number_map /= Void then
+				Result := closing_line_number_map.item (a_node_number)
+			end
+		end
+
 	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
 		do
@@ -258,7 +266,7 @@ feature -- Element change
 			system_id_not_void: a_system_id /= Void
 			valid_node_number: a_node_number > 0
 		do
-			system_id_map.set_system_id(a_node_number, a_system_id)
+			system_id_map.set_system_id (a_node_number, a_system_id)
 		end
 
 	set_line_numbering is
@@ -267,19 +275,32 @@ feature -- Element change
 			no_line_numbering: not is_line_numbering
 		do
 			create line_number_map.make
+			create closing_line_number_map.make_default
 			set_line_number_for_node (1, 0)
 		ensure
 			line_number_map_not_void: line_number_map /= Void
+			closing_line_number_map_not_void: closing_line_number_map /= Void
 		end
 
 	set_line_number_for_node (a_node_number: INTEGER; a_line_number: INTEGER) is
 			-- Set the line number for `a_node_number'.
 		require
 			valid_node_number: a_node_number > 0
-			prositive_line_number: a_line_number >= 0
+			positive_line_number: a_line_number >= 0
 		do
 			if line_number_map /= Void then
 				line_number_map.set_line_number(a_node_number, a_line_number)
+			end
+		end
+
+	set_closing_line_number_for_node (a_node_number: INTEGER; a_line_number: INTEGER) is
+			-- Set the closing line number for `a_node_number'.
+		require
+			valid_node_number: a_node_number > 0
+			positive_line_number: a_line_number >= 0
+		do
+			if closing_line_number_map /= Void then
+				closing_line_number_map.force_new (a_line_number, a_node_number)
 			end
 		end
 
@@ -415,6 +436,9 @@ feature {NONE} -- Implementation
 
 	line_number_map: XM_XPATH_LINE_NUMBER_MAP
 			-- Maps sequence numbers to line numbers
+
+	closing_line_number_map: DS_HASH_TABLE [INTEGER, INTEGER]
+			-- Maps sequence numbers to closing line numbers
 
 invariant
 

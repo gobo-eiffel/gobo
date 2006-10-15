@@ -106,6 +106,14 @@ feature -- Access
 			system_id_not_void: Result /= Void
 		end
 
+	module_system_ids: DS_LIST [STRING] is
+			-- System-IDs of all compiled stylesheet modules
+		do
+			Result := module_list
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	output_properties (a_fingerprint: INTEGER): XM_XSLT_OUTPUT_PROPERTIES is
 			-- Output properties set named by `a_fingerprint'?
 		require

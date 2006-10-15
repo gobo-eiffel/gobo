@@ -27,6 +27,13 @@ inherit
 
 feature -- Access
 
+	closing_line_number: INTEGER is
+			-- Line number of element end tag (or 0 if not known)
+		deferred
+		ensure
+			non_negative_result: Result >= 0
+		end
+
 	construct_type: INTEGER is
 			-- Type of construct being traced
 		deferred
