@@ -753,7 +753,7 @@ feature {NONE} -- Implementation
 					create a_range_variable.make (a_token_value, last_generated_name_code  \\ bits_20, a_single_item)
 					create a_clause.make (a_range_variable, internal_last_parsed_expression, a_line_number)
 					declare_range_variable (a_clause.range_variable)
-					a_clause_list.put_last (a_clause)
+					a_clause_list.force_last (a_clause)
 				end
 			end
 		end
