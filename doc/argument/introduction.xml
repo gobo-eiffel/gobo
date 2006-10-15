@@ -27,7 +27,7 @@
 <title>Argument Parser Introduction</title>
 
 <para>
-	The argument parsing library gives you the ability to parse the
+	The argument library gives you the ability to parse the
 	command line arguments that are passed to your application. It
 	is a feature-rich library that tries to achieve the maximum
 	comfort for the developer and for the user of the application
@@ -88,11 +88,11 @@
 	<para>
 		Here, /tmp is the only parameter. The flags -A and -l
 		have been merged into a single option. The option -I
-		is set with the argument 'iso' and the option --color
-		is set with the argument 'always' (note that the
-		command line parser does not care whether the
-		arguments to a short options are introduced by a space or
-		follow directly).
+		is set twice with the argument '*~' and '*.bak' and
+		the option --color is set with the argument 'always'
+		(note that the command line parser does not care
+		whether the arguments to a short options are
+		introduced by a space or follow directly).
 	</para>
 </section>
 
@@ -123,7 +123,7 @@
 	</para>
 
 	<para>
-		The <emphasis>Gobo Eiffel Argument Parser</emphasis>
+		The <emphasis>Gobo Eiffel Argument Library</emphasis>
 		tries to take the burden off the developer to bother
 		himself with command line parsing. Instead, she or he
 		just defines a number of options that the application
