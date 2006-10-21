@@ -22,6 +22,9 @@ inherit
 	XM_XPATH_REGEXP_ROUTINES
 		export {NONE} all end
 
+	UC_IMPORTED_UTF8_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -98,6 +101,7 @@ feature -- Evaluation
 				last_evaluated_item := an_item
 			else
 				an_input_string := an_item.string_value
+				an_input_string := utf8.to_utf8 (an_input_string)
 			end
 			if last_evaluated_item = Void then -- else it's an error
 				if regexp_cache_entry = Void then
@@ -153,6 +157,7 @@ feature {NONE} -- Implementation
 					-- Statically typed as a single string
 				end
 				a_pattern_string := an_item.as_atomic_value.string_value
+								a_pattern_string := utf8.to_utf8 (a_pattern_string)
 				if arguments.count = 2 then
 					a_flags_string := ""
 				else
@@ -178,7 +183,7 @@ feature {NONE} -- Implementation
 					a_key := composed_key (a_pattern_string, a_flags_string)
 					a_regexp_cache_entry := shared_regexp_cache.item (a_key)
 					if a_regexp_cache_entry = Void then
-						create a_regexp_cache_entry.make( a_pattern_string, a_flags_string)
+						create a_regexp_cache_entry.make (a_pattern_string, a_flags_string)
 						if not a_regexp_cache_entry.is_error then
 							shared_regexp_cache.put (a_regexp_cache_entry, a_key)
 						end

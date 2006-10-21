@@ -25,6 +25,9 @@ inherit
 	KL_IMPORTED_ARRAY_ROUTINES
 		export {NONE} all end
 
+	UC_IMPORTED_UTF8_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -361,7 +364,7 @@ feature {NONE} -- Implementation
 			if select_expression.last_evaluated_string.is_error then
 				a_context.transformer.report_fatal_error (select_expression.last_evaluated_string.error_value)
 			else
-				an_input := select_expression.last_evaluated_string.string_value
+				an_input := utf8.to_utf8 (select_expression.last_evaluated_string.string_value)
 				if regexp_cache_entry = Void then
 					flags_expression.evaluate_as_string (a_context)
 					if flags_expression.last_evaluated_string.is_error then
@@ -372,10 +375,10 @@ feature {NONE} -- Implementation
 						if regex_expression.last_evaluated_string.is_error then
 							a_context.transformer.report_fatal_error (regex_expression.last_evaluated_string.error_value)
 						else
-							a_key := composed_key (regex_expression.last_evaluated_string.string_value, some_flags)
+							a_key := composed_key (utf8.to_utf8 (regex_expression.last_evaluated_string.string_value), some_flags)
 							regexp_cache_entry :=  shared_regexp_cache.item (a_key)
 							if regexp_cache_entry = Void then
-								create regexp_cache_entry.make (regex_expression.as_string_value.string_value, some_flags)
+								create regexp_cache_entry.make (utf8.to_utf8 (regex_expression.as_string_value.string_value), some_flags)
 								if regexp_cache_entry.is_error then
 									create an_error.make_from_string (STRING_.concat ("Invalid regular expression: ", regex_expression.last_evaluated_string.string_value),
 																				 Xpath_errors_uri, "XTDE1140", Dynamic_error)

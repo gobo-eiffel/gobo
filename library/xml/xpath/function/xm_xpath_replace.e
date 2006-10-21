@@ -19,6 +19,9 @@ inherit
 			simplify, evaluate_item
 		end
 
+	UC_IMPORTED_UTF8_ROUTINES
+		export {NONE} all end
+
 	XM_XPATH_REGEXP_ROUTINES
 
 	KL_IMPORTED_ANY_ROUTINES
@@ -97,6 +100,7 @@ feature -- Evaluation
 				last_evaluated_item := an_item
 			else
 				an_input_string := an_item.string_value
+				an_input_string := utf8.to_utf8 (an_input_string)
 			end
 			if last_evaluated_item = Void then -- else it's an error
 				if regexp_cache_entry = Void then
@@ -114,6 +118,7 @@ feature -- Evaluation
 							-- Statically typed as a single string
 						end
 						a_pattern_string := an_item.as_atomic_value.string_value
+						a_pattern_string := utf8.to_utf8 (a_pattern_string)
 						if arguments.count = 3 then
 							a_flags_string := ""
 						else
@@ -285,6 +290,7 @@ feature {NONE} -- Implementation
 		local
 			replacement_is_ascii, subject_is_ascii: BOOLEAN
 			a_subject_string, a_substitution_string: STRING
+			l_utf8: UC_UTF8_STRING
 		do
 			subject_is_ascii := ANY_.same_types (an_input_string, "")
 			replacement_is_ascii := ANY_.same_types (replacement_string, "")
@@ -300,8 +306,11 @@ feature {NONE} -- Implementation
 				a_substitution_string := STRING_.new_empty_string (an_input_string, replacement_string.count)
 				a_substitution_string := STRING_.appended_string (a_substitution_string, replacement_string)
 			end
+			a_subject_string := utf8.to_utf8 (a_subject_string)
+			a_substitution_string := utf8.to_utf8 (a_substitution_string)
 			regexp.match (a_subject_string)
-			create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (regexp.replace_all (a_substitution_string))
+			create l_utf8.make_from_utf8 (regexp.replace_all (a_substitution_string))
+			create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (l_utf8)
 		ensure
 			evaluated: last_evaluated_item /= Void
 		end

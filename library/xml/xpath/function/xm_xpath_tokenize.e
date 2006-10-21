@@ -132,6 +132,7 @@ feature -- Evaluation
 						elseif a_flags_string = Void then
 							set_last_error_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)
 						else
+							a_pattern_string := utf8.to_utf8 (a_pattern_string)
 							a_key := composed_key (a_pattern_string, a_flags_string)
 							a_regexp_cache_entry := shared_regexp_cache.item (a_key)
 							if a_regexp_cache_entry = Void then
@@ -144,6 +145,7 @@ feature -- Evaluation
 								if a_regexp_cache_entry.regexp.matches ("") then
 									create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Dynamic_error)
 								else
+									an_input_string := utf8.to_utf8 (an_input_string)
 									create {XM_XPATH_TOKEN_ITERATOR} last_iterator.make (an_input_string, a_regexp_cache_entry)
 								end
 							else
@@ -152,6 +154,7 @@ feature -- Evaluation
 						end
 					end
 				else
+					an_input_string := utf8.to_utf8 (an_input_string)
 					create {XM_XPATH_TOKEN_ITERATOR} last_iterator.make (an_input_string, regexp_cache_entry)
 				end
 			end

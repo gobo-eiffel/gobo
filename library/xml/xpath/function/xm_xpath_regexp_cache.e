@@ -17,6 +17,7 @@ inherit
 	XM_XPATH_REGEXP_CACHE_ROUTINES
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 create
 

@@ -24,6 +24,9 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
+	UC_IMPORTED_UTF8_ROUTINES
+		export {NONE} all end
+
 	XM_XPATH_ERROR_TYPES
 
 feature {NONE} -- Implementation
@@ -58,10 +61,10 @@ feature {NONE} -- Implementation
 				an_expression := arguments.item (2) -- the pattern
 				if an_expression.is_string_value then
 					a_string_value := an_expression.as_string_value
-					a_key := composed_key (a_string_value.string_value, a_flags_string)
+					a_key := composed_key (utf8.to_utf8 (a_string_value.string_value), a_flags_string)
 					regexp_cache_entry :=  shared_regexp_cache.item (a_key)
 					if regexp_cache_entry = Void then
-						create regexp_cache_entry.make (a_string_value.string_value, a_flags_string)
+						create regexp_cache_entry.make (utf8.to_utf8 (a_string_value.string_value), a_flags_string)
 						if regexp_cache_entry.is_error then
 							regexp_cache_entry := Void
 						else

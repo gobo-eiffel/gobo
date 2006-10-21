@@ -76,12 +76,15 @@ feature -- Cursor movement
 
 	forth is
 			-- Move to next position
+		local
+			l_utf8: UC_UTF8_STRING
 		do
 			index := index + 1
 			if index > token_count then
 				item := Void
 			else
-				create {XM_XPATH_STRING_VALUE} item.make (tokens.item (index))
+				create l_utf8.make_from_utf8 (tokens.item (index))
+				create {XM_XPATH_STRING_VALUE} item.make (l_utf8)
 			end
 		end
 

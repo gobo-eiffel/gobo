@@ -27,6 +27,9 @@ inherit
 	XM_XPATH_REGEXP_CACHE_ROUTINES
 		export {NONE} all end
 
+	UC_IMPORTED_UTF8_ROUTINES
+		export {NONE} all end
+
 create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -217,10 +220,10 @@ feature {NONE} -- Implementation
 			if not are_normalized_flags (some_flags) then
 				create an_error.make_from_string (STRING_.concat ("Invalid value for flags attribute: ", some_flags), Xpath_errors_uri, "XTDE1145", Static_error)
 			else
-				a_key := composed_key (regex_expression.as_string_value.string_value, some_flags)
+				a_key := composed_key (utf8.to_utf8 (regex_expression.as_string_value.string_value), some_flags)
 				regexp_cache_entry :=  shared_regexp_cache.item (a_key)
 				if regexp_cache_entry = Void then
-					create regexp_cache_entry.make (regex_expression.as_string_value.string_value, some_flags)
+					create regexp_cache_entry.make (utf8.to_utf8 (regex_expression.as_string_value.string_value), some_flags)
 					if regexp_cache_entry.is_error then
 						regexp_cache_entry := Void
 					else
