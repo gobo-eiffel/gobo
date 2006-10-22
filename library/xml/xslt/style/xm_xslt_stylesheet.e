@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			create rule_manager.make
 			create slot_manager.make
 			create executable.make (rule_manager, key_manager, decimal_format_manager,
-											collation_map, module_list, function_library)
+											collation_map, shared_name_pool, module_list, function_library)
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
 		end
 

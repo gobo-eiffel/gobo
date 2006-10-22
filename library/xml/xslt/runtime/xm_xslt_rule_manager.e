@@ -40,6 +40,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	mode_fingerprints: DS_LINKED_LIST [INTEGER] is
+			-- Fingerprints of non-default modes
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
+		do
+			create Result.make
+			l_cursor := mode_map.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				Result.put_last (l_cursor.key)
+				l_cursor.forth
+			end
+		ensure
+			result_not_void: result /= Void
+			correct_count: Result.count = mode_map.count
+		end
+
 	mode (a_mode_name_code: INTEGER): XM_XSLT_MODE is
 			-- Mode corresponding to `a_mode_name_code:'
 		require

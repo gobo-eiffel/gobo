@@ -14,8 +14,6 @@ class XM_XSLT_EXECUTABLE
 
 inherit
 
-	XM_XPATH_SHARED_NAME_POOL
-
 	XM_XPATH_ISOLATION_LEVELS
 
 	UC_SHARED_STRING_EQUALITY_TESTER
@@ -29,7 +27,7 @@ feature {NONE} -- Initialization
 
 	make (a_rule_manager: XM_XSLT_RULE_MANAGER; a_key_manager: XM_XSLT_KEY_MANAGER;
 			a_decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER;
-			a_collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING];
+			a_collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]; a_name_pool: like name_pool;
 			a_module_list: DS_ARRAYED_LIST [STRING]; a_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER) is
 			-- Establish invariant.
 		require
@@ -39,6 +37,7 @@ feature {NONE} -- Initialization
 			collation_map: a_collation_map /= Void
 			module_list_not_void: a_module_list /= Void
 			function_library_not_void: a_function_library /= Void
+			name_pool_not_void: a_name_pool /= Void
 		do
 			rule_manager := a_rule_manager
 			key_manager := a_key_manager
@@ -51,6 +50,7 @@ feature {NONE} -- Initialization
 			create output_properties_map.make_default
 			create attribute_set_manager.make
 			isolation_level := Serializable
+			name_pool := a_name_pool
 		ensure
 			rule_manager_set: rule_manager = a_rule_manager
 			key_manager_set: key_manager = a_key_manager
@@ -59,9 +59,13 @@ feature {NONE} -- Initialization
 			module_list_set: module_list = a_module_list
 			function_library_set: function_library = a_function_library
 			slots_not_yet_allocated: not are_slots_allocated
+			name_pool_set: name_pool = a_name_pool
 		end
 
 feature -- Access
+
+	name_pool: XM_XPATH_NAME_POOL
+			-- Name pool used to compile `Current'.
 
 	global_slot_manager: XM_XPATH_SLOT_MANAGER
 			-- Slot manager for global variables
@@ -117,7 +121,7 @@ feature -- Access
 	output_properties (a_fingerprint: INTEGER): XM_XSLT_OUTPUT_PROPERTIES is
 			-- Output properties set named by `a_fingerprint'?
 		require
-			valid_fingerprint: shared_name_pool.is_valid_name_code (a_fingerprint)
+			valid_fingerprint: name_pool.is_valid_name_code (a_fingerprint)
 			has_property_set: has_output_properties (a_fingerprint)
 		do
 			Result := output_properties_map.item (a_fingerprint)
@@ -149,7 +153,7 @@ feature -- Status report
 	has_output_properties (a_fingerprint: INTEGER): BOOLEAN is
 			-- Does the executable have an output properties set named by `a_fingerprint'?
 		require
-			valid_fingerprint: shared_name_pool.is_valid_name_code (a_fingerprint)
+			valid_fingerprint: name_pool.is_valid_name_code (a_fingerprint)
 		do
 			Result := output_properties_map.has (a_fingerprint)
 		end
@@ -243,7 +247,7 @@ feature -- Element change
 	set_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_fingerprint: INTEGER) is
 			-- Set output properties named by `a_fingerprint'?
 		require
-			valid_fingerprint: shared_name_pool.is_valid_name_code (a_fingerprint)
+			valid_fingerprint: name_pool.is_valid_name_code (a_fingerprint)
 			property_set_not_known: not has_output_properties (a_fingerprint)
 			output_properties_not_void: a_property_set /= Void
 		do
@@ -300,6 +304,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	name_pool_not_void: name_pool /= Void
 	rule_manager_not_void: rule_manager /= Void
 	key_manager_not_void: key_manager /= Void
 	decimal_format_manager: decimal_format_manager /= Void
