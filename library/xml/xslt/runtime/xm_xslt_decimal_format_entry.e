@@ -19,6 +19,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+	
 create
 
 	make
@@ -249,7 +252,7 @@ feature -- Element change
 			pattern_separator := ";"
 			minus_sign := "-"
 			percent := "%%"
-			create {UC_UTF8_STRING} per_mille.make_filled_code (8240, 1)
+			per_mille := new_unicode_string_filled_code (8240, 1)
 			zero_digit := "0"
 			digit_sign := "#"
 			infinity := "Infinity"

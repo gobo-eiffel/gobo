@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 					-- Statically typed as a single string
 				end
 				a_pattern_string := an_item.as_atomic_value.string_value
-								a_pattern_string := utf8.to_utf8 (a_pattern_string)
+				a_pattern_string := utf8.to_utf8 (a_pattern_string)
 				if arguments.count = 2 then
 					a_flags_string := ""
 				else

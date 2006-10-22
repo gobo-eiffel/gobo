@@ -19,7 +19,7 @@ inherit
 			start, is_invulnerable
 		end
 
-	UC_IMPORTED_UTF8_ROUTINES
+	UC_UNICODE_FACTORY
 		export {NONE} all end
 
 create
@@ -84,8 +84,6 @@ feature -- Cursor movement
 
 	start is
 			-- Move to first position
-		local
-			l_utf8: UC_UTF8_STRING
 		do
 			index := 1
 			regexp.wipe_out
@@ -94,18 +92,15 @@ feature -- Cursor movement
 			else
 				regexp.match (input)
 				if regexp.match_count = 0 then
-					create l_utf8.make_from_utf8 (input)
-					create item.make (l_utf8)
+					create item .make (new_unicode_string_from_utf8 (input))
 					was_last_match := False
 					next_subject := ""
 				elseif regexp.captured_start_position (0) > 1 then
-					create l_utf8.make_from_utf8 (input.substring (1, regexp.captured_start_position (0) - 1))
-					create item.make (l_utf8)
+					create item.make (new_unicode_string_from_utf8 (input.substring (1, regexp.captured_start_position (0) - 1)))
 					was_last_match := False
 					next_subject := input.substring (regexp.captured_start_position (0), input.count)
 				else
-					create l_utf8.make_from_utf8 (input.substring (regexp.captured_start_position (0), regexp.captured_end_position (0)))
-					create item.make (l_utf8)
+					create item.make (new_unicode_string_from_utf8 (input.substring (regexp.captured_start_position (0), regexp.captured_end_position (0))))
 					next_subject := input.substring (regexp.captured_end_position (0) + 1, input.count)
 					was_last_match := True
 				end
@@ -114,8 +109,6 @@ feature -- Cursor movement
 			
 	forth is
 			-- Move to next position
-		local
-			l_utf8: UC_UTF8_STRING
 		do
 			index := index + 1
 			regexp.wipe_out
@@ -124,18 +117,15 @@ feature -- Cursor movement
 			else
 				regexp.match (next_subject)
 				if regexp.match_count = 0 then
-					create l_utf8.make_from_utf8 (next_subject)
-					create item.make (l_utf8)
+					create item.make (new_unicode_string_from_utf8 (next_subject))
 					was_last_match := False
 					next_subject := ""
 				elseif regexp.captured_start_position (0) > 1 then
-					create l_utf8.make_from_utf8 (next_subject.substring (1, regexp.captured_start_position (0) - 1))
-					create item.make (l_utf8)
+					create item.make (new_unicode_string_from_utf8 (next_subject.substring (1, regexp.captured_start_position (0) - 1)))
 					was_last_match := False
 					next_subject := next_subject.substring (regexp.captured_start_position (0), next_subject.count)
 				else
-					create l_utf8.make_from_utf8 (next_subject.substring (regexp.captured_start_position (0), regexp.captured_end_position (0)))
-					create item.make (l_utf8)
+					create item.make (new_unicode_string_from_utf8 (next_subject.substring (regexp.captured_start_position (0), regexp.captured_end_position (0))))
 					next_subject := next_subject.substring (regexp.captured_end_position (0) + 1, next_subject.count)
 					was_last_match := True
 				end

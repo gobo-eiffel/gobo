@@ -19,7 +19,7 @@ inherit
 			simplify, evaluate_item
 		end
 
-	UC_IMPORTED_UTF8_ROUTINES
+	UC_UNICODE_FACTORY
 		export {NONE} all end
 
 	XM_XPATH_REGEXP_ROUTINES
@@ -290,7 +290,6 @@ feature {NONE} -- Implementation
 		local
 			replacement_is_ascii, subject_is_ascii: BOOLEAN
 			a_subject_string, a_substitution_string: STRING
-			l_utf8: UC_UTF8_STRING
 		do
 			subject_is_ascii := ANY_.same_types (an_input_string, "")
 			replacement_is_ascii := ANY_.same_types (replacement_string, "")
@@ -309,8 +308,7 @@ feature {NONE} -- Implementation
 			a_subject_string := utf8.to_utf8 (a_subject_string)
 			a_substitution_string := utf8.to_utf8 (a_substitution_string)
 			regexp.match (a_subject_string)
-			create l_utf8.make_from_utf8 (regexp.replace_all (a_substitution_string))
-			create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (l_utf8)
+			create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (new_unicode_string_from_utf8 (regexp.replace_all (a_substitution_string)))
 		ensure
 			evaluated: last_evaluated_item /= Void
 		end
