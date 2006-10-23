@@ -35,6 +35,9 @@ inherit
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 feature -- Test
 
 	test_matches_one is
@@ -137,6 +140,56 @@ feature -- Test
 			assert ("Matches", a_boolean_value.value)
 		end
 
+	test_matches_four_chinese is
+			-- Test fn:matches returns false when applied to chinese.xml.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			a_regular_expression: STRING
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_mixed
+			an_evaluator.build_static_context (chinese_xml_uri.full_reference, False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			a_regular_expression := STRING_.concat ("matches(/*[1], '", chinese_character_one)
+			a_regular_expression := STRING_.appended_string (a_regular_expression, ".*")
+			a_regular_expression := STRING_.appended_string (a_regular_expression, chinese_character_two)
+			a_regular_expression := STRING_.appended_string (a_regular_expression, "')")
+			an_evaluator.evaluate (a_regular_expression)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean value", a_boolean_value /= Void)
+			assert ("Doesnt match", not a_boolean_value.value)
+		end
+
+	test_matches_five_chinese is
+			-- Test fn:matches returns true when applied to chinese.xml.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			a_regular_expression: STRING
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_mixed
+			an_evaluator.build_static_context (chinese_xml_uri.full_reference, False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			a_regular_expression := STRING_.concat ("matches(/*[1], '", chinese_character_one)
+			a_regular_expression := STRING_.appended_string (a_regular_expression, ".*")
+			a_regular_expression := STRING_.appended_string (a_regular_expression, chinese_character_two)
+			a_regular_expression := STRING_.appended_string (a_regular_expression, "', 's')")
+			an_evaluator.evaluate (a_regular_expression)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean value", a_boolean_value /= Void)
+			assert ("Matches", a_boolean_value.value)
+		end
+
 	test_matches_six is
 			-- Test fn:matches(., "^Kaum.*gesehen,$", "m") returns true when applied to poem.
 		local
@@ -205,6 +258,22 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
+	chinese_character_one: STRING is
+			-- First chinese character used in regular expression
+		once
+			Result := new_unicode_string_filled_code (21326, 1)
+		ensure
+			chinese_character_one_not_void: Result /= Void
+		end
+
+	chinese_character_two: STRING is
+			-- Second chinese character used in regular expression
+		once
+			Result := new_unicode_string_filled_code (21457, 1)
+		ensure
+			chinese_character_two_not_void: Result /= Void
+		end
+
 	data_dirname: STRING is
 			-- Name of directory containing data files
 		once
@@ -236,6 +305,17 @@ feature {NONE} -- Implementation
 			Result := File_uri.filename_to_uri (a_path)
 		ensure
 			poem_xml_uri_not_void: Result /= Void
+		end
+		
+	chinese_xml_uri: UT_URI is
+			-- URI of file 'chinese.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "chinese.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			chinese_xml_uri_not_void: Result /= Void
 		end
 
 end

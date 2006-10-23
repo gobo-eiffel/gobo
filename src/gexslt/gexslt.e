@@ -47,7 +47,10 @@ inherit
 
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
-		
+
+	UT_SHARED_URL_ENCODING
+		export {NONE} all end
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -827,6 +830,7 @@ feature {NONE} -- Implementation
 					create a_uri.make_resolve_uri (current_directory_base,
 														File_uri.filename_to_uri (output_destination))
 					a_destination_system_id := a_uri.full_reference
+					print (a_destination_system_id)
 				else
 					a_destination_system_id := "stdout:"
 				end
