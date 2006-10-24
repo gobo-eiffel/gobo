@@ -44,9 +44,12 @@ feature -- XML asserts
 		require
 			name_not_void: a_name /= Void
 			in_not_void: in /= Void
+		local
+			l_stream: KL_STRING_INPUT_STREAM
 		do
 			reset_parser
-			parser.parse_from_string (new_unicode_string_from_utf8 (in))
+			create l_stream.make (in)
+			parser.parse_from_stream (l_stream)
 			assert (a_name, error.has_error)
 		end
 
