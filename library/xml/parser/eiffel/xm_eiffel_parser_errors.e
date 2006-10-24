@@ -76,5 +76,5 @@ feature -- Parser errors
 	
 	Error_unicode_in_ascii_string_mode: STRING is "Unexpected non-ASCII character in ASCII-only mode"
 	Error_unicode_in_latin1_string_mode: STRING is "Unexpected non-latin1 character in latin1-only mode"
-
+	Error_unicode_invalid_utf8: STRING is "Invalid UTF8 character sequence"
 end
