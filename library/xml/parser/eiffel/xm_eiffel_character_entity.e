@@ -99,7 +99,7 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Is this entity representing a valid XML character?
 		do
-			if unicode.valid_code (code) then
+			if unicode.valid_non_surrogate_code (code) then
 					-- Non conforming: excluded >32 unicode character:
 				Result := (code = 9) or -- tab
 					(code = 10) or (code = 13) or -- cr/lf

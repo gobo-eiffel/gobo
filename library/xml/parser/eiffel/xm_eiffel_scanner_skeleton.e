@@ -128,17 +128,18 @@ feature {NONE} -- Input
 
 feature -- Encoding
 
-	is_valid_encoding (an_encoding: STRING): BOOLEAN is
+	is_applicable_encoding (an_encoding: STRING): BOOLEAN is
 			-- Is this encoding known?
 		do
 			check filter_set: input_filter /= Void end
 			Result := input_filter.is_valid_encoding (an_encoding)
+				and then input_filter.is_applicable_encoding (an_encoding)
 		end
 
 	set_encoding (an_encoding: STRING) is
 			-- Set encoding.
 		require
-			valid_encoding: is_valid_encoding (an_encoding)
+			valid_encoding: is_applicable_encoding (an_encoding)
 		do
 			check filter_set: input_filter /= Void end
 			input_filter.set_encoding (an_encoding)

@@ -460,7 +460,7 @@ feature {NONE} -- Encoding
 		require
 			not_void: an_encoding /= Void
 		do
-			if scanner.is_valid_encoding (an_encoding) then
+			if scanner.is_applicable_encoding (an_encoding) then
 				scanner.set_encoding (an_encoding)
 			else
 				force_error (Error_unsupported_encoding)
@@ -857,13 +857,17 @@ feature {NONE} -- String mode
 			if is_string_mode_ascii then
 				force_error (Error_unicode_in_ascii_string_mode)
 			else
-				Result := new_unicode_string_from_utf8 (a_string)
-				if is_string_mode_latin1 then
-					if maximum_item_code (Result) > 255 then
-						force_error (Error_unicode_in_latin1_string_mode)
-					else
-						Result := Result.string
+				if utf8.valid_utf8 (a_string) then
+					Result := new_unicode_string_from_utf8 (a_string)
+					if is_string_mode_latin1 then
+						if maximum_item_code (Result) > 255 then
+							force_error (Error_unicode_in_latin1_string_mode)
+						else
+							Result := Result.string
+						end
 					end
+				else
+					force_error (Error_unicode_invalid_utf8)
 				end
 			end
 		end
