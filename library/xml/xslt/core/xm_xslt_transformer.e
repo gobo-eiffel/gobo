@@ -18,7 +18,7 @@ inherit
 		export {NONE} all end
 
 	XM_XPATH_TRANSFORMER
-		
+
 	XM_XPATH_NAME_UTILITIES
 
 	XM_XPATH_TYPE
@@ -30,7 +30,7 @@ inherit
 	XM_XSLT_CONFIGURATION_CONSTANTS
 
 	XM_XSLT_VALIDATION
-	
+
 	DT_SHARED_SYSTEM_CLOCK
 		export {NONE} all end
 
@@ -50,7 +50,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-			
+
 create
 
 	make
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			executable_set: executable = a_executable
 			transformer_factory_set: transformer_factory = a_factory
 		end
-			
+
 feature -- Access
 
 	executable: XM_XSLT_EXECUTABLE
@@ -149,7 +149,7 @@ feature -- Access
 
 	last_remembered_node: XM_XPATH_NODE
 			-- Last remembered nod
-	
+
 	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
 			-- Implicit time zone for comparing unzoned times and dates
 
@@ -249,7 +249,7 @@ feature -- Status setting
 
 				-- We only report the first error;
 				-- Otherwise, an error can get reported twice.
-				
+
 				error_listener.fatal_error (an_error)
 				is_error := True
 				last_error := an_error
@@ -295,7 +295,7 @@ feature -- Creation
 			Result := executable.new_stripper (Current, a_builder)
 		ensure
 			stripper_not_void: Result /= Void
-		end	
+		end
 
 	new_parser: XM_PARSER is
 			-- XML Parser
@@ -333,7 +333,7 @@ feature -- Creation
 		end
 
 feature -- Element change
-	
+
 	save_function_results (a_result_table: DS_HASH_TABLE [XM_XPATH_VALUE, STRING]; a_function: XM_XSLT_COMPILED_USER_FUNCTION) is
 			-- User data associated with `an_object'
 		require
@@ -370,7 +370,7 @@ feature -- Element change
 				if initial_template.has_required_parameters then
 					create an_error.make_from_string (("Initial template must not have any required parameters"), Xpath_errors_uri, "XTDE0060", Dynamic_error)
 					report_fatal_error (an_error)
-				end				
+				end
 			else
 				initial_template := Void
 				create an_error.make_from_string (STRING_.concat ("Unable to locate a template named ", a_template_name), Xpath_errors_uri, "XTDE0040", Dynamic_error)
@@ -395,7 +395,7 @@ feature -- Element change
 				report_fatal_error (an_error)
 			end
 		end
-			
+
 	clear_document_pool is
 			-- Empty `document_pool'.
 			-- This might need to be done between multiple
@@ -655,7 +655,7 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 				properties := executable.default_output_properties
 				a_transformation_result := a_result
 				-- TODO: overlay properties defined by API
-				
+
 				-- Stylesheet chaining
 
 				a_next_uri := properties.next_in_chain
@@ -673,7 +673,7 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 					a_saved_receiver.start_document
 
 					-- Process the source document using the handlers that have been set up.
-					
+
 					if initial_template = Void then
 						perform_transformation (a_start_node)
 					else
@@ -682,17 +682,17 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 						create a_parameter_set.make_empty
 						a_context.set_local_parameters (a_parameter_set)
 						create a_parameter_set.make_empty
-						a_context.set_tunnel_parameters (a_parameter_set)						
+						a_context.set_tunnel_parameters (a_parameter_set)
 						initial_template.process (a_context)
 					end
-					
+
 					if is_tracing then
 						trace_listener.stop_tracing
 					end
-					
+
 					a_saved_receiver.end_document
 					a_saved_receiver.close
-					std.output.flush
+					principal_result.flush
 					if a_transformation_result.error_message /= Void then
 						report_warning (a_transformation_result.error_message, Void)
 					end
@@ -845,7 +845,7 @@ feature -- Implementation
 			output_resolver.output_destinations.wipe_out
 
 			-- Create a new bindery, to clear out any variables from previous runs
-			
+
 			bindery := executable.new_bindery
 			initial_context := new_xpath_context
 			if a_start_node /= Void then
@@ -856,7 +856,7 @@ feature -- Implementation
 			end
 
 			-- If XPath parameters were supplied, set them up
-			
+
 			if xpath_parameters /= Void then
 				if parameters = Void then
 					create parameters.make_empty
@@ -967,7 +967,7 @@ feature -- Implementation
 		ensure
 			error_or_not_void: not is_error implies Result /= Void
 		end
-		
+
 invariant
 
 	parser_factory_not_void: parser_factory /= Void
@@ -983,6 +983,6 @@ invariant
 	implicit_timezone_not_void: implicit_timezone /= Void
 	current_date_time_not_void: current_date_time /= Void
 	output_resolver_not_void: output_resolver /= Void
-	
+
 end
-	
+

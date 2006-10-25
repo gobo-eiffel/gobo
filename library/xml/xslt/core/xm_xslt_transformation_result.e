@@ -130,6 +130,14 @@ feature -- Element change
 			principal_receiver_set: principal_receiver = a_receiver
 		end
 
+	flush is
+			-- Flush `stream'.
+		do
+			if stream /= Void then
+				stream.flush
+			end
+		end
+
 	close (some_properties: XM_XSLT_OUTPUT_PROPERTIES) is
 			-- Close output stream.
 		require
@@ -155,4 +163,4 @@ invariant
 	system_id_not_void: system_id /= Void
 
 end
-	
+

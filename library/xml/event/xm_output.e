@@ -15,10 +15,10 @@ class XM_OUTPUT
 inherit
 
 	ANY
-	
+
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
-		
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -35,7 +35,7 @@ feature -- Output
 		end
 
 	set_output_string (a_string: like last_output) is
-			-- Initialize output to given string, 
+			-- Initialize output to given string,
 			-- the result must still be collected from
 			-- last_output, which may be another string.
 		require
@@ -53,7 +53,7 @@ feature -- Output
 			output_stream := a_stream
 			last_output := Void
 		end
-		
+
 	set_output_standard is
 			-- Set output to standard output (Default).
 		do
@@ -71,6 +71,14 @@ feature -- Output
 	last_output: STRING
 			-- Last output;
 			-- May be void if standard output or stream is used.
+
+	flush is
+			-- Flush `output_stream'.
+		do
+			if output_stream /= Void and then output_stream.is_open_write then
+				output_stream.flush
+			end
+		end
 
 feature {NONE} -- Output stream
 
