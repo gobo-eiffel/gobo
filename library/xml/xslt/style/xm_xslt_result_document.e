@@ -103,8 +103,12 @@ feature -- Element change
 			if a_format_attribute /= Void then
 				generate_attribute_value_template (a_format_attribute, static_context)
 				if last_generated_expression.is_string_value then
-					generate_name_code (a_format_attribute)
-					output_fingerprint := last_generated_name_code
+					if is_qname (a_format_attribute) then
+						generate_name_code (a_format_attribute)
+						output_fingerprint := last_generated_name_code
+					else
+						output_fingerprint := -1
+					end
 					if output_fingerprint = -1 then
 						a_message := STRING_.concat ("XTDE1460: xsl:result-document format='", a_format_attribute)
 						a_message := STRING_.appended_string (a_message, "' does not specify a valid QName")
@@ -215,7 +219,7 @@ feature -- Element change
 				create a_local_property_set.make (Platform.Minimum_integer)
 				build_local_properties (a_local_property_set)
 				if not any_compile_errors then
-					if namespace_context_needed then a_namespace_resolver := static_context.namespace_resolver end
+					a_namespace_resolver := static_context.namespace_resolver
 					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
 					a_content := last_generated_expression
 					if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
@@ -242,7 +246,6 @@ feature -- Element change
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create a_fingerprint_list.make (formatting_attributes.count)
-			namespace_context_needed := format_expression = Void
 			a_namespace_resolver := static_context.namespace_resolver
 			from
 				a_cursor := formatting_attributes.new_cursor; a_cursor.start
@@ -264,7 +267,6 @@ feature -- Element change
 					a_local_name := shared_name_pool.local_name_from_name_code (a_fingerprint)
 					if STRING_.same_string (a_local_name, Method_attribute) or else
 						STRING_.same_string (a_local_name, Cdata_section_elements_attribute) then
-						namespace_context_needed := True
 					end
 				end
 				if not a_cursor.after then a_cursor.forth end
@@ -295,9 +297,6 @@ feature {NONE} -- Implementation
 
 	format_expression: XM_XPATH_EXPRESSION
 			-- Format attribute, when supplied as an AVT
-
-	namespace_context_needed: BOOLEAN
-			-- Is namespace context needed at runtime?
 
 	use_character_maps: STRING
 			-- Character maps to be used

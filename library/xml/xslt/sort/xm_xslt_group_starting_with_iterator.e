@@ -35,14 +35,14 @@ feature {NONE} -- Initialization
 			key_not_void: a_key /= Void
 			context_not_void: a_context /= Void
 		do
-			population := a_population
+			population := a_population.another
 			key_pattern := a_key
 			base_context := a_context
 			running_context := a_context.new_minor_context
 			running_context.set_current_iterator (population)
 			locator := a_locator
 		ensure
-			population_set: population = a_population
+			population_before: population.before
 			key_set: key_pattern = a_key
 			base_context_set: base_context = a_context
 			locator_set: locator = a_locator

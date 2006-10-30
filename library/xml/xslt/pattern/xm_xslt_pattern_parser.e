@@ -15,6 +15,9 @@ class XM_XSLT_PATTERN_PARSER
 inherit
 
 	XM_XPATH_EXPRESSION_PARSER
+		redefine
+			check_valid_function
+		end
 
 	XM_XSLT_SHARED_ANY_NODE_TEST
 		export {NONE} all end
@@ -611,7 +614,17 @@ feature {NONE} -- Implementation
 		ensure
 			xslt_node_test_not_void: Result /= Void
 		end
-			
+
+	check_valid_function (a_function: XM_XPATH_EXPRESSION) is
+			-- Check `a_function' is a valid function call.
+		do
+			if a_function.is_current_group then
+				report_parse_error ("Function fn:current-group() is not permitted in an XSLT pattern", "XTSE1060")
+			elseif a_function.is_current_grouping_key then
+				report_parse_error ("Function fn:current-grouping-key() is not permitted in an XSLT pattern", "XTSE1070")
+			end
+		end
+
 	internal_last_parsed_pattern: XM_XSLT_PATTERN
 			-- Last sucessfully parsed pattern
 

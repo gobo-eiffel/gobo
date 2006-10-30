@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			name := "upper-case"; namespace_uri := Xpath_standard_functions_uri
 			fingerprint := Upper_case_function_type_code
-			minimum_argument_count := 0
+			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
@@ -66,7 +66,7 @@ feature -- Evaluation
 		do
 			arguments.item (1).evaluate_item (a_context)
 			an_item := arguments.item (1).last_evaluated_item
-			if not an_item.is_atomic_value then
+			if an_item = Void or else not an_item.is_atomic_value then
 				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 			else
 				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (an_item.as_atomic_value.string_value.as_upper)

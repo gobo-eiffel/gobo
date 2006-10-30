@@ -1338,16 +1338,22 @@ feature -- Creation
 			pattern_text_not_void: a_pattern /= Void
 			static_context_not_void: static_context /= Void
 		local
-			a_pattern_parser: XM_XSLT_PATTERN_PARSER
-			an_error: XM_XPATH_ERROR_VALUE
+			l_pattern_parser: XM_XSLT_PATTERN_PARSER
+			l_error: XM_XPATH_ERROR_VALUE
+			l_code: STRING
 		do
-			create a_pattern_parser.make
-			a_pattern_parser.parse_pattern (a_pattern, static_context, line_number)
-			if not a_pattern_parser.is_parse_error then
-				last_generated_pattern := a_pattern_parser.last_parsed_pattern.simplified_pattern
+			create l_pattern_parser.make
+			l_pattern_parser.parse_pattern (a_pattern, static_context, line_number)
+			if not l_pattern_parser.is_parse_error then
+				last_generated_pattern := l_pattern_parser.last_parsed_pattern.simplified_pattern
 			else
-				create an_error.make_from_string (a_pattern_parser.first_parse_error, Xpath_errors_uri, "XTSE0340", Static_error)
-				report_compile_error (an_error)
+				if l_pattern_parser.first_parse_error_code.substring_index ("XTSE", 1) > 0 then
+					l_code := l_pattern_parser.first_parse_error_code
+				else
+					l_code := "XTSE0340"
+				end
+				create l_error.make_from_string (l_pattern_parser.first_parse_error, Xpath_errors_uri, l_code, Static_error)
+				report_compile_error (l_error)
 				create {XM_XSLT_NO_NODE_TEST} last_generated_pattern.make
 			end
 		ensure

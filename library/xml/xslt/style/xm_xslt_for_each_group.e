@@ -294,6 +294,6 @@ feature {NONE} -- Implementation
 invariant
 
 	only_one_algorithm: validated implies group_by /= Void xor group_adjacent /= Void xor group_starting_with /= Void xor group_ending_with /= Void
-	collation_name: collation_name /= Void implies group_by /= Void xor group_adjacent /= Void
+	collation_name: attributes_prepared and collation_name /= Void and not any_compile_errors implies group_by /= Void xor group_adjacent /= Void
 
 end

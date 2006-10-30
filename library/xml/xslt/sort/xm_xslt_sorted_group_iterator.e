@@ -51,7 +51,7 @@ feature -- Access
 			-- Grouping key for current group;
 			-- (or `Void' for group-starting/ending-with)
 		do
-			todo ("current_grouping_key", False)
+			Result := node_keys.item (index).as_group_sort_record.current_grouping_key
 		end
 
 feature -- Evaluation

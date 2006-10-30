@@ -1978,8 +1978,11 @@ feature {NONE} -- Implementation
 								report_parse_error (a_message, "XPST0017")
 							else
 								function_library.bind_function (a_fingerprint, arguments, environment.is_restricted)
-								internal_last_parsed_expression := function_library.last_bound_function
-								-- TODO set location
+								check_valid_function (function_library.last_bound_function)
+								if not is_parse_error then
+									internal_last_parsed_expression := function_library.last_bound_function
+									-- TODO set location
+								end
 							end
 						end
 					end
@@ -1989,6 +1992,14 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
+		end
+
+	check_valid_function (a_function: XM_XPATH_EXPRESSION) is
+			-- Check `a_function' is a valid function call.
+		require
+			a_function_not_void: a_function /= Void
+		do
+			-- Redefined in XM_XSLT_PATTERN_PARSER
 		end
 
 	parse_node_test (a_node_type: INTEGER) is

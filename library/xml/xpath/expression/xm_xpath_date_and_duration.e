@@ -25,17 +25,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+	make (a_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; a_operand_two: XM_XPATH_EXPRESSION) is
 			-- Establish invariant
 		do
 
 			-- One operand is a date/dateTime/time, the other is a duration.
 			-- We normalize so that `second_operand' is a duration.
 
-			if an_operand_one.is_duration_value then
-				Precursor (an_operand_two, a_token, an_operand_one)
+			if a_operand_one.is_duration_value then
+				Precursor (a_operand_two, a_token, a_operand_one)
 			else
-				Precursor (an_operand_one, a_token, an_operand_two)
+				Precursor (a_operand_one, a_token, a_operand_two)
 			end
 		end
 
@@ -83,7 +83,7 @@ feature -- Evaluation
 
 invariant
 
-	second_operand_is_duration: second_operand.is_duration_value
+		second_operand_is_duration: initialized implies is_sub_type (second_operand.item_type, type_factory.duration_type)
 
 end
 	

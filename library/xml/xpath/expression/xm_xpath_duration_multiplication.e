@@ -16,12 +16,29 @@ inherit
 	
 	XM_XPATH_ARITHMETIC_EXPRESSION
 		redefine
-			evaluate_item
+			make, evaluate_item
 		end
 
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; a_operand_two: XM_XPATH_EXPRESSION) is
+			-- Establish invariant
+		do
+			-- One of the operands evaluates to a duration - we ensure it is the first one.
+			if is_sub_type (a_operand_one.item_type, type_factory.duration_type) then
+				Precursor (a_operand_one, a_token, a_operand_two)
+			else
+				check
+					second_operand_is_duration: is_sub_type (a_operand_two.item_type, type_factory.duration_type)
+				end
+				Precursor (a_operand_two, a_token, a_operand_one)
+			end
+			initialized := True
+		end
 
 feature -- Evaluation
 
@@ -52,7 +69,11 @@ feature -- Evaluation
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Multiplication by NaN", Xpath_errors_uri, "FOCA0005", Dynamic_error)
 						elseif a_numeric_value.is_zero then
 							create a_duration.make (0, 0, 0, 0, 0, 0)
-							create {XM_XPATH_MONTHS_DURATION_VALUE} last_evaluated_item.make_from_duration (a_duration)
+							if a_duration_value.is_months_duration then
+								create {XM_XPATH_MONTHS_DURATION_VALUE} last_evaluated_item.make_from_duration (a_duration)
+							else
+								create {XM_XPATH_SECONDS_DURATION_VALUE} last_evaluated_item.make_from_duration (a_duration)
+							end
 						elseif a_numeric_value.is_infinite then
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Multiplication by Infinity", Xpath_errors_uri, "FODT0002", Dynamic_error)
 						else
@@ -68,7 +89,11 @@ feature -- Evaluation
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Division by zero", Xpath_errors_uri, "FODT0002", Dynamic_error)
 						elseif a_numeric_value.is_infinite then
 							create a_duration.make (0, 0, 0, 0, 0, 0)
-							create {XM_XPATH_MONTHS_DURATION_VALUE} last_evaluated_item.make_from_duration (a_duration)
+							if a_duration_value.is_months_duration then
+								create {XM_XPATH_MONTHS_DURATION_VALUE} last_evaluated_item.make_from_duration (a_duration)
+							else
+								create {XM_XPATH_SECONDS_DURATION_VALUE} last_evaluated_item.make_from_duration (a_duration)
+							end
 						else
 							last_evaluated_item := a_duration_value.scalar_divide (a_numeric_value.as_double)
 						end
@@ -76,6 +101,10 @@ feature -- Evaluation
 				end
 			end
 		end
+
+invariant
+
+	first_operand_is_duration: is_sub_type (first_operand.item_type, type_factory.duration_type)
 
 end
 	

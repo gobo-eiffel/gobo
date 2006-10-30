@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, create_iterator, compute_intrinsic_dependencies
+			pre_evaluate, create_iterator, compute_intrinsic_dependencies, is_current_group
 		end
 
 create
@@ -50,6 +50,12 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_current_group: BOOLEAN is
+			-- Is `Current' the XSLT "current-group()" function?
+		do
+			Result := True
+		end
 
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'

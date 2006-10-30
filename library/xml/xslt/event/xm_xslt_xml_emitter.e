@@ -719,7 +719,9 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if not transformer.is_error then
+			if transformer.is_error then
+				is_error := True
+			else
 				is_output_open := True
 				if not is_declaration_written then write_declaration end
 
@@ -735,7 +737,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			document_opened: is_error or else is_output_open
+			document_opened: is_error or is_output_open
 		end
 
 	write_doctype (a_type, a_system_id, a_public_id: STRING ) is

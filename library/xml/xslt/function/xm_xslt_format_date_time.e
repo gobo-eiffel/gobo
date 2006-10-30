@@ -243,15 +243,15 @@ feature {NONE} -- Implementation
 			country_not_void: a_country /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			i, a_count, an_open, a_close: INTEGER
+			i, l_count, l_open, l_close: INTEGER
 			finished, finished_inner: BOOLEAN
 		do
 			from
-				i := 1; a_count := a_picture.count
+				i := 1; l_count := a_picture.count
 			until finished loop
-				from finished_inner := False until i > a_count or else finished_inner loop
+				from finished_inner := False until i > l_count or else finished_inner loop
 					if a_picture.index_of ('[', i) = i then
-						an_open := i
+						l_open := i
 						finished_inner := True
 					else
 						a_result_string.insert_character (a_picture.item (i), a_result_string.count + 1)
@@ -265,23 +265,26 @@ feature {NONE} -- Implementation
 					end
 					i := i + 1
 				end
-				if i > a_count then
+				if i > l_count then
 					finished := True
+					if l_open > 0 and l_close = 0 then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("] not found after [ in picture string", Xpath_errors_uri, "XTDE1340", Dynamic_error)
+					end
 				elseif not finished then
 					if a_picture.index_of ('[', i) = i then
 						a_result_string.insert_character ('[', a_result_string.count + 1)
 						i := i + 1
 					else
-						a_close := a_picture.index_of (']', i)
-						if a_close = 0 then
+						l_close := a_picture.index_of (']', i)
+						if l_close = 0 then
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("] not found after [ in picture string", Xpath_errors_uri, "XTDE1340", Dynamic_error)
 							finished := True
 						else
-							format_marker (a_result_string, a_calendar_value, a_picture.substring (an_open + 1, a_close - 1), a_language, a_calendar, a_country)
+							format_marker (a_result_string, a_calendar_value, a_picture.substring (l_open + 1, l_close - 1), a_language, a_calendar, a_country)
 							if last_evaluated_item /= Void then
 								finished := True
 							else
-								i := a_close + 1
+								i := l_close + 1
 							end
 						end
 					end
@@ -1020,15 +1023,21 @@ feature {NONE} -- Implementation
 		local
 			a_string: STRING
 		do
-			check_modifiers (some_modifiers, "n", True)
-			if not is_name_modifier then primary_modifier := "n" end
+			check_not_time_value (a_calendar_value, "E specifier not allowed for format-time()")
 			if last_evaluated_item = Void then
-				a_string := era (a_calendar_value, a_language, a_calendar, a_country)
-				a_string := correctly_cased_name (a_string)
-				if a_string.count < minimum_width then
-					a_string := appended_with_blanks (a_string)
+				check_modifiers (some_modifiers, "n", True)
+				if not is_name_modifier then primary_modifier := "n" end
+				if last_evaluated_item = Void then
+					if a_calendar_value.is_time_value then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Era is not available with time values", Xpath_errors_uri, "XTDE1350", Dynamic_error)
+						a_string := era (a_calendar_value, a_language, a_calendar, a_country)
+						a_string := correctly_cased_name (a_string)
+						if a_string.count < minimum_width then
+							a_string := appended_with_blanks (a_string)
+						end
+						STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					end
 				end
-				STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 			end
 		end
 
@@ -1037,7 +1046,7 @@ feature {NONE} -- Implementation
 		do
 			Result := is_zeros_plus_one (primary_modifier)			
 		end
-
+	
 	check_modifiers (some_modifiers, a_default: STRING; use_names: BOOLEAN) is
 			-- Check `some_modifiers' for syntax errors.
 		require
@@ -1377,7 +1386,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			elseif  STRING_.same_string (a_calendar, Ad_calendar) then
-							if a_year > 0 then
+				if a_year > 0 then
 					if maximum_width >= 11 then
 						Result := "Anno Domini"
 					else
@@ -1403,7 +1412,7 @@ feature {NONE} -- Implementation
 			string_not_void: a_string /= Void
 			short_string: a_string.count < minimum_width
 		do
-			create Result.make_filled ('0', a_string.count - minimum_width)
+			create Result.make_filled ('0', minimum_width - a_string.count)
 			Result := STRING_.appended_string (Result, a_string)
 		ensure
 			minimum_width: Result.count = minimum_width
@@ -1415,7 +1424,7 @@ feature {NONE} -- Implementation
 			string_not_void: a_string /= Void
 			short_string: a_string.count < minimum_width
 		do
-			create Result.make_filled (' ', a_string.count - minimum_width)
+			create Result.make_filled (' ', minimum_width - a_string.count)
 			Result := STRING_.concat (a_string, Result)
 		ensure
 			minimum_width: Result.count = minimum_width

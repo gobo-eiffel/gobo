@@ -89,8 +89,8 @@ feature -- Access
 	Xml_schema_instance_uri: STRING is "http://www.w3.org/2001/XMLSchema-instance"
 			-- The XML Schema instance document namespace (xsi)
 
-	Xpath_defined_datatypes_uri: STRING is "http://www.w3.org/2005/xpath-datatypes"
-			-- former namespace for additional XPath-defined data types (xdt)
+	Xpath_defined_datatypes_uri: STRING is "http://www.w3.org/2001/XMLSchema"
+			-- former namespace for additional XPath-defined data types (was xdt - now xs)
 
 	Xpath_standard_functions_uri: STRING is "http://www.w3.org/2005/xpath-functions"
 			-- XPath standard functions and operators (fn)

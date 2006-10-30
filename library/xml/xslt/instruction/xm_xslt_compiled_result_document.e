@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			no_schema_type_as_yet: a_schema_type = Void
 			formatting_attributes_not_void: some_formatting_attributes /= Void
 			content_not_void: a_content /= Void
-			namespace_resolver_not_void: a_format /= Void implies a_namespace_resolver /= Void
+			namespace_resolver_not_void: a_namespace_resolver /= Void
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
 		do

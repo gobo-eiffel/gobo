@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, evaluate_item, compute_intrinsic_dependencies
+			pre_evaluate, evaluate_item, compute_intrinsic_dependencies, is_current_grouping_key
 		end
 
 create
@@ -50,6 +50,12 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_current_grouping_key: BOOLEAN is
+			-- Is `Current' the XSLT "current-grouping-key()" function?
+		do
+			Result := True
+		end
 
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'

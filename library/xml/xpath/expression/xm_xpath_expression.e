@@ -165,6 +165,18 @@ feature -- Access
 			Result := False
 		end
 
+	is_current_group: BOOLEAN is
+			-- Is `Current' the XSLT "current-group()" function?
+		do
+			Result := False
+		end
+
+	is_current_grouping_key: BOOLEAN is
+			-- Is `Current' the XSLT "current-grouping-key()" function?
+		do
+			Result := False
+		end
+
 	is_pattern_bridge: BOOLEAN is
 			-- Is `Current' a bridge to an XSLT pattern?
 		do

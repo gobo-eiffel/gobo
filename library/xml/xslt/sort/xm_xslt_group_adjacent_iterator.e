@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 					elseif  key_expression.last_evaluated_item.is_atomic_value then
 						a_candidate_key := key_expression.last_evaluated_item.as_atomic_value
 						if next_key = Void then next_key := a_candidate_key end
-						if next_key.three_way_comparison (a_candidate_key, running_context) = 0 then
+						if next_key.is_comparable (a_candidate_key) and then comparer.three_way_comparison (next_key, a_candidate_key) = 0 then
 							current_members.force_last (a_candidate)
 						else
 							next_key := a_candidate_key

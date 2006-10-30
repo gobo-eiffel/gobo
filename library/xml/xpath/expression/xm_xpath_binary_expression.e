@@ -25,23 +25,25 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+	make (a_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; a_operand_two: XM_XPATH_EXPRESSION) is
 			-- Establish invariant
 		require
-			operand_1_not_void: an_operand_one /= Void
-			operand_2_not_void: an_operand_two /= Void
+			operand_1_not_void: a_operand_one /= Void
+			operand_2_not_void: a_operand_two /= Void
 			-- TODO: is_binary_op?
 		do
 			operator := a_token
-			set_first_operand (an_operand_one)
-			set_second_operand (an_operand_two)
-			adopt_child_expression (an_operand_one)
-			adopt_child_expression (an_operand_two)
+			set_first_operand (a_operand_one)
+			set_second_operand (a_operand_two)
+			adopt_child_expression (a_operand_one)
+			adopt_child_expression (a_operand_two)
 			compute_static_properties
 		ensure
 			operator_set: operator = a_token
-			operand_1_set: first_operand /= Void and then first_operand.same_expression (an_operand_one)
-			operand_2_set: second_operand /= Void and then second_operand.same_expression (an_operand_two)
+			operand_1_set: first_operand /= Void
+			operand_2_set: second_operand /= Void
+			same_operands: (first_operand.same_expression (a_operand_one) and second_operand.same_expression (a_operand_two))
+								or (first_operand.same_expression (a_operand_two) and second_operand.same_expression (a_operand_one))
 			static_properties_computed: are_static_properties_computed
 		end
 

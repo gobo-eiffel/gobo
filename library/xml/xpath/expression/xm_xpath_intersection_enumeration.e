@@ -59,7 +59,7 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			Result := first_iterator.after or else second_iterator.after
+			Result := first_iterator.after or second_iterator.after
 		end
 
 feature -- Cursor movement
@@ -71,8 +71,13 @@ feature -- Cursor movement
 			a_comparison: INTEGER
 		do
 			index := index + 1
-			first_iterator.forth
-			second_iterator.forth
+			if index = 1 then
+				first_iterator.start
+				second_iterator.start
+			else
+				first_iterator.forth
+				second_iterator.forth
+			end
 			if first_iterator.is_error then
 				set_last_error (first_iterator.error_value)
 			elseif second_iterator.is_error then
