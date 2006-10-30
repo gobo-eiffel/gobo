@@ -125,7 +125,7 @@ feature -- Access
 				l_depends := True
 			elseif ancestor_pattern /= Void and then ancestor_pattern.depends_upon_local_variables then
 				l_depends := True
-			else
+			elseif filters /= Void then
 				from l_cursor := filters.new_cursor; l_cursor.start until l_cursor.after loop
 					if l_cursor.item.depends_upon_local_variables then
 						l_depends := True
@@ -489,16 +489,18 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 				axis := Child_axis
 			end
 			create {XM_XPATH_AXIS_EXPRESSION} step.make (axis, node_test)
-			from
-				a_cursor := filters.new_cursor
-				a_cursor.start
-			variant
-				filters.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				create {XM_XPATH_FILTER_EXPRESSION} step.make (step, a_cursor.item)
+			if filters /= Void then
+				from
+					a_cursor := filters.new_cursor
+					a_cursor.start
+				variant
+					filters.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					create {XM_XPATH_FILTER_EXPRESSION} step.make (step, a_cursor.item)
 				a_cursor.forth
+				end
 			end
 			create parent_node.make
 			create Result.make (parent_node, step)

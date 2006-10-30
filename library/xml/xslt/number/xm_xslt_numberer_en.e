@@ -315,6 +315,7 @@ feature {NONE} -- Implementation
 						Result := STRING_.appended_string (Result, a_group_separator)
 					end
 					Result := STRING_.appended_string (Result, another_string.substring (an_index, an_index))
+					an_index := an_index + 1
 				end
 			else
 				Result := another_string

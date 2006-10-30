@@ -413,6 +413,8 @@ feature -- Evaluation
 						create an_error.make_from_string ("Letter-value must be %"traditional%" or %"alphabetic%"", Xpath_errors_uri, "XTDE0030", Dynamic_error)
 						an_error.set_location (system_id, line_number)
 						transformer.report_fatal_error (an_error)
+					else
+						a_letter := letter_value.last_evaluated_string.string_value
 					end
 				end
 				if not transformer.is_error then
