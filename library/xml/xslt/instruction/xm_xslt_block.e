@@ -350,14 +350,13 @@ feature -- Evaluation
 			end
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			a_child: XM_XPATH_EXPRESSION
 			an_instruction: XM_XSLT_INSTRUCTION
 		do
-			last_tail_call := Void
 			from
 				a_cursor := children.new_cursor; a_cursor.start
 			variant
@@ -366,13 +365,12 @@ feature -- Evaluation
 				a_context.transformer.is_error or else a_cursor.after
 			loop
 				a_child := a_cursor.item
-				an_instruction ?= a_child -- TODO: ? - cluster dependency
+				a_tail.put (Void)
+				an_instruction ?= a_child
 				if an_instruction /= Void then
-					an_instruction.process_leaving_tail (a_context)
-					last_tail_call := an_instruction.last_tail_call
+					an_instruction.process_leaving_tail (a_tail, a_context)
 				else
 					a_child.process (a_context)
-					last_tail_call := Void
 				end
 				a_cursor.forth
 			end

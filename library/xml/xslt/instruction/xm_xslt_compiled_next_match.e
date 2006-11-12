@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
@@ -44,7 +44,6 @@ feature -- Evaluation
 			a_current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			another_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			last_tail_call := Void
 			a_transformer := a_context.transformer
 			
 			-- handle any parameters

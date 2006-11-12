@@ -99,43 +99,51 @@ feature -- Evaluation
 			-- process `Current', without returning any tail calls
 		require
 			context_not_void: a_context /= Void
+		local
+			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
+			l_tail_call: XM_XPATH_TAIL_CALL
 		do
 			from
-				process_leaving_tail (a_context)
+				create l_tail.make (Void)
+				process_leaving_tail (l_tail, a_context)
+				l_tail_call := l_tail.item
 			until
-				last_tail_call = Void
+				l_tail_call = Void
 			loop
-				last_tail_call.process_leaving_tail (a_context)
-				last_tail_call := last_tail_call.last_tail_call
+				l_tail.put (Void)
+				l_tail_call.process_leaving_tail (l_tail, a_context)
+				l_tail_call := l_tail.item
 			end
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			a_new_context := a_context.new_context
 			a_new_context.set_current_template (Current)
-			expand (a_new_context)
+			expand (a_tail, a_new_context)
 		end
 
-	expand (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	expand (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Expand the template.
 			-- Called when the template is invoked using xsl:call-template or xsl:apply-templates.
 		require
+			a_tail_not_void: a_tail /= Void
+			no_tail_call: a_tail.item = Void
 			context_not_void: a_context /= Void
 		local
 			an_instruction: XM_XSLT_INSTRUCTION
 		do
 			an_instruction ?= body
 			if an_instruction /= Void then
-				an_instruction.process_leaving_tail (a_context)
-				last_tail_call := an_instruction.last_tail_call
+				an_instruction.process_leaving_tail (a_tail, a_context)
 			else
 				body.process (a_context)
-				last_tail_call := Void
 			end
+		ensure
+			possible_tail_call: a_tail.item /= Void xor a_tail.item = Void
 		end
 
 end

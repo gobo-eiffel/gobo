@@ -73,22 +73,6 @@ feature -- Access
 
 feature -- Status report
 
-	last_set_tail_call: XM_XPATH_TAIL_CALL is
-			-- Last tail call set by `set_last_tail_call'
-		do
-			Result := last_tail_call
-		end
-
-feature -- Status setting
-
-	set_last_tail_call (a_tail_call: XM_XPATH_TAIL_CALL) is
-			-- Set residue from `apply_templates'
-		do
-			last_tail_call := a_tail_call
-		end
-
-feature -- Status report
-
 	creates_new_nodes: BOOLEAN is
 			-- Can `Current' create new nodes?
 		do
@@ -204,14 +188,17 @@ feature -- Evaluation
 
 	process (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
 		do
-			apply (a_context, False)
+			create l_tail.make (Void)
+			apply (l_tail, a_context, False)
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			apply (a_context, is_tail_recursion_used)
+			apply (a_tail, a_context, is_tail_recursion_used)
 		end
 
 feature {NONE} -- Implementation
@@ -234,67 +221,70 @@ feature {NONE} -- Implementation
 	mode: XM_XSLT_MODE
 			-- Mode to use
 
-	apply (a_context: XM_XSLT_EVALUATION_CONTEXT; returns_tail_call: BOOLEAN) is
+	apply (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT; returns_tail_call: BOOLEAN) is
 			-- Apply `Current'.
 		require
 			context_not_void: a_context /= void
 		local
-			an_evaluation_context, a_new_context: XM_XSLT_EVALUATION_CONTEXT
-			a_mode: XM_XSLT_MODE
-			some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_evaluation_context, l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_mode: XM_XSLT_MODE
+			l_parameters, l_tunnel_parameters: XM_XSLT_PARAMETER_SET
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_tail_call: XM_XPATH_TAIL_CALL
 		do
-			last_tail_call := Void
-			an_evaluation_context ?= a_context
+			l_evaluation_context ?= a_context
 			check
-				evaluation_context: an_evaluation_context /= Void
+				evaluation_context: l_evaluation_context /= Void
 				-- as this is XSLT
 			end
 			if is_current_mode_used then
-				a_mode := an_evaluation_context.current_mode
+				l_mode := l_evaluation_context.current_mode
 			else
-				a_mode := mode
+				l_mode := mode
 			end
 
 			-- handle any parameters
 
-			some_parameters := assembled_parameters (a_context, actual_parameters)
-			some_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameters)
+			l_parameters := assembled_parameters (a_context, actual_parameters)
+			l_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameters)
 
 			if returns_tail_call then
-				a_new_context := a_context.new_context
+				l_new_context := a_context.new_context
 				select_expression.lazily_evaluate (a_context, 1)
-				create {XM_XSLT_APPLY_TEMPLATES_PACKAGE} last_tail_call.make ( select_expression.last_evaluation,
-																									a_mode, some_parameters,
-																									some_tunnel_parameters,
-																									a_new_context
-																								  )
+				create {XM_XSLT_APPLY_TEMPLATES_PACKAGE} l_tail_call.make (select_expression.last_evaluation,
+																									l_mode, l_parameters,
+																									l_tunnel_parameters,
+																									l_new_context
+																							 )
+				a_tail.put (l_tail_call)
 			else
 
 				-- Get an iterator to iterate through the selected nodes in original order.
 
 				select_expression.create_iterator (a_context)
-				an_iterator := select_expression.last_iterator
-				if an_iterator.is_error then
-					if not an_iterator.error_value.is_location_known then
-						an_iterator.error_value.set_location (system_id, line_number)
+				l_iterator := select_expression.last_iterator
+				if l_iterator.is_error then
+					if not l_iterator.error_value.is_location_known then
+						l_iterator.error_value.set_location (system_id, line_number)
 					end
-					a_context.transformer.report_fatal_error (an_iterator.error_value)
+					a_context.transformer.report_fatal_error (l_iterator.error_value)
 				else
 					-- quick exit if the iterator is empty
 					
-					if not an_iterator.is_empty_iterator then
+					if not l_iterator.is_empty_iterator then
 						
 						-- Process the selected nodes now.
 						
 						from
-							a_new_context := a_context.new_context
-							apply_templates (an_iterator, a_mode, some_parameters, some_tunnel_parameters, a_new_context)
+							l_new_context := a_context.new_context
+							apply_templates (a_tail, l_iterator, l_mode, l_parameters, l_tunnel_parameters, l_new_context)
+							l_tail_call := a_tail.item
 						until
-							a_new_context.transformer.is_error or else last_tail_call = Void
+							l_new_context.transformer.is_error or l_tail_call = Void
 						loop
-							last_tail_call.process_leaving_tail (a_new_context)
-							last_tail_call := last_tail_call.last_tail_call
+							a_tail.put (Void)
+							l_tail_call.process_leaving_tail (a_tail, l_new_context)
+							l_tail_call := a_tail.item
 						end
 					end
 				end

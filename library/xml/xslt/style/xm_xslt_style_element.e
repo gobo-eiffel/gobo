@@ -1,9 +1,9 @@
 indexing
-
+	
 	description:
-
+		
 		"Element nodes in an XSLT stylesheet"
-
+	
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -130,7 +130,7 @@ feature -- Access
 				from
 					a_cursor := some_collation_names.new_cursor; a_cursor.start
 				variant
-				some_collation_names.count + 1 - a_cursor.index
+					some_collation_names.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -472,7 +472,7 @@ feature -- Access
 			from
 				a_cursor := a_top_level_element_list.new_cursor; a_cursor.finish
 			variant
-			a_cursor.index
+				a_cursor.index
 			until
 				a_cursor.before
 			loop
@@ -588,7 +588,7 @@ feature -- Status_report
 					a_cursor := children.new_cursor
 					a_cursor.start
 				variant
-				children.count + 1 - a_cursor.index
+					children.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -890,34 +890,34 @@ feature -- Status setting
 					STRING_.same_string (an_attribute_uri, Xslt_uri) and then
 					STRING_.same_string (an_element_uri, Gexslt_eiffel_type_uri) and then
 					(
-					 STRING_.same_string (a_local_name, Use_when_attribute) or else
-					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
-					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
-					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
-					 STRING_.same_string (a_local_name, Version_attribute) or else
-					 STRING_.same_string (a_local_name, Default_collation_attribute)
-					 ) then
-					-- do nothing
+						STRING_.same_string (a_local_name, Use_when_attribute) or else
+						STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
+						STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
+						STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
+						STRING_.same_string (a_local_name, Version_attribute) or else
+						STRING_.same_string (a_local_name, Default_collation_attribute)
+					) then
+						-- do nothing
 
-					-- Allow standard attributes on an XSLT element.
+						-- Allow standard attributes on an XSLT element.
 
 				elseif STRING_.same_string (an_element_uri, Xslt_uri) and then
 					STRING_.same_string (an_attribute_uri, "") and then
 					(
-					 STRING_.same_string (a_local_name, Use_when_attribute) or else
-					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
-					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
-					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
-					 STRING_.same_string (a_local_name, Version_attribute) or else
-					 STRING_.same_string (a_local_name, Default_collation_attribute)
-					 ) then
-					-- do nothing
+						STRING_.same_string (a_local_name, Use_when_attribute) or else
+						STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
+						STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
+						STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
+						STRING_.same_string (a_local_name, Version_attribute) or else
+						STRING_.same_string (a_local_name, Default_collation_attribute)
+					) then
+						-- do nothing
 				elseif STRING_.same_string (an_attribute_uri, "") or else
 					STRING_.same_string (an_attribute_uri, Xslt_uri) then
-					a_message := STRING_.appended_string ("Attribute ", shared_name_pool.display_name_from_name_code (a_name_code))
-					a_message := STRING_.appended_string (a_message, " is not allowed on this element")
-					create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0090", Static_error)
-					report_compile_error (an_error)
+						a_message := STRING_.appended_string ("Attribute ", shared_name_pool.display_name_from_name_code (a_name_code))
+						a_message := STRING_.appended_string (a_message, " is not allowed on this element")
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0090", Static_error)
+						report_compile_error (an_error)
 
 				end
 			end
@@ -1296,8 +1296,8 @@ feature -- Creation
 					end
 				end
 			end
-			ensure
-				possible_error: last_generated_name_code = -1 implies name_code_error_value /= Void
+		ensure
+			possible_error: last_generated_name_code = -1 implies name_code_error_value /= Void
 		end
 
 	generate_expression (an_expression: STRING) is
@@ -1515,9 +1515,9 @@ feature -- Element change
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
-				and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Use_when_attribute)
-				and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
-							  or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
+					and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Use_when_attribute)
+						and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
+							or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
 		local
 			a_static_context: XM_XSLT_EXPRESSION_CONTEXT
 			a_use_when_attribute: STRING
@@ -1566,9 +1566,9 @@ feature -- Element change
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
-				and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Xpath_default_namespace_attribute)
-				and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
-							  or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
+					and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Xpath_default_namespace_attribute)
+						and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
+							or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
 		do
 			default_xpath_namespace := attribute_value_by_expanded_name (an_attribute_name)
 			if default_xpath_namespace /= Void then
@@ -1586,9 +1586,9 @@ feature -- Element change
 			validation_reporting: Report_always <= a_condition and then a_condition <= Report_if_instantiated
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
-				and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Version_attribute)
-				and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
-							  or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
+					and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Version_attribute)
+						and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
+							or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
 		local
 			a_version: STRING
 			a_parent: XM_XSLT_STYLE_ELEMENT
@@ -1643,9 +1643,9 @@ feature -- Element change
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
-				and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Default_collation_attribute)
-				and then (namespace_uri_from_expanded_name (an_attribute_name).count = 0
-							 or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
+					and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Default_collation_attribute)
+						and then (namespace_uri_from_expanded_name (an_attribute_name).count = 0
+							or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
 		do
 			local_default_collation_name := attribute_value_by_expanded_name (an_attribute_name)
 		end
@@ -1657,9 +1657,9 @@ feature -- Element change
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
-				and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Extension_element_prefixes_attribute)
-				and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
-							  or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
+					and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Extension_element_prefixes_attribute)
+						and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
+							or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
 		local
 			extensions, an_extension: STRING
 			a_splitter: ST_SPLITTER
@@ -1707,9 +1707,9 @@ feature -- Element change
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
-				and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Exclude_result_prefixes_attribute)
-				and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
-							  or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
+					and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Exclude_result_prefixes_attribute)
+						and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
+							or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
 		local
 			exclusions, an_exclusion: STRING
 			a_splitter: ST_SPLITTER
@@ -2266,7 +2266,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 					a_cursor := excluded_namespaces.new_cursor
 					a_cursor.start
 				variant
-				excluded_namespaces.count + 1 - a_cursor.index
+					excluded_namespaces.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop

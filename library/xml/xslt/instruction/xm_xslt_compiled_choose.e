@@ -404,42 +404,43 @@ feature -- Evaluation
 			end
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			an_instruction: XM_XSLT_INSTRUCTION
-			an_action: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_instruction: XM_XSLT_INSTRUCTION
+			l_action: XM_XPATH_EXPRESSION
+			l_tail_call: XM_XPATH_TAIL_CALL
 		do
-			last_tail_call := Void
 			from
-				a_cursor := conditions.new_cursor; a_cursor.start
+				l_cursor := conditions.new_cursor; l_cursor.start
 			variant
-				conditions.count + 1 - a_cursor.index
+				conditions.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_cursor.item.calculate_effective_boolean_value (a_context)
-				a_boolean_value := a_cursor.item.last_boolean_value
-				if a_boolean_value.is_error then
-					a_boolean_value.error_value.set_location (system_id, line_number)
-					a_context.transformer.report_fatal_error (a_boolean_value.error_value)
-					a_cursor.go_after
-				elseif a_boolean_value.value then
-					an_action := actions.item (a_cursor.index)
-					an_instruction ?= an_action
-					if an_instruction /= Void then
-						an_instruction.process_leaving_tail (a_context)
-						last_tail_call := an_instruction.last_tail_call
+				l_cursor.item.calculate_effective_boolean_value (a_context)
+				l_boolean_value := l_cursor.item.last_boolean_value
+				if l_boolean_value.is_error then
+					l_boolean_value.error_value.set_location (system_id, line_number)
+					a_context.transformer.report_fatal_error (l_boolean_value.error_value)
+					l_cursor.go_after
+				elseif l_boolean_value.value then
+					l_action := actions.item (l_cursor.index)
+					l_instruction ?= l_action
+					if l_instruction /= Void then
+						l_instruction.process_leaving_tail (a_tail, a_context)
+						l_tail_call := a_tail.item
 					else
-						an_action.process (a_context)
-						last_tail_call := Void
+						l_action.process (a_context)
+						l_tail_call := Void
 					end
-					a_cursor.go_after
+					l_cursor.go_after
 				else
-					a_cursor.forth
+					l_cursor.forth
 				end
+				a_tail.put (l_tail_call)
 			end
 		end
 

@@ -131,65 +131,69 @@ feature -- Evaluation
 	process (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_tail_call: XM_XPATH_TAIL_CALL
-			a_new_context: XM_XSLT_EVALUATION_CONTEXT
-			a_transformer: XM_XSLT_TRANSFORMER
+			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
+			l_tail_call: XM_XPATH_TAIL_CALL
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_transformer: XM_XSLT_TRANSFORMER
 		do
-			a_new_context := a_context.new_context
-			a_new_context.open_stack_frame (target.slot_manager)
-			a_new_context.set_local_parameters (assembled_parameters (a_context, actual_parameter_list))
-			a_new_context.set_tunnel_parameters (assembled_tunnel_parameters (a_context, tunnel_parameter_list))
-			a_transformer := a_context.transformer
-			target.expand (a_new_context)
+			l_new_context := a_context.new_context
+			l_new_context.open_stack_frame (target.slot_manager)
+			l_new_context.set_local_parameters (assembled_parameters (a_context, actual_parameter_list))
+			l_new_context.set_tunnel_parameters (assembled_tunnel_parameters (a_context, tunnel_parameter_list))
+			l_transformer := a_context.transformer
+			create l_tail.make (Void)
+			target.expand (l_tail, l_new_context)
 			from
-				a_tail_call := target.last_tail_call
+				l_tail_call := l_tail.item
 			until
-				a_transformer.is_error or else a_tail_call = Void
+				l_transformer.is_error or else l_tail_call = Void
 			loop
-				a_tail_call.process_leaving_tail (a_new_context)
-				a_tail_call := a_tail_call.last_tail_call
+				l_tail.put (Void)
+				l_tail_call.process_leaving_tail (l_tail, l_new_context)
+				l_tail_call := l_tail.item
 			end
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			some_tunnel_parameters: XM_XSLT_PARAMETER_SET
-			some_parameters: XM_XSLT_PARAMETER_SET
+			l_tunnel_parameters: XM_XSLT_PARAMETER_SET
+			l_parameters: XM_XSLT_PARAMETER_SET
 			a_local_variable_frame: XM_XPATH_STACK_FRAME
-			some_variables: ARRAY [XM_XPATH_VALUE]
-			an_index: INTEGER
+			l_variables: ARRAY [XM_XPATH_VALUE]
+			l_index: INTEGER
+			l_tail_call: XM_XPATH_TAIL_CALL
 		do
-			last_tail_call := Void
 			if not use_tail_recursion then
 				process (a_context)
 			else
 
 				-- Handle any parameters.
 
-				some_parameters := assembled_parameters (a_context, actual_parameter_list)
-				some_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameter_list)
+				l_parameters := assembled_parameters (a_context, actual_parameter_list)
+				l_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameter_list)
 
 				-- The local variables are no longer needed, so we clear them:
 
 				a_local_variable_frame := a_context.local_variable_frame
-				some_variables := a_local_variable_frame.variables
+				l_variables := a_local_variable_frame.variables
 				from
-					an_index := 1
+					l_index := 1
 				until
-					an_index > some_variables.count
+					l_index > l_variables.count
 				loop
-					some_variables.put (Void, an_index)
-					an_index := an_index + 1
+					l_variables.put (Void, l_index)
+					l_index := l_index + 1
 				end
 
 				-- Call the named template. Actually, don't call it; rather construct a call package
 				--  and return it to the caller, who will then process this package.
 
-				create {XM_XSLT_CALL_TEMPLATE_PACKAGE} last_tail_call.make (target,
-																								some_parameters,
-																								some_tunnel_parameters,
+				create {XM_XSLT_CALL_TEMPLATE_PACKAGE} l_tail_call.make (target,
+																								l_parameters,
+																								l_tunnel_parameters,
 																								a_context)
+				a_tail.put (l_tail_call)
 			end
 		end
 

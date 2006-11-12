@@ -59,13 +59,12 @@ feature -- Element change
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			was_supplied: BOOLEAN
 			an_invalid_item : XM_XPATH_INVALID_ITEM
 		do
-			last_tail_call := Void
 			was_supplied := a_context.is_local_parameter_supplied (variable_fingerprint, is_tunnel_parameter)
 			if was_supplied then
 				a_context.ensure_local_parameter_set (variable_fingerprint, is_tunnel_parameter, slot_number)

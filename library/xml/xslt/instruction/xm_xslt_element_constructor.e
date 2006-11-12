@@ -161,7 +161,7 @@ feature -- Evaluation
 			end
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_name_code, some_properties: INTEGER
@@ -170,7 +170,6 @@ feature -- Evaluation
 			a_validator: XM_XPATH_RECEIVER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			last_tail_call := Void
 			a_name_code := name_code (a_context)
 			a_transformer := a_context.transformer
 			if not a_transformer.is_error then

@@ -73,20 +73,6 @@ feature -- Status report
 			todo ("display", False)
 		end
 
-	last_set_tail_call: XM_XPATH_TAIL_CALL is
-			-- Last tail call set by `set_last_tail_call'
-		do
-			Result := last_tail_call
-		end
-
-feature -- Status setting
-
-	set_last_tail_call (a_tail_call: XM_XPATH_TAIL_CALL) is
-			-- Set residue from `apply_templates'
-		do
-			last_tail_call := a_tail_call
-		end
-
 feature -- Optimization
 
 	simplify is
@@ -119,7 +105,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
@@ -132,7 +118,6 @@ feature -- Evaluation
 			a_current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			another_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			last_tail_call := Void
 			a_transformer := a_context.transformer
 			
 			-- handle any parameters

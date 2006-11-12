@@ -160,7 +160,7 @@ feature -- Evaluation
 			last_iterator := a_receiver.sequence.last_iterator
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
@@ -168,7 +168,6 @@ feature -- Evaluation
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
 		do
-			last_tail_call := Void
 			a_receiver := a_context.current_receiver
 			if copy_namespaces then
 				which_namespaces := All_namespaces

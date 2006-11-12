@@ -475,7 +475,7 @@ feature -- Evaluation
 			end
 		end
 
-	process_leaving_tail (a_context: XM_XPATH_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_let_expression: XM_XPATH_LET_EXPRESSION
@@ -503,16 +503,14 @@ feature -- Evaluation
 					end
 				end
 			end
+			a_tail.put (Void)
 			if is_error then
-				last_tail_call := Void
 				a_context.report_fatal_error (error_value)
 			else
 				if a_let_expression.action.is_tail_call then
-					a_let_expression.action.as_tail_call.process_leaving_tail (a_context)
-					last_tail_call := a_let_expression.action.as_tail_call.last_tail_call
+					a_let_expression.action.as_tail_call.process_leaving_tail (a_tail, a_context)
 				else
 					a_let_expression.action.process (a_context)
-					last_tail_call := Void
 				end
 			end
 		end

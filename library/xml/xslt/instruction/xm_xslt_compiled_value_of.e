@@ -147,10 +147,9 @@ feature -- Evaluation
 			end
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			last_tail_call := Void
 			expand_children (a_context)
 			if is_error then
 				a_context.transformer.report_recoverable_error (error_value)

@@ -75,14 +75,13 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_comment, a_string: STRING
 			a_comment_marker_index: INTEGER
 		do
-			last_tail_call := Void
 			a_transformer := a_context.transformer
 			expand_children (a_context)
 			if last_string_value = Void then

@@ -299,13 +299,12 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			last_tail_call := Void
 			a_regexp_iterator := regexp_iterator (a_context)
 			if not a_context.transformer.is_error then
 				a_new_context := a_context.new_context

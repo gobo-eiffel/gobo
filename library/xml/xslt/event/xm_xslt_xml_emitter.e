@@ -107,7 +107,9 @@ feature -- Events
 	close is
 			-- Notify end of event stream.
 		do
-			outputter.outputter.flush
+			if outputter /= Void then
+				outputter.outputter.flush
+			end
 			is_open := False
 		end
 

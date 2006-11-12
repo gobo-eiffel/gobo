@@ -157,7 +157,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -170,7 +170,6 @@ feature -- Evaluation
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
-			last_tail_call := Void
 			l_transformer := a_context.transformer
 			create l_output_properties.make (-1000000)
 			l_output_properties.set_omit_xml_declaration (True, -1000000)

@@ -94,7 +94,7 @@ feature -- Evaluation
 			last_evaluated_item := an_outputter.first_item
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
@@ -104,7 +104,6 @@ feature -- Evaluation
 			a_document: XM_XPATH_DOCUMENT
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			last_tail_call := Void
 			a_transformer := a_context.transformer
 			a_new_context := a_context.new_minor_context
 			a_receiver := a_new_context.current_receiver
@@ -116,7 +115,7 @@ feature -- Evaluation
 				inspect
 					a_node.node_type
 				when Element_node then
-					Precursor (a_new_context)
+					Precursor (a_tail, a_new_context)
 				when Attribute_node then
 					copy_attribute (a_node, a_new_context, Void, Validation_strip)
 				when Text_node then

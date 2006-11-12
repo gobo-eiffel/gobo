@@ -234,7 +234,7 @@ feature -- Conversion
 	rounded_value: like Current is
 			-- `a_numeric_value' rounded towards the nearest whole number (0.5 rounded up)
 		local
-			a_decimal: MA_DECIMAL
+			l_decimal, l_decimal_2: MA_DECIMAL
 		do
 			if is_nan or else is_infinite then
 				Result := Current
@@ -243,11 +243,17 @@ feature -- Conversion
 			elseif value > -0.5 and then value < 0.0 then
 				create Result.make (-0.0)
 			else
-				create a_decimal.make_from_string (value.out)
-				if a_decimal.is_negative then
-					create Result.make (a_decimal.round_to_integer (shared_negative_round_context).to_double)
+				create l_decimal.make_from_string (value.out)
+				if l_decimal.is_negative then
+					l_decimal_2 := l_decimal.round_to_integer (shared_negative_round_context)
 				else
-					create Result.make (a_decimal.round_to_integer (shared_round_context).to_double)
+					l_decimal_2 := l_decimal.round_to_integer (shared_round_context)
+				end
+				if l_decimal_2.is_special then
+					create Result.make_nan
+					Result.set_last_error_from_string ("Failure rounding to integer", Xpath_errors_uri, "FOAR0002", Dynamic_error)
+				else
+					create Result.make (l_decimal_2.to_double)
 				end
 			end
 		end

@@ -376,68 +376,68 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.	
 		local
-			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
-			a_letter: STRING
-			an_integer_value: XM_XPATH_INTEGER_VALUE
-			a_number_formatter: XM_XSLT_NUMBER_FORMATTER
-			an_error: XM_XPATH_ERROR_VALUE
+			l_receiver: XM_XPATH_SEQUENCE_RECEIVER
+			l_letter: STRING
+			l_integer_value: XM_XPATH_INTEGER_VALUE
+			l_number_formatter: XM_XSLT_NUMBER_FORMATTER
+			l_error: XM_XPATH_ERROR_VALUE
 		do
-			last_tail_call := Void
 			transformer := a_context.transformer
-			a_receiver := a_context.current_receiver
+			l_receiver := a_context.current_receiver
 			calculate_vector (a_context)
 			if not transformer.is_error then calculate_group_size (a_context)	end
 			if not transformer.is_error then calculate_group_separator (a_context) end
-			if not transformer.is_error then calculate_ordinal (a_context) end
-			calculate_ordinal (a_context)
-			if integer_vector = Void and then format = Void and then group_size = 0 and then language = Void then
-
-				-- fast path for the simple case
-
-				a_receiver.notify_characters (value.to_scientific_string, 0)
-			else
-				if numberer = Void then
-					language.evaluate_as_string (a_context)
-					numberer := selected_numberer (language.last_evaluated_string.string_value)
-				end
-				if letter_value = Void then
-					a_letter := ""
+			if not transformer.is_error then
+				calculate_ordinal (a_context)
+				if integer_vector = Void and then format = Void and then group_size = 0 and then language = Void then
+					
+					-- fast path for the simple case
+					
+					l_receiver.notify_characters (value.to_scientific_string, 0)
 				else
-					letter_value.evaluate_as_string (a_context)
-					if letter_value.last_evaluated_string.is_error or else
-						not (STRING_.same_string (letter_value.last_evaluated_string.string_value, "alphabetic") or else
-							  STRING_.same_string (letter_value.last_evaluated_string.string_value, "traditional")) then
-						create an_error.make_from_string ("Letter-value must be %"traditional%" or %"alphabetic%"", Xpath_errors_uri, "XTDE0030", Dynamic_error)
-						an_error.set_location (system_id, line_number)
-						transformer.report_fatal_error (an_error)
+					if numberer = Void then
+						language.evaluate_as_string (a_context)
+						numberer := selected_numberer (language.last_evaluated_string.string_value)
+					end
+					if letter_value = Void then
+						l_letter := ""
 					else
-						a_letter := letter_value.last_evaluated_string.string_value
-					end
-				end
-				if not transformer.is_error then
-					if integer_vector = Void then
-						create integer_vector.make (1)
-						create an_integer_value.make (value)
-						integer_vector.put_last (an_integer_value)
-					end
-					if formatter = Void then
-						format.evaluate_as_string (a_context)
-						if format.last_evaluated_string.is_error then
-							create an_error.make_from_string ("Format must evaluate to a string", Xpath_errors_uri, "XTDE0030", Dynamic_error)
-							an_error.set_location (system_id, line_number)
-							transformer.report_fatal_error (an_error)
+						letter_value.evaluate_as_string (a_context)
+						if letter_value.last_evaluated_string.is_error or else
+							not (STRING_.same_string (letter_value.last_evaluated_string.string_value, "alphabetic") or else
+								  STRING_.same_string (letter_value.last_evaluated_string.string_value, "traditional")) then
+							create l_error.make_from_string ("Letter-value must be %"traditional%" or %"alphabetic%"", Xpath_errors_uri, "XTDE0030", Dynamic_error)
+							l_error.set_location (system_id, line_number)
+							transformer.report_fatal_error (l_error)
 						else
-							create a_number_formatter.make (format.last_evaluated_string.string_value)
+							l_letter := letter_value.last_evaluated_string.string_value
 						end
-					else
-						a_number_formatter := formatter
 					end
-				end
-				if not transformer.is_error then
-					a_receiver.notify_characters (a_number_formatter.formatted_string (integer_vector, group_size, group_separator, a_letter, ordinal_value, numberer), 0)
+					if not transformer.is_error then
+						if integer_vector = Void then
+							create integer_vector.make (1)
+							create l_integer_value.make (value)
+							integer_vector.put_last (l_integer_value)
+						end
+						if formatter = Void then
+							format.evaluate_as_string (a_context)
+							if format.last_evaluated_string.is_error then
+								create l_error.make_from_string ("Format must evaluate to a string", Xpath_errors_uri, "XTDE0030", Dynamic_error)
+								l_error.set_location (system_id, line_number)
+								transformer.report_fatal_error (l_error)
+							else
+								create l_number_formatter.make (format.last_evaluated_string.string_value)
+							end
+						else
+							l_number_formatter := formatter
+						end
+					end
+					if not transformer.is_error then
+						l_receiver.notify_characters (l_number_formatter.formatted_string (integer_vector, group_size, group_separator, l_letter, ordinal_value, numberer), 0)
+					end
 				end
 			end
 		end

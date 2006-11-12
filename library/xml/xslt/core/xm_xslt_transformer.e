@@ -202,19 +202,7 @@ feature -- Status report
 	last_error: XM_XPATH_ERROR_VALUE
 			-- Last reported fatal error
 
-	last_set_tail_call: XM_XPATH_TAIL_CALL is
-			-- Last tail call set by `set_last_tail_call'
-		do
-			Result := last_tail_call
-		end
-
 feature -- Status setting
-
-	set_last_tail_call (a_tail_call: XM_XPATH_TAIL_CALL) is
-			-- Set residue from `apply_templates'
-		do
-			last_tail_call := a_tail_call
-		end
 
 	report_warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
 			-- Report a warning.
@@ -708,24 +696,28 @@ feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 			start_node_in_document: a_start_node /= Void and then a_start_node.document_root /= Void
 			no_error_yet: not is_error
 		local
-			a_sequence_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
-			finished: BOOLEAN
-			some_local_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET
+			l_sequence_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			l_finished: BOOLEAN
+			l_local_parameters, l_tunnel_parameters: XM_XSLT_PARAMETER_SET
+			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
+			l_tail_call: XM_XPATH_TAIL_CALL
 		do
 			if not is_error then
-				create a_sequence_iterator.make (a_start_node)
+				create l_sequence_iterator.make (a_start_node)
 				from
-					create some_local_parameters.make_empty
-					create some_tunnel_parameters.make_empty
-					apply_templates (a_sequence_iterator, rule_manager.mode (initial_mode), some_local_parameters, some_tunnel_parameters, initial_context)
+					create l_tail.make (Void)
+					create l_local_parameters.make_empty
+					create l_tunnel_parameters.make_empty
+					apply_templates (l_tail, l_sequence_iterator, rule_manager.mode (initial_mode), l_local_parameters, l_tunnel_parameters, initial_context)
 				until
-					is_error or else finished
+					is_error or else l_finished
 				loop
-					if last_tail_call /= Void then
-						last_tail_call.process_leaving_tail (initial_context)
-						last_tail_call := last_tail_call.last_tail_call
+					l_tail_call := l_tail.item
+					l_tail.put (Void)
+					if l_tail_call /= Void then
+						l_tail_call.process_leaving_tail (l_tail, initial_context)
 					else
-						finished := True
+						l_finished := True
 					end
 				end
 			end
@@ -744,9 +736,6 @@ feature -- Implementation
 
 	initial_context: XM_XSLT_EVALUATION_CONTEXT
 			-- Initial dynamic context for a transformation
-
-	last_tail_call: XM_XPATH_TAIL_CALL
-			-- Residue from `apply_templates'
 
 	temporary_destination_depth: INTEGER
 			-- Count of temporary output destinations

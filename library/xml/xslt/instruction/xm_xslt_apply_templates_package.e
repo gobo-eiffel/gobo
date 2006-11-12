@@ -46,33 +46,16 @@ feature {NONE} -- Initialization
 			execution_context_saved: execution_context = a_context
 		end
 
-feature -- Status report
-
-	last_set_tail_call: XM_XPATH_TAIL_CALL is
-			-- Last tail call set by `set_last_tail_call'
-		do
-			Result := last_tail_call
-		end
-
-feature -- Status setting
-
-	set_last_tail_call (a_tail_call: XM_XPATH_TAIL_CALL) is
-			-- Set residue from `apply_templates'
-		do
-			last_tail_call := a_tail_call
-		end
-
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			last_tail_call := Void
 			selected_nodes.create_iterator (Void)
 			if selected_nodes.last_iterator.is_error then
 				a_context.transformer.report_fatal_error (selected_nodes.last_iterator.error_value)
 			else
-				apply_templates (selected_nodes.last_iterator,
+				apply_templates (a_tail, selected_nodes.last_iterator,
 									  mode,
 									  actual_parameters,
 									  tunnel_parameters,

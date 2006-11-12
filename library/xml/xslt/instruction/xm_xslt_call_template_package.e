@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
@@ -52,9 +52,7 @@ feature -- Evaluation
 			a_new_context.set_local_parameters (actual_parameters)
 			a_new_context.set_tunnel_parameters (tunnel_parameters)
 			a_new_context.open_stack_frame (target.slot_manager)
-			last_tail_call := Void
-			target.expand (a_new_context)
-			last_tail_call := target.last_tail_call
+			target.expand (a_tail, a_new_context)
 		end
 
 feature {NONE} -- Implementation

@@ -18,19 +18,21 @@ inherit
 
 feature -- Status report
 
-	last_tail_call: XM_XPATH_TAIL_CALL
+	--	commented out 2006/11/10 in favour of DS_CELL argument last_tail_call: XM_XPATH_TAIL_CALL
 			-- Residue from last call to `process_leaving_tail'
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XPATH_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		require
+			a_tail_not_void: a_tail /= Void
+			no_tail_call: a_tail.item = Void
 			context_not_void: a_context /= Void
 			no_error: not a_context.is_process_error
 		deferred
 		ensure
-			possible_tail_call: last_tail_call = Void or else last_tail_call /= Void
+			possible_tail_call: a_tail.item /= Void xor a_tail.item = Void
 		end
 	
 end

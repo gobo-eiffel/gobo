@@ -136,7 +136,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
@@ -145,7 +145,6 @@ feature -- Evaluation
 			a_namespace_code: INTEGER
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 		do
-			last_tail_call := Void
 			a_transformer := a_context.transformer
 			name.evaluate_as_string (a_context)
 			if name.last_evaluated_string.is_error then

@@ -160,26 +160,28 @@ feature -- Evaluation
 	process (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			a_tail_call: like last_tail_call
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
+			l_tail_call: XM_XPATH_TAIL_CALL
 		do
-			an_evaluation_context ?= a_context
+			l_evaluation_context ?= a_context
 			check
-				evaluation_context_not_void: an_evaluation_context /= Void
+				evaluation_context_not_void: l_evaluation_context /= Void
 				-- this is XSLT
 			end
-			process_leaving_tail (an_evaluation_context)
+			create l_tail.make (Void)
+			process_leaving_tail (l_tail, l_evaluation_context)
 			from
-				a_tail_call := last_tail_call
+				l_tail_call := l_tail.item
 			until
-				a_tail_call = Void or else an_evaluation_context.transformer.is_error
+				l_tail_call = Void or else l_evaluation_context.transformer.is_error
 			loop
-				a_tail_call.process_leaving_tail (an_evaluation_context)
-				a_tail_call := a_tail_call.last_tail_call
+				l_tail.put (Void)
+				l_tail_call.process_leaving_tail (l_tail, l_evaluation_context)
+				l_tail_call := l_tail.item
 			end
-			last_tail_call := a_tail_call
 		ensure then
-			no_tail_calls: not a_context.is_process_error implies last_tail_call = Void
+			no_tail_calls: not a_context.is_process_error implies True -- l_tail_call = Void
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
