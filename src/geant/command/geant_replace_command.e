@@ -12,7 +12,7 @@ indexing
 
 	library: "Gobo Eiffel Ant"
 
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2006, Sven Ehrke and others"
 
 	license: "Eiffel Forum License v2 (see forum.txt)"
 
