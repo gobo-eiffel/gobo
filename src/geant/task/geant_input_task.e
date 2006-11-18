@@ -6,13 +6,13 @@ indexing
 
 
 
-		"Ask tasks"
+		"Input tasks"
 
 
 
 	library: "Gobo Eiffel Ant"
 
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2006, Sven Ehrke and others"
 
 	license: "Eiffel Forum License v2 (see forum.txt)"
 
@@ -134,7 +134,7 @@ feature -- Access
 
 	command: GEANT_INPUT_COMMAND
 
-			-- Set commands
+			-- Input commands
 
 
 
@@ -216,7 +216,7 @@ feature {NONE} -- Constants
 
 	Answer_required_attribute_name: STRING is
 
-			-- Name of xml attribute for default
+			-- Name of xml attribute for answer_required
 
 		once
 
