@@ -268,4 +268,22 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
+	Input_task_name: STRING is
+			-- "input" task name
+		once
+			Result := "input"
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: Result.count > 0
+		end
+
+	Replace_task_name: STRING is
+			-- "replace" task name
+		once
+			Result := "replace"
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: Result.count > 0
+		end
+
 end

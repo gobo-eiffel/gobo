@@ -627,6 +627,12 @@ feature -- Processing
 			elseif STRING_.same_string (a_xml_element.name, Available_task_name) then
 					-- available
 				create {GEANT_AVAILABLE_TASK} a_task.make (project, a_xml_element)
+			elseif STRING_.same_string (a_xml_element.name, Input_task_name) then
+					-- input
+				create {GEANT_INPUT_TASK} a_task.make (project, a_xml_element)
+			elseif STRING_.same_string (a_xml_element.name, Replace_task_name) then
+					-- replace
+				create {GEANT_REPLACE_TASK} a_task.make (project, a_xml_element)
 			else
 					-- Default:
 				a_task := Void
