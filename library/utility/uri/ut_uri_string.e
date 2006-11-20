@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_decoded (a_string: STRING) is
-			-- Create with `a_string', where each character is 
+			-- Create with `a_string', where each character is
 			-- percent-encoded directly.
 		require
 			a_string_not_void: a_string /= Void
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_decoded_utf8 (a_string: STRING) is
-			-- Create with `a_string', to be encoded as UTF and 
+			-- Create with `a_string', to be encoded as UTF and
 			-- then percent-encoded.
 		require
 			a_string_not_void: a_string /= Void
@@ -71,7 +71,7 @@ feature -- Access
 			-- Percent-encoded string
 
 	decoded: STRING is
-			-- Decoded string where each %-encoded character 
+			-- Decoded string where each %-encoded character
 			-- gives one item in the resulting string
 		do
 			if decoded_impl = Void then
@@ -95,7 +95,7 @@ feature -- Access
 			decoded_utf8_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implemenation
+feature {NONE} -- Implementation
 
 	decoded_impl: STRING
 			-- Cache for `decoded'
@@ -106,5 +106,5 @@ feature {NONE} -- Implemenation
 invariant
 
 	encoded_not_void: encoded /= Void
-	
+
 end
