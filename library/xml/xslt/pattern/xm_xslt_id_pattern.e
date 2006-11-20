@@ -107,54 +107,50 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
-			-- Determine whether this Pattern matches the given Node;
+	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Attempt to match `Current' againast `a_node'.
 		local
-			a_doc: XM_XPATH_DOCUMENT
-			an_id, ids: STRING
-			a_splitter: ST_SPLITTER
-			strings:  DS_LIST [STRING]
-			a_cursor: DS_LIST_CURSOR [STRING]
-			an_element: XM_XPATH_ELEMENT
+			l_doc: XM_XPATH_DOCUMENT
+			l_id, l_ids: STRING
+			l_splitter: ST_SPLITTER
+			l_strings:  DS_LIST [STRING]
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_element: XM_XPATH_ELEMENT
 		do
+			internal_last_match_result := False
 			if a_node.node_type = Element_node then
-				a_doc := a_node.document_root
-				if a_doc = Void then
-					Result := False
-				else
+				l_doc := a_node.document_root
+				if l_doc /= Void then
 					id_expression.evaluate_item (a_context)
-					if not id_expression.last_evaluated_item.is_string_value then
-						Result := False						
-					else
-						ids := id_expression.last_evaluated_item.as_string_value.string_value
-						create a_splitter.make
-						strings := a_splitter.split (ids)
-							check
-								more_than_zero_ids: strings.count > 0
-							end
-						if strings.count = 1 then
-							an_element := a_doc.selected_id (ids)
-							if an_element = Void then
-								Result := False
-							else
-								Result := an_element.is_same_node (a_node)
+					if id_expression.last_evaluated_item.is_string_value then
+						l_ids := id_expression.last_evaluated_item.as_string_value.string_value
+						create l_splitter.make
+						l_strings := l_splitter.split (l_ids)
+						check
+							more_than_zero_ids: l_strings.count > 0
+						end
+						if l_strings.count = 1 then
+							l_element := l_doc.selected_id (l_ids)
+							if l_element /= Void then
+								internal_last_match_result := l_element.is_same_node (a_node)
 							end
 						else
 							from
-								a_cursor := strings.new_cursor
-								a_cursor.start
+								l_cursor := l_strings.new_cursor
+								l_cursor.start
 							variant
-								strings.count + 1 - a_cursor.index
+								l_strings.count + 1 - l_cursor.index
 							until
-								a_cursor.after
+								l_cursor.after
 							loop
-								an_id := a_cursor.item
-								an_element := a_doc.selected_id (an_id)
-								if an_element /= Void and then an_element.is_same_node (a_node) then
-									Result := True
-									a_cursor.go_after
+								l_id := l_cursor.item
+								l_element := l_doc.selected_id (l_id)
+								if l_element /= Void and then l_element.is_same_node (a_node) then
+									internal_last_match_result := True
+									l_cursor.go_after
+								else
+									l_cursor.forth
 								end
-								a_cursor.forth
 							end
 						end
 					end

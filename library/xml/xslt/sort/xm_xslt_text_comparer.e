@@ -30,7 +30,9 @@ feature {NONE} -- Initialiaztion
 		require
 			comparer_not_void: a_comparer /= Void
 		do
-			todo ("make", False)
+			comparer := a_comparer
+		ensure
+			comparer_set: comparer = a_comparer
 		end
 	
 	make_from_collator (a_collator: ST_COLLATOR) is

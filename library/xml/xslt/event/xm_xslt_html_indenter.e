@@ -127,7 +127,7 @@ feature -- Events
 					Precursor (chars.substring (a_last_newline, chars.count), properties)
 				end
 			end
-			is_written := True
+			mark_as_written
 			is_after_inline := False
 		end
 

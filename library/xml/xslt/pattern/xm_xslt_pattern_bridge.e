@@ -132,7 +132,12 @@ feature -- Evaluation
 			l_context_item := a_context.context_item
 			if l_context_item /= Void and then l_context_item.is_node  then
 				l_evaluation_context ?= a_context
-				create last_boolean_value.make (pattern.matches (l_context_item.as_node, l_evaluation_context))
+				pattern.match (l_context_item.as_node, l_evaluation_context)
+				if pattern.is_error then
+					set_last_error (pattern.error_value)
+				else
+					create last_boolean_value.make (pattern.last_match_result)
+				end
 			else
 				create last_boolean_value.make (False)
 			end

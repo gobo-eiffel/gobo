@@ -53,12 +53,6 @@ feature {NONE} -- Initialization
 			create orphan.make (Element_node, "")
 			base_receiver := an_underlying_receiver
 			system_id := an_underlying_receiver.system_id
-			debug ("XSLT stripper")
-				std.error.put_string ("Stripper mode is " + stripper_mode.out)
-				std.error.put_new_line
-				std.error.put_string ("Preserve all? " + preserve_all.out)
-				std.error.put_new_line
-			end
 		ensure
 			transformer_set: transformer = a_transformer
 			mode_set: stripper_mode = a_stripper_mode
@@ -79,49 +73,41 @@ feature -- Access
 	Preserve_parent: INTEGER is 4
 			-- Parent element requests preserve white space
 
-	space_preserving_mode (a_name_code: INTEGER): INTEGER is
-			-- Space-preserving mode for element identitifed by `a_name_code'
+	found_space_preserving_mode: INTEGER
+			-- Result from `find_space_preserving_mode'
+
+	find_space_preserving_mode (a_name_code: INTEGER) is
+			-- Find space-preserving mode for element identitifed by `a_name_code'
 		require
 			valid_name_code: a_name_code > 0
 		local
 			a_rule: XM_XSLT_RULE_VALUE
 		do
-			debug ("XSLT stripper")
-				std.error.put_string ("Space-preserving mode: preserve all? " + preserve_all.out)
-				std.error.put_new_line
-			end
 			if preserve_all then
-				Result := Always_preserve
+				found_space_preserving_mode := Always_preserve
 			elseif strip_all then
-				Result := Strip_default
+				found_space_preserving_mode := Strip_default
 			else
 				orphan.set_name_code (a_name_code)
-				a_rule := stripper_mode.rule (orphan, context)
-				if a_rule = Void then
-					Result := Always_preserve
+				stripper_mode.match_rule (orphan, context)
+				a_rule := stripper_mode.last_matched_rule
+				if context.transformer.is_error then
+					found_space_preserving_mode := Strip_default
+				elseif a_rule = Void then
+					found_space_preserving_mode := Always_preserve
 				else
 					check
 						boolean_rule: a_rule.is_boolean
 					end
 					if a_rule.as_boolean then
-						debug ("XSLT stripper")
-							std.error.put_string ("Rule is preserve%N")
-						end
-						Result := Always_preserve
+						found_space_preserving_mode := Always_preserve
 					else
-						debug ("XSLT stripper")
-							std.error.put_string ("Rule is default%N")
-						end
-						Result := Strip_default
+						found_space_preserving_mode := Strip_default
 					end
 				end
 			end
-			debug ("XSLT stripper")
-				std.error.put_string ("Space-preserving mode: " + Result.out)
-				std.error.put_new_line
-			end
 		ensure
-			valid_result: Result = Always_preserve or else Result = Strip_default or else Result = Always_strip
+			valid_result: found_space_preserving_mode = Always_preserve or found_space_preserving_mode = Strip_default or found_space_preserving_mode = Always_strip
 		end
 
 feature -- Status report
@@ -154,10 +140,6 @@ feature -- Events
 		local
 			a_preservation_status, a_parent_preservation_status: INTEGER
 		do
-			debug ("XSLT stripper")
-				std.error.put_string ("Possibly stripping element " + shared_name_pool.display_name_from_name_code (a_name_code))
-				std.error.put_new_line
-			end
 			Precursor (a_name_code, a_type_code, properties)
 			a_parent_preservation_status := strip_stack.item
 			if a_parent_preservation_status - Preserve_parent < 0 then
@@ -166,15 +148,12 @@ feature -- Events
 				a_preservation_status := Preserve_parent
 			end
 
-			if space_preserving_mode (a_name_code) = Always_preserve then
+			find_space_preserving_mode (a_name_code)
+			if found_space_preserving_mode = Always_preserve then
 				a_preservation_status := a_preservation_status + Always_preserve
 			end
-			debug ("XSLT stripper")
-				std.error.put_string ("Preservation status is " + a_preservation_status.out)
-				std.error.put_new_line
-			end
 			strip_stack.force (a_preservation_status)
-			is_written := True
+			mark_as_written
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -187,31 +166,17 @@ feature -- Events
 
 			if a_name_code = xml_space_code then
 				if STRING_.same_string (a_value, "preserve") then
-					debug ("XSLT stripper")
-						std.error.put_string ("Found xml:space='preserve'%N")
-					end
 					a_preservation_status := strip_stack.item
 					if a_preservation_status < Preserve_parent then
 						a_preservation_status := a_preservation_status + Preserve_parent
 					end
 					strip_stack.replace (a_preservation_status)
 				elseif STRING_.same_string (a_value, "default") then
-					debug ("XSLT stripper")
-						std.error.put_string ("Found xml:space='default'%N")
-					end
 					if a_preservation_status >= Preserve_parent then
 						a_preservation_status := a_preservation_status - Preserve_parent
 					end
 					strip_stack.replace (a_preservation_status)
 				end
-				debug ("XSLT stripper")
-					std.error.put_string ("Preservation status is now " + a_preservation_status.out)
-					std.error.put_new_line
-				end
-			end
-			debug ("XSLT stripper")
-				std.error.put_string ("Notifying attribute " + shared_name_pool.display_name_from_name_code (a_name_code))
-				std.error.put_new_line
 			end
 			Precursor (a_name_code, a_type_code, a_value, properties)
 		end
@@ -219,9 +184,6 @@ feature -- Events
 	end_element is
 			-- Notify the end of an element.
 		do
-			debug ("XSLT stripper")
-				std.error.put_string ("Leaving element%N")
-			end
 			Precursor
 			strip_stack.remove
 		end
@@ -236,9 +198,6 @@ feature -- Events
 
 			if chars.count > 0 then
 				if not is_all_whitespace (chars) then
-					debug ("XSLT stripper")
-						std.error.put_string ("Not all whitespace so not preserving%N")
-					end
 					Precursor (chars, properties)
 				elseif strip_stack.item /= Strip_default then
 					a_preservation_status := strip_stack.item
@@ -249,18 +208,11 @@ feature -- Events
 						a_preservation_status := a_preservation_status - Preserve_parent
 					end
 					if a_preservation_status /= Always_strip then
-						debug ("XSLT stripper")
-							std.error.put_string ("Preserving " + chars.count.out + " blanks%N")
-						end
 						Precursor (chars, properties)
-					end
-				else
-					debug ("XSLT stripper")
-						std.error.put_string ("Strip default so not preserving%N")
 					end
 				end
 			end
-			is_written := True
+			mark_as_written
 		end
 
 feature -- Duplication

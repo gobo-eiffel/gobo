@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			fingerprint, simplified_pattern, type_check, internal_matches, node_kind,
+			fingerprint, simplified_pattern, type_check, internal_match, node_kind,
 			sub_expressions, is_location_pattern, as_location_pattern,
 			computed_dependencies, promote
 		end
@@ -318,6 +318,11 @@ feature -- Optimization
 					if equivalent_expression.is_error then
 						set_error_value (equivalent_expression.error_value)
 					else
+						an_expression_context ?= a_context
+						check
+							an_expression_context_not_void: an_expression_context /= Void
+						end
+						an_expression_context.style_element.allocate_slots (equivalent_expression, an_expression_context.style_element.containing_stylesheet.slot_manager)
 						set_special_filter (True)
 					end
 				end
@@ -348,19 +353,21 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
-			-- Determine whether this Pattern matches the given Node;
-			-- Not 100% pure, as it changes the current iterator.
+	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Does `Current' match `a_node'?
 		local
-			a_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
+			l_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
 		do
+			l_saved_iterator := a_context.current_iterator
 			if uses_current then
-				create a_singleton_iterator.make (a_node)
-				a_context.set_current_iterator (a_singleton_iterator)
-				Result := internal_matches (a_node, a_context)
+				create l_singleton_iterator.make (a_node)
+				a_context.set_current_iterator (l_singleton_iterator)
+				internal_match (a_node, a_context)
 			else
-				Result := internal_matches (a_node, a_context)
+				internal_match (a_node, a_context)
 			end
+			a_context.set_current_iterator (l_saved_iterator)
 		end
 
 feature -- Element change
@@ -552,86 +559,147 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 
 feature {XM_XSLT_PATTERN} -- Implementation
 
-	internal_matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
+	internal_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Does `Current' match `a_node'?
 		local
-			another_node: XM_XPATH_NODE
-			is_candidate_match, is_result_determined: BOOLEAN
-			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_node: XM_XPATH_NODE
+			l_is_candidate_match: BOOLEAN
 		do
+			internal_last_match_result := False
 			if node_test.matches_node (a_node.node_type, a_node.fingerprint, a_node.type_annotation) then
-				is_candidate_match := True
+				l_is_candidate_match := True
 				if parent_pattern /= Void then
-					another_node := a_node.parent
-					if another_node /= Void then
-						is_candidate_match := parent_pattern.internal_matches (another_node, a_context)
+					l_node := a_node.parent
+					if l_node /= Void then
+						parent_pattern.internal_match (l_node, a_context)
+						if parent_pattern.is_error then
+							set_error_value (parent_pattern.error_value)
+						else
+							l_is_candidate_match := parent_pattern.last_match_result
+						end
 					else
-						is_candidate_match := False
+						l_is_candidate_match := False
 					end
 				elseif ancestor_pattern /= Void then
-					is_candidate_match := False
+					l_is_candidate_match := False
 					from
-						another_node := a_node.parent
+						l_node := a_node.parent
 					until
-						is_candidate_match or else another_node = Void
+						is_error or l_is_candidate_match or l_node = Void
 					loop
-						is_candidate_match := ancestor_pattern.internal_matches (another_node, a_context)
-						another_node := another_node.parent
+						ancestor_pattern.internal_match (l_node, a_context)
+						if ancestor_pattern.is_error then
+							set_error_value (ancestor_pattern.error_value)
+						else
+							l_is_candidate_match := ancestor_pattern.last_match_result
+						end
+						l_node := l_node.parent
 					end
 				end
-				if is_candidate_match then
-					if is_special_filter then
-						is_result_determined := True
-						if is_first_element_pattern then
-							a_node_iterator := a_node.new_axis_iterator_with_node_test (Preceding_sibling_axis, node_test)
-							a_node_iterator.start; Result := a_node_iterator.after
-						elseif is_last_element_pattern then
-							a_node_iterator := a_node.new_axis_iterator_with_node_test (Following_sibling_axis, node_test)
-							a_node_iterator.start; Result := a_node_iterator.after
-						elseif equivalent_expression /= Void then
-							Result := equivalent_expression_matches (a_node, a_context)
-						else
-							is_result_determined := False
-						end
-					end
-					if not is_result_determined then
-						if filters = Void then
-							Result := True
-						else
-							create a_singleton_iterator.make (a_node)
-							a_context.set_current_iterator (a_singleton_iterator)
-
-							-- as it's a non-positional filter, we can handle each node separately
-
-							from
-								a_cursor := filters.new_cursor; a_cursor.start; Result := True
-							variant
-								filters.count + 1 - a_cursor.index
-							until
-								Result = False or else a_cursor.after
-							loop
-								a_cursor.item.calculate_effective_boolean_value (a_context)
-								Result := a_cursor.item.last_boolean_value.value
-								a_cursor.forth
-							end
-						end
-					end
+				if l_is_candidate_match and not is_error then
+					confirm_match (a_node, a_context)
 				end
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	equivalent_expression_matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
+	confirm_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Check that `Current' is indeed a match for `a_node'.
+		require
+			a_node_not_void: a_node /= Void
+			a_context_not_void: a_context /= Void
+			not_in_error: not is_error
+		local
+			l_is_result_determined: BOOLEAN
+			l_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			if is_special_filter then
+				l_is_result_determined := True
+				if is_first_element_pattern then
+					l_node_iterator := a_node.new_axis_iterator_with_node_test (Preceding_sibling_axis, node_test)
+					l_node_iterator.start
+					internal_last_match_result := l_node_iterator.after
+				elseif is_last_element_pattern then
+					l_node_iterator := a_node.new_axis_iterator_with_node_test (Following_sibling_axis, node_test)
+					l_node_iterator.start
+					internal_last_match_result := l_node_iterator.after
+				elseif equivalent_expression /= Void then
+					match_equivalent_expression (a_node, a_context)
+				else
+					l_is_result_determined := False
+				end
+			end
+			if not l_is_result_determined then
+				if filters = Void then
+					internal_last_match_result := True
+				else
+					create l_singleton_iterator.make (a_node)
+					a_context.set_current_iterator (l_singleton_iterator)
+					
+					-- as it's a non-positional filter, we can handle each node separately
+					
+					from
+						l_cursor := filters.new_cursor; l_cursor.start; internal_last_match_result := True
+					variant
+						filters.count + 1 - l_cursor.index
+					until
+						internal_last_match_result = False or l_cursor.after
+					loop
+						l_cursor.item.calculate_effective_boolean_value (a_context)
+						if l_cursor.item.is_error then
+							set_error_value (l_cursor.item.error_value)
+						else
+							internal_last_match_result := l_cursor.item.last_boolean_value.value
+						end
+						l_cursor.forth
+					end
+				end
+			end
+		end
+
+	match_equivalent_expression (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Does `a_node' matches `equivalent_expression'?
 		require
 			node_not_void: a_node /= Void
 			equivalent_expression_not_void: equivalent_expression /= Void
 			context_not_void: a_context /= Void
+			not_in_error: not is_error
+		local
+			l_context: XM_XSLT_EVALUATION_CONTEXT
+			l_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
+			l_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			todo ("equivalent_expression_matches", False)
+			l_context := a_context.new_minor_context
+			create l_iterator.make (a_node)
+			l_iterator.start
+			if l_iterator.is_error then
+				set_error_value (l_iterator.error_value)
+			else
+				l_context.set_current_iterator (l_iterator)
+				equivalent_expression.create_node_iterator (l_context)
+				l_node_iterator := equivalent_expression.last_node_iterator
+				if l_node_iterator.is_error then
+					set_error_value (l_node_iterator.error_value)
+				else
+					from
+						l_node_iterator.start
+					until
+						 internal_last_match_result or l_node_iterator.is_error or else l_node_iterator.after
+					loop
+						if l_node_iterator.item.is_same_node (a_node) then
+							internal_last_match_result := True
+						else
+							l_node_iterator.forth
+						end
+					end
+					if l_node_iterator.is_error then
+						set_error_value (l_node_iterator.error_value)
+					end
+				end
+			end
 		end
 
 invariant

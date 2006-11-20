@@ -518,7 +518,7 @@ feature -- Element change
 		do
 			precedence_property_map.force (an_import_precedence, Media_type_attribute)
 			if not string_property_map.has (Media_type_attribute) then
-				string_property_map.put (a_media_type, Media_type_attribute)
+				string_property_map.force_new (a_media_type, Media_type_attribute)
 			end
 		ensure
 			import_precedence_set: precedence_property_map.has (Media_type_attribute) and then precedence_property_map.item (Media_type_attribute) = an_import_precedence
@@ -628,7 +628,7 @@ feature -- Element change
 		do
 			precedence_property_map.force (an_import_precedence, Gexslt_character_representation_attribute)
 			if not string_property_map.has (Gexslt_character_representation_attribute) then
-				string_property_map.put (a_character_representation, Gexslt_character_representation_attribute)
+				string_property_map.force_new (a_character_representation, Gexslt_character_representation_attribute)
 			end
 		ensure
 			import_precedence_set: precedence_property_map.has (Gexslt_character_representation_attribute) and then precedence_property_map.item (Gexslt_character_representation_attribute) = an_import_precedence

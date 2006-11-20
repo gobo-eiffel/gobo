@@ -98,10 +98,23 @@ feature -- Analysis
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
-			-- Determine whether this Pattern matches the given Node;
+	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Attempt to match `Current' againast `a_node'.
 		do
-			Result := left_hand_side.matches (a_node, a_context) or else right_hand_side.matches (a_node, a_context)
+			left_hand_side.match (a_node, a_context)
+			if left_hand_side.is_error then
+				set_error_value (left_hand_side.error_value)
+			else
+				internal_last_match_result := left_hand_side.last_match_result
+				if not internal_last_match_result then
+					right_hand_side.match (a_node, a_context)
+					if right_hand_side.is_error then
+						set_error_value (right_hand_side.error_value)
+					else
+						internal_last_match_result := right_hand_side.last_match_result
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -105,7 +105,7 @@ feature -- Element change
 				if last_generated_expression.is_string_value then
 					if is_qname (a_format_attribute) then
 						generate_name_code (a_format_attribute)
-						output_fingerprint := last_generated_name_code
+						output_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 					else
 						output_fingerprint := -1
 					end

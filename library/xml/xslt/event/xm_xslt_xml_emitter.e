@@ -107,6 +107,9 @@ feature -- Events
 	close is
 			-- Notify end of event stream.
 		do
+			if not is_error and not is_output_open then
+				open_document
+			end
 			if outputter /= Void then
 				outputter.outputter.flush
 			end
@@ -160,7 +163,7 @@ feature -- Events
 					is_open_start_tag := True
 				end
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
@@ -192,7 +195,7 @@ feature -- Events
 					end
 				end
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -227,7 +230,7 @@ feature -- Events
 					if not is_error then output_attribute (current_element_name_code, a_display_name, a_value, properties) end
 				end
 			end
-			is_written := True
+			mark_as_written
 		end
 
 
@@ -235,7 +238,7 @@ feature -- Events
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			-- Don't add ">" to the start tag until we know whether the element has content.
-			is_written := True
+			mark_as_written
 		end
 
 	end_element is
@@ -254,7 +257,7 @@ feature -- Events
 					if not is_error then output (">") end
 				end
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
@@ -298,7 +301,7 @@ feature -- Events
 					output_escape (normalized_string (chars), False)
 				end
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
@@ -321,7 +324,7 @@ feature -- Events
 				a_string := STRING_.appended_string (a_string, "?>")
 				output (a_string)
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
@@ -338,7 +341,7 @@ feature -- Events
 				if not is_error then output (a_content_string) end
 				if not is_error then output ("-->") end
 			end
-			is_written := True
+			mark_as_written
 		end
 
 
@@ -485,8 +488,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			omit := output_properties.omit_xml_declaration
-			if
-				omit and then
+			if omit and then
 				not (STRING_.same_string (encoding, "UTF-8") or else
 				STRING_.same_string (encoding, "UTF-16") or else
 				STRING_.same_string (encoding, "US-ASCII") or else

@@ -18,7 +18,7 @@ inherit
 		undefine
 			is_no_node_test
 		redefine
-			default_priority, matches
+			default_priority, match
 		end
 	
 	XM_XPATH_NO_NODE_TEST
@@ -51,10 +51,10 @@ feature -- Access
 
 feature -- Matching
 
-	frozen matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
+	frozen match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Determine whether this Pattern matches the given Node;
 		do
-			Result := False
+			internal_last_match_result := False
 		end
 
 end

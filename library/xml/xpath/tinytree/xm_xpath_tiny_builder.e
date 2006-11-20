@@ -159,14 +159,14 @@ feature -- Events
 			if is_line_numbering then
 				tree.set_line_number_for_node (node_number, locator.line_number)
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace.
 		do
 			tree.add_namespace (node_number, a_namespace_code)
-			is_written := True
+			mark_as_written
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -180,14 +180,14 @@ feature -- Events
 			else
 				tree.add_attribute (tiny_document, node_number, a_name_code, a_new_type_code, a_value)
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	start_content is
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			node_number := node_number + 1
-			is_written := True
+			mark_as_written
 		end
 	
 	end_element is
@@ -195,7 +195,7 @@ feature -- Events
 		do
 			previously_at_depth.put (-1, current_depth)
 			current_depth := current_depth - 1
-			is_written := True
+			mark_as_written
 		end
 
 	notify_characters (a_character_string: STRING; properties: INTEGER) is
@@ -226,7 +226,7 @@ feature -- Events
 					previously_at_depth.put (node_number, current_depth)
 				end
 			end
-			is_written := True
+			mark_as_written
 		end
 	
 	notify_processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER) is
@@ -260,7 +260,7 @@ feature -- Events
 			if is_line_numbering then
 				tree.set_line_number_for_node (node_number, locator.line_number)
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
@@ -278,7 +278,7 @@ feature -- Events
 			end
 			tree.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
-			is_written := True
+			mark_as_written
 		end
 
 	end_document is

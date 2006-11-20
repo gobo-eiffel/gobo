@@ -116,7 +116,7 @@ feature -- Element change
 			end
 			if a_name_attribute /= Void then
 				generate_name_code (a_name_attribute)
-				output_fingerprint := last_generated_name_code
+				output_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 			else
 				output_fingerprint := -1
 			end

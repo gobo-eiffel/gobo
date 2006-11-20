@@ -105,60 +105,56 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
-			-- Determine whether this Pattern matches the given Node;
-			-- TODO: This function is not 100% pure, as it may cause
-			--  an index to be built for a key, but this is only a 
-			--  performance-affecting side effect.
-			-- In addition, an iterator is created over `key_expression',
-			--  and this might uncover an error.
+	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Attempt to match `Current' againast `a_node'.
 		local
-			a_doc: XM_XPATH_DOCUMENT
-			a_key_value: XM_XPATH_STRING_VALUE
-			a_key: STRING
-			a_km: XM_XSLT_KEY_MANAGER
-			finished: BOOLEAN
-			an_iter: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			nodes: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_doc: XM_XPATH_DOCUMENT
+			l_key_value: XM_XPATH_STRING_VALUE
+			l_key: STRING
+			l_km: XM_XSLT_KEY_MANAGER
+			l_finished: BOOLEAN
+			l_iter: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_nodes: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			a_doc := a_node.document_root
-			if a_doc = Void then
-				Result := False
-			else
-				a_km := a_context.transformer.key_manager
+			internal_last_match_result := False
+			l_doc := a_node.document_root
+			if l_doc /= Void then
+				l_km := a_context.transformer.key_manager
 				key_expression.create_iterator (a_context)
-				an_iter := key_expression.last_iterator
-				if an_iter.is_error then
-					set_error_value (an_iter.error_value)
+				l_iter := key_expression.last_iterator
+				if l_iter.is_error then
+					set_error_value (l_iter.error_value)
 				else
 					from
-						an_iter.start
+						l_iter.start
 					until
-						finished or else an_iter.is_error or else an_iter.after
+						l_finished or else l_iter.is_error or else l_iter.after
 					loop
-						a_key := an_iter.item.string_value
-						create a_key_value.make (a_key)
-						a_km.generate_keyed_sequence (key_fingerprint, a_doc, a_key_value, a_context)
-						if not a_context.transformer.is_error then
-							nodes := a_km.last_key_sequence
+						l_key := l_iter.item.string_value
+						create l_key_value.make (l_key)
+						l_km.generate_keyed_sequence (key_fingerprint, l_doc, l_key_value, a_context)
+						if a_context.transformer.is_error then
+							set_error_value (a_context.transformer.last_error)
+						else
+							l_nodes := l_km.last_key_sequence
 							from
-								nodes.start
+								l_nodes.start
 							until
-								finished or else nodes.is_error or else nodes.after
+								l_finished or else l_nodes.is_error or else l_nodes.after
 							loop
-								if nodes.item.is_same_node (a_node) then
-									Result := True
-									finished := True
+								if l_nodes.item.is_same_node (a_node) then
+									internal_last_match_result := True
+									l_finished := True
 								end
-								nodes.forth
+								l_nodes.forth
 							end
 						end
-						an_iter.forth
+						l_iter.forth
 					end
-					if nodes.is_error then
-						set_error_value (nodes.error_value)
-					elseif an_iter.is_error then
-						set_error_value (an_iter.error_value)
+					if l_nodes.is_error then
+						set_error_value (l_nodes.error_value)
+					elseif l_iter.is_error then
+						set_error_value (l_iter.error_value)
 					end					
 				end
 			end

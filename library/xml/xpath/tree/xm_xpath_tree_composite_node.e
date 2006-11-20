@@ -68,15 +68,17 @@ feature -- Access
 			from
 				a_node := first_child
 			until
-				a_node = Void or else not a_node.as_tree_node.is_tree_text
+				a_node = Void
 			loop
-				a_text_node := a_node.as_tree_node.as_tree_text
-				if a_string = Void then
-					create a_string.make (a_text_node.string_value)
-				else
-					a_string.append_string (a_text_node.string_value)
+				if a_node.as_tree_node.is_tree_text then
+					a_text_node := a_node.as_tree_node.as_tree_text
+					if a_string = Void then
+						create a_string.make (a_text_node.string_value)
+					else
+						a_string.append_string (a_text_node.string_value)
+					end
 				end
-				a_node := a_text_node.next_node_in_document_order (Current)
+				a_node := a_node.as_tree_node.next_node_in_document_order (Current)
 			end
 			if a_string = Void then
 				Result := ""

@@ -196,8 +196,12 @@ feature -- Evaluation
 						
 						-- Apply the content of any attribute sets mentioned in use-attribute-sets.
 						
-						if attribute_sets /= Void then expand_attribute_sets (a_transformer.executable, attribute_sets, a_context) end
-						content.process (a_context)
+						if attribute_sets /= Void then
+							expand_attribute_sets (a_transformer.executable, attribute_sets, a_context)
+						end
+						if not a_transformer.is_error then
+							content.process (a_context)
+						end
 						
 						if not a_transformer.is_error then
 							

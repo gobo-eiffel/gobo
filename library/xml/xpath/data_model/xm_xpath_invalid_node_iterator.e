@@ -19,6 +19,9 @@ inherit
 		export {NONE} all end
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+		redefine
+			is_node_iterator, as_node_iterator
+		end
 
 	XM_XPATH_ERROR_TYPES
 		export {NONE} all end
@@ -72,6 +75,20 @@ feature -- Status report
 			-- Are there any more items in the sequence?
 		do
 			-- (pre-condition can't be met)
+		end
+
+	is_node_iterator: BOOLEAN is
+			-- Does `Current' yield a node sequence?
+		do
+			Result := True
+		end
+
+feature -- Conversion
+	
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as a node iterator
+		do
+			Result := Current
 		end
 
 feature -- Cursor movement

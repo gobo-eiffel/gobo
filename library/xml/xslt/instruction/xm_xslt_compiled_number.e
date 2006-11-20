@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; a_level: INTEGER; a_count_pattern, a_from_pattern: XM_XSLT_PATTERN;
 		a_value_expression, a_format, a_grouping_size, a_grouping_separator, a_letter_value, an_ordinal, a_language: XM_XPATH_EXPRESSION;
-		a_formatter: XM_XSLT_NUMBER_FORMATTER;	a_numberer: XM_XSLT_NUMBERER; variables_in_patterns: BOOLEAN) is
+		a_formatter: XM_XSLT_NUMBER_FORMATTER;	a_numberer: XM_XSLT_NUMBERER; a_variables_in_patterns, a_backwards: BOOLEAN) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -60,11 +60,12 @@ feature {NONE} -- Initialization
 			language := a_language; if language /= Void then adopt_child_expression (language) end
 			formatter := a_formatter
 			numberer := a_numberer
-			has_variables_in_patterns := variables_in_patterns
-
+			has_variables_in_patterns := a_variables_in_patterns
+			is_backwards_compatible := a_backwards
 			if value_expression /= Void and then is_sub_type (value_expression.item_type, type_factory.any_atomic_type) then
 				create {XM_XPATH_ATOMIZER_EXPRESSION} value_expression.make (value_expression, False)
 			end
+			
 			compute_static_properties
 			initialized := True
 		ensure
@@ -82,7 +83,8 @@ feature {NONE} -- Initialization
 			language_set: language = a_language
 			formatter_set: formatter = a_formatter
 			numberer_set: numberer = a_numberer
-			has_variables_in_patterns_set: has_variables_in_patterns = variables_in_patterns
+			has_variables_in_patterns_set: has_variables_in_patterns = a_variables_in_patterns
+			backwards_compatible: is_backwards_compatible = a_backwards
 		end
 
 feature -- Access
@@ -124,10 +126,15 @@ feature -- Access
 
 feature -- Status report
 
+	is_backwards_compatible: BOOLEAN
+			-- Is in backwards compatible mode?
+
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-			todo ("display", False)
+			std.error.put_string (STRING_.appended_string (indentation (a_level), "xsl:number"))
+			std.error.put_new_line
+			if select_expression /= Void then select_expression.display (a_level + 1) end
 		end
 
 feature -- Status setting
@@ -392,7 +399,7 @@ feature -- Evaluation
 			if not transformer.is_error then calculate_group_separator (a_context) end
 			if not transformer.is_error then
 				calculate_ordinal (a_context)
-				if integer_vector = Void and then format = Void and then group_size = 0 and then language = Void then
+				if atomic_vector = Void and then format = Void and then group_size = 0 and then language = Void then
 					
 					-- fast path for the simple case
 					
@@ -417,10 +424,10 @@ feature -- Evaluation
 						end
 					end
 					if not transformer.is_error then
-						if integer_vector = Void then
-							create integer_vector.make (1)
+						if atomic_vector = Void then
+							create atomic_vector.make (1)
 							create l_integer_value.make (value)
-							integer_vector.put_last (l_integer_value)
+							atomic_vector.put_last (l_integer_value)
 						end
 						if formatter = Void then
 							format.evaluate_as_string (a_context)
@@ -436,7 +443,7 @@ feature -- Evaluation
 						end
 					end
 					if not transformer.is_error then
-						l_receiver.notify_characters (l_number_formatter.formatted_string (integer_vector, group_size, group_separator, l_letter, ordinal_value, numberer), 0)
+						l_receiver.notify_characters (l_number_formatter.formatted_string (atomic_vector, group_size, group_separator, l_letter, ordinal_value, numberer), 0)
 					end
 				end
 			end
@@ -497,8 +504,8 @@ feature {NONE} -- Implementation
 	value: MA_DECIMAL
 			-- Value of number
 
-	integer_vector: DS_ARRAYED_LIST [XM_XPATH_INTEGER_VALUE]
-			-- Sequence of integers to be used as place marker to be formatted
+	atomic_vector: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
+			-- Sequence of atoms to be used as place marker to be formatted
 
 	transformer: XM_XSLT_TRANSFORMER
 			-- Transformer
@@ -593,8 +600,8 @@ feature {NONE} -- Implementation
 			context_not_void: a_context /= Void
 			transformer_not_void: transformer /= Void
 		local
-			a_source: XM_XPATH_NODE
-			an_error: XM_XPATH_ERROR_VALUE
+			l_source: XM_XPATH_NODE
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			create value.make_copy (decimal.minus_one)
 			if value_expression /= Void then
@@ -603,35 +610,49 @@ feature {NONE} -- Implementation
 				if select_expression /= Void then
 					select_expression.evaluate_item (a_context)
 					if select_expression.last_evaluated_item.is_node then
-						a_source := select_expression.last_evaluated_item.as_node
+						l_source := select_expression.last_evaluated_item.as_node
+					else
+						create l_error.make_from_string ("Context item for xsl:number must be a node",
+																	 Xpath_errors_uri, "XTTE0990", Type_error)
+						l_error.set_location (system_id, line_number)
+						transformer.report_fatal_error (l_error)
 					end
 				else
 					if not a_context.context_item.is_node then
-						create an_error.make_from_string ("Context item for xsl:number must be a node",
+						create l_error.make_from_string ("Context item for xsl:number must be a node",
 																	 Xpath_errors_uri, "XTTE0990", Type_error)
-						an_error.set_location (system_id, line_number)
-						transformer.report_fatal_error (an_error)
+						l_error.set_location (system_id, line_number)
+						transformer.report_fatal_error (l_error)
 					else
-						a_source := a_context.context_item.as_node
+						l_source := a_context.context_item.as_node
 					end
 				end
 				if not transformer.is_error then
 					if level = Simple_numbering then
-						value := simple_number (a_source)
+						value := simple_number (l_source)
 					elseif level = Single_level then
-						value := single_number (a_source, count_pattern, from_pattern, a_context)
-						if value.is_zero then
-							create integer_vector.make (0)
+						calculate_single_number (l_source, count_pattern, from_pattern, a_context)
+						if not transformer.is_error then
+							value := last_single_number
+							if value.is_zero then
+								create atomic_vector.make (0)
+							end
 						end
 					elseif level = Any_level then
-						value := any_number (a_source, a_context)
+						calculate_any_number (l_source, a_context)
+						if not transformer.is_error then
+							value := last_single_number
+						end
 					elseif level = Multiple_levels then
-						integer_vector := multi_level_number (a_source, a_context)
+						calculate_multi_level_number (l_source, a_context)
+						if not transformer.is_error then
+							atomic_vector := multi_level_number
+						end
 					end
 				end
 			end
 		ensure
-			value_not_void: value /= Void
+			value_not_void: not transformer.is_error implies value /= Void
 		end
 
 	calculate_value (a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -640,63 +661,76 @@ feature {NONE} -- Implementation
 			context_not_void: a_context /= Void
 			transformer_not_void: transformer /= Void
 		local
-			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			finished: BOOLEAN
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			an_integer_value: XM_XPATH_INTEGER_VALUE
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			an_error: XM_XPATH_ERROR_VALUE
+			l_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_finished: BOOLEAN
+			l_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_string_value: XM_XPATH_STRING_VALUE
+			l_integer_value: XM_XPATH_INTEGER_VALUE
+			l_numeric_value: XM_XPATH_NUMERIC_VALUE
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				value_expression.create_iterator (a_context)
-				a_sequence_iterator := value_expression.last_iterator
-				if a_sequence_iterator.is_error then
-					a_sequence_iterator.error_value.set_location (system_id, line_number)
-					a_context.transformer.report_fatal_error (a_sequence_iterator.error_value)
+				l_sequence_iterator := value_expression.last_iterator
+				if l_sequence_iterator.is_error then
+					l_sequence_iterator.error_value.set_location (system_id, line_number)
+					a_context.transformer.report_fatal_error (l_sequence_iterator.error_value)
 				else
-					a_sequence_iterator.start
+					l_sequence_iterator.start
 				end
-				create integer_vector.make_default
+				create atomic_vector.make_default
 			until
-				finished or else a_sequence_iterator.is_error or else a_sequence_iterator.after
+				l_finished or else l_sequence_iterator.is_error or else l_sequence_iterator.after
 			loop
-				an_atomic_value ?= a_sequence_iterator.item
-				if an_atomic_value = Void then
-					finished := True
+				l_atomic_value ?= l_sequence_iterator.item
+				if l_atomic_value = Void then
+					l_finished := True
 				else
-					an_integer_value ?= an_atomic_value
-					if an_integer_value = Void then
-						a_numeric_value ?= an_atomic_value
-						if a_numeric_value = Void then
-							a_numeric_value := item_to_double (an_atomic_value)
-							if a_numeric_value.is_nan then
-								create an_error.make_from_string ("Numbers to be formatted must be positive integers",
-																			 Xpath_errors_uri, "XTDE0980", Dynamic_error)
-								an_error.set_location (system_id, line_number)
-								transformer.report_fatal_error (an_error)
-								finished := True
+					l_integer_value ?= l_atomic_value
+					if l_integer_value = Void then
+						l_numeric_value ?= l_atomic_value
+						if l_numeric_value = Void then
+							l_numeric_value := item_to_double (l_atomic_value)
+							if l_numeric_value.is_nan then
+								if is_backwards_compatible then
+									l_finished := True
+									create l_string_value.make ("NaN")
+									atomic_vector.force_last (l_string_value)
+								else
+									create l_error.make_from_string ("Numbers to be formatted must be positive integers",
+									Xpath_errors_uri, "XTDE0980", Dynamic_error)
+									l_error.set_location (system_id, line_number)
+									transformer.report_fatal_error (l_error)
+									l_finished := True
+								end
 							end
 						end
-						if not finished then
-							a_numeric_value := a_numeric_value.rounded_value
-							an_integer_value ?= a_numeric_value.convert_to_type (type_factory.integer_type)
+						if not l_finished then
+							l_numeric_value := l_numeric_value.rounded_value
+							l_integer_value ?= l_numeric_value.convert_to_type (type_factory.integer_type)
 						end
 					end
-					if not finished and then an_integer_value.value.is_negative then
-						create an_error.make_from_string ("Numbers to be formatted must be positive integers",
-																	 Xpath_errors_uri, "XTDE0980", Dynamic_error)
-						an_error.set_location (system_id, line_number)
-						transformer.report_fatal_error (an_error)
+					if not l_finished and then l_integer_value.value.is_negative then
+						if is_backwards_compatible then
+							l_finished := True
+							create l_string_value.make ("NaN")
+							atomic_vector.force_last (l_string_value)
+						else
+							create l_error.make_from_string ("Numbers to be formatted must be positive integers",
+							Xpath_errors_uri, "XTDE0980", Dynamic_error)
+							l_error.set_location (system_id, line_number)
+							transformer.report_fatal_error (l_error)
+						end
 					end
-					if not finished then
-						integer_vector.force_last (an_integer_value)
+					if not l_finished then
+						atomic_vector.force_last (l_integer_value)
 					end
 				end
-				a_sequence_iterator.forth
+				l_sequence_iterator.forth
 			end
-			if a_sequence_iterator.is_error then
-				a_sequence_iterator.error_value.set_location (system_id, line_number)
-				a_context.transformer.report_fatal_error (a_sequence_iterator.error_value)
+			if l_sequence_iterator.is_error then
+				l_sequence_iterator.error_value.set_location (system_id, line_number)
+				a_context.transformer.report_fatal_error (l_sequence_iterator.error_value)
 			end
 		end
 
@@ -747,7 +781,10 @@ feature {NONE} -- Implementation
 				and then not Result.is_zero
 		end
 
-	single_number (a_node: XM_XPATH_NODE; a_count_pattern, a_from_pattern: XM_XSLT_PATTERN; a_context: XM_XSLT_EVALUATION_CONTEXT): MA_DECIMAL is
+	last_single_number: MA_DECIMAL
+			-- Result from `calculate_single_number' or `calculate_any_number'
+
+	calculate_single_number (a_node: XM_XPATH_NODE; a_count_pattern, a_from_pattern: XM_XSLT_PATTERN; a_context: XM_XSLT_EVALUATION_CONTEXT) is 
 			-- One plus the number of previous siblings
 			--  of the nearest ancestor-or-self, that match `count_pattern'.
 		require
@@ -760,8 +797,9 @@ feature {NONE} -- Implementation
 			a_count: XM_XSLT_PATTERN
 			i: INTEGER
 		do
+			last_single_number := Void
 			if a_count_pattern = Void and then a_from_pattern = Void then
-				Result := simple_number (a_node)
+				last_single_number := simple_number (a_node)
 			else
 				if a_count_pattern = Void then
 					if a_node.fingerprint = -1 then
@@ -775,39 +813,55 @@ feature {NONE} -- Implementation
 				end
 				from
 					a_target := a_node
-				until known_to_match or else finished or else a_count.matches (a_target, a_context) loop
-					a_target := a_target.parent
-					if a_target = Void then
-						create Result.make_zero
+				until known_to_match or else finished loop
+					a_count.match (a_target, a_context)
+					if transformer.is_error then
 						finished := True
+					elseif a_count.last_match_result then
+						known_to_match := True
+					else
+						a_target := a_target.parent
+						if a_target = Void then
+							create last_single_number.make_zero
+							finished := True
+						end
 					end
 				end
 				if not finished then
-					if a_from_pattern /= Void and then a_from_pattern.matches (a_target, a_context) then
-						create Result.make_zero
-					else
-
+					if a_from_pattern /= Void then
+						a_from_pattern.match (a_target, a_context)
+						if not transformer.is_error and a_from_pattern.last_match_result then
+							create last_single_number.make_zero
+						end
+					end
+					if last_single_number = Void then
+						
 						-- We've found the ancestor to count from
 
 						already_checked := a_count.is_node_test
 						from
 							an_iterator := a_target.new_axis_iterator_with_node_test (Preceding_sibling_axis, a_count.node_test)
 							an_iterator.start; i := 1
-						until an_iterator.after loop
-							if already_checked or else a_count.matches (an_iterator.item, a_context) then
+						until transformer.is_error or an_iterator.after loop
+							if already_checked then
 								i := i + 1
+							else
+								a_count.match (an_iterator.item, a_context)
+								if not transformer.is_error and a_count.last_match_result then
+									i := i + 1
+								end
 							end
 							an_iterator.forth
 						end
-						create Result.make_from_integer (i)
+						create last_single_number.make_from_integer (i)
 					end
 				end
 			end
 		ensure
-			positive_integer: Result /= Void and then Result.is_integer and then Result.is_positive
+			positive_integer: not transformer.is_error implies last_single_number /= Void and then last_single_number.is_integer and then last_single_number.is_positive
 		end
 
-	any_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): MA_DECIMAL is
+	calculate_any_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- One plus number of previous nodes that match `count_pattern'
 		require
 			source_node_not_void: a_node /= Void
@@ -819,6 +873,7 @@ feature {NONE} -- Implementation
 			a_filter: XM_XPATH_NODE_TEST
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
+			last_single_number := Void
 			memoize := not has_variables_in_patterns and then count_pattern /= Void
 			if count_pattern = Void then
 				if a_node.fingerprint = -1 then
@@ -827,8 +882,11 @@ feature {NONE} -- Implementation
 						create {XM_XSLT_NAME_TEST} count_pattern.make_without_location (a_node)
 				end
 				a_count := 1
-			elseif count_pattern.matches (a_node, a_context) then
-				a_count := 1
+			else
+				count_pattern.match (a_node, a_context)
+				if not transformer.is_error and count_pattern.last_match_result then
+					a_count := 1
+				end
 			end
 
 			-- Pass part of the filtering down to the axis iterator if possible
@@ -842,33 +900,42 @@ feature {NONE} -- Implementation
 			end
 			from
 				an_iterator := a_node.new_axis_iterator_with_node_test (Preceding_or_ancestor_axis, a_filter); an_iterator.start
-			until finished or else an_iterator.after loop
-				if from_pattern /= Void and then from_pattern.matches (an_iterator.item, a_context) then
-					create Result.make_from_integer (a_count); finished := True
-				elseif count_pattern.matches (an_iterator.item, a_context) then
-					if memoize and then a_count = 1 then
-						a_memo := transformer.remembered_number (an_iterator.item)
-						if a_memo /= Void then
-							a_count := a_memo.to_integer + 1; finished := True
-						end
+			until finished or an_iterator.after or transformer.is_error loop
+				if from_pattern /= Void then
+					from_pattern.match (an_iterator.item, a_context)
+					if not transformer.is_error and from_pattern.last_match_result then
+						create last_single_number.make_from_integer (a_count); finished := True
 					end
-					if not finished then a_count := a_count + 1 end
+				else
+					count_pattern.match (an_iterator.item, a_context)
+					if not transformer.is_error and count_pattern.last_match_result then
+						if memoize and then a_count = 1 then
+							a_memo := transformer.remembered_number (an_iterator.item)
+							if a_memo /= Void then
+								a_count := a_memo.to_integer + 1; finished := True
+							end
+						end
+						if not finished then a_count := a_count + 1 end
+					end
 				end
 				an_iterator.forth
 			end
-			if from_pattern /= Void and then Result = Void then
-				create Result.make_zero
+			if from_pattern /= Void and then last_single_number = Void then
+				create last_single_number.make_zero
 			else
-				create Result.make_from_integer (a_count)
+				create last_single_number.make_from_integer (a_count)
 			end
 			if memoize then
-				transformer.set_remembered_number (Result, a_node)
+				transformer.set_remembered_number (last_single_number, a_node)
 			end
 		ensure
-			positive_integer: Result /= Void and then Result.is_integer and then Result.is_positive
+			positive_integer: not transformer.is_error implies last_single_number /= Void and then last_single_number.is_integer and then last_single_number.is_positive
 		end
 
-	multi_level_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): DS_ARRAYED_LIST [XM_XPATH_INTEGER_VALUE] is
+	multi_level_number: DS_ARRAYED_LIST [XM_XPATH_INTEGER_VALUE]
+			-- Result from `calculate_multi_level_number'
+	
+	calculate_multi_level_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Hirerarchic position of `a_node'
 		require
 			source_node_not_void: a_node /= Void
@@ -878,7 +945,7 @@ feature {NONE} -- Implementation
 			finished: BOOLEAN
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
-			create Result.make_default
+			create multi_level_number.make_default
 			if count_pattern = Void then
 				if a_node.fingerprint = -1 then
 					create {XM_XSLT_NODE_KIND_TEST} count_pattern.make_without_location (a_node.node_type)
@@ -887,19 +954,30 @@ feature {NONE} -- Implementation
 				end
 			end
 			from a_current_node := a_node	until finished loop
-				if count_pattern.matches (a_current_node, a_context) then
-					create an_integer_value.make (single_number (a_current_node, count_pattern, Void, a_context))
-					Result.force_first (an_integer_value)
+				count_pattern.match (a_current_node, a_context)
+				if transformer.is_error then
+					finished := True
+				elseif count_pattern.last_match_result then
+					calculate_single_number (a_current_node, count_pattern, Void, a_context)
+					if transformer.is_error then
+						finished := True
+					else
+						create an_integer_value.make (last_single_number)
+						multi_level_number.force_first (an_integer_value)
+					end
 				end
 				a_current_node := a_current_node.parent
 				if a_current_node = Void then
 					finished := True
-				elseif from_pattern /= Void and then from_pattern.matches (a_current_node, a_context) then
-					finished := True
+				elseif from_pattern /= Void then
+					from_pattern.match (a_current_node, a_context)
+					if transformer.is_error or from_pattern.last_match_result then
+						finished := True
+					end
 				end
 			end
 		ensure
-			result_not_void: Result /= Void
+			result_not_void: multi_level_number /= Void
 		end
 
 invariant

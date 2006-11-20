@@ -313,23 +313,25 @@ feature {NONE} -- Implementation
 						from
 							an_attribute_iterator := a_node.new_axis_iterator (Attribute_axis); an_attribute_iterator.start
 						until
-							an_attribute_iterator.after
+							a_context.transformer.is_error or an_attribute_iterator.after
 						loop
 							another_node := an_attribute_iterator.item
-							if match.matches (another_node, a_new_context) then
+							match.match (another_node, a_new_context)
+							if not a_context.transformer.is_error and match.last_match_result then
 								process_key_node (another_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
 							end
 							an_attribute_iterator.forth
 						end
 						if a_node_type = Any_node then
-							-- Index the element as well as it's attributes							
-							if match.matches (a_node, a_new_context) then
-								
+							-- Index the element as well as it's attributes
+							match.match (a_node, a_new_context)
+							if not a_context.transformer.is_error and match.last_match_result then
 								process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
 							end
 						end
 					else
-						if match.matches (a_node, a_new_context) then
+						match.match (a_node, a_new_context)
+						if not a_context.transformer.is_error and match.last_match_result then
 							process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
 						end
 					end
@@ -344,8 +346,13 @@ feature {NONE} -- Implementation
 					a_node := all_nodes_iterator.item
 					-- If `match' is a node test, we avoid testing it a second time
 					a_node_test ?= match
-					if a_node_test /= Void or else match.matches (a_node, a_new_context) then
+					if a_node_test /= Void then
 						process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
+					else
+						match.match (a_node, a_new_context)
+						if not a_context.transformer.is_error and match.last_match_result then
+							process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
+						end
 					end
 					all_nodes_iterator.forth
 				end

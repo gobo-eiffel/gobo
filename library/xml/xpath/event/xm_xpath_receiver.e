@@ -69,6 +69,14 @@ feature -- Ststus report
 			Result := a_name_code >= 0
 		end
 
+feature -- Status setting
+
+	mark_as_written is
+			-- Mark as output has been written.
+		do
+			is_written := True
+		end
+
 feature -- Events
 
 	on_error (a_message: STRING) is

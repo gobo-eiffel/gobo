@@ -135,7 +135,7 @@ feature -- Events
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
 			-- Notify an unparsed entity URI.
 		do
-			is_written := True
+			mark_as_written
 		end
 
 feature -- Element change
@@ -162,8 +162,10 @@ feature -- Element change
 		do
 			output_properties := some_output_properties
 			an_encoding := output_properties.encoding
-			an_outputter := outputter.outputter
-			outputter := transformer.configuration.encoder_factory.outputter (an_encoding, an_outputter)
+			if outputter /= Void then
+				an_outputter := outputter.outputter
+				outputter := transformer.configuration.encoder_factory.outputter (an_encoding, an_outputter)
+			end
 		ensure
 			output_properties_set: output_properties = some_output_properties
 		end

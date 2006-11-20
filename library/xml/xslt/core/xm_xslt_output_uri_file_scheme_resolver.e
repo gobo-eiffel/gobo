@@ -50,6 +50,7 @@ feature -- Action
 			an_output: XM_OUTPUT
 			a_stream: KL_TEXT_OUTPUT_FILE
 		do
+			last_result := Void
 			check
 				absolute_path: a_uri.has_absolute_path
 				-- as `a_uri' is absolute, and scheme is "file"

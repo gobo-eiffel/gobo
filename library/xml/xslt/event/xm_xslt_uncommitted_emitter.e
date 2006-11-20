@@ -25,6 +25,9 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 	XM_XPATH_TYPE
 
 	XM_XSLT_STRING_ROUTINES
@@ -67,6 +70,7 @@ feature -- Events
 			-- Notify end of event stream.
 		do
 			is_open := False
+			base_receiver.close
 		end
 
 	start_document is
@@ -111,7 +115,7 @@ feature -- Events
 			else
 				base_receiver.notify_characters (chars, properties)
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
@@ -126,7 +130,7 @@ feature -- Events
 			else
 				base_receiver.notify_processing_instruction (a_name, a_data_string, properties)
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
@@ -141,7 +145,7 @@ feature -- Events
 			else
 				base_receiver.notify_comment (a_content_string, properties)
 			end
-			is_written := True
+			mark_as_written
 		end	
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
@@ -168,7 +172,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.start_element (a_name_code, a_type_code, properties)
-			is_written := True
+			mark_as_written
 		ensure then
 			committed: committed			
 		end
@@ -180,7 +184,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.notify_namespace (a_namespace_code, properties)
-			is_written := True
+			mark_as_written
 		ensure then
 			committed: committed
 		end
@@ -192,7 +196,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.notify_attribute (a_name_code, a_type_code, a_value, properties)
-			is_written := True
+			mark_as_written
 		ensure then
 			committed: committed
 		end
@@ -204,7 +208,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.start_content
-			is_written := True
+			mark_as_written
 		ensure then
 			committed: committed
 		end
@@ -216,7 +220,7 @@ feature -- Events
 				committed: committed
 			end
 			base_receiver.end_element
-			is_written := True
+			mark_as_written
 		ensure then
 			committed: committed
 		end
@@ -254,7 +258,7 @@ feature {NONE} -- Implementation
 			an_xml_indenter: XM_XSLT_XML_INDENTER
 			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
-			output_properties.set_xml_defaults (1000000)
+			output_properties.set_xml_defaults (Platform.Maximum_integer)
 			create an_xml_emitter.make (transformer, outputter, output_properties, character_map_expander)
 			base_receiver := an_xml_emitter
 			if output_properties.indent then
@@ -278,7 +282,7 @@ feature {NONE} -- Implementation
 			an_html_emitter: XM_XSLT_HTML_EMITTER
 			an_html_indenter: XM_XSLT_HTML_INDENTER
 		do
-			output_properties.set_html_defaults (1000000)
+			output_properties.set_html_defaults (Platform.Maximum_integer)
 			create an_html_emitter.make (transformer, outputter, output_properties, character_map_expander)
 			base_receiver := an_html_emitter
 			if output_properties.indent then
@@ -299,7 +303,7 @@ feature {NONE} -- Implementation
 			an_html_indenter: XM_XSLT_XHTML_INDENTER
 			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
-			output_properties.set_xhtml_defaults (1000000)
+			output_properties.set_xhtml_defaults (Platform.Maximum_integer)
 			create an_xhtml_emitter.make (transformer, outputter, output_properties, character_map_expander)
 			base_receiver := an_xhtml_emitter
 			if output_properties.indent then

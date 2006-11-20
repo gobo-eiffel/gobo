@@ -126,6 +126,12 @@ feature -- Access
 	principal_result_uri: STRING
 		-- System id of unamed output definition
 
+	principal_receiver: XM_XPATH_SEQUENCE_RECEIVER
+			-- Receiver for unnamed output definition
+
+	principal_emitter: XM_XSLT_EMITTER
+			-- Destination emitter
+
 	document_pool: XM_XPATH_DOCUMENT_POOL
 			-- Document pool
 
@@ -513,6 +519,20 @@ feature -- Element change
 			encoding_cleared: last_unparsed_encoding = Void
 		end
 
+	set_principal_receiver_properties (a_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+			-- Set `a_properties' on target emitter of `principal_receiver'.
+		require
+			principal_receiver_not_void: principal_receiver /= Void
+			a_properties_not_void: a_properties /= Void
+		do
+			find_principal_emitter
+			if principal_emitter /= Void then
+				principal_emitter.set_output_properties (a_properties)
+			end
+		ensure
+			properties_set: principal_emitter /= Void implies principal_emitter.output_properties = a_properties
+		end
+
 feature -- Transformation
 
 	transform (a_source: XM_XSLT_SOURCE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
@@ -634,7 +654,6 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 			a_transformation_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_context: XM_XSLT_EVALUATION_CONTEXT
 			a_parameter_set: XM_XSLT_PARAMETER_SET
-			a_saved_receiver: XM_XPATH_SEQUENCE_RECEIVER
 		do
 			principal_result := a_result
 			principal_result_uri := a_result.system_id
@@ -653,12 +672,12 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 				end
 				if not is_error then
 					initial_context.change_output_destination (properties, a_transformation_result, True, Validation_preserve, Void)
-					a_saved_receiver := initial_context.current_receiver
+					principal_receiver := initial_context.current_receiver
 					check
-						opened: a_saved_receiver.is_open
+						opened: principal_receiver.is_open
 						-- change_output_destination ensures this
 					end
-					a_saved_receiver.start_document
+					principal_receiver.start_document
 
 					-- Process the source document using the handlers that have been set up.
 
@@ -678,8 +697,8 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 						trace_listener.stop_tracing
 					end
 
-					a_saved_receiver.end_document
-					a_saved_receiver.close
+					principal_receiver.end_document
+					principal_receiver.close
 					principal_result.flush
 					if a_transformation_result.error_message /= Void then
 						report_warning (a_transformation_result.error_message, Void)
@@ -780,41 +799,41 @@ feature -- Implementation
 			result_not_void: a_result /= Void
 			properties_not_void: some_properties /= Void
 		local
-			an_emitter: XM_XSLT_EMITTER
-			a_method: STRING
-			a_method_uri, a_method_local_name: STRING
-			a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
+			l_emitter: XM_XSLT_EMITTER
+			l_method: STRING
+			l_method_uri, l_method_local_name: STRING
+			l_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
 		do
 			if a_result.is_emitter then
-				an_emitter := a_result.emitter
-				an_emitter.set_output_properties (some_properties)
-				Result := an_emitter
+				l_emitter := a_result.emitter
+				l_emitter.set_output_properties (some_properties)
+				Result := l_emitter
 			elseif a_result.is_receiver then
 				Result := a_result.receiver
 			else
 				check
 					stream: a_result.is_stream
 				end
-				a_method := some_properties.method
-				if a_method.count = 0 then
-					a_method_uri := ""; a_method_local_name := ""
+				l_method := some_properties.method
+				if l_method.count = 0 then
+					l_method_uri := ""; l_method_local_name := ""
 				else
-					a_method_uri := namespace_uri_from_expanded_name (a_method)
-					a_method_local_name := local_name_from_expanded_name (a_method)
+					l_method_uri := namespace_uri_from_expanded_name (l_method)
+					l_method_local_name := local_name_from_expanded_name (l_method)
 				end
 				if some_properties.used_character_maps.count > 0 then
-					a_character_map_index := executable.character_map_index
+					l_character_map_index := executable.character_map_index
 					check
-						character_map_index: a_character_map_index /= Void
+						character_map_index: l_character_map_index /= Void
 						-- as it will have been compiled in - we have already checked
 						-- that the xsl:character-maps have been declared.
 					end
 				end
 				check
-					valid_output_method: emitter_factory.is_valid_output_method (a_method_uri, a_method_local_name)
+					valid_output_method: emitter_factory.is_valid_output_method (l_method_uri, l_method_local_name)
 					-- compiler ensures this
 				end
-				Result := emitter_factory.new_receiver (a_method_uri, a_method_local_name, Current, a_result.stream, some_properties,  a_character_map_index)
+				Result := emitter_factory.new_receiver (l_method_uri, l_method_local_name, Current, a_result.stream, some_properties,  l_character_map_index)
 				a_result.set_principal_receiver (Result)
 			end
 		ensure
@@ -955,6 +974,30 @@ feature -- Implementation
 			end
 		ensure
 			error_or_not_void: not is_error implies Result /= Void
+		end
+
+	find_principal_emitter is
+			-- Find emitter attached to `principal_receiver'.
+		require
+			principal_receiver_not_void: principal_receiver /= Void
+		local
+			l_complex: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
+			l_receiver: XM_XPATH_RECEIVER
+			l_proxy: XM_XPATH_PROXY_RECEIVER
+		do
+			l_complex ?= principal_receiver
+			if l_complex /= Void then
+				from
+					l_receiver := l_complex.next_receiver
+					l_proxy ?= l_receiver
+				until
+					l_proxy = Void
+				loop
+					l_receiver := l_proxy.base_receiver
+					l_proxy ?= l_receiver
+				end
+				principal_emitter ?= l_receiver
+			end
 		end
 
 invariant

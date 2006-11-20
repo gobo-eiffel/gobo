@@ -94,7 +94,7 @@ feature -- Status report
 			-- Line number where pattern occured
 
 	is_error: BOOLEAN
-			-- Is the pattern in error (as a result of `type_check')?
+			-- Is the pattern in error ?
 
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Error value
@@ -173,12 +173,17 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
-			-- Determine whether this Pattern matches the given Node;
-			-- This is the main external interface for matching patterns;
-			--  it sets the result of current() to `a_node'.
-			-- The context is only relevant if the pattern
-			--  uses variables, or contains calls on functions such as document() or key().
+	last_match_result: BOOLEAN is
+			-- Result of last call to `match'
+		require
+			no_error: not is_error
+		do
+			Result := internal_last_match_result
+		end
+
+	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Attempt to match `Current' againast `a_node'.
+			-- Sets `last_match_result' and possibly `error_value'.
 		require
 			valid_node: a_node /= Void
 			context_not_void: a_context /= Void
@@ -199,7 +204,10 @@ feature -- Conversion
 
 feature {XM_XSLT_PATTERN} -- Local
 
-	internal_matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
+	internal_last_match_result: BOOLEAN
+			-- Result of last call to `match'
+
+	internal_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Determine whether this Pattern matches the given Node;
 			-- This is an internal interface used for matching sub-patterns;
 			--  it does not alter current().
@@ -207,8 +215,9 @@ feature {XM_XSLT_PATTERN} -- Local
 		require
 			valid_node: a_node /= Void
 			context_not_void: a_context /= Void
+			no_error: not is_error
 		do
-			Result := matches (a_node, a_context)
+			match (a_node, a_context)
 		end
 
 invariant

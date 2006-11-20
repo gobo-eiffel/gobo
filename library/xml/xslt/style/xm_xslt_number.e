@@ -43,7 +43,7 @@ feature -- Element change
 				a_cursor := attribute_collection.name_code_cursor
 				a_cursor.start
 			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				attribute_collection.number_of_attributes + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -98,7 +98,7 @@ feature -- Element change
 					select_expression := select_expression.replacement_expression
 				end
 				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:number/select", 1, Xpath_errors_uri, "XPTY0004")
+				create a_role.make (Instruction_role, "xsl:number/select", 1, Xpath_errors_uri, "XTTE1000")
 				create a_single_node.make_single_node
 				a_type_checker.static_type_check (static_context, select_expression, a_single_node, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
@@ -118,7 +118,7 @@ feature -- Element change
 				if format.was_expression_replaced then
 					format := format.replacement_expression
 				end
-			end			
+			end
 			if grouping_size /= Void then
 				type_check_expression ("grouping-size", grouping_size)
 				if grouping_size.was_expression_replaced then
@@ -130,7 +130,7 @@ feature -- Element change
 				if grouping_separator.was_expression_replaced then
 					grouping_separator := grouping_separator.replacement_expression
 				end
-			end						
+			end
 			if letter_value /= Void then
 				type_check_expression ("letter-value", letter_value)
 				if letter_value.was_expression_replaced then
@@ -154,7 +154,7 @@ feature -- Element change
 			end
 			if count_pattern /= Void then
 				type_check_pattern ("count", count_pattern)
-			end				
+			end
 			validated := True
 		end
 
@@ -169,7 +169,7 @@ feature -- Element change
 																								  grouping_separator,
 																								  letter_value, ordinal,
 																								  language, formatter,
-																								  numberer, has_variables_in_patterns)
+																								  numberer, has_variables_in_patterns, static_context.is_backwards_compatible_mode)
 			-- TODO: consider wrapping this in a value-of
 		end
 
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 
 	level: INTEGER
 			-- Level
-	
+
 	has_variables_in_patterns: BOOLEAN
 			-- Do any supplied patterns include variable references?
 
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			-- Supplied value
 
 	count_pattern: XM_XSLT_PATTERN
-			-- Nodes which are to be counted 
+			-- Nodes which are to be counted
 
 	from_pattern: XM_XSLT_PATTERN
 			-- Node from which counted is to be started
@@ -244,16 +244,16 @@ feature {NONE} -- Implementation
 					report_compile_error (value_expression.error_value)
 				end
 				if a_select_attribute /= Void then
-					create an_error.make_from_string ("The select attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0010", Static_error)
+					create an_error.make_from_string ("The select attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0975", Static_error)
 					report_compile_error (an_error)
 				elseif a_count_attribute /= Void then
-					create an_error.make_from_string ("The count attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0010", Static_error)
+					create an_error.make_from_string ("The count attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0975", Static_error)
 					report_compile_error (an_error)
 				elseif a_from_attribute /= Void then
-					create an_error.make_from_string ("The from attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0010", Static_error)
+					create an_error.make_from_string ("The from attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0975", Static_error)
 					report_compile_error (an_error)
 				elseif a_level_attribute /= Void then
-					create an_error.make_from_string ("The level attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0010", Static_error)
+					create an_error.make_from_string ("The level attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0975", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			elseif STRING_.same_string (a_level_attribute, "multiple") then
 				level := Multiple_levels
 			elseif STRING_.same_string (a_level_attribute, "any") then
-				level := Any_level				
+				level := Any_level
 			else
 				create an_error.make_from_string ("Invalid value for level attribute", Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 				level := Simple_numbering
 			end
 			prepare_attributes_3 (an_ordinal_attribute, a_lang_attribute, a_letter_value_attribute,
-										  a_grouping_size_attribute, a_grouping_separator_attribute, a_format_attribute)			
+										  a_grouping_size_attribute, a_grouping_separator_attribute, a_format_attribute)
 		end
 
 	prepare_attributes_3 (an_ordinal_attribute, a_lang_attribute, a_letter_value_attribute: STRING;

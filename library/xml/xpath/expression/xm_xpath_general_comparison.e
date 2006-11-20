@@ -310,8 +310,8 @@ feature {NONE} -- Implementation
 			first_type_not_void: a_type /= Void
 			second_type_not_void: another_type /= Void
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
+			l_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			if a_type = type_factory.untyped_atomic_type then
 				if another_type = type_factory.untyped_atomic_type then
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.double_type, False)
 					adopt_child_expression (first_operand)
 				else
-					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (second_operand, another_type, False)
+					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, another_type, False)
 					adopt_child_expression (first_operand)
 				end
 			elseif another_type = type_factory.untyped_atomic_type then
@@ -336,20 +336,20 @@ feature {NONE} -- Implementation
 				end	
 			end
 			
-			create {XM_XPATH_VALUE_COMPARISON} a_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
-			a_computed_expression.set_parent (container)
-			a_computed_expression.simplify
-			if not a_computed_expression.is_error then
-				if a_computed_expression.was_expression_replaced then
-					an_expression := a_computed_expression.replacement_expression
+			create {XM_XPATH_VALUE_COMPARISON} l_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
+			l_computed_expression.set_parent (container)
+			l_computed_expression.simplify
+			if not l_computed_expression.is_error then
+				if l_computed_expression.was_expression_replaced then
+					l_expression := l_computed_expression.replacement_expression
 				else
-					an_expression := a_computed_expression
+					l_expression := l_computed_expression
 				end
-				an_expression.check_static_type (a_context, a_context_item_type)
-				if an_expression.was_expression_replaced then
-					set_replacement (an_expression.replacement_expression)
+				l_expression.check_static_type (a_context, a_context_item_type)
+				if l_expression.was_expression_replaced then
+					set_replacement (l_expression.replacement_expression)
 				else
-					set_replacement (an_expression)
+					set_replacement (l_expression)
 				end
 			end
 		end
@@ -411,54 +411,60 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 		local
-			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
-			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			a_type, another_type: XM_XPATH_ITEM_TYPE
-			a_message: STRING
-			a_type_checker: XM_XPATH_TYPE_CHECKER
+			l_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
+			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
+			l_type, l_other_type: XM_XPATH_ITEM_TYPE
+			l_message: STRING
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create a_type_checker
-			create an_atomic_sequence.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
-			create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-			a_type_checker.static_type_check (a_context, first_operand, an_atomic_sequence, False, a_role)
-			if a_type_checker.is_static_type_check_error then
-				set_last_error (a_type_checker.static_type_check_error)
+			create l_type_checker
+			create l_atomic_sequence.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
+			create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
+			l_type_checker.static_type_check (a_context, first_operand, l_atomic_sequence, False, l_role)
+			if l_type_checker.is_static_type_check_error then
+				set_last_error (l_type_checker.static_type_check_error)
 			else
-				set_first_operand (a_type_checker.checked_expression)
-				create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-				a_type_checker.static_type_check (a_context, second_operand, an_atomic_sequence, False, another_role)
-				if a_type_checker.is_static_type_check_error	then
-					set_last_error (a_type_checker.static_type_check_error)
+				set_first_operand (l_type_checker.checked_expression)
+				create l_other_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
+				l_type_checker.static_type_check (a_context, second_operand, l_atomic_sequence, False, l_other_role)
+				if l_type_checker.is_static_type_check_error	then
+					set_last_error (l_type_checker.static_type_check_error)
 				else
-					set_second_operand (a_type_checker.checked_expression)
-					a_type := first_operand.item_type
-					another_type := second_operand.item_type
-					if not is_error and then not (a_type = type_factory.any_atomic_type or else a_type = type_factory.untyped_atomic_type
-															or else another_type = type_factory.any_atomic_type or else another_type = type_factory.untyped_atomic_type) then
-						if a_type.primitive_type /= another_type.primitive_type and then
-							not are_types_comparable (a_type.primitive_type, another_type.primitive_type) then
-							a_message := STRING_.appended_string ("Cannot compare ", a_type.conventional_name)
-							a_message := STRING_.appended_string (a_message, " with ")
-							a_message := STRING_.appended_string (a_message, another_type.conventional_name)
-							set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
-						end
-					end
-					if not is_error then
-						if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
-							a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type and then
-							a_type.is_atomic_type and then another_type.is_atomic_type then
-							type_check_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type, a_context_item_type)
-						elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
-							type_check_singleton_and_empty_sequence (a_context, a_context_item_type)
-						elseif not first_operand.cardinality_allows_many then
-							type_check_first_operand_single (a_context, a_context_item_type)
-						else
-							if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (a_type, type_factory.numeric_type)
-																																 or else is_sub_type (another_type, type_factory.numeric_type)) then
-								type_check_inequalities (a_context, a_type, another_type, a_context_item_type)
+					set_second_operand (l_type_checker.checked_expression)
+					if not is_error and then (first_operand.cardinality_is_empty or second_operand.cardinality_is_empty) then
+						create l_boolean_value.make (False)
+						set_replacement (l_boolean_value)
+					else
+						l_type := first_operand.item_type
+						l_other_type := second_operand.item_type
+						if not is_error and then not (l_type = type_factory.any_atomic_type or else l_type = type_factory.untyped_atomic_type
+							or else l_other_type = type_factory.any_atomic_type or else l_other_type = type_factory.untyped_atomic_type) then
+							if l_type.primitive_type /= l_other_type.primitive_type and then
+								not are_types_comparable (l_type.primitive_type, l_other_type.primitive_type) then
+									l_message := STRING_.appended_string ("Cannot compare ", l_type.conventional_name)
+									l_message := STRING_.appended_string (l_message, " with ")
+									l_message := STRING_.appended_string (l_message, l_other_type.conventional_name)
+									set_last_error_from_string (l_message, Xpath_errors_uri, "XPTY0004", Type_error)
 							end
-							if not was_expression_replaced then
-								evaluate_two_constants
+						end
+						if not is_error then
+							if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
+								l_type /= type_factory.any_atomic_type and then l_other_type /= type_factory.any_atomic_type and then
+								l_type.is_atomic_type and then l_other_type.is_atomic_type then
+									type_check_two_singletons (a_context, l_type.as_atomic_type, l_other_type.as_atomic_type, a_context_item_type)
+							elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
+								type_check_singleton_and_empty_sequence (a_context, a_context_item_type)
+							elseif not first_operand.cardinality_allows_many then
+								type_check_first_operand_single (a_context, a_context_item_type)
+							else
+								if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (l_type, type_factory.numeric_type)
+									or else is_sub_type (l_other_type, type_factory.numeric_type)) then
+										type_check_inequalities (a_context, l_type, l_other_type, a_context_item_type)
+								end
+								if not was_expression_replaced then
+									evaluate_two_constants
+								end
 							end
 						end
 					end

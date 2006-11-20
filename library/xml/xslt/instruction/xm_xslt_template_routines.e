@@ -89,8 +89,9 @@ feature -- Evaluation
 		do
 			-- find the node handler [i.e., the template rule] for this node
 				
-			l_node_handler := a_transformer.rule_manager.template_rule (a_node, a_mode, a_context)
+			a_transformer.rule_manager.find_template_rule (a_node, a_mode, a_context)
 			if not a_transformer.is_error then
+				l_node_handler := a_transformer.rule_manager.last_found_template
 				if l_node_handler = Void then
 					
 					-- Use the default action for the node. No need to open a new stack frame!

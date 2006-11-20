@@ -62,19 +62,19 @@ feature -- Events
 			-- Notify character data.
 		do
 			character_buffer := STRING_.appended_string (character_buffer, chars)
-			is_written := True
+			mark_as_written
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
 		do
-			is_written := True
+			mark_as_written
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
 		do
-			is_written := True
+			mark_as_written
 		end
 	
 feature {NONE} -- Implementation

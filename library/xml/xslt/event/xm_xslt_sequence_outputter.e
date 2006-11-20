@@ -182,7 +182,7 @@ feature -- Events
 			level := level + 1
 			in_start_tag := True
 			previous_atomic := False
-			is_written := True
+			mark_as_written
 		end
 
 	end_element is
@@ -196,7 +196,7 @@ feature -- Events
 			if level = 0 then
 				append_item (builder.current_root)
 			end
-			is_written := True
+			mark_as_written
 			previous_atomic := False
 		end -- TODO: what about freeing document from document pool?
 
@@ -212,7 +212,7 @@ feature -- Events
 				end
 				tree.notify_namespace (a_namespace_code, properties)
 			end
-			is_written := True
+			mark_as_written
 			previous_atomic := False
 		end
 
@@ -228,7 +228,7 @@ feature -- Events
 				end
 				tree.notify_attribute (a_name_code, a_type_code, a_value, properties)
 			end
-			is_written := True
+			mark_as_written
 			previous_atomic := False
 		end
 
@@ -238,7 +238,7 @@ feature -- Events
 			in_start_tag := False
 			tree.start_content
 			previous_atomic := False
-			is_written := True
+			mark_as_written
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
@@ -259,7 +259,7 @@ feature -- Events
 					tree.notify_characters (chars, properties)
 				end
 			end
-			is_written := True
+			mark_as_written
 			previous_atomic := False
 		end
 
@@ -276,7 +276,7 @@ feature -- Events
 				end
 				tree.notify_comment (a_content_string, properties)
 			end
-			is_written := True
+			mark_as_written
 			previous_atomic := False
 		end
 
@@ -293,7 +293,7 @@ feature -- Events
 				end
 				tree.notify_processing_instruction (a_name, a_data_string, properties)
 			end
-			is_written := True
+			mark_as_written
 			previous_atomic := False
 		end
 

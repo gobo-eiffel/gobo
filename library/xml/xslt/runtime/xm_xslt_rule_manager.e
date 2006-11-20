@@ -75,7 +75,10 @@ feature -- Access
 			mode_not_void: Result /= Void
 		end
 
-	template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_COMPILED_TEMPLATE is
+	last_found_template: XM_XSLT_COMPILED_TEMPLATE
+			-- Last template found by `find_template_rule' or `find_imported_template_rule' or `find_next_match_handler'
+
+	find_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Template rule registered for a particular node in a specific mode.
 		require
 			node_not_void: a_node /= Void
@@ -84,6 +87,7 @@ feature -- Access
 			mode_to_use: XM_XSLT_MODE
 			a_rule_value: XM_XSLT_RULE_VALUE
 		do
+			last_found_template := Void
 			if a_mode = Void then
 				mode_to_use := mode_for_default_mode
 			else
@@ -103,8 +107,9 @@ feature -- Access
 				std.error.put_string (a_node.fingerprint.out)
 				std.error.put_new_line
 			end
-			a_rule_value := mode_to_use.rule (a_node, a_context)
-			if a_rule_value /= Void then
+			mode_to_use.match_rule (a_node, a_context)
+			a_rule_value := mode_to_use.last_matched_rule
+			if a_rule_value /= Void and not a_context.transformer.is_error then
 				debug ("XSLT template rules")
 					std.error.put_string ("Found a match%N")
 				end
@@ -112,11 +117,11 @@ feature -- Access
 					template_rule: a_rule_value.is_template
 					-- Rule manager is only used with template rules
 				end
-				Result := a_rule_value.as_template
+				last_found_template := a_rule_value.as_template
 			end
 		end
 
-	imported_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_minimum_precedence, a_maximum_precedence: INTEGER;  a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_COMPILED_TEMPLATE is
+	find_imported_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_minimum_precedence, a_maximum_precedence: INTEGER;  a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Template rule registered for a particular node in a specific mode, within a given precedence range.
 			-- (Used to support xsl:apply-imports.)
 		require
@@ -126,22 +131,24 @@ feature -- Access
 			mode_to_use: XM_XSLT_MODE
 			a_rule_value: XM_XSLT_RULE_VALUE
 		do
+			last_found_template := Void
 			if a_mode = Void then
 				mode_to_use := mode_for_default_mode
 			else
 				mode_to_use := a_mode
 			end
-			a_rule_value := mode_to_use.imported_rule (a_node, a_minimum_precedence, a_maximum_precedence, a_context)
-			if a_rule_value /= Void then
+			mode_to_use.match_imported_rule (a_node, a_minimum_precedence, a_maximum_precedence, a_context)
+			a_rule_value := mode_to_use.last_matched_rule
+			if a_rule_value /= Void and not a_context.transformer.is_error then
 				check
 					template_rule: a_rule_value.is_template
 					-- Rule manager is only used with template rules
 				end
-				Result := a_rule_value.as_template
+				last_found_template := a_rule_value.as_template
 			end
 		end
 
-	next_match_handler (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_current_template: XM_XSLT_COMPILED_TEMPLATE; a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_COMPILED_TEMPLATE is
+	find_next_match_handler (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_current_template: XM_XSLT_COMPILED_TEMPLATE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Next template rule registered for a particular node in a specific mode, following `a_current_template'
 		require
 			node_not_void: a_node /= Void
@@ -151,18 +158,20 @@ feature -- Access
 			mode_to_use: XM_XSLT_MODE
 			a_rule_value: XM_XSLT_RULE_VALUE
 		do
+			last_found_template := Void
 			if a_mode = Void then
 				mode_to_use := mode_for_default_mode
 			else
 				mode_to_use := a_mode
 			end
-			a_rule_value := mode_to_use.next_matching_rule (a_node, a_current_template, a_context)
-			if a_rule_value /= Void then
+			mode_to_use.match_next_rule (a_node, a_current_template, a_context)
+			a_rule_value := mode_to_use.last_matched_rule
+			if a_rule_value /= Void and not a_context.transformer.is_error then
 				check
 					template_rule: a_rule_value.is_template
 					-- Rule manager is only used with template rules
 				end
-				Result := a_rule_value.as_template
+				last_found_template := a_rule_value.as_template
 			end
 		end
 

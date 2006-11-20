@@ -90,7 +90,7 @@ feature -- Events
 				count_stack.replace (count_stack.item + 1)
 				Precursor (a_namespace_code, properties)
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is

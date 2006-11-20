@@ -18,7 +18,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_RECEIVER
 		redefine
-			open, start_document, is_name_code_ok_for_start_element
+			open, start_document, is_name_code_ok_for_start_element, mark_as_written
 		end
 
 	XM_XPATH_NAME_UTILITIES
@@ -64,6 +64,11 @@ feature {NONE} -- Initialization
 			no_pending_start_tag: pending_start_tag = -1
 		end
 
+feature {XM_XSLT_TRANSFORMER} -- Access
+		
+	next_receiver: XM_XPATH_RECEIVER
+			-- Next receiver in pipeline
+
 feature -- Status report
 	
 	is_name_code_ok_for_start_element (a_name_code: INTEGER): BOOLEAN is
@@ -74,7 +79,16 @@ feature -- Status report
 
 			Result := a_name_code = -10 or else a_name_code >= 0
 		end
-	
+
+feature -- Status setting
+
+	mark_as_written is
+			-- Mark as output has been written.
+		do
+			is_written := True
+			next_receiver.mark_as_written
+		end
+
 feature -- Events
 
 	on_error (a_message: STRING) is
@@ -129,7 +143,7 @@ feature -- Events
 				current_simple_type := a_type_code
 				previous_atomic := False
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
@@ -206,7 +220,7 @@ feature -- Events
 					end
 				end
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -263,7 +277,7 @@ feature -- Events
 					end
 				end
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	start_content is
@@ -315,7 +329,7 @@ feature -- Events
 				pending_attributes_lists_size := 0
 				previous_atomic := False
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	end_element is
@@ -324,7 +338,7 @@ feature -- Events
 			if pending_start_tag /= -1 then start_content end
 			next_receiver.end_element
 			previous_atomic := False
-			is_written := True
+			mark_as_written
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
@@ -335,7 +349,7 @@ feature -- Events
 				if pending_start_tag /= -1 then start_content end
 				next_receiver.notify_characters (chars, properties)
 			end
-			is_written := True
+			mark_as_written
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
@@ -344,7 +358,7 @@ feature -- Events
 			if pending_start_tag /= -1 then start_content end
 			next_receiver.notify_processing_instruction (a_name, a_data_string, properties)
 			previous_atomic := False
-			is_written := True
+			mark_as_written
 		end
 	
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
@@ -353,7 +367,7 @@ feature -- Events
 			if pending_start_tag /= -1 then start_content end
 			next_receiver.notify_comment (a_content_string, properties)
 			previous_atomic := False
-			is_written := True
+			mark_as_written
 		end
 
 	end_document is
@@ -418,9 +432,6 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-
-	next_receiver: XM_XPATH_RECEIVER
-			-- Next receiver in pipeline
 
 	pending_start_tag: INTEGER
 			-- Name code of pending start tag

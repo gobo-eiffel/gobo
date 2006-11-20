@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_stripper
 		redefine
-			another, space_preserving_mode, is_local_invariant_met
+			another, find_space_preserving_mode, is_local_invariant_met
 		end
 
 create
@@ -67,15 +67,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	space_preserving_mode (a_name_code: INTEGER): INTEGER is
-			-- Space-preserving mode for element identitifed by `a_name_code'
+	find_space_preserving_mode (a_name_code: INTEGER) is
+			-- Find space-preserving mode for element identitifed by `a_name_code'
 		local
 			a_fingerprint, counter: INTEGER
 			found: BOOLEAN
 		do
 			a_fingerprint := a_name_code - (a_name_code // bits_20) * bits_20
 			if a_fingerprint = xsl_text_fingerprint then
-				Result := Always_preserve
+				found_space_preserving_mode := Always_preserve
 			else
 				from
 					counter := 1
@@ -86,12 +86,12 @@ feature -- Access
 				loop
 					if specials.item (counter) = a_fingerprint then
 						found := True
-						Result := Always_strip
+						found_space_preserving_mode := Always_strip
 					end	
 					counter := counter + 1
 				end
 				if not found then
-					Result := Strip_default
+					found_space_preserving_mode := Strip_default
 				end
 			end
 		end

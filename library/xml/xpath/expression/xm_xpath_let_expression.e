@@ -453,7 +453,7 @@ feature -- Evaluation
 			from
 				a_let_expression := current
 			until
-				is_error or else finished
+				is_error or a_context.is_process_error or finished
 			loop
 				a_let_expression.sequence.lazily_evaluate (a_context, a_let_expression.reference_count)
 				a_value := a_let_expression.sequence.last_evaluation
@@ -468,7 +468,9 @@ feature -- Evaluation
 					end
 				end
 			end
-			if is_error then
+			if a_context.is_process_error then
+				-- do nothing
+			elseif is_error then
 				a_context.report_fatal_error (error_value)
 			else
 				a_let_expression.action.process (a_context)

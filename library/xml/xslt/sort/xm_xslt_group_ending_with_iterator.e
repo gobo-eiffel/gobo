@@ -98,8 +98,12 @@ feature -- Cursor movement
 				loop
 					population.forth
 					if not population.after then
-						if key_pattern.matches (next_candidate.as_node , running_context) then
-							next_candidate := population.item; matched := True
+						key_pattern.match (next_candidate.as_node , running_context)
+						if key_pattern.is_error then
+							set_last_error (key_pattern.error_value)
+						elseif key_pattern.last_match_result then
+							next_candidate := population.item
+							matched := True
 						else
 							next_candidate := population.item
 							current_members.force_last (next_candidate)

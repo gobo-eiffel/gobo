@@ -205,7 +205,7 @@ feature -- Evaluation
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			evaluate_item (a_context)
-			if last_evaluated_item /= Void then
+			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
 				a_context.current_receiver.append_item (last_evaluated_item)
 			end
 		end

@@ -541,8 +541,7 @@ feature -- Element change
 					some_properties := properties
 				end
 				a_receiver := transformer.selected_receiver (a_result, some_properties)
-
-				if not transformer.is_error then
+				if not transformer.is_error and not a_receiver.is_open then
 					-- TODO: add a validator to the pipeline if required
 					
 					-- Add a filter to remove duplicate namespaces

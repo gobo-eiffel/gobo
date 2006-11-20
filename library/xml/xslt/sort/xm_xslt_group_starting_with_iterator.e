@@ -107,7 +107,10 @@ feature -- Cursor movement
 						an_error.set_location (locator.system_id, locator.line_number)
 						running_context.transformer.report_fatal_error (an_error)
 					else
-						if key_pattern.matches (next_candidate.as_node , running_context) then
+						key_pattern.match (next_candidate.as_node , running_context)
+						if key_pattern.is_error then
+							set_last_error (key_pattern.error_value)
+						elseif key_pattern.last_match_result then
 							next_group_reached := True
 						else
 							current_members.force_last (next_candidate)

@@ -68,7 +68,7 @@ feature -- Status report
 			when 2 then
 				create Result.make_atomic_sequence
 			when 3 then
-				create Result.make (document_node_kind_test, Required_cardinality_exactly_one)
+				create Result.make_single_node
 			end
 		end
 
@@ -99,75 +99,80 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			a_context_document: XM_XPATH_DOCUMENT
-			a_fingerprint: INTEGER
-			a_given_key_name, a_message: STRING
-			an_expression: XM_XPATH_EXPRESSION
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_key_context_information: XM_XSLT_KEY_CONTEXT_INFORMATION
-			a_key_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			all_values_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
-			a_local_order_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
-			an_error: XM_XPATH_ERROR_VALUE
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_context_document: XM_XPATH_DOCUMENT
+			l_node: XM_XPATH_NODE
+			l_fingerprint: INTEGER
+			l_given_key_name, a_message: STRING
+			l_expression: XM_XPATH_EXPRESSION
+			l_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_key_context_information: XM_XSLT_KEY_CONTEXT_INFORMATION
+			l_key_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_values_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
+			l_local_order_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
+			l_error: XM_XPATH_ERROR_VALUE
 		do
-			an_evaluation_context ?= a_context
+			l_evaluation_context ?= a_context
 			check
-				evaluation_context_not_void: an_evaluation_context /= Void
+				evaluation_context_not_void: l_evaluation_context /= Void
 				-- as this is an XSLT function
 			end
-			a_transformer := an_evaluation_context.transformer
-			arguments.item (3).evaluate_item (an_evaluation_context)
-			a_context_document ?= arguments.item (3).last_evaluated_item
-			if a_context_document = Void then
-				create an_error.make_from_string ("In the key() function, the context node must be in a tree whose root is a document node",
+			l_transformer := l_evaluation_context.transformer
+			arguments.item (3).evaluate_item (l_evaluation_context)
+			if arguments.item (3).last_evaluated_item.is_node then
+				l_node := arguments.item (3).last_evaluated_item.as_node
+				l_context_document := l_node.document_root
+			end
+			if l_context_document = Void then
+				create l_error.make_from_string ("In the key() function, the context node must be in a tree whose root is a document node",
 															 Xpath_errors_uri, "XTDE1270", Dynamic_error)
-				an_error.set_location (system_id, line_number)
-				a_transformer.report_fatal_error (an_error)
+				l_error.set_location (system_id, line_number)
+				l_transformer.report_fatal_error (l_error)
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_error)
 			else
-				a_fingerprint := key_fingerprint
-				if a_fingerprint = -1 then
-					arguments.item (1).evaluate_item (an_evaluation_context)
-					a_given_key_name := arguments.item (1).last_evaluated_item.string_value
-					a_fingerprint := namespace_context.fingerprint (a_given_key_name, False)
-					if a_fingerprint = -1 then
-						a_message := STRING_.concat ("Key '", a_given_key_name)
+				l_fingerprint := key_fingerprint
+				if l_fingerprint = -1 then
+					arguments.item (1).evaluate_item (l_evaluation_context)
+					l_given_key_name := arguments.item (1).last_evaluated_item.string_value
+					l_fingerprint := namespace_context.fingerprint (l_given_key_name, False)
+					if l_fingerprint = -1 then
+						a_message := STRING_.concat ("Key '", l_given_key_name)
 						a_message := STRING_.appended_string (a_message, "' has not been defined")
-						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1260", Dynamic_error)
-						an_error.set_location (system_id, line_number)
-						a_transformer.report_fatal_error (an_error)
+						create l_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1260", Dynamic_error)
+						l_error.set_location (system_id, line_number)
+						l_transformer.report_fatal_error (l_error)
 					end
 				end
-				if not a_transformer.is_error then
+				if not l_transformer.is_error then
 
 					-- If the second argument is a singleton, we evaluate the function  directly;
 					-- otherwise we recurse to evaluate it once for each item in the sequence.
 
-					an_expression := arguments.item (2)
-					if not an_expression.cardinality_allows_many then
-						an_expression.evaluate_item (an_evaluation_context)
-						an_atomic_value ?= an_expression.last_evaluated_item
-						if an_atomic_value /= Void then
-							a_transformer.key_manager.generate_keyed_sequence (a_fingerprint, a_context_document, an_atomic_value, an_evaluation_context)
-							if a_transformer.is_error then
+					l_expression := arguments.item (2)
+					if not l_expression.cardinality_allows_many then
+						l_expression.evaluate_item (l_evaluation_context)
+						l_atomic_value ?= l_expression.last_evaluated_item
+						if l_atomic_value /= Void then
+							l_transformer.key_manager.generate_keyed_sequence (l_fingerprint, l_context_document, l_atomic_value, l_evaluation_context)
+							if l_transformer.is_error then
 								create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
 							else
-								last_iterator := a_transformer.key_manager.last_key_sequence
+								last_iterator := l_transformer.key_manager.last_key_sequence
 							end
 						else
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						end
 					else
-						create a_key_context_information.make (a_context_document, an_evaluation_context, a_fingerprint)
-						an_expression.create_iterator (a_context)
-						if an_expression.last_iterator.is_error then
-							last_iterator := an_expression.last_iterator
+						create l_key_context_information.make (l_context_document, l_evaluation_context, l_fingerprint)
+						l_expression.create_iterator (a_context)
+						if l_expression.last_iterator.is_error then
+							last_iterator := l_expression.last_iterator
 						else
-							a_key_iterator := an_expression.last_iterator
-							create all_values_iterator.make (a_key_iterator, a_key_context_information, Void)
-							create a_local_order_comparer
-							create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (all_values_iterator, a_local_order_comparer)
+							l_key_iterator := l_expression.last_iterator
+							create l_values_iterator.make (l_key_iterator, l_key_context_information, Void)
+							create l_local_order_comparer
+							create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (l_values_iterator, l_local_order_comparer)
 						end
 					end
 				else

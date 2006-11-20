@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_RECEIVER
 		redefine
-			is_proxy, as_proxy
+			is_proxy, as_proxy, mark_as_written
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -32,6 +32,15 @@ feature -- Status report
 			-- Is `Current' an `XM_XPATH_PROXY_RECEIVER'?
 		do
 			Result := True
+		end
+
+feature -- Status setting
+
+	mark_as_written is
+			-- Mark as output has been written.
+		do
+			is_written := True
+			base_receiver.mark_as_written
 		end
 
 feature -- Events
@@ -59,64 +68,64 @@ feature -- Events
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
 			-- Notify an unparsed entity URI.
 		do
+			mark_as_written
 			base_receiver.set_unparsed_entity (a_name, a_system_id, a_public_id)
-			is_written := True
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
 		do
+			mark_as_written
 			base_receiver.start_element (a_name_code, a_type_code, properties)
-			is_written := True
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace.
 		do
+			mark_as_written
 			base_receiver.notify_namespace (a_namespace_code, properties)
-			is_written := True
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
 			-- Notify an attribute.
 		do
+			mark_as_written
 			base_receiver.notify_attribute (a_name_code, a_type_code, a_value, properties)
-			is_written := True
 		end
 
 	start_content is
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
+			mark_as_written
 			base_receiver.start_content
-			is_written := True
 		end
 
 	end_element is
 			-- Notify the end of an element.
 		do
+			mark_as_written
 			base_receiver.end_element
-			is_written := True
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
 			-- Notify character data.
 		do
+			mark_as_written
 			base_receiver.	notify_characters (chars, properties)
-			is_written := True
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
 		do
+			mark_as_written
 			base_receiver.notify_processing_instruction (a_name, a_data_string, properties)
-			is_written := True
 		end
 	
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
 		do
+			mark_as_written
 			base_receiver.	notify_comment (a_content_string, properties)
-			is_written := True
 		end
 
 	end_document is

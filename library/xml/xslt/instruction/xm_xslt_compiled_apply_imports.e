@@ -148,8 +148,11 @@ feature -- Evaluation
 						an_error.set_location (system_id, line_number)
 						a_transformer.report_fatal_error (an_error)
 					else
-						a_node_handler := a_transformer.rule_manager.imported_template_rule (a_current_iterator.item.as_node, a_mode, a_minimum_precedence, a_maximum_precedence, a_context)
-						if a_node_handler = Void then
+						a_transformer.rule_manager.find_imported_template_rule (a_current_iterator.item.as_node, a_mode, a_minimum_precedence, a_maximum_precedence, a_context)
+						a_node_handler := a_transformer.rule_manager.last_found_template
+						if a_transformer.is_error then
+							-- nothing to do
+						elseif a_node_handler = Void then
 							
 							-- Use the default action for the node.
 							

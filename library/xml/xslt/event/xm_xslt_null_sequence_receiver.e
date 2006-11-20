@@ -55,55 +55,55 @@ feature -- Events
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
 			-- Notify an unparsed entity URI.
 		do
-			is_written := True
+			mark_as_written
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element.
 		do
-			is_written := True
+			mark_as_written
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace.
 		do
-			is_written := True
+			mark_as_written
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
 			-- Notify an attribute.
 		do
-			is_written := True
+			mark_as_written
 		end
 
 	start_content is
 			-- Notify the start of the content.
 		do
-			is_written := True
+			mark_as_written
 		end
 
 	end_element is
 			-- Notify the end of an element.
 		do
-			is_written := True
+			mark_as_written
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
 			-- Notify character data.
 		do
-			is_written := True
+			mark_as_written
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
 		do
-			is_written := True
+			mark_as_written
 		end
 	
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
 		do
-			is_written := True
+			mark_as_written
 		end
 
 	end_document is

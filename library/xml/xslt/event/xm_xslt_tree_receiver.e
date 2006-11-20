@@ -23,7 +23,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_RECEIVER
 		undefine
-			open, start_document, set_unparsed_entity, is_proxy, as_proxy
+			open, start_document, set_unparsed_entity, is_proxy, as_proxy, mark_as_written
 		end
 
 	XM_XPATH_AXIS
