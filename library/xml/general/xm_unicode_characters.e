@@ -1,7 +1,7 @@
 indexing
 
 	description:
-	
+
 		"XML unicode character classes"
 
 	library: "Gobo Eiffel XML Library"
@@ -9,7 +9,7 @@ indexing
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class XM_UNICODE_CHARACTERS
 
 feature -- Strings
@@ -78,7 +78,7 @@ feature -- Strings
 				end
 			end
 		end
-		
+
 	is_ncname (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid XML Namespace 'NCName'?
 		require
@@ -103,10 +103,10 @@ feature -- Strings
 		ensure
 			empty_not_name: a_name.is_empty implies not Result
 		end
-		
+
 	is_qname (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid XML Namespace 'Qname'?
-			-- Qname := [NCName ':']? NCName 
+			-- Qname := [NCName ':']? NCName
 		require
 			a_name_not_void: a_name /= Void
 		local
@@ -129,7 +129,7 @@ feature -- Characters
 			-- Valid content character?
 		deferred
 		end
-		
+
 	is_name_char (a: INTEGER): BOOLEAN is
 			-- Character for name?
 		deferred
@@ -139,7 +139,7 @@ feature -- Characters
 			-- Valid first character of name?
 		deferred
 		end
-		
+
 	is_space (a: INTEGER): BOOLEAN is
 			-- Space character?
 		deferred
@@ -150,7 +150,7 @@ feature -- Namespace characters
 	is_ncname_char (a: INTEGER): BOOLEAN is
 			-- Is this a valid 'NCName' character?
 		do
-			Result := a /= (':').code and is_name_char (a)
+			Result := a /= (':').code and then is_name_char (a)
 		ensure
 			definition: Result = (a /= (':').code and is_name_char (a))
 		end
@@ -158,7 +158,7 @@ feature -- Namespace characters
 	is_ncname_first(a: INTEGER): BOOLEAN is
 			-- Is this a valid first character of a 'NCName'?
 		do
-			Result := a /= (':').code and is_name_first (a)
+			Result := a /= (':').code and then is_name_first (a)
 		ensure
 			definition: Result = (a /= (':').code and is_name_first (a))
 		end

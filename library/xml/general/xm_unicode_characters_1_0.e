@@ -1,7 +1,7 @@
 indexing
 
 	description:
-	
+
 		"XML unicode character classes"
 
 	implements: "Appendix B of XML 1.0 -- second edition"
@@ -15,9 +15,9 @@ indexing
 class XM_UNICODE_CHARACTERS_1_0
 
 inherit
-	
+
 	XM_UNICODE_CHARACTERS
-	
+
 -- Code used to generate the initial version of the code below from the standard text
 --
 --inherit XF_CONVERSION_PRIVATE_ROUTINES
@@ -66,34 +66,34 @@ feature -- Valid characters (section 2.2)
 	is_char (a: INTEGER): BOOLEAN is
 			-- Valid content character?
 		do
-			Result := a = 9 or
-				a = 10 or
-				a = 13 or
-				(a >= 32 and a <= 55295) or
-				(a >= 57344 and a <= 65533) or
+			Result := a = 9 or else
+				a = 10 or else
+				a = 13 or else
+				(a >= 32 and a <= 55295) or else
+				(a >= 57344 and a <= 65533) or else
 				(a >= 65536 and a <= 1114111)
 		end
 
 	is_name_char (a: INTEGER): BOOLEAN is
 			-- Character for name?
 		do
-			Result := is_name_first (a) or
-					a = ('.').code or a = ('-').code or
-					is_digit (a) or
-					is_combining_char (a) or
+			Result := is_name_first (a) or else
+					a = ('.').code or a = ('-').code or else
+					is_digit (a) or else
+					is_combining_char (a) or else
 					is_extender (a)
 		end
 
 	is_name_first (a: INTEGER): BOOLEAN is
 			-- Valid first character of name?
 		do
-			Result := is_letter (a) or a = ('_').code or a = (':').code
+			Result := is_letter (a) or else a = ('_').code or else a = (':').code
 		end
-		
+
 	is_space (a: INTEGER): BOOLEAN is
 			-- Space character?
 		do
-			Result := a = 32 or a = 9 or a = 10 or a = 13
+			Result := a = 32 or else a = 9 or else a = 10 or else a = 13
 		end
 
 feature -- Character classes (appendix B)
@@ -101,7 +101,7 @@ feature -- Character classes (appendix B)
 	is_letter (a: INTEGER): BOOLEAN is
 			-- Letter class.
 		do
-			Result := is_base_char (a) or
+			Result := is_base_char (a) or else
 				is_ideographic (a)
 		end
 
