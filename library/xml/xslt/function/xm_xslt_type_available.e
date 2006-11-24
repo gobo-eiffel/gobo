@@ -103,11 +103,11 @@ feature {NONE} -- Implementation
 			l_fingerprint: INTEGER
 		do
 			if not is_qname (a_qname) then
-				create {XM_XPATH_INVALID_VALUE} last_evaluated_item.make_from_string ("Argument is not a lexical QNAME", Xpath_errors_uri, "XTDE1425", Dynamic_error)
+				create {XM_XPATH_INVALID_VALUE} last_evaluated_item.make_from_string ("Argument is not a lexical QNAME", Xpath_errors_uri, "XTDE1428", Dynamic_error)
 			else
 				l_fingerprint := namespace_resolver.fingerprint (a_qname, true)
 				if l_fingerprint = -2 then
-					create {XM_XPATH_INVALID_VALUE} last_evaluated_item.make_from_string ("There is no namespace in scope for argument's prefix", Xpath_errors_uri, "XTDE1425", Dynamic_error)
+					create {XM_XPATH_INVALID_VALUE} last_evaluated_item.make_from_string ("There is no namespace in scope for argument's prefix", Xpath_errors_uri, "XTDE1428", Dynamic_error)
 				elseif l_fingerprint = -1 then
 					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
 				else
