@@ -111,7 +111,7 @@ feature -- Evaluation
 		evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item.
 		local
-			l_value, l_min, l_max: XM_XPATH_NUMERIC_VALUE
+			l_value: XM_XPATH_NUMERIC_VALUE
 		do
 			value.evaluate_item (a_context)
 			if value.last_evaluated_item = Void then
