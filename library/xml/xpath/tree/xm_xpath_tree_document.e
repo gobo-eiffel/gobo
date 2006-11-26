@@ -35,10 +35,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system_id: STRING) is
-			-- Establish invariant.
-		require
-			system_id_not_void: a_system_id /= Void
+	make (a_base_uri: like base_uri; a_document_uri: like document_uri) is
+			-- Initialize `Current'.
 		do
 			cached_id_table := Void
 			document := Current
@@ -46,11 +44,18 @@ feature {NONE} -- Initialization
 			create children.make (5)
 			create system_id_map.make
 			sequence_number_high_word := 1
-			set_system_id (a_system_id)
+			if a_document_uri /= Void then
+				set_system_id (a_document_uri.full_reference)
+			elseif a_base_uri /= Void then
+				set_system_id (a_base_uri)
+			end
+			base_uri := a_base_uri
+			document_uri := a_document_uri
 			shared_serial_number_generator.generate_next_serial_number
 			set_document_number (shared_serial_number_generator.last_generated_serial_number)
 		ensure
-			base_uri_set: STRING_.same_string (base_uri, a_system_id)
+			base_uri_set: base_uri = a_base_uri
+			document_uri_set: document_uri = a_document_uri
 			cached_id_table_is_void: cached_id_table = Void
 		end
 
@@ -67,6 +72,9 @@ feature -- Access
 		do
 			Result := Current
 		end
+
+	base_uri: STRING
+			-- Base URI
 
 	system_id: STRING is
 			-- SYSTEM id of `Current', or `Void' if not known
@@ -154,8 +162,7 @@ feature -- Access
 
 			Result := a_list
 		end
-
-			
+		
 	unparsed_entity_system_id (an_entity_name: STRING): STRING is
 			-- System identifier of an unparsed external entity
 		local
@@ -194,11 +201,8 @@ feature -- Access
 			end
 		end
 
-	document_uri: STRING is
+	document_uri: UT_URI
 			-- Absolute URI of the source from which the document was constructed
-		do
-			Result := system_id_map.system_id (1)
-		end
 
 	selected_id (an_id: STRING): XM_XPATH_ELEMENT is
 			-- Element with ID value of `id'

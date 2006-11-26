@@ -15,7 +15,10 @@ class XM_XPATH_INTEGER_RANGE_TEST
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
-	
+		redefine
+			sub_expressions, evaluate_item
+		end
+
 create
 
 	make
@@ -43,6 +46,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	value: XM_XPATH_EXPRESSION
+			-- Value to be tested
+
+	minimum_bound, maximum_bound: XM_XPATH_EXPRESSION
+			-- Inclusive bounds over `value'
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
@@ -53,12 +62,17 @@ feature -- Access
 			end
 		end
 
-	value: XM_XPATH_EXPRESSION
-			-- Value to be tested
-
-	minimum_bound, maximum_bound: XM_XPATH_EXPRESSION
-			-- Inclusive bounds over `value'
-
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (3)
+			Result.set_equality_tester (expression_tester)
+			Result.put (value, 1)
+			Result.put (minimum_bound, 2)
+			Result.put (maximum_bound, 3)
+		ensure then
+			three_sub_expressions: Result.count = 3
+		end
 
 feature -- Status report
 
@@ -90,6 +104,38 @@ feature -- Optimization
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
+		end
+
+feature -- Evaluation
+
+		evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item.
+		local
+			l_value, l_min, l_max: XM_XPATH_NUMERIC_VALUE
+		do
+			value.evaluate_item (a_context)
+			if value.last_evaluated_item = Void then
+				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+			elseif value.last_evaluated_item.is_error then
+				last_evaluated_item := value.last_evaluated_item
+			else
+				l_value := value.last_evaluated_item.as_numeric_value
+				minimum_bound.evaluate_item (a_context)
+				if minimum_bound.last_evaluated_item.is_error then
+					last_evaluated_item := minimum_bound.last_evaluated_item
+				else
+					if l_value.three_way_comparison (minimum_bound.last_evaluated_item.as_numeric_value, a_context) = -1 then
+						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+					else
+						maximum_bound.evaluate_item (a_context)
+						if maximum_bound.last_evaluated_item.is_error then
+							last_evaluated_item := maximum_bound.last_evaluated_item
+						else
+							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (l_value.three_way_comparison (maximum_bound.last_evaluated_item.as_numeric_value, a_context) < 1)
+						end
+					end
+				end
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

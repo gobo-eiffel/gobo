@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			outputter := an_outputter
 			output_properties := some_output_properties
 			character_map_expander := a_character_map_expander
-			system_id := "" -- TODO - set_system_id
+			base_uri := "" -- TODO - set_base_uri
 		ensure
 			not_yet_committed: not committed
 			transformer_set: transformer = a_transformer

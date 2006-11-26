@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tree: XM_XPATH_TINY_FOREST; a_node_number: INTEGER) is
+	make (a_tree: XM_XPATH_TINY_FOREST; a_node_number: INTEGER; a_base_uri: STRING; a_document_uri: like document_uri) is
 			-- Establish invariant.
 		require
 			tree_not_void: a_tree /= Void
@@ -60,12 +60,22 @@ feature {NONE} -- Initialization
 			tree := a_tree
 			node_number := a_node_number
 			node_type := Document_node
+			base_uri := a_base_uri
+			document_uri := a_document_uri
+			if document_uri /= Void then
+				set_system_id (document_uri.full_reference)
+			end
 		ensure
 			tree_set: tree = a_tree
 			node_number_set: node_number = a_node_number
+			base_uri_set: base_uri = a_base_uri
+			document_id_set: document_uri = a_document_uri
 		end
 
 feature -- Access
+
+	base_uri: STRING
+			-- Base URI of `Current'
 
 	system_id: STRING is
 			-- SYSTEM id of `Current', or `Void' if not known
@@ -152,11 +162,8 @@ feature -- Access
 			end
 		end
 
-	document_uri: STRING is
+	document_uri: UT_URI
 			-- Absolute URI of the source from which the document was constructed
-		do
-			Result := system_id
-		end
 
 	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT] is
 			-- An enumeration of all elements with a given name;

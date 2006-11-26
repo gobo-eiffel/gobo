@@ -28,8 +28,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
-			-- TODO - set_system_id
-			system_id := ""
+			base_uri := ""
 		end
 
 feature -- Events

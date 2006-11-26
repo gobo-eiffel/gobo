@@ -69,7 +69,7 @@ feature -- Access
 	base_uri: STRING is
 			-- Base URI
 		do
-			Result := system_id
+			Result := Void
 		end
 
 	system_id: STRING

@@ -30,22 +30,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_underlying_receiver: XM_XPATH_RECEIVER; an_emitter: XM_XSLT_EMITTER; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
-			-- Establish invariant.
+	make (a_underlying_receiver: XM_XPATH_RECEIVER; a_emitter: XM_XSLT_EMITTER; a_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+			-- Initialize `Current'
 		require
-			underlying_receiver_not_void: an_underlying_receiver /= Void
-			emitter_not_void: an_emitter /= Void
-			output_properties_not_void: some_output_properties /= Void
+			underlying_receiver_not_void: a_underlying_receiver /= Void
+			emitter_not_void: a_emitter /= Void
+			output_properties_not_void: a_output_properties /= Void
 		do
 			create element_fingerprints.make_default
-			cdata_names := cdata_section_names (some_output_properties)
+			cdata_names := cdata_section_names (a_output_properties)
 			create character_buffer.make (80)
-			base_receiver := an_underlying_receiver
-			system_id := an_underlying_receiver.system_id
-			emitter := an_emitter
+			base_receiver := a_underlying_receiver
+			document_uri := a_underlying_receiver.document_uri
+			base_uri := a_underlying_receiver.base_uri
+			emitter := a_emitter
 		ensure
-			base_receiver_set: base_receiver = an_underlying_receiver
-			emitter_set: emitter = an_emitter
+			base_receiver_set: base_receiver = a_underlying_receiver
+			emitter_set: emitter = a_emitter
 		end
 
 

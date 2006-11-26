@@ -30,16 +30,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_underlying_receiver: XM_XPATH_RECEIVER) is
-			-- Establish invariant.
+	make (a_underlying_receiver: XM_XPATH_RECEIVER) is
+			-- Initailize `Current'.
 		require
-			underlying_receiver_not_void: an_underlying_receiver /= Void
+			underlying_receiver_not_void: a_underlying_receiver /= Void
 		do
-			base_receiver := an_underlying_receiver
-			system_id := an_underlying_receiver.system_id
+			base_receiver := a_underlying_receiver
+			document_uri := a_underlying_receiver.document_uri
+			base_uri := a_underlying_receiver.base_uri
 			create character_buffer.make (80)
 		ensure
-			base_receiver_set: base_receiver = an_underlying_receiver
+			base_receiver_set: base_receiver = a_underlying_receiver
 		end
 
 feature -- Events

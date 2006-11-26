@@ -73,11 +73,11 @@ feature {NONE} -- Implementation
 							if a_context.is_build_document_error then
 								a_document := Void -- for now, we just ignore errors
 								if a_context.available_documents.isolation_level = Serializable then
-									a_context.available_documents.add (void, Void, a_file_uri.full_uri)
+									a_context.available_documents.add (Void, Void, a_file_uri.full_uri)
 								end
 							else
 								a_document := a_context.last_parsed_document
-								a_context.available_documents.add (a_document, a_context.last_parsed_media_type, a_file_uri.full_uri)
+								a_context.available_documents.add (a_document, a_context.last_parsed_media_type, a_document.document_uri.full_uri)
 							end
 						end
 						if a_document /= Void then a_list.put_last (a_document) end

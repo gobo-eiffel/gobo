@@ -30,17 +30,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parser: XM_PARSER; is_line_numbering: BOOLEAN) is
+	make (a_parser: XM_PARSER; is_line_numbering: BOOLEAN; a_base_uri: STRING; a_document_uri: UT_URI) is
 			-- Create a new pipe.
 		require
-			parser_not_void: a_parser /= Void
+			a_parser_not_void: a_parser /= Void
+			a_base_uri_not_void: a_base_uri /= Void
 		local
 			a_namespace_resolver: XM_NAMESPACE_RESOLVER
 			a_node_factory: XM_XPATH_NODE_FACTORY
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
 			create a_node_factory
-			create tree.make (a_node_factory)
+			create tree.make (a_node_factory, a_base_uri, a_document_uri)
 			create a_locator.make (a_parser)
 			tree.set_document_locator (a_locator)
 			tree.set_line_numbering (is_line_numbering)

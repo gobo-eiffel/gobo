@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_RECEIVER
 		redefine
-			is_proxy, as_proxy, mark_as_written
+			is_proxy, as_proxy, mark_as_written, set_document_uri, set_base_uri
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -144,15 +144,18 @@ feature -- Events
 
 feature -- Element change
 
-	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree.
+	set_document_uri (a_uri: UT_URI) is
+			-- Set `document_uri' for destination tree.
 		do
-			if not STRING_.same_string(a_system_id, system_id) then
-				system_id := a_system_id
-				base_receiver.set_system_id (system_id)
-			end
-		ensure then
-			system_id_set: STRING_.same_string(a_system_id, system_id)
+			Precursor (a_uri)
+			base_receiver.set_document_uri (a_uri)
+		end
+
+	set_base_uri (a_uri: STRING) is
+			-- Set `base_uri' for destination tree.
+		do
+			Precursor (a_uri)
+			base_receiver.set_base_uri (a_uri)
 		end
 
 	set_document_locator (a_locator: XM_XPATH_LOCATOR) is

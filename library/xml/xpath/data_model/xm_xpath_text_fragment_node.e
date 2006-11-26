@@ -71,7 +71,9 @@ feature -- Access
 	base_uri: STRING is
 			-- Base URI
 		do
-			Result := system_id
+			if system_id.count > 0 then
+				Result := system_id
+			end
 		end
 
 	system_id: STRING

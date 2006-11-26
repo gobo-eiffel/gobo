@@ -62,6 +62,7 @@ feature -- Test
 			an_evaluator.evaluate ("collection ('../data/')")
 			assert ("No error", not an_evaluator.is_error)
 			assert ("At least 10 documents", an_evaluator.evaluated_items.count >= 10)
+			-- TODO: add tests that all documents have same base URI, but each has a separate document-uri.
 		end
 
 	test_default_collection is

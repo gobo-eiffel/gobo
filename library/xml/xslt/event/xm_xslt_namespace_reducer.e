@@ -44,9 +44,10 @@ feature {NONE} -- Initialization
 			underlying_receiver_not_void: an_underlying_receiver /= Void
 		do
 			base_receiver := an_underlying_receiver
+			document_uri := base_receiver.document_uri
+			base_uri := base_receiver.base_uri
 			create namespaces_in_scope.make (50)
 			create count_stack.make (50)
-			system_id := ""
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end

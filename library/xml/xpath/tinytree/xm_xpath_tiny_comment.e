@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_TINY_NODE
 		undefine
-			local_part
+			local_part, typed_value
 		end
 
 create

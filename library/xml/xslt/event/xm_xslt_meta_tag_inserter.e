@@ -33,7 +33,8 @@ feature {NONE} -- Initialization
 			output_properties_exist: some_properties /= Void
 		do
 			base_receiver := a_receiver
-			system_id := base_receiver.system_id
+			document_uri := base_receiver.document_uri
+			base_uri := base_receiver.base_uri
 			is_xhtml := xhtml
 			if is_xhtml then
 				matching_uri_code := Xhtml_uri_code

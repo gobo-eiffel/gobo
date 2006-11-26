@@ -301,23 +301,25 @@ feature -- Creation
 			parser_not_void: Result /= Void
 		end
 
-	new_builder (a_parser: XM_PARSER): XM_XPATH_BUILDER is
+	new_builder (a_parser: XM_PARSER; a_base_uri: STRING; a_document_uri: UT_URI): XM_XPATH_BUILDER is
 			-- Builder for XML source.
 		require
-			parser_not_void: a_parser /= Void
+			a_parser_not_void: a_parser /= Void
+			a_base_uri_not_void: a_base_uri /= Void
+			absolute_document_uri: a_document_uri /= Void and then a_document_uri.is_absolute
 		local
 			a_node_factory: XM_XPATH_NODE_FACTORY
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
 			a_tiny_builder: XM_XPATH_TINY_BUILDER
 		do
 			if configuration.is_tiny_tree_model then
-				create a_tiny_builder.make
+				create a_tiny_builder.make (a_base_uri, a_document_uri)
 				a_tiny_builder.set_reporting_sizes (configuration.is_reporting_tiny_tree_statistics)
 				a_tiny_builder.set_defaults (configuration.estimated_nodes, configuration.estimated_attributes, configuration.estimated_namespaces, configuration.estimated_characters)
 				Result := a_tiny_builder
 			else
 				create a_node_factory
-				create {XM_XPATH_TREE_BUILDER} Result.make (a_node_factory)
+				create {XM_XPATH_TREE_BUILDER} Result.make (a_node_factory, a_base_uri, a_document_uri)
 			end
 			Result.set_line_numbering (configuration.is_line_numbering)
 			create a_locator.make (a_parser)
@@ -592,8 +594,8 @@ feature -- Transformation
 					create an_error.make_from_string ("The system has already written to source URI " + a_source.system_id, Xpath_errors_uri, "XTRE1500", Dynamic_error)
 				else
 					a_parser := new_parser
-					a_builder := new_builder (a_parser)
 					create a_uri.make (a_source.uri_reference)
+					a_builder := new_builder (a_parser, a_source.uri_reference, a_uri)
 					a_source.send (a_parser, new_stripper (a_builder), a_uri, False)
 					a_media_type := a_source.media_type
 					if a_builder.has_error then

@@ -177,21 +177,23 @@ feature
 
 feature {NONE} -- Implementation
 
-	make_parser (a_system_id: STRING; is_tiny: BOOLEAN) is
+	make_parser (a_base_uri: STRING; is_tiny: BOOLEAN) is
 		require
-			system_id_not_void: a_system_id /= Void
+			a_base_uri_not_void: a_base_uri /= Void
 		local
-			entity_resolver: XM_URI_EXTERNAL_RESOLVER
+			l_uri: UT_URI
+			l_entity_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
-			entity_resolver := new_file_resolver_current_directory
+			l_entity_resolver := new_file_resolver_current_directory
 			create parser.make
-			parser.set_resolver (entity_resolver)
+			parser.set_resolver (l_entity_resolver)
+			create l_uri.make (a_base_uri)
 			if is_tiny then
-				create tiny_tree_pipe.make (parser, True)
+				create tiny_tree_pipe.make (parser, True, a_base_uri, l_uri)
 				parser.set_callbacks (tiny_tree_pipe.start)
 				parser.set_dtd_callbacks (tiny_tree_pipe.emitter)
 			else
-				create tree_pipe.make (parser, True)
+				create tree_pipe.make (parser, True, a_base_uri, l_uri)
 				parser.set_callbacks (tree_pipe.start)
 				parser.set_dtd_callbacks (tree_pipe.emitter)
 			end

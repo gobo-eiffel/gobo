@@ -104,7 +104,8 @@ feature -- Events
 			a_receiver.set_document_locator (l_locator)
 			create l_uri.make_resolve (a_uri, uri_reference)
 			l_system_id := l_uri.full_reference
-			a_receiver.set_system_id (l_system_id)
+			a_receiver.set_base_uri (l_system_id)
+			a_receiver.set_document_uri (l_uri)
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (xpointer_filter)
 			a_parser.parse_from_system (l_system_id)
@@ -157,10 +158,11 @@ feature -- Events
 			create start.set_next (xpointer_filter)
 			create l_locator.make (a_parser)
 			a_receiver.set_document_locator (l_locator)
-			a_receiver.set_system_id (uri_reference)
+			a_receiver.set_base_uri (uri_reference)
+			create l_uri.make (system_id)
+			a_receiver.set_document_uri (l_uri)
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (oasis_xml_catalog_filter)
-			create l_uri.make (system_id)
 			l_entity_resolver.push_uri (l_uri)
 			a_parser.parse_from_stream (a_stream)
 			a_parser.entity_resolver.resolve_finish

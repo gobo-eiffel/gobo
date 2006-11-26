@@ -61,10 +61,13 @@ feature {NONE} -- Initialization
 			emitter := an_emitter
 			principal_receiver := emitter
 			is_emitter := True
-			system_id := emitter.system_id
+			if emitter.document_uri /= Void then
+				system_id := emitter.document_uri.full_reference
+			else
+				system_id := emitter.base_uri
+			end
 		ensure
 			emitter_set: emitter = an_emitter
-			system_id_set: system_id = emitter.system_id
 		end
 
 	make_receiver (a_receiver: XM_XPATH_RECEIVER) is
@@ -75,10 +78,13 @@ feature {NONE} -- Initialization
 			receiver := a_receiver
 			principal_receiver := receiver
 			is_receiver := True
-			system_id := receiver.system_id
+			if receiver.document_uri /= Void then
+				system_id := receiver.document_uri.full_reference
+			else
+				system_id := receiver.base_uri
+			end
 		ensure
 			receiver_set: receiver = a_receiver
-			system_id_set: system_id = receiver.system_id
 		end
 
 feature -- Access

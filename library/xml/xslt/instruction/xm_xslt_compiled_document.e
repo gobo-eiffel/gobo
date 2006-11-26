@@ -179,8 +179,7 @@ feature -- Evaluation
 				if last_evaluated_item = Void then create {XM_XPATH_TEXT_FRAGMENT_VALUE} last_evaluated_item.make (a_text_value, base_uri) end
 			else
 				a_new_context ?= a_context.new_minor_context
-				create a_builder.make
-				a_builder.set_system_id (base_uri)
+				create a_builder.make (base_uri, Void)
 				create a_result.make_receiver (a_builder)
 				a_new_context.change_output_destination (Void, a_result, False, Validation_strip, Void)
 				a_receiver := a_new_context.current_receiver

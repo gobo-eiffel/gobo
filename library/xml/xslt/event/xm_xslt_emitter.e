@@ -101,34 +101,38 @@ feature -- Events
 		on_error (a_message: STRING) is
 			-- Event producer detected an error.
 		local
-			an_error: XM_XPATH_ERROR_VALUE
-			a_uri, a_code, a_text: STRING
-			an_index, a_second_index: INTEGER
+			l_error: XM_XPATH_ERROR_VALUE
+			l_uri, l_code, l_text: STRING
+			l_index, l_second_index: INTEGER
 		do
-			an_index := a_message.index_of (':', 1)
-			if a_message.count > an_index + 1 and then STRING_.same_string (a_message.substring (1, 1), "X") and then an_index > 0 then
-				a_uri := Xpath_errors_uri
-				a_code := a_message.substring (1, an_index - 1)
-				a_text := a_message.substring (an_index + 2, a_message.count)
+			l_index := a_message.index_of (':', 1)
+			if a_message.count > l_index + 1 and then STRING_.same_string (a_message.substring (1, 1), "X") and then l_index > 0 then
+				l_uri := Xpath_errors_uri
+				l_code := a_message.substring (1, l_index - 1)
+				l_text := a_message.substring (l_index + 2, a_message.count)
 			elseif a_message.count > 0 and then a_message.index_of ('#', 2) > 0 then
-				an_index := a_message.index_of ('#', 2)
-				a_uri := a_message.substring (1, an_index - 1)
-				a_second_index := a_message.index_of (':', an_index + 1)
+				l_index := a_message.index_of ('#', 2)
+				l_uri := a_message.substring (1, l_index - 1)
+				l_second_index := a_message.index_of (':', l_index + 1)
 				check
-					colon_found: a_second_index > an_index + 1
+					colon_found: l_second_index > l_index + 1
 				end
-				a_code := a_message.substring (an_index + 1, a_second_index - 1)
-				STRING_.left_adjust (a_code)
-				STRING_.right_adjust (a_code)
-				a_text := a_message.substring (a_second_index + 1, a_message.count)
+				l_code := a_message.substring (l_index + 1, l_second_index - 1)
+				STRING_.left_adjust (l_code)
+				STRING_.right_adjust (l_code)
+				l_text := a_message.substring (l_second_index + 1, a_message.count)
 			else
-				a_text := a_message
-				a_uri := Gexslt_eiffel_type_uri
-				a_code := "SERIALIZATION_ERROR"
+				l_text := a_message
+				l_uri := Gexslt_eiffel_type_uri
+				l_code := "SERIALIZATION_ERROR"
 			end
-			create an_error.make_from_string (a_text, a_uri, a_code, Dynamic_error)
-			if not system_id.is_empty then an_error.set_location (system_id, 0) end
-			transformer.report_fatal_error (an_error)
+			create l_error.make_from_string (l_text, l_uri, l_code, Dynamic_error)
+			if document_uri /= Void then
+				l_error.set_location (document_uri.full_reference, 0)
+			elseif not base_uri.is_empty then
+				l_error.set_location (base_uri, 0)
+			end
+			transformer.report_fatal_error (l_error)
 			is_error := True
 		end
 
@@ -139,12 +143,6 @@ feature -- Events
 		end
 
 feature -- Element change
-
-	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree.
-		do
-			system_id := a_system_id
-		end
 
 	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
 			-- Set the locator.
@@ -204,7 +202,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	system_id_not_void: system_id /= Void
 	output_properties_not_void: output_properties /= Void
 	transformer_not_void: transformer /= Void
 	normalization_form: normalization_form >= No_normalization and normalization_form <= Nfkd

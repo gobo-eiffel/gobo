@@ -60,7 +60,7 @@ feature -- Element change
 	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
 			-- Resolve `a_uri' to a sequence of nodes.
 		require
-			absolute_uri_not_void: a_uri /= Void and then a_uri.is_absolute
+			absolute_base_uri_not_void: a_uri /= Void and then a_uri.is_absolute
 			dynamic_context_not_void: a_context /= Void
 			collection_not_known_yet: not a_context.available_documents.is_collection_mapped (a_uri.full_reference)
 		deferred

@@ -25,23 +25,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value, a_system_id: STRING) is
+	make (a_value, a_base_uri: STRING) is
 			-- Establish invariant.
 		require
 			value_not_void: a_value /= Void
-			system_id_not_void: a_system_id /= Void
+			a_base_uri_not_void: a_base_uri /= Void
 		do
 			text := a_value
-			system_id := a_system_id
+			base_uri := a_base_uri
 			shared_serial_number_generator.generate_next_serial_number
 			set_document_number (shared_serial_number_generator.last_generated_serial_number)
 			node_type := Document_node
 		ensure
 			text_set: text = a_value
-			system_id_set: system_id = a_system_id
+			base_uri_set: base_uri = a_base_uri
 		end
 
 feature -- Access
+
+	base_uri: STRING
+			-- Base URI
 
 	system_id: STRING
 			-- SYSTEM id
@@ -61,10 +64,10 @@ feature -- Access
 			Result := text
 		end
 
-	document_uri: STRING is
+	document_uri: UT_URI is
 			-- Absoulte URI of the source from which the document was constructed
 		do
-			Result := system_id
+			create Result.make (system_id)
 		end
 
 	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is

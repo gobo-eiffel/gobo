@@ -46,7 +46,7 @@ feature -- Test
 		do
 			conformance.set_basic_xslt_processor
 			system_id := books_xml_uri.full_reference
-			make_parser
+			make_parser (system_id)
 			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			a_document := tree_pipe.document
@@ -77,7 +77,7 @@ feature -- Test
 		do
 			conformance.set_basic_xslt_processor
 			system_id := books_xml_uri.full_reference
-			make_parser
+			make_parser (system_id)
 			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			a_document := tree_pipe.document
@@ -111,7 +111,7 @@ feature -- Test
 		do
 			conformance.set_basic_xslt_processor
 			system_id := books_xml_uri.full_reference
-			make_parser
+			make_parser (system_id)
 			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			a_document := tree_pipe.document
@@ -144,7 +144,7 @@ feature -- Test
 		do
 			conformance.set_basic_xslt_processor
 			system_id := books_xml_uri.full_reference
-			make_parser
+			make_parser (system_id)
 			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			a_document := tree_pipe.document
@@ -166,14 +166,16 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	make_parser is
+	make_parser (a_base_uri: STRING) is
+		require
+			a_base_uri_not_void: a_base_uri /= Void
 		local
-			entity_resolver: XM_URI_EXTERNAL_RESOLVER
+			l_uri: UT_URI
 		do
-			entity_resolver := new_file_resolver_current_directory
+			create l_uri.make (a_base_uri)
 			create parser.make
-			parser.set_resolver (entity_resolver)
-			create tree_pipe.make (parser, False)
+			parser.set_resolver (new_file_resolver_current_directory)
+			create tree_pipe.make (parser, False, a_base_uri, l_uri)
 			parser.set_callbacks (tree_pipe.start)
 			parser.set_dtd_callbacks (tree_pipe.emitter)
 			parser.set_string_mode_ascii

@@ -141,7 +141,7 @@ feature -- Compilation
 			create a_parser.make
 			a_parser.set_resolver (configuration.entity_resolver)
 			a_parser.copy_string_mode (configuration)
-			create a_tree_builder.make (node_factory)
+			create a_tree_builder.make (node_factory, a_system_id.full_reference, a_system_id)
 			create a_locator.make (a_parser)
 			a_tree_builder.set_document_locator (a_locator)
 			a_tree_builder.set_line_numbering (configuration.is_line_numbering)
@@ -180,7 +180,7 @@ feature -- Compilation
 			create a_parser.make
 			a_parser.set_resolver (configuration.entity_resolver)
 			a_parser.copy_string_mode (configuration)
-			create a_tree_builder.make (node_factory)
+			create a_tree_builder.make (node_factory, a_uri.full_reference, a_uri)
 			create a_locator.make (a_parser)
 			a_tree_builder.set_document_locator (a_locator)
 			a_tree_builder.set_line_numbering (configuration.is_line_numbering)

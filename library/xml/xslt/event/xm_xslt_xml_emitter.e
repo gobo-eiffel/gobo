@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			element_qname_stack.set_equality_tester (string_equality_tester)
 			create name_lookup_table.make (0, name_lookup_table_size - 1)
 			make_specials
-			system_id := "" -- TODO - set_system_id
+			base_uri := "" -- TODO - set `base_uri'
 			encoder_factory := transformer.configuration.encoder_factory
 			set_normalization_form
 		ensure

@@ -15,8 +15,10 @@ deferred class XM_XPATH_DOCUMENT
 inherit
 
 	XM_XPATH_COMPOSITE_NODE
+	   undefine
+			base_uri
 		redefine
-			base_uri, is_document, as_document
+			is_document, as_document
 		end
 
 		HASHABLE
@@ -40,8 +42,7 @@ feature -- Access
 
 	base_uri: STRING is
 			-- Base URI
-		do
-			Result := system_id
+		deferred
 		end
 
 	node_kind: STRING is
@@ -83,9 +84,11 @@ feature -- Access
 		deferred
 		end
 
-	document_uri: STRING is
+	document_uri: UT_URI is
 			-- Absoulte URI of the source from which the document was constructed
 		deferred
+		ensure
+			absolute_uri: Result /= Void implies Result.is_absolute
 		end
 
 	selected_id (an_id: STRING): XM_XPATH_ELEMENT is

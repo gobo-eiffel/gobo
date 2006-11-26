@@ -20,6 +20,9 @@ inherit
 		end
 
 	XM_XPATH_TREE_NODE
+		undefine
+			typed_value
+		end
 
 create
 

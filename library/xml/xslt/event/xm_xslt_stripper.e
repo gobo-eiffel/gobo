@@ -52,7 +52,8 @@ feature {NONE} -- Initialization
 			end
 			create orphan.make (Element_node, "")
 			base_receiver := an_underlying_receiver
-			system_id := an_underlying_receiver.system_id
+			base_uri := an_underlying_receiver.base_uri
+			document_uri := an_underlying_receiver.document_uri
 		ensure
 			transformer_set: transformer = a_transformer
 			mode_set: stripper_mode = a_stripper_mode

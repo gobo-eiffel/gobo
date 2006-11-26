@@ -56,22 +56,22 @@ feature -- Access
 	base_uri: STRING is
 			-- Base URI
 		local
-			an_xml_base, an_initial_system_id: STRING
-			a_parent: XM_XPATH_COMPOSITE_NODE
+			l_xml_base, l_initial_system_id: STRING
+			l_parent: XM_XPATH_COMPOSITE_NODE
 		do
-			an_xml_base := attribute_value (Xml_base_type_code)
-			if an_xml_base /= Void then
-				Result := an_xml_base
+			l_xml_base := attribute_value (Xml_base_type_code)
+			if l_xml_base /= Void then
+				Result := l_xml_base
 			else
-				an_initial_system_id := system_id
-				a_parent := parent
-				if a_parent = Void then
-					Result := an_initial_system_id
+				l_initial_system_id := system_id
+				l_parent := parent
+				if l_parent = Void then
+					Result := l_initial_system_id
 				elseif
-					STRING_.same_string (a_parent.system_id, an_initial_system_id) then
-					Result := a_parent.base_uri
+					STRING_.same_string (l_parent.system_id, l_initial_system_id) then
+					Result := l_parent.base_uri
 				else
-					Result := an_initial_system_id
+					Result := l_initial_system_id
 				end
 			end
 		end

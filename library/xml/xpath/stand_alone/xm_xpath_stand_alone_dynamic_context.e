@@ -153,9 +153,10 @@ feature 	-- Element change
 	build_document (a_uri_reference: STRING) is
 			-- Build a document.
 		local
-			an_entity_resolver: XM_URI_EXTERNAL_RESOLVER
-			a_parser: XM_EIFFEL_PARSER
-			a_tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
+			l_entity_resolver: XM_URI_EXTERNAL_RESOLVER
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
+			l_document_uri: UT_URI
 		do
 			is_build_document_error := False
 			last_parsed_document := Void
@@ -167,21 +168,22 @@ feature 	-- Element change
 				if uri_resolver.has_media_type then
 					last_parsed_media_type := uri_resolver.last_media_type
 				end
-				an_entity_resolver := new_file_resolver_current_directory
-				create a_parser.make
-				a_parser.copy_string_mode (Current)
-				a_parser.set_resolver (an_entity_resolver)
-				create a_tree_pipe.make (a_parser, True)
-				a_parser.set_callbacks (a_tree_pipe.start)
-				a_parser.set_dtd_callbacks (a_tree_pipe.emitter)
-				an_entity_resolver.push_uri (uri_resolver.last_system_id)
-				a_parser.parse_from_stream (uri_resolver.last_uri_reference_stream)
-				a_parser.entity_resolver.resolve_finish
+				l_entity_resolver := new_file_resolver_current_directory
+				create l_parser.make
+				l_parser.copy_string_mode (Current)
+				l_parser.set_resolver (l_entity_resolver)
+				create l_document_uri.make (a_uri_reference)
+				create l_tree_pipe.make (l_parser, True, a_uri_reference, l_document_uri)
+				l_parser.set_callbacks (l_tree_pipe.start)
+				l_parser.set_dtd_callbacks (l_tree_pipe.emitter)
+				l_entity_resolver.push_uri (uri_resolver.last_system_id)
+				l_parser.parse_from_stream (uri_resolver.last_uri_reference_stream)
+				l_parser.entity_resolver.resolve_finish
 				if uri_resolver.last_uri_reference_stream.is_closable then uri_resolver.last_uri_reference_stream.close end
-				if a_tree_pipe.tree.has_error then
-					set_build_error (a_tree_pipe.tree.last_error)
+				if l_tree_pipe.tree.has_error then
+					set_build_error (l_tree_pipe.tree.last_error)
 				else
-					last_parsed_document	:= a_tree_pipe.document
+					last_parsed_document	:= l_tree_pipe.document
 				end
 			end
 		end

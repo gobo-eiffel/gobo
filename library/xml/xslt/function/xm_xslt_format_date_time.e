@@ -120,6 +120,7 @@ feature -- Evaluation
 			a_calendar_value: XM_XPATH_CALENDAR_VALUE
 			a_picture, a_language, a_country, a_calendar: STRING
 		do
+			last_evaluated_item := Void
 			arguments.item (1).evaluate_item (a_context)
 			if arguments.item (1).last_evaluated_item = Void or else arguments.item (1).last_evaluated_item.is_error then
 				last_evaluated_item := arguments.item (1).last_evaluated_item

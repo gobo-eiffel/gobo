@@ -366,10 +366,10 @@ feature {NONE} -- Implementation
 				Result := "0"
 			else
 				a_range := an_alphabet.count
-				an_index := a_number \\ a_range
+				an_index := ((a_number - 1) \\ a_range) + 1
 				a_last_character := an_alphabet.substring (an_index, an_index)
 				if a_number > a_range then
-					Result := STRING_.appended_string (alphabetic_number (a_number // a_range, an_alphabet), a_last_character)
+					Result := STRING_.appended_string (alphabetic_number ((a_number - 1) // a_range, an_alphabet), a_last_character)
 				else
 					Result := a_last_character
 				end

@@ -319,37 +319,42 @@ feature -- Basic operations
 			a_double, another_double: DOUBLE
 			an_integer, another_integer: INTEGER
 		do
-			debug ("XPath Double values")
-				std.error.put_string ("Double arithmetic%N")
-			end
-			inspect
-				an_operator
-			when Plus_token then
-				create {XM_XPATH_DOUBLE_VALUE} Result.make (value + other.as_double)
-			when Minus_token then
-				create {XM_XPATH_DOUBLE_VALUE} Result.make (value - other.as_double)
-			when Multiply_token then
-				create {XM_XPATH_DOUBLE_VALUE} Result.make (value * other.as_double)
-			when Division_token then
-				create {XM_XPATH_DOUBLE_VALUE} Result.make (value / other.as_double)
-			when Integer_division_token then
-				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value / other.as_double))
-			when Modulus_token then
-				a_double := other.as_double
-				if is_whole_number and then other.is_whole_number then
-					an_integer := as_integer
-					another_integer := other.as_integer
-					create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (an_integer \\ another_integer)
-				else
-					if is_nan or else other.is_nan or else other.is_zero or else is_infinite then
-						create {XM_XPATH_DOUBLE_VALUE} Result.make_nan
-					elseif other.is_infinite then
-						Result := Current
-					elseif is_zero then
-						Result := Current
+			if is_nan then
+				Result := Current
+			else
+				inspect
+					an_operator
+				when Plus_token then
+					create {XM_XPATH_DOUBLE_VALUE} Result.make (value + other.as_double)
+				when Minus_token then
+					create {XM_XPATH_DOUBLE_VALUE} Result.make (value - other.as_double)
+				when Multiply_token then
+					create {XM_XPATH_DOUBLE_VALUE} Result.make (value * other.as_double)
+				when Division_token then
+					create {XM_XPATH_DOUBLE_VALUE} Result.make (value / other.as_double)
+				when Integer_division_token then
+					create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value / other.as_double))
+				when Modulus_token then
+					a_double := other.as_double
+					if is_whole_number and then other.is_whole_number then
+						an_integer := as_integer
+						another_integer := other.as_integer
+						if another_integer = 0 then
+							create {XM_XPATH_DOUBLE_VALUE} Result.make_nan
+						else
+							create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (an_integer \\ another_integer)
+						end
 					else
-						another_double := (value / a_double).floor
-						create {XM_XPATH_DOUBLE_VALUE} Result.make (value - another_double)
+						if is_nan or else other.is_nan or else other.is_zero or else is_infinite then
+							create {XM_XPATH_DOUBLE_VALUE} Result.make_nan
+						elseif other.is_infinite then
+							Result := Current
+						elseif is_zero then
+							Result := Current
+						else
+							another_double := (value / a_double).floor
+							create {XM_XPATH_DOUBLE_VALUE} Result.make (value - another_double)
+						end
 					end
 				end
 			end

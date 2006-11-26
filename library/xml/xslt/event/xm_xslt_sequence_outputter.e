@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			transformer_not_void: a_transformer /= Void
 		do
 			create output_list.make (50)
-			system_id := ""
+			base_uri := ""
 			transformer := a_transformer
 		ensure
 			transformer_set: transformer = a_transformer
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			transformer_not_void: a_transformer /= Void
 		do
 			create output_list.make (a_size)
-			system_id := ""
+			base_uri := ""
 			transformer := a_transformer
 		ensure
 			transformer_set: transformer = a_transformer
@@ -151,7 +151,7 @@ feature -- Events
 					a_code := "SERIALIZATION_ERROR"
 				end
 				create an_error.make_from_string (a_text, a_uri, a_code, Dynamic_error)
-				if not system_id.is_empty then an_error.set_location (system_id, 0) end
+				if not base_uri.is_empty then an_error.set_location (base_uri, 0) end
 				transformer.report_fatal_error (an_error)
 			end
 		end
@@ -351,14 +351,6 @@ feature -- Events
 
 feature -- Element change
 
-	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree.
-		do
-			system_id := a_system_id
-		ensure then
-			system_id_set: system_id = a_system_id
-		end
-
 	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
 			-- Set the locator.
 		do
@@ -406,12 +398,11 @@ feature {NONE} -- Implementation
 			a_reducer: XM_XSLT_NAMESPACE_REDUCER
 			a_complex_outputter: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
 		do
-			create builder.make 
+			create builder.make (base_uri, document_uri)
 			builder.set_defaults (50, 10, 5, 200)
 			create a_reducer.make (builder)
 			create a_complex_outputter.make (a_reducer)
 			tree := a_complex_outputter
-			tree.set_system_id (system_id)
 			tree.open
 		end
 

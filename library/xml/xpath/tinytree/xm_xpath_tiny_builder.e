@@ -40,11 +40,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Establish invariant.
+	make (a_base_uri: like base_uri; a_document_uri: like document_uri) is
+			-- Initialize `Current'.
+		require
+			a_base_uri_not_void: a_base_uri /= Void
 		do
-			system_id := ""
+			base_uri := a_base_uri
+			document_uri := a_document_uri
 			create {XM_XPATH_DEFAULT_LOCATOR} locator
+		ensure
+			base_uri_set: base_uri = a_base_uri
+			document_uri_set: document_uri = a_document_uri
 		end
 	
 feature -- Access
@@ -94,10 +100,8 @@ feature -- Events
 
 			-- TODO add timing information
 
-			if system_id.count = 0 then system_id := locator.system_id end
-			create tiny_document.make (tree, node_number + 1)
+			create tiny_document.make (tree, node_number + 1, base_uri, document_uri)
 			current_root := tiny_document
-			tiny_document.set_system_id (system_id)
 			tree.add_document_node (tiny_document)
 			node_number := tree.last_node_added
 			previously_at_depth.put(1, 1) -- i.e. depth one is node 1 - the document node
@@ -113,7 +117,7 @@ feature -- Events
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
 			-- Notify an unparsed entity URI
 		do
-			-- TODO tree.set_unparsed_entity (a_name, a_system_id, a_public_id)
+			tree.set_unparsed_entity (a_name, a_system_id, a_public_id)
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is

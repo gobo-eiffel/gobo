@@ -57,7 +57,8 @@ feature {NONE} -- Initialization
 			is_after_tag := True
 			is_allwhite := True
 			suppressed_at_level := -1
-			system_id := a_receiver.system_id
+			document_uri := base_receiver.document_uri
+			base_uri := base_receiver.base_uri
 		end
 
 feature -- Events

@@ -46,21 +46,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_underlying_receiver: XM_XPATH_RECEIVER) is
+	make (a_underlying_receiver: XM_XPATH_RECEIVER) is
 			-- Establish invariant.
 		require
-			underlying_receiver_not_void: an_underlying_receiver /= Void
+			underlying_receiver_not_void: a_underlying_receiver /= Void
 		do
-			next_receiver := an_underlying_receiver
+			next_receiver := a_underlying_receiver
 			pending_start_tag := -1
-			system_id := an_underlying_receiver.system_id
+			document_uri := a_underlying_receiver.document_uri
+			base_uri := a_underlying_receiver.base_uri
 			create pending_attributes_name_codes.make (1, Initial_arrays_size)
 			create pending_attributes_type_codes.make (1, Initial_arrays_size)
 			create pending_attributes_values.make (1, Initial_arrays_size)
 			create pending_attributes_properties.make (1, Initial_arrays_size)
 			create pending_namespaces.make (1, 3)
 		ensure
-			next_receiver_set: next_receiver = an_underlying_receiver
+			next_receiver_set: next_receiver = a_underlying_receiver
 			no_pending_start_tag: pending_start_tag = -1
 		end
 
@@ -418,12 +419,6 @@ feature -- Events
 		end
 
 feature -- Element change
-
-	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree.
-		do
-			-- do nothing
-		end
 
 	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
 			-- Set the locator.

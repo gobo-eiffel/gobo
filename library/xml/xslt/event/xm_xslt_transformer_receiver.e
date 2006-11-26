@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: like transformer; a_system_id: like system_id; a_destination: like next_destination) is
+	make (a_transformer: like transformer; a_system_id: like base_uri; a_destination: like next_destination) is
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
@@ -35,14 +35,16 @@ feature {NONE} -- Initialization
 			destination_not_void: a_destination /= Void
 		do
 			transformer := a_transformer
-			system_id := a_system_id
+			base_uri := a_system_id
+			create document_uri.make (base_uri)
 			next_destination := a_destination
-			builder := transformer.new_builder (transformer.new_parser)
-			builder.set_system_id (system_id)
+			builder := transformer.new_builder (transformer.new_parser, base_uri, document_uri)
+			builder.set_base_uri (base_uri)
+			builder.set_document_uri (document_uri)
 			base_receiver := transformer.new_stripper (builder)
 		ensure
 			transformer_set: transformer = a_transformer
-			system_id_set: system_id = a_system_id
+			base_uri_set: base_uri = a_system_id
 			destination_set: next_destination = a_destination
 		end
 
@@ -73,14 +75,14 @@ feature -- Events
 			Precursor
 			a_document ?= builder.current_root
 			if a_document /= Void then
-				if document_pool.is_document_mapped (system_id) then
+				if document_pool.is_document_mapped (document_uri.full_reference) then
 
 					-- Done to keep the one URI to same document mapping
 					--  in some sort of spurious shape
 
-					remove_document (system_id)
+					remove_document (document_uri.full_reference)
 				end
-				transformer.register_document (a_document, transformer.configuration.default_media_type (system_id), system_id)
+				transformer.register_document (a_document, transformer.configuration.default_media_type (document_uri.full_uri), document_uri.full_uri)
 				transformer.transform_document (a_document, next_destination)
 			end
 		end

@@ -289,7 +289,11 @@ feature -- Access
 		require
 			valid_node_number: is_node_number_valid (a_node_number)
 		do
-			Result := system_id_map.system_id (a_node_number)
+			if system_id_map.number_allocated_uris > 0 then
+				Result := system_id_map.system_id (a_node_number)
+			else
+				Result := ""
+			end
 		ensure
 			system_id_not_void: Result /= Void
 		end
@@ -349,6 +353,44 @@ feature -- Access
 			end
 		ensure
 			minus_one_or_valid_node: Result /= -1 implies is_node_number_valid (Result)
+		end
+
+	unparsed_entity_system_id (an_entity_name: STRING): STRING is
+			-- System identifier of an unparsed external entity
+		local
+			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
+		do
+			if entity_table = Void then
+				Result := Void
+			elseif not entity_table.has (an_entity_name) then
+				Result := Void
+			else
+				an_entity_table_entry := entity_table.item (an_entity_name)
+					check
+						entity_present: an_entity_table_entry /= Void
+						-- Because `has' returned `True'.
+					end
+				Result := an_entity_table_entry.item (1)
+			end
+		end
+
+	unparsed_entity_public_id (an_entity_name: STRING): STRING is
+			-- Public identifier of an unparsed external entity
+		local
+			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
+		do
+			if entity_table = Void then
+				Result := Void
+			elseif not entity_table.has (an_entity_name) then
+				Result := Void
+			else
+				an_entity_table_entry := entity_table.item (an_entity_name)
+					check
+						entity_present: an_entity_table_entry /= Void
+						-- Because `has' returned `True'.
+					end
+				Result := an_entity_table_entry.item (2)
+			end
 		end
 
 feature -- Status report
@@ -786,7 +828,27 @@ feature -- Element change
 		do
 			system_id_map.set_system_id (a_node_number, a_system_id)
 		end
-		
+
+	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING) is
+			-- Save SYSTEM and PUBLIC ids for `a_name'.
+		require
+			entity_name_not_void: a_name /= Void
+		local
+			an_id_list: DS_ARRAYED_LIST [STRING]
+		do
+			if entity_table = Void then
+				create entity_table.make_with_equality_testers (10, Void, string_equality_tester)
+			end
+			if entity_table.has (a_name) then
+				-- Validation error - we will ignore duplicates
+			else
+				create an_id_list.make (2)
+				an_id_list.set_equality_tester (string_equality_tester)
+				an_id_list.put (a_system_id, 1)
+				an_id_list.put (a_public_id, 2)
+			end
+		end
+
 feature -- Conversion
 
 	namespace_code_for_node (a_namespace_number: INTEGER): INTEGER is
@@ -814,6 +876,9 @@ feature -- Conversion
 		end
 
 feature {NONE} -- Implementation
+
+	entity_table: DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
+		-- Maps unparsed entity names to their URI/PUBLIC-ID pairs
 
 	document_number: INTEGER
 			-- Actually a forest number in this instance;

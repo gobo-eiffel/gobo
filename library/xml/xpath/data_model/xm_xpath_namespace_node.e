@@ -121,7 +121,7 @@ feature -- Access
 	base_uri: STRING is
 			-- Base URI
 		do
-			Result := element.base_uri
+			Result := Void
 		end
 
 	system_id: STRING is

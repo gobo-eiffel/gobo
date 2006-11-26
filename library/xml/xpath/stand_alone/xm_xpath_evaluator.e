@@ -110,13 +110,13 @@ feature -- Element change
 			valid_uri: a_source_uri /= Void -- and then ... for now - is a relative file uri - TODO
 			warnings: warnings implies xpath_one_compatibility
 		local
-			a_context_node: XM_XPATH_NODE
 			has_error: BOOLEAN
-			a_base_uri: UT_URI
-			a_core_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
-			a_constructor_function_library: XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY
+			l_base_uri: UT_URI
+			l_core_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
+			l_constructor_function_library: XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY
 		do
-			make_parser (use_tiny_tree_model)
+			create l_base_uri.make (a_source_uri)
+			make_parser (use_tiny_tree_model, a_source_uri, l_base_uri)
 			source_uri := a_source_uri
 			parser.parse_from_system (source_uri)
 			if use_tiny_tree_model then
@@ -141,16 +141,14 @@ feature -- Element change
 					context_item_is_node: context_item.is_node
 					-- because tree_pipe.document is a document node
 				end
-				a_context_node := context_item.as_node
-				document := a_context_node.document_root
-				create a_base_uri.make (document.base_uri)
-				source_uri := a_base_uri.full_reference
+				document := context_item.as_node.document_root
+				source_uri := document.base_uri
 				create function_library.make
-				create a_core_function_library.make
-				create a_constructor_function_library.make
-				function_library.add_function_library (a_core_function_library)
-				function_library.add_function_library (a_constructor_function_library)
-				create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (warnings, xpath_one_compatibility, a_base_uri, function_library)
+				create l_core_function_library.make
+				create l_constructor_function_library.make
+				function_library.add_function_library (l_core_function_library)
+				function_library.add_function_library (l_constructor_function_library)
+				create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (warnings, xpath_one_compatibility, l_base_uri, function_library)
 			end
 		ensure
 			built: not was_build_error implies static_context /= Void and then document /= Void and then context_item /= Void
@@ -278,7 +276,7 @@ feature {NONE} -- Implementation
 	media_type: UT_MEDIA_TYPE
 			-- Media type of `source_uri'
 
-	make_parser (use_tiny_tree_model: BOOLEAN) is
+	make_parser (use_tiny_tree_model: BOOLEAN; a_base_uri: STRING; a_document_uri: UT_URI) is
 		local
 			entity_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
@@ -287,11 +285,11 @@ feature {NONE} -- Implementation
 			parser.copy_string_mode (Current)
 			parser.set_resolver (entity_resolver)
 			if use_tiny_tree_model then
-				create tiny_tree_pipe.make (parser, is_line_numbering)
+				create tiny_tree_pipe.make (parser, is_line_numbering, a_base_uri, a_document_uri)
 				parser.set_callbacks (tiny_tree_pipe.start)
 				parser.set_dtd_callbacks (tiny_tree_pipe.emitter)
 			else
-				create tree_pipe.make (parser, is_line_numbering)
+				create tree_pipe.make (parser, is_line_numbering, a_base_uri, a_document_uri)
 				parser.set_callbacks (tree_pipe.start)
 				parser.set_dtd_callbacks (tree_pipe.emitter)
 			end

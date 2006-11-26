@@ -302,41 +302,44 @@ feature {NONE} -- Implementation
 			stylesheet_compiler_not_void: a_compiler /= Void
 			version_not_void: a_version /= Void
 		local
-			a_builder: XM_XPATH_TREE_BUILDER
+			l_builder: XM_XPATH_TREE_BUILDER
+			l_uri: UT_URI
 		do
-			create a_builder.make (a_compiler.node_factory)
-			a_builder.set_system_id (system_id)
-			a_builder.open; a_builder.start_document
-			a_builder.start_element (Xslt_transform_type_code, Untyped_type_code, 0)
-			a_builder.notify_namespace (Xslt_uri_code, 0)
+			create l_uri.make (system_id)
+			create l_builder.make (a_compiler.node_factory, system_id, l_uri)
+			l_builder.open
+			l_builder.start_document
+			l_builder.start_element (Xslt_transform_type_code, Untyped_type_code, 0)
+			l_builder.notify_namespace (Xslt_uri_code, 0)
 			if not shared_name_pool.is_name_code_allocated (Null_uri, Null_uri, Version_attribute) then
 				shared_name_pool.allocate_name (Null_uri, Null_uri, Version_attribute)
 			end
-			a_builder.notify_attribute (shared_name_pool.name_code (Null_uri, Null_uri, Version_attribute), Untyped_atomic_type_code, a_version, 0)
-			a_builder.start_content
+			l_builder.notify_attribute (shared_name_pool.name_code (Null_uri, Null_uri, Version_attribute), Untyped_atomic_type_code, a_version, 0)
+			l_builder.start_content
 
-			a_builder.start_element (Xslt_template_type_code, Untyped_type_code, 0)
+			l_builder.start_element (Xslt_template_type_code, Untyped_type_code, 0)
 			if not shared_name_pool.is_name_code_allocated (Null_uri, Null_uri, Match_attribute) then
 				shared_name_pool.allocate_name (Null_uri, Null_uri, Match_attribute)
 			end
-			a_builder.notify_attribute (shared_name_pool.name_code (Null_uri, Null_uri, Match_attribute), Untyped_atomic_type_code, "/", 0)
-			a_builder.start_content
+			l_builder.notify_attribute (shared_name_pool.name_code (Null_uri, Null_uri, Match_attribute), Untyped_atomic_type_code, "/", 0)
+			l_builder.start_content
 
-			a_builder.graft_element (Current)
+			l_builder.graft_element (Current)
 
-			a_builder.end_element
-			a_builder.end_element
-			a_builder.end_document; a_builder.close
-			if a_builder.has_error then
-				a_compiler.report_error (a_builder.last_error)
+			l_builder.end_element
+			l_builder.end_element
+			l_builder.end_document
+			l_builder.close
+			if l_builder.has_error then
+				a_compiler.report_error (l_builder.last_error)
 			else	
-				Result := a_builder.tree_document
+				Result := l_builder.tree_document
 			end
 		ensure
 			error_or_result_not_void: not a_compiler.load_stylesheet_module_failed implies Result /= Void
 		rescue
-			if a_builder.has_error then
-				a_compiler.report_error (a_builder.last_error)
+			if l_builder.has_error then
+				a_compiler.report_error (l_builder.last_error)
 			end
 		end
 

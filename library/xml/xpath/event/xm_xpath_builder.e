@@ -78,10 +78,20 @@ feature -- Events
 
 	open is
 			-- Notify start of event stream.
+		local
+			l_uri: STRING
 		do
 			is_open := True
 			if is_timing then
-				std.error.put_string ("Building tree for " + system_id)
+				if document_uri /= Void then
+					l_uri := document_uri.full_reference
+				elseif base_uri /= Void then
+					l_uri := base_uri
+				else
+					l_uri := "unknown document"
+				end
+				-- TODO: make the timing destination configurable, for use in GUIs
+				std.error.put_string ("Building tree for " + l_uri)
 				std.error.put_new_line
 				start_time := utc_system_clock.time_now
 			end
@@ -89,24 +99,25 @@ feature -- Events
 
 	close is
 			-- Notify end of event stream.
+		local
+			l_uri: STRING
 		do
 			is_open := False
 			if is_timing then
-				std.error.put_string ("Tree build for " + system_id + " took " + utc_system_clock.time_now.canonical_duration (start_time).precise_time_out)
+				if document_uri /= Void then
+					l_uri := document_uri.full_reference
+				elseif base_uri /= Void then
+					l_uri := base_uri
+				else
+					l_uri := "unknown document"
+				end
+				std.error.put_string ("Tree build for " + l_uri + " took " + utc_system_clock.time_now.canonical_duration (start_time).precise_time_out)
 				std.error.put_new_line
 				show_size
 			end
 		end
 
 feature -- Element change
-
-	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree.
-		do
-			system_id := a_system_id
-		ensure then
-			system_id_set: system_id = a_system_id
-		end
 
 	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
 			-- Set the locator.

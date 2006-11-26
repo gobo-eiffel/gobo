@@ -138,11 +138,9 @@ feature -- Access
 		do
 			if parent /= Void then
 				Result := parent.base_uri
-			else
-				Result := ""
 			end
 		ensure
-			base_uri_not_void: Result /= Void
+			base_uri_may_be_void: True
 		end
 
 	node_type: INTEGER

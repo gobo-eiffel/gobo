@@ -40,7 +40,8 @@ feature {NONE} -- Initialization
 			base_receiver := a_receiver
 			indent_spaces := some_output_properties.indent_spaces
 			is_after_formatted := True
-			system_id := a_receiver.system_id
+			document_uri := base_receiver.document_uri
+			base_uri := base_receiver.base_uri
 			create property_stack.make (20)
 		end
 

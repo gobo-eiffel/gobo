@@ -15,6 +15,9 @@ deferred class XM_XPATH_COMMENT
 inherit
 
 	XM_XPATH_NODE
+		redefine
+			typed_value
+		end
 
 feature -- Access
 
@@ -34,6 +37,15 @@ feature -- Access
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
 			end
+		end
+
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
+			-- Typed value
+		local
+			l_value: XM_XPATH_STRING_VALUE
+		do
+			create  l_value.make (string_value)
+			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_STRING_VALUE]} Result.make (l_value)
 		end
 
 end

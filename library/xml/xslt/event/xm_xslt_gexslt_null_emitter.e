@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 		do
 			transformer := a_transformer
 			output_properties := some_output_properties
-			system_id := ""
 		ensure
 			transformer_set: transformer = a_transformer
 			outputter_properties_set: output_properties = some_output_properties

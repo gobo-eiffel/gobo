@@ -476,33 +476,35 @@ feature -- Element change
 	build_document (a_uri_reference: STRING) is
 			-- Build a document.
 		local
-			a_uri_resolver: XM_URI_REFERENCE_RESOLVER
-			a_parser: XM_PARSER
-			a_builder: XM_XPATH_BUILDER
-			a_source: XM_XSLT_URI_SOURCE
-			an_executable: XM_XSLT_EXECUTABLE
+			l_uri_resolver: XM_URI_REFERENCE_RESOLVER
+			l_parser: XM_PARSER
+			l_builder: XM_XPATH_BUILDER
+			l_source: XM_XSLT_URI_SOURCE
+			l_executable: XM_XSLT_EXECUTABLE
+			l_uri: UT_URI
 		do
 			is_build_document_error := False
 			last_parsed_document := Void
 			last_parsed_media_type := Void
-			a_uri_resolver := transformer.configuration.uri_resolver
-			a_uri_resolver.resolve_uri (a_uri_reference)
-			if a_uri_resolver.has_uri_reference_error then
-				set_build_error (a_uri_resolver.last_uri_reference_error)
+			create l_uri.make (a_uri_reference)
+			l_uri_resolver := transformer.configuration.uri_resolver
+			l_uri_resolver.resolve_uri (a_uri_reference)
+			if l_uri_resolver.has_uri_reference_error then
+				set_build_error (l_uri_resolver.last_uri_reference_error)
 			else
-				if a_uri_resolver.has_media_type then
-					last_parsed_media_type := a_uri_resolver.last_media_type
+				if l_uri_resolver.has_media_type then
+					last_parsed_media_type := l_uri_resolver.last_media_type
 				end
-				a_parser := transformer.new_parser
-				a_builder := transformer.new_builder (a_parser)
-				create a_source.make (a_uri_resolver.last_system_id.full_uri)
-				a_source.send_from_stream (a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id, a_parser, a_builder, False)
-				if a_builder.has_error then
-					set_build_error (a_builder.last_error)
+				l_parser := transformer.new_parser
+				l_builder := transformer.new_builder (l_parser, l_uri_resolver.last_system_id.full_uri, l_uri)
+				create l_source.make (l_uri_resolver.last_system_id.full_uri)
+				l_source.send_from_stream (l_uri_resolver.last_uri_reference_stream, l_uri_resolver.last_system_id, l_parser, l_builder, False)
+				if l_builder.has_error then
+					set_build_error (l_builder.last_error)
 				else
-					last_parsed_document	?= a_builder.current_root
+					last_parsed_document	?= l_builder.current_root
 					if last_parsed_document /= Void then
-						an_executable := transformer.executable
+						l_executable := transformer.executable
 					end
 				end
 			end

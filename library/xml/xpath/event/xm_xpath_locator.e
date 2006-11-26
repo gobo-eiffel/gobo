@@ -20,7 +20,7 @@ feature -- Access
 
 	system_id: STRING is
 			-- Current SYSTEM ID;
-			-- If this is a URL, then it must be fully resolved
+			-- STRING interpretation of `base_uri' when available.
 		deferred
 		ensure
 			system_id_not_void: Result /= Void

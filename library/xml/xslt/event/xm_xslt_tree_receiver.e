@@ -23,7 +23,8 @@ inherit
 
 	XM_XPATH_SEQUENCE_RECEIVER
 		undefine
-			open, start_document, set_unparsed_entity, is_proxy, as_proxy, mark_as_written
+			open, start_document, set_unparsed_entity, is_proxy, as_proxy, mark_as_written,
+			set_document_uri, set_base_uri
 		end
 
 	XM_XPATH_AXIS
@@ -39,8 +40,9 @@ feature {NONE} -- Initialization
 		require
 			underlying_receiver_not_void: a_receiver /= Void
 		do
-			system_id := a_receiver.system_id
 			base_receiver := a_receiver
+			base_uri := a_receiver.base_uri
+			document_uri := a_receiver.document_uri
 		ensure
 			base_receiver_set: base_receiver = a_receiver
 		end

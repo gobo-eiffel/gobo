@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 					end
 					if a_child_node = Void or else another_child_node = Void then
 						finished := True; Result := a_child_node = another_child_node
-					elseif not nodes_are_deep_equal (a_node, another_node, a_comparer) then
+					elseif not nodes_are_deep_equal (a_child_node, another_child_node, a_comparer) then
 						Result := False; finished := True
 					else
 						a_child_iterator.forth; another_child_iterator.forth

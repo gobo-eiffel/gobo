@@ -36,8 +36,12 @@ inherit
 
 feature -- Access
 
-	system_id: STRING
-			-- SYSTEM-id of the document
+	document_uri: UT_URI
+			-- Absolute URI of resource from which document node will be constructed
+
+	base_uri: STRING
+			-- Base URI of document;
+			-- This will be absolute if it is possible to compute an absolute base URI
 
 feature -- Ststus report
 
@@ -227,12 +231,26 @@ feature -- Events
 
 feature -- Element change
 
-	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree.
+	set_document_uri (a_uri: UT_URI) is
+			-- Set `document_uri' for destination tree.
 		require
 			not_open: not is_open
-			system_id_not_void: a_system_id /= Void
-		deferred
+			absolute_uri: a_uri /= Void implies a_uri.is_absolute
+		do
+			document_uri := a_uri
+		ensure
+			document_uri_set: document_uri = a_uri
+		end
+
+	set_base_uri (a_uri: STRING) is
+			-- Set `base_uri' for destination tree.
+		require
+			not_open: not is_open
+			a_uri: a_uri /= Void
+		do
+			base_uri := a_uri
+		ensure
+			base_uri_set: base_uri = a_uri
 		end
 
 	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
@@ -265,7 +283,8 @@ feature -- Conversion
 
 invariant
 
-	system_id_not_void: system_id /= Void
+	document_uri_is_absolute: document_uri /= Void implies document_uri.is_absolute
+	base_uri_not_void: base_uri /= Void
 	not_open_implies_not_started: not is_open implies not is_document_started
 	started_implies_open: is_document_started implies is_open
 

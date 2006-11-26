@@ -62,7 +62,7 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			a_uri: UT_URI
+			l_uri: UT_URI
 		do
 			arguments.item (1).evaluate_item (a_context)
 			if arguments.item (1).last_evaluated_item = Void then
@@ -71,9 +71,9 @@ feature -- Evaluation
 				last_evaluated_item := arguments.item (1).last_evaluated_item
 			else
 				if arguments.item (1).last_evaluated_item.is_document then
-					create a_uri.make (arguments.item (1).last_evaluated_item.as_document.document_uri)
-					if a_uri.is_absolute then
-						create {XM_XPATH_ANY_URI_VALUE} last_evaluated_item.make (a_uri.full_reference)
+					l_uri := arguments.item (1).last_evaluated_item.as_document.document_uri
+					if l_uri /= Void and then l_uri.is_absolute then
+						create {XM_XPATH_ANY_URI_VALUE} last_evaluated_item.make (l_uri.full_reference)
 					else
 						last_evaluated_item := Void
 					end

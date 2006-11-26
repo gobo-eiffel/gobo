@@ -66,7 +66,9 @@ feature -- Access
 				create a_uri.make_resolve (a_base_uri, href)
 				a_uri_resolver.resolve_uri (a_uri.full_reference)
 				if a_uri_resolver.has_uri_reference_error then
-					create an_error.make_from_string (a_uri_resolver.last_uri_reference_error, Xpath_errors_uri, "XTSE0165", Static_error)
+					a_message := STRING_.concat (a_uri_resolver.last_uri_reference_error, ": URI is ")
+					a_message := STRING_.appended_string (a_message, a_uri.full_reference)
+					create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0165", Static_error)
 					report_compile_error (an_error)
 				else
 					create a_source.make (a_uri_resolver.last_system_id.full_reference)

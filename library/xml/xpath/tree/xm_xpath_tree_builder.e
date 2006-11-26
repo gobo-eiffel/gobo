@@ -36,16 +36,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_factory: XM_XPATH_NODE_FACTORY) is
+	make (a_node_factory: XM_XPATH_NODE_FACTORY; a_base_uri: like base_uri; a_document_uri: like document_uri) is
 			-- Establish invariant..
 		require
 			node_factory_not_void: a_node_factory /= Void
+			a_base_uri_not_void: a_base_uri /= Void
 		do
 			node_factory := a_node_factory
-			system_id := ""
+			base_uri := a_base_uri
+			document_uri := a_document_uri
 			create {XM_XPATH_DEFAULT_LOCATOR} locator
 		ensure
 			node_factory_set: node_factory = a_node_factory
+			base_uri_set: base_uri = a_base_uri
+			document_uri_set: document_uri = a_document_uri
 		end
 
 feature -- Access
@@ -80,14 +84,13 @@ feature -- Events
 		do
 			has_error := False
 			last_error := Void
-			if system_id.count = 0 then system_id := locator.system_id end
 			Precursor
 		end
 
 	start_document is
 			-- Notify the start of the document
 		do
-			create tree_document.make (system_id)
+			create tree_document.make (base_uri, document_uri)
 			current_root := tree_document
 			current_depth := 1
 			next_node_number := 2
