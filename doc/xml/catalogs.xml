@@ -46,8 +46,8 @@ in code, a dedicated class is not very flexible. A good answer to these problems
 <para>
 <classname>XM_CATALOG_RESOLVER</classname> is a resolver that implements a two-stage 
 resolution process. In the first stage, it uses XML catalogs (as defined by the
-<ulink url="http://www.oasis-open.org/committees/download.php/12075/xml-catalogs.html">
-OASIS Entity Resolution Technical Committee's 1.1 specification of 16th March 2005</ulink>) to look up
+<ulink url="http://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html">
+OASIS Entity Resolution Technical Committee's 1.1 specification of 7th October 2005</ulink>) to look up
 a <exmlsyntax>SYSTEM</exmlsyntax> or <exmlsyntax>PUBLIC</exmlsyntax> id, or a 
 URI reference from the source document, and fetches another URI reference
 to feed into the second stage.
