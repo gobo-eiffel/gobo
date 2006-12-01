@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Test URI parsing."
 
@@ -26,6 +26,7 @@ feature -- Tests
 			create uri.make ("http://www.ics.uci.edu/pub/ietf/uri/#Related")
 			check_uri (uri, "http", "www.ics.uci.edu", "/pub/ietf/uri/", Void, "Related")
 			assert ("valid_scheme", uri.has_valid_scheme)
+			assert ("http://www.ics.uci.edu/pub/ietf/uri/#Related has an absolute path", uri.has_absolute_path)
 
 			create uri.make ("http://www.ics.uci.edu/cgi-bin/test?id=1")
 			check_uri (uri, "http", "www.ics.uci.edu", "/cgi-bin/test", "id=1", Void)
@@ -44,7 +45,7 @@ feature -- Tests
 
 			create uri.make ("a/various.html")
 			check_uri (uri, Void, Void, "a/various.html", Void, Void)
-			
+
 			create uri.make ("empty:")
 			check_uri (uri, "empty", Void, "", Void, Void)
 
@@ -53,6 +54,10 @@ feature -- Tests
 
 			create uri.make ("//www.invalid/abc")
 			check_uri (uri, Void, "www.invalid", "/abc", Void, Void)
+
+			create uri.make ("/")
+			assert ("/", uri.has_absolute_path)
+
 		end
 
 	test_query is
@@ -68,7 +73,7 @@ feature -- Tests
 
 			create uri.make ("?q")
 			check_uri (uri, Void, Void, "", "q", Void)
-			
+
 			create uri.make ("s:?query")
 			check_uri (uri, "s", Void, "", "query", Void)
 
