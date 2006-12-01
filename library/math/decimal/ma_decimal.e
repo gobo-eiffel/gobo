@@ -896,7 +896,7 @@ feature -- Basic operations
 		end
 
 	multiply (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
-			-- Multiply `other' whith respect to `ctx'
+			-- Multiply `other' with respect to `ctx'
 		require
 			other_not_void: other /= Void
 			ctx_not_void: ctx /= Void
@@ -1780,7 +1780,7 @@ feature {MA_DECIMAL} -- Basic operations
 				other.grow (new_digits)
 			end
 			if new_digits > count then
- 				grow (new_digits)
+				grow (new_digits)
 			end
 		ensure
 			same_count: count = other.count
@@ -2561,7 +2561,7 @@ feature {MA_DECIMAL} -- Basic operations
 				end
 					-- Determine if exponential notation shall be used.
 				the_exponent := adjusted_exponent
-				exponential := not (exponent <= 0 and then adjusted_exponent >= - 6) 
+				exponential := not (exponent <= 0 and then adjusted_exponent >= - 6)
 				if exponential then
 					printed_exponent := the_exponent
 					if is_engineering then
