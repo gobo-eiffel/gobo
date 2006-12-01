@@ -829,6 +829,13 @@ feature {NONE} -- URI parsing
 			inspect state
 			when State_scheme, State_authority_prefix, State_path then
 				stop_path_base (start, i)
+				if
+					not has_absolute_path and then
+					i > start and then
+					full_reference.item (start) = '/'
+				then
+					has_absolute_path := True
+				end
 			when State_authority then
 				if start < i then
 					stop_authority (start, i)
@@ -1001,12 +1008,12 @@ feature {NONE} -- Resolve a relative-path reference
 			an_encoded: STRING
 		do
 			an_encoded := a_string.encoded
-			Result := an_encoded.count = 1 
+			Result := an_encoded.count = 1
 				and then an_encoded.item (1) = '.'
 		ensure
 			definition: Result = STRING_.same_string (a_string.encoded, ".")
 		end
-		
+
 	is_dot_dot (a_string: UT_URI_STRING): BOOLEAN is
 			-- Is `a_string a '..'?
 		require
@@ -1015,7 +1022,7 @@ feature {NONE} -- Resolve a relative-path reference
 			an_encoded: STRING
 		do
 			an_encoded := a_string.encoded
-			Result := an_encoded.count = 2 
+			Result := an_encoded.count = 2
 				and then an_encoded.item (1) = '.'
 				and then an_encoded.item (2) = '.'
 		ensure
