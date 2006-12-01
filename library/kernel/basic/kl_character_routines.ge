@@ -25,6 +25,13 @@ feature -- Status report
 			Result := (c >= '0' and c <= '9')
 		end
 
+	is_hex_digit (c: CHARACTER): BOOLEAN is
+			-- Is `c' a hexadecimal digit?
+			-- A digit is one of 0123456789a-fA-f
+		do
+			Result := (c >= '0' and c <= '9') or (c >= 'a' and c <= 'f') or (c >= 'A' and c <= 'F')
+		end
+
 feature -- Access
 
 	next (c: CHARACTER): CHARACTER is
