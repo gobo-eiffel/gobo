@@ -174,7 +174,7 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item.
 		do
-			process (a_context)
+			generate_events (a_context)
 			last_evaluated_item := Void
 		end
 

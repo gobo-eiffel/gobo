@@ -155,12 +155,12 @@ feature -- Evaluation
 			end
 			create a_receiver.make (another_context.transformer)
 			a_new_context.set_current_receiver (a_receiver)
-			process (a_new_context)
+			generate_events (a_new_context)
 			a_receiver.sequence.create_iterator (Void)
 			last_iterator := a_receiver.sequence.last_iterator
 		end
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER

@@ -160,7 +160,7 @@ feature -- Evaluation
 			end		
 		end
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
@@ -173,7 +173,7 @@ feature -- Evaluation
 				a_trace_listener := a_transformer.trace_listener
 				a_trace_listener.trace_instruction_entry (trace_details)
 			end
-			child.process (a_context)
+			child.generate_events (a_context)
 			if is_tracing then
 				a_trace_listener.trace_instruction_exit (trace_details)
 			end

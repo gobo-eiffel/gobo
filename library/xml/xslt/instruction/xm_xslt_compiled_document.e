@@ -188,7 +188,7 @@ feature -- Evaluation
 					-- `change_output_destination' guarentees this
 				end
 				a_receiver.start_document
-				content.process (a_new_context)
+				content.generate_events (a_new_context)
 				a_receiver.end_document
 				a_receiver.close
 				if a_builder.has_error then
@@ -200,7 +200,7 @@ feature -- Evaluation
 			end
 		end
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			evaluate_item (a_context)

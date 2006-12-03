@@ -105,18 +105,18 @@ feature -- Evaluation
 		do
 			from
 				create l_tail.make (Void)
-				process_leaving_tail (l_tail, a_context)
+				generate_tail_call (l_tail, a_context)
 				l_tail_call := l_tail.item
 			until
 				l_tail_call = Void
 			loop
 				l_tail.put (Void)
-				l_tail_call.process_leaving_tail (l_tail, a_context)
+				l_tail_call.generate_tail_call (l_tail, a_context)
 				l_tail_call := l_tail.item
 			end
 		end
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
@@ -138,9 +138,9 @@ feature -- Evaluation
 		do
 			an_instruction ?= body
 			if an_instruction /= Void then
-				an_instruction.process_leaving_tail (a_tail, a_context)
+				an_instruction.generate_tail_call (a_tail, a_context)
 			else
-				body.process (a_context)
+				body.generate_events (a_context)
 			end
 		ensure
 			possible_tail_call: a_tail.item /= Void xor a_tail.item = Void

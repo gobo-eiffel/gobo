@@ -299,7 +299,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
@@ -315,12 +315,12 @@ feature -- Evaluation
 						a_context.transformer.report_fatal_error (a_regexp_iterator.error_value)
 					elseif a_regexp_iterator.is_matching then
 						if matching_block /= Void then
-							matching_block.process (a_new_context)
+							matching_block.generate_events (a_new_context)
 						end
 						a_regexp_iterator.forth
 					else
 						if non_matching_block /= Void then
-							non_matching_block.process (a_new_context)
+							non_matching_block.generate_events (a_new_context)
 						end
 						a_regexp_iterator.forth
 					end

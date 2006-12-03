@@ -71,9 +71,9 @@ feature -- Evaluation
 			if is_stack_frame_needed then
 				l_new_context := a_context.new_context
 				l_new_context.open_stack_frame (slot_manager)
-				body.process (l_new_context)
+				body.generate_events (l_new_context)
 			else
-				body.process (a_context)
+				body.generate_events (a_context)
 			end
 		end
 

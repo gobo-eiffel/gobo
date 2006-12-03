@@ -1325,7 +1325,7 @@ feature -- Status report
 		end
 
 	is_process_supported: BOOLEAN is
-			-- Is `process' supported natively?
+			-- Is `generate_events' supported natively?
 		require
 			not_replaced: not was_expression_replaced
 		do
@@ -1737,7 +1737,7 @@ feature -- Evaluation
 			iterator_before: not last_node_iterator.is_error implies last_node_iterator.before
 		end
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		require
 			evaluation_context_not_void: a_context /= Void
@@ -1848,7 +1848,7 @@ feature -- Evaluation
 		end
 
 	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
-			-- Eager evaluation via `process'
+			-- Eager evaluation via `generate_events'
 		require
 			expression_not_in_error: not is_error
 			context_may_be_void: True
@@ -1915,7 +1915,7 @@ feature {XM_XPATH_EXPRESSION} -- Local
 			-- `Current natively supports `iterator'
 
 	Supports_process: INTEGER is 4
-			-- `Current natively supports `process'
+			-- `Current natively supports `generate_events'
 
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines

@@ -19,7 +19,7 @@ inherit
 			simplify
 		redefine
 			promote, native_implementations, evaluate_item, create_iterator, compute_special_properties,
-			processed_eager_evaluation, process, system_id_from_module_number, is_tail_call, as_tail_call,
+			processed_eager_evaluation, generate_events, system_id_from_module_number, is_tail_call, as_tail_call,
 			create_node_iterator
 		end
 
@@ -157,7 +157,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
@@ -170,14 +170,14 @@ feature -- Evaluation
 				-- this is XSLT
 			end
 			create l_tail.make (Void)
-			process_leaving_tail (l_tail, l_evaluation_context)
+			generate_tail_call (l_tail, l_evaluation_context)
 			from
 				l_tail_call := l_tail.item
 			until
 				l_tail_call = Void or else l_evaluation_context.transformer.is_error
 			loop
 				l_tail.put (Void)
-				l_tail_call.process_leaving_tail (l_tail, l_evaluation_context)
+				l_tail_call.generate_tail_call (l_tail, l_evaluation_context)
 				l_tail_call := l_tail.item
 			end
 		ensure then
@@ -215,7 +215,7 @@ feature -- Evaluation
 				end
 				create a_receiver.make_with_size (1, another_context.transformer)
 				another_context.change_to_sequence_output_destination (a_receiver)
-				process (another_context)
+				generate_events (another_context)
 				a_receiver.close
 				last_evaluated_item := a_receiver.first_item
 			end
@@ -255,7 +255,7 @@ feature -- Evaluation
 				end
 				create a_receiver.make (another_context.transformer)
 				another_context.change_to_sequence_output_destination (a_receiver)
-				process (another_context)
+				generate_events (another_context)
 				if a_receiver.is_open then a_receiver.close end
 				if not another_context.transformer.is_error then
 					a_receiver.sequence.create_iterator (another_context)
@@ -278,7 +278,7 @@ feature -- Evaluation
 		end
 
 	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
-			-- Eager evaluation via `process'
+			-- Eager evaluation via `generate_events'
 		local
 			a_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
 			another_context: XM_XSLT_EVALUATION_CONTEXT
@@ -290,7 +290,7 @@ feature -- Evaluation
 				end
 			create a_receiver.make (another_context.transformer)
 			another_context.change_to_sequence_output_destination (a_receiver)
-			process (another_context)
+			generate_events (another_context)
 			a_receiver.close
 			Result := a_receiver.sequence
 		end

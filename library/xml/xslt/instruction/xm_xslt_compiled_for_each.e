@@ -244,7 +244,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
@@ -272,7 +272,7 @@ feature -- Evaluation
 					if a_transformer.is_tracing then
 						a_trace_listener.trace_current_item_start (an_iterator.item)
 					end
-					action.process (an_inner_context)
+					action.generate_events (an_inner_context)
 					if a_transformer.is_tracing then
 						a_trace_listener.trace_current_item_finish (an_iterator.item)
 					end

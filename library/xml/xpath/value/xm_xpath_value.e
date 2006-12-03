@@ -189,7 +189,7 @@ feature -- Evaluation
 				last_evaluation := Current
 		end
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
@@ -212,7 +212,7 @@ feature -- Evaluation
 		end
 
 	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
-			-- Eager evaluation via `process'
+			-- Eager evaluation via `generate_events'
 		do
 			Result := Current
 		end

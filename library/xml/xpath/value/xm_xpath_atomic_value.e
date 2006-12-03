@@ -21,7 +21,7 @@ inherit
 			is_atomic_value, as_atomic_value, is_untyped_atomic, as_untyped_atomic, is_object_value, is_function_package,
 			is_any_uri, as_any_uri
 		redefine
-			process, count, calculate_effective_boolean_value 
+			generate_events, count, calculate_effective_boolean_value 
 		end
 
 	XM_XPATH_ITEM
@@ -161,7 +161,7 @@ feature -- Evaluation
 			-- precondition is never met
 		end
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			evaluate_item (a_context)

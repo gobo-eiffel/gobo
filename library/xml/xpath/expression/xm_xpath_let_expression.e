@@ -19,7 +19,7 @@ inherit
 		redefine
 			promote, create_iterator, create_node_iterator, evaluate_item, compute_special_properties,
 			mark_tail_function_calls, action, is_let_expression, as_let_expression,
-			is_tail_recursive, process, is_tail_call, as_tail_call
+			is_tail_recursive, generate_events, is_tail_call, as_tail_call
 		end
 
 	XM_XPATH_ROLE
@@ -440,7 +440,7 @@ feature -- Evaluation
 			end
 		end
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_let_expression: XM_XPATH_LET_EXPRESSION
@@ -473,11 +473,11 @@ feature -- Evaluation
 			elseif is_error then
 				a_context.report_fatal_error (error_value)
 			else
-				a_let_expression.action.process (a_context)
+				a_let_expression.action.generate_events (a_context)
 			end
 		end
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XPATH_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_let_expression: XM_XPATH_LET_EXPRESSION
@@ -510,9 +510,9 @@ feature -- Evaluation
 				a_context.report_fatal_error (error_value)
 			else
 				if a_let_expression.action.is_tail_call then
-					a_let_expression.action.as_tail_call.process_leaving_tail (a_tail, a_context)
+					a_let_expression.action.as_tail_call.generate_tail_call (a_tail, a_context)
 				else
-					a_let_expression.action.process (a_context)
+					a_let_expression.action.generate_events (a_context)
 				end
 			end
 		end

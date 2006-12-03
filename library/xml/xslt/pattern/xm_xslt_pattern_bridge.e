@@ -170,14 +170,14 @@ feature -- Evaluation
 			-- pre-condition cannot be met
 		end
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			-- pre-condition cannot be met
 		end
 
 	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
-			-- Eager evaluation via `process'
+			-- Eager evaluation via `generate_events'
 		do
 			-- pre-condition cannot be met
 		end

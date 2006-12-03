@@ -17,7 +17,7 @@ inherit
 
 	XM_XSLT_ELEMENT_CONSTRUCTOR
 		redefine
-			evaluate_item, process_leaving_tail
+			evaluate_item, generate_tail_call
 		end
 
 create
@@ -89,12 +89,12 @@ feature -- Evaluation
 			end
 			create an_outputter.make_with_size (1, another_context.transformer)
 			a_new_context.change_to_sequence_output_destination (an_outputter)
-			process (a_new_context)
+			generate_events (a_new_context)
 			an_outputter.close
 			last_evaluated_item := an_outputter.first_item
 		end
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			if a_validator /= a_receiver then
 				todo ("copy_document (validation)", True)
 			end
-			content.process (a_context)
+			content.generate_events (a_context)
 		end
 
 end

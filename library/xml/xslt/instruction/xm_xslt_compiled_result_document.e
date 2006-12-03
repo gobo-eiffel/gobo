@@ -294,7 +294,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -372,7 +372,7 @@ feature -- Evaluation
 					l_receiver := l_new_context.current_receiver
 					l_receiver.start_document
 				end
-				content.process (l_new_context)
+				content.generate_events (l_new_context)
 				if not l_default then
 					l_receiver.end_document
 					l_receiver.close

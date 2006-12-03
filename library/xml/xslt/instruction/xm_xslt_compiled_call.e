@@ -14,7 +14,7 @@ inherit
 	
 	XM_XSLT_INSTRUCTION
 		redefine
-			sub_expressions, process, creates_new_nodes, promote_instruction,
+			sub_expressions, generate_events, creates_new_nodes, promote_instruction,
 			compute_intrinsic_dependencies
 		end
 
@@ -128,7 +128,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_events (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
@@ -149,12 +149,12 @@ feature -- Evaluation
 				l_transformer.is_error or else l_tail_call = Void
 			loop
 				l_tail.put (Void)
-				l_tail_call.process_leaving_tail (l_tail, l_new_context)
+				l_tail_call.generate_tail_call (l_tail, l_new_context)
 				l_tail_call := l_tail.item
 			end
 		end
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_tunnel_parameters: XM_XSLT_PARAMETER_SET
@@ -165,7 +165,7 @@ feature -- Evaluation
 			l_tail_call: XM_XPATH_TAIL_CALL
 		do
 			if not use_tail_recursion then
-				process (a_context)
+				generate_events (a_context)
 			else
 
 				-- Handle any parameters.

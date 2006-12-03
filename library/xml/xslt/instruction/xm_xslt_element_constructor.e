@@ -149,7 +149,7 @@ feature -- Evaluation
 				-- N.B. The element is constructed as a parentless element
 				a_receiver.start_element (a_name_code, -1, some_properties)
 				output_namespace_nodes (a_new_context, a_receiver)
-				content.process (a_new_context)
+				content.generate_events (a_new_context)
 				if not a_transformer.is_error then
 					a_receiver.end_element
 					a_receiver.close
@@ -161,7 +161,7 @@ feature -- Evaluation
 			end
 		end
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_name_code, some_properties: INTEGER
@@ -200,7 +200,7 @@ feature -- Evaluation
 							expand_attribute_sets (a_transformer.executable, attribute_sets, a_context)
 						end
 						if not a_transformer.is_error then
-							content.process (a_context)
+							content.generate_events (a_context)
 						end
 						
 						if not a_transformer.is_error then
@@ -226,7 +226,7 @@ feature -- Evaluation
 			--  this element and the attributes that follow it
 
 			a_context.current_receiver.start_element (-10, 0, 0)
-			content.process (a_context)
+			content.generate_events (a_context)
 
 			-- Note, we don't bother with an end_element call.
 			

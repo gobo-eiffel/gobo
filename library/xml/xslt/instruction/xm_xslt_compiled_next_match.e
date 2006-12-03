@@ -14,7 +14,7 @@ inherit
 	
 	XM_XSLT_COMPILED_APPLY_IMPORTS
 		redefine
-			process_leaving_tail, make
+			generate_tail_call, make
 		end
 
 create
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER

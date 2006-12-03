@@ -736,7 +736,7 @@ feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 					l_tail_call := l_tail.item
 					l_tail.put (Void)
 					if l_tail_call /= Void then
-						l_tail_call.process_leaving_tail (l_tail, initial_context)
+						l_tail_call.generate_tail_call (l_tail, initial_context)
 					else
 						l_finished := True
 					end

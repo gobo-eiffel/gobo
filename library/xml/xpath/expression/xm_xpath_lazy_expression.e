@@ -18,7 +18,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			is_lazy_expression, as_lazy_expression, evaluate_item, create_iterator, process
+			is_lazy_expression, as_lazy_expression, evaluate_item, create_iterator, generate_events
 		end
 
 create {XM_XPATH_EXPRESSION_FACTORY}
@@ -66,10 +66,10 @@ feature -- Evaluation
 			last_iterator := base_expression.last_iterator
 		end
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			base_expression.process (a_context)
+			base_expression.generate_events (a_context)
 		end
 
 feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted

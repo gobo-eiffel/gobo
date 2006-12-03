@@ -480,7 +480,7 @@ feature -- Evaluation
 			end		
 		end
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			an_error_value: XM_XPATH_ERROR_VALUE
@@ -527,7 +527,7 @@ feature -- Evaluation
 		end
 
 	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
-			-- Eager evaluation via `process'
+			-- Eager evaluation via `generate_events'
 		do
 			-- pre-condition will not be met for this implementation
 		end

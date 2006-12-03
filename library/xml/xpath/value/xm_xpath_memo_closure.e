@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_CLOSURE
 		redefine
-			make, create_iterator, same_expression, process, is_memo_closure, as_memo_closure, count,
+			make, create_iterator, same_expression, generate_events, is_memo_closure, as_memo_closure, count,
 			item_at, is_node_sequence
 		end
 
@@ -251,7 +251,7 @@ feature -- Evaluation
 			end
 		end
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			todo ("process", False)

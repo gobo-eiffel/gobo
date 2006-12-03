@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			evaluate_item, display, item_type, is_convertible_to_item, as_item, process,
+			evaluate_item, display, item_type, is_convertible_to_item, as_item, generate_events,
 			is_closure, as_closure, reduce
 		end
 	
@@ -204,7 +204,7 @@ feature -- Evaluation
 			last_node_iterator := last_iterator.as_node_iterator
 		end
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			todo ("process", False)

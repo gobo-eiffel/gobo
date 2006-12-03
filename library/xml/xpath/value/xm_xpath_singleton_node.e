@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_VALUE
 		redefine
-			process, is_singleton_node, as_singleton_node, count,
+			generate_events, is_singleton_node, as_singleton_node, count,
 			item_at, calculate_effective_boolean_value 
 		end
 
@@ -158,7 +158,7 @@ feature -- Evaluation
 			create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (node)
 		end
 
-	process (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			if node /= Void then

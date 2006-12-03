@@ -404,7 +404,7 @@ feature -- Evaluation
 			end
 		end
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -430,10 +430,10 @@ feature -- Evaluation
 					l_action := actions.item (l_cursor.index)
 					l_instruction ?= l_action
 					if l_instruction /= Void then
-						l_instruction.process_leaving_tail (a_tail, a_context)
+						l_instruction.generate_tail_call (a_tail, a_context)
 						l_tail_call := a_tail.item
 					else
-						l_action.process (a_context)
+						l_action.generate_events (a_context)
 						l_tail_call := Void
 					end
 					l_cursor.go_after

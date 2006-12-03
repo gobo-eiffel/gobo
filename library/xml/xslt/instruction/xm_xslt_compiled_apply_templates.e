@@ -14,7 +14,7 @@ inherit
 	
 	XM_XSLT_INSTRUCTION
 		redefine
-			sub_expressions, promote_instruction, process, creates_new_nodes
+			sub_expressions, promote_instruction, generate_events, creates_new_nodes
 		end
 
 	XM_XSLT_TEMPLATE_ROUTINES
@@ -186,7 +186,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_events (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
@@ -195,7 +195,7 @@ feature -- Evaluation
 			apply (l_tail, a_context, False)
 		end
 
-	process_leaving_tail (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			apply (a_tail, a_context, is_tail_recursion_used)
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 							l_new_context.transformer.is_error or l_tail_call = Void
 						loop
 							a_tail.put (Void)
-							l_tail_call.process_leaving_tail (a_tail, l_new_context)
+							l_tail_call.generate_tail_call (a_tail, l_new_context)
 							l_tail_call := a_tail.item
 						end
 					end

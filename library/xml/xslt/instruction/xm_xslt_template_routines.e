@@ -45,7 +45,7 @@ feature -- Evaluation
 					else
 						from  until l_transformer.is_error or else l_tail_call = Void loop
 							a_tail.put (Void)
-							l_tail_call.process_leaving_tail (a_tail, a_context)
+							l_tail_call.generate_tail_call (a_tail, a_context)
 							l_tail_call := a_tail.item
 							if l_transformer.is_error then l_finished := True end
 						end
@@ -106,7 +106,7 @@ feature -- Evaluation
 						if a_transformer.is_tracing then
 							a_transformer.trace_listener.trace_current_item_start (a_node)
 						end
-						l_node_handler.process_leaving_tail (a_tail, a_context)
+						l_node_handler.generate_tail_call (a_tail, a_context)
 						if a_transformer.is_tracing then
 							a_transformer.trace_listener.trace_current_item_finish (a_node)
 						end
@@ -114,7 +114,7 @@ feature -- Evaluation
 						if a_transformer.is_tracing then
 							a_transformer.trace_listener.trace_current_item_start (a_node)
 						end
-						l_node_handler.process_leaving_tail (a_tail, a_context)
+						l_node_handler.generate_tail_call (a_tail, a_context)
 						if a_transformer.is_tracing then
 							a_transformer.trace_listener.trace_current_item_finish (a_node)
 						end
@@ -153,7 +153,7 @@ feature -- Evaluation
 						l_tail_call = Void
 					loop
 						l_tail.put (Void)
-						l_tail_call.process_leaving_tail (l_tail, l_new_context)
+						l_tail_call.generate_tail_call (l_tail, l_new_context)
 						l_tail_call := l_tail.item
 					end
 				when Text_node, Attribute_node then
