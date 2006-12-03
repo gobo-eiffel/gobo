@@ -278,6 +278,19 @@ feature -- Access
 			end
 		end
 
+	name_code_to_prefix_index (a_name_code: INTEGER): INTEGER is
+			-- Extracted prefix index from `a_name_code'
+		do
+			check
+				name_code_is_positive: a_name_code > 0
+				-- because it only occupies 28 bits
+			end
+			-- (a_name_code |>> 20) & 0x000000ff
+			Result := (a_name_code // bits_20)
+		ensure
+			valid_prefix_index: Result >= 0 and Result < 255
+		end
+
 	prefix_with_index (a_uri_code: INTEGER; an_index: INTEGER): STRING is
 			-- Get a prefix among all the prefixes used with a given URI, given its index
 		require
@@ -1520,19 +1533,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			valid_result: -2 < Result and Result < 255
-		end
-
-	name_code_to_prefix_index (a_name_code: INTEGER): INTEGER is
-			-- Extract the prefix index from `a_name_code'
-		do
-				check
-					name_code_is_positive: a_name_code > 0
-					-- because it only occupies 28 bits
-				end
-			-- (a_name_code |>> 20) & 0x000000ff
-			Result := (a_name_code // bits_20)
-		ensure
-			valid_prefix_index: Result >= 0 and Result < 255
 		end
 
 	name_code_to_depth (a_name_code: INTEGER): INTEGER is

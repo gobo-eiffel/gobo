@@ -103,7 +103,7 @@ feature -- Evaluation
 																Gexslt_eiffel_type_uri, "NO_INITIAL_TEMPLATE", Static_error)
 				last_iterator := qname_value_iterator
 			else
-				create l_builder.make (Void, Void)
+				create l_builder.make (static_context.base_uri, Void)
 				create l_result.make_receiver (l_builder)
 				l_config := transformer.configuration
 				l_tracer := l_config.trace_listener

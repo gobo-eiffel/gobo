@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 		local
 			l_uri, l_prefix: STRING
 			l_error: XM_XPATH_ERROR_VALUE
-			l_namespace_uri: UT_URI
+			l_namespace: UT_URI
 		do
 			l_prefix := STRING_.cloned_string (a_prefix)
 			if namespace = Void then
@@ -334,8 +334,11 @@ feature {NONE} -- Implementation
 						create l_error.make_from_string ("Namespace does not conform to xs:anyURI", Xpath_errors_uri, "XTDE0865", Dynamic_error)
 						set_last_error (l_error)
 					else
-						create l_namespace_uri.make (l_uri)
-						if l_uri.count = 0 then
+						if not l_uri.is_empty then
+							create l_namespace.make (l_uri)
+							-- TODO: need UT_URI validity checking
+						end
+						if l_uri.is_empty then
 							l_prefix := ""
 						elseif l_prefix.count = 0 then
 							l_prefix := shared_name_pool.suggested_prefix_for_uri (l_uri)

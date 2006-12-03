@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 					report_compile_error (an_error)
 				end
 				if namespace = Void then
-					namespace_uri := uri_for_prefix (qname_prefix, False)
+					namespace_uri := uri_for_prefix (qname_prefix, True)
 				end
 			end
 		ensure

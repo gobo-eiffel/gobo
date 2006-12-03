@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			is_instruction := True
+			is_inherit_namespaces := True
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
 		end
 

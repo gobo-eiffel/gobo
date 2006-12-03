@@ -300,7 +300,7 @@ feature -- Events
 					an_index > pending_attributes_lists_size 
 				loop
 					a_name_code := pending_attributes_name_codes.item (an_index)
-					if prefix_code_from_namespace_code (a_name_code) /= 0 then -- non-null prefix
+					if shared_name_pool.name_code_to_prefix_index (a_name_code) /= 0 then
 						check_proposed_prefix (a_name_code, an_index)
 						pending_attributes_name_codes.put (last_checked_namecode, an_index)
 					end
@@ -484,50 +484,50 @@ feature {NONE} -- Implementation
 			valid_name_code: a_name_code > -1
 			positive_sequence_number: a_sequence_number >= 0
 		local
-			an_index: INTEGER
-			a_namespace_code, another_namespace_code, a_prefix_code, a_uri_code: INTEGER -- _16
-			a_prefix, a_uri, a_local_name: STRING
-			finished: BOOLEAN
+			l_index: INTEGER
+			l_namespace_code, l_other_namespace_code, l_prefix_code, l_uri_code: INTEGER -- _16
+			l_prefix, l_uri, l_local_name: STRING
+			l_finished: BOOLEAN
 		do
 			last_checked_namecode := a_name_code
 			if not shared_name_pool.is_namespace_code_allocated_for_name_code (a_name_code) then
 				shared_name_pool.allocate_namespace_code_for_name_code (a_name_code)
 			end
-			a_namespace_code := shared_name_pool.namespace_code_from_name_code (a_name_code)
-			a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
-			a_uri_code := uri_code_from_namespace_code (a_namespace_code)
+			l_namespace_code := shared_name_pool.namespace_code_from_name_code (a_name_code)
+			l_prefix_code := prefix_code_from_namespace_code (l_namespace_code)
+			l_uri_code := uri_code_from_namespace_code (l_namespace_code)
 			from
-				an_index := an_index + 1
+				l_index := l_index + 1
 			until
-				finished or else an_index > pending_namespaces_list_size
+				l_finished or else l_index > pending_namespaces_list_size
 			loop
-				another_namespace_code := pending_namespaces.item (an_index)
-				if a_prefix_code = prefix_code_from_namespace_code (another_namespace_code) then
-					if a_uri_code = uri_code_from_namespace_code (another_namespace_code) then
-						finished := True
+				l_other_namespace_code := pending_namespaces.item (l_index)
+				if l_prefix_code = prefix_code_from_namespace_code (l_other_namespace_code) then
+					if l_uri_code = uri_code_from_namespace_code (l_other_namespace_code) then
+						l_finished := True
 					else
-						a_prefix := substituted_prefix (a_namespace_code, a_sequence_number)
-						a_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
-						a_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
-						a_uri := shared_name_pool.uri_from_uri_code (a_uri_code)
-						if shared_name_pool.is_name_code_allocated_using_uri_code (a_prefix,a_uri_code, a_local_name) then
-							last_checked_namecode := shared_name_pool.name_code (a_prefix, a_uri, a_local_name)
+						l_prefix := substituted_prefix (l_namespace_code, a_sequence_number)
+						l_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
+						l_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
+						l_uri := shared_name_pool.uri_from_uri_code (l_uri_code)
+						if shared_name_pool.is_name_code_allocated_using_uri_code (l_prefix, l_uri_code, l_local_name) then
+							last_checked_namecode := shared_name_pool.name_code (l_prefix, l_uri, l_local_name)
 						else
-							shared_name_pool.allocate_name_using_uri_code (a_prefix, a_uri_code, a_local_name)
+							shared_name_pool.allocate_name_using_uri_code (l_prefix, l_uri_code, l_local_name)
 							last_checked_namecode := shared_name_pool.last_name_code
 						end
 						if not shared_name_pool.is_namespace_code_allocated_for_name_code (last_checked_namecode) then
 							shared_name_pool.allocate_namespace_code_for_name_code (last_checked_namecode)
 						end
 						notify_namespace (shared_name_pool.namespace_code_from_name_code (last_checked_namecode), 0)
-						finished := True
+						l_finished := True
 					end
 				else
-					an_index := an_index + 1
+					l_index := l_index + 1
 				end
 			end
-			if not finished then
-				notify_namespace (a_namespace_code, 0)
+			if not l_finished then
+				notify_namespace (l_namespace_code, 0)
 			end
 		ensure
 			last_checked_namecode: last_checked_namecode > -1

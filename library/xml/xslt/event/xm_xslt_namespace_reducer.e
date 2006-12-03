@@ -28,9 +28,6 @@ inherit
 		export {NONE} all end
 
 	-- This class also ensures that an xmlns="" undeclaration is output when necessary.
-	-- Used on its own, it simply eliminates unwanted namespace declarations.
-	-- It can also be subclassed, in which case the subclass can use it's services to resolve QNames.
-	-- It also validates namespace-sensitive content.
 
 create
 
@@ -82,11 +79,15 @@ feature -- Events
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace.
+		local
+			l_prefix_code: INTEGER --_16
 		do
 
 			-- Keep the namespace only if it is actually needed
 
-			if is_needed (a_namespace_code) then
+			l_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
+			cancel_pending_undeclarations (l_prefix_code)
+			if is_needed (a_namespace_code, l_prefix_code) then
 				namespaces_in_scope.force_last (a_namespace_code)
 				count_stack.replace (count_stack.item + 1)
 				Precursor (a_namespace_code, properties)
@@ -180,64 +181,66 @@ feature {NONE} -- Implementation
 	pending_undeclarations: DS_ARRAYED_LIST [INTEGER]
 			-- Pending undeclarations
 
-	is_needed (a_namespace_code: INTEGER): BOOLEAN is
+	cancel_pending_undeclarations (a_prefix_code: INTEGER) is
+			-- Cancel any pendinf undeclarations for `a_prefix_code'.
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+			if pending_undeclarations /= Void then
+				from
+					l_cursor := pending_undeclarations.new_cursor; l_cursor.start
+				variant
+					pending_undeclarations.count + 1 - l_cursor.index
+				until
+					l_cursor.after
+				loop
+					if a_prefix_code = prefix_code_from_namespace_code (l_cursor.item) then
+						l_cursor.replace (-1)
+					end
+					l_cursor.forth
+				end
+			end
+		end
+
+	is_needed (a_namespace_code, a_prefix_code: INTEGER): BOOLEAN is
 			-- Is declaration for `a_namespace_code' needed?
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_prefix_code: INTEGER --_16
-			decided: BOOLEAN
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_decided: BOOLEAN
 		do
 			if a_namespace_code /= Xml_namespace_code then
-				a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
 
 				-- First cancel any pending undeclaration of this namespace prefix
 
-				if pending_undeclarations /= Void then
-					from
-						a_cursor := pending_undeclarations.new_cursor; a_cursor.start
-					variant
-						pending_undeclarations.count + 1 - a_cursor.index
-					until
-						a_cursor.after
-					loop
-						if a_prefix_code = prefix_code_from_namespace_code (a_cursor.item) then
-							a_cursor.replace (-1)
-							a_cursor.go_after
-						else
-							a_cursor.forth
-						end
-					end
-				end
-
 				from
-					a_cursor := namespaces_in_scope.new_cursor; a_cursor.finish
+					l_cursor := namespaces_in_scope.new_cursor; l_cursor.finish
 				variant
-					a_cursor.index
+					l_cursor.index
 				until
-					a_cursor.before
+					l_cursor.before
 				loop
-					if a_namespace_code = a_cursor.item then
+					if a_namespace_code = l_cursor.item then
 
 						-- it's a duplicate so we don't need it
 
 						Result := False
-						decided := True
-						a_cursor.go_before
-					elseif a_prefix_code = prefix_code_from_namespace_code (a_cursor.item) then
+						l_decided := True
+						l_cursor.go_before
+					elseif a_prefix_code = prefix_code_from_namespace_code (l_cursor.item) then
 
 						-- same prefix, different URI, so we do need it
 
 						Result := True
-						decided := True
-						a_cursor.go_before
+						l_decided := True
+						l_cursor.go_before
 					else
-						a_cursor.back
+						l_cursor.back
 					end
 				end
 
 				-- we need it unless it's a redundant xmlns=""
 
-				if not decided then Result := a_namespace_code /= Null_namespace_code end
+				if not l_decided then Result := a_namespace_code /= Null_namespace_code end
 			end
 		end
 
@@ -280,15 +283,6 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end
-
-	uri_code (a_prefix_code: INTEGER): INTEGER is
-			-- URI code for `a_prefix_code' from in-scope namespaces
-		do
-
-			-- This is for the benefit of sub-classes
-
-			todo ("uri_code", False)
 		end
 
 invariant

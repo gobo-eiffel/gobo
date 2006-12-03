@@ -99,7 +99,7 @@ feature -- Element change
 				end
 			end
 			if a_select_attribute /= Void then
-				generate_attribute_value_template (a_select_attribute, static_context)
+				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
 				if select_expression.is_error then
 					report_compile_error (select_expression.error_value)
@@ -185,8 +185,9 @@ feature -- Element change
 						if Url_encoding.has_excluded_characters (namespace_uri) then
 							create l_error.make_from_string ("Namespace does not conform to xs:anyURI", Xpath_errors_uri, "XTDE0865", Dynamic_error)
 							set_last_error (l_error)
-						else
+						elseif namespace_uri.count > 0 then
 							create l_uri.make (namespace_uri)
+							-- TODO: - need validation checking in UT_URI
 						end
 						if namespace_uri.count = 0 then
 							qname_prefix := ""
@@ -325,7 +326,7 @@ feature {NONE} -- Implementation
 		end
 
 	choose_arbitrary_qname_prefix is
-			-- choose an arbitrary XML prefix.
+			-- Choose an arbitrary XML prefix.
 		require
 			namespace_uri_not_void: namespace_uri /= Void
 			namespace_uri_not_empty: not namespace_uri.is_empty
@@ -348,13 +349,14 @@ feature {NONE} -- Implementation
 			-- Maybe the namespace is already known to the name pool
 			if not found then
 				qname_prefix := shared_name_pool.suggested_prefix_for_uri (namespace_uri)
-				if qname_prefix = Void then
-					-- the following arbitrary prefix will be change if it clashes
-					qname_prefix := "ns0"
-				end
+			end
+			if qname_prefix = Void or else qname_prefix.is_empty then
+				-- the following arbitrary prefix will be change if it clashes
+				qname_prefix := "ns0"
 			end
 		ensure
 			chosen_prefix_not_void: qname_prefix /= Void
+			chosen_prefix_empty: not qname_prefix.is_empty
 		end
 
 end
