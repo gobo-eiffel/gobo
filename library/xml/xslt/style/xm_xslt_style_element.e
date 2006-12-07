@@ -1229,11 +1229,13 @@ feature -- Creation
 				create {XM_XPATH_STRING_VALUE} last_generated_expression.make ("")
 			elseif l_avt.components.count = 1 then
 				last_generated_expression := l_avt.components.item (1)
+				-- TODO: simplify
 			elseif a_static_context.is_backwards_compatible_mode then
 				last_generated_expression := l_avt.components.item (1)
 			else
 				create l_concat_function.make
 				l_concat_function.set_arguments (l_avt.components)
+				-- TODO: l_concat_function.simplify
 				last_generated_expression := l_concat_function
 			end
 			if last_generated_expression.is_error then

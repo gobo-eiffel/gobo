@@ -122,7 +122,7 @@ feature -- Evaluation
 							last_evaluated_item := arguments.item (2).last_evaluated_item
 						else
 							a_separator := arguments.item (2).last_evaluated_item.string_value
-							a_result := STRING_.concat (a_string, a_separator)
+							a_result := a_string
 							from
 							until
 								an_iterator.is_error or else an_iterator.after

@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if collator /= Void then
-				create {XM_XSLT_TEXT_COMPARER} comparer.make_from_collator (collator)
+				create {XM_XSLT_TEXT_COMPARER} a_comparer.make_from_collator (collator)
 			else
 				if language.count = 0 or else STRING_.same_string (language, "en") then
 					create a_base_collator

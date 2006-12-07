@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 				when Group_by_algorithm then
 					l_new_context := a_context.new_minor_context
 					l_new_context.set_current_iterator (l_population)
-					l_collator := collator (l_new_context)
+					l_collator := collator (a_context)
 					if l_collator = Void then
 						report_unknown_collator (a_context.transformer)
 					else

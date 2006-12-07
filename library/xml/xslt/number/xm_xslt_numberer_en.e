@@ -487,65 +487,65 @@ feature {NONE} -- Implementation
 		require
 			strictly_positive_integer: a_number > 0
 		local
-			a_remainder: INTEGER
+			l_remainder: INTEGER
 		do
 			if a_number >= 1000000000 then
-				a_remainder := a_number \\ 1000000000
+				l_remainder := a_number \\ 1000000000
 				Result := words_number (a_number // 1000000000) + " Billion" -- American and very modern English usage
-				if a_remainder = 0 then
+				if l_remainder = 0 then
 					Result := Result + "th"
 				else
-					if a_remainder < 100 then
-						Result := Result + " "
-					else
+					if l_remainder < 100 then
 						Result := Result + " and "
+					else
+						Result := Result + " "
 					end
-					Result := Result + ordinal_number (a_remainder)
+					Result := Result + ordinal_number (l_remainder)
 				end
 			elseif a_number >= 1000000 then
-				a_remainder := a_number \\ 1000000
+				l_remainder := a_number \\ 1000000
 				Result := words_number (a_number // 1000000) + " Million"
-				if a_remainder = 0 then
+				if l_remainder = 0 then
 					Result := Result + "th"
 				else
-					if a_remainder < 100 then
-						Result := Result + " "
-					else
+					if l_remainder < 100 then
 						Result := Result + " and "
+					else
+						Result := Result + " "
 					end
-					Result := Result + ordinal_number (a_remainder)
+					Result := Result + ordinal_number (l_remainder)
 				end
 			elseif a_number >= 1000 then
-				a_remainder := a_number \\ 1000
+				l_remainder := a_number \\ 1000
 				Result := words_number (a_number // 1000) + " Thousand"
-				if a_remainder = 0 then
+				if l_remainder = 0 then
 					Result := Result + "th"
 				else
-					if a_remainder < 100 then
-						Result := Result + " "
-					else
+					if l_remainder < 100 then
 						Result := Result + " and "
+					else
+						Result := Result + " "
 					end
-					Result := Result + ordinal_number (a_remainder)
+					Result := Result + ordinal_number (l_remainder)
 				end
 			elseif a_number >= 100 then
-				a_remainder := a_number \\ 100
+				l_remainder := a_number \\ 100
 				Result := words_number (a_number // 100) + " Hundred"
-				if a_remainder = 0 then
+				if l_remainder = 0 then
 					Result := Result + "th"
 				else
-					if a_remainder /= 0 then
+					if l_remainder /= 0 then
 						Result := Result + " and "
 					end
-					Result := Result + ordinal_number (a_remainder)
+					Result := Result + ordinal_number (l_remainder)
 				end
 			elseif a_number < 20 then
 				Result := english_ordinal_units.item (a_number)
 			else
-				a_remainder := a_number \\ 10
+				l_remainder := a_number \\ 10
 				Result := english_ordinal_tens.item (a_number // 10)
-				if a_remainder /= 0 then
-					Result := Result + " " + english_ordinal_units.item (a_remainder)
+				if l_remainder /= 0 then
+					Result := Result + " " + english_ordinal_units.item (l_remainder)
 				end
 			end
 		ensure

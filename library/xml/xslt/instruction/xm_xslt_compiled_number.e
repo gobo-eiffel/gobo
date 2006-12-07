@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			numberer := a_numberer
 			has_variables_in_patterns := a_variables_in_patterns
 			is_backwards_compatible := a_backwards
-			if value_expression /= Void and then is_sub_type (value_expression.item_type, type_factory.any_atomic_type) then
+			if value_expression /= Void and then not is_sub_type (value_expression.item_type, type_factory.any_atomic_type) then
 				create {XM_XPATH_ATOMIZER_EXPRESSION} value_expression.make (value_expression, False)
 			end
 			
@@ -932,7 +932,7 @@ feature {NONE} -- Implementation
 			positive_integer: not transformer.is_error implies last_single_number /= Void and then last_single_number.is_integer and then last_single_number.is_positive
 		end
 
-	multi_level_number: DS_ARRAYED_LIST [XM_XPATH_INTEGER_VALUE]
+	multi_level_number: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
 			-- Result from `calculate_multi_level_number'
 	
 	calculate_multi_level_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
