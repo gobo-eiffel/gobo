@@ -18,6 +18,9 @@ inherit
 		redefine
 			start, as_node_iterator
 		end
+	
+	XM_XPATH_NAME_UTILITIES
+		export {NONE} all end
 
 		-- This class also implements an extra Axis, preceding-or-ancestor,
 		-- which is used internally by xsl:number level="any"
@@ -38,11 +41,9 @@ feature {NONE} -- Initialization
 			document := a_document
 			starting_node := a_starting_node
 			node_test := a_node_test
-			next_node_number := a_starting_node.node_number
 			include_ancestors := ancestors
 
-			next_ancestor_depth := a_document.depth_of (next_node_number) - 1
-			advance
+			next_ancestor_depth := a_document.depth_of (starting_node.node_number) - 1
 		ensure
 			document_set: document = a_document
 			starting_node_set: starting_node = a_starting_node
@@ -66,23 +67,61 @@ feature -- Cursor movement
 	start is
 			-- Move to next position
 		do
-			index := 1
-			if document.is_node_number_valid (next_node_number) then
-				current_item := document.retrieve_node (next_node_number)
-			else
-				current_item := Void
-			end
+			current_item := starting_node
+			forth
 		end
 
 	forth is
 			-- Move to next position
+		local
+			l_next: INTEGER
+			l_found, l_valid: BOOLEAN
 		do
 			index := index + 1
-			advance
-			if document.is_node_number_valid (next_node_number) then
-				current_item := document.retrieve_node (next_node_number)
-			else
-				current_item := Void
+			from
+				l_next := current_item.node_number
+			until
+				l_found
+			loop
+				l_next := l_next - 1
+				l_valid := document.is_node_number_valid (l_next)
+				if not include_ancestors then
+					from
+					until
+						next_ancestor_depth < 1 or else (l_valid and then document.depth_of (l_next) /= next_ancestor_depth)
+					loop
+						if next_ancestor_depth <= 1 then
+							l_found := True
+							current_item := Void
+						end
+						next_ancestor_depth := next_ancestor_depth - 1
+						l_next := l_next - 1
+						l_valid := document.is_node_number_valid (l_next)
+					end
+				elseif not l_valid then
+					l_found := True
+					current_item := Void
+				elseif document.depth_of (l_next) = 1 then
+					l_found := True
+					current_item := Void
+				end
+				if not l_found then
+					if not l_valid then
+						l_found := True
+						current_item := Void
+					elseif node_test.matches_node (document.retrieve_node_kind (l_next), fingerprint_from_name_code (document.retrieve_name_code (l_next)), document.element_annotation (l_next)) then
+						l_found := True
+						current_item := document.retrieve_node (l_next)
+						if not current_item.root.is_same_node (starting_node.root) then
+							-- Different document fragments
+							current_item := Void
+						end
+					end
+					if l_valid and document.depth_of (l_next) = 1 then
+						l_found := True
+						current_item := Void
+					end
+				end
 			end
 		end
 
@@ -108,36 +147,12 @@ feature {NONE} -- Implementation
 	include_ancestors: BOOLEAN
 			-- Do we include ancestors in the enumeration
 
-	next_node_number: INTEGER
-			-- The next node to be returned by the enumeration
-
 	next_ancestor_depth: INTEGER
 	
 	advance is
 			-- Move to the next matching node
-		local
-			finished: BOOLEAN
 		do
-			from
-			until
-				finished
-			loop
-				next_node_number := next_node_number - 1
-				if not include_ancestors then
-				-- skip over ancestors
-					from
-					until
-						not document.is_node_number_valid (next_node_number) or else document.depth_of (next_node_number) /= next_ancestor_depth
-					loop
-						next_ancestor_depth := next_ancestor_depth - 1
-						next_node_number := next_node_number - 1
-					end
-				end
-				if not document.is_node_number_valid (next_node_number)
-					or else node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)) then
-					finished := True
-				end
-			end
+			-- not used
 		end
 	
 invariant

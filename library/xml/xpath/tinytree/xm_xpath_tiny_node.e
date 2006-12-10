@@ -120,7 +120,7 @@ feature -- Access
 	document_number: INTEGER is
 			-- Uniquely identifies the owning document.
 		do
-			Result := document.document_number
+			Result := tree.document_number
 		end
 
 	name_code: INTEGER is
@@ -151,11 +151,15 @@ feature -- Access
 					loop
 						p := tree.retrieve_next_sibling (p)
 					end
-					a_node := tree.retrieve_node (p)
-					if a_node.is_tiny_composite_node then
-						cached_parent_node := a_node.as_tiny_composite_node
-					else
+					if p = node_number then
 						cached_parent_node := Void
+					else
+						a_node := tree.retrieve_node (p)
+						if a_node.is_tiny_composite_node then
+							cached_parent_node := a_node.as_tiny_composite_node
+						else
+							cached_parent_node := Void
+						end
 					end
 				end
 			end
@@ -183,7 +187,7 @@ feature -- Access
 			-- This is not necessarily a Document node.
 		do
 			if tree.depth_of (node_number) = 1 then
-				Result := current
+				Result := Current
 			elseif cached_parent_node /= Void then
 				Result := cached_parent_node.root
 			else
@@ -286,7 +290,9 @@ feature -- Comparison
 			else
 				if other.is_tiny_node then
 					a_tiny_node := other.as_tiny_node
-					if node_number /= a_tiny_node.node_number then
+					if tree /= a_tiny_node.tree then
+						Result := False
+					elseif node_number /= a_tiny_node.node_number then
 						Result := False
 					elseif node_type /= a_tiny_node.node_type then
 						Result := False
@@ -311,7 +317,7 @@ feature {NONE} -- Implementation
 	
 	cached_parent_node: XM_XPATH_TINY_COMPOSITE_NODE
 			-- Cached parent node
-
+				
 	created_ancestor_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
 			-- New ancestor axis iterator
 		require

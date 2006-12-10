@@ -124,11 +124,9 @@ feature -- Access
 	
 	document_number: INTEGER is
 			-- Uniquely identifies the owning document.
-		require
-			document_not_void: document /= Void
 		deferred
 		ensure
-			strictly_positive_result: Result > 0
+			strictly_positiv_result: Result > 0
 		end
 
 	base_uri: STRING is
@@ -176,6 +174,7 @@ feature -- Access
 		deferred
 		ensure
 			parent_may_be_void: True
+			not_current_node: Result /= Void implies not is_same_node (Result)
 		end
 	
 	root: XM_XPATH_NODE is

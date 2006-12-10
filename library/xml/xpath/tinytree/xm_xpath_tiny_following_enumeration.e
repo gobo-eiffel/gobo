@@ -19,6 +19,9 @@ inherit
 			start, as_node_iterator
 		end
 
+	XM_XPATH_NAME_UTILITIES
+		export {NONE} all end
+
 create
 
 	make
@@ -31,40 +34,11 @@ feature {NONE} -- Initialization
 			document_not_void: a_document /= Void
 			starting_node_not_void: a_starting_node /= Void
 			node_test_not_void: a_node_test /= Void
-		local
-			a_depth: INTEGER
-			finished: BOOLEAN
 		do
 			document := a_document
 			starting_node := a_starting_node
 			node_test := a_node_test
-			next_node_number := a_starting_node.node_number
 			include_descendants := descendants
-
-			a_depth := a_document.depth_of (next_node_number)
-
-			-- Skip the descendants, if any
-			
-			if include_descendants then
-				next_node_number := next_node_number + 1
-			else
-				from
-				until
-					finished
-				loop
-					next_node_number := next_node_number + 1
-					if next_node_number > a_document.last_node_added then
-						next_node_number := -1
-						finished := True
-					elseif not (a_document.depth_of (next_node_number) > a_depth) then
-						finished := True
-					end
-				end
-			end
-
-			if not a_node_test.matches_node (a_document.retrieve_node_kind (next_node_number), a_document.name_code_for_node (next_node_number), a_document.element_annotation (next_node_number)) then
-				advance
-			end
 		ensure
 			document_set: document = a_document
 			starting_node_set: starting_node = a_starting_node
@@ -88,23 +62,46 @@ feature -- Cursor movement
 		start is
 			-- Move to next position
 		do
-			index := 1
-			if document.is_node_number_valid (next_node_number) then
-				current_item := document.retrieve_node (next_node_number)
-			else
-				current_item := Void
-			end
+			forth
 		end
 
 	forth is
 			-- Move to next position
+		local
+			l_node_number: INTEGER
+			l_found, l_valid: BOOLEAN
 		do
-			index := index + 1
-			advance
-			if document.is_node_number_valid (next_node_number) then
-				current_item := document.retrieve_node (next_node_number)
-			else
-				current_item := Void
+			from
+				index := index + 1
+				if index = 1 then
+					l_node_number := initial_node_number
+				else
+					l_node_number := current_item.node_number + 1
+					if l_node_number = -1 then
+						current_item := Void
+						l_found := True
+					end
+				end
+			until
+				l_found
+			loop
+				l_valid := document.is_node_number_valid (l_node_number)
+				if not l_valid then
+					current_item := Void
+					l_found := True
+				elseif document.depth_of (l_node_number) = 1 then
+					current_item := Void
+					l_found := True
+				else
+					if l_valid and then node_test.matches_node (document.retrieve_node_kind (l_node_number),
+					                                            fingerprint_from_name_code (document.retrieve_name_code (l_node_number)),
+																			  document.element_annotation (l_node_number)) then
+						current_item := document.retrieve_node (l_node_number)
+						l_found := True
+					else
+						l_node_number := l_node_number + 1
+					end
+				end
 			end
 		end
 
@@ -128,30 +125,53 @@ feature {NONE} -- Implemnentation
 			-- The node test to apply when selecting nodes
 
 	include_descendants: BOOLEAN
-			-- Do we include descendants in the enumeration
-
-	next_node_number: INTEGER
-			-- The next node to be returned by the enumeration
+			-- Do we include descendants in the enumeration?
+			-- For elements, no, for attributes and namespaces, yes.
 
 	advance is
 			-- Move to the next matching node
-		local
-			finished: BOOLEAN
 		do
-			from
-			until
-				finished 
-			loop
-				next_node_number := next_node_number + 1
-				if next_node_number > document.last_node_added then
-					next_node_number := -1
-					finished := True
-				elseif node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)) then
-					finished := True
+			-- not used
+		end
+
+	initial_node_number: INTEGER is
+			-- Node number to try first
+		require
+			first_item: index = 1
+		local
+			l_next: INTEGER
+			l_found: BOOLEAN
+		do
+			Result := starting_node.node_number
+			if include_descendants then
+				Result := Result + 1
+			else
+				from
+				until
+					l_found
+				loop
+					if document.is_node_number_valid (Result) then
+						l_next := document.retrieve_next_sibling (Result)
+						if l_next > Result then
+							l_found := True
+							Result := l_next
+						elseif not document.is_node_number_valid (l_next) then
+							l_found := True
+							Result := -1
+						elseif document.depth_of (l_next) = 1 then
+							l_found := True
+							Result := -1
+						else
+							Result := l_next
+						end
+					else
+						l_found := True
+						Result := -1
+					end
 				end
 			end
 		end
-	
+
 invariant
 
 	document_not_void: document /= Void

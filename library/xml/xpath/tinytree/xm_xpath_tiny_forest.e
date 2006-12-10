@@ -132,6 +132,13 @@ feature -- Access
 	are_namespaces_used: BOOLEAN
 			-- Does any element declare a namespace (other than xmlns:xml)?
 
+	document_number: INTEGER
+			-- Actually a forest number in this instance;
+			-- Two nodes with the same document number are treated as
+			--  being within the same document, for order comparisons.
+			-- This works, as all node sequence numbers within a document
+			--  are in a contiguous range within `Current'
+
 	element_annotation (a_node_number: INTEGER): INTEGER is
 			-- Type annotation of `a_node_number'
 		require
@@ -590,12 +597,8 @@ feature -- Element change
 			document_node_not_void: a_document_node /= Void
 		do
 			document_list.force_last (a_document_node)
-			if number_of_nodes = 0 then
-				shared_serial_number_generator.generate_next_serial_number
-				document_number := shared_serial_number_generator.last_generated_serial_number
-			end
-			a_document_node.set_document_number (document_number) -- all documents in `Current' have the same document number
 			add_node (Document_node, 1, root_index + 1, 0, -1)
+			a_document_node.set_document_number (document_number) -- all documents in `Current' have the same document number
 		end
 
 	add_node (a_new_node_type: INTEGER; a_depth_value: INTEGER; an_alpha_value: INTEGER;  a_beta_value: INTEGER; a_new_name_code: INTEGER) is
@@ -610,6 +613,10 @@ feature -- Element change
 		local
 			a_new_size: INTEGER
 		do
+			if number_of_nodes = 0 then
+				shared_serial_number_generator.generate_next_serial_number
+				document_number := shared_serial_number_generator.last_generated_serial_number
+			end
 			number_of_nodes := number_of_nodes + 1
 			if number_of_nodes > node_kinds.count then
 				a_new_size := node_kinds.count * 2
@@ -879,13 +886,6 @@ feature {NONE} -- Implementation
 
 	entity_table: DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
 		-- Maps unparsed entity names to their URI/PUBLIC-ID pairs
-
-	document_number: INTEGER
-			-- Actually a forest number in this instance;
-			-- Two nodes with the same document number are treated as
-			--  being within the same document, for order comparisons.
-			-- This works, as all node sequence numbers within a document
-			--  are in a contiguous range within `Current'
 
 	document_list: DS_ARRAYED_LIST [XM_XPATH_TINY_DOCUMENT]
 			-- Documents in the forest

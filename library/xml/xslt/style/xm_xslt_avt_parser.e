@@ -168,8 +168,6 @@ feature {NONE} -- Implementation
 			l_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
 			l_first_item_expression: XM_XPATH_FIRST_ITEM_EXPRESSION
 			l_atomic_sequence_converter: XM_XPATH_ATOMIC_SEQUENCE_CONVERTER
-			l_string_join_function: XM_XPATH_STRING_JOIN
-			l_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			l_blank: XM_XPATH_STRING_VALUE
 		do
 			if static_context.is_backwards_compatible_mode then
@@ -188,16 +186,8 @@ feature {NONE} -- Implementation
 					l_result_expression := l_atomic_sequence_converter
 				end
 			else
-				create l_atomizer.make (a_expression, are_all_nodes_untyped)
-				create l_atomic_sequence_converter.make (l_atomizer, type_factory.string_type)
-				create l_string_join_function.make
-				create l_arguments.make (2)
-				l_arguments.set_equality_tester (expression_tester)
-				l_arguments.put (l_atomic_sequence_converter, 1)
 				create l_blank.make (" ")
-				l_arguments.put (l_blank, 2)
-				l_string_join_function.set_arguments (l_arguments)
-				l_result_expression := l_string_join_function
+				create {XM_XSLT_CONTENT_CONSTRUCTOR} l_result_expression.make (a_expression, l_blank)
 			end
 			if not components.extendible (1) then
 				components.resize (2 * components.count)

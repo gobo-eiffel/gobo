@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
 			compute_special_properties, promote, create_iterator, calculate_effective_boolean_value,
-			is_reverser, as_reverser
+			is_reverser, as_reverser, create_node_iterator
 		end
 
 create
@@ -91,6 +91,25 @@ feature -- Evaluation
 			end
 		end
 
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Iterator over a sequence of nodes
+		local
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+		do
+			base_expression.create_node_iterator (a_context)
+			l_iterator := base_expression.last_node_iterator
+			if l_iterator.is_error then
+				last_node_iterator := l_iterator
+			elseif l_iterator.is_reversible_iterator then
+				last_node_iterator := l_iterator.as_reversible_iterator.reverse_iterator
+			else
+				create l_sequence_extent.make (l_iterator)
+				last_node_iterator := l_sequence_extent.reverse_iterator.as_node_iterator
+			end
+		end
+
+	
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		do

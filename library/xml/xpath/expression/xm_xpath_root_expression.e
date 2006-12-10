@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 							no_document_node: a_context.context_item.as_node.document_root = Void
 							-- follows from pre-condition
 						end
-						create Result.make_from_string ("Evaluating '/': the root of the tree containing the context item is not a document node", Xpath_errors_uri, "XPTY0020", Type_error)
+						create Result.make_from_string ("Evaluating '/': the root of the tree containing the context item is not a document node", Xpath_errors_uri, "XPDY0050", Type_error)
 					end
 				end
 			end

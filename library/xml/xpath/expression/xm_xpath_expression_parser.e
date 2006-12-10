@@ -1358,15 +1358,15 @@ feature {NONE} -- Implementation
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			a_path: XM_XPATH_EXPRESSION
-			another_path, a_third_path: XM_XPATH_PATH_EXPRESSION
-			a_root: XM_XPATH_ROOT_EXPRESSION
-			an_axis: XM_XPATH_AXIS_EXPRESSION
+			l_path: XM_XPATH_PATH_EXPRESSION
+			l_root: XM_XPATH_ROOT_EXPRESSION
+			l_axis: XM_XPATH_AXIS_EXPRESSION
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_path_expression%N")
 			end			
 			inspect
+
 				tokenizer.last_token
 
 			when Slash_token then
@@ -1374,18 +1374,11 @@ feature {NONE} -- Implementation
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 				else
-					create a_root.make
+					create l_root.make
 					if is_at_start_of_relative_path then
-						parse_relative_path
-						if not is_parse_error then
-							create another_path.make (a_root, internal_last_parsed_expression)
-							a_path := another_path
-						end
+						parse_remaining_path (l_root)
 					else
-						a_path := a_root
-					end
-					if not is_parse_error then
-						internal_last_parsed_expression := a_path
+						internal_last_parsed_expression := l_root
 					end
 				end
 
@@ -1394,14 +1387,10 @@ feature {NONE} -- Implementation
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 				else
-					parse_relative_path
-					if not is_parse_error then
-						create a_root.make
-						create an_axis.make (Descendant_or_self_axis, Void)
-						create a_third_path.make (an_axis, internal_last_parsed_expression)
-						create another_path.make (a_root, a_third_path)
-						internal_last_parsed_expression := another_path
-					end
+					create l_root.make
+					create l_axis.make (Descendant_or_self_axis, Void)
+					create l_path.make (l_root, l_axis)
+					parse_remaining_path (l_path)
 				end
 
 			else
@@ -1409,6 +1398,51 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void			
+		end
+
+	parse_remaining_path (a_expression: XM_XPATH_EXPRESSION) is
+			-- Parse rest of relative path expression.
+		require
+			static_context_not_void: environment /= Void
+			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			no_previous_parse_error: not is_parse_error
+		local
+			l_operator: INTEGER
+			l_finished: BOOLEAN
+			l_expression, l_next: XM_XPATH_EXPRESSION
+			l_axis: XM_XPATH_AXIS_EXPRESSION
+			l_path: XM_XPATH_PATH_EXPRESSION
+		do
+			from
+				l_operator := Slash_token
+				l_expression := a_expression
+			until
+				is_parse_error or l_finished
+			loop
+				parse_step_expression
+				if not is_parse_error then
+					l_next := internal_last_parsed_expression
+					if l_operator = Slash_token then
+						create {XM_XPATH_PATH_EXPRESSION} l_expression.make (l_expression, l_next)
+					else
+						-- add implicit descendant-or-self::node() step
+						create l_axis.make (Descendant_or_self_axis, Void)
+						create l_path.make (l_axis, l_next)
+						create {XM_XPATH_PATH_EXPRESSION} l_expression.make (l_expression, l_path)
+					end
+					l_operator := tokenizer.last_token
+					l_finished := (l_operator /= Slash_token and l_operator /= Slash_slash_token)
+					if not l_finished then
+						next_token ("In remaining relative path expression: current token is ")
+						if tokenizer.is_lexical_error then
+							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+						end
+					end
+				end
+			end
+			internal_last_parsed_expression := l_expression
+		ensure
+			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void		
 		end
 
 	parse_relative_path is
@@ -1439,7 +1473,7 @@ feature {NONE} -- Implementation
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 					else
-						parse_relative_path
+						parse_step_expression
 						if not is_parse_error then
 							if an_operator = Slash_token then
 								create {XM_XPATH_PATH_EXPRESSION} an_expression.make (an_expression, internal_last_parsed_expression)

@@ -112,9 +112,10 @@ feature -- Access
 	string_value: STRING is
 			--Value of the item as a string
 		do
-			Result := value.to_scientific_string -- TODO - check the standard
+			Result := value.normalize.to_scientific_string
 			-- should be OK, providing this NEVER goes into exponential form.
 			-- but this doesn't look to be guarenteed to me.
+			-- TODO: it isn't. Add to Berend's string formatter as suggested on gobo-devel list.
 		end
 
 feature -- Comparison

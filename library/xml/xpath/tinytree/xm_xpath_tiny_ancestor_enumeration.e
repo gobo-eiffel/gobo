@@ -33,20 +33,13 @@ feature {NONE} -- Initialization
 		do
 			starting_node := a_start_node
 			node_test := a_node_test
-
-			if include_self and then node_test.matches_node (starting_node.node_type, starting_node.fingerprint, starting_node.type_annotation) then
-				first_node := starting_node
-			end
-
-			-- Now catch the case where the first node is an attribute or namespace node
-
-			next_node := starting_node.parent 
-			if next_node /= Void and then not node_test.matches_node (next_node.node_type, next_node.fingerprint, next_node.type_annotation) then
-				advance
-			end
+			include_self := self
+			current_item := starting_node
 		ensure
+			current_item_not_void: current_item /= Void
 			starting_node_set: starting_node = a_start_node
 			test_set: node_test = a_node_test
+			include_self_set: include_self = self
 		end
 
 feature -- Access
@@ -65,26 +58,34 @@ feature -- Cursor movement
 	start is
 			-- Move to next position
 		do
-			index := 1
-			if first_node /= Void then
-				current_item := first_node
-				first_node := Void
+			if include_self and node_test.matches_item (starting_node) then
+				index := 1
 			else
-				current_item := next_node
+				forth
 			end
+		ensure then
+			not_same_node: current_item /= Void and not include_self implies not starting_node.is_same_node (current_item)
 		end
 
 	forth is
 			-- Move to next position
+		local
+			l_node: XM_XPATH_TINY_NODE
 		do
 			index := index + 1
-			advance
-			if first_node /= Void then
-				current_item := first_node
-				first_node := Void
-			else
-				current_item := next_node
+			from
+				l_node := current_item.parent
+				current_item := l_node
+			until
+				l_node = Void or else node_test.matches_item (l_node)
+			loop
+				l_node := l_node.parent
 			end
+			if l_node /= Void then
+				current_item := l_node
+			end
+		ensure then
+			not_same_node: current_item /= Void implies not starting_node.is_same_node (current_item)
 		end
 
 feature -- Duplication
@@ -106,22 +107,10 @@ feature {NONE} -- Implemnentation
 	include_self: BOOLEAN
 			-- Do we include ourself in the enumeration
 
-	first_node: XM_XPATH_TINY_NODE
-			-- The first node to possibly be returned by the enumeration
-
-	next_node: XM_XPATH_TINY_NODE
-			-- The next node to be returned by the enumeration
-
 	advance is
 			-- Move to the next matching node
 		do
-			from
-				next_node := next_node.parent
-			until
-				next_node = Void or else node_test.matches_node (next_node.node_type, next_node.fingerprint, next_node.type_annotation)
-			loop
-				next_node := next_node.parent
-			end
+			-- Not used
 		end
 	
 invariant

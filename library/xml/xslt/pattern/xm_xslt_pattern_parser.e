@@ -504,15 +504,15 @@ feature {NONE} -- Implementation
 	parse_pattern_step (a_principal_node_type: INTEGER) is
 			-- Parse a pattern step (after any axis name or @)
 		local
-			a_step: XM_XSLT_LOCATION_PATH_PATTERN
-			a_node_test: XM_XSLT_NODE_TEST
-			a_node_kind: INTEGER
+			l_step: XM_XSLT_LOCATION_PATH_PATTERN
+			l_node_test: XM_XSLT_NODE_TEST
+			l_node_kind: INTEGER
 		do
-			create a_step.make (environment)
+			create l_step.make (environment)
 			parse_node_test (a_principal_node_type)
 			if not is_parse_error then
-				a_node_test := xpath_to_xslt_node_test (internal_last_parsed_node_test)
-				if a_node_test = any_xslt_node_test then
+				l_node_test := xpath_to_xslt_node_test (internal_last_parsed_node_test)
+				if l_node_test = any_xslt_node_test then
 					
 					-- handle node() and @node() specially
 					
@@ -520,32 +520,32 @@ feature {NONE} -- Implementation
 						
 						-- We are on the Child::axis
 						
-						create {XM_XSLT_ANY_CHILD_NODE_PATTERN} a_node_test.make (environment)
+						create {XM_XSLT_ANY_CHILD_NODE_PATTERN} l_node_test.make (environment)
 					else
 						
 						-- We are on the Attribute::axis
 						
-						todo ("parse_pattern_step - attribute axis", True)
+						create {XM_XSLT_NODE_KIND_TEST} l_node_test.make (environment, a_principal_node_type)
 					end
 				end
 				
 				-- Deal with nonsense patterns such as @comment() or child::attribute().
 				-- These are legal, but will never match anything.
 
-				a_node_kind := a_node_test.node_kind
+				l_node_kind := l_node_test.node_kind
 				if a_principal_node_type = Element_node and then
-					(a_node_kind = Attribute_node) then
-					a_node_test := xslt_empty_item
+					(l_node_kind = Attribute_node) then
+					l_node_test := xslt_empty_item
 				elseif a_principal_node_type = Attribute_node and then
-					(a_node_kind = Comment_node or else a_node_kind = Text_node
-						or else a_node_kind = Processing_instruction_node
-						or else a_node_kind = Element_node
-						or else a_node_kind = Document_node) then
-					a_node_test := xslt_empty_item
+					(l_node_kind = Comment_node or else l_node_kind = Text_node
+						or else l_node_kind = Processing_instruction_node
+						or else l_node_kind = Element_node
+						or else l_node_kind = Document_node) then
+					l_node_test := xslt_empty_item
 				end
-				a_step.set_node_test (a_node_test)
-				parse_filters (a_step)
-				last_parsed_pattern_step := a_step
+				l_step.set_node_test (l_node_test)
+				parse_filters (l_step)
+				last_parsed_pattern_step := l_step
 			end
 		ensure
 			pattern_not_void_unless_error: not is_parse_error implies last_parsed_pattern_step /= Void

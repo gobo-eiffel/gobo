@@ -596,112 +596,114 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	simplified_descendant_path: XM_XPATH_PATH_EXPRESSION is
-			-- Simplified descendant path, or `Void' if not possible
+	simplify_descendant_path is
+			-- Simplify descendant path if possible.
 		local
-			a_context_item_expression: XM_XPATH_CONTEXT_ITEM_EXPRESSION
-			a_filter: XM_XPATH_FILTER_EXPRESSION
-			any_positional_filter: BOOLEAN
-			an_axis: XM_XPATH_AXIS_EXPRESSION
+			l_start, l_underlying_step: XM_XPATH_EXPRESSION
+			l_start_path: XM_XPATH_PATH_EXPRESSION
+			l_context_item_expression: XM_XPATH_CONTEXT_ITEM_EXPRESSION
+			l_positional_filter: BOOLEAN
+			l_mid_axis: XM_XPATH_AXIS_EXPRESSION
 		do
-
+			l_start := start
 			-- Detect .//x as a special case; this will appear as descendant-or-self::node()/x
 
 			if start.is_axis_expression and then start.as_axis_expression.axis /= Descendant_or_self_axis then
-				Result := Void
+				-- nothing to be done
 			else
 				if start.is_axis_expression then
-					create a_context_item_expression.make
-					copy_location_identifier (a_context_item_expression)
-					create {XM_XPATH_PATH_EXPRESSION} start.make (a_context_item_expression, start.as_axis_expression)
-					copy_location_identifier (start)
+					create l_context_item_expression.make
+					copy_location_identifier (l_context_item_expression)
+					create {XM_XPATH_PATH_EXPRESSION} l_start.make (l_context_item_expression, start.as_axis_expression)
+					copy_location_identifier (l_start)
 				end
-				if not start.is_path_expression then
-					Result := Void
-				elseif not start.as_path_expression.step.is_axis_expression then
-					Result := Void
-				elseif start.as_path_expression.step.as_axis_expression.axis /= Descendant_or_self_axis then
-					Result := Void
-				elseif start.as_path_expression.step.as_axis_expression.node_test = Void or else start.as_path_expression.step.as_axis_expression.node_test = any_node_test then
-					Result := Void
+				if not l_start.is_path_expression then
+					-- nothing to be done
 				else
-					from
-						an_axis := start.as_path_expression.step.as_axis_expression
-						any_positional_filter := False
-						if step.is_filter_expression then a_filter := step.as_filter_expression end
-					until
-						any_positional_filter or else a_filter = Void
-					loop
-						if a_filter.is_positional then
-							Result := Void
-							any_positional_filter := True
+					l_start_path := l_start.as_path_expression
+					if not l_start_path.step.is_axis_expression then
+					-- nothing to be done
+					else
+						l_mid_axis := l_start_path.step.as_axis_expression
+						if l_mid_axis.axis /= Descendant_or_self_axis then
+							-- nothing to be done
+						elseif not (l_mid_axis.node_test = Void or else l_mid_axis.node_test = any_node_test) then
+							-- nothing to be done
 						else
-							if a_filter.base_expression.is_filter_expression then
-								a_filter := a_filter.base_expression.as_filter_expression
-							else
-								a_filter := Void
+							from
+								l_underlying_step := step
+								l_positional_filter := False
+							until
+								l_positional_filter or not l_underlying_step.is_filter_expression
+							loop
+								l_positional_filter := l_underlying_step.as_filter_expression.is_positional
+								if l_positional_filter then
+									-- nothing to be done
+								else
+									l_underlying_step := l_underlying_step.as_filter_expression.base_expression
+								end
 							end
-							if a_filter /= Void and then a_filter.base_expression.is_axis_expression then
-								an_axis := a_filter.base_expression.as_axis_expression
-							else
-								an_axis := Void
+							if not l_positional_filter and l_underlying_step.is_axis_expression then
+								simplify_non_positional_filter_path (l_underlying_step.as_axis_expression, l_start_path)
 							end
 						end
-					end
-					if not any_positional_filter then
-						Result := non_positional_filter_path (an_axis)
 					end
 				end
 			end
 		ensure
-			result_may_be_void: True
+			possible_path_expression_replacement: was_expression_replaced implies replacement_expression.is_path_expression
 		end
 
-	non_positional_filter_path (an_axis: XM_XPATH_AXIS_EXPRESSION): XM_XPATH_PATH_EXPRESSION is
-			-- Simplified descendat path without any positional filters
+	simplify_non_positional_filter_path (a_axis: XM_XPATH_AXIS_EXPRESSION; a_path: XM_XPATH_PATH_EXPRESSION) is
+			-- Simplify descendant path without any positional filters.
+		require
+			a_axis_not_void: a_axis /= Void
+			a_path_not_void: a_path /= Void
+			not_yet_replaced: not was_expression_replaced
+			no_positional_filters: True -- could add a routine for this
 		local
-			a_new_step: XM_XPATH_COMPUTED_EXPRESSION
-			a_filter: XM_XPATH_FILTER_EXPRESSION
-			a_path: XM_XPATH_PATH_EXPRESSION
-			a_node_kind_test: XM_XPATH_NODE_KIND_TEST
+			l_new_step: XM_XPATH_COMPUTED_EXPRESSION
+			l_filter: XM_XPATH_FILTER_EXPRESSION
+			l_path: XM_XPATH_PATH_EXPRESSION
+			l_node_kind_test: XM_XPATH_NODE_KIND_TEST
 		do
-			if an_axis = Void then
-				Result := Void
-			elseif an_axis.axis = Child_axis then
-				create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_axis, an_axis.node_test)
-				copy_location_identifier (a_new_step)
+			if a_axis.axis = Child_axis then
+				create {XM_XPATH_AXIS_EXPRESSION} l_new_step.make (Descendant_axis, a_axis.node_test)
+				copy_location_identifier (l_new_step)
 				from
-					if step.is_filter_expression then a_filter := step.as_filter_expression end
+					if step.is_filter_expression then l_filter := step.as_filter_expression end
 				until
-					a_filter = Void
+					l_filter = Void
 				loop
 					
 					-- Add any filters to the new expression. We know they aren't
 					-- positional, so the order of the filters doesn't matter.
 					
-					create {XM_XPATH_FILTER_EXPRESSION} a_new_step.make (a_new_step, a_filter.filter)
-					a_filter.copy_location_identifier (a_new_step)
-					if a_filter.base_expression.is_filter_expression then
-						a_filter := a_filter.base_expression.as_filter_expression
+					create {XM_XPATH_FILTER_EXPRESSION} l_new_step.make (l_new_step, l_filter.filter)
+					l_filter.copy_location_identifier (l_new_step)
+					if l_filter.base_expression.is_filter_expression then
+						l_filter := l_filter.base_expression.as_filter_expression
 					else
-						a_filter := Void
+						l_filter := Void
 					end
 				end
-				create a_path.make (a_path.start, a_new_step)
-				copy_location_identifier (a_path)
-				Result := a_path
-			elseif an_axis.axis = Attribute_axis then
+				create l_path.make (a_path.start, l_new_step)
+				copy_location_identifier (l_path)
+				set_replacement (l_path)
+			elseif a_axis.axis = Attribute_axis then
 				
 				-- turn the expression a//@b into a/descendant-or-self::*/@b
 				
-				create a_node_kind_test.make (Element_node)
-				create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_or_self_axis, a_node_kind_test)
-				copy_location_identifier (a_new_step)
-				create a_path.make (a_path.start, a_new_step)
-				create a_path.make (a_path, step)
-				copy_location_identifier (a_path)
-				Result := a_path
+				create l_node_kind_test.make (Element_node)
+				create {XM_XPATH_AXIS_EXPRESSION} l_new_step.make (Descendant_or_self_axis, l_node_kind_test)
+				copy_location_identifier (l_new_step)
+				create l_path.make (a_path.start, l_new_step)
+				create l_path.make (l_path, step)
+				copy_location_identifier (l_path)
+				set_replacement (l_path)
 			end
+		ensure
+			possible_path_expression_replacement: was_expression_replaced implies replacement_expression.is_path_expression
 		end
 
 	compute_special_properties is
@@ -835,28 +837,34 @@ feature {NONE} -- Implementation
 				
 				-- Try to simplify descendant expressions such as a//b
 				
-				l_path := simplified_descendant_path
-				if l_path /= Void then
-					
+				simplify_descendant_path
+				if was_expression_replaced then
 					-- Descendant expressions such as a//b were simplified
-					
-					l_path.simplify
-					if l_path.was_expression_replaced then
-						l_expression := l_path.replacement_expression
-					else
-						l_expression := l_path
+					l_expression := replacement_expression
+					if l_expression.was_expression_replaced then
+						l_expression := l_expression.replacement_expression
 					end
 					if not l_expression.is_error then
 						check
-							path_expression: l_path.is_path_expression
+							path_expression: l_expression.is_path_expression
 						end
 						l_path := l_expression.as_path_expression
 						l_path.check_static_type (a_context, a_context_item_type)
 						if l_path.was_expression_replaced then
-							set_replacement (l_path.replacement_expression)
+							if l_path.replacement_expression.is_document_sorter then
+								mark_unreplaced
+								set_replacement (l_path.replacement_expression)
+							else
+								l_path.replacement_expression.mark_unreplaced
+								set_replacement (l_path.replacement_expression)
+							end
 						else
+							mark_unreplaced
 							set_replacement (l_path)
 						end
+					else
+						mark_unreplaced
+						set_replacement (l_expression)
 					end
 				elseif not is_error and then not was_expression_replaced then
 					
