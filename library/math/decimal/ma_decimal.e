@@ -807,7 +807,7 @@ feature -- Duplication
 			-- Copy `other' to current decimal.
 		do
 			if other /= Current then
-				if coefficient = Void then
+				if coefficient = Void or else coefficient = special_coefficient then
 					coefficient := other.coefficient.to_twin
 				else
 					coefficient.copy (other.coefficient)
@@ -2668,7 +2668,8 @@ invariant
 
 	special_values: special >= Special_none and then special <= Special_quiet_nan
 	coefficient_not_void: coefficient /= Void
-	specials_share_coefficient: is_special implies coefficient = special_coefficient
-	exponent_zero_when_special: is_special implies exponent = 0
+	special_share_coefficient: is_special implies coefficient = special_coefficient
+	special_has_exponent_zero: is_special implies exponent = 0
+	special_coefficient_is_zero: special_coefficient.is_zero
 
 end
