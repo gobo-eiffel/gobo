@@ -195,7 +195,9 @@ feature {NONE} -- Precompilation
 								if file_system.has_extension (a_filename, ".e") then
 									a_filename := file_system.pathname (a_dirname, a_filename)
 									assert_execute ("short -plain -no_style_warning -no_warning " + a_filename + output_log)
-									assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+									if file_system.file_count (error_log_filename) /= 0 then
+										assert_files_equal ("error_log_diff", se_warning_filename, error_log_filename)
+									end
 								end
 								a_dir.read_entry
 							end
@@ -222,6 +224,16 @@ feature {NONE} -- Implementation
 		ensure
 			xace_filename_not_void: Result /= Void
 			xace_filename_not_empty: Result.count > 0
+		end
+
+	se_warning_filename: STRING is
+			-- Name of file containing SE 1.2 warning
+		once
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "common", "data", "sewarning.txt">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			se_warning_filename_not_void: Result /= Void
+			se_warning_filename_not_empty: Result.count > 0
 		end
 
 	testdir: STRING is "Tprecomp"
