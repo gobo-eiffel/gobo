@@ -34,6 +34,20 @@ feature -- Test
 			assert ("not_recognizes3", not a_regexp.recognizes ("17"))
 		end
 
+	test_optimize1 is
+			-- Test 'optimize' feature.
+		local
+			a_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create a_regexp.make
+			a_regexp.compile ("(.*)|a")
+			a_regexp.optimize
+			assert ("recognizes1", a_regexp.recognizes ("a"))
+			assert ("recognizes2", a_regexp.recognizes ("ab"))
+			assert ("recognizes3", a_regexp.recognizes ("b"))
+			assert ("recognizes4", a_regexp.recognizes ("ba"))
+		end
+
 feature -- Test Input 1
 
 	test_input1_regexp1 is

@@ -3084,6 +3084,12 @@ feature {NONE} -- Implementation
 		end
 
 	set_start_bits (a_code_index: INTEGER; a_caseless: BOOLEAN) is
+			-- Create bitmap of starting characters.
+			-- This routine scans a compiled unanchored expression and
+			-- attempts to build a bitmap of the set of initial characters.
+			-- If it can't, it sets `start_bits' to Void.
+			-- `a_code_index' points to an expression and `a_caseless'
+			-- is the current state of the caseless flag.
 		local
 			i, nb: INTEGER
 			icode: INTEGER
@@ -3252,6 +3258,8 @@ feature {NONE} -- Implementation
 							when op_wordchar then
 									-- Single character type sets the bits and stops.
 								internal_start_bits.add_set (word_set)
+							else
+								-- Do nothing.
 							end
 							tcode := tcode + 3
 							stop := False
@@ -3277,6 +3285,8 @@ feature {NONE} -- Implementation
 							when op_wordchar then
 									-- Single character type sets the bits and stops.
 								internal_start_bits.add_set (word_set)
+							else
+								-- Do nothing.
 							end
 							tcode := tcode + 2
 							stop := False
