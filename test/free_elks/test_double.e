@@ -314,8 +314,8 @@ feature -- Test
 			r: DOUBLE
 			r2: REAL
 		do
-			r := 97.8
-			r2 := 97.8
+			r := 97.5
+			r2 := 97.5
 			assert ("truncated_to_real_1", r.truncated_to_real = r2)
 		end
 

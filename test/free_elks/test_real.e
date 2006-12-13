@@ -171,7 +171,7 @@ feature -- Test
 				-- set the 'item' of the result of the next call of this
 				-- function.
 			({REAL} 4.4 + {REAL} 6.5).set_item ({REAL} -11.5)
-			assert ("item4", ({REAL} 4.4 + {REAL} 6.5).item = {REAL} 10.9)
+			assert ("item4", ({REAL} 4.4 + {REAL} 6.1).item = {REAL} 10.5)
 		end
 
 	test_to_reference is
@@ -213,8 +213,8 @@ feature -- Test
 			r1, r2, r3, r4: REAL
 		do
 			r1 := {REAL} 4.4
-			r2 := {REAL} 6.5
-			r3 := {REAL} 10.9
+			r2 := {REAL} 6.1
+			r3 := {REAL} 10.5
 				-- Need to use `r4' otherwise ISE 5.7.0414 fails
 				-- to work in frozen mode. Still does not work in
 				-- finalized mode.
