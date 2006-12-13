@@ -31,6 +31,12 @@ inherit
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
+	UT_SHARED_ECMA_VERSIONS
+		export {NONE} all end
+
 feature -- Test
 
 	test_printer is
@@ -52,6 +58,9 @@ feature -- Test
 			a_prefixed_name: STRING
 			a_full_test: BOOLEAN
 			ve_os: STRING
+			ise_5_6: STRING
+			ise_version: UT_VERSION
+			ecma_version: UT_VERSION
 		do
 			create an_xace_file.make (xace_filename)
 			an_xace_file.open_read
@@ -80,12 +89,15 @@ feature -- Test
 			assert ("xace_parsed", not an_xace_error_handler.has_error)
 			a_universe := an_xace_parser.last_universe
 			assert ("universe_not_void", a_universe /= Void)
-			a_universe.set_use_assign_keyword (True)
-			a_universe.set_use_attribute_keyword (False)
-			a_universe.set_use_convert_keyword (True)
-			a_universe.set_use_create_keyword (True)
-			a_universe.set_use_recast_keyword (False)
-			a_universe.set_use_reference_keyword (True)
+			ise_version := ise_5_6_latest
+			if eiffel_compiler.is_ise then
+				ise_5_6 := Execution_environment.variable_value ("ISE_5_6")
+				if ise_5_6 = Void or else ise_5_6.count = 0 then
+					ise_version := ise_5_7_latest
+				end
+			end
+			a_universe.set_ise_version (ise_version)
+			a_universe.set_ecma_version (ecma_version)
 			if eiffel_compiler.is_ve then
 				a_universe.set_use_void_keyword (False)
 			else
