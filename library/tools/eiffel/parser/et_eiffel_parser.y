@@ -38,7 +38,7 @@ create
 
 %}
 
-%token <ET_KEYWORD> E_AGENT E_ALIAS E_ALL E_AS E_CHECK
+%token <ET_KEYWORD> E_ALIAS E_ALL E_AS E_CHECK
 %token <ET_KEYWORD> E_CLASS E_CREATE E_CREATION E_DEBUG
 %token <ET_KEYWORD> E_DO E_ELSE E_ELSEIF E_END E_ENSURE
 %token <ET_KEYWORD> E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
@@ -49,6 +49,7 @@ create
 %token <ET_KEYWORD> E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
 %token <ET_KEYWORD> E_DEFERRED E_EXPANDED E_REFERENCE E_SEPARATE
 %token <ET_KEYWORD> E_ATTRIBUTE E_CONVERT E_RECAST E_ASSIGN
+%token <ET_AGENT_KEYWORD> E_AGENT
 %token <ET_PRECURSOR_KEYWORD> E_PRECURSOR
 
 %token <ET_SYMBOL> E_ARROW E_DOTDOT E_LARRAY E_RARRAY
@@ -171,7 +172,7 @@ create
 %type <ET_INDEXING_TERM> Index_value
 %type <ET_INDEXING_TERM_ITEM> Index_value_comma
 %type <ET_INDEXING_TERM_LIST> Index_terms
-%type <ET_EXPRESSION> Inline_agent
+%type <ET_INLINE_AGENT> Inline_agent
 %type <ET_INSPECT_INSTRUCTION> Multi_branch
 %type <ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
 %type <ET_INTEGER_CONSTANT> Integer_constant Typed_integer_constant Untyped_integer_constant Signed_integer_constant
@@ -1749,7 +1750,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt '=' Manifest_constant Semicolon_opt
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
 			end
@@ -1759,7 +1760,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt '=' E_UNIQUE Semicolon_opt
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
 			end
@@ -1771,7 +1772,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
 			end
@@ -1785,7 +1786,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
 			end
@@ -1797,7 +1798,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
 			end
@@ -1811,7 +1812,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
 			end
@@ -1821,7 +1822,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class)
 			end
@@ -1833,7 +1834,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := ast_factory.new_deferred_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class)
 			end
@@ -1845,7 +1846,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, ast_factory.new_external_language ($8, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
 			end
@@ -1859,7 +1860,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, ast_factory.new_external_language ($9, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
 			end
@@ -1897,7 +1898,7 @@ Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt O
 Is_opt: -- Empty
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := Void
 			end
@@ -3009,7 +3010,7 @@ Call_chain: Identifier Actuals_opt
 	| Bracket_expression
 		{
 			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
-				abort
+				raise_error
 			else
 				$$ := $1
 			end
@@ -3448,69 +3449,55 @@ Tilde_call_agent: '~' Feature_name Agent_actuals_opt
 
 Inline_agent:
 -- There is a syntactical ambiguity with attribute inline agents.
---	E_AGENT ':' Type Assigner_opt Agent_actuals_opt
---		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, Void, last_clients, last_feature_clause, last_class) }
-	E_AGENT ':' Type Assigner_opt Precondition_opt Local_declarations_opt
+--	E_AGENT ':' Type Agent_actuals_opt
+--		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), Void, Void, last_clients, last_feature_clause, last_class), $4) }
+	E_AGENT ':' Type Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END 
 		{
 			last_local_variables_stack.remove
 		}
 	Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
-	| E_AGENT Formal_arguments ':' Type Assigner_opt Precondition_opt
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), Void, Void, Void, Void, $4, $5, $6, $7, $8, $9, Void, last_clients, last_feature_clause, last_class), $11) }
+	| E_AGENT Formal_arguments ':' Type Precondition_opt
 	Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
 		{
 			last_formal_arguments_stack.remove
 			last_local_variables_stack.remove
 		}
 	Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
-	| E_AGENT ':' Type Assigner_opt Precondition_opt Local_declarations_opt
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), Void, Void, Void, Void, $5, $6, $7, $8, $9, $10, Void, last_clients, last_feature_clause, last_class), $12) }
+	| E_AGENT ':' Type Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END
 		{
 			last_local_variables_stack.remove
 		}
 	Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
-	| E_AGENT Formal_arguments ':' Type Assigner_opt Precondition_opt
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), Void, Void, Void, Void, $4, $5, $6, $7, $8, $9, Void, last_clients, last_feature_clause, last_class), $11) }
+	| E_AGENT Formal_arguments ':' Type Precondition_opt
 	Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
 		{
 			last_formal_arguments_stack.remove
 			last_local_variables_stack.remove
 		}
 	Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
-	| E_AGENT ':' Type Assigner_opt Precondition_opt E_EXTERNAL Manifest_string
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), Void, Void, Void, Void, $5, $6, $7, $8, $9, $10, Void, last_clients, last_feature_clause, last_class), $12) }
+	| E_AGENT ':' Type Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, ast_factory.new_external_language ($8, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
-	| E_AGENT Formal_arguments ':' Type Assigner_opt Precondition_opt
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), Void, Void, Void, Void, $4, ast_factory.new_external_language ($5, $6), $7, $8, $9, Void, last_clients, last_feature_clause, last_class), $10) }
+	| E_AGENT Formal_arguments ':' Type Precondition_opt
 	E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
 		{
 			last_formal_arguments_stack.remove
 		}
 	Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, ast_factory.new_external_language ($9, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), Void, Void, Void, Void, $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, Void, last_clients, last_feature_clause, last_class), $12) }
 	| E_AGENT Precondition_opt Local_declarations_opt Do_compound
 	Postcondition_opt Rescue_opt E_END
 		{
 			last_local_variables_stack.remove
 		}
 	Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := ast_factory.new_do_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_do_procedure ($1, Void, Void, Void, Void, $2, $3, $4, $5, $6, $7, Void, last_clients, last_feature_clause, last_class), $9) }
 	| E_AGENT Formal_arguments Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END
 		{
@@ -3518,18 +3505,14 @@ Inline_agent:
 			last_local_variables_stack.remove
 		}
 	Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := ast_factory.new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_do_procedure ($1, $2, Void, Void, Void, $3, $4, $5, $6, $7, $8, Void, last_clients, last_feature_clause, last_class), $10) }
 	| E_AGENT Precondition_opt Local_declarations_opt Once_compound
 	Postcondition_opt Rescue_opt E_END
 		{
 			last_local_variables_stack.remove
 		}
 	Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_once_procedure ($1, Void, Void, Void, Void, $2, $3, $4, $5, $6, $7, Void, last_clients, last_feature_clause, last_class), $9) }
 	| E_AGENT Formal_arguments Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END
 		{
@@ -3537,23 +3520,17 @@ Inline_agent:
 			last_local_variables_stack.remove
 		}
 	Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_once_procedure ($1, $2, Void, Void, Void, $3, $4, $5, $6, $7, $8, Void, last_clients, last_feature_clause, last_class), $10) }
 	| E_AGENT Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := new_external_procedure ($1, Void, $2, $3, $4, $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_external_procedure ($1, Void, Void, Void, Void, $2, ast_factory.new_external_language ($3, $4), $5, $6, $7, Void, last_clients, last_feature_clause, last_class), $8) }
 	| E_AGENT Formal_arguments Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END
 		{
 			last_formal_arguments_stack.remove
 		}
 	Agent_actuals_opt
--- TODO:
-		{ $$ := tokens.void_keyword }
---		{ $$ := new_external_procedure ($1, $2, $3, $4, $5, $6, ast_factory.new_external_language ($7, $8), $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
+		{ $$ := ast_factory.new_inline_agent ($1, ast_factory.new_external_procedure ($1, $2, Void, Void, Void, $3, ast_factory.new_external_language ($4, $5), $6, $7, $8, Void, last_clients, last_feature_clause, last_class), $10) }
 	;
 
 Agent_target: Identifier
