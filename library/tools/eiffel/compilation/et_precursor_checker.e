@@ -5,7 +5,7 @@ indexing
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,7 @@ inherit
 			process_expression_address,
 			process_if_instruction,
 			process_infix_expression,
+			process_inline_agent,
 			process_inspect_instruction,
 			process_loop_instruction,
 			process_loop_invariants,
@@ -602,6 +603,17 @@ feature {ET_AST_NODE} -- Processing
 		do
 			an_expression.left.process (Current)
 			an_expression.right.process (Current)
+		end
+
+	process_inline_agent (an_expression: ET_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+		do
+			an_arguments ?= an_expression.arguments
+			if an_arguments /= Void then
+				process_agent_argument_operand_list (an_arguments)
+			end
 		end
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is

@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -539,6 +539,8 @@ feature -- Status report
 
 	is_like_argument: BOOLEAN is
 			-- Is this type a 'like argument' (rather than a 'like feature')?
+			-- Note that 'like argument' is not a valid construct in ECMA Eiffel.
+			-- This is supported here for backward compatibility.
 		do
 			Result := name.is_argument
 		ensure then

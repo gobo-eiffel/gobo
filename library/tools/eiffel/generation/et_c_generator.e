@@ -13788,16 +13788,16 @@ feature {NONE} -- Error handling
 feature {NONE} -- Type resolving
 
 	resolved_formal_parameters (a_type: ET_TYPE): ET_TYPE is
-			-- Replace formal generic parameters in `a_type' by their
-			-- corresponding actual parameters if the class where
-			-- `a_type' appears is generic and is not `current_type.base_type'.
+			-- Replace formal generic parameters in `a_type' (when WRITTEN
+			-- in class `current_feature.static_feature.implementation_class')
+			-- by their corresponding actual parameters in `current_type.base_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
 		do
 -- TODO.
 --			has_fatal_error := False
-			Result := type_checker.resolved_formal_parameters (a_type, current_feature.static_feature, current_type.base_type)
+			Result := type_checker.resolved_formal_parameters (a_type, current_feature.static_feature.implementation_class, current_type.base_type)
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			end

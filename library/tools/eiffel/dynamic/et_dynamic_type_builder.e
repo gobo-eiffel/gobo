@@ -86,8 +86,8 @@ inherit
 			report_typed_pointer_expression,
 			report_unqualified_call_expression,
 			report_unqualified_call_instruction,
-			report_unqualified_procedure_call_agent,
-			report_unqualified_query_call_agent,
+			report_unqualified_procedure_agent,
+			report_unqualified_query_agent,
 			report_void_constant
 		end
 
@@ -151,7 +151,8 @@ feature {NONE} -- Initialization
 				current_class := universe.unknown_class
 				current_type := current_class
 				current_feature := dummy_feature
-				feature_impl := dummy_feature
+				current_feature_impl := dummy_feature.implementation_feature
+				current_class_impl := current_feature_impl.implementation_class
 				create actual_context.make_with_capacity (current_type, 10)
 				create formal_context.make_with_capacity (current_type, 10)
 				create instruction_context.make_with_capacity (current_type, 10)
@@ -1584,7 +1585,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_resolved_type := resolved_formal_parameters (a_local.type, feature_impl, current_type)
+				l_resolved_type := resolved_formal_parameters (a_local.type, current_class_impl, current_type)
 				if not has_fatal_error then
 					l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type)
 					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
@@ -2372,9 +2373,10 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an unqualified procedure call (to `a_procedure') agent
-			-- of type `a_type' in `a_context' has been processed.
+	report_unqualified_procedure_agent (an_expression: ET_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that an unqualified procedure call (to `a_procedure') agent or
+			-- inline agent (with associated feature `a_procedure') of type `a_type'
+			-- in `a_context' has been processed.
 		local
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
@@ -2384,9 +2386,10 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an unqualified query call (to `a_query') agent
-			-- of type `a_type' in `a_context' has been processed.
+	report_unqualified_query_agent (an_expression: ET_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that an unqualified query call (to `a_query') agent or
+			-- inline agent (with associated feature `a_query') of type `a_type'
+			-- in `a_context' has been processed.
 		local
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
@@ -2396,8 +2399,9 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_DYNAMIC_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an unqualified call (to `a_feature') agent
+	report_unqualified_call_agent (an_expression: ET_AGENT; a_feature: ET_DYNAMIC_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that an unqualified call (to `a_feature') agent or
+			-- inline agent (with associated feature `a_feature')
 			-- of type `a_type' in `a_context' has been processed.
 		require
 			no_error: not has_fatal_error

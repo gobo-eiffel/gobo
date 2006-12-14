@@ -332,10 +332,10 @@ feature -- Statut setting
 
 feature -- Eiffel keywords
 
-	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_AGENT_KEYWORD is
 			-- New 'agent' keyword
 		do
-			create Result.make_agent
+			create Result.make
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))

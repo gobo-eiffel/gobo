@@ -25,52 +25,52 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_agent: like call_agent) is
+	make (an_agent: like agent_expression) is
 			-- Create a new agent implicit 'Current' target.
 		require
 			an_agent_not_void: an_agent /= Void
 		do
-			call_agent := an_agent
+			agent_expression := an_agent
 		ensure
-			call_agent_set: call_agent = an_agent
+			agent_expression_set: agent_expression = an_agent
 		end
 
 feature -- Access
 
-	call_agent: ET_CALL_AGENT
-			-- Call agent to which current implicit 'Current' target belongs
+	agent_expression: ET_AGENT
+			-- Agent expression to which current implicit 'Current' target belongs
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := call_agent.name.position
+			Result := agent_expression.implicit_target_position.position
 		end
 
 	first_position: ET_POSITION is
 			-- Position of first character of current node in source code;
 			-- Null position is current node is empty
 		do
-			Result := call_agent.name.first_position
+			Result := agent_expression.implicit_target_position.first_position
 		end
 
 	last_position: ET_POSITION is
 			-- Position of last character of current node in source code;
 			-- Null position is current node is empty
 		do
-			Result := call_agent.name.last_position
+			Result := agent_expression.implicit_target_position.last_position
 		end
 
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			Result := call_agent.name.first_leaf
+			Result := agent_expression.implicit_target_position.first_leaf
 		end
 
 	last_leaf: ET_AST_LEAF is
 			-- Last leaf node in current node
 		do
-			Result := call_agent.name.last_leaf
+			Result := agent_expression.implicit_target_position.last_leaf
 		end
 
 	break: ET_BREAK is
@@ -88,6 +88,6 @@ feature -- Processing
 
 invariant
 
-	call_agent_not_void: call_agent /= Void
+	agent_expression_not_void: agent_expression /= Void
 
 end

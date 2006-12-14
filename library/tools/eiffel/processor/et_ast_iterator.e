@@ -90,13 +90,10 @@ feature {ET_AST_NODE} -- Processing
 			-- Do nothing.
 		end
 
-	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
-			-- Process `an_argument'.
+	process_agent_keyword (a_keyword: ET_AGENT_KEYWORD) is
+			-- Process `a_keyword'.
 		do
-			an_argument.left_brace.process (Current)
-			an_argument.type.process (Current)
-			an_argument.right_brace.process (Current)
-			an_argument.question_mark.process (Current)
+			process_keyword (a_keyword)
 		end
 
 	process_agent_open_target (a_target: ET_AGENT_OPEN_TARGET) is
@@ -105,6 +102,15 @@ feature {ET_AST_NODE} -- Processing
 			a_target.left_brace.process (Current)
 			a_target.type.process (Current)
 			a_target.right_brace.process (Current)
+		end
+
+	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
+			-- Process `an_argument'.
+		do
+			an_argument.left_brace.process (Current)
+			an_argument.type.process (Current)
+			an_argument.right_brace.process (Current)
+			an_argument.question_mark.process (Current)
 		end
 
 	process_alias_free_name (a_name: ET_ALIAS_FREE_NAME) is
@@ -1745,6 +1751,18 @@ feature {ET_AST_NODE} -- Processing
 		do
 			an_operator.or_keyword.process (Current)
 			an_operator.else_keyword.process (Current)
+		end
+
+	process_inline_agent (an_expression: ET_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+		do
+			an_expression.associated_feature.process (Current)
+			an_arguments ?= an_expression.arguments
+			if an_arguments /= Void then
+				an_arguments.process (Current)
+			end
 		end
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is

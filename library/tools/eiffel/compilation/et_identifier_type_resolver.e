@@ -151,8 +151,9 @@ feature {NONE} -- Type resolving
 				resolved := True
 			else
 				if current_feature /= Void then
-						-- This has to be a 'like argument', otherwise
-						-- this is an error.
+						-- This has to be a 'like argument', otherwise this is an error.
+						-- Note that 'like argument' is not a valid construct in ECMA Eiffel.
+						-- This is supported here for backward compatibility.
 					l_argument_name ?= l_name
 					if l_argument_name /= Void then
 						args := current_feature.arguments
@@ -166,7 +167,7 @@ feature {NONE} -- Type resolving
 							end
 						end
 					end
-				end	
+				end
 			end
 			if not resolved then
 				set_fatal_error

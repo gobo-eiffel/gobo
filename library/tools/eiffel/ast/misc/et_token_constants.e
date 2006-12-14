@@ -1580,10 +1580,10 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	agent_keyword: ET_KEYWORD is
+	agent_keyword: ET_AGENT_KEYWORD is
 			-- 'agent' keyword
 		once
-			create Result.make_agent
+			create Result.make
 		ensure
 			keyword_not_void: Result /= Void
 		end

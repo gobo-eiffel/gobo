@@ -66,6 +66,7 @@ inherit
 			process_hexadecimal_integer_constant,
 			process_if_instruction,
 			process_infix_expression,
+			process_inline_agent,
 			process_inspect_instruction,
 			process_invariants,
 			process_local_variable,
@@ -840,6 +841,18 @@ feature {ET_AST_NODE} -- Processing
 		do
 			an_expression.left.process (Current)
 			an_expression.right.process (Current)
+		end
+
+	process_inline_agent (an_expression: ET_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+		do
+			an_expression.associated_feature.process (Current)
+			an_arguments ?= an_expression.arguments
+			if an_arguments /= Void then
+				process_agent_argument_operand_list (an_arguments)
+			end
 		end
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is

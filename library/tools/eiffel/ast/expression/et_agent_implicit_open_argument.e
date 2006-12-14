@@ -26,16 +26,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_agent: like call_agent; an_index: INTEGER) is
+	make (an_agent: like agent_expression; an_index: INTEGER) is
 			-- Create a new agent implicit open argument.
 		require
 			an_agent_not_void: an_agent /= Void
 			an_index_nonnegative: an_index >= 1
 		do
-			call_agent := an_agent
+			agent_expression := an_agent
 			argument_index := an_index
 		ensure
-			call_agent_set: call_agent = an_agent
+			agent_expression_set: agent_expression = an_agent
 			argument_index_set: argument_index = an_index
 		end
 
@@ -46,8 +46,8 @@ feature -- Status report
 
 feature -- Access
 
-	call_agent: ET_CALL_AGENT
-			-- Call agent to which current implicit open argument belongs
+	agent_expression: ET_AGENT
+			-- Agent expression to which current implicit open argument belongs
 
 	argument_index: INTEGER
 			-- Index of argument
@@ -56,33 +56,33 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := call_agent.name.position
+			Result := agent_expression.implicit_argument_position.position
 		end
 
 	first_position: ET_POSITION is
 			-- Position of first character of current node in source code;
 			-- Null position is current node is empty
 		do
-			Result := call_agent.name.first_position
+			Result := agent_expression.implicit_argument_position.first_position
 		end
 
 	last_position: ET_POSITION is
 			-- Position of last character of current node in source code;
 			-- Null position is current node is empty
 		do
-			Result := call_agent.name.last_position
+			Result := agent_expression.implicit_argument_position.last_position
 		end
 
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			Result := call_agent.name.first_leaf
+			Result := agent_expression.implicit_argument_position.first_leaf
 		end
 
 	last_leaf: ET_AST_LEAF is
 			-- Last leaf node in current node
 		do
-			Result := call_agent.name.last_leaf
+			Result := agent_expression.implicit_argument_position.last_leaf
 		end
 
 	break: ET_BREAK is
@@ -100,7 +100,7 @@ feature -- Processing
 
 invariant
 
-	call_agent_not_void: call_agent /= Void
+	agent_expression_not_void: agent_expression /= Void
 	argument_index_nonnegative: argument_index >= 1
 
 end

@@ -1375,8 +1375,9 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_DYNAMIC_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an unqualified call (to `a_feature') agent
+	report_unqualified_call_agent (an_expression: ET_AGENT; a_feature: ET_DYNAMIC_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that an unqualified call (to `a_feature') agent or
+			-- inline agent (with associated feature `a_feature')
 			-- of type `a_type' in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE

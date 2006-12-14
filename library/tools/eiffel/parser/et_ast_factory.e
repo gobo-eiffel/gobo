@@ -29,13 +29,14 @@ feature {NONE} -- Initialization
 
 feature -- Eiffel keywords
 
-	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_AGENT_KEYWORD is
 			-- New 'agent' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			Result := tokens.agent_keyword
+			create Result.make
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_alias_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -2516,6 +2517,17 @@ feature -- AST nodes
 			if a_conditional /= Void then
 				create Result.make (a_conditional, a_when_parts)
 				Result.set_else_compound (an_else_compound)
+			end
+		end
+
+	new_inline_agent (an_agent: ET_AST_LEAF; a_feature: ET_FEATURE; args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_INLINE_AGENT is
+			-- New inline agent
+		do
+			if a_feature /= Void then
+				create Result.make (a_feature, args)
+				if an_agent /= Void then
+					Result.set_agent_keyword (an_agent)
+				end
 			end
 		end
 

@@ -21,7 +21,6 @@ inherit
 
 create
 
-	make_agent,
 	make_alias,
 	make_all,
 	make_as,

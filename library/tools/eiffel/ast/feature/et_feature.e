@@ -5,7 +5,7 @@ indexing
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,14 @@ inherit
 		redefine
 			is_immediate,
 			immediate_feature
+		end
+
+	ET_ENCLOSING_FEATURE
+
+	ET_ENCLOSED_FEATURE
+		redefine
+			is_feature,
+			as_feature
 		end
 
 	HASHABLE
@@ -338,6 +346,9 @@ feature -- Status report
 
 	is_immediate: BOOLEAN is True
 			-- Is current feature immediate?
+
+	is_feature: BOOLEAN is True
+			-- Is `Current' a feature?
 
 feature -- Measurement
 
@@ -702,6 +713,14 @@ feature -- Inheritance
 
 	immediate_feature: ET_FEATURE is
 			-- Current feature viewed as an immediate feature
+		do
+			Result := Current
+		end
+
+feature -- Conversion
+
+	as_feature: ET_FEATURE is
+			-- `Current' viewed as a feature
 		do
 			Result := Current
 		end

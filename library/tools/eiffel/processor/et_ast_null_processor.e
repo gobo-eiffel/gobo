@@ -57,6 +57,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_agent_keyword (a_keyword: ET_AGENT_KEYWORD) is
+			-- Process `a_keyword'.
+		do
+		end
+
 	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
 			-- Process `an_argument'.
 		do
@@ -579,6 +584,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR) is
 			-- Process `an_operator'.
+		do
+		end
+
+	process_inline_agent (an_expression: ET_INLINE_AGENT) is
+			-- Process `an_expression'.
 		do
 		end
 

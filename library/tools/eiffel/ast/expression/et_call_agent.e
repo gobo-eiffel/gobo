@@ -14,7 +14,7 @@ class ET_CALL_AGENT
 
 inherit
 
-	ET_EXPRESSION
+	ET_AGENT
 		redefine
 			reset
 		end
@@ -81,12 +81,6 @@ feature -- Initialization
 
 feature -- Access
 
-	agent_keyword: ET_AST_LEAF
-			-- 'agent' keyword or '~' symbol
-
-	target: ET_AGENT_TARGET
-			-- Target
-
 	qualified_name: ET_QUALIFIED_FEATURE_NAME
 			-- Qualified feature name
 
@@ -97,9 +91,6 @@ feature -- Access
 		ensure then
 			definition: Result = qualified_name.feature_name
 		end
-
-	arguments: ET_AGENT_ARGUMENT_OPERANDS
-			-- Arguments
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -177,26 +168,6 @@ feature -- Status report
 			Result := a_symbol /= Void
 		end
 
-feature -- Setting
-
-	set_agent_keyword (an_agent: like agent_keyword) is
-			-- Set `agent_keyword' to `an_agent'.
-		require
-			an_agent_not_void: an_agent /= Void
-		do
-			agent_keyword := an_agent
-		ensure
-			agent_keyword_set: agent_keyword = an_agent
-		end
-
-	set_arguments (an_arguments: like arguments) is
-			-- Set `arguments' to `an_arguments'.
-		do
-			arguments := an_arguments
-		ensure
-			argumnts_set: arguments = an_arguments
-		end
-
 feature -- Status setting
 
 	set_procedure (b: BOOLEAN) is
@@ -205,6 +176,22 @@ feature -- Status setting
 			is_procedure := b
 		ensure
 			procedure_set: is_procedure = b
+		end
+
+feature {ET_AGENT_IMPLICIT_CURRENT_TARGET} -- Implicit node positions
+
+	implicit_target_position: ET_AST_NODE is
+			-- Node used to provide a position to the implicit target if any
+		do
+			Result := name.first_leaf
+		end
+
+feature {ET_AGENT_IMPLICIT_OPEN_ARGUMENT} -- Implicit node positions
+
+	implicit_argument_position: ET_AST_NODE is
+			-- Node used to provide a position to implicit open arguments if any
+		do
+			Result := name.last_leaf
 		end
 
 feature -- Processing
@@ -217,8 +204,6 @@ feature -- Processing
 
 invariant
 
-	agent_keyword_not_void: agent_keyword /= Void
 	qualified_name_not_void: qualified_name /= Void
-	target_not_void: target /= Void
 
 end

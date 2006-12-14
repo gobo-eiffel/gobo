@@ -94,10 +94,10 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
-			-- Process `an_argument'.
+	process_agent_keyword (a_keyword: ET_AGENT_KEYWORD) is
+			-- Process `a_keyword'.
 		require
-			an_argument_not_void: an_argument /= Void
+			a_keyword_not_void: a_keyword /= Void
 		deferred
 		end
 
@@ -105,6 +105,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_target'.
 		require
 			a_target_not_void: a_target /= Void
+		deferred
+		end
+
+	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
+			-- Process `an_argument'.
+		require
+			an_argument_not_void: an_argument /= Void
 		deferred
 		end
 
@@ -826,6 +833,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_operator'.
 		require
 			an_operator_not_void: an_operator /= Void
+		deferred
+		end
+
+	process_inline_agent (an_expression: ET_INLINE_AGENT) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
 		deferred
 		end
 
