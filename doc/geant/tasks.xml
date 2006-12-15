@@ -77,6 +77,9 @@
 		<link linkend="geyacc_task">geyacc</link>
 	</para>
 	<para>
+		<link linkend="input_task">input</link>
+	</para>
+	<para>
 		<link linkend="ise_task">ise</link>
 	</para>
 	<para>
@@ -93,6 +96,9 @@
 	</para>
 	<para>
 		<link linkend="precursor_task">precursor</link>
+	</para>
+	<para>
+		<link linkend="replace_task">replace</link>
 	</para>
 	<para>
 		<link linkend="setenv_task">setenv</link>

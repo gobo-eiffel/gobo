@@ -48,11 +48,13 @@
 		<geant target="xslt_and_shift" arguments="getest_task"/>
 		<geant target="xslt_and_shift" arguments="gexace_task"/>
 		<geant target="xslt_and_shift" arguments="gexmlsplit_task"/>
+		<geant target="xslt_and_shift" arguments="input_task"/>
 		<geant target="xslt_and_shift" arguments="ise_task"/>
 		<geant target="xslt_and_shift" arguments="mkdir_task"/>
 		<geant target="xslt_and_shift" arguments="move_task"/>
 		<geant target="xslt_and_shift" arguments="outofdate_task"/>
 		<geant target="xslt_and_shift" arguments="precursor_task"/>
+		<geant target="xslt_and_shift" arguments="replace_task"/>
 		<geant target="xslt_and_shift" arguments="se_task"/>
 		<geant target="xslt_and_shift" arguments="set_task"/>
 		<geant target="xslt_and_shift" arguments="setenv_task"/>
@@ -97,11 +99,13 @@
 		<delete file="getest_task.html"/>
 		<delete file="gexace_task.html"/>
 		<delete file="gexmlsplit_task.html"/>
+		<delete file="input_task.html"/>
 		<delete file="ise_task.html"/>
 		<delete file="mkdir_task.html"/>
 		<delete file="move_task.html"/>
 		<delete file="outofdate_task.html"/>
 		<delete file="precursor_task.html"/>
+		<delete file="replace_task.html"/>
 		<delete file="se_task.html"/>
 		<delete file="set_task.html"/>
 		<delete file="setenv_task.html"/>

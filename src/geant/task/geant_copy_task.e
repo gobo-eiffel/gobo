@@ -77,7 +77,7 @@ feature {NONE} -- Constants
 			Result := "file"
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: Result.count > 0
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	To_file_attribute_name: STRING is
@@ -86,16 +86,16 @@ feature {NONE} -- Constants
 			Result := "to_file"
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: Result.count > 0
+			attribute_name_not_empty: Result.count > 0
 		end
-		
+
 	To_directory_attribute_name: STRING is
 			-- Name of xml attribute to_directory.
 		once
 			Result := "to_directory"
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: Result.count > 0
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	Force_attribute_name: STRING is
@@ -104,7 +104,7 @@ feature {NONE} -- Constants
 			Result := "force"
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: Result.count > 0
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	Fileset_element_name: STRING is
