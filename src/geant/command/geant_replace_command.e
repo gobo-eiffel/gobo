@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Copy commands"
+		"Replace commands"
 
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2006, Sven Ehrke and others"
