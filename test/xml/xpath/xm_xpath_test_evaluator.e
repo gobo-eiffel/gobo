@@ -270,15 +270,22 @@ feature -- Test
 	test_logical_and_two is
 			-- Test logical and.
 			-- Dynamic error will be raised owing to static analysis.
+			-- No. Returning false() is allowed, and now it does that
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 2 and 3 idiv 0 = 1")
-			assert ("Evaluation error", an_evaluator.is_error)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean false", a_boolean_value /= Void and then a_boolean_value.value = False)
 		end
 
 	test_logical_or is
@@ -303,15 +310,22 @@ feature -- Test
 	test_logical_or_two is
 			-- Test logical or.
 			-- Dynamic error will be raised owing to static analysis.
+			-- No. Returning true() is allowed, and now it does that
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 1 or 3 idiv 0 = 1")
-			assert ("Evaluation error", an_evaluator.is_error)
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)			
 		end
 
 	test_logical_and_three is

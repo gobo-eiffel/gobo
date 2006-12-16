@@ -60,6 +60,18 @@ feature -- Access
 		deferred
 		end
 
+	base_uri: STRING
+			-- Base URI for constructed element
+
+	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING is
+			-- Re-calculated base URI
+		require
+			a_context_not_void: a_context /= Void
+		deferred
+		ensure
+			may_be_empty: Result /= Void
+		end
+		
 feature -- Status report
 
 	creates_new_nodes: BOOLEAN is
@@ -139,6 +151,9 @@ feature -- Evaluation
 				a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
 				if a_validator = a_receiver then
 					a_new_context.change_to_sequence_output_destination (a_receiver)
+					if a_receiver.base_uri.is_empty then
+						a_receiver.set_base_uri (new_base_uri (a_context))
+					end
 				else
 					check
 						schema_aware: False
@@ -186,6 +201,9 @@ feature -- Evaluation
 							-- Only Basic XSLT processor is supported now
 						end
 					end
+					if a_receiver.base_uri.is_empty then
+						a_receiver.set_base_uri (new_base_uri (a_context))
+					end
 					if not is_inherit_namespaces then some_properties := Disinherit_namespaces end
 					a_receiver.start_element (a_name_code, -1, some_properties)
 					
@@ -230,6 +248,16 @@ feature -- Evaluation
 
 			-- Note, we don't bother with an end_element call.
 			
+		end
+
+feature -- Element change
+
+	set_base_uri (a_uri: STRING) is
+			-- Set `base_uri' to `a_uri'.
+		do
+			base_uri := a_uri
+		ensure
+			base_uri_set: base_uri = a_uri
 		end
 
 feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local

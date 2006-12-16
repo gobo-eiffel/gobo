@@ -80,7 +80,9 @@ feature -- Evaluation
 				last_evaluated_item := arguments.item (1).last_evaluated_item
 			else
 				a_uri := arguments.item (1).last_evaluated_item.as_node.base_uri
-				if a_uri.count = 0 then
+				if a_uri = Void then
+					last_evaluated_item := Void
+				elseif a_uri.count = 0 then
 					last_evaluated_item := Void
 				else
 					create {XM_XPATH_ANY_URI_VALUE} last_evaluated_item.make (a_uri)

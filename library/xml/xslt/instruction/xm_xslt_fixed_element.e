@@ -86,6 +86,15 @@ feature -- Access
 			Result := fixed_name_code
 		end
 
+	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING is
+			-- Re-calculated base URI
+		do
+			Result := base_uri
+			if Result = Void then
+				Result := ""
+			end
+		end
+		
 feature -- Status report
 
 	display (a_level: INTEGER) is

@@ -202,9 +202,22 @@ feature -- Events
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace.
+		local
+			l_orphan: XM_XPATH_ORPHAN
+			l_name_code: INTEGER
+			l_prefix: STRING
 		do
 			if level = 0 then
-				todo ("notify_namespace", true)
+				create l_orphan.make (Namespace_node, shared_name_pool.uri_from_namespace_code (a_namespace_code))
+				l_prefix := shared_name_pool.prefix_from_namespace_code (a_namespace_code)
+				if shared_name_pool.is_name_code_allocated (Null_uri, Null_uri, l_prefix) then
+					l_name_code := shared_name_pool.name_code (Null_uri, Null_uri, l_prefix)
+				else
+					shared_name_pool.allocate_name (Null_uri, Null_uri, l_prefix)
+					l_name_code := shared_name_pool.last_name_code
+				end
+				l_orphan.set_name_code (l_name_code)
+				append_item (l_orphan)
 			else
 				check
 					tree_not_void: tree /= Void
@@ -218,9 +231,13 @@ feature -- Events
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
 			-- Notify an attribute.
+		local
+			l_orphan: XM_XPATH_ORPHAN
 		do
 			if level = 0 then
-				todo ("notify_attribute", true)
+				create l_orphan.make (Attribute_node, a_value)
+				l_orphan.set_name_code (a_name_code)
+				append_item (l_orphan)
 			else
 				check
 					tree_not_void: tree /= Void
@@ -244,13 +261,13 @@ feature -- Events
 	notify_characters (chars: STRING; properties: INTEGER) is
 			-- Notify character data.
 		local
-			an_orphan: XM_XPATH_ORPHAN
+			l_orphan: XM_XPATH_ORPHAN
 		do
 			if chars.count /= 0 then
 				if in_start_tag then start_content end
 				if level = 0 then
-					create an_orphan.make (Text_node, chars)
-					append_item (an_orphan)
+					create l_orphan.make (Text_node, chars)
+					append_item (l_orphan)
 				else
 					check
 						tree_not_void: tree /= Void
@@ -265,10 +282,13 @@ feature -- Events
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
+		local
+			l_orphan: XM_XPATH_ORPHAN
 		do
 			if in_start_tag then start_content end
 			if level = 0 then
-					todo ("notify_comment", true)
+				create l_orphan.make (Comment_node, a_content_string)
+				append_item (l_orphan)
 			else
 				check
 					tree_not_void: tree /= Void
@@ -282,10 +302,20 @@ feature -- Events
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
+		local
+			l_orphan: XM_XPATH_ORPHAN
+			l_name_code: INTEGER
 		do
 			if in_start_tag then start_content end
 			if level = 0 then
-				todo ("notify_comment", true)
+				create l_orphan.make (Processing_instruction_node, a_data_string)
+				if shared_name_pool.is_name_code_allocated (Null_uri, Null_uri, a_name) then
+					l_name_code := shared_name_pool.name_code (Null_uri, Null_uri, a_name)
+				else
+					shared_name_pool.allocate_name (Null_uri, Null_uri, a_name)
+					l_name_code := shared_name_pool.last_name_code
+				end
+				append_item (l_orphan)
 			else
 				check
 					tree_not_void: tree /= Void
@@ -403,6 +433,7 @@ feature {NONE} -- Implementation
 			create a_reducer.make (builder)
 			create a_complex_outputter.make (a_reducer)
 			tree := a_complex_outputter
+			tree.set_base_uri (base_uri)
 			tree.open
 		end
 

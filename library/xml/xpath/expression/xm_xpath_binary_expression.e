@@ -177,7 +177,10 @@ feature -- Optimization
 					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
 						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 						eagerly_evaluate (Void)
-						set_replacement (last_evaluation)
+						if last_evaluation= Void or else not last_evaluation.is_error then
+							-- the value might not be needed at runtime
+							set_replacement (last_evaluation)
+						end
 					end
 				end
 			end
@@ -207,7 +210,10 @@ feature -- Optimization
 					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
 						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 						eagerly_evaluate (Void)
-						set_replacement (last_evaluation)
+						if last_evaluation = Void or else not last_evaluation.is_error then
+							-- the value might not be needed at runtime
+							set_replacement (last_evaluation)
+						end
 					end
 				end
 			end

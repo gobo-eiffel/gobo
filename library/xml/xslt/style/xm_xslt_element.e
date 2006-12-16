@@ -317,6 +317,7 @@ feature {NONE} -- Implementation
 				create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
 			end
 			create a_fixed_element.make (a_executable, a_name_code, some_namespace_codes, used_attribute_sets, Void, validation_action, is_inherit_namespaces, a_content)
+			a_fixed_element.set_base_uri (base_uri)
 			last_generated_expression := a_fixed_element
 		end
 

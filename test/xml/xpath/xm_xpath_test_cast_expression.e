@@ -144,7 +144,7 @@ feature -- Test
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:double")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
 	test_untyped_atomic_to_double is
@@ -175,7 +175,7 @@ feature -- Test
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:decimal")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
 	test_untyped_atomic_to_decimal is
@@ -208,7 +208,7 @@ feature -- Test
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:integer")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
 	test_untyped_atomic_to_integer is
@@ -241,7 +241,7 @@ feature -- Test
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:boolean")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
 	test_untyped_atomic_to_boolean is
@@ -334,7 +334,7 @@ feature -- Test
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:date")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
 	test_untyped_atomic_to_zoneless_time is

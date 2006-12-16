@@ -245,7 +245,6 @@ feature -- Element change
 	set_base_uri (a_uri: STRING) is
 			-- Set `base_uri' for destination tree.
 		require
-			not_open: not is_open
 			a_uri: a_uri /= Void
 		do
 			base_uri := a_uri

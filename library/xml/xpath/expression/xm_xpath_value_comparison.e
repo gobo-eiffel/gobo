@@ -375,36 +375,36 @@ feature {NONE} -- Implementation
 	optimize_count (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimise count(x) eq 0 (or gt 0, ne 0, eq 0, etc).
 		local
-			a_count_function: XM_XPATH_COUNT
-			an_integer_value: XM_XPATH_INTEGER_VALUE
-			new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			an_integer: MA_DECIMAL
-			a_filter_expression: XM_XPATH_FILTER_EXPRESSION
-			an_expression: XM_XPATH_EXPRESSION
-			a_function_library: XM_XPATH_FUNCTION_LIBRARY
+			l_count_function: XM_XPATH_COUNT
+			l_integer_value: XM_XPATH_INTEGER_VALUE
+			l_new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			l_integer: MA_DECIMAL
+			l_filter_expression: XM_XPATH_FILTER_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
+			l_function_library: XM_XPATH_FUNCTION_LIBRARY
 		do
 			if first_operand.is_count_function and then second_operand.is_atomic_value then
-				a_count_function := first_operand.as_count_function
-				if a_count_function.arguments.count = 1 then
-					a_function_library := a_context.available_functions
+				l_count_function := first_operand.as_count_function
+				if l_count_function.arguments.count = 1 then
+					l_function_library := a_context.available_functions
 					if is_zero (second_operand.as_atomic_value) then
 						if operator = Fortran_equal_token or else operator = Fortran_less_equal_token then
 
 							-- Rewrite count(x)=0 as empty(x).
 
-							a_function_library.bind_function (Empty_function_type_code, a_count_function.arguments, False)
-							an_expression := a_function_library.last_bound_function.as_empty_function
+							l_function_library.bind_function (Empty_function_type_code, l_count_function.arguments, False)
+							l_expression := l_function_library.last_bound_function.as_empty_function
 						elseif operator = Fortran_not_equal_token or else operator = Fortran_greater_than_token then
 
 							-- Rewrite count(x)!=0, count(x)>0 as exists(x)
 
-							a_function_library.bind_function (Exists_function_type_code, a_count_function.arguments, False)
-							an_expression := a_function_library.last_bound_function.as_exists_function
+							l_function_library.bind_function (Exists_function_type_code, l_count_function.arguments, False)
+							l_expression := l_function_library.last_bound_function.as_exists_function
 						elseif operator = Fortran_greater_equal_token then
 
 							-- Rewrite count(x)>=0 as true()
 
-							create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
+							create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (True)
 						else
 							check
 								less_then_or_equal_to: operator = Fortran_less_equal_token
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 
 							-- Rewrite count(x)<0 as false()
 
-							create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (False)
+							create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (False)
 
 						end
 					else
@@ -421,18 +421,29 @@ feature {NONE} -- Implementation
 							-- Rewrite count(x) gt n as exists(x[n+1])
 							--  and count(x) ge n as exists(x[n])
 
-							an_integer := second_operand.as_integer_value.value
-							if operator = Fortran_greater_than_token then an_integer := an_integer + decimal.one end
-							create new_arguments.make (1)
-							create an_integer_value.make (an_integer)
-							create a_filter_expression.make (a_count_function.arguments.item(1), an_integer_value)
-							new_arguments.put (a_filter_expression, 1)
-							a_function_library.bind_function (Exists_function_type_code, new_arguments, False)
-							an_expression := a_function_library.last_bound_function.as_exists_function
+							l_integer := second_operand.as_integer_value.value
+							if operator = Fortran_greater_than_token then l_integer := l_integer + decimal.one end
+							create l_new_arguments.make (1)
+							create l_integer_value.make (l_integer)
+							create l_filter_expression.make (l_count_function.arguments.item(1), l_integer_value)
+							l_new_arguments.put (l_filter_expression, 1)
+							l_function_library.bind_function (Exists_function_type_code, l_new_arguments, False)
+							l_expression := l_function_library.last_bound_function.as_exists_function
 
 						end
 					end
-					if an_expression /= Void then set_replacement (an_expression) end
+					if l_expression /= Void then
+						l_expression.check_static_type (a_context, a_context_item_type)
+						if l_expression.was_expression_replaced then
+							l_expression := l_expression.replacement_expression
+						end
+						l_expression.optimize (a_context, a_context_item_type)
+						if l_expression.was_expression_replaced then
+							set_replacement (l_expression.replacement_expression)
+						else
+							set_replacement (l_expression)
+						end
+					end
 				end
 			end
 		end

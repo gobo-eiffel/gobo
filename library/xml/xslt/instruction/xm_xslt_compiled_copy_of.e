@@ -29,13 +29,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; copy_ns: BOOLEAN) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; copy_ns: BOOLEAN; a_base_uri: STRING) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
 			select_expression_not_void: a_select_expression /= Void
 		do
 			executable := an_executable
+			base_uri := a_base_uri
 			select_expression := a_select_expression
 			adopt_child_expression (select_expression)
 			copy_namespaces := copy_ns
@@ -45,6 +46,7 @@ feature {NONE} -- Initialization
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
 			copy_namespaces_set: copy_namespaces = copy_ns
+			base_uri_set: base_uri = a_base_uri
 		end
 
 feature -- Access
@@ -66,6 +68,9 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 			Result.put (select_expression, 1)
 		end
+
+	base_uri: STRING
+			-- Base URI for copying elements with xml:base
 
 feature -- Status report
 
@@ -163,37 +168,39 @@ feature -- Evaluation
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
-			which_namespaces: INTEGER
-			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_item: XM_XPATH_ITEM
+			l_receiver: XM_XPATH_SEQUENCE_RECEIVER
+			l_which_namespaces: INTEGER
+			l_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_item: XM_XPATH_ITEM
+			l_copy_base_uri: BOOLEAN
 		do
-			a_receiver := a_context.current_receiver
+			l_receiver := a_context.current_receiver
+			l_copy_base_uri := l_receiver.base_uri.is_empty
 			if copy_namespaces then
-				which_namespaces := All_namespaces
+				l_which_namespaces := All_namespaces
 			else
-				which_namespaces := No_namespaces
+				l_which_namespaces := No_namespaces
 			end
 			from
 				select_expression.create_iterator (a_context)
-				a_sequence_iterator := select_expression.last_iterator
-				if a_sequence_iterator.is_error then
-					a_receiver.on_error (a_sequence_iterator.error_value.error_message)
+				l_sequence_iterator := select_expression.last_iterator
+				if l_sequence_iterator.is_error then
+					l_receiver.on_error (l_sequence_iterator.error_value.error_message)
 				else
-					a_sequence_iterator.start
+					l_sequence_iterator.start
 				end
 			until
-				a_sequence_iterator.is_error or else a_sequence_iterator.after
+				l_sequence_iterator.is_error or else l_sequence_iterator.after
 			loop
-				an_item := a_sequence_iterator.item
-				if an_item.is_node then
-					process_node (an_item.as_node, a_receiver, which_namespaces, a_context)
+				l_item := l_sequence_iterator.item
+				if l_item.is_node then
+					process_node (l_item.as_node, l_receiver, l_which_namespaces, l_copy_base_uri, a_context)
 				else
-					a_receiver.append_item (an_item)
+					l_receiver.append_item (l_item)
 				end
-				a_sequence_iterator.forth
-				if a_sequence_iterator.is_error then
-					a_receiver.on_error (a_sequence_iterator.error_value.error_message)
+				l_sequence_iterator.forth
+				if l_sequence_iterator.is_error then
+					l_receiver.on_error (l_sequence_iterator.error_value.error_message)
 				end
 			end
 		end
@@ -221,7 +228,7 @@ feature {NONE} -- Implementation
 	copy_namespaces: BOOLEAN
 			-- Do we copy namespaces?
 
-	process_node (a_node: XM_XPATH_NODE; a_receiver: XM_XPATH_SEQUENCE_RECEIVER; which_namespaces: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_node (a_node: XM_XPATH_NODE; a_receiver: XM_XPATH_SEQUENCE_RECEIVER; which_namespaces: INTEGER; a_copy_base_uri: BOOLEAN; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Process a node.
 		require
 			node_not_void: a_node /= Void
@@ -235,12 +242,18 @@ feature {NONE} -- Implementation
 				a_node.node_type
 			when Element_node then
 				a_validator := a_context.transformer.configuration.element_validator (a_receiver, a_node.name_code, Void, Validation_strip)
+				if a_copy_base_uri then
+					a_validator.set_base_uri (base_uri)
+				end
 				a_node.copy_node (a_validator, which_namespaces, True)
 			when Attribute_node then
 				copy_attribute (a_node, a_context, Void, Validation_strip)
 			when Text_node then
 				a_receiver.notify_characters (STRING_.cloned_string (a_node.string_value), 0)
 			when Processing_instruction_node then
+				if a_copy_base_uri then
+					a_receiver.set_base_uri (a_node.base_uri)
+				end
 				a_receiver.notify_processing_instruction (a_node.node_name, STRING_.cloned_string (a_node.string_value), 0)
 			when Comment_node then
 				a_receiver.notify_comment (STRING_.cloned_string (a_node.string_value), 0)
@@ -250,6 +263,9 @@ feature {NONE} -- Implementation
 				if not l_was_open then
 					a_validator.open
 					a_validator.start_document
+				end
+				if a_copy_base_uri then
+					a_validator.set_base_uri (a_node.base_uri)
 				end
 				a_node.copy_node (a_validator, which_namespaces, True)
 				if not l_was_open then
@@ -264,6 +280,7 @@ feature {NONE} -- Implementation
 invariant
 
 	select_expression_not_void: initialized implies select_expression /= Void
+	base_uri_not_void: base_uri /= Void
 
 end
 	

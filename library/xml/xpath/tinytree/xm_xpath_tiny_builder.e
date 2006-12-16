@@ -159,6 +159,8 @@ feature -- Events
 
 			if not locator.system_id.is_empty then
 				tree.set_system_id_for_node (node_number, locator.system_id)
+			elseif current_depth = 2 then
+				tree.set_system_id_for_node (node_number, base_uri)
 			end
 			if is_line_numbering then
 				tree.set_line_number_for_node (node_number, locator.line_number)

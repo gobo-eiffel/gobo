@@ -36,22 +36,22 @@ feature {NONE} -- Initialization
 		require
 			value_is_base64: a_value /= Void and then STRING_.is_base64 (a_value)
 		local
-			a_decoder: UT_BASE64_DECODING_INPUT_STREAM
-			an_index, a_count: INTEGER
-			a_stream: KL_STRING_INPUT_STREAM
-			a_decoded_string: STRING
+			l_decoder: UT_BASE64_DECODING_INPUT_STREAM
+			l_index, l_count: INTEGER
+			l_stream: KL_STRING_INPUT_STREAM
+			l_decoded_string: STRING
 		do
 			make_atomic_value
-			create a_stream.make (a_value)
-			create a_decoder.make (a_stream)
-			a_count := a_value.count
-			create a_decoded_string.make (a_count)
-			a_decoder.read_string (a_count)
-			a_count := a_decoded_string.count
-			create binary_value.make (1, a_count)
-			from an_index := 1 until an_index > a_count loop
-				binary_value.put (a_decoded_string.item (an_index), an_index)
-				an_index := an_index + 1
+			create l_stream.make (a_value)
+			create l_decoder.make (l_stream)
+			l_count := a_value.count
+			l_decoder.read_string (l_count)
+			l_decoded_string := l_decoder.last_string
+			l_count := l_decoded_string.count
+			create binary_value.make (1, l_count)
+			from l_index := 1 until l_index > l_count loop
+				binary_value.put (l_decoded_string.item (l_index), l_index)
+				l_index := l_index + 1
 			end
 		ensure
 			static_properties_computed: are_static_properties_computed
@@ -125,7 +125,7 @@ feature -- Comparison
 		do
 			if other.is_base64_binary then
 				a_count := binary_value.count
-				if a_count /= other.as_base64_binary.binary_value.count then
+				if a_count = other.as_base64_binary.binary_value.count then
 					Result := True
 					from an_index := 1 until not Result or else an_index > a_count loop
 						Result := binary_value.item (an_index) = other.as_base64_binary.binary_value.item (an_index)

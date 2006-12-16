@@ -29,10 +29,11 @@ feature {NONE} -- Initialization
 			-- Establsh invariant.
 		require
 			valid_node_kind: a_node_type = Element_node or else
-			-- a_node_type = Attribute_node or else
-			a_node_type = Text_node -- or else
---			a_node_type = Comment_node or else
---			a_node_type = Processing_instruction_node
+				a_node_type = Attribute_node or else
+				a_node_type = Text_node or else
+				a_node_type = Comment_node or else
+				a_node_type = Namespace_node or else
+				a_node_type = Processing_instruction_node
 			string_value_not_void: a_string_value /= Void
 		do
 			node_type := a_node_type
@@ -92,6 +93,8 @@ feature -- Access
 				Result := "processing-instruction"
 			when Text_node then
 				Result := "text"
+			when Namespace_node then
+				Result := "namespace"
 			when Comment_node then
 				Result := "comment"
 			end
@@ -128,13 +131,25 @@ feature -- Access
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		local
-			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
+			l_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
+			l_string_value: XM_XPATH_STRING_VALUE
 		do
-			if type_annotation = type_factory.untyped_type.fingerprint or else type_annotation = type_factory.untyped_atomic_type.fingerprint then
-				create an_untyped_atomic_value.make (string_value)
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (an_untyped_atomic_value)
+			inspect
+				node_type
+			when Comment_node, Processing_instruction_node then
+				create l_string_value.make (string_value)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (l_string_value)
+			when Text_node, Namespace_node then
+				create l_untyped_atomic_value.make (string_value)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (l_untyped_atomic_value)
 			else
-				todo ("typed_value", True)
+				if type_annotation = type_factory.untyped_type.fingerprint or else type_annotation = type_factory.untyped_atomic_type.fingerprint then
+					create l_untyped_atomic_value.make (string_value)
+					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (l_untyped_atomic_value)
+				else
+					-- schema-aware
+					todo ("typed_value", True)
+				end
 			end
 		end
 
@@ -143,16 +158,17 @@ feature -- Access
 		do
 			inspect
 				node_type
-			when Element_node then
+			when Comment_node, Processing_instruction_node then
+				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+			when Text_node, Namespace_node then
+				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+			else
 				if type_annotation = type_factory.untyped_type.fingerprint or else type_annotation = type_factory.untyped_atomic_type.fingerprint then
 					create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
 				else
+					-- schema-aware
 					todo ("atomized_value", True)
-				end
-			when Text_node then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
-			else
-				todo ("atomized_value", True)
+				end				
 			end
 		end
 			
@@ -204,6 +220,8 @@ feature -- Duplication
 
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
 			-- Copy `Current' to `a_receiver'.
+		local
+			l_type_annotation, l_code: INTEGER
 		do
 			inspect
 				node_type
@@ -215,17 +233,27 @@ feature -- Duplication
 				check
 					elements_not_copied: False
 				end
---			when Attribute_node then
---				if copy_annotations then
---					a_type_annotation := type_annotation
---				else
---					a_type_annotation := -1
---				end
---				a_receiver.notify_attribute (name_code, a_type_annotation, string_value, 0)
---			when Processing_instruction_node then
+			when Attribute_node then
+				if copy_annotations then
+					l_type_annotation := type_annotation
+				else
+					l_type_annotation := -1
+				end
+				a_receiver.notify_attribute (name_code, l_type_annotation, string_value, 0)
+			when Processing_instruction_node then
+				a_receiver.notify_processing_instruction (local_part, string_value, 0)
 			when Text_node then
 				a_receiver.notify_characters (string_value, 0)
---			when Comment_node then			
+			when Comment_node then
+				a_receiver.notify_comment (string_value, 0)
+			when Namespace_node then
+				if shared_name_pool.is_namespace_code_allocated (local_part, string_value) then
+					l_code := shared_name_pool.namespace_code (local_part, string_value)
+				else
+					shared_name_pool.allocate_namespace_code (local_part, string_value)
+					l_code := shared_name_pool.last_namespace_code
+				end
+				a_receiver.notify_namespace (l_code, 0)
 			end
 		end
 
@@ -237,10 +265,11 @@ invariant
 
 	no_document: document = Void
 	valid_node_type: node_type = Text_node or else
--- node_type = Attribute_node or else
-	node_type = Element_node --or else
---	node_type = Comment_node or else
---	node_type = Processing_instruction_node
+		node_type = Attribute_node or else
+		node_type = Element_node or else
+		node_type = Comment_node or else
+		node_type = Namespace_node or else
+		node_type = Processing_instruction_node
 	no_parent: parent = Void
 
 end

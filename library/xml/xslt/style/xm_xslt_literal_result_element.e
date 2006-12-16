@@ -239,6 +239,7 @@ feature -- Element change
 				end
 				if l_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_content.make end
 				create l_fixed_element.make (a_executable, result_name_code, namespace_codes, Void, Void, validation, is_inherit_namespaces, l_content)
+				l_fixed_element.set_base_uri (base_uri)
 				last_generated_expression := l_fixed_element
 			end
 		end

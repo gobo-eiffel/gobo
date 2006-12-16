@@ -78,7 +78,7 @@ feature -- Element change
 		do
 			create {XM_XSLT_COMPILED_COPY_OF} last_generated_expression.make (an_executable,
 																									 select_expression,
-																									 copy_namespaces)
+																									 copy_namespaces, base_uri)
 		end
 
 feature {NONE} -- Implementation

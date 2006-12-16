@@ -64,6 +64,20 @@ feature -- Access
 			Result := a_context.context_item.as_node.name_code
 		end
 
+	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING is
+			-- Re-calculated base URI
+		local
+			l_item: XM_XPATH_ITEM
+		do
+			l_item := a_context.context_item
+			if l_item /= Void and then l_item.is_node then
+				Result := l_item.as_node.base_uri
+			end
+			if Result = Void then
+				Result := ""
+			end
+		end
+
 feature -- Status report
 
 	display (a_level: INTEGER) is

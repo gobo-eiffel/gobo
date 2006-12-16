@@ -173,7 +173,7 @@ feature -- Evaluation
 				last_evaluated_item := base_expression.last_evaluated_item.as_atomic_value.convert_to_type (target_type)
 			else
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ",
-																																			 target_type.conventional_name), Xpath_errors_uri, "XPTY0004", Dynamic_error)
+																																			 target_type.conventional_name), Xpath_errors_uri, "FORG0001", Dynamic_error)
 			end
 			if last_evaluated_item = Void and then not is_empty_allowed then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Target type for cast as does not allow empty sequence",

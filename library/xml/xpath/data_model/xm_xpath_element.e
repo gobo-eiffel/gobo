@@ -19,6 +19,12 @@ inherit
 			type_annotation, is_nilled, base_uri, is_element, as_element
 		end
 
+	UC_IMPORTED_UTF8_ROUTINES
+		export {NONE} all end
+
+	UT_URL_ENCODING
+		export {NONE} all end
+
 	XM_UNICODE_CHARACTERS_1_1
 
 feature -- Access
@@ -56,8 +62,10 @@ feature -- Access
 	base_uri: STRING is
 			-- Base URI
 		local
+			l_uri: UT_URI
 			l_xml_base, l_initial_system_id: STRING
 			l_parent: XM_XPATH_COMPOSITE_NODE
+			l_resolved: BOOLEAN
 		do
 			l_xml_base := attribute_value (Xml_base_type_code)
 			if l_xml_base /= Void then
@@ -67,11 +75,29 @@ feature -- Access
 				l_parent := parent
 				if l_parent = Void then
 					Result := l_initial_system_id
-				elseif
-					STRING_.same_string (l_parent.system_id, l_initial_system_id) then
+					l_resolved := True
+				elseif STRING_.same_string (l_parent.system_id, l_initial_system_id) then
 					Result := l_parent.base_uri
+					l_resolved := True
 				else
 					Result := l_initial_system_id
+				end
+			end
+			if has_excluded_characters (Result) then
+				Result := escape_custom (utf8.to_utf8 (Result), unescaped_uri_characters, False)
+			end
+			if not l_resolved then
+				l_parent := parent
+				if l_parent /= Void then
+					create l_uri.make (l_parent.base_uri)
+					create l_uri.make_resolve (l_uri, Result)
+					Result := l_uri.full_reference
+				elseif l_initial_system_id = Void then
+					create l_uri.make (system_id)
+					if l_uri.is_absolute then
+						create l_uri.make_resolve (l_uri, Result)
+						Result := l_uri.full_reference
+					end
 				end
 			end
 		end
@@ -104,15 +130,17 @@ feature -- Access
 		do
 			if STRING_.same_string (Xml_prefix, an_xml_prefix) then
 				Result := Xml_uri_code
-			elseif shared_name_pool.is_code_for_prefix_allocated (an_xml_prefix) then
-				a_prefix_code := shared_name_pool.code_for_prefix (an_xml_prefix)
 			else
-				a_prefix_code := -1
-			end
-			if a_prefix_code = -1 then
-				Result := -1
-			else
-				Result := uri_code_for_prefix_code (a_prefix_code)
+				if shared_name_pool.is_code_for_prefix_allocated (an_xml_prefix) then
+					a_prefix_code := shared_name_pool.code_for_prefix (an_xml_prefix)
+				else
+					a_prefix_code := -1
+				end
+				if a_prefix_code = -1 then
+					Result := -1
+				else
+					Result := uri_code_for_prefix_code (a_prefix_code)
+				end
 			end
 		ensure
 			nearly_positive_result: Result > -2
@@ -200,6 +228,18 @@ feature {NONE} -- Access
 
 	nilled_property: BOOLEAN
 			-- Nilled property from the infoset
+
+	unescaped_uri_characters: DS_HASH_SET [CHARACTER] is
+			-- Characters not to be escaped for fn:encode-for-uri()
+		local
+			a_character_set: STRING
+		once
+			a_character_set := STRING_.concat (Rfc_lowalpha_characters, Rfc_upalpha_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_digit_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_mark_characters)
+			a_character_set := STRING_.appended_string (a_character_set, "#")
+			Result := new_character_set (a_character_set)
+		end
 
 invariant
 	-- namespaces_have_unique_names: All namespace nodes must have distinct names.

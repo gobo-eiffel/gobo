@@ -36,15 +36,15 @@ feature {NONE} -- Initialization
 		require
 			value_is_hexadecimal: a_value /= Void and then STRING_.is_hexadecimal (a_value) and then a_value.count \\ 2 = 0
 		local
-			an_index, a_count, a_code: INTEGER
+			l_index, l_count, l_code: INTEGER
 		do
 			make_atomic_value
-			a_count := a_value.count
-			create binary_value.make (1, a_count)
-			from an_index := 1 until an_index > a_count loop
-				a_code := 16 * hexadecimal_digit_to_integer (a_value.item (an_index)) + hexadecimal_digit_to_integer (a_value.item (an_index + 1))
-				an_index := an_index + 2
-				binary_value.put (INTEGER_.to_character (a_code), an_index // 2)
+			l_count := a_value.count
+			create binary_value.make (1, l_count // 2)
+			from l_index := 1 until l_index > l_count loop
+				l_code := 16 * hexadecimal_digit_to_integer (a_value.item (l_index)) + hexadecimal_digit_to_integer (a_value.item (l_index + 1))
+				l_index := l_index + 2
+				binary_value.put (INTEGER_.to_character (l_code), l_index // 2)
 			end
 		ensure
 			static_properties_computed: are_static_properties_computed
@@ -80,12 +80,12 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		local
-			an_index, a_count: INTEGER
+			l_index, l_count: INTEGER
 		do
-			a_count := binary_value.count; if a_count > 32 then a_count := 32 end
-			from an_index := 1 until an_index > count loop
-				Result := INTEGER_.bit_xor (INTEGER_.bit_shift_left (Result, 1), binary_value.item (an_index).code)
-				an_index := an_index + 1
+			l_count := binary_value.count; if l_count > 32 then l_count := 32 end
+			from l_index := 1 until l_index > count loop
+				Result := INTEGER_.bit_xor (INTEGER_.bit_shift_left (Result, 1), binary_value.item (l_index).code)
+				l_index := l_index + 1
 			end
 			if Result < 0 then Result := 0 - Result end
 		end
@@ -93,12 +93,14 @@ feature -- Access
 	string_value: STRING is
 			-- Value of the item as a string
 		local
-			an_index, a_count: INTEGER
+			l_index, l_count, l_code: INTEGER
 		do
-			a_count := binary_value.count; Result := ""
-			from an_index := 1 until an_index > a_count loop
-				Result := Result + INTEGER_.to_hexadecimal (binary_value.item (an_index).code, True)
-				an_index := an_index + 1
+			l_count := binary_value.count; Result := ""
+			from l_index := 1 until l_index > l_count loop
+				l_code := binary_value.item (l_index).code
+				Result := Result + INTEGER_.to_hexadecimal (l_code // 16, True)
+				Result := Result + INTEGER_.to_hexadecimal (l_code \\ 16, True)
+				l_index := l_index + 1
 			end
 		end
 
@@ -107,15 +109,15 @@ feature -- Comparison
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
 		local
-			an_index, a_count: INTEGER
+			l_index, l_count: INTEGER
 		do
 			if other.is_hex_binary then
-				a_count := binary_value.count
-				if a_count /= other.as_hex_binary.binary_value.count then
+				l_count := binary_value.count
+				if l_count = other.as_hex_binary.binary_value.count then
 					Result := True
-					from an_index := 1 until not Result or else an_index > a_count loop
-						Result := binary_value.item (an_index) = other.as_hex_binary.binary_value.item (an_index)
-						an_index := an_index + 1
+					from l_index := 1 until not Result or else l_index > l_count loop
+						Result := binary_value.item (l_index) = other.as_hex_binary.binary_value.item (l_index)
+						l_index := l_index + 1
 					end
 				end
 			end

@@ -217,7 +217,7 @@ feature -- Status report
 				create a_duration_parser.make
 				Result := a_duration_parser.is_duration (value)
 			elseif a_required_type = type_factory.hex_binary_type then
-				Result := STRING_.is_hexadecimal (string_value)
+				Result := STRING_.is_hexadecimal (string_value) and string_value.count \\ 2 = 0
 			elseif a_required_type = type_factory.base64_binary_type then
 				Result := STRING_.is_base64 (string_value)
 			end
