@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Replace a pattern from a file"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="replace_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2006</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Jocelyn</firstname><surname>Fiat</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+	<title>replace</title>
+
+	<section id="replace_description">
+		<title>Description</title>
+		<para>
+			Replace a pattern from a file
+		</para>
+	</section>
+
+	<section id="replace_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>File to be processed.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>to_file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>File to save replacement's result to. If not defined `file' is used as `to_file' value.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>to_directory</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Directory to which file(s)'s result should be saved to</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid directoryname pointing to existing directory</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>match</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Regular expressions defining the pattern to be replaced by</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid regular expression</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>			
+			<varlistentry>
+				<term>token</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Text to be replaced by</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>			
+			<varlistentry>
+				<term>replace</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Replace `match' or `token' entities by this value. This value can use regexp patterns such as \1\.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>		
+			<varlistentry>
+				<term>flags</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Flags to precise match replacement (g: global, i: caseless; m: multiline; s: singeline)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>string composed by g, i, m or s.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>non global, non caseless and singleline-</para>
+				</listitem>
+			</varlistentry>			
+		</variablelist>
+	</section>
+
+	<section id="replace_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="replace">
+    <element name="replace">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <group>
+          <attribute name="file"/>
+        </group>
+        <group>
+          <attribute name="file"/>
+          <attribute name="to_file"/>
+        </group>
+        <group>
+          <attribute name="file"/>
+          <attribute name="to_directory"/>
+        </group>
+        <group>
+          <attribute name="to_directory"/>
+          <ref name="fileset"/>
+        </group>
+      </choice>
+	  <choice>
+		  <group>
+			<attribute name="token" />
+			<attribute name="replace" />
+		  </group>
+		  <group>
+			<attribute name="match" />
+			<attribute name="replace" />
+		  </group>
+      </choice>
+      <optional>
+		<attribute name="flags" />
+      </optional>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</section>
+
+	<section id="replace_examples">
+		<title>Examples</title>
+
+		<programlisting><![CDATA[
+  <replace file="test.txt" to_file="new_test.txt" token="foo" replace="BAR" flags="gi" />
+  <replace file="new_test.txt" match="([0-9]+)" replace="NUM(\1\)" flags="gi" />
+  <replace file="new_test.txt" match="((.)\2)" replace="[\1\]" flags="gi"  />
+  <replace dir="${cwd}" token="123" replace="321" flags="g" >
+	  <fileset include="@(**/*.txt)" />
+  </replace>
+]]>
+		</programlisting>
+	</section>
+
+</chapter>

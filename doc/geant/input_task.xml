@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Input Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="input_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2006</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Jocelyn</firstname><surname>Fiat</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+	<title>input</title>
+
+	<section id="input_description">
+		<title>Description</title>
+		<para>
+			Input a message from stdin.
+		</para>
+	</section>
+
+	<section id="input_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>message</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Message to be echoed</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>variable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>variable which will hold the input value</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid variable name</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>defaultvalue</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>If defined, this value is the default input value</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid value (text)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>validargs</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>If defined, this value defines the valid input values</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>comma separated string containing valid input values</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>validregexp</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>If defined, this input value must be matched by the regular expression</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>regular expression (text)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>answer_required</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>If False, an empty input value is valid, otherwise the input value must be non empty</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid boolean (True|False)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>True</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</section>
+
+	<section id="input_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+<define name="input">
+  <element name="input">
+    <ref name="dir_if_unless"/>
+    <attribute name="message"/>
+    <attribute name="variable"/>
+    <optional>
+      <attribute name="defaultvalue"/>
+      <attribute name="validargs"/>
+      <attribute name="validregexp"/>
+	  <attribute name="answer_required">
+          <!-- runtime evaluation
+          <choice>
+            <value>true</value>
+            <value>false</value>
+          </choice>
+          -->
+        </attribute>
+    </optional>
+  </element>
+</define>
+]]>
+		</programlisting>
+	</section>
+
+	<section id="input_examples">
+		<title>Examples</title>
+
+		<programlisting><![CDATA[
+  <input message="Do you want to continue ?" variable="answer" defaultvalue="y" validargs="y,n" />
+  <input message="Enter a string :" variable="answer" answer_required="true" />
+  <input message="Enter a number :" variable="answer" validregexp="^[0-9]+$" answer_required="true" />
+]]>
+		</programlisting>
+	</section>
+
+</chapter>
