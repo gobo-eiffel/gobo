@@ -48,10 +48,6 @@ create
 
 	make
 
-create {ET_FEATURE_CHECKER}
-
-	make_from_checker
-
 feature -- Factory
 
 	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET is

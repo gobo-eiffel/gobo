@@ -27,7 +27,6 @@ inherit
 			make as make_feature_checker
 		redefine
 			has_fatal_error,
-			make_from_checker, set_state,
 			check_external_function_validity,
 			check_external_procedure_validity,
 			check_check_instruction_validity,
@@ -104,10 +103,6 @@ create
 
 	make
 
-create {ET_FEATURE_CHECKER}
-
-	make_from_checker
-
 feature {NONE} -- Initialization
 
 	make (a_system: like current_system) is
@@ -141,28 +136,6 @@ feature {NONE} -- Initialization
 			create string_index.make (0)
 		ensure
 			current_system_set: current_system = a_system
-		end
-
-	make_from_checker (a_builder: like Current) is
-			-- Create a new dynamic type set builder from `a_builder'.
-		do
-			if ANY_.same_types (a_builder, Current) then
-				standard_copy (a_builder)
-				current_class := universe.unknown_class
-				current_type := current_class
-				current_feature := dummy_feature
-				current_feature_impl := dummy_feature.implementation_feature
-				current_class_impl := current_feature_impl.implementation_class
-				create actual_context.make_with_capacity (current_type, 10)
-				create formal_context.make_with_capacity (current_type, 10)
-				create instruction_context.make_with_capacity (current_type, 10)
-				create expression_context.make_with_capacity (current_type, 10)
-				create assertion_context.make_with_capacity (current_type, 10)
-				current_target_type := universe.any_class
-				current_context := actual_context
-			else
-				make (a_builder.current_system)
-			end
 		end
 
 feature -- Factory
@@ -4059,21 +4032,6 @@ feature {ET_FEATURE_CHECKER} -- Access
 
 	string_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of string expressions in `dynamic_type_sets'
-
-feature {ET_FEATURE_CHECKER} -- Status report
-
-	set_state (other: like Current) is
-			-- Set current state with state of `other'.
-		do
-			precursor (other)
-			current_dynamic_type := other.current_dynamic_type
-			current_dynamic_feature := other.current_dynamic_feature
-			no_debug := other.no_debug
-			no_assertion := other.no_assertion
-		ensure then
-			current_dynamic_type_set: current_dynamic_type = other.current_dynamic_type
-			current_dynamic_feature_set: current_dynamic_feature = other.current_dynamic_feature
-		end
 
 feature {NONE} -- Implementation
 
