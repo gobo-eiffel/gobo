@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1193,9 +1193,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				an_actual := a_context.base_type_actual (index, a_universe)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
-						-- No type other than itself conforms to
-						-- a formal generic type.
-					Result := False
+						-- No type other than itself conforms to a formal generic type,
+						-- unless it is declared as 'reference' in which case 'NONE'
+						-- conforms to it.
+					if is_type_reference (a_context, a_universe) and other.direct_base_class (a_universe) = a_universe.none_class then
+						Result := True
+					else
+						Result := False
+					end
 				else
 					Result := an_actual.conforms_from_class_type (other, other_context, a_context.root_context, a_universe)
 				end
@@ -1421,9 +1426,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				an_actual := a_context.base_type_actual (index, a_universe)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
-						-- No type other than itself conforms to
-						-- a formal generic type.
-					Result := False
+						-- No type other than itself conforms to a formal generic type,
+						-- unless it is declared as 'reference' in which case 'NONE'
+						-- conforms to it.
+					if is_type_reference (a_context, a_universe) and other.direct_base_class (a_universe) = a_universe.none_class then
+						Result := True
+					else
+						Result := False
+					end
 				else
 					Result := an_actual.reference_conforms_from_class_type (other, other_context, a_context.root_context, a_universe)
 				end
