@@ -14,6 +14,8 @@ class XM_XPATH_ARITHMETIC_ROUTINES
 
 inherit
 
+	ANY
+
 	XM_XPATH_TYPE
 		export {NONE} all end
 
@@ -30,7 +32,7 @@ feature {NONE} -- Implementation
 	Duration_multiplication_action: INTEGER is 6
 	Duration_division_action: INTEGER is 7
 			-- Arithmetic action need on operands
-	
+
 	action (t1, t2: XM_XPATH_ITEM_TYPE; a_operator: INTEGER): INTEGER is
 			-- Action needed for `t1' and `t2'
 		require
@@ -83,7 +85,7 @@ feature {NONE} -- Implementation
 					elseif t1 = type_factory.date_time_type and (t2 = type_factory.year_month_duration_type or t2 = type_factory.day_time_duration_type) then
 						Result := Date_and_duration_action
 					else
-						Result := Unknown_action						
+						Result := Unknown_action
 					end
 				end
 			end
