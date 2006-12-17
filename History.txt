@@ -9,6 +9,11 @@ Version 3.5 - ????
 	* Added attribute 'force' to task <xslt>. Use this attribute to
 	  generate output that already exists and is newer than the input.
 
+	* Added task 'input' to get input value.
+
+	* Added task 'replace' which permit to replace token or pattern in a
+	file.
+
 	getest:
 
 	* Added command-line option --default_test to specify whether the
