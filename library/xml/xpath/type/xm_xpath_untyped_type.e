@@ -41,11 +41,11 @@ feature -- Access
 			Result := True
 		end
 
-	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
-			-- Does `an_item' conform to `Current'?
+	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN is
+			-- Does `a_item' conform to `Current'?
 		
 		do
-			Result := is_same_type (an_item.item_type)
+			Result := is_same_type (a_item.item_type)
 		end
 
 	super_type: XM_XPATH_ITEM_TYPE is

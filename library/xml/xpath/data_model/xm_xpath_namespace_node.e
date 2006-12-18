@@ -201,7 +201,7 @@ feature -- Access
 			when Ancestor_axis then
 				Result := element.new_axis_iterator_with_node_test (Ancestor_or_self_axis, a_node_test)
 			when Ancestor_or_self_axis then
-				if a_node_test.matches_item (Current) then
+				if a_node_test.matches_item (Current, False) then
 					create {XM_XPATH_PREPEND_ITERATOR [XM_XPATH_NODE]} Result.make (Current, element.new_axis_iterator_with_node_test (Ancestor_or_self_axis, a_node_test).as_axis_iterator)
 				else
 					Result := element.new_axis_iterator_with_node_test (Ancestor_or_self_axis, a_node_test)
@@ -214,7 +214,7 @@ feature -- Access
 			when Following_axis then
 				--TODO
 			when Parent_axis then
-				if a_node_test.matches_item (element) then
+				if a_node_test.matches_item (element, False) then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (element)
 				else
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
@@ -222,7 +222,7 @@ feature -- Access
 			when Preceding_axis then
 				--TODO
 			when Self_axis then
-				if a_node_test.matches_item (Current) then
+				if a_node_test.matches_item (Current, False) then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 				else
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make

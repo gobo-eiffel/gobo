@@ -105,7 +105,7 @@ feature -- Cursor movement
 			cursor.start; position := 1
 			from
 				if not cursor.after then create item.make (element, cursor.item, position) end
-			until cursor.after or else node_test.matches_item (item) loop
+			until cursor.after or else node_test.matches_item (item, False) loop
 				cursor.forth; position := position + 1
 				if not cursor.after then create item.make (element, cursor.item, position) end
 			end
@@ -118,7 +118,7 @@ feature -- Cursor movement
 			cursor.forth; position := position + 1
 			from
 				if not cursor.after then create item.make (element, cursor.item, position) end
-			until cursor.after or else node_test.matches_item (item) loop
+			until cursor.after or else node_test.matches_item (item, False) loop
 				cursor.forth; position := position + 1
 			if not cursor.after then create item.make (element, cursor.item, position) end
 			end

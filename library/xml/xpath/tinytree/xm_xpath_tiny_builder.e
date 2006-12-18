@@ -238,24 +238,25 @@ feature -- Events
 	notify_processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
 		local
-			a_name_code, a_previous_sibling: INTEGER
+			l_name_code, l_previous_sibling, l_comment_start: INTEGER
 		do
 			if not shared_name_pool.is_name_code_allocated ("", "", a_target) then
 
 				-- TODO need to check for resource exhaustion in name pool
 				
 				shared_name_pool.allocate_name ("", "", a_target)
-				a_name_code := shared_name_pool.last_name_code
+				l_name_code := shared_name_pool.last_name_code
 			else
-				a_name_code := shared_name_pool.name_code ("", "", a_target) 
+				l_name_code := shared_name_pool.name_code ("", "", a_target) 
 			end
+			l_comment_start := tree.next_comment_start
 			tree.store_comment (a_data_string)
-			tree.add_node (Processing_instruction_node, current_depth, tree.comment_buffer.count, a_data_string.count, a_name_code)
+			tree.add_node (Processing_instruction_node, current_depth, l_comment_start, a_data_string.count, l_name_code)
 			node_number := tree.last_node_added
 
-			a_previous_sibling := previously_at_depth.item (current_depth)
-			if a_previous_sibling > 0 then
-				tree.set_next_sibling (node_number, a_previous_sibling)
+			l_previous_sibling := previously_at_depth.item (current_depth)
+			if l_previous_sibling > 0 then
+				tree.set_next_sibling (node_number, l_previous_sibling)
 			end
 			tree.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
@@ -272,15 +273,16 @@ feature -- Events
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
 		local
-			a_previous_sibling: INTEGER
+			l_previous_sibling, l_comment_start: INTEGER
 		do
+			l_comment_start := tree.next_comment_start
 			tree.store_comment (a_content_string)
-			tree.add_node (Comment_node, current_depth, tree.comment_buffer.count, a_content_string.count, -1)
+			tree.add_node (Comment_node, current_depth, l_comment_start, a_content_string.count, -1)
 			node_number := tree.last_node_added
 
-			a_previous_sibling := previously_at_depth.item (current_depth)
-			if a_previous_sibling > 0 then
-				tree.set_next_sibling (node_number, a_previous_sibling)
+			l_previous_sibling := previously_at_depth.item (current_depth)
+			if l_previous_sibling > 0 then
+				tree.set_next_sibling (node_number, l_previous_sibling)
 			end
 			tree.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)

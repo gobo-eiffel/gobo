@@ -81,20 +81,20 @@ feature -- Access
 				Result := normalized_duration.string_value
 			else
 				if is_negative then Result := "-P" else Result := "P" end
-				if duration.year /= 0 then Result := Result + duration.year.out + "Y" end
-				if duration.month /= 0 then Result := Result + duration.month.out + "M" end
-				if duration.day /= 0 then Result := Result + duration.day.out + "D" end
+				if duration.year /= 0 then Result := Result + duration.year.abs.out + "Y" end
+				if duration.month /= 0 then Result := Result + duration.month.abs.out + "M" end
+				if duration.day /= 0 then Result := Result + duration.day.abs.out + "D" end
 				if duration.hour /= 0 or else duration.minute /= 0 
 					or else duration.second /= 0 or else duration.millisecond /= 0 then
 					Result := Result + "T"
 				end
-				if duration.hour /= 0 then Result := Result + duration.hour.out + "H" end
-				if duration.minute /= 0 then Result := Result + duration.minute.out + "M" end
+				if duration.hour /= 0 then Result := Result + duration.hour.abs.out + "H" end
+				if duration.minute /= 0 then Result := Result + duration.minute.abs.out + "M" end
 				if duration.second /= 0 or else duration.millisecond /= 0 then
-					Result := Result + duration.second.out
+					Result := Result + duration.second.abs.out
 					if duration.millisecond /= 0 then
 						Result := Result + "."
-						a_string := duration.millisecond.out
+						a_string := duration.millisecond.abs.out
 						from  until a_string.count = 3 loop
 							a_string.insert_character ('0', 1)
 						end
@@ -155,9 +155,9 @@ feature -- Status report
 			-- Is `duration' in normal form?
 		do
 			Result := duration.month.abs < 12 and then duration.hour.abs < 24
-				and then duration.month < 0 implies  duration.hour <= 0
-				and then duration.hour < 0 implies duration.month <= 0
-				and then duration.year < 0 implies duration.hour <= 0
+				and then (duration.month < 0 implies  duration.hour <= 0)
+				and then (duration.hour < 0 implies duration.month <= 0)
+				and then (duration.year < 0 implies duration.hour <= 0)
 				and then duration.is_time_canonical
 		end
 
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 			a_minute := total_minutes \\ 60
 			total_hours := total_minutes // 60
 			an_hour := total_hours \\ 24
-			a_day :=  total_hours // 24
+			a_day :=  duration.day.abs + total_hours // 24
 			if total_months < 0 or else duration.millisecond_count < 0 then
 				create a_duration.make_precise (-a_year, -a_month, -a_day, -an_hour, -a_minute, -a_second, -a_millisecond)
 			else

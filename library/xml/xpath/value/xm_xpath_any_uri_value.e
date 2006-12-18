@@ -95,7 +95,7 @@ feature -- Status report
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
 		do
-			Result := other.is_string_value
+			Result := other.is_any_uri
 		end
 
 	display (a_level: INTEGER) is

@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 		local
 			a_message: STRING
 		do
-			if not required_item_type.matches_item (an_item) then
+			if not required_item_type.matches_item (an_item, True) then
 				a_message := STRING_.appended_string ("Required type of ", role_locator.message)
 				a_message := STRING_.appended_string (a_message, " is ")
 				a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)

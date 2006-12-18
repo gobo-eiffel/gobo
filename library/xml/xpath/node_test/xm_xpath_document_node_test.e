@@ -74,43 +74,43 @@ feature -- Access
 			Result := element_test.fingerprint
 		end
 
-	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
-			-- Does `an_item' conform to `Current'?
+	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN is
+			-- Does `a_item' conform to `Current'?
 		local
-			a_node: XM_XPATH_NODE
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			found, finished: BOOLEAN
-			a_node_type: INTEGER
+			l_node: XM_XPATH_NODE
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_found, l_finished: BOOLEAN
+			l_node_type: INTEGER
 		do
 
 			-- `Result' is `True' if there is exactly one element node child, no text node
 			--  children, and the element node matches the element test.
 
-			if an_item.is_node then
-				a_node := an_item.as_node
-				if a_node.node_type = Document_node then
+			if a_item.is_node then
+				l_node := a_item.as_node
+				if l_node.node_type = Document_node then
 					from
-						an_iterator := a_node.new_axis_iterator (Child_axis); an_iterator.start
+						l_iterator := l_node.new_axis_iterator (Child_axis); l_iterator.start
 					until
-						finished or else an_iterator.after
+						l_finished or else l_iterator.after
 					loop
-						a_node := an_iterator.item
-						a_node_type := a_node.node_type
-						if a_node_type = Text_node then
-							found := False
-							finished := True
-						elseif a_node_type = Element_node then
-							if found then
-								found := False
-								finished := True
+						l_node := l_iterator.item
+						l_node_type := l_node.node_type
+						if l_node_type = Text_node then
+							l_found := False
+							l_finished := True
+						elseif l_node_type = Element_node then
+							if l_found then
+								l_found := False
+								l_finished := True
 							else
-								found := element_test.matches_item (a_node)
-								if not found then finished := True end
+								l_found := element_test.matches_item (l_node, False)
+								if not l_found then l_finished := True end
 							end
 						end
-						an_iterator.forth
+						l_iterator.forth
 					end
-					Result := found
+					Result := l_found
 				end
 			end
 		end

@@ -307,7 +307,9 @@ feature -- Events
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
 		local
-			a_string: STRING
+			l_string, l_message: STRING
+			l_bad_character_code: INTEGER
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if not is_error then
 				if not is_output_open then
@@ -316,19 +318,37 @@ feature -- Events
 				if is_open_start_tag then
 					close_start_tag ("", False)
 				end
-				a_string := STRING_.concat ("<?", a_name)
-				if a_data_string.count > 0 then
-					a_string := STRING_.appended_string (a_string, " ")
-					a_string := STRING_.appended_string (a_string, a_data_string)
+				l_bad_character_code := bad_character_code (a_name)
+				if l_bad_character_code > 0 then
+					l_message := "Processing instruction target contains a character (decimal" + l_bad_character_code.out + ") not available in the selected encoding"
+					create l_error.make_from_string (l_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
+					transformer.report_fatal_error (l_error)
+				else
+					l_string := STRING_.concat ("<?", a_name)
+					l_bad_character_code := bad_character_code (a_data_string)
+					if l_bad_character_code > 0 then
+						l_message := "Processing instruction data contains a character (decimal" + l_bad_character_code.out + ") not available in the selected encoding"
+						create l_error.make_from_string (l_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
+						transformer.report_fatal_error (l_error)
+					else
+						if a_data_string.count > 0 then
+							l_string := STRING_.appended_string (l_string, " ")
+							l_string := STRING_.appended_string (l_string, a_data_string)
+						end
+						l_string := STRING_.appended_string (l_string, "?>")
+						output (l_string)
+					end
 				end
-				a_string := STRING_.appended_string (a_string, "?>")
-				output (a_string)
 			end
 			mark_as_written
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
+		local
+			l_bad_character_code: INTEGER
+			l_message: STRING
+			l_error: XM_XPATH_ERROR_VALUE		
 		do
 			if not is_error then
 				if not is_output_open then
@@ -338,8 +358,19 @@ feature -- Events
 					close_start_tag ("", False)
 				end
 				output ("<!--")
-				if not is_error then output (a_content_string) end
-				if not is_error then output ("-->") end
+				l_bad_character_code := bad_character_code (a_content_string)
+				if l_bad_character_code > 0 then
+					l_message := "Comment contains a character (decimal" + l_bad_character_code.out + ") not available in the selected encoding"
+					create l_error.make_from_string (l_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
+					transformer.report_fatal_error (l_error)
+				else
+					if not is_error then
+						output (a_content_string)
+					end
+					if not is_error then
+						output ("-->")
+					end
+				end
 			end
 			mark_as_written
 		end

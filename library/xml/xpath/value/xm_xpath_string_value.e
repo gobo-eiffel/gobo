@@ -110,7 +110,7 @@ feature -- Status report
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
 		do
-			Result := other.is_string_value
+			Result := other.is_string_value and not other.is_any_uri
 		end
 	
 	display (a_level: INTEGER) is
@@ -172,7 +172,7 @@ feature -- Status report
 				or else a_required_type = any_item then
 				Result := True
 			elseif a_required_type = type_factory.any_uri_type then
-				Result := True
+				Result := True -- TODO - not quite true - might contain # in fragment
 			elseif a_required_type = type_factory.qname_type then
 				Result := False -- not done directly, as a static context is necessary
 			elseif a_required_type = type_factory.date_type then

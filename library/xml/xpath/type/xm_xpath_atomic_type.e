@@ -74,17 +74,21 @@ feature -- Access
 			Result := Current
 		end
 
-	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
-			-- Does `an_item' conform to `Current'?
+	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN is
+			-- Does `a_item' conform to `Current'?
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
-			if an_item.is_atomic_value then
-				an_atomic_value := an_item.as_atomic_value
-				if fingerprint = an_atomic_value.item_type.as_atomic_type.fingerprint then
+			if a_item.is_atomic_value then
+				l_atomic_value := a_item.as_atomic_value
+				if fingerprint = l_atomic_value.item_type.as_atomic_type.fingerprint then
 					Result := True
 				else
-					Result := is_sub_type (an_item.item_type, Current)
+					Result := is_sub_type (a_item.item_type, Current)
+					if not Result and a_treat_uri_as_string then
+						-- allow promotion from anyURI to string
+						Result := (fingerprint = type_factory.string_type.fingerprint) and is_sub_type (l_atomic_value.item_type, type_factory.any_uri_type) 
+					end
 				end
 			end
 		end

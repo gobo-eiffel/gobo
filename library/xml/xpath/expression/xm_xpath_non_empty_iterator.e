@@ -79,7 +79,9 @@ feature -- Cursor movement
 		do
 			index := 1
 			base_iterator.start
-			if base_iterator.after then
+			if base_iterator.is_error then
+				set_last_error (base_iterator.error_value)
+			elseif base_iterator.after then
 				create l_error.make_from_string (STRING_.concat("An empty sequence is not allowed as the ", role_locator.message),
 															role_locator.namespace_uri, role_locator.error_code, Type_error)
 				set_last_error (l_error)

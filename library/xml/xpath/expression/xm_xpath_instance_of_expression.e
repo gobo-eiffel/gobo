@@ -106,7 +106,8 @@ feature -- Optimization
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static analysis of `Current' and its subexpressions
 		local
-			an_expression: XM_XPATH_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
+			l_relation: INTEGER
 		do
 			mark_unreplaced
 			base_expression.check_static_type (a_context, a_context_item_type)
@@ -125,15 +126,25 @@ feature -- Optimization
 					
 					-- See if we can get the answer by static analysis.
 					
-					if target_type.cardinality_subsumes (base_expression.cardinality) and then
-						is_sub_type (base_expression.item_type, target_type.primary_type) then
-						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
-						set_replacement (an_expression)
+					if target_type.cardinality_subsumes (base_expression.cardinality) then
+						l_relation := type_relationship (base_expression.item_type, target_type.primary_type)
+						if l_relation = Same_item_type or else l_relation = Subsumed_type then
+							create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (True)
+							set_replacement (l_expression)
+						elseif l_relation = Disjoint_types then
+							-- it might still be true - iff both sequences are empty
+							if (not base_expression.cardinality_allows_zero) or (not target_type.cardinality_allows_zero) then
+								create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (False)
+								set_replacement (l_expression)
+							end
+						end
 					end
 				end
 			end
 		end
-	
+
+	-- TODO: add optimize along the same lines
+
 feature -- Evaluation
 
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
@@ -154,11 +165,11 @@ feature -- Evaluation
 					counter := 0; finished := False
 					an_iterator.start
 				until
-					finished or else an_iterator.after
+					finished or else an_iterator.is_error or else an_iterator.after
 				loop
 					an_item := an_iterator.item
 					counter := counter + 1
-					if not target_type.primary_type.matches_item (an_item) then
+					if not target_type.primary_type.matches_item (an_item, False) then
 						create last_boolean_value.make (False); finished := True
 					elseif counter = 2 and then not target_type.cardinality_allows_many then
 						create last_boolean_value.make (False)

@@ -54,10 +54,10 @@ feature -- Access
 		do
 			length := tree.beta_value (node_number)
 			start := tree.alpha_value (node_number)
-			Result := tree.comment_buffer.substring (start + 1, start + length)
+			Result := tree.comment_buffer.substring (start, start + length - 1)
 		end
 
-base_uri: STRING is
+	base_uri: STRING is
 			-- Base URI
 		local
 			l_initial_system_id: STRING

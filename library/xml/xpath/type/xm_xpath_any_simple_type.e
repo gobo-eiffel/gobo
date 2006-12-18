@@ -47,7 +47,7 @@ feature -- Access
 			Result := type_factory.any_atomic_type
 		end
 
-	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
+	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN is
 			-- Does `an_item' conform to `Current'?
 		
 		do

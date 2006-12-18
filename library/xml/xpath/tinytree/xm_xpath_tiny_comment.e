@@ -52,7 +52,7 @@ feature -- Access
 		do
 			an_index := tree.alpha_value (node_number)
 			a_length  := tree.beta_value (node_number)
-			Result := tree.comment_buffer.substring (an_index + 1, an_index + a_length)
+			Result := tree.comment_buffer.substring (an_index, an_index + a_length - 1)
 		end
 
 feature -- Duplication

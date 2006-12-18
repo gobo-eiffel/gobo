@@ -49,13 +49,13 @@ feature -- Access
 			Result := -1 -- Means can match multiple fingerprints
 		end
 
-	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
-			-- Does `an_item' conform to `Current'?
+	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN is
+			-- Does `a_item' conform to `Current'?
 		local
 			a_node: XM_XPATH_NODE
 		do
-			if an_item.is_node then
-				a_node := an_item.as_node
+			if a_item.is_node then
+				a_node := a_item.as_node
 				Result := matches_node (a_node.node_type, a_node.fingerprint, a_node.type_annotation)
 			end
 		end

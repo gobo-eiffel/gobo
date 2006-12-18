@@ -95,14 +95,14 @@ feature -- Access
 		local
 			a_decimal: MA_DECIMAL
 		do
-			if is_nan then
-				Result := "NaN"
-			elseif is_infinite then
+			if is_infinite then
 				if value = DOUBLE_.minus_infinity then
 					Result := "-INF"
 				else
 					Result := "INF"
 				end
+			elseif is_nan then
+				Result := "NaN"				
 			elseif value.abs >= 1.0e-6 or else value.abs < 1.0e6 then -- TODO: that was for double - check for float
 				create a_decimal.make_from_string (value.out)
 				Result := a_decimal.to_scientific_string

@@ -168,7 +168,11 @@ feature -- Status report
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
-			todo ("is-convertible", False)
+			if a_required_type = type_factory.string_type or
+				a_required_type = type_factory.untyped_atomic_type or
+				a_required_type = type_factory.qname_type then
+				Result := True
+			end
 		end
 
 feature -- Conversion
@@ -176,7 +180,13 @@ feature -- Conversion
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
 		do
-				todo ("convert-to-type", False)				
+			if a_required_type = type_factory.qname_type then
+				Result := Current
+			elseif a_required_type = type_factory.string_type then
+				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+			elseif a_required_type = type_factory.untyped_atomic_type then
+				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+			end
 		end
 
 feature {XM_XPATH_QNAME_VALUE} -- Local

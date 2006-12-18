@@ -758,7 +758,21 @@ feature -- Element change
 		do
 			character_buffer := STRING_.appended_string (character_buffer, characters)
 		end
-	
+
+	next_comment_start: INTEGER is
+			-- Start index of next comment to be stored
+		do
+			if comment_buffer = Void then
+				Result := 1
+			else
+				Result := comment_buffer.count + 1
+			end
+		ensure
+			strictly_positive_result: Result > 0
+			void_definition: comment_buffer = Void implies Result = 1
+			non_void_definition: comment_buffer /= Void implies Result = comment_buffer.count + 1
+		end
+
 	store_comment (a_comment_string: STRING) is
 			-- Store comment or processing instruction test
 		require

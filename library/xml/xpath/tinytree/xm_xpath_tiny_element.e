@@ -264,7 +264,7 @@ feature -- Duplication
 				when Comment_node then
 					close_pending := False
 					a_start_index := tree.alpha_value (a_next_node)
-					a_receiver.notify_comment (tree.comment_buffer.substring (a_start_index + 1, a_start_index + tree.beta_value (a_next_node)), 0)
+					a_receiver.notify_comment (tree.comment_buffer.substring (a_start_index, a_start_index + tree.beta_value (a_next_node) - 1), 0)
 				when Processing_instruction_node then
 					close_pending := False
 					a_node := tree.retrieve_node (a_next_node)

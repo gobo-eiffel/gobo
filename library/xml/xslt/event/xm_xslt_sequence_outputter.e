@@ -315,6 +315,7 @@ feature -- Events
 					shared_name_pool.allocate_name (Null_uri, Null_uri, a_name)
 					l_name_code := shared_name_pool.last_name_code
 				end
+				l_orphan.set_name_code (l_name_code)
 				append_item (l_orphan)
 			else
 				check

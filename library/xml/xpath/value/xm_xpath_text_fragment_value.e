@@ -110,14 +110,14 @@ feature -- Access
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 			when Child_axis, Descendant_axis then
 				a_node := child_text_node
-				if a_node_test.matches_item (a_node) then
+				if a_node_test.matches_item (a_node, False) then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (child_text_node)
 				else
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 				end
 			when Descendant_or_self_axis then
 				a_node := child_text_node
-				if a_node_test.matches_item (a_node) then
+				if a_node_test.matches_item (a_node, False) then
 					create a_node_list.make (2)
 					a_node_list.put (Current, 1)
 					a_node_list.put (child_text_node, 2)

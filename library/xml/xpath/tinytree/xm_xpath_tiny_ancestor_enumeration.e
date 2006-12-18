@@ -58,7 +58,7 @@ feature -- Cursor movement
 	start is
 			-- Move to next position
 		do
-			if include_self and node_test.matches_item (starting_node) then
+			if include_self and node_test.matches_item (starting_node, False) then
 				index := 1
 			else
 				forth
@@ -77,7 +77,7 @@ feature -- Cursor movement
 				l_node := current_item.parent
 				current_item := l_node
 			until
-				l_node = Void or else node_test.matches_item (l_node)
+				l_node = Void or else node_test.matches_item (l_node, False)
 			loop
 				l_node := l_node.parent
 			end

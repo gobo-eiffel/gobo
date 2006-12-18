@@ -300,13 +300,17 @@ feature {NONE} -- Implementation
 
 				-- M can also occur after T, in which case it designates minutes
 
-				if an_index > 0 and then a_time_designator = 0 or else an_index < a_time_designator then
+				if (an_index > 0 and then a_time_designator = 0) or else an_index < a_time_designator then
 					a_string := a_duration.substring (1, an_index - 1)
-					Result := a_string.is_integer and then a_string.index_of ('-', 1) = 0
+					Result := a_string.is_empty or (a_string.is_integer and then a_string.index_of ('-', 1) = 0)
 					if Result then
 						any_designator_found := True
-						current_month := a_string.to_integer
-						if is_negative then current_month := 0 - current_month end
+						if not a_string.is_empty then
+							current_month := a_string.to_integer
+							if is_negative then
+								current_month := 0 - current_month
+							end
+						end
 						Result := is_duration_after_month (a_duration.substring (an_index + 1, a_duration.count))
 					end
 				else
@@ -482,6 +486,7 @@ feature {NONE} -- Implementation
 								end
 								a_millisecond := a_string.to_integer
 								if a_round_digit > 4 then a_millisecond := a_millisecond + 1 end
+								if is_negative then a_millisecond := 0 - a_millisecond end
 								create last_cached_duration.make_precise (current_year, current_month, current_day, current_hour, current_minute, a_second, a_millisecond)
 							else
 								create last_cached_duration.make (current_year, current_month, current_day, current_hour, current_minute, a_second)

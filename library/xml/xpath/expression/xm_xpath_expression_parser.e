@@ -2319,10 +2319,10 @@ feature {NONE} -- Implementation
 		require
 			no_previous_parse_error: not is_parse_error
 		local
-			a_name_code: INTEGER
-			a_message, a_node_name: STRING
+			l_name_code: INTEGER
+			l_message, l_node_name: STRING
 		do
-			a_node_name := ""
+			l_node_name := ""
 			internal_last_parsed_node_test := Void
 			if is_empty then
 				if is_attribute then
@@ -2336,16 +2336,16 @@ feature {NONE} -- Implementation
 				if is_schema_declaration then
 					report_parse_error ("schema-attribute(...) or schema-element(...) require a QName, not *.", "XPST0003")
 				else
-					a_name_code := -1
+					l_name_code := -1
 				end
 			elseif tokenizer.last_token = Name_token then
-				a_node_name := tokenizer.last_token_value
-				generate_name_code (a_node_name, True)
-				a_name_code := last_generated_name_code
+				l_node_name := tokenizer.last_token_value
+				generate_name_code (l_node_name, True)
+				l_name_code := last_generated_name_code
 			else
-				a_message := STRING_.concat ("Unexpected ", display_current_token)
-				a_message := STRING_.appended_string (a_message, " after '(' in named node-kind test.")
-				report_parse_error (a_message, "XPST0003")
+				l_message := STRING_.concat ("Unexpected ", display_current_token)
+				l_message := STRING_.appended_string (l_message, " after '(' in named node-kind test.")
+				report_parse_error (l_message, "XPST0003")
 			end
 			if not is_parse_error and then internal_last_parsed_node_test = Void then
 				next_token ("In create_named_node_kind_test")
@@ -2353,7 +2353,7 @@ feature {NONE} -- Implementation
 					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 				elseif tokenizer.last_token = Right_parenthesis_token then
 					next_token ("In create_named_node_kind_test after ')'")
-					if a_name_code = -1 then
+					if l_name_code = -1 then
 						if is_attribute then
 							create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_attribute_test
 						else
@@ -2363,7 +2363,7 @@ feature {NONE} -- Implementation
 						if is_schema_declaration then
 							report_parse_error ("schema-attribute(...) or schema-element(...) not supported with a Basic-level XSLT processor.", "XPST0003")
 						else
-							create_bare_name_node_kind_test (a_name_code, a_node_name, is_attribute)
+							create_bare_name_node_kind_test (l_name_code, l_node_name, is_attribute)
 						end
 					end
 				elseif tokenizer.last_token = Comma_token then
@@ -2374,17 +2374,24 @@ feature {NONE} -- Implementation
 						if tokenizer.is_lexical_error then
 							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 						elseif tokenizer.last_token = Name_token then
-							create_named_node_kind_test_with_type_name (a_name_code, a_node_name, is_attribute)
+							l_node_name := tokenizer.last_token_value
+							generate_name_code (l_node_name, True)
+							l_name_code := last_generated_name_code
+							if l_name_code = -1 then
+								report_parse_error ("No name present for node-kind test with name", "XPST0003")
+							else
+								create_named_node_kind_test_with_type_name (l_name_code, l_node_name, is_attribute)
+							end
 						else
-							a_message := STRING_.concat ("Unexpected ", display_current_token)
-							a_message := STRING_.appended_string (a_message, " after ',' in named node-kind test.")
-							report_parse_error (a_message, "XPST0003")
+							l_message := STRING_.concat ("Unexpected ", display_current_token)
+							l_message := STRING_.appended_string (l_message, " after ',' in named node-kind test.")
+							report_parse_error (l_message, "XPST0003")
 						end
 					end
 				else
-					a_message := STRING_.concat ("Expected ',' or ')', found ", display_current_token)
-					a_message := STRING_.appended_string (a_message, " in named node-kind test.")
-					report_parse_error (a_message, "XPST0003")
+					l_message := STRING_.concat ("Expected ',' or ')', found ", display_current_token)
+					l_message := STRING_.appended_string (l_message, " in named node-kind test.")
+					report_parse_error (l_message, "XPST0003")
 				end
 			end
 		ensure
