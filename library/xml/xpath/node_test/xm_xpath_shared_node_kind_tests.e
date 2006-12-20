@@ -50,4 +50,10 @@ feature -- Access
 			create Result.make_comment_test
 		end
 
+	namespace_node_kind_test: XM_XPATH_NODE_KIND_TEST is
+			-- Namespace test
+		once
+			create Result.make_namespace_test
+		end
+
 end

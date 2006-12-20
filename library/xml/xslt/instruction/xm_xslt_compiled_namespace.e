@@ -17,8 +17,11 @@ inherit
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
 			promote_instruction, display, item_type, compute_cardinality,
-			compute_dependencies, sub_expressions, simplify
+			compute_dependencies, sub_expressions, simplify, evaluate_name_code
 		end
+
+	XM_XPATH_SHARED_NODE_KIND_TESTS
+		export {NONE} all end
 
 	XM_XPATH_RECEIVER_OPTIONS
 		export {NONE} all end
@@ -55,20 +58,9 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
-
-			-- The following is hardly conducive to good optimization,
-			--  but since removing namespace nodes from our data model,
-			--  we have little choice:
-			-- TODO: review the above - namespace nodes have been added back in.
-
-			Result := any_item
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
+			Result := namespace_node_kind_test
 		end
 
-	
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
@@ -139,53 +131,37 @@ feature -- Evaluation
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_prefix, a_uri: STRING
-			an_error: XM_XPATH_ERROR_VALUE
-			a_namespace_code: INTEGER
-			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
+			l_uri: STRING
+			l_error: XM_XPATH_ERROR_VALUE
+			l_namespace_code: INTEGER
+			l_receiver: XM_XPATH_SEQUENCE_RECEIVER
 		do
-			a_transformer := a_context.transformer
-			name.evaluate_as_string (a_context)
-			if name.last_evaluated_string.is_error then
-					name.last_evaluated_string.error_value.set_location (system_id, line_number)
-				a_transformer.report_fatal_error (name.last_evaluated_string.error_value)
-			else
-				a_prefix := name.last_evaluated_string.string_value
-				if not (a_prefix.count = 0 or else is_ncname (a_prefix)) then
-					create an_error.make_from_string (STRING_.concat ("Namespace prefix is invalid: ", a_prefix), Xpath_errors_uri, "XTDE0920", Dynamic_error)
-					an_error.set_location (system_id, line_number)
-					a_transformer.report_fatal_error (an_error)
-				elseif STRING_.same_string (a_prefix, Xmlns) then
-					create an_error.make_from_string ("Namespace prefix of 'xmlns' is not allowed", Xpath_errors_uri, "XTDE0920", Dynamic_error)
-					an_error.set_location (system_id, line_number)
-					a_transformer.report_fatal_error (an_error)
-				else
-					expand_children (a_context)
-					if not is_error then
-						a_uri := last_string_value
-						if STRING_.same_string (a_prefix, Xml_prefix) and then not STRING_.same_string (a_uri, Xml_prefix_namespace) then
-							create an_error.make_from_string ("Namespace prefix of 'xml' may only be used with 'http://www.w3.org/XML/1998/namespace'", Xpath_errors_uri, "XTDE0925", Dynamic_error)
-							an_error.set_location (system_id, line_number)
-							a_transformer.report_fatal_error (an_error)
-						elseif STRING_.same_string (a_uri, Xml_prefix_namespace) then
-							create an_error.make_from_string ("Namespace prefix of 'xml' must be used with 'http://www.w3.org/XML/1998/namespace'", Xpath_errors_uri, "XTDE0925", Dynamic_error)
-							an_error.set_location (system_id, line_number)
-							a_transformer.report_fatal_error (an_error)
-						elseif a_uri.count = 0 then
-							create an_error.make_from_string ("Namespace prefix is the empty string", Xpath_errors_uri, "XTDE0930", Dynamic_error)
-							an_error.set_location (system_id, line_number)
-							a_transformer.report_fatal_error (an_error)
+			evaluate_prefix (a_context)
+			if not a_context.transformer.is_error then
+				expand_children (a_context)
+				if not is_error then
+					l_uri := last_string_value
+					if STRING_.same_string (last_evaluated_prefix, Xml_prefix) and then not STRING_.same_string (l_uri, Xml_prefix_namespace) then
+						create l_error.make_from_string ("Namespace prefix of 'xml' may only be used with 'http://www.w3.org/XML/1998/namespace'", Xpath_errors_uri, "XTDE0925", Dynamic_error)
+						l_error.set_location (system_id, line_number)
+						a_context.transformer.report_fatal_error (l_error)
+					elseif STRING_.same_string (l_uri, Xml_prefix_namespace) then
+						create l_error.make_from_string ("Namespace prefix of 'xml' must be used with 'http://www.w3.org/XML/1998/namespace'", Xpath_errors_uri, "XTDE0925", Dynamic_error)
+						l_error.set_location (system_id, line_number)
+						a_context.transformer.report_fatal_error (l_error)
+					elseif l_uri.count = 0 then
+						create l_error.make_from_string ("Namespace prefix is the empty string", Xpath_errors_uri, "XTDE0930", Dynamic_error)
+						l_error.set_location (system_id, line_number)
+						a_context.transformer.report_fatal_error (l_error)
+					else
+						if shared_name_pool.is_namespace_code_allocated (last_evaluated_prefix, l_uri) then
+							l_namespace_code := shared_name_pool.namespace_code (last_evaluated_prefix, l_uri)
 						else
-							if shared_name_pool.is_namespace_code_allocated (a_prefix, a_uri) then
-								a_namespace_code := shared_name_pool.namespace_code (a_prefix, a_uri)
-							else
-								shared_name_pool.allocate_namespace_code (a_prefix, a_uri)
-								a_namespace_code := shared_name_pool.last_namespace_code
-							end
-							a_receiver := a_context.current_receiver
-							a_receiver.notify_namespace (a_namespace_code, Reject_duplicates)
+							shared_name_pool.allocate_namespace_code (last_evaluated_prefix, l_uri)
+							l_namespace_code := shared_name_pool.last_namespace_code
 						end
+						l_receiver := a_context.current_receiver
+						l_receiver.notify_namespace (l_namespace_code, Reject_duplicates)
 					end
 				end
 			end
@@ -196,6 +172,61 @@ feature {NONE} -- Implementation
 	name: XM_XPATH_EXPRESSION
 			-- Name
 
+	last_evaluated_prefix: STRING
+			-- Result from successful call to `evaluate_prefix
+	
+	evaluate_prefix (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Evaluate namespace prefix.
+		require
+			initialized: initialized
+			a_context_not_void: a_context /= Void
+		local
+			l_error: XM_XPATH_ERROR_VALUE
+		do
+			name.evaluate_as_string (a_context)
+			if name.last_evaluated_string.is_error then
+				name.last_evaluated_string.error_value.set_location (system_id, line_number)
+				a_context.transformer.report_fatal_error (name.last_evaluated_string.error_value)
+			else
+				last_evaluated_prefix := name.last_evaluated_string.string_value
+				if not (last_evaluated_prefix.is_empty or else is_ncname (last_evaluated_prefix)) then
+					create l_error.make_from_string (STRING_.concat ("Namespace prefix is invalid: ", last_evaluated_prefix), Xpath_errors_uri, "XTDE0920", Dynamic_error)
+					l_error.set_location (system_id, line_number)
+					a_context.transformer.report_fatal_error (l_error)
+				elseif STRING_.same_string (last_evaluated_prefix, Xmlns) then
+					create l_error.make_from_string ("Namespace prefix of 'xmlns' is not allowed", Xpath_errors_uri, "XTDE0920", Dynamic_error)
+					l_error.set_location (system_id, line_number)
+					a_context.transformer.report_fatal_error (l_error)
+				end
+			end
+		ensure
+			last_evaluated_prefix_not_void: last_evaluated_prefix /= Void
+		end
+	
+	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate name code.
+		local
+			l_context: XM_XSLT_EVALUATION_CONTEXT
+		do
+			l_context ?= a_context
+			check
+				xslt_context: l_context /= Void
+				-- this is XSLT
+			end
+			evaluate_prefix (l_context)
+			if l_context.transformer.is_error then
+				last_name_code := -1
+				set_last_error (l_context.transformer.last_error)
+			else
+				if shared_name_pool.is_name_code_allocated (Null_uri, Null_uri, last_evaluated_prefix) then
+					last_name_code := shared_name_pool.name_code (Null_uri, Null_uri, last_evaluated_prefix)
+				else
+					shared_name_pool.allocate_name (Null_uri, Null_uri, last_evaluated_prefix)
+					last_name_code := shared_name_pool.last_name_code
+				end
+			end
+		end
+	
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is

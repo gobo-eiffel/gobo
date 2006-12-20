@@ -173,7 +173,9 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		do
 			evaluate_item (a_context)
-			if last_evaluated_item /= Void and then last_evaluated_item.is_error then
+			if last_evaluated_item = Void then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+			elseif last_evaluated_item.is_error then
 				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
 			elseif last_evaluated_item.is_node then
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (last_evaluated_item.as_node)
@@ -244,7 +246,7 @@ feature {NONE} -- Implementation
 		do
 			last_name_code := -1
 		ensure
-			error_or_name_code_set: is_error or else last_name_code >= -1
+			error_or_name_code_set: is_error or last_name_code >= -1
 		end
 
 end
