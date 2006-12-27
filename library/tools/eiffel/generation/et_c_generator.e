@@ -2793,9 +2793,37 @@ feature {NONE} -- Instruction generation
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
+		local
+			l_call: ET_FEATURE_CALL_EXPRESSION
+			l_target: ET_EXPRESSION
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
 		do
--- TODO:
-print ("ET_C_GENERATOR.print_assigner_instruction%N")
+			l_call := an_instruction.call
+			if l_call.name.is_tuple_label then
+				print_operand (an_instruction.source)
+				fill_call_operands (1)
+				l_target := l_call.target
+				l_target_type_set := current_feature.dynamic_type_set (l_target)
+				if l_target_type_set = Void then
+						-- Internal error: the dynamic type set of `l_target'
+						-- should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					print_attribute_tuple_item_access (l_call.name.seed, l_target, l_target_type_set.static_type)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_expression (call_operands.first)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				call_operands.wipe_out
+			else
+				print_qualified_call_instruction (an_instruction)
+			end
 		end
 
 	print_assignment (an_instruction: ET_ASSIGNMENT) is

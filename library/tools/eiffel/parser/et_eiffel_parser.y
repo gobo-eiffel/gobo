@@ -3120,10 +3120,6 @@ Binary_expression: Expression E_FREEOP Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
 	| Expression E_MOD Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
-	| Expression '=' Expression
-		{ $$ := ast_factory.new_equality_expression ($1, $2, $3) }
-	| Expression E_NE Expression
-		{ $$ := ast_factory.new_equality_expression ($1, $2, $3) }
 	| Expression '<' Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
 	| Expression '>' Expression
@@ -3144,6 +3140,10 @@ Binary_expression: Expression E_FREEOP Expression
 		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_or_else_operator ($2, $3), $4) }
 	| Expression E_IMPLIES Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
+	| Expression '=' Expression
+		{ $$ := ast_factory.new_equality_expression ($1, $2, $3) }
+	| Expression E_NE Expression
+		{ $$ := ast_factory.new_equality_expression ($1, $2, $3) }
 	;
 
 Non_binary_expression: Bracket_target

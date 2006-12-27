@@ -1427,9 +1427,7 @@ feature -- AST nodes
 	new_assigner (an_assign: ET_KEYWORD; a_feature_name: ET_FEATURE_NAME): ET_ASSIGNER is
 			-- New assigner
 		do
-			if a_feature_name /= Void then
-				create Result.make (a_feature_name)
-			end
+			Result := a_feature_name
 		end
 
 	new_assigner_instruction (a_target: ET_FEATURE_CALL_EXPRESSION; an_assign: ET_SYMBOL; a_source: ET_EXPRESSION): ET_ASSIGNER_INSTRUCTION is

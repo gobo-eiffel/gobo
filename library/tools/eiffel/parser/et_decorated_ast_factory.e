@@ -1662,11 +1662,14 @@ feature -- AST nodes
 
 	new_assigner (an_assign: ET_KEYWORD; a_feature_name: ET_FEATURE_NAME): ET_ASSIGNER is
 			-- New assigner
+		local
+			l_assigner: ET_ASSIGN_FEATURE_NAME
 		do
 			if a_feature_name /= Void then
-				create Result.make (a_feature_name)
+				create l_assigner.make (a_feature_name)
+				Result := l_assigner
 				if an_assign /= Void then
-					Result.set_assign_keyword (an_assign)
+					l_assigner.set_assign_keyword (an_assign)
 				end
 			end
 		end

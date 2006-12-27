@@ -1410,12 +1410,461 @@ feature {NONE} -- Instruction validity
 	check_assigner_instruction_validity (an_instruction: ET_ASSIGNER_INSTRUCTION) is
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- An assigner instruction is of the form:
+			--    call := source
+			-- where 'call' is either:
+			--    target.f
+			--    target.f (args)
+			--    target [args]
+			-- We have to check that:
+			--  * 'call' (including 'target' and 'args') and 'source' are valid
+			--  * the type of 'source' conforms or converts to the type
+			--    of 'call' (see VBAC-1, ECMA 367-2 p.119)
+			--  * 'f' or the feature with 'alias "[]"' is a query with
+			--    an assigner procedure (see VBAC-2, ECMA 367-2 p.119),
+			--    or 'f' (with no arguments) is a Tuple label (not in ECMA)
 		require
 			an_instruction_not_void: an_instruction /= Void
+		local
+			l_call: ET_FEATURE_CALL_EXPRESSION
+			l_call_context: ET_TYPE_CONTEXT
+			l_target: ET_EXPRESSION
+			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_source: ET_EXPRESSION
+			l_source_context: ET_NESTED_TYPE_CONTEXT
+			l_name: ET_CALL_NAME
+			l_label: ET_IDENTIFIER
+			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_assigner: ET_ASSIGNER
+			l_assigner_seed: INTEGER
+			l_assigner_procedure: ET_PROCEDURE
+			l_class: ET_CLASS
+			l_query: ET_QUERY
+			l_procedure: ET_PROCEDURE
+			l_type: ET_TYPE
+			l_seed: INTEGER
+			i, nb: INTEGER
+			nb_args: INTEGER
+			l_convert_feature: ET_CONVERT_FEATURE
+			l_conversion_query: ET_QUERY
+			l_conversion_procedure: ET_PROCEDURE
+			l_convert_expression: ET_CONVERT_EXPRESSION
+			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
+			l_convert_class: ET_CLASS
+			l_convert_name: ET_FEATURE_NAME
+			l_source_named_type: ET_NAMED_TYPE
+			l_target_named_type: ET_NAMED_TYPE
+			any_type: ET_CLASS_TYPE
+			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			report_current_type_needed
--- TODO: assigner
+			l_call := an_instruction.call
+			l_target := l_call.target
+			l_target_context := new_context (current_type)
+			l_name := l_call.name
+			l_actuals := l_call.arguments
+			any_type := universe.any_type
+			l_seed := l_name.seed
+			if l_seed = 0 then
+					-- We need to resolve `l_name' in the class where this code has been written.
+				if current_class_impl /= current_class then
+						-- Bad luck: we are not in the context of the class where this
+						-- code has been written. An error should have been reported
+						-- when processing `current_feature_impl' in `current_class_impl'.
+						-- Check the validity of the target of the call despite the error.
+					check_expression_validity (l_target, l_target_context, any_type)
+					set_fatal_error
+					if not has_implementation_error (current_feature_impl) then
+							-- Internal error: either `l_name' should have been resolved in
+							-- the implementation feature or an error should have been reported.
+						error_handler.report_giaaa_error
+					end
+				else
+						-- Check the validity of the target of the call.
+						-- After this, `l_target_context' will represent the type of the target.
+					check_expression_validity (l_target, l_target_context, any_type)
+					if not has_fatal_error then
+							-- Determine the base class of the target in order to find
+							-- the feature of the call in this class.
+						l_class := l_target_context.base_class (universe)
+						l_class.process (universe.interface_checker)
+						if not l_class.interface_checked or else l_class.has_interface_error then
+								-- There was an error when processing this class in
+								-- a previous compilation pass. The error was reported
+								-- at that time, so no need to report it here again.
+								-- We just need to flag that there is an error.
+							set_fatal_error
+						else
+							if l_class.is_dotnet then
+									-- A class coming from a .NET assembly can contain overloaded
+									-- features (i.e. several features with the same name).
+									-- We have to be careful about that here.
+								l_class.add_overloaded_queries (l_name, overloaded_queries)
+								nb := overloaded_queries.count
+								if nb = 0 then
+									-- The error is reported later.
+								elseif nb = 1 then
+									l_query := overloaded_queries.first
+									l_seed := l_query.first_seed
+									l_name.set_seed (l_seed)
+								else
+										-- More than one query with that name.
+										-- Start to remove those with the wrong number of arguments.
+									nb_args := l_call.arguments_count
+									from i := nb until i < 1 loop
+										if overloaded_queries.item (i).arguments_count /= nb_args then
+											overloaded_queries.remove (i)
+										end
+										i := i - 1
+									end
+									nb := overloaded_queries.count
+									if nb = 0 then
+										-- The error is reported later.
+									elseif nb = 1 then
+										l_query := overloaded_queries.first
+										l_seed := l_query.first_seed
+										l_name.set_seed (l_seed)
+									elseif nb_args = 0 then
+											-- Ambiguity in overloaded queries.
+-- TODO: report VIOF
+									else
+										keep_best_overloaded_features (overloaded_queries, l_actuals, l_target_context)
+										if not has_fatal_error then
+											nb := overloaded_queries.count
+											if nb = 0 then
+												-- The error is reported later.
+											elseif nb = 1 then
+												l_query := overloaded_queries.first
+												l_seed := l_query.first_seed
+												l_name.set_seed (l_seed)
+											else
+													-- Ambiguity in overloaded queries.
+-- TODO: report VIOF
+											end
+										end
+									end
+								end
+								overloaded_queries.wipe_out
+							end
+							if l_query = Void and not has_fatal_error then
+									-- We didn't find the feature (a query in our case) of the call
+									-- when taking into account .NET peculiarities.
+								l_query := l_class.named_query (l_name)
+								if l_query /= Void then
+										-- We found it.
+									l_seed := l_query.first_seed
+									l_name.set_seed (l_seed)
+								else
+									if l_class = universe.tuple_class then
+											-- Check whether this is a tuple label.
+											-- For example:
+											--     target: TUPLE [f: INTEGER]
+											--     target.f := 5
+										l_label ?= l_name
+										if l_label /= Void then
+											l_seed := l_target_context.base_type_index_of_label (l_label, universe)
+											if l_seed /= 0 then
+													-- We found it.
+												l_label.set_tuple_label (True)
+												l_label.set_seed (l_seed)
+											end
+										end
+									end
+									if l_seed = 0 then
+											-- It's not a query of the class nor a Tuple label.
+											-- Check to see whether it is a procedure.
+										l_procedure := l_class.named_procedure (l_name)
+										if l_procedure /= Void then
+												-- Report error: in a call expression, the feature has to be a query.
+											set_fatal_error
+											error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
+										else
+												-- Report error: there is no feature with that name in the
+												-- base class of the target of the call.
+												-- ISE Eiffel 5.4 reports this error as a VEEN,
+												-- but it is in fact a VUEX-2 (ETL2 p.368).
+											set_fatal_error
+											error_handler.report_vuex2a_error (current_class, l_name, l_class)
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+			if has_fatal_error then
+				if l_actuals /= Void then
+						-- Check the validity of the arguments of the call despite the error.
+					check_expressions_validity (l_actuals)
+					has_fatal_error := True
+				end
+			elseif l_name.is_tuple_label then
+					-- This is a tuple label.
+					-- For example:
+					--     target: TUPLE [f: INTEGER]
+					--     target.f := 5
+				if l_label = Void then
+						-- We didn't find the label yet. This is because the seed was already
+						-- computed in a proper ancestor (or in another generic derivation) of
+						-- `current_class' where this code was written.
+						-- Check the validity of the target of the call.
+						-- After this, `l_target_context' will represent the type of the target.
+					check_expression_validity (l_target, l_target_context, any_type)
+					if not has_fatal_error then
+							-- Determine the base class of the target.
+							-- It has to be the class 'TUPLE'.
+						l_class := l_target_context.base_class (universe)
+						l_class.process (universe.interface_checker)
+						if not l_class.interface_checked or else l_class.has_interface_error then
+								-- There was an error when processing this class in
+								-- a previous compilation pass. The error was reported
+								-- at that time, so no need to report it here again.
+								-- We just need to flag that there is an error.
+							set_fatal_error
+						elseif l_class /= universe.tuple_class then
+								-- Internal error: if we got a call to tuple label,
+								-- the class has to be TUPLE because it is not possible
+								-- to inherit from TUPLE.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
+					end
+				end
+				if l_actuals /= Void and then not l_actuals.is_empty then
+						-- A call to a Tuple label cannot have arguments.
+						-- Check the validity of the arguments despite the error.
+					check_expressions_validity (l_actuals)
+						-- Now, report the error.
+					set_fatal_error
+					if current_class = current_class_impl then
+						error_handler.report_vuar1c_error (current_class, l_name)
+					elseif not has_implementation_error (current_feature_impl) then
+							-- Internal error: this error should have been reported when
+							-- processing `current_feature_impl' in `current_class_impl'.
+						error_handler.report_giaaa_error
+					end
+				elseif l_seed > l_target_context.base_type_actual_count (universe) then
+						-- Internal error: the index of the labeled
+						-- actual parameter cannot be out of bound because
+						-- for a Tuple type to conform to another Tuple type
+						-- it needs to have more actual parameters.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_type := l_target_context.base_type_actual (l_seed, universe)
+				end
+			else
+					-- It's either:
+					--    target [args] := source
+					--    target.f := source
+					--    target.f (args) := source
+					-- where 'f' is a query.
+				if l_query = Void then
+						-- We didn't find the query yet. This is because the seed was already
+						-- computed in a proper ancestor (or in another generic derivation) of
+						-- `current_class' where this code was written.
+						-- Check the validity of the target of the call.
+						-- After this, `l_target_context' will represent the type of the target.
+					check_expression_validity (l_target, l_target_context, any_type)
+					if not has_fatal_error then
+						l_class := l_target_context.base_class (universe)
+						l_class.process (universe.interface_checker)
+						if not l_class.interface_checked or else l_class.has_interface_error then
+							set_fatal_error
+						else
+							l_query := l_class.seeded_query (l_seed)
+							if l_query = Void then
+									-- Internal error: if we got a seed, the
+									-- `l_query' should not be void.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							end
+						end
+					end
+				end
+				if l_query = Void then
+					if l_actuals /= Void then
+							-- Check the validity of the arguments of the call despite the error.
+						check has_fatal_error: has_fatal_error end
+						check_expressions_validity (l_actuals)
+						has_fatal_error := True
+					end
+				else
+					check l_class_not_void: l_class /= Void end
+					if not l_query.is_exported_to (current_class, universe) then
+							-- Report error: the feature is not exported to `current_class'.
+						set_fatal_error
+						if current_class = current_class_impl then
+							error_handler.report_vuex2b_error (current_class, l_name, l_query, l_class)
+						else
+							error_handler.report_vuex2c_error (current_class, current_class_impl, l_name, l_query, l_class)
+						end
+					end
+					had_error := has_fatal_error
+						-- Check validity of the arguments of the call.
+					check_actual_arguments_validity (l_actuals, l_target_context, l_name, l_query, l_class)
+					has_fatal_error := has_fatal_error or had_error
+					l_type := l_query.type
+				end
+			end
+				-- Check the validity of the source.
+			l_source := an_instruction.source
+			l_source_context := new_context (current_type)
+			if l_type = Void then
+					-- The call is not valid. As a consequence its type was not
+					-- been computed correctly. We will consider that it is of
+					-- type 'ANY' when checking the validity of the source.
+				check has_fatal_error: has_fatal_error end
+				check_expression_validity (l_source, l_source_context, l_call_context)
+				has_fatal_error := True
+			else
+					-- After this, `l_source_context' will represent the type of the source.
+					-- In some cases we need the type of the call in order to determine the
+					-- type of the source. For example:
+					--    target.f := << "gobo", 'a', 2 >>
+					-- where 'f' is declared of type 'ARRAY [COMPARABLE]' in the base class of 'target'.
+					-- The type of the manifest array will be 'ARRAY [COMPARABLE]'. Without the
+					-- this hint it could have been 'ARRAY [HASHABLE]' or even 'ARRAY [ANY]'.
+				l_target_context.force_last (l_type)
+				l_call_context := l_target_context
+				had_error := has_fatal_error
+				check_expression_validity (l_source, l_source_context, l_call_context)
+				if not has_fatal_error then
+						-- Both source and call have valid types. Check whether the type
+						-- of the source conforms or converts to the type of the call.
+					if not l_source_context.conforms_to_context (l_call_context, universe) then
+							-- The source does not conform to the call.
+							-- Try to find out whether it converts to it.
+						if current_class = current_class_impl then
+							l_convert_feature := type_checker.convert_feature (l_source_context, l_call_context)
+						else
+								-- Convertibility should be resolved in class where the code has been written.
+							l_convert_feature := Void
+						end
+						if l_convert_feature /= Void then
+							if l_convert_feature.is_convert_from then
+								l_convert_class := l_call_context.base_class (universe)
+							elseif l_convert_feature.is_convert_to then
+								l_convert_class := l_source_context.base_class (universe)
+							else
+								l_convert_class := Void
+							end
+							if l_convert_class /= Void then
+								l_convert_class.process (universe.feature_flattener)
+								if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
+										-- Error already reported by the feature flattener.
+									set_fatal_error
+									l_convert_feature := Void
+								end
+							end
+							if l_convert_feature /= Void then
+									-- Insert the conversion feature call in the AST.
+								if l_convert_feature.is_convert_to then
+									create l_convert_to_expression.make (l_source, l_convert_feature)
+									l_convert_expression := l_convert_to_expression
+									l_convert_name := l_convert_feature.name
+									l_conversion_query := l_convert_class.seeded_query (l_convert_name.seed)
+									if l_conversion_query /= Void then
+										report_qualified_call_expression (l_convert_to_expression, l_source_context, l_conversion_query)
+									else
+											-- Internal error: the seed of the convert feature should correspond
+											-- to a query of `a_convert_class'.
+										set_fatal_error
+										error_handler.report_giaaa_error
+									end
+								elseif l_convert_feature.is_convert_from then
+									create l_convert_expression.make (l_source, l_convert_feature)
+									l_convert_name := l_convert_feature.name
+									l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
+									if l_conversion_procedure /= Void then
+										report_creation_expression (l_convert_expression, l_call_context.named_type (universe), l_conversion_procedure, l_source)
+									else
+											-- Internal error: the seed of the convert feature should correspond
+											-- to a procedure of `a_convert_class'.
+										set_fatal_error
+										error_handler.report_giaaa_error
+									end
+								else
+									create l_convert_expression.make (l_source, l_convert_feature)
+									report_builtin_conversion (l_convert_expression, l_call_context)
+								end
+								an_instruction.set_source (l_convert_expression)
+							end
+						else
+								-- Report error: the type of the source does not conform nor convert
+								-- to the type of the call. See VBAC-1, ECMA 367-2 p.119.
+							set_fatal_error
+							l_source_named_type := l_source_context.named_type (universe)
+							l_target_named_type := l_target_context.named_type (universe)
+							if current_class = current_class_impl then
+								error_handler.report_vbac1a_error (current_class, an_instruction, l_source_named_type, l_target_named_type)
+							else
+								error_handler.report_vbac1b_error (current_class, current_class_impl, an_instruction, l_source_named_type, l_target_named_type)
+							end
+						end
+					end
+				end
+				l_target_context.remove_last
+				has_fatal_error := has_fatal_error or had_error
+					-- Check whether the query has an associated assigner procedure.
+				if l_name.is_tuple_label then
+					if not has_fatal_error then
+						report_tuple_label_setter (an_instruction, l_target_context)
+					end
+				elseif l_query /= Void then
+					check l_class_not_void: l_class /= Void end
+					l_assigner_seed := an_instruction.name.seed
+					if l_assigner_seed = 0 then
+							-- We should find the assigner in the context of the
+							-- class where this code has been written.
+						if current_class /= current_class_impl then
+								-- Bad luck: we are not in the context of the class where this
+								-- code has been written. An error should have been reported
+								-- when processing `current_feature_impl' in `current_class_impl'.
+							set_fatal_error
+							if not has_implementation_error (current_feature_impl) then
+									-- Internal error: either `l_assigner_seed' should have been resolved
+									-- in the implementation feature or an error should have been reported.
+								error_handler.report_giaaa_error
+							end
+						else
+							l_assigner := l_query.assigner
+							if l_assigner = Void then
+									-- Report error: `l_query' should have an assigner command
+									-- associated with it. See VBAC-2, ECMA 367-2 p.119.
+								set_fatal_error
+								error_handler.report_vbac2a_error (current_class, an_instruction, l_query, l_class)
+							else
+								l_assigner_seed := l_assigner.feature_name.seed
+								if l_assigner_seed = 0 then
+										-- Internal error: invalid assigner. This error should have
+										-- already been reported when flattening features of `l_class'
+										-- (class containing `l_query').
+									set_fatal_error
+									error_handler.report_giaaa_error
+								else
+									an_instruction.set_name (l_assigner.feature_name)
+								end
+							end
+						end
+					end
+					if l_assigner_seed /= 0 then
+						l_assigner_procedure := l_class.seeded_procedure (l_assigner_seed)
+						if l_assigner_procedure = Void then
+								-- Internal error: if we got a seed, the
+								-- `l_assigner_procedure' should not be void.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif not has_fatal_error then
+							report_qualified_call_instruction (an_instruction, l_target_context, l_assigner_procedure)
+						end
+					end
+				end
+			end
+			free_context (l_target_context)
 		end
 
 	check_assignment_validity (an_instruction: ET_ASSIGNMENT) is
@@ -1449,7 +1898,7 @@ feature {NONE} -- Instruction validity
 			l_target := an_instruction.target
 			l_target_context := new_context (current_type)
 				-- Check the validity of the target.
-				-- After this call `l_target_context' will represent the type of the target.
+				-- After this, `l_target_context' will represent the type of the target.
 			check_writable_validity (l_target, l_target_context)
 			if has_fatal_error then
 					-- The target is not valid. As a consequence its type might not
@@ -1460,19 +1909,17 @@ feature {NONE} -- Instruction validity
 				l_target_context.force_last (universe.any_type)
 			end
 				-- Check the validity of the source.
-				-- After this call `l_source_context' will represent the type of the source.
+				-- After this, `l_source_context' will represent the type of the source.
 				-- In some cases we need the type of the target in order to determine the
 				-- type of the source. For example:
 				--    target: ARRAY [COMPARABLE]
 				--    target := << "gobo", 'a', 2 >>
-				-- The type of the manifest array will be 'ARRAY[COMPARABLE]'. Without the
-				-- this hint it could have been 'ARRAY[HASHABLE]' or even 'ARRAY[ANY]'.
+				-- The type of the manifest array will be 'ARRAY [COMPARABLE]'. Without the
+				-- this hint it could have been 'ARRAY [HASHABLE]' or even 'ARRAY [ANY]'.
 			l_source := an_instruction.source
 			l_source_context := new_context (current_type)
 			check_expression_validity (l_source, l_source_context, l_target_context)
-			if had_error then
-				set_fatal_error
-			end
+			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
 					-- Both source and target are valid. Check whether the type of the
 					-- source conforms or converts to the type of the target.
@@ -7181,9 +7628,8 @@ feature {NONE} -- Expression validity
 		end
 
 	check_expression_validity (an_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT) is
-			-- Check validity of `an_expression' (whose target is of type
-			-- `a_target_type') in `current_feature' of `current_type'.
-			-- Set `has_fatal_error' if a fatal error occurred.
+			-- Check validity of `an_expression' (whose possible attachment target
+			-- is of type `a_target_type') in `current_feature' of `current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred. Otherwise
 			-- the type of `an_expression' is appended to `a_context'.
 		require
@@ -7206,6 +7652,32 @@ feature {NONE} -- Expression validity
 			end
 			current_context := old_context
 			current_target_type := old_target_type
+		end
+
+	check_expressions_validity (an_expressions: ET_EXPRESSIONS) is
+			-- Check validity of `an_expressions' (without any indication
+			-- about the type of the possible attachment target)
+			-- in `current_feature' of `current_type'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expressions_not_void: an_expressions /= Void
+		local
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			any_type: ET_CLASS_TYPE
+			i, nb: INTEGER
+		do
+			has_fatal_error := True
+			if an_expressions /= Void then
+				any_type := universe.any_type
+				l_expression_context := new_context (current_type)
+				nb := an_expressions.count
+				from i := 1 until i > nb loop
+					check_expression_validity (an_expressions.expression (i), l_expression_context, any_type)
+					l_expression_context.wipe_out
+					i := i + 1
+				end
+				free_context (l_expression_context)
+			end
 		end
 
 	check_actual_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT;
@@ -9467,6 +9939,16 @@ feature {NONE} -- Event handling
 			an_expression_not_void: an_expression /= Void
 			qualified_call: an_expression.is_qualified_call
 			tuple_label: an_expression.name.is_tuple_label
+			a_target_type_not_void: a_target_type /= Void
+		do
+		end
+
+	report_tuple_label_setter (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT) is
+			-- Report that a call to the setter of a tuple label has been processed.
+		require
+			no_error: not has_fatal_error
+			an_assigner_not_void: an_assigner /= Void
+			tuple_label: an_assigner.call.name.is_tuple_label
 			a_target_type_not_void: a_target_type /= Void
 		do
 		end

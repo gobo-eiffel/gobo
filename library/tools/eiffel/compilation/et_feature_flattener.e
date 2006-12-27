@@ -540,6 +540,7 @@ feature {NONE} -- Feature flattening
 						error_handler.report_vcch2a_error (current_class)
 					end
 				end
+				check_assigners_validity
 				check_creators_validity
 				check_convert_validity
 			end
@@ -1590,6 +1591,148 @@ feature {NONE} -- Convert validity
 					end
 					i := i + 1
 				end
+			end
+		end
+
+feature -- Assigner validity
+
+	check_assigners_validity is
+			-- Check validity of assigner clauses of queries of `current_class'.
+		local
+			l_queries: ET_QUERY_LIST
+			l_query: ET_QUERY
+			l_assigner: ET_ASSIGNER
+			l_feature_name: ET_FEATURE_NAME
+			l_feature: ET_FEATURE
+			l_query_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_procedure_arguments: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+			j, nb_args: INTEGER
+			l_type, l_other_type: ET_TYPE
+			l_procedure: ET_PROCEDURE
+			l_seed: INTEGER
+		do
+			l_queries := current_class.queries
+				-- Process queries declared or redeclared in `current_class'.
+			nb := l_queries.declared_count
+			from i := 1 until i > nb loop
+				l_query := l_queries.item (i)
+				l_assigner := l_query.assigner
+				if l_assigner /= Void then
+					l_feature_name := l_assigner.feature_name
+					named_features.search (l_feature_name)
+					if not named_features.found then
+						set_fatal_error (current_class)
+						error_handler.report_vfac1a_error (current_class, l_feature_name, l_query)
+					else
+						l_feature := named_features.found_item.flattened_feature
+						l_procedure ?= l_feature
+						if l_procedure = Void then
+							set_fatal_error (current_class)
+							error_handler.report_vfac1b_error (current_class, l_feature_name, l_query)
+						else
+							l_feature_name.set_seed (l_feature.first_seed)
+							l_procedure_arguments := l_procedure.arguments
+							if l_procedure_arguments = Void then
+								set_fatal_error (current_class)
+								error_handler.report_vfac2a_error (current_class, l_feature_name, l_query, l_procedure)
+							elseif l_procedure_arguments.count /= l_query.arguments_count + 1 then
+								set_fatal_error (current_class)
+								error_handler.report_vfac2a_error (current_class, l_feature_name, l_query, l_procedure)
+							else
+								l_type := l_query.type
+								l_other_type := l_procedure_arguments.formal_argument (1).type
+								if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
+									set_fatal_error (current_class)
+									error_handler.report_vfac3a_error (current_class, l_feature_name, l_query, l_procedure)
+								end
+								nb_args := l_procedure_arguments.count
+								l_query_arguments := l_query.arguments
+								from j := 2 until j > nb_args loop
+									l_type := l_query_arguments.formal_argument (j - 1).type
+									l_other_type := l_procedure_arguments.formal_argument (j).type
+									if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
+										set_fatal_error (current_class)
+										error_handler.report_vfac4a_error (current_class, l_feature_name, l_query, l_procedure, j - 1)
+									end
+									j := j + 1
+								end
+							end
+						end
+					end
+				end
+				i := i + 1
+			end
+				-- Process queries inherited without redeclaration.
+			nb := l_queries.count
+			from until i > nb loop
+				l_query := l_queries.item (i)
+				l_assigner := l_query.assigner
+				if l_assigner /= Void then
+					l_feature_name := l_assigner.feature_name
+					l_seed := l_feature_name.seed
+					if l_seed = 0 then
+							-- Internal error: the seed should have been resolved
+							-- in the ancestor class where this assigner has been
+							-- declared.
+						set_fatal_error (current_class)
+						error_handler.report_giaaa_error
+					else
+						l_procedure := current_class.seeded_procedure (l_seed)
+						if l_procedure = Void then
+							if not current_class.has_flattening_error then
+									-- Internal error: if the assigner was valid
+									-- in the ancestor class and there was no error
+									-- when flattening the features of current class
+									-- then we should get a procedure here.
+								set_fatal_error (current_class)
+								error_handler.report_giaaa_error
+							end
+						else
+							l_procedure_arguments := l_procedure.arguments
+							if l_procedure_arguments = Void then
+								if not current_class.has_flattening_error then
+										-- Internal error: if the assigner was valid
+										-- in the ancestor class and there was no error
+										-- when flattening the features of current class
+										-- then we should have the expected number of
+										-- arguments here.
+									set_fatal_error (current_class)
+									error_handler.report_giaaa_error
+								end
+							elseif l_procedure_arguments.count /= l_query.arguments_count + 1 then
+								if not current_class.has_flattening_error then
+										-- Internal error: if the assigner was valid
+										-- in the ancestor class and there was no error
+										-- when flattening the features of current class
+										-- then we should have the expected number of
+										-- arguments here.
+									set_fatal_error (current_class)
+									error_handler.report_giaaa_error
+								end
+							else
+								l_type := l_query.type
+								l_other_type := l_procedure_arguments.formal_argument (1).type
+								if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
+									set_fatal_error (current_class)
+									error_handler.report_vfac3b_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+								end
+								nb_args := l_procedure_arguments.count
+								l_query_arguments := l_query.arguments
+								from j := 2 until j > nb_args loop
+									l_type := l_query_arguments.formal_argument (j - 1).type
+									l_other_type := l_procedure_arguments.formal_argument (j).type
+									if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
+										set_fatal_error (current_class)
+										error_handler.report_vfac4b_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
+									end
+									j := j + 1
+								end
+							end
+						end
+					end
+				end
+				i := i + 1
 			end
 		end
 

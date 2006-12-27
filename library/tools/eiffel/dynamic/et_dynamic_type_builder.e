@@ -82,6 +82,7 @@ inherit
 			report_strip_expression,
 			report_tuple_label_call_agent,
 			report_tuple_label_expression,
+			report_tuple_label_setter,
 			report_typed_pointer_expression,
 			report_unqualified_call_expression,
 			report_unqualified_call_instruction,
@@ -2296,6 +2297,49 @@ feature {NONE} -- Event handling
 						else
 							l_dynamic_type_set := l_item_type_sets.item (l_index)
 							set_dynamic_type_set (l_dynamic_type_set, an_expression)
+						end
+					end
+				end
+			end
+		end
+
+	report_tuple_label_setter (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT) is
+			-- Report that a call to the setter of a tuple label has been processed.
+		local
+			l_call: ET_FEATURE_CALL_EXPRESSION
+			l_target: ET_EXPRESSION
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_index: INTEGER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_call := an_assigner.call
+				l_target := l_call.target
+				l_target_type_set := dynamic_type_set (l_target)
+				if l_target_type_set = Void then
+						-- Internal error: the dynamic type sets of the
+						-- target should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_tuple_type ?= l_target_type_set.static_type
+					if l_tuple_type = Void then
+							-- Internal error: the target of a label expression
+							-- should be a Tuple.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_item_type_sets := l_tuple_type.item_type_sets
+						l_index := l_call.name.seed
+						if not l_item_type_sets.valid_index (l_index) then
+								-- Internal error: invalid label index.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_dynamic_type_set := l_item_type_sets.item (l_index)
+							set_dynamic_type_set (l_dynamic_type_set, l_call)
 						end
 					end
 				end

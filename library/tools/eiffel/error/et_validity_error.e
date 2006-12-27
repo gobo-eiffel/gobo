@@ -33,6 +33,9 @@ create
 	make_vape0h,
 	make_vave0a,
 	make_vave0b,
+	make_vbac1a,
+	make_vbac1b,
+	make_vbac2a,
 	make_vcch1a,
 	make_vcch1b,
 	make_vcch2a,
@@ -92,6 +95,13 @@ create
 	make_veen2b,
 	make_veen2c,
 	make_veen2d,
+	make_vfac1a,
+	make_vfac1b,
+	make_vfac2a,
+	make_vfac3a,
+	make_vfac3b,
+	make_vfac4a,
+	make_vfac4b,
 	make_vfav1a,
 	make_vfav1b,
 	make_vfav1c,
@@ -949,6 +959,141 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = base type of expression
+		end
+
+	make_vbac1a (a_class: like current_class; an_assigner: ET_ASSIGNER_INSTRUCTION; a_source_type, a_target_type: ET_NAMED_TYPE) is
+			-- Create a new VBAC-1 error: the source expression of `an_assignment' does
+			-- not conform nor convert to its target.
+			--
+			-- ECMA 367-2: p.119
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		do
+			code := vbac1a_template_code
+			etl_code := vbac1_etl_code
+			default_template := vbac1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_assigner.source.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_source_type.to_text, 6)
+			parameters.put (a_target_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = source type
+			-- dollar7: $7 = target type
+		end
+
+	make_vbac1b (a_class: like current_class; a_class_impl: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION;
+		a_source_type, a_target_type: ET_NAMED_TYPE) is
+			-- Create a new VBAC-1 error: the source expression of `an_assigner' does
+			-- not conform nor convert to its target when viewed from `a_class'.
+			--
+			-- ECMA 367-2: p.119
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		do
+			code := vbac1b_template_code
+			etl_code := vbac1_etl_code
+			default_template := vbac1b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_assigner.source.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_class_impl.upper_name, 6)
+			parameters.put (a_source_type.to_text, 7)
+			parameters.put (a_target_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = source type
+			-- dollar8: $8 = target type
+		end
+
+	make_vbac2a (a_class: like current_class; an_assigner: ET_ASSIGNER_INSTRUCTION; a_query: ET_QUERY; a_query_class: ET_CLASS) is
+			-- Create a new VBAC-2 error: `a_query' from class `a_query_class', used
+			-- as query of the call in the assigner instruction `an_assigner', has
+			-- no associated assigner command.
+			--
+			-- ECMA 367-2: p.119
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_class_not_void: a_query_class /= Void
+		do
+			code := vbac2a_template_code
+			etl_code := vbac2_etl_code
+			default_template := vbac2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_assigner.call.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_query.name.lower_name, 6)
+			parameters.put (a_query_class.upper_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = name of the query
+			-- dollar7: $7 = name of the class to which the query belongs
 		end
 
 	make_vcch1a (a_class: like current_class; f: ET_FEATURE) is
@@ -3554,6 +3699,328 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 		end
 
+	make_vfac1a (a_class: like current_class; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY) is
+			-- Create a new VFAC-1 error: `a_query' has an assigner `an_assigner'
+			-- but there is not feature with that name in `a_class'.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+		do
+			code := vfac1a_template_code
+			etl_code := vfac1_etl_code
+			default_template := vfac1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_assigner.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_query.name.lower_name, 6)
+			parameters.put (an_assigner.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = query name
+			-- dollar7: $7 = assigner name
+		end
+
+	make_vfac1b (a_class: like current_class; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY) is
+			-- Create a new VFAC-1 error: `a_query' has an assigner `an_assigner'
+			-- but this feature is not a procedure.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+		do
+			code := vfac1b_template_code
+			etl_code := vfac1_etl_code
+			default_template := vfac1b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_assigner.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_query.name.lower_name, 6)
+			parameters.put (an_assigner.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = query name
+			-- dollar7: $7 = assigner name
+		end
+
+	make_vfac2a (a_class: like current_class; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
+			-- Create a new VFAC-2 error: the number of argument in the
+			-- assigner procedure `a_procedure' is not one more than the
+			-- number of arguments in `a_query'.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+			a_procedure_not_void: a_procedure /= Void
+		do
+			code := vfac2a_template_code
+			etl_code := vfac2_etl_code
+			default_template := vfac2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_assigner.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_query.name.lower_name, 6)
+			parameters.put (a_procedure.name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = query name
+			-- dollar7: $7 = assigner procedure name
+		end
+
+	make_vfac3a (a_class: like current_class; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
+			-- Create a new VFAC-3 error: the type of the first argument of the
+			-- assigner procedure `a_procedure' and the result type of `a_query'
+			-- do not have the same deanchored form.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+			a_procedure_not_void: a_procedure /= Void
+		do
+			code := vfac3a_template_code
+			etl_code := vfac3_etl_code
+			default_template := vfac3a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_assigner.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_query.name.lower_name, 6)
+			parameters.put (a_procedure.name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = query name
+			-- dollar7: $7 = assigner procedure name
+		end
+
+	make_vfac3b (a_class: like current_class; a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
+			-- Create a new VFAC-3 error: the type of the first argument of the
+			-- assigner procedure `a_procedure' (redeclared in `a_class') and the
+			-- result type of `a_query' (inherited from the ancestor class
+			-- `a_class_impl') do not have the same deanchored form.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+			a_procedure_not_void: a_procedure /= Void
+		do
+			code := vfac3b_template_code
+			etl_code := vfac3_etl_code
+			default_template := vfac3b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_assigner.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_query.name.lower_name, 7)
+			parameters.put (a_procedure.name.lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar6: $7 = query name
+			-- dollar7: $8 = assigner procedure name
+		end
+
+	make_vfac4a (a_class: like current_class; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE; arg: INTEGER) is
+			-- Create a new VFAC-4 error: the type of the `arg'-th + 1 argument of the
+			-- assigner procedure `a_procedure' and the type of the `arg'-th argument
+			-- of `a_query' do not have the same deanchored form.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+			a_procedure_not_void: a_procedure /= Void
+			arg_not_negative: arg > 0
+		do
+			code := vfac4a_template_code
+			etl_code := vfac4_etl_code
+			default_template := vfac4a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_assigner.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_query.name.lower_name, 6)
+			parameters.put (a_procedure.name.lower_name, 7)
+			parameters.put (arg.out, 8)
+			parameters.put ((arg + 1).out, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = query name
+			-- dollar7: $7 = assigner procedure name
+			-- dollar8: $8 = argument index in query
+			-- dollar9: $9 = argument index in assigner procedure
+		end
+
+	make_vfac4b (a_class: like current_class; a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE; arg: INTEGER) is
+			-- Create a new VFAC-4 error: the type of the `arg'-th + 1 argument of the
+			-- assigner procedure `a_procedure' (redeclared in `a_class') and the type
+			-- of the `arg'-th argument of `a_query' (inherited from the ancestor class
+			-- `a_class_impl') do not have the same deanchored form.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+			a_procedure_not_void: a_procedure /= Void
+			arg_not_negative: arg > 0
+		do
+			code := vfac4b_template_code
+			etl_code := vfac4_etl_code
+			default_template := vfac4b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_assigner.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_query.name.lower_name, 7)
+			parameters.put (a_procedure.name.lower_name, 8)
+			parameters.put (arg.out, 9)
+			parameters.put ((arg + 1).out, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar6: $7 = query name
+			-- dollar7: $8 = assigner procedure name
+			-- dollar9: $9 = argument index in query
+			-- dollar10: $10 = argument index in assigner procedure
+		end
+
 	make_vfav1a (a_class: like current_class; a_feature: ET_FEATURE) is
 			-- Create a new VFAV-1 error: `a_feature' has an infix operator alias
 			-- but is not a function with exactly one argument.
@@ -5935,7 +6402,7 @@ feature {NONE} -- Initialization
 
 	make_vjar0a (a_class: like current_class; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE) is
 			-- Create a new VJAR error: the source expression of `an_assignment' does
-			-- not conform to its target entity.
+			-- not conform nor convert to its target entity.
 			--
 			-- ETL2: p. 311
 		require
@@ -5980,7 +6447,7 @@ feature {NONE} -- Initialization
 	make_vjar0b (a_class: like current_class; a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT;
 		a_source_type, a_target_type: ET_NAMED_TYPE) is
 			-- Create a new VJAR error: the source expression of `an_assignment' does
-			-- not conform to its target entity when viewed from `a_class'.
+			-- not conform nor convert to its target entity when viewed from `a_class'.
 			--
 			-- ETL2: p. 311
 		require
@@ -15667,6 +16134,9 @@ feature {NONE} -- Implementation
 	vape0h_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
 	vave0a_default_template: STRING is "[$1] class $5 ($3,$4): loop variant expression of non-INTEGER type '$6'."
 	vave0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): loop variant expression of non-INTEGER type '$7'."
+	vbac1a_default_template: STRING is "[$1] class $5 ($3,$4): the source of the assigner call (of type '$6') does not conform nor convert to its target (of type '$7')."
+	vbac1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the source of the assigner call (of type '$7') does not conform nor convert to its target (of type '$8')."
+	vbac2a_default_template: STRING is "[$1] class $5 ($3,$4): query `$6' in class $7 has no assigner command."
 	vcch1a_default_template: STRING is "[$1] class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6'."
 	vcch1b_default_template: STRING is "[$1] class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6' inherited from $7."
 	vcch2a_default_template: STRING is "[$1] class $5 ($3,$4): class is marked as deferred but has no deferred feature."
@@ -15726,6 +16196,13 @@ feature {NONE} -- Implementation
 	veen2b_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the precondition of feature `$6'."
 	veen2c_default_template: STRING is "[$1] class $5 ($3,$4): local entity `$6' appears in the precondition or postcondition of feature `$7'."
 	veen2d_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the invariant of the class."
+	vfac1a_default_template: STRING is "[$1] class $5 ($3,$4): query `$6' has an assigner mark `$7' but there is no feature with that name."
+	vfac1b_default_template: STRING is "[$1] class $5 ($3,$4): query `$6' has an assigner mark `$7' but this feature is not a procedure."
+	vfac2a_default_template: STRING is "[$1] class $5 ($3,$4): the number of arguments in assigner procedure `$7' is not one more than the number of arguments in query `$6'."
+	vfac3a_default_template: STRING is "[$1] class $5 ($3,$4): the type of the first argument of assigner procedure `$7' and the result type of query `$6' do not have the same deanchored form."
+	vfac3b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the type of the first argument of assigner procedure `$8' and the result type of query `$7' do not have the same deanchored form."
+	vfac4a_default_template: STRING is "[$1] class $5 ($3,$4): the type of the $9-th argument of assigner procedure `$7' and of the $8-th argument of query `$6' do not have the same deanchored form."
+	vfac4b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the type of the $10-th argument of assigner procedure `$8' and of the $9-th argument of query `$7' do not have the same deanchored form."
 	vfav1a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' has a binary Operator alias `$7' but is not a query with at exactly one argument."
 	vfav1b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' has a unary Operator alias `$7' but is not a query with no argument."
 	vfav1c_default_template: STRING is "[$1] class $5 ($3,$4): features `$6' and `$8' have both the same unary Operator alias `$7'."
@@ -15779,8 +16256,8 @@ feature {NONE} -- Implementation
 	vhrc4c_default_template: STRING is "[$1] class $5 ($3,$4): `$6' has a binary Operator alias `$7' but `$8' in $9 is not a query with exactly one argument."
 	vhrc4d_default_template: STRING is "[$1] class $5 ($3,$4): `$6' has a unary Operator alias `$7' but `$8' in $9 is not a query with no argument."
 	vhrc5a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is of the Infix form but `$7' in $8 is not a function with one argument."
-	vjar0a_default_template: STRING is "[$1] class $5 ($3,$4): the source of the assignment (of type '$6') does not conform to its target entity (of type '$7')."
-	vjar0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the source of the assignment (of type '$7') does not conform to its target entity (of type '$8')."
+	vjar0a_default_template: STRING is "[$1] class $5 ($3,$4): the source of the assignment (of type '$6') does not conform nor convert to its target entity (of type '$7')."
+	vjar0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the source of the assignment (of type '$7') does not conform nor convert to its target entity (of type '$8')."
 	vjaw0a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not an attribute. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0c_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is the name of a formal argument of feature `$7'. A Writable is either a local variable (including Result) or an attribute."
 	vjrv0a_default_template: STRING is "[$1] class $5 ($3,$4): the type '$6' of the target entity of the assignment attempt is not a reference type."
@@ -16010,6 +16487,8 @@ feature {NONE} -- Implementation
 	vaol1_etl_code: STRING is "VAOL-1"
 	vape_etl_code: STRING is "VAPE"
 	vave_etl_code: STRING is "VAVE"
+	vbac1_etl_code: STRING is "VBAC-1"
+	vbac2_etl_code: STRING is "VBAC-2"
 	vcch1_etl_code: STRING is "VCCH-1"
 	vcch2_etl_code: STRING is "VCCH-2"
 	vcfg1_etl_code: STRING is "VCFG-1"
@@ -16038,6 +16517,10 @@ feature {NONE} -- Implementation
 	vdus4_etl_code: STRING is "VDUS-4"
 	veen_etl_code: STRING is "VEEN"
 	veen2_etl_code: STRING is "VEEN-2"
+	vfac1_etl_code: STRING is "VFAC-1"
+	vfac2_etl_code: STRING is "VFAC-2"
+	vfac3_etl_code: STRING is "VFAC-3"
+	vfac4_etl_code: STRING is "VFAC-4"
 	vfav1_etl_code: STRING is "VFAV-1"
 	vfav2_etl_code: STRING is "VFAV-2"
 	vffd4_etl_code: STRING is "VFFD-4"
@@ -16151,6 +16634,9 @@ feature {NONE} -- Implementation
 	vape0h_template_code: STRING is "vape0h"
 	vave0a_template_code: STRING is "vave0a"
 	vave0b_template_code: STRING is "vave0b"
+	vbac1a_template_code: STRING is "vbac1a"
+	vbac1b_template_code: STRING is "vbac1b"
+	vbac2a_template_code: STRING is "vbac2a"
 	vcch1a_template_code: STRING is "vcch1a"
 	vcch1b_template_code: STRING is "vcch1b"
 	vcch2a_template_code: STRING is "vcch2a"
@@ -16210,6 +16696,13 @@ feature {NONE} -- Implementation
 	veen2b_template_code: STRING is "veen2b"
 	veen2c_template_code: STRING is "veen2c"
 	veen2d_template_code: STRING is "veen2d"
+	vfac1a_template_code: STRING is "vfac1a"
+	vfac1b_template_code: STRING is "vfac1b"
+	vfac2a_template_code: STRING is "vfac2a"
+	vfac3a_template_code: STRING is "vfac3a"
+	vfac3b_template_code: STRING is "vfac3b"
+	vfac4a_template_code: STRING is "vfac4a"
+	vfac4b_template_code: STRING is "vfac4b"
 	vfav1a_template_code: STRING is "vfav1a"
 	vfav1b_template_code: STRING is "vfav1b"
 	vfav1c_template_code: STRING is "vfav1c"

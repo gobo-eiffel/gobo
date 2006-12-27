@@ -975,6 +975,72 @@ feature -- Validity errors
 			end
 		end
 
+	report_vbac1a_error (a_class: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION; a_source_type, a_target_type: ET_NAMED_TYPE) is
+			-- Report VBAC-1 error: the source expression of `an_assigner' does
+			-- not conform nor convert to its target.
+			--
+			-- ECMA 367-2: p.119
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vbac1_error (a_class) then
+				create an_error.make_vbac1a (a_class, an_assigner, a_source_type, a_target_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vbac1b_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION; a_source_type, a_target_type: ET_NAMED_TYPE) is
+			-- Report VBAC-1 error: the source expression of `an_assigner' does
+			-- not conform nor convert to its target when viewed from `a_class'.
+			--
+			-- ECMA 367-2: p.119
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vbac1_error (a_class) then
+				create an_error.make_vbac1b (a_class, a_class_impl, an_assigner, a_source_type, a_target_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vbac2a_error (a_class: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION; a_query: ET_QUERY; a_query_class: ET_CLASS) is
+			-- Report VBAC-2 error: `a_query' from class `a_query_class', used
+			-- as query of the call in the assigner instruction `an_assigner', has
+			-- no associated assigner command.
+			--
+			-- ECMA 367-2: p.119
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_class_not_void: a_query_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vbac2_error (a_class) then
+				create an_error.make_vbac2a (a_class, an_assigner, a_query, a_query_class)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vcch1a_error (a_class: ET_CLASS; f: ET_FEATURE) is
 			-- Report VCCH-1 error: `a_class' has deferred features
 			-- but is not declared as deferred. `f' is one of these deferred
@@ -2328,6 +2394,162 @@ feature -- Validity errors
 		do
 			if reportable_veen2_error (a_class) then
 				create an_error.make_veen2d (a_class, a_result)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfac1a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY) is
+			-- Report VFAC-1 error: `a_query' has an assigner `an_assigner'
+			-- but there is not feature with that name in `a_class'.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfac1_error (a_class) then
+				create an_error.make_vfac1a (a_class, an_assigner, a_query)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfac1b_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY) is
+			-- Report VFAC-1 error: `a_query' has an assigner `an_assigner'
+			-- but this feature is not a procedure.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfac1_error (a_class) then
+				create an_error.make_vfac1b (a_class, an_assigner, a_query)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfac2a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
+			-- Report VFAC-2 error: the number of argument in the
+			-- assigner procedure `a_procedure' is not one more than the
+			-- number of arguments in `a_query'.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+			a_procedure_not_void: a_procedure /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfac2_error (a_class) then
+				create an_error.make_vfac2a (a_class, an_assigner, a_query, a_procedure)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfac3a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
+			-- Report VFAC-3 error: the type of the first argument of the
+			-- assigner procedure `a_procedure' and the result type of `a_query'
+			-- do not have the same deanchored form.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+			a_procedure_not_void: a_procedure /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfac3_error (a_class) then
+				create an_error.make_vfac3a (a_class, an_assigner, a_query, a_procedure)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfac3b_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
+			-- Report VFAC-3 error: the type of the first argument of the
+			-- assigner procedure `a_procedure' (redeclared in `a_class') and the
+			-- result type of `a_query' (inherited from the ancestor class
+			-- `a_class_impl') do not have the same deanchored form.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+			a_procedure_not_void: a_procedure /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfac3_error (a_class) then
+				create an_error.make_vfac3b (a_class, a_class_impl, an_assigner, a_query, a_procedure)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfac4a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE; arg: INTEGER) is
+			-- Report VFAC-4 error: the type of the `arg'-th + 1 argument of the
+			-- assigner procedure `a_procedure' and the type of the `arg'-th argument
+			-- of `a_query' do not have the same deanchored form.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+			a_procedure_not_void: a_procedure /= Void
+			arg_not_negative: arg > 0
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfac4_error (a_class) then
+				create an_error.make_vfac4a (a_class, an_assigner, a_query, a_procedure, arg)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfac4b_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE; arg: INTEGER) is
+			-- Report VFAC-4 error: the type of the `arg'-th + 1 argument of the
+			-- assigner procedure `a_procedure' (redeclared in `a_class') and the type
+			-- of the `arg'-th argument of `a_query' (inherited from the ancestor class
+			-- `a_class_impl') do not have the same deanchored form.
+			--
+			-- ECMA 367-2: p.41
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_assigner_not_void: an_assigner /= Void
+			a_query_not_void: a_query /= Void
+			a_query_has_assigner: a_query.assigner /= Void
+			a_procedure_not_void: a_procedure /= Void
+			arg_not_negative: arg > 0
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfac4_error (a_class) then
+				create an_error.make_vfac4b (a_class, a_class_impl, an_assigner, a_query, a_procedure, arg)
 				report_validity_error (an_error)
 			end
 		end
@@ -8125,6 +8347,26 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vbac1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VBAC-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vbac2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VBAC-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vcch1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VCCH-1 error be reported when it
 			-- appears in `a_class'?
@@ -8387,6 +8629,46 @@ feature -- Validity error status
 
 	reportable_veen2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VEEN-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vfac1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VFAC-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vfac2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VFAC-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vfac3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VFAC-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vfac4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VFAC-4 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

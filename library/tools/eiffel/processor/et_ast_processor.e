@@ -150,7 +150,7 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_assigner (an_assigner: ET_ASSIGNER) is
+	process_assign_feature_name (an_assigner: ET_ASSIGN_FEATURE_NAME) is
 			-- Process `an_assigner'.
 		require
 			an_assigner_not_void: an_assigner /= Void

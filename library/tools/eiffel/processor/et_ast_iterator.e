@@ -148,7 +148,7 @@ feature {ET_AST_NODE} -- Processing
 			an_assertion.semicolon.process (Current)
 		end
 
-	process_assigner (an_assigner: ET_ASSIGNER) is
+	process_assign_feature_name (an_assigner: ET_ASSIGN_FEATURE_NAME) is
 			-- Process `an_assigner'.
 		do
 			an_assigner.assign_keyword.process (Current)
