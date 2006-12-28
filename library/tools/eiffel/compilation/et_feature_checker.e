@@ -7471,7 +7471,7 @@ feature {NONE} -- Expression validity
 					-- case for `Void').
 				else
 					l_feature_clients := a_feature.clients
-					l_clients := current_feature.clients
+					l_clients := current_enclosing_feature.clients
 					nb := l_clients.count
 					from i := 1 until i > nb loop
 						l_client_name := l_clients.class_name (i)
@@ -7563,7 +7563,7 @@ feature {NONE} -- Expression validity
 					-- case for `Void').
 				else
 					l_feature_clients := a_feature.clients
-					l_clients := current_feature.clients
+					l_clients := current_enclosing_feature.clients
 					nb := l_clients.count
 					from i := 1 until i > nb loop
 						l_client_name := l_clients.class_name (i)
