@@ -388,4 +388,13 @@ feature -- Test
 			assert ("infix_less4", d2 < d1)
 		end
 
+	test_is_time_canonical is
+			-- Test feature 'is_time_canonical'.
+		local
+			d1: DT_DATE_TIME_DURATION
+		do
+			create d1.make (0, 0, 337, 0, 0, 0)
+			assert ("is_time_canonical1", d1.is_time_canonical)
+		end
+
 end

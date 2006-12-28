@@ -356,7 +356,9 @@ feature -- Status report
 			-- Has date time duration a canonical time part
 			-- and has the time part same sign as the day part?
 		do
-			if millisecond_count > 0 then
+			if millisecond_count = 0 then
+				Result := (hour = 0 and minute = 0 and second = 0 and millisecond = 0)
+			elseif millisecond_count > 0 then
 				Result := (hour >= 0 and hour < Hours_in_day and
 					minute >= 0 and minute < Minutes_in_hour and
 					second >= 0 and second < Seconds_in_minute and
@@ -370,14 +372,18 @@ feature -- Status report
 					day <= 0)
 			end
 		ensure then
+			zero_definition: Result implies
+				(millisecond_count = 0 implies
+					(hour = 0 and minute = 0 and
+					second = 0 and millisecond = 0))
 			positive_definition: Result implies
-				(millisecond_count >= 0 implies
+				(millisecond_count > 0 implies
 					(hour >= 0 and hour < Hours_in_day and
 					minute >= 0 and minute < Minutes_in_hour and
 					second >= 0 and second < Seconds_in_minute and
 					millisecond >= 0 and millisecond < 1000 and day >= 0))
 			negative_definition: Result implies
-				(millisecond_count <= 0 implies
+				(millisecond_count < 0 implies
 					(hour <= 0 and hour > -Hours_in_day and
 					minute <= 0 and minute > -Minutes_in_hour and
 					second <= 0 and second > -Seconds_in_minute and
@@ -514,7 +520,7 @@ feature -- Basic operations
 			Result.add_precise_hours_minutes_seconds (other.hour, other.minute,
 				other.second, other.millisecond)
 		end
-	
+
 	infix "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
