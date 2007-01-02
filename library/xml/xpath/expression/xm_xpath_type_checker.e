@@ -95,7 +95,7 @@ feature -- Optimization
 			a_supplied_expression.mark_unreplaced
 			initialize (a_supplied_expression, a_required_type)
 			handle_xpath_one_compatibility (backwards_compatible)
-			if not item_type_ok then handle_xpath_two_rules end
+			if not item_type_ok then handle_xpath_two_rules (a_role_locator) end
 			
 			-- If both the cardinality and item type are statically OK, return now.
 			
@@ -378,8 +378,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_xpath_two_rules is
+	handle_xpath_two_rules (a_role_locator: XM_XPATH_ROLE_LOCATOR) is
 			-- Apply conversions needed in 2.0 mode.
+		require
+			role_not_void: a_role_locator /= Void
 		local
 			a_required_item_type_fingerprint: INTEGER
 			an_expression: XM_XPATH_EXPRESSION
@@ -392,7 +394,7 @@ feature {NONE} -- Implementation
 
 				-- Rule 2: convert untypedAtomic to the required type
 
-				conditionally_add_untyped_converter
+				conditionally_add_untyped_converter (a_role_locator)
 
 				-- Rule 3: numeric promotion decimal -> float -> double
 
@@ -455,11 +457,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	conditionally_add_untyped_converter is	
+	conditionally_add_untyped_converter (a_role_locator: XM_XPATH_ROLE_LOCATOR) is	
 			--  Conditionally add an Untyped Atomic Converter
+		require
+			role_not_void: a_role_locator /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_converter: XM_XPATH_UNTYPED_ATOMIC_CONVERTER
 		do
 
 			-- Rule 2a: all supplied values are untyped atomic. Convert if necessary, and we're finished.
@@ -470,7 +475,11 @@ feature {NONE} -- Implementation
 				required_item_type /= type_factory.untyped_atomic_type and then
 				required_item_type /= type_factory.any_atomic_type then
 				an_expression := checked_expression
-				create {XM_XPATH_UNTYPED_ATOMIC_CONVERTER} checked_expression.make (an_expression, required_item_type)
+				create l_converter.make (an_expression, required_item_type)
+				if STRING_.same_string (a_role_locator.error_code, "XTTE0505") then
+					l_converter.set_error_code (a_role_locator.error_code)
+				end
+				checked_expression := l_converter
 				if an_expression.is_value and then not an_expression.depends_upon_implicit_timezone then
 					checked_expression.create_iterator (Void)
 					an_iterator := checked_expression.last_iterator

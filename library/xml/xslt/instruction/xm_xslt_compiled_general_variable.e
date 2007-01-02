@@ -123,9 +123,11 @@ feature -- Optimization
 			-- Perform context-independent static optimizations
 		do
 			if select_expression /= Void then
-				select_expression.simplify
-				if select_expression.was_expression_replaced then
-					set_selector (select_expression.replacement_expression)
+				if not select_expression.is_error then
+					select_expression.simplify
+					if select_expression.was_expression_replaced then
+						set_selector (select_expression.replacement_expression)
+					end
 				end
 				if select_expression.is_error then set_last_error (select_expression.error_value) end
 			end

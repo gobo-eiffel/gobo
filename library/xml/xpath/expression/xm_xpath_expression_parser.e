@@ -44,6 +44,9 @@ inherit
 	XM_XPATH_SHARED_NO_NODE_TEST
 		export {NONE} all end
 
+	XM_XPATH_SHARED_DECIMAL_CONTEXTS
+		export {NONE} all end
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_AXIS
@@ -1776,32 +1779,35 @@ feature {NONE} -- Implementation
 		require
 			no_previous_parse_error: not is_parse_error
 		local
-			a_message: STRING
-			a_value: XM_XPATH_VALUE
+			l_message: STRING
+			l_value: XM_XPATH_VALUE
+			l_decimal: MA_DECIMAL
 		do
 			if tokenizer.last_token_value.index_of ('E', 1) > 0 or else tokenizer.last_token_value.index_of ('e', 1) > 0 then
 				if tokenizer.last_token_value.is_double then
-					create {XM_XPATH_DOUBLE_VALUE} a_value.make_from_string (tokenizer.last_token_value)
+					create {XM_XPATH_DOUBLE_VALUE} l_value.make_from_string (tokenizer.last_token_value)
 				else
-					a_message := STRING_.appended_string ("Invalid numeric literal [", tokenizer.last_token_value)
-					a_message := STRING_.appended_string (a_message,  "]")
-					report_parse_error (a_message, "XPST0003")
+					l_message := STRING_.appended_string ("Invalid numeric literal [", tokenizer.last_token_value)
+					l_message := STRING_.appended_string (l_message,  "]")
+					report_parse_error (l_message, "XPST0003")
 				end
 			elseif tokenizer.last_token_value.index_of ('.', 1) > 0  then
-				if tokenizer.last_token_value.is_double then -- TODO
-					create {XM_XPATH_DECIMAL_VALUE} a_value.make_from_string (tokenizer.last_token_value)
+				create l_decimal.make_from_string_ctx (tokenizer.last_token_value, shared_round_context)
+				if l_decimal.is_nan then
+					l_message := STRING_.appended_string ("Invalid numeric literal [", tokenizer.last_token_value)
+					l_message := STRING_.appended_string (l_message,  "]")
+					report_parse_error (l_message, "XPST0003")
 				else
-					a_message := STRING_.appended_string ("Invalid numeric literal [", tokenizer.last_token_value)
-					a_message := STRING_.appended_string (a_message,  "]")
-					report_parse_error (a_message, "XPST0003")
+					create {XM_XPATH_DECIMAL_VALUE} l_value.make (l_decimal)
 				end
 			else
-				if tokenizer.last_token_value.is_integer then -- TODO
-					create {XM_XPATH_INTEGER_VALUE} a_value.make_from_string (tokenizer.last_token_value)
+				create l_decimal.make_from_string_ctx (tokenizer.last_token_value, shared_integer_context)
+				if l_decimal.is_nan then
+					l_message := STRING_.appended_string ("Invalid numeric literal [", tokenizer.last_token_value)
+					l_message := STRING_.appended_string (l_message,  "]")
+					report_parse_error (l_message, "XPST0003")
 				else
-					a_message := STRING_.appended_string ("Invalid numeric literal [", tokenizer.last_token_value)
-					a_message := STRING_.appended_string (a_message,  "]")
-					report_parse_error (a_message, "XPST0003")
+					create {XM_XPATH_INTEGER_VALUE} l_value.make (l_decimal)
 				end
 			end
 			next_token ("In parse_numeric_literal: current token is ")
@@ -1809,7 +1815,7 @@ feature {NONE} -- Implementation
 				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 			end
 			if not is_parse_error then
-				internal_last_parsed_expression := a_value
+				internal_last_parsed_expression := l_value
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void			
@@ -2376,8 +2382,7 @@ feature {NONE} -- Implementation
 						elseif tokenizer.last_token = Name_token then
 							l_node_name := tokenizer.last_token_value
 							generate_name_code (l_node_name, True)
-							l_name_code := last_generated_name_code
-							if l_name_code = -1 then
+							if last_generated_name_code = -1 then
 								report_parse_error ("No name present for node-kind test with name", "XPST0003")
 							else
 								create_named_node_kind_test_with_type_name (l_name_code, l_node_name, is_attribute)
@@ -2423,7 +2428,7 @@ feature {NONE} -- Implementation
 	create_named_node_kind_test_with_type_name (a_name_code: INTEGER; a_node_name: STRING; is_attribute: BOOLEAN) is
 			-- Create a named node-kind test with type name.
 		require
-			positive_name_code: a_name_code >= 0
+			nearly_positive_name_code: a_name_code > -2
 			node_name_not_void: a_node_name /= Void
 			no_error_yet: not is_parse_error
 		local

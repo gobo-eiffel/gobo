@@ -72,6 +72,7 @@ feature -- Execution
 			i, nb: INTEGER
 			arg: STRING
 		do
+			digits := 18
 			create configuration.make_with_defaults
 			error_handler := configuration.error_reporter
 			error_listener := configuration.error_listener
@@ -269,6 +270,9 @@ feature -- Access
 	highly_secure: BOOLEAN
 			-- Is high security wanted?
 
+	digits: INTEGER
+			-- Maximum number of digits in xs:decimal/xs:integer values
+
 feature -- Error handling
 
 	report_cannot_read_error (a_filename: STRING) is
@@ -423,6 +427,7 @@ feature -- Error handling
 									  "       --no-extension-functions%N" +
 									  "       --no-gc%N" +
 									  "       --no-network-protocols%N" +
+									  "       --digits=[n]%N" +
 									  "       --no-catalogs%N" +
 									  "       --no-catalog-pi%N" +
 									  "       --prefer-system%N" +
@@ -484,7 +489,26 @@ feature {NONE} -- Implementation
 
 	title: STRING
 			-- Target style (for use with  xml-stylesheet PIs)
-	
+
+	set_digits (a_value: STRING) is
+			-- Set precision or decimal and integer values.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			if a_value.is_integer then
+				digits := a_value.to_integer
+				if digits < 18 then
+					report_general_message ("digits must exceed 17")
+					report_usage_message
+					Exceptions.die (1)
+				end
+			else
+				report_general_message ("digits must specify a positive integer over 17")
+				report_usage_message
+				Exceptions.die (1)
+			end
+		end
+
 	process_option (an_option: STRING) is
 			-- Process `an_option'.
 		require
@@ -602,6 +626,8 @@ feature {NONE} -- Implementation
 				set_string_parameter (an_option.substring (7, an_option.count))
 			elseif an_option.substring_index ("file=", 1) = 1 and then an_option.count > 5 then
 				process_file (an_option.substring (6, an_option.count))
+			elseif an_option.substring_index ("digits=", 1) = 1 and then an_option.count > 7 then
+				set_digits (an_option.substring (8, an_option.count))
 			elseif an_option.is_equal ("no-output-extensions") then
 				suppress_output_extensions := True
 			elseif an_option.is_equal ("no-extension-functions") then
@@ -741,6 +767,7 @@ feature {NONE} -- Implementation
 		do
 			conformance.set_basic_xslt_processor
 			configuration.use_tiny_tree_model (is_tiny_tree_model)
+			configuration.set_digits (digits)
 			configuration.report_tiny_tree_statistics (is_reporting_document_statistics)
 			if is_tiny_tree_model then
 				configuration.set_tiny_tree_estimates (estimated_nodes, estimated_attributes, estimated_namespaces, estimated_characters)

@@ -131,19 +131,24 @@ feature -- Status report
 			std.error.put_new_line
 		end
 
+	
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
-			if	a_required_type = any_item
-				or else a_required_type = type_factory.any_atomic_type
-				or else a_required_type = type_factory.boolean_type
-				or else a_required_type = type_factory.string_type
-				or else a_required_type = type_factory.numeric_type
-				or else a_required_type = type_factory.integer_type
-				or else a_required_type = type_factory.decimal_type
-				or else a_required_type = type_factory.float_type
-				or else a_required_type = type_factory.double_type then
-				Result := True
+			if	a_required_type = any_item or
+				a_required_type = type_factory.any_atomic_type or
+				a_required_type = type_factory.boolean_type or
+				a_required_type = type_factory.string_type or
+				a_required_type = type_factory.string_type or
+				a_required_type = type_factory.untyped_atomic_type or
+				a_required_type = type_factory.numeric_type or
+				a_required_type = type_factory.float_type or
+				a_required_type = type_factory.double_type then
+					Result := True
+			elseif a_required_type = type_factory.integer_type then
+				Result := is_platform_integer
+			elseif a_required_type = type_factory.decimal_type then
+				Result := not is_nan
 			else
 				Result := False
 			end
@@ -224,6 +229,8 @@ feature -- Conversion
 				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_string (value.out)
 			elseif  a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+			elseif a_required_type = type_factory.untyped_atomic_type then
+				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
 			end
 		end
 
@@ -309,34 +316,38 @@ feature -- Basic operations
 			a_float, another_float: DOUBLE
 			an_integer, another_integer: INTEGER
 		do
-			inspect
-				an_operator
-			when Plus_token then
-				create {XM_XPATH_FLOAT_VALUE} Result.make (value + other.as_double)
-			when Minus_token then
-				create {XM_XPATH_FLOAT_VALUE} Result.make (value - other.as_double)
-			when Multiply_token then
-				create {XM_XPATH_FLOAT_VALUE} Result.make (value * other.as_double)
-			when Division_token then
-				create {XM_XPATH_FLOAT_VALUE} Result.make (value / other.as_double)
-			when Integer_division_token then
-				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value / other.as_double))
-			when Modulus_token then
-				a_float := other.as_double
-				if is_whole_number and then other.is_whole_number then
-					an_integer := as_integer
-					another_integer := other.as_integer
-					create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (an_integer \\ another_integer)
-				else
-					if is_nan or else other.is_nan or else other.is_zero or else is_infinite then
-						create {XM_XPATH_FLOAT_VALUE} Result.make_nan
-					elseif other.is_infinite then
-						Result := Current
-					elseif is_zero then
-						Result := Current
+			if is_nan then
+				Result := Current
+			else
+				inspect
+					an_operator
+				when Plus_token then
+					create {XM_XPATH_FLOAT_VALUE} Result.make (value + other.as_double)
+				when Minus_token then
+					create {XM_XPATH_FLOAT_VALUE} Result.make (value - other.as_double)
+				when Multiply_token then
+					create {XM_XPATH_FLOAT_VALUE} Result.make (value * other.as_double)
+				when Division_token then
+					create {XM_XPATH_FLOAT_VALUE} Result.make (value / other.as_double)
+				when Integer_division_token then
+					create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value / other.as_double))
+				when Modulus_token then
+					a_float := other.as_double
+					if is_whole_number and then other.is_whole_number then
+						an_integer := as_integer
+						another_integer := other.as_integer
+						create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (an_integer \\ another_integer)
 					else
-						another_float := (value / a_float).floor
-						create {XM_XPATH_FLOAT_VALUE} Result.make (value - another_float)
+						if is_nan or else other.is_nan or else other.is_zero or else is_infinite then
+							create {XM_XPATH_FLOAT_VALUE} Result.make_nan
+						elseif other.is_infinite then
+							Result := Current
+						elseif is_zero then
+							Result := Current
+						else
+							another_float := (value / a_float).floor
+							create {XM_XPATH_FLOAT_VALUE} Result.make (value - another_float)
+						end
 					end
 				end
 			end

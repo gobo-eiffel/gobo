@@ -272,7 +272,7 @@ feature -- Test
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('xs:b:fred') cast as xs:QName")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
 	test_untyped_atomic_to_qname_2 is
@@ -285,7 +285,7 @@ feature -- Test
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('xs:untypedAtomic') cast as xs:QName")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end	
 
 	test_untyped_atomic_to_date is

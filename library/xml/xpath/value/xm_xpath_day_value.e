@@ -85,35 +85,43 @@ feature -- Comparison
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Comparison of `Current' to `other'
 		local
-			a_yv: XM_XPATH_DAY_VALUE
-			dt1, dt2: DT_DATE_TIME
-			a_time: DT_TIME
+			l_dv: XM_XPATH_DAY_VALUE
+			l_dt1, l_dt2: DT_DATE_TIME
+			l_time: DT_TIME
 		do
-			a_yv := other.as_day_value
-			if zoned = a_yv.zoned then
-				create a_time.make (0,0,0)
-				create dt1.make_from_date_time (zoned_date.date, a_time)
-				zoned_date.time_zone.convert_to_utc (dt1)
-				create a_time.make (0,0,0)
-				create dt2.make_from_date_time (a_yv.zoned_date.date, a_time)
-				a_yv.zoned_date.time_zone.convert_to_utc (dt2)
-				Result := dt1.three_way_comparison (dt2)
+			l_dv := other.as_day_value
+			if zoned = l_dv.zoned then
+				create l_time.make (0,0,0)
+				if zoned then
+					create l_dt1.make_from_date_time (zoned_date.date, l_time)
+					zoned_date.time_zone.convert_to_utc (l_dt1)
+				else
+					create l_dt1.make_from_date_time (local_date, l_time)
+				end
+				create l_time.make (0,0,0)
+				if zoned then
+					create l_dt2.make_from_date_time (l_dv.zoned_date.date, l_time)
+					l_dv.zoned_date.time_zone.convert_to_utc (l_dt2)
+				else
+					create l_dt2.make_from_date_time (l_dv.local_date, l_time)
+				end
+				Result := l_dt1.three_way_comparison (l_dt2)
  			elseif zoned then
-				create a_time.make (0,0,0)
-				create dt2.make_from_date_time (a_yv.local_date, a_time)
-				a_context.implicit_timezone.convert_to_utc (dt2)
-				create a_time.make (0,0,0)
-				create dt1.make_from_date_time (zoned_date.date, a_time)
-				zoned_date.time_zone.convert_to_utc (dt1)
-				Result := dt1.three_way_comparison (dt2)
+				create l_time.make (0,0,0)
+				create l_dt2.make_from_date_time (l_dv.local_date, l_time)
+				a_context.implicit_timezone.convert_to_utc (l_dt2)
+				create l_time.make (0,0,0)
+				create l_dt1.make_from_date_time (zoned_date.date, l_time)
+				zoned_date.time_zone.convert_to_utc (l_dt1)
+				Result := l_dt1.three_way_comparison (l_dt2)
 			else -- `other' is zoned
-				create a_time.make (0,0,0)
-				create dt2.make_from_date_time (a_yv.local_date, a_time)
-				a_yv.zoned_date.time_zone.convert_to_utc (dt2)
-				create a_time.make (0,0,0)
-				create dt1.make_from_date_time (local_date, a_time)
-				a_context.implicit_timezone.convert_to_utc (dt1)
-				Result := dt1.three_way_comparison (dt2)
+				create l_time.make (0,0,0)
+				create l_dt2.make_from_date_time (l_dv.zoned_date.date, l_time)
+				l_dv.zoned_date.time_zone.convert_to_utc (l_dt2)
+				create l_time.make (0,0,0)
+				create l_dt1.make_from_date_time (local_date, l_time)
+				a_context.implicit_timezone.convert_to_utc (l_dt1)
+				Result := l_dt1.three_way_comparison (l_dt2)
 			end
 		end
 

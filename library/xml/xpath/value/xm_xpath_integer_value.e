@@ -141,15 +141,16 @@ feature -- Status report
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
-			if	a_required_type = any_item
-				or else a_required_type = type_factory.any_atomic_type
-				or else a_required_type = type_factory.boolean_type
-				or else a_required_type = type_factory.string_type
-				or else a_required_type = type_factory.numeric_type
-				or else a_required_type = type_factory.integer_type
-				or else a_required_type = type_factory.decimal_type
-				or else a_required_type = type_factory.float_type
-				or else a_required_type = type_factory.double_type then
+			if	a_required_type = any_item or
+				a_required_type = type_factory.any_atomic_type or
+				a_required_type = type_factory.boolean_type or
+				a_required_type = type_factory.string_type or
+				a_required_type = type_factory.untyped_atomic_type or
+				a_required_type = type_factory.numeric_type or
+				a_required_type = type_factory.integer_type or
+				a_required_type = type_factory.decimal_type or
+				a_required_type = type_factory.float_type or
+				a_required_type = type_factory.double_type then
 				Result := True
 			else
 				Result := False
@@ -233,6 +234,8 @@ feature -- Conversion
 				create {XM_XPATH_DECIMAL_VALUE} Result.make (value)
 			elseif  a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+			elseif a_required_type = type_factory.untyped_atomic_type then
+				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
 			end
 		end
 

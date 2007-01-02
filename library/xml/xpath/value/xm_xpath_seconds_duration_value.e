@@ -21,9 +21,9 @@ inherit
 		redefine
 			is_duration, string_value,
 			is_seconds_duration, as_seconds_duration,
-			same_expression, is_convertible, plus, minus,
+			same_expression, plus, minus,
 			multiply, divide, scalar_divide,
-			display, convert_to_type, item_type
+			display, item_type
 		end
 
 	KL_SHARED_PLATFORM
@@ -157,18 +157,6 @@ feature -- Status report
 			Result := True
 		end
 
-	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
-			-- Is `Current' convertible to `a_required_type'?
-		do
-			if	a_required_type = any_item or else a_required_type = type_factory.any_atomic_type
-				or else a_required_type = type_factory.duration_type
-				or else a_required_type = type_factory.day_time_duration_type
-				or else a_required_type = type_factory.string_type
-				or else a_required_type = type_factory.untyped_atomic_type then
-				Result := True
-			end
-		end
-
 	is_valid_time_zone: BOOLEAN is
 			-- Is `Current' valid as a fixed-offset time zone?
 		local
@@ -206,21 +194,6 @@ feature -- Conversions
 			Result := Current
 		end
 	
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
-			-- Convert `Current' to `a_required_type'
-		do
-			if	a_required_type = any_item or else a_required_type = type_factory.any_atomic_type
-				or else a_required_type = type_factory.day_time_duration_type then
-				Result := Current
-			elseif a_required_type = type_factory.string_type then
-				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
-			elseif a_required_type = type_factory.untyped_atomic_type then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
-			elseif a_required_type = type_factory.duration_type then
-				create {XM_XPATH_DURATION_VALUE} Result.make_from_duration (duration)
-			end
-		end
-
 feature -- Basic operations
 
 	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is

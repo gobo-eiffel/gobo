@@ -23,7 +23,7 @@ inherit
 feature -- Access
 
 	shared_integer_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by all instances of `Current'
+			-- Decimal context for use by all integers
 		once
 			create Result.make (shared_decimal_context.digits, Round_down)
 		end

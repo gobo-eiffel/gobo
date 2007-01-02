@@ -201,6 +201,9 @@ feature -- Access
 						if Result then
 							last_cached_date_time_string := a_formatted_date_time
 							create last_cached_date_time.make_from_date_time (last_cached_date, last_cached_time)
+							if last_time_carry then
+								last_cached_date_time.add_days (1)
+							end
 						end
 					end
 				end
@@ -280,6 +283,7 @@ feature -- Access
 			some_components, some_seconds: DS_LIST [STRING]
 			an_hour, a_minute, a_second, a_millisecond: INTEGER
 		do
+			last_time_carry := False
 			if not a_formatted_time.is_empty then
 				if STRING_.same_string (a_formatted_time, last_cached_time_string) then
 					Result := True
@@ -317,11 +321,13 @@ feature -- Access
 														end
 														if Result and then an_hour = 24 then
 															Result := a_minute = 0 and then a_second = 0 and then a_millisecond = 0
+															last_time_carry := True
 														end
 													end
 													if Result then
 														if an_hour = 24 then
 															an_hour := 0
+															last_time_carry := True
 														end
 														create last_cached_time.make_precise (an_hour, a_minute, a_second, a_millisecond)
 														last_cached_time_string := a_formatted_time
@@ -1297,6 +1303,9 @@ feature {NONE} -- Implementation
 
 	last_cached_time: DT_TIME
 			-- Last date validated by `is_time'
+
+	last_time_carry: BOOLEAN
+			-- Does `last_cached_time' include a 24-hour carry?
 
 	last_cached_zoned_time_string: STRING
 			-- Last string validated by `is_zoned_time'

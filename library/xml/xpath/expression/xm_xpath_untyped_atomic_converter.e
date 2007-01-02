@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			sequence_not_void: a_sequence /= Void
 			target_type_not_void: a_required_type /= Void
 		do
+			error_code := "FORG0001"
 			make_unary (a_sequence)
 			target_type := a_required_type
 			compute_static_properties
@@ -55,6 +56,9 @@ feature -- Access
 				-- that `Result' is not optimized away.
 			end
 		end
+
+	error_code: STRING
+			-- Error code to use
 
 feature -- Optimization	
 
@@ -116,7 +120,7 @@ feature -- Evaluation
 					last_evaluated_item := base_expression.last_evaluated_item.as_untyped_atomic.convert_to_type (target_type)
 				else
 					a_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "FORG0001", Type_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, error_code, Type_error)
 				end
 			else
 				last_evaluated_item := base_expression.last_evaluated_item
@@ -150,12 +154,25 @@ feature -- Evaluation
 					create last_mapped_item.make_item (an_untyped_atomic_value.convert_to_type (target_type))
 				else
 					a_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
-					create an_invalid_item.make_from_string (a_message, Xpath_errors_uri, "FORG0001", Type_error)
+					create an_invalid_item.make_from_string (a_message, Xpath_errors_uri, error_code, Type_error)
 					create last_mapped_item.make_item (an_invalid_item)
 				end
 			else
 				create last_mapped_item.make_item (an_item)
 			end
+		end
+
+feature -- Element change
+
+	set_error_code (a_code: like error_code) is
+			-- Set `eeror_code' to `a_code'
+		require
+			a_code_not_void: a_code /= Void
+			a_code_not_empty : not a_code.is_empty
+		do
+			error_code := a_code
+		ensure
+			code_set: error_code = a_code
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -179,5 +196,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 invariant
 
 	target_type_not_void: initialized implies target_type /= Void
+	error_code_not_void: error_code /= Void
+	error_code_not_empty : not error_code.is_empty
 
 end

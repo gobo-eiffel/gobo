@@ -102,7 +102,7 @@ feature -- Optimization
 						a_namespace_uri := a_context.uri_for_prefix (an_xml_prefix)
 					end
 				else
-					set_last_error_from_string ("Argument to cast as xs:QName is not a lexical QName", Xpath_errors_uri, "FORG0001", Static_error)
+					set_last_error_from_string ("Argument to cast as xs:QName is not a lexical QName", Xpath_errors_uri, "XPTY0004", Static_error)
 				end
 				if not is_error then
 					if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_namespace_uri, a_local_name) then
@@ -119,7 +119,7 @@ feature -- Optimization
 					end
 				end
 			else
-				set_last_error_from_string ("The argument of a QName constructor must be a string literal", Xpath_errors_uri, "FORG0001", Static_error)
+				set_last_error_from_string ("The argument of a QName constructor must be a string literal", Xpath_errors_uri, "XPTY0004", Static_error)
 			end
 		end
 

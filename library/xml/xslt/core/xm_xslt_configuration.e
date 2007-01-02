@@ -31,11 +31,6 @@ inherit
 
 	XM_XSLT_VALIDATION
 
-	MA_SHARED_DECIMAL_CONTEXT
-		export {NONE} all end
-
-	MA_DECIMAL_CONTEXT_CONSTANTS
-		export {NONE} all end
 
 create
 
@@ -65,7 +60,6 @@ feature {NONE} -- Initialization
 			uri_resolver := a_uri_resolver
 			output_resolver := an_output_resolver
 			set_error_listener (an_error_listener)
-			shared_decimal_context.set_digits (18)
 			saved_base_uri := entity_resolver.uri
 			create extension_functions.make_default
 			create media_type_map.make
@@ -237,15 +231,6 @@ feature -- Element change
 			entity_resolver.reset_uri_stack (saved_base_uri)
 		end
 
-	set_digits (digits: INTEGER) is
-			-- Set the preceision for decimal and integer arithmetic.
-		require
-			sufficient_precision: digits >= 18
-		do
-			shared_decimal_context.set_digits (digits)
-		ensure
-			digits_set: shared_decimal_context.digits = digits
-		end
 			
 	set_line_numbering (on_or_off: BOOLEAN) is
 			-- Turn line numbering `on_or_off'.

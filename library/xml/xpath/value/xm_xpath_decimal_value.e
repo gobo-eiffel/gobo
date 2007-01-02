@@ -47,7 +47,11 @@ feature {NONE} -- Initialization
 			is_decimal: a_value /= Void and then is_string_a_decimal (a_value)
 		do
 			make_atomic_value
-			create value.make_from_string (a_value)
+			if a_value.index_of ('e', 1) = 0 and a_value.index_of ('E', 1) = 0 then
+				create value.make_from_string (a_value)
+			else
+				create error_value.make_from_string ("Decimal literal may not contain e or E", Xpath_errors_uri, "FORG0001", Dynamic_error)
+			end
 		end
 
 	make_error (a_string, a_namespace_uri, an_error_code: STRING; an_error_type: INTEGER) is
@@ -164,15 +168,16 @@ feature -- Status report
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
-			if	a_required_type = any_item
-				or else a_required_type = type_factory.any_atomic_type
-				or else a_required_type = type_factory.boolean_type
-				or else a_required_type = type_factory.string_type
-				or else a_required_type = type_factory.numeric_type
-				or else a_required_type = type_factory.integer_type
-				or else a_required_type = type_factory.decimal_type
-				or else a_required_type = type_factory.float_type
-				or else a_required_type = type_factory.double_type then
+			if	a_required_type = any_item or
+				a_required_type = type_factory.any_atomic_type or
+				a_required_type = type_factory.boolean_type or
+				a_required_type = type_factory.string_type or
+				a_required_type = type_factory.untyped_atomic_type or
+				a_required_type = type_factory.numeric_type or
+				a_required_type = type_factory.integer_type or
+				a_required_type = type_factory.decimal_type or
+				a_required_type = type_factory.float_type or
+				a_required_type = type_factory.double_type then
 				Result := True
 			else
 				Result := False
@@ -277,6 +282,8 @@ feature -- Conversion
 				Result := Current
 			elseif  a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+			elseif a_required_type = type_factory.untyped_atomic_type then
+				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
 			end
 		end
 
@@ -370,5 +377,9 @@ feature -- Basic operations
 				end
 			end
 		end
+
+invariant
+
+	value_not_void_or_error: error_value = Void implies value /= Void
 
 end

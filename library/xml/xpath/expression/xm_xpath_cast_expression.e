@@ -146,6 +146,8 @@ feature -- Optimization
 							if last_evaluated_item = Void then
 								create an_empty_sequence.make
 								set_replacement (an_empty_sequence)
+							elseif last_evaluated_item.is_error then
+								set_last_error (last_evaluated_item.error_value)
 							elseif last_evaluated_item.is_atomic_value then
 								set_replacement (last_evaluated_item.as_atomic_value)
 							end

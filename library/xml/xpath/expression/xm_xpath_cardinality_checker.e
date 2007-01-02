@@ -62,7 +62,11 @@ feature -- Optimization
 			mark_unreplaced
 			base_expression.check_static_type (a_context, a_context_item_type)
 			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
+				if base_expression.replacement_expression.is_error then
+					set_last_error (base_expression.replacement_expression.error_value)
+				else
+					set_base_expression (base_expression.replacement_expression)
+				end
 			end
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)

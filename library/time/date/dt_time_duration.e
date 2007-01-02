@@ -12,7 +12,7 @@ indexing
 	revision: "$Revision$"
 
 class DT_TIME_DURATION
- 
+
 inherit
 
 	DT_DURATION
@@ -364,7 +364,7 @@ feature -- Basic operations
 			Result.add_precise_hours_minutes_seconds (other.hour, other.minute,
 				other.second, other.millisecond)
 		end
-	
+
 	infix "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do

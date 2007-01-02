@@ -12,6 +12,14 @@ indexing
 
 class XM_XPATH_CONFIGURATION
 
+inherit
+
+	MA_SHARED_DECIMAL_CONTEXT
+		export {NONE} all end
+
+	MA_DECIMAL_CONTEXT_CONSTANTS
+		export {NONE} all end
+
 create
 
 	make_configuration
@@ -23,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			create {XM_XPATH_DEFAULT_COLLECTION_RESOLVER} collection_resolver.make
 			product_name := "Gexslt"
+			shared_decimal_context.set_digits (18)
 		end
 
 feature -- Access
@@ -88,6 +97,16 @@ feature -- Element change
 			product_name := a_name
 		ensure
 			name_set: product_name = a_name
+		end
+
+	set_digits (digits: INTEGER) is
+			-- Set the preceision for decimal and integer arithmetic.
+		require
+			sufficient_precision: digits >= 18
+		do
+			shared_decimal_context.set_digits (digits)
+		ensure
+			digits_set: shared_decimal_context.digits = digits
 		end
 
 	trace (a_label, a_value: STRING) is

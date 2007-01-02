@@ -254,7 +254,7 @@ feature -- Element change
 			else
 				if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
 				if required_type /= Void then
-					create a_role.make (Template_result_role, role_identifier, 1, Xpath_errors_uri, "XPTY0004")
+					create a_role.make (Template_result_role, role_identifier, 1, Xpath_errors_uri, "XTTE0505")
 					create a_type_checker
 					a_type_checker.static_type_check (static_context, a_content, required_type, False, a_role)
 					if a_type_checker.is_static_type_check_error	then

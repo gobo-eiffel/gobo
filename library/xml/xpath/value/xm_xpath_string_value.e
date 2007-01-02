@@ -162,9 +162,10 @@ feature -- Status report
 				a_string := trimmed_white_space (value)
 				Result := a_string.is_integer
 			elseif a_required_type = type_factory.decimal_type then
-				a_string := trimmed_white_space (value)
-				create last_decimal.make_from_string (a_string)
-				Result := not (last_decimal.is_nan)
+				if value.index_of ('e', 1) = 0 and value.index_of ('E', 1) = 0 then
+					create last_decimal.make_from_string (trimmed_white_space (value))
+					Result := not (last_decimal.is_nan)
+				end
 			elseif a_required_type = type_factory.untyped_atomic_type
 				or else a_required_type = type_factory.string_type
 				or else a_required_type = type_factory.any_atomic_type
@@ -258,6 +259,9 @@ feature -- Conversion
 			elseif a_required_type = type_factory.integer_type then
 				create {XM_XPATH_INTEGER_VALUE} Result.make_from_string (a_value)
 			elseif a_required_type = type_factory.decimal_type then
+				if last_decimal = Void then
+					create last_decimal.make_from_string (trimmed_white_space (value))
+				end
 				create {XM_XPATH_DECIMAL_VALUE} Result.make (last_decimal)
 			elseif a_required_type = type_factory.any_uri_type then
 				create {XM_XPATH_ANY_URI_VALUE} Result.make (value)

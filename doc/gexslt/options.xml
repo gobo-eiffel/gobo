@@ -633,6 +633,14 @@
     <title>Miscellaneous</title>
     <variablelist>
       <varlistentry>
+	<term>--digits=[maximum_decimal_digits]</term>
+	<listitem>
+	  <para>
+	   Maximum number of digits permitted in xs:decimal and xs:integer values. Default (and minimum) is 18.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
 	<term>--no-network-protocols</term>
 	<listitem>
 	  <para>
