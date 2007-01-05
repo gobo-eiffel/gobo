@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			a_reference_not_void: a_reference /= Void
 			a_reference_not_empty: not a_reference.is_empty
 			a_reference_valid: not Url_encoding.has_excluded_characters (a_reference)
+			valid_optional_fragment_identifier: a_reference.occurrences ('#') < 2
 		do
 			full_reference := a_reference
 			parse_reference

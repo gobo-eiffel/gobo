@@ -264,6 +264,64 @@ feature -- Valid characters
 			end
 		end
 
+	has_excluded_iri_codes (s: STRING): BOOLEAN is
+			-- Does `s' contain code points dis-allowed in IRIs?
+		require
+			s_not_void: s /= Void
+		local
+			i,c, nb: INTEGER
+		do
+			nb := s.count
+			from i := 1 until i > nb loop
+				c := s.item_code (i)
+				inspect
+					c
+				when 0..32 then
+					-- Control characters and space.
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				when 128..159 then
+					-- Latin-1 non-alpahbetic
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				when 34, 60, 62 then
+					-- Delimiters ("<>), we allow %, else we can't create
+					-- URIs with encoded data.
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				when 40, 41, 92, 94, 96, 124 then
+					-- ({,},|,\,^,`)Unwise, can be modified by gateways and transport agents.
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				when 55296..57343 then
+					-- UTF-16 surrogate codes
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				when 64976..65007  then
+					-- UTF-16 surrogate codes
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				when 65520..65536 then
+					-- ?? (last two are non-characters)
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				when 131070..131071, 196606..196607,
+					262142..262143, 327678..327679,
+					393214..393215, 458750..458751,
+					524286..524287, 589822..589823,
+					655358..655359, 720894..720895,
+					786430..786431, 851966..851967,
+					917502..917503, 983038..983039,
+					1048574..1048575, 1114110..1114111 then
+					-- non-characters
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					-- OK.
+				end
+			end
+		end
+
 	is_valid_scheme (a_scheme: STRING): BOOLEAN is
 			-- Is `a_scheme' a valid scheme?
 		local
