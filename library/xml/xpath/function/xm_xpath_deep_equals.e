@@ -166,7 +166,9 @@ feature {NONE} -- Implementation
 									second_item_atomic: another_item.is_atomic_value 
 									-- as they are not nodes
 								end
-								if a_comparer.three_way_comparison (an_item.as_atomic_value, another_item.as_atomic_value) /= 0 then
+								if not a_comparer.are_comparable (an_item.as_atomic_value, another_item.as_atomic_value) then
+									Result := False; finished := True
+								elseif a_comparer.three_way_comparison (an_item.as_atomic_value, another_item.as_atomic_value) /= 0 then
 									Result := False; finished := True
 								end
 							end

@@ -253,19 +253,20 @@ feature -- Optimization
 					a_cursor.forth
 				end
 			end
-			from
-				a_cursor := actions.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				an_expression := a_cursor.item
-				an_expression.optimize (a_context, a_context_item_type)
-				if an_expression.was_expression_replaced then
-					a_cursor.replace (an_expression.replacement_expression)
-				end
-				a_cursor.forth
-			end	
-
+			if not was_expression_replaced then
+				from
+					a_cursor := actions.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					an_expression := a_cursor.item
+					an_expression.optimize (a_context, a_context_item_type)
+					if an_expression.was_expression_replaced then
+						a_cursor.replace (an_expression.replacement_expression)
+					end
+					a_cursor.forth
+				end	
+			end
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is

@@ -133,8 +133,7 @@ feature -- Optimization
 									a_message := STRING_.concat ("Type ", a_type.conventional_name)
 									a_message := STRING_.appended_string (a_message, " is not an ordered type")
 									set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
-								end
-								if not is_ordered (another_primitive_type) then
+								elseif not is_ordered (another_primitive_type) then
 									a_message := STRING_.concat ("Type ", another_type.conventional_name)
 									a_message := STRING_.appended_string (a_message, " is not an ordered type")
 									set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
@@ -624,43 +623,43 @@ feature {NONE} -- Implementation
 			a_context.issue_warning (a_message)
 		end
 
-	check_correct_relation (an_atomic_value: XM_XPATH_ATOMIC_VALUE; an_operator: INTEGER;
-											an_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; another_atomic_value: XM_XPATH_ATOMIC_VALUE) is
+	check_correct_relation (a_atomic_value: XM_XPATH_ATOMIC_VALUE; a_operator: INTEGER;
+											a_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; a_other_value: XM_XPATH_ATOMIC_VALUE) is
 			-- Compare two atomic values
 		require
-			first_value_not_void: an_atomic_value /= Void
-			second_value_not: another_atomic_value /= Void
-			valid_value_operator: is_value_comparison_operator (an_operator)
-			comparer_not_void: an_atomic_comparer /= Void
+			first_value_not_void: a_atomic_value /= Void
+			second_value_not: a_other_value /= Void
+			valid_value_operator: is_value_comparison_operator (a_operator)
+			comparer_not_void: a_atomic_comparer /= Void
 			no_previous_error: not is_error
 		local
-			a_message: STRING
+			l_message: STRING
 		do
-			if an_atomic_value.is_numeric_value and then an_atomic_value.as_numeric_value.is_nan then
-				last_check_result := False
-			elseif another_atomic_value.is_numeric_value and then another_atomic_value.as_numeric_value.is_nan then
-				last_check_result := False
-			elseif an_atomic_comparer.are_comparable (an_atomic_value, another_atomic_value) then
+			if a_atomic_value.is_numeric_value and then a_other_value.as_numeric_value.is_nan then
+				last_check_result := (a_operator = Fortran_not_equal_token)
+			elseif a_other_value.is_numeric_value and then a_atomic_value.as_numeric_value.is_nan then
+				last_check_result := (a_operator = Fortran_not_equal_token)
+			elseif a_atomic_comparer.are_comparable (a_atomic_value, a_other_value) then
 				inspect
-					an_operator
+					a_operator
 				when Fortran_equal_token then
-					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) = 0
+					last_check_result := a_atomic_comparer.three_way_comparison (a_atomic_value, a_other_value) = 0
 				when Fortran_not_equal_token then
-					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) /= 0
+					last_check_result := a_atomic_comparer.three_way_comparison (a_atomic_value, a_other_value) /= 0
 				when Fortran_greater_than_token then
-					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) = 1
+					last_check_result := a_atomic_comparer.three_way_comparison (a_atomic_value, a_other_value) = 1
 				when Fortran_less_than_token then
-					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) = -1
+					last_check_result := a_atomic_comparer.three_way_comparison (a_atomic_value, a_other_value) = -1
 				when Fortran_greater_equal_token then
-					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) /= -1
+					last_check_result := a_atomic_comparer.three_way_comparison (a_atomic_value, a_other_value) /= -1
 				when Fortran_less_equal_token then
-					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) /= 1
+					last_check_result := a_atomic_comparer.three_way_comparison (a_atomic_value, a_other_value) /= 1
 				end
 			else
-				a_message := STRING_.appended_string ("Cannot compare ", an_atomic_value.item_type.conventional_name)
-				a_message := STRING_.appended_string (a_message, " with ")
-				a_message := STRING_.appended_string (a_message, another_atomic_value.item_type.conventional_name)
-				create error_value.make_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
+				l_message := STRING_.appended_string ("Cannot compare ", a_atomic_value.item_type.conventional_name)
+				l_message := STRING_.appended_string (l_message, " with ")
+				l_message := STRING_.appended_string (l_message, a_other_value.item_type.conventional_name)
+				create error_value.make_from_string (l_message, Xpath_errors_uri, "XPTY0004", Type_error)
 			end
 		end
 

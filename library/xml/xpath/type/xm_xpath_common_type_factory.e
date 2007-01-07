@@ -778,7 +778,7 @@ feature {NONE} -- Implementation
 			bind_xs_name (Idrefs_type_code, "IDREFS")
 			bind_xs_name (Entity_type_code, "ENTITY")
 			bind_xs_name (Entities_type_code, "ENTITIES")
-			bind_xs_name (Any_type_code, "any")
+			bind_xs_name (Any_type_code, "anyType")
 			bind_xs_name (Any_simple_type_code, "anySimpleType")
 			bind_xs_name (Any_atomic_type_code, "anyAtomicType")
 			bind_xs_name (Untyped_atomic_type_code, "untypedAtomic")

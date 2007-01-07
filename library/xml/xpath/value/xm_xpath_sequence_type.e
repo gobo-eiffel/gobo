@@ -196,7 +196,7 @@ feature	{NONE} -- Initialization
 			-- Create a sequence that exactly one numeric values
 		do
 			primary_type := type_factory.numeric_type
-			set_cardinality_zero_or_more
+			set_cardinality_exactly_one
 		end
 
 	make_optional_number is
@@ -210,7 +210,7 @@ feature	{NONE} -- Initialization
 			-- Create a sequence that allows zero or more numeric values
 		do
 			primary_type := type_factory.numeric_type
-			set_cardinality_exactly_one
+			set_cardinality_zero_or_more
 		end
 
 	make_atomic_sequence is

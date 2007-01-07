@@ -137,8 +137,6 @@ feature -- Status report
 
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
-		local
-			l_float: REAL
 		do
 			if	a_required_type = any_item or
 				a_required_type = type_factory.any_atomic_type or
@@ -154,8 +152,7 @@ feature -- Status report
 			elseif a_required_type = type_factory.decimal_type then
 				Result := not is_nan
 			elseif a_required_type = type_factory.float_type then
-				l_float := value
-				Result := (value = l_float)
+				Result := True -- TODO
 			else
 				Result := False
 			end

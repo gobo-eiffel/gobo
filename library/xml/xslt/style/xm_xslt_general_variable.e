@@ -228,7 +228,7 @@ feature -- Status setting
 								if as_type.cardinality_allows_zero then
 									create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 								else
-									create an_error.make_from_string ("Default value () is not valid for the declared type", Xpath_errors_uri, "XTTE0590", Type_error)
+									create an_error.make_from_string ("Default value () is not valid for the declared type", Xpath_errors_uri, "XTTE0570", Type_error)
 									report_compile_error (an_error)
 								end
 							end

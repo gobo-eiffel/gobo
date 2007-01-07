@@ -22,9 +22,14 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+	
 	XM_XPATH_TYPE
+		export {NONE} all end
 
 	XM_XSLT_STRING_ROUTINES
+		export {NONE} all end
 
 create
 
@@ -44,12 +49,6 @@ feature {NONE} -- Initialization
 			strip_all := False
 			preserve_all := stripper_mode = Void
 			create strip_stack.make (100)
-			if shared_name_pool.is_name_code_allocated ("xml", Xml_uri, "space") then
-				xml_space_code := shared_name_pool.name_code ("xml", Xml_uri, "space")
-			else
-				shared_name_pool.allocate_name ("xml", Xml_uri, "space")
-				xml_space_code := shared_name_pool.last_name_code
-			end
 			create orphan.make (Element_node, "")
 			base_receiver := an_underlying_receiver
 			base_uri := an_underlying_receiver.base_uri
@@ -73,6 +72,9 @@ feature -- Access
 
 	Preserve_parent: INTEGER is 4
 			-- Parent element requests preserve white space
+
+	Must_not_strip: INTEGER is 8
+			-- Simple content model forbids stripping
 
 	found_space_preserving_mode: INTEGER
 			-- Result from `find_space_preserving_mode'
@@ -143,15 +145,18 @@ feature -- Events
 		do
 			Precursor (a_name_code, a_type_code, properties)
 			a_parent_preservation_status := strip_stack.item
-			if a_parent_preservation_status - Preserve_parent < 0 then
-				a_preservation_status := Strip_default
-			else
-				a_preservation_status := Preserve_parent
-			end
+			a_preservation_status := INTEGER_.bit_and (a_parent_preservation_status, Preserve_parent)
 
 			find_space_preserving_mode (a_name_code)
 			if found_space_preserving_mode = Always_preserve then
-				a_preservation_status := a_preservation_status + Always_preserve
+				a_preservation_status := INTEGER_.bit_or (a_preservation_status, Always_preserve)
+			elseif found_space_preserving_mode = Always_strip then
+				a_preservation_status := INTEGER_.bit_or (a_preservation_status, Always_strip)
+			end
+			if a_preservation_status = Strip_default and a_type_code > 0 and a_type_code /= Untyped_type_code then
+				-- TODO: if schema_aware
+				-- elements with simple content may not be stripped
+				--if ... then  a_preservation_status := INTEGER_.bit_or (a_preservation_status, Must_not_strip)
 			end
 			strip_stack.force (a_preservation_status)
 			mark_as_written
@@ -165,18 +170,16 @@ feature -- Events
 
 			-- Test for xml:space="preserve"
 
-			if a_name_code = xml_space_code then
+			if fingerprint_from_name_code (a_name_code) = xml_space_type_code then
 				if STRING_.same_string (a_value, "preserve") then
-					a_preservation_status := strip_stack.item
-					if a_preservation_status < Preserve_parent then
-						a_preservation_status := a_preservation_status + Preserve_parent
-					end
+					a_preservation_status := INTEGER_.bit_or (strip_stack.item, Preserve_parent)
 					strip_stack.replace (a_preservation_status)
 				elseif STRING_.same_string (a_value, "default") then
-					if a_preservation_status >= Preserve_parent then
+					a_preservation_status := strip_stack.item
+					if INTEGER_.bit_and (a_preservation_status, Preserve_parent) /= 0 then
 						a_preservation_status := a_preservation_status - Preserve_parent
+						strip_stack.replace (a_preservation_status)
 					end
-					strip_stack.replace (a_preservation_status)
 				end
 			end
 			Precursor (a_name_code, a_type_code, a_value, properties)
@@ -191,8 +194,6 @@ feature -- Events
 
 	notify_characters (chars: STRING; properties: INTEGER) is
 			-- Notify character data.
-		local
-			a_preservation_status: INTEGER
 		do
 
 			-- Assumes adjacent chunks of text are already concatenated
@@ -200,17 +201,9 @@ feature -- Events
 			if chars.count > 0 then
 				if not is_all_whitespace (chars) then
 					Precursor (chars, properties)
-				elseif strip_stack.item /= Strip_default then
-					a_preservation_status := strip_stack.item
-
-					-- Unless Always_strip is set, we do not strip.
-				
-					if a_preservation_status >= Preserve_parent then
-						a_preservation_status := a_preservation_status - Preserve_parent
-					end
-					if a_preservation_status /= Always_strip then
-						Precursor (chars, properties)
-					end
+				elseif INTEGER_.bit_and (strip_stack.item, INTEGER_.bit_or (INTEGER_.bit_or (Preserve_parent, Always_preserve), Must_not_strip)) /= 0 and then
+					INTEGER_.bit_and (strip_stack.item, Always_strip) = 0 then
+					Precursor (chars, properties)
 				end
 			end
 			mark_as_written
@@ -259,9 +252,6 @@ feature {NONE} -- Implementation
 
 	stripper_mode: XM_XSLT_MODE
 			-- Collection of rules governing stripping
-
-	xml_space_code: INTEGER
-			-- Name code for xml:space attribute
 
 	orphan: XM_XPATH_ORPHAN
 			-- Dummy element for `{XM_XSLT_MODE}.rule'

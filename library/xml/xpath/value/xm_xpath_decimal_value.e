@@ -138,7 +138,7 @@ feature -- Comparison
 				is_a_decimal := True
 			end
 			if is_a_decimal then
-				if value = a_value then
+				if value.is_equal (a_value) then
 					Result := 0
 				elseif value > a_value then
 					Result := 1

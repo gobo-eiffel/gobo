@@ -47,7 +47,7 @@ feature -- Comparison
 		require
 			first_value_not_void: an_atomic_value /= Void
 			second_value_not: another_atomic_value /= Void
-			are_comparable (an_atomic_value, another_atomic_value)
+			values_are_comparable: are_comparable (an_atomic_value, another_atomic_value)
 		local
 			compared: BOOLEAN
 		do

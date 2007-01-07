@@ -1616,7 +1616,7 @@ feature -- Evaluation
 			not_in_error: not is_error
 			not_replaced: not was_expression_replaced
 		local
-			an_item: XM_XPATH_ITEM
+			l_item: XM_XPATH_ITEM
 		do
 			last_boolean_value := Void
 			create_iterator (a_context)
@@ -1626,45 +1626,45 @@ feature -- Evaluation
 					create last_boolean_value.make (False)
 					last_boolean_value.set_last_error (last_iterator.error_value)
 				elseif not last_iterator.after then
-					an_item := last_iterator.item
-					if an_item.is_node then
+					l_item := last_iterator.item
+					if l_item.is_node then
 						create last_boolean_value.make (True)
 					else
-						if an_item.is_boolean_value then
+						if l_item.is_boolean_value then
 							last_iterator.forth
 							if last_iterator.is_error then
 								create last_boolean_value.make (False)
 								last_boolean_value.set_last_error (last_iterator.error_value)
 							elseif last_iterator.after then
-								create last_boolean_value.make (an_item.as_boolean_value.value)
+								create last_boolean_value.make (l_item.as_boolean_value.value)
 							else
 								last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 							end
 						else
-							if an_item.is_string_value then
+							if l_item.is_string_value or l_item.is_untyped_atomic then -- includes URI
 								last_iterator.forth
 								if last_iterator.is_error then
 									create last_boolean_value.make (False)
 									last_boolean_value.set_last_error (last_iterator.error_value)
 								elseif last_iterator.after then
-									create last_boolean_value.make (an_item.as_string_value.string_value.count /= 0)
+									create last_boolean_value.make (l_item.string_value.count /= 0)
 								else
 									last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 								end
 							else
-								if an_item.is_numeric_value then
+								if l_item.is_numeric_value then
 									last_iterator.forth
 									if last_iterator.is_error then
 										create last_boolean_value.make (False)
 										last_boolean_value.set_last_error (last_iterator.error_value)
 									elseif last_iterator.after then
-										an_item.as_numeric_value.calculate_effective_boolean_value (a_context)
-										last_boolean_value := an_item.as_numeric_value.last_boolean_value
+										l_item.as_numeric_value.calculate_effective_boolean_value (a_context)
+										last_boolean_value := l_item.as_numeric_value.last_boolean_value
 									else
 										last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 									end
 								else
-									last_boolean_value := effective_boolean_value_in_error ("sequence starting with an atomic value other than a boolean, number, or string")
+									last_boolean_value := effective_boolean_value_in_error ("sequence starting with a typed atomic value other than a boolean, number, URI or string")
 								end
 							end
 						end
@@ -1977,7 +1977,7 @@ feature {XM_XPATH_EXPRESSION} -- Local
 			reason_not_empty: a_reason /= Void and then a_reason.count > 0
 		do
 			create Result.make (False)
-			Result.set_last_error_from_string ("Effective boolean value is not defined for a " + a_reason, Gexslt_eiffel_type_uri, "EFFECTIVE_BOOLEAN_VALUE", Type_error)
+			Result.set_last_error_from_string ("Effective boolean value is not defined for a " + a_reason, Xpath_errors_uri, "FORG0006", Type_error)
 		end
 		
 invariant

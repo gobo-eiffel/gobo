@@ -96,13 +96,18 @@ feature -- Matching
 
 	matches_node (a_node_kind: INTEGER; a_name_code: INTEGER; a_node_type: INTEGER): BOOLEAN is
 			-- Is this node test satisfied by a given node?
+		local
+			l_schema_type: XM_XPATH_SCHEMA_TYPE
 		do
 			if node_kind /= a_node_kind then
 				Result := False
+			elseif content_type.is_any_type then
+				Result := True
 			elseif a_node_type = content_type.fingerprint then
 				Result := True
 			else
-				Result := False
+				l_schema_type := type_factory.schema_type (a_node_type)
+				Result := l_schema_type /= Void and then is_sub_type (l_schema_type, content_type)
 			end
 		end
 

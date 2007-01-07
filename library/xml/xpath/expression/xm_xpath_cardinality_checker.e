@@ -84,45 +84,46 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			finished: BOOLEAN
-			items: INTEGER
-			an_item: XM_XPATH_ITEM
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_finished: BOOLEAN
+			l_items: INTEGER
+			l_item: XM_XPATH_ITEM
 		do
 			last_evaluated_item := Void
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if not an_iterator.is_error then
+			l_iterator := base_expression.last_iterator
+			if not l_iterator.is_error then
 				from
-					an_iterator.start
+					l_iterator.start
 				until
-					finished or else an_iterator.is_error
+					l_finished or else l_iterator.is_error
 				loop
-					if an_iterator.is_error then
-						finished := True
-					elseif an_iterator.after then
-						finished := True
+					if l_iterator.is_error then
+						l_finished := True
+					elseif l_iterator.after then
+						l_finished := True
 					else
-						an_item := an_iterator.item
-						if an_item /= Void then
-							last_evaluated_item := an_item
-							items := items + 1
+						l_item := l_iterator.item
+						if l_item /= Void then
+							last_evaluated_item := l_item
+							l_items := l_items + 1
 						end
-						if items > 1 then
+						if l_items > 1 then
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ",
 																																						 role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error)
+							l_iterator.set_last_error (last_evaluated_item.error_value)
 							if not system_id.is_empty then
 								last_evaluated_item.error_value.set_location (system_id, line_number)
 							end
-							finished := True
+							l_finished := True
 						else
-							an_iterator.forth
+							l_iterator.forth
 						end
 					end
 				end
 
-				if not an_iterator.is_error then
-					if items = 0 and then not is_cardinality_allows_zero (required_cardinality) then
+				if not l_iterator.is_error then
+					if l_items = 0 and then not is_cardinality_allows_zero (required_cardinality) then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
 																																					 role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error)
 						if not system_id.is_empty then
@@ -130,13 +131,13 @@ feature -- Evaluation
 						end
 					end
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
 					if not system_id.is_empty then
 						last_evaluated_item.error_value.set_location (system_id, line_number)
 					end
 				end
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
 				if not system_id.is_empty then
 					last_evaluated_item.error_value.set_location (system_id, line_number)
 				end

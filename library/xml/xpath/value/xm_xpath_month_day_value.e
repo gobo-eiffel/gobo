@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_DATE_VALUE
 		redefine
-			make, is_date_value, item_type,
+			make, make_from_date, make_from_zoned_date,
+			is_date_value, item_type,
 			is_date, same_expression,
 			string_value, three_way_comparison,
 			is_comparable, is_convertible,
@@ -44,6 +45,20 @@ feature {NONE} -- Initialization
 				local_date := a_date_time_parser.string_to_month_day (a_lexical_date)
 			end
 			if not zoned then set_depends_upon_implicit_timezone end
+		end
+
+	make_from_date (a_date: DT_DATE) is
+			-- Create from date object.
+		do
+			Precursor (a_date)
+			local_date.set_year (1)
+		end
+
+	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is
+			-- Create from date object.
+		do
+			Precursor (a_date)
+			zoned_date.date.set_year (1)
 		end
 
 feature -- Access

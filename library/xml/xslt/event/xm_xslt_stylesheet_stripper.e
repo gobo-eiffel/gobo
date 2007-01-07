@@ -74,7 +74,7 @@ feature -- Access
 			a_fingerprint, counter: INTEGER
 			found: BOOLEAN
 		do
-			a_fingerprint := a_name_code - (a_name_code // bits_20) * bits_20
+			a_fingerprint := fingerprint_from_name_code (a_name_code)
 			if a_fingerprint = xsl_text_fingerprint then
 				found_space_preserving_mode := Always_preserve
 			else

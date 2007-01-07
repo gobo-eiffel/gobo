@@ -191,14 +191,20 @@ feature -- Evaluation
 			select_expression_not_void: select_expression /= Void
 			no_error: not a_context.transformer.is_error
 		do
-			select_expression.evaluate_item (a_context)
-			if select_expression.last_evaluated_item = Void then
-				last_string_value := ""
-			elseif select_expression.last_evaluated_item.is_error then
-				last_string_value := Void
-				set_last_error (select_expression.last_evaluated_item.error_value)
-			else
-				last_string_value := select_expression.last_evaluated_item.string_value
+			if not is_error then
+				if select_expression.is_error then
+					set_last_error (select_expression.error_value)
+				else
+					select_expression.evaluate_item (a_context)
+					if select_expression.last_evaluated_item = Void then
+						last_string_value := ""
+					elseif select_expression.last_evaluated_item.is_error then
+						last_string_value := Void
+						set_last_error (select_expression.last_evaluated_item.error_value)
+					else
+						last_string_value := select_expression.last_evaluated_item.string_value
+					end
+				end
 			end
 		ensure
 			error_or_string_value_not_void: is_error or else last_string_value /= Void
