@@ -122,6 +122,14 @@ feature -- Test
 			assert_integers_equal ("bit_and1", 2, INTEGER_.bit_and (2, 6))
 		end
 
+	test_bit_not is
+			-- Test feature `bit_not'.
+		do
+				-- 00000000000000000000000000000010 = 2
+				-- 11111111111111111111111111111101 = -3
+			assert_integers_equal ("bit_not1", -3, INTEGER_.bit_not (2))
+		end
+
 	test_bit_shift_left is
 			-- Test feature `bit_shift_left'.
 		do
