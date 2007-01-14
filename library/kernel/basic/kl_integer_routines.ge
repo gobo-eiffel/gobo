@@ -432,6 +432,25 @@ feature -- Operation(s)
 #endif
 		end
 
+	bit_not (n: INTEGER): INTEGER is
+			-- Bitwise 'not' of `n'
+		local
+#ifdef VE
+			i: BIT 32
+#endif
+		do
+#ifdef VE
+			i.from_integer (n)
+			Result := (not i).to_integer
+#endif
+#ifdef ISE
+			Result := n.bit_not
+#endif
+#ifdef SE
+			Result := n.bit_not
+#endif
+		end
+
 	bit_shift_left (m, n: INTEGER): INTEGER is
 			-- `m' shifted `n' bits to left;
 			-- Note: The new bits added on the right are 0.
