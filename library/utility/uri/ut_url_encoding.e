@@ -276,11 +276,11 @@ feature -- Valid characters
 				c := s.item_code (i)
 				inspect
 					c
-				when 0..32 then
+				when 0 .. 32 then
 					-- Control characters and space.
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
-				when 128..159 then
+				when 128 .. 159 then
 					-- Latin-1 non-alpahbetic
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
@@ -293,26 +293,26 @@ feature -- Valid characters
 					-- ({,},|,\,^,`)Unwise, can be modified by gateways and transport agents.
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
-				when 55296..57343 then
+				when 55296 .. 57343 then
 					-- UTF-16 surrogate codes
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
-				when 64976..65007  then
+				when 64976 .. 65007  then
 					-- UTF-16 surrogate codes
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
-				when 65520..65536 then
+				when 65520 .. 65536 then
 					-- ?? (last two are non-characters)
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
-				when 131070..131071, 196606..196607,
-					262142..262143, 327678..327679,
-					393214..393215, 458750..458751,
-					524286..524287, 589822..589823,
-					655358..655359, 720894..720895,
-					786430..786431, 851966..851967,
-					917502..917503, 983038..983039,
-					1048574..1048575, 1114110..1114111 then
+				when 131070 .. 131071, 196606 .. 196607,
+					262142 .. 262143, 327678 .. 327679,
+					393214 .. 393215, 458750 .. 458751,
+					524286 .. 524287, 589822 .. 589823,
+					655358 .. 655359, 720894 .. 720895,
+					786430 .. 786431, 851966 .. 851967,
+					917502 .. 917503, 983038 .. 983039,
+					1048574 .. 1048575, 1114110 .. 1114111 then
 					-- non-characters
 					Result := True
 					i := nb + 1 -- Jump out of the loop.

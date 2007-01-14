@@ -8,7 +8,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEMPLATE_ROUTINES
+class XM_XSLT_TEMPLATE_ROUTINES
 
 inherit
 
@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_AXIS
 
 feature -- Evaluation
-	
+
 	apply_templates (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mode:  XM_XSLT_MODE;
 	                 a_parameters, a_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Apply templates to `a_iterator'.
@@ -84,18 +84,18 @@ feature -- Evaluation
 			a_mode_not_void: a_node /= Void
 			major_context_not_void: a_context /= Void and then not a_context.is_minor
 			no_previous_error: not a_context.transformer.is_error
-		local	
+		local
 			l_node_handler: XM_XSLT_COMPILED_TEMPLATE
 		do
 			-- find the node handler [i.e., the template rule] for this node
-				
+
 			a_transformer.rule_manager.find_template_rule (a_node, a_mode, a_context)
 			if not a_transformer.is_error then
 				l_node_handler := a_transformer.rule_manager.last_found_template
 				if l_node_handler = Void then
-					
+
 					-- Use the default action for the node. No need to open a new stack frame!
-					
+
 					perform_default_action (a_node, a_parameters, a_tunnel_parameters, a_context)
 				else
 					if a_tunnel_parameters /= Void and then a_tunnel_parameters.count > 0
@@ -159,12 +159,12 @@ feature -- Evaluation
 				when Text_node, Attribute_node then
 					a_context.current_receiver.notify_characters (STRING_.cloned_string (a_node.string_value), 0)
 				when Comment_node, Processing_instruction_node then
-					
+
 					-- No action
-					
+
 				end
 			end
 		end
 
 end
-	
+

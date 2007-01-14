@@ -132,6 +132,7 @@ feature -- Execution
 			regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_valid_args: DS_LIST [STRING]
 			splitter: ST_SPLITTER
+			l_tester: KL_STRING_EQUALITY_TESTER
 		do
 			exit_code := 0
 
@@ -139,7 +140,8 @@ feature -- Execution
 			if validargs /= Void then
 				create splitter.make_with_separators (",")
 				l_valid_args := splitter.split (validargs)
-				l_valid_args.set_equality_tester (create {KL_STRING_EQUALITY_TESTER})
+				create l_tester
+				l_valid_args.set_equality_tester (l_tester)
 			end
 			if validregexp /= Void then
 				create regexp.make

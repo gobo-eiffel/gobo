@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			item_type, check_static_type, evaluate_item
+			check_static_type, evaluate_item
 		end
 
 	XM_XPATH_ARITHMETIC_ROUTINES
@@ -27,7 +27,7 @@ create
 
 feature -- Access
 
-	
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do

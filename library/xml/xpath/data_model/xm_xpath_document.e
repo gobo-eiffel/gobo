@@ -18,7 +18,7 @@ inherit
 	   undefine
 			base_uri
 		redefine
-			is_document, as_document
+			is_document, as_document, base_uri
 		end
 
 		HASHABLE
@@ -27,7 +27,7 @@ feature -- Access
 
 	document_number: INTEGER
 			-- Uniquely identifies this document.
-	
+
 	is_document: BOOLEAN is
 			-- Is `Current' a document?
 		do
@@ -80,7 +80,7 @@ feature -- Access
 	unparsed_entity_public_id (an_entity_name: STRING): STRING is
 			-- Public identifier of an unparsed external entity
 		require
-			entity_name_not_void: an_entity_name /= Void		
+			entity_name_not_void: an_entity_name /= Void
 		deferred
 		end
 
