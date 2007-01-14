@@ -76,7 +76,7 @@ feature -- Initialization
 			upper := a.upper
 		end
 
-	make_from_cil (na: NATIVE_ARRAY [G]) is
+	make_from_cil (na: NATIVE_ARRAY [like item]) is
 			-- Initialize array from `na'.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -316,7 +316,7 @@ feature -- Element change
 			higher_count: count >= old count
 		end
 
-	subcopy (other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER) is
+	subcopy (other: ARRAY [like item]; start_pos, end_pos, index_pos: INTEGER) is
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to current array starting at index `index_pos'.
 		require
@@ -336,7 +336,7 @@ feature -- Element change
 feature -- Iteration
 
 	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
-			-- Apply `action' to every non-void item.
+			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		require
@@ -361,7 +361,7 @@ feature -- Iteration
 		end
 
 	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
-			-- Apply `action' to every non-void item that satisfies `test'.
+			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		require
@@ -412,7 +412,7 @@ feature -- Iteration
 		end
 
 	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
-			-- Is `test' true for all non-void items?
+			-- Is `test' true for all items?
 		require
 			test_not_void: test /= Void
 		local
@@ -598,11 +598,14 @@ feature -- Duplication
 			-- bounds `start_pos' and `end_pos'.
 		require
 			valid_start_pos: valid_index (start_pos)
-			valid_end_pos: valid_index (end_pos)
+			valid_end_pos: end_pos <= upper
 			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
 		do
 			create Result.make (start_pos, end_pos)
-			Result.subcopy (Current, start_pos, end_pos, start_pos)
+			if start_pos <= end_pos then
+					-- Only copy elements if needed.
+				Result.subcopy (Current, start_pos, end_pos, start_pos)
+			end
 		ensure
 			lower: Result.lower = start_pos
 			upper: Result.upper = end_pos

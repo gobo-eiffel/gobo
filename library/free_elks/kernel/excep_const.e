@@ -51,8 +51,20 @@ feature -- Access
 	Signal_exception: INTEGER is 12
 			-- Exception code for operating system signal
 
+	Eiffel_runtime_panic: INTEGER is 13
+			-- Eiffel run-time panic
+
 	Rescue_exception: INTEGER is 14
 			-- Exception code for exception in rescue clause
+
+	Out_of_memory: INTEGER is 15
+			-- Out of memory (cannot be ignored)
+
+	Resumption_failed: INTEGER is 16
+			-- Resumption failed (retry did not succeed)
+
+	Create_on_deferred: INTEGER is 17
+			-- Create on deferred
 
 	External_exception: INTEGER is 18
 			-- Exception code for operating system error
@@ -62,6 +74,9 @@ feature -- Access
 	Void_assigned_to_expanded: INTEGER is 19
 			-- Exception code for assignment of void value
 			-- to expanded entity
+
+	Exception_in_signal_handler: INTEGER is 20
+			-- Exception in signal handler
 
 	Io_exception: INTEGER is 21
 			-- Exception code for I/O error
@@ -77,6 +92,12 @@ feature -- Access
 
 	Developer_exception: INTEGER is 24
 			-- Exception code for developer exception
+
+	Eiffel_runtime_fatal_error: INTEGER is 25
+			-- Eiffel run-time fatal error
+
+	Dollar_applied_to_melted_feature: INTEGER is 26
+			-- $ applied to melted feature
 
 	Runtime_io_exception: INTEGER is 27
 			-- Exception code for I/O error raised by runtime functions

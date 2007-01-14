@@ -5,6 +5,8 @@ indexing
 		(The number of children is arbitrary but cannot be
 		changed once the node has been created
 		]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 
 	names: fixed_tree, tree, fixed_list;
 	representation: recursive, array;
@@ -55,9 +57,21 @@ feature -- Initialization
 			-- Create node with `n' void children and item `v'.
 		require
 			valid_number_of_children: n >= 0
+		local
+			l_default: G
 		do
 			arity := n
 			create fixed_list.make_filled (n)
+				-- In order to ensure that no child is Void, we manually fill
+				-- the tree with default values.
+			from
+				fixed_list.start
+			until
+				fixed_list.after
+			loop
+				replace_child (create {like Current}.make (0, l_default))
+				fixed_list.forth
+			end
 			replace (v)
 		ensure
 			node_item: item = v
@@ -157,7 +171,7 @@ feature -- Element change
 		ensure then
 			child_replaced: n.parent = Current
 		end
-		
+
 	replace_child (n: like parent) is
 			-- Make `n' the node's child.
 		do
@@ -226,7 +240,7 @@ feature -- Removal
 				parent.child_go_i_th (old_idx)
 			end
 		end
-		
+
 	forget_right is
 			-- Forget all right siblings.
 		local
@@ -340,12 +354,6 @@ feature {FIXED_TREE} -- Implementation
 			end
 		end
 
-	cut_off_node is
-			-- Cut off all links from current node.
-		do
-			fixed_list.array_make (1, capacity)
-		end
-
 feature {NONE} -- Implementation
 
 	position_in_parent: INTEGER
@@ -367,7 +375,7 @@ feature {FIXED_TREE} -- Implementation
 		ensure
 			fixed_list_set: fixed_list = a_list
 		end
-		
+
 feature -- Redefinition
 
 	child_capacity: INTEGER is
@@ -376,15 +384,29 @@ feature -- Redefinition
 			Result := fixed_list.count
 		end
 
+feature {FIXED_TREE} -- Implementation
+
 	clone_node (n: like Current): like Current is
 			-- Clone node `n'.
-		local
-			a_list: like fixed_list
 		do
-			Result := n.standard_twin
-			create a_list.make_filled (n.capacity)
-			Result.set_fixed_list (a_list)
-			Result.attach_to_parent (Void)
+			create Result.make (n.arity, n.item)
+			Result.copy_node (n)
+		end
+
+	copy_node (n: like Current) is
+			-- Copy content of `n' except tree data into Current.
+		local
+			l_list: like fixed_list
+		do
+				-- Store values that may be overriden by `standard_copy'.
+			l_list := fixed_list
+				-- Perform copy.
+			standard_copy (n)
+				-- Restore values that we wanted to preserve.
+			arity := 0
+			fixed_list := l_list
+			position_in_parent := 0
+			parent := Void
 		end
 
 feature -- Access
@@ -479,7 +501,7 @@ feature -- Access
 	prune (n: like parent) is
 		do
 		end
-	
+
 	wipe_out is
 		do
 			create fixed_list.make (fixed_list.count)
@@ -499,7 +521,7 @@ feature -- Access
 		do
 			Result := fixed_list.capacity
 		end
-		
+
 feature {NONE} -- private access fixed_list
 
 	fl_make (n: INTEGER)is
@@ -511,7 +533,7 @@ feature {NONE} -- private access fixed_list
 		do
 			fixed_list.make_filled (n)
 		end
-		
+
 	fl_extend (v: FIXED_TREE [like item]) is
 		do
 			fixed_list.extend (v)
@@ -568,35 +590,21 @@ feature {NONE} -- private access fixed_list
 		end
 
 indexing
-
-	library: "[
-			EiffelBase: Library of reusable components for Eiffel.
-			]"
-
-	status: "[
-			Copyright 1986-2001 Interactive Software Engineering (ISE).
-			For ISE customers the original versions are an ISE product
-			covered by the ISE Eiffel license and support agreements.
-			]"
-
-	license: "[
-			EiffelBase may now be used by anyone as FREE SOFTWARE to
-			develop any product, public-domain or commercial, without
-			payment to ISE, under the terms of the ISE Free Eiffel Library
-			License (IFELL) at http://eiffel.com/products/base/license.html.
-			]"
-
+	library:	"EiffelBase: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Interactive Software Engineering Inc.
-			ISE Building
-			360 Storke Road, Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Electronic mail <info@eiffel.com>
-			Customer support http://support.eiffel.com
-			]"
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
-	info: "[
-			For latest info see award-winning pages: http://eiffel.com
-			]"
+
+
+
+
+
 
 end -- class FIXED_TREE

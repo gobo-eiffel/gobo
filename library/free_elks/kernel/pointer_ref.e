@@ -9,8 +9,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class POINTER_REF inherit
-
+class POINTER_REF
+inherit
 	HASHABLE
 		redefine
 			out, is_equal, is_hashable
@@ -20,7 +20,7 @@ class POINTER_REF inherit
 		redefine
 			out, is_equal
 		end
-
+		
 feature -- Access
 
 	item: POINTER is

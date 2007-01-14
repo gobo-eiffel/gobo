@@ -48,7 +48,7 @@ feature -- Status report
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"mem_tget"
+			"eif_mem_tget"
 		end
 
 	collection_period: INTEGER is
@@ -60,7 +60,7 @@ feature -- Status report
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"mem_pget"
+			"eif_mem_pget"
 		end
 
 	coalesce_period: INTEGER is
@@ -80,7 +80,7 @@ feature -- Status report
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"gc_ison"
+			"eif_gc_ison"
 		end
 
 	largest_coalesced_block: INTEGER is
@@ -89,7 +89,7 @@ feature -- Status report
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"mem_largest"
+			"eif_mem_largest"
 		end
 
 	max_mem: INTEGER is
@@ -273,7 +273,7 @@ feature -- Status setting
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"gc_stop"
+			"eif_gc_stop"
 		end
 
 	collection_on is
@@ -281,7 +281,7 @@ feature -- Status setting
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"gc_run"
+			"eif_gc_run"
 		end
 
 	allocate_fast is
@@ -290,7 +290,7 @@ feature -- Status setting
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"mem_speed"
+			"eif_mem_speed"
 		end
 
 	allocate_compact is
@@ -299,7 +299,7 @@ feature -- Status setting
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"mem_slow"
+			"eif_mem_slow"
 		end
 
 	allocate_tiny is
@@ -308,7 +308,7 @@ feature -- Status setting
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"mem_tiny"
+			"eif_mem_tiny"
 		end
 
 	enable_time_accounting is
@@ -332,7 +332,7 @@ feature -- Status setting
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"mem_tset"
+			"eif_mem_tset"
 		end
 
 	set_collection_period (value: INTEGER) is
@@ -345,7 +345,7 @@ feature -- Status setting
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"mem_pset"
+			"eif_mem_pset"
 		end
 
 	set_coalesce_period (value: INTEGER) is
@@ -396,6 +396,8 @@ feature -- Removal
 			-- (Preferred interface is `free'.)
 		external
 			"C signature (EIF_REFERENCE) use %"eif_memory.h%""
+		alias
+			"eif_mem_free"
 		end
 
 	full_coalesce is
@@ -405,7 +407,7 @@ feature -- Removal
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"mem_coalesc"
+			"eif_mem_coalesc"
 		end
 
 	collect is
@@ -467,4 +469,5 @@ feature {NONE} -- Implementation
 		ensure
 			internal_not_void: Result /= Void
 		end
+
 end

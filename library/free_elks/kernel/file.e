@@ -584,6 +584,20 @@ feature -- Status report
 		do
 		end
 
+feature -- Comparison
+
+	same_file (fn: STRING): BOOLEAN is
+			-- Is current file the same as `a_filename'?
+		require
+			fn_not_void: fn /= Void
+			fn_not_empty: not fn.is_empty
+		local
+			l_comparer: FILE_COMPARER
+		do
+			create l_comparer
+			Result := l_comparer.same_files (name, fn)
+		end
+
 feature -- Status setting
 
 	open_read is
@@ -1075,6 +1089,7 @@ feature -- Element change
 			-- Change file name to `new_name'
 		require
 			new_name_not_void: new_name /= Void
+			new_name_not_empty: not new_name.is_empty
 			file_exists: exists
 		local
 			ext_old_name, ext_new_name: ANY
@@ -1364,10 +1379,8 @@ feature -- Input
 			p_not_void: p /= Void
 			p_large_enough: p.count >= nb_bytes + start_pos
 			is_readable: file_readable
-		local
-			l_read: INTEGER
 		do
-			l_read := file_gss (file_pointer, p.item + start_pos, nb_bytes)
+			bytes_read := file_gss (file_pointer, p.item + start_pos, nb_bytes)
 		end
 
 	read_word, readword is

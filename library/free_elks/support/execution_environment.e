@@ -75,6 +75,32 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	starting_environment_variables: HASH_TABLE [STRING, STRING] is
+			-- Table of environment variables when current process starts,
+			-- indexed by variable name
+		local
+			l_ptr: POINTER
+			i: INTEGER
+			l_curr_var: TUPLE [value: STRING; key: STRING]
+		do
+			create Result.make (40)
+			from
+				i := 0
+				l_ptr := i_th_environ (i)
+			until
+				l_ptr = default_pointer
+			loop
+				l_curr_var := separated_variables (create {STRING}.make_from_c (l_ptr))
+				if l_curr_var /= Void then
+					Result.force (l_curr_var.value, l_curr_var.key)
+				end
+				i := i + 1
+				l_ptr := i_th_environ (i)
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Status
 
 	return_code: INTEGER
@@ -108,11 +134,11 @@ feature -- Status setting
 			l_env.append_character ('=')
 			l_env.append (value)
 			create l_c_env.make (l_env)
-			
 			environ.force (l_c_env, key)
 			return_code := eif_putenv (l_c_env.item)
 		ensure
-			variable_set: (return_code = 0) implies (value.is_equal (get (key)))
+			variable_set: (return_code = 0) implies
+				(equal (value, get (key)) or else (value.is_empty and then (get (key) = Void)))
 		end
 
 	system (s: STRING) is
@@ -159,12 +185,68 @@ feature {NONE} -- Implementation
 			create Result.make (10)
 		end
 
+	i_th_environ (i: INTEGER): POINTER is
+			-- Environment variable at `i'-th position of `eif_environ'.
+		require
+			i_valid: i >=0
+		external
+			"C inline use <string.h>"
+		alias
+			"[
+				if (eif_environ) {
+					#ifdef EIF_WINDOWS
+						LPSTR vars = (LPSTR) eif_environ;
+						int cnt = 0;
+						for (; *vars; vars++) {
+						   if ($i==cnt) return vars;
+						   while (*vars) { vars++; }
+						   cnt++;
+						}
+						return NULL;
+					#else
+						return ((char **)eif_environ)[$i];
+					#endif
+				} else {
+					return NULL;
+				}
+			]"
+		end
+
+	separated_variables (a_var: STRING): TUPLE [value: STRING; key: STRING] is
+			-- Given an environment variable `a_var' in form of "key=value",
+			-- return separated key and value.
+			-- Return Void if `a_var' is in incorrect format.
+		require
+			a_var_attached: a_var /= Void
+		local
+			i, j: INTEGER
+			done: BOOLEAN
+		do
+			j := a_var.count
+			from
+				i := 1
+			until
+				i > j or done
+			loop
+				if a_var.item (i) = '=' then
+					done := True
+				else
+					i := i + 1
+				end
+			end
+			if i > 1 and then i < j then
+				Result := [a_var.substring (i + 1, j), a_var.substring (1, i - 1)]
+			end
+		end
+
 feature {NONE} -- External
 
 	eif_getenv (s: POINTER): POINTER is
 			-- Value of environment variable `s'
 		external
-			"C use %"eif_misc.h%""
+			"C use <stdlib.h>"
+		alias
+			"getenv"
 		end
 
 	eif_putenv (v: POINTER): INTEGER is

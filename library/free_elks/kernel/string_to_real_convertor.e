@@ -18,7 +18,7 @@ create
 feature{NONE} -- Initialization
 
 	make is
-			--
+			-- Initialize.
 		do
 			set_leading_separators (" ")
 			set_trailing_separators (" ")
@@ -34,16 +34,19 @@ feature{NONE} -- Initialization
 feature -- Status reporting
 
 	conversion_type_valid (type: INTEGER): BOOLEAN is
+			-- Is conversion type `type' valid?
 		do
 			Result := real_double_type_valid (type)
 		end
 
 	overflowed: BOOLEAN is
+			-- Is real number parsed so far overflowed?
 		do
 			Result := False
 		end
 
 	underflowed: BOOLEAN is
+			-- Is real number parsed so far underflowed?
 		do
 			Result := False
 		end
@@ -57,6 +60,7 @@ feature -- Status reporting
 		end
 
 	separators_valid (separators: STRING): BOOLEAN is
+			-- Are separators contained in `separators' valid?
 		local
 			i: INTEGER
 			c: CHARACTER
@@ -129,6 +133,7 @@ feature -- Status reporting
 feature -- Status setting
 
 	reset (type: INTEGER) is
+			-- Reset current convertor to parse real number string of type `type'.
 		do
 			conversion_type := type
 			sign := 0
@@ -155,7 +160,8 @@ feature -- Status setting
 
 feature -- Parse
 
-	parse_string_with_type (s: STRING; type: INTEGER) is
+	parse_string_with_type (s: STRING_GENERAL; type: INTEGER) is
+			-- Parse string `s' as real number of type `type'.
 		local
 			i: INTEGER
 			l_c: INTEGER
@@ -167,13 +173,13 @@ feature -- Parse
 			until
 				i > l_c or last_state = 9
 			loop
-				parse_character (s.item (i))
+				parse_character (s.code (i).to_character_8)
 				i := i + 1
 			end
 		end
 
 	parse_character (c: CHARACTER) is
-
+			-- Parse character `c'.
 		do
 				-- Parse according to the following specification:
 				-- Real/double number specification:

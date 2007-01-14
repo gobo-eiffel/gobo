@@ -8,7 +8,7 @@ indexing
 
 deferred class
 	STRING_TO_NUMERIC_CONVERTOR
-	
+
 inherit
 	NUMERIC_INFORMATION
 
@@ -16,13 +16,13 @@ feature -- Status reporting
 
 	trailing_separators_acceptable: BOOLEAN
 		-- Are trailing separators acceptable?
-		
+
 	leading_separators_acceptable: BOOLEAN
 		-- Are leading separators acceptable?
-		
+
 	leading_separators: STRING
 			-- Leading separators
-	
+
 	trailing_separators: STRING
 			-- Trailing separators
 
@@ -31,34 +31,34 @@ feature -- Status reporting
 		require
 			separators_not_void: separators /= Void
 		deferred
-		end	
-		
+		end
+
 	conversion_type_valid (type: INTEGER): BOOLEAN is
 			-- Is `type' to which string will be converted valid?
 			-- See `NUMBER_INFORMATION' for more information.
 		deferred
 		end
-				
+
 	overflowed: BOOLEAN is
 			-- Is number overflowed (too large)?
 		deferred
 		end
-	
+
 	underflowed: BOOLEAN is
 			-- Is number underflowed (too small)?
 		deferred
 		end
-				
+
 	parse_successful: BOOLEAN is
 			-- Is parse so far successful?
 		deferred
 		end
-				
+
 	conversion_type: INTEGER
 		-- Type to which a string will be converted
 		-- See `NUMBER_INFORMATION' for more information.
-					
-feature -- Reset 
+
+feature -- Reset
 
 	reset (type: INTEGER) is
 			-- Reset this convertor to start a new parse session
@@ -74,9 +74,9 @@ feature -- Reset
 			conversion_type_set: conversion_type = type
 			not_overflowed: not overflowed
 			not_underflowed: not underflowed
-			parse_successful: parse_successful			
+			parse_successful: parse_successful
 		end
-					
+
 feature -- Status setting
 
 	set_trailing_separators_acceptable (b: BOOLEAN) is
@@ -84,19 +84,19 @@ feature -- Status setting
 		do
 			trailing_separators_acceptable := b
 		ensure
-			trailing_separators_acceptable_set: 
+			trailing_separators_acceptable_set:
 				trailing_separators_acceptable = b
 		end
-		
+
 	set_leading_separators_acceptable (b: BOOLEAN) is
 			-- Set `leading_separators_acceptable' to `b'.
 		do
 			leading_separators_acceptable := b
 		ensure
-			leading_separators_acceptable_set: 
+			leading_separators_acceptable_set:
 				leading_separators_acceptable = b
-		end	
-		
+		end
+
 	set_leading_separators (separators: STRING) is
 			-- Set `leading_separators' with `separators'.
 		require
@@ -107,7 +107,7 @@ feature -- Status setting
 		ensure
 			leading_separators_set: leading_separators.is_equal (separators)
 		end
-		
+
 	set_trailing_separators (separators: STRING) is
 			-- Set `trailing_separators' with `separators'.
 		require
@@ -121,14 +121,15 @@ feature -- Status setting
 
 feature -- Parse
 
-	parse_string_with_type (s: STRING; type: INTEGER) is
-			-- `Reset' convertor to start a new parse session and 
+	parse_string_with_type (s: STRING_GENERAL; type: INTEGER) is
+			-- `Reset' convertor to start a new parse session and
 			-- parse `s' to see if it is a number of `type'.
 			-- Make result available in `overflowed', `underflowed' and `parse_successful'.
 			-- See `NUMBER_INFORMATION' for more information about `type'.
 		require
 			s_not_void: s /= Void
-			type_valid: conversion_type_valid (type)			
+			s_is_valid_as_string_8: s.is_valid_as_string_8
+			type_valid: conversion_type_valid (type)
 		deferred
 		end
 
@@ -137,16 +138,16 @@ feature -- Parse
 			-- Make result available in `overflowed', `underflowed' and `parse_successful'.			
 		deferred
 		end
-		
+
 feature{NONE} -- Implementation
 
 	last_state: INTEGER
 		-- Last state of this state machine
-			
+
 	sign: INTEGER
 		-- Sign of this integer, 0: positive; 1: negative.
 
 invariant
 	leading_separators_not_void: leading_separators /= Void
-	trailing_separators_not_void: trailing_separators /= Void			
+	trailing_separators_not_void: trailing_separators /= Void
 end

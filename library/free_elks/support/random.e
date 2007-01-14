@@ -31,6 +31,7 @@ feature -- Initialization
 			-- Initialize structure using a default seed.
 		do
 			set_seed (default_seed)
+			start
 		ensure
 			seed_set: seed = default_seed
 		end
@@ -146,6 +147,8 @@ feature -- Access
 
 	real_i_th (i: INTEGER): REAL is
 			-- The `i'-th random number as a real between 0 and 1
+		require
+			positive_argument: i > 0
 		local
 			r1, r2: REAL
 		do
@@ -156,6 +159,8 @@ feature -- Access
 
 	double_i_th (i: INTEGER): DOUBLE is
 			-- The `i'-th random number as a double between 0 and 1
+		require
+			positive_argument: i > 0
 		local
 			d: DOUBLE
 		do

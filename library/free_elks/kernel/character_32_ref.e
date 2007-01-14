@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	WIDE_CHARACTER_REF
+	CHARACTER_32_REF
 
 inherit
 	COMPARABLE
@@ -20,9 +20,14 @@ inherit
 			is_hashable, is_equal, out
 		end
 
+	REFACTORING_HELPER
+		redefine
+			is_equal, out
+		end
+
 feature -- Access
 
-	item: WIDE_CHARACTER is
+	item: CHARACTER_32 is
 			-- Unicode character value
 		external
 			"built_in"
@@ -40,10 +45,34 @@ feature -- Access
 			Result := code
 		end
 
+	natural_32_code: NATURAL_32 is
+			-- Associated integer value
+		do
+			Result := item.natural_32_code
+		end
+
+	Min_value: NATURAL_32 is 0
+	Max_value: NATURAL_32 is 4294967295
+			-- Bounds for integer representation of CHARACTER_32
+
 feature -- Status report
 
 	is_hashable: BOOLEAN is True
 			-- May current object be hashed?
+
+	is_space: BOOLEAN is
+			-- Is `item' a white space?
+		require
+			is_character_8_compatible: is_character_8
+		do
+			Result := to_character_8.is_space
+		end
+
+	is_character_8: BOOLEAN is
+			-- Can current be represented on a CHARACTER_8?
+		do
+			Result := natural_32_code <= {CHARACTER_8}.max_value.to_natural_32
+		end
 
 feature -- Comparison
 
@@ -64,7 +93,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_item (c: WIDE_CHARACTER) is
+	set_item (c: CHARACTER_32) is
 			-- Make `c' the `item' value.
 		external
 			"built_in"
@@ -83,25 +112,57 @@ feature -- Output
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: WIDE_CHARACTER_REF) is
+	make_from_reference (v: CHARACTER_32_REF) is
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
 		do
 			set_item (v)
 		ensure
-			item_set: item = v.item	
+			item_set: item = v.item
 		end
 
 feature -- Conversion
 
-	to_reference: WIDE_CHARACTER_REF is
+	to_reference: CHARACTER_32_REF is
 			-- Associated reference of Current
 		do
 			create Result
 			Result.set_item (item)
 		ensure
 			to_reference_not_void: Result /= Void
+		end
+
+	to_character_8: CHARACTER_8 is
+			-- Convert current to CHARACTER_8
+		require
+			is_character_8_compatible: is_character_8
+		do
+			Result := item.to_character_8
+		end
+
+	to_character_32: CHARACTER_32 is
+			-- Convert current to CHARACTER_32
+		do
+			Result := item
+		end
+
+	as_upper, upper: CHARACTER_32 is
+			-- Uppercase value of `item'
+			-- Returns `item' if not `is_lower'
+		require
+			is_character_8_compatible: is_character_8
+		do
+			Result := to_character_8.upper
+		end
+
+	as_lower, lower: CHARACTER_32 is
+			-- Lowercase value of `item'
+			-- Returns `item' if not `is_upper'
+		require
+			is_character_8_compatible: is_character_8
+		do
+			Result := to_character_8.lower
 		end
 
 end

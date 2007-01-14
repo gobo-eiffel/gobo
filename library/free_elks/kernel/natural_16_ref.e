@@ -71,11 +71,11 @@ feature -- Access
 	ascii_char: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
 		obsolete
-			"Use to_character instead"
+			"Use `to_character_8' instead"
 		require
-			valid_character_code: is_valid_character_code
+			valid_character_code: is_valid_character_8_code
 		do
-			Result := item.to_character
+			Result := item.to_character_8
 		end
 
 	Min_value: NATURAL_16 is 0
@@ -109,7 +109,7 @@ feature -- Element change
 
 feature -- Status report
 
-	divisible (other: NATURAL_16_REF): BOOLEAN is
+	divisible (other: like Current): BOOLEAN is
 			-- May current object be divided by `other'?
 		do
 			Result := other.item /= 0
@@ -147,10 +147,25 @@ feature -- Status report
 		end
 
 	is_valid_character_code: BOOLEAN is
+			-- Does current object represent a CHARACTER_8?
+		obsolete
+			"Use `is_valid_character_8_code' instead."
+		do
+			Result := is_valid_character_8_code
+		end
+
+	is_valid_character_8_code: BOOLEAN is
+			-- Does current object represent a CHARACTER_8?
+		do
+			Result := item >= {CHARACTER_8}.Min_value.to_natural_32 and
+				item <= {CHARACTER_8}.Max_value.to_natural_32
+		end
+
+	is_valid_character_32_code: BOOLEAN is
 			-- Does current object represent a character?
 		do
-			Result := item >= {CHARACTER}.Min_value.to_natural_16 and 
-				item <= {CHARACTER}.Max_value.to_natural_16
+			Result := item >= {CHARACTER_32}.Min_value and
+				item <= {CHARACTER_32}.Max_value
 		end
 
 feature -- Basic operations
@@ -277,7 +292,7 @@ feature -- Conversion
 		do
 			Result := item.as_natural_32
 		end
-	
+
 	as_natural_64: NATURAL_64 is
 			-- Convert `item' into an NATURAL_64 value.
 		do
@@ -289,7 +304,7 @@ feature -- Conversion
 		do
 			Result := item.as_integer_8
 		end
-		
+
 	as_integer_16: INTEGER_16 is
 			-- Convert `item' into an INTEGER_16 value.
 		do
@@ -390,7 +405,7 @@ feature -- Conversion
 			loop
 				a_digit := (val & 0xF)
 				Result.put (a_digit.to_hex_character, i)
-				val := val |>> 4 
+				val := val |>> 4
 				i := i - 1
 			end
 		ensure
@@ -407,9 +422,9 @@ feature -- Conversion
 		do
 			tmp := item.to_integer_32
 			if tmp <= 9 then
-				Result := (tmp + ('0').code).to_character
+				Result := (tmp + ('0').code).to_character_8
 			else
-				Result := (('A').code + (tmp - 10)).to_character
+				Result := (('A').code + (tmp - 10)).to_character_8
 			end
 		ensure
 			valid_character: ("0123456789ABCDEF").has (Result)
@@ -417,10 +432,28 @@ feature -- Conversion
 
 	to_character: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
+		obsolete
+			"Use `to_character_8' instead."
 		require
-			valid_character: is_valid_character_code
+			valid_character: is_valid_character_8_code
 		do
-			Result := item.to_character
+			Result := item.to_character_8
+		end
+
+	to_character_8: CHARACTER_8 is
+			-- Associated character in 8 bit version.
+		require
+			valid_character: is_valid_character_8_code
+		do
+			Result := item.to_character_8
+		end
+
+	to_character_32: CHARACTER_32 is
+			-- Associated character in 32 bit version.
+		require
+			valid_character: is_valid_character_32_code
+		do
+			Result := item.to_character_32
 		end
 
 feature -- Bit operations

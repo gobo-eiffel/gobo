@@ -1,18 +1,21 @@
 indexing
 	description: "Characters, with comparison operations and an ASCII code"
+	external_name: "System.Char"
+	assembly: "mscorlib"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2005, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class
-	CHARACTER
+frozen expanded class
+	CHARACTER_8
 
 inherit
-	CHARACTER_REF
+	CHARACTER_8_REF
 		redefine
-			code
+			code,
+			to_character_32
 		end
 
 create
@@ -20,13 +23,21 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({CHARACTER_REF}),
-	to_reference: {CHARACTER_REF, HASHABLE, COMPARABLE, PART_COMPARABLE, ANY}
+	make_from_reference ({CHARACTER_8_REF}),
+	to_character_32: {CHARACTER_32}
 
 feature -- Access
 
 	code: INTEGER is
 			-- Associated integer value
+		external
+			"built_in"
+		end
+
+feature -- Conversion
+
+	to_character_32: CHARACTER_32 is
+			-- Associated character in 32 bit version.
 		external
 			"built_in"
 		end

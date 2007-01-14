@@ -1,18 +1,22 @@
 indexing
 	description: "Unicode characters, with comparison operations"
+	assembly: "mscorlib"
+	external_name: "System.UInt32"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class
-	WIDE_CHARACTER
+frozen expanded class
+	CHARACTER_32
 
 inherit
-	WIDE_CHARACTER_REF
+	CHARACTER_32_REF
 		redefine
-			code
+			code,
+			natural_32_code,
+			to_character_8
 		end
 
 create
@@ -20,13 +24,26 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({WIDE_CHARACTER_REF}),
-	to_reference: {WIDE_CHARACTER_REF, HASHABLE, COMPARABLE, PART_COMPARABLE, ANY}
+	make_from_reference ({CHARACTER_32_REF})
 
 feature -- Access
 
 	code: INTEGER is
 			-- Associated integer value
+		external
+			"built_in"
+		end
+
+	natural_32_code: NATURAL_32 is
+			-- Associated integer value
+		external
+			"built_in"
+		end
+
+feature -- Conversion
+
+	to_character_8: CHARACTER_8 is
+			-- Convert current to CHARACTER_8
 		external
 			"built_in"
 		end

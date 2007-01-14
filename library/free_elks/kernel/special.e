@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Special objects: homogeneous sequences of values, 
+		Special objects: homogeneous sequences of values,
 		used to represent arrays and strings
 		]"
 	library: "Free implementation of ELKS library"
@@ -113,7 +113,7 @@ feature -- Access
 			is_dotnet: {PLATFORM}.is_dotnet
 		do
 		end
-		
+
 feature -- Measurement
 
 	lower: INTEGER is 0
@@ -125,7 +125,7 @@ feature -- Measurement
 			Result := count - 1
 		end
 
-	frozen count: INTEGER is 
+	frozen count: INTEGER is
 			-- Count of the special area
 		external
 			"built_in"
@@ -222,7 +222,7 @@ feature -- Element change
 			end
 		end
 
-	frozen copy_data (other: like Current; source_index, destination_index, n: INTEGER) is
+	frozen copy_data (other: SPECIAL [T]; source_index, destination_index, n: INTEGER) is
 			-- Copy `n' elements of `other' from `source_index' position to Current at
 			-- `destination_index'. Other elements of Current remain unchanged.
 		require
@@ -232,6 +232,7 @@ feature -- Element change
 			n_non_negative: n >= 0
 			n_is_small_enough_for_source: source_index + n <= other.count
 			n_is_small_enough_for_destination: destination_index + n <= count
+			same_type: same_type (other)
 		local
 			i, j, nb: INTEGER
 		do
@@ -361,22 +362,9 @@ feature -- Resizing
 			-- Create a copy of Current with a count of `n'.
 		require
 			valid_new_count: n > count
-		local
-			i, nb: INTEGER
 		do
 			create Result.make (n)
-			from
-				nb := count
-			invariant
-				i >= 0 and i <= nb
-			variant
-				nb - i
-			until
-				i = nb
-			loop
-				Result.put (item (i), i)
-				i := i + 1
-			end
+			Result.copy_data (Current, 0, 0, count)
 		ensure
 			Result_not_void: Result /= Void
 			Result_different_from_current: Result /= Current

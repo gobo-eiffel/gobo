@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	STREAM
 
 inherit
@@ -44,7 +44,7 @@ feature -- Access
 		do
 			Result := c_buffer (internal_buffer_access)
 		end
-	
+
 	buffer: POINTER is
 			-- C buffer correspond to the Eiffel STREAM
 		obsolete
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 		alias
 			"return (*(EIF_POINTER *) $a_buf);"
 		end
-			
+
 	c_stream_basic_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
 			-- Return new size of `internal_buffer_access'.
@@ -178,9 +178,9 @@ feature {NONE} -- Implementation
 		external
 			"C signature (EIF_POINTER *, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER *): EIF_REFERENCE use %"eif_retrieve.h%""
 		alias
-			"stream_eretrieve"	
+			"stream_eretrieve"
 		end
-	
+
 	c_malloc (size: INTEGER): POINTER is
 		external
 			"C use %"eif_store.h%""
@@ -248,7 +248,7 @@ feature -- Output
 		require else
 			stream_exists: exists
 		do
-			put_character ('%N')		
+			put_character ('%N')
 		end
 
 	put_string, putstring (s: STRING) is
@@ -270,42 +270,42 @@ feature -- Output
 			-- Write `i' to medium.
 		do
 		end
-		
+
 	put_integer_8 (i: INTEGER_8) is
 			-- Write `i' to medium.
 		do
-		end		
-	
+		end
+
 	put_integer_16 (i: INTEGER_16) is
 			-- Write `i' to medium.
 		do
-		end	
+		end
 
 	put_integer_64 (i: INTEGER_64) is
 			-- Write `i' to medium.
 		do
-		end	
-		
-	put_natural_8 (i: NATURAL_8) is				
-			-- Write `i' to medium.
-		do
-		end	
-		 
-	put_natural_16 (i: NATURAL_16) is				
-			-- Write `i' to medium.
-		do
-		end	
-	
-	put_natural, put_natural_32 (i: NATURAL_32) is				
-			-- Write `i' to medium.
-		do
-		end	
+		end
 
-	put_natural_64 (i: NATURAL_64) is				
+	put_natural_8 (i: NATURAL_8) is
 			-- Write `i' to medium.
 		do
-		end	
-		
+		end
+
+	put_natural_16 (i: NATURAL_16) is
+			-- Write `i' to medium.
+		do
+		end
+
+	put_natural, put_natural_32 (i: NATURAL_32) is
+			-- Write `i' to medium.
+		do
+		end
+
+	put_natural_64 (i: NATURAL_64) is
+			-- Write `i' to medium.
+		do
+		end
+
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' to medium.
 		do
@@ -347,48 +347,48 @@ feature -- Input
 			-- Make result available in `last_integer'.
 		do
 		end
-		
+
 	read_integer_8 is
 			-- Read a new integer.
 			-- Make result available in `last_integer_8'.
 		do
 		end
-		
+
 	read_integer_16 is
 			-- Read a new integer.
 			-- Make result available in `last_integer_16'.
 		do
 		end
-		
+
 	read_integer_64 is
 			-- Read a new integer.
 			-- Make result available in `last_integer_64'.
 		do
 		end
-		
+
 	read_natural_8 is
 			-- Read a new natural.
 			-- Make result available in `last_natural_8'.
 		do
-		end		
-		
+		end
+
 	read_natural_16 is
 			-- Read a new natural.
 			-- Make result available in `last_natural_16'.
 		do
-		end			
+		end
 
 	read_natural, read_natural_32 is
 			-- Read a new natural.
 			-- Make result available in `last_natural'.
 		do
-		end	
-		
+		end
+
 	read_natural_64 is
 			-- Read a new natural.
 			-- Make result available in `last_natural_64'.
 		do
-		end					
+		end
 
 	read_stream, readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' bound characters

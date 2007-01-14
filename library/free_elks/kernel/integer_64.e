@@ -1,12 +1,14 @@
 indexing
 	description: "Integer values coded on 64 bits"
+	external_name: "System.Int64"
+	assembly: "mscorlib"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2005, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class INTEGER_64
+frozen expanded class INTEGER_64
 
 inherit
 	INTEGER_64_REF
@@ -31,7 +33,8 @@ inherit
 			as_integer_64,
 			to_real,
 			to_double,
-			to_character,
+			to_character_8,
+			to_character_32,
 			bit_and,
 			bit_or,
 			bit_xor,
@@ -46,7 +49,6 @@ create
 
 convert
 	make_from_reference ({INTEGER_64_REF}),
-	to_reference: {INTEGER_64_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
 	to_real: {REAL},
 	to_double: {DOUBLE}
 
@@ -176,8 +178,14 @@ feature -- Conversion
 			"built_in"
 		end
 
-	to_character: CHARACTER is
-			-- Returns corresponding ASCII character to `item' value.
+	to_character_8: CHARACTER_8 is
+			-- Associated character in 8 bit version.
+		external
+			"built_in"
+		end
+
+	to_character_32: CHARACTER_32 is
+			-- Associated character in 32 bit version.
 		external
 			"built_in"
 		end

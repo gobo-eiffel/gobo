@@ -24,6 +24,8 @@ feature -- Access
 			-- (base class of the type of which it is a direct instance)
 		external
 			"built_in"
+		ensure
+			generator_not_void: Result /= Void
 		end
 
  	generating_type: STRING is
@@ -31,6 +33,8 @@ feature -- Access
 			-- (type of which it is a direct instance)
 		external
 			"built_in"
+ 		ensure
+ 			generating_type_not_void: Result /= Void
  		end
 
 feature -- Status report
@@ -223,6 +227,7 @@ feature -- Duplication
 		external
 			"built_in"
 		ensure
+			deep_twin_not_void: Result /= Void
 			deep_equal: deep_equal (Current, Result)
 		end
 
@@ -278,6 +283,8 @@ feature -- Output
 		once
 			create Result
 			Result.set_output_default
+		ensure
+			io_not_void: Result /= Void
 		end
 
 	out: STRING is
@@ -285,6 +292,8 @@ feature -- Output
 			-- of current object
 		do
 			Result := tagged_out
+		ensure
+			out_not_void: Result /= Void
 		end
 
 	frozen tagged_out: STRING is
@@ -292,6 +301,8 @@ feature -- Output
 			-- of current object
 		external
 			"built_in"
+		ensure
+			tagged_out_not_void: Result /= Void
 		end
 
 	print (some: ANY) is
@@ -309,6 +320,8 @@ feature -- Platform
 			-- Objects available from the operating system
 		once
 			create Result
+		ensure
+			operating_environment_not_void: Result /= Void
 		end
 
 feature {NONE} -- Initialization

@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CHARACTER_REF inherit
+class CHARACTER_8_REF inherit
 
 	COMPARABLE
 		redefine
@@ -17,7 +17,7 @@ class CHARACTER_REF inherit
 		redefine
 			is_hashable, out, is_equal
 		end
-		
+
 	REFACTORING_HELPER
 		redefine
 			out, is_equal
@@ -25,7 +25,7 @@ class CHARACTER_REF inherit
 
 feature -- Access
 
-	item: CHARACTER is
+	item: CHARACTER_8 is
 			-- Character value
 		external
 			"built_in"
@@ -35,6 +35,12 @@ feature -- Access
 			-- Associated integer value
 		do
 			Result := item.code
+		end
+
+	natural_32_code: NATURAL_32 is
+			-- Associated integer value
+		do
+			Result := code.to_natural_32
 		end
 
 	hash_code: INTEGER is
@@ -75,27 +81,27 @@ feature -- Comparison
 
 feature -- Basic routines
 
-	infix "+" (incr: INTEGER): CHARACTER is
+	infix "+" (incr: INTEGER): CHARACTER_8 is
 			-- Add `incr' to the code of `item'
 		require
-			valid_increment: (item.code + incr).is_valid_character_code
+			valid_increment: (item.code + incr).is_valid_character_8_code
 		do
-			Result := (item.code + incr).to_character
+			Result := (item.code + incr).to_character_8
 		ensure
 			valid_result: Result |-| item = incr
 		end
 
-	infix "-" (decr: INTEGER): CHARACTER is
+	infix "-" (decr: INTEGER): CHARACTER_8 is
 			-- Subtract `decr' to the code of `item'
 		require
-			valid_decrement: (item.code - decr).is_valid_character_code
+			valid_decrement: (item.code - decr).is_valid_character_8_code
 		do
-			Result := (item.code - decr).to_character
+			Result := (item.code - decr).to_character_8
 		ensure
 			valid_result: item |-| Result = decr
 		end
 
-	infix "|-|" (other: CHARACTER): INTEGER is
+	infix "|-|" (other: CHARACTER_8): INTEGER is
 			-- Difference between the codes of `item' and `other'
 		do
 			Result := item.code - other.code
@@ -103,20 +109,20 @@ feature -- Basic routines
 			valid_result: other + Result = item
 		end
 
-	next: CHARACTER is
+	next: CHARACTER_8 is
 			-- Next character
 		require
-			valid_character: (item.code + 1).is_valid_character_code
+			valid_character: (item.code + 1).is_valid_character_8_code
 		do
 			Result := item + 1
 		ensure
 			valid_result: Result |-| item = 1
 		end
 
-	previous: CHARACTER is
+	previous: CHARACTER_8 is
 			-- Previous character
 		require
-			valid_character: (item.code - 1).is_valid_character_code
+			valid_character: (item.code - 1).is_valid_character_8_code
 		do
 			Result := item - 1
 		ensure
@@ -125,7 +131,7 @@ feature -- Basic routines
 
 feature -- Element change
 
-	set_item (c: CHARACTER) is
+	set_item (c: CHARACTER_8) is
 			-- Make `c' the `item' value.
 		external
 			"built_in"
@@ -142,19 +148,19 @@ feature -- Output
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: CHARACTER_REF) is
+	make_from_reference (v: CHARACTER_8_REF) is
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
 		do
 			set_item (v)
 		ensure
-			item_set: item = v.item	
+			item_set: item = v.item
 		end
 
 feature -- Conversion
 
-	to_reference: CHARACTER_REF is
+	to_reference: CHARACTER_8_REF is
 			-- Associated reference of Current
 		do
 			create Result
@@ -163,23 +169,35 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-	as_upper, upper: CHARACTER is
+	to_character_8: CHARACTER_8 is
+			-- Associated character in 8 bit version.
+		do
+			Result := item
+		end
+
+	to_character_32: CHARACTER_32 is
+			-- Associated character in 32 bit version.
+		do
+			Result := item.to_character_32
+		end
+
+	as_upper, upper: CHARACTER_8 is
 			-- Uppercase value of `item'
 			-- Returns `item' if not `is_lower'
 		do
 			if is_lower then
-				Result := (item.code - ('a').code + ('A').code).to_character
+				Result := (item.code - ('a').code + ('A').code).to_character_8
 			else
 				Result := item
 			end
 		end
 
-	as_lower, lower: CHARACTER is
+	as_lower, lower: CHARACTER_8 is
 			-- Lowercase value of `item'
 			-- Returns `item' if not `is_upper'
 		do
 			if is_upper then
-				Result := (item.code - ('A').code + ('a').code).to_character
+				Result := (item.code - ('A').code + ('a').code).to_character_8
 			else
 				Result := item
 			end
@@ -193,7 +211,7 @@ feature -- Status report
 		do
 			Result := (character_types (item.code) & (is_upper_flag | is_lower_flag)) > 0
 		end
-		
+
 	is_upper: BOOLEAN is
 			-- Is `item' uppercase?
 		do
@@ -212,7 +230,7 @@ feature -- Status report
 		do
 			Result := (character_types (item.code) & is_digit_flag) > 0
 		end
-		
+
 	is_hexa_digit: BOOLEAN is
 			-- Is `item' an hexadecimal digit?
 			-- A digit is one of 0123456789ABCDEFabcedf
@@ -225,19 +243,19 @@ feature -- Status report
 		do
 			Result := (character_types (item.code) & is_white_space_flag) > 0
 		end
-		
+
 	is_punctuation: BOOLEAN is
 			-- Is `item' a punctuation?
 		do
 			Result := (character_types (item.code) & is_punctuation_flag) > 0
 		end
-		
+
 	is_alpha_numeric: BOOLEAN is
 			-- Is `item' alphabetic or a digit?
 		do
 			Result := (character_types (item.code) & (is_upper_flag | is_lower_flag | is_digit_flag)) > 0
 		end
-		
+
 	is_printable: BOOLEAN is
 			-- Is `item' a printable character including space?
 		do
@@ -263,7 +281,7 @@ feature {NONE} -- Implementation
 	character_types (a_code: INTEGER): NATURAL_8 is
 			-- Associated type for character of code `a_code'.
 		do
-				-- For character whose code is above 256, it is as if 
+				-- For character whose code is above 256, it is as if
 				-- we had no information about it.
 			if a_code < 256 then
 				Result := internal_character_types.item (a_code)
@@ -404,20 +422,20 @@ feature {NONE} -- Implementation
 			Result.put (is_control_flag, 127)
 		end
 
-	is_upper_flag: NATURAL_8 is {NATURAL_8} 0x01	
+	is_upper_flag: NATURAL_8 is {NATURAL_8} 0x01
 
 	is_lower_flag: NATURAL_8 is {NATURAL_8} 0x02
-	
+
 	is_digit_flag: NATURAL_8 is {NATURAL_8} 0x04
-	
+
 	is_white_space_flag: NATURAL_8 is {NATURAL_8} 0x08
-	
+
 	is_punctuation_flag: NATURAL_8 is {NATURAL_8} 0x10
-	
+
 	is_control_flag: NATURAL_8 is {NATURAL_8} 0x20
 
 	is_hexa_digit_flag: NATURAL_8 is {NATURAL_8} 0x40
-	
+
 	is_space_flag: NATURAL_8 is {NATURAL_8} 0x80;
-	
+
 end

@@ -2,8 +2,9 @@ indexing
 
 	description:
 		"Trees implemented using a two way linked list representation"
+	legal: "See notice at end of class."
 
-	status: "See notice at end of class"
+	status: "See notice at end of class."
 	names: two_way_tree, tree, two_way_list;
 	representation: recursive, linked;
 	access: cursor, membership;
@@ -18,7 +19,7 @@ class TWO_WAY_TREE [G] inherit
 			child_after, child_before, child_item,
 			child_off, child_islast
 		redefine
-			parent
+			parent, clone_node
 		select
 			has
 		end
@@ -101,7 +102,7 @@ class TWO_WAY_TREE [G] inherit
 
 create
 	make
-	
+
 create {TWO_WAY_TREE}
 	twl_make, make_sublist
 
@@ -123,7 +124,7 @@ feature -- Access
 			-- Leftmost child
 
 	last_child: like parent
-	
+
 	child_cursor: TWO_WAY_TREE_CURSOR [G] is
 			-- Current cursor position
 		do
@@ -137,7 +138,7 @@ feature -- Status report
 		do
 			Result := not is_leaf and Precursor {TWO_WAY_LIST}
 		end
-		
+
 feature {RECURSIVE_CURSOR_TREE} -- Element change
 
 	set_child (n: like parent) is
@@ -246,7 +247,7 @@ feature -- Element change
 			loop
 				l_child := l_child.right_sibling
 			end
-			
+
 			if l_child /= Void then
 				if l_child = first_child then
 					first_child := first_child.right_sibling
@@ -287,6 +288,9 @@ feature {TWO_WAY_TREE} -- Implementation
 			-- New cell containing `v'
 		do
 			create Result.make (v)
+			if object_comparison then
+				Result.compare_objects
+			end
 			Result.attach_to_parent (Current)
 		end
 
@@ -299,14 +303,27 @@ feature {TWO_WAY_TREE} -- Implementation
 			create Result.make (item)
 		end
 
-	cut_off_node is
-			-- Cut off all links from current node.
+	clone_node (n: like Current): like Current is
+			-- Clone node `n'.
 		do
-			make (item)
-			wipe_out
-			simple_forget_left
-			simple_forget_right
+			create Result.make (n.item)
+			Result.copy_node (n)
+		end
+
+	copy_node (n: like Current) is
+			-- Copy content of `n' except tree data into Current.
+		do
+			standard_copy (n)
+			arity := 0
+			child := Void
+			child_after := False
+			child_before := True
+			first_child := Void
+			last_child := Void
+			left_sibling := Void
 			parent := Void
+			right_sibling := Void
+			sublist := Void
 		end
 
 feature {NONE} -- Implementation
@@ -332,36 +349,22 @@ invariant
 	off_constraint: (child = Void) implies child_off
 
 indexing
-
-	library: "[
-			EiffelBase: Library of reusable components for Eiffel.
-			]"
-
-	status: "[
-			Copyright 1986-2001 Interactive Software Engineering (ISE).
-			For ISE customers the original versions are an ISE product
-			covered by the ISE Eiffel license and support agreements.
-			]"
-
-	license: "[
-			EiffelBase may now be used by anyone as FREE SOFTWARE to
-			develop any product, public-domain or commercial, without
-			payment to ISE, under the terms of the ISE Free Eiffel Library
-			License (IFELL) at http://eiffel.com/products/base/license.html.
-			]"
-
+	library:	"EiffelBase: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Interactive Software Engineering Inc.
-			ISE Building
-			360 Storke Road, Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Electronic mail <info@eiffel.com>
-			Customer support http://support.eiffel.com
-			]"
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
-	info: "[
-			For latest info see award-winning pages: http://eiffel.com
-			]"
+
+
+
+
+
 
 end -- class TWO_WAY_TREE
 

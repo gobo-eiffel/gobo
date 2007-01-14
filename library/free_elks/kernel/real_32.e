@@ -1,21 +1,23 @@
 indexing
-	description: "Real values, double precision" 
+	description: "Real values, single precision"
+	external_name: "System.Single"
+	assembly: "mscorlib"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class DOUBLE inherit
+frozen expanded class REAL_32 inherit
 
-	DOUBLE_REF
+	REAL_32_REF
 		redefine
 			infix "<",
 			truncated_to_integer,
 			truncated_to_integer_64,
-			truncated_to_real,
-			ceiling_real_64,
-			floor_real_64,
+			to_double,
+			ceiling_real_32,
+			floor_real_32,
 			infix "+",
 			infix "-",
 			infix "*",
@@ -31,14 +33,13 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({DOUBLE_REF}),
-	to_reference: {DOUBLE_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
-	truncated_to_real: {REAL}
+	make_from_reference ({REAL_32_REF}),
+	to_double: {DOUBLE}
 
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
-			-- Is `other' greater than current double?
+			-- Is `other' greater than current real?
 		external
 			"built_in"
 		end
@@ -46,33 +47,32 @@ feature -- Comparison
 feature -- Conversion
 
 	truncated_to_integer: INTEGER is
-			-- Integer part (Same sign, largest absolute
+			-- Integer part (same sign, largest absolute
 			-- value no greater than current object's)
 		external
 			"built_in"
 		end
 
 	truncated_to_integer_64: INTEGER_64 is
-			-- Integer part (Same sign, largest absolute
+			-- Integer part (same sign, largest absolute
 			-- value no greater than current object's)
 		external
 			"built_in"
 		end
 
-	truncated_to_real: REAL is
-			-- Real part (Same sign, largest absolute
-			-- value no greater than current object's)
+	to_double: DOUBLE is
+			-- Current seen as a double
 		external
 			"built_in"
 		end
 
-	ceiling_real_64: DOUBLE is
+	ceiling_real_32: REAL_32 is
 			-- Smallest integral value no smaller than current object
 		external
 			"built_in"
 		end
 
-	floor_real_64: DOUBLE is
+	floor_real_32: REAL_32 is
 			-- Greatest integral value no greater than current object
 		external
 			"built_in"
@@ -93,7 +93,7 @@ feature -- Basic operations
 		end
 
 	infix "*" (other: like Current): like Current is
-			-- Product with `other'
+			-- Product by `other'
 		external
 			"built_in"
 		end
@@ -105,7 +105,7 @@ feature -- Basic operations
 		end
 
 	infix "^" (other: DOUBLE): DOUBLE is
-			-- Current double to the power `other'
+			-- Current real to the power `other'
 		external
 			"built_in"
 		end
@@ -125,7 +125,7 @@ feature -- Basic operations
 feature -- Output
 
 	out: STRING is
-			-- Printable representation of double value
+			-- Printable representation of real value
 		external
 			"built_in"
 		end

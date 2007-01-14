@@ -1,5 +1,7 @@
 indexing
 	description: "Truth values, with the boolean operations"
+	external_name: "System.Boolean"
+	assembly: "mscorlib"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -25,8 +27,7 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({BOOLEAN_REF}),
-	to_reference: {BOOLEAN_REF, HASHABLE, ANY}
+	make_from_reference ({BOOLEAN_REF})
 
 feature -- Basic operations
 

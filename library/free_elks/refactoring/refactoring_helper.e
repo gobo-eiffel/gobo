@@ -26,7 +26,7 @@ feature -- Markers
 				io.error.put_new_line
 			end
 		end
-		
+
 	to_implement (comment: STRING) is
 			-- Mark code that has to be "implemented" with `comment'.
 		require
@@ -38,7 +38,7 @@ feature -- Markers
 				io.error.put_new_line
 			end
 		end
-		
+
 	to_implement_assertion (comment: STRING): BOOLEAN is
 			-- Mark assertion that has to be "implemented" with `comment'.
 		require

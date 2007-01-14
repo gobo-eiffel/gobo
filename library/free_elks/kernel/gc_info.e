@@ -1,9 +1,10 @@
 indexing
+
 	description: "[
-		Garbage collector statistics.
-		This class may be used as ancestor by classes needing its facilities.
-		Time accounting is relevant only if `enable_time_accounting' 
-		(from MEMORY) has been called.
+			Garbage collector statistics.
+			This class may be used as ancestor by classes needing its facilities.
+			Time accounting is relevant only if `enable_time_accounting' 
+			(from MEMORY) has been called.
 		]"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
@@ -38,7 +39,7 @@ feature -- Initialization
 		ensure
 			type_set: type = memory
 		end
-		
+
 	update (memory: INTEGER) is
 			-- Fill in statistics for `memory' type
 		require
@@ -184,6 +185,8 @@ feature {NONE} -- Implementation
 			-- statistics frozen at the time of this call.
 		external
 			"C use %"eif_memory.h%""
+		alias
+			"eif_gc_stat"
 		end
 
 	structure_size: INTEGER is
@@ -191,7 +194,7 @@ feature {NONE} -- Implementation
 		do
 			Result := c_sizeof_gacstat
 		end
-		
+
 feature {NONE} -- C externals
 
 	c_sizeof_gacstat: INTEGER is
@@ -209,7 +212,7 @@ feature {NONE} -- C externals
 		alias
 			"return ((struct gacstat *) $a_ptr)->count;"
 		end
-		
+
 	c_mem_used (a_ptr: POINTER): INTEGER is
 			-- Access `mem_used' data member of `a_ptr' struct.
 		external

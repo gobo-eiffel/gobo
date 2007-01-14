@@ -1,12 +1,14 @@
 indexing
 	description: "Unsigned integer values coded on 32 bits."
+	external_name: "System.UInt32"
+	assembly: "mscorlib"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2005, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class NATURAL_32 inherit
+frozen expanded class NATURAL_32 inherit
 
 	NATURAL_32_REF
 		redefine
@@ -29,7 +31,8 @@ expanded class NATURAL_32 inherit
 			as_integer_64,
 			to_real_32,
 			to_real_64,
-			to_character,
+			to_character_8,
+			to_character_32,
 			bit_and,
 			bit_or,
 			bit_xor,
@@ -44,7 +47,6 @@ create
 
 convert
 	make_from_reference ({NATURAL_32_REF}),
-	to_reference: {NATURAL_32_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
 	to_real_32: {REAL},
 	to_real_64: {DOUBLE},
 	to_integer_64: {INTEGER_64},
@@ -170,8 +172,14 @@ feature -- Conversion
 			"built_in"
 		end
 
-	to_character: CHARACTER is
+	to_character_8: CHARACTER_8 is
 			-- Returns corresponding ASCII character to `item' value.
+		external
+			"built_in"
+		end
+
+	to_character_32: CHARACTER_32 is
+			-- Returns corresponding CHARACTER_32 to `item' value.
 		external
 			"built_in"
 		end

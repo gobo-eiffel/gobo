@@ -15,6 +15,5 @@
 
 extern EIF_INTEGER eif_system(char* s);
 extern void eif_system_asynchronous(char* cmd);
-extern char* eif_getenv(char* k);
 
 #endif

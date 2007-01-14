@@ -2,8 +2,9 @@ indexing
 
 	description:
 		"Structures whose items may be accessed sequentially, one-way"
+	legal: "See notice at end of class."
 
-	status: "See notice at end of class"
+	status: "See notice at end of class."
 	names: sequential, traversing;
 	access: membership;
 	contents: generic;
@@ -109,7 +110,7 @@ feature -- Access
 		deferred
 		end
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: like item): INTEGER is
 			-- Number of times `v' appears.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -169,7 +170,7 @@ feature -- Iteration
 	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		local
 			t: TUPLE [G]
 			cs: CURSOR_STRUCTURE [G]
@@ -199,7 +200,7 @@ feature -- Iteration
 	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		local
 			t: TUPLE [G]
 			cs: CURSOR_STRUCTURE [G]
@@ -231,14 +232,14 @@ feature -- Iteration
 	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
 			-- Is `test' true for at least one item?
 			-- Semantics not guaranteed if `test' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		local
 			cs: CURSOR_STRUCTURE [G]
 			c: CURSOR
 			t: TUPLE [G]
 		do
 			create t
-			
+
 			cs ?= Current
 			if cs /= Void then
 				c := cs.cursor
@@ -262,14 +263,14 @@ feature -- Iteration
 	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
 			-- Is `test' true for all items?
 			-- Semantics not guaranteed if `test' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		local
 			cs: CURSOR_STRUCTURE [G]
 			c: CURSOR
 			t: TUPLE [G]
 		do
 			create t
-			
+
 			cs ?= Current
 			if cs /= Void then
 				c := cs.cursor
@@ -306,36 +307,22 @@ invariant
 	after_constraint: after implies off
 
 indexing
-
-	library: "[
-			EiffelBase: Library of reusable components for Eiffel.
-			]"
-
-	status: "[
-			Copyright 1986-2001 Interactive Software Engineering (ISE).
-			For ISE customers the original versions are an ISE product
-			covered by the ISE Eiffel license and support agreements.
-			]"
-
-	license: "[
-			EiffelBase may now be used by anyone as FREE SOFTWARE to
-			develop any product, public-domain or commercial, without
-			payment to ISE, under the terms of the ISE Free Eiffel Library
-			License (IFELL) at http://eiffel.com/products/base/license.html.
-			]"
-
+	library:	"EiffelBase: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Interactive Software Engineering Inc.
-			ISE Building
-			360 Storke Road, Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Electronic mail <info@eiffel.com>
-			Customer support http://support.eiffel.com
-			]"
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
-	info: "[
-			For latest info see award-winning pages: http://eiffel.com
-			]"
+
+
+
+
+
 
 end -- class LINEAR
 

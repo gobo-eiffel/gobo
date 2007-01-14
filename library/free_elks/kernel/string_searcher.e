@@ -28,11 +28,12 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	initialize_deltas (a_pattern: STRING) is
+	initialize_deltas (a_pattern: STRING_GENERAL) is
 			-- Initialize `deltas' with `a_pattern'.
 			-- Optimized for ASCII characters only.
 		require
 			a_pattern_not_void: a_pattern /= Void
+			a_pattern_valid: a_pattern.is_valid_as_string_8
 		do
 			internal_initialize_deltas (a_pattern, a_pattern.count, deltas)
 		end
@@ -44,13 +45,14 @@ feature -- Access
 
 feature -- Search
 
-	substring_index (a_string, a_pattern: STRING; start_pos, end_pos: INTEGER): INTEGER is
+	substring_index (a_string, a_pattern: STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER is
 			-- Position of first occurrence of `a_pattern' at or after `start_pos'
 			-- and before `end_pos' in `a_string'.
 			-- 0 if there are no matches.
 		require
 			a_string_not_void: a_string /= Void
 			a_pattern_not_void: a_pattern /= Void
+			a_pattern_valid: a_pattern.is_valid_as_string_8
 			start_large_enough: start_pos >= 1
 			end_pos_large_enough: start_pos <= end_pos + 1
 			end_pos_small_enough: end_pos <= a_string.count
@@ -69,21 +71,21 @@ feature -- Search
 			end
 		end
 
-	substring_index_with_deltas (a_string, a_pattern: STRING; start_pos, end_pos: INTEGER): INTEGER is
+	substring_index_with_deltas (a_string, a_pattern: STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER is
 			-- Position of first occurrence of `a_pattern' at or after `start_pos' in `a_string'.
 			-- 0 if there are no matches.
 		require
 			a_string_not_void: a_string /= Void
 			a_pattern_not_void: a_pattern /= Void
+			a_pattern_valid: a_pattern.is_valid_as_string_8
 			a_pattern_not_empty: not a_pattern.is_empty
 			start_large_enough: start_pos >= 1
 			end_pos_large_enough: start_pos <= end_pos + 1
 			end_pos_small_enough: end_pos <= a_string.count
 		local
-			i, j: INTEGER
+			i, j, l_end_pos: INTEGER
 			l_pattern_count: INTEGER
 			l_matched: BOOLEAN
-			l_area, l_pattern_area: SPECIAL [CHARACTER]
 			l_char_code: INTEGER
 			l_deltas: like deltas
 		do
@@ -93,56 +95,57 @@ feature -- Search
 				end
 			else
 				l_pattern_count := a_pattern.count
-				if l_pattern_count = 0 then
-					Result := start_pos
-				else
+				check l_pattern_count_positive: l_pattern_count > 0 end
+				from
+					i := start_pos
+					l_deltas := deltas
+					l_end_pos := end_pos + 1
+				until
+					i + l_pattern_count > l_end_pos
+				loop
 					from
-						l_area := a_string.area
-						l_pattern_area := a_pattern.area
-						l_deltas := deltas
-						i := start_pos - 1
+						j := 0
+						l_matched := True
 					until
-						i + l_pattern_count > end_pos
+						j = l_pattern_count
 					loop
-						from
-							j := 0
-							l_matched := True
-						until
-							j = l_pattern_count
-						loop
-							if l_area.item (i + j) /= l_pattern_area.item (j) then
-									-- Mismatch, so we stop
-								j := l_pattern_count - 1	-- Jump out of loop
-								l_matched := False
-							end
-							j := j + 1
+						if a_string.code (i + j) /= a_pattern.code (j + 1) then
+								-- Mismatch, so we stop
+							j := l_pattern_count - 1	-- Jump out of loop
+							l_matched := False
 						end
+						j := j + 1
+					end
 
-						if l_matched then
-								-- We got the substring
-							Result := i + 1
-							i := end_pos + 1	-- Jump out of loop
-						else
-								-- Pattern was not found, shift to next location
-							l_char_code := l_area.item (i + l_pattern_count).code
+					if l_matched then
+							-- We got the substring
+						Result := i
+						i := l_end_pos	-- Jump out of loop
+					else
+							-- Pattern was not found, shift to next location
+						if i + l_pattern_count <= end_pos then
+							l_char_code := a_string.code (i + l_pattern_count).to_integer_32
 							if l_char_code > max_ascii_character_value then
 								i := i + 1
 							else
 								i := i + l_deltas.item (l_char_code)
 							end
+						else
+							i := i + 1
 						end
 					end
 				end
 			end
 		end
 
-	fuzzy_index (a_string, a_pattern: STRING; start_pos, end_pos, fuzzy: INTEGER): INTEGER is
+	fuzzy_index (a_string, a_pattern: STRING_GENERAL; start_pos, end_pos, fuzzy: INTEGER): INTEGER is
 			-- Position of first occurrence of `a_pattern' at or after `start_pos' in
 			-- `a_string' with 0..`fuzzy' mismatches between `a_string' and `a_pattern'.
 			-- 0 if there are no fuzzy matches.
 		require
 			a_string_not_void: a_string /= Void
 			a_pattern_not_void: a_pattern /= Void
+			a_pattern_valid: a_pattern.is_valid_as_string_8
 			a_pattern_not_empty: not a_pattern.is_empty
 			start_large_enough: start_pos >= 1
 			end_pos_large_enough: start_pos <= end_pos + 1
@@ -150,10 +153,9 @@ feature -- Search
 			fuzzy_non_negative: fuzzy >= 0
 			acceptable_fuzzy: fuzzy <= a_pattern.count
 		local
-			i, j, l_min_offset: INTEGER
+			i, j, l_min_offset, l_end_pos: INTEGER
 			l_pattern_count, l_nb_mismatched: INTEGER
 			l_matched: BOOLEAN
-			l_area, l_pattern_area: SPECIAL [CHARACTER]
 			l_char_code: INTEGER
 			l_deltas_array: like deltas_array
 		do
@@ -166,13 +168,12 @@ feature -- Search
 				else
 					initialize_fuzzy_deltas (a_pattern, fuzzy)
 					from
-						l_area := a_string.area
-						l_pattern_area := a_pattern.area
 						l_pattern_count := a_pattern.count
 						l_deltas_array := deltas_array
-						i := start_pos - 1
+						i := start_pos
+						l_end_pos := end_pos + 1
 					until
-						i + l_pattern_count > end_pos
+						i + l_pattern_count > l_end_pos
 					loop
 						from
 							j := 0
@@ -181,10 +182,10 @@ feature -- Search
 						until
 							j = l_pattern_count
 						loop
-							if l_area.item (i + j) /= l_pattern_area.item (j) then
+							if a_string.code (i + j) /= a_pattern.code (j + 1) then
 								l_nb_mismatched := l_nb_mismatched + 1;
 								if l_nb_mismatched > fuzzy then
-										-- Too manu mismatched, so we stop
+										-- Too many mismatched, so we stop
 									j := l_pattern_count - 1	-- Jump out of loop
 									l_matched := False
 								end
@@ -194,27 +195,31 @@ feature -- Search
 
 						if l_matched then
 								-- We got the substring
-							Result := i + 1
-							i := end_pos + 1	-- Jump out of loop
+							Result := i
+							i := l_end_pos	-- Jump out of loop
 						else
-								-- Pattern was not found, compute shift to next location
-							from
-								j := 0
-								l_min_offset := l_pattern_count + 1
-							until
-								j > fuzzy
-							loop
-								l_char_code := l_area.item (i + l_pattern_count - j).code
-								if l_char_code > max_ascii_character_value then
-										-- No optimization for a non-extended ASCII character.
-									l_min_offset := 1
-									j := fuzzy + 1 -- Jump out of loop
-								else
-									l_min_offset := l_min_offset.min (l_deltas_array.item (j).item (l_char_code))
+							if i + l_pattern_count <= end_pos then
+									-- Pattern was not found, compute shift to next location
+								from
+									j := 0
+									l_min_offset := l_pattern_count + 1
+								until
+									j > fuzzy
+								loop
+									l_char_code := a_string.code (i + l_pattern_count - j).to_integer_32
+									if l_char_code > max_ascii_character_value then
+											-- No optimization for a non-extended ASCII character.
+										l_min_offset := 1
+										j := fuzzy + 1 -- Jump out of loop
+									else
+										l_min_offset := l_min_offset.min (l_deltas_array.item (j).item (l_char_code))
+									end
+									j := j + 1
 								end
-								j := j + 1
+								i := i + l_min_offset
+							else
+								i := i + 1
 							end
-							i := i + l_min_offset
 						end
 					end
 					deltas_array := Void
@@ -232,17 +237,17 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation
 
-	internal_initialize_deltas (a_pattern: STRING; a_pattern_count: INTEGER; a_deltas: like deltas) is
+	internal_initialize_deltas (a_pattern: STRING_GENERAL; a_pattern_count: INTEGER; a_deltas: like deltas) is
 			-- Initialize `a_deltas' with `a_pattern'.
 			-- Optimized for ASCII characters only.
 		require
 			a_pattern_not_void: a_pattern /= Void
+			a_pattern_valid: a_pattern.is_valid_as_string_8
 			a_pattern_count_not_negative: a_pattern_count >= 0
 			a_pattern_count_valid: a_pattern_count <= a_pattern.count
 			a_deltas_not_void: a_deltas /= Void
-			a_deltas_valid: a_deltas.count <= max_ascii_character_value + 1			
+			a_deltas_valid: a_deltas.count = max_ascii_character_value + 1
 		local
-			l_area: SPECIAL [CHARACTER]
 			i, l_char_code: INTEGER
 		do
 				-- Initialize the delta table (one more than pattern count).
@@ -253,12 +258,11 @@ feature {NONE} -- Implementation
 				-- we scan the pattern from left to right (ie. if there is two 'a', only the
 				-- delta associated with the second --rightmost-- will be kept).
 			from
-				l_area := a_pattern.area
 				i := 0
 			until
 				i = a_pattern_count
 			loop
-				l_char_code := l_area.item (i).code
+				l_char_code := a_pattern.code (i + 1).to_integer_32
 				if l_char_code <= max_ascii_character_value then
 					a_deltas.put (a_pattern_count - i, l_char_code)
 				end
@@ -266,7 +270,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_fuzzy_deltas (a_pattern: STRING; fuzzy: INTEGER) is
+	initialize_fuzzy_deltas (a_pattern: STRING_GENERAL; fuzzy: INTEGER) is
 			-- Compile `a_pattern' by computing the delta shift tables from a pattern
 			-- string. This has to be done before searching occurs. The first delta
 			-- table is computed with the full pattern, the second one is computed with
@@ -274,6 +278,7 @@ feature {NONE} -- Implementation
 			-- are computed and stored in `deltas_array'.
 		require
 			a_pattern_not_void: a_pattern /= Void
+			a_pattern_valid: a_pattern.is_valid_as_string_8
 			fuzzy_positive: fuzzy > 0
 		local
 			l_deltas: like deltas
@@ -302,6 +307,6 @@ feature {NONE} -- Implementation
 
 invariant
 	deltas_not_void: deltas /= Void
-	deltas_valid: deltas.count <= max_ascii_character_value + 1
+	deltas_valid: deltas.count = max_ascii_character_value + 1
 
 end

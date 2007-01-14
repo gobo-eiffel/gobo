@@ -82,13 +82,16 @@ inherit
 #ifdef SE
 			{UC_STRING_HANDLER} storage, compare;
 #endif
-#ifdef (ISE && ISE_5_6) || GE
+#ifdef ISE
+#ifdef ISE_5_6
 			{STRING} share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal;
-			{NONE} all
+#else
+			{STRING}
+				share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal,
+				valid_code, to_string_32;
 #endif
-#ifndef ISE
-			{NONE} all
 #endif
+			{NONE} all
 		undefine
 #ifdef VE || SE
 			compare,
@@ -124,7 +127,7 @@ inherit
 			old_left_adjust,
 			old_right_adjust,
 			old_wipe_out,
-#ifndef ISE_5_6 || GE
+#ifndef ISE_5_6
 			code, append_code, put_code, has_code, index_of_code,
 #endif
 #else
@@ -187,7 +190,7 @@ inherit
 			old_clear_all,
 			old_left_adjust,
 			old_right_adjust,
-#ifndef ISE_5_6 || GE
+#ifndef ISE_5_6
 			code, append_code, put_code, has_code, index_of_code,
 #endif
 			infix "+",
@@ -3357,7 +3360,7 @@ feature {UC_STRING} -- Inapplicable
 			keep_head (nb)
 		end
 
-#ifndef ISE_5_6 || GE
+#ifndef ISE_5_6
 	code (i: INTEGER): NATURAL_32 is
 			-- Code at position `i'
 		do

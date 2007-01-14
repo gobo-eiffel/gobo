@@ -2,8 +2,9 @@ indexing
 
 	description:
 		"Binary tree: each node may have a left child and a right child"
+	legal: "See notice at end of class."
 
-	status: "See notice at end of class"
+	status: "See notice at end of class."
 	names: binary_tree, tree, fixed_tree;
 	representation: recursive, array;
 	access: cursor, membership;
@@ -30,9 +31,9 @@ inherit
 			child_remove,
 			child_after,
 			child_capacity,
-			tree_copy,
 			child_start,
-			child_forth
+			child_forth,
+			clone_node
 		end
 
 create
@@ -305,7 +306,7 @@ feature -- Element change
 			if not has_left and not has_right then
 				child_index := 1
 			end
-			
+
 			inspect
 				child_index
 			when 1 then
@@ -365,11 +366,11 @@ feature -- Removal
 
 	wipe_out is
 			-- Remove all children.
-		do 
+		do
 			remove_left_child
 			remove_right_child
 		end
-		
+
 	forget_left is
 			-- Forget left sibling.
 		do
@@ -377,7 +378,7 @@ feature -- Removal
 				parent.remove_left_child
 			end
 		end
-		
+
 	forget_right is
 			-- Forget right sibling.
 		do
@@ -385,7 +386,7 @@ feature -- Removal
 				parent.remove_right_child
 			end
 		end
-		
+
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
@@ -428,9 +429,20 @@ feature {BINARY_TREE} -- Implementation
 			end
 		end
 
-	cut_off_node is
-			-- Cut off all links from current node.
+feature {BINARY_TREE} -- Implementation
+
+	clone_node (n: like Current): like Current is
+			-- Clone node `n'.
 		do
+			create Result.make (n.item)
+			Result.copy_node (n)
+		end
+
+	copy_node (n: like Current) is
+			-- Copy content of `n' except tree data into Current.
+		do
+			standard_copy (n)
+			child_index := 0
 			left_child := Void
 			right_child := Void
 			parent := Void
@@ -485,160 +497,26 @@ feature {NONE} -- Implementation
 			end
 		end
 
- 	tree_copy (other, tmp_tree: like Current) is
-		local
-			i: INTEGER
-			p1, p2, node: like Current
-			other_stack, tmp_stack: LINKED_STACK [like Current]
-			idx_stack, orgidx_stack: LINKED_STACK [INTEGER]
-		do
-			create other_stack.make
-			create tmp_stack.make
-			create idx_stack.make
-			create orgidx_stack.make
-			if other.object_comparison then
-				tmp_tree.compare_objects
-			end
-			orgidx_stack.put (other.child_index)
-			from
-				i := 1
-				p1 := other
-				p2 := tmp_tree
-			invariant
-				same_count: other_stack.count = tmp_stack.count and
-							tmp_stack.count = idx_stack.count
-			until
-				i > child_capacity and other_stack.is_empty
-			loop
-				p1.child_go_i_th (i)
-				p2.child_go_i_th (i)
-				if p1.child_readable then
-					check
-						source_tree_not_void: p1 /= Void
-						target_tree_not_void: p2 /= Void
-							-- Because we always point to valid parent nodes.
-						source_child_not_void: p1.child /= Void
-							-- Because we only get here when the child is
-							-- readable.
-						target_child_void: p2.child = Void
-							-- Because the target child has not been copied
-							-- yet.
-					end
-					node := clone_node (p1.child)
-						check
-							equal_but_not_the_same: standard_equal (node, p1.child) and node /= p1.child
-								-- Because `node' has been cloned.
-						end
-					if i = 1 then
-						p2.put_left_child (node)
-					else
-						p2.put_right_child (node)
-					end
-						check
-							node_is_child: node = p2.child
-								-- Because we inserted `node' as child.
-							comparison_mode_ok: p2.child.object_comparison =
-										p1.child.object_comparison
-								-- Because the comparson mode flag must be copied
-								-- correctly, too.
-							p1_consistent: p1.child.parent = p1
-							p2_consistent: p2.child.parent = p2
-								-- Because the tree has to be consistent.
-						end
-					if not p1.child.is_leaf then
-						other_stack.put (p1)
-						tmp_stack.put (p2)
-						idx_stack.put (i + 1)
-						p1 := p1.child
-						p2 := p2.child
-						orgidx_stack.put (p1.child_index)
-						i := 0
-					end
-				end
-				if i <= child_capacity then
-					i := i + 1
-				else
-					from
-					invariant
-						same_count: other_stack.count = tmp_stack.count and
-									tmp_stack.count = idx_stack.count
-					until
-						other_stack.is_empty or else i <= child_capacity
-					loop
-						p1.child_go_i_th (orgidx_stack.item)
-						p2.child_go_i_th (orgidx_stack.item)
-							check
-								child_indices_equal: 
-									p1.child_index = p2.child_index
-										-- Because we have set them equal before.
-							end
-						p1 := other_stack.item
-						p2 := tmp_stack.item
-							check
-								p1_not_void: p1 /= Void
-								p2_not_void: p2 /= Void
-									-- Because we never put Void references on the
-									-- stack.
-							end
-						i := idx_stack.item
-						other_stack.remove
-						tmp_stack.remove
-						idx_stack.remove
-						orgidx_stack.remove
-					end
-				end
-			end
-			other.child_go_i_th (orgidx_stack.item)
-			tmp_tree.child_go_i_th (orgidx_stack.item)
-			orgidx_stack.remove
-				check
-					tree_stacks_empty: other_stack.is_empty and tmp_stack.is_empty
-						-- Because we removed all items.
-					at_root: p1 = other and p2 = tmp_tree
-						-- Because the root nodes where the last item we removed.
-					copy_correct: equal (other, tmp_tree)
-						-- Because `other' has been copied to `tmp_tree'.
-
-					index_stack_empty: orgidx_stack.is_empty
-						-- Because we also removed the root from the index
-						-- stack now.
-				end
-		end
-
 invariant
 
 	tree_is_binary: child_capacity = 2
 
 indexing
-
-	library: "[
-			EiffelBase: Library of reusable components for Eiffel.
-			]"
-
-	status: "[
-			Copyright 1986-2001 Interactive Software Engineering (ISE).
-			For ISE customers the original versions are an ISE product
-			covered by the ISE Eiffel license and support agreements.
-			]"
-
-	license: "[
-			EiffelBase may now be used by anyone as FREE SOFTWARE to
-			develop any product, public-domain or commercial, without
-			payment to ISE, under the terms of the ISE Free Eiffel Library
-			License (IFELL) at http://eiffel.com/products/base/license.html.
-			]"
-
+	library:	"EiffelBase: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Interactive Software Engineering Inc.
-			ISE Building
-			360 Storke Road, Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Electronic mail <info@eiffel.com>
-			Customer support http://support.eiffel.com
-			]"
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
-	info: "[
-			For latest info see award-winning pages: http://eiffel.com
-			]"
+
+
+
+
+
 
 end -- class BINARY_TREE

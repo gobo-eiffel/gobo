@@ -42,31 +42,31 @@ struct emallinfo {
 /* TODO */
 #define eif_is_in_final_collect EIF_FALSE
 
-extern void gc_stat(EIF_POINTER item, EIF_INTEGER type);
-extern void mem_stat(EIF_POINTER item, EIF_INTEGER type);
-extern EIF_INTEGER mem_tget(void);
-extern long mem_pget(void);
+extern void eif_gc_stat(EIF_POINTER item, EIF_INTEGER type);
+extern void eif_mem_stat(EIF_POINTER item, EIF_INTEGER type);
+extern EIF_INTEGER eif_mem_tget(void);
+extern long eif_mem_pget(void);
 extern EIF_INTEGER eif_coalesce_period(void);
-extern char gc_ison(void);
-extern EIF_INTEGER mem_largest(void);
+extern char eif_gc_ison(void);
+extern EIF_INTEGER eif_mem_largest(void);
 extern EIF_INTEGER eif_get_max_mem(void);
 extern EIF_INTEGER eif_get_chunk_size(void);
 extern EIF_INTEGER eif_tenure(void);
 extern EIF_INTEGER eif_generation_object_limit(void);
 extern EIF_INTEGER eif_scavenge_zone_size(void);
-extern void mem_speed(void);
-extern void gc_stop(void);
-extern void gc_run(void);
-extern void mem_slow(void);
-extern void mem_tiny(void);
-extern void mem_tset(long int value);
-extern void mem_pset(long int value);
+extern void eif_mem_speed(void);
+extern void eif_gc_stop(void);
+extern void eif_gc_run(void);
+extern void eif_mem_slow(void);
+extern void eif_mem_tiny(void);
+extern void eif_mem_tset(long int value);
+extern void eif_mem_pset(long int value);
 extern void eif_set_coalesce_period (EIF_INTEGER p);
 extern void eif_set_max_mem(EIF_INTEGER value);
-extern void mem_free(EIF_REFERENCE object);
-extern void mem_coalesc(void);
+extern void eif_mem_free(EIF_REFERENCE object);
+extern void eif_mem_coalesc(void);
 extern int collect(void);
 extern void plsc(void);
-extern void gc_mon(char flag);
+extern void eif_gc_mon(char flag);
 
 #endif

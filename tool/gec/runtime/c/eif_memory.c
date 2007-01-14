@@ -13,20 +13,20 @@
 #ifndef EIF_MEMORY_C
 #define EIF_MEMORY_C
 
-void gc_stat(EIF_POINTER item, EIF_INTEGER type) {
+void eif_gc_stat(EIF_POINTER item, EIF_INTEGER type) {
 	/* TODO */
 }
 
-void mem_stat(EIF_POINTER item, EIF_INTEGER type) {
+void eif_mem_stat(EIF_POINTER item, EIF_INTEGER type) {
 	/* TODO */
 }
 
-EIF_INTEGER mem_tget(void) {
+EIF_INTEGER eif_mem_tget(void) {
 	/* TODO */
 	return (EIF_INTEGER)0;
 }
 
-long mem_pget(void) {
+long eif_mem_pget(void) {
 	/* TODO */
 	return 0;
 }
@@ -36,12 +36,12 @@ EIF_INTEGER eif_coalesce_period(void) {
 	return (EIF_INTEGER)0;
 }
 
-char gc_ison(void) {
+char eif_gc_ison(void) {
 	/* TODO */
 	return '\0';
 }
 
-EIF_INTEGER mem_largest(void) {
+EIF_INTEGER eif_mem_largest(void) {
 	/* TODO */
 	return (EIF_INTEGER)0;
 }
@@ -71,31 +71,31 @@ EIF_INTEGER eif_scavenge_zone_size(void) {
 	return (EIF_INTEGER)0;
 }
 
-void mem_speed(void) {
+void eif_mem_speed(void) {
 	/* TODO */
 }
 
-void gc_stop(void) {
+void eif_gc_stop(void) {
 	/* TODO */
 }
 
-void gc_run(void) {
+void eif_gc_run(void) {
 	/* TODO */
 }
 
-void mem_slow(void) {
+void eif_mem_slow(void) {
 	/* TODO */
 }
 
-void mem_tiny(void) {
+void eif_mem_tiny(void) {
 	/* TODO */
 }
 
-void mem_tset(long int value) {
+void eif_mem_tset(long int value) {
 	/* TODO */
 }
 
-void mem_pset(long int value) {
+void eif_mem_pset(long int value) {
 	/* TODO */
 }
 
@@ -107,11 +107,11 @@ void eif_set_max_mem(EIF_INTEGER value) {
 	/* TODO */
 }
 
-void mem_free(EIF_REFERENCE object) {
+void eif_mem_free(EIF_REFERENCE object) {
 	/* TODO */
 }
 
-void mem_coalesc(void) {
+void eif_mem_coalesc(void) {
 	/* TODO */
 }
 
@@ -124,7 +124,7 @@ void plsc(void) {
 	/* TODO */
 }
 
-void gc_mon(char flag) {
+void eif_gc_mon(char flag) {
 	/* TODO */
 }
 

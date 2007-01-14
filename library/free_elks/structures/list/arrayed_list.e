@@ -2,8 +2,9 @@ indexing
 
 	description:
 		"Lists implemented by resizable arrays"
+	legal: "See notice at end of class."
 
-	status: "See notice at end of class"
+	status: "See notice at end of class."
 	names: sequence;
 	representation: array;
 	access: index, cursor, membership;
@@ -105,7 +106,7 @@ feature -- Initialization
 		ensure then
 			correct_position: before
 			filled: count = a.count
-		end 
+		end
 
 feature -- Access
 
@@ -150,7 +151,7 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			l_area: like area
-			l_item: G
+			l_item: like item
 			i, nb: INTEGER
 		do
 			l_area := area
@@ -297,7 +298,7 @@ feature -- Cursor movement
 			-- based on `object_comparison'.)
 		local
 			l_area: like area
-			l_item: G
+			l_item: like item
 			i, nb: INTEGER
 			l_found: BOOLEAN
 		do
@@ -411,10 +412,10 @@ feature -- Element change
 				conservative_resize (1, l_new_count)
 				set_count (l_new_count)
 				if index < l_old_count then
-					subcopy (Current, index + 1, l_old_count, 
-						index + other.count + 1) 
+					subcopy (Current, index + 1, l_old_count,
+						index + other.count + 1)
 				end
-				subcopy (other, 1, other.count, index + 1) 
+				subcopy (other, 1, other.count, index + 1)
 				other.wipe_out
 			end
 		end
@@ -504,34 +505,37 @@ feature -- Removal
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			offset: INTEGER
 			res: BOOLEAN
 			obj_cmp: BOOLEAN
 			default_val: like item
+			l_area: like area
 		do
 			obj_cmp := object_comparison
-			from 
-				i := 1 
-			until 
-				i > count 
+			from
+				l_area := area
+				i := 0
+				nb := count
+			until
+				i = count
 			loop
-				if i <= count - offset then
-					if offset > 0 then 
-						put_i_th (i_th (i + offset), i) 
+				if i < nb - offset then
+					if offset > 0 then
+						l_area.put (l_area.item (i + offset), i)
 					end
 					if obj_cmp then
-						res := equal (v, i_th (i))
+						res := equal (v, l_area.item (i))
 					else
-						res := (v = i_th (i))
+						res := (v = l_area.item (i))
 					end
-					if res then 
+					if res then
 						offset := offset + 1
 					else
 						i := i + 1
 					end
 				else
-					put_i_th (default_val, i)
+					l_area.put (default_val, i)
 					i := i + 1
 				end
 			end
@@ -563,7 +567,7 @@ feature -- Removal
 		do
 			set_count (0)
 			index := 0
-			discard_items
+			clear_all
 		end
 
 feature -- Transformation
@@ -623,17 +627,17 @@ feature {NONE} -- Implementation
 			index_unchanged: index = old index
 			insertion_done: i_th (pos) = v
 		end
-		
+
 	set_count (new_count: INTEGER) is
 			-- Set `count' to `new_count'
 		do
-			count := new_count			
+			count := new_count
 		end
 
 	new_filled_list (n: INTEGER): like Current is
 			-- New list with `n' elements.
 		require
-			n_non_negative: n >=0 
+			n_non_negative: n >=0
 		do
 			create Result.make_filled (n)
 		ensure
@@ -650,35 +654,21 @@ invariant
 	empty_means_storage_empty: is_empty implies all_default
 
 indexing
-
-	library: "[
-			EiffelBase: Library of reusable components for Eiffel.
-			]"
-
-	status: "[
-			Copyright 1986-2001 Interactive Software Engineering (ISE).
-			For ISE customers the original versions are an ISE product
-			covered by the ISE Eiffel license and support agreements.
-			]"
-
-	license: "[
-			EiffelBase may now be used by anyone as FREE SOFTWARE to
-			develop any product, public-domain or commercial, without
-			payment to ISE, under the terms of the ISE Free Eiffel Library
-			License (IFELL) at http://eiffel.com/products/base/license.html.
-			]"
-
+	library:	"EiffelBase: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Interactive Software Engineering Inc.
-			ISE Building
-			360 Storke Road, Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Electronic mail <info@eiffel.com>
-			Customer support http://support.eiffel.com
-			]"
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
-	info: "[
-			For latest info see award-winning pages: http://eiffel.com
-			]"
+
+
+
+
+
 
 end -- class ARRAYED_LIST

@@ -2,8 +2,9 @@ indexing
 
 	description:
 		"Trees where the children of each node are kept in an array"
+	legal: "See notice at end of class."
 
-	status: "See notice at end of class"
+	status: "See notice at end of class."
 	names: tree;
 	representation: recursive, array;
 	access: cursor, membership;
@@ -28,7 +29,7 @@ class ARRAYED_TREE [G] inherit
 			writable_child, child_off, child_before
 		redefine
 			parent, attach_to_parent, duplicate, extend,
-			duplicate_all, fill_subtree
+			duplicate_all, fill_subtree, clone_node
 		end
 
 create
@@ -380,10 +381,25 @@ feature {ARRAYED_TREE} -- Implementation
 			parent := n
 		end
 
-	cut_off_node is
-			-- Cut off all links from current node.
+	clone_node (n: like Current): like Current is
+			-- Clone node `n'.
 		do
-			make (arity, item)
+			create Result.make (n.arity, n.item)
+			Result.copy_node (n)
+		end
+
+	copy_node (n: like Current) is
+			-- Copy content of `n' except tree data into Current.
+		local
+			l_arrayed_list: like arrayed_list
+		do
+				-- Store values that may be overriden by `standard_copy'.
+			l_arrayed_list := arrayed_list
+				-- Perform copy.
+			standard_copy (n)
+				-- Restore values that we wanted to preserve.			
+			arrayed_list := l_arrayed_list
+			parent := Void
 		end
 
 feature {NONE} -- Implementation
@@ -552,7 +568,7 @@ feature -- Access
 		do
 			arrayed_list.prune (n)
 		end
-	
+
 	wipe_out is
 		do
 			arrayed_list.wipe_out
@@ -670,35 +686,21 @@ feature {NONE} -- private access arrayed_list
 		end
 
 indexing
-
-	library: "[
-			EiffelBase: Library of reusable components for Eiffel.
-			]"
-
-	status: "[
-			Copyright 1986-2001 Interactive Software Engineering (ISE).
-			For ISE customers the original versions are an ISE product
-			covered by the ISE Eiffel license and support agreements.
-			]"
-
-	license: "[
-			EiffelBase may now be used by anyone as FREE SOFTWARE to
-			develop any product, public-domain or commercial, without
-			payment to ISE, under the terms of the ISE Free Eiffel Library
-			License (IFELL) at http://eiffel.com/products/base/license.html.
-			]"
-
+	library:	"EiffelBase: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Interactive Software Engineering Inc.
-			ISE Building
-			360 Storke Road, Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Electronic mail <info@eiffel.com>
-			Customer support http://support.eiffel.com
-			]"
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
-	info: "[
-			For latest info see award-winning pages: http://eiffel.com
-			]"
+
+
+
+
+
 
 end -- class ARRAYED_TREE

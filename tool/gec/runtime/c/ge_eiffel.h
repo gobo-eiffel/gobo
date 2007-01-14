@@ -79,23 +79,19 @@ typedef unsigned __int64 uint64_t;
 typedef struct {int id;} EIF_OBJECT;
 #define EIF_REFERENCE EIF_OBJECT*
 typedef char EIF_BOOLEAN;
-typedef unsigned char EIF_CHARACTER;
-typedef int32_t EIF_INTEGER_32;
+typedef unsigned char EIF_CHARACTER_8;
+typedef uint32_t EIF_CHARACTER_32;
 typedef int8_t EIF_INTEGER_8;
 typedef int16_t EIF_INTEGER_16;
-#define EIF_INTEGER EIF_INTEGER_32
+typedef int32_t EIF_INTEGER_32;
 typedef int64_t EIF_INTEGER_64;
 typedef uint8_t EIF_NATURAL_8;
 typedef uint16_t EIF_NATURAL_16;
 typedef uint32_t EIF_NATURAL_32;
-#define EIF_NATURAL EIF_NATURAL_32
 typedef uint64_t EIF_NATURAL_64;
 typedef void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
-#define EIF_REAL EIF_REAL_32
-#define EIF_DOUBLE EIF_REAL_64
-typedef uint32_t EIF_WIDE_CHAR;
 #define EIF_PROCEDURE EIF_POINTER
 
 #define EIF_VOID ((EIF_REFERENCE)0)

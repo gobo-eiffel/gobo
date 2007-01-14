@@ -70,11 +70,11 @@ feature -- Access
 	ascii_char: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
 		obsolete
-			"Use to_character instead"
+			"Use to_character_8 instead"
 		require
-			valid_character_code: is_valid_character_code
+			valid_character_code: is_valid_character_8_code
 		do
-			Result := item.to_character
+			Result := item.to_character_8
 		end
 
 	Min_value: INTEGER_8 is -128
@@ -108,7 +108,7 @@ feature -- Element change
 
 feature -- Status report
 
-	divisible (other: INTEGER_8_REF): BOOLEAN is
+	divisible (other: like Current): BOOLEAN is
 			-- May current object be divided by `other'?
 		do
 			Result := other.item /= 0
@@ -146,9 +146,26 @@ feature -- Status report
 		end
 
 	is_valid_character_code: BOOLEAN is
+			-- Does current object represent a CHARACTER_8?
+		obsolete
+			"Use `is_valid_character_8_code' instead."
+		do
+			Result := is_valid_character_8_code
+		end
+
+	is_valid_character_8_code: BOOLEAN is
+			-- Does current object represent a CHARACTER_8?
+		do
+			Result := item >= {CHARACTER_8}.Min_value and
+				item <= {CHARACTER_8}.Max_value
+		end
+
+	is_valid_character_32_code: BOOLEAN is
 			-- Does current object represent a character?
 		do
-			Result := item >= {CHARACTER}.Min_value and item <= {CHARACTER}.Max_value
+			Result := item >= 0 and then
+				item.to_natural_32 >= {CHARACTER_32}.Min_value and
+				item.to_natural_32 <= {CHARACTER_32}.Max_value
 		end
 
 feature -- Basic operations
@@ -422,10 +439,28 @@ feature -- Conversion
 
 	to_character: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
+		obsolete
+			"Use `to_character_8' instead."
 		require
-			valid_character: is_valid_character_code
+			valid_character: is_valid_character_8_code
 		do
-			Result := item.to_character 
+			Result := item.to_character_8
+		end
+
+	to_character_8: CHARACTER_8 is
+			-- Associated character in 8 bit version.
+		require
+			valid_character: is_valid_character_8_code
+		do
+			Result := item.to_character_8
+		end
+
+	to_character_32: CHARACTER_32 is
+			-- Associated character in 32 bit version.
+		require
+			valid_character: is_valid_character_32_code
+		do
+			Result := item.to_character_32
 		end
 
 feature -- Bit operations

@@ -23,10 +23,6 @@
 #define PATH_MAX 1024 /* Maximum length of full path name */
 #endif
 
-char* eif_getenv(char* k) {
-	return (char*)getenv(k);
-}
-
 EIF_INTEGER eif_system(char* s) {
 	return (EIF_INTEGER)system(s);
 }

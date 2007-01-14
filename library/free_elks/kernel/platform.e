@@ -10,6 +10,12 @@ class PLATFORM
 
 feature -- Platform
 
+	is_thread_capable: BOOLEAN is
+			-- Is current platform capable of multi-threading?
+		external
+			"built_in"
+		end
+
 	is_dotnet: BOOLEAN is
 			-- Are we targetting .NET?
 		external
@@ -61,8 +67,11 @@ feature -- Access bytes size
 			"built_in"
 		end
 
-	wide_character_bytes: INTEGER is 4
+	wide_character_bytes: INTEGER is
 			-- Number of bytes in a value of type `WIDE_CHARACTER'
+		external
+			"built_in"
+		end
 
 	natural_8_bytes: INTEGER is 1
 			-- Number of bytes in a value of type `INTEGER_8'
@@ -184,7 +193,7 @@ feature -- Access min max values
 			meaningful: Result >= 127
 		end
 
-	maximum_integer: INTEGER is 
+	maximum_integer: INTEGER is
 			-- Largest supported value of type INTEGER.
 		do
 			Result := {INTEGER}.max_value

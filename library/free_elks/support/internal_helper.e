@@ -12,6 +12,10 @@ class
 
 feature -- Status report
 
+	is_pre_ecma_mapping_disabled: BOOLEAN
+			-- Are we mapping old names to new ECMA names?
+			-- False means. mapping STRING to STRING_8, INTEGER to INTEGER_32,...
+
 	is_valid_type_string (s: STRING): BOOLEAN is
 			-- Is `s' a valid string representation for a TYPE.
 		require
@@ -64,6 +68,47 @@ feature -- Status report
 					-- Ensures that it is a valid type name.
 				Result := is_valid_identifier (l_class_type_name)
 			end
+		end
+
+	mapped_type (a_type: STRING): STRING is
+			-- If `is_pre_ecma_mapping_disabled' `a_type', otherwise
+			-- the mapped typed.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_table: like pre_ecma_type_mapping
+		do
+			if not is_pre_ecma_mapping_disabled then
+				l_table := pre_ecma_type_mapping
+				l_table.search (a_type)
+				if l_table.found then
+					Result := l_table.found_item
+				else
+					Result := a_type
+				end
+			else
+				Result := a_type
+			end
+		ensure
+			mapped_type_not_void: Result /= Void
+		end
+
+feature -- Status setting
+
+	enable_pre_ecma_mapping is
+			-- Set `is_pre_ecma_mapping_disabled' to False.
+		do
+			is_pre_ecma_mapping_disabled := False
+		ensure
+			is_pre_ecma_mapping_disabled_set: not is_pre_ecma_mapping_disabled
+		end
+
+	disable_pre_ecma_mapping is
+			-- Set `is_pre_ecma_mapping_disabled' to True.
+		do
+			is_pre_ecma_mapping_disabled := True
+		ensure
+			is_pre_ecma_mapping_disabled_set: is_pre_ecma_mapping_disabled
 		end
 
 feature {NONE} -- Implementation: status report
@@ -134,6 +179,27 @@ feature {NONE} -- Decompose string type
 			else
 				Result.extend (a_str.substring (l_first_pos, i - 1))
 			end
+		end
+
+feature {NONE} -- ECMA mapping helper
+
+	pre_ecma_type_mapping: HASH_TABLE [STRING, STRING] is
+			-- Mapping between pre-ECMA type naming and new names.
+		once
+			create Result.make (12)
+			Result.put ("STRING_8", "STRING")
+			Result.put ("INTEGER_32", "INTEGER")
+			Result.put ("INTEGER_32_REF", "INTEGER_REF")
+			Result.put ("CHARACTER_8", "CHARACTER")
+			Result.put ("CHARACTER_8_REF", "CHARACTER_REF")
+			Result.put ("CHARACTER_32", "WIDE_CHARACTER")
+			Result.put ("CHARACTER_32_REF", "WIDE_CHARACTER_REF")
+			Result.put ("REAL_32", "REAL")
+			Result.put ("REAL_32_REF", "REAL_REF")
+			Result.put ("REAL_64", "DOUBLE")
+			Result.put ("REAL_64_REF", "DOUBLE_REF")
+		ensure
+			pre_ecma_type_mapping_not_void: Result /= Void
 		end
 
 end

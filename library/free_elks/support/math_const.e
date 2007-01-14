@@ -14,7 +14,7 @@ indexing
 class
 	MATH_CONST
 
-feature {NONE} -- Access
+feature -- Access
 
 	Pi: DOUBLE is 3.14159265358979323846
 

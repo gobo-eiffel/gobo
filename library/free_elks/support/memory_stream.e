@@ -10,6 +10,9 @@ indexing
 class
 	MEMORY_STREAM
 
+obsolete
+	"Use MANAGED_POINTER instead."
+
 inherit
 	DISPOSABLE
 		redefine
@@ -76,7 +79,7 @@ feature -- Access
 	item alias "[]", infix "@" (i: INTEGER): INTEGER_8 assign put is
 			-- Entry at index `i'.
 		require
-			valid_index: valid_index (i)			
+			valid_index: valid_index (i)
 		do
 			($Result).memory_copy (area.item + i, 1)
 		end
@@ -170,7 +173,7 @@ feature {NONE} -- Disposal
 		end
 
 	internal_area: MANAGED_POINTER
-	
+
 invariant
 	non_void_internal_area: internal_area /= Void
 	area_not_null: area /= default_pointer

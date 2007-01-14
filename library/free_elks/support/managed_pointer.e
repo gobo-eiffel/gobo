@@ -26,10 +26,10 @@ inherit
 		redefine
 			is_equal, copy
 		end
-	
+
 create
 	make, make_from_array, make_from_pointer, share_from_pointer
-	
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
@@ -120,7 +120,7 @@ feature -- Access
 
 	item: POINTER
 			-- Access to allocated memory.
-			
+
 	count: INTEGER
 			-- Number of elements that Current can hold.
 
@@ -132,7 +132,9 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object considered equal to current object?
 		do
-			Result := count = other.count and then item.memory_compare (other.item, count)
+			if count = other.count then
+				Result := (item = other.item) or else item.memory_compare (other.item, count)
+			end
 		end
 
 feature -- Duplication
@@ -164,7 +166,7 @@ feature -- Duplication
 			sharing_status_not_preserved:
 				(old is_shared and not is_shared) implies (other.count > old count)
 		end
-		
+
 feature -- Access: Platform specific
 
 	read_natural_8 (pos: INTEGER): NATURAL_8 is
@@ -192,7 +194,7 @@ feature -- Access: Platform specific
 			valid_position: (pos + natural_32_bytes) <= count
 		do
 			($Result).memory_copy (item + pos, natural_32_bytes)
-		end		
+		end
 
 	read_natural_64 (pos: INTEGER): NATURAL_64 is
 			-- Read NATURAL_64 at position `pos'.
@@ -228,7 +230,7 @@ feature -- Access: Platform specific
 			valid_position: (pos + integer_32_bytes) <= count
 		do
 			Result := read_natural_32 (pos).as_integer_32
-		end		
+		end
 
 	read_integer_64 (pos: INTEGER): INTEGER_64 is
 			-- Read INTEGER_64 at position `pos'.
@@ -264,7 +266,7 @@ feature -- Access: Platform specific
 			valid_position: (pos + Character_bytes) <= count
 		do
 			($Result).memory_copy (item + pos, Character_bytes)
-		end		
+		end
 
 	read_real (pos: INTEGER): REAL is
 			-- Read REAL_32 at position `pos'.
@@ -436,10 +438,10 @@ feature -- Element change: Platform specific
 			(item + pos).memory_copy ($b, Boolean_bytes)
 		ensure
 			inserted: b = read_boolean (pos)
-		end	
+		end
 
 	put_character (c: CHARACTER; pos: INTEGER) is
-			-- Insert `' at position `pos'.
+			-- Insert `c' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Character_bytes) <= count
@@ -447,7 +449,7 @@ feature -- Element change: Platform specific
 			(item + pos).memory_copy ($c, Character_bytes)
 		ensure
 			inserted: c = read_character (pos)
-		end			
+		end
 
 	put_real (r: REAL; pos: INTEGER) is
 			-- Insert `r' at position `pos'.
@@ -620,7 +622,7 @@ feature -- Element change: Little-endian format
 		ensure
 			inserted: i = read_natural_8_le (pos)
 		end
-		
+
 	put_natural_16_le (i: NATURAL_16; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
 		require
@@ -681,7 +683,7 @@ feature -- Element change: Little-endian format
 		ensure
 			inserted: i = read_integer_8_le (pos)
 		end
-		
+
 	put_integer_16_le (i: INTEGER_16; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
 		require
@@ -758,7 +760,7 @@ feature -- Access: Big-endian format
 			else
 				Result := read_natural_32 (pos)
 			end
-		end		
+		end
 
 	read_natural_64_be (pos: INTEGER): NATURAL_64 is
 			-- Read NATURAL_64 at position `pos'.
@@ -802,7 +804,7 @@ feature -- Access: Big-endian format
 			valid_position: (pos + integer_32_bytes) <= count
 		do
 			Result := read_natural_32_be (pos).as_integer_32
-		end		
+		end
 
 	read_integer_64_be (pos: INTEGER): INTEGER_64 is
 			-- Read INTEGER_64 at position `pos'.
@@ -825,7 +827,7 @@ feature -- Element change: Big-endian format
 		ensure
 			inserted: i = read_natural_8_be (pos)
 		end
-		
+
 	put_natural_16_be (i: NATURAL_16; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
 		require
@@ -886,7 +888,7 @@ feature -- Element change: Big-endian format
 		ensure
 			inserted: i = read_integer_8_be (pos)
 		end
-		
+
 	put_integer_16_be (i: INTEGER_16; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
 		require
@@ -955,7 +957,7 @@ feature -- Resizing
 					(create {EXCEPTIONS}).raise ("No more memory")
 				end
 			end
-			
+
 			if n > count then
 					-- Reset newly allocated memory to `0'.
 				(item + count).memory_set (0, n - count)
@@ -982,5 +984,5 @@ feature {NONE} -- Disposal
 invariant
 	item_not_null: item = default_pointer implies (count = 0 and is_shared)
 	valid_count: count >= 0
-	
+
 end

@@ -1,12 +1,12 @@
 indexing
-	description: "References to objects containing a real value" 
+	description: "References to objects containing a double-precision real number"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class REAL_REF inherit
+class REAL_64_REF inherit
 
 	NUMERIC
 		redefine
@@ -25,8 +25,8 @@ class REAL_REF inherit
 
 feature -- Access
 
-	item: REAL is
-			-- Numeric real value
+	item: REAL_64 is
+			-- Numeric double value
 		external
 			"built_in"
 		end
@@ -66,7 +66,7 @@ feature -- Access
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
-			-- Is `other' greater than current real?
+			-- Is `other' greater than current double?
 		do
 			Result := item < other.item
 		end
@@ -80,20 +80,20 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_item (r: REAL) is
-			-- Make `r' the value of `item'.
+	set_item (d: REAL_64) is
+			-- Make `d' the `item' value.
 		external
 			"built_in"
 		end
 
 feature -- Status report
 
-	divisible (other: REAL_REF): BOOLEAN is
+	divisible (other: DOUBLE_REF): BOOLEAN is
 			-- May current object be divided by `other'?
 		do
 			Result := other.item /= 0.0
 		ensure then
-			ref_not_exact_zero: Result implies (other.item /= 0.0)
+			not_exact_zero: Result implies (other.item /= 0.0)
 		end
 
 	exponentiable (other: NUMERIC): BOOLEAN is
@@ -125,9 +125,9 @@ feature -- Status report
 			Result := item /= 0.0
 		end
 
-feature {NONE} -- Initialization
+feature {NONE} -- Conversion
 
-	make_from_reference (v: REAL_REF) is
+	make_from_reference (v: REAL_64_REF) is
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
@@ -139,7 +139,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: REAL_REF is
+	to_reference: REAL_64_REF is
 			-- Associated reference of Current
 		do
 			create Result
@@ -149,29 +149,30 @@ feature -- Conversion
 		end
 
 	truncated_to_integer: INTEGER is
-			-- Integer part (same sign, largest absolute
+			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
 			Result := item.truncated_to_integer
 		end
 
 	truncated_to_integer_64: INTEGER_64 is
-			-- Integer part (same sign, largest absolute
+			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
 			Result := item.truncated_to_integer_64
 		end
 
-	to_double: DOUBLE is
-			-- Current seen as a double
+	truncated_to_real: REAL_32 is
+			-- Real part (Same sign, largest absolute
+			-- value no greater than current object's)
 		do
-			Result := item.to_double
+			Result := item.truncated_to_real
 		end
 
 	ceiling: INTEGER is
 			-- Smallest integral value no smaller than current object
 		do
-			Result := ceiling_real_32.truncated_to_integer
+			Result := ceiling_real_64.truncated_to_integer
 		ensure
 			result_no_smaller: Result >= item
 			close_enough: Result - item < item.one
@@ -180,7 +181,7 @@ feature -- Conversion
 	floor: INTEGER is
 			-- Greatest integral value no greater than current object
 		do
-			Result := floor_real_32.truncated_to_integer
+			Result := floor_real_64.truncated_to_integer
 		ensure
 			result_no_greater: Result <= item
 			close_enough: item - Result < Result.one
@@ -194,35 +195,35 @@ feature -- Conversion
 			definition: Result = sign * ((abs + 0.5).floor)
 		end
 
-	ceiling_real_32: REAL is
+	ceiling_real_64: REAL_64 is
 			-- Smallest integral value no smaller than current object
 		do
-			Result := item.ceiling_real_32
+			Result := item.ceiling_real_64
 		ensure
 			result_no_smaller: Result >= item
 			close_enough: Result - item < item.one
 		end
 
-	floor_real_32: REAL is
+	floor_real_64: REAL_64 is
 			-- Greatest integral value no greater than current object
 		do
-			Result := item.floor_real_32
+			Result := item.floor_real_64
 		ensure
 			result_no_greater: Result <= item
 			close_enough: item - Result < Result.one
 		end
 
-	rounded_real_32: REAL is
+	rounded_real_64: REAL_64 is
 			-- Rounded integral value
 		do
-			Result := sign * ((abs + 0.5).floor_real_32)
+			Result := sign * ((abs + 0.5).floor_real_64)
 		ensure
-			definition: Result = sign * ((abs + 0.5).floor_real_32)
+			definition: Result = sign * ((abs + 0.5).floor_real_64)
 		end
 
 feature -- Basic operations
 
-	abs: REAL is
+	abs: REAL_64 is
 			-- Absolute value
 		do
 			Result := abs_ref.item
@@ -246,7 +247,7 @@ feature -- Basic operations
 		end
 
 	infix "*" (other: like Current): like Current is
-			-- Product by `other'
+			-- Product with `other'
 		do
 			create Result
 			Result.set_item (item * other.item)
@@ -260,7 +261,7 @@ feature -- Basic operations
 		end
 
 	infix "^" (other: DOUBLE): DOUBLE is
-			-- Current real to the power `other'
+			-- Current double to the power `other'
 		do
 			Result := item ^ other
 		end
@@ -282,7 +283,7 @@ feature -- Basic operations
 feature -- Output
 
 	out: STRING is
-			-- Printable representation of real value
+			-- Printable representation of double value
 		do
 			Result := item.out
 		end

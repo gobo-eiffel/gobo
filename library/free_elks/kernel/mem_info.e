@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} make_by_pointer, structure_make, item, shared
 		end
-	
+
 	MEM_CONST
 
 create
@@ -98,6 +98,8 @@ feature {NONE} -- Implementation
 			-- statistics frozen at the time of this call.
 		external
 			"C use %"eif_memory.h%""
+		alias
+			"eif_mem_stat"
 		end
 
 	structure_size: INTEGER is
@@ -105,7 +107,7 @@ feature {NONE} -- Implementation
 		do
 			Result := c_sizeof_emallinfo
 		end
-		
+
 feature {NONE} -- C externals
 
 	c_ml_total (a_ptr: POINTER): INTEGER is

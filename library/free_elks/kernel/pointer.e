@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class POINTER inherit
+frozen expanded class POINTER inherit
 
 	POINTER_REF
 		redefine
@@ -21,8 +21,7 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({POINTER_REF}),
-	to_reference: {POINTER_REF, HASHABLE, ANY}
+	make_from_reference ({POINTER_REF})
 
 feature -- Access
 
