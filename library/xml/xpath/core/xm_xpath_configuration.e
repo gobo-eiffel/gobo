@@ -14,6 +14,8 @@ class XM_XPATH_CONFIGURATION
 
 inherit
 
+	ANY
+
 	MA_SHARED_DECIMAL_CONTEXT
 		export {NONE} all end
 
