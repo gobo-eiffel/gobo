@@ -68,7 +68,7 @@ feature -- Optimization
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			an_expression: XM_XPATH_EXPRESSION 
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			mark_unreplaced
 			Precursor (a_context, a_context_item_type)
@@ -101,7 +101,7 @@ feature -- Evaluation
 				if an_iterator.is_error then
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 				elseif an_iterator.after then
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")	
+				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 				else
 					a_string := an_iterator.item.string_value
 					an_iterator.forth
@@ -110,9 +110,9 @@ feature -- Evaluation
 					elseif an_iterator.after then
 						create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_string)
 					else
-						
+
 						-- Type checking ensured that the separator was not an empty sequence.
-						
+
 						arguments.item (2).evaluate_item (a_context)
 						check
 							second_string_not_void: arguments.item (2).last_evaluated_item /= Void
@@ -122,7 +122,7 @@ feature -- Evaluation
 							last_evaluated_item := arguments.item (2).last_evaluated_item
 						else
 							a_separator := arguments.item (2).last_evaluated_item.string_value
-							a_result := a_string.twin
+							a_result := STRING_.cloned_string (a_string)
 							from
 							until
 								an_iterator.is_error or else an_iterator.after
@@ -175,4 +175,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+
