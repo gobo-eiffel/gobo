@@ -51,26 +51,26 @@ feature -- Test
 			-- Test feature 'generator'.
 		local
 			l_generator: STRING
-			s: STRING
-			i: INTEGER
+			s: STRING_8
+			i: INTEGER_16
 			aa: AA
-			bb: BB [INTEGER]
-			cc: CC [STRING, CHARACTER]
+			bb: BB [INTEGER_64]
+			cc: CC [STRING_32, CHARACTER_32]
 			sp: SPECIAL [BOOLEAN]
 		do
-				-- STRING.
-			s := "gobo"
+				-- STRING_8.
+			create s.make (0)
 			l_generator := s.generator
 			assert ("not_void1", l_generator /= Void )
 			assert ("type1", l_generator.same_type (""))
-			assert_equal ("value1", "STRING", l_generator)
+			assert_equal ("value1", "STRING_8", l_generator)
 			assert ("new_object1", l_generator /= s.generator)
-				-- INTEGER.
+				-- INTEGER_16.
 			i := 5
 			l_generator := i.generator
 			assert ("not_void2", l_generator /= Void )
 			assert ("type2", l_generator.same_type (""))
-			assert_equal ("value2", "INTEGER", l_generator)
+			assert_equal ("value2", "INTEGER_16", l_generator)
 			assert ("new_object2", l_generator /= i.generator)
 				-- AA.
 			create aa
@@ -79,14 +79,14 @@ feature -- Test
 			assert ("type3", l_generator.same_type (""))
 			assert_equal ("value3", "AA", l_generator)
 			assert ("new_object3", l_generator /= aa.generator)
-				-- BB [INTEGER].
+				-- BB [INTEGER_64].
 			create bb
 			l_generator := bb.generator
 			assert ("not_void4", l_generator /= Void )
 			assert ("type4", l_generator.same_type (""))
 			assert_equal ("value4", "BB", l_generator)
 			assert ("new_object4", l_generator /= bb.generator)
-				-- CC [STRING, CHARACTER].
+				-- CC [STRING_32, CHARACTER_32].
 			create cc
 			l_generator := cc.generator
 			assert ("not_void5", l_generator /= Void )
@@ -106,26 +106,26 @@ feature -- Test
 			-- Test feature 'generating_type'.
 		local
 			l_type: STRING
-			s: STRING
-			i: INTEGER
+			s: STRING_8
+			i: INTEGER_16
 			aa: AA
-			bb: BB [INTEGER]
-			cc: CC [STRING, CHARACTER]
+			bb: BB [INTEGER_64]
+			cc: CC [STRING_32, CHARACTER_32]
 			sp: SPECIAL [BOOLEAN]
 		do
-				-- STRING.
-			s := "gobo"
+				-- STRING_8.
+			create s.make (0)
 			l_type := s.generating_type
 			assert ("not_void1", l_type /= Void )
 			assert ("type1", l_type.same_type (""))
-			assert_equal ("value1", "STRING", l_type)
+			assert_equal ("value1", "STRING_8", l_type)
 			assert ("new_object1", l_type /= s.generating_type)
-				-- INTEGER.
+				-- INTEGER_16.
 			i := 5
 			l_type := i.generating_type
 			assert ("not_void2", l_type /= Void )
 			assert ("type2", l_type.same_type (""))
-			assert_equal ("value2", "INTEGER", l_type)
+			assert_equal ("value2", "INTEGER_16", l_type)
 			assert ("new_object2", l_type /= i.generating_type)
 				-- AA.
 			create aa
@@ -134,19 +134,19 @@ feature -- Test
 			assert ("type3", l_type.same_type (""))
 			assert_equal ("value3", "AA", l_type)
 			assert ("new_object3", l_type /= aa.generating_type)
-				-- BB [INTEGER].
+				-- BB [INTEGER_64].
 			create bb
 			l_type := bb.generating_type
 			assert ("not_void4", l_type /= Void )
 			assert ("type4", l_type.same_type (""))
-			assert_equal ("value4", "BB [INTEGER]", l_type)
+			assert_equal ("value4", "BB [INTEGER_64]", l_type)
 			assert ("new_object4", l_type /= bb.generating_type)
-				-- CC [STRING, CHARACTER].
+				-- CC [STRING_32, CHARACTER_32].
 			create cc
 			l_type := cc.generating_type
 			assert ("not_void5", l_type /= Void )
 			assert ("type5", l_type.same_type (""))
-			assert_equal ("value5", "CC [STRING, CHARACTER]", l_type)
+			assert_equal ("value5", "CC [STRING_32, CHARACTER_32]", l_type)
 			assert ("new_object5", l_type /= cc.generating_type)
 				-- SPECIAL [BOOLEAN].
 			create sp.make (2)

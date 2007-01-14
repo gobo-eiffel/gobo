@@ -307,6 +307,7 @@ feature -- Test
 			sp1: SPECIAL [INTEGER]
 			sp2: SPECIAL [STRING]
 			s1, s2: STRING
+			sp3: SPECIAL [ANY]
 		do
 			create sp1.make (2)
 			sp1.put (7, 0)
@@ -326,6 +327,13 @@ feature -- Test
 			sp2.put (s2, 1)
 			assert_same ("put8", s1, sp2.item (0))
 			assert_same ("put9", s2, sp2.item (1))
+			create sp3.make (3)
+			s1 := "gobo"
+			sp3.put (s1, 1)
+			sp3.put (5, 2)
+			assert_same ("put10", Void, sp3.item (0))
+			assert_same ("put11", s1, sp3.item (1))
+			assert_equal ("put12", 5, sp3.item (2))
 		end
 
 	test_fill_with is

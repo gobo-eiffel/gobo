@@ -38,6 +38,22 @@ feature -- Status report
 			end
 		end
 
+	has_expanded: BOOLEAN is
+			-- Does current type list contain at least one expanded type?
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if storage.item (i).is_expanded then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Access
 
 	special_type: ET_DYNAMIC_TYPE is

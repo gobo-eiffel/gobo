@@ -76,6 +76,7 @@ feature -- Element change
 
 	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
 			-- Add `a_target' to current set.
+			-- (Targets are supersets of current set.)
 		do
 			-- Do nothing: the current kind of type set is not pushing
 			-- types to targets but pulling them from sources.
@@ -83,7 +84,7 @@ feature -- Element change
 
 	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
 			-- Add `a_source' to current set.
-			-- (Sources are sub-sets of current set.)
+			-- (Sources are subsets of current set.)
 		do
 			if sources = Void then
 				sources := a_source

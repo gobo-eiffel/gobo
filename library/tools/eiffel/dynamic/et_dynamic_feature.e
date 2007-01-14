@@ -19,6 +19,9 @@ inherit
 	ET_TOKEN_CODES
 		export {NONE} all end
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 create
 
 	make
@@ -39,6 +42,7 @@ feature {NONE} -- Initialization
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			args: ET_FORMAL_ARGUMENT_LIST
+			arg: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
 		do
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
@@ -61,10 +65,12 @@ feature {NONE} -- Initialization
 				if nb > 0 then
 					create dynamic_type_sets.make_with_capacity (nb)
 					from i := 1 until i > nb loop
-						l_type := args.formal_argument (i).type
+						arg := args.formal_argument (i)
+						l_type := arg.type
 						l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 						l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
 						dynamic_type_sets.put_last (l_dynamic_type_set)
+						arg.name.set_index (i)
 						i := i + 1
 					end
 				end
@@ -78,10 +84,19 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	result_type_set: ET_DYNAMIC_TYPE_SET
-			-- Type of result, if any
+			-- Type set of result, if any
 
 	target_type: ET_DYNAMIC_TYPE
 			-- Type of target
+
+	argument_type_set (i: INTEGER): ET_DYNAMIC_TYPE_SET is
+			-- Type set of `i'-th argument;
+			-- Void if unknown yet
+		do
+			if i >= 1 and i <= dynamic_type_sets.count then
+				Result := dynamic_type_sets.item (i)
+			end
+		end
 
 	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets of expressions within current feature;
@@ -95,9 +110,13 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			i := an_operand.index
-			if i >= 1 and i <= dynamic_type_sets.count then
-				Result := dynamic_type_sets.item (i)
+			if an_operand = tokens.current_keyword then
+				Result := target_type
+			else
+				i := an_operand.index
+				if i >= 1 and i <= dynamic_type_sets.count then
+					Result := dynamic_type_sets.item (i)
+				end
 			end
 		end
 
@@ -224,17 +243,17 @@ feature -- Status report
 				inspect builtin_code // builtin_capacity
 				when builtin_boolean_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_boolean_item
-				when builtin_character_class then
+				when builtin_character_8_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_character_item
-				when builtin_wide_character_class then
+				when builtin_character_32_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_character_item
 				when builtin_pointer_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_pointer_item
-				when builtin_integer_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
 				when builtin_integer_8_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
 				when builtin_integer_16_class then
+					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+				when builtin_integer_32_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
 				when builtin_integer_64_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
@@ -246,9 +265,9 @@ feature -- Status report
 					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
 				when builtin_natural_64_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
-				when builtin_real_class then
+				when builtin_real_32_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_real_item
-				when builtin_double_class then
+				when builtin_real_64_class then
 					Result := (builtin_code \\ builtin_capacity) = builtin_real_item
 				else
 					Result := False

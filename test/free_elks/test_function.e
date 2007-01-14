@@ -126,6 +126,10 @@ feature -- Test
 			p1: FUNCTION [ANY, TUPLE [INTEGER], CHARACTER]
 			p2: FUNCTION [ANY, TUPLE, CHARACTER]
 			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			b: TO_SPECIAL [ANY]
+			b1: ARRAY [CHARACTER]
+			b2: ARRAY [STRING]
+			p4: FUNCTION [ANY, TUPLE [ANY], ANY]
 		do
 				-- 1 open, 0 closed.
 			create {ARRAY [CHARACTER]} a.make (1, 1)
@@ -169,18 +173,39 @@ feature -- Test
 			assert_characters_equal ("item5b", 'c', p1.item ([1, "gobo"]))
 				-- Polymorphic agent.
 			create {ARRAY [CHARACTER]} a.make (1, 1)
-			a.put ('f', 1)
+			a.put ('x', 1)
 			p3 := agent a.item (?)
-			assert_characters_equal ("item6a", 'f', p3.item ([1, "gobo"]))
-			a.put ('h', 1)
+			assert_characters_equal ("item6a", 'x', p3.item ([1, "gobo"]))
+			a.put ('y', 1)
 			p3 := agent a.item (1)
-			assert_characters_equal ("item7a", 'h', p3.item ([5, "gobo"]))
-			a := "e"
+			assert_characters_equal ("item7a", 'y', p3.item ([5, "gobo"]))
+			a := "z"
 			p3 := agent a.item (?)
-			assert_characters_equal ("item6b", 'e', p3.item ([1, "gobo"]))
+			assert_characters_equal ("item6b", 'z', p3.item ([1, "gobo"]))
 			a.put ('j', 1)
 			p3 := agent a.item (1)
 			assert_characters_equal ("item7b", 'j', p3.item ([5, "gobo"]))
+				-- Polymorphic agent with boxing.
+			create {ARRAY [CHARACTER]} a.make (1, 1)
+			a.put ('f', 1)
+			p4 := agent a.item (?)
+			assert_equal ("item8a", 'f', p4.item ([1, "gobo"]))
+			a := "e"
+			p4 := agent a.item (?)
+			assert_equal ("item8b", 'e', p4.item ([1, "gobo"]))
+			create b1.make (1, 1)
+			b1.put ('p', 1)
+			b := b1
+			p4 := agent b.item (?)
+			assert_equal ("item9a", 'p', p4.item ([1, "gobo"]))
+			b := "q"
+			p4 := agent b.item (?)
+			assert_equal ("item9b", 'q', p4.item ([1, "gobo"]))
+			create b2.make (1, 1)
+			b2.put ("gobo", 1)
+			b := b2
+			p4 := agent b.item (?)
+			assert_equal ("item9c", "gobo", p4.item ([1, 'd']))
 		end
 
 	test_item_labeled_tuple1 is

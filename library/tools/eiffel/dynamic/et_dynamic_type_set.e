@@ -53,6 +53,53 @@ feature -- Status report
 			definition: Result = static_type.is_expanded
 		end
 
+	has_expanded: BOOLEAN is
+			-- Does current type set contain at least one expanded type?
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			l_type := first_type
+			if l_type /= Void then
+				if l_type.is_expanded then
+					Result := True
+				elseif other_types /= Void then
+					Result := other_types.has_expanded
+				end
+			end
+		end
+
+	is_subset (other: ET_DYNAMIC_TYPE_SET): BOOLEAN is
+			-- Is current dynamic type set at subset of `other'.
+		require
+			other_not_void: other /= Void
+		local
+			l_type: ET_DYNAMIC_TYPE
+			l_other_types: ET_DYNAMIC_TYPE_LIST
+			i, nb: INTEGER
+		do
+			if count <= other.count then
+				l_type := first_type
+				if l_type = Void then
+					Result := True
+				elseif other.has_type (l_type) then
+					Result := True
+					l_other_types := other_types
+					if l_other_types /= Void then
+						nb := l_other_types.count
+						from i := 1 until i > nb loop
+							l_type := l_other_types.item (i)
+							if not other.has_type (l_type) then
+								Result := False
+								i := nb + 1 -- Jump out of the loop.
+							else
+								i := i + 1
+							end
+						end
+					end
+				end
+			end
+		end
+
 feature -- Access
 
 	static_type: ET_DYNAMIC_TYPE is
@@ -72,10 +119,13 @@ feature -- Access
 			-- Other types in current set;
 			-- Void if zero or one type in the set
 		deferred
+		ensure
+			void_if_zero: first_type = Void implies Result = Void
+			void_if_one: Result /= Void implies not Result.is_empty
 		end
 
 	sources: ET_DYNAMIC_ATTACHMENT is
-			-- Sub-sets of current set
+			-- Subsets of current set
 		deferred
 		end
 

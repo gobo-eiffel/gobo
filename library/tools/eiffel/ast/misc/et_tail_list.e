@@ -161,6 +161,37 @@ feature -- Element change
 			last_set: last = an_item
 		end
 
+	append_last (other: ET_TAIL_LIST [G]) is
+			-- Add items of `other' to the end of list.
+			-- Keep items of `other' in the same order.
+			-- Resize list if necessary.
+		require
+			other_not_void: other /= Void
+		local
+			new_capacity: INTEGER
+			i, nb: INTEGER
+			j: INTEGER
+		do
+			nb := other.count
+			if count + nb > capacity then
+				new_capacity := (capacity + nb) * 2
+				if storage = Void then
+					storage := fixed_array.make (new_capacity + 1)
+				else
+					storage := fixed_array.resize (storage, new_capacity + 1)
+				end
+			end
+			j := count
+			from i := 1 until i > nb loop
+				j := j + 1
+				storage.put (other.item (i), j)
+				i := i + 1
+			end
+			count := j
+		ensure
+			new_more: count = old (count + other.count)
+		end
+
 	put (an_item: like item; i: INTEGER) is
 			-- Put `an_item' at index `i' in list.
 		require

@@ -290,6 +290,9 @@ create
 	make_gvkbs3a,
 	make_gvkbs3b,
 	make_gvkbs3c,
+	make_gvkbs3d,
+	make_gvkbs3e,
+	make_gvkbs3f,
 	make_gvkbs4a,
 	make_gvkbs4b,
 	make_gvkbs4c,
@@ -321,6 +324,7 @@ create
 	make_gvkbs4ac,
 	make_gvkbs4ad,
 	make_gvkbs4ae,
+	make_gvkbs4af,
 	make_gvkbs5a,
 	make_gvkbs5b,
 	make_gvkbs5c,
@@ -366,6 +370,8 @@ create
 	make_gvkbs9g,
 	make_gvkbs9h,
 	make_gvkbs9i,
+	make_gvkbs9j,
+	make_gvkbs9k,
 	make_gvkbs10a,
 	make_gvkbs11a,
 	make_gvkbu1a,
@@ -12445,6 +12451,126 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = character class name
 		end
 
+	make_gvkbs3d (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.natural_32_code'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs3d_template_code
+			etl_code := gvkbs3_etl_code
+			default_template := gvkbs3d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs3e (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.to_character_8'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs3e_template_code
+			etl_code := gvkbs3_etl_code
+			default_template := gvkbs3e_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs3f (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.to_character_32'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs3f_template_code
+			etl_code := gvkbs3_etl_code
+			default_template := gvkbs3f_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
 	make_gvkbs4a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.infix "+"'
 			-- built-in routine `a_feature' in class `a_class'.
@@ -12766,7 +12892,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_gvkbs4i (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.to_character'
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.to_character_8'
 			-- built-in routine `a_feature' in class `a_class'.
 			--
 			-- Not in ETL
@@ -13666,6 +13792,46 @@ feature {NONE} -- Initialization
 			code := gvkbs4ae_template_code
 			etl_code := gvkbs4_etl_code
 			default_template := gvkbs4ae_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4af (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.to_character_32'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4af_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4af_default_template
 			current_class := a_class
 			class_impl := a_class
 			position := a_feature.name.position
@@ -15497,6 +15663,86 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
+	make_gvkbs9j (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-9 error: wrong signature for 'PLATFORM.is_thread_capable'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs9j_template_code
+			etl_code := gvkbs9_etl_code
+			default_template := gvkbs9j_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs9k (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-9 error: wrong signature for 'PLATFORM.wide_character_bytes'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs9k_template_code
+			etl_code := gvkbs9_etl_code
+			default_template := gvkbs9k_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
 	make_gvkbs10a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Create a new GVKBS-10 error: wrong signature for 'PROCEDURE.call'
 			-- built-in routine `a_feature' in class `a_class'.
@@ -16391,6 +16637,9 @@ feature {NONE} -- Implementation
 	gvkbs3a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'code: INTEGER'."
 	gvkbs3b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'item: $7'."
 	gvkbs3c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'set_item (c: $7)'."
+	gvkbs3d_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'natural_32_code: NATURAL_32'."
+	gvkbs3e_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'to_character_8: CHARACTER_8'."
+	gvkbs3f_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'to_character_32: CHARACTER_32'."
 	gvkbs4a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"+%" (other: like Current): like Current'."
 	gvkbs4b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"-%" (other: like Current): like Current'."
 	gvkbs4c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"*%" (other: like Current): like Current'."
@@ -16399,7 +16648,7 @@ feature {NONE} -- Implementation
 	gvkbs4f_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"\\%" (other: like Current): like Current'."
 	gvkbs4g_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'prefix %"-%": like Current'."
 	gvkbs4h_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"<%" (other: like Current): BOOLEAN'."
-	gvkbs4i_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'to_character: CHARACTER'."
+	gvkbs4i_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'to_character_8: CHARACTER_8'."
 	gvkbs4j_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'bit_or (other: like Current): like Current'."
 	gvkbs4k_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'bit_shift_left (other: INTEGER): like Current'."
 	gvkbs4l_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'bit_shift_right (other: INTEGER): like Current'."
@@ -16422,6 +16671,7 @@ feature {NONE} -- Implementation
 	gvkbs4ac_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'as_integer_64: INTEGER_64'."
 	gvkbs4ad_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'to_real_32: REAL'."
 	gvkbs4ae_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'to_real_64: DOUBLE'."
+	gvkbs4af_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'to_character_32: CHARACTER_32'."
 	gvkbs5a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"and then%" (other: like Current): BOOLEAN'."
 	gvkbs5b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"or else%" (other: like Current): BOOLEAN'."
 	gvkbs5c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"implies%" (other: like Current): BOOLEAN'."
@@ -16451,12 +16701,12 @@ feature {NONE} -- Implementation
 	gvkbs8j_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"<%" (other: like Current): BOOLEAN'."
 	gvkbs8k_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'truncated_to_integer: INTEGER'."
 	gvkbs8l_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'truncated_to_integer_64: INTEGER_64'."
-	gvkbs8m_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'truncated_to_real: REAL'."
+	gvkbs8m_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'truncated_to_real: REAL_32'."
 	gvkbs8n_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'to_double: DOUBLE'."
-	gvkbs8o_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'ceiling_real_32: REAL'."
-	gvkbs8p_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'ceiling_real_64: DOUBLE'."
-	gvkbs8q_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'floor_real_32: REAL'."
-	gvkbs8r_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'floor_real_64: DOUBLE'."
+	gvkbs8o_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'ceiling_real_32: REAL_32'."
+	gvkbs8p_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'ceiling_real_64: REAL_64'."
+	gvkbs8q_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'floor_real_32: REAL_32'."
+	gvkbs8r_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'floor_real_64: REAL_64'."
 	gvkbs8s_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'out: STRING'."
 	gvkbs9a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'is_dotnet: BOOLEAN'."
 	gvkbs9b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'is_unix: BOOLEAN'."
@@ -16467,6 +16717,8 @@ feature {NONE} -- Implementation
 	gvkbs9g_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'integer_bytes: INTEGER'."
 	gvkbs9h_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'pointer_bytes: INTEGER'."
 	gvkbs9i_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'real_bytes: INTEGER'."
+	gvkbs9j_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'is_thread_capable: BOOLEAN'."
+	gvkbs9k_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'wide_character_bytes: INTEGER'."
 	gvkbs10a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'call (args: OPEN_ARGS)'."
 	gvkbs11a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'item (args: OPEN_ARGS): RESULT_TYPE'."
 	gvkbu1a_default_template: STRING is "[$1] class $5: unknown built-in routine `$6' in class $5."
@@ -16891,6 +17143,9 @@ feature {NONE} -- Implementation
 	gvkbs3a_template_code: STRING is "gvkbs3a"
 	gvkbs3b_template_code: STRING is "gvkbs3b"
 	gvkbs3c_template_code: STRING is "gvkbs3c"
+	gvkbs3d_template_code: STRING is "gvkbs3d"
+	gvkbs3e_template_code: STRING is "gvkbs3e"
+	gvkbs3f_template_code: STRING is "gvkbs3f"
 	gvkbs4a_template_code: STRING is "gvkbs4a"
 	gvkbs4b_template_code: STRING is "gvkbs4b"
 	gvkbs4c_template_code: STRING is "gvkbs4c"
@@ -16922,6 +17177,7 @@ feature {NONE} -- Implementation
 	gvkbs4ac_template_code: STRING is "gvkbs4ac"
 	gvkbs4ad_template_code: STRING is "gvkbs4ad"
 	gvkbs4ae_template_code: STRING is "gvkbs4ae"
+	gvkbs4af_template_code: STRING is "gvkbs4af"
 	gvkbs5a_template_code: STRING is "gvkbs5a"
 	gvkbs5b_template_code: STRING is "gvkbs5b"
 	gvkbs5c_template_code: STRING is "gvkbs5c"
@@ -16967,6 +17223,8 @@ feature {NONE} -- Implementation
 	gvkbs9g_template_code: STRING is "gvkbs9g"
 	gvkbs9h_template_code: STRING is "gvkbs9h"
 	gvkbs9i_template_code: STRING is "gvkbs9i"
+	gvkbs9j_template_code: STRING is "gvkbs9j"
+	gvkbs9k_template_code: STRING is "gvkbs9k"
 	gvkbs10a_template_code: STRING is "gvkbs10a"
 	gvkbs11a_template_code: STRING is "gvkbs11a"
 	gvkbu1a_template_code: STRING is "gvkbu1a"

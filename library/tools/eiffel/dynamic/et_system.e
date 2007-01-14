@@ -50,9 +50,11 @@ feature {NONE} -- Initialization
 		do
 			l_unknown_class := universe.unknown_class
 			create l_unknown_type.make (l_unknown_class, l_unknown_class)
-			character_type := l_unknown_type
 			boolean_type := l_unknown_type
+			character_type := l_unknown_type
 			wide_character_type := l_unknown_type
+			character_8_type := l_unknown_type
+			character_32_type := l_unknown_type
 			integer_type := l_unknown_type
 			integer_8_type := l_unknown_type
 			integer_16_type := l_unknown_type
@@ -65,17 +67,25 @@ feature {NONE} -- Initialization
 			natural_64_type := l_unknown_type
 			real_type := l_unknown_type
 			double_type := l_unknown_type
+			real_32_type := l_unknown_type
+			real_64_type := l_unknown_type
 			pointer_type := l_unknown_type
 			string_type := l_unknown_type
+			string_8_type := l_unknown_type
+			string_32_type := l_unknown_type
 			special_character_type := l_unknown_type
+			special_character_8_type := l_unknown_type
+			special_character_32_type := l_unknown_type
 			any_type := l_unknown_type
 			none_type := l_unknown_type
 		ensure
 			any_type_not_void: any_type /= Void
 			none_type_not_void: none_type /= Void
-			character_type_not_void: character_type /= Void
 			boolean_type_not_void: boolean_type /= Void
+			character_type_not_void: character_type /= Void
 			wide_character_type_not_void: wide_character_type /= Void
+			character_8_type_not_void: character_8_type /= Void
+			character_32_type_not_void: character_32_type /= Void
 			integer_type_not_void: integer_type /= Void
 			integer_8_type_not_void: integer_8_type /= Void
 			integer_16_type_not_void: integer_16_type /= Void
@@ -88,9 +98,15 @@ feature {NONE} -- Initialization
 			natural_64_type_not_void: natural_64_type /= Void
 			real_type_not_void: real_type /= Void
 			double_type_not_void: double_type /= Void
+			real_32_type_not_void: real_32_type /= Void
+			real_64_type_not_void: real_64_type /= Void
 			pointer_type_not_void: pointer_type /= Void
 			string_type_not_void: string_type /= Void
+			string_8_type_not_void: string_8_type /= Void
+			string_32_type_not_void: string_32_type /= Void
 			special_character_type_not_void: special_character_type /= Void
+			special_character_8_type_not_void: special_character_8_type /= Void
+			special_character_32_type_not_void: special_character_32_type /= Void
 		end
 
 feature -- Access
@@ -141,14 +157,20 @@ feature -- Status setting
 
 feature -- Types
 
-	character_type: ET_DYNAMIC_TYPE
-			-- Type "CHARACTER"
-
 	boolean_type: ET_DYNAMIC_TYPE
 			-- Type "BOOLEAN"
 
+	character_type: ET_DYNAMIC_TYPE
+			-- Type "CHARACTER"			
+
 	wide_character_type: ET_DYNAMIC_TYPE
 			-- Type "WIDE_CHARACTER"
+
+	character_8_type: ET_DYNAMIC_TYPE
+			-- Type "CHARACTER_8"	
+
+	character_32_type: ET_DYNAMIC_TYPE
+			-- Type "CHARACTER_32"	
 
 	integer_type: ET_DYNAMIC_TYPE
 			-- Type "INTEGER"
@@ -186,6 +208,12 @@ feature -- Types
 	double_type: ET_DYNAMIC_TYPE
 			-- Type "DOUBLE"
 
+	real_32_type: ET_DYNAMIC_TYPE
+			-- Type "REAL_32"
+
+	real_64_type: ET_DYNAMIC_TYPE
+			-- Type "REAL_64"
+
 	pointer_type: ET_DYNAMIC_TYPE
 			-- Type "POINTER"
 
@@ -198,8 +226,20 @@ feature -- Types
 	string_type: ET_DYNAMIC_TYPE
 			-- Type "STRING"
 
+	string_8_type: ET_DYNAMIC_TYPE
+			-- Type "STRING_8"
+
+	string_32_type: ET_DYNAMIC_TYPE
+			-- Type "STRING_32"
+
 	special_character_type: ET_DYNAMIC_TYPE
 			-- Type "SPECIAL [CHARACTER]"
+
+	special_character_8_type: ET_DYNAMIC_TYPE
+			-- Type "SPECIAL [CHARACTER_8]"
+
+	special_character_32_type: ET_DYNAMIC_TYPE
+			-- Type "SPECIAL [CHARACTER_32]"
 
 	dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE is
 			-- Dynamic type corresponding to `a_type' in `a_context';
@@ -705,13 +745,6 @@ feature {NONE} -- Compilation
 		do
 			dynamic_types.wipe_out
 			l_any := universe.any_class
-				-- Type "CHARACTER".
-			l_class := universe.character_class
-			if not l_class.is_preparsed then
-				set_fatal_error
-				error_handler.report_gvknl1a_error (l_class)
-			end
-			character_type := dynamic_type (l_class, l_any)
 				-- Type "BOOLEAN".
 			l_class := universe.boolean_class
 			if not l_class.is_preparsed then
@@ -719,20 +752,46 @@ feature {NONE} -- Compilation
 				error_handler.report_gvknl1a_error (l_class)
 			end
 			boolean_type := dynamic_type (l_class, l_any)
+				-- Type "CHARACTER_8".
+			l_class := universe.character_8_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			character_8_type := dynamic_type (l_class, l_any)
+				-- Type "CHARACTER_32".
+			l_class := universe.character_32_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			character_32_type := dynamic_type (l_class, l_any)
+				-- Type "CHARACTER".
+			l_class := universe.character_class
+			if l_class = universe.character_8_class then
+				character_type := character_8_type
+			elseif l_class = universe.character_32_class then
+				character_type := character_32_type
+			else
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+				end
+				character_type := dynamic_type (l_class, l_any)
+			end
 				-- Type "WIDE_CHARACTER".
 			l_class := universe.wide_character_class
-			if not l_class.is_preparsed then
-				set_fatal_error
-				error_handler.report_gvknl1a_error (l_class)
+			if l_class = universe.character_8_class then
+				wide_character_type := character_8_type
+			elseif l_class = universe.character_32_class then
+				wide_character_type := character_32_type
+			else
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+				end
+				wide_character_type := dynamic_type (l_class, l_any)
 			end
-			wide_character_type := dynamic_type (l_class, l_any)
-				-- Type "INTEGER".
-			l_class := universe.integer_class
-			if not l_class.is_preparsed then
-				set_fatal_error
-				error_handler.report_gvknl1a_error (l_class)
-			end
-			integer_type := dynamic_type (l_class, l_any)
 				-- Type "INTEGER_8".
 			l_class := universe.integer_8_class
 			if not l_class.is_preparsed then
@@ -747,7 +806,13 @@ feature {NONE} -- Compilation
 				error_handler.report_gvknl1a_error (l_class)
 			end
 			integer_16_type := dynamic_type (l_class, l_any)
---			integer_32_type := dynamic_type (universe.integer_32_class, l_any)
+				-- Type "INTEGER_32".
+			l_class := universe.integer_32_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			integer_32_type := dynamic_type (l_class, l_any)
 				-- Type "INTEGER_64".
 			l_class := universe.integer_64_class
 			if not l_class.is_preparsed then
@@ -755,7 +820,23 @@ feature {NONE} -- Compilation
 				error_handler.report_gvknl1a_error (l_class)
 			end
 			integer_64_type := dynamic_type (l_class, l_any)
---			natural_type := dynamic_type (universe.natural_class, l_any)
+				-- Type "INTEGER".
+			l_class := universe.integer_class
+			if l_class = universe.integer_8_class then
+				integer_type := integer_8_type
+			elseif l_class = universe.integer_16_class then
+				integer_type := integer_16_type
+			elseif l_class = universe.integer_32_class then
+				integer_type := integer_32_type
+			elseif l_class = universe.integer_64_class then
+				integer_type := integer_64_type
+			else
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+				end
+				integer_type := dynamic_type (l_class, l_any)
+			end
 				-- Type "NATURAL_8".
 			l_class := universe.natural_8_class
 			if not l_class.is_preparsed then
@@ -784,20 +865,63 @@ feature {NONE} -- Compilation
 				error_handler.report_gvknl1a_error (l_class)
 			end
 			natural_64_type := dynamic_type (l_class, l_any)
+				-- Type "NATURAL".
+			l_class := universe.natural_class
+			if l_class = universe.natural_8_class then
+				natural_type := natural_8_type
+			elseif l_class = universe.natural_16_class then
+				natural_type := natural_16_type
+			elseif l_class = universe.natural_32_class then
+				natural_type := natural_32_type
+			elseif l_class = universe.natural_64_class then
+				natural_type := natural_64_type
+			else
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+				end
+				natural_type := dynamic_type (l_class, l_any)
+			end
+				-- Type "REAL_32".
+			l_class := universe.real_32_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			real_32_type := dynamic_type (l_class, l_any)
+				-- Type "REAL_64".
+			l_class := universe.real_64_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			real_64_type := dynamic_type (l_class, l_any)
 				-- Type "REAL".
 			l_class := universe.real_class
-			if not l_class.is_preparsed then
-				set_fatal_error
-				error_handler.report_gvknl1a_error (l_class)
+			if l_class = universe.real_32_class then
+				real_type := real_32_type
+			elseif l_class = universe.real_64_class then
+				real_type := real_64_type
+			else
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+				end
+				real_type := dynamic_type (l_class, l_any)
 			end
-			real_type := dynamic_type (l_class, l_any)
 				-- Type "DOUBLE".
 			l_class := universe.double_class
-			if not l_class.is_preparsed then
-				set_fatal_error
-				error_handler.report_gvknl1a_error (l_class)
+			if l_class = universe.real_32_class then
+				double_type := real_32_type
+			elseif l_class = universe.real_64_class then
+				double_type := real_64_type
+			else
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+				end
+				double_type := dynamic_type (l_class, l_any)
 			end
-			double_type := dynamic_type (l_class, l_any)
 				-- Type "POINTER".
 			l_class := universe.pointer_class
 			if not l_class.is_preparsed then
@@ -805,29 +929,56 @@ feature {NONE} -- Compilation
 				error_handler.report_gvknl1a_error (l_class)
 			end
 			pointer_type := dynamic_type (l_class, l_any)
-				-- Type "SPECIAL[CHARACTER]"
+				-- Type "SPECIAL[CHARACTER_8]"
 			l_class := universe.special_class
 			if not l_class.is_preparsed then
 				set_fatal_error
 				error_handler.report_gvknl1a_error (l_class)
 			end
 			create l_actual_parameters.make_with_capacity (1)
-			l_actual_parameters.put_first (universe.character_class)
+			l_actual_parameters.put_first (universe.character_8_class)
 			create l_generic_class_type.make (Void, l_class.name, l_actual_parameters, l_class)
-			special_character_type := dynamic_type (l_generic_class_type, l_any)
-				-- Type "STRING".
-			l_class := universe.string_class
+			special_character_8_type := dynamic_type (l_generic_class_type, l_any)
+				-- Type "SPECIAL[CHARACTER_32]"
+			l_class := universe.special_class
 			if not l_class.is_preparsed then
 				set_fatal_error
 				error_handler.report_gvknl1a_error (l_class)
 			end
-			string_type := dynamic_type (l_class, l_any)
+			create l_actual_parameters.make_with_capacity (1)
+			l_actual_parameters.put_first (universe.character_32_class)
+			create l_generic_class_type.make (Void, l_class.name, l_actual_parameters, l_class)
+			special_character_32_type := dynamic_type (l_generic_class_type, l_any)
+				-- Type "SPECIAL[CHARACTER]"
+			l_class := universe.character_class
+			if l_class = universe.character_8_class then
+				special_character_type := special_character_8_type
+			elseif l_class = universe.character_32_class then
+				special_character_type := special_character_32_type
+			else
+				l_class := universe.special_class
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+				end
+				create l_actual_parameters.make_with_capacity (1)
+				l_actual_parameters.put_first (universe.character_class)
+				create l_generic_class_type.make (Void, l_class.name, l_actual_parameters, l_class)
+				special_character_type := dynamic_type (l_generic_class_type, l_any)
+			end
+				-- Type "STRING_8".
+			l_class := universe.string_8_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			string_8_type := dynamic_type (l_class, l_any)
 			if l_class.has_interface_error then
 					-- Error already reported.
 				set_fatal_error
 			else
 					-- Make features 'area' and 'count' alive at the first
-					-- two positions in the feature list of the STRING type.
+					-- two positions in the feature list of the STRING_8 type.
 				l_area_feature := l_class.named_query (tokens.area_feature_name)
 				if l_area_feature = Void then
 					l_procedure := l_class.named_procedure (tokens.area_feature_name)
@@ -842,15 +993,15 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvkfe2a_error (l_class, l_area_feature)
 				else
-					l_dynamic_feature := string_type.dynamic_query (l_area_feature, Current)
+					l_dynamic_feature := string_8_type.dynamic_query (l_area_feature, Current)
 					l_result_type_set := l_dynamic_feature.result_type_set
 					if l_result_type_set = Void then
 							-- Internal error: an attribute should have a result type.
 						set_fatal_error
 						error_handler.report_giaaa_error
-					elseif l_result_type_set.static_type /= special_character_type then
+					elseif l_result_type_set.static_type /= special_character_8_type then
 						set_fatal_error
-						error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_type.base_type)
+						error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_8_type.base_type)
 					end
 				end
 				l_count_feature := l_class.named_query (tokens.count_feature_name)
@@ -867,7 +1018,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvkfe2a_error (l_class, l_count_feature)
 				else
-					l_dynamic_feature := string_type.dynamic_query (l_count_feature, Current)
+					l_dynamic_feature := string_8_type.dynamic_query (l_count_feature, Current)
 					l_result_type_set := l_dynamic_feature.result_type_set
 					if l_result_type_set = Void then
 							-- Internal error: an attribute should have a result type.
@@ -876,6 +1027,140 @@ feature {NONE} -- Compilation
 					elseif l_result_type_set.static_type /= integer_type then
 						set_fatal_error
 						error_handler.report_gvkfe3a_error (l_class, l_count_feature, integer_type.base_type)
+					end
+				end
+			end
+				-- Type "STRING_32".
+			l_class := universe.string_32_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			string_32_type := dynamic_type (l_class, l_any)
+			if l_class.has_interface_error then
+					-- Error already reported.
+				set_fatal_error
+			else
+					-- Make features 'area' and 'count' alive at the first
+					-- two positions in the feature list of the STRING_32 type.
+				l_area_feature := l_class.named_query (tokens.area_feature_name)
+				if l_area_feature = Void then
+					l_procedure := l_class.named_procedure (tokens.area_feature_name)
+					if l_procedure /= Void then
+						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, l_area_feature)
+					else
+						set_fatal_error
+						error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
+					end
+				elseif not l_area_feature.is_attribute then
+					set_fatal_error
+					error_handler.report_gvkfe2a_error (l_class, l_area_feature)
+				else
+					l_dynamic_feature := string_32_type.dynamic_query (l_area_feature, Current)
+					l_result_type_set := l_dynamic_feature.result_type_set
+					if l_result_type_set = Void then
+							-- Internal error: an attribute should have a result type.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_result_type_set.static_type /= special_character_32_type then
+						set_fatal_error
+						error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_32_type.base_type)
+					end
+				end
+				l_count_feature := l_class.named_query (tokens.count_feature_name)
+				if l_count_feature = Void then
+					l_procedure := l_class.named_procedure (tokens.count_feature_name)
+					if l_procedure /= Void then
+						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, l_count_feature)
+					else
+						set_fatal_error
+						error_handler.report_gvkfe1a_error (l_class, tokens.count_feature_name)
+					end
+				elseif not l_count_feature.is_attribute then
+					set_fatal_error
+					error_handler.report_gvkfe2a_error (l_class, l_count_feature)
+				else
+					l_dynamic_feature := string_32_type.dynamic_query (l_count_feature, Current)
+					l_result_type_set := l_dynamic_feature.result_type_set
+					if l_result_type_set = Void then
+							-- Internal error: an attribute should have a result type.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_result_type_set.static_type /= integer_type then
+						set_fatal_error
+						error_handler.report_gvkfe3a_error (l_class, l_count_feature, integer_type.base_type)
+					end
+				end
+			end
+				-- Class "STRING".
+			l_class := universe.string_class
+			if l_class = universe.string_8_class then
+				string_type := string_8_type
+			elseif l_class = universe.string_32_class then
+				string_type := string_32_type
+			else
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+				end
+				string_type := dynamic_type (l_class, l_any)
+				if l_class.has_interface_error then
+						-- Error already reported.
+					set_fatal_error
+				else
+						-- Make features 'area' and 'count' alive at the first
+						-- two positions in the feature list of the STRING type.
+					l_area_feature := l_class.named_query (tokens.area_feature_name)
+					if l_area_feature = Void then
+						l_procedure := l_class.named_procedure (tokens.area_feature_name)
+						if l_procedure /= Void then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, l_area_feature)
+						else
+							set_fatal_error
+							error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
+						end
+					elseif not l_area_feature.is_attribute then
+						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, l_area_feature)
+					else
+						l_dynamic_feature := string_type.dynamic_query (l_area_feature, Current)
+						l_result_type_set := l_dynamic_feature.result_type_set
+						if l_result_type_set = Void then
+								-- Internal error: an attribute should have a result type.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif l_result_type_set.static_type /= special_character_type then
+							set_fatal_error
+							error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_type.base_type)
+						end
+					end
+					l_count_feature := l_class.named_query (tokens.count_feature_name)
+					if l_count_feature = Void then
+						l_procedure := l_class.named_procedure (tokens.count_feature_name)
+						if l_procedure /= Void then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, l_count_feature)
+						else
+							set_fatal_error
+							error_handler.report_gvkfe1a_error (l_class, tokens.count_feature_name)
+						end
+					elseif not l_count_feature.is_attribute then
+						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, l_count_feature)
+					else
+						l_dynamic_feature := string_type.dynamic_query (l_count_feature, Current)
+						l_result_type_set := l_dynamic_feature.result_type_set
+						if l_result_type_set = Void then
+								-- Internal error: an attribute should have a result type.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif l_result_type_set.static_type /= integer_type then
+							set_fatal_error
+							error_handler.report_gvkfe3a_error (l_class, l_count_feature, integer_type.base_type)
+						end
 					end
 				end
 			end
@@ -1090,9 +1375,11 @@ invariant
 	no_void_dynamic_type: not dynamic_types.has (Void)
 	any_type_not_void: any_type /= Void
 	none_type_not_void: none_type /= Void
-	character_type_not_void: character_type /= Void
 	boolean_type_not_void: boolean_type /= Void
+	character_type_not_void: character_type /= Void
 	wide_character_type_not_void: wide_character_type /= Void
+	character_8_type_not_void: character_8_type /= Void
+	character_32_type_not_void: character_32_type /= Void
 	integer_type_not_void: integer_type /= Void
 	integer_8_type_not_void: integer_8_type /= Void
 	integer_16_type_not_void: integer_16_type /= Void
@@ -1105,9 +1392,15 @@ invariant
 	natural_64_type_not_void: natural_64_type /= Void
 	real_type_not_void: real_type /= Void
 	double_type_not_void: double_type /= Void
+	real_32_type_not_void: real_32_type /= Void
+	real_64_type_not_void: real_64_type /= Void
 	pointer_type_not_void: pointer_type /= Void
 	string_type_not_void: string_type /= Void
+	string_8_type_not_void: string_8_type /= Void
+	string_32_type_not_void: string_32_type /= Void
 	special_character_type_not_void: special_character_type /= Void
+	special_character_8_type_not_void: special_character_8_type /= Void
+	special_character_32_type_not_void: special_character_32_type /= Void
 	root_creation_procedure: root_creation_procedure /= Void implies root_creation_procedure.is_procedure
 	dynamic_type_set_builder_not_void: dynamic_type_set_builder /= Void
 	null_dynamic_type_set_builder_not_void: null_dynamic_type_set_builder /= Void

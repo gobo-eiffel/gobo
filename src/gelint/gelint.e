@@ -224,7 +224,7 @@ feature {NONE} -- Processing
 			a_universe.error_handler.set_verbose (is_verbose)
 			a_universe.error_handler.set_benchmark_shown (True)
 			if ise_version = Void then
-				ise_version := ise_5_6_latest
+				ise_version := ise_latest
 			end
 			a_universe.set_ise_version (ise_version)
 			a_universe.set_ecma_version (ecma_version)

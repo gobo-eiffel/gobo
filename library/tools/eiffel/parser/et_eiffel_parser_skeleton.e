@@ -1748,14 +1748,14 @@ feature {NONE} -- Built-in
 				set_builtin_any_function (a_feature)
 			elseif a_class = universe.special_class then
 				set_builtin_special_function (a_feature)
-			elseif a_class = universe.character_ref_class then
-				set_builtin_sized_character_ref_function (a_feature, universe.character_class, tokens.builtin_character_class)
-			elseif a_class = universe.character_class then
-				set_builtin_sized_character_function (a_feature, tokens.builtin_character_class)
-			elseif a_class = universe.wide_character_ref_class then
-				set_builtin_sized_character_ref_function (a_feature, universe.wide_character_class, tokens.builtin_wide_character_class)
-			elseif a_class = universe.wide_character_class then
-				set_builtin_sized_character_function (a_feature, tokens.builtin_wide_character_class)
+			elseif a_class = universe.character_8_ref_class then
+				set_builtin_sized_character_ref_function (a_feature, universe.character_8_class, tokens.builtin_character_8_class)
+			elseif a_class = universe.character_8_class then
+				set_builtin_sized_character_function (a_feature, tokens.builtin_character_8_class)
+			elseif a_class = universe.character_32_ref_class then
+				set_builtin_sized_character_ref_function (a_feature, universe.character_32_class, tokens.builtin_character_32_class)
+			elseif a_class = universe.character_32_class then
+				set_builtin_sized_character_function (a_feature, tokens.builtin_character_32_class)
 			elseif a_class = universe.boolean_ref_class then
 				set_builtin_boolean_ref_function (a_feature)
 			elseif a_class = universe.boolean_class then
@@ -1772,10 +1772,6 @@ feature {NONE} -- Built-in
 				set_builtin_procedure_function (a_feature)
 			elseif a_class = universe.function_class then
 				set_builtin_function_function (a_feature)
-			elseif a_class = universe.integer_ref_class then
-				set_builtin_sized_integer_ref_function (a_feature, universe.integer_class, tokens.builtin_integer_class)
-			elseif a_class = universe.integer_class then
-				set_builtin_sized_integer_function (a_feature, tokens.builtin_integer_class)
 			elseif a_class = universe.integer_8_ref_class then
 				set_builtin_sized_integer_ref_function (a_feature, universe.integer_8_class, tokens.builtin_integer_8_class)
 			elseif a_class = universe.integer_8_class then
@@ -1784,6 +1780,10 @@ feature {NONE} -- Built-in
 				set_builtin_sized_integer_ref_function (a_feature, universe.integer_16_class, tokens.builtin_integer_16_class)
 			elseif a_class = universe.integer_16_class then
 				set_builtin_sized_integer_function (a_feature, tokens.builtin_integer_16_class)
+			elseif a_class = universe.integer_32_ref_class then
+				set_builtin_sized_integer_ref_function (a_feature, universe.integer_32_class, tokens.builtin_integer_32_class)
+			elseif a_class = universe.integer_32_class then
+				set_builtin_sized_integer_function (a_feature, tokens.builtin_integer_32_class)
 			elseif a_class = universe.integer_64_ref_class then
 				set_builtin_sized_integer_ref_function (a_feature, universe.integer_64_class, tokens.builtin_integer_64_class)
 			elseif a_class = universe.integer_64_class then
@@ -1804,14 +1804,14 @@ feature {NONE} -- Built-in
 				set_builtin_sized_integer_ref_function (a_feature, universe.natural_64_class, tokens.builtin_natural_64_class)
 			elseif a_class = universe.natural_64_class then
 				set_builtin_sized_integer_function (a_feature, tokens.builtin_natural_64_class)
-			elseif a_class = universe.real_ref_class then
-				set_builtin_sized_real_ref_function (a_feature, universe.real_class, tokens.builtin_real_class)
-			elseif a_class = universe.real_class then
-				set_builtin_sized_real_function (a_feature, tokens.builtin_real_class)
-			elseif a_class = universe.double_ref_class then
-				set_builtin_sized_real_ref_function (a_feature, universe.double_class, tokens.builtin_double_class)
-			elseif a_class = universe.double_class then
-				set_builtin_sized_real_function (a_feature, tokens.builtin_double_class)
+			elseif a_class = universe.real_32_ref_class then
+				set_builtin_sized_real_ref_function (a_feature, universe.real_32_class, tokens.builtin_real_32_class)
+			elseif a_class = universe.real_32_class then
+				set_builtin_sized_real_function (a_feature, tokens.builtin_real_32_class)
+			elseif a_class = universe.real_64_ref_class then
+				set_builtin_sized_real_ref_function (a_feature, universe.real_64_class, tokens.builtin_real_64_class)
+			elseif a_class = universe.real_64_class then
+				set_builtin_sized_real_function (a_feature, tokens.builtin_real_64_class)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -2122,6 +2122,42 @@ feature {NONE} -- Built-in
 						-- The signature should be 'code: INTEGER'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs3a_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.natural_32_code_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_character_natural_32_code))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'natural_32_code: NATURAL_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3d_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.natural_32_class, a_class, a_class, universe) then
+						-- The signature should be 'natural_32_code: NATURAL_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3d_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.to_character_8_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_character_to_character_8))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'to_character_8: CHARACTER_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3e_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.character_8_class, a_class, a_class, universe) then
+						-- The signature should be 'to_character_8: CHARACTER_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3e_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.to_character_32_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_character_to_character_32))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'to_character_32: CHARACTER_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3f_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.character_32_class, a_class, a_class, universe) then
+						-- The signature should be 'to_character_32: CHARACTER_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs3f_error (a_class, a_feature)
 				end
 			else
 					-- Unknown built-in routine.
@@ -2561,6 +2597,30 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs9i_error (a_class, a_feature)
 				end
+			elseif a_feature.name.same_feature_name (tokens.is_thread_capable_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_thread_capable))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'is_thread_capable: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9j_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'is_thread_capable: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9j_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.wide_character_bytes_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_wide_character_bytes))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'wide_character_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9k_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'wide_character_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs9k_error (a_class, a_feature)
+				end
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -2813,17 +2873,29 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs4h_error (a_class, a_feature)
 				end
-			elseif a_feature.name.same_feature_name (tokens.to_character_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_character))
+			elseif a_feature.name.same_feature_name (tokens.to_character_8_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_character_8))
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'to_character: CHARACTER'.
+						-- The signature should be 'to_character_8: CHARACTER_8'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs4i_error (a_class, a_feature)
-				elseif not a_feature.type.same_syntactical_type (universe.character_class, a_class, a_class, universe) then
-						-- The signature should be 'to_character: CHARACTER'.
+				elseif not a_feature.type.same_syntactical_type (universe.character_8_class, a_class, a_class, universe) then
+						-- The signature should be 'to_character_8: CHARACTER_8'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs4i_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.to_character_32_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_character_32))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'to_character_32: CHARACTER_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4af_error (a_class, a_feature)
+				elseif not a_feature.type.same_syntactical_type (universe.character_32_class, a_class, a_class, universe) then
+						-- The signature should be 'to_character_32: CHARACTER_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs4af_error (a_class, a_feature)
 				end
 			elseif a_feature.name.same_feature_name (tokens.to_real_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_real))
@@ -3277,11 +3349,11 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_real_truncated_to_real))
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'truncated_to_real: REAL'.
+						-- The signature should be 'truncated_to_real: REAL_32'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs8m_error (a_class, a_feature)
-				elseif not a_feature.type.same_syntactical_type (universe.real_class, a_class, a_class, universe) then
-						-- The signature should be 'truncated_to_real: REAL'.
+				elseif not a_feature.type.same_syntactical_type (universe.real_32_class, a_class, a_class, universe) then
+						-- The signature should be 'truncated_to_real: REAL_32'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs8m_error (a_class, a_feature)
 				end
@@ -3301,11 +3373,11 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_real_ceiling_real_32))
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'ceiling_real_32: REAL'.
+						-- The signature should be 'ceiling_real_32: REAL_32'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs8o_error (a_class, a_feature)
-				elseif not a_feature.type.same_syntactical_type (universe.real_class, a_class, a_class, universe) then
-						-- The signature should be 'ceiling_real_32: REAL'.
+				elseif not a_feature.type.same_syntactical_type (universe.real_32_class, a_class, a_class, universe) then
+						-- The signature should be 'ceiling_real_32: REAL_32'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs8o_error (a_class, a_feature)
 				end
@@ -3313,11 +3385,11 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_real_ceiling_real_64))
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'ceiling_real_64: DOUBLE'.
+						-- The signature should be 'ceiling_real_64: REAL_64'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs8p_error (a_class, a_feature)
-				elseif not a_feature.type.same_syntactical_type (universe.double_class, a_class, a_class, universe) then
-						-- The signature should be 'ceiling_real_64: DOUBLE'.
+				elseif not a_feature.type.same_syntactical_type (universe.real_64_class, a_class, a_class, universe) then
+						-- The signature should be 'ceiling_real_64: REAL_64'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs8p_error (a_class, a_feature)
 				end
@@ -3325,11 +3397,11 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_real_floor_real_32))
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'floor_real_32: REAL'.
+						-- The signature should be 'floor_real_32: REAL_32'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs8q_error (a_class, a_feature)
-				elseif not a_feature.type.same_syntactical_type (universe.real_class, a_class, a_class, universe) then
-						-- The signature should be 'floor_real_32: REAL'.
+				elseif not a_feature.type.same_syntactical_type (universe.real_32_class, a_class, a_class, universe) then
+						-- The signature should be 'floor_real_32: REAL_32'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs8q_error (a_class, a_feature)
 				end
@@ -3337,11 +3409,11 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_real_floor_real_64))
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'floor_real_64: DOUBLE'.
+						-- The signature should be 'floor_real_64: REAL_64'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs8r_error (a_class, a_feature)
-				elseif not a_feature.type.same_syntactical_type (universe.double_class, a_class, a_class, universe) then
-						-- The signature should be 'floor_real_64: DOUBLE'.
+				elseif not a_feature.type.same_syntactical_type (universe.real_64_class, a_class, a_class, universe) then
+						-- The signature should be 'floor_real_64: REAL_64'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs8r_error (a_class, a_feature)
 				end
@@ -3378,14 +3450,14 @@ feature {NONE} -- Built-in
 				set_builtin_any_procedure (a_feature)
 			elseif a_class = universe.special_class then
 				set_builtin_special_procedure (a_feature)
-			elseif a_class = universe.character_ref_class then
-				set_builtin_sized_character_ref_procedure (a_feature, universe.character_class, tokens.builtin_character_class)
-			elseif a_class = universe.character_class then
-				set_builtin_sized_character_procedure (a_feature, tokens.builtin_character_class)
-			elseif a_class = universe.wide_character_ref_class then
-				set_builtin_sized_character_ref_procedure (a_feature, universe.wide_character_class, tokens.builtin_wide_character_class)
-			elseif a_class = universe.wide_character_class then
-				set_builtin_sized_character_procedure (a_feature, tokens.builtin_wide_character_class)
+			elseif a_class = universe.character_8_ref_class then
+				set_builtin_sized_character_ref_procedure (a_feature, universe.character_8_class, tokens.builtin_character_8_class)
+			elseif a_class = universe.character_8_class then
+				set_builtin_sized_character_procedure (a_feature, tokens.builtin_character_8_class)
+			elseif a_class = universe.character_32_ref_class then
+				set_builtin_sized_character_ref_procedure (a_feature, universe.character_32_class, tokens.builtin_character_32_class)
+			elseif a_class = universe.character_32_class then
+				set_builtin_sized_character_procedure (a_feature, tokens.builtin_character_32_class)
 			elseif a_class = universe.boolean_ref_class then
 				set_builtin_boolean_ref_procedure (a_feature)
 			elseif a_class = universe.boolean_class then
@@ -3402,10 +3474,6 @@ feature {NONE} -- Built-in
 				set_builtin_procedure_procedure (a_feature)
 			elseif a_class = universe.function_class then
 				set_builtin_function_procedure (a_feature)
-			elseif a_class = universe.integer_ref_class then
-				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_class, tokens.builtin_integer_class)
-			elseif a_class = universe.integer_class then
-				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_integer_class)
 			elseif a_class = universe.integer_8_ref_class then
 				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_8_class, tokens.builtin_integer_8_class)
 			elseif a_class = universe.integer_8_class then
@@ -3414,6 +3482,10 @@ feature {NONE} -- Built-in
 				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_16_class, tokens.builtin_integer_16_class)
 			elseif a_class = universe.integer_16_class then
 				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_integer_16_class)
+			elseif a_class = universe.integer_32_ref_class then
+				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_32_class, tokens.builtin_integer_32_class)
+			elseif a_class = universe.integer_32_class then
+				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_integer_32_class)
 			elseif a_class = universe.integer_64_ref_class then
 				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_64_class, tokens.builtin_integer_64_class)
 			elseif a_class = universe.integer_64_class then
@@ -3434,14 +3506,14 @@ feature {NONE} -- Built-in
 				set_builtin_sized_integer_ref_procedure (a_feature, universe.natural_64_class, tokens.builtin_natural_64_class)
 			elseif a_class = universe.natural_64_class then
 				set_builtin_sized_integer_procedure (a_feature, tokens.builtin_natural_64_class)
-			elseif a_class = universe.real_ref_class then
-				set_builtin_sized_real_ref_procedure (a_feature, universe.real_class, tokens.builtin_real_class)
-			elseif a_class = universe.real_class then
-				set_builtin_sized_real_procedure (a_feature, tokens.builtin_real_class)
-			elseif a_class = universe.double_ref_class then
-				set_builtin_sized_real_ref_procedure (a_feature, universe.double_class, tokens.builtin_double_class)
-			elseif a_class = universe.double_class then
-				set_builtin_sized_real_procedure (a_feature, tokens.builtin_double_class)
+			elseif a_class = universe.real_32_ref_class then
+				set_builtin_sized_real_ref_procedure (a_feature, universe.real_32_class, tokens.builtin_real_32_class)
+			elseif a_class = universe.real_32_class then
+				set_builtin_sized_real_procedure (a_feature, tokens.builtin_real_32_class)
+			elseif a_class = universe.real_64_ref_class then
+				set_builtin_sized_real_ref_procedure (a_feature, universe.real_64_class, tokens.builtin_real_64_class)
+			elseif a_class = universe.real_64_class then
+				set_builtin_sized_real_procedure (a_feature, tokens.builtin_real_64_class)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -3648,6 +3720,21 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_character_code))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs3a_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.natural_32_code_feature_name) then
+					-- 'CHARACTER.natural_32_code' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_character_natural_32_code))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs3d_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.to_character_8_feature_name) then
+					-- 'CHARACTER.to_character_8' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_character_to_character_8))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs3e_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.to_character_32_feature_name) then
+					-- 'CHARACTER.to_character_32' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_character_to_character_32))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs3f_error (a_class, a_feature)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -3896,6 +3983,16 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_real_bytes))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs9i_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.is_thread_capable_feature_name) then
+					-- 'PLATFORM.is_thread_capable' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_thread_capable))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9j_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.wide_character_bytes_feature_name) then
+					-- 'PLATFORM.wide_character_bytes' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_wide_character_bytes))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs9k_error (a_class, a_feature)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -4053,11 +4150,16 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_lt))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs4h_error (a_class, a_feature)
-			elseif a_feature.name.same_feature_name (tokens.to_character_feature_name) then
-					-- 'to_character' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_character))
+			elseif a_feature.name.same_feature_name (tokens.to_character_8_feature_name) then
+					-- 'to_character_8' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_character_8))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs4i_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.to_character_32_feature_name) then
+					-- 'to_character_32' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_character_32))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs4af_error (a_class, a_feature)
 			elseif a_feature.name.same_feature_name (tokens.to_real_feature_name) then
 					-- 'to_real' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_integer_to_real))

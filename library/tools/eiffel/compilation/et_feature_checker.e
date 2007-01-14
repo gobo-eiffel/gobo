@@ -9823,6 +9823,7 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			qualified_call_agent: an_expression.is_qualified_call
+			procedure_call: an_expression.is_procedure
 			a_procedure_not_void: a_procedure /= Void
 			an_agent_type_not_void: an_agent_type /= Void
 			a_context_not_void: a_context /= Void
@@ -9837,6 +9838,7 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			qualified_call_agent: an_expression.is_qualified_call
+			query_call: not an_expression.is_procedure
 			a_query_not_void: a_query /= Void
 			an_agent_type_not_void: an_agent_type /= Void
 			a_context_not_void: a_context /= Void
@@ -9925,6 +9927,7 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			qualified_call_agent: an_expression.is_qualified_call
+			query_call: not an_expression.is_procedure
 			tuple_label: an_expression.name.is_tuple_label
 			an_agent_type_not_void: an_agent_type /= Void
 			a_context_not_void: a_context /= Void
@@ -9993,6 +9996,7 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			unqualified_call_agent: not an_expression.is_qualified_call
+			procedure_call: an_expression.is_procedure
 			a_procedure_not_void: a_procedure /= Void
 			a_type_not_void: a_type /= Void
 			a_context_not_void: a_context /= Void
@@ -10008,6 +10012,7 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			unqualified_call_agent: not an_expression.is_qualified_call
+			query_call: not an_expression.is_procedure
 			a_query_not_void: a_query /= Void
 			a_type_not_void: a_type /= Void
 			a_context_not_void: a_context /= Void

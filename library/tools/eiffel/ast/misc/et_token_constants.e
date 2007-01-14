@@ -1060,6 +1060,14 @@ feature -- Feature names
 			is_dotnet_feature_name_not_void: Result /= Void
 		end
 
+	is_thread_capable_feature_name: ET_FEATURE_NAME is
+			-- 'is_thread_capable' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_thread_capable_name)
+		ensure
+			is_thread_capable_feature_name_not_void: Result /= Void
+		end
+
 	is_unix_feature_name: ET_FEATURE_NAME is
 			-- 'is_unix' feature name
 		once
@@ -1114,6 +1122,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (make_name)
 		ensure
 			make_feature_name_not_void: Result /= Void
+		end
+
+	natural_32_code_feature_name: ET_FEATURE_NAME is
+			-- 'natural_32_code' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (natural_32_code_name)
+		ensure
+			natural_32_code_feature_name_not_void: Result /= Void
 		end
 
 	out_feature_name: ET_FEATURE_NAME is
@@ -1269,6 +1285,22 @@ feature -- Feature names
 			to_character_feature_name_not_void: Result /= Void
 		end
 
+	to_character_8_feature_name: ET_FEATURE_NAME is
+			-- 'to_character_8' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (to_character_8_name)
+		ensure
+			to_character_8_feature_name_not_void: Result /= Void
+		end
+
+	to_character_32_feature_name: ET_FEATURE_NAME is
+			-- 'to_character_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (to_character_32_name)
+		ensure
+			to_character_32_feature_name_not_void: Result /= Void
+		end
+
 	to_double_feature_name: ET_FEATURE_NAME is
 			-- 'to_double' feature name
 		once
@@ -1354,7 +1386,15 @@ feature -- Feature names
 		once
 			create {ET_IDENTIFIER} Result.make (capitalized_void_keyword_name)
 		ensure
-			default_create_feature_name_not_void: Result /= Void
+			void_feature_name_not_void: Result /= Void
+		end
+
+	wide_character_bytes_feature_name: ET_FEATURE_NAME is
+			-- 'wide_charafter_bytesVoid' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (wide_character_bytes_name)
+		ensure
+			wide_character_bytes_feature_name_not_void: Result /= Void
 		end
 
 feature -- Types
@@ -2144,6 +2184,7 @@ feature -- Keyword and symbol names
 	integer_bytes_name: STRING is "integer_bytes"
 	is_deep_equal_name: STRING is "is_deep_equal"
 	is_dotnet_name: STRING is "is_dotnet"
+	is_thread_capable_name: STRING is "is_thread_capable"
 	is_unix_name: STRING is "is_unix"
 	is_vms_name: STRING is "is_vms"
 	is_windows_name: STRING is "is_windows"
@@ -2151,6 +2192,7 @@ feature -- Keyword and symbol names
 	last_result_name: STRING is "last_result"
 	lower_name: STRING is "lower"
 	make_name: STRING is "make"
+	natural_32_code_name: STRING is "natural_32_code"
 	out_name: STRING is "out"
 	pointer_bytes_name: STRING is "pointer_bytes"
 	pointer_item_name: STRING is "pointer_item"
@@ -2166,6 +2208,8 @@ feature -- Keyword and symbol names
 	standard_twin_name: STRING is "standard_twin"
 	tagged_out_name: STRING is "tagged_out"
 	to_character_name: STRING is "to_character"
+	to_character_8_name: STRING is "to_character_8"
+	to_character_32_name: STRING is "to_character_32"
 	to_double_name: STRING is "to_double"
 	to_integer_32_name: STRING is "to_integer_32"
 	to_real_name: STRING is "to_real"
@@ -2176,6 +2220,7 @@ feature -- Keyword and symbol names
 	truncated_to_real_name: STRING is "truncated_to_real"
 	twin_name: STRING is "twin"
 	upper_name: STRING is "upper"
+	wide_character_bytes_name: STRING is "wide_character_bytes"
 		-- Eiffel feature names
 
 	capitalized_current_keyword_name: STRING is "Current"

@@ -93,6 +93,22 @@ feature -- Access
 			ise_5_7_latest_not_void: Result /= Void
 		end
 
+	ise_6_0_0: UT_VERSION is
+			-- ISE 6.0.0
+		once
+			create Result.make (6, 0, 0)
+		ensure
+			ise_6_0_0_not_void: Result /= Void
+		end
+
+	ise_6_0_latest: UT_VERSION is
+			-- After the last release ISE 6.0
+		once
+			create Result.make_major_minor (6, 0)
+		ensure
+			ise_6_0_latest_not_void: Result /= Void
+		end
+
 	ise_latest: UT_VERSION is
 			-- After the latest release of ISE
 		once

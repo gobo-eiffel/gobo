@@ -54,7 +54,7 @@ feature -- Access
 			-- Supersets of the current set
 
 	sources: ET_DYNAMIC_ATTACHMENT is
-			-- Sub-sets of current type set
+			-- Subsets of current type set
 		do
 		ensure then
 			no_source: Result = Void

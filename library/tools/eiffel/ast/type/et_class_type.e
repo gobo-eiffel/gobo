@@ -620,7 +620,7 @@ feature -- Output
 				a_string.append_string (type_mark.text)
 				a_string.append_character (' ')
 			end
-			a_string.append_string (upper_name)
+			a_string.append_string (eiffel_class.upper_name)
 			a_parameters := actual_parameters
 			if a_parameters /= Void and then not a_parameters.is_empty then
 				a_string.append_character (' ')

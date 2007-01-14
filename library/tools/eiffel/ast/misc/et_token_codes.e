@@ -181,17 +181,14 @@ feature -- Built-in codes
 	builtin_special_aliased_resized_area: INTEGER is 6
 			-- Codes for built-in features from class SPECIAL
 
-	builtin_character_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class CHARACTER
-		do
-			Result := builtin_character_class * builtin_capacity + a_feature_code
-		end
-
-	builtin_character_class: INTEGER is 3
-	builtin_wide_character_class: INTEGER is 4
+	builtin_character_8_class: INTEGER is 3
+	builtin_character_32_class: INTEGER is 4
 	builtin_character_item: INTEGER is 1
 	builtin_character_set_item: INTEGER is 2
 	builtin_character_code: INTEGER is 3
+	builtin_character_natural_32_code: INTEGER is 4
+	builtin_character_to_character_8: INTEGER is 5
+	builtin_character_to_character_32: INTEGER is 6
 			-- Codes for built-in features from class CHARACTER
 
 	builtin_boolean_feature (a_feature_code: INTEGER): INTEGER is
@@ -212,15 +209,9 @@ feature -- Built-in codes
 	builtin_boolean_implies: INTEGER is 9
 			-- Codes for built-in features from class BOOLEAN
 
-	builtin_integer_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class INTEGER
-		do
-			Result := builtin_integer_class * builtin_capacity + a_feature_code
-		end
-
-	builtin_integer_class: INTEGER is 6
-	builtin_integer_8_class: INTEGER is 7
-	builtin_integer_16_class: INTEGER is 8
+	builtin_integer_8_class: INTEGER is 6
+	builtin_integer_16_class: INTEGER is 7
+	builtin_integer_32_class: INTEGER is 8
 	builtin_integer_64_class: INTEGER is 9
 	builtin_natural_8_class: INTEGER is 10
 	builtin_natural_16_class: INTEGER is 11
@@ -256,17 +247,12 @@ feature -- Built-in codes
 	builtin_integer_to_real_32: INTEGER is 28
 	builtin_integer_to_real_64: INTEGER is 29
 	builtin_integer_to_double: INTEGER is 30
-	builtin_integer_to_character: INTEGER is 31
+	builtin_integer_to_character_8: INTEGER is 31
+	builtin_integer_to_character_32: INTEGER is 32
 			-- Codes for built-in features from class INTEGER
 
-	builtin_real_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class REAL
-		do
-			Result := builtin_real_class * builtin_capacity + a_feature_code
-		end
-
-	builtin_real_class: INTEGER is 14
-	builtin_double_class: INTEGER is 15
+	builtin_real_32_class: INTEGER is 14
+	builtin_real_64_class: INTEGER is 15
 	builtin_real_item: INTEGER is 1
 	builtin_real_set_item: INTEGER is 2
 	builtin_real_lt: INTEGER is 3
@@ -329,6 +315,8 @@ feature -- Built-in codes
 	builtin_platform_integer_bytes: INTEGER is 7
 	builtin_platform_real_bytes: INTEGER is 8
 	builtin_platform_pointer_bytes: INTEGER is 9
+	builtin_platform_is_thread_capable: INTEGER is 10
+	builtin_platform_wide_character_bytes: INTEGER is 11
 
 	builtin_procedure_feature (a_feature_code: INTEGER): INTEGER is
 			-- Full code for built-in feature from class PROCEDURE

@@ -69,7 +69,7 @@ feature -- Initialization
 			l_actuals: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			name.reset
-			is_procedure := False
+			implicit_result := Void
 			target.reset
 			l_actuals ?= arguments
 			if l_actuals /= Void then
@@ -91,6 +91,10 @@ feature -- Access
 		ensure then
 			definition: Result = qualified_name.feature_name
 		end
+
+	implicit_result: ET_RESULT
+			-- Fictitious node corresponding to the result of the
+			-- associated feature when it's a query
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -156,8 +160,13 @@ feature -- Status report
 			Result := (l_implicit_target = Void)
 		end
 
-	is_procedure: BOOLEAN
+	is_procedure: BOOLEAN is
 			-- Is the associated feature a procedure?
+		do
+			Result := (implicit_result = Void)
+		ensure then
+			definition: Result = (implicit_result = Void)
+		end
 
 	use_tilde: BOOLEAN is
 			-- Is the old syntax with '~' used?
@@ -173,7 +182,11 @@ feature -- Status setting
 	set_procedure (b: BOOLEAN) is
 			-- Set `is_procedure' to `b'.
 		do
-			is_procedure := b
+			if b then
+				implicit_result := Void
+			elseif implicit_result = Void then
+				create implicit_result.make
+			end
 		ensure
 			procedure_set: is_procedure = b
 		end

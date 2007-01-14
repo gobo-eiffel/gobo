@@ -67,6 +67,14 @@ feature -- Status report
 			definition: Result = base_type.is_expanded
 		end
 
+	is_generic: BOOLEAN is
+			-- Is current type generic?
+		do
+			Result := base_class.is_generic
+		ensure
+			definition: Result = base_class.is_generic
+		end
+
 	is_agent_type: BOOLEAN is
 			-- Is current type an agent type?
 		do

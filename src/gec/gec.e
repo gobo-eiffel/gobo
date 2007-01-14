@@ -152,8 +152,6 @@ feature -- Execution
 					Exceptions.die (1)
 				end
 			end
---print ("Type Enter...")
---std.input.read_character
 		rescue
 			Exceptions.die (4)
 		end
@@ -200,7 +198,7 @@ feature {NONE} -- Processing
 				a_universe.set_error_handler (l_null_error_handler)
 			end
 			a_universe.error_handler.set_ise
-			a_universe.set_ise_version (ise_5_6_latest)
+			a_universe.set_ise_version (ise_latest)
 			if is_verbose then
 -- TODO.
 			end
