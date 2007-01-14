@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 
 			if (supplied_item_type = type_factory.untyped_atomic_type or else supplied_item_type = type_factory.any_atomic_type) and then
 				required_item_type /= type_factory.untyped_atomic_type and then
-				required_item_type /= type_factory.any_atomic_type then
+				required_item_type /= type_factory.any_atomic_type and then not checked_expression.is_untyped_atomic_converter then
 				an_expression := checked_expression
 				create l_converter.make (an_expression, required_item_type)
 				if STRING_.same_string (a_role_locator.error_code, "XTTE0505") then

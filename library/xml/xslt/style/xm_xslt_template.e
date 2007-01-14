@@ -488,12 +488,12 @@ feature {NONE} -- Implementation
 				else
 					create a_decimal_parser.make
 					a_decimal_parser.parse (a_priority_attribute)
-					if not a_decimal_parser.error then
+					if not a_decimal_parser.error and a_priority_attribute.index_of ('e', 1) = 0 and a_priority_attribute.index_of ('E', 1) = 0 then
 						priority := a_decimal_parser.last_decimal
 					else
-						a_message := STRING_.appended_string ("Invalid numeric value for priority (", a_priority_attribute)
+						a_message := STRING_.appended_string ("Invalid decimal value for priority (", a_priority_attribute)
 						a_message := STRING_.appended_string (a_message, ")")
-						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0020", Static_error)
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0530", Static_error)
 						report_compile_error (an_error)
 					end
 				end

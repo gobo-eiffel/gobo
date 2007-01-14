@@ -80,7 +80,7 @@ feature -- Events
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
 			create content.set_next (attributes)
-			create oasis_xml_catalog_filter.set_next (content, content_emitter)
+			create oasis_xml_catalog_filter.set_next (content, attributes)
 			l_entity_resolver ?= a_parser.entity_resolver
 			if is_stylesheet then
 				l_media_type := default_media_type
@@ -132,7 +132,7 @@ feature -- Events
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
 			create content.set_next (attributes)
-			create oasis_xml_catalog_filter.set_next (content, content_emitter)
+			create oasis_xml_catalog_filter.set_next (content, attributes)
 			l_entity_resolver ?= a_parser.entity_resolver
 			check
 				uri_entity_resolver: l_entity_resolver /= Void

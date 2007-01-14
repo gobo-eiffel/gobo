@@ -36,19 +36,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER; a_local_name, an_original_text: STRING) is
+	make (a_node_type: INTEGER; a_local_name, a_original_text: STRING) is
 		require
 			valid_node_type: is_node_type (a_node_type)
 			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
-			original_text_not_void: an_original_text /= Void
+			original_text_not_void: a_original_text /= Void
 		do
 			node_kind := a_node_type
 			local_name := a_local_name
-			original_text := an_original_text
+			original_text := a_original_text
 		ensure
 			node_kind_set: node_kind = a_node_type
 			local_name_set: local_name = a_local_name
-			original_text_set: original_text = an_original_text
+			original_text_set: original_text = a_original_text
 		end
 
 feature -- Access
@@ -56,11 +56,15 @@ feature -- Access
 	node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
 
+	local_name: STRING
+			-- Local name (NCName)
+
 	node_kind_mask: INTEGER is
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_shift_left (1, node_kind)
 		end
+
 	is_local_name_test: BOOLEAN is
 			-- Is `Current' a local-name test?
 		do
@@ -94,11 +98,6 @@ feature -- Matching
 				Result := STRING_.same_string (local_name, shared_name_pool.local_name_from_name_code (a_name_code))
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	local_name: STRING
-			-- Local name (NCName)
 
 invariant
 

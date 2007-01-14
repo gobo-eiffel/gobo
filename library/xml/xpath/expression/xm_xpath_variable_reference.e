@@ -19,7 +19,7 @@ inherit
 			same_expression, promote, create_iterator, evaluate_item, lazily_evaluate,
 			native_implementations, compute_special_properties, compute_intrinsic_dependencies,
 			is_variable_reference, as_variable_reference, accumulate_slots_used,
-			create_node_iterator
+			create_node_iterator, generate_events
 		end
 
 create
@@ -202,6 +202,17 @@ feature -- Evaluation
 			end
 		end
 
+	generate_events (a_context: XM_XPATH_CONTEXT) is
+			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		do
+			evaluate_variable (a_context)
+			if last_evaluated_binding.is_error then
+				a_context.report_fatal_error (last_evaluated_binding.error_value)
+			else
+				last_evaluated_binding.generate_events (a_context)
+			end
+		end
+	
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do

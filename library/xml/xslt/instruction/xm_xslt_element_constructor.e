@@ -28,6 +28,9 @@ inherit
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 		export {NONE} all end
 
+	XM_XPATH_NODE_KIND_ROUTINES
+		export {NONE} all end
+
 	XM_XSLT_VALIDATION
 
 feature -- Access
@@ -100,6 +103,7 @@ feature -- Optimization
 				content := content.replacement_expression
 				adopt_child_expression (content)
 			end
+			check_contents_for_attributes (a_context)
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -304,6 +308,59 @@ feature {NONE} -- Implementation
 
 	content: XM_XPATH_EXPRESSION
 			-- Element content
+
+	check_contents_for_attributes (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Check no attributes or namespaces are created after child nodes.
+		require
+			a_context_not_void: a_context /= Void
+		local
+			l_block: XM_XSLT_BLOCK
+			l_children: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_component: XM_XPATH_EXPRESSION
+			l_value_of: XM_XSLT_COMPILED_VALUE_OF
+			l_ok, l_found_child, l_finished: BOOLEAN
+			l_mask: INTEGER
+			l_error: XM_XPATH_ERROR_VALUE
+		do
+			if content.is_block then
+				l_block ?= content
+				l_children := l_block.children.new_cursor
+				from
+					l_children.start
+				until
+					l_children.after or l_finished
+				loop
+					l_component := l_children.item
+					-- Need to ignore a zero-length text node, which is included to prevent space-separation
+					-- in a construct like <a>{@x}{@y}</b>
+					if l_component.is_value_of then
+						l_value_of ?= l_component
+						if l_value_of.select_expression.is_string_value and then l_value_of.select_expression.as_string_value.string_value.is_empty then
+							l_ok := True
+						end
+					end
+					if not l_ok then
+						if l_component.item_type.is_node_test then
+							l_mask := l_component.item_type.as_node_test.node_kind_mask
+							if INTEGER_.bit_and (l_mask, INTEGER_.bit_not (child_kinds)) = 0 then
+								l_found_child := True
+							elseif l_found_child and l_mask = INTEGER_.bit_shift_left (1, Attribute_node) then
+								l_finished := True
+								create l_error.make_from_string ("May not create an attribute node after creating a child of the containing element", Xpath_errors_uri, "XTDE0410", Dynamic_error)
+								set_last_error (l_error)
+							elseif l_found_child and l_mask = INTEGER_.bit_shift_left (1, Namespace_node) then
+								l_finished := True
+								create l_error.make_from_string ("May not create a namespace node after creating a child of the containing element", Xpath_errors_uri, "XTDE0410", Dynamic_error)
+								set_last_error (l_error)
+							end
+						end
+					end
+					if not l_finished then
+						l_children.forth
+					end
+				end
+			end
+		end
 
 invariant
 

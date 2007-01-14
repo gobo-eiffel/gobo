@@ -170,7 +170,7 @@ feature -- Events
 
 			-- Test for xml:space="preserve"
 
-			if fingerprint_from_name_code (a_name_code) = xml_space_type_code then
+			if fingerprint_from_name_code (a_name_code) = Xml_space_type_code then
 				if STRING_.same_string (a_value, "preserve") then
 					a_preservation_status := INTEGER_.bit_or (strip_stack.item, Preserve_parent)
 					strip_stack.replace (a_preservation_status)

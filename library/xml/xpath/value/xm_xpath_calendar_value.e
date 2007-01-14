@@ -166,8 +166,9 @@ feature -- Access
 		do
 			Result := hour
 			if Result > 11 then Result := Result - 12 end
+			if Result = 0 then Result := 12 end
 		ensure
-			result_in_range: Result >= 0 and then Result <= 11
+			result_in_range: Result >= 1 and then Result <= 12
 		end
 
 	minutes_in_day: INTEGER is

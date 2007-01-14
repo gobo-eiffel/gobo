@@ -19,11 +19,17 @@ inherit
 			evaluate_item
 		end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 	XM_XSLT_NUMBER_ROUTINES
+		export {NONE} all end
 
 	DT_SHARED_WEEK_DAYS_FROM_MONDAY
+		export {NONE} all end
 
 	KL_SHARED_PLATFORM
+		export {NONE} all end
 
 create
 
@@ -215,7 +221,7 @@ feature {NONE} -- Implementation
 			if a_picture.is_empty then
 				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 			else
-				create a_result_string.make (32)
+				a_result_string := new_unicode_string_with_capacity (32)
 				if not is_language_supported (a_requested_language) then
 					a_language := language (a_requested_language)
 					a_result_string := STRING_.appended_string (a_result_string, language_prefix (a_requested_language))

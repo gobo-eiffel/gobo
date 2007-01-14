@@ -32,6 +32,14 @@ feature -- Access
 			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Document_node), INTEGER_.bit_shift_left (1, Text_node))
 		end
 
+	child_kinds: INTEGER is
+			-- Possible child nodes
+		once
+			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Element_node), INTEGER_.bit_shift_left (1, Text_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Comment_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Processing_instruction_node))
+		end
+
 	untyped_if_untyped_kinds: INTEGER is
 			-- Node kinds whose typed value is conditionally untypedAtomic
 		once

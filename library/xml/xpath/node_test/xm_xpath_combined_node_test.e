@@ -35,17 +35,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_test: XM_XPATH_NODE_TEST; an_operator: INTEGER; another_node_test: XM_XPATH_NODE_TEST) is
+	make (a_node_test: XM_XPATH_NODE_TEST; a_operator: INTEGER; a_other_node_test: XM_XPATH_NODE_TEST) is
 		require
 			node_test_one_not_void: a_node_test /= Void
-			node_test_two_not_void: another_node_test /= Void
-			set_operation: an_operator = Union_token or else an_operator = Intersect_token or else an_operator = Except_token
+			node_test_two_not_void: a_other_node_test /= Void
+			set_operation: a_operator = Union_token or else a_operator = Intersect_token or else a_operator = Except_token
 		local
 			a_string: STRING
 		do
 			node_test_one := a_node_test
-			node_test_two := another_node_test
-			operator := an_operator
+			node_test_two := a_other_node_test
+			operator := a_operator
 			a_string := STRING_.appended_string ("(", node_test_one.original_text)
 			a_string := STRING_.appended_string (a_string, " ")
 			a_string := STRING_.appended_string (a_string, token_name (operator))
@@ -55,11 +55,20 @@ feature {NONE} -- Initialization
 			original_text := a_string
 		ensure
 			node_test_one_set: node_test_one = a_node_test
-			node_test_two_set: node_test_two = another_node_test
-			operator_set: operator = an_operator
+			node_test_two_set: node_test_two = a_other_node_test
+			operator_set: operator = a_operator
 		end
 
 feature -- Access
+
+	node_test_one: XM_XPATH_NODE_TEST
+			-- first constituent node tests
+
+	node_test_two: XM_XPATH_NODE_TEST
+			-- Second constituent node tests
+
+	operator: INTEGER
+			-- Set operation
 
 	node_kind_mask: INTEGER is
 			-- Mask of types of nodes matched
@@ -140,14 +149,6 @@ feature -- Matching
 				not node_test_two.matches_node (a_node_kind, a_fingerprint, a_node_type)
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	node_test_one, node_test_two: XM_XPATH_NODE_TEST
-			-- Constituent node tests
-
-	operator: INTEGER
-			-- Set operation
 
 invariant
 

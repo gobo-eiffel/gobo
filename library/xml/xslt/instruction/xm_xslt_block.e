@@ -17,7 +17,7 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			sub_expressions, item_type, compute_cardinality,
-			promote_instruction,
+			promote_instruction, is_block,
 			native_implementations, create_iterator, creates_new_nodes
 		end
 
@@ -144,6 +144,12 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_block: BOOLEAN is
+			-- Is `Current' an `XM_XSLT_BLOCK'?
+		do
+			Result := True
+		end
 
 	creates_new_nodes: BOOLEAN is
 			-- Can `Current' create new nodes?

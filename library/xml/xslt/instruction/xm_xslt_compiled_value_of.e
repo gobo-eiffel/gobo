@@ -17,7 +17,7 @@ inherit
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
 			display, evaluate_item, item_type,
-			compute_cardinality
+			compute_cardinality, is_value_of
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS
@@ -101,6 +101,12 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_value_of: BOOLEAN is
+			-- Is `Current' an `XM_XSLT_COMPILED_VALUE_OF'?
+		do
+			Result := True
+		end
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'

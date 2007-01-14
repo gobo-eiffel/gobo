@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			underlying_receiver_not_void: a_underlying_receiver /= Void
 		do
 			next_receiver := a_underlying_receiver
-			pending_start_tag := -1
+			pending_start_tag := -2
 			document_uri := a_underlying_receiver.document_uri
 			base_uri := a_underlying_receiver.base_uri
 			create pending_attributes_name_codes.make (1, Initial_arrays_size)
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			create pending_namespaces.make (1, 3)
 		ensure
 			next_receiver_set: next_receiver = a_underlying_receiver
-			no_pending_start_tag: pending_start_tag = -1
+			no_pending_start_tag: pending_start_tag = -2
 		end
 
 feature {XM_XSLT_TRANSFORMER} -- Access
@@ -111,12 +111,22 @@ feature -- Events
 			-- New document
 		do
 			is_document_started := True
-			if pending_start_tag = -1 then
+			if pending_start_tag < 0 then
 				next_receiver.start_document
 			else
 				start_content
 			end
 			previous_atomic := False
+		end
+
+	start_nested_document is
+			-- Start a copy of a new document within `Current'.
+		require
+			nested_document: is_document_started
+		do
+			start_content
+			pending_start_tag := -2
+			is_top_level := True
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
@@ -132,7 +142,7 @@ feature -- Events
 			else
 				suppress_attributes := False
 				start_element_properties := properties
-				if pending_start_tag /= -1 then start_content end
+				if pending_start_tag >= 0 then start_content end
 				debug ("XSLT content output")
 					std.error.put_string ("Starting element " + shared_name_pool.display_name_from_name_code (a_name_code))
 					std.error.put_new_line
@@ -155,7 +165,7 @@ feature -- Events
 			a_uri_code, a_prefix_code: INTEGER -- _16
 		do
 			if not suppress_attributes then
-				if pending_start_tag = -1 then
+				if pending_start_tag < 0 then
 					if is_top_level then
 						on_error ("XTDE0420: Cannot write a namespace declaration when the parent is a document node")
 					else
@@ -231,7 +241,7 @@ feature -- Events
 			duplicate_found: BOOLEAN
 		do
 			if not suppress_attributes then
-				if pending_start_tag = -1 then
+				if pending_start_tag < 0 then
 					if is_top_level then
 						on_error ("XTDE0420: Cannot write an attribute declaration when the parent is a document node")
 					else
@@ -287,7 +297,7 @@ feature -- Events
 			properties, an_index: INTEGER
 			a_name_code: INTEGER
 		do
-			if pending_start_tag /= -1 then
+			if pending_start_tag >= 0 then
 				check_proposed_prefix (pending_start_tag, 0)
 				properties := start_element_properties
 				if not is_namespace_declared (properties) then
@@ -336,7 +346,7 @@ feature -- Events
 	end_element is
 			-- Notify the end of an element.
 		do
-			if pending_start_tag /= -1 then start_content end
+			if pending_start_tag >=0 then start_content end
 			next_receiver.end_element
 			previous_atomic := False
 			mark_as_written
@@ -347,7 +357,7 @@ feature -- Events
 		do
 			previous_atomic := False
 			if chars.count > 0 then
-				if pending_start_tag /= -1 then start_content end
+				if pending_start_tag >= 0 then start_content end
 				next_receiver.notify_characters (chars, properties)
 			end
 			mark_as_written
@@ -356,7 +366,7 @@ feature -- Events
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
 		do
-			if pending_start_tag /= -1 then start_content end
+			if pending_start_tag >= 0 then start_content end
 			next_receiver.notify_processing_instruction (a_name, a_data_string, properties)
 			previous_atomic := False
 			mark_as_written
@@ -365,7 +375,7 @@ feature -- Events
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
 		do
-			if pending_start_tag /= -1 then start_content end
+			if pending_start_tag >= 0 then start_content end
 			next_receiver.notify_comment (a_content_string, properties)
 			previous_atomic := False
 			mark_as_written
@@ -379,7 +389,11 @@ feature -- Events
 			previous_atomic := False
 		end
 
-	
+	end_nested_document is
+			-- Notify end of nested document copy.
+		do
+		end
+
 	close is
 			-- Notify end of event stream.
 		do

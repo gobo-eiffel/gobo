@@ -117,6 +117,7 @@ feature -- Optimization
 				content := content.replacement_expression
 				adopt_child_expression (content)
 			end
+			check_contents_for_attributes (a_context)
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -145,57 +146,63 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item.
 		local
-			a_text_value: STRING
-			a_builder: XM_XPATH_TINY_BUILDER
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_new_context: XM_XSLT_EVALUATION_CONTEXT
-			a_receiver: XM_XPATH_RECEIVER
+			l_text_value, l_error: STRING
+			l_builder: XM_XPATH_TINY_BUILDER
+			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_receiver: XM_XPATH_RECEIVER
+			l_splitter: ST_SPLITTER
+			l_words: DS_LIST [STRING]
 		do
 			last_evaluated_item := Void
 			if is_text_only then
 				if constant_text /= Void then
-					a_text_value := constant_text
+					l_text_value := constant_text
 				else
-					a_text_value := ""
+					l_text_value := ""
 					from
 						content.create_iterator (a_context)
-						an_iterator := content.last_iterator
-						if an_iterator.is_error then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+						l_iterator := content.last_iterator
+						if l_iterator.is_error then
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
 						else
-							an_iterator.start
+							l_iterator.start
 						end
 					until
-						an_iterator.is_error or else an_iterator.after
+						l_iterator.is_error or else l_iterator.after
 					loop
-						a_text_value := STRING_.appended_string (a_text_value, an_iterator.item.string_value)
-						an_iterator.forth
+						l_text_value := STRING_.appended_string (l_text_value, l_iterator.item.string_value)
+						l_iterator.forth
 					end
-					if an_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+					if l_iterator.is_error then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
 					end
 				end
-				if last_evaluated_item = Void then create {XM_XPATH_TEXT_FRAGMENT_VALUE} last_evaluated_item.make (a_text_value, base_uri) end
+				if last_evaluated_item = Void then create {XM_XPATH_TEXT_FRAGMENT_VALUE} last_evaluated_item.make (l_text_value, base_uri) end
 			else
-				a_new_context ?= a_context.new_minor_context
-				create a_builder.make (base_uri, Void)
-				create a_result.make_receiver (a_builder)
-				a_new_context.change_output_destination (Void, a_result, False, Validation_strip, Void)
-				a_receiver := a_new_context.current_receiver
+				l_new_context ?= a_context.new_minor_context
+				create l_builder.make (base_uri, Void)
+				create l_result.make_receiver (l_builder)
+				l_new_context.change_output_destination (Void, l_result, False, Validation_strip, Void)
+				l_receiver := l_new_context.current_receiver
 				check
-					receiver_opened: a_receiver.is_open
+					receiver_opened: l_receiver.is_open
 					-- `change_output_destination' guarentees this
 				end
-				a_receiver.start_document
-				content.generate_events (a_new_context)
-				a_receiver.end_document
-				a_receiver.close
-				if a_builder.has_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_builder.last_error, Xpath_errors_uri, "FOER0000", Dynamic_error)
+				l_receiver.start_document
+				content.generate_events (l_new_context)
+				l_receiver.end_document
+				l_receiver.close
+				if l_builder.has_error then
+					create l_splitter.make_with_separators (": %T%N%R")
+					l_words := l_splitter.split (l_builder.last_error)
+					l_error := l_words.item (1)
+					l_words.remove (1)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (l_splitter.join_unescaped (l_words), Xpath_errors_uri, l_error, Dynamic_error)
 					set_last_error (last_evaluated_item.error_value)
 				else
-					last_evaluated_item := a_builder.current_root
+					last_evaluated_item := l_builder.current_root
 				end
 			end
 		end
@@ -204,8 +211,12 @@ feature -- Evaluation
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			evaluate_item (a_context)
-			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
-				a_context.current_receiver.append_item (last_evaluated_item)
+			if last_evaluated_item /= Void then
+				if last_evaluated_item.is_error then
+					a_context.transformer.report_recoverable_error (error_value)
+				else
+					a_context.current_receiver.append_item (last_evaluated_item)
+				end
 			end
 		end
 
@@ -228,6 +239,46 @@ feature {NONE} -- Implementation
 	base_uri: STRING
 			-- Base URI
 
+	check_contents_for_attributes (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Check no attributes or namespaces are created after child nodes of document element.
+		require
+			a_context_not_void: a_context /= Void
+		local
+			l_block: XM_XSLT_BLOCK
+			l_children: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_component: XM_XPATH_EXPRESSION
+			l_finished: BOOLEAN
+			l_mask: INTEGER
+			l_error: XM_XPATH_ERROR_VALUE
+		do
+			if content.is_block then
+				l_block ?= content
+				l_children := l_block.children.new_cursor
+				from
+					l_children.start
+				until
+					l_children.after or l_finished
+				loop
+					l_component := l_children.item
+					if l_component.item_type.is_node_test then
+						l_mask := l_component.item_type.as_node_test.node_kind_mask
+						if l_mask = INTEGER_.bit_shift_left (1, Attribute_node) then
+							l_finished := True
+							create l_error.make_from_string ("May not create an attribute node as a child of the document node", Xpath_errors_uri, "XTDE0420", Dynamic_error)
+							set_last_error (l_error)
+						elseif l_mask = INTEGER_.bit_shift_left (1, Namespace_node) then
+							l_finished := True
+							create l_error.make_from_string ("May not create a namespace node as a child of the document node", Xpath_errors_uri, "XTDE0420", Dynamic_error)
+							set_last_error (l_error)
+						end
+					end
+					if not l_finished then
+						l_children.forth
+					end
+				end
+			end
+		end
+	
 invariant
 
 	base_uri: initialized implies base_uri /= Void

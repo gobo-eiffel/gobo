@@ -17,7 +17,8 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, check_static_type, evaluate_item, create_iterator, compute_special_properties
+			item_type, check_static_type, evaluate_item, create_iterator,
+			compute_special_properties, is_untyped_atomic_converter
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -59,6 +60,14 @@ feature -- Access
 
 	error_code: STRING
 			-- Error code to use
+
+feature -- Status report
+	
+	is_untyped_atomic_converter: BOOLEAN is
+			-- Is `Current' an `XM_XPATH_UNTYPED_ATOMIC_CONVERTER'?
+		do
+			Result := True
+		end
 
 feature -- Optimization	
 

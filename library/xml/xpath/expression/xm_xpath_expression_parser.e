@@ -2234,7 +2234,6 @@ feature {NONE} -- Implementation
 				parse_node_kind_test
 				if not is_parse_error then
 					create {XM_XPATH_DOCUMENT_NODE_TEST} internal_last_parsed_node_test.make (internal_last_parsed_node_test)
-					next_token ("create_document_node_kind_test ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 					else
@@ -2243,10 +2242,7 @@ feature {NONE} -- Implementation
 			            l_message := STRING_.appended_string (l_message, display_current_token)
 							report_parse_error (l_message, "XPST0003")
 						else
-							next_token ("create_document_node_kind_test 2.")
-							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-							end
+							next_token ("create_document_node_kind_test")
 						end
 					end
 				end

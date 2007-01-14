@@ -25,6 +25,9 @@ inherit
 	MA_SHARED_DECIMAL_CONTEXT
 		export {NONE} all end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
@@ -37,9 +40,9 @@ feature -- Access
 			a_character_code: INTEGER
 		do
 			if a_number < decimal.zero then
-				Result := a_number.to_scientific_string
+				Result := new_unicode_string (a_number.to_scientific_string)
 			elseif a_picture.count = 0 then
-				Result := a_number.to_scientific_string
+				Result := new_unicode_string (a_number.to_scientific_string)
 			elseif is_zeros_plus_one (a_picture) then
 				Result := converted_number (a_number, decimal_digits_set (a_picture), a_picture.count, a_group_size, a_group_separator, an_ordinal)
 			elseif a_picture.count = 1 then
@@ -48,13 +51,13 @@ feature -- Access
 					a_character_code
 				when 105 then -- 'i' - lower case Roman numerals
 					if a_number.is_zero then
-						Result := "0"
+						Result := new_unicode_string ("0")
 					else
 						Result := converted_roman_numerals (a_number)
 					end
 				when 73 then -- 'I' - upper case Roman numerals
 					if a_number.is_zero then
-						Result := "0"
+						Result := new_unicode_string ("0")
 					else
 						Result := converted_roman_numerals (a_number)
 						Result.to_upper
@@ -129,7 +132,7 @@ feature -- Access
 				Result := Result.substring (1, a_max)
 			end
 			from  until Result.count >= a_minimum_width loop
-				Result := Result + " "
+				Result := Result + new_unicode_string (" ")
 			end
 		end
 
@@ -148,7 +151,7 @@ feature -- Access
 				Result := Result.substring (1, a_max)
 			end
 			from  until Result.count >= a_minimum_width loop
-				Result := Result + " "
+				Result := Result + new_unicode_string (" ")
 			end
 		end
 
@@ -160,21 +163,21 @@ feature -- Access
 				inspect
 					a_maximum_width
 				when 1 then
-					Result := "A"
+					Result := new_unicode_string ("A")
 				when 2, 3 then
-					Result := "Am"
+					Result := new_unicode_string ("Am")
 				else
-					Result := "A.M."
+					Result := new_unicode_string ("A.M.")
 				end
 			else
 				inspect
 					a_maximum_width
 				when 1 then
-					Result := "P"
+					Result := new_unicode_string ("P")
 				when 2, 3 then
-					Result := "Pm"
+					Result := new_unicode_string ("Pm")
 				else
-					Result := "P.M."
+					Result := new_unicode_string ("P.M.")
 				end
 			end
 		end
@@ -183,23 +186,38 @@ feature {NONE} -- Implementation
 
 	-- Alphabets
 
-	latin_upper_case_letters: STRING is "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	latin_upper_case_letters: STRING is
 			-- Latin upper case alphabet
+		once
+			Result := new_unicode_string ("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+		ensure
+			latin_upper_case_letters_not_void: Result /= Void
+		end
 
-	latin_lower_case_letters: STRING is "abcdefghijklmnopqrstuvwxyz"
+	latin_lower_case_letters: STRING is
 			-- Latin lower case alphabet
+		once
+			Result := new_unicode_string ("abcdefghijklmnopqrstuvwxyz")
+		ensure
+			latin_lower_case_letters_not_void: Result /= Void
+		end
 
-	european_digits: STRING is "0123456789"
-		-- "Arabic" numerals, for fallback to format "1"
+	european_digits: STRING is
+			-- "Indo-Arabic" numerals, for fallback to format "1"
+		once
+			Result := new_unicode_string ("0123456789")
+		ensure
+			european_digits_not_void: Result /= Void
+		end
 
 	roman_thousands: ARRAY [STRING] is
 			-- Thousands in Roman numerals
 		once
 			create Result.make (0, 3)
-			Result.put ("", 0)
-			Result.put ("m", 1)
-			Result.put ("mm", 2)
-			Result.put ("mmmm", 3)
+			Result.put (new_unicode_string_empty, 0)
+			Result.put (new_unicode_string ("m"), 1)
+			Result.put (new_unicode_string ("mm"), 2)
+			Result.put (new_unicode_string ("mmmm"), 3)
 		ensure
 			roman_thousands_not_void: Result /= Void
 		end
@@ -208,16 +226,16 @@ feature {NONE} -- Implementation
 			-- Hundreds in Roman numerals
 		once
 			create Result.make (0, 9)
-			Result.put ("", 0)
-			Result.put ("c", 1)
-			Result.put ("cc", 2)
-			Result.put ("ccc", 3)
-			Result.put ("cd", 4)
-			Result.put ("d", 5)
-			Result.put ("dc", 6)
-			Result.put ("dcc", 7)
-			Result.put ("dccc", 8)
-			Result.put ("cm", 9)
+			Result.put (new_unicode_string_empty, 0)
+			Result.put (new_unicode_string ("c"), 1)
+			Result.put (new_unicode_string ("cc"), 2)
+			Result.put (new_unicode_string ("ccc"), 3)
+			Result.put (new_unicode_string ("cd"), 4)
+			Result.put (new_unicode_string ("d"), 5)
+			Result.put (new_unicode_string ("dc"), 6)
+			Result.put (new_unicode_string ("dcc"), 7)
+			Result.put (new_unicode_string ("dccc"), 8)
+			Result.put (new_unicode_string ("cm"), 9)
 		ensure
 			roman_hundreds_not_void: Result /= Void
 		end
@@ -226,16 +244,16 @@ feature {NONE} -- Implementation
 			-- Tens in Roman numerals
 		once
 			create Result.make (0, 9)
-			Result.put ("", 0)
-			Result.put ("x", 1)
-			Result.put ("xx", 2)
-			Result.put ("xxx", 3)
-			Result.put ("xl", 4)
-			Result.put ("l", 5)
-			Result.put ("lx", 6)
-			Result.put ("lxx", 7)
-			Result.put ("lxxxx", 8)
-			Result.put ("xc", 9)
+			Result.put (new_unicode_string_empty, 0)
+			Result.put (new_unicode_string ("x"), 1)
+			Result.put (new_unicode_string ("xx"), 2)
+			Result.put (new_unicode_string ("xxx"), 3)
+			Result.put (new_unicode_string ("xl"), 4)
+			Result.put (new_unicode_string ("l"), 5)
+			Result.put (new_unicode_string ("lx"), 6)
+			Result.put (new_unicode_string ("lxx"), 7)
+			Result.put (new_unicode_string ("lxxxx"), 8)
+			Result.put (new_unicode_string ("xc"), 9)
 		ensure
 			roman_tens_not_void: Result /= Void
 		end
@@ -244,16 +262,16 @@ feature {NONE} -- Implementation
 			-- Units in Roman numerals
 		once
 			create Result.make (0, 9)
-			Result.put ("", 0)
-			Result.put ("i", 1)
-			Result.put ("ii", 2)
-			Result.put ("iii", 3)
-			Result.put ("iv", 4)
-			Result.put ("v", 5)
-			Result.put ("vi", 6)
-			Result.put ("vii", 7)
-			Result.put ("viii", 8)
-			Result.put ("ix", 9)
+			Result.put (new_unicode_string_empty, 0)
+			Result.put (new_unicode_string ("i"), 1)
+			Result.put (new_unicode_string ("ii"), 2)
+			Result.put (new_unicode_string ("iii"), 3)
+			Result.put (new_unicode_string ("iv"), 4)
+			Result.put (new_unicode_string ("v"), 5)
+			Result.put (new_unicode_string ("vi"), 6)
+			Result.put (new_unicode_string ("vii"), 7)
+			Result.put (new_unicode_string ("viii"), 8)
+			Result.put (new_unicode_string ("ix"), 9)
 		ensure
 			roman_tens_not_void: Result /= Void
 		end
@@ -273,8 +291,8 @@ feature {NONE} -- Implementation
 			a_base: MA_DECIMAL
 			an_index: INTEGER
 		do
-			create Result.make (0)
-			create a_string.make (0)
+			Result := new_unicode_string_empty
+			a_string := new_unicode_string_empty
 
 			-- First convert `a_number' to a decimal string using `digits'
 
@@ -363,7 +381,7 @@ feature {NONE} -- Implementation
 			a_last_character: STRING
 		do
 			if a_number = 0 then
-				Result := "0"
+				Result := new_unicode_string ("0")
 			else
 				a_range := an_alphabet.count
 				an_index := ((a_number - 1) \\ a_range) + 1
@@ -384,7 +402,7 @@ feature {NONE} -- Implementation
 			positive_integer: a_number >= 0
 		do
 			if a_number = 0 then
-				Result := "Zero"
+				Result := new_unicode_string ("Zero")
 			else
 				Result := words_number (a_number)
 			end
@@ -408,43 +426,43 @@ feature {NONE} -- Implementation
 		do
 			if a_number >= 1000000000 then
 				a_remainder := a_number \\ 1000000000
-				Result := words_number (a_number // 1000000000) + " Billion" -- American and very modern English usage - TODO - descendant class for en-GB with traditional
+				Result := words_number (a_number // 1000000000) + new_unicode_string (" Billion") -- American and very modern English usage - TODO - descendant class for en-GB with traditional
 				if a_remainder /= 0 then
 					if a_remainder < 100 then
-						Result := Result + " and "
+						Result := Result + new_unicode_string (" and ")
 					else
-						Result := Result + " "
+						Result := Result + new_unicode_string (" ")
 					end
 					Result := Result + words_number (a_remainder)
 				end
 			elseif a_number >= 1000000 then
 				a_remainder := a_number \\ 1000000
-				Result := words_number (a_number // 1000000) + " Million"
+				Result := words_number (a_number // 1000000) + new_unicode_string (" Million")
 				if a_remainder /= 0 then
 					if a_remainder < 100 then
-						Result := Result + " and "
+						Result := Result + new_unicode_string (" and ")
 					else
-						Result := Result + " "
+						Result := Result + new_unicode_string (" ")
 					end
 					Result := Result + words_number (a_remainder)
 				end
 			elseif a_number >= 1000 then
 				a_remainder := a_number \\ 1000
-				Result := words_number (a_number // 1000) + " Thousand"
+				Result := words_number (a_number // 1000) + new_unicode_string (" Thousand")
 				if a_remainder /= 0 then
 					if a_remainder < 100 then
-						Result := Result + " and "
+						Result := Result + new_unicode_string (" and ")
 					else
-						Result := Result + " "
+						Result := Result + new_unicode_string (" ")
 					end
 					Result := Result + words_number (a_remainder)
 				end
 			elseif a_number >= 100 then
 				a_remainder := a_number \\ 100
-				Result := words_number (a_number // 100) + " Hundred"
+				Result := words_number (a_number // 100) + new_unicode_string (" Hundred")
 				if a_remainder /= 0 then
 					if a_remainder /= 0 then
-						Result := Result + " and "
+						Result := Result + new_unicode_string (" and ")
 					end
 					Result := Result + words_number (a_remainder)
 				end
@@ -454,7 +472,7 @@ feature {NONE} -- Implementation
 				a_remainder := a_number \\ 10
 				Result := english_tens.item (a_number // 10)
 				if a_remainder /= 0 then
-					Result := Result + " " + english_units.item (a_remainder)
+					Result := Result + new_unicode_string (" ") + english_units.item (a_remainder)
 				end
 			end
 		ensure
@@ -467,7 +485,7 @@ feature {NONE} -- Implementation
 			positive_integer: a_number >= 0
 		do
 			if a_number = 0 then
-				Result := "Zeroth" -- ?? Physics usage, not colloquial English
+				Result := new_unicode_string ("Zeroth") -- ?? Physics usage, not colloquial English
 			else
 				Result := ordinal_number (a_number)
 			end
@@ -491,51 +509,51 @@ feature {NONE} -- Implementation
 		do
 			if a_number >= 1000000000 then
 				l_remainder := a_number \\ 1000000000
-				Result := words_number (a_number // 1000000000) + " Billion" -- American and very modern English usage
+				Result := words_number (a_number // 1000000000) + new_unicode_string (" Billion") -- American and very modern English usage
 				if l_remainder = 0 then
-					Result := Result + "th"
+					Result := Result + new_unicode_string ("th")
 				else
 					if l_remainder < 100 then
-						Result := Result + " and "
+						Result := Result + new_unicode_string (" and ")
 					else
-						Result := Result + " "
+						Result := Result + new_unicode_string (" ")
 					end
 					Result := Result + ordinal_number (l_remainder)
 				end
 			elseif a_number >= 1000000 then
 				l_remainder := a_number \\ 1000000
-				Result := words_number (a_number // 1000000) + " Million"
+				Result := words_number (a_number // 1000000) + new_unicode_string (" Million")
 				if l_remainder = 0 then
-					Result := Result + "th"
+					Result := Result + new_unicode_string ("th")
 				else
 					if l_remainder < 100 then
-						Result := Result + " and "
+						Result := Result + new_unicode_string (" and ")
 					else
-						Result := Result + " "
+						Result := Result + new_unicode_string (" ")
 					end
 					Result := Result + ordinal_number (l_remainder)
 				end
 			elseif a_number >= 1000 then
 				l_remainder := a_number \\ 1000
-				Result := words_number (a_number // 1000) + " Thousand"
+				Result := words_number (a_number // 1000) + new_unicode_string (" Thousand")
 				if l_remainder = 0 then
-					Result := Result + "th"
+					Result := Result + new_unicode_string ("th")
 				else
 					if l_remainder < 100 then
-						Result := Result + " and "
+						Result := Result + new_unicode_string (" and ")
 					else
-						Result := Result + " "
+						Result := Result + new_unicode_string (" ")
 					end
 					Result := Result + ordinal_number (l_remainder)
 				end
 			elseif a_number >= 100 then
 				l_remainder := a_number \\ 100
-				Result := words_number (a_number // 100) + " Hundred"
+				Result := words_number (a_number // 100) + new_unicode_string (" Hundred")
 				if l_remainder = 0 then
-					Result := Result + "th"
+					Result := Result + new_unicode_string ("th")
 				else
 					if l_remainder /= 0 then
-						Result := Result + " and "
+						Result := Result + new_unicode_string (" and ")
 					end
 					Result := Result + ordinal_number (l_remainder)
 				end
@@ -545,7 +563,7 @@ feature {NONE} -- Implementation
 				l_remainder := a_number \\ 10
 				Result := english_ordinal_tens.item (a_number // 10)
 				if l_remainder /= 0 then
-					Result := Result + " " + english_ordinal_units.item (l_remainder)
+					Result := Result + new_unicode_string (" ") + english_ordinal_units.item (l_remainder)
 				end
 			end
 		ensure
@@ -556,16 +574,16 @@ feature {NONE} -- Implementation
 			-- English words for tens
 		once
 			create Result.make (0, 9)
-			Result.put ("", 0)
-			Result.put ("Ten", 1)
-			Result.put ("Twenty", 2)
-			Result.put ("Thirty", 3)
-			Result.put ("Forty", 4)
-			Result.put ("Fifty", 5)
-			Result.put ("Sixty", 6)
-			Result.put ("Seventy", 7)
-			Result.put ("Eighty", 8)
-			Result.put ("Ninety", 9)
+			Result.put (new_unicode_string_empty, 0)
+			Result.put (new_unicode_string ("Ten"), 1)
+			Result.put (new_unicode_string ("Twenty"), 2)
+			Result.put (new_unicode_string ("Thirty"), 3)
+			Result.put (new_unicode_string ("Forty"), 4)
+			Result.put (new_unicode_string ("Fifty"), 5)
+			Result.put (new_unicode_string ("Sixty"), 6)
+			Result.put (new_unicode_string ("Seventy"), 7)
+			Result.put (new_unicode_string ("Eighty"), 8)
+			Result.put (new_unicode_string ("Ninety"), 9)
 		ensure
 			ten_numbers: Result /= Void and then Result.count = 10
 		end
@@ -574,25 +592,25 @@ feature {NONE} -- Implementation
 			-- English words for units and teens
 		once
 			create Result.make (1, 19)
-			Result.put ("One", 1)
-			Result.put ("Two", 2)
-			Result.put ("Three", 3)
-			Result.put ("Four", 4)
-			Result.put ("Five", 5)
-			Result.put ("Six", 6)
-			Result.put ("Seven", 7)
-			Result.put ("Eight", 8)
-			Result.put ("Nine", 9)
-			Result.put ("Ten", 10)
-			Result.put ("Eleven", 11)
-			Result.put ("Twelve", 12)
-			Result.put ("Thirteen", 13)
-			Result.put ("Fourteen", 14)
-			Result.put ("Fifteen", 15)
-			Result.put ("Sixteen", 16)
-			Result.put ("Seventeen", 17)
-			Result.put ("Eighteen", 18)
-			Result.put ("Nineteen", 19)
+			Result.put (new_unicode_string ("One"), 1)
+			Result.put (new_unicode_string ("Two"), 2)
+			Result.put (new_unicode_string ("Three"), 3)
+			Result.put (new_unicode_string ("Four"), 4)
+			Result.put (new_unicode_string ("Five"), 5)
+			Result.put (new_unicode_string ("Six"), 6)
+			Result.put (new_unicode_string ("Seven"), 7)
+			Result.put (new_unicode_string ("Eight"), 8)
+			Result.put (new_unicode_string ("Nine"), 9)
+			Result.put (new_unicode_string ("Ten"), 10)
+			Result.put (new_unicode_string ("Eleven"), 11)
+			Result.put (new_unicode_string ("Twelve"), 12)
+			Result.put (new_unicode_string ("Thirteen"), 13)
+			Result.put (new_unicode_string ("Fourteen"), 14)
+			Result.put (new_unicode_string ("Fifteen"), 15)
+			Result.put (new_unicode_string ("Sixteen"), 16)
+			Result.put (new_unicode_string ("Seventeen"), 17)
+			Result.put (new_unicode_string ("Eighteen"), 18)
+			Result.put (new_unicode_string ("Nineteen"), 19)
 		ensure
 			ten_numbers: Result /= Void and then Result.count = 19
 		end
@@ -601,16 +619,16 @@ feature {NONE} -- Implementation
 			-- English ordinal words for tens
 		once
 			create Result.make (0, 9)
-			Result.put ("", 0)
-			Result.put ("Tenth", 1)
-			Result.put ("Twentieth", 2)
-			Result.put ("Thirtieth", 3)
-			Result.put ("Fortieth", 4)
-			Result.put ("Fiftieth", 5)
-			Result.put ("Sixtieth", 6)
-			Result.put ("Seventieth", 7)
-			Result.put ("Eightieth", 8)
-			Result.put ("Ninetieth", 9)
+			Result.put (new_unicode_string_empty, 0)
+			Result.put (new_unicode_string ("Tenth"), 1)
+			Result.put (new_unicode_string ("Twentieth"), 2)
+			Result.put (new_unicode_string ("Thirtieth"), 3)
+			Result.put (new_unicode_string ("Fortieth"), 4)
+			Result.put (new_unicode_string ("Fiftieth"), 5)
+			Result.put (new_unicode_string ("Sixtieth"), 6)
+			Result.put (new_unicode_string ("Seventieth"), 7)
+			Result.put (new_unicode_string ("Eightieth"), 8)
+			Result.put (new_unicode_string ("Ninetieth"), 9)
 		ensure
 			ten_numbers: Result /= Void and then Result.count = 10
 		end
@@ -619,25 +637,25 @@ feature {NONE} -- Implementation
 			-- English ordinal words for units and teens
 		once
 			create Result.make (1, 19)
-			Result.put ("First", 1)
-			Result.put ("Second", 2)
-			Result.put ("Third", 3)
-			Result.put ("Fourth", 4)
-			Result.put ("Fifth", 5)
-			Result.put ("Sixth", 6)
-			Result.put ("Seventh", 7)
-			Result.put ("Eighth", 8)
-			Result.put ("Ninth", 9)
-			Result.put ("Tenth", 10)
-			Result.put ("Eleventh", 11)
-			Result.put ("Twelfth", 12)
-			Result.put ("Thirteenth", 13)
-			Result.put ("Fourteenth", 14)
-			Result.put ("Fifteenth", 15)
-			Result.put ("Sixteenth", 16)
-			Result.put ("Seventeenth", 17)
-			Result.put ("Eighteenth", 18)
-			Result.put ("Nineteenth", 19)
+			Result.put (new_unicode_string ("First"), 1)
+			Result.put (new_unicode_string ("Second"), 2)
+			Result.put (new_unicode_string ("Third"), 3)
+			Result.put (new_unicode_string ("Fourth"), 4)
+			Result.put (new_unicode_string ("Fifth"), 5)
+			Result.put (new_unicode_string ("Sixth"), 6)
+			Result.put (new_unicode_string ("Seventh"), 7)
+			Result.put (new_unicode_string ("Eighth"), 8)
+			Result.put (new_unicode_string ("Ninth"), 9)
+			Result.put (new_unicode_string ("Tenth"), 10)
+			Result.put (new_unicode_string ("Eleventh"), 11)
+			Result.put (new_unicode_string ("Twelfth"), 12)
+			Result.put (new_unicode_string ("Thirteenth"), 13)
+			Result.put (new_unicode_string ("Fourteenth"), 14)
+			Result.put (new_unicode_string ("Fifteenth"), 15)
+			Result.put (new_unicode_string ("Sixteenth"), 16)
+			Result.put (new_unicode_string ("Seventeenth"), 17)
+			Result.put (new_unicode_string ("Eighteenth"), 18)
+			Result.put (new_unicode_string ("Nineteenth"), 19)
 		ensure
 			ten_numbers: Result /= Void and then Result.count = 19
 		end
@@ -646,18 +664,18 @@ feature {NONE} -- Implementation
 			-- English names for months
 		once
 			create Result.make (1, 12)
-			Result.put ("January", 1)
-			Result.put ("February", 2)
-			Result.put ("March", 3)
-			Result.put ("April", 4)
-			Result.put ("May", 5)
-			Result.put ("June", 6)
-			Result.put ("July", 7)
-			Result.put ("August", 8)
-			Result.put ("September", 9)
-			Result.put ("October", 10)
-			Result.put ("November", 11)
-			Result.put ("December", 12)
+			Result.put (new_unicode_string ("January"), 1)
+			Result.put (new_unicode_string ("February"), 2)
+			Result.put (new_unicode_string ("March"), 3)
+			Result.put (new_unicode_string ("April"), 4)
+			Result.put (new_unicode_string ("May"), 5)
+			Result.put (new_unicode_string ("June"), 6)
+			Result.put (new_unicode_string ("July"), 7)
+			Result.put (new_unicode_string ("August"), 8)
+			Result.put (new_unicode_string ("September"), 9)
+			Result.put (new_unicode_string ("October"), 10)
+			Result.put (new_unicode_string ("November"), 11)
+			Result.put (new_unicode_string ("December"), 12)
 		ensure
 			twelve_months: Result /= Void and then Result.count = 12
 		end
@@ -666,13 +684,13 @@ feature {NONE} -- Implementation
 			-- English names for days
 		once
 			create Result.make (1, 7)
-			Result.put ("Sunday", 7)
-			Result.put ("Monday", 1)
-			Result.put ("Tuesday", 2)
-			Result.put ("Wednesday", 3)
-			Result.put ("Thursday", 4)
-			Result.put ("Friday", 5)
-			Result.put ("Saturday", 6)
+			Result.put (new_unicode_string ("Sunday"), 7)
+			Result.put (new_unicode_string ("Monday"), 1)
+			Result.put (new_unicode_string ("Tuesday"), 2)
+			Result.put (new_unicode_string ("Wednesday"), 3)
+			Result.put (new_unicode_string ("Thursday"), 4)
+			Result.put (new_unicode_string ("Friday"), 5)
+			Result.put (new_unicode_string ("Saturday"), 6)
 		ensure
 			seven_days: Result /= Void and then Result.count = 7
 		end
@@ -681,13 +699,13 @@ feature {NONE} -- Implementation
 			-- Abbreviated English names for days
 		once
 			create Result.make (1, 7)
-			Result.put ("Sun", 7)
-			Result.put ("Mon", 1)
-			Result.put ("Tues", 2)
-			Result.put ("Weds", 3)
-			Result.put ("Thurs", 4)
-			Result.put ("Fri", 5)
-			Result.put ("Sat", 6)
+			Result.put (new_unicode_string ("Sun"), 7)
+			Result.put (new_unicode_string ("Mon"), 1)
+			Result.put (new_unicode_string ("Tues"), 2)
+			Result.put (new_unicode_string ("Weds"), 3)
+			Result.put (new_unicode_string ("Thurs"), 4)
+			Result.put (new_unicode_string ("Fri"), 5)
+			Result.put (new_unicode_string ("Sat"), 6)
 		ensure
 			seven_days: Result /= Void and then Result.count = 7
 		end
@@ -702,18 +720,18 @@ feature {NONE} -- Implementation
 			a_penultimate := (a_number \\ Hundred).to_integer // 10
 			an_ultimate := (a_number \\ Ten).to_integer
 			if a_penultimate = 1 then
-				Result := "th"
+				Result := new_unicode_string ("th")
 			else
 				inspect
 					an_ultimate
 				when 1 then
-					Result := "st"
+					Result := new_unicode_string ("st")
 				when 2 then
-					Result := "nd"
+					Result := new_unicode_string ("nd")
 				when 3 then
-					Result := "rd"
+					Result := new_unicode_string ("rd")
 				else
-					Result := "th"
+					Result := new_unicode_string ("th")
 				end
 			end
 		ensure

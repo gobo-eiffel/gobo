@@ -196,15 +196,15 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
-			a_reservoir: like reservoir
+			l_reservoir: like reservoir
 		do
 			last_iterator := Void
 			if is_node_sequence then
-				a_reservoir := node_reservoir
+				l_reservoir := node_reservoir
 			else
-				a_reservoir := reservoir
+				l_reservoir := reservoir
 			end
-			if a_reservoir.count > 0 then
+			if l_reservoir.count > 0 then
 				if input_iterator.is_error then
 					last_iterator := input_iterator
 				elseif input_iterator /= Void and then input_iterator.after then
@@ -241,8 +241,7 @@ feature -- Evaluation
 						create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (reservoir)
 					end
 				when Busy_state then
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Attempt to access a lazily-evaluated variable while it is being evaluated",
-																											 Gexslt_eiffel_type_uri, "BUSY_CLOSURE", Dynamic_error)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Attempting to access a variable while it is being evaluated", Xpath_errors_uri, "XTDE0640", Dynamic_error)
 					check
 						busy_memo_closure: False
 						-- BUG
@@ -253,8 +252,35 @@ feature -- Evaluation
 
 	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			l_error: XM_XPATH_ERROR_VALUE
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_receiver: XM_XPATH_SEQUENCE_RECEIVER
 		do
-			todo ("process", False)
+			if state = Busy_state then
+				create l_error.make_from_string ("Attempting to access a variable while it is being evaluated", Xpath_errors_uri, "XTDE0640", Dynamic_error)
+				a_context.report_fatal_error (l_error)
+			else
+				create_iterator (a_context)
+				if last_iterator.is_error then
+					a_context.report_fatal_error (last_iterator.error_value)
+				else
+					l_receiver := a_context.current_receiver
+					from
+						l_iterator := last_iterator
+						l_iterator.start
+					until
+						l_iterator.is_error or l_iterator.after
+					loop
+						if l_iterator.is_error then
+							a_context.report_fatal_error (l_iterator.error_value)
+						else
+							l_receiver.append_item (l_iterator.item)
+							l_iterator.forth
+						end
+					end
+				end
+			end
 		end
 
 feature {XM_XPATH_MEMO_CLOSURE, XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR} -- Restricted
@@ -266,6 +292,7 @@ feature {XM_XPATH_MEMO_CLOSURE, XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESS
 	Maybe_more_state: INTEGER is 2
 	All_read_state: INTEGER is 3
 	Busy_state: INTEGER is 4
+			-- TODO - optimize by adding Empty_state
 
 feature {XM_XPATH_MEMO_CLOSURE} -- Local
 

@@ -4,7 +4,7 @@ indexing
 
 		"Objects that parse XSLT patterns and XPath sequence types"
 
-	library: "Gobo Eiffel XPath Library"
+	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -19,17 +19,7 @@ inherit
 			check_valid_function
 		end
 
-	XM_XSLT_SHARED_ANY_NODE_TEST
-		export {NONE} all end
-
-	XM_XSLT_SHARED_NO_NODE_TEST
-		export {NONE} all end
-
-	XM_XPATH_SHARED_NO_NODE_TEST
-		export {NONE} all end
-
-	XM_XPATH_DEBUGGING_ROUTINES
-		export {NONE} all end
+	XM_XSLT_PATTERN_ROUTINES
 
 	-- TODO: Add XSLT Pattern as host language
 create
@@ -511,7 +501,7 @@ feature {NONE} -- Implementation
 			create l_step.make (environment)
 			parse_node_test (a_principal_node_type)
 			if not is_parse_error then
-				l_node_test := xpath_to_xslt_node_test (internal_last_parsed_node_test)
+				l_node_test := xpath_to_xslt_node_test (internal_last_parsed_node_test, environment)
 				if l_node_test = any_xslt_node_test then
 					
 					-- handle node() and @node() specially
@@ -585,34 +575,6 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end
-
-	xpath_to_xslt_node_test (an_xpath_node_test: XM_XPATH_NODE_TEST): XM_XSLT_NODE_TEST is
-			-- XSLT node-test-pattern from an XPath node-test
-		require
-			node_test_not_void: an_xpath_node_test /= Void
-		do
-			if an_xpath_node_test = any_node_test then
-				Result := any_xslt_node_test
-			elseif an_xpath_node_test = empty_item then
-				Result := xslt_empty_item
-			elseif an_xpath_node_test.is_combined_node_test then
-					todo ("xpath_to_xslt_node_test - combined node test", True)
-			elseif an_xpath_node_test.is_content_test then
-				todo ("xpath_to_xslt_node_test - content type test", True)
-			elseif an_xpath_node_test.is_local_name_test then
-				todo ("xpath_to_xslt_node_test - local name test", True)
-			elseif an_xpath_node_test.is_namespace_test then
-				create  {XM_XSLT_NAMESPACE_TEST} Result.make (environment, an_xpath_node_test.as_namespace_test.node_kind, shared_name_pool.uri_from_uri_code(an_xpath_node_test.as_namespace_test.uri_code), an_xpath_node_test.as_namespace_test.original_text)
-			elseif an_xpath_node_test.is_name_test then
-				create {XM_XSLT_NAME_TEST} Result.make (environment, an_xpath_node_test.as_name_test.node_kind, an_xpath_node_test.as_name_test.fingerprint, an_xpath_node_test.as_name_test.original_text)
-			elseif an_xpath_node_test.is_node_kind_test then
-				create {XM_XSLT_NODE_KIND_TEST} Result.make (environment, an_xpath_node_test.as_node_kind_test.node_kind)
-			else
-				todo ("xpath_to_xslt_node_test - unknown test", True)
-			end
-		ensure
-			xslt_node_test_not_void: Result /= Void
 		end
 
 	check_valid_function (a_function: XM_XPATH_EXPRESSION) is

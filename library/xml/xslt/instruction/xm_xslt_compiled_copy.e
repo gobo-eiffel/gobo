@@ -175,18 +175,34 @@ feature {NONE} -- Implementation
 			transformer_not_void: a_transformer /= Void
 			receiver_not_void: a_receiver /= Void
 		local
-			a_validator: XM_XPATH_RECEIVER
+			l_validator: XM_XPATH_RECEIVER
+			l_complex_content: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
+			l_nested: BOOLEAN
 		do
-
-			-- TODO: add a document node to the result sequence (copying it only if necessary?)
-
-			a_validator := a_transformer.configuration.document_validator (a_receiver,
+			l_validator := a_transformer.configuration.document_validator (a_receiver,
 																								 a_document.base_uri,
 																								 validation_action)
-			if a_validator /= a_receiver then
+			if l_validator /= a_receiver then
 				todo ("copy_document (validation)", True)
 			end
+
+			l_nested := a_receiver.is_document_started
+			if l_nested then
+				l_complex_content ?= a_receiver
+				check
+					nested_document: l_complex_content /= Void
+					-- Logic of cluster
+				end
+				l_complex_content.start_nested_document
+			else
+				a_receiver.start_document
+			end
 			content.generate_events (a_context)
+			if l_nested then
+				l_complex_content.end_nested_document
+			else
+				a_receiver.end_document
+			end
 		end
 
 end

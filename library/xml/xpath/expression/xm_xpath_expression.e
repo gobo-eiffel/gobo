@@ -159,6 +159,24 @@ feature -- Access
 		deferred
 		end
 
+	is_untyped_atomic_converter: BOOLEAN is
+			-- Is `Current' an `XM_XPATH_UNTYPED_ATOMIC_CONVERTER'?
+		do
+			Result := False
+		end
+
+	is_block: BOOLEAN is
+			-- Is `Current' an `XM_XSLT_BLOCK'?
+		do
+			Result := False
+		end
+
+	is_value_of: BOOLEAN is
+			-- Is `Current' an `XM_XSLT_COMPILED_VALUE_OF'?
+		do
+			Result := False
+		end
+
 	is_current_function: BOOLEAN is
 			-- Is `Current' the XSLT "current()" function?
 		do
