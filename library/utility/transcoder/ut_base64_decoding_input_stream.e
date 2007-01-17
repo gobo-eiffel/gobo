@@ -63,7 +63,6 @@ feature -- Input
 					i := nb + 1 -- Jump out of the loop.
 				end
 			end
-			end_of_input := (last_string.count = 0)
 		end
 
 	read_character is
@@ -248,41 +247,45 @@ feature {NONE} -- Implementation
 					-- Fill `codes' with four 6-bit values.
 				triplet_position := 1
 				from i := 1 until i > 4 loop
+					check
+						not_end_of_input:
+							not base_stream.end_of_input
+					end
 					base_stream.read_character
 					if base_stream.end_of_input then
 						if i = 1 then
 							end_of_input := True
 							i := 5 -- Jump out of the loop.
 						else
-								-- Invalid base64 stream.
+							-- Invalid base64 stream.
 							end_of_input := True
 							i := 5 -- Jump out of the loop.
 						end
 					else
 						c := base_stream.last_character
 						if c = '=' then
-								-- Note: RFC 2045 says "Because it is used only for padding
-								-- at the end of the data, the occurrence of any '=' characters
-								-- may be taken as evidence that the end of the data has
-								-- been reached (without truncation in transit)."
+							-- Note: RFC 2045 says "Because it is used only for padding
+							-- at the end of the data, the occurrence of any '=' characters
+							-- may be taken as evidence that the end of the data has
+							-- been reached (without truncation in transit)."
 							equal_sign_read := True
 							inspect i
 							when 1 then
-									-- Invalid base64 stream: =***.
+								-- Invalid base64 stream: =***.
 								end_of_input := True
 								i := 5 -- Jump out of the loop.
 							when 2 then
-									-- Invalid base64 stream: *=**
+								-- Invalid base64 stream: *=**
 								end_of_input := True
 								i := 5 -- Jump out of the loop.
 							when 3 then
-									-- Valid base64 stream: **==
-									-- Read second =.
+								-- Valid base64 stream: **==
+								-- Read second =.
 								base_stream.read_character
 								triplet_position := 3
 								i := 5 -- Jump out of the loop.
 							when 4 then
-									-- Valid base64 stream: ***=
+								-- Valid base64 stream: ***=
 								triplet_position := 2
 								i := 5 -- Jump out of the loop.
 							end
@@ -301,7 +304,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if not end_of_input then
-						-- Bit-shift `codes' into 3 characters.
+					-- Bit-shift `codes' into 3 characters.
 					a_code := (codes.item (1) * shift_2_bits) + (codes.item (2) // shift_4_bits)
 					decoded_triplet.put (INTEGER_.to_character (a_code), triplet_position)
 					if triplet_position < 3 then
