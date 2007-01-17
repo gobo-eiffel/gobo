@@ -109,7 +109,8 @@ feature -- Access/XML attribute values
 			Result := xml_element.attribute_by_name (an_attr_name).value
 			if Result.count > 0 then
 				create a_string_interpreter.make
-					-- Search variable in arguments if any (TODO: make this more efficient):
+					-- Search variable in arguments if any (TODO: make this more efficient)
+					-- (NOTE: checking that the stack is not empty is only needed for GEANT startup):
 				if target_arguments_stack.count > 0 then
 					create a_variable_resolver.make
 					a_string_interpreter.set_variable_resolver (a_variable_resolver)
@@ -131,10 +132,7 @@ feature -- Access/XML attribute values
 			a_string_interpreter: GEANT_STRING_INTERPRETER
 		do
 			if xml_element.has_attribute_by_name (an_attr_name) then
-				create a_string_interpreter.make
-				Project_variables_resolver.set_variables (project.variables)
-				a_string_interpreter.set_variable_resolver (Project_variables_resolver)
-				Result := a_string_interpreter.interpreted_string (xml_element.attribute_by_name (an_attr_name).value)
+				Result := attribute_value (an_attr_name)
 			else
 				Result := a_default_value
 			end
