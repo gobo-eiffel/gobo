@@ -98,11 +98,11 @@ feature -- Access
 
 				if target_arguments_stack.count > 0 then
 
-					Target_arguments_stack.item.search (a_name)
+					target_arguments_stack.item.search (a_name)
 
-					if Target_arguments_stack.item.found then
+					if target_arguments_stack.item.found then
 
-						Result := Target_arguments_stack.item.found_item
+						Result := target_arguments_stack.item.found_item
 
 					end
 
@@ -298,9 +298,9 @@ feature -- Status report
 
 				if target_arguments_stack.count > 0 then
 
-					Target_arguments_stack.item.search (a_name)
+					target_arguments_stack.item.search (a_name)
 
-					Result := Target_arguments_stack.item.found
+					Result := target_arguments_stack.item.found
 
 				end
 
