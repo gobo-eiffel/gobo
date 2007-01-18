@@ -30,9 +30,11 @@ feature -- Status report
 		do
 			Result := (match /= Void and then match.count > 0)
 					xor	(token /= Void and then token.count > 0)
+					xor (variable_pattern /= Void and then variable_pattern.count > 0)
 		ensure
-			param_not_void: Result implies (match /= Void or token /= Void)
-			param_not_empty: Result implies (match /= Void and then match.count > 0) or (token /= Void and then token.count > 0)
+			param_not_void: Result implies (match /= Void or token /= Void or variable_pattern /= Void)
+			param_not_empty: Result implies (match /= Void and then match.count > 0) or (token /= Void and then token.count > 0) or
+				(variable_pattern /= Void and then variable_pattern.count > 0)
 		end
 
 	is_file_to_file_executable: BOOLEAN is
@@ -69,6 +71,9 @@ feature -- Access
 
 	token: STRING
 			-- Token to be replaced by `replace'
+
+	variable_pattern: STRING
+			-- Pattern for variables to be replaced by their values, '_' as a placeholder for the name
 
 	match: STRING
 			-- Pattern to be replaced by `replace'
@@ -127,7 +132,7 @@ feature -- Setting
 		end
 
 	set_token (a_token: like token) is
-			-- Set `token' to `a_match'.
+			-- Set `token' to `a_token'.
 		require
 			a_token_not_void: a_token /= Void
 			a_token_not_empty: a_token.count > 0
@@ -135,6 +140,17 @@ feature -- Setting
 			token := a_token
 		ensure
 			token_set: token = a_token
+		end
+
+	set_variable_pattern (a_variable_pattern: like variable_pattern) is
+			-- Set `variable_pattern' to `a_variable_pattern'.
+		require
+			a_variable_pattern_not_void: a_variable_pattern /= Void
+			a_variable_pattern_not_empty: a_variable_pattern.count > 0
+		do
+			variable_pattern := a_variable_pattern
+		ensure
+			variable_pattern_set: variable_pattern = a_variable_pattern
 		end
 
 	set_match (a_match: like match) is
@@ -236,10 +252,89 @@ feature -- Execution
 			if l_to_filename = Void then
 				l_to_filename := a_filename
 			end
-			if match /= Void and then match.count > 0 then
+			if variable_pattern /= Void and then variable_pattern.count > 0 then
+				execute_replace_variable_pattern (a_filename, l_to_filename)
+			elseif match /= Void and then match.count > 0 then
 				execute_replace_regexp (a_filename, l_to_filename)
 			elseif token /= Void and then token.count > 0 then
 				execute_replace_token (a_filename, l_to_filename)
+			end
+		end
+
+	execute_replace_variable_pattern (a_filename, a_to_filename: like file) is
+			-- Replace variables on the basis of the variable pattern
+		require
+			a_filename_nod_void: a_filename /= Void
+			a_to_filename_nod_void: a_to_filename /= Void
+			variable_pattern_valid: variable_pattern /= Void and then variable_pattern.count > 0
+			not_match: match = Void
+		local
+			a_from_file: KL_TEXT_INPUT_FILE
+			a_to_file: KL_TEXT_OUTPUT_FILE
+
+			a_prefix: STRING
+			a_postfix: STRING
+			i,pos,file_count: INTEGER
+			s: STRING
+		do
+			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" variable_pattern=", variable_pattern >>)
+
+			if not file_system.file_exists (a_filename) then
+				project.log (<<"  [replace] error: file %"" + a_filename + "%" does not exists">>)
+				exit_code := 1
+			end
+
+			if exit_code = 0 then
+				i := variable_pattern.occurrences (placeholder_character)
+				if i = 0 then
+					project.log (<<"  [replace] error: variable_pattern is missing a %"" + placeholder_character.out + "%" character">>)
+					exit_code := 1
+				end
+				if i > 1 then
+					project.log (<<"  [replace] error: variable_pattern has more then one %"" + placeholder_character.out + "%" character">>)
+					exit_code := 1
+				end
+			end
+			if exit_code = 0 then
+				a_prefix := variable_pattern.substring (1, pos-1)
+				a_postfix := variable_pattern.substring (pos+1, variable_pattern.count)
+
+				if not file_system.file_exists (a_filename) then
+					project.log (<<"  [replace] error: file %"" + a_filename + "%" does not exists">>)
+					exit_code := 1
+				else
+					a_from_file := tmp_input_file
+					a_from_file.reset (a_filename)
+					file_count := a_from_file.count
+					a_from_file.open_read
+					if not a_from_file.is_open_read then
+						project.log (<<"  [replace] error: file %"" + a_filename + "%" is not readable">>)
+						exit_code := 1
+					else
+						a_from_file.read_string (file_count)
+						s := a_from_file.last_string
+						a_from_file.close
+						a_from_file := Void
+
+						a_to_file := tmp_output_file
+						a_to_file.reset (a_to_filename)
+						a_to_file.open_write
+						if not a_to_file.is_open_write then
+							project.log (<<"  [replace] error: file %"" + a_to_file.name + "%" is not writable">>)
+							exit_code := 1
+						else
+							from
+								project.variables.start
+							until project.variables.off loop
+								s := STRING_.replaced_all_substrings (s, a_prefix+project.variables.key_for_iteration+a_postfix,project.variables.item_for_iteration)
+								project.variables.forth
+							end
+							a_to_file.put_string (s)
+							a_to_file.close
+							a_to_file := Void
+						end
+					end
+				end
 			end
 		end
 
@@ -259,6 +354,7 @@ feature -- Execution
 			a_token: STRING
 			a_replace: STRING
 			a_flags: STRING
+			file_count: INTEGER
 		do
 			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" token=", token, " replace=", replace >>)
 
@@ -281,9 +377,10 @@ feature -- Execution
 				else
 					a_from_file := tmp_input_file
 					a_from_file.reset (a_filename)
-					if a_from_file.is_readable then
-						a_from_file.open_read
-						a_from_file.read_string (a_from_file.count)
+					file_count := a_from_file.count
+					a_from_file.open_read
+					if a_from_file.is_open_read then
+						a_from_file.read_string (file_count)
 						s := a_from_file.last_string
 						a_from_file.close
 						a_from_file := Void
@@ -338,6 +435,7 @@ feature -- Execution
 			a_replace: STRING
 			a_flags: STRING
 			a_is_global: BOOLEAN
+			file_count: INTEGER
 
 			regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
@@ -377,8 +475,9 @@ feature -- Execution
 					if regexp.is_compiled then
 						a_from_file := tmp_input_file
 						a_from_file.reset (file)
-						if a_from_file.is_readable then
-							a_from_file.open_read
+						file_count := a_from_file.count
+						a_from_file.open_read
+						if a_from_file.is_open_read then
 							a_from_file.read_string (a_from_file.count)
 							regexp.match (a_from_file.last_string)
 							a_from_file.close
@@ -433,5 +532,7 @@ feature {NONE} -- Implementation
 		end
 
 	dummy_name: STRING is "_dummy_"
+
+	placeholder_character: CHARACTER is '_'
 
 end

@@ -22,7 +22,7 @@
 		<firstname>Jocelyn</firstname><surname>Fiat</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date>18 January 2007</date>
 </chapterinfo>
 
 	<title>replace</title>
@@ -99,6 +99,18 @@
 				</listitem>
 			</varlistentry>			
 			<varlistentry>
+				<term>variable_pattern</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Replace all occurencies of Geant variables</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>a string that contains a single underscore '_', which is replaced by the variable name</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>			
+			<varlistentry>
 				<term>replace</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>Replace `match' or `token' entities by this value. This value can use regexp patterns such as \1\.</para>
@@ -158,6 +170,9 @@
 			<attribute name="match" />
 			<attribute name="replace" />
 		  </group>
+		  <group>
+			<attribute name="variable_pattern" />
+		  </group>
       </choice>
       <optional>
 		<attribute name="flags" />
@@ -178,6 +193,7 @@
   <replace dir="${cwd}" token="123" replace="321" flags="g" >
 	  <fileset include="@(**/*.txt)" />
   </replace>
+  <replace file="in.txt" to_file="out.txt" variable_pattern="${_}"/>
 ]]>
 		</programlisting>
 	</section>
