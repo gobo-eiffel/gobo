@@ -274,7 +274,7 @@ feature -- Execution
 
 			a_prefix: STRING
 			a_postfix: STRING
-			i,pos,a_file_count: INTEGER
+			i,pos: INTEGER
 			s: STRING
 		do
 			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" variable_pattern=", variable_pattern >>)
@@ -305,14 +305,18 @@ feature -- Execution
 				else
 					a_from_file := tmp_input_file
 					a_from_file.reset (a_filename)
-					a_file_count := a_from_file.count
 					a_from_file.open_read
 					if not a_from_file.is_open_read then
 						project.log (<<"  [replace] error: file %"" + a_filename + "%" is not readable">>)
 						exit_code := 1
 					else
-						a_from_file.read_string (a_file_count)
-						s := a_from_file.last_string
+						from
+							create s.make_empty
+							a_from_file.read_string (read_chunk_size)
+						until a_from_file.end_of_file loop
+							s.append_string (a_from_file.last_string)
+							a_from_file.read_string (read_chunk_size)
+						end
 						a_from_file.close
 						a_from_file := Void
 
@@ -354,7 +358,6 @@ feature -- Execution
 			a_token: STRING
 			a_replace: STRING
 			a_flags: STRING
-			a_file_count: INTEGER
 		do
 			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" token=", token, " replace=", replace >>)
 
@@ -377,11 +380,15 @@ feature -- Execution
 				else
 					a_from_file := tmp_input_file
 					a_from_file.reset (a_filename)
-					a_file_count := a_from_file.count
 					a_from_file.open_read
 					if a_from_file.is_open_read then
-						a_from_file.read_string (a_file_count)
-						s := a_from_file.last_string
+						from
+							create s.make_empty
+							a_from_file.read_string (read_chunk_size)
+						until a_from_file.end_of_file loop
+							s.append_string (a_from_file.last_string)
+							a_from_file.read_string (read_chunk_size)
+						end
 						a_from_file.close
 						a_from_file := Void
 
@@ -435,7 +442,6 @@ feature -- Execution
 			a_replace: STRING
 			a_flags: STRING
 			a_is_global: BOOLEAN
-			a_file_count: INTEGER
 
 			regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
@@ -475,11 +481,15 @@ feature -- Execution
 					if regexp.is_compiled then
 						a_from_file := tmp_input_file
 						a_from_file.reset (file)
-						a_file_count := a_from_file.count
 						a_from_file.open_read
 						if a_from_file.is_open_read then
-							a_from_file.read_string (a_from_file.count)
-							regexp.match (a_from_file.last_string)
+							from
+								create s.make_empty
+								a_from_file.read_string (read_chunk_size)
+							until a_from_file.end_of_file loop
+								s.append_string (a_from_file.last_string)
+								a_from_file.read_string (read_chunk_size)
+							end
 							a_from_file.close
 							a_from_file := Void
 
@@ -534,5 +544,7 @@ feature {NONE} -- Implementation
 	dummy_name: STRING is "_dummy_"
 
 	placeholder_character: CHARACTER is '_'
+
+	read_chunk_size: INTEGER is 4096
 
 end
