@@ -62,17 +62,37 @@ feature -- Escape/unescape data characters
 		end
 
 	unescape_utf8 (a_string: STRING): STRING is
-			-- Unescape `a_string', and convert UTF8 encoded result to string.
+			-- Unescaped version of `a_string';
+			-- It is assumed that non-ASCII characters are represented by
+			--  percent-encoding their UTF-8 byte sequence.
 		require
 			a_string_not_void: a_string /= Void
+			ascii_string: maximum_character_code_in_string (a_string) <= 127
+		local
+			l_high_code: INTEGER
 		do
 			Result := unescape_string (a_string)
-			if maximum_character_code_in_string (Result) > 127 and utf8.valid_utf8 (Result) then
-				Result := new_unicode_string_from_utf8 (Result)
+			l_high_code := maximum_character_code_in_string (Result)
+			if l_high_code > 255 then
+				-- Not a (unescaped UTF-8) byte sequence
+				Result := Void
+			elseif l_high_code > 127 then
+				-- Contains UTF-8 bytes
+				if not ANY_.same_types (a_string, "") then
+					-- We need dynamic type of STRING for the test for valid UTF-8
+					Result := Result.string
+				end
+				if utf8.valid_utf8 (Result) then
+					Result := new_unicode_string_from_utf8 (Result)
+				else
+					-- Original string was not an escaped UTF-8 string;
+					-- E.g. A percent-encoded Latin-1 string.
+					Result := Void
+				end
 			end
 		ensure
-			unescape_utf8_not_void: Result /= Void
-			unescape_utf8_cannot_be_larger: Result.count <= a_string.count
+			unescape_utf8_may_be_void: True
+			unescape_utf8_cannot_be_larger: Result /= Void implies Result.count <= a_string.count
 		end
 
 	escape_string (a_string: STRING): STRING is
