@@ -2194,6 +2194,7 @@ feature {NONE} -- Feature generation
 			l_c_code: STRING
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_argument_name: ET_IDENTIFIER
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_name: STRING
 			i, j, nb: INTEGER
 			i2, nb2: INTEGER
@@ -2281,6 +2282,20 @@ feature {NONE} -- Feature generation
 									if l_max_index /= 0 then
 										l_argument_name := l_formal_arguments.formal_argument (l_max_index).name
 										print_argument_name (l_argument_name, current_file)
+											-- Check to see if the argument is declared of type
+											-- 'TYPED_POINTER [XX]'. In that case we use the
+											-- corresponding pointer (first attribute of the object).
+										l_argument_type_set := current_feature.argument_type_set (l_max_index)
+										if l_argument_type_set = Void then
+												-- Internal error: the dynamic type set of the formal
+												-- arguments should have been computed at this stage.
+											set_fatal_error
+											error_handler.report_giaaa_error
+										elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+											current_file.put_character ('.')
+											current_file.put_character ('a')
+											current_file.put_character ('1')
+										end
 										i := i + l_max
 									else
 										current_file.put_character ('$')
@@ -2882,7 +2897,7 @@ feature {NONE} -- Instruction generation
 			l_call := an_instruction.call
 			if l_call.name.is_tuple_label then
 				l_tuple_expression := l_call.target
-				l_target_type_set := current_feature.dynamic_type_set (l_tuple_expression)
+				l_tuple_type_set := current_feature.dynamic_type_set (l_tuple_expression)
 				if l_tuple_type_set = Void then
 						-- Internal error: the dynamic type set of `l_tuple_expression'
 						-- should be known at this stage.
@@ -2912,18 +2927,28 @@ feature {NONE} -- Instruction generation
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
+								print_operand (l_tuple_expression)
 								print_operand (l_source)
+									-- Keep track ot the source operand because the call
+									-- to `print_attribute_tuple_item_access' will empty
+									-- the `call_operands' stack.
 								fill_call_operands (1)
-								print_attribute_tuple_item_access (l_seed, l_tuple_expression, l_tuple_type)
+								l_source := call_operands.first
+								call_operands.wipe_out
+									-- Process the tuple expression operand.
+								fill_call_operands (1)
+								print_indentation
+								print_attribute_tuple_item_access (l_seed, call_operands.first, l_tuple_type)
+								call_operands.wipe_out
 								current_file.put_character (' ')
 								current_file.put_character ('=')
 								current_file.put_character (' ')
 								current_file.put_character ('(')
-								print_attachment_expression (call_operands.first, l_source_type_set, l_target_type_set.static_type)
+									-- Process the saved copy of source operand now.
+								print_attachment_expression (l_source, l_source_type_set, l_target_type_set.static_type)
 								current_file.put_character (')')
 								current_file.put_character (';')
 								current_file.put_new_line
-								call_operands.wipe_out
 							end
 						end
 					end
