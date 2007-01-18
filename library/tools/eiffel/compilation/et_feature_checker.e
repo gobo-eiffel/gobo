@@ -8149,25 +8149,23 @@ feature {NONE} -- Agent validity
 				create a_tuple_type.make (an_open_operands)
 				a_type := a_query.type
 -- TODO: like argument
--- PREDICATE is not supported in ISE Eiffel and it is a user-define class
--- at AXA Rosenberg.
---				if
---					universe.predicate_class.is_preparsed and then
---					a_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
---				then
---					an_agent_class := universe.predicate_class
---					create a_parameters.make_with_capacity (2)
---					a_parameters.put_first (a_tuple_type)
---					a_parameters.put_first (current_type)
---					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---				else
+				if
+					universe.predicate_class.is_preparsed and then
+					a_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
+				then
+					an_agent_class := universe.predicate_class
+					create a_parameters.make_with_capacity (2)
+					a_parameters.put_first (a_tuple_type)
+					a_parameters.put_first (current_type)
+					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+				else
 					an_agent_class := universe.function_class
 					create a_parameters.make_with_capacity (3)
 					a_parameters.put_first (a_type)
 					a_parameters.put_first (a_tuple_type)
 					a_parameters.put_first (current_type)
 					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---				end
+				end
 			end
 			report_unqualified_query_agent (an_expression, a_query, an_agent_type, a_context)
 			a_context.force_last (an_agent_type)
@@ -8528,25 +8526,23 @@ feature {NONE} -- Agent validity
 				create a_tuple_type.make (an_open_operands)
 				a_type := a_query.type
 -- TODO: like argument
--- PREDICATE is not supported in ISE Eiffel and it is a user-define class
--- at AXA Rosenberg.
---				if
---					universe.predicate_class.is_preparsed and then
---					a_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
---				then
---					an_agent_class := universe.predicate_class
---					create a_parameters.make_with_capacity (2)
---					a_parameters.put_first (a_tuple_type)
---					a_parameters.put_first (a_target_type)
---					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---				else
+				if
+					universe.predicate_class.is_preparsed and then
+					a_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
+				then
+					an_agent_class := universe.predicate_class
+					create a_parameters.make_with_capacity (2)
+					a_parameters.put_first (a_tuple_type)
+					a_parameters.put_first (a_target_type)
+					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+				else
 					an_agent_class := universe.function_class
 					create a_parameters.make_with_capacity (3)
 					a_parameters.put_first (a_type)
 					a_parameters.put_first (a_tuple_type)
 					a_parameters.put_first (a_target_type)
 					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---				end
+				end
 				report_qualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -8664,25 +8660,23 @@ feature {NONE} -- Agent validity
 			else
 				l_type := a_context.base_type_actual (l_index, universe)
 				l_target_type := tokens.like_current
--- PREDICATE is not supported in ISE Eiffel and it is a user-define class
--- at AXA Rosenberg.
---				if
---					universe.predicate_class.is_preparsed and then
---					l_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
---				then
---					l_agent_class := universe.predicate_class
---					create l_parameters.make_with_capacity (2)
---					l_parameters.put_first (universe.tuple_class)
---					l_parameters.put_first (l_target_type)
---					create l_agent_type.make (Void, l_agent_class.name, l_parameters, l_agent_class)
---				else
+				if
+					universe.predicate_class.is_preparsed and then
+					l_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
+				then
+					l_agent_class := universe.predicate_class
+					create l_parameters.make_with_capacity (2)
+					l_parameters.put_first (universe.tuple_class)
+					l_parameters.put_first (l_target_type)
+					create l_agent_type.make (Void, l_agent_class.name, l_parameters, l_agent_class)
+				else
 					l_agent_class := universe.function_class
 					create l_parameters.make_with_capacity (3)
 					l_parameters.put_first (l_type)
 					l_parameters.put_first (universe.tuple_type)
 					l_parameters.put_first (l_target_type)
 					create l_agent_type.make (Void, l_agent_class.name, l_parameters, l_agent_class)
---				end
+				end
 				report_tuple_label_call_agent (an_expression, l_agent_type, a_context)
 				a_context.force_last (l_agent_type)
 			end
@@ -8993,25 +8987,23 @@ feature {NONE} -- Agent validity
 				create a_tuple_type.make (an_open_operands)
 				a_result_type := a_query.type
 -- TODO: like argument
--- PREDICATE is not supported in ISE Eiffel and it is a user-define class
--- at AXA Rosenberg.
---				if
---					universe.predicate_class.is_preparsed and then
---					a_result_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
---				then
---					an_agent_class := universe.predicate_class
---					create a_parameters.make_with_capacity (2)
---					a_parameters.put_first (a_tuple_type)
---					a_parameters.put_first (a_target_type)
---					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---				else
+				if
+					universe.predicate_class.is_preparsed and then
+					a_result_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
+				then
+					an_agent_class := universe.predicate_class
+					create a_parameters.make_with_capacity (2)
+					a_parameters.put_first (a_tuple_type)
+					a_parameters.put_first (a_target_type)
+					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+				else
 					an_agent_class := universe.function_class
 					create a_parameters.make_with_capacity (3)
 					a_parameters.put_first (a_result_type)
 					a_parameters.put_first (a_tuple_type)
 					a_parameters.put_first (a_target_type)
 					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---				end
+				end
 				report_qualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -9137,25 +9129,23 @@ feature {NONE} -- Agent validity
 				create l_open_operands.make_with_capacity (1)
 				l_open_operands.put_first (l_target_type)
 				create l_tuple_type.make (l_open_operands)
--- PREDICATE is not supported in ISE Eiffel and it is a user-define class
--- at AXA Rosenberg.
---				if
---					universe.predicate_class.is_preparsed and then
---					l_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
---				then
---					l_agent_class := universe.predicate_class
---					create l_parameters.make_with_capacity (2)
---					l_parameters.put_first (l_tuple_type)
---					l_parameters.put_first (l_target_type)
---					create l_agent_type.make (Void, l_agent_class.name, l_parameters, l_agent_class)
---				else
+				if
+					universe.predicate_class.is_preparsed and then
+					l_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
+				then
+					l_agent_class := universe.predicate_class
+					create l_parameters.make_with_capacity (2)
+					l_parameters.put_first (l_tuple_type)
+					l_parameters.put_first (l_target_type)
+					create l_agent_type.make (Void, l_agent_class.name, l_parameters, l_agent_class)
+				else
 					l_agent_class := universe.function_class
 					create l_parameters.make_with_capacity (3)
 					l_parameters.put_first (l_type)
 					l_parameters.put_first (l_tuple_type)
 					l_parameters.put_first (l_target_type)
 					create l_agent_type.make (Void, l_agent_class.name, l_parameters, l_agent_class)
---				end
+				end
 				report_tuple_label_call_agent (an_expression, l_agent_type, a_context)
 				a_context.force_last (l_agent_type)
 			end
@@ -9176,7 +9166,7 @@ feature {NONE} -- Agent validity
 			l_procedure: ET_PROCEDURE
 			l_query: ET_QUERY
 		do
--- TODO		check_inline_agent_feature_validity (an_expression.associated_feature, current_type)
+			check_inline_agent_feature_validity (an_expression.associated_feature, current_type)
 			if not has_fatal_error then
 				if current_class_impl = current_class then
 						-- Make implicit open arguments explicit.
