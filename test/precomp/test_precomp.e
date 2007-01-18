@@ -41,7 +41,11 @@ feature -- Test
 			end
 		end
 
-	test_ise_base is
+-- This test does not work anymore with ISE 5.7 because of the
+-- introduction of ECF which does not take the 'exclude' clause
+-- in the 'base' cluster into account when converting the Ace
+-- file to ECF.
+	xxtest_ise_base is
 			-- Test precompilation with ISE Eiffel using Gobo's
 			-- EiffelBase emulation instead of ISE's EiffelBase.
 		do
@@ -118,6 +122,7 @@ feature {NONE} -- Precompilation
 				-- Make sure that there is not left-over from
 				-- previous precompilation.
 			assert ("EIFGEN_not_exists", not file_system.directory_exists ("EIFGEN"))
+			assert ("EIFGENs_not_exists", not file_system.directory_exists ("EIFGENs"))
 				-- Generate Ace file.
 			if base then
 				if dotnet /= Void and then dotnet.count > 0 then
