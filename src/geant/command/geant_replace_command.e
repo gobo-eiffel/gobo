@@ -274,7 +274,7 @@ feature -- Execution
 
 			a_prefix: STRING
 			a_postfix: STRING
-			i,pos,file_count: INTEGER
+			i,pos,a_file_count: INTEGER
 			s: STRING
 		do
 			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" variable_pattern=", variable_pattern >>)
@@ -305,13 +305,13 @@ feature -- Execution
 				else
 					a_from_file := tmp_input_file
 					a_from_file.reset (a_filename)
-					file_count := a_from_file.count
+					a_file_count := a_from_file.count
 					a_from_file.open_read
 					if not a_from_file.is_open_read then
 						project.log (<<"  [replace] error: file %"" + a_filename + "%" is not readable">>)
 						exit_code := 1
 					else
-						a_from_file.read_string (file_count)
+						a_from_file.read_string (a_file_count)
 						s := a_from_file.last_string
 						a_from_file.close
 						a_from_file := Void
@@ -354,7 +354,7 @@ feature -- Execution
 			a_token: STRING
 			a_replace: STRING
 			a_flags: STRING
-			file_count: INTEGER
+			a_file_count: INTEGER
 		do
 			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" token=", token, " replace=", replace >>)
 
@@ -377,10 +377,10 @@ feature -- Execution
 				else
 					a_from_file := tmp_input_file
 					a_from_file.reset (a_filename)
-					file_count := a_from_file.count
+					a_file_count := a_from_file.count
 					a_from_file.open_read
 					if a_from_file.is_open_read then
-						a_from_file.read_string (file_count)
+						a_from_file.read_string (a_file_count)
 						s := a_from_file.last_string
 						a_from_file.close
 						a_from_file := Void
@@ -435,7 +435,7 @@ feature -- Execution
 			a_replace: STRING
 			a_flags: STRING
 			a_is_global: BOOLEAN
-			file_count: INTEGER
+			a_file_count: INTEGER
 
 			regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
@@ -475,7 +475,7 @@ feature -- Execution
 					if regexp.is_compiled then
 						a_from_file := tmp_input_file
 						a_from_file.reset (file)
-						file_count := a_from_file.count
+						a_file_count := a_from_file.count
 						a_from_file.open_read
 						if a_from_file.is_open_read then
 							a_from_file.read_string (a_from_file.count)
