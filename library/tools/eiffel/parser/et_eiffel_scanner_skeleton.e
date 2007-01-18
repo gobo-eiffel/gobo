@@ -1371,7 +1371,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 't', 'T' then
 									last_token := E_AGENT
-									last_et_keyword_value := ast_factory.new_agent_keyword (Current)
+									last_et_agent_keyword_value := ast_factory.new_agent_keyword (Current)
 								else
 									-- Do nothing.
 								end
