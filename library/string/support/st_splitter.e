@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			set_separators (Default_separators)
 		ensure
-			default_separators: separators = Default_separators 
+			default_separators: separators = Default_separators
 			no_escape_character: not has_escape_character
 		end
 
@@ -39,8 +39,6 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 			a_string_not_empty: not a_string.is_empty
-			escape_character_not_separator: has_escape_character implies
-				not a_string.has (escape_character)
 		do
 			set_separators (a_string)
 		ensure
@@ -58,12 +56,12 @@ feature -- Access
 
 	escape_character: CHARACTER
 			-- Escape character
-			-- (When in an input string, it is removed and replaced 
-			-- with the character following it. This following 
+			-- (When in an input string, it is removed and replaced
+			-- with the character following it. This following
 			-- character is not treated as a separator.)
 
 	Default_separators: STRING is " %T%R%N"
-			-- Space, Tab, CR, Newline 
+			-- Space, Tab, CR, Newline
 
 feature -- Setting
 
@@ -130,7 +128,7 @@ feature -- Status report
 			end
 		ensure
 			definition_empty: a_linear.is_empty implies not Result
-			definition_for_first: a_linear.count > 0 
+			definition_for_first: a_linear.count > 0
 				implies (a_linear.first.is_empty implies Result)
 		end
 
@@ -152,13 +150,13 @@ feature -- Operation(s)
 			no_empty_item: not has_empty (Result)
 			count_ceiling: Result.count <= a_string.count // 2 + 1
 			last_escape_character_verbatim: (a_string.count >= 2
-				and then a_string.item (a_string.count) = escape_character 
+				and then a_string.item (a_string.count) = escape_character
 				and then a_string.item (a_string.count - 1) /= escape_character)
 				implies (Result.last.item (Result.last.count) = escape_character)
 		end
 
 	split_greedy (a_string: STRING): DS_LIST [STRING] is
-			-- Split a string according to separator 
+			-- Split a string according to separator
 			-- and escape character settings.
 			-- Each separator character makes a separate separator
 			-- e.g. split ("/a//") = << "", "a", "", "" >>.
@@ -174,14 +172,14 @@ feature -- Operation(s)
 			no_void_item: not Result.has (Void)
 			count_ceiling: Result.count <= a_string.count + 1
 			last_escape_character_verbatim: (a_string.count >= 2
-				and then a_string.item (a_string.count) = escape_character 
+				and then a_string.item (a_string.count) = escape_character
 				and then a_string.item (a_string.count - 1) /= escape_character)
 				implies (Result.last.item (Result.last.count) = escape_character)
 		end
 
 	join (a_linear: DS_LINEAR [STRING]): STRING is
 			-- Join sequence to a string using the first of the
-			-- `separators' as separator, and escape separators 
+			-- `separators' as separator, and escape separators
 			-- within tokens.
 		require
 			has_escape_character: has_escape_character
@@ -198,7 +196,7 @@ feature -- Operation(s)
 
 	join_greedy (a_linear: DS_LINEAR [STRING]): STRING is
 			-- Join sequence to a string using the first of the
-			-- `separators' as separator, and escape separators 
+			-- `separators' as separator, and escape separators
 			-- within tokens.
 		require
 			has_escape_character: has_escape_character
@@ -241,7 +239,7 @@ feature -- Operation(s)
 feature {NONE} -- Implementation
 
 	separator_codes: DS_HASH_SET [INTEGER]
-			-- Character codes of separators 
+			-- Character codes of separators
 			-- (Hashed, and integer for unicode compatibility.)
 
 	do_split (a_string: STRING; a_greedy: BOOLEAN): DS_LIST [STRING] is
@@ -323,7 +321,7 @@ feature {NONE} -- Implementation
 
 	do_join (a_linear: DS_LINEAR [STRING]; a_greedy: BOOLEAN): STRING is
 			-- Join sequence to a string using the first of the
-			-- `separators' as separator, and escape separators 
+			-- `separators' as separator, and escape separators
 			-- within tokens.
 		require
 			has_escape_character: has_escape_character
@@ -383,7 +381,7 @@ invariant
 
 	separators_not_void: separators /= Void
 	separators_not_empty: not separators.is_empty
-	escape_character_not_separator: has_escape_character 
+	escape_character_not_separator: has_escape_character
 		implies not separators.has (escape_character)
 
 end
