@@ -127,4 +127,7 @@ typedef double EIF_REAL_64;
 #define snprintf(a,b,c,d) sprintf(a,c,d)
 #endif
 
+/* Interoperability with ISE */
+#define RTI64C(x) geint64(x)
+
 #endif

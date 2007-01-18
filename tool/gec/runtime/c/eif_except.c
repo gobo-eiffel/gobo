@@ -15,7 +15,7 @@
 
 void eraise(char* name, long code) {
 	/* TODO */
-	printf("'eraise' in 'eif_except.h' not implemented\n");
+	printf("'eraise (\"%s\", %ld)' in 'eif_except.h' not implemented\n", name, code);
 }
 
 void esdie(int code) {
