@@ -63,6 +63,7 @@ feature -- Input
 					i := nb + 1 -- Jump out of the loop.
 				end
 			end
+			end_of_input := last_string.is_empty
 		end
 
 	read_character is
@@ -71,6 +72,8 @@ feature -- Input
 		do
 			if triplet_position = 4 then
 				read_24_bits
+			elseif base_stream.end_of_input then
+				end_of_input := True
 			end
 			if not end_of_input then
 				last_character := decoded_triplet.item (triplet_position)
@@ -242,14 +245,17 @@ feature {NONE} -- Implementation
 			a_code: INTEGER
 		do
 			if equal_sign_read then
+				triplet_position := 4
+				end_of_input := True
+			elseif base_stream.end_of_input then
+				triplet_position := 4
 				end_of_input := True
 			else
 					-- Fill `codes' with four 6-bit values.
 				triplet_position := 1
 				from i := 1 until i > 4 loop
 					check
-						not_end_of_input:
-							not base_stream.end_of_input
+						not_end_of_base_input: i > 1 implies not base_stream.end_of_input
 					end
 					base_stream.read_character
 					if base_stream.end_of_input then

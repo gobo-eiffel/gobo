@@ -93,7 +93,9 @@ feature {NONE} -- Implementation
 				l_decoder.end_of_input
 			loop
 				l_decoder.read_string (100)
-				Result.append (l_decoder.last_string)
+				if not l_decoder.end_of_input then
+					Result := STRING_.appended_string (Result, l_decoder.last_string)
+				end
 			end
 		end
 	
