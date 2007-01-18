@@ -4,7 +4,7 @@ indexing
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,17 +40,6 @@ feature -- Execution
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_INPUT_FILE
-			a_lace_parser: ET_LACE_PARSER
-			a_lace_error_handler: ET_LACE_ERROR_HANDLER
-			an_xace_parser: ET_XACE_UNIVERSE_PARSER
-			an_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
-			an_xace_variables: DS_HASH_TABLE [STRING, STRING]
-			a_splitter: ST_SPLITTER
-			a_cursor: DS_LIST_CURSOR [STRING]
-			a_definition: STRING
-			an_index: INTEGER
-			gobo_eiffel: STRING
-			a_universe: ET_UNIVERSE
 			i, nb: INTEGER
 			arg: STRING
 			a_ise_version: STRING
@@ -121,57 +110,25 @@ feature -- Execution
 				create a_file.make (a_filename)
 				a_file.open_read
 				if a_file.is_open_read then
+					last_universe := Void
 					nb := a_filename.count
 					if nb > 5 and then a_filename.substring (nb - 4, nb).is_equal (".xace") then
-						create an_xace_error_handler.make_standard
-						create an_xace_variables.make_map (100)
-						an_xace_variables.set_key_equality_tester (string_equality_tester)
-						gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
-						if gobo_eiffel /= Void then
-							an_xace_variables.force_last (gobo_eiffel, "GOBO_EIFFEL")
-						end
-						if defined_variables /= Void then
-							create a_splitter.make
-							a_cursor := a_splitter.split (defined_variables).new_cursor
-							from a_cursor.start until a_cursor.after loop
-								a_definition := a_cursor.item
-								if a_definition.count > 0 then
-									an_index := a_definition.index_of ('=', 1)
-									if an_index = 0 then
-										an_xace_variables.force_last ("", a_definition)
-									elseif an_index = a_definition.count then
-										an_xace_variables.force_last ("", a_definition.substring (1, an_index - 1))
-									elseif an_index /= 1 then
-										an_xace_variables.force_last (a_definition.substring (an_index + 1 ,a_definition.count), a_definition.substring (1, an_index - 1))
-									end
-								end
-								a_cursor.forth
-							end
-						end
-						create an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
-						an_xace_parser.parse_file (a_file)
-						a_file.close
-						if not an_xace_error_handler.has_error then
-							a_universe := an_xace_parser.last_universe
-						end
+						parse_xace_file (a_file)
+					elseif nb > 4 and then a_filename.substring (nb - 3, nb).is_equal (".ecf") then
+						parse_ecf_file (a_file)
 					else
-						create a_lace_error_handler.make_standard
-						create a_lace_parser.make (a_lace_error_handler)
-						a_lace_parser.parse_file (a_file)
-						a_file.close
-						if not a_lace_parser.syntax_error then
-							a_universe := a_lace_parser.last_universe
-						end
+						parse_ace_file (a_file)
 					end
-					if a_universe /= Void then
-						process_universe (a_universe)
+					a_file.close
+					if last_universe /= Void then
+						process_universe (last_universe)
 						debug ("stop")
 							std.output.put_line ("Press Enter...")
 							io.read_line
 						end
-						if a_universe.error_handler.has_eiffel_error then
+						if last_universe.error_handler.has_eiffel_error then
 							Exceptions.die (2)
-						elseif a_universe.error_handler.has_internal_error then
+						elseif last_universe.error_handler.has_internal_error then
 							Exceptions.die (5)
 						end
 					else
@@ -203,6 +160,91 @@ feature -- Access
 
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
+
+	last_universe: ET_UNIVERSE
+			-- Last universe parsed, if any
+
+feature {NONE} -- Config file parsing
+
+	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+			-- Read Ace file `a_file'.
+			-- Put result in `last_universe' if no error occurred.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		local
+			l_lace_parser: ET_LACE_PARSER
+			l_lace_error_handler: ET_LACE_ERROR_HANDLER
+		do
+			last_universe := Void
+			create l_lace_error_handler.make_standard
+			create l_lace_parser.make (l_lace_error_handler)
+			l_lace_parser.parse_file (a_file)
+			if not l_lace_parser.syntax_error then
+				last_universe := l_lace_parser.last_universe
+			end
+		end
+
+	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+			-- Read Xace file `a_file'.
+			-- Put result in `last_universe' if no error occurred.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		local
+			l_xace_parser: ET_XACE_UNIVERSE_PARSER
+			l_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
+			l_xace_variables: DS_HASH_TABLE [STRING, STRING]
+			l_splitter: ST_SPLITTER
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_definition: STRING
+			l_index: INTEGER
+			gobo_eiffel: STRING
+		do
+			last_universe := Void
+			create l_xace_error_handler.make_standard
+			create l_xace_variables.make_map (100)
+			l_xace_variables.set_key_equality_tester (string_equality_tester)
+			gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
+			if gobo_eiffel /= Void then
+				l_xace_variables.force_last (gobo_eiffel, "GOBO_EIFFEL")
+			end
+			if defined_variables /= Void then
+				create l_splitter.make
+				l_cursor := l_splitter.split (defined_variables).new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_definition := l_cursor.item
+					if l_definition.count > 0 then
+						l_index := l_definition.index_of ('=', 1)
+						if l_index = 0 then
+							l_xace_variables.force_last ("", l_definition)
+						elseif l_index = l_definition.count then
+							l_xace_variables.force_last ("", l_definition.substring (1, l_index - 1))
+						elseif l_index /= 1 then
+							l_xace_variables.force_last (l_definition.substring (l_index + 1, l_definition.count), l_definition.substring (1, l_index - 1))
+						end
+					end
+					l_cursor.forth
+				end
+			end
+			create l_xace_parser.make_with_variables (l_xace_variables, l_xace_error_handler)
+			l_xace_parser.parse_file (a_file)
+			if not l_xace_error_handler.has_error then
+				last_universe := l_xace_parser.last_universe
+			end
+		end
+
+	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+			-- Read ECF file `a_file'.
+			-- Put result in `last_universe' if no error occurred.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		do
+				-- ECF is not supported.
+				-- Parse Ace file as default.
+			parse_ace_file (a_file)
+		end
 
 feature {NONE} -- Processing
 
