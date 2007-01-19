@@ -57,6 +57,7 @@ feature {AP_PARSER} -- Parser Interface
 			else
 				create error.make_invalid_parameter_error (Current, a_parser.last_option_parameter)
 				a_parser.error_handler.report_error (error)
+				parameters.force_last (0)
 			end
 		end
 
