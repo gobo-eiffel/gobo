@@ -119,6 +119,9 @@ typedef double EIF_REAL_64;
 #endif 
 #endif 
 
+/* Interoperability with ISE */
+#define RTI64C(x) geint64(x)
+
 /* Memory allocation, GC */
 #define gealloc(x) calloc((x),1)
 
@@ -126,8 +129,5 @@ typedef double EIF_REAL_64;
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
 #define snprintf(a,b,c,d) sprintf(a,c,d)
 #endif
-
-/* Interoperability with ISE */
-#define RTI64C(x) geint64(x)
 
 #endif

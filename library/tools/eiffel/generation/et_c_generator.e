@@ -232,8 +232,9 @@ feature -- Generation
 				a_file.put_new_line
 				print_types (header_file)
 				header_file.put_new_line
-				header_file.put_line ("extern int geargc;")
-				header_file.put_line ("extern char** geargv;")
+				include_runtime_header_file ("ge_arguments.h", header_file)
+				header_file.put_new_line
+				include_runtime_header_file ("ge_exception.h", header_file)
 				header_file.put_new_line
 				print_gems_function
 				a_file.put_new_line
@@ -267,10 +268,6 @@ feature -- Generation
 				manifest_tuple_types.wipe_out
 					-- Print call-on-void-target function.
 				print_gevoid_function
-				a_file.put_new_line
-					-- Print arguments.
-				a_file.put_line ("int geargc;")
-				a_file.put_line ("char** geargv;")
 				a_file.put_new_line
 					-- Print constants declarations.
 				print_constants_declaration
@@ -2384,6 +2381,7 @@ feature {NONE} -- Feature generation
 			l_once_feature: ET_FEATURE
 			i, nb, nb_args: INTEGER
 			l_compound: ET_COMPOUND
+			l_rescue: ET_COMPOUND
 			l_comma: BOOLEAN
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_buffer: STRING
@@ -2573,6 +2571,17 @@ feature {NONE} -- Feature generation
 					i := i + 1
 				end
 			end
+			l_rescue := a_feature.rescue_clause
+			if l_rescue /= Void then
+				print_indentation
+				current_file.put_string (c_struct)
+				current_file.put_character (' ')
+				current_file.put_string (c_gerescue)
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
 			current_file := current_function_body_buffer
 			if a_creation then
 				print_malloc_current (a_feature)
@@ -2621,9 +2630,58 @@ feature {NONE} -- Feature generation
 				current_file.put_character ('}')
 				current_file.put_new_line
 			end
+			if l_rescue /= Void then
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_gesetjmp)
+				current_file.put_character ('(')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_character ('j')
+				current_file.put_character ('b')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('!')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_compound (l_rescue)
+				print_indentation
+				current_file.put_string (c_geraise)
+				current_file.put_character ('(')
+				current_file.put_character ('8')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				current_file.put_string (c_geretry)
+				current_file.put_character (':')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string ("r.previous = gerescue;")
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string ("gerescue = &r;")
+				current_file.put_new_line
+			end
 			l_compound := a_feature.compound
 			if l_compound /= Void then
 				print_compound (l_compound)
+			end
+			if l_rescue /= Void then
+				print_indentation
+				current_file.put_string ("gerescue = r.previous;")
+				current_file.put_new_line
 			end
 			if l_result_type /= Void then
 				if l_once_feature /= Void then
@@ -4221,8 +4279,12 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
--- TODO.
-print ("ET_C_GENERATOR.print_retry_instruction%N")
+			print_indentation
+			current_file.put_string (c_goto)
+			current_file.put_character (' ')
+			current_file.put_string (c_geretry)
+			current_file.put_character (';')
+			current_file.put_new_line
 		end
 
 	print_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
@@ -14616,6 +14678,8 @@ feature {NONE} -- C function generation
 				print_indentation
 				current_file.put_line ("geargv = argv;")
 				print_indentation
+				current_file.put_line ("gerescue = 0;")
+				print_indentation
 				current_file.put_line ("geconst();")
 				print_indentation
 				print_temp_name (l_temp, current_file)
@@ -17162,11 +17226,16 @@ feature {NONE} -- Include files
 			a_file_open_write: a_file.is_open_write
 		do
 			if not included_runtime_header_files.has (a_filename) then
-				if a_filename.same_string ("eif_console.h") then
+				if a_filename.same_string ("ge_arguments.h") then
+					included_runtime_c_files.force ("ge_arguments.c")
+				elseif a_filename.same_string ("ge_exception.h") then
+					included_runtime_c_files.force ("ge_exception.c")
+				elseif a_filename.same_string ("eif_console.h") then
 					included_runtime_c_files.force ("eif_console.c")
 				elseif a_filename.same_string ("eif_dir.h") then
 					included_runtime_c_files.force ("eif_dir.c")
 				elseif a_filename.same_string ("eif_except.h") then
+					include_runtime_header_file ("ge_exception.h", a_file)
 					included_runtime_c_files.force ("eif_except.c")
 				elseif a_filename.same_string ("eif_file.h") then
 					included_runtime_c_files.force ("eif_file.c")
@@ -17991,8 +18060,13 @@ feature {NONE} -- Constants
 	c_genat32: STRING is "genat32"
 	c_genat64: STRING is "genat64"
 	c_gepower: STRING is "gepower"
+	c_geraise: STRING is "geraise"
+	c_gerescue: STRING is "gerescue"
+	c_geretry: STRING is "geretry"
+	c_gesetjmp: STRING is "gesetjmp"
 	c_getypes: STRING is "getypes"
 	c_gevoid: STRING is "gevoid"
+	c_goto: STRING is "goto"
 	c_id: STRING is "id"
 	c_if: STRING is "if"
 	c_include: STRING is "#include"

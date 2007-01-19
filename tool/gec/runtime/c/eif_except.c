@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTIONS"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2007, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,8 +14,7 @@
 #define EIF_EXCEPT_C
 
 void eraise(char* name, long code) {
-	/* TODO */
-	printf("'eraise (\"%s\", %ld)' in 'eif_except.h' not implemented\n", name, code);
+	geraise((int)code);
 }
 
 void esdie(int code) {
