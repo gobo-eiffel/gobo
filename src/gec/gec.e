@@ -379,40 +379,30 @@ feature -- Status report
 
 	is_cat: BOOLEAN is
 			-- Cat mode?
-		require
-			cat_flag_exists: cat_flag /= Void
 		do
 			Result := cat_flag.was_found
 		end
 
 	is_finalize: BOOLEAN is
 			-- Compile finalized code ?
-		require
-			finalize_flag_exists: finalize_flag /= Void
 		do
 			Result := finalize_flag.was_found
 		end
 
 	is_silent: BOOLEAN is
 			-- Use silent compilation ?
-		require
-			silent_flag_exists: silent_flag /= Void
 		do
 			Result := silent_flag.was_found
 		end
 
 	is_verbose: BOOLEAN is
 			-- Verbose output ?
-		require
-			verbose_flag_exists: verbose_flag /= Void
 		do
 			Result := verbose_flag.was_found
 		end
 	
 	no_c_compile: BOOLEAN is
 			-- Do not trigger C compilation ?
-		require
-			no_c_compile_flag_exists: no_c_compile_flag /= Void
 		do
 			Result := no_c_compile_flag.was_found
 		end
@@ -450,22 +440,22 @@ feature -- Argument parsing
 			a_parser.set_application_description ("Gobo Eiffel Compiler, a full-featured (TODO) compiler from Eiffel to C.")
 			a_parser.set_parameters_description ("ace_filename")
 
-			create cat_flag.make ('c',"cat")
+			create cat_flag.make ('c', "cat")
 			cat_flag.set_description ("Check for CAT calls.")
 			a_parser.options.force_last (cat_flag)
-			create finalize_flag.make ('f',"finalize")
+			create finalize_flag.make ('f', "finalize")
 			finalize_flag.set_description ("Generate finalized code.")
 			a_parser.options.force_last (finalize_flag)
 			create no_c_compile_flag.make_with_long_form ("nocc")
 			no_c_compile_flag.set_description ("Do not compile generated C code")
 			a_parser.options.force_last (no_c_compile_flag)
-			create silent_flag.make ('s',"silent")
+			create silent_flag.make ('s', "silent")
 			silent_flag.set_description ("Silent operation.")
 			a_parser.options.force_last (silent_flag)
-			create verbose_flag.make ('v',"verbose")
+			create verbose_flag.make ('v', "verbose")
 			verbose_flag.set_description ("Verbose output.")
 			a_parser.options.force_last (verbose_flag)
-			create version_flag.make ('V',"version")
+			create version_flag.make ('V', "version")
 			version_flag.set_description ("Print version information")
 			create a_list.make (version_flag)
 			a_parser.alternative_options_lists.force_last (a_list)
@@ -483,17 +473,16 @@ feature -- Argument parsing
 			end
 
 			ace_filename := a_parser.parameters.first
-		ensure
-			ace_filename_exists: ace_filename /= Void
-			cat_flag_exists: cat_flag /= Void			
-			finalize_flag_exists: finalize_flag /= Void
-			silent_flag_exists: silent_flag /= Void
-			verbose_flag_exists: verbose_flag /= Void
-			no_c_compile_flag_exists: no_c_compile_flag /= Void
 		end
 
 invariant
-
+	
 	error_handler_not_void: error_handler /= Void
+	ace_filename_not_void: ace_filename /= Void
+	cat_flag_not_void: cat_flag /= Void			
+	finalize_flag_not_void: finalize_flag /= Void
+	silent_flag_not_void: silent_flag /= Void
+	verbose_flag_not_void: verbose_flag /= Void
+	no_c_compile_flag_not_void: no_c_compile_flag /= Void
 
 end
