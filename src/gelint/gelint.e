@@ -164,7 +164,7 @@ feature -- Access
 	last_universe: ET_UNIVERSE
 			-- Last universe parsed, if any
 
-feature {NONE} -- Config file parsing
+feature {NONE} -- Eiffel config file parsing
 
 	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Read Ace file `a_file'.

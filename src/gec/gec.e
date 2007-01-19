@@ -4,7 +4,7 @@ indexing
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2007, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,84 +39,41 @@ feature -- Execution
 	execute is
 			-- Start 'gec' execution.
 		local
+			a_filename: STRING
 			a_file: KL_TEXT_INPUT_FILE
-			a_lace_parser: ET_LACE_PARSER
-			a_lace_error_handler: ET_LACE_ERROR_HANDLER
---			an_xace_parser: ET_XACE_UNIVERSE_PARSER
---			an_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
---			an_xace_variables: DS_HASH_TABLE [STRING, STRING]
---			a_splitter: ST_SPLITTER
---			a_cursor: DS_LIST_CURSOR [STRING]
---			a_definition: STRING
---			an_index: INTEGER
---			gobo_eiffel: STRING
-			a_universe: ET_UNIVERSE
---			nb: INTEGER
+			nb: INTEGER
 		do
 			Arguments.set_program_name ("gec")
 			create error_handler.make_standard
-
 			parse_arguments
-
-			create a_file.make (ace_filename)
+			a_filename := ace_filename
+			create a_file.make (a_filename)
 			a_file.open_read
 			if a_file.is_open_read then
---					nb := ace_filename.count
---					if nb > 5 and then ace_filename.substring (nb - 4, nb).is_equal (".xace") then
---						create an_xace_error_handler.make_standard
---						create an_xace_variables.make_map (100)
---						an_xace_variables.set_key_equality_tester (string_equality_tester)
---						gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
---						if gobo_eiffel /= Void then
---							an_xace_variables.force_last (gobo_eiffel, "GOBO_EIFFEL")
---						end
---						if defined_variables /= Void then
---							create a_splitter.make
---							a_cursor := a_splitter.split (defined_variables).new_cursor
---							from a_cursor.start until a_cursor.after loop
---								a_definition := a_cursor.item
---								if a_definition.count > 0 then
---									an_index := a_definition.index_of ('=', 1)
---									if an_index = 0 then
---										an_xace_variables.force_last ("", a_definition)
---									elseif an_index = a_definition.count then
---										an_xace_variables.force_last ("", a_definition.substring (1, an_index - 1))
---									elseif an_index /= 1 then
---										an_xace_variables.force_last (a_definition.substring (an_index + 1 ,a_definition.count), a_definition.substring (1, an_index - 1))
---									end
---								end
---								a_cursor.forth
---							end
---						end
---						create an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
---						an_xace_parser.parse_file (a_file)
---						a_file.close
---						if not an_xace_error_handler.has_error then
---							a_universe := an_xace_parser.last_universe
---						end
---					else
-				create a_lace_error_handler.make_standard
-				create a_lace_parser.make (a_lace_error_handler)
-				a_lace_parser.parse_file (a_file)
-				a_file.close
-				if not a_lace_parser.syntax_error then
-					a_universe := a_lace_parser.last_universe
+				last_universe := Void
+				nb := a_filename.count
+				if nb > 5 and then a_filename.substring (nb - 4, nb).is_equal (".xace") then
+					parse_xace_file (a_file)
+				elseif nb > 4 and then a_filename.substring (nb - 3, nb).is_equal (".ecf") then
+					parse_ecf_file (a_file)
+				else
+					parse_ace_file (a_file)
 				end
---					end
-				if a_universe /= Void then
-					process_universe (a_universe)
+				a_file.close
+				if last_universe /= Void then
+					process_universe (last_universe)
 					debug ("stop")
 						std.output.put_line ("Press Enter...")
 						std.input.read_character
 					end
-					if a_universe.error_handler.has_error then
+					if last_universe.error_handler.has_error then
 						Exceptions.die (2)
 					end
 				else
 					Exceptions.die (3)
 				end
 			else
-				report_cannot_read_error (ace_filename)
+				report_cannot_read_error (a_filename)
 				Exceptions.die (1)
 			end
 		rescue
@@ -127,6 +84,94 @@ feature -- Access
 
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
+
+	last_universe: ET_UNIVERSE
+			-- Last universe parsed, if any
+
+feature {NONE} -- Eiffel config file parsing
+
+	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+			-- Read Ace file `a_file'.
+			-- Put result in `last_universe' if no error occurred.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		local
+			l_lace_parser: ET_LACE_PARSER
+			l_lace_error_handler: ET_LACE_ERROR_HANDLER
+		do
+			last_universe := Void
+			create l_lace_error_handler.make_standard
+			create l_lace_parser.make (l_lace_error_handler)
+			l_lace_parser.parse_file (a_file)
+			if not l_lace_parser.syntax_error then
+				last_universe := l_lace_parser.last_universe
+			end
+		end
+
+	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+			-- Read Xace file `a_file'.
+			-- Put result in `last_universe' if no error occurred.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		local
+--			l_xace_parser: ET_XACE_UNIVERSE_PARSER
+--			l_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
+--			l_xace_variables: DS_HASH_TABLE [STRING, STRING]
+--			l_splitter: ST_SPLITTER
+--			l_cursor: DS_LIST_CURSOR [STRING]
+--			l_definition: STRING
+--			l_index: INTEGER
+--			gobo_eiffel: STRING
+		do
+				-- Xace is not supported.
+				-- Parse Ace file as default.
+			parse_ace_file (a_file)
+--			last_universe := Void
+--			create l_xace_error_handler.make_standard
+--			create l_xace_variables.make_map (100)
+--			l_xace_variables.set_key_equality_tester (string_equality_tester)
+--			gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
+--			if gobo_eiffel /= Void then
+--				l_xace_variables.force_last (gobo_eiffel, "GOBO_EIFFEL")
+--			end
+--			if defined_variables /= Void then
+--				create l_splitter.make
+--				l_cursor := l_splitter.split (defined_variables).new_cursor
+--				from l_cursor.start until l_cursor.after loop
+--					l_definition := l_cursor.item
+--					if l_definition.count > 0 then
+--						l_index := l_definition.index_of ('=', 1)
+--						if l_index = 0 then
+--							l_xace_variables.force_last ("", l_definition)
+--						elseif l_index = l_definition.count then
+--							l_xace_variables.force_last ("", l_definition.substring (1, l_index - 1))
+--						elseif l_index /= 1 then
+--							l_xace_variables.force_last (l_definition.substring (l_index + 1, l_definition.count), l_definition.substring (1, l_index - 1))
+--						end
+--					end
+--					l_cursor.forth
+--				end
+--			end
+--			create l_xace_parser.make_with_variables (l_xace_variables, l_xace_error_handler)
+--			l_xace_parser.parse_file (a_file)
+--			if not l_xace_error_handler.has_error then
+--				last_universe := l_xace_parser.last_universe
+--			end
+		end
+
+	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+			-- Read ECF file `a_file'.
+			-- Put result in `last_universe' if no error occurred.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		do
+				-- ECF is not supported.
+				-- Parse Ace file as default.
+			parse_ace_file (a_file)
+		end
 
 feature {NONE} -- Processing
 
@@ -377,34 +422,34 @@ feature -- Error handling
 
 feature -- Status report
 
-	is_cat: BOOLEAN is
-			-- Cat mode?
-		do
-			Result := cat_flag.was_found
-		end
-
 	is_finalize: BOOLEAN is
-			-- Compile finalized code ?
+			-- Compilation with optimizations turned on?
 		do
 			Result := finalize_flag.was_found
 		end
 
+	is_cat: BOOLEAN is
+			-- Should CAT-call errors be considered as fatal errors?
+		do
+			Result := cat_flag.was_found
+		end
+
+	no_c_compile: BOOLEAN is
+			-- Should the back-end C compiler not be invoked on the generated C code?
+		do
+			Result := no_c_compile_flag.was_found
+		end
+
 	is_silent: BOOLEAN is
-			-- Use silent compilation ?
+			-- Should gec run in silent mode?
 		do
 			Result := silent_flag.was_found
 		end
 
 	is_verbose: BOOLEAN is
-			-- Verbose output ?
+			-- Should gec run in verbose mode?
 		do
 			Result := verbose_flag.was_found
-		end
-	
-	no_c_compile: BOOLEAN is
-			-- Do not trigger C compilation ?
-		do
-			Result := no_c_compile_flag.was_found
 		end
 
 feature -- Argument parsing
@@ -437,49 +482,53 @@ feature -- Argument parsing
 			a_list: AP_ALTERNATIVE_OPTIONS_LIST
 		do
 			create a_parser.make
-			a_parser.set_application_description ("Gobo Eiffel Compiler, a full-featured (TODO) compiler from Eiffel to C.")
+			a_parser.set_application_description ("Gobo Eiffel Compiler, translate Eiffel programs into C code.")
 			a_parser.set_parameters_description ("ace_filename")
-
-			create cat_flag.make ('c', "cat")
-			cat_flag.set_description ("Check for CAT calls.")
-			a_parser.options.force_last (cat_flag)
-			create finalize_flag.make ('f', "finalize")
-			finalize_flag.set_description ("Generate finalized code.")
+				-- Options.
+			create finalize_flag.make_with_long_form ("finalize")
+			finalize_flag.set_description ("Compile with optimizations turned on.")
 			a_parser.options.force_last (finalize_flag)
+			create cat_flag.make_with_long_form ("cat")
+			cat_flag.set_description ("CAT-call errors should be considered as fatal errors.")
+			a_parser.options.force_last (cat_flag)
 			create no_c_compile_flag.make_with_long_form ("nocc")
-			no_c_compile_flag.set_description ("Do not compile generated C code")
+			no_c_compile_flag.set_description ("Do not invoke the back-end C compiler on the generated C code.")
 			a_parser.options.force_last (no_c_compile_flag)
-			create silent_flag.make ('s', "silent")
-			silent_flag.set_description ("Silent operation.")
+			create silent_flag.make_with_long_form ("silent")
+			silent_flag.set_description ("Run gec in silent mode.")
 			a_parser.options.force_last (silent_flag)
-			create verbose_flag.make ('v', "verbose")
-			verbose_flag.set_description ("Verbose output.")
+			create verbose_flag.make_with_long_form ("verbose")
+			verbose_flag.set_description ("Run gec in verbose mode.")
 			a_parser.options.force_last (verbose_flag)
 			create version_flag.make ('V', "version")
-			version_flag.set_description ("Print version information")
+			version_flag.set_description ("Print the version number of gec and exit.")
 			create a_list.make (version_flag)
 			a_parser.alternative_options_lists.force_last (a_list)
-			
+				-- Parsing.
 			a_parser.parse_arguments
-
 			if version_flag.was_found then
 				report_version_number
 				Exceptions.die (0)
-			end
-
-			if a_parser.parameters.count /= 1 then
+			elseif a_parser.parameters.count /= 1 then
 				error_handler.report_info_message (a_parser.help_option.full_usage_instruction (a_parser))
 				Exceptions.die (1)
+			else
+				ace_filename := a_parser.parameters.first
 			end
-
-			ace_filename := a_parser.parameters.first
+		ensure
+			ace_filename_not_void: ace_filename /= Void
+			cat_flag_not_void: cat_flag /= Void
+			finalize_flag_not_void: finalize_flag /= Void
+			silent_flag_not_void: silent_flag /= Void
+			verbose_flag_not_void: verbose_flag /= Void
+			no_c_compile_flag_not_void: no_c_compile_flag /= Void
 		end
 
 invariant
-	
+
 	error_handler_not_void: error_handler /= Void
 	ace_filename_not_void: ace_filename /= Void
-	cat_flag_not_void: cat_flag /= Void			
+	cat_flag_not_void: cat_flag /= Void
 	finalize_flag_not_void: finalize_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
