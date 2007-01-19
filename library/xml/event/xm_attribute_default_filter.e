@@ -19,9 +19,19 @@ class XM_ATTRIBUTE_DEFAULT_FILTER
 
 inherit
 
-	XM_DTD_CALLBACKS
+	XM_DTD_CALLBACKS_FILTER
+		rename
+			make_null as make_dtd_null,
+			set_next as set_next_dtd,
+			next as dtd_callbacks
+		redefine
+			on_attribute_declaration
+		end
 
 	XM_CALLBACKS_FILTER
+		rename
+			make_null as make_callbacks_null,
+			set_next as set_next_callbacks
 		redefine
 			on_start_tag,
 			on_attribute,
@@ -44,67 +54,53 @@ create
 
 	make_null,
 	set_next
-	
+
+feature {NONE} -- Initialization
+
+	make_null is
+			-- Next is null processor.
+		do
+			make_callbacks_null
+			make_dtd_null			
+		end
+
+feature -- Setting
+
+	set_next (a_callback: XM_CALLBACKS) is
+			-- Client will receive callbacks to.
+		require
+			a_callback_not_void: a_callback /= Void
+		do
+			set_next_callbacks (a_callback)
+			make_dtd_null
+		end
+
 feature -- DTD
 
-	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
-			-- Document type declaration.
-		do
-		end
-
-	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
-			-- Element declaration.
-		do
-		end
-
-	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	on_attribute_declaration (a_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
 			-- Attribute declaration, one event per attribute.
 		local
-			a_sub: DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT]
+			l_sub: DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT]
 		do
 				-- Default attribute values.
 			if a_model.has_default_value then
 				if defaults = Void then
 					defaults := new_dtd_attribute_content_list_table
 				end
-				if not defaults.has (an_element_name) then
-					create a_sub.make_default
-					defaults.force_new (a_sub, an_element_name)
+				if not defaults.has (a_element_name) then
+					create l_sub.make_default
+					defaults.force_new (l_sub, a_element_name)
 				end
 					-- First declaration is binding.
-				if not has_attribute (defaults.item (an_element_name),a_name) then
-					defaults.item (an_element_name).force_last (a_model)
+				if not has_attribute (defaults.item (a_element_name),a_name) then
+					defaults.item (a_element_name).force_last (a_model)
 				end
 			end
 				-- NMTOKEN values.
-			token_on_attribute_declaration (an_element_name, a_name, a_model)
+			token_on_attribute_declaration (a_element_name, a_name, a_model)
+			Precursor (a_element_name, a_name, a_model)
 		end
 
-	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
-			-- Entity declaration.
-		do
-		end
-
-	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
-			-- Notation declaration.
-		do
-		end
-		
-	on_dtd_comment (a_comment: STRING) is
-			-- Comment.
-		do
-		end
-		
-	on_dtd_processing_instruction (a_target: STRING; a_content: STRING) is
-			-- PI.
-		do
-		end
-		
-	on_dtd_end is
-			-- Last DTD event.
-		do
-		end
 
 feature {NONE} -- DTD implementation
 

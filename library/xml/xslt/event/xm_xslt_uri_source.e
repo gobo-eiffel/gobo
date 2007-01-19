@@ -79,6 +79,7 @@ feature -- Events
 			create namespace_resolver.set_next (content_emitter)
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
+			attributes.set_next_dtd (content_emitter)
 			create content.set_next (attributes)
 			create oasis_xml_catalog_filter.set_next (content, attributes)
 			l_entity_resolver ?= a_parser.entity_resolver
@@ -131,6 +132,7 @@ feature -- Events
 			create namespace_resolver.set_next (content_emitter)
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
+			attributes.set_next_dtd (content_emitter)
 			create content.set_next (attributes)
 			create oasis_xml_catalog_filter.set_next (content, attributes)
 			l_entity_resolver ?= a_parser.entity_resolver

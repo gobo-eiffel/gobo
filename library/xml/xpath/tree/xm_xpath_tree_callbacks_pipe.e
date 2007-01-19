@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			create a_namespace_resolver.set_next (emitter)
 			a_namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (a_namespace_resolver)
+			attributes.set_next_dtd (emitter)
 			create content.set_next (attributes)
 			create whitespace.set_next (content)
 			create start.set_next (whitespace)

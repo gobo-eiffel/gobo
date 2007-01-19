@@ -82,7 +82,7 @@ feature -- Status report
 	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as an empty iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 	is_node_iterator: BOOLEAN is
@@ -94,7 +94,7 @@ feature -- Status report
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 	is_invulnerable: BOOLEAN is
