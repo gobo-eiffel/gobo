@@ -27,11 +27,17 @@ feature {NONE} -- Initialization
 
 	make (handler: like error_handler) is
 			-- Create a new command line.
+		require
+			hander_not_void: handler /= Void
 		do
 			error_handler := handler
 		ensure
 			error_handler_set: error_handler = handler
 		end
+
+feature -- Access
+
+	error_handler: UT_ERROR_HANDLER
 
 feature -- Parsing
 
@@ -41,197 +47,178 @@ feature -- Parsing
 		require
 			options_not_void: options /= Void
 		local
-			i, nb: INTEGER
-			exit: BOOLEAN
-			arg: STRING
-			equiv_classes_used: BOOLEAN
-			meta_equiv_classes_used: BOOLEAN
-			j, arg_count: INTEGER
-			str: STRING
-			a_size: INTEGER
-			a_pragma: STRING
+			a_parser: AP_PARSER
+			a_version_flag: AP_FLAG
+			a_pragma_option: AP_ENUMERATION_OPTION
+			an_output_option: AP_STRING_OPTION
+			a_size_option: AP_INTEGER_OPTION
+			a_backup_flag: AP_FLAG
+			a_debug_flag: AP_FLAG
+			a_nofull_flag: AP_FLAG
+			an_ecs_flag: AP_FLAG
+			a_full_flag: AP_FLAG
+			a_case_insensitive_flag: AP_FLAG
+			a_meta_ecs_flag: AP_FLAG
+			a_nodefault_flag: AP_FLAG
+			a_nowarn_flag: AP_FLAG
+			a_sep_file_flag: AP_FLAG
+			an_inspect_flag: AP_FLAG
+			a_list: AP_ALTERNATIVE_OPTIONS_LIST
+			an_error: AP_ERROR
 		do
-				-- Read options.
-			from
-				i := 1
-				nb := Arguments.argument_count
-			until
-				exit or i > nb
-			loop
-				arg := Arguments.argument (i)
-				arg_count := arg.count
-				if arg_count < 2 or arg.item (1) /= '-' then
-					exit := True
-				elseif arg.is_equal ("--") then
-						-- End of options
-					exit := True
-					i := i + 1
-				elseif arg.is_equal ("--version") then
-					report_version_number
-					i := i + 1
-				elseif arg.is_equal ("--help") then
-					report_usage_message
-					i := i + 1
-				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--pragma=") then
-					a_pragma := arg.substring (10, arg.count)
-					if a_pragma.is_equal ("line") then
-						options.set_line_pragma (True)
-					elseif a_pragma.is_equal ("noline") then
-						options.set_line_pragma (False)
-					else
-						report_usage_error
-					end
-					i := i + 1
+			create a_parser.make
+			a_parser.set_application_description ("Gobo Eiffel Lex is a tool for generating Eiffel programs that perform pattern-matching on text.")
+			a_parser.set_parameters_description ("filename")
+
+			create a_version_flag.make ('V', "version")
+			a_version_flag.set_description ("Display version information.")
+			create a_list.make (a_version_flag)
+			a_parser.alternative_options_lists.force_last (a_list)
+
+			create a_size_option.make ('a', "array-size")
+			a_size_option.set_description ("Split manifest arrays larger than 'size'.")
+			a_size_option.set_parameter_description ("size")
+			a_parser.options.force_last (a_size_option)
+
+			create a_backup_flag.make ('b', "backup")
+			a_backup_flag.set_description ("Generate backing-up information to standard output.")
+			a_parser.options.force_last (a_backup_flag)
+
+			create a_nofull_flag.make ('c', "nofull")
+			a_nofull_flag.set_description ("Generated compressed tables (small, but slower).")
+			a_parser.options.force_last (a_nofull_flag)
+
+			create a_debug_flag.make ('d', "debug")
+			a_debug_flag.set_description ("Enable debug output.")
+			a_parser.options.force_last (a_debug_flag)
+
+			create an_ecs_flag.make ('e', "ecs")
+			an_ecs_flag.set_description ("Direct gelex to construct equivalence classes.")
+			a_parser.options.force_last (an_ecs_flag)
+
+			create a_full_flag.make ('f', "full")
+			a_full_flag.set_description ("Generate full tables (large, but faster).")
+			a_parser.options.force_last (a_full_flag)
+
+			create a_case_insensitive_flag.make ('i', "case-insensitive")
+			a_case_insensitive_flag.set_description ("Generate a case-insensitive scanner.")
+			a_parser.options.force_last (a_case_insensitive_flag)
+
+			create a_meta_ecs_flag.make ('m', "meta-ecs")
+			a_meta_ecs_flag.set_description ("Direct gelex to construct meta-equivalence classes.")
+			a_parser.options.force_last (a_meta_ecs_flag)
+
+			create an_output_option.make ('o', "outfile")
+			an_output_option.set_description ("Name of the output file (instead of stdout).")
+			an_output_option.set_parameter_description ("filename")
+			a_parser.options.force_last (an_output_option)
+
+			create a_pragma_option.make_with_long_form ("pragma")
+			a_pragma_option.set_description ("Generation of #line comments.")
+			a_pragma_option.extend ("line")
+			a_pragma_option.extend ("noline")
+			a_pragma_option.set_parameter_description ("[no]line")
+			a_parser.options.force_last (a_pragma_option)
+
+			create a_nodefault_flag.make ('s', "nodefault")
+			a_nodefault_flag.set_description ("Cause the default rule to be suppressed.")
+			a_parser.options.force_last (a_nodefault_flag)
+
+			create a_nowarn_flag.make ('w', "nowarn")
+			a_nowarn_flag.set_description ("Suppress warnings.")
+			a_parser.options.force_last (a_nowarn_flag)
+
+			create a_sep_file_flag.make_with_short_form ('x')
+			a_sep_file_flag.set_description ("Write each semantic action into a separate routine.")
+			a_parser.options.force_last (a_sep_file_flag)
+
+
+			create an_inspect_flag.make ('z', "inspect")
+			an_inspect_flag.set_description ("The generated code uses an inspect instruction to find out which action to execute.")
+
+			a_parser.options.force_last (an_inspect_flag)
+
+			a_parser.parse_arguments
+
+			if a_version_flag.was_found then
+				report_version_number		
+			end
+
+			if a_pragma_option.was_found then
+				options.set_line_pragma (a_pragma_option.parameter.is_equal ("line"))
+			end
+
+			if an_output_option.was_found then
+				options.set_output_filename (an_output_option.parameter)
+			end
+
+			if a_size_option.was_found then
+				if a_size_option.parameter >= 0 then
+					options.set_array_size (a_size_option.parameter)
 				else
-					inspect arg.item (2)
-					when 'o' then
-						if arg_count > 2 then
-							options.set_output_filename
-								(arg.substring (3, arg_count))
-						elseif i < nb then
-							i := i + 1
-							options.set_output_filename (Arguments.argument (i))
-						else
-							options.set_output_filename (Void)
-							report_usage_error
-						end
-					when 'a' then
-						str := Void
-						if arg_count > 2 then
-							str := arg.substring (3, arg_count)
-						elseif i < nb then
-							i := i + 1
-							str := Arguments.argument (i)
-						end
-						if str /= Void and then STRING_.is_integer (str) then
-							a_size := str.to_integer
-							if a_size >= 0 then
-								options.set_array_size (a_size)
-							else
-								report_usage_error
-							end
-						else
-							report_usage_error
-						end
-					else
-						from j := 2 until j > arg_count loop
-							inspect arg.item (j)
-							when 'a' then
-								report_separated_flag_error ("-a")
-							when 'b' then
-								options.set_backing_up_report (True)
-							when 'c' then
-								options.set_equiv_classes_used (False)
-								options.set_meta_equiv_classes_used (False)
-								options.set_full_table (False)
-							when 'd' then
-								options.set_debug_mode (True)
-							when 'e' then
-								equiv_classes_used := True
-							when 'f' then
-								options.set_equiv_classes_used (False)
-								options.set_meta_equiv_classes_used (False)
-								options.set_full_table (True)
-							when '?', 'h' then
-								report_usage_message
-							when 'i' then
-								options.set_case_insensitive (True)
-							when 'm' then
-								meta_equiv_classes_used := True
-							when 'o' then
-								report_separated_flag_error ("-o")
-							when 's' then
-								options.set_no_default_rule (True)
-							when 'V' then
-								report_version_number
-							when 'w' then
-								options.set_no_warning (True)
-							when 'x' then
-								options.set_actions_separated (True)
-							when 'z' then
-								options.set_inspect_used (True)
-							else
-								report_unknown_flag_error (arg.item (j).out)
-							end
-							j := j + 1
-						end
-					end
-					i := i + 1
+					create an_error.make_invalid_parameter_error (a_size_option, a_size_option.parameter.out)
+					error_handler.report_error (an_error)
+					Exceptions.die (1)
 				end
 			end
-			if equiv_classes_used then
+
+			if a_backup_flag.was_found then
+				options.set_backing_up_report (True)
+			end
+
+			if a_debug_flag.was_found then
+				options.set_debug_mode (True)
+			end
+
+			if a_nofull_flag.was_found then
+				options.set_equiv_classes_used (False)
+				options.set_meta_equiv_classes_used (False)
+				options.set_full_table (False)
+			end
+
+			if a_full_flag.was_found then
+				options.set_equiv_classes_used (False)
+				options.set_meta_equiv_classes_used (False)
+				options.set_full_table (True)
+			end
+
+			if an_ecs_flag.was_found then
 				options.set_equiv_classes_used (True)
 			end
-			if meta_equiv_classes_used then
+
+			if a_meta_ecs_flag.was_found then
 				options.set_meta_equiv_classes_used (True)
 			end
-				-- Read file names.
-			if i = nb then
-				options.set_input_filename (Arguments.argument (i))
-			else
-				report_usage_error
+
+			if a_case_insensitive_flag.was_found then
+				options.set_case_insensitive (True)
 			end
+
+			if a_nodefault_flag.was_found then
+				options.set_no_default_rule (True)
+			end
+
+			if a_nowarn_flag.was_found then
+				options.set_no_warning (True)
+			end
+
+			if a_sep_file_flag.was_found then
+				options.set_actions_separated (True)
+			end
+
+			if an_inspect_flag.was_found then
+				options.set_inspect_used (True)
+			end
+
+			if a_parser.parameters.count /= 1 then
+				error_handler.report_info_message (a_parser.help_option.full_usage_instruction (a_parser))
+				Exceptions.die (1)
+			end
+
+			options.set_input_filename (a_parser.parameters.first)
 		end
 
-feature -- Access
-
-	error_handler: UT_ERROR_HANDLER
-			-- Error handler
-
-feature -- Setting
-
-	set_error_handler (handler: like error_handler) is
-			-- Set `error_handler' to `handler'.
-		require
-			handler_not_void: handler /= Void
-		do
-			error_handler := handler
-		ensure
-			error_handler_set: error_handler = handler
-		end
-
-feature {NONE} -- Error handling
-
-	report_separated_flag_error (a_flag: STRING) is
-			-- Report that flag `a_flag' must be given separately
-			-- and then terminate with exit status 1.
-		require
-			a_flag_not_void: a_flag /= Void
-		local
-			an_error: UT_SEPARATED_FLAG_ERROR
-		do
-			create an_error.make (a_flag)
-			error_handler.report_error (an_error)
-			Exceptions.die (1)
-		end
-
-	report_unknown_flag_error (a_flag: STRING) is
-			-- Report that `a_flag' in an unknown flag
-			-- and then terminate with exit status 1.
-		require
-			a_flag_not_void: a_flag /= Void
-		local
-			an_error: UT_UNKNOWN_FLAG_ERROR
-		do
-			create an_error.make (a_flag)
-			error_handler.report_error (an_error)
-			Exceptions.die (1)
-		end
-
-	report_usage_error is
-			-- Report usage error and then terminate
-			-- with exit status 1.
-		do
-			error_handler.report_error (Usage_message)
-			Exceptions.die (1)
-		end
-
-	report_usage_message is
-			-- Report usage message and exit.
-		do
-			error_handler.report_info (Usage_message)
-			Exceptions.die (0)
-		end
+feature{NONE} -- Reporting
 
 	report_version_number is
 			-- Report version number and exit.
@@ -241,16 +228,6 @@ feature {NONE} -- Error handling
 			create a_message.make (Version_number)
 			error_handler.report_info (a_message)
 			Exceptions.die (0)
-		end
-
-	Usage_message: UT_USAGE_MESSAGE is
-			-- Gelex usage message
-		once
-			create Result.make
-				("[--version][--help][-bcefhimsVwxz?][-a size]%N%
-				%%T[--pragma=[no]line][-o filename][--] filename")
-		ensure
-			usage_message_not_void: Result /= Void
 		end
 
 invariant
