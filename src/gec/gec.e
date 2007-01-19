@@ -39,7 +39,6 @@ feature -- Execution
 	execute is
 			-- Start 'gec' execution.
 		local
-			a_filename: STRING
 			a_file: KL_TEXT_INPUT_FILE
 			a_lace_parser: ET_LACE_PARSER
 			a_lace_error_handler: ET_LACE_ERROR_HANDLER
@@ -52,49 +51,18 @@ feature -- Execution
 --			an_index: INTEGER
 --			gobo_eiffel: STRING
 			a_universe: ET_UNIVERSE
-			i, nb: INTEGER
-			arg: STRING
+--			nb: INTEGER
 		do
 			Arguments.set_program_name ("gec")
 			create error_handler.make_standard
-			nb := Arguments.argument_count
-			from i := 1 until i > nb loop
-				arg := Arguments.argument (i)
-				if arg.is_equal ("-V") or arg.is_equal ("--version") then
-					report_version_number
-					Exceptions.die (0)
-				elseif arg.is_equal ("-h") or arg.is_equal ("-?") or arg.is_equal ("--help") then
-					report_usage_message
-					Exceptions.die (0)
-				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--define=") then
-					defined_variables := arg.substring (10, arg.count)
-				elseif arg.is_equal ("--silent") then
-					is_silent := True
-				elseif arg.is_equal ("--verbose") then
-					is_verbose := True
-				elseif arg.is_equal ("--nocc") then
-					no_c_compile := True
-				elseif arg.is_equal ("--cat") then
-					is_cat := True
-				elseif arg.is_equal ("--finalize") then
-					is_finalize := True
-				elseif i = nb then
-					a_filename := arg
-				else
-					report_usage_message
-					Exceptions.die (1)
-				end
-				i := i + 1
-			end
-			if a_filename = Void then
-				report_usage_message
-				Exceptions.die (1)
-			else
-				create a_file.make (a_filename)
-				a_file.open_read
-				if a_file.is_open_read then
-					nb := a_filename.count
---					if nb > 5 and then a_filename.substring (nb - 4, nb).is_equal (".xace") then
+
+			parse_arguments
+
+			create a_file.make (ace_filename)
+			a_file.open_read
+			if a_file.is_open_read then
+--					nb := ace_filename.count
+--					if nb > 5 and then ace_filename.substring (nb - 4, nb).is_equal (".xace") then
 --						create an_xace_error_handler.make_standard
 --						create an_xace_variables.make_map (100)
 --						an_xace_variables.set_key_equality_tester (string_equality_tester)
@@ -127,44 +95,33 @@ feature -- Execution
 --							a_universe := an_xace_parser.last_universe
 --						end
 --					else
-						create a_lace_error_handler.make_standard
-						create a_lace_parser.make (a_lace_error_handler)
-						a_lace_parser.parse_file (a_file)
-						a_file.close
-						if not a_lace_parser.syntax_error then
-							a_universe := a_lace_parser.last_universe
-						end
+				create a_lace_error_handler.make_standard
+				create a_lace_parser.make (a_lace_error_handler)
+				a_lace_parser.parse_file (a_file)
+				a_file.close
+				if not a_lace_parser.syntax_error then
+					a_universe := a_lace_parser.last_universe
+				end
 --					end
-					if a_universe /= Void then
-						process_universe (a_universe)
-						debug ("stop")
-							std.output.put_line ("Press Enter...")
-							std.input.read_character
-						end
-						if a_universe.error_handler.has_error then
-							Exceptions.die (2)
-						end
-					else
-						Exceptions.die (3)
+				if a_universe /= Void then
+					process_universe (a_universe)
+					debug ("stop")
+						std.output.put_line ("Press Enter...")
+						std.input.read_character
+					end
+					if a_universe.error_handler.has_error then
+						Exceptions.die (2)
 					end
 				else
-					report_cannot_read_error (a_filename)
-					Exceptions.die (1)
+					Exceptions.die (3)
 				end
+			else
+				report_cannot_read_error (ace_filename)
+				Exceptions.die (1)
 			end
 		rescue
 			Exceptions.die (4)
 		end
-
-feature -- Status report
-
-	defined_variables: STRING
-	is_verbose: BOOLEAN
-	no_c_compile: BOOLEAN
-	is_cat: BOOLEAN
-	is_silent: BOOLEAN
-	is_finalize: BOOLEAN
-			-- Command-line options
 
 feature -- Access
 
@@ -409,12 +366,6 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_usage_message is
-			-- Report usage message.
-		do
-			error_handler.report_info (Usage_message)
-		end
-
 	report_version_number is
 			-- Report version number.
 		local
@@ -424,12 +375,121 @@ feature -- Error handling
 			error_handler.report_info (a_message)
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
-			-- Gec usage message.
-		once
-			create Result.make ("[--finalize][--cat][--nocc][--silent][--verbose] ace_filename")
+feature -- Status report
+
+	is_cat: BOOLEAN is
+			-- Cat mode?
+		require
+			cat_flag_exists: cat_flag /= Void
+		do
+			Result := cat_flag.was_found
+		end
+
+	is_finalize: BOOLEAN is
+			-- Compile finalized code ?
+		require
+			finalize_flag_exists: finalize_flag /= Void
+		do
+			Result := finalize_flag.was_found
+		end
+
+	is_silent: BOOLEAN is
+			-- Use silent compilation ?
+		require
+			silent_flag_exists: silent_flag /= Void
+		do
+			Result := silent_flag.was_found
+		end
+
+	is_verbose: BOOLEAN is
+			-- Verbose output ?
+		require
+			verbose_flag_exists: verbose_flag /= Void
+		do
+			Result := verbose_flag.was_found
+		end
+	
+	no_c_compile: BOOLEAN is
+			-- Do not trigger C compilation ?
+		require
+			no_c_compile_flag_exists: no_c_compile_flag /= Void
+		do
+			Result := no_c_compile_flag.was_found
+		end
+
+feature -- Argument parsing
+
+	ace_filename: STRING
+			-- Name of the ace file
+
+	cat_flag: AP_FLAG
+			-- Flag for '--cat'
+
+	finalize_flag: AP_FLAG
+			-- Flag for '--finalize'
+
+	no_c_compile_flag: AP_FLAG
+			-- Flag for '--nocc'
+
+	silent_flag: AP_FLAG
+			-- Flag for '--silent'
+
+	verbose_flag: AP_FLAG
+			-- Flag for '--verbose'
+
+	version_flag: AP_FLAG
+			-- Flag for '--version'
+
+	parse_arguments is
+			-- Initialize options and parse the command line.
+		local
+			a_parser: AP_PARSER
+			a_list: AP_ALTERNATIVE_OPTIONS_LIST
+		do
+			create a_parser.make
+			a_parser.set_application_description ("Gobo Eiffel Compiler, a full-featured (TODO) compiler from Eiffel to C.")
+			a_parser.set_parameters_description ("ace_filename")
+
+			create cat_flag.make ('c',"cat")
+			cat_flag.set_description ("Check for CAT calls.")
+			a_parser.options.force_last (cat_flag)
+			create finalize_flag.make ('f',"finalize")
+			finalize_flag.set_description ("Generate finalized code.")
+			a_parser.options.force_last (finalize_flag)
+			create no_c_compile_flag.make_with_long_form ("nocc")
+			no_c_compile_flag.set_description ("Do not compile generated C code")
+			a_parser.options.force_last (no_c_compile_flag)
+			create silent_flag.make ('s',"silent")
+			silent_flag.set_description ("Silent operation.")
+			a_parser.options.force_last (silent_flag)
+			create verbose_flag.make ('v',"verbose")
+			verbose_flag.set_description ("Verbose output.")
+			a_parser.options.force_last (verbose_flag)
+			create version_flag.make ('V',"version")
+			version_flag.set_description ("Print version information")
+			create a_list.make (version_flag)
+			a_parser.alternative_options_lists.force_last (a_list)
+			
+			a_parser.parse_arguments
+
+			if version_flag.was_found then
+				report_version_number
+				Exceptions.die (0)
+			end
+
+			if a_parser.parameters.count /= 1 then
+				error_handler.report_info_message (a_parser.help_option.full_usage_instruction (a_parser))
+				Exceptions.die (1)
+			end
+
+			ace_filename := a_parser.parameters.first
 		ensure
-			usage_message_not_void: Result /= Void
+			ace_filename_exists: ace_filename /= Void
+			cat_flag_exists: cat_flag /= Void			
+			finalize_flag_exists: finalize_flag /= Void
+			silent_flag_exists: silent_flag /= Void
+			verbose_flag_exists: verbose_flag /= Void
+			no_c_compile_flag_exists: no_c_compile_flag /= Void
 		end
 
 invariant

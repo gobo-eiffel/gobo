@@ -33,6 +33,7 @@
 	<cluster name="gec_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="gec" location="${GOBO}/src/gec"/>
 
+	<mount location="${GOBO}/library/argument/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
 	<mount location="${GOBO}/library/parse/library.xace"/>
 	<mount location="${GOBO}/library/utility/library.xace"/>
