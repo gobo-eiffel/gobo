@@ -29,7 +29,7 @@
 
 <para>
 The <projectname>Gobo Eiffel Tools Library</projectname> is an Eiffel class
-library useful for writing tools that expect Eiffel souce code as input. It
+library useful for writing tools that expect Eiffel source code as input. It
 provides Ace and Xace parsers, an Eiffel parser which generates <ulink
 url="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax
 Trees</ulink>, and numerous processors traversing these ASTs to perform

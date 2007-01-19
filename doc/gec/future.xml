@@ -99,7 +99,7 @@ incremental.
 Several kinds of validation test suite are needed. One to test interoperability
 with ISE Eiffel. Another one to test compliance with the <ulink
 url="http://www.ecma-international.org/publications/standards/Ecma-367.htm">ECMA
-Eiffel standard</ulink>. It would be also useful to have a test suite for
+Eiffel standard</ulink>. It would also be useful to have a test suite for
 <ulink url="https://sourceforge.net/projects/freeelks">FreeELKS</ulink> kernel
 library.
 </para>

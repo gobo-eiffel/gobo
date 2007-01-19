@@ -44,9 +44,6 @@ used with <projectname>gec</projectname>:
 			<filename>-h</filename>
 		</term>
 		<term>
-			<filename>-?</filename>
-		</term>
-		<term>
 			<filename>--help</filename>
 		</term>
 		<listitem><para>
@@ -158,7 +155,7 @@ This config file is used by <projectname>gec</projectname> to generate a
 executed to compile the generated C code. The variable "cc" represents the
 command-line template to turn C files into object files, and "link" to
 turn object files into executables. The variables "$cflags", "$includes",
-"$c" in the first template, and "$lflags", "$exe", "objs" and "libs"
+"$c" in the first template, and "$lflags", "$exe", "$objs" and "$libs"
 in the second template will be replaced by appropriate values by 
 <projectname>gec</projectname>. Next, the variables "obj" and "exe"
 represent the file extensions for object files and executables on the
