@@ -980,6 +980,9 @@ feature {NONE} -- Implementation
 					elseif a_string.count > maximum_width then
 						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
+					if not ANY_.same_types (a_result_string, a_string) then
+						a_string := new_unicode_string (a_string)
+					end
 					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
 				end
 			end
