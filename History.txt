@@ -3,20 +3,27 @@ Version 3.5 - ????
 	geant:
 
 	* Fixed bugs which prevented that possible arguments of a target
-	  weren't taken into account during evaluation of ${somevar} references.
+	  to be taken into account during evaluation of ${somevar} references.
 	  This was especially the case for the attributes 'if' and 'unless'.
 
 	* Task <geant> now by default spawns a new geant process if
 	  attribute 'file' has been specified. It also has a new attribute
-	  called 'fork' to control whether a new process should be spawned or not.
+	  called 'fork' to control whether a new process should be spawned
+	  or not.
 
 	* Added attribute 'force' to task <xslt>. Use this attribute to
 	  generate output that already exists and is newer than the input.
 
 	* Added task <input> to get input values.
 
-	* Added task <replace> which permits to replace tokens or patterns
-	  in a file.
+	* Added task <replace> to replace tokens or patterns in a file.
+
+	gec:
+
+	* First version of the Gobo Eiffel Compiler (gec) that is able to
+	  compile everything in the Gobo package. However gec is not a
+	  full-fledged Eiffel compiler yet. See the documentation for more
+	  details.
 
 	getest:
 
@@ -57,7 +64,7 @@ Version 3.5 - ????
 	  characters. Also updated code for conversion to lower and
 	  upper case, and added code for conversion to title case.
 	  These are generated from the Unicode Character Database.
-	  Currently Unicode version 4.1.0 is supported.
+	  Currently Unicode version 5.0.0 is supported.
 	* New features have been added to a new ancestor of ISE's STRING
 	  class in order to support the classes STRING_32 and STRING_8
 	  which have been introduced at ECMA. As a consequence, the
@@ -73,7 +80,7 @@ Version 3.5 - ????
 	* Added creation procedure `make' to MA_DECIMAL_TEXT_PARSER and
 	  MA_DECIMAL_BCD_PARSER.
 	* Renamed MA_DECIMAL_CONSTANTS as MA_DECIMAL_CONTEXT_CONSTANTS and
-	  MA_DECIMAL_MATH as MA_DECIMAN_CONSTANTS.
+	  MA_DECIMAL_MATH as MA_DECIMAL_CONSTANTS.
 	* Added class MA_SHARED_DECIMAL_CONSTANTS.
 	* Moved `Maximum_integer_as_decimal' and `Minimum_integer_as_decimal'
 	  from MA_DECIMAL_CONTEXT_CONSTANTS to MA_DECIMAL_CONSTANTS and
@@ -93,17 +100,20 @@ Version 3.5 - ????
 	  Note that a call to `abort' or `accept' will force `parse' to parse
 	  from scratch.
 
-	Gobo Eiffel Time Library:
+	* Changed implementation of feature `syntax_error' in YY_PARSER_SKELETON
+	  so that it returns false when nothing has been parsed yet.
 
-	* Added classes to parse and format XML Schema date, time and
-	  date-time datatypes.
-
-	Gobo Eiffel String Library
+	Gobo Eiffel String Library:
 
 	* Added classes for normalizing Unicode strings.
 
 	* Removed useless precondition of feature `make_with_separators'
 	  in ST_SPLITTER.
+
+	Gobo Eiffel Time Library:
+
+	* Added classes to parse and format XML Schema date, time and
+	  date-time datatypes.
 
 	Gobo Eiffel XML Library:
 
