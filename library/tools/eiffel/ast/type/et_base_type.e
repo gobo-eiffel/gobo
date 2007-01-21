@@ -72,6 +72,9 @@ inherit
 			is_root_context
 		end
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 feature -- Initialization
 
 	reset is
@@ -337,9 +340,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- `a_formal' is implicitly constrained by "ANY",
 						-- so it conforms to any type that conforms to "ANY".
 					any_type := a_universe.any_type
-						-- Test below needed for compatibility with ISE 5.6.0610:
-						-- expanded types don't conform to reference types, the possibly convert to them.
-					if other.is_type_reference (other_context, a_universe) and is_type_reference (a_context, a_universe) then
+					if a_universe.is_ise and then a_universe.ise_version <= ise_5_6_latest then
+							-- Test below needed for compatibility with ISE 5.6.0610:
+							-- expanded types don't conform to reference types, the possibly convert to them.
+						if other.is_type_reference (other_context, a_universe) and is_type_reference (a_context, a_universe) then
+							Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
+						end
+					else
 						Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
 					end
 				else
@@ -349,9 +356,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 							-- parameter, or if it is there is no cycle and
 							-- the resolved base type of this constraint has
 							-- been made available in `base_type'.
-							-- Test below needed for compatibility with ISE 5.6.0610:
-							-- expanded types don't conform to reference types, the possibly convert to them.
-						if other.is_type_reference (other_context, a_universe) and is_type_reference (a_context, a_universe) then
+						if a_universe.is_ise and then a_universe.ise_version <= ise_5_6_latest then
+								-- Test below needed for compatibility with ISE 5.6.0610:
+								-- expanded types don't conform to reference types, the possibly convert to them.
+							if other.is_type_reference (other_context, a_universe) and is_type_reference (a_context, a_universe) then
+								Result := a_base_type.conforms_to_type (Current, a_context, other_context, a_universe)
+							end
+						else
 							Result := a_base_type.conforms_to_type (Current, a_context, other_context, a_universe)
 						end
 					else

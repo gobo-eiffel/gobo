@@ -49,6 +49,9 @@ inherit
 			is_valid_context_type
 		end
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 create
 
 	make
@@ -1259,10 +1262,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 								if a_base_type /= Void then
 										-- There is no cycle of the form
 										-- "[G -> G]" or "[G -> H, H -> G]".
-										-- Test below needed for compatibility with ISE 5.6.0610:
-										-- expanded types don't conform to reference types, the possibly convert to them.
-									if other.is_type_reference (other_context, a_universe) and is_type_reference (a_context.root_context, a_universe) then
-										Result := a_constraint.reference_conforms_to_type (Current, a_context.root_context, other_context, a_universe)
+									if a_universe.is_ise and then a_universe.ise_version <= ise_5_6_latest then
+											-- Test below needed for compatibility with ISE 5.6.0610:
+											-- expanded types don't conform to reference types, the possibly convert to them.
+										if other.is_type_reference (other_context, a_universe) and is_type_reference (a_context.root_context, a_universe) then
+											Result := a_constraint.reference_conforms_to_type (Current, a_context.root_context, other_context, a_universe)
+										end
+									else
+										Result := a_constraint.conforms_to_type (Current, a_context.root_context, other_context, a_universe)
 									end
 								else
 										-- There is a cycle. If `other' is "G" and current

@@ -30,6 +30,9 @@ inherit
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 create
 
 	make
@@ -934,11 +937,23 @@ feature {NONE} -- Validity checking
 							else
 								a_constraint := universe.any_type
 							end
-								-- Test below uses conformance of reference types for compatibility with ISE 5.6.0610.
-								-- the reference version of the actual generic parameter should conform to the
-								-- reference version of the constraint, and the actual generic parameter should
-								-- either conform or convert to the constraint (the latter condition is not checked here).
-							if not an_actual.reference_conforms_to_type (a_constraint, current_type, current_type, universe) then
+							if universe.is_ise and then universe.ise_version <= ise_5_6_latest then
+									-- Test below uses conformance of reference types for compatibility with ISE 5.6.0610.
+									-- the reference version of the actual generic parameter should conform to the
+									-- reference version of the constraint, and the actual generic parameter should
+									-- either conform or convert to the constraint (the latter condition is not checked here).
+								if not an_actual.reference_conforms_to_type (a_constraint, current_type, current_type, universe) then
+										-- The actual parameter does not conform to the
+										-- constraint of its corresponding formal parameter.
+									set_fatal_error
+									if current_class = a_class_impl then
+										error_handler.report_vtcg3a_error (current_class, a_type, an_actual, a_constraint)
+									else
+-- TODO: this error should have already been reported when processing `a_class_impl'.
+										error_handler.report_vtcg3a_error (a_class_impl, a_type, an_actual, a_constraint)
+									end
+								end
+							elseif not an_actual.conforms_to_type (a_constraint, current_type, current_type, universe) then
 									-- The actual parameter does not conform to the
 									-- constraint of its corresponding formal parameter.
 								set_fatal_error

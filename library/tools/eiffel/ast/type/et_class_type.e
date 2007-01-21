@@ -26,9 +26,6 @@ inherit
 
 	ET_SHARED_FEATURE_NAME_TESTER
 
-	UT_SHARED_ISE_VERSIONS
-		export {NONE} all end
-
 create
 
 	make
@@ -436,7 +433,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				if other_base_class = a_universe.none_class then
 						-- "NONE" conforms to any class type that is not expanded.
 					Result := True
-				elseif other.is_expanded and then (not a_universe.is_ise or else a_universe.ise_version <= ise_5_6_latest) then
+				elseif other.is_expanded and then (a_universe.is_ise and then a_universe.ise_version <= ise_5_6_latest) then
 						-- This test is needed for compatibility with ISE 5.6.0610:
 						-- expanded types don't conform to reference types, they
 						-- possibly convert to them.
