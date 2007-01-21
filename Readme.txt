@@ -1,4 +1,4 @@
-Gobo Eiffel, version 3.4
+Gobo Eiffel, version 3.5
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
 libraries and tools that are portable across various Eiffel compilers
@@ -8,15 +8,15 @@ this package.
 
 The software included in this package is copyrighted freeware distributed
 under the terms and conditions of the Eiffel Forum License version 2 as
-specified in file License.txt. Gobo Eiffel is now a multi-developer
+specified in file License.txt. Gobo Eiffel is a multi-developer
 open-source project whose development is hosted at SourceForge
 (https://sourceforge.net/projects/gobo-eiffel/) while the official stite
 (for stable releases) is still located at http://www.gobosoft.com/.
 
-Note that this release is not a full-fledged version. In particular its
-documentation is out of date or missing. It was decided to build this
-package anyway because it contains a lot of new library classes and a
-couple of new tools which have already been in use for several months
+Note that this release is not a full-fledged version. In particular
+some of its documentation is out of date or missing. It was decided to
+build this package anyway because it contains a lot of new library classes
+and a couple of new tools which have already been in use for several months
 by other Eiffel projects. So now that the code of these tools and Eiffel
 libraries is stable, it was deemed useful to make it available in an
 official package rather that still requiring those third party Eiffel
@@ -24,8 +24,9 @@ projects to tell their users to download the development version of Gobo
 under CVS. The next releases will be devoted to making the documentation
 more uptodate and providing more tests and examples.
 
-This package consists of thirteen Eiffel libraries:
+This package consists of fourteen Eiffel libraries:
 
+    . Gobo Eiffel Argument Library
     . Gobo Eiffel Kernel Library
     . Gobo Eiffel Structure Library
     . Gobo Eiffel Lexical Library
@@ -35,19 +36,20 @@ This package consists of thirteen Eiffel libraries:
     . Gobo Eiffel Math Library
     . Gobo Eiffel String Library
     . Gobo Eiffel Test Library
-    . Gobo Eiffel Tools Library
     . Gobo Eiffel Time Library
+    . Gobo Eiffel Tools Library
     . Gobo Eiffel Utility Library
     . Gobo Eiffel XML Library
 
 and nine utilities:
 
+    . Gobo Eiffel Compiler (gec)
     . Gobo Eiffel Ant (geant)
     . Gobo Eiffel Xace (gexace)
     . Gobo Eiffel Lex (gelex)
     . Gobo Eiffel Yacc (geyacc)
     . Gobo Eiffel Test (getest)
-    . Gobo Eiffel XSLT Processor  (gexslt)
+    . Gobo Eiffel XSLT Processor (gexslt)
     . Gobo Eiffel Lint (gelint)
     . Gobo Eiffel Preprocessor (gepp)
 
@@ -57,7 +59,7 @@ from CVS).
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
-has only been tested under Windows XP and Linux Fedora Core 4. Since
+has only been tested under Windows XP and Linux Fedora Core 2. Since
 most Eiffel compilers use the notation $NAME for environment variables
 in their Ace files (or equivalent), this convention has been used instead
 of the Windowish %NAME%. Likewise, the directory separator used through
@@ -68,7 +70,7 @@ To install this package, please follow the instructions below:
 
 Under Windows:
 
-    . download the package gobo34.zip
+    . download the package gobo35.zip
     . copy the files to a directory of your choice on your disk and
       set the environment variable %GOBO% to that directory, known as
       the distribution directory. Also put the directory %GOBO%\bin
@@ -76,7 +78,7 @@ Under Windows:
 
 Under Linux:
 
-    . download the package gobo34.tar.gz
+    . download the package gobo35.tar.gz
     . copy the files to a directory of your choice on your disk and
       set the environment variable $GOBO to that directory, known as
       the distribution directory. Also put the directory $GOBO/bin
@@ -84,13 +86,13 @@ Under Linux:
 
 For other platforms:
 
-    . download the package gobo34.tar.gz
+    . download the package gobo35.tar.gz
     . copy the files to a directory of your choice on your disk and
       set the environment variable $GOBO to that directory, known as
       the distribution directory. Also put the directory $GOBO/bin
       in your PATH.
     . go to each directories under $GOBO/src and use your favorite
-      Eiffel compiler and the Ace, Xace or ESD files provided to compile
+      Eiffel compiler and the Ace or Xace files provided to compile
       the corresponding tools, and copy the generated executables
       to $GOBO/bin.
 
@@ -98,20 +100,23 @@ Note that if you downloaded this package from CVS on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
 The supported Eiffel compilers, in alphabetical order, are: ISE Eiffel
-5.6.1218 (Classic and .NET), SmartEiffel 1.2r6, and Visual Eiffel 5.0b
-(Build 2508). For more details about the supported Eiffel compilers,
-please see the file "Release_notes.txt". This software might work with
-other Eiffel compilers and/or other compiler versions, however no test
-has been done. To have a better understanding of the way this software
-has been designed and implemented, you can also have a look at
-"$GOBO/doc/portability".
+5.6.1218, 5.7.64493 and 6.0.65740 (Classic and .NET), SmartEiffel 1.2r7,
+Visual Eiffel 5.0b (Build 2508) and Gobo Eiffel Compiler (gec) 3.5. For
+more details about the supported Eiffel compilers, please see the file
+"Release_notes.txt". This software might work with other Eiffel compilers
+and/or other compiler versions, however no test has been done. To have
+a better understanding of the way this software has been designed and
+implemented, you can also have a look at "$GOBO/doc/portability".
 
 In this distribution:
 
     bin                         Windows or Linux executables (gelex, geyacc, etc.)
     doc                         Gobo Eiffel documentation
+    doc/argument                Gobo Eiffel Argument Library documentation
     doc/geant                   geant documentation
+    doc/gec                     gec documentation
     doc/gelex                   gelex documentation
+    doc/gelint                  gelint documentation
     doc/getest                  getest documentation
     doc/gexace                  gexace documentation
     doc/gexslt                  gexslt documentation
@@ -122,7 +127,9 @@ In this distribution:
     doc/string                  Gobo Eiffel String Library documentation
     doc/structure               Gobo Eiffel Structure Library documentation
     doc/time                    Gobo Eiffel Time Library documentation
+    doc/tools                   Gobo Eiffel Tools Library documentation
     doc/xml                     Gobo Eiffel XML Library documentation
+    example/argument            examples for Gobo Eiffel Argument Library
     example/geant               geant examples
     example/lexical             examples for Gobo Eiffel Lexical Library
     example/math                examples for Gobo Eiffel Math Library
@@ -133,9 +140,11 @@ In this distribution:
     example/time                examples for Gobo Eiffel Time Library
     example/tools               examples for Gobo Eiffel Tools Library
     example/xml                 examples for Gobo Eiffel XML Library
+    library/argument            Gobo Eiffel Argument Library classes
+    library/free_elks           copy of the FreeELKS kernel library used by gec
     library/kernel              compiler-dependent kernel class adapters
     library/lexical             Gobo Eiffel Lexical Library classes
-    library/math                Gobo Eiffel Lexical Math classes
+    library/math                Gobo Eiffel Math Library classes
     library/other               emulation of third-party Eiffel libraries
     library/parse               Gobo Eiffel Parse Library classes
     library/pattern             Gobo Eiffel Pattern Library classes
@@ -149,15 +158,18 @@ In this distribution:
     library/xml                 Gobo Eiffel XML Library classes
     misc                        miscellaneous files
     src/geant                   geant source code
+    src/gec                     gec source code (still under development)
     src/gelex                   gelex source code
     src/gelint                  gelint source code (still under development)
     src/gepp                    gepp source code
     src/getest                  getest source code
     src/gexace                  gexace source code
-    src/gexslt                  gexslt source code (still under development)
+    src/gexslt                  gexslt source code
     src/geyacc                  geyacc source code
+    test/argument               test suite for Gobo Eiffel Argument Library
     test/common                 classes used by other tests
     test/example                test suite for the examples in $GOBO/example
+    test/free_elks              test suite for FreeELKS kernel library
     test/kernel                 test suite for Gobo Eiffel Kernel Library
     test/lexical                test suite for Gobo Eiffel Lexical Library
     test/math                   test suite for Gobo Eiffel Math Library
@@ -171,6 +183,7 @@ In this distribution:
     test/tools                  test suite for Gobo Eiffel Tools Library
     test/utility                test suite for Gobo Eiffel Utility Library
     test/xml                    test suite for Gobo Eiffel XML Library
+    tool/gec                    configuration and runtime files for gec
 
 Each of the above directories comes with a Readme file providing
 some basic information. Documentation is also available on the Web
@@ -190,5 +203,5 @@ your projects and how easy (or difficult) it was to adapt this software
 for your specific needs. Thank you in advance.
 
 --
-Copyright (c) 1997-2005, Eric Bezault and others
-10 July 2005
+Copyright (c) 1997-2007, Eric Bezault and others
+24 January 2007

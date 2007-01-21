@@ -30,4 +30,4 @@ and a GPL-Compatible, Free Software License:
     http://www.gnu.org/licenses/eiffel-forum-license-2.html
 
 --
-Copyright (c) 1997-2005, Eric Bezault and others
+Copyright (c) 1997-2007, Eric Bezault and others
