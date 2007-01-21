@@ -1,4 +1,4 @@
-ISE 5.7 (ISE Eiffel)
+ISE 5.7/6.0 (ISE Eiffel)
 
 	* The Ace files for ISE Eiffel provided in this package are for
 	  Eiffel classic. In order to get Ace files configured for Eiffel
@@ -12,7 +12,7 @@ ISE 5.7 (ISE Eiffel)
 
 ISE 5.6 (ISE Eiffel)
 
-	* The Gobo Eiffel package has been configured to work with ISE 5.7.
+	* The Gobo Eiffel package has been configured to work with ISE 5.7/6.0.
 	  If you are using ISE 5.6, you will need to set the environment
 	  variable $ISE_5_6, and then run the following commands to reconfigure
 	  the package with ISE 5.6:
@@ -31,6 +31,10 @@ ISE 5.6 (ISE Eiffel)
 	    cd %GOBO%
 	    geant clobber
 	    geant install
+
+SE 2.* (SmartEiffel)
+
+	* This version of the SmartEiffel compiler is not supported anymore.
 
 SE 1.2r7 (SmartEiffel)
 
