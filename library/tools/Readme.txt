@@ -17,12 +17,18 @@ eiffel
       Abstract syntax tree classes.
   compilation
       Eiffel code analysis.
+  dynamic
+      Dynamic type set classes and other runtime entities.
   error
       Error message classes used throughout this library.
+  generation
+      C code generation.
   parser
       Eiffel parsers.
   processor
       AST visitors.
+ecf
+    ECF parser (not available yet).
 lace
     LACE parser.
 xace
@@ -32,4 +38,4 @@ A more detailed documentation for this library will be provided in
 future releases.
 
 --
-Copyright (c) 2000-2005, Eric Bezault and others
+Copyright (c) 2000-2007, Eric Bezault and others
