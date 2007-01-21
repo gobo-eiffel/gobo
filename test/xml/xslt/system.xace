@@ -14,7 +14,7 @@
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
-		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="finalize" value="true"/>
 		<option if="${GOBO_EIFFEL}=ise">
 			<!--
 				In finized mode, it takes a huge amount of time to compile a big generated C file.
