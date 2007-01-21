@@ -27,7 +27,7 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
-		
+
 	KL_IMPORTED_SPECIAL_ROUTINES
 		export {NONE} all end
 
@@ -348,8 +348,11 @@ feature -- Status report
 
 	syntax_error: BOOLEAN is
 			-- Has last parsing been unsuccesful?
+			-- This query may return false if errors have been recovered.
+			-- Note that the result of this query is undefined within
+			-- the calll to `parse', e.g. when executing semantic actions.
 		do
-			Result := yy_parsing_status /= yyAccepted
+			Result := yy_parsing_status = yyAborted
 		end
 
 	is_suspended: BOOLEAN is
@@ -357,6 +360,8 @@ feature -- Status report
 			-- The next call to `parse' will resume parsing in the state
 			-- where the parser was when it was suspended. Note that a call
 			-- to `abort' or `accept' will force `parse' to parse from scratch.
+			-- Also, note that the result of this query is undefined within
+			-- the calll to `parse', e.g. when executing semantic actions.
 		do
 			Result := yy_parsing_status = yySuspended
 		end
@@ -486,7 +491,7 @@ feature {YY_PARSER_ACTION} -- Status report
 					if a_token = yyEof then
 						yychar1 := 0
 					else
-							-- Translate lexical token `a_token' into 
+							-- Translate lexical token `a_token' into
 							-- geyacc internal token code.
 						if a_token <= yyMax_token then
 							yychar1 := yytranslate.item (a_token)
@@ -612,7 +617,7 @@ feature {NONE} -- Tables
 			-- what to do after reducing a rule that derives
 			-- a variable, indexed by variable id - nb_tokens.
 			-- This portion is indexed by the parser state
-			-- number `s' as of before the text for this 
+			-- number `s' as of before the text for this
 			-- nonterminal was read. The value from `yytable'
 			-- is the state to go to if the corresponding
 			-- value in `yycheck' is `s'.
@@ -626,7 +631,7 @@ feature {NONE} -- Tables
 			-- indicates, in a roundabout way, the bounds of
 			-- the portion you are trying to examine. Suppose
 			-- that the portion of `yytable' starts at index
-			-- `p' and the index to be examined within the 
+			-- `p' and the index to be examined within the
 			-- portion is `i'. Then if `yycheck.item (p+i) /= i',
 			-- `i' is outside the bounds of what is actually
 			-- allocated, and the default (from `yydefact'

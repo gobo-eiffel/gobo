@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 		once
 			create Result
 		end
-		
+
 feature -- Initialization
 
 	reset is
@@ -131,7 +131,7 @@ feature -- Parsing
 			entity_resolver.resolve_public (a_public, a_system)
 			parse_from_entity
 		end
-		
+
 feature {NONE} -- Implementation
 
 	parse_from_entity is
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 				force_error (entity_resolver.last_error)
 			end
 		end
-		
+
 	parse_with_events is
 			-- Parse with start/finish events.
 		do
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			parse
 			on_finish
 		end
-		
+
 feature -- Obsolete
 
 	parse_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
@@ -173,16 +173,16 @@ feature -- Namespace mode
 			-- Disable namespace parsing and allow strict
 			-- XML 1.0 names (eg ":" or ":a:b:c:").
 			-- Namespace field in events is always Void.
-			
+
 		do
 			use_namespaces := False
 		ensure
 			disabled_namespaces: not use_namespaces
 		end
-		
+
 	use_namespaces: BOOLEAN
 			-- Are namespaces parsed?
-			
+
 feature {NONE} -- Namespaces
 
 	namespace_force_last (a_name: XM_EIFFEL_PARSER_NAME; a_string: STRING) is
@@ -197,13 +197,13 @@ feature {NONE} -- Namespaces
 				force_error (Error_namespaces_name_misformed)
 			end
 		end
-		
+
 feature -- Error reporting
 
 	is_correct: BOOLEAN is
 			-- Has no error been detected?
 		do
-			Result := not syntax_error
+			Result := (internal_last_error_description = Void)
 		end
 
 	last_error: INTEGER is
@@ -217,8 +217,16 @@ feature -- Error reporting
 			end
 		end
 
-	last_error_description: STRING
+	last_error_description: STRING is
 			-- Textual description of last error
+		do
+			Result := internal_last_error_description
+		end
+
+feature {NONE} -- Error reporting
+
+	internal_last_error_description: STRING
+			-- Textual description of last error, if any
 
 feature -- Error
 
@@ -289,22 +297,22 @@ feature {NONE} -- Error
 			-- Set error state.
 		do
 			error_positions := Void
-			last_error_description := Void
+			internal_last_error_description := Void
 		end
-		
+
 	setup_error_state (an_error: STRING) is
 			-- Set error message and position
 		require
 			an_error_not_void: an_error /= Void
 		do
 				-- Set error info
-			last_error_description := an_error
-			
+			internal_last_error_description := an_error
+
 				-- Setup position and unfold scanner stack,
 				-- if not already done
 			if error_positions = Void then
 				error_positions := new_positions
-			
+
 					-- Unfold scanner stack
 				scanner.close_input
 				from
@@ -321,7 +329,7 @@ feature {NONE} -- Error
 		end
 
 	new_positions: DS_BILINKED_LIST [XM_POSITION] is
-			-- Create stack of positions representing position in current XML 
+			-- Create stack of positions representing position in current XML
 			-- entities.
 		local
 			a_scanners: like scanners
@@ -365,13 +373,12 @@ feature -- Obsolete error
 		do
 			create {XM_FILE_SOURCE} Result.make (position.source_name)
 		end
-		
+
 feature {NONE} -- Error reporting
 
 	report_error (an_error: STRING) is
 			-- On error.
 		do
-			check in_error: not is_correct end
 			setup_error_state (an_error)
 			on_error (last_error_extended_description)
 		end
@@ -466,7 +473,7 @@ feature {NONE} -- Encoding
 				force_error (Error_unsupported_encoding)
 			end
 		end
-		
+
 feature {NONE} -- DTD
 
 	set_element_repetition (a_node: XM_DTD_ELEMENT_CONTENT; a_value: STRING) is
@@ -627,7 +634,7 @@ feature {NONE} -- Entities
 				a_resolver.resolve (an_id.system_id)
 			end
 		end
-		
+
 	external_entity_to_string (a_sys: XM_DTD_EXTERNAL_ID): STRING is
 			-- External entity to string
 		require
@@ -683,7 +690,7 @@ feature {NONE} -- DTD
 			debug ("xml_parser")
 				std.error.put_string ("[when_external_dtd]")
 			end
-				
+
 			resolve_external_id (dtd_resolver, a_system)
 			if not dtd_resolver.has_error then
 				-- Push old scanner.
@@ -728,7 +735,7 @@ feature {NONE} -- Scanner implementation
 			last_token := scanner.last_token
 			last_string_value := scanner.last_value
 			debug ("xml_parser")
-				
+
 				std.error.put_string (token_name (last_token))
 				std.error.put_string ("/")
 				if last_string_value /= Void then
@@ -751,7 +758,7 @@ feature {NONE} -- Scanner implementation
 				-- switch scanner. Token is left for validation.
 			last_text := last_string_value
 			--check for_all tokens_below: last_value is STRING end
-			
+
 			if last_token = DOCTYPE_PEREFERENCE then
 				process_pe_entity (onstring_ascii (last_text))
 			elseif last_token = DOCTYPE_PEREFERENCE_UTF8 then
@@ -848,7 +855,7 @@ feature {NONE} -- String mode
 				Result := a_string
 			end
 		end
-		
+
 	onstring_utf8 (a_string: STRING): STRING is
 			-- Incoming UTF8 encoded string.
 		require
@@ -871,7 +878,7 @@ feature {NONE} -- String mode
 				end
 			end
 		end
-		
+
 feature {NONE} -- String mode implementation
 
 	maximum_item_code (a_string: STRING): INTEGER is
@@ -902,7 +909,7 @@ feature {NONE} -- String mode implementation
 			empty_zero: a_string.is_empty implies Result = 0
 			result_positive: Result >= 0
 		end
-		
+
 	shared_empty_string: STRING is
 			-- Shared empty string (type depends on string mode)
 		do
@@ -914,7 +921,7 @@ feature {NONE} -- String mode implementation
 		ensure
 			empty_string_not_void: Result /= Void
 		end
-				
+
 feature {NONE} -- String mode: shared empty string implementation
 
 	shared_empty_string_string: STRING is
@@ -924,7 +931,7 @@ feature {NONE} -- String mode: shared empty string implementation
 		ensure
 			string_type: ANY_.same_types (Result, "")
 		end
-		
+
 	shared_empty_string_uc: STRING is
 			-- Empty string of type UC_STRING
 		once

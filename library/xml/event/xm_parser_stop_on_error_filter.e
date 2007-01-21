@@ -3,7 +3,7 @@ indexing
 	description:
 
 		"Variant of XM_STOP_ON_ERROR_FILTER that also stops the parser if the error is not from the parser"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -23,7 +23,7 @@ create
 
 	make,
 	make_next
-	
+
 feature {NONE}
 
 	make (a_parser: like parser) is
@@ -34,7 +34,7 @@ feature {NONE}
 			parser := a_parser
 			make_null
 		end
-		
+
 	make_next (a_parser: like parser; a_next: like next) is
 			-- Set parser and next callbacks.
 		require
@@ -44,7 +44,7 @@ feature {NONE}
 			make (a_parser)
 			set_next (a_next)
 		end
-		
+
 	parser: XM_PARSER
 			-- Associated parser.
 
@@ -53,7 +53,7 @@ feature -- Event(s)
 	on_error (a_message: STRING) is
 			-- Error event.
 		do
-			if a_message /= parser.last_error_description then
+			if parser.is_correct or else (a_message /= parser.last_error_description) then
 					-- The error does not come from the parser,
 					-- it is therefore an error from a filter that
 					-- is between the parser and this one,
