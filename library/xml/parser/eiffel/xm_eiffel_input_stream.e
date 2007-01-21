@@ -176,6 +176,9 @@ feature -- Input
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
+			-- (Note that even if at least `nb' characters are available
+			-- in the input stream, there is no guarantee that they
+			-- will all be read.)
 		local
 			i: INTEGER
 		do
@@ -202,6 +205,9 @@ feature -- Input
 			-- Fill `a_string', starting at position `pos', with
 			-- at most `nb' characters read from input stream.
 			-- Return the number of characters actually read.
+			-- (Note that even if at least `nb' characters are available
+			-- in the input stream, there is no guarantee that they
+			-- will all be read.)
 		do
 			if encoding = Undetected or encoding = Utf_8_or_compatible or else utf_queue.count > 0 then
 					-- Read one by one,
@@ -527,7 +533,7 @@ feature {NONE} -- Constants
 		end
 
 invariant
-	
+
 	last_string: last_string /= Void
 	impl_not_void: impl /= Void
 	queue_not_void: utf_queue /= Void

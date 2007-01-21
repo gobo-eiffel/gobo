@@ -30,6 +30,9 @@ feature -- Input
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
+			-- (Note that even if at least `nb' characters are available
+			-- in the input stream, there is no guarantee that they
+			-- will all be read.)
 		require
 			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
@@ -45,6 +48,9 @@ feature -- Input
 			-- Fill `a_string', starting at position `pos', with
 			-- at most `nb' characters read from input stream.
 			-- Return the number of characters actually read.
+			-- (Note that even if at least `nb' characters are available
+			-- in the input stream, there is no guarantee that they
+			-- will all be read.)
 		require
 			is_open_read: is_open_read
 			not_end_of_input: not end_of_input

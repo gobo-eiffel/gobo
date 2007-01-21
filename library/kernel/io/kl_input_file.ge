@@ -143,6 +143,9 @@ feature -- Input
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
+			-- (Note that even if at least `nb' characters are available
+			-- in the input file, there is no guarantee that they
+			-- will all be read.)
 #ifdef ISE
 		local
 			i: INTEGER
@@ -219,6 +222,9 @@ feature -- Input
 			-- Fill `a_string', starting at position `pos' with
 			-- at most `nb' characters read from input file.
 			-- Return the number of characters actually read.
+			-- (Note that even if at least `nb' characters are available
+			-- in the input file, there is no guarantee that they
+			-- will all be read.)
 		local
 #ifdef VE
 			end_pos: INTEGER
@@ -322,8 +328,11 @@ feature -- Input
 #endif
 	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER]; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_buffer', starting at position `pos', with
-			-- at most `nb' characters read from input stream.
+			-- at most `nb' characters read from input file.
 			-- Return the number of characters actually read.
+			-- (Note that even if at least `nb' characters are available
+			-- in the input file, there is no guarantee that they
+			-- will all be read.)
 		local
 			char_buffer: KL_CHARACTER_BUFFER
 		do

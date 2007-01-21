@@ -41,6 +41,9 @@ feature -- Input
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
+			-- (Note that even if at least `nb' characters are available
+			-- in the input stream, there is no guarantee that they
+			-- will all be read.)
 		do
 			base_stream.read_string (nb)
 		end

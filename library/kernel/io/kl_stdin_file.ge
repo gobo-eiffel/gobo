@@ -226,6 +226,9 @@ feature -- Input
 			-- Read at most `nb' characters from standard input file.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
+			-- (Note that even if at least `nb' characters are available
+			-- in standard input file, there is no guarantee that they
+			-- will all be read.)
 #ifdef ISE
 		local
 			i: INTEGER
@@ -428,6 +431,9 @@ feature -- Input
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from standard input file.
 			-- Return the number of characters actually read.
+			-- (Note that even if at least `nb' characters are available
+			-- in standard input file, there is no guarantee that they
+			-- will all be read.)
 		local
 			i, j: INTEGER
 			k, nb2: INTEGER
@@ -474,6 +480,9 @@ feature -- Input
 			-- Fill `a_buffer', starting at position `pos', with
 			-- at most `nb' characters read from standard input file.
 			-- Return the number of characters actually read.
+			-- (Note that even if at least `nb' characters are available
+			-- in standard input file, there is no guarantee that they
+			-- will all be read.)
 		local
 			char_buffer: KL_CHARACTER_BUFFER
 		do

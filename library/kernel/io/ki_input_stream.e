@@ -44,6 +44,9 @@ feature -- Input
 			-- Fill `a_buffer', starting at position `pos', with
 			-- at most `nb' items read from input stream.
 			-- Return the number of items actually read.
+			-- (Note that even if at least `nb' items are available
+			-- in the input stream, there is no guarantee that they
+			-- will all be read.)
 		require
 			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
