@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			sub_expressions, same_expression, simplify, promote, compute_special_properties,
-			is_unary_expression, as_unary_expression
+			is_unary_expression, as_unary_expression, mark_tail_function_calls
 		end
 
 feature {NONE} -- Initialization
@@ -87,6 +87,14 @@ feature -- Status report
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			base_expression.display (a_level + 1)
+		end
+
+feature -- Status setting
+
+	mark_tail_function_calls is
+			-- Mark tail-recursive calls on stylesheet functions.
+		do
+			base_expression.mark_tail_function_calls
 		end
 
 feature -- Optimization	

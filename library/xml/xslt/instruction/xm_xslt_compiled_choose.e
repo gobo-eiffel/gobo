@@ -15,7 +15,7 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			item_type, creates_new_nodes, sub_expressions, evaluate_item, create_iterator,
-			native_implementations, promote_instruction
+			native_implementations, promote_instruction, mark_tail_function_calls
 		end
 
 create
@@ -135,6 +135,24 @@ feature -- Status report
 			end
 		end
 
+feature -- Status report
+
+	mark_tail_function_calls is
+			-- Mark tail-recursive calls on stylesheet functions.
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			from
+				l_cursor := actions.new_cursor
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_cursor.item.mark_tail_function_calls
+				l_cursor.forth
+			end
+		end
+	
 feature -- Optimization
 
 	simplify is

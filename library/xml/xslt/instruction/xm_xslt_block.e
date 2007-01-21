@@ -17,7 +17,7 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			sub_expressions, item_type, compute_cardinality,
-			promote_instruction, is_block,
+			promote_instruction, is_block, mark_tail_function_calls,
 			native_implementations, create_iterator, creates_new_nodes
 		end
 
@@ -190,7 +190,15 @@ feature -- Status report
 				a_cursor.forth
 			end
 		end
-	
+
+feature -- Status report
+
+	mark_tail_function_calls is
+			-- Mark tail-recursive calls on stylesheet functions.
+		do
+			children.last.mark_tail_function_calls
+		end
+
 feature -- Optimization
 
 	simplify is
