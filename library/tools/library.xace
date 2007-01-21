@@ -40,6 +40,11 @@
 			<cluster name="error"/>
 			<cluster name="parser"/>
 		</cluster>
+		<cluster name="ecf" prefix="ecf_">
+			<option name="abstract" value="true"/>
+			<cluster name="ast"/>
+			<cluster name="error"/>
+		</cluster>
 		<cluster name="xace" prefix="xace_">
 			<option name="abstract" value="true"/>
 			<cluster name="ast"/>
