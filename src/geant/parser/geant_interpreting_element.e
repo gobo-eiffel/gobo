@@ -128,8 +128,6 @@ feature -- Access/XML attribute values
 	attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is
 			-- Value of attribue `an_attr_name',
 			-- or `a_default_value' of no such attribute
-		local
-			a_string_interpreter: GEANT_STRING_INTERPRETER
 		do
 			if xml_element.has_attribute_by_name (an_attr_name) then
 				Result := attribute_value (an_attr_name)

@@ -43,7 +43,7 @@ feature -- Access
 
 	element_test: XM_XPATH_NODE_TEST
 			-- Test for document element
-	
+
 	is_document_node_test: BOOLEAN is
 			-- Is `Current' a document node test?
 		do
@@ -127,11 +127,6 @@ feature -- Matching
 
 	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN is
 			-- Is this node test satisfied by a given node?
-		local
-			l_found, l_continuing: BOOLEAN
-			l_iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
-			l_node: XM_XPATH_NODE
-			l_kind: INTEGER
 		do
 			if a_node_kind = Document_node then
 				Result := element_test.matches_node (Element_node, a_fingerprint, a_node_type)
@@ -143,4 +138,4 @@ invariant
 	element_test_not_void: element_test /= Void
 
 end
-	
+
