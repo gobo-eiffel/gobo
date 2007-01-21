@@ -11,7 +11,7 @@ indexing
 	revision: "$Revision$"
 
 class XM_XPATH_EMPTY_ITERATOR [G -> XM_XPATH_NODE]
-	
+
 inherit
 
 
@@ -59,7 +59,7 @@ feature -- Access
 			-- Value or node at the current position
 		do
 		end
-	
+
 	last_position: INTEGER is
 			-- Last position (= number of items in sequence)
 		do
@@ -81,8 +81,28 @@ feature -- Status report
 
 	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as an empty iterator
+		local
+			a: ANY
+			r: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TREE_NODE]
 		do
-			Result := Current
+				-- Note1: the assignment attempt is necessary to compile
+				-- with ISE 5.6 (formal generic does not necessarily
+				-- conform to its constraint, but its reference version
+				-- conforms to the reference version of its constraint).
+				-- This has been changed in ISE 5.7, so no assignment
+				-- attempt will be necessary when we drop support for
+				-- ISE 5.6.
+				-- Note2: we need to use an ANY as source of the assignment
+				-- attempt, otherwise SE complains.
+				-- Note3: because of a bug in assignment attempt with
+				-- generic types in VE, we have to do it in two steps.
+			a := Current
+			r ?= a
+			if r /= Void then
+				Result := r
+			else
+				Result ?= a
+			end
 		end
 
 	is_node_iterator: BOOLEAN is
@@ -93,8 +113,28 @@ feature -- Status report
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as a node iterator
+		local
+			a: ANY
+			r: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TREE_NODE]
 		do
-			Result := Current
+				-- Note1: the assignment attempt is necessary to compile
+				-- with ISE 5.6 (formal generic does not necessarily
+				-- conform to its constraint, but its reference version
+				-- conforms to the reference version of its constraint).
+				-- This has been changed in ISE 5.7, so no assignment
+				-- attempt will be necessary when we drop support for
+				-- ISE 5.6.
+				-- Note2: we need to use an ANY as source of the assignment
+				-- attempt, otherwise SE complains.
+				-- Note3: because of a bug in assignment attempt with
+				-- generic types in VE, we have to do it in two steps.
+			a := Current
+			r ?= a
+			if r /= Void then
+				Result := r
+			else
+				Result ?= a
+			end
 		end
 
 	is_invulnerable: BOOLEAN is
