@@ -265,9 +265,9 @@ feature -- Validity checks
 					from i := 1 until i > nb loop
 						if
 							is_alpha_numeric (a_string.item (i)) or
-							(i > 1 and i < nb and then
-						 	a_string.item (i) = short_option_introduction and
-						 	a_string.item (i - 1) /= short_option_introduction)
+							((i > 1 and i < nb) and then
+						 	(a_string.item (i) = short_option_introduction and
+						 	a_string.item (i - 1) /= short_option_introduction))
 						then
 							i := i + 1
 						else
