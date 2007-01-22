@@ -111,10 +111,10 @@ feature {NONE} -- Precompilation
 			-- Test precompilation with ISE Eiffel. If `base' is true then
 			-- use Gobo's EiffelBase emulation instead of ISE's EiffelBase.
 		local
-			define_base: STRING
+			define_option: STRING
 			dotnet: STRING
+			ise_5_6: STRING
 		do
-			dotnet := Execution_environment.variable_value ("GOBO_DOTNET")
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
@@ -124,20 +124,30 @@ feature {NONE} -- Precompilation
 			assert ("EIFGEN_not_exists", not file_system.directory_exists ("EIFGEN"))
 			assert ("EIFGENs_not_exists", not file_system.directory_exists ("EIFGENs"))
 				-- Generate Ace file.
+			create define_option.make (50)
 			if base then
-				if dotnet /= Void and then dotnet.count > 0 then
-					define_base := "--define=%"GOBO_EIFFELBASE GOBO_DOTNET%" "
+				define_option.append_string ("--define=%"GOBO_EIFFELBASE")
+			end
+			dotnet := Execution_environment.variable_value ("GOBO_DOTNET")
+			if dotnet /= Void and then dotnet.count > 0 then
+				if define_option.count = 0 then
+					define_option.append_string ("--define=%"GOBO_DOTNET")
 				else
-					define_base := "--define=%"GOBO_EIFFELBASE%" "
-				end
-			else
-				if dotnet /= Void and then dotnet.count > 0 then
-					define_base := "--define=%"GOBO_DOTNET%" "
-				else
-					define_base := ""
+					define_option.append_string (" GOBO_DOTNET")
 				end
 			end
-			assert_execute ("gexace " + define_base + "--library=ise " + xace_filename + output_log)
+			ise_5_6 := Execution_environment.variable_value ("ISE_5_6")
+			if ise_5_6 /= Void and then ise_5_6.count > 0 then
+				if define_option.count = 0 then
+					define_option.append_string ("--define=%"ISE_5_6")
+				else
+					define_option.append_string (" ISE_5_6")
+				end
+			end
+			if define_option.count > 0 then
+				define_option.append_string ("%" ")
+			end
+			assert_execute ("gexace " + define_option + "--library=ise " + xace_filename + output_log)
 				-- Eiffel precompilation.
 			assert_execute ("ec -precompile -batch -ace ise.ace" + output_log)
 				-- Done.
