@@ -10,5 +10,5 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="argument" prefix="ap_" location="${GOBO}/library/argument"/>
+	<cluster name="argument" location="${GOBO}/library/argument"/>
 </library>
