@@ -59,7 +59,7 @@ from CVS).
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
-has only been tested under Windows XP and Linux Fedora Core 2. Since
+has only been tested under Windows XP and Linux Ubuntu 6.10. Since
 most Eiffel compilers use the notation $NAME for environment variables
 in their Ace files (or equivalent), this convention has been used instead
 of the Windowish %NAME%. Likewise, the directory separator used through
@@ -204,4 +204,4 @@ for your specific needs. Thank you in advance.
 
 --
 Copyright (c) 1997-2007, Eric Bezault and others
-24 January 2007
+23 January 2007
