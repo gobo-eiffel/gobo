@@ -5,7 +5,7 @@
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2005, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -11576,7 +11576,7 @@ typedef struct {
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2007, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -11596,7 +11596,7 @@ extern char** geargv;
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2007, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -12877,7 +12877,7 @@ extern void T69f19(T0* C, T14 a1, T14 a2, T6 a3);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -12954,7 +12954,7 @@ extern void file_pdb(FILE* f, EIF_REAL_64 val);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -13087,7 +13087,7 @@ extern T0* T215f2(T0* C);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -13207,7 +13207,7 @@ extern void T767f4(T0* C, T14 a1, T6 a2);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -13274,7 +13274,7 @@ extern T6 T46f9(T0* C, T14 a1);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -17411,7 +17411,7 @@ extern T6 T123f23(T0* C, T14 a1);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */

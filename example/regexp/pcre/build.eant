@@ -5,7 +5,7 @@
 	<description>
 		system: "PCRE regular expression usage example"
 		copyright: "Copyright (c) 2002, Harald Erdbruegger and others"
-		license: "Eiffel Forum License v2 (see forum.txt)"
+		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>

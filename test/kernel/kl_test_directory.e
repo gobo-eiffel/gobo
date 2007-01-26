@@ -6,7 +6,7 @@ indexing
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -211,6 +211,7 @@ feature -- Test
 			expected_entries: ARRAY [STRING]
 			an_entry: STRING
 			cvs_dir: STRING
+			dot_svn: STRING
 		do
 			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
@@ -219,6 +220,7 @@ feature -- Test
 			if a_directory.is_open_read then
 				assert ("not_eof", not a_directory.end_of_input)
 				cvs_dir := "CVS"
+				dot_svn := ".svn"
 				from
 					create filenames.make (10)
 				until
@@ -228,6 +230,7 @@ feature -- Test
 					if not a_directory.end_of_input then
 						an_entry := a_directory.last_entry
 						if
+							not STRING_.same_string (an_entry, dot_svn) and
 							not STRING_.same_string (an_entry, cvs_dir) and
 							not STRING_.same_string (an_entry, file_system.relative_current_directory) and
 							not STRING_.same_string (an_entry, file_system.relative_parent_directory)

@@ -7,7 +7,7 @@ indexing
 
 	library: "Gobo Eiffel Pattern Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

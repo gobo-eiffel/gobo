@@ -7,7 +7,7 @@ indexing
 	remark: "year 0 means 1 BCE, year -1 means 2 BCE, etc."
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2000, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

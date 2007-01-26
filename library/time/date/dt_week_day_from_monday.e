@@ -7,7 +7,7 @@ indexing
 	pattern: "Use features from DT_WEEK_DAYS_FROM_MONDAY to get instances of this class"
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

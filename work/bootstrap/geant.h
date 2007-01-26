@@ -5,7 +5,7 @@
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2005, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -4667,7 +4667,7 @@ extern void T35f2(T0* C, T4 a1);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -4715,7 +4715,7 @@ extern void T34f17(T0* C, T14 a1, T14 a2, T4 a3);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -4792,7 +4792,7 @@ extern void file_pdb(FILE* f, EIF_REAL_64 val);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -5233,7 +5233,7 @@ extern T14 T59f3(T0* C, T14 a1);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -8543,7 +8543,7 @@ extern T4 T59f5(T0* C, T14 a1);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -12724,7 +12724,7 @@ extern void T389f15(T0* C, T14 a1, T14 a2, T14 a3);
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */

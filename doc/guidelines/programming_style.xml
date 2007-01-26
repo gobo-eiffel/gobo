@@ -6,7 +6,7 @@
 		"Programming Style"
 
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -77,7 +77,7 @@ _   _   </text>"Short description of the class"
 _   </text>library:    "Gobo Eiffel Lexical Library"
 <text>_   </text>author:     "Eric Bezault &lt;ericb@gobosoft.com&gt;"
 <text>_   </text>copyright:  "Copyright (c) 2000, Eric Bezault and others"
-<text>_   </text>license:    "Eiffel Forum License v2 (see forum.txt)"
+<text>_   </text>license:    "MIT License"
 <text>_   </text>date:       "$Date$"
 <text>_   </text>revision:   "$Revision$"
 </programlisting>

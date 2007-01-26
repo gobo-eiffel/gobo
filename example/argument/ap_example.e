@@ -5,7 +5,7 @@ indexing
 		"Ficticious application to demonstrate the use of the command line parsing library"
 
 	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -2,7 +2,7 @@
 
 rem description: "Bootstrap Gobo Eiffel package"
 rem copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
-rem license: "Eiffel Forum License v2 (see forum.txt)"
+rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
 

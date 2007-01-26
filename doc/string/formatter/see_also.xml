@@ -7,7 +7,7 @@
 
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Berend de Boer and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 -->
@@ -36,8 +36,8 @@ The <libraryname>Gobo Eiffel String Formatter Library</libraryname> is based on 
 Formatting Cluster</libraryname></ulink> of Eiffel/S (now 
 <ulink url="http://www.object-tools.com">Object Tools</ulink>). SiG put the 
 <libraryname>Formatting Cluster</libraryname> in the public domain by licensing it 
-under the <ulink url="http://www.opensource.org/licenses/eiffel.php">Eiffel Forum 
-License, version 1</ulink>. It was ported by Friedrich Dominicus to other Eiffel 
+under the <ulink url="http://opensource.org/licenses/mit-license.html">MIT License</ulink>.
+It was ported by Friedrich Dominicus to other Eiffel 
 compilers. The <libraryname>Gobo Eiffel String Formatter Library</libraryname> is based 
 on Friedrich Dominicus's work, which can be 
 <ulink url="http://www.eiffelzone.com/esd/fc/index.html">downloaded</ulink> 

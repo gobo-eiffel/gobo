@@ -2,7 +2,7 @@ indexing
 	description: "Fake abstraction of a .NET NATIVE_ARRAY in a non-.NET system"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2005, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

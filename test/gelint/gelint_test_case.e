@@ -5,7 +5,7 @@ indexing
 		"Gelint test cases"
 
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -5,7 +5,7 @@ indexing
 		"Gobo Eiffel Compiler"
 
 	copyright: "Copyright (c) 2005-2007, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

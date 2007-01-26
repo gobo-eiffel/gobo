@@ -2,7 +2,7 @@ indexing
 	description: "References to objects containing an integer value coded on 32 bits"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2005, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

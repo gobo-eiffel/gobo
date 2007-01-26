@@ -6,8 +6,8 @@ available on the market. That way, you can still use your favorite
 Eiffel compiler while taking advantage of the goodies included in
 this package.
 
-The software included in this package is copyrighted freeware distributed
-under the terms and conditions of the Eiffel Forum License version 2 as
+The software included in this package is copyrighted freeware
+distributed under the terms and conditions of the MIT License as
 specified in file License.txt. Gobo Eiffel is a multi-developer
 open-source project whose development is hosted at SourceForge
 (https://sourceforge.net/projects/gobo-eiffel/) while the official stite

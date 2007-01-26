@@ -1,33 +1,37 @@
 All source code and binary programs included in Gobo Eiffel
-are distributed under the terms and conditions of the Eiffel
-Forum License:
+are distributed under the terms and conditions of the MIT
+License:
 
-    Eiffel Forum License, version 2
+    The MIT License
 
-    1. Permission is hereby granted to use, copy, modify and/or distribute
-       this package, provided that:
-           * copyright notices are retained unchanged,
-           * any distribution of this package, whether modified or not,
-             includes this license text.
-    2. Permission is hereby also granted to distribute binary programs which
-       depend on this package. If the binary program depends on a modified
-       version of this package, you are encouraged to publicly release the
-       modified version of this package.
+    Copyright (c) <year> <copyright holders>
 
-    THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT WARRANTY. ANY EXPRESS OR
-    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE TO ANY PARTY FOR
-    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-    DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THIS PACKAGE.
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 This license is an OSI Approved License:
 
-    http://opensource.org/licenses/ver2_eiffel.php
+    http://opensource.org/licenses/mit-license.html
 
-and a GPL-Compatible, Free Software License:
+and a GPL-Compatible Free Software License:
 
-    http://www.gnu.org/licenses/eiffel-forum-license-2.html
+    http://www.gnu.org/licenses/license-list.html#X11License
 
 --
 Copyright (c) 1997-2007, Eric Bezault and others

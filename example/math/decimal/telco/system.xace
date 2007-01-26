@@ -9,7 +9,7 @@
 			The specification is Copyright (c) IBM Corporation, 2002.
 
 		copyright: "Copyright (c) 2005, Paul G. Crismer and others"
-		license: "Eiffel Forum License v2 (see forum.txt)"
+		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>

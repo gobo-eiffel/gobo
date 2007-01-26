@@ -7,7 +7,7 @@ indexing
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
 	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum License v2 (see forum.txt)"
+	license:    "MIT License"
 
 class DS_LINKED_LIST [G]
 

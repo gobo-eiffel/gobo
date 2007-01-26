@@ -5,7 +5,7 @@
 		description: "Xace file for the Gobo Eiffel XML core Library"
 		library: "Gobo Eiffel XML Library"
 		copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
-		license: "Eiffel Forum License v2 (see forum.txt)"
+		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>

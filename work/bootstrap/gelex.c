@@ -40018,7 +40018,7 @@ int main(int argc, char** argv)
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -40916,7 +40916,7 @@ void file_pdb(FILE* f, EIF_REAL_64 val) {
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */
@@ -41017,7 +41017,7 @@ void console_file_close (FILE* f) {
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 */

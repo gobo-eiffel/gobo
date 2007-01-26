@@ -4,7 +4,7 @@
 	description: "Gobo Documentation RelaxNG specification"
 	system: "Gobo Eiffel"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 -->

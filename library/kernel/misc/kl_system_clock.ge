@@ -10,7 +10,7 @@ indexing
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

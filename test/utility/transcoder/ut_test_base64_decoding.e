@@ -6,7 +6,7 @@ indexing
 
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	revision: "$Revision$"
 	date: "$Date$"
 

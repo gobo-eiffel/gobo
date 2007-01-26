@@ -5,7 +5,7 @@ indexing
 		"Error: Too many nested include files"
 
 	copyright: "Copyright (c) 1999, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -5,7 +5,7 @@ indexing
 		"Version of Gobo"
 
 	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

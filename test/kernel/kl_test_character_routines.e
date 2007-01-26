@@ -6,7 +6,7 @@ indexing
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2006, Berend de Boer and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 

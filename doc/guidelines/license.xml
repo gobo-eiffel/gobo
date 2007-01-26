@@ -6,7 +6,7 @@
 		"License"
 
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,50 +30,51 @@
 <para>
 The files in the <projectname>Gobo Eiffel</projectname> package are released 
 under the 
-<ulink url="http://opensource.org/licenses/ver2_eiffel.php">Eiffel Forum 
-Freeware License</ulink>: 
+<ulink url="http://opensource.org/licenses/mit-license.html">MIT License</ulink>: 
 </para>
 
 <para>
 <blockquote>
 <para>
-	<emphasis role="strong">Eiffel Forum License, version 2</emphasis>
+	<emphasis role="strong">The MIT License</emphasis>
 </para>
 
 <para>
-<orderedlist>
-	<listitem><para>Permission is hereby granted to use, copy, modify and/or
-	distribute this package, provided that:
-	<itemizedlist>
-		<listitem><para>copyright notices are retained unchanged,</para></listitem>
-		<listitem><para>any distribution of this package, whether 
-		modified or not, includes this license text.</para></listitem>
-	</itemizedlist></para>
-	</listitem>
-	
-	<listitem><para>Permission is hereby also granted to distribute binary 
-	programs which depend on this package. If the binary program depends on 
-	a modified version of this package, you are encouraged to publicly 
-	release the modified version of this package.</para></listitem>
-</orderedlist>
+Copyright (c) &lt;year&gt; &lt;copyright holders&gt;
 </para>
 
 <para>
-THIS PACKAGE IS PROVIDED <quote>AS IS</quote> AND WITHOUT WARRANTY. ANY EXPRESS 
-OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
-SHALL THE AUTHORS BE LIABLE TO ANY PARTY FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE 
-OF THIS PACKAGE.
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+<quote>Software</quote>), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+</para>
+
+<para>
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+</para>
+
+<para>
+THE SOFTWARE IS PROVIDED <quote>AS IS</quote>, WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </para>
 </blockquote>
 </para>
 
 <para>
 This license is an 
-<ulink url="http://opensource.org/licenses/ver2_eiffel.php">OSI Approved 
+<ulink url="http://opensource.org/licenses/mit-license.html">OSI Approved 
 License</ulink> and a 
-<ulink url="http://www.gnu.org/licenses/eiffel-forum-license-2.html">GPL-Compatible, 
+<ulink url="http://www.gnu.org/licenses/license-list.html#X11License">GPL-Compatible 
 Free Software License</ulink>.
 </para>
 

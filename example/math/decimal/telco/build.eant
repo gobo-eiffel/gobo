@@ -6,7 +6,7 @@
 		system: "Telco benchmark"
 		specification: "http://www2.hursley.ibm.com/decimal/telco.html"
 		copyright: "Copyright (c) 2005, Paul G. Crismer and others"
-		license: "Eiffel Forum License v2 (see forum.txt)"
+		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
