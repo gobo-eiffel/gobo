@@ -32,14 +32,14 @@
     <ulink url="http://www.w3.org/TR/xslt20/">XSLT 2.0 tranformation language</ulink>.
   </para>
   <para>
-    The library supports a Basic XSLT processor, and is in line with the Proposed Recommendation.
+    The library supports a Basic XSLT processor, and is in line with the Recommendation.
   </para>
   <para>
     The support is not yet quite complete. The following features have yet to be implemented:
     <itemizedlist>
 	<listitem>
 	  <para>
-	    Regular expressions do not yet support Unicode data (ASCII support only).
+	    Xsl:sort case-order attribute is not supported yet.
 	  </para>
 	</listitem>
 	<listitem>
