@@ -118,7 +118,7 @@ feature -- Events
 			reporter.info_file.put_string ("<")
 			reporter.info_file.put_string (tag_name (some_trace_details))
 			reporter.info_file.put_string (" ")
-			if some_trace_details.construct_type >= 1024 then
+			if some_trace_details.construct_type >= 2000 then
 				reporter.info_file.put_string (Gexslt_name_pseudo_attribute)
 				reporter.info_file.put_string ("=%"")
 				reporter.info_file.put_string (some_trace_details.trace_property (Gexslt_name_pseudo_attribute))
@@ -262,16 +262,14 @@ feature {NONE} -- Implementation
 		require
 			trace_details_not_void: some_trace_details /= Void
 		do
-			if some_trace_details.construct_type < 1024 then
-				Result := shared_name_pool.display_name_from_name_code (some_trace_details.construct_type)
+			inspect
+				some_trace_details.construct_type
+			when Literal_result_element then
+				Result := "LRE"
+			when Xpath_expression_in_xslt then
+				Result := "XPath expression"
 			else
-				inspect
-					some_trace_details.construct_type
-				when Literal_result_element then
-					Result := "LRE"
-				else
-					Result := "TODO-Unknown-tag-" + some_trace_details.construct_type.out
-				end
+				Result := shared_name_pool.display_name_from_name_code (some_trace_details.construct_type)
 			end
 		ensure
 			result_not_void: Result /= Void
