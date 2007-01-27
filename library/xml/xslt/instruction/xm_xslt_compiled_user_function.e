@@ -75,9 +75,6 @@ feature -- Access
 	parameter_definitions: DS_ARRAYED_LIST [XM_XSLT_USER_FUNCTION_PARAMETER]
 			-- Parameters to the call
 
-	last_called_value: XM_XPATH_VALUE
-			-- Result of `call'
-
 	parameter_count: INTEGER
 			-- Number of parameters passed
 
@@ -136,14 +133,14 @@ feature -- Status report
 	contains_tail_calls: BOOLEAN
 			-- Does `Current' contain tail calls?
 
-	last_combined_key: STRING
-			-- Result from `calculate_combined_key'
-
 feature -- Evaluation
 
-	call (some_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_parameter_count: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; evaluate_tail_calls: BOOLEAN) is
+	call (a_return_value: DS_CELL [XM_XPATH_VALUE]; some_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_parameter_count: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; evaluate_tail_calls: BOOLEAN) is
 			-- Evaluate function call.
+			-- Result returned as `a_return_value.item'.
 		require
+			a_return_value_not_void: a_return_value /= Void
+			return_value_is_void: a_return_value.item = Void
 			arguments_not_void: some_actual_arguments /= Void
 			positive_parameter_count: a_parameter_count >= 0
 			major_context_not_void: a_context /= Void and then not a_context.is_minor
@@ -152,13 +149,12 @@ feature -- Evaluation
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_stack_frame: XM_XPATH_STACK_FRAME
 		do
-			last_called_value := Void
 			parameter_count := a_parameter_count
 			a_transformer := a_context.transformer
 			if is_memo_function then
-				fetch_cached_value (a_transformer, some_actual_arguments)
+				fetch_cached_value (a_return_value, a_transformer, some_actual_arguments)
 			end
-			if last_called_value = Void then
+			if a_return_value.item = Void then
 				create a_stack_frame.make (slot_manager, some_actual_arguments)
 				a_context.set_stack_frame (a_stack_frame)
 				if contains_tail_calls or else is_memo_function then
@@ -171,24 +167,24 @@ feature -- Evaluation
 				else
 					body.lazily_evaluate (a_context, 1)
 				end
-				last_called_value := body.last_evaluation
-				if evaluate_tail_calls and then last_called_value.is_function_package then
+				a_return_value.put (body.last_evaluation)
+				if evaluate_tail_calls and then a_return_value.item.is_function_package then
 					from
-						a_function_package ?= last_called_value
+						a_function_package ?= a_return_value.item
 					until
 						a_function_package = Void
 					loop
-						a_function_package.call
-						last_called_value := a_function_package.last_called_value
-						a_function_package ?= last_called_value
+						a_return_value.put (Void)
+						a_function_package.call (a_return_value)
+						a_function_package ?= a_return_value.item
 					end
 				end
 				if is_memo_function then
-					put_cached_value (a_transformer, some_actual_arguments, last_called_value)
+					put_cached_value (a_transformer, some_actual_arguments, a_return_value.item)
 				end
 			end
 		ensure
-			called_value_not_void: last_called_value /= Void -- but may be an error value
+			called_value_not_void: a_return_value.item /= Void -- but may be an error value
 		end
 
 feature -- Element change
@@ -213,108 +209,111 @@ feature {NONE} -- Implementation
 			arguments_not_void: some_actual_arguments /= Void
 		local
 			a_function_cache: DS_HASH_TABLE [XM_XPATH_VALUE, STRING]
-			a_key: STRING
+			l_key: DS_CELL [STRING]
 		do
 			a_function_cache := a_transformer.function_results_cache (Current)
 			if a_function_cache = Void then
 				create a_function_cache.make_with_equality_testers (10, Void, string_equality_tester)
 				a_transformer.save_function_results (a_function_cache, Current)
 			end
-			calculate_combined_key (some_actual_arguments, a_transformer)
-			if last_called_value = Void then
-				a_key := last_combined_key
-				a_function_cache.force (a_cached_result, a_key)
-				last_called_value := a_cached_result
+			create l_key.make (Void)
+			calculate_combined_key (l_key, some_actual_arguments, a_transformer)
+			if not a_transformer.is_error then
+				a_function_cache.force (a_cached_result, l_key.item)
 			end
-		ensure
-			last_called_value_not_void: last_called_value /= Void
 		end
 
-	fetch_cached_value (a_transformer: XM_XSLT_TRANSFORMER; some_actual_arguments: ARRAY [XM_XPATH_VALUE]) is
-			-- Save value from cache into `last_called_value'.
+	fetch_cached_value (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER; some_actual_arguments: ARRAY [XM_XPATH_VALUE]) is
+			-- Save value from cache into `a_return_value.item'.
 		require
+			a_return_value_not_void: a_return_value /= Void
+			return_value_is_void: a_return_value.item = Void
 			memo_function: is_memo_function
 			transformer_not_void: a_transformer /= Void
 			arguments_not_void: some_actual_arguments /= Void
 		local
-			a_function_cache: DS_HASH_TABLE [XM_XPATH_VALUE, STRING]
-			a_key: STRING
+			l_function_cache: DS_HASH_TABLE [XM_XPATH_VALUE, STRING]
+			l_key: DS_CELL [STRING]
 		do
-			a_function_cache := a_transformer.function_results_cache (Current)
-			if a_function_cache /= Void then
-				calculate_combined_key (some_actual_arguments, a_transformer)
-				if last_called_value = Void then
-					if a_function_cache.has (a_key) then
-						last_called_value := a_function_cache.item (a_key)
+			l_function_cache := a_transformer.function_results_cache (Current)
+			if l_function_cache /= Void then
+				create l_key.make (Void)
+				calculate_combined_key (l_key, some_actual_arguments, a_transformer)
+				if not a_transformer.is_error then
+					if l_function_cache.has (l_key.item) then
+						a_return_value.put (l_function_cache.item (l_key.item))
 					end
 				end
-			else
-				last_called_value := Void
 			end
 		end
 
-	calculate_combined_key (some_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER) is
+	calculate_combined_key (a_key: DS_CELL [STRING]; some_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER) is
 			-- Calculate representation of all argument values.
 		require
+			a_key_not_void: a_key /= Void
+			key_is_void: a_key.item = Void
 			arguments_not_void: some_actual_arguments /= Void
 			transformer_not_void: a_transformer /= Void
 		local
-			a_value: XM_XPATH_VALUE
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_NODE
-			an_index: INTEGER
+			l_value: XM_XPATH_VALUE
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_item: XM_XPATH_ITEM
+			l_node: XM_XPATH_NODE
+			l_index: INTEGER
+			l_key: STRING
 		do
-			last_called_value := Void
-			create last_combined_key.make (0)
+			create l_key.make (0)
+			a_key.put (l_key)
 			from
-				an_index := 1
+				l_index := 1
 			variant
-				parameter_count + 1 - an_index
+				parameter_count + 1 - l_index
 			until
-				a_transformer.is_error or else an_index > parameter_count
+				a_transformer.is_error or else l_index > parameter_count
 			loop
-				a_value := some_actual_arguments.item (an_index)
-				if a_value.is_error then
-					last_called_value := a_value
-					an_index := an_index + 1
+				l_value := some_actual_arguments.item (l_index)
+				if l_value.is_error then
+					a_transformer.report_fatal_error (l_value.error_value)
+					l_index := l_index + 1
 				else
 					from
-						a_value.create_iterator (Void)
-						an_iterator := a_value.last_iterator
-						if an_iterator.is_error then
-							a_transformer.report_fatal_error (an_iterator.error_value)
+						l_value.create_iterator (Void)
+						l_iterator := l_value.last_iterator
+						if l_iterator.is_error then
+							a_key.put (Void)
+							a_transformer.report_fatal_error (l_iterator.error_value)
 						else
-							an_iterator.start
+							l_iterator.start
 						end
 					until
-						an_iterator.is_error or else an_iterator.after
+						l_iterator.is_error or else l_iterator.after
 					loop
-						an_item := an_iterator.item
-						if an_item.is_node then
-							a_node := an_item.as_node
-							if a_node.generated_id = Void then
-								a_node.generate_id
+						l_item := l_iterator.item
+						if l_item.is_node then
+							l_node := l_item.as_node
+							if l_node.generated_id = Void then
+								l_node.generate_id
 							end
-							last_combined_key.append_string (a_node.generated_id)
+							l_key.append_string (l_node.generated_id)
 						else
-							last_combined_key.append_string (an_item.item_type.conventional_name)
-							last_combined_key.append_string ("/")
-							last_combined_key.append_string (an_item.string_value)
+							l_key.append_string (l_item.item_type.conventional_name)
+							l_key.append_string ("/")
+							l_key.append_string (l_item.string_value)
 						end
-						last_combined_key.append_character (code_one)
-						an_iterator.forth
+						l_key.append_character (code_one)
+						l_iterator.forth
 					end
-					if an_iterator.is_error then
-						a_transformer.report_fatal_error (an_iterator.error_value)
+					if l_iterator.is_error then
+						a_key.put (Void)
+						a_transformer.report_fatal_error (l_iterator.error_value)
 					else
-						last_combined_key.append_character (code_two)
+						l_key.append_character (code_two)
 					end
-					an_index := an_index + 1
+					l_index := l_index + 1
 				end
 			end
 		ensure
-			error_or_combined_key_set: last_called_value = Void implies last_combined_key /= Void
+			error_or_combined_key_set: not a_transformer.is_error implies a_key.item /= Void
 		end
 
 	code_one: CHARACTER is

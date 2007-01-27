@@ -281,7 +281,7 @@ feature -- Creation
 				Result := new_major_context (Current)
 			else
 				Result := Precursor
-				Result.set_caller (Current)
+				--Result.set_caller (Current)
 			end
 		end
 	
@@ -324,7 +324,6 @@ feature -- Creation
 			-- Created clean context (for XSLT function calls)
 		do
 			create Result.make (transformer)
-			Result.set_caller (Current)
 		end
 
 feature -- Element change

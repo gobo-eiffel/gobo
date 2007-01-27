@@ -109,9 +109,6 @@ feature -- Comparison
 
 feature -- Status report
 
-	last_called_value: XM_XPATH_VALUE
-			-- Result of last non-tail call
-
 	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
 			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
 		do
@@ -150,33 +147,36 @@ feature -- Evaluation
 	create_results_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			a_flattener: XM_XSLT_FUNCTION_CALL_FLATTENER
-			a_value: XM_XPATH_VALUE
+			l_flattener: XM_XSLT_FUNCTION_CALL_FLATTENER
+			l_value: DS_CELL [XM_XPATH_VALUE]
 		do
-			call
-			a_value := last_called_value
-			a_value.create_iterator (a_context)
-			if a_value.last_iterator.is_error then
-				last_iterator := a_value.last_iterator
+			create l_value.make (Void)
+			call (l_value)
+			l_value.item.create_iterator (a_context)
+			if l_value.item.last_iterator.is_error then
+				last_iterator := l_value.item.last_iterator
 			else
-				create a_flattener.make
+				create l_flattener.make
 				-- TODO: need a node_iterator version
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_value.last_iterator, a_flattener, a_context)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (l_value.item.last_iterator, l_flattener, a_context)
 			end
 		ensure
 			last_iterator_not_void: last_iterator /= Void
 		end
 
-	call is
+	call (a_return_value: DS_CELL [XM_XPATH_VALUE]) is
 			-- Call `Current'.
+			-- Result returned as `a_return_value.item'.
+		require
+			a_return_value_not_void: a_return_value /= Void
+			return_value_is_void: a_return_value.item = Void
 		local
-			a_context: XM_XSLT_EVALUATION_CONTEXT
+			l_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			a_context := context.new_clean_context
-			function.call (actual_arguments, parameter_count, a_context, False)
-			last_called_value := function.last_called_value
+			l_context := context.new_clean_context
+			function.call (a_return_value, actual_arguments, parameter_count, l_context, False)
 		ensure
-			called_value_not_void: last_called_value /= Void -- but may be an error value
+			called_value_not_void: a_return_value.item /= Void -- but may be an error value
 		end
 
 feature -- Conversion
@@ -192,40 +192,42 @@ feature -- Output
 	send (a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
 			-- Send `Current' to `a_receiver'.
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_invalid_item: XM_XPATH_INVALID_ITEM
-			a_function_package: like Current
-			finished: BOOLEAN
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_invalid_item: XM_XPATH_INVALID_ITEM
+			l_function_package: like Current
+			l_finished: BOOLEAN
+			l_value: DS_CELL [XM_XPATH_VALUE]
 		do
 
 			-- We want to avoid recursion, to operate in constant space,
 
-			from a_function_package := Current until finished loop
-				a_function_package.call
-				if a_function_package.last_called_value.is_error then
-					finished := True
-					a_receiver.on_error (a_function_package.last_called_value.error_value.error_message)
+			from l_function_package := Current until l_finished loop
+				create l_value.make (Void)
+				l_function_package.call (l_value)
+				if l_value.item.is_error then
+					l_finished := True
+					a_receiver.on_error (l_value.item.error_value.error_message)
 				else
-					a_function_package.last_called_value.create_iterator (Void)
-					an_iterator := a_function_package.last_called_value.last_iterator
-					from an_iterator.start until finished or else an_iterator.after loop
-						if an_iterator.is_error then
-							create an_invalid_item.make (an_iterator.error_value); finished := True
-							a_receiver.append_item (an_invalid_item)
+					l_value.item.create_iterator (Void)
+					l_iterator := l_value.item.last_iterator
+					from l_iterator.start until l_finished or else l_iterator.after loop
+						if l_iterator.is_error then
+							create l_invalid_item.make (l_iterator.error_value); l_finished := True
+							a_receiver.append_item (l_invalid_item)
 						else
-							if an_iterator.item.is_function_package then
-								a_function_package ?= an_iterator.item
+							if l_iterator.item.is_function_package then
+								l_function_package ?= l_iterator.item
 							else
-								a_function_package := Void
-								a_receiver.append_item (an_iterator.item)
+								l_function_package := Void
+								a_receiver.append_item (l_iterator.item)
 							end
 						end
-						an_iterator.forth
+						l_iterator.forth
 						check
-							nothing_after_function_package: a_function_package /= Void implies an_iterator.after
+							nothing_after_function_package: l_function_package /= Void implies l_iterator.after
 						end
 					end
-					if a_function_package = Void then finished := True end
+					if l_function_package = Void then l_finished := True end
 				end
 			end
 		end

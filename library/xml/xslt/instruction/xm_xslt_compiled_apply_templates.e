@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 					if not l_iterator.is_empty_iterator then
 						
 						-- Process the selected nodes now.
-						
+
 						from
 							l_new_context := a_context.new_context
 							apply_templates (a_tail, l_iterator, l_mode, l_parameters, l_tunnel_parameters, l_new_context)

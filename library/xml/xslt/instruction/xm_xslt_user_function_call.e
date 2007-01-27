@@ -69,9 +69,6 @@ feature -- Access
 
 feature -- Status report
 
-	last_called_value: XM_XPATH_VALUE
-			-- Result of last non-tail call
-
 	is_type_error: BOOLEAN
 			-- Has a type error been detected on an argument?
 
@@ -119,55 +116,57 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			an_execution_context: XM_XSLT_EVALUATION_CONTEXT
-			a_value: XM_XPATH_VALUE
+			l_execution_context: XM_XSLT_EVALUATION_CONTEXT
+			l_value: DS_CELL [XM_XPATH_VALUE]
 		do
-			an_execution_context ?= a_context
+			l_execution_context ?= a_context
 			check
-				execution_context: an_execution_context /= Void
+				execution_context: l_execution_context /= Void
 				-- as this is an XSLT function
 			end
-			call (an_execution_context)
-			if last_called_value.is_error then
+			create l_value.make (Void)
+			call (l_value, l_execution_context)
+			if l_value.item.is_error then
 				if is_node_sequence then
-					create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (last_called_value.error_value)
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_value.item.error_value)
 				else
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_called_value.error_value)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_value.item.error_value)
 				end
-			elseif last_called_value.is_function_package then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_called_value.as_atomic_value)
+			elseif l_value.item.is_function_package then
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_value.item.as_atomic_value)
 			else
-				a_value := last_called_value -- because `last_called_value' will be changed by recursive calls
-				a_value.create_iterator (Void)
-				last_iterator := a_value.last_iterator
+				l_value.item.create_iterator (Void)
+				last_iterator := l_value.item.last_iterator
 			end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_execution_context: XM_XSLT_EVALUATION_CONTEXT
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_execution_context: XM_XSLT_EVALUATION_CONTEXT
+			l_value: DS_CELL [XM_XPATH_VALUE]
 		do
-			an_execution_context ?= a_context
+			l_execution_context ?= a_context
 			check
-				execution_context: an_execution_context /= Void
+				execution_context: l_execution_context /= Void
 				-- as this is an XSLT function
 			end
-			call (an_execution_context)
-			if last_called_value.is_atomic_value then
-				last_evaluated_item := last_called_value.as_atomic_value
+			create l_value.make (Void)
+			call (l_value, l_execution_context)
+			if l_value.item.is_atomic_value then
+				last_evaluated_item := l_value.item.as_atomic_value
 			else
-				last_called_value.create_iterator (a_context)
-				an_iterator := last_called_value.last_iterator
-				if an_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				l_value.item.create_iterator (a_context)
+				l_iterator := l_value.item.last_iterator
+				if l_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
 				else
-					an_iterator.start
-					if an_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
-					elseif not an_iterator.after then
-						last_evaluated_item := an_iterator.item
+					l_iterator.start
+					if l_iterator.is_error then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
+					elseif not l_iterator.after then
+						last_evaluated_item := l_iterator.item
 					end
 				end
 			end
@@ -285,107 +284,106 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call (a_context: XM_XSLT_EVALUATION_CONTEXT) is
-			-- Call the function
+	call (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Call the function.
+			-- Result returned as `a_return_value.item'.
 		require
+			a_return_value_not_void: a_return_value /= Void
+			return_value_is_void: a_return_value.item = Void
 			context_not_void: a_context /= Void
 			fixed_up: function /= Void
 		local
-			some_actual_arguments: ARRAY [XM_XPATH_VALUE]
-			a_function_call_package: XM_XSLT_FUNCTION_CALL_PACKAGE
-			a_clean_context: XM_XSLT_EVALUATION_CONTEXT
+			l_actual_arguments: ARRAY [XM_XPATH_VALUE]
+			l_function_call_package: XM_XSLT_FUNCTION_CALL_PACKAGE
+			l_clean_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			last_called_value := Void
-			last_called_error_value := Void
-			create some_actual_arguments.make (1, arguments.count)
-			process_call_loop (some_actual_arguments, a_context)
-			if last_called_error_value /= Void then
-				last_called_value := last_called_error_value
+			create l_actual_arguments.make (1, arguments.count)
+			process_call_loop (a_return_value, l_actual_arguments, a_context)
+			if a_return_value.item /= Void then
+				-- error - do nothing
 			elseif is_tail_recursive then
-				create a_function_call_package.make (function, some_actual_arguments, arguments.count, a_context)
-				last_called_value := a_function_call_package
+				create l_function_call_package.make (function, l_actual_arguments, arguments.count, a_context)
+				a_return_value.put (l_function_call_package)
 			else
-				a_clean_context := a_context.new_clean_context
-				function.call (some_actual_arguments, arguments.count, a_clean_context, True)
-				last_called_value := function.last_called_value
+				l_clean_context := a_context.new_clean_context
+				function.call (a_return_value, l_actual_arguments, arguments.count, l_clean_context, True)
 			end
 		ensure
-			last_called_value: last_called_value /= Void -- but may be in error
+			called_value_not_void: a_return_value.item /= Void -- but may be an error value
 		end
 
-	last_called_error_value: XM_XPATH_VALUE
-			-- Last error from `process_call_loop'
-
-	process_call_loop (some_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_call_loop (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Process body of `call'.
 		require
-			arguments_not_void: some_actual_arguments /= Void
-			corect_number_of_arguments: some_actual_arguments.count = arguments.count
+			a_return_value_not_void: a_return_value /= Void
+			return_value_is_void: a_return_value.item = Void
+			arguments_not_void: a_actual_arguments /= Void
+			corect_number_of_arguments: a_actual_arguments.count = arguments.count
 			context_not_void: a_context /= Void
 			fixed_up: function /= Void
 		local
-			a_reference_count, a_parameter_count: INTEGER
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			an_expression: XM_XPATH_EXPRESSION
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_reference_count, l_parameter_count: INTEGER
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_expression: XM_XPATH_EXPRESSION
+			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			from
-				a_parameter_count := function.parameter_definitions.count
+				l_parameter_count := function.parameter_definitions.count
 				check
-					corect_number_of_parameters: a_parameter_count = arguments.count
+					corect_number_of_parameters: l_parameter_count = arguments.count
 					-- static_typing
 				end
-				a_cursor := arguments.new_cursor; a_cursor.start
+				l_cursor := arguments.new_cursor; l_cursor.start
 			variant
-				arguments.count + 1 - a_cursor.index
+				arguments.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				an_expression := a_cursor.item
-				a_reference_count := function.parameter_definitions.item (a_cursor.index).reference_count
-				if an_expression.is_value then
-					if an_expression.is_error then
-						last_called_error_value := an_expression.as_value
-						a_cursor.go_after
+				l_expression := l_cursor.item
+				l_reference_count := function.parameter_definitions.item (l_cursor.index).reference_count
+				if l_expression.is_value then
+					if l_expression.is_error then
+						a_return_value.put (l_expression.as_value)
+						l_cursor.go_after
 					else
-						some_actual_arguments.put (an_expression.as_value, a_cursor.index)
+						a_actual_arguments.put (l_expression.as_value, l_cursor.index)
 					end
 				else
 
 					-- determine which kind of lazy evaluation to use
 
-					if a_reference_count = 0 then
-						create an_empty_sequence.make
-						some_actual_arguments.put (an_empty_sequence, a_cursor.index)
-					elseif an_expression.depends_upon_user_functions then
+					if l_reference_count = 0 then
+						create l_empty_sequence.make
+						a_actual_arguments.put (l_empty_sequence, l_cursor.index)
+					elseif l_expression.depends_upon_user_functions then
 
 						-- If the argument contains a call to a user-defined function, then it might be a recursive call.
                   -- It's better to evaluate it now, rather than waiting until we are on a new stack frame, as
 						--  that can blow the stack if done repeatedly.
 
-						an_expression.eagerly_evaluate (a_context)
-						if an_expression.last_evaluation.is_error then
-							last_called_error_value := an_expression.last_evaluation
-							a_cursor.go_after
+						l_expression.eagerly_evaluate (a_context)
+						if l_expression.last_evaluation.is_error then
+							a_return_value.put (l_expression.last_evaluation)
+							l_cursor.go_after
 						else
-							some_actual_arguments.put (an_expression.last_evaluation, a_cursor.index)
+							a_actual_arguments.put (l_expression.last_evaluation, l_cursor.index)
 						end						
 					else
-						an_expression.lazily_evaluate (a_context, a_reference_count)
-						if an_expression.last_evaluation.is_error then
-							last_called_error_value := an_expression.last_evaluation
-							a_cursor.go_after
+						l_expression.lazily_evaluate (a_context, l_reference_count)
+						if l_expression.last_evaluation.is_error then
+							a_return_value.put (l_expression.last_evaluation)
+							l_cursor.go_after
 						else
-							some_actual_arguments.put (an_expression.last_evaluation, a_cursor.index)
+							a_actual_arguments.put (l_expression.last_evaluation, l_cursor.index)
 						end
 					end
 				end
-				if not a_cursor.after and then a_reference_count > 1 and then some_actual_arguments.item (a_cursor.index).is_closure and then
-					not some_actual_arguments.item (a_cursor.index).is_memo_closure then
-					some_actual_arguments.item (a_cursor.index).reduce
-					some_actual_arguments.put (some_actual_arguments.item (a_cursor.index).last_reduced_value, a_cursor.index)
+				if not l_cursor.after and then l_reference_count > 1 and then a_actual_arguments.item (l_cursor.index).is_closure and then
+					not a_actual_arguments.item (l_cursor.index).is_memo_closure then
+					a_actual_arguments.item (l_cursor.index).reduce
+					a_actual_arguments.put (a_actual_arguments.item (l_cursor.index).last_reduced_value, l_cursor.index)
 				end
-				if not a_cursor.after then a_cursor.forth end
+				if not l_cursor.after then l_cursor.forth end
 			end
 		end
 
