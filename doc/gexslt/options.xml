@@ -33,7 +33,7 @@
       <listitem><para>&program_name; --help</para></listitem>
       <listitem><para>&program_name; --version</para></listitem>
       <listitem><para>&program_name; [--file=|--uri=]stylesheet [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
-      <listitem><para>&program_name; stylesheet --template=template-name (--options)* (string-parameter)*</para></listitem>
+      <listitem><para>&program_name; [--file=|--uri=]stylesheet --template=template-name (--options)* (string-parameter)*</para></listitem>
       <listitem><para>&program_name; --use-pi [(--pi-options)*] [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
     </itemizedlist>
     </para>
@@ -201,8 +201,24 @@
 	    </para>
 	    <para>
 	      If this parameter is omitted (the usual situation), then the initial template is the one
-	      that matches the document node of the source document. If this parameter is supplied,
+	      that matches the initial context node, normally the document node, of the source document. If this parameter is supplied,
 	      then the source document may be omitted.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--context=&lt;name&gt;=&lt;XPath expression&gt;</term>
+	  <listitem>
+	    <para>
+	      Specifies an XPath expression to be applied to the source document in order to determine the initial context node. This
+	      parameter must be omitted if a source document is not supplied. It is a non-recoverable error is the supplied expression
+	      does not select a single node.
+	    </para>
+	    <para>
+	      If this parameter is omitted (the usual situation), then the initial context node is the document node of the source document.
+	      <warning>
+	       Not yet implemented. Ask if you think you need it.
+	      </warning>
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -222,10 +238,6 @@
 	      Sets a global parameter on the stylesheet, passing an XPath expression
 	      as the value.
 	      Enclose the value in single quotes if it includes embedded blanks.
-	    </para>
-	    <para>
-	      You cannot use this option if you also supply the --template=&lt;initial-template-name&gt; option,
-	      and omit the source document, as then the XPath expression will have no context.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -358,6 +370,9 @@
 	      By default, diagnostics will include the line number where the
 	      error was detected. This option turns off this facility.
 	    </para>
+	    <para>
+	     The intention is to save memory when processing very large files.
+	    </para>
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
@@ -443,7 +458,7 @@
 	      Do not use the system default catalog.
 	    </para>
 	    <para>
-	      In this case, only catalogs specified in <envar>XM_CATALOG_FILES</envar>,
+	      In this case, only catalogs specified by the environment variable <envar>XM_CATALOG_FILES</envar>,
 	      plus any per-document-catalogs named in <exmlsyntax>oasis-xml-catalog</exmlsyntax>
 	      processing instructions, are searched.
 	    </para>
@@ -591,7 +606,7 @@
 	      By default, &program_name; assumes that a web server is serving up XHTML
 	      documents as media type text/html (to get round the fact that MSIE does not recognize 
 	      application/xhtml+xml). So if it sees a media type of text/html, it pretends that it is actually
-	      application/xhtml+xml. Using this option means it respects the media type is really text/html.
+	      application/xhtml+xml. Using this option means it respects the media type as text/html.
 	      The result is that this is a media type that the program chooses not to recognize, so you will
 	      get recoverable error XTRE1160.
 	    </para>

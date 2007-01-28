@@ -80,4 +80,10 @@
       <!-- TODO: break up the code into smaller routines to make it easier to follow. -->
     </para>
   </section>
+  <section>
+    <title>Gestalt</title>
+    <para>
+     Other examples are in the Gestalt distribution (see <ulink url="http://gestalt.sourceforge.net">Gestalt</ulink>).
+    </para>
+  </section>
 </chapter>

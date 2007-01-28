@@ -139,7 +139,7 @@
     <title>A testing error listener: <classname>XM_XSLT_TESTING_ERROR_LISTENER</classname></title>
     <para>
      This error listener supresses all output, but records which error message codes it has seen.
-     It was written for use in the XSLT test suite, so as to avoid confusing the user by diaplaying
+     It was written for use in the XSLT test suite, so as to avoid confusing the user by displaying
      error messages which are intentionally being produced.
     </para>
   </section>

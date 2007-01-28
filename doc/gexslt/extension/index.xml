@@ -68,8 +68,7 @@
 	    </para>
 	    <para>
 	      <warning>
-		This should not be set to "yes" if the function has any side effects (which can only occur if it uses
-		user-written extension functions with side-effects), or if it access context information, such as position(),
+		This should not be set to "yes" if the function has any side effects, or if it accesses context information, such as position(),
 		last() or the context item.
 	      </warning>
 	    </para>
@@ -92,7 +91,7 @@
 	      This tells the serializer how to serialize non-ASCII characters, and characters that are not representable
 	      in the selected encoding.
 	      <warning>
-		This may need to b e dropped - I have to check the serialization specs, but I think they have been tightened to disallow
+		This may need to be dropped - I have to check the serialization specs, but I think they have been tightened to disallow
 		some of this.
 	      </warning>
 	    </para>
@@ -130,6 +129,9 @@
 	      for the serialization method is "no". If you omit this parameter, then three spaces are used 
 	      (but check the creation procedure for <classname>XM_XSLT_OUTPUT_PROPERTIES</classname> to confirm
 	      this, in case it gets changed and I forget to update the documentation).
+	      <warning>
+	       TODO: Change the default to indent with a single tab.
+	      </warning>
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -192,6 +194,7 @@
     <para>
       None are provided at present. <xslt>gexslt:serialize</xslt> may be defined in the future. Or maybe not.
       Users can always use <ulink url="http://xmlportfolio.com/xml-to-string/">Evan Lenz's serializer written in XSLT 1.0</ulink>.
+      (I think an XSLT 2.0 html serializer has also been written).
     </para>
  </section>
  <section>
@@ -202,7 +205,7 @@
       attributes on the <xslt>xslt:output</xslt> element are ignored.
     </para>
     <para>
-     Also, there is an example provided to show Eiffel programmers
+     There is also an example provided to show Eiffel programmers
       how to write their own output methods. This is in the namespace 
       <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example</uri>, and has
       a local name of <exmlsyntax>xml</exmlsyntax>. It functions identically to the standard
@@ -277,7 +280,7 @@
       </orderedlist>
      </para>
      <para>
-      Result documents can be serialized using the <xslt>gexslt:serialize</xslt> extension instruction.
+      Result documents can be serialized using the <xslt>gexslt:serialize</xslt> extension instruction (if I ever write it).
      </para>
     </section>
  </section>

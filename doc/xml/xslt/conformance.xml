@@ -27,12 +27,12 @@
   </chapterinfo>
   <title>Conformance to standards</title>
   <para>
-    This library is aligned with the Candidate Recommendations issued on the 3rd November 2005
-    for XPath 2.0 and XSLT 2.0. An XSLT processor claiming conformance with these Candidate Recommendations
+    This library is aligned with the Recommendations issued on the 23rd January 2007
+    for XPath 2.0 and XSLT 2.0. An XSLT processor claiming conformance with theseRecommendations
     is required to document what choices it makes for features that are listed as implementation-defined.
   </para>
   <para>
-    The library clains conformance to a Basic XSLT processor, and in addition supports the optional features
+    The library claims conformance to a Basic XSLT processor, and in addition supports the optional features
     Serialization Feature and Backwards Compatibility Feature.
   </para>
   <section>
@@ -155,13 +155,13 @@
 	 </listitem>
 	 <listitem>
 	  <para>
-	   For xdt:yearMonth durations, the greatest durations that can be expressed in months is 13 times the maximum positive number that can be expressed 
+	   For xs:yearMonth durations, the greatest durations that can be expressed in months is 13 times the maximum positive number that can be expressed 
 	   as a 32-bit signed integer.
 	  </para>
 	 </listitem>
 	 <listitem>
 	  <para>
-	   For xdt:dayTime durations, the greatest durations that can be expressed in seconds is 24 * 60 * 60 times the maximum positive number that can be expressed 
+	   For xs:dayTime durations, the greatest durations that can be expressed in seconds is 24 * 60 * 60 times the maximum positive number that can be expressed 
 	   as a 32-bit signed integer.
 	  </para>
 	 </listitem>
@@ -181,7 +181,7 @@
       </listitem>
      </varlistentry> 
      <varlistentry>
-      <term>Implicit Timexone</term>
+      <term>Implicit Timezone</term>
       <listitem>
        <para>
 	The implicit timezone is set to the local time zone when a transformer is created.
@@ -220,7 +220,7 @@
       <term>Data-type attribute on xsl:sort</term>
       <listitem>
        <para>
-	If the <xslt>data-type</xslt> attribuute on the <xslt>xsl:sort</xslt> instruction has a value other than text or number then
+	If the <xslt>data-type</xslt> attribute on the <xslt>xsl:sort</xslt> instruction has a value other than text or number then
 	error <xslt>XTDE0030</xslt> is issued at run-time.
        </para>
       </listitem>
@@ -290,7 +290,7 @@
 	   <para>gexslt</para>
 	   <para>
 	    This is actually configurable, by calling <featurename>set_product_name</featurename> from
-	    <classname>XM_XPATH_CONFIGURATION</classname>
+	    <classname>XM_XPATH_CONFIGURATION</classname>. For Gestalt, the value is gestalt.
 	   </para>
 	  </listitem>
 	 </varlistentry>
@@ -322,7 +322,7 @@
       <term>Destination for xsl:message</term>
       <listitem>
        <para>
-	All xsl:message output goes to the standard error stream.
+	All xsl:message output goes to the standard error stream by default. This is configurable (see API documentation).
        </para>
       </listitem>
      </varlistentry>

@@ -74,10 +74,19 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="xpath/invoking.html">XPATH library</ulink>
+			<ulink url="xpath/xpointer.html">XPointer library</ulink>
 		</term>
 		<listitem><para>
-			XPATH functionalities.
+			XPointer functionalities.
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<ulink url="xpath/invoking.html">XPath library (not supported)</ulink>
+		</term>
+		<listitem><para>
+			XPath functionalities.
 		</para></listitem>
 	</varlistentry>
 

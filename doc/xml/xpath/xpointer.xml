@@ -25,7 +25,7 @@
 <title>&title;</title>
 <para>
   The XPath library includes an implementation of the &framework; and implementations for the W3C &xpointer; schemes
-  <xpath>element</xpath> and <xpath>xmlns</xpath>. In addition, There is a &program_name_cased;-specific scheme: <xpath>&program_name;:xpath</xpath>.
+  <xpath>element</xpath>, <xpath>xmlns</xpath> and <xpath>xpath2</xpath>. In addition, There is a &program_name_cased;-specific scheme: <xpath>&program_name;:xpath</xpath>, but this is deprecated..
 </para> 
 <section id="xpointer_framework">
   <title>Invoking the &framework;</title>
@@ -88,7 +88,7 @@
 	<term><classname>XM_XPOINTER_XPATH_XPATH_SCHEME</classname></term>
 	<listitem>
 	<para>
-	  The  W3C <xpath>xpath2</xpath> scheme or the <xpath>&program_name;:xpath</xpath> schemes.
+	  The  W3C <xpath>xpath2</xpath> scheme or the (deprecated) <xpath>&program_name;:xpath</xpath> schemes.
 	</para>
 	</listitem>
       </varlistentry>
