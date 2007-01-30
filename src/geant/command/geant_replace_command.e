@@ -276,6 +276,7 @@ feature -- Execution
 			a_postfix: STRING
 			i,pos: INTEGER
 			s: STRING
+			l_vars: GEANT_VARIABLES
 		do
 			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" variable_pattern=", variable_pattern >>)
 
@@ -291,13 +292,13 @@ feature -- Execution
 					exit_code := 1
 				end
 				if i > 1 then
-					project.log (<<"  [replace] error: variable_pattern has more then one %"" + placeholder_character.out + "%" character">>)
+					project.log (<<"  [replace] error: variable_pattern has more than one %"" + placeholder_character.out + "%" character">>)
 					exit_code := 1
 				end
 			end
 			if exit_code = 0 then
-				a_prefix := variable_pattern.substring (1, pos-1)
-				a_postfix := variable_pattern.substring (pos+1, variable_pattern.count)
+				a_prefix := variable_pattern.substring (1, pos - 1)
+				a_postfix := variable_pattern.substring (pos + 1, variable_pattern.count)
 
 				if not file_system.file_exists (a_filename) then
 					project.log (<<"  [replace] error: file %"" + a_filename + "%" does not exists">>)
@@ -313,7 +314,9 @@ feature -- Execution
 						from
 							create s.make_empty
 							a_from_file.read_string (read_chunk_size)
-						until a_from_file.end_of_file loop
+						until 
+							a_from_file.end_of_file 
+						loop
 							s.append_string (a_from_file.last_string)
 							a_from_file.read_string (read_chunk_size)
 						end
@@ -327,11 +330,18 @@ feature -- Execution
 							project.log (<<"  [replace] error: file %"" + a_to_file.name + "%" is not writable">>)
 							exit_code := 1
 						else
+								--| This may be improved by replacing all patterns in one pass.
 							from
-								project.variables.start
-							until project.variables.off loop
-								s := STRING_.replaced_all_substrings (s, a_prefix+project.variables.key_for_iteration+a_postfix,project.variables.item_for_iteration)
-								project.variables.forth
+								l_vars := project.variables
+								l_vars.start
+							until 
+								l_vars.after 
+							loop
+								s := STRING_.replaced_all_substrings (s, 
+										a_prefix + l_vars.key_for_iteration + a_postfix,
+										l_vars.item_for_iteration
+									)
+								l_vars.forth
 							end
 							a_to_file.put_string (s)
 							a_to_file.close
@@ -385,7 +395,9 @@ feature -- Execution
 						from
 							create s.make_empty
 							a_from_file.read_string (read_chunk_size)
-						until a_from_file.end_of_file loop
+						until 
+							a_from_file.end_of_file 
+						loop
 							s.append_string (a_from_file.last_string)
 							a_from_file.read_string (read_chunk_size)
 						end
@@ -486,7 +498,9 @@ feature -- Execution
 							from
 								create s.make_empty
 								a_from_file.read_string (read_chunk_size)
-							until a_from_file.end_of_file loop
+							until 
+								a_from_file.end_of_file 
+							loop
 								s.append_string (a_from_file.last_string)
 								a_from_file.read_string (read_chunk_size)
 							end
