@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			initialized := True
+			tolerate_empty_string_match
 		end
 
 feature -- Access

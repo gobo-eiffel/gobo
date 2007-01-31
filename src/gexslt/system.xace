@@ -11,6 +11,7 @@
 
 	<root class="GEXSLT" creation="execute"/>
 	<option name="console_application" value="true"/>
+	<option name="exception_trace" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="internal"/>

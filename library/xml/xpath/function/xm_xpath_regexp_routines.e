@@ -31,11 +31,22 @@ inherit
 
 feature {NONE} -- Implementation
 
+	is_empty_match_ok: BOOLEAN
+			-- Is matching the empty string OK?
+	
 	regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY
 			-- Cached regular expression
 
 	regexp_error_value: XM_XPATH_ERROR_VALUE
 			-- Possible error set by `try_to_compile'
+
+	tolerate_empty_string_match is
+			-- Allow matching empty string.
+		do
+			is_empty_match_ok := True
+		ensure
+			may_match_empty_string: is_empty_match_ok = True
+		end
 
 	try_to_compile (a_flag_argument_position: INTEGER; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
 			-- Attempt to compile `regexp'.
@@ -71,7 +82,7 @@ feature {NONE} -- Implementation
 							shared_regexp_cache.put (regexp_cache_entry, a_key)
 						end
 					end
-					if regexp_cache_entry /= Void then
+					if regexp_cache_entry /= Void and not is_empty_match_ok then
 						if regexp_cache_entry.regexp.matches ("") then
 							create regexp_error_value.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Static_error)
 						end
