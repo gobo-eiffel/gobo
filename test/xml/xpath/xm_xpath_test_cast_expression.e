@@ -216,8 +216,7 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
-			an_integer: MA_DECIMAL
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -227,8 +226,7 @@ feature -- Test
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			an_integer_value ?= evaluated_items.item (1)
-			create an_integer.make_from_integer (56)
-			assert ("Correct value", an_integer_value /= Void and then an_integer_value.value.is_equal (an_integer))
+			assert ("Correct value", an_integer_value /= Void and then an_integer_value.value = 56)
 		end
 
 	test_untyped_atomic_to_boolean_unsucessful is

@@ -69,7 +69,7 @@ feature -- Evaluation
 		local
 			a_string: STRING
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			an_integer: INTEGER
 		do
 			arguments.item (1).create_iterator (a_context)
@@ -79,7 +79,7 @@ feature -- Evaluation
 			else
 				a_string := ""
 				from an_iterator.start until is_error or else an_iterator.after loop
-					an_integer_value := an_iterator.item.as_integer_value
+					an_integer_value := an_iterator.item.as_machine_integer_value
 					if an_integer_value.is_platform_integer then
 						an_integer := an_integer_value.as_integer
 						if is_char (an_integer) then

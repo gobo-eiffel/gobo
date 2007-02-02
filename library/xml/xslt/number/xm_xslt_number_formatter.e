@@ -105,7 +105,7 @@ feature -- Access
 		local
 			l_token_index: INTEGER
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_ATOMIC_VALUE]
-			l_decimal: MA_DECIMAL
+			l_value: INTEGER_64
 			l_atomic: XM_XPATH_ATOMIC_VALUE
 			l_string: STRING
 		do
@@ -131,9 +131,9 @@ feature -- Access
 					Result := STRING_.appended_string (Result, formatting_separators.item (l_token_index))
 				end
 				l_atomic := l_cursor.item
-				if l_atomic.is_integer_value then
-					l_decimal := l_atomic.as_integer_value.value
-					l_string := a_numberer.formatted_string (l_decimal, formatting_tokens.item (l_token_index),
+				if l_atomic.is_machine_integer_value then
+					l_value := l_atomic.as_machine_integer_value.value
+					l_string := a_numberer.formatted_string (create {MA_DECIMAL}.make_from_string (l_value.out), formatting_tokens.item (l_token_index),
 					a_group_size, a_group_separator, a_letter, an_ordinal)
 				else
 					l_string := l_atomic.string_value

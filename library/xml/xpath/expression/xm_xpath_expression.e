@@ -479,6 +479,21 @@ feature -- Access
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
+
+	is_machine_integer_value: BOOLEAN is
+			-- Is `Current' a machine integer value?
+		do
+			Result := False
+		end
+
+	as_machine_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE is
+			-- `Current' seen as a machine integer value
+		require
+			machine_integer_value: is_machine_integer_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
 	
 	is_integer_range: BOOLEAN is
 			-- Is `Current' an integer range?
@@ -1419,6 +1434,12 @@ feature -- Status report
 		require
 			no_error: not is_error
 		deferred
+		end
+	
+	is_trace_wrapper: BOOLEAN is
+			-- Is `Current' an `XM_XSLT_TRACE_WRAPPER'?
+		do
+			Result := False
 		end
 
 feature -- Status setting

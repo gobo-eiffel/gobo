@@ -184,7 +184,7 @@ feature -- Test
 			-- Test fn:years-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -206,7 +206,7 @@ feature -- Test
 			-- Test fn:months-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -228,7 +228,7 @@ feature -- Test
 			-- Test fn:days-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -250,7 +250,7 @@ feature -- Test
 			-- Test fn:hours-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -282,7 +282,7 @@ feature -- Test
 			-- Test fn:minutes-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -321,7 +321,7 @@ feature -- Test
 			-- Test fn:year-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -338,7 +338,7 @@ feature -- Test
 			-- Test fn:month-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -355,7 +355,7 @@ feature -- Test
 			-- Test fn:day-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -372,7 +372,7 @@ feature -- Test
 			-- Test fn:hours-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -389,7 +389,7 @@ feature -- Test
 			-- Test fn:minutes-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -439,7 +439,7 @@ feature -- Test
 			-- Test fn:year-from-date.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -461,7 +461,7 @@ feature -- Test
 			-- Test fn:month-from-date.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -483,7 +483,7 @@ feature -- Test
 			-- Test fn:day-from-date.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -527,7 +527,7 @@ feature -- Test
 			-- Test fn:hours-from-time.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -559,7 +559,7 @@ feature -- Test
 			-- Test fn:minutes-from-time.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii

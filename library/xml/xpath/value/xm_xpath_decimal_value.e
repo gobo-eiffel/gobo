@@ -24,7 +24,7 @@ inherit
 
 create
 
-	make, make_from_string, make_from_integer, make_error
+	make, make_from_string, make_from_integer, make_error, make_from_integer_64
 
 feature {NONE} -- Initialization
 
@@ -36,10 +36,16 @@ feature {NONE} -- Initialization
 			value_set: value = a_value
 		end
 
-	make_from_integer (a_value: INTEGER) is
+	make_from_integer (a_value: INTEGER_32) is
 		do
 			make_atomic_value
 			create value.make_from_integer (a_value)
+		end
+
+	make_from_integer_64 (a_value: INTEGER_64) is
+		do
+			make_atomic_value
+			create value.make_from_string (a_value.out)
 		end
 
 	make_from_string (a_value: STRING) is
@@ -263,7 +269,11 @@ feature -- Conversion
 			elseif a_required_type = any_item  then
 				Result := Current
 			elseif  a_required_type = type_factory.integer_type then
-				create {XM_XPATH_INTEGER_VALUE} Result.make (value)
+				if is_platform_integer then
+					create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (value.to_integer.to_integer_64)
+				else
+					create {XM_XPATH_INTEGER_VALUE} Result.make (value)
+				end
 			elseif  a_required_type = type_factory.double_type then
 				if is_nan then
 					create {XM_XPATH_DOUBLE_VALUE} Result.make_nan

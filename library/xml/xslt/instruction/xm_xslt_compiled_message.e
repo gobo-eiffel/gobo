@@ -204,7 +204,7 @@ feature -- Evaluation
 					elseif STRING_.same_string (l_string_value.string_value, "no") then
 						-- do_nothing
 					elseif STRING_.same_string (l_string_value.string_value, "yes") then
-						create l_error.make_from_string ("Execution terminated owing to xsl:message terminate='yes'.", Gexslt_eiffel_type_uri, "TERMINATE", Dynamic_error)
+						create l_error.make_from_string ("Execution terminated owing to xsl:message terminate='yes'.", Xpath_errors_uri, "XTMM9000", Dynamic_error)
 						l_error.set_location (system_id, line_number)
 						l_transformer.report_fatal_error (l_error)
 					else

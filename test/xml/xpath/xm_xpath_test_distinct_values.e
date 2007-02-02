@@ -47,14 +47,6 @@ feature -- Result
 			two_not_void: Result /= Void
 		end
 
-	three: MA_DECIMAL is
-			-- 3.0
-		once
-			create Result.make_from_integer (3)
-		ensure
-			three_not_void: Result /= Void
-		end
-
 feature -- Test
 
 	test_distinct_values_one is
@@ -62,7 +54,7 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			a_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -75,13 +67,13 @@ feature -- Test
 			assert ("Three distinct values", evaluated_items /= Void and then evaluated_items.count = 3)
 			an_integer_value ?= evaluated_items.item (1)
 			assert ("First value is integer", an_integer_value /= Void)
-			assert ("First value is one", an_integer_value.value.is_equal (decimal.one))
+			assert ("First value is one", an_integer_value.value = 1)
 			a_decimal_value ?= evaluated_items.item (2)
 			assert ("Second value is decimal", a_decimal_value /= Void)
 			assert ("Second value is two", a_decimal_value.value.is_equal (two))
 			an_integer_value ?= evaluated_items.item (3)
 			assert ("Third value is integer", an_integer_value /= Void)
-			assert ("Third value is three", an_integer_value.value.is_equal (three))
+			assert ("Third value is three", an_integer_value.value = 3)
 		end
 
 	set_up is

@@ -224,7 +224,11 @@ feature -- Conversion
 			elseif a_required_type = any_item  then
 				Result := Current
 			elseif  a_required_type = type_factory.integer_type then
-				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value))
+				if is_platform_integer then
+					create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (DOUBLE_.truncated_to_integer (value).to_integer_64)
+				else
+					create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value))
+				end
 			elseif  a_required_type = type_factory.double_type then
 				Result := Current
 			elseif  a_required_type = type_factory.numeric_type then

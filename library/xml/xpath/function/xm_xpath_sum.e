@@ -100,7 +100,7 @@ feature -- Evaluation
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 				elseif an_iterator.after then
 					if arguments.count = 1 then
-						create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (0)
+						create {XM_XPATH_MACHINE_INTEGER_VALUE} last_evaluated_item.make (0)
 					else
 						arguments.item (2).evaluate_item (a_context)
 						last_evaluated_item := arguments.item (2).last_evaluated_item

@@ -19,7 +19,7 @@ inherit
 			is_integer_value, as_integer_value, is_string_value, as_string_value, is_decimal_value, as_decimal_value,
 			is_qname_value, as_qname_value, is_boolean_value, as_boolean_value, is_numeric_value, as_numeric_value,
 			is_atomic_value, as_atomic_value, is_untyped_atomic, as_untyped_atomic, is_object_value, is_function_package,
-			is_any_uri, as_any_uri
+			is_any_uri, as_any_uri, is_machine_integer_value, as_machine_integer_value
 		redefine
 			generate_events, count, calculate_effective_boolean_value 
 		end

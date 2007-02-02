@@ -280,8 +280,8 @@ feature -- Optimization
 					-- Detect head expressions (E[1]) and tail expressions (E[position()!=1])
 					-- and treat them specially.
 					
-					if filter.is_integer_value and then filter.as_integer_value.is_platform_integer
-						and then filter.as_integer_value.as_integer = 1 then
+					if filter.is_machine_integer_value and then filter.as_machine_integer_value.is_platform_integer
+						and then filter.as_machine_integer_value.value = 1 then
 						create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
 						set_replacement (an_expression)
 					else
@@ -338,8 +338,8 @@ feature -- Optimization
 					-- Detect head expressions (E[1]) and tail expressions (E[position()!=1])
 					-- and treat them specially.
 					
-					if filter.is_integer_value and then filter.as_integer_value.is_platform_integer
-						and then filter.as_integer_value.as_integer = 1 then
+					if filter.is_machine_integer_value and then filter.as_machine_integer_value.is_platform_integer
+						and then filter.as_machine_integer_value.value = 1 then
 						create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
 						set_replacement (an_expression)
 					else

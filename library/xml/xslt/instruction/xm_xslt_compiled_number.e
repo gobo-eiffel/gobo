@@ -28,9 +28,6 @@ inherit
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 
-	MA_SHARED_DECIMAL_CONSTANTS
-		export {NONE} all end
-
 create
 
 	make
@@ -388,7 +385,7 @@ feature -- Evaluation
 		local
 			l_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			l_letter: STRING
-			l_integer_value: XM_XPATH_INTEGER_VALUE
+			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			l_number_formatter: XM_XSLT_NUMBER_FORMATTER
 			l_error: XM_XPATH_ERROR_VALUE
 		do
@@ -403,7 +400,7 @@ feature -- Evaluation
 					
 					-- fast path for the simple case
 					
-					l_receiver.notify_characters (value.to_scientific_string, 0)
+					l_receiver.notify_characters (value.out, 0)
 				else
 					if numberer = Void then
 						language.evaluate_as_string (a_context)
@@ -501,7 +498,7 @@ feature {NONE} -- Implementation
 
 	-- The following are used to communicate between `generate_tail_call' and it's sub-routines
 
-	value: MA_DECIMAL
+	value: INTEGER_64
 			-- Value of number
 
 	atomic_vector: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
@@ -603,7 +600,7 @@ feature {NONE} -- Implementation
 			l_source: XM_XPATH_NODE
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			create value.make_copy (decimal.minus_one)
+			value := -1
 			if value_expression /= Void then
 				calculate_value (a_context)
 			else
@@ -634,7 +631,7 @@ feature {NONE} -- Implementation
 						calculate_single_number (l_source, count_pattern, from_pattern, a_context)
 						if not transformer.is_error then
 							value := last_single_number
-							if value.is_zero then
+							if value = 0 then
 								create atomic_vector.make (0)
 							end
 						end
@@ -651,8 +648,6 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		ensure
-			value_not_void: not transformer.is_error implies value /= Void
 		end
 
 	calculate_value (a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -665,7 +660,7 @@ feature {NONE} -- Implementation
 			l_finished: BOOLEAN
 			l_atomic_value: XM_XPATH_ATOMIC_VALUE
 			l_string_value: XM_XPATH_STRING_VALUE
-			l_integer_value: XM_XPATH_INTEGER_VALUE
+			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			l_numeric_value: XM_XPATH_NUMERIC_VALUE
 			l_error: XM_XPATH_ERROR_VALUE
 		do
@@ -710,7 +705,7 @@ feature {NONE} -- Implementation
 							l_integer_value ?= l_numeric_value.convert_to_type (type_factory.integer_type)
 						end
 					end
-					if not l_finished and then l_integer_value.value.is_negative then
+					if not l_finished and then l_integer_value.value < 0 then
 						if is_backwards_compatible then
 							l_finished := True
 							create l_string_value.make ("NaN")
@@ -734,7 +729,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	simple_number (a_node: XM_XPATH_NODE): MA_DECIMAL is
+	simple_number (a_node: XM_XPATH_NODE): INTEGER_64 is
 			-- Simple number of `a_node';
 			-- This is defined as one plus the number of previous siblings
 			--  of the same node type and name.
@@ -747,7 +742,7 @@ feature {NONE} -- Implementation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			finished: BOOLEAN
 			a_previous_node: XM_XPATH_NODE
-			a_memo: MA_DECIMAL
+			a_memo: DS_CELL [INTEGER_64]
 		do
 			a_fingerprint := a_node.fingerprint
 			if a_fingerprint = -1 then
@@ -758,30 +753,29 @@ feature {NONE} -- Implementation
 			from
 				an_iterator := a_node.new_axis_iterator_with_node_test (Preceding_sibling_axis, a_node_test)
 				an_iterator.start
-				create Result.make_one
+				Result := 1
 			until
 				finished or else an_iterator.after
 			loop
 				a_previous_node := an_iterator.item
 				a_memo := transformer.remembered_number (a_previous_node)
 				if a_memo /= Void then
-					Result := Result + a_memo
+					Result := Result + a_memo.item
 					transformer.set_remembered_number (Result, a_node)
 					finished := True
 				else
 					an_iterator.forth
-					Result := Result + decimal.one
+					Result := Result + 1
 				end
 				if not finished then
 					transformer.set_remembered_number (Result, a_node)
 				end
 			end
 		ensure
-			strictly_positive_integer: Result /= Void and then Result.is_integer and then Result.is_positive
-				and then not Result.is_zero
+			strictly_positive_integer: Result > 0
 		end
 
-	last_single_number: MA_DECIMAL
+	last_single_number: INTEGER_64
 			-- Result from `calculate_single_number' or `calculate_any_number'
 
 	calculate_single_number (a_node: XM_XPATH_NODE; a_count_pattern, a_from_pattern: XM_XSLT_PATTERN; a_context: XM_XSLT_EVALUATION_CONTEXT) is 
@@ -797,7 +791,7 @@ feature {NONE} -- Implementation
 			a_count: XM_XSLT_PATTERN
 			i: INTEGER
 		do
-			last_single_number := Void
+			last_single_number := -1
 			if a_count_pattern = Void and then a_from_pattern = Void then
 				last_single_number := simple_number (a_node)
 			else
@@ -822,7 +816,7 @@ feature {NONE} -- Implementation
 					else
 						a_target := a_target.parent
 						if a_target = Void then
-							create last_single_number.make_zero
+							last_single_number := 0
 							finished := True
 						end
 					end
@@ -831,10 +825,10 @@ feature {NONE} -- Implementation
 					if a_from_pattern /= Void then
 						a_from_pattern.match (a_target, a_context)
 						if not transformer.is_error and a_from_pattern.last_match_result then
-							create last_single_number.make_zero
+							last_single_number := 0
 						end
 					end
-					if last_single_number = Void then
+					if last_single_number = -1 then
 						
 						-- We've found the ancestor to count from
 
@@ -853,12 +847,12 @@ feature {NONE} -- Implementation
 							end
 							an_iterator.forth
 						end
-						create last_single_number.make_from_integer (i)
+						last_single_number := i
 					end
 				end
 			end
 		ensure
-			positive_integer: not transformer.is_error implies last_single_number /= Void and then last_single_number.is_integer and then last_single_number.is_positive
+			positive_integer: not transformer.is_error implies last_single_number >= 0
 		end
 
 	calculate_any_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -867,13 +861,12 @@ feature {NONE} -- Implementation
 			source_node_not_void: a_node /= Void
 			transformer_not_void: transformer /= Void
 		local
-			a_memo: MA_DECIMAL
+			a_memo: DS_CELL [INTEGER_64]
 			memoize, finished: BOOLEAN
-			a_count: INTEGER
+			a_count: INTEGER_64
 			a_filter: XM_XPATH_NODE_TEST
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			last_single_number := Void
 			memoize := not has_variables_in_patterns and then count_pattern /= Void
 			if count_pattern = Void then
 				if a_node.fingerprint = -1 then
@@ -904,7 +897,7 @@ feature {NONE} -- Implementation
 				if from_pattern /= Void then
 					from_pattern.match (an_iterator.item, a_context)
 					if not transformer.is_error and from_pattern.last_match_result then
-						create last_single_number.make_from_integer (a_count); finished := True
+						last_single_number := a_count; finished := True
 					end
 				else
 					count_pattern.match (an_iterator.item, a_context)
@@ -912,7 +905,7 @@ feature {NONE} -- Implementation
 						if memoize and then a_count = 1 then
 							a_memo := transformer.remembered_number (an_iterator.item)
 							if a_memo /= Void then
-								a_count := a_memo.to_integer + 1; finished := True
+								a_count := a_memo.item + 1; finished := True
 							end
 						end
 						if not finished then a_count := a_count + 1 end
@@ -921,15 +914,15 @@ feature {NONE} -- Implementation
 				an_iterator.forth
 			end
 			if from_pattern /= Void and then last_single_number = Void then
-				create last_single_number.make_zero
+				last_single_number := 0
 			else
-				create last_single_number.make_from_integer (a_count)
+				last_single_number := a_count
 			end
 			if memoize then
 				transformer.set_remembered_number (last_single_number, a_node)
 			end
 		ensure
-			positive_integer: not transformer.is_error implies last_single_number /= Void and then last_single_number.is_integer and then last_single_number.is_positive
+			positive_integer: not transformer.is_error implies last_single_number >= 0
 		end
 
 	multi_level_number: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
@@ -943,7 +936,7 @@ feature {NONE} -- Implementation
 		local
 			a_current_node: XM_XPATH_NODE
 			finished: BOOLEAN
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create multi_level_number.make_default
 			if count_pattern = Void then

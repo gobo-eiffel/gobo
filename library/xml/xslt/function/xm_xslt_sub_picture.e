@@ -121,8 +121,8 @@ feature -- Access
 				end
 				if a_number.is_double_value  then
 					Result := formatted_double (a_number.as_double) -- this will also be used for float in future
-				elseif a_number.is_integer_value then
-					Result := formatted_integer (a_number.as_integer_value)
+				elseif a_number.is_machine_integer_value then
+					Result := formatted_integer (a_number.as_machine_integer_value)
 				else
 					check
 						decimal: a_number.is_decimal_value
@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	formatted_integer (a_value: XM_XPATH_INTEGER_VALUE): STRING is
+	formatted_integer (a_value: XM_XPATH_MACHINE_INTEGER_VALUE): STRING is
 			-- Formatted version of `a_value'
 		require
 			value_not_void: a_value /= Void

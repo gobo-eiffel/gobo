@@ -58,7 +58,7 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -69,9 +69,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Two items", evaluated_items /= Void and then evaluated_items.count = 2)
 			an_integer_value ?= evaluated_items.item (1)
-			assert ("First position is 2", an_integer_value /= Void and then an_integer_value.value.is_integer and then an_integer_value.value.to_integer = 2)
+			assert ("First position is 2", an_integer_value /= Void and then an_integer_value.value = 2)
 			an_integer_value ?= evaluated_items.item (2)
-			assert ("Second position is 5", an_integer_value /= Void and then an_integer_value.value.is_integer and then an_integer_value.value.to_integer = 5)
+			assert ("Second position is 5", an_integer_value /= Void and then an_integer_value.value = 5)
 		end
 
 	test_index_of_three is
@@ -79,7 +79,7 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -90,9 +90,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Two items", evaluated_items /= Void and then evaluated_items.count = 2)
 			an_integer_value ?= evaluated_items.item (1)
-			assert ("First position is 1", an_integer_value /= Void and then an_integer_value.value.is_integer and then an_integer_value.value.to_integer = 1)
+			assert ("First position is 1", an_integer_value /= Void and then an_integer_value.value = 1)
 			an_integer_value ?= evaluated_items.item (2)
-			assert ("Second position is 4", an_integer_value /= Void and then an_integer_value.value.is_integer and then an_integer_value.value.to_integer = 4)
+			assert ("Second position is 4", an_integer_value /= Void and then an_integer_value.value = 4)
 		end
 
 	test_index_of_error is

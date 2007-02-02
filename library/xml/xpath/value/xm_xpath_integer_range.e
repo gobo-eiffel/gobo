@@ -78,7 +78,7 @@ feature -- Access
 	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
 			-- Item at `an_index'
 		do
-			create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (minimum + an_index - 1)
+			create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make ((minimum + an_index - 1).to_integer_64)
 		end
 
 feature -- Comparison

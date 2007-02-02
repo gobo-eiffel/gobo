@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: like item
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			last_match_test := False
 			if non_numeric then
@@ -182,10 +182,10 @@ feature {NONE} -- Implementation
 							last_match_test := True
 						elseif an_item.is_boolean_value then
 							if an_item.as_boolean_value.value then	last_match_test := True	else an_iterator.forth; last_match_test := not an_iterator.after end
-						elseif an_item.is_integer_value and then an_item.as_integer_value.is_platform_integer then
-							if an_item.as_integer_value.as_integer = base_iterator.index then last_match_test := True else an_iterator.forth; last_match_test := not an_iterator.after end
+						elseif an_item.is_machine_integer_value and then an_item.as_machine_integer_value.is_platform_integer then
+							if an_item.as_machine_integer_value.as_integer = base_iterator.index then last_match_test := True else an_iterator.forth; last_match_test := not an_iterator.after end
 						elseif an_item.is_numeric_value then
-							create an_integer_value.make_from_integer (base_iterator.index)
+							create an_integer_value.make (base_iterator.index)
 							last_match_test := an_item.as_numeric_value.same_expression (an_integer_value)
 							if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
 						else

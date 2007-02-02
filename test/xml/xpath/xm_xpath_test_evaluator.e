@@ -120,7 +120,7 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -139,7 +139,7 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -542,13 +542,13 @@ feature -- Test
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			create an_integer_value.make_from_integer (7)
+			create an_integer_value.make (7)
 			an_evaluator.static_context.declare_variable ("fred", an_integer_value)
 			an_evaluator.evaluate ("(8, ($fred - 1), 9) < (8, ($fred - 2), 4)")
 			assert ("No evaluation error", not an_evaluator.is_error)

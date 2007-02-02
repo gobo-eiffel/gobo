@@ -257,7 +257,11 @@ feature -- Conversion
 			elseif a_required_type = type_factory.float_type then
 				create {XM_XPATH_FLOAT_VALUE} Result.make_from_string (a_value)
 			elseif a_required_type = type_factory.integer_type then
-				create {XM_XPATH_INTEGER_VALUE} Result.make_from_string (a_value)
+				if STRING_.is_integer_64 (a_value) then
+					create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (STRING_.to_integer_64 (a_value))
+				else
+					create {XM_XPATH_INTEGER_VALUE} Result.make_from_string (a_value)
+				end
 			elseif a_required_type = type_factory.decimal_type then
 				if last_decimal = Void then
 					create last_decimal.make_from_string (trimmed_white_space (value))

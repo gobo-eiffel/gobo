@@ -189,6 +189,21 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
+	is_machine_integer_value: BOOLEAN is
+			-- Is `Current' a machine integer value?
+		do
+			Result := False
+		end
+
+	as_machine_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE is
+			-- `Current' seen as a machine integer value
+		require
+			machine_integer_value: is_machine_integer_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 	is_double_value: BOOLEAN is
 			-- Is `Current' a double value?
 		do
@@ -365,6 +380,7 @@ invariant
 	item_in_error: is_error implies error_value /= Void
 	node_or_atomic_value: not is_error implies is_node xor is_atomic_value
 	integers_are_numeric: is_integer_value implies is_numeric_value
+	machine_integers_are_numeric: is_machine_integer_value implies is_numeric_value
 	doubles_are_numeric: is_double_value implies is_numeric_value
 	floats_are_numeric: is_float_value implies is_numeric_value
 

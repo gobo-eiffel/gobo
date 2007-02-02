@@ -69,7 +69,7 @@ feature -- Evaluation
 			-- Evaluate `Current' as a single item
 		local
 			an_arity, a_fingerprint: INTEGER
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			a_uri, an_xml_prefix: STRING
 			a_parser: XM_XPATH_QNAME_PARSER
 			a_boolean: BOOLEAN
@@ -82,10 +82,10 @@ feature -- Evaluation
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (arguments.item (2).last_evaluated_item.error_value)
 				else
 					check
-						integer: arguments.item (2).last_evaluated_item.is_integer_value
+						integer: arguments.item (2).last_evaluated_item.is_machine_integer_value
 						-- static typing
 					end
-					an_integer_value := arguments.item (2).last_evaluated_item.as_integer_value
+					an_integer_value := arguments.item (2).last_evaluated_item.as_machine_integer_value
 					an_arity := an_integer_value.value.to_integer
 				end
 			end
@@ -150,10 +150,10 @@ feature -- Evaluation
 					set_last_error (arguments.item (2).last_evaluated_item.error_value)
 				else
 					check
-						integer: arguments.item (2).last_evaluated_item.is_integer_value
+						integer: arguments.item (2).last_evaluated_item.is_machine_integer_value
 						-- static typing
 					end
-					an_arity := arguments.item (2).last_evaluated_item.as_integer_value.value.to_integer
+					an_arity := arguments.item (2).last_evaluated_item.as_machine_integer_value.value.to_integer
 				end
 			end
 			if not is_error then

@@ -206,6 +206,59 @@ feature -- Status report
 			end
 		end
 
+	is_integer_64 (a_string: STRING): BOOLEAN is
+			-- Does `a_string' represent a positive INTEGER_64?
+		require
+			a_string_not_void: a_string /= Void
+			digits_only: is_integer (a_string)
+		local
+			i, j, k: INTEGER
+			l_digits: ARRAY [INTEGER]
+			l_string: STRING
+		do
+			i := a_string.count
+			from
+				j := 1
+			until
+				j > i
+			loop
+				if a_string.item (j) /= '0' then
+					l_string := a_string.substring (j, i)
+					j := i + 1
+				else
+					j := j + 1
+				end
+			end
+			if l_string = Void then
+				-- zeros only
+				Result := True
+			else
+				i := l_string.count
+				if i < 20 then
+					Result := True
+					if i = 19 then
+						-- Max value is 9223372036854775807
+						l_digits := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 7>>
+						from
+							k := 1
+						until
+							not Result or k > 19
+						loop
+							j := l_string.substring (k, k).to_integer
+							i := l_digits.item (k)
+							if  j < i then
+								Result := True
+								k := 20 -- finish loop early
+							else
+								Result := j = i
+								k := k + 1
+							end
+						end
+					end
+				end
+			end
+		end
+
 	is_hexadecimal (a_string: STRING): BOOLEAN is
 			-- Is a string made up of digits or A-F or a-f?
 			-- (Not in ELKS 2001 STRING)
@@ -1660,6 +1713,37 @@ feature -- Resizing
 		ensure
 			count_set: a_string.count = n
 		end
+
+feature -- Conversion
+
+#ifndef VE
+	to_integer_64 (a_string: STRING): INTEGER_64 is
+			-- `a_string' as `INTEGER_64'
+		require
+			a_string_not_void: a_string /= Void
+			digits_only: is_integer (a_string)
+			integer_64_string: is_integer_64 (a_string)
+#ifdef ISE || GE
+		do
+			Result := a_string.to_integer_64
+		end
+#endif
+#ifdef SE
+		local
+			i, c: INTEGER
+		do
+			from
+				c := a_string.count
+				i := 1
+			until
+				i > c
+			loop
+				Result := 10 * Result + a_string.substring (i, i).to_integer
+				i := i + 1
+			end
+		end
+#endif
+#endif
 
 feature {NONE} -- Implementation
 

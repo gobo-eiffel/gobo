@@ -287,8 +287,8 @@ feature {NONE} -- Implementation
 		do
 			if an_expression.is_atomic_value then
 				an_atomic_value := an_expression.as_atomic_value
-				if an_atomic_value.is_integer_value then
-					Result := an_atomic_value.as_integer_value.is_zero
+				if an_atomic_value.is_numeric_value then
+					Result := an_atomic_value.as_numeric_value.is_zero
 				elseif an_atomic_value.is_convertible (type_factory.integer_type) then
 					Result := an_atomic_value.convert_to_type (type_factory.integer_type).as_integer_value.is_zero
 				end
@@ -375,9 +375,9 @@ feature {NONE} -- Implementation
 			-- Optimise count(x) eq 0 (or gt 0, ne 0, eq 0, etc).
 		local
 			l_count_function: XM_XPATH_COUNT
-			l_integer_value: XM_XPATH_INTEGER_VALUE
+			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			l_new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			l_integer: MA_DECIMAL
+			l_integer: INTEGER_64
 			l_filter_expression: XM_XPATH_FILTER_EXPRESSION
 			l_expression: XM_XPATH_EXPRESSION
 			l_function_library: XM_XPATH_FUNCTION_LIBRARY
@@ -415,13 +415,13 @@ feature {NONE} -- Implementation
 
 						end
 					else
-						if second_operand.is_integer_value and then (operator = Fortran_greater_than_token or else operator = Fortran_greater_equal_token) then
+						if second_operand.is_machine_integer_value and then (operator = Fortran_greater_than_token or else operator = Fortran_greater_equal_token) then
 
 							-- Rewrite count(x) gt n as exists(x[n+1])
 							--  and count(x) ge n as exists(x[n])
 
-							l_integer := second_operand.as_integer_value.value
-							if operator = Fortran_greater_than_token then l_integer := l_integer + decimal.one end
+							l_integer := second_operand.as_machine_integer_value.value
+							if operator = Fortran_greater_than_token then l_integer := l_integer + 1 end
 							create l_new_arguments.make (1)
 							create l_integer_value.make (l_integer)
 							create l_filter_expression.make (l_count_function.arguments.item(1), l_integer_value)
@@ -469,52 +469,52 @@ feature {NONE} -- Implementation
 	optimize_position (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Optimise position() < n etc.
 		local
-			an_integer: MA_DECIMAL
+			an_integer: INTEGER
 			an_expression: XM_XPATH_EXPRESSION
 		do
-			if first_operand.is_position_function and then second_operand.is_integer_value then
-				an_integer := second_operand.as_integer_value.value
-				if an_integer.is_negative then an_integer := decimal.zero end
-				if an_integer <= decimal.maximum_integer then
+			if first_operand.is_position_function and then second_operand.is_machine_integer_value then
+				an_integer := second_operand.as_machine_integer_value.value.to_integer
+				if an_integer < 0 then an_integer := 0 end
+				if an_integer <= Platform.Maximum_integer then
 					inspect
 						operator
 					when Fortran_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer, an_integer.to_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, an_integer)
 					when Fortran_greater_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer, Platform.Maximum_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, Platform.Maximum_integer)
 					when Fortran_not_equal_token then
 						if an_integer.to_integer = 1 then
 							create {XM_XPATH_POSITION_RANGE} an_expression.make (2, Platform.Maximum_integer)
 						end
 					when Fortran_less_than_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer - 1)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer - 1)
 					when Fortran_greater_than_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer + 1, Platform.Maximum_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer + 1, Platform.Maximum_integer)
 					when Fortran_less_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer)
 					end
 					set_replacement (an_expression)
 				end
-			elseif second_operand.is_position_function and then first_operand.is_integer_value then
-				an_integer := first_operand.as_integer_value.value
-				if an_integer.is_negative then an_integer := decimal.zero end
-				if an_integer <= decimal.maximum_integer then
+			elseif second_operand.is_position_function and then first_operand.is_machine_integer_value then
+				an_integer := first_operand.as_machine_integer_value.value.to_integer
+				if an_integer < 0 then an_integer := 0 end
+				if an_integer <= Platform.Maximum_integer then
 					inspect
 						operator
 					when Fortran_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer, an_integer.to_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, an_integer)
 					when Fortran_less_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer, Platform.Maximum_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, Platform.Maximum_integer)
 					when Fortran_not_equal_token then
 						if an_integer.to_integer = 1 then
 							create {XM_XPATH_POSITION_RANGE} an_expression.make (2, Platform.Maximum_integer)
 						end
 					when Fortran_greater_than_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer - 1)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer - 1)
 					when Fortran_less_than_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer + 1, Platform.Maximum_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer + 1, Platform.Maximum_integer)
 					when Fortran_greater_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer)
 					end
 					set_replacement (an_expression)
 				end

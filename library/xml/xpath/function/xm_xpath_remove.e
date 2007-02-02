@@ -77,7 +77,7 @@ feature -- Optimization
 				-- This is worth doing because tail expressions
 				--  used in a recursive call are handled specially.
 
-				if arguments.item (2).is_integer_value and then arguments.item (2).as_integer_value.is_platform_integer and then arguments.item (2).as_integer_value.as_integer = 1 then
+				if arguments.item (2).is_numeric_value and then arguments.item (2).as_numeric_value.is_platform_integer and then arguments.item (2).as_numeric_value.as_integer = 1 then
 					create a_tail_expression.make (arguments.item (1), 2)
 					set_replacement (a_tail_expression)
 				end
@@ -108,11 +108,11 @@ feature -- Evaluation
 					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 				else
 					check
-						integer: an_item.is_integer_value
+						integer: an_item.is_numeric_value
 						-- static typing
 					end
-					if an_item.as_integer_value.is_platform_integer then
-						a_count := an_item.as_integer_value.as_integer
+					if an_item.as_numeric_value.is_platform_integer then
+						a_count := an_item.as_numeric_value.as_integer
 						create {XM_XPATH_REMOVE_ITERATOR} last_iterator.make (a_sequence, a_count)
 					else
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Position exceeds implementation limit", Gexslt_eiffel_type_uri, "SEQUENCE_TOO_LONG", Dynamic_error)

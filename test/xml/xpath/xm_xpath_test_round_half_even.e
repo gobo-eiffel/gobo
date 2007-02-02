@@ -184,7 +184,7 @@ feature -- Tests
 -- 		local
 -- 			an_evaluator: XM_XPATH_EVALUATOR
 -- 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
--- 			an_integer_value: XM_XPATH_INTEGER_VALUE
+-- 			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 -- 		do
 -- 			create an_evaluator.make (18, False)
 -- 			an_evaluator.set_string_mode_ascii
@@ -205,7 +205,7 @@ feature -- Tests
 -- 		local
 -- 			an_evaluator: XM_XPATH_EVALUATOR
 -- 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
--- 			an_integer_value: XM_XPATH_INTEGER_VALUE
+-- 			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 -- 		do
 -- 			create an_evaluator.make (18, False)
 -- 			an_evaluator.set_string_mode_ascii

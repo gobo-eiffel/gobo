@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "normalize-space"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := Normalize_space_function_type_code
+			name := "normalize-unicode"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Normalize_unicode_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)

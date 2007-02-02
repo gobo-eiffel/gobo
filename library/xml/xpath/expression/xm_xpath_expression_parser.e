@@ -1234,7 +1234,7 @@ feature {NONE} -- Implementation
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 				else
-					create {XM_XPATH_INTEGER_VALUE} an_expression.make_from_integer (0)
+					create {XM_XPATH_MACHINE_INTEGER_VALUE} an_expression.make (0)
 					parse_unary_expression
 					if not is_parse_error then
 						create another_expression.make (an_expression, Minus_token, internal_last_parsed_expression)
@@ -1246,7 +1246,7 @@ feature {NONE} -- Implementation
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 				else
-					create {XM_XPATH_INTEGER_VALUE} an_expression.make_from_integer (0)
+					create {XM_XPATH_MACHINE_INTEGER_VALUE} an_expression.make (0)
 					parse_unary_expression
 					if not is_parse_error then
 
@@ -1800,14 +1800,16 @@ feature {NONE} -- Implementation
 				else
 					create {XM_XPATH_DECIMAL_VALUE} l_value.make (l_decimal)
 				end
+			elseif STRING_.is_integer_64 (tokenizer.last_token_value) then
+				create {XM_XPATH_MACHINE_INTEGER_VALUE} l_value.make (STRING_.to_integer_64 (tokenizer.last_token_value))
 			else
 				create l_decimal.make_from_string_ctx (tokenizer.last_token_value, shared_integer_context)
 				if l_decimal.is_nan then
-					l_message := STRING_.appended_string ("Invalid numeric literal [", tokenizer.last_token_value)
+					l_message := STRING_.concat ("Invalid numeric literal [", tokenizer.last_token_value)
 					l_message := STRING_.appended_string (l_message,  "]")
 					report_parse_error (l_message, "XPST0003")
 				else
-					create {XM_XPATH_INTEGER_VALUE} l_value.make (l_decimal)
+					create {XM_XPATH_DECIMAL_VALUE} l_value.make (l_decimal)
 				end
 			end
 			next_token ("In parse_numeric_literal: current token is ")

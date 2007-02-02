@@ -22,6 +22,9 @@ inherit
 
 	XM_XPATH_ROLE
 
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 create
 
 	make
@@ -122,10 +125,10 @@ feature -- Optimization
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			an_integer, another_integer: INTEGER
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
-			an_integer_value: XM_XPATH_INTEGER_VALUE
-			an_integer_range: XM_XPATH_INTEGER_RANGE
+			l_integer, l_other_integer: INTEGER_64
+			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
+			l_integer_range: XM_XPATH_INTEGER_RANGE
 		do
 			mark_unreplaced
 			first_operand.optimize (a_context, a_context_item_type)
@@ -142,20 +145,18 @@ feature -- Optimization
 				if second_operand.is_error then
 					set_last_error (second_operand.error_value)
 				else
-					if first_operand.is_integer_value and then second_operand.is_integer_value and then
-						first_operand.as_integer_value.is_platform_integer and then
-						second_operand.as_integer_value.is_platform_integer then
-						an_integer := first_operand.as_integer_value.as_integer
-						another_integer := second_operand.as_integer_value.as_integer
-						if an_integer > another_integer then
-							create an_empty_sequence.make
-							set_replacement (an_empty_sequence)
-						elseif an_integer = another_integer then
-							create an_integer_value.make_from_integer (an_integer)
-							set_replacement (an_integer_value)
-						else
-							create an_integer_range.make (an_integer, another_integer)
-							set_replacement (an_integer_range)
+					if first_operand.is_machine_integer_value and then second_operand.is_machine_integer_value then
+						l_integer := first_operand.as_machine_integer_value.as_integer
+						l_other_integer := second_operand.as_machine_integer_value.as_integer
+						if l_integer > l_other_integer then
+							create l_empty_sequence.make
+							set_replacement (l_empty_sequence)
+						elseif l_integer = l_other_integer then
+							create l_integer_value.make (l_integer)
+							set_replacement (l_integer_value)
+						elseif l_integer.abs <=  Platform.Maximum_integer and l_other_integer.abs <=  Platform.Maximum_integer then 
+							create l_integer_range.make (l_integer.to_integer_32, l_other_integer.to_integer_32)
+							set_replacement (l_integer_range)
 						end
 					end
 				end
@@ -167,28 +168,32 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			an_integer_value, another_integer_value: XM_XPATH_INTEGER_VALUE 
+			l_integer_value, l_other_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE 
 		do
 			first_operand.evaluate_item (a_context)
 			if first_operand.last_evaluated_item.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (first_operand.last_evaluated_item.error_value)
 			else
-				if not first_operand.last_evaluated_item.is_integer_value then
+				if not (first_operand.last_evaluated_item.is_machine_integer_value or first_operand.last_evaluated_item.is_integer_value) then
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 				else
 					second_operand.evaluate_item (a_context)
 					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_error then
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (second_operand.last_evaluated_item.error_value)
 					else
-						if not second_operand.last_evaluated_item.is_integer_value then
+						if not (second_operand.last_evaluated_item.is_machine_integer_value or second_operand.last_evaluated_item.is_integer_value) then
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						else
-							an_integer_value := first_operand.last_evaluated_item.as_integer_value
-							another_integer_value := second_operand.last_evaluated_item.as_integer_value
-							if an_integer_value.value > another_integer_value.value then
-								create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-							elseif an_integer_value.is_platform_integer and then another_integer_value.is_platform_integer then
-								create {XM_XPATH_RANGE_ITERATOR} last_iterator.make (an_integer_value.as_integer, another_integer_value.as_integer)
+							if first_operand.last_evaluated_item.is_machine_integer_value and second_operand.last_evaluated_item.is_machine_integer_value
+								and first_operand.last_evaluated_item.as_machine_integer_value.is_platform_integer
+								and second_operand.last_evaluated_item.as_machine_integer_value.is_platform_integer then
+								l_integer_value := first_operand.last_evaluated_item.as_machine_integer_value
+								l_other_integer_value := second_operand.last_evaluated_item.as_machine_integer_value
+								if l_integer_value.value > l_other_integer_value.value then
+									create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+								else
+									create {XM_XPATH_RANGE_ITERATOR} last_iterator.make (l_integer_value.as_integer, l_other_integer_value.as_integer)
+								end
 							else
 								todo ("iterator - large integers", True)
 							end

@@ -153,6 +153,35 @@ feature -- Test
 			assert ("not_integer3", not STRING_.is_integer (uc_string))
 		end
 
+	test_is_integer_64 is
+			-- Test feature `is_integer_64'.
+		local
+			uc_string: UC_UTF8_STRING
+		do
+			assert ("is_integer_64_1", STRING_.is_integer_64 ("1234"))
+			assert ("is_integer_64_2", STRING_.is_integer_64 ("00078"))
+			create uc_string.make_from_string ("4534")
+			assert ("is_integer_64_3", STRING_.is_integer_64 (uc_string))
+			assert ("is_integer_64_4", STRING_.is_integer_64 ("9223372036854775807"))
+			assert ("is_integer_64_5", STRING_.is_integer_64 ("00000000009223372036854775807"))
+			assert ("not_is_integer_64_1", not STRING_.is_integer_64 ("9223372036854775808"))
+			assert ("not_is_integer_64_2", not STRING_.is_integer_64 ("10223372036854775807"))
+			assert ("not_is_integer_64_1", not STRING_.is_integer_64 ("00019223372136854775807"))
+		end
+
+	test_to_integer_64 is
+			-- Test feature `to_integer_64'.
+		local
+			uc_string: UC_UTF8_STRING
+		do
+			assert_equal ("to_integer_64_1", (1234).to_integer_64, STRING_.to_integer_64 ("1234"))
+			assert_equal ("to_integer_64_2", (78).to_integer_64, STRING_.to_integer_64 ("00078"))
+			create uc_string.make_from_string ("4534")
+			assert_equal ("to_integer_64_3", (4534).to_integer_64, STRING_.to_integer_64 (uc_string))
+			assert_equal ("to_integer_64_4", (9223372036854775807).to_integer_64, STRING_.to_integer_64 ("9223372036854775807"))
+			assert_equal ("to_integer_64_5", (9223372036854775807).to_integer_64, STRING_.to_integer_64 ("00000000009223372036854775807"))
+		end
+
 	test_is_hexadecimal is
 			-- Test feature `is_hexadecimal'.
 		local

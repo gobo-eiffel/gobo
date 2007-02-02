@@ -64,6 +64,7 @@ feature -- Access
 	count: INTEGER is
 			-- Number of items in `Current';
 			-- Not 100% pure - may put `Current' into error.
+			-- N.B. Limited to INTEGER_32 (and hence XPath sequences) by `{DS_ARRAYED_LIST}.count'
 		local
 			a_saved_iterator, an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do

@@ -22,6 +22,9 @@ inherit
 	XM_XPATH_TOKENS
 		export {NONE} all end
 
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 create
 
 	make
@@ -70,7 +73,7 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		local
 			an_item: XM_XPATH_ITEM
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			a_scale: INTEGER
 			in_error: BOOLEAN
 		do
@@ -78,11 +81,11 @@ feature -- Evaluation
 				arguments.item (2).evaluate_item (a_context)
 				an_item := arguments.item (2).last_evaluated_item
 				check
-					integer_precision: an_item.is_integer_value
+					integer_precision: an_item.is_machine_integer_value
 					-- static typing
 				end
-				an_integer_value := an_item.as_integer_value
-				if an_integer_value.value.is_integer then
+				an_integer_value := an_item.as_machine_integer_value
+				if an_integer_value.value.abs <= Platform.Maximum_integer then
 					a_scale := an_integer_value.value.to_integer
 				else
 					in_error := True

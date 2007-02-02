@@ -54,12 +54,24 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
+		local
+			l_first, l_second: MA_DECIMAL
 		do
 			if not other.is_numeric_value then
 				Result := False
 			else
-				if is_integer_value and then other.is_integer_value then
-					Result := as_integer_value.value.is_equal (other.as_integer_value.value)
+				if (is_integer_value or is_machine_integer_value) and (other.is_integer_value or other.is_machine_integer_value) then
+					if is_integer_value then
+						l_first := as_integer_value.value
+					else
+						create l_first.make_from_string (as_machine_integer_value.value.out)
+					end
+					if other.is_integer_value then
+						l_second := other.as_integer_value.value
+					else
+						create l_second.make_from_string (other.as_machine_integer_value.value.out)
+					end
+					Result := l_first.is_equal (l_second)
 				elseif is_decimal_value and then other.is_decimal_value then
 						Result := as_decimal_value.value.is_equal (other.as_decimal_value.value)
 				else
@@ -170,10 +182,12 @@ feature -- Conversions
 		deferred
 		end
 
-	rounded_half_even (a_scale: INTEGER): like Current is
+	rounded_half_even (a_scale: INTEGER): XM_XPATH_NUMERIC_VALUE is
 			-- `a_numeric_value' rounded towards the nearest even number;
 			-- Implements XPath round-to-half-even().
 		deferred
+		ensure
+			same_xpath_type: Result.item_type.is_same_type (old item_type)
 		end
 
 	floor: like Current is

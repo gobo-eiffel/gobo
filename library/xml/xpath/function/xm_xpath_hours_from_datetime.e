@@ -69,7 +69,7 @@ feature -- Evaluation
 			last_evaluated_item := arguments.item (1).last_evaluated_item
 			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
 				a_date_time_value := last_evaluated_item.as_atomic_value.as_date_time_value
-				create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (a_date_time_value.time.hour)
+				create {XM_XPATH_MACHINE_INTEGER_VALUE} last_evaluated_item.make (a_date_time_value.time.hour)
 			end
 		end
 

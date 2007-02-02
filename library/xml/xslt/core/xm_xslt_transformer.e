@@ -150,7 +150,7 @@ feature -- Access
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
 
-	last_remembered_number: MA_DECIMAL
+	last_remembered_number: DS_CELL [INTEGER_64]
 			--	Last remembered number
 
 	last_remembered_node: XM_XPATH_NODE
@@ -159,7 +159,7 @@ feature -- Access
 	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
 			-- Implicit time zone for comparing unzoned times and dates
 
-	remembered_number (a_node: XM_XPATH_NODE): MA_DECIMAL is
+	remembered_number (a_node: XM_XPATH_NODE): like last_remembered_number is
 			-- Number of a node if it is the last remembered one
 		require
 			node_not_void: a_node /= Void
@@ -250,17 +250,16 @@ feature -- Status setting
 			end
 		end
 
-	set_remembered_number (a_number: MA_DECIMAL; a_node: XM_XPATH_NODE) is
+	set_remembered_number (a_number: INTEGER_64; a_node: XM_XPATH_NODE) is
 			-- Set remembered number.
 		require
 			node_not_void: a_node /= Void
-			number_not_void: a_number /= Void
 		do
-			last_remembered_number := a_number -- CAUTION - should we copy??
+			create last_remembered_number.make (a_number)
 			last_remembered_node := a_node
 		ensure
 			last_remembered_node_set: last_remembered_node = a_node
-			last_remembered_number_set: last_remembered_number = a_number -- CAUTION - should we copy??
+			last_remembered_number_set: last_remembered_number.item = a_number
 		end
 
 feature -- Creation

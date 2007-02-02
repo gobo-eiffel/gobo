@@ -571,10 +571,10 @@ feature {NONE} -- Implementation
 		local
 			an_expression: XM_XPATH_EXPRESSION
 		do
-			if a_range_expression.lower_bound.is_integer_value and then a_range_expression.upper_bound.is_integer_value
-				and then second_operand.is_position_function and then a_range_expression.lower_bound.as_integer_value.is_platform_integer
-				and then a_range_expression.upper_bound.as_integer_value.is_platform_integer then
-				create {XM_XPATH_POSITION_RANGE} an_expression.make (a_range_expression.lower_bound.as_integer_value.as_integer, a_range_expression.upper_bound.as_integer_value.as_integer)
+			if a_range_expression.lower_bound.is_machine_integer_value and then a_range_expression.upper_bound.is_machine_integer_value
+				and then second_operand.is_position_function and then a_range_expression.lower_bound.as_machine_integer_value.is_platform_integer
+				and then a_range_expression.upper_bound.as_machine_integer_value.is_platform_integer then
+				create {XM_XPATH_POSITION_RANGE} an_expression.make (a_range_expression.lower_bound.as_machine_integer_value.value.to_integer, a_range_expression.upper_bound.as_machine_integer_value.value.to_integer)
 			else
 				create {XM_XPATH_INTEGER_RANGE_TEST} an_expression.make (second_operand, a_range_expression.lower_bound, a_range_expression.upper_bound)
 			end

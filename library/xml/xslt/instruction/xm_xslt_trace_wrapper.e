@@ -16,9 +16,9 @@ inherit
 
 	XM_XSLT_INSTRUCTION
 		redefine
-			item_type, compute_cardinality,
+			item_type, compute_cardinality, is_trace_wrapper,
 			compute_dependencies, creates_new_nodes, evaluate_item,
-			create_iterator, sub_expressions, set_unsorted,
+			create_iterator, create_node_iterator, sub_expressions, set_unsorted,
 			set_unsorted_if_homogeneous, native_implementations
 		end
 
@@ -83,6 +83,12 @@ feature -- Status report
 			Result := True
 		end
 
+	is_trace_wrapper: BOOLEAN is
+			-- Is `Current' an `XM_XSLT_TRACE_WRAPPER'?
+		do
+			Result := True
+		end
+
 feature -- Optimization
 
 	simplify is
@@ -96,14 +102,20 @@ feature -- Optimization
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			child.check_static_type (a_context, a_context_item_type)
-			if child.was_expression_replaced then child := child.replacement_expression end
+			if child.was_expression_replaced then
+				child := child.replacement_expression
+				reset_static_properties
+			end
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			child.optimize (a_context, a_context_item_type)
-			if child.was_expression_replaced then child := child.replacement_expression end
+			if child.was_expression_replaced then
+				child := child.replacement_expression
+				reset_static_properties
+			end
 		end
 
 feature -- Evaluation
@@ -158,6 +170,32 @@ feature -- Evaluation
 			if is_tracing then
 				a_trace_listener.trace_instruction_exit (trace_details)
 			end		
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		local
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_trace_listener: XM_XSLT_TRACE_LISTENER
+			l_is_tracing: BOOLEAN
+			l_transformer: XM_XSLT_TRANSFORMER	
+		do
+			l_evaluation_context ?= a_context
+			check
+				evaluation_context: l_evaluation_context /= Void
+				-- This is XSLT
+			end
+			l_transformer := l_evaluation_context.transformer
+			l_is_tracing := l_transformer.is_tracing
+			if l_is_tracing then
+				l_trace_listener := l_transformer.trace_listener
+				l_trace_listener.trace_instruction_entry (trace_details)
+			end
+			child.create_node_iterator (a_context)
+			last_node_iterator := child.last_node_iterator
+			if l_is_tracing then
+				l_trace_listener.trace_instruction_exit (trace_details)
+			end
 		end
 
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is

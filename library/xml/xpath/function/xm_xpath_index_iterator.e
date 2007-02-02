@@ -90,7 +90,7 @@ feature -- Cursor movement
 						if not atomic_comparer.are_comparable (an_atomic_value, search_value) then
 							create {XM_XPATH_INVALID_ITEM} item.make_from_string ("Items are not comparable", Xpath_errors_uri, "FOTY0012", Dynamic_error)
 						elseif atomic_comparer.three_way_comparison (an_atomic_value, search_value) = 0 then
-							create {XM_XPATH_INTEGER_VALUE} item.make_from_integer (last_position)
+							create {XM_XPATH_MACHINE_INTEGER_VALUE} item.make (last_position)
 						else
 							if not base_sequence.after then
 								base_sequence.forth

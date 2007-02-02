@@ -286,10 +286,10 @@ feature -- Optimization
 
 				if node_test.node_kind = Element_node and then filters /= Void and then filters.count = 1 then
 					a_filter_expression := filters.item (1)
-					if (a_filter_expression.is_integer_value and then a_filter_expression.as_integer_value.value.is_equal (decimal.one))
+					if (a_filter_expression.is_machine_integer_value and then a_filter_expression.as_machine_integer_value.value = 1
 						or else (a_filter_expression.is_position_range and then
-									(a_filter_expression.as_position_range.minimum_position = 1 and then
-									 a_filter_expression.as_position_range.maximum_position = 1)) then
+									(a_filter_expression.as_position_range.minimum_position = 1 and
+									 a_filter_expression.as_position_range.maximum_position = 1))) then
 						set_first_element_pattern (True)
 						set_special_filter (True)
 						set_filters (Void)

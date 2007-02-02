@@ -54,7 +54,7 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -66,10 +66,10 @@ feature -- Test
 			assert ("Two values", evaluated_items /= Void and then evaluated_items.count = 2)
 			an_integer_value ?= evaluated_items.item (1)
 			assert ("First value is integer", an_integer_value /= Void)
-			assert ("First value is one", an_integer_value.value.is_equal (decimal.one))
+			assert ("First value is one", 1 = an_integer_value.value)
 			an_integer_value ?= evaluated_items.item (2)
 			assert ("Second value is integer", an_integer_value /= Void)
-			assert ("Second value is three", an_integer_value.value.is_equal (three))
+			assert ("Second value is three", 3 = an_integer_value.value)
 		end
 
 	set_up is
