@@ -867,6 +867,7 @@ feature {NONE} -- Implementation
 			a_filter: XM_XPATH_NODE_TEST
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
+			last_single_number := -1
 			memoize := not has_variables_in_patterns and then count_pattern /= Void
 			if count_pattern = Void then
 				if a_node.fingerprint = -1 then
@@ -913,7 +914,7 @@ feature {NONE} -- Implementation
 				end
 				an_iterator.forth
 			end
-			if from_pattern /= Void and then last_single_number = Void then
+			if from_pattern /= Void and then last_single_number = -1 then
 				last_single_number := 0
 			else
 				last_single_number := a_count

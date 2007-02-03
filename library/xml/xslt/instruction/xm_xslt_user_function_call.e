@@ -18,7 +18,7 @@ inherit
 		redefine
 			pre_evaluate, evaluate_item, create_iterator, display,
 			mark_tail_function_calls, compute_intrinsic_dependencies,
-			is_tail_recursive
+			is_tail_recursive, create_node_iterator
 		end
 
 	XM_XPATH_ROLE
@@ -140,6 +140,32 @@ feature -- Evaluation
 			end
 		end
 
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence.
+		local
+			l_execution_context: XM_XSLT_EVALUATION_CONTEXT
+			l_value: DS_CELL [XM_XPATH_VALUE]
+			l_package: XM_XSLT_FUNCTION_CALL_PACKAGE
+		do
+			l_execution_context ?= a_context
+			check
+				execution_context: l_execution_context /= Void
+				-- as this is an XSLT function
+			end
+			create l_value.make (Void)
+			call (l_value, l_execution_context)
+			if l_value.item.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_value.item.error_value)
+			elseif l_value.item.is_function_package then
+				l_package ?= l_value.item
+				l_package.create_node_results_iterator (l_execution_context)
+				last_node_iterator := l_package.last_node_iterator
+			else
+				l_value.item.create_node_iterator (Void)
+				last_node_iterator := l_value.item.last_node_iterator
+			end
+		end
+
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
@@ -176,13 +202,6 @@ feature -- Evaluation
 			-- Pre-evaluate `Current' at compile time.
 		do
 			--	do_nothing
-		end
-
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Create an iterator over a node sequence.
-		do
-			create_iterator (a_context)
-			last_node_iterator := last_iterator.as_node_iterator
 		end
 
 feature -- Element change

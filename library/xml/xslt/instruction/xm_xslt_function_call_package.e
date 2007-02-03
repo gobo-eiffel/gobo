@@ -164,6 +164,25 @@ feature -- Evaluation
 			last_iterator_not_void: last_iterator /= Void
 		end
 
+	create_node_results_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Iterator over the nodes of a sequence
+		local
+			l_flattener: XM_XSLT_NODE_FUNCTION_CALL_FLATTENER
+			l_value: DS_CELL [XM_XPATH_VALUE]
+		do
+			create l_value.make (Void)
+			call (l_value)
+			l_value.item.create_node_iterator (a_context)
+			if l_value.item.last_node_iterator.is_error then
+				last_node_iterator := l_value.item.last_node_iterator
+			else
+				create l_flattener.make
+				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (l_value.item.last_node_iterator, l_flattener, a_context)
+			end
+		ensure
+			last_node_iterator_not_void: last_node_iterator /= Void
+		end
+			
 	call (a_return_value: DS_CELL [XM_XPATH_VALUE]) is
 			-- Call `Current'.
 			-- Result returned as `a_return_value.item'.
