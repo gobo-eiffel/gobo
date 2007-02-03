@@ -126,8 +126,11 @@ feature -- Pathname
 				create Result.make_absolute (File_scheme)
 				if a_pathname.hostname /= Void then
 					Result.set_authority (hostname_to_authority (a_pathname.hostname))
-				-- removed for correct canonization - CPA - 20061221: else
-				--	Result.set_authority (hostname_to_authority (Localhost_authority))
+					-- removed for correct canonization - CPA - 20061221: else
+					--	Result.set_authority (hostname_to_authority (Localhost_authority))
+				else
+					-- added for correct canonization - CPA - 20070203:
+					Result.set_authority (hostname_to_authority (""))
 				end
 			end
 			nb := a_pathname.count
