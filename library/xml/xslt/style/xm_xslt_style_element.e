@@ -229,21 +229,31 @@ feature -- Access
 			-- N.B. This may not be the principal stylersheet, it may be 
 			--  an included or imported module.
 		require
-			well_formed_stylesheet: True -- Can't easily check, but all nodes other than XM_XSLT_STYLESHEETs must have a parent.
+			-- commented out - see post-condition comments
+			-- well_formed_stylesheet: True -- Can't easily check, but all nodes other than XM_XSLT_STYLESHEETs must have a parent.
 		local
-			a_node: XM_XPATH_TREE_COMPOSITE_NODE
+			l_node: XM_XPATH_TREE_COMPOSITE_NODE
+			l_finished: BOOLEAN
 		do
 			from
-				a_node := Current
-				Result ?= a_node
+				l_node := Current
+				Result ?= l_node
+				l_finished := Result /= Void
 			until
-				Result /= Void
+				l_finished
 			loop
-				a_node := a_node.parent
-				Result ?= a_node
+				if l_node = Void then
+					l_finished := True
+				else
+					l_node := l_node.parent
+					Result ?= l_node
+					l_finished := Result /= Void
+				end
 			end
 		ensure
-			containing_stylesheet_not_void: Result /= Void
+			-- in the presence of compile errors, the next line won't necessarily be true
+			-- but any_compile_errors calls this routine.
+			-- containing_stylesheet_not_void: Result /= Void
 		end
 
 	principal_stylesheet: XM_XSLT_STYLESHEET is
@@ -253,7 +263,9 @@ feature -- Access
 		do
 			from
 				Result := containing_stylesheet
-				another_stylesheet := Result.importer
+				if Result /= Void then
+					another_stylesheet := Result.importer
+				end
 			until
 				another_stylesheet = Void
 			loop
@@ -261,7 +273,8 @@ feature -- Access
 				another_stylesheet := Result.importer
 			end
 		ensure
-			prinicpal_stylesheet_not_void: Result /= Void
+			-- the next line is true in the case of well-formedness errors
+			-- prinicpal_stylesheet_not_void: Result /= Void
 		end
 
 	stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER is
@@ -521,8 +534,13 @@ feature -- Status_report
 
 	any_compile_errors: BOOLEAN is
 			-- Have any compile errors been reported?
+		local
+			l_stylesheet: like principal_stylesheet
 		do
-			Result := principal_stylesheet.any_compile_errors
+			l_stylesheet := principal_stylesheet
+			if l_stylesheet /= Void then
+				Result := principal_stylesheet.any_compile_errors
+			end
 		end
 
 	attributes_prepared: BOOLEAN

@@ -92,6 +92,7 @@ feature -- Evaluation
 			a_string: STRING
 			a_uri: UT_URI
 		do
+			last_evaluated_item := Void
 			if arguments.count = 2 then
 				arguments.item (2).evaluate_item (a_context)
 				if arguments.item (2).last_evaluated_item.is_error then
