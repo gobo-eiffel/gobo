@@ -19,7 +19,7 @@ inherit
 		redefine
 			item_type, primitive_value, is_function_package, reduce,
 			same_expression, is_convertible_to_item, display, as_item,
-			string_value, send
+			string_value, send, create_node_iterator
 		end
 
 create
@@ -145,7 +145,7 @@ feature -- Optimization
 feature -- Evaluation
 
 	create_results_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterator over the values of a sequence
+			-- Create an iterator over the values of a sequence
 		local
 			l_flattener: XM_XSLT_FUNCTION_CALL_FLATTENER
 			l_value: DS_CELL [XM_XPATH_VALUE]
@@ -165,7 +165,7 @@ feature -- Evaluation
 		end
 
 	create_node_results_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterator over the nodes of a sequence
+			-- Create an iterator over the nodes of a sequence
 		local
 			l_flattener: XM_XSLT_NODE_FUNCTION_CALL_FLATTENER
 			l_value: DS_CELL [XM_XPATH_VALUE]
@@ -182,7 +182,13 @@ feature -- Evaluation
 		ensure
 			last_node_iterator_not_void: last_node_iterator /= Void
 		end
-			
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over the nodes of a sequence.
+		do
+			create_node_results_iterator (a_context)
+		end
+
 	call (a_return_value: DS_CELL [XM_XPATH_VALUE]) is
 			-- Call `Current'.
 			-- Result returned as `a_return_value.item'.
