@@ -169,7 +169,7 @@
             <attribute name="name"/>
             <attribute name="value"/>
           </element>
-        <zeroOrMore>
+	    </zeroOrMore>
       </choice>
     </optional>
     <optional>
