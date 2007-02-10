@@ -178,8 +178,8 @@ feature -- Test
 			assert_equal ("to_integer_64_2", (78).to_integer_64, STRING_.to_integer_64 ("00078"))
 			create uc_string.make_from_string ("4534")
 			assert_equal ("to_integer_64_3", (4534).to_integer_64, STRING_.to_integer_64 (uc_string))
-			assert_equal ("to_integer_64_4", (9223372036854775807).to_integer_64, STRING_.to_integer_64 ("9223372036854775807"))
-			assert_equal ("to_integer_64_5", (9223372036854775807).to_integer_64, STRING_.to_integer_64 ("00000000009223372036854775807"))
+			assert_equal ("to_integer_64_4", Platform.Maximum_integer_64, STRING_.to_integer_64 ("9223372036854775807"))
+			assert_equal ("to_integer_64_5", Platform.Maximum_integer_64, STRING_.to_integer_64 ("00000000009223372036854775807"))
 		end
 
 	test_is_hexadecimal is

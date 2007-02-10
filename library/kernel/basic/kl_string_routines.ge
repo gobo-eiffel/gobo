@@ -212,47 +212,38 @@ feature -- Status report
 			a_string_not_void: a_string /= Void
 			digits_only: is_integer (a_string)
 		local
-			i, j, k: INTEGER
-			l_digits: ARRAY [INTEGER]
-			l_string: STRING
+			i, j, k, l, m: INTEGER
 		do
 			i := a_string.count
 			from
+				k := 1
 				j := 1
 			until
-				j > i
+				k /= j or j > i
 			loop
-				if a_string.item (j) /= '0' then
-					l_string := a_string.substring (j, i)
-					j := i + 1
-				else
-					j := j + 1
+				if a_string.item (j) = '0' then
+					k := k + 1
 				end
+				j := j + 1
 			end
-			if l_string = Void then
-				-- zeros only
+			i := i - k + 1
+			if i < 20 then
 				Result := True
-			else
-				i := l_string.count
-				if i < 20 then
-					Result := True
-					if i = 19 then
-						-- Max value is 9223372036854775807
-						l_digits := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 7>>
-						from
-							k := 1
-						until
-							not Result or k > 19
-						loop
-							j := l_string.substring (k, k).to_integer
-							i := l_digits.item (k)
-							if  j < i then
-								Result := True
-								k := 20 -- finish loop early
-							else
-								Result := j = i
-								k := k + 1
-							end
+				if i = 19 then
+					from
+						l := a_string.count
+						m := l - i
+					until
+						not Result or k > l
+					loop
+						j := a_string.item_code (k) - code_zero
+						i := max_integer_64_digits.item (k - m)
+						if  j < i then
+							Result := True
+							k := l + 1
+						else
+							Result := j = i
+							k := k + 1
 						end
 					end
 				end
@@ -1738,7 +1729,7 @@ feature -- Conversion
 			until
 				i > c
 			loop
-				Result := 10 * Result + a_string.substring (i, i).to_integer
+				Result := 10 * Result + a_string.item_code (i) - code_zero
 				i := i + 1
 			end
 		end
@@ -1750,4 +1741,19 @@ feature {NONE} -- Implementation
 	dummy_string: STRING is ""
 			-- Dummy string
 
+	max_integer_64_digits: ARRAY [INTEGER] is
+			-- Digits of maximum INTEGER_64 value
+		once
+			Result  := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 7>>
+		ensure
+			result_not_void: Result /= Void
+			nionteen_digits: Result.count = 19
+		end
+
+	code_zero: INTEGER is
+			-- code for '0'
+		once
+			Result := ('0').code
+		end
+		
 end

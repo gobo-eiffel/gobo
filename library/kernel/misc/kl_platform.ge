@@ -185,4 +185,18 @@ feature -- Values
 			Result := old_maximum_integer
 		end
 
+#ifndef SE
+	Minimum_integer_64: INTEGER_64 is
+			-- Smallest supported value of type INTEGER_64
+		once
+			Result := -9223372036854775808
+		end
+
+	Maximum_integer_64: INTEGER_64 is
+			-- Largest supported value of type INTEGER_64
+		once
+			Result := 9223372036854775807
+		end
+#endif
+	
 end
