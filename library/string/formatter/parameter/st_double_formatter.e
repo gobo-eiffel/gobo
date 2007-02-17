@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			create unsigned_decimal_formatter.make
 			create decimal_formatter.make
 			create fractional_part.make (64)
+			create fractional_list.make (10)
 		end
 
 feature -- Initialization
@@ -90,19 +91,25 @@ feature {NONE} -- Implementation
 
 	build_integer_and_fractional_parts (d: DOUBLE) is
 			-- Build `integer_part', `fractional_part' and `fsign' for `d'.
-			-- 
-			-- This function entered as replacing of simple expression:
-			--   create f_f.make (floor((fractional_part*10^(precision))+0.5))
+			--
+			-- This function is used as a substitute for simple expression:
+			--   fractional_part := floor(((d.abs-integer_part)*10^(precision))+0.5)
 			-- which fails in case of large precision.
-			-- Now we obtain fraction part with pieces of decimal_digit_count digits.
+			-- Now we obtain fraction part with pieces of `decimal_digit_count' digits.
 		local
 			i: INTEGER
 			fa: DOUBLE
 			fp, fff: DOUBLE
+			rounded_int: INTEGER
+			overflow_int: INTEGER
+			is_overflow_consumed: BOOLEAN
+			j, nb: INTEGER
+			fp_piece: INTEGER
 		do
 			fa := d.abs
 			fsign := double_sign (d)
 			STRING_.wipe_out (fractional_part)
+			fractional_list.wipe_out
 			integer_part := DOUBLE_.floor_to_integer (fa)
 			from
 				i := precision
@@ -110,21 +117,51 @@ feature {NONE} -- Implementation
 			until
 				i <= decimal_digit_count - 1
 			loop
-				fff := fp * (10.0 ^ decimal_digit_count) -- .truncated_to_real
-				append_integer_to_string (DOUBLE_.floor_to_integer (fff), decimal_digit_count, fractional_part)
+				fff := fp * (10.0 ^ decimal_digit_count)
+				fractional_list.force_last (DOUBLE_.floor_to_integer (fff))
 				fp := fff - fff.floor
 				i := i - decimal_digit_count
 			end
-			append_integer_to_string (DOUBLE_.floor_to_integer ((fp * 10.0 ^ i) + 0.5), i, fractional_part)
-			check new_count: fractional_part.count = precision or fractional_part.count = precision + 1 end
-			if fractional_part.count = precision then
+			rounded_int := DOUBLE_.rounded_to_integer (fp * 10.0 ^ i)
+			overflow_int := DOUBLE_.truncated_to_integer (10.0 ^ i)
+			nb := fractional_list.count
+			if rounded_int >= overflow_int then
+					-- The final digits have "overflowed" - reinitialize `rounded_int'
+					-- and propagate the carry through the previous fractional digit
+					-- pieces.
+				rounded_int := 0
+				overflow_int := DOUBLE_.truncated_to_integer (10.0 ^ decimal_digit_count)
+				from j := nb until j < 1 loop
+					fp_piece := fractional_list.item (j) + 1
+					if fp_piece < overflow_int then
+							-- No more overflow - all done.
+						fractional_list.replace (fp_piece, j)
+						is_overflow_consumed := True
+						j := 0 -- Jump out of the loop.
+					else
+							-- Current digits have "overflowed" - reset the digits and
+							-- continue propagating the carry.
+						fractional_list.replace (0, j)
+						j := j - 1
+					end
+				end
+			else
+					-- No overflow condition.
+				is_overflow_consumed := True
+			end
+				-- Build up the fractional digits string from the digit pieces in
+				-- `fractional_list' and `rounded_int' (containing the final digits).
+			from j := 1 until j > nb loop
+				append_integer_to_string (fractional_list.item (j), decimal_digit_count, fractional_part)
+				j := j + 1
+			end
+			append_integer_to_string (rounded_int, i, fractional_part)
+			if is_overflow_consumed then
 				integer_part := integer_part * fsign
 			else
 					-- There is overflow.
-					-- We should add 1 to the int_part ...
+					-- We should add 1 to the `integer_part'.
 				integer_part := (integer_part + 1) * fsign
-					-- ... and remove extraneous '1'
-				fractional_part.remove (1)
 			end
 			if not fractional_part.is_empty then
 				fractional_part.precede ('.')
@@ -147,8 +184,11 @@ feature {NONE} -- Implementation
 		end
 
 	decimal_digit_count: INTEGER is 8
-			-- NUmber of decimal digits that can fit into INTEGER type;
+			-- Number of decimal digits that can fit into INTEGER type;
 			-- Used in fractional part calculating decimal_digit_count < log10(Maxint)
+
+	fractional_list: DS_ARRAYED_LIST [INTEGER]
+			-- Hold fractional part pieces within `build_integer_and_fractional_parts'
 
 	double_sign (d: DOUBLE): INTEGER is
 			-- Sign of `d'
@@ -169,7 +209,7 @@ feature {NONE} -- Implementation
 	double_buffer: STRING
 			-- Buffer used in `double_format_to'
 
-	string_output_stream: KL_STRING_OUTPUT_STREAM 
+	string_output_stream: KL_STRING_OUTPUT_STREAM
 			-- String output stream
 
 	unsigned_decimal_formatter: ST_UNSIGNED_DECIMAL_FORMATTER
@@ -185,5 +225,6 @@ invariant
 	unsigned_decimal_formatter_not_void: unsigned_decimal_formatter /= Void
 	decimal_formatter_not_void: decimal_formatter /= Void
 	fractional_part_not_void: fractional_part /= Void
+	fractional_list_not_void: fractional_list /= Void
 
 end

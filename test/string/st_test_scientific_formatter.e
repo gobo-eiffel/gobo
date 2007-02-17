@@ -133,6 +133,8 @@ feature -- Test
 			assert_equal ("test9", "4", format ("$.0f", << double_cell (3.6) >>))
 			assert_equal ("test10", "-1.00", format ("$.2f", << double_cell (-1.0) >>))
 			assert_equal ("test11", "-0.20", format ("$.2f", << double_cell (-0.2) >>))
+			assert_equal ("test12", "941.659000000", format ("$11.9f", << double_cell (941.65899999999817) >>))
+			assert_equal ("test13", "942.000000000", format ("$11.9f", << double_cell (941.99999999999817) >>))
 		end
 
 	test_mixed_point is
@@ -212,7 +214,7 @@ feature -- Test
 				------------------------------------------------------------
 			a_format := "$5i $4x $6o $u $c $b $3s $8e $7.8f "
 			assert_equal ("test6",
-				" -123  100    400 123 c true some string 3.141593e+00 4.41593451 ",
+				" -123  100    400 123 c true some string 3.141593e+00 3.14159346 ",
 				format (a_format, << integer_cell (-123), integer_cell (256), integer_cell (256), integer_cell (123), character_cell ('c'), boolean_cell (True), "some string", double_cell (3.1415934563), double_cell (3.1415934563)>>))
 
 				-----------------------------------------------------------------------
@@ -235,7 +237,7 @@ feature -- Test
 				-----------------------------------------------------------------------
 			a_format := "$05i $04x $6o $u $c $B $-.3s $00.5e $+7.8f "
 			assert_equal ("test7",
-				"-0123 0100    400 123 c True som 3.14159e+00 4.41593451 ",
+				"-0123 0100    400 123 c True som 3.14159e+00 3.14159346 ",
 				format (a_format, <<integer_cell (-123), integer_cell (256), integer_cell (256), integer_cell (123), character_cell ('c'), boolean_cell (True), "some string", double_cell (3.1415934563), double_cell (3.1415934563)>>))
 
 			a_format := "($^10s) ($^10i) ($^10e) "
