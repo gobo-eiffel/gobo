@@ -60,10 +60,11 @@ feature -- Access
 			-- Parent type of current precursor
 
 	current_feature: ET_DYNAMIC_FEATURE
-			-- Feature to which current precursor is a precuror
+			-- Feature to which current precursor is a precursor
 
 	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_PRECURSOR is
-			-- Dynamic precursor of current feature
+			-- Dynamic precursor of `current_feature';
+			-- `a_feature' is the precursor of `current_feaure' in `a_parent_type'
 		do
 			Result := current_feature.dynamic_precursor (a_feature, a_parent_type, a_system)
 		end

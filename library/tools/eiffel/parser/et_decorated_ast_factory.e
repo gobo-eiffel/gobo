@@ -201,7 +201,9 @@ inherit
 			new_deferred_procedure,
 			new_do_compound,
 			new_do_function,
+			new_do_function_inline_agent,
 			new_do_procedure,
+			new_do_procedure_inline_agent,
 			new_dot_feature_name,
 			new_else_compound,
 			new_exports,
@@ -210,8 +212,10 @@ inherit
 			new_extended_feature_name_comma,
 			new_external_alias,
 			new_external_function,
+			new_external_function_inline_agent,
 			new_external_language,
 			new_external_procedure,
+			new_external_procedure_inline_agent,
 			new_feature_address,
 			new_feature_clause,
 			new_feature_name_comma,
@@ -271,8 +275,10 @@ inherit
 			new_old_expression,
 			new_once_compound,
 			new_once_function,
+			new_once_function_inline_agent,
 			new_once_manifest_string,
 			new_once_procedure,
+			new_once_procedure_inline_agent,
 			new_parent,
 			new_parent_semicolon,
 			new_parents,
@@ -2175,6 +2181,27 @@ feature -- AST nodes
 			end
 		end
 
+	new_do_function_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
+		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
+		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_DO_FUNCTION_INLINE_AGENT is
+			-- New inline agent whose associated feature is a do function
+		do
+			if a_type /= Void then
+				create Result.make (a_formal_args, a_type, an_actual_args)
+				if an_agent /= Void then
+					Result.set_agent_keyword (an_agent)
+				end
+				Result.set_preconditions (a_preconditions)
+				Result.set_locals (a_locals)
+				Result.set_compound (a_compound)
+				Result.set_postconditions (a_postconditions)
+				Result.set_rescue_clause (a_rescue)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
+				end
+			end
+		end
+
 	new_do_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
@@ -2201,6 +2228,25 @@ feature -- AST nodes
 				end
 				Result.set_semicolon (a_semicolon)
 				Result.set_feature_clause (a_feature_clause)
+			end
+		end
+
+	new_do_procedure_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST;
+		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
+		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_DO_PROCEDURE_INLINE_AGENT is
+			-- New inline agent whose associated feature is a do procedure
+		do
+			create Result.make (a_formal_args, an_actual_args)
+			if an_agent /= Void then
+				Result.set_agent_keyword (an_agent)
+			end
+			Result.set_preconditions (a_preconditions)
+			Result.set_locals (a_locals)
+			Result.set_compound (a_compound)
+			Result.set_postconditions (a_postconditions)
+			Result.set_rescue_clause (a_rescue)
+			if an_end /= Void then
+				Result.set_end_keyword (an_end)
 			end
 		end
 
@@ -2305,6 +2351,25 @@ feature -- AST nodes
 			end
 		end
 
+	new_external_function_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
+		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
+		an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_EXTERNAL_FUNCTION_INLINE_AGENT is
+			-- New inline agent whose associated feature is an external function
+		do
+			if a_type /= Void and a_language /= Void then
+				create Result.make (a_formal_args, a_type, a_language, an_actual_args)
+				if an_agent /= Void then
+					Result.set_agent_keyword (an_agent)
+				end
+				Result.set_preconditions (a_preconditions)
+				Result.set_alias_clause (an_alias)
+				Result.set_postconditions (a_postconditions)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
+				end
+			end
+		end
+
 	new_external_language (a_keyword: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_EXTERNAL_LANGUAGE is
 			-- New external language
 		do
@@ -2339,6 +2404,25 @@ feature -- AST nodes
 				end
 				Result.set_semicolon (a_semicolon)
 				Result.set_feature_clause (a_feature_clause)
+			end
+		end
+
+	new_external_procedure_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST;
+		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
+		an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_EXTERNAL_PROCEDURE_INLINE_AGENT is
+			-- New inline agent whose associated feature is an external procedure
+		do
+			if a_language /= Void then
+				create Result.make (a_formal_args, a_language, an_actual_args)
+				if an_agent /= Void then
+					Result.set_agent_keyword (an_agent)
+				end
+				Result.set_preconditions (a_preconditions)
+				Result.set_alias_clause (an_alias)
+				Result.set_postconditions (a_postconditions)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
+				end
 			end
 		end
 
@@ -3001,6 +3085,27 @@ feature -- AST nodes
 			end
 		end
 
+	new_once_function_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
+		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
+		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_ONCE_FUNCTION_INLINE_AGENT is
+			-- New inline agent whose associated feature is a once function
+		do
+			if a_type /= Void then
+				create Result.make (a_formal_args, a_type, an_actual_args)
+				if an_agent /= Void then
+					Result.set_agent_keyword (an_agent)
+				end
+				Result.set_preconditions (a_preconditions)
+				Result.set_locals (a_locals)
+				Result.set_compound (a_compound)
+				Result.set_postconditions (a_postconditions)
+				Result.set_rescue_clause (a_rescue)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
+				end
+			end
+		end
+
 	new_once_manifest_string (a_once: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ONCE_MANIFEST_STRING is
 			-- New once manifest string
 		do
@@ -3038,6 +3143,25 @@ feature -- AST nodes
 				end
 				Result.set_semicolon (a_semicolon)
 				Result.set_feature_clause (a_feature_clause)
+			end
+		end
+
+	new_once_procedure_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST;
+		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
+		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_ONCE_PROCEDURE_INLINE_AGENT is
+			-- New inline agent whose assicated feature is a once procedure
+		do
+			create Result.make (a_formal_args, an_actual_args)
+			if an_agent /= Void then
+				Result.set_agent_keyword (an_agent)
+			end
+			Result.set_preconditions (a_preconditions)
+			Result.set_locals (a_locals)
+			Result.set_compound (a_compound)
+			Result.set_postconditions (a_postconditions)
+			Result.set_rescue_clause (a_rescue)
+			if an_end /= Void then
+				Result.set_end_keyword (an_end)
 			end
 		end
 

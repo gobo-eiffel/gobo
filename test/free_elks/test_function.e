@@ -448,6 +448,22 @@ feature -- Test
 			assert_integers_equal ("item3", 10, p3.item ([]))
 		end
 
+	test_item_do_function_inline_agent1 is
+			-- Test feature 'item' with an inline agent with a do-function as associated feature.
+		local
+			s: STRING
+			p1: FUNCTION [ANY, TUPLE, INTEGER]
+			p2: FUNCTION [ANY, TUPLE [INTEGER], INTEGER]
+		do
+				-- 0 open operand, 1 closed operand.
+			s := "gobo"
+			p1 := agent (a: STRING): INTEGER do Result := 2 * a.count end (s)
+			assert_integers_equal ("item1", 8, p1.item ([]))
+				-- 1 open operand, 0 closed operand.
+			p2 := agent (a: INTEGER): INTEGER do Result := 3 * a end
+			assert_integers_equal ("item2", 6, p2.item ([2]))
+		end
+
 	test_call_qualified1 is
 			-- Test feature 'call' with a closed qualified target.
 		local

@@ -16,6 +16,8 @@ inherit
 
 	ET_AGENT
 		redefine
+			implicit_result,
+			is_call_agent,
 			reset
 		end
 
@@ -164,9 +166,10 @@ feature -- Status report
 			-- Is the associated feature a procedure?
 		do
 			Result := (implicit_result = Void)
-		ensure then
-			definition: Result = (implicit_result = Void)
 		end
+
+	is_call_agent: BOOLEAN is True
+			-- Is current agent a call agent?
 
 	use_tilde: BOOLEAN is
 			-- Is the old syntax with '~' used?

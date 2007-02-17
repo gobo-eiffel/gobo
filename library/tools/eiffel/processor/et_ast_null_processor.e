@@ -352,8 +352,18 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		do
+		end
+
 	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
 			-- Process `a_feature'.
+		do
+		end
+
+	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
 		do
 		end
 
@@ -422,8 +432,18 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		do
+		end
+
 	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
 			-- Process `a_feature'.
+		do
+		end
+
+	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
 		do
 		end
 
@@ -587,11 +607,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_inline_agent (an_expression: ET_INLINE_AGENT) is
-			-- Process `an_expression'.
-		do
-		end
-
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
@@ -717,6 +732,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		do
+		end
+
 	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
 			-- Process `an_expression'.
 		do
@@ -724,6 +744,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_once_procedure (a_feature: ET_ONCE_PROCEDURE) is
 			-- Process `a_feature'.
+		do
+		end
+
+	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
 		do
 		end
 

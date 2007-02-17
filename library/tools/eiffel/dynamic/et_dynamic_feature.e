@@ -129,7 +129,8 @@ feature -- Access
 			-- May be void if zero or one precursor called
 
 	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_PRECURSOR is
-			-- Dynamic precursor of current feature
+			-- Dynamic precursor of current feature;
+			-- `a_feature' is the precursor of the current feaure in `a_parent_type'
 		require
 			a_feature_not_void: a_feature /= Void
 			a_parent_type_not_void: a_parent_type /= Void

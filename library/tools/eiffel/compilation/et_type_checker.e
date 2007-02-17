@@ -44,7 +44,8 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_universe)
 			current_type := a_universe.unknown_class
-			current_feature := dummy_feature
+			current_class_impl := a_universe.unknown_class
+			current_feature_impl := dummy_feature
 		end
 
 feature -- Status report
@@ -54,32 +55,38 @@ feature -- Status report
 
 feature -- Validity checking
 
-	check_type_validity (a_type: ET_TYPE; a_current_feature: ET_ENCLOSED_FEATURE; a_current_type: ET_BASE_TYPE) is
-			-- Check validity of `a_type' when it appears in `a_current_feature' viewed
-			-- from `a_current_type'. Resolve identifiers (such as 'like identifier'
-			-- and 'BIT identifier') in type `a_type' if not already done.
+	check_type_validity (a_type: ET_TYPE; a_current_feature_impl: ET_CLOSURE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE) is
+			-- Check validity of `a_type' written in `a_current_feature_impl' in
+			-- `a_current_class_impl' viewed from `a_current_type'. Resolve
+			-- identifiers (such as 'like identifier' and 'BIT identifier')
+			-- in type `a_type' if not already done.
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
-			a_current_feature_not_void: a_current_feature /= Void
+			a_current_feature_impl_not_void: a_current_feature_impl /= Void
+			a_current_class_impl_not_void: a_current_class_impl /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
 		local
-			old_feature: ET_ENCLOSED_FEATURE
+			old_feature_impl: ET_CLOSURE
 			old_type: ET_BASE_TYPE
+			old_class_impl: ET_CLASS
 			l_type: ET_TYPE
 		do
 			has_fatal_error := False
-			old_feature := current_feature
-			current_feature := a_current_feature
+			old_feature_impl := current_feature_impl
+			current_feature_impl := a_current_feature_impl
 			old_type := current_type
 			current_type := a_current_type
-			l_type := resolved_formal_parameters (a_type, current_class, current_type)
+			old_class_impl := current_class_impl
+			current_class_impl := a_current_class_impl
+			l_type := resolved_formal_parameters (a_type, current_class_impl, current_type)
 			if not has_fatal_error then
 				l_type.process (Current)
 			end
+			current_class_impl := old_class_impl
 			current_type := old_type
-			current_feature := old_feature
+			current_feature_impl := old_feature_impl
 		end
 
 	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE; a_position: ET_POSITION) is
@@ -250,6 +257,7 @@ feature -- Validity checking
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			has_fatal_error := False
+			Result := a_type
 			if a_current_class_impl = a_current_type then
 				Result := a_type
 			elseif not a_current_class_impl.is_generic then
@@ -267,18 +275,24 @@ feature -- Validity checking
 					a_current_class.process (universe.ancestor_builder)
 					if not a_current_class.ancestors_built or else a_current_class.has_ancestors_error then
 						set_fatal_error
+							-- Return the input type despite the error.
+						Result := a_type
 					else
 						an_ancestor := a_current_class.ancestor (a_current_class_impl, universe)
 						if an_ancestor = Void then
 								-- Internal error: `a_current_class' is a descendant of `a_current_class_impl'.
 							set_fatal_error
 							error_handler.report_giaaa_error
+								-- Return the input type despite the error.
+							Result := a_type
 						else
 							a_parameters := an_ancestor.actual_parameters
 							if a_parameters = Void then
 									-- Internal error: we said that `a_current_class_impl' was generic.
 								set_fatal_error
 								error_handler.report_giaaa_error
+									-- Return the input type despite the error.
+								Result := a_type
 							else
 								Result := a_type.resolved_formal_parameters (a_parameters)
 							end
@@ -305,7 +319,7 @@ feature -- Validity checking
 				end
 			end
 		ensure
-			resolved_type_not_void: not has_fatal_error implies Result /= Void
+			resolved_type_not_void: Result /= Void
 		end
 
 feature -- Type conversion
@@ -728,17 +742,15 @@ feature {NONE} -- Validity checking
 			a_procedure: ET_PROCEDURE
 			a_constant: ET_INTEGER_CONSTANT
 			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
-			a_class_impl: ET_CLASS
 		do
 -- TODO: should we check whether class BIT is in the universe or not?
 			if a_type.constant = Void then
 					-- Not resolved yet.
-				a_class_impl := current_feature.implementation_class
-				a_class_impl.process (universe.interface_checker)
-				if not a_class_impl.interface_checked or else a_class_impl.has_interface_error then
+				current_class_impl.process (universe.interface_checker)
+				if not current_class_impl.interface_checked or else current_class_impl.has_interface_error then
 					set_fatal_error
 				else
-					a_query := a_class_impl.named_query (a_type.name)
+					a_query := current_class_impl.named_query (a_type.name)
 					if a_query /= Void then
 						a_constant_attribute ?= a_query
 						if a_constant_attribute /= Void then
@@ -752,35 +764,35 @@ feature {NONE} -- Validity checking
 								-- in Bit_type must be the final name of a
 								-- constant attribute of type INTEGER.
 							set_fatal_error
-							if current_class = a_class_impl then
+							if current_class = current_class_impl then
 								error_handler.report_vtbt0a_error (current_class, a_type)
 							else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-								error_handler.report_vtbt0a_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+								error_handler.report_vtbt0a_error (current_class_impl, a_type)
 							end
 						end
 					else
-						a_procedure := a_class_impl.named_procedure (a_type.name)
+						a_procedure := current_class_impl.named_procedure (a_type.name)
 						if a_procedure /= Void then
 								-- VTBT error (ETL2 page 210): The identifier
 								-- in Bit_type must be the final name of a
 								-- constant attribute of type INTEGER.
 							set_fatal_error
-							if current_class = a_class_impl then
+							if current_class = current_class_impl then
 								error_handler.report_vtbt0a_error (current_class, a_type)
 							else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-								error_handler.report_vtbt0a_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+								error_handler.report_vtbt0a_error (current_class_impl, a_type)
 							end
 						else
 								-- VTBT error (ETL2 page 210): The identifier
 								-- in Bit_type must be the final name of a feature.
 							set_fatal_error
-							if current_class = a_class_impl then
+							if current_class = current_class_impl then
 								error_handler.report_vtbt0b_error (current_class, a_type)
 							else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-								error_handler.report_vtbt0b_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+								error_handler.report_vtbt0b_error (current_class_impl, a_type)
 							end
 						end
 					end
@@ -803,27 +815,23 @@ feature {NONE} -- Validity checking
 		require
 			a_type_not_void: a_type /= Void
 			constant_not_void: a_type.constant /= Void
-		local
-			a_class_impl: ET_CLASS
 		do
 			a_type.compute_size
 			if a_type.has_size_error then
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
-				if current_class = a_class_impl then
+				if current_class = current_class_impl then
 					error_handler.report_vtbt0c_error (current_class, a_type)
 				else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-					error_handler.report_vtbt0c_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+					error_handler.report_vtbt0c_error (current_class_impl, a_type)
 				end
 			elseif a_type.size = 0 and a_type.constant.is_negative then
 					-- Not considered as a fatal error by gelint.
-				a_class_impl := current_feature.implementation_class
-				if current_class = a_class_impl then
+				if current_class = current_class_impl then
 					error_handler.report_vtbt0d_error (current_class, a_type)
 				else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-					error_handler.report_vtbt0d_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+					error_handler.report_vtbt0d_error (current_class_impl, a_type)
 				end
 			end
 		end
@@ -840,18 +848,16 @@ feature {NONE} -- Validity checking
 			a_formal: ET_FORMAL_PARAMETER
 			a_constraint: ET_TYPE
 			a_class: ET_CLASS
-			a_class_impl: ET_CLASS
 		do
-			a_class_impl := current_feature.implementation_class
 			a_class := a_type.direct_base_class (universe)
 			if a_class = universe.none_class then
 				if a_type.is_generic then
 					set_fatal_error
-					if current_class = a_class_impl then
+					if current_class = current_class_impl then
 						error_handler.report_vtug1a_error (current_class, a_type)
 					else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-						error_handler.report_vtug1a_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+						error_handler.report_vtug1a_error (current_class_impl, a_type)
 					end
 				end
 			else
@@ -860,11 +866,11 @@ feature {NONE} -- Validity checking
 					set_fatal_error
 				elseif not a_class.is_preparsed then
 					set_fatal_error
-					if current_class = a_class_impl then
+					if current_class = current_class_impl then
 						error_handler.report_vtct0a_error (current_class, a_type)
 					else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-						error_handler.report_vtct0a_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+						error_handler.report_vtct0a_error (current_class_impl, a_type)
 					end
 				elseif a_class.has_interface_error then
 						-- Error should already have been
@@ -873,20 +879,20 @@ feature {NONE} -- Validity checking
 				elseif not a_class.is_generic then
 					if a_type.is_generic then
 						set_fatal_error
-						if current_class = a_class_impl then
+						if current_class = current_class_impl then
 							error_handler.report_vtug1a_error (current_class, a_type)
 						else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-							error_handler.report_vtug1a_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+							error_handler.report_vtug1a_error (current_class_impl, a_type)
 						end
 					end
 				elseif not a_type.is_generic then
 					set_fatal_error
-					if current_class = a_class_impl then
+					if current_class = current_class_impl then
 						error_handler.report_vtug2a_error (current_class, a_type)
 					else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-						error_handler.report_vtug2a_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+						error_handler.report_vtug2a_error (current_class_impl, a_type)
 					end
 				else
 					a_formals := a_class.formal_parameters
@@ -897,11 +903,11 @@ feature {NONE} -- Validity checking
 					end
 					if an_actuals.count /= a_formals.count then
 						set_fatal_error
-						if current_class = a_class_impl then
+						if current_class = current_class_impl then
 							error_handler.report_vtug2a_error (current_class, a_type)
 						else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-							error_handler.report_vtug2a_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+							error_handler.report_vtug2a_error (current_class_impl, a_type)
 						end
 					else
 						nb := an_actuals.count
@@ -946,22 +952,22 @@ feature {NONE} -- Validity checking
 										-- The actual parameter does not conform to the
 										-- constraint of its corresponding formal parameter.
 									set_fatal_error
-									if current_class = a_class_impl then
+									if current_class = current_class_impl then
 										error_handler.report_vtcg3a_error (current_class, a_type, an_actual, a_constraint)
 									else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-										error_handler.report_vtcg3a_error (a_class_impl, a_type, an_actual, a_constraint)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+										error_handler.report_vtcg3a_error (current_class_impl, a_type, an_actual, a_constraint)
 									end
 								end
 							elseif not an_actual.conforms_to_type (a_constraint, current_type, current_type, universe) then
 									-- The actual parameter does not conform to the
 									-- constraint of its corresponding formal parameter.
 								set_fatal_error
-								if current_class = a_class_impl then
+								if current_class = current_class_impl then
 									error_handler.report_vtcg3a_error (current_class, a_type, an_actual, a_constraint)
 								else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-									error_handler.report_vtcg3a_error (a_class_impl, a_type, an_actual, a_constraint)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+									error_handler.report_vtcg3a_error (current_class_impl, a_type, an_actual, a_constraint)
 								end
 							end
 							i := i + 1
@@ -986,7 +992,6 @@ feature {NONE} -- Validity checking
 			a_type_not_void: a_type /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			a_class_impl: ET_CLASS
 			a_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
@@ -997,12 +1002,11 @@ feature {NONE} -- Validity checking
 			a_name := a_type.name
 			if a_name.seed = 0 then
 					-- Not resolved yet.
-				a_class_impl := current_feature.implementation_class
-				a_class_impl.process (universe.interface_checker)
-				if not a_class_impl.interface_checked or else a_class_impl.has_interface_error then
+				current_class_impl.process (universe.interface_checker)
+				if not current_class_impl.interface_checked or else current_class_impl.has_interface_error then
 					set_fatal_error
 				else
-					a_query := a_class_impl.named_query (a_name)
+					a_query := current_class_impl.named_query (a_name)
 					if a_query /= Void then
 							-- This is a 'like feature'.
 						a_type.resolve_like_feature (a_query)
@@ -1011,7 +1015,7 @@ feature {NONE} -- Validity checking
 							-- This has to be a 'like argument', otherwise this is an error.
 							-- Note that 'like argument' is not a valid construct in ECMA Eiffel.
 							-- This is supported here for backward compatibility.
-						l_feature ?= current_feature
+						l_feature ?= current_feature_impl
 						if l_feature /= Void then
 							an_argument_name ?= a_name
 							if an_argument_name /= Void then
@@ -1031,27 +1035,19 @@ feature {NONE} -- Validity checking
 					if not resolved then
 						set_fatal_error
 						if l_feature /= Void then
-							if current_class = a_class_impl then
+							if current_class = current_class_impl then
 								error_handler.report_vtat1b_error (current_class, l_feature, a_type)
 							else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-								error_handler.report_vtat1b_error (a_class_impl, l_feature, a_type)
-							end
-						elseif current_feature.is_inline_agent then
-								-- 'like argument' not allowed in inline agents.
-							if current_class = a_class_impl then
-								error_handler.report_vtat1a_error (current_class, a_type)
-							else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-								error_handler.report_vtat1a_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+								error_handler.report_vtat1b_error (current_class_impl, l_feature, a_type)
 							end
 						else
-								-- 'like argument' not valid in invariants.
-							if current_class = a_class_impl then
+								-- 'like argument' not valid in inline agents and invariants.
+							if current_class = current_class_impl then
 								error_handler.report_vtat1a_error (current_class, a_type)
 							else
--- TODO: this error should have already been reported when processing `a_class_impl'.
-								error_handler.report_vtat1a_error (a_class_impl, a_type)
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+								error_handler.report_vtat1a_error (current_class_impl, a_type)
 							end
 						end
 					end
@@ -1140,6 +1136,14 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Access
 
+	current_feature_impl: ET_CLOSURE
+			-- Feature/invariant/inline agent where the type has been written
+
+	current_class_impl: ET_CLASS
+			-- Class where the type has been written
+			-- (May be different from `current_class' when the
+			-- code has been inherited from an ancestor)
+
 	current_class: ET_CLASS is
 			-- Class where the type appears
 		do
@@ -1150,9 +1154,6 @@ feature {NONE} -- Access
 
 	current_type: ET_BASE_TYPE
 			-- Base type where the type appears
-
-	current_feature: ET_ENCLOSED_FEATURE
-			-- Feature where the type appears
 
 feature {NONE} -- Implementation
 
@@ -1169,8 +1170,9 @@ feature {NONE} -- Implementation
 
 invariant
 
+	current_class_impl_not_void: current_class_impl /= Void
 	current_type_not_void: current_type /= Void
 	valid_current_type: current_type.is_valid_context
-	current_feature_not_void: current_feature /= Void
+	current_feature_impl_not_void: current_feature_impl /= Void
 
 end

@@ -158,7 +158,7 @@ feature {ET_AST_NODE} -- Processing
 	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			an_instruction.target.process (Current)
+			an_instruction.call.process (Current)
 			an_instruction.assign_symbol.process (Current)
 			an_instruction.source.process (Current)
 		end
@@ -981,6 +981,49 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+			a_preconditions: ET_PRECONDITIONS
+			a_locals: ET_LOCAL_VARIABLE_LIST
+			a_postconditions: ET_POSTCONDITIONS
+			a_compound: ET_COMPOUND
+		do
+			an_expression.agent_keyword.process (Current)
+			a_formal_arguments := an_expression.formal_arguments
+			if a_formal_arguments /= Void then
+				a_formal_arguments.process (Current)
+			end
+			an_expression.declared_type.process (Current)
+			a_preconditions := an_expression.preconditions
+			if a_preconditions /= Void then
+				a_preconditions.process (Current)
+			end
+			a_locals := an_expression.locals
+			if a_locals /= Void then
+				a_locals.process (Current)
+			end
+			a_compound := an_expression.compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			a_postconditions := an_expression.postconditions
+			if a_postconditions /= Void then
+				a_postconditions.process (Current)
+			end
+			a_compound := an_expression.rescue_clause
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			an_expression.end_keyword.process (Current)
+			an_actual_arguments ?= an_expression.actual_arguments
+			if an_actual_arguments /= Void then
+				an_actual_arguments.process (Current)
+			end
+		end
+
 	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
 			-- Process `a_feature'.
 		local
@@ -1049,6 +1092,48 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon := a_feature.semicolon
 			if a_semicolon /= Void then
 				a_semicolon.process (Current)
+			end
+		end
+
+	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+			a_preconditions: ET_PRECONDITIONS
+			a_locals: ET_LOCAL_VARIABLE_LIST
+			a_postconditions: ET_POSTCONDITIONS
+			a_compound: ET_COMPOUND
+		do
+			an_expression.agent_keyword.process (Current)
+			a_formal_arguments := an_expression.formal_arguments
+			if a_formal_arguments /= Void then
+				a_formal_arguments.process (Current)
+			end
+			a_preconditions := an_expression.preconditions
+			if a_preconditions /= Void then
+				a_preconditions.process (Current)
+			end
+			a_locals := an_expression.locals
+			if a_locals /= Void then
+				a_locals.process (Current)
+			end
+			a_compound := an_expression.compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			a_postconditions := an_expression.postconditions
+			if a_postconditions /= Void then
+				a_postconditions.process (Current)
+			end
+			a_compound := an_expression.rescue_clause
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			an_expression.end_keyword.process (Current)
+			an_actual_arguments ?= an_expression.actual_arguments
+			if an_actual_arguments /= Void then
+				an_actual_arguments.process (Current)
 			end
 		end
 
@@ -1286,6 +1371,41 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+			a_preconditions: ET_PRECONDITIONS
+			an_alias_clause: ET_EXTERNAL_ALIAS
+			a_postconditions: ET_POSTCONDITIONS
+		do
+			an_expression.agent_keyword.process (Current)
+			a_formal_arguments := an_expression.formal_arguments
+			if a_formal_arguments /= Void then
+				a_formal_arguments.process (Current)
+			end
+			an_expression.declared_type.process (Current)
+			a_preconditions := an_expression.preconditions
+			if a_preconditions /= Void then
+				a_preconditions.process (Current)
+			end
+			an_expression.language.process (Current)
+			an_alias_clause := an_expression.alias_clause
+			if an_alias_clause /= Void then
+				an_alias_clause.process (Current)
+			end
+			a_postconditions := an_expression.postconditions
+			if a_postconditions /= Void then
+				a_postconditions.process (Current)
+			end
+			an_expression.end_keyword.process (Current)
+			an_actual_arguments ?= an_expression.actual_arguments
+			if an_actual_arguments /= Void then
+				an_actual_arguments.process (Current)
+			end
+		end
+
 	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
 			-- Process `a_feature'.
 		local
@@ -1346,6 +1466,40 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon := a_feature.semicolon
 			if a_semicolon /= Void then
 				a_semicolon.process (Current)
+			end
+		end
+
+	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+			a_preconditions: ET_PRECONDITIONS
+			an_alias_clause: ET_EXTERNAL_ALIAS
+			a_postconditions: ET_POSTCONDITIONS
+		do
+			an_expression.agent_keyword.process (Current)
+			a_formal_arguments := an_expression.formal_arguments
+			if a_formal_arguments /= Void then
+				a_formal_arguments.process (Current)
+			end
+			a_preconditions := an_expression.preconditions
+			if a_preconditions /= Void then
+				a_preconditions.process (Current)
+			end
+			an_expression.language.process (Current)
+			an_alias_clause := an_expression.alias_clause
+			if an_alias_clause /= Void then
+				an_alias_clause.process (Current)
+			end
+			a_postconditions := an_expression.postconditions
+			if a_postconditions /= Void then
+				a_postconditions.process (Current)
+			end
+			an_expression.end_keyword.process (Current)
+			an_actual_arguments ?= an_expression.actual_arguments
+			if an_actual_arguments /= Void then
+				an_actual_arguments.process (Current)
 			end
 		end
 
@@ -1753,18 +1907,6 @@ feature {ET_AST_NODE} -- Processing
 			an_operator.else_keyword.process (Current)
 		end
 
-	process_inline_agent (an_expression: ET_INLINE_AGENT) is
-			-- Process `an_expression'.
-		local
-			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-		do
-			an_expression.associated_feature.process (Current)
-			an_arguments ?= an_expression.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-		end
-
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
@@ -2083,6 +2225,49 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+			a_preconditions: ET_PRECONDITIONS
+			a_locals: ET_LOCAL_VARIABLE_LIST
+			a_postconditions: ET_POSTCONDITIONS
+			a_compound: ET_COMPOUND
+		do
+			an_expression.agent_keyword.process (Current)
+			a_formal_arguments := an_expression.formal_arguments
+			if a_formal_arguments /= Void then
+				a_formal_arguments.process (Current)
+			end
+			an_expression.declared_type.process (Current)
+			a_preconditions := an_expression.preconditions
+			if a_preconditions /= Void then
+				a_preconditions.process (Current)
+			end
+			a_locals := an_expression.locals
+			if a_locals /= Void then
+				a_locals.process (Current)
+			end
+			a_compound := an_expression.compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			a_postconditions := an_expression.postconditions
+			if a_postconditions /= Void then
+				a_postconditions.process (Current)
+			end
+			a_compound := an_expression.rescue_clause
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			an_expression.end_keyword.process (Current)
+			an_actual_arguments ?= an_expression.actual_arguments
+			if an_actual_arguments /= Void then
+				an_actual_arguments.process (Current)
+			end
+		end
+
 	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
 			-- Process `an_expression'.
 		do
@@ -2158,6 +2343,48 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon := a_feature.semicolon
 			if a_semicolon /= Void then
 				a_semicolon.process (Current)
+			end
+		end
+
+	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+			a_preconditions: ET_PRECONDITIONS
+			a_locals: ET_LOCAL_VARIABLE_LIST
+			a_postconditions: ET_POSTCONDITIONS
+			a_compound: ET_COMPOUND
+		do
+			an_expression.agent_keyword.process (Current)
+			a_formal_arguments := an_expression.formal_arguments
+			if a_formal_arguments /= Void then
+				a_formal_arguments.process (Current)
+			end
+			a_preconditions := an_expression.preconditions
+			if a_preconditions /= Void then
+				a_preconditions.process (Current)
+			end
+			a_locals := an_expression.locals
+			if a_locals /= Void then
+				a_locals.process (Current)
+			end
+			a_compound := an_expression.compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			a_postconditions := an_expression.postconditions
+			if a_postconditions /= Void then
+				a_postconditions.process (Current)
+			end
+			a_compound := an_expression.rescue_clause
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			an_expression.end_keyword.process (Current)
+			an_actual_arguments ?= an_expression.actual_arguments
+			if an_actual_arguments /= Void then
+				an_actual_arguments.process (Current)
 			end
 		end
 

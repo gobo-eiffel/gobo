@@ -16,6 +16,7 @@
 			<option name="abstract" value="true"/>
 			<cluster name="ast">
 				<option name="abstract" value="true"/>
+				<cluster name="agent"/>
 				<cluster name="assertion"/>
 				<cluster name="class"/>
 				<cluster name="cluster"/>

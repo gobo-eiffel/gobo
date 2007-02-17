@@ -35,22 +35,26 @@ inherit
 			process_create_instruction,
 			process_debug_instruction,
 			process_do_function,
+			process_do_function_inline_agent,
 			process_do_procedure,
+			process_do_procedure_inline_agent,
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
 			process_expression_address,
+			process_external_function_inline_agent,
+			process_external_procedure_inline_agent,
 			process_if_instruction,
 			process_infix_expression,
-			process_inline_agent,
 			process_inspect_instruction,
 			process_loop_instruction,
 			process_loop_invariants,
 			process_manifest_array,
 			process_manifest_tuple,
-			process_old_expression,
 			process_once_function,
+			process_once_function_inline_agent,
 			process_once_procedure,
+			process_once_procedure_inline_agent,
 			process_parenthesized_expression,
 			process_precursor_expression,
 			process_precursor_instruction,
@@ -346,7 +350,7 @@ feature {ET_AST_NODE} -- Processing
 	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			an_instruction.target.process (Current)
+			an_instruction.call.process (Current)
 			an_instruction.source.process (Current)
 		end
 
@@ -529,6 +533,17 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+		do
+			an_arguments ?= an_expression.actual_arguments
+			if an_arguments /= Void then
+				process_agent_argument_operand_list (an_arguments)
+			end
+		end
+
 	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
 			-- Process `a_feature'.
 		local
@@ -537,6 +552,17 @@ feature {ET_AST_NODE} -- Processing
 			a_compound := a_feature.compound
 			if a_compound /= Void then
 				process_compound (a_compound)
+			end
+		end
+
+	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+		do
+			an_arguments ?= an_expression.actual_arguments
+			if an_arguments /= Void then
+				process_agent_argument_operand_list (an_arguments)
 			end
 		end
 
@@ -577,6 +603,28 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 		end
 
+	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+		do
+			an_arguments ?= an_expression.actual_arguments
+			if an_arguments /= Void then
+				process_agent_argument_operand_list (an_arguments)
+			end
+		end
+
+	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+		do
+			an_arguments ?= an_expression.actual_arguments
+			if an_arguments /= Void then
+				process_agent_argument_operand_list (an_arguments)
+			end
+		end
+
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
@@ -603,17 +651,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			an_expression.left.process (Current)
 			an_expression.right.process (Current)
-		end
-
-	process_inline_agent (an_expression: ET_INLINE_AGENT) is
-			-- Process `an_expression'.
-		local
-			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-		do
-			an_arguments ?= an_expression.arguments
-			if an_arguments /= Void then
-				process_agent_argument_operand_list (an_arguments)
-			end
 		end
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
@@ -699,12 +736,6 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
-			-- Process `an_expression'.
-		do
-			an_expression.expression.process (Current)
-		end
-
 	process_once_function (a_feature: ET_ONCE_FUNCTION) is
 			-- Process `a_feature'.
 		local
@@ -716,6 +747,17 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+		do
+			an_arguments ?= an_expression.actual_arguments
+			if an_arguments /= Void then
+				process_agent_argument_operand_list (an_arguments)
+			end
+		end
+
 	process_once_procedure (a_feature: ET_ONCE_PROCEDURE) is
 			-- Process `a_feature'.
 		local
@@ -724,6 +766,17 @@ feature {ET_AST_NODE} -- Processing
 			a_compound := a_feature.compound
 			if a_compound /= Void then
 				process_compound (a_compound)
+			end
+		end
+
+	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
+		local
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
+		do
+			an_arguments ?= an_expression.actual_arguments
+			if an_arguments /= Void then
+				process_agent_argument_operand_list (an_arguments)
 			end
 		end
 

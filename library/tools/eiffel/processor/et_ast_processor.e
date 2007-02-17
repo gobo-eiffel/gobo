@@ -507,10 +507,26 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+
+	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
 	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		deferred
+		end
+
+
+	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
 		deferred
 		end
 
@@ -605,10 +621,26 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+
+	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
 	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		deferred
+		end
+
+
+	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
 		deferred
 		end
 
@@ -836,13 +868,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_inline_agent (an_expression: ET_INLINE_AGENT) is
-			-- Process `an_expression'.
-		require
-			an_expression_not_void: an_expression /= Void
-		deferred
-		end
-
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
 			-- Process `an_instruction'.
 		require
@@ -1018,6 +1043,14 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+
+	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
 	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
 			-- Process `an_expression'.
 		require
@@ -1029,6 +1062,14 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		deferred
+		end
+
+
+	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
 		deferred
 		end
 

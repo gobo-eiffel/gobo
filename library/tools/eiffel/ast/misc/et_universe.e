@@ -2856,9 +2856,9 @@ feature -- Compilation
 
 feature -- Client/Supplier relationship
 
-	report_expression_supplier (a_supplier: ET_TYPE_CONTEXT; a_client: ET_BASE_TYPE; a_feature: ET_ENCLOSING_FEATURE) is
+	report_expression_supplier (a_supplier: ET_TYPE_CONTEXT; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
 			-- Report the fact that `a_supplier' is the type of an expression
-			-- in feature `a_feature' in type `a_client'.
+			-- in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' may be altered after the execution of
 			-- this routine. Therefore if you want to keep a reference to it
 			-- you should duplicate it or use its base type for example.)
@@ -2874,39 +2874,39 @@ feature -- Client/Supplier relationship
 			end
 		end
 
-	report_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_ENCLOSING_FEATURE) is
+	report_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_routine: ET_ROUTINE) is
 			-- Report the fact that `a_supplier' is the type of a formal argument
-			-- of feature `a_feature' in type `a_client'.
+			-- of `a_routine' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
 			-- the context of `a_client'.)
 		require
 			a_supplier_not_void: a_supplier /= Void
 			a_client_not_void: a_client /= Void
 			a_client_valid: a_client.is_valid_context
-			a_feature_not_void: a_feature /= Void
+			a_routine_not_void: a_routine /= Void
 		do
 			if supplier_handler /= Void then
-				supplier_handler.report_argument_supplier (a_supplier, a_client, a_feature)
+				supplier_handler.report_argument_supplier (a_supplier, a_client, a_routine)
 			end
 		end
 
-	report_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_ENCLOSING_FEATURE) is
-			-- Report the fact that `a_supplier' is the type of the result of
-			-- query `a_feature' in type `a_client'.
+	report_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_query: ET_QUERY) is
+			-- Report the fact that `a_supplier' is the type of the result
+			-- of `a_query' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
 			-- the context of `a_client'.)
 		require
 			a_supplier_not_void: a_supplier /= Void
 			a_client_not_void: a_client /= Void
 			a_client_valid: a_client.is_valid_context
-			a_feature_not_void: a_feature /= Void
+			a_query_not_void: a_query /= Void
 		do
 			if supplier_handler /= Void then
-				supplier_handler.report_result_supplier (a_supplier, a_client, a_feature)
+				supplier_handler.report_result_supplier (a_supplier, a_client, a_query)
 			end
 		end
 
-	report_static_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_ENCLOSING_FEATURE) is
+	report_static_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
 			-- Report the fact that `a_supplier' is the type of a static call
 			-- in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -2922,7 +2922,7 @@ feature -- Client/Supplier relationship
 			end
 		end
 
-	report_create_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_ENCLOSING_FEATURE) is
+	report_create_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
 			-- Report the fact that `a_supplier' is the explicit type of a
 			-- creation instruction or expression in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -2938,9 +2938,9 @@ feature -- Client/Supplier relationship
 			end
 		end
 
-	report_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_ENCLOSING_FEATURE) is
+	report_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_FEATURE) is
 			-- Report the fact that `a_supplier' is the type of a local variable
-			-- of feature `a_feature' in type `a_client'.
+			-- of `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
 			-- the context of `a_feature.implementation_class'. Its
 			-- formal generic parameters should be resolved in the
@@ -2957,11 +2957,14 @@ feature -- Client/Supplier relationship
 			end
 		end
 
-	report_inline_agent_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_ENCLOSING_FEATURE) is
+	report_inline_agent_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
 			-- Report the fact that `a_supplier' is the type of a formal argument
-			-- of an inline agent in feature `a_feature' in type `a_client'.
+			-- of an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
-			-- the context of `a_client'.)
+			-- the context of `a_feature.implementation_class'. Its
+			-- formal generic parameters should be resolved in the
+			-- base class of `a_client' first before using `a_client'
+			-- as its context.)
 		require
 			a_supplier_not_void: a_supplier /= Void
 			a_client_not_void: a_client /= Void
@@ -2973,9 +2976,9 @@ feature -- Client/Supplier relationship
 			end
 		end
 
-	report_inline_agent_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_ENCLOSING_FEATURE) is
+	report_inline_agent_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
 			-- Report the fact that `a_supplier' is the type of a local variable
-			-- of an inline agent in feature `a_feature' in type `a_client'.
+			-- of an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
 			-- the context of `a_feature.implementation_class'. Its
 			-- formal generic parameters should be resolved in the
@@ -2989,6 +2992,25 @@ feature -- Client/Supplier relationship
 		do
 			if supplier_handler /= Void then
 				supplier_handler.report_inline_agent_local_supplier (a_supplier, a_client, a_feature)
+			end
+		end
+
+	report_inline_agent_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+			-- Report the fact that `a_supplier' is the type of the result of
+			-- an inline agent in `a_feature' in type `a_client'.
+			-- (Note that `a_supplier' is assumed to be interpreted in
+			-- the context of `a_feature.implementation_class'. Its
+			-- formal generic parameters should be resolved in the
+			-- base class of `a_client' first before using `a_client'
+			-- as its context.)
+		require
+			a_supplier_not_void: a_supplier /= Void
+			a_client_not_void: a_client /= Void
+			a_client_valid: a_client.is_valid_context
+			a_feature_not_void: a_feature /= Void
+		do
+			if supplier_handler /= Void then
+				supplier_handler.report_inline_agent_result_supplier (a_supplier, a_client, a_feature)
 			end
 		end
 

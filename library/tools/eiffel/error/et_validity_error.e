@@ -5,7 +5,7 @@ indexing
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,6 +61,7 @@ create
 	make_vdpr3b,
 	make_vdpr3c,
 	make_vdpr3d,
+	make_vdpr3e,
 	make_vdpr4a,
 	make_vdpr4c,
 	make_vdpr4d,
@@ -91,10 +92,14 @@ create
 	make_vdus3a,
 	make_vdus4a,
 	make_veen0a,
+	make_veen0b,
 	make_veen2a,
 	make_veen2b,
 	make_veen2c,
 	make_veen2d,
+	make_veen2e,
+	make_veen2f,
+	make_veen2g,
 	make_vfac1a,
 	make_vfac1b,
 	make_vfac2a,
@@ -159,6 +164,7 @@ create
 	make_vjar0b,
 	make_vjaw0a,
 	make_vjaw0c,
+	make_vjaw0d,
 	make_vjrv0a,
 	make_vjrv0b,
 	make_vkcn1a,
@@ -196,6 +202,10 @@ create
 	make_vpca5b,
 	make_vpca5c,
 	make_vpca5d,
+	make_vpir1a,
+	make_vpir1b,
+	make_vpir1c,
+	make_vpir1d,
 	make_vqmc1a,
 	make_vqmc1b,
 	make_vqmc2a,
@@ -210,11 +220,20 @@ create
 	make_vqmc6b,
 	make_vqui0a,
 	make_vqui0b,
+	make_vred0a,
+	make_vred0b,
+	make_vred0c,
+	make_vred0d,
 	make_vreg0a,
 	make_vreg0b,
 	make_vrfa0a,
+	make_vrfa0b,
 	make_vrle1a,
 	make_vrle2a,
+	make_vrlv1a,
+	make_vrlv1b,
+	make_vrlv2a,
+	make_vrlv2b,
 	make_vscn0a,
 	make_vscn0b,
 	make_vscn0c,
@@ -383,9 +402,13 @@ create
 	make_gvtcg5a,
 	make_gvtcg5b,
 	make_gvuaa0a,
+	make_gvuaa0b,
 	make_gvual0a,
+	make_gvual0b,
 	make_gvuia0a,
-	make_gvuil0a
+	make_gvuia0b,
+	make_gvuil0a,
+	make_gvuil0b
 
 feature {NONE} -- Initialization
 
@@ -2181,6 +2204,43 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
+	make_vdpr3e (a_class: like current_class; a_precursor: ET_PRECURSOR; an_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE) is
+			-- Create a new VDPR-3 error: `a_precursor' appears in inline agent
+			-- `an_agent' of `a_feature' in `a_class', but the associated feature
+			-- of inline agents cannot be redefined.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			an_agent_not_void: an_agent /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := vdpr3d_template_code
+			etl_code := vdpr3_etl_code
+			default_template := vdpr3d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_precursor.position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+		end
+
 	make_vdpr4a (a_class: like current_class; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS) is
 			-- Create a new VDPR-4A error: the number of actual arguments in
 			-- the precursor call `a_precursor' appearing in `a_class' is
@@ -3505,7 +3565,7 @@ feature {NONE} -- Initialization
 
 	make_veen0a (a_class: like current_class; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE) is
 			-- Create a new VEEN error: `an_identifier', appearing in `a_feature'
-			-- of `class', is not the final name of a feature in `a_class'
+			-- of `a_class', is not the final name of a feature in `a_class'
 			-- nor the name of a local variable or a formal argument of
 			-- `a_feature'.
 			--
@@ -3545,6 +3605,48 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = identifier
 			-- dollar7: $7 = feature name
+		end
+
+	make_veen0b (a_class: like current_class; an_identifier: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Create a new VEEN error: `an_identifier', appearing in inline agent
+			-- `an_agent' in `a_class', is not the final name of a feature in `a_class'
+			-- nor the name of a local variable or a formal argument of
+			-- `an_agent'.
+			--
+			-- ETL2: p.276
+			-- ETR: p.61
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_identifier_not_void: an_identifier /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			code := veen0b_template_code
+			etl_code := veen_etl_code
+			default_template := veen0b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_identifier.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (an_identifier.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = identifier
 		end
 
 	make_veen2a (a_class: like current_class; a_result: ET_RESULT; a_feature: ET_FEATURE) is
@@ -3682,6 +3784,122 @@ feature {NONE} -- Initialization
 			code := veen2d_template_code
 			etl_code := veen2_etl_code
 			default_template := veen2d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_result.position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+		end
+
+	make_veen2e (a_class: like current_class; a_local: ET_FEATURE_NAME; an_agent: ET_INLINE_AGENT) is
+			-- Create a new VEEN-2 error: the local variable `a_local' appears in the precondition
+			-- or postcondition of inline agent `an_agent' in `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			a_local_is_local: a_local.is_local
+			an_agent_not_void: an_agent /= Void
+		do
+			code := veen2e_template_code
+			etl_code := veen2_etl_code
+			default_template := veen2e_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_local.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_local.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = local name
+		end
+
+	make_veen2f (a_class: like current_class; a_result: ET_RESULT; an_agent: ET_INLINE_AGENT) is
+			-- Create a new VEEN-2 error: `a_result' appears in the precondition
+			-- of inline agent `an_agent' in `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			code := veen2b_template_code
+			etl_code := veen2_etl_code
+			default_template := veen2b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_result.position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+		end
+
+	make_veen2g (a_class: like current_class; a_result: ET_RESULT; an_agent: ET_INLINE_AGENT) is
+			-- Create a new VEEN-2 error: `a_result' appears in the body, postcondition
+			-- or rescue clause of inline agent `an_agent' in `a_class', but the associated
+			-- feature of `an_agent' is a procedure.
+			--
+			-- ETL2: p.276
+			-- ETR: p.61
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			code := veen2g_template_code
+			etl_code := veen2_etl_code
+			default_template := veen2g_default_template
 			current_class := a_class
 			class_impl := a_class
 			position := a_result.position
@@ -6580,6 +6798,45 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
+	make_vjaw0d (a_class: like current_class; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- it is a formal argument name of inline agent `an_agent'.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			code := vjaw0d_template_code
+			etl_code := vjaw_etl_code
+			default_template := vjaw0d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = formal argument name
+		end
+
 	make_vjrv0a (a_class: like current_class; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE) is
 			-- Create a new VJRV error: the type `a_target_type' of the target
 			-- `a_target' of an assignment attempt appearing in `a_class'
@@ -8354,6 +8611,170 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = formal type
 		end
 
+	make_vpir1a (a_class: like current_class; arg1: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; arg2: ET_FORMAL_ARGUMENT) is
+			-- Create a new VPIR-1 error: `arg1' in inline agent `an_agent' has
+			-- the same name as argument `arg2' of an enclosing feature or
+			-- inline agent.
+			--
+			-- ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			an_agent_not_void: an_agent /= Void
+			arg2_not_void: arg2 /= Void
+		do
+			code := vpir1a_template_code
+			etl_code := vpir1_etl_code
+			default_template := vpir1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := arg1.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (arg1.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+		end
+
+	make_vpir1b (a_class: like current_class; arg1: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_local2: ET_LOCAL_VARIABLE) is
+			-- Create a new VPIR-1 error: `arg1' in inline agent `an_agent' has
+			-- the same name as local variable `a_local2' of an enclosing
+			-- feature or inline agent.
+			--
+			-- ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			an_agent_not_void: an_agent /= Void
+			a_local2_not_void: a_local2 /= Void
+		do
+			code := vpir1b_template_code
+			etl_code := vpir1_etl_code
+			default_template := vpir1b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := arg1.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (arg1.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+		end
+
+	make_vpir1c (a_class: like current_class; a_local1: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; arg2: ET_FORMAL_ARGUMENT) is
+			-- Create a new VPIR-1 error: `a_local1' in inline agent `an_agent' has
+			-- the same name as argument `arg2' of an enclosing feature or
+			-- inline agent.
+			--
+			-- ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local1_not_void: a_local1 /= Void
+			an_agent_not_void: an_agent /= Void
+			arg2_not_void: arg2 /= Void
+		do
+			code := vpir1c_template_code
+			etl_code := vpir1_etl_code
+			default_template := vpir1c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_local1.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_local1.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = local variable name
+		end
+
+	make_vpir1d (a_class: like current_class; a_local1: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_local2: ET_LOCAL_VARIABLE) is
+			-- Create a new VPIR-1 error: `a_local1' in inline agent `an_agent' has
+			-- the same name as local variable `a_local2' of an enclosing feature or
+			-- inline agent.
+			--
+			-- ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local1_not_void: a_local1 /= Void
+			an_agent_not_void: an_agent /= Void
+			a_local2_not_void: a_local2 /= Void
+		do
+			code := vpir1d_template_code
+			etl_code := vpir1_etl_code
+			default_template := vpir1d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_local1.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_local1.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = local variable name
+		end
+
 	make_vqmc1a (a_class: like current_class; an_attribute: ET_CONSTANT_ATTRIBUTE) is
 			-- Create a new VQMC-1 error: `an_attribute' introduces a boolean constant
 			-- but its type is not "BOOLEAN".
@@ -8953,6 +9374,172 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = type
 		end
 
+	make_vred0a (a_class: like current_class; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FEATURE) is
+			-- Create a new VRED error: `arg1' and `arg2' have the same
+			-- name in feature `f' in `a_class'.
+			--
+			-- ECMA 367-2: p.55
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			arg2_not_void: arg2 /= Void
+			f_not_void: f /= Void
+		do
+			code := vred0a_template_code
+			etl_code := vred_etl_code
+			default_template := vred0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := arg2.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (arg2.name.lower_name, 6)
+			parameters.put (f.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+			-- dollar7: $7 = feature name (where the arguments appear)
+		end
+
+	make_vred0b (a_class: like current_class; local1, local2: ET_LOCAL_VARIABLE; f: ET_FEATURE) is
+			-- Create a new VRED error: `local1' and `local2' have the same
+			-- name in feature `f' in `a_class'.
+			--
+			-- ECMA 367-2: p.55
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			local1_not_void: local1 /= Void
+			local2_not_void: local2 /= Void
+			f_not_void: f /= Void
+		do
+			code := vred0b_template_code
+			etl_code := vred_etl_code
+			default_template := vred0b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := local2.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (local2.name.lower_name, 6)
+			parameters.put (f.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = local name
+			-- dollar7: $7 = feature name (where the local variables appear)
+		end
+
+	make_vred0c (a_class: like current_class; arg1, arg2: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE) is
+			-- Create a new VRED error: `arg1' and `arg2' have the same
+			-- name in inline agent `an_agent' of feature `f' in `a_class'.
+			--
+			-- ECMA 367-2: p.55
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			arg2_not_void: arg2 /= Void
+			an_agent_not_void: an_agent /= Void
+			f_not_void: f /= Void
+		do
+			code := vred0c_template_code
+			etl_code := vred_etl_code
+			default_template := vred0c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := arg2.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (arg2.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+		end
+
+	make_vred0d (a_class: like current_class; local1, local2: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE) is
+			-- Create a new VRED error: `local1' and `local2' have the same
+			-- name in inline agent `an_agent' of feature `f' in `a_class'.
+			--
+			-- ECMA 367-2: p.55
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			local1_not_void: local1 /= Void
+			local2_not_void: local2 /= Void
+			an_agent_not_void: an_agent /= Void
+			f_not_void: f /= Void
+		do
+			code := vred0d_template_code
+			etl_code := vred_etl_code
+			default_template := vred0d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := local2.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (local2.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = local name
+		end
+
 	make_vreg0a (a_class: like current_class; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FEATURE) is
 			-- Create a new VREG error: `arg1' and `arg2' have the same
 			-- name in feature `f' in `a_class'.
@@ -9042,6 +9629,7 @@ feature {NONE} -- Initialization
 			-- the same name as feature `f2' in `a_class'.
 			--
 			-- ETL2: p.110
+			-- ECMA 367-2: p.55
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -9061,8 +9649,8 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (arg.name.name, 6)
-			parameters.put (f1.name.name, 7)
+			parameters.put (arg.name.lower_name, 6)
+			parameters.put (f1.lower_name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9077,6 +9665,47 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = argument name
 			-- dollar7: $7 = feature name (where argument appears)
+		end
+
+	make_vrfa0b (a_class: like current_class; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; f1: ET_STANDALONE_CLOSURE; f2: ET_FEATURE) is
+			-- Create a new VRFA error: `arg' in inline agent `an_agent' of
+			-- feature `f1' has the same name as feature `f2' in `a_class'.
+			--
+			-- ECMA 367-2: p.55
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			an_agent_not_void: an_agent /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vrfa0b_template_code
+			etl_code := vrfa_etl_code
+			default_template := vrfa0b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := arg.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (arg.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
 		end
 
 	make_vrle1a (a_class: like current_class; a_local: ET_LOCAL_VARIABLE; f1, f2: ET_FEATURE) is
@@ -9162,6 +9791,174 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = argument name
 			-- dollar7: $7 = feature name (where local variable and argument appears)
+		end
+
+	make_vrlv1a (a_class: like current_class; a_local: ET_LOCAL_VARIABLE; f1, f2: ET_FEATURE) is
+			-- Create a new VRLV-1 error: `a_local' in feature `f1' has
+			-- the same name as feature `f2' in `a_class'.
+			--
+			-- ECMA 367-2: p.56
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vrlv1a_template_code
+			etl_code := vrlv1_etl_code
+			default_template := vrlv1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_local.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_local.name.lower_name, 6)
+			parameters.put (f1.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+			-- dollar7: $7 = feature name (where local variable appears)
+		end
+
+	make_vrlv1b (a_class: like current_class; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f1: ET_STANDALONE_CLOSURE; f2: ET_FEATURE) is
+			-- Create a new VRLV-1 error: `a_local' in inline agent `an_agent'
+			-- of feature `f1' has the same name as feature `f2' in `a_class'.
+			--
+			-- ECMA 367-2: p.56
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			an_agent_not_void: an_agent /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vrlv1b_template_code
+			etl_code := vrlv1_etl_code
+			default_template := vrlv1b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_local.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_local.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+		end
+
+	make_vrlv2a (a_class: like current_class; a_local: ET_LOCAL_VARIABLE; f: ET_FEATURE; arg: ET_FORMAL_ARGUMENT) is
+			-- Create a new VRLV-2 error: `a_local' in feature `f' has
+			-- the same name as formal argument `arg' of this feature
+			-- in `a_class'.
+			--
+			-- ECMA 367-2: p.56
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			f_not_void: f /= Void
+			arg_not_void: arg /= Void
+		do
+			code := vrlv2a_template_code
+			etl_code := vrlv2_etl_code
+			default_template := vrlv2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_local.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_local.name.lower_name, 6)
+			parameters.put (f.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+			-- dollar7: $7 = feature name (where local variable and argument appears)
+		end
+
+	make_vrlv2b (a_class: like current_class; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE; arg: ET_FORMAL_ARGUMENT) is
+			-- Create a new VRLV-2 error: `a_local' in inline agent `an_agent'
+			-- of feature `f' has the same name as formal argument `arg' of this
+			-- inline agent in `a_class'.
+			--
+			-- ECMA 367-2: p.56
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			an_agent_not_void: an_agent /= Void
+			f_not_void: f /= Void
+			arg_not_void: arg /= Void
+		do
+			code := vrlv2b_template_code
+			etl_code := vrlv2_etl_code
+			default_template := vrlv2b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_local.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_local.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
 		end
 
 	make_vscn0a (a_class: like current_class; other_class: ET_CLASS) is
@@ -16202,6 +16999,47 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
+	make_gvuaa0b (a_class: like current_class; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Create a new GVUAA error: `a_name' is a formal argument of
+			-- inline agent `an_agent' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAA: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			code := gvuaa0b_template_code
+			etl_code := gvuaa_etl_code
+			default_template := gvuaa0b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = formal argument name
+		end
+
 	make_gvual0a (a_class: like current_class; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
 			-- Create a new GVUAL error: `a_name' is a local variable of
 			-- `a_feature' in `a_class', and hence cannot have actual
@@ -16243,6 +17081,47 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = local variable name
 			-- dollar7: $7 = feature name
+		end
+
+	make_gvual0b (a_class: like current_class; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Create a new GVUAL error: `a_name' is a local variable of
+			-- inline agent `an_agent' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAA: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			code := gvual0b_template_code
+			etl_code := gvual_etl_code
+			default_template := gvual0b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = local variable name
 		end
 
 	make_gvuia0a (a_class: like current_class; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
@@ -16287,6 +17166,46 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
+	make_gvuia0b (a_class: like current_class; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Create a new GVUIA error: `a_name' is a formal argument of
+			-- inline agent `an_agent' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			code := gvuia0b_template_code
+			etl_code := gvuia_etl_code
+			default_template := gvuia0b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = formal argument name
+		end
+
 	make_gvuil0a (a_class: like current_class; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
 			-- Create a new GVUIL error: `a_name' is a local variable of
 			-- `a_feature' in `a_class', and hence cannot be an
@@ -16327,6 +17246,46 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = local variable name
 			-- dollar7: $7 = feature name
+		end
+
+	make_gvuil0b (a_class: like current_class; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Create a new GVUIL error: `a_name' is a local variable of
+			-- inline agent `an_agent' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			code := gvuil0b_template_code
+			etl_code := gvuil_etl_code
+			default_template := gvuil0b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = local variable name
 		end
 
 feature -- Access
@@ -16408,6 +17367,7 @@ feature {NONE} -- Implementation
 	vdpr3b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not the redefinition of an effective feature."
 	vdpr3c_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not the redefinition of a feature from parent '$7'."
 	vdpr3d_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not the redeclaration of a feature."
+	vdpr3e_default_template: STRING is "[$1] class $5 ($3,$4): the associated feature of inline agents cannot be redefined."
 	vdpr4a_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments in Precursor call is not the same as the number of formal arguments of feature `$6' in class $7."
 	vdpr4c_default_template: STRING is "[$1] class $5 ($3,$4): the $8-th actual argument (of type '$9') does not conform to the corresponding formal argument (of type '$10') of feature `$6' in class $7."
 	vdpr4d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$7' in class $8."
@@ -16438,10 +17398,14 @@ feature {NONE} -- Implementation
 	vdus3a_default_template: STRING is "[$1] class $5 ($3,$4): cannot undefine the deferred feature `$6'."
 	vdus4a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Undefine subclause of parent $7."
 	veen0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' appears in feature `$7', but it is not the final name of a feature in class $5 nor the name of a local variable or formal argument of feature `$7'."
+	veen0b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' appears in an inline agent, but it is not the final name of a feature in class $5 nor the name of a local variable or formal argument of this inline agent."
 	veen2a_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the body, postcondition or rescue clause of a procedure `$6'."
 	veen2b_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the precondition of feature `$6'."
 	veen2c_default_template: STRING is "[$1] class $5 ($3,$4): local entity `$6' appears in the precondition or postcondition of feature `$7'."
 	veen2d_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the invariant of the class."
+	veen2e_default_template: STRING is "[$1] class $5 ($3,$4): local entity `$6' appears in the precondition or postcondition of an inline agent."
+	veen2f_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the precondition of an inline agent."
+	veen2g_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the body, postcondition or rescue clause of an inline agent whose associated feature is a procedure."
 	vfac1a_default_template: STRING is "[$1] class $5 ($3,$4): query `$6' has an assigner mark `$7' but there is no feature with that name."
 	vfac1b_default_template: STRING is "[$1] class $5 ($3,$4): query `$6' has an assigner mark `$7' but this feature is not a procedure."
 	vfac2a_default_template: STRING is "[$1] class $5 ($3,$4): the number of arguments in assigner procedure `$7' is not one more than the number of arguments in query `$6'."
@@ -16506,6 +17470,7 @@ feature {NONE} -- Implementation
 	vjar0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the source of the assignment (of type '$7') does not conform nor convert to its target entity (of type '$8')."
 	vjaw0a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not an attribute. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0c_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is the name of a formal argument of feature `$7'. A Writable is either a local variable (including Result) or an attribute."
+	vjaw0d_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is the name of a formal argument of an inline agent. A Writable is either a local variable (including Result) or an attribute."
 	vjrv0a_default_template: STRING is "[$1] class $5 ($3,$4): the type '$6' of the target entity of the assignment attempt is not a reference type."
 	vjrv0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the type '$7' of the target entity of the assignment attempt is not a reference type."
 	vkcn1a_default_template: STRING is "[$1] class $5 ($3,$4): query `$7' of class $8 appears in a call instruction."
@@ -16543,6 +17508,10 @@ feature {NONE} -- Implementation
 	vpca5b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the type '$11' specified for the $10-th actual argument of Call_agent does not conform to the corresponding formal argument (of type '$12') of feature `$8' in class $9."
 	vpca5c_default_template: STRING is "[$1] class $5 ($3,$4): the type '$9' specified for the $8-th actual argument of Call_agent does not conform to the corresponding formal argument (of type '$10') of feature `$7'."
 	vpca5d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the type '$10' specified for the $9-th actual argument of Call_agent does not conform to the corresponding formal argument (of type '$11') of feature `$8'."
+	vpir1a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' in inline agent is also the name of a formal argument of an enclosing feature or inline agent."
+	vpir1b_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' in inline agent is also the name of a local variable of an enclosing feature or inline agent."
+	vpir1c_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in inline agent is also the name of a formal argument of an enclosing feature or inline agent."
+	vpir1d_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in inline agent is also the name of a local variable of an enclosing feature or inline agent."
 	vqmc1a_default_template: STRING is "[$1] class $5 ($3,$4): boolean constant attribute `$6' is not declared of type BOOLEAN."
 	vqmc1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): boolean constant attribute `$7' is not declared of type BOOLEAN."
 	vqmc2a_default_template: STRING is "[$1] class $5 ($3,$4): character constant attribute `$6' is not declared of type CHARACTER."
@@ -16557,11 +17526,20 @@ feature {NONE} -- Implementation
 	vqmc6b_default_template: STRING is "[$1] class $5 ($6,$3,$4): bit constant attribute `$7' is not declared of Bit_type."
 	vqui0a_default_template: STRING is "[$1] class $5 ($3,$4): unique attribute `$6' is not declared of type INTEGER."
 	vqui0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): unique attribute `$7' is not declared of type INTEGER."
+	vred0a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' appear twice in feature `$7'."
+	vred0b_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' appear twice in feature `$7'."
+	vred0c_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' appear twice in inline agent."
+	vred0d_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' appear twice in inline agent."
 	vreg0a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' appear twice in feature `$7'."
 	vreg0b_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' appear twice in feature `$7'."
-	vrfa0a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' in feature `$7' is also the final name of feature."
-	vrle1a_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in feature `$7' is also the final name of feature."
+	vrfa0a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' in feature `$7' is also the final name of a feature."
+	vrfa0b_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' in inline agent is also the final name of a feature."
+	vrle1a_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in feature `$7' is also the final name of a feature."
 	vrle2a_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in feature `$7' is also the name of a formal argument of this feature."
+	vrlv1a_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in feature `$7' is also the final name of a feature."
+	vrlv1b_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in inline agent is also the final name of a feature."
+	vrlv2a_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in feature `$7' is also the name of a formal argument of this feature."
+	vrlv2b_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in inline agent is also the name of a formal argument of this agent."
 	vscn0a_default_template: STRING is "[$1] class $5: class appears in files '$7' and '$9'."
 	vscn0b_default_template: STRING is "[$1] class $5: class appears in file '$7' and assembly '$9'."
 	vscn0c_default_template: STRING is "[$1] class $5: class appears in file '$7' and group '$9'."
@@ -16730,9 +17708,13 @@ feature {NONE} -- Implementation
 	gvtcg5a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' in type '$7' is not a reference type but the corresponding formal parameter is marked as reference."
 	gvtcg5b_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' in type '$7' is not expanded type but the corresponding formal parameter is marked as expanded."
 	gvuaa0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot have actual arguments."
+	gvuaa0b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of an inline agent and hence cannot have actual arguments."
 	gvual0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a local variable of feature `$7' and hence cannot have actual arguments."
+	gvual0b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a local variable of an inline agent and hence cannot have actual arguments."
 	gvuia0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot be an instruction."
+	gvuia0b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of an inline agent and hence cannot be an instruction."
 	gvuil0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a local variable of feature `$7' and hence cannot be an instruction."
+	gvuil0b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a local variable of an inline agent and hence cannot be an instruction."
 	gvzzz0a_default_template: STRING is "[$1] class $5 ($3,$4): validity error"
 			-- Default templates
 
@@ -16814,6 +17796,7 @@ feature {NONE} -- Implementation
 	vpca3_etl_code: STRING is "VPCA-3"
 	vpca4_etl_code: STRING is "VPCA-4"
 	vpca5_etl_code: STRING is "VPCA-5"
+	vpir1_etl_code: STRING is "VPIR-1"
 	vqmc1_etl_code: STRING is "VQMC-1"
 	vqmc2_etl_code: STRING is "VQMC-2"
 	vqmc3_etl_code: STRING is "VQMC-3"
@@ -16821,10 +17804,13 @@ feature {NONE} -- Implementation
 	vqmc5_etl_code: STRING is "VQMC-5"
 	vqmc6_etl_code: STRING is "VQMC-6"
 	vqui_etl_code: STRING is "VQUI"
+	vred_etl_code: STRING is "VRED"
 	vreg_etl_code: STRING is "VREG"
 	vrfa_etl_code: STRING is "VRFA"
 	vrle1_etl_code: STRING is "VRLE-1"
 	vrle2_etl_code: STRING is "VRLE-2"
+	vrlv1_etl_code: STRING is "VRLV-1"
+	vrlv2_etl_code: STRING is "VRLV-2"
 	vscn_etl_code: STRING is "VSCN"
 	vtat1_etl_code: STRING is "VTAT-1"
 	vtat2_etl_code: STRING is "VTAT-2"
@@ -16914,6 +17900,7 @@ feature {NONE} -- Implementation
 	vdpr3b_template_code: STRING is "vdpr3b"
 	vdpr3c_template_code: STRING is "vdpr3c"
 	vdpr3d_template_code: STRING is "vdpr3d"
+	vdpr3e_template_code: STRING is "vdpr3e"
 	vdpr4a_template_code: STRING is "vdpr4a"
 	vdpr4c_template_code: STRING is "vdpr4c"
 	vdpr4d_template_code: STRING is "vdpr4d"
@@ -16944,10 +17931,14 @@ feature {NONE} -- Implementation
 	vdus3a_template_code: STRING is "vdus3a"
 	vdus4a_template_code: STRING is "vdus4a"
 	veen0a_template_code: STRING is "veen0a"
+	veen0b_template_code: STRING is "veen0b"
 	veen2a_template_code: STRING is "veen2a"
 	veen2b_template_code: STRING is "veen2b"
 	veen2c_template_code: STRING is "veen2c"
 	veen2d_template_code: STRING is "veen2d"
+	veen2e_template_code: STRING is "veen2e"
+	veen2f_template_code: STRING is "veen2f"
+	veen2g_template_code: STRING is "veen2g"
 	vfac1a_template_code: STRING is "vfac1a"
 	vfac1b_template_code: STRING is "vfac1b"
 	vfac2a_template_code: STRING is "vfac2a"
@@ -17012,6 +18003,7 @@ feature {NONE} -- Implementation
 	vjar0b_template_code: STRING is "vjar0b"
 	vjaw0a_template_code: STRING is "vjaw0a"
 	vjaw0c_template_code: STRING is "vjaw0c"
+	vjaw0d_template_code: STRING is "vjaw0d"
 	vjrv0a_template_code: STRING is "vjrv0a"
 	vjrv0b_template_code: STRING is "vjrv0b"
 	vkcn1a_template_code: STRING is "vkcn1a"
@@ -17049,6 +18041,10 @@ feature {NONE} -- Implementation
 	vpca5b_template_code: STRING is "vpca5b"
 	vpca5c_template_code: STRING is "vpca5c"
 	vpca5d_template_code: STRING is "vpca5d"
+	vpir1a_template_code: STRING is "vpir1a"
+	vpir1b_template_code: STRING is "vpir1b"
+	vpir1c_template_code: STRING is "vpir1c"
+	vpir1d_template_code: STRING is "vpir1d"
 	vqmc1a_template_code: STRING is "vqmc1a"
 	vqmc1b_template_code: STRING is "vqmc1b"
 	vqmc2a_template_code: STRING is "vqmc2a"
@@ -17063,11 +18059,20 @@ feature {NONE} -- Implementation
 	vqmc6b_template_code: STRING is "vqmc6b"
 	vqui0a_template_code: STRING is "vqui0a"
 	vqui0b_template_code: STRING is "vqui0b"
+	vred0a_template_code: STRING is "vred0a"
+	vred0b_template_code: STRING is "vred0b"
+	vred0c_template_code: STRING is "vred0c"
+	vred0d_template_code: STRING is "vred0d"
 	vreg0a_template_code: STRING is "vreg0a"
 	vreg0b_template_code: STRING is "vreg0b"
 	vrfa0a_template_code: STRING is "vrfa0a"
+	vrfa0b_template_code: STRING is "vrfa0b"
 	vrle1a_template_code: STRING is "vrle1a"
 	vrle2a_template_code: STRING is "vrle2a"
+	vrlv1a_template_code: STRING is "vrlv1a"
+	vrlv1b_template_code: STRING is "vrlv1b"
+	vrlv2a_template_code: STRING is "vrlv2a"
+	vrlv2b_template_code: STRING is "vrlv2b"
 	vscn0a_template_code: STRING is "vscn0a"
 	vscn0b_template_code: STRING is "vscn0b"
 	vscn0c_template_code: STRING is "vscn0c"
@@ -17236,9 +18241,13 @@ feature {NONE} -- Implementation
 	gvtcg5a_template_code: STRING is "gvtcg5a"
 	gvtcg5b_template_code: STRING is "gvtcg5b"
 	gvuaa0a_template_code: STRING is "gvuaa0a"
+	gvuaa0b_template_code: STRING is "gvuaa0b"
 	gvual0a_template_code: STRING is "gvual0a"
+	gvual0b_template_code: STRING is "gvual0b"
 	gvuia0a_template_code: STRING is "gvuia0a"
+	gvuia0b_template_code: STRING is "gvuia0b"
 	gvuil0a_template_code: STRING is "gvuil0a"
+	gvuil0b_template_code: STRING is "gvuil0b"
 	gvzzz0a_template_code: STRING is "gvzzz0a"
 			-- Template error codes
 

@@ -418,7 +418,7 @@ feature {NONE} -- Assertion validity
 			if not a_flat_only or (current_class /= a_class_impl) then
 				a_preconditions := a_feature_impl.preconditions
 				if a_preconditions /= Void then
-					feature_checker.check_preconditions_validity (a_preconditions, a_feature_impl, a_feature, a_feature, current_class)
+					feature_checker.check_preconditions_validity (a_preconditions, a_feature_impl, a_feature, current_class)
 					if feature_checker.has_fatal_error then
 						had_error := True
 						if a_flat_only then
@@ -430,7 +430,7 @@ feature {NONE} -- Assertion validity
 				end
 				a_postconditions := a_feature_impl.postconditions
 				if a_postconditions /= Void then
-					feature_checker.check_postconditions_validity (a_postconditions, a_feature_impl, a_feature, a_feature, current_class)
+					feature_checker.check_postconditions_validity (a_postconditions, a_feature_impl, a_feature, current_class)
 					if feature_checker.has_fatal_error then
 						had_error := True
 						if a_flat_only then

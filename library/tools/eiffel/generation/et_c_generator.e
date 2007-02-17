@@ -43,11 +43,15 @@ inherit
 			process_deferred_function,
 			process_deferred_procedure,
 			process_do_function,
+			process_do_function_inline_agent,
 			process_do_procedure,
+			process_do_procedure_inline_agent,
 			process_equality_expression,
 			process_expression_address,
 			process_external_function,
+			process_external_function_inline_agent,
 			process_external_procedure,
+			process_external_procedure_inline_agent,
 			process_false_constant,
 			process_feature_address,
 			process_hexadecimal_integer_constant,
@@ -62,8 +66,10 @@ inherit
 			process_manifest_type,
 			process_old_expression,
 			process_once_function,
+			process_once_function_inline_agent,
 			process_once_manifest_string,
 			process_once_procedure,
+			process_once_procedure_inline_agent,
 			process_parenthesized_expression,
 			process_precursor_expression,
 			process_precursor_instruction,
@@ -155,9 +161,10 @@ feature {NONE} -- Initialization
 			create polymorphic_call_feature.make (dummy_feature.static_feature, dummy_feature.target_type, current_system)
 			create l_dynamic_type_sets.make_with_capacity (50)
 			polymorphic_call_feature.set_dynamic_type_sets (l_dynamic_type_sets)
-			create call_agents.make (20)
+			create current_agents.make (20)
 			create agent_open_operands.make (20)
 			create agent_closed_operands.make (20)
+			agent_target := tokens.current_keyword
 			create agent_arguments.make_with_capacity (100)
 			create agent_instruction.make (Void, current_feature.static_feature.name, Void)
 			create agent_expression.make (Void, current_feature.static_feature.name, Void)
@@ -406,7 +413,7 @@ feature {NONE} -- Feature generation
 		local
 			old_type: ET_DYNAMIC_TYPE
 			old_feature: ET_DYNAMIC_FEATURE
-			i, nb: INTEGER
+			i: INTEGER
 		do
 			if not a_feature.is_semistrict then
 				old_type := current_type
@@ -415,12 +422,14 @@ feature {NONE} -- Feature generation
 				current_feature := a_feature
 				a_feature.static_feature.process (Current)
 					-- Print declaration of agents used in `a_feature'.
-				nb := call_agents.count
-				from i := 1 until i > nb loop
-					print_call_agent_declaration (i, call_agents.item (i))
+					-- Note that we compute `current_agents.count' at each iteration
+					-- because inline agents may contain other inline agents
+					-- which will be added to `agents' on the fly.
+				from i := 1 until i > current_agents.count loop
+					print_agent_declaration (i, current_agents.item (i))
 					i := i + 1
 				end
-				call_agents.wipe_out
+				current_agents.wipe_out
 				current_feature := old_feature
 				current_type := old_type
 			end
@@ -4919,7 +4928,9 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-			if in_operand then
+			if current_agent /= Void then
+				agent_target.process (Current)
+			elseif in_operand then
 				operand_stack.force (an_expression)
 			elseif in_target then
 				if current_type.is_expanded then
@@ -4996,11 +5007,16 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 				else
 					print_type_cast (current_system.pointer_type, current_file)
 					current_file.put_character ('(')
-					l_special_type ?= current_type
-					if l_special_type /= Void then
-						print_attribute_special_item_access (tokens.current_keyword, l_special_type)
+					if current_type.is_expanded then
+						current_file.put_character ('&')
+						print_expression (an_expression.current_keyword)
 					else
-						print_current_name (current_file)
+						l_special_type ?= current_type
+						if l_special_type /= Void then
+							print_attribute_special_item_access (an_expression.current_keyword, l_special_type)
+						else
+							print_expression (an_expression.current_keyword)
+						end
 					end
 					current_file.put_character (')')
 				end
@@ -5383,8 +5399,19 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 		local
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_static_type: ET_DYNAMIC_TYPE
+			l_seed: INTEGER
 		do
-			if in_operand then
+			if current_agent /= Void then
+				l_seed := a_name.seed
+				if l_seed < 1 or l_seed > agent_arguments.count then
+						-- Internal error: we know at this stage that the
+						-- number of formal and actual aguments is the same.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					agent_arguments.actual_argument (l_seed).process (Current)
+				end
+			elseif in_operand then
 				operand_stack.force (a_name)
 			else
 				if in_target then
@@ -7811,10 +7838,10 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 
 feature {NONE} -- Agent generation
 
-	print_call_agent (an_expression: ET_CALL_AGENT) is
-			-- Print `an_expression'.
+	print_agent (an_agent: ET_AGENT) is
+			-- Print `an_agent'.
 		require
-			an_expression_not_void: an_expression /= Void
+			an_agent_not_void: an_agent /= Void
 		local
 			l_temp: ET_IDENTIFIER
 			i, nb: INTEGER
@@ -7827,25 +7854,25 @@ feature {NONE} -- Agent generation
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
-			l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			l_dynamic_type_set := current_feature.dynamic_type_set (an_agent)
 			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of `an_expression'
+					-- Internal error: the dynamic type set of `an_agent'
 					-- should be known at this stage.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
 				l_agent_type := l_dynamic_type_set.static_type
-				if not an_expression.is_qualified_call then
+				if not an_agent.is_qualified_call then
 					print_operand (tokens.current_keyword)
 					nb_operands := 1
 				else
-					l_closed_operand ?= an_expression.target
+					l_closed_operand ?= an_agent.target
 					if l_closed_operand /= Void then
 						print_operand (l_closed_operand)
 						nb_operands := 1
 					end
 				end
-				l_arguments := an_expression.arguments
+				l_arguments := an_agent.arguments
 				if l_arguments /= Void then
 					nb := l_arguments.count
 					from i := 1 until i > nb loop
@@ -7858,7 +7885,7 @@ feature {NONE} -- Agent generation
 					end
 				end
 				fill_call_operands (nb_operands)
-				call_agents.force_last (an_expression)
+				current_agents.force_last (an_agent)
 				if in_operand then
 					if l_assignment_target /= Void then
 						operand_stack.force (l_assignment_target)
@@ -7866,7 +7893,7 @@ feature {NONE} -- Agent generation
 						print_writable (l_assignment_target)
 					else
 						l_temp := new_temp_variable (l_agent_type)
-						l_temp.set_index (an_expression.index)
+						l_temp.set_index (an_agent.index)
 						operand_stack.force (l_temp)
 						print_indentation
 						print_temp_name (l_temp, current_file)
@@ -7875,7 +7902,7 @@ feature {NONE} -- Agent generation
 					current_file.put_character ('=')
 					current_file.put_character (' ')
 				end
-				print_agent_creation_name (call_agents.count, current_feature, current_type, current_file)
+				print_agent_creation_name (current_agents.count, current_feature, current_type, current_file)
 				current_file.put_character ('(')
 				from i := 1 until i > nb_operands loop
 					if i /= 1 then
@@ -7894,6 +7921,62 @@ feature {NONE} -- Agent generation
 			end
 		end
 
+	print_call_agent (an_agent: ET_CALL_AGENT) is
+			-- Print `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_agent (an_agent)
+		end
+
+	print_do_function_inline_agent (an_agent: ET_DO_FUNCTION_INLINE_AGENT) is
+			-- Print `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_agent (an_agent)
+		end
+
+	print_do_procedure_inline_agent (an_agent: ET_DO_PROCEDURE_INLINE_AGENT) is
+			-- Print `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_agent (an_agent)
+		end
+
+	print_external_function_inline_agent (an_agent: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+			-- Print `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_agent (an_agent)
+		end
+
+	print_external_procedure_inline_agent (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+			-- Print `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_agent (an_agent)
+		end
+
+	print_once_function_inline_agent (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT) is
+			-- Print `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_agent (an_agent)
+		end
+
+	print_once_procedure_inline_agent (an_agent: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+			-- Print `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_agent (an_agent)
+		end
+
 	print_agent_open_operand (a_name: ET_IDENTIFIER) is
 			-- Print agent open operand `a_name'.
 		require
@@ -7902,7 +7985,14 @@ feature {NONE} -- Agent generation
 		local
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_static_type: ET_DYNAMIC_TYPE
+			l_agent: ET_AGENT
 		do
+				-- Make sure that "Current" is interpreted in the context of
+				-- `current_feature' and not in the context of `current_agent'.
+				-- For that we temporarily set `current_agent' to Void.
+				-- It's reset to its original value when existing this routine.
+			l_agent := current_agent
+			current_agent := Void
 			if in_operand then
 				operand_stack.force (a_name)
 			else
@@ -7933,6 +8023,7 @@ feature {NONE} -- Agent generation
 					print_agent_open_operand_name (a_name, current_file)
 				end
 			end
+			current_agent := l_agent
 		end
 
 	print_agent_closed_operand (a_name: ET_IDENTIFIER) is
@@ -7943,7 +8034,14 @@ feature {NONE} -- Agent generation
 		local
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_static_type: ET_DYNAMIC_TYPE
+			l_agent: ET_AGENT
 		do
+				-- Make sure that "Current" is interpreted in the context of
+				-- `current_feature' and not in the context of `current_agent'.
+				-- For that we temporarily set `current_agent' to Void.
+				-- It's reset to its original value when existing this routine.
+			l_agent := current_agent
+			current_agent := Void
 			if in_operand then
 				operand_stack.force (a_name)
 			else
@@ -7974,6 +8072,7 @@ feature {NONE} -- Agent generation
 					print_agent_closed_operand_access (a_name, tokens.current_keyword)
 				end
 			end
+			current_agent := l_agent
 		end
 
 	print_agent_closed_operand_access (a_name: ET_IDENTIFIER; a_target: ET_EXPRESSION) is
@@ -7999,41 +8098,38 @@ feature {NONE} -- Agent generation
 			end
 		end
 
-	print_call_agent_declaration (i: INTEGER; an_expression: ET_CALL_AGENT) is
-			-- Print declaration of `i'-th call agent `an_expression'.
+	print_agent_declaration (i: INTEGER; an_agent: ET_AGENT) is
+			-- Print declaration of `i'-th agent `an_agent'.
 		require
-			an_expression_not_void: an_expression /= Void
+			an_agent_not_void: an_agent /= Void
 		local
 			l_target_type: ET_DYNAMIC_TYPE
-			nb_closed_operands: INTEGER
-			nb_open_operands: INTEGER
 			l_open_operand: ET_IDENTIFIER
 			l_closed_operand: ET_IDENTIFIER
+			l_open_index: INTEGER
+			l_closed_index: INTEGER
+			nb_open_operands: INTEGER
+			nb_closed_operands: INTEGER
 			l_target: ET_AGENT_TARGET
 			l_result: ET_RESULT
 			l_arguments: ET_AGENT_ARGUMENT_OPERANDS
 			l_argument: ET_AGENT_ARGUMENT_OPERAND
-			l_name: ET_FEATURE_NAME
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			j, nb: INTEGER
 			l_agent_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_query: ET_DYNAMIC_FEATURE
-			l_query_type: ET_DYNAMIC_TYPE
-			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_index: INTEGER
+			l_result_type: ET_DYNAMIC_TYPE
 			l_type: ET_DYNAMIC_TYPE
-			l_open_index: INTEGER
-			l_closed_index: INTEGER
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_buffer: STRING
 		do
 				--
 				-- Determine agent type.
 				--
-			l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			l_dynamic_type_set := current_feature.dynamic_type_set (an_agent)
 			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of `an_expression'
+					-- Internal error: the dynamic type set of `an_agent'
 					-- should be known at this stage.
 				set_fatal_error
 				error_handler.report_giaaa_error
@@ -8043,7 +8139,7 @@ feature {NONE} -- Agent generation
 				--
 				-- Determine target type.
 				--
-			l_target := an_expression.target
+			l_target := an_agent.target
 			l_dynamic_type_set := current_feature.dynamic_type_set (l_target)
 			if l_dynamic_type_set = Void then
 					-- Internal error: the dynamic type set of `l_target'
@@ -8058,7 +8154,6 @@ feature {NONE} -- Agent generation
 			elseif l_target_type = Void then
 				-- Error already reported.
 			else
-				l_name := an_expression.name
 					--
 					-- Determine open and closed operands.
 					--
@@ -8085,7 +8180,7 @@ feature {NONE} -- Agent generation
 					end
 					l_closed_operand.set_index (l_target.index)
 				end
-				l_arguments := an_expression.arguments
+				l_arguments := an_agent.arguments
 				if l_arguments /= Void then
 					nb := l_arguments.count
 					from j := 1 until j > nb loop
@@ -8170,40 +8265,20 @@ feature {NONE} -- Agent generation
 				end
 					-- Function pointer.
 				header_file.put_character ('%T')
-				if an_expression.is_procedure then
+				l_result := an_agent.implicit_result
+				if l_result = Void then
+						-- Proedure.
 					header_file.put_string (c_void)
 				else
-					if l_name.is_tuple_label then
-						l_index := l_name.seed
-						l_actual_parameters := l_target_type.base_type.actual_parameters
-						if l_actual_parameters /= Void and then (l_index >= 1 and l_index <= l_actual_parameters.count) then
-							l_query_type := current_system.dynamic_type (l_actual_parameters.type (l_index), universe.any_type)
-						else
-								-- Internal error: this is an invalid labeled tuple.
-								-- This has been checked by ET_FEATURE_CHECKER.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						end
+						-- Query or tuple label.
+					l_dynamic_type_set := current_feature.dynamic_type_set (l_result)
+					if l_dynamic_type_set = Void then
+							-- Internal error: a query or tuple label should have a result type.
+						set_fatal_error
+						error_handler.report_giaaa_error
 					else
-						l_query := l_target_type.seeded_dynamic_query (l_name.seed, current_system)
-						if l_query = Void then
-								-- Internal error: there should be a query with that seed.
-								-- This has been checked by ET_FEATURE_CHECKER.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_dynamic_type_set := l_query.result_type_set
-							if l_dynamic_type_set = Void then
-									-- Internal error: a query should have a result type.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								l_query_type := l_dynamic_type_set.static_type
-							end
-						end
-					end
-					if l_query_type /= Void then
-						print_type_declaration (l_query_type, header_file)
+						l_result_type := l_dynamic_type_set.static_type
+						print_type_declaration (l_result_type, header_file)
 					end
 				end
 				header_file.put_character (' ')
@@ -8284,8 +8359,8 @@ feature {NONE} -- Agent generation
 				current_file.put_character ('*')
 				current_file.put_character ('/')
 				current_file.put_new_line
-				if l_query_type /= Void then
-					print_type_declaration (l_query_type, current_file)
+				if l_result_type /= Void then
+					print_type_declaration (l_result_type, current_file)
 				else
 					current_file.put_string (c_void)
 				end
@@ -8335,107 +8410,37 @@ feature {NONE} -- Agent generation
 				current_file.put_character ('0')
 				current_file.put_character (';')
 				current_file.put_new_line
-				if l_query_type /= Void then
-					print_indentation
-					print_type_declaration (l_query_type, current_file)
-					current_file.put_character (' ')
-					print_result_name (current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('0')
-					current_file.put_character (';')
-					current_file.put_new_line
-					current_file := current_function_body_buffer
-					if l_target.is_open_operand then
-						l_open_index := 1
-						agent_expression.set_target (agent_open_operands.item (l_open_index))
-					else
-						l_closed_index := 1
-						agent_expression.set_target (agent_closed_operands.item (l_closed_index))
-					end
-					agent_expression.set_name (l_name)
-					agent_arguments.wipe_out
-					if l_arguments /= Void then
-						nb := l_arguments.count
-						if agent_arguments.capacity < nb then
-							agent_arguments.resize (nb)
-						end
-						l_open_index := nb_open_operands
-						l_closed_index := nb_closed_operands
-						from j := nb until j < 1 loop
-							l_argument := l_arguments.actual_argument (j)
-							if l_argument.is_open_operand then
-								agent_arguments.put_first (agent_open_operands.item (l_open_index))
-								l_open_index := l_open_index - 1
-							else
-								agent_arguments.put_first (agent_closed_operands.item (l_closed_index))
-								l_closed_index := l_closed_index - 1
-							end
-							j := j - 1
-						end
-						agent_expression.set_arguments (agent_arguments)
-					else
-						agent_expression.set_arguments (Void)
-					end
-					l_result := an_expression.implicit_result
-					agent_expression.set_index (l_result.index)
-					assignment_target := l_result
-					print_operand (agent_expression)
-					assignment_target := Void
-					fill_call_operands (1)
-					if call_operands.first /= l_result then
-						print_indentation
-						print_result_name (current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						print_expression (call_operands.first)
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
-					call_operands.wipe_out
-					print_indentation
-					current_file.put_string (c_return)
-					current_file.put_character (' ')
-					print_result_name (current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
+					-- Make sure that `ageent_target' is set correctly
+					-- before calling `print_agent_body_declaration'.
+				if l_target.is_open_operand then
+					agent_target := agent_open_operands.item (1)
 				else
-					current_file := current_function_body_buffer
-					if l_target.is_open_operand then
-						l_open_index := 1
-						agent_instruction.set_target (agent_open_operands.item (l_open_index))
-					else
-						l_closed_index := 1
-						agent_instruction.set_target (agent_closed_operands.item (l_closed_index))
-					end
-					agent_instruction.set_name (l_name)
-					agent_arguments.wipe_out
-					if l_arguments /= Void then
-						nb := l_arguments.count
-						if agent_arguments.capacity < nb then
-							agent_arguments.resize (nb)
-						end
-						l_open_index := nb_open_operands
-						l_closed_index := nb_closed_operands
-						from j := nb until j < 1 loop
-							l_argument := l_arguments.actual_argument (j)
-							if l_argument.is_open_operand then
-								agent_arguments.put_first (agent_open_operands.item (l_open_index))
-								l_open_index := l_open_index - 1
-							else
-								agent_arguments.put_first (agent_closed_operands.item (l_closed_index))
-								l_closed_index := l_closed_index - 1
-							end
-							j := j - 1
-						end
-						agent_instruction.set_arguments (agent_arguments)
-					else
-						agent_instruction.set_arguments (Void)
-					end
-					print_qualified_call_instruction (agent_instruction)
+					agent_target := agent_closed_operands.item (1)
 				end
+					-- Make sure that `agent_arguments' is set correctly
+					-- before calling `print_agent_body_declaration'.
+				agent_arguments.wipe_out
+				if l_arguments /= Void then
+					nb := l_arguments.count
+					if agent_arguments.capacity < nb then
+						agent_arguments.resize (nb)
+					end
+					l_open_index := nb_open_operands
+					l_closed_index := nb_closed_operands
+					from j := nb until j < 1 loop
+						l_argument := l_arguments.actual_argument (j)
+						if l_argument.is_open_operand then
+							agent_arguments.put_first (agent_open_operands.item (l_open_index))
+							l_open_index := l_open_index - 1
+						else
+							agent_arguments.put_first (agent_closed_operands.item (l_closed_index))
+							l_closed_index := l_closed_index - 1
+						end
+						j := j - 1
+					end
+				end
+				current_file := current_function_body_buffer
+				print_agent_body_declaration (an_agent)
 				dedent
 				current_file.put_character ('}')
 				current_file.put_new_line
@@ -8602,11 +8607,302 @@ feature {NONE} -- Agent generation
 			end
 		end
 
+	print_agent_body_declaration (an_agent: ET_AGENT) is
+			-- Print body of declaration of agent `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			current_agent := an_agent
+			an_agent.process (Current)
+			current_agent := Void
+		end
+
+	print_call_agent_body_declaration (an_agent: ET_CALL_AGENT) is
+			-- Print body of declaration of call agent `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		local
+			l_result: ET_RESULT
+			l_arguments: ET_AGENT_ARGUMENT_OPERANDS
+			l_name: ET_FEATURE_NAME
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type: ET_DYNAMIC_TYPE
+			old_file: KI_TEXT_OUTPUT_STREAM
+		do
+			l_name := an_agent.name
+			l_arguments := an_agent.arguments
+			l_result := an_agent.implicit_result
+			if l_result /= Void then
+					-- Query or tuple label.
+				l_result_type_set := current_feature.dynamic_type_set (l_result)
+				if l_result_type_set = Void then
+						-- Internal error: if the associated feature is a query,
+						-- then the dynamic type set should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					old_file := current_file
+					current_file := current_function_header_buffer
+					l_result_type := l_result_type_set.static_type
+					print_indentation
+					print_type_declaration (l_result_type, current_file)
+					current_file.put_character (' ')
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('0')
+					current_file.put_character (';')
+					current_file.put_new_line
+					current_file := current_function_body_buffer
+					agent_expression.set_target (agent_target)
+					agent_expression.set_name (l_name)
+					if l_arguments /= Void then
+						agent_expression.set_arguments (agent_arguments)
+					else
+						agent_expression.set_arguments (Void)
+					end
+					agent_expression.set_index (l_result.index)
+					assignment_target := l_result
+					print_operand (agent_expression)
+					assignment_target := Void
+					fill_call_operands (1)
+					if call_operands.first /= l_result then
+						print_indentation
+						print_result_name (current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						print_expression (call_operands.first)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					call_operands.wipe_out
+					print_indentation
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					print_result_name (current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+					current_file := old_file
+				end
+			else
+					-- Procedure.
+				old_file := current_file
+				current_file := current_function_body_buffer
+				agent_instruction.set_target (agent_target)
+				agent_instruction.set_name (l_name)
+				if l_arguments /= Void then
+					agent_instruction.set_arguments (agent_arguments)
+				else
+					agent_instruction.set_arguments (Void)
+				end
+				print_qualified_call_instruction (agent_instruction)
+				current_file := old_file
+			end
+		end
+
+	print_do_function_inline_agent_body_declaration (an_agent: ET_DO_FUNCTION_INLINE_AGENT) is
+			-- Print body if declaration of inline agent `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_internal_routine_inline_agent_body_declaration (an_agent)
+		end
+
+	print_do_procedure_inline_agent_body_declaration (an_agent: ET_DO_PROCEDURE_INLINE_AGENT) is
+			-- Print body if declaration of inline agent `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_internal_routine_inline_agent_body_declaration (an_agent)
+		end
+
+	print_external_function_inline_agent_body_declaration (an_agent: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+			-- Print body if declaration of inline agent `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+-- TODO
+		end
+
+	print_external_procedure_inline_agent_body_declaration (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+			-- Print body if declaration of inline agent `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+-- TODO
+		end
+
+	print_once_function_inline_agent_body_declaration (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT) is
+			-- Print body if declaration of inline agent `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_internal_routine_inline_agent_body_declaration (an_agent)
+		end
+
+	print_once_procedure_inline_agent_body_declaration (an_agent: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+			-- Print body if declaration of inline agent `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			print_internal_routine_inline_agent_body_declaration (an_agent)
+		end
+
+	print_internal_routine_inline_agent_body_declaration (an_agent: ET_INTERNAL_ROUTINE_INLINE_AGENT) is
+			-- Print body if declaration of inline agent `an_agent'.
+		require
+			an_agent_not_void: an_agent /= Void
+		local
+			l_locals: ET_LOCAL_VARIABLE_LIST
+			i, nb: INTEGER
+			l_name: ET_IDENTIFIER
+			l_local_type_set: ET_DYNAMIC_TYPE_SET
+			l_rescue: ET_COMPOUND
+			l_compound: ET_COMPOUND
+			l_result: ET_RESULT
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type: ET_DYNAMIC_TYPE
+			old_file: KI_TEXT_OUTPUT_STREAM
+		do
+-- TODO: handle case of once-routines
+			l_result := an_agent.implicit_result
+			if l_result /= Void then
+				l_result_type_set := current_feature.dynamic_type_set (l_result)
+				if l_result_type_set = Void then
+						-- Internal error: if the associated feature is a query,
+						-- then the dynamic type set should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_result_type := l_result_type_set.static_type
+				end
+			end
+			old_file := current_file
+			current_file := current_function_header_buffer
+			if l_result_type /= Void then
+				print_indentation
+				print_type_declaration (l_result_type, current_file)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			l_locals := an_agent.locals
+			if l_locals /= Void then
+				nb := l_locals.count
+				from i := 1 until i > nb loop
+					l_name := l_locals.local_variable (i).name
+					l_local_type_set := current_feature.dynamic_type_set (l_name)
+					if l_local_type_set = Void then
+							-- Internal error: the dynamic type of local variable
+							-- should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						print_indentation
+						print_type_declaration (l_local_type_set.static_type, current_file)
+						current_file.put_character (' ')
+						print_local_name (l_name, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('0')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					i := i + 1
+				end
+			end
+			l_rescue := an_agent.rescue_clause
+			if l_rescue /= Void then
+				print_indentation
+				current_file.put_string (c_struct)
+				current_file.put_character (' ')
+				current_file.put_string (c_gerescue)
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			current_file := current_function_body_buffer
+			if l_rescue /= Void then
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_gesetjmp)
+				current_file.put_character ('(')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_character ('j')
+				current_file.put_character ('b')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('!')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_compound (l_rescue)
+				print_indentation
+				current_file.put_string (c_geraise)
+				current_file.put_character ('(')
+				current_file.put_character ('8')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				current_file.put_string (c_geretry)
+				current_file.put_character (':')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string ("r.previous = gerescue;")
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string ("gerescue = &r;")
+				current_file.put_new_line
+			end
+			l_compound := an_agent.compound
+			if l_compound /= Void then
+				print_compound (l_compound)
+			end
+			if l_rescue /= Void then
+				print_indentation
+				current_file.put_string ("gerescue = r.previous;")
+				current_file.put_new_line
+			end
+			if l_result_type /= Void then
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			current_file := old_file
+		end
+
 	agent_instruction: ET_CALL_INSTRUCTION
 			-- Agent instruction
 
 	agent_expression: ET_CALL_EXPRESSION
 			-- Agent expression
+
+	agent_target: ET_EXPRESSION
+			-- Agent target
 
 	agent_arguments: ET_ACTUAL_ARGUMENT_LIST
 			-- Agent arguments
@@ -17333,7 +17629,11 @@ feature {ET_AST_NODE} -- Processing
 	process_call_agent (an_expression: ET_CALL_AGENT) is
 			-- Process `an_expression'.
 		do
-			print_call_agent (an_expression)
+			if an_expression = current_agent then
+				print_call_agent_body_declaration (an_expression)
+			else
+				print_call_agent (an_expression)
+			end
 		end
 
 	process_call_expression (an_expression: ET_CALL_EXPRESSION) is
@@ -17420,10 +17720,30 @@ feature {ET_AST_NODE} -- Processing
 			print_do_function (a_feature)
 		end
 
+	process_do_function_inline_agent (an_agent: ET_DO_FUNCTION_INLINE_AGENT) is
+			-- Process `an_agent'.
+		do
+			if an_agent = current_agent then
+				print_do_function_inline_agent_body_declaration (an_agent)
+			else
+				print_do_function_inline_agent (an_agent)
+			end
+		end
+
 	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
 			-- Process `a_feature'.
 		do
 			print_do_procedure (a_feature)
+		end
+
+	process_do_procedure_inline_agent (an_agent: ET_DO_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_agent'.
+		do
+			if an_agent = current_agent then
+				print_do_procedure_inline_agent_body_declaration (an_agent)
+			else
+				print_do_procedure_inline_agent (an_agent)
+			end
 		end
 
 	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
@@ -17444,10 +17764,30 @@ feature {ET_AST_NODE} -- Processing
 			print_external_function (a_feature)
 		end
 
+	process_external_function_inline_agent (an_agent: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+			-- Process `an_agent'.
+		do
+			if an_agent = current_agent then
+				print_external_function_inline_agent_body_declaration (an_agent)
+			else
+				print_external_function_inline_agent (an_agent)
+			end
+		end
+
 	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
 			-- Process `a_feature'.
 		do
 			print_external_procedure (a_feature)
+		end
+
+	process_external_procedure_inline_agent (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_agent'.
+		do
+			if an_agent = current_agent then
+				print_external_procedure_inline_agent_body_declaration (an_agent)
+			else
+				print_external_procedure_inline_agent (an_agent)
+			end
 		end
 
 	process_false_constant (a_constant: ET_FALSE_CONSTANT) is
@@ -17548,6 +17888,16 @@ feature {ET_AST_NODE} -- Processing
 			print_once_function (a_feature)
 		end
 
+	process_once_function_inline_agent (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT) is
+			-- Process `an_agent'.
+		do
+			if an_agent = current_agent then
+				print_once_function_inline_agent_body_declaration (an_agent)
+			else
+				print_once_function_inline_agent (an_agent)
+			end
+		end
+
 	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
 			-- Process `an_expression'.
 		do
@@ -17558,6 +17908,16 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature'.
 		do
 			print_once_procedure (a_feature)
+		end
+
+	process_once_procedure_inline_agent (an_agent: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+			-- Process `an_agent'.
+		do
+			if an_agent = current_agent then
+				print_once_procedure_inline_agent_body_declaration (an_agent)
+			else
+				print_once_procedure_inline_agent (an_agent)
+			end
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
@@ -17727,6 +18087,12 @@ feature {NONE} -- Access
 	current_type: ET_DYNAMIC_TYPE
 			-- Type where `current_feature' belongs
 
+	current_agent: ET_AGENT
+			-- Agent being processed if any, Void otherwise
+
+	current_agents: DS_ARRAYED_LIST [ET_AGENT]
+			-- Agents already processed in `current_feature'
+
 	current_file: KI_TEXT_OUTPUT_STREAM
 			-- Output file
 
@@ -17741,9 +18107,6 @@ feature {NONE} -- Access
 
 	called_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
 			-- Features being called
-
-	call_agents: DS_ARRAYED_LIST [ET_CALL_AGENT]
-			-- Agents already processed in `current_feature'
 
 	manifest_array_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
 			-- Types of manifest arrays
@@ -18112,10 +18475,11 @@ invariant
 	no_void_polymorphic_type: not polymorphic_types.has_item (Void)
 	standalone_type_sets_not_void: standalone_type_sets /= Void
 	no_void_standalone_type_set: standalone_type_sets.has (Void)
-	call_agents_not_void: call_agents /= Void
-	no_void_call_agent: not call_agents.has (Void)
+	current_agents_not_void: current_agents /= Void
+	no_void_agent: not current_agents.has (Void)
 	agent_instruction_not_void: agent_instruction /= Void
 	agent_expression_not_void: agent_expression /= Void
+	agent_target_not_void: agent_target /= Void
 	agent_arguments_not_void: agent_arguments /= Void
 	agent_open_operands_not_void: agent_open_operands /= Void
 	no_void_agent_open_operand: not agent_open_operands.has (Void)

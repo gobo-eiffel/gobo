@@ -22,9 +22,7 @@ inherit
 			immediate_feature
 		end
 
-	ET_ENCLOSING_FEATURE
-
-	ET_ENCLOSED_FEATURE
+	ET_STANDALONE_CLOSURE
 		redefine
 			is_feature,
 			as_feature
@@ -80,6 +78,18 @@ feature -- Access
 			Result := extended_name.feature_name
 		end
 
+	lower_name: STRING is
+			-- Lower-name of feature
+			-- (May return the same object as `name.name' if already in lower case,
+			-- otherwise return a new object at each call.)
+		do
+			Result := name.lower_name
+		ensure
+			upper_name_not_void: Result /= Void
+			upper_name_not_empty: Result.count > 0
+			definition: Result.is_equal (name.name.as_lower)
+		end
+
 	alias_name: ET_ALIAS_NAME is
 			-- Alias name, if any
 		do
@@ -114,18 +124,6 @@ feature -- Access
 			Result := overloaded_extended_name.alias_name
 		end
 
-	type: ET_TYPE is
-			-- Return type;
-			-- Void for procedures
-		do
-		end
-
-	arguments: ET_FORMAL_ARGUMENT_LIST is
-			-- Formal arguments;
-			-- Void if not a routine or a routine with no arguments
-		do
-		end
-
 	header_break: ET_BREAK is
 			-- Break which appears where the header comment is expected
 		deferred
@@ -145,12 +143,6 @@ feature -- Access
 
 	obsolete_message: ET_OBSOLETE is
 			-- Obsolete message
-		do
-		end
-
-	locals: ET_LOCAL_VARIABLE_LIST is
-			-- Local variables;
-			-- Void if not an internal routine or a routine with no local variables
 		do
 		end
 
@@ -365,75 +357,6 @@ feature -- Measurement
 			arguments_count_not_negative: Result >= 0
 			no_argument: arguments = Void implies Result = 0
 			with_arguments: arguments /= Void implies Result = arguments.count
-		end
-
-feature -- Implementation checking status
-
-	implementation_checked: BOOLEAN
-			-- Has the implementation of current feature been checked?
-			-- (Check everything except assertions.)
-
-	has_implementation_error: BOOLEAN
-			-- Has a fatal error occurred during implementation checking?
-			-- (Check everything except assertions.)
-
-	assertions_checked: BOOLEAN
-			-- Has the implementation of assertions of current feature been checked?
-
-	has_assertions_error: BOOLEAN
-			-- Has a fatal error occurred during assertions implementation checking?
-
-	set_implementation_checked is
-			-- Set `implementation_checked' to True.
-		do
-			implementation_checked := True
-		ensure
-			implementation_checked: implementation_checked
-		end
-
-	set_implementation_error is
-			-- Set `has_implementation_error' to True.
-		do
-			has_implementation_error := True
-		ensure
-			has_implementation_error: has_implementation_error
-
-		end
-
-	reset_implementation_checked is
-			-- Set `implementation_checked' to False.
-		do
-			has_implementation_error := False
-			implementation_checked := False
-		ensure
-			implementation_not_checked: not implementation_checked
-			no_implementation_error: not has_implementation_error
-		end
-
-	set_assertions_checked is
-			-- Set `assertions_checked' to True.
-		do
-			assertions_checked := True
-		ensure
-			assertions_checked: assertions_checked
-		end
-
-	set_assertions_error is
-			-- Set `has_assertions_error' to True.
-		do
-			has_assertions_error := True
-		ensure
-			has_assertions_error: has_assertions_error
-		end
-
-	reset_assertions_checked is
-			-- Set `assertions_checked' to False.
-		do
-			has_assertions_error := False
-			assertions_checked := False
-		ensure
-			assertions_not_checked: not assertions_checked
-			no_assertions_error: not has_assertions_error
 		end
 
 feature -- Export status

@@ -24,15 +24,14 @@ feature -- Access
 	target: ET_AGENT_TARGET
 			-- Target
 
-	name: ET_FEATURE_NAME is
-			-- Feature name
-		deferred
-		ensure
-			name_not_void: Result /= Void
-		end
-
 	arguments: ET_AGENT_ARGUMENT_OPERANDS
 			-- Arguments
+
+	implicit_result: ET_RESULT is
+			-- Fictitious node corresponding to the result of the
+			-- associated feature when it's a query
+		do
+		end
 
 feature -- Status report
 
@@ -44,6 +43,20 @@ feature -- Status report
 	is_procedure: BOOLEAN is
 			-- Is the associated feature a procedure?
 		deferred
+		ensure
+			definition: Result = (implicit_result = Void)
+		end
+
+	is_call_agent: BOOLEAN is
+			-- Is current agent a call agent?
+		do
+			-- Result := False
+		end
+
+	is_inline_agent: BOOLEAN is
+			-- Is current agent an inline agent?
+		do
+			-- Result := False
 		end
 
 feature -- Setting

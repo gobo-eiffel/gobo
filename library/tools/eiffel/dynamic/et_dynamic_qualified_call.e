@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			l_actuals: ET_ARGUMENT_OPERANDS
 			l_actual: ET_ARGUMENT_OPERAND
 			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_target_argument_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -177,17 +177,7 @@ feature {NONE} -- Implementation
 			if l_actuals /= Void then
 				nb := l_actuals.count
 				if nb > 0 then
-						-- Dynamic type sets for arguments are stored first
-						-- in `dynamic_type_sets'.
-					l_target_argument_type_sets := a_feature.dynamic_type_sets
-					if l_target_argument_type_sets.count < nb then
-							-- Internal error: it has already been checked somewhere else
-							-- that there was the same number of formal arguments in
-							-- feature redeclaration.
-						l_builder := a_system.dynamic_type_set_builder
-						l_builder.set_fatal_error
-						l_builder.error_handler.report_giaaa_error
-					elseif (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
+					if (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
 							-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
@@ -229,14 +219,22 @@ feature {NONE} -- Implementation
 									end
 								else
 									l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
+									l_target_argument_type_set := a_feature.argument_type_set (1)
 									if l_source_argument_type_set = Void then
 											-- Internal error: the dynamic type sets of the actual
 											-- arguments should be known at this stage.
 										l_builder := a_system.dynamic_type_set_builder
 										l_builder.set_fatal_error
 										l_builder.error_handler.report_giaaa_error
+									elseif l_target_argument_type_set = Void then
+											-- Internal error: it has already been checked somewhere else
+											-- that there was the same number of formal arguments in
+											-- feature redeclaration.
+										l_builder := a_system.dynamic_type_set_builder
+										l_builder.set_fatal_error
+										l_builder.error_handler.report_giaaa_error
 									else
-										l_source_argument_type_set.put_target (l_target_argument_type_sets.item (1), a_system)
+										l_source_argument_type_set.put_target (l_target_argument_type_set, a_system)
 									end
 								end
 							end
@@ -244,14 +242,22 @@ feature {NONE} -- Implementation
 					else
 						from i := 1 until i > nb loop
 							l_source_argument_type_set := current_feature.dynamic_type_set (l_actuals.actual_argument (i))
+							l_target_argument_type_set := a_feature.argument_type_set (i)
 							if l_source_argument_type_set = Void then
 									-- Internal error: the dynamic type sets of the actual
 									-- arguments should be known at this stage.
 								l_builder := a_system.dynamic_type_set_builder
 								l_builder.set_fatal_error
 								l_builder.error_handler.report_giaaa_error
+							elseif l_target_argument_type_set = Void then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of formal arguments in
+									-- feature redeclaration.
+								l_builder := a_system.dynamic_type_set_builder
+								l_builder.set_fatal_error
+								l_builder.error_handler.report_giaaa_error
 							else
-								l_source_argument_type_set.put_target (l_target_argument_type_sets.item (i), a_system)
+								l_source_argument_type_set.put_target (l_target_argument_type_set, a_system)
 							end
 							i := i + 1
 						end
@@ -269,7 +275,6 @@ feature {NONE} -- Implementation
 			a_builder_not_void: a_builder /= Void
 		local
 			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_actuals: ET_ARGUMENT_OPERANDS
 			l_actual: ET_ARGUMENT_OPERAND
@@ -286,16 +291,7 @@ feature {NONE} -- Implementation
 			if l_actuals /= Void then
 				nb := l_actuals.count
 				if nb > 0 then
-						-- Dynamic type sets for arguments are stored first
-						-- in `dynamic_type_sets'.
-					l_target_argument_type_sets := a_feature.dynamic_type_sets
-					if l_target_argument_type_sets.count < nb then
-							-- Internal error: it has already been checked somewhere else
-							-- that there was the same number of formal arguments in
-							-- feature redeclaration.
-						a_builder.set_fatal_error
-						a_builder.error_handler.report_giaaa_error
-					elseif (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
+					if (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
 							-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
@@ -338,8 +334,14 @@ feature {NONE} -- Implementation
 										i := i + 1
 									end
 								else
-									l_target_argument_type_set := l_target_argument_type_sets.item (1)
-									if not l_target_argument_type_set.is_expanded then
+									l_target_argument_type_set := a_feature.argument_type_set (1)
+									if l_target_argument_type_set = Void then
+											-- Internal error: it has already been checked somewhere else
+											-- that there was the same number of formal arguments in
+											-- feature redeclaration.
+										a_builder.set_fatal_error
+										a_builder.error_handler.report_giaaa_error
+									elseif not l_target_argument_type_set.is_expanded then
 										l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
 										if l_source_argument_type_set = Void then
 												-- Internal error: the dynamic type sets of the actual
@@ -356,8 +358,14 @@ feature {NONE} -- Implementation
 						end
 					else
 						from i := 1 until i > nb loop
-							l_target_argument_type_set := l_target_argument_type_sets.item (i)
-							if not l_target_argument_type_set.is_expanded then
+							l_target_argument_type_set := a_feature.argument_type_set (i)
+							if l_target_argument_type_set = Void then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of formal arguments in
+									-- feature redeclaration.
+								a_builder.set_fatal_error
+								a_builder.error_handler.report_giaaa_error
+							elseif not l_target_argument_type_set.is_expanded then
 								l_actual := l_actuals.actual_argument (i)
 								l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
 								if l_source_argument_type_set = Void then

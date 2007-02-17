@@ -5,7 +5,7 @@ indexing
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1642,6 +1642,25 @@ feature -- Validity errors
 			end
 		end
 
+	report_vdpr3e_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; an_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE) is
+			-- Report VDPR-3 error: `a_precursor' appears in inline agent `an_agent'
+			-- of `a_feature' in `a_class', but the associated feature of inline
+			-- agents cannot be redefined.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			an_agent_not_void: an_agent /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr3_error (a_class) then
+				create an_error.make_vdpr3e (a_class, a_precursor, an_agent, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vdpr4a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS) is
 			-- Report VDPR-4A error: the number of actual arguments in
 			-- the precursor call `a_precursor' appearing in `a_class' is
@@ -2300,7 +2319,7 @@ feature -- Validity errors
 
 	report_veen0a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE) is
 			-- Report VEEN error: `an_identifier', appearing in `a_feature'
-			-- of `class', is not the final name of a feature in `a_class'
+			-- of `a_class', is not the final name of a feature in `a_class'
 			-- nor the name of a local variable or a formal argument of
 			-- `a_feature'.
 			--
@@ -2316,6 +2335,28 @@ feature -- Validity errors
 		do
 			if reportable_veen_error (a_class) then
 				create an_error.make_veen0a (a_class, an_identifier, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_veen0b_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Report VEEN error: `an_identifier', appearing in inline
+			-- agent `an_agent' in `a_class', is not the final name of a feature
+			-- in `a_class' nor the name of a local variable or a formal argument of
+			-- `an_agent'.
+			--
+			-- ETL2: p.276
+			-- ETR: p.61
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_identifier_not_void: an_identifier /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen_error (a_class) then
+				create an_error.make_veen0b (a_class, an_identifier, an_agent)
 				report_validity_error (an_error)
 			end
 		end
@@ -2343,7 +2384,7 @@ feature -- Validity errors
 
 	report_veen2b_error (a_class: ET_CLASS; a_result: ET_RESULT; a_feature: ET_FEATURE) is
 			-- Report VEEN-2 error: `a_result' appears in the precondition
-			-- `a_feature' in `a_class'.
+			-- of `a_feature' in `a_class'.
 			--
 			-- ETL2: p.276
 		require
@@ -2394,6 +2435,66 @@ feature -- Validity errors
 		do
 			if reportable_veen2_error (a_class) then
 				create an_error.make_veen2d (a_class, a_result)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_veen2e_error (a_class: ET_CLASS; a_local: ET_FEATURE_NAME; an_agent: ET_INLINE_AGENT) is
+			-- Report VEEN-2 error: the local variable `a_local' appears in the precondition
+			-- or postcondition of inline agent `an_agent' in `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			a_local_is_local: a_local.is_local
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen2_error (a_class) then
+				create an_error.make_veen2e (a_class, a_local, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_veen2f_error (a_class: ET_CLASS; a_result: ET_RESULT; an_agent: ET_INLINE_AGENT) is
+			-- Report VEEN-2 error: `a_result' appears in the precondition
+			-- of inline agent `an_agent' in `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen2_error (a_class) then
+				create an_error.make_veen2f (a_class, a_result, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_veen2g_error (a_class: ET_CLASS; a_result: ET_RESULT; an_agent: ET_INLINE_AGENT) is
+			-- Report VEEN-2 error: `a_result' appears in the body, postcondition
+			-- or rescue clause of inline agent `an_agent' in `a_class', but the
+			-- associated feature of `an_agent' is a procedure.
+			--
+			-- ETL2: p.276
+			-- ETR: p.61
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen2_error (a_class) then
+				create an_error.make_veen2g (a_class, a_result, an_agent)
 				report_validity_error (an_error)
 			end
 		end
@@ -3780,6 +3881,25 @@ feature -- Validity errors
 			end
 		end
 
+	report_vjaw0d_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- it is a formal argument name of inline agent `an_agent'.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjaw_error (a_class) then
+				create an_error.make_vjaw0d (a_class, a_name, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vjrv0a_error (a_class: ET_CLASS; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE) is
 			-- Report VJRV error: the type `a_target_type' of the target
 			-- `a_target' of an assignment attempt appearing in `a_class'
@@ -4620,6 +4740,86 @@ feature -- Validity errors
 			end
 		end
 
+	report_vpir1a_error (a_class: ET_CLASS; arg1: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; arg2: ET_FORMAL_ARGUMENT) is
+			-- Report VPIR-1 error: `arg1' in inline agent `an_agent' has the same
+			-- name as argument `arg2' of an enclosing feature or inline agent.
+			--
+			-- ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			an_agent_not_void: an_agent /= Void
+			arg2_not_void: arg2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir1_error (a_class) then
+				create an_error.make_vpir1a (a_class, arg1, an_agent, arg2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpir1b_error (a_class: ET_CLASS; arg1: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_local2: ET_LOCAL_VARIABLE) is
+			-- Report VPIR-1 error: `arg1' in inline agent `an_agent' has the same
+			-- name as local variable `a_local2' of an enclosing feature or inline agent.
+			--
+			-- ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			an_agent_not_void: an_agent /= Void
+			a_local2_not_void: a_local2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir1_error (a_class) then
+				create an_error.make_vpir1b (a_class, arg1, an_agent, a_local2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpir1c_error (a_class: ET_CLASS; a_local1: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; arg2: ET_FORMAL_ARGUMENT) is
+			-- Report VPIR-1 error: `a_local1' in inline agent `an_agent' has the same
+			-- name as argument `arg2' of an enclosing feature or inline agent.
+			--
+			-- ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local1_not_void: a_local1 /= Void
+			an_agent_not_void: an_agent /= Void
+			arg2_not_void: arg2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir1_error (a_class) then
+				create an_error.make_vpir1c (a_class, a_local1, an_agent, arg2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpir1d_error (a_class: ET_CLASS; a_local1: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_local2: ET_LOCAL_VARIABLE) is
+			-- Report VPIR-1 error: `a_local1' in inline agent `an_agent' has the same
+			-- name as local variable `a_local2' of an enclosing feature or inline agent.
+			--
+			-- ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local1_not_void: a_local1 /= Void
+			an_agent_not_void: an_agent /= Void
+			a_local2_not_void: a_local2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir1_error (a_class) then
+				create an_error.make_vpir1d (a_class, a_local1, an_agent, a_local2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vqmc1a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
 			-- Report VQMC-1 error: `an_attribute' introduces a boolean constant
 			-- but its type is not "BOOLEAN".
@@ -4897,6 +5097,88 @@ feature -- Validity errors
 			end
 		end
 
+	report_vred0a_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FEATURE) is
+			-- Report VRED error: `arg1' and `arg2' have the same
+			-- name in feature `f' in `a_class'.
+			--
+			-- ECMA 367-2: p.55
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			arg2_not_void: arg2 /= Void
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vreg_error (a_class) then
+				create an_error.make_vred0a (a_class, arg1, arg2, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vred0b_error (a_class: ET_CLASS; local1, local2: ET_LOCAL_VARIABLE; f: ET_FEATURE) is
+			-- Report VRED error: `local1' and `local2' have the same
+			-- name in feature `f' in `a_class'.
+			--
+			-- ECMA 367-2: p.55
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			local1_not_void: local1 /= Void
+			local2_not_void: local2 /= Void
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vreg_error (a_class) then
+				create an_error.make_vred0b (a_class, local1, local2, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vred0c_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE) is
+			-- Report VRED error: `arg1' and `arg2' have the same
+			-- name in inline agent `an_agent' of feature `f' in `a_class'.
+			--
+			-- ECMA 367-2: p.55
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			arg2_not_void: arg2 /= Void
+			an_agent_not_void: an_agent /= Void
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vreg_error (a_class) then
+				create an_error.make_vred0c (a_class, arg1, arg2, an_agent, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vred0d_error (a_class: ET_CLASS; local1, local2: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE) is
+			-- Report VRED error: `local1' and `local2' have the same
+			-- name in inline agent `an_agent' of feature `f' in `a_class'.
+			--
+			-- ECMA 367-2: p.55
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			local1_not_void: local1 /= Void
+			local2_not_void: local2 /= Void
+			an_agent_not_void: an_agent /= Void
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vreg_error (a_class) then
+				create an_error.make_vred0d (a_class, local1, local2, an_agent, f)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vreg0a_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FEATURE) is
 			-- Report VREG error: `arg1' and `arg2' have the same
 			-- name in feature `f' in `a_class'.
@@ -4942,6 +5224,7 @@ feature -- Validity errors
 			-- the same name as feature `f2' in `a_class'.
 			--
 			-- ETL2: p.110
+			-- ECMA 367-2: p.55
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4953,6 +5236,27 @@ feature -- Validity errors
 		do
 			if reportable_vrfa_error (a_class) then
 				create an_error.make_vrfa0a (a_class, arg, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vrfa0b_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; f1: ET_STANDALONE_CLOSURE; f2: ET_FEATURE) is
+			-- Report VRFA error: `arg' in inline agent `an_agent' of
+			-- feature `f1' has the same name as feature `f2' in `a_class'.
+			--
+			-- ECMA 367-2: p.55
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			an_agent_not_void: an_agent /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vrfa_error (a_class) then
+				create an_error.make_vrfa0b (a_class, arg, an_agent, f1, f2)
 				report_validity_error (an_error)
 			end
 		end
@@ -4994,6 +5298,90 @@ feature -- Validity errors
 		do
 			if reportable_vrle2_error (a_class) then
 				create an_error.make_vrle2a (a_class, a_local, f, arg)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vrlv1a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f1, f2: ET_FEATURE) is
+			-- Report VRLV-1 error: `a_local' in feature `f1' has
+			-- the same name as feature `f2' in `a_class'.
+			--
+			-- ECMA 367-2: p.56
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vrlv1_error (a_class) then
+				create an_error.make_vrlv1a (a_class, a_local, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vrlv1b_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f1: ET_STANDALONE_CLOSURE; f2: ET_FEATURE) is
+			-- Report VRLV-1 error: `a_local' in inline agent `an_agent' of
+			-- feature `f1' has the same name as feature `f2' in `a_class'.
+			--
+			-- ECMA 367-2: p.56
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			an_agent_not_void: an_agent /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vrlv1_error (a_class) then
+				create an_error.make_vrlv1b (a_class, a_local, an_agent, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vrlv2a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f: ET_FEATURE; arg: ET_FORMAL_ARGUMENT) is
+			-- Report VRLV-2 error: `a_local' in feature `f' has
+			-- the same name as formal argument `arg' of this feature
+			-- in `a_class'.
+			--
+			-- ECMA 367-2: p.56
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			f_not_void: f /= Void
+			arg_not_void: arg /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vrlv2_error (a_class) then
+				create an_error.make_vrlv2a (a_class, a_local, f, arg)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vrlv2b_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE; arg: ET_FORMAL_ARGUMENT) is
+			-- Report VRLV-2 error: `a_local' in inline agent `an_agent' of
+			-- feature `f' has the same name as formal argument `arg' of
+			-- this agent in `a_class'.
+			--
+			-- ECMA 367-2: p.56
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			an_agent_not_void: an_agent /= Void
+			f_not_void: f /= Void
+			arg_not_void: arg /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vrlv2_error (a_class) then
+				create an_error.make_vrlv2b (a_class, a_local, an_agent, f, arg)
 				report_validity_error (an_error)
 			end
 		end
@@ -8374,6 +8762,27 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvuaa0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Report GVUAA error: `a_name' is a formal argument of
+			-- inline agent `an_agent' in `a_class', and hence cannot
+			-- have actual arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAA: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuaa_error (a_class) then
+				create an_error.make_gvuaa0b (a_class, a_name, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvual0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
 			-- Report GVUAL error: `a_name' is a local variable of
 			-- `a_feature' in `a_class', and hence cannot have actual
@@ -8391,6 +8800,27 @@ feature -- Validity errors
 		do
 			if reportable_gvual_error (a_class) then
 				create an_error.make_gvual0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvual0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Report GVUAL error: `a_name' is a local variable of
+			-- inline agent `an_agent' in `a_class', and hence cannot
+			-- have actual arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAA: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvual_error (a_class) then
+				create an_error.make_gvual0b (a_class, a_name, an_agent)
 				report_validity_error (an_error)
 			end
 		end
@@ -8415,6 +8845,26 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvuia0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Report GVUIA error: `a_name' is a formal argument of
+			-- inline agent `an_agent' in `a_class', and hence cannot
+			-- be an instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuia_error (a_class) then
+				create an_error.make_gvuia0b (a_class, a_name, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvuil0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
 			-- Report GVUIL error: `a_name' is a local variable of
 			-- `a_feature' in `a_class', and hence cannot be an
@@ -8431,6 +8881,26 @@ feature -- Validity errors
 		do
 			if reportable_gvuil_error (a_class) then
 				create an_error.make_gvuil0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuil0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+			-- Report GVUIL error: `a_name' is a local variable of
+			-- inline agent `an_agent' in `a_class', and hence cannot
+			-- be an instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuil_error (a_class) then
+				create an_error.make_gvuil0b (a_class, a_name, an_agent)
 				report_validity_error (an_error)
 			end
 		end
@@ -9207,6 +9677,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vpir1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VPIR-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vqmc1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VQMC-1 error be reported when it
 			-- appears in `a_class'?
@@ -9277,6 +9757,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vred_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VRED error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vreg_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VREG error be reported when it
 			-- appears in `a_class'?
@@ -9309,6 +9799,26 @@ feature -- Validity error status
 
 	reportable_vrle2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VRLE-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vrlv1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VRLV-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vrlv2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VRLV-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

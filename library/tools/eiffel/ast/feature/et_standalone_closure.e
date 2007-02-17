@@ -2,19 +2,19 @@ indexing
 
 	description:
 
-		"Eiffel features, invariants or inline agents"
+		"Eiffel standalone closures, e.g. features or invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_ENCLOSED_FEATURE
+deferred class ET_STANDALONE_CLOSURE
 
 inherit
 
-	ANY
+	ET_CLOSURE
 
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
@@ -33,33 +33,9 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_inline_agent: BOOLEAN is
-			-- Is `Current' an inline agent?
-		do
-			-- Result := False
-		end
-
 feature -- Access
 
-	type: ET_TYPE is
-			-- Return type;
-			-- Void for procedures
-		deferred
-		end
-
-	arguments: ET_FORMAL_ARGUMENT_LIST is
-			-- Formal arguments;
-			-- Void if not a routine or a routine with no arguments
-		deferred
-		end
-
-	locals: ET_LOCAL_VARIABLE_LIST is
-			-- Local variables;
-			-- Void if not an internal routine or a routine with no local variables
-		deferred
-		end
-
-	first_precursor: ET_ENCLOSED_FEATURE is
+	first_precursor: ET_STANDALONE_CLOSURE is
 			-- First precursor;
 			-- Void if the feature has no precursor.
 			-- Useful to build the flat preconditions and
@@ -78,7 +54,7 @@ feature -- Access
 		deferred
 		end
 
-	implementation_feature: ET_ENCLOSED_FEATURE is
+	implementation_feature: ET_STANDALONE_CLOSURE is
 			-- Current feature in `implementation_class',
 			-- Useful for interpreting feature calls and type
 			-- anchors (that might be renamed in descendant classes)
@@ -97,26 +73,70 @@ feature -- Export status
 
 feature -- Implementation checking status
 
-	implementation_checked: BOOLEAN is
+	implementation_checked: BOOLEAN
 			-- Has the implementation of current feature been checked?
 			-- (Check everything except assertions.)
-		deferred
-		end
 
-	has_implementation_error: BOOLEAN is
+	has_implementation_error: BOOLEAN
 			-- Has a fatal error occurred during implementation checking?
 			-- (Check everything except assertions.)
-		deferred
-		end
 
-	assertions_checked: BOOLEAN is
+	assertions_checked: BOOLEAN
 			-- Has the implementation of assertions of current feature been checked?
-		deferred
+
+	has_assertions_error: BOOLEAN
+			-- Has a fatal error occurred during assertions implementation checking?
+
+	set_implementation_checked is
+			-- Set `implementation_checked' to True.
+		do
+			implementation_checked := True
+		ensure
+			implementation_checked: implementation_checked
 		end
 
-	has_assertions_error: BOOLEAN is
-			-- Has a fatal error occurred during assertions implementation checking?
-		deferred
+	set_implementation_error is
+			-- Set `has_implementation_error' to True.
+		do
+			has_implementation_error := True
+		ensure
+			has_implementation_error: has_implementation_error
+		end
+
+	reset_implementation_checked is
+			-- Set `implementation_checked' to False.
+		do
+			has_implementation_error := False
+			implementation_checked := False
+		ensure
+			implementation_not_checked: not implementation_checked
+			no_implementation_error: not has_implementation_error
+		end
+
+	set_assertions_checked is
+			-- Set `assertions_checked' to True.
+		do
+			assertions_checked := True
+		ensure
+			assertions_checked: assertions_checked
+		end
+
+	set_assertions_error is
+			-- Set `has_assertions_error' to True.
+		do
+			has_assertions_error := True
+		ensure
+			has_assertions_error: has_assertions_error
+		end
+
+	reset_assertions_checked is
+			-- Set `assertions_checked' to False.
+		do
+			has_assertions_error := False
+			assertions_checked := False
+		ensure
+			assertions_not_checked: not assertions_checked
+			no_assertions_error: not has_assertions_error
 		end
 
 feature -- Conversion
@@ -137,16 +157,6 @@ feature -- Conversion
 			is_invariants: is_invariants
 		do
 			check is_invariants: is_invariants end
-		ensure
-			definition: ANY_.same_objects (Result, Current)
-		end
-
-	as_inline_agent: ET_INLINE_AGENT is
-			-- `Current' viewed as an inline agent
-		require
-			is_inline_agent: is_inline_agent
-		do
-			check is_inline_agent: is_inline_agent end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

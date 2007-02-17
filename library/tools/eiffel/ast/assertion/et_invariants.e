@@ -20,9 +20,7 @@ inherit
 			make_with_capacity as make_assertions_with_capacity
 		end
 
-	ET_ENCLOSING_FEATURE
-
-	ET_ENCLOSED_FEATURE
+	ET_STANDALONE_CLOSURE
 		redefine
 			is_invariants,
 			as_invariants
@@ -71,24 +69,6 @@ feature -- Access
 
 	invariant_keyword: ET_KEYWORD
 			-- 'invariant' keyword
-
-	type: ET_TYPE is
-			-- Return type;
-			-- Void for procedures
-		do
-		end
-
-	arguments: ET_FORMAL_ARGUMENT_LIST is
-			-- Formal arguments;
-			-- Void if not a routine or a routine with no arguments
-		do
-		end
-
-	locals: ET_LOCAL_VARIABLE_LIST is
-			-- Local variables;
-			-- Void if not an internal routine or a routine with no local variables
-		do
-		end
 
 	first_precursor: ET_INVARIANTS is
 			-- First precursor;
@@ -158,74 +138,6 @@ feature -- Export status
 			-- Clients to which feature is exported
 		once
 			Result := tokens.any_clients
-		end
-
-feature -- Implementation checking status
-
-	implementation_checked: BOOLEAN
-			-- Has the implementation of current feature been checked?
-			-- (Check everything except assertions.)
-
-	has_implementation_error: BOOLEAN
-			-- Has a fatal error occurred during implementation checking?
-			-- (Check everything except assertions.)
-
-	assertions_checked: BOOLEAN
-			-- Has the implementation of assertions of current feature been checked?
-
-	has_assertions_error: BOOLEAN
-			-- Has a fatal error occurred during assertions implementation checking?
-
-	set_implementation_checked is
-			-- Set `implementation_checked' to True.
-		do
-			implementation_checked := True
-		ensure
-			implementation_checked: implementation_checked
-		end
-
-	set_implementation_error is
-			-- Set `has_implementation_error' to True.
-		do
-			has_implementation_error := True
-		ensure
-			has_implementation_error: has_implementation_error
-		end
-
-	reset_implementation_checked is
-			-- Set `implementation_checked' to False.
-		do
-			has_implementation_error := False
-			implementation_checked := False
-		ensure
-			implementation_not_checked: not implementation_checked
-			no_implementation_error: not has_implementation_error
-		end
-
-	set_assertions_checked is
-			-- Set `assertions_checked' to True.
-		do
-			assertions_checked := True
-		ensure
-			assertions_checked: assertions_checked
-		end
-
-	set_assertions_error is
-			-- Set `has_assertions_error' to True.
-		do
-			has_assertions_error := True
-		ensure
-			has_assertions_error: has_assertions_error
-		end
-
-	reset_assertions_checked is
-			-- Set `assertions_checked' to False.
-		do
-			has_assertions_error := False
-			assertions_checked := False
-		ensure
-			assertions_not_checked: not assertions_checked
-			no_assertions_error: not has_assertions_error
 		end
 
 feature -- Setting
