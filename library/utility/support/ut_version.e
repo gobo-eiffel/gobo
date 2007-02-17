@@ -4,6 +4,7 @@ indexing
 
 		"Version numbers"
 
+	remark: "See http://en.wikipedia.org/wiki/Software_versioning"
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
 	license: "MIT License"
@@ -30,21 +31,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_major: like major; a_minor: like minor; a_build: like build) is
-			-- Make new version of the form "major.minor.build".
+	make (a_major: like major; a_minor: like minor; a_revision: like revision; a_build: like build) is
+			-- Make new version of the form "major.minor.revision,build".
 		require
 			a_major_not_negative: a_major >= 0
 			a_minor_not_negative: a_minor >= 0
+			a_revision_not_negative: a_revision >= 0
 			a_build_not_negative: a_build >= 0
 		do
 			internal_major := a_major
 			internal_minor := a_minor
+			internal_revision := a_revision
 			internal_build := a_build
 		ensure
 			has_major: has_major
 			major_set: major = a_major
 			has_minor: has_minor
 			minor_set: minor = a_minor
+			has_revision: has_revision
+			revision_set: revision = a_revision
 			has_build: has_build
 			build_set: build = a_build
 		end
@@ -52,36 +57,42 @@ feature {NONE} -- Initialization
 	make_major (a_major: like major) is
 			-- Make new version of the form "major".
 			-- Note that this version is greater than any other
-			-- version of the form "major.xxx" or "major.xxx.yyy".
+			-- version of the form "major.xxx", "major.xxx.yyy"
+			-- or "major.xxx.yyy.zzz".
 		require
 			a_major_not_negative: a_major >= 0
 		do
 			internal_major := a_major
 			internal_minor := -1
+			internal_revision := -1
 			internal_build := -1
 		ensure
 			has_major: has_major
 			major_set: major = a_major
 			no_minor: not has_minor
+			no_revision: not has_revision
 			no_build: not has_build
 		end
 
 	make_major_minor (a_major: like major; a_minor: like minor) is
 			-- Make new version of the form "major.minor".
 			-- Note that this version is greater than any other
-			-- version of the form "major.minor.xxx".
+			-- version of the form "major.minor.xxx",
+			-- or "major.minor.xxx.yyy".
 		require
 			a_major_not_negative: a_major >= 0
 			a_minor_not_negative: a_minor >= 0
 		do
 			internal_major := a_major
 			internal_minor := a_minor
+			internal_revision := -1
 			internal_build := -1
 		ensure
 			has_major: has_major
 			major_set: major = a_major
 			has_minor: has_minor
 			minor_set: minor = a_minor
+			no_revision: not has_revision
 			no_build: not has_build
 		end
 
@@ -91,10 +102,12 @@ feature {NONE} -- Initialization
 		do
 			internal_major := -1
 			internal_minor := -1
+			internal_revision := -1
 			internal_build := -1
 		ensure
 			no_major: not has_major
 			no_minor: not has_minor
+			no_revision: not has_revision
 			no_build: not has_build
 		end
 
@@ -110,6 +123,12 @@ feature -- Status report
 			-- Does current version have a minor version?
 		do
 			Result := (internal_minor >= 0)
+		end
+
+	has_revision: BOOLEAN is
+			-- Does current version have a revision number?
+		do
+			Result := (internal_revision >= 0)
 		end
 
 	has_build: BOOLEAN is
@@ -140,8 +159,18 @@ feature -- Access
 			minor_not_negative: Result >= 0
 		end
 
+	revision: INTEGER is
+			-- Revision number
+		require
+			has_revision: has_revision
+		do
+			Result := internal_revision
+		ensure
+			revision_not_negative: Result >= 0
+		end
+
 	build: INTEGER is
-			-- Release/build number
+			-- Build number
 		require
 			has_build: has_build
 		do
@@ -167,14 +196,24 @@ feature -- Comparison
 						elseif minor < other.minor then
 							Result := True
 						elseif minor = other.minor then
-							if other.has_build then
-								if not has_build then
+							if other.has_revision then
+								if not has_revision then
 									Result := False
-								else
-									Result := (build < other.build)
+								elseif revision < other.revision then
+									Result := True
+								elseif revision = other.revision then
+									if other.has_build then
+										if not has_build then
+											Result := False
+										else
+											Result := (build < other.build)
+										end
+									else
+										Result := has_build
+									end
 								end
 							else
-								Result := has_build
+								Result := has_revision
 							end
 						end
 					else
@@ -198,9 +237,13 @@ feature -- Output
 				if has_minor then
 					Result.append_character ('.')
 					Result.append_string (minor.out)
-					if has_build then
+					if has_revision then
 						Result.append_character ('.')
-						Result.append_string (build.out)
+						Result.append_string (revision.out)
+						if has_build then
+							Result.append_character ('.')
+							Result.append_string (build.out)
+						end
 					end
 				end
 			end
@@ -214,12 +257,16 @@ feature {NONE} -- Implementation
 	internal_minor: INTEGER
 			-- Minor version
 
+	internal_revision: INTEGER
+			-- Revision
+
 	internal_build: INTEGER
-			-- Release/build number
+			-- Build number
 
 invariant
 
 	no_minor: not has_major implies not has_minor
-	no_build: not has_minor implies not has_build
+	no_revision: not has_minor implies not has_revision
+	no_build: not has_revision implies not has_build
 
 end

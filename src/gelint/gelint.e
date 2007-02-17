@@ -78,7 +78,7 @@ feature -- Execution
 				elseif arg.count > 6 and then arg.substring (1, 6).is_equal ("--ise=") then
 					a_ise_version := arg.substring (7, arg.count)
 					create a_ise_regexp.make
-					a_ise_regexp.compile ("([0-9]+)(\.([0-9]+))?(\.([0-9]+))?")
+					a_ise_regexp.compile ("([0-9]+)(\.([0-9]+))?(\.([0-9]+))?(\.([0-9]+))?")
 					if a_ise_regexp.recognizes (a_ise_version) then
 						inspect a_ise_regexp.match_count
 						when 2 then
@@ -86,7 +86,9 @@ feature -- Execution
 						when 4 then
 							create ise_version.make_major_minor (a_ise_regexp.captured_substring (1).to_integer, a_ise_regexp.captured_substring (3).to_integer)
 						when 6 then
-							create ise_version.make (a_ise_regexp.captured_substring (1).to_integer, a_ise_regexp.captured_substring (3).to_integer, a_ise_regexp.captured_substring (5).to_integer)
+							create ise_version.make (a_ise_regexp.captured_substring (1).to_integer, a_ise_regexp.captured_substring (3).to_integer, a_ise_regexp.captured_substring (5).to_integer, 0)
+						when 8 then
+							create ise_version.make (a_ise_regexp.captured_substring (1).to_integer, a_ise_regexp.captured_substring (3).to_integer, a_ise_regexp.captured_substring (5).to_integer, a_ise_regexp.captured_substring (7).to_integer)
 						else
 							report_usage_message
 							Exceptions.die (1)
@@ -322,7 +324,7 @@ feature -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gelint usage message.
 		once
-			create Result.make ("[--ecma][--ise[=major[.minor[.build]]]][--define=variables]%N%
+			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%
 				%%T[--flat][--noflatdbc][--cat][--void][--silent][--verbose] ace_filename")
 		ensure
 			usage_message_not_void: Result /= Void

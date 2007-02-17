@@ -21,7 +21,7 @@ feature -- Access
 	ise_5_6_0: UT_VERSION is
 			-- ISE 5.6.0
 		once
-			create Result.make (5, 6, 0)
+			create Result.make (5, 6, 0, 0)
 		ensure
 			ise_5_6_0_not_void: Result /= Void
 		end
@@ -37,7 +37,7 @@ feature -- Access
 	ise_5_7_0: UT_VERSION is
 			-- ISE 5.7.0
 		once
-			create Result.make (5, 7, 0)
+			create Result.make (5, 7, 0, 0)
 		ensure
 			ise_5_7_0_not_void: Result /= Void
 		end
@@ -47,7 +47,7 @@ feature -- Access
 			-- Last release with EIFGEN and Ace.
 			-- Following releases use EIFGENs and ecf.
 		once
-			create Result.make (5, 7, 0827)
+			create Result.make (5, 7, 0827, 0)
 		ensure
 			ise_5_7_0827_not_void: Result /= Void
 		end
@@ -58,7 +58,7 @@ feature -- Access
 			-- * optional 'is' keyword
 			-- * bracket expression as target of qualified calls
 		once
-			create Result.make (5, 7, 59914)
+			create Result.make (5, 7, 59914, 0)
 		ensure
 			ise_5_7_59914_not_void: Result /= Void
 		end
@@ -70,7 +70,7 @@ feature -- Access
 			--  INTEGER -> INTEGER_32
 			--  etc.
 		once
-			create Result.make (5, 7, 60362)
+			create Result.make (5, 7, 60362, 0)
 		ensure
 			ise_5_7_60362_not_void: Result /= Void
 		end
@@ -80,7 +80,7 @@ feature -- Access
 			-- First release with expanded basic types conforming to
 			-- their reference ancestors (instead of converting to them)
 		once
-			create Result.make (5, 7, 62488)
+			create Result.make (5, 7, 62488, 0)
 		ensure
 			ise_5_7_62488_not_void: Result /= Void
 		end
@@ -96,7 +96,7 @@ feature -- Access
 	ise_6_0_0: UT_VERSION is
 			-- ISE 6.0.0
 		once
-			create Result.make (6, 0, 0)
+			create Result.make (6, 0, 0, 0)
 		ensure
 			ise_6_0_0_not_void: Result /= Void
 		end
