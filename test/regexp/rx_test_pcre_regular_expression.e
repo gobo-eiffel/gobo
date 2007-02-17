@@ -5,7 +5,7 @@ indexing
 		"Test features of class RX_PCRE_REGULAR_EXPRESSION"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature -- Test
 		end
 
 	test_optimize1 is
-			-- Test 'optimize' feature.
+			-- Test feature 'optimize'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
@@ -46,6 +46,18 @@ feature -- Test
 			assert ("recognizes2", a_regexp.recognizes ("ab"))
 			assert ("recognizes3", a_regexp.recognizes ("b"))
 			assert ("recognizes4", a_regexp.recognizes ("ba"))
+		end
+
+	test_compile1 is
+			-- Test feature 'compile'.
+		local
+			a_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create a_regexp.make
+			a_regexp.compile ("^[abc]*$")
+			assert ("compiled1", a_regexp.is_compiled)
+			assert ("recognizes1", a_regexp.recognizes ("aaabbbccc"))
+			assert ("not_recognizes1", not a_regexp.recognizes ("aaabbbcccddd"))
 		end
 
 feature -- Test Input 1
