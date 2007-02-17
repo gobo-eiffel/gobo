@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		ensure
 			value_set: value = a_value
 		end
-	
+
 	make_from_string (a_value: STRING) is
 		require
 			is_integer: a_value.is_integer_64
@@ -70,7 +70,7 @@ feature -- Access
 		do
 			Result := value.to_integer_32
 		end
-	
+
 	hash_code: INTEGER is
 			-- Hash code value
 		do
@@ -100,7 +100,7 @@ feature -- Access
 		end
 
 feature -- Comparison
-	
+
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Compare `Current' to `other'
 		local
@@ -135,7 +135,7 @@ feature -- Status report
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end
-	
+
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
@@ -196,7 +196,7 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 
 feature -- Conversion
 
@@ -272,13 +272,13 @@ feature -- Conversion
 				create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (l_rounded)
 			end
 		end
-	
+
 	floor: like Current is
 			-- Value rounded towards minus infinity
 		do
 			Result := Current
 		end
-	
+
 	ceiling: like Current is
 			-- Value rounded towards plus infinity
 		do
@@ -300,7 +300,6 @@ feature -- Basic operations
 			l_integer_value: XM_XPATH_INTEGER_VALUE
 			l_decimal_value: XM_XPATH_DECIMAL_VALUE
 			l_value: INTEGER_64
-			l_decimal: MA_DECIMAL
 		do
 			if other.is_machine_integer_value then
 				l_value := other.as_machine_integer_value.value
