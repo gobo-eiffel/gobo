@@ -2046,6 +2046,12 @@ feature {NONE} -- Feature generation
 						print_builtin_any_standard_copy_call (current_type)
 						current_file.put_new_line
 						call_operands.wipe_out
+					when builtin_any_copy then
+						fill_call_formal_arguments (a_feature)
+						print_indentation
+						print_builtin_any_copy_call (current_type)
+						current_file.put_new_line
+						call_operands.wipe_out
 					else
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
@@ -4013,6 +4019,8 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 						inspect l_builtin_code \\ builtin_capacity
 						when builtin_any_standard_copy then
 							print_builtin_any_standard_copy_call (a_target_type)
+						when builtin_any_copy then
+							print_builtin_any_copy_call (a_target_type)
 						else
 							l_printed := False
 						end
@@ -10566,6 +10574,17 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 					current_file.put_character (';')
 				end
 			end
+		end
+
+	print_builtin_any_copy_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'ANY.copy' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_any_standard_copy_call (a_target_type)
 		end
 
 	print_builtin_special_item_call (a_target_type: ET_DYNAMIC_TYPE) is

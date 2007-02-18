@@ -1213,6 +1213,8 @@ feature {NONE} -- AST factory
 			if Result /= Void then
 				if STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.builtin_marker) then
 					set_builtin_function (Result)
+				elseif STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.static_builtin_marker) then
+					set_builtin_function (Result)
 				end
 			end
 		end
@@ -1230,6 +1232,8 @@ feature {NONE} -- AST factory
 				an_end, a_semicolon, a_clients, a_feature_clause, a_class)
 			if Result /= Void then
 				if STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.builtin_marker) then
+					set_builtin_procedure (Result)
+				elseif STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.static_builtin_marker) then
 					set_builtin_procedure (Result)
 				end
 			end
@@ -1971,6 +1975,11 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_copy))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs1c_error (a_class, a_feature)
+			elseif a_feature.name.same_feature_name (tokens.copy_feature_name) then
+					-- 'ANY.copy' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_copy))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs1l_error (a_class, a_feature)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -3543,6 +3552,18 @@ feature {NONE} -- Built-in
 						-- The signature should be 'standard_copy (other: like Current)'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs1c_error (a_class, a_feature)
+				end
+			elseif a_feature.name.same_feature_name (tokens.copy_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_copy))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'copy (other: like Current)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1l_error (a_class, a_feature)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+						-- The signature should be 'copy (other: like Current)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs1l_error (a_class, a_feature)
 				end
 			elseif a_feature.name.same_feature_name (tokens.twin_feature_name) then
 					-- 'ANY.twin' should be a function.

@@ -597,7 +597,7 @@ feature -- Tokens
 				if l_longest_break_prefix > 0 then
 					create l_value.make (nb - l_nb_lines * l_longest_break_prefix)
 					from i := 1 until i > nb loop
-						from 
+						from
 								-- Skip the longest break prefix.
 							i := i + l_longest_break_prefix
 							l_stop := False
@@ -727,6 +727,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_wide_character_ref_name)
 				-- Insert basic strings in `strings'.
 			Result.force_new (-1, tokens.builtin_marker)
+			Result.force_new (-1, tokens.static_builtin_marker)
 				-- Class names.
 			Result.force_new (-1, tokens.capitalized_any_name)
 			Result.force_new (-1, tokens.capitalized_arguments_name)
@@ -820,7 +821,6 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.natural_32_code_name)
 			Result.force_new (-1, tokens.out_name)
 			Result.force_new (-1, tokens.pointer_bytes_name)
-			Result.force_new (-1, tokens.pointer_item_name)
 			Result.force_new (-1, tokens.put_name)
 			Result.force_new (-1, tokens.put_reference_name)
 			Result.force_new (-1, tokens.real_bytes_name)
@@ -837,6 +837,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.to_character_32_name)
 			Result.force_new (-1, tokens.to_double_name)
 			Result.force_new (-1, tokens.to_integer_32_name)
+			Result.force_new (-1, tokens.to_pointer_name)
 			Result.force_new (-1, tokens.to_real_name)
 			Result.force_new (-1, tokens.to_real_32_name)
 			Result.force_new (-1, tokens.to_real_64_name)

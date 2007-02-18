@@ -5,7 +5,7 @@ indexing
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1148,14 +1148,6 @@ feature -- Feature names
 			pointer_bytes_feature_name_not_void: Result /= Void
 		end
 
-	pointer_item_feature_name: ET_FEATURE_NAME is
-			-- 'pointer_item' feature name
-		once
-			create {ET_IDENTIFIER} Result.make (pointer_item_name)
-		ensure
-			pointer_item_feature_name_not_void: Result /= Void
-		end
-
 	prefix_minus_feature_name: ET_FEATURE_NAME is
 			-- 'prefix "-"' feature name
 		local
@@ -1323,6 +1315,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (to_real_name)
 		ensure
 			to_real_feature_name_not_void: Result /= Void
+		end
+
+	to_pointer_feature_name: ET_FEATURE_NAME is
+			-- 'to_pointer' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (to_pointer_name)
+		ensure
+			to_pointer_feature_name_not_void: Result /= Void
 		end
 
 	to_real_32_feature_name: ET_FEATURE_NAME is
@@ -2195,7 +2195,6 @@ feature -- Keyword and symbol names
 	natural_32_code_name: STRING is "natural_32_code"
 	out_name: STRING is "out"
 	pointer_bytes_name: STRING is "pointer_bytes"
-	pointer_item_name: STRING is "pointer_item"
 	put_name: STRING is "put"
 	put_reference_name: STRING is "put_reference"
 	real_bytes_name: STRING is "real_bytes"
@@ -2212,6 +2211,7 @@ feature -- Keyword and symbol names
 	to_character_32_name: STRING is "to_character_32"
 	to_double_name: STRING is "to_double"
 	to_integer_32_name: STRING is "to_integer_32"
+	to_pointer_name: STRING is "to_pointer"
 	to_real_name: STRING is "to_real"
 	to_real_32_name: STRING is "to_real_32"
 	to_real_64_name: STRING is "to_real_64"
@@ -2421,6 +2421,9 @@ feature -- Built-in
 
 	builtin_marker: STRING is "built_in"
 			-- Built-in marker
+
+	static_builtin_marker: STRING is "static built_in"
+			-- Static built-in marker
 
 feature -- Position
 

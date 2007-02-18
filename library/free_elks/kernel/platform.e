@@ -2,7 +2,7 @@ indexing
 	description: "Platform-dependent properties."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
-	license: "MIT License"
+	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,31 +13,31 @@ feature -- Platform
 	is_thread_capable: BOOLEAN is
 			-- Is current platform capable of multi-threading?
 		external
-			"built_in"
+			"static built_in"
 		end
 
 	is_dotnet: BOOLEAN is
 			-- Are we targetting .NET?
 		external
-			"built_in"
+			"static built_in"
 		end
 
 	is_windows: BOOLEAN is
 			-- Are we running on Windows platform?
 		external
-			"built_in"
+			"static built_in"
 		end
 
 	is_unix: BOOLEAN is
 			-- Are we running on a Unix like platform?
 		external
-			"built_in"
+			"static built_in"
 		end
 
 	is_vms: BOOLEAN is
 			-- Are we running on VMS?
 		external
-			"built_in"
+			"static built_in"
 		end
 
 	is_little_endian: BOOLEAN is
@@ -58,19 +58,19 @@ feature -- Access bytes size
 	boolean_bytes: INTEGER is
 			-- Number of bytes in a value of type `BOOLEAN'
 		external
-			"built_in"
+			"static built_in"
 		end
 
 	character_bytes: INTEGER is
 			-- Number of bytes in a value of type `CHARACTER'
 		external
-			"built_in"
+			"static built_in"
 		end
 
 	wide_character_bytes: INTEGER is
 			-- Number of bytes in a value of type `WIDE_CHARACTER'
 		external
-			"built_in"
+			"static built_in"
 		end
 
 	natural_8_bytes: INTEGER is 1
@@ -88,7 +88,7 @@ feature -- Access bytes size
 	integer_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER'
 		external
-			"built_in"
+			"static built_in"
 		end
 
 	integer_8_bytes: INTEGER is 1
@@ -106,7 +106,7 @@ feature -- Access bytes size
 	real_bytes: INTEGER is
 			-- Number of bytes in a value of type `REAL'
 		external
-			"built_in"
+			"static built_in"
 		end
 
 	real_32_bytes: INTEGER is 4
@@ -118,7 +118,7 @@ feature -- Access bytes size
 	pointer_bytes: INTEGER is
 			-- Number of bytes in a value of type `POINTER'
 		external
-			"built_in"
+			"static built_in"
 		end
 
 feature -- Access bits size

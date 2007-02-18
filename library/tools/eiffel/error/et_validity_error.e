@@ -300,6 +300,7 @@ create
 	make_gvkbs1i,
 	make_gvkbs1j,
 	make_gvkbs1k,
+	make_gvkbs1l,
 	make_gvkbs2a,
 	make_gvkbs2b,
 	make_gvkbs2c,
@@ -12882,6 +12883,46 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
+	make_gvkbs1l (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-1 error: wrong signature for 'ANY.copy'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs1l_template_code
+			etl_code := gvkbs1_etl_code
+			default_template := gvkbs1l_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
 	make_gvkbs2a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Create a new GVKBS-2 error: wrong signature for 'SPECIAL.item'
 			-- built-in routine `a_feature' in class `a_class'.
@@ -17606,6 +17647,7 @@ feature {NONE} -- Implementation
 	gvkbs1i_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'standard_twin: like Current'."
 	gvkbs1j_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'is_deep_equal (other: like Current): BOOLEAN'."
 	gvkbs1k_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'deep_twin: like Current'."
+	gvkbs1l_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'copy (other: like Current)'."
 	gvkbs2a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'item (i: INTEGER): G'."
 	gvkbs2b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'put (v: G; i: INTEGER)'."
 	gvkbs2c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'make (nb: INTEGER)'."
@@ -18139,6 +18181,7 @@ feature {NONE} -- Implementation
 	gvkbs1i_template_code: STRING is "gvkbs1i"
 	gvkbs1j_template_code: STRING is "gvkbs1j"
 	gvkbs1k_template_code: STRING is "gvkbs1k"
+	gvkbs1l_template_code: STRING is "gvkbs1l"
 	gvkbs2a_template_code: STRING is "gvkbs2a"
 	gvkbs2b_template_code: STRING is "gvkbs2b"
 	gvkbs2c_template_code: STRING is "gvkbs2c"

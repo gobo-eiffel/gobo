@@ -2,7 +2,7 @@ indexing
 	description: "Find out if two paths corresponds to exactly the same file."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2006, Eiffel Software and others"
-	license: "MIT License"
+	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 

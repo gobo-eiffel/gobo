@@ -5,7 +5,7 @@ indexing
 		]"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
-	license: "MIT License"
+	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 		external
 			"C use %"eif_memory.h%""
 		alias
-			"gc_mon"
+			"eif_gc_mon"
 		end
 	
 	find_referers (target: POINTER; result_type: INTEGER): SPECIAL [ANY] is

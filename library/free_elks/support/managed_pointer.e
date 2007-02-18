@@ -9,7 +9,7 @@ indexing
 		]"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
-	license: "MIT License"
+	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -610,10 +610,40 @@ feature -- Access: Little-endian format
 			Result := read_natural_64_le (pos).as_integer_64
 		end
 
+	read_real_32_le (pos: INTEGER): REAL is
+			-- Read REAL_32 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + real_32_bytes) <= count
+		local
+			l_nat32: NATURAL_32
+		do
+			check
+				correct_size: real_32_bytes = natural_32_bytes
+			end
+			l_nat32 := read_natural_32_le (pos)
+			($Result).memory_copy ($l_nat32, natural_32_bytes)
+		end
+
+	read_real_64_le (pos: INTEGER): DOUBLE is
+			-- Read REAL_64 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + real_64_bytes) <= count
+		local
+			l_nat64: NATURAL_64
+		do
+			check
+				correct_size: real_64_bytes = natural_64_bytes
+			end
+			l_nat64 := read_natural_64_le (pos)
+			($Result).memory_copy ($l_nat64, natural_64_bytes)
+		end
+
 feature -- Element change: Little-endian format
 
 	put_natural_8_le (i: NATURAL_8; pos: INTEGER) is
-			-- Insert `i' at position `pos' in big-endian format.
+			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_8_bytes) <= count
@@ -624,7 +654,7 @@ feature -- Element change: Little-endian format
 		end
 
 	put_natural_16_le (i: NATURAL_16; pos: INTEGER) is
-			-- Insert `i' at position `pos' in big-endian format.
+			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_16_bytes) <= count
@@ -640,7 +670,7 @@ feature -- Element change: Little-endian format
 		end
 
 	put_natural_32_le (i: NATURAL_32; pos: INTEGER) is
-			-- Insert `i' at position `pos' in big-endian format.
+			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_32_bytes) <= count
@@ -656,7 +686,7 @@ feature -- Element change: Little-endian format
 		end
 
 	put_natural_64_le (i: NATURAL_64; pos: INTEGER) is
-			-- Insert `i' at position `pos' in big-endian format.
+			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_64_bytes) <= count
@@ -674,7 +704,7 @@ feature -- Element change: Little-endian format
 		end
 
 	put_integer_8_le (i: INTEGER_8; pos: INTEGER) is
-			-- Insert `i' at position `pos' in big-endian format.
+			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
@@ -685,7 +715,7 @@ feature -- Element change: Little-endian format
 		end
 
 	put_integer_16_le (i: INTEGER_16; pos: INTEGER) is
-			-- Insert `i' at position `pos' in big-endian format.
+			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_16_bytes) <= count
@@ -696,7 +726,7 @@ feature -- Element change: Little-endian format
 		end
 
 	put_integer_32_le (i: INTEGER; pos: INTEGER) is
-			-- Insert `i' at position `pos' in big-endian format.
+			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_32_bytes) <= count
@@ -707,7 +737,7 @@ feature -- Element change: Little-endian format
 		end
 
 	put_integer_64_le (i: INTEGER_64; pos: INTEGER) is
-			-- Insert `i' at position `pos' in big-endian format.
+			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_64_bytes) <= count
@@ -715,6 +745,40 @@ feature -- Element change: Little-endian format
 			put_natural_64_le (i.as_natural_64, pos)
 		ensure
 			inserted: i = read_integer_64_le (pos)
+		end
+
+	put_real_32_le (v: REAL; pos: INTEGER_32)
+			-- Insert `v' at position `pos' in little-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + real_32_bytes) <= count
+		local
+			l_nat32: NATURAL_32
+		do
+			check
+				correct_size: real_32_bytes = natural_32_bytes
+			end
+			($l_nat32).memory_copy ($v, natural_32_bytes)
+			put_natural_32_le (l_nat32, pos)
+		ensure
+			inserted: v = read_real_32_le (pos)
+		end
+
+	put_real_64_le (v: DOUBLE; pos: INTEGER_32)
+			-- Insert `v' at position `pos' in little-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + real_64_bytes) <= count
+		local
+			l_nat64: NATURAL_64
+		do
+			check
+				correct_size: real_64_bytes = natural_64_bytes
+			end
+			($l_nat64).memory_copy ($v, natural_64_bytes)
+			put_natural_64_le (l_nat64, pos)
+		ensure
+			inserted: v = read_real_64_le (pos)
 		end
 
 feature -- Access: Big-endian format
@@ -813,6 +877,36 @@ feature -- Access: Big-endian format
 			valid_position: (pos + integer_64_bytes) <= count
 		do
 			Result := read_natural_64_be (pos).as_integer_64
+		end
+
+	read_real_32_be (pos: INTEGER): REAL is
+			-- Read REAL_32 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + real_32_bytes) <= count
+		local
+			l_nat32: NATURAL_32
+		do
+			check
+				correct_size: real_32_bytes = natural_32_bytes
+			end
+			l_nat32 := read_natural_32_be (pos)
+			($Result).memory_copy ($l_nat32, natural_32_bytes)
+		end
+
+	read_real_64_be (pos: INTEGER): DOUBLE is
+			-- Read REAL_64 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + real_64_bytes) <= count
+		local
+			l_nat64: NATURAL_64
+		do
+			check
+				correct_size: real_64_bytes = natural_64_bytes
+			end
+			l_nat64 := read_natural_64_be (pos)
+			($Result).memory_copy ($l_nat64, natural_64_bytes)
 		end
 
 feature -- Element change: Big-endian format
@@ -922,6 +1016,40 @@ feature -- Element change: Big-endian format
 			inserted: i = read_integer_64_be (pos)
 		end
 
+	put_real_32_be (v: REAL; pos: INTEGER_32)
+			-- Insert `v' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + real_32_bytes) <= count
+		local
+			l_nat32: NATURAL_32
+		do
+			check
+				correct_size: real_32_bytes = natural_32_bytes
+			end
+			($l_nat32).memory_copy ($v, natural_32_bytes)
+			put_natural_32_be (l_nat32, pos)
+		ensure
+			inserted: v = read_real_32_be (pos)
+		end
+
+	put_real_64_be (v: DOUBLE; pos: INTEGER_32)
+			-- Insert `v' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + real_64_bytes) <= count
+		local
+			l_nat64: NATURAL_64
+		do
+			check
+				correct_size: real_64_bytes = natural_64_bytes
+			end
+			($l_nat64).memory_copy ($v, natural_64_bytes)
+			put_natural_64_be (l_nat64, pos)
+		ensure
+			inserted: v = read_real_64_be (pos)
+		end
+
 feature -- Concatenation
 
 	append (other: like Current) is
@@ -945,7 +1073,6 @@ feature -- Resizing
 
 	resize (n: INTEGER) is
 			-- Reallocate `item' to hold `n' bytes.
-			-- If `n' smaller than `count', does nothing.
 		require
 			n_non_negative: n >= 0
 			not_shared: not is_shared

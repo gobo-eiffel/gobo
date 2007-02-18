@@ -5,7 +5,7 @@ indexing
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -164,6 +164,7 @@ feature -- Built-in codes
 	builtin_any_tagged_out: INTEGER is 9
 	builtin_any_standard_twin: INTEGER is 10
 	builtin_any_deep_twin: INTEGER is 11
+	builtin_any_copy: INTEGER is 12
 			-- Codes for built-in features from class ANY
 
 	builtin_special_feature (a_feature_code: INTEGER): INTEGER is

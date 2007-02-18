@@ -1022,6 +1022,8 @@ feature {NONE} -- Feature validity
 						inspect l_builtin_code \\ builtin_capacity
 						when builtin_any_standard_copy then
 							report_builtin_any_standard_copy (a_feature)
+						when builtin_any_copy then
+							report_builtin_any_copy (a_feature)
 						else
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
@@ -3127,6 +3129,17 @@ feature {NONE} -- Built-in features
 
 	report_builtin_any_standard_copy (a_feature: ET_EXTERNAL_PROCEDURE) is
 			-- Report that built-in feature 'ANY.standard_copy' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+			end
+		end
+
+	report_builtin_any_copy (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'ANY.copy' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void

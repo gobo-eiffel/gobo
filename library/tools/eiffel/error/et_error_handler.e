@@ -6712,6 +6712,26 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvkbs1l_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.copy'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1l (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvkbs2a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.item'
 			-- built-in routine `a_feature' in class `a_class'.

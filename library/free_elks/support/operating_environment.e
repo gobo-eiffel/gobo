@@ -3,7 +3,7 @@ indexing
 	description: "The objects available from the operating system"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2005, Eiffel Software and others"
-	license: "MIT License"
+	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 

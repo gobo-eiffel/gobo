@@ -2,7 +2,7 @@ indexing
 	description: "Ancestor of SPECIAL to perform queries on SPECIAL without knowing its actual generic type."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2005, Eiffel Software and others"
-	license: "MIT License"
+	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 

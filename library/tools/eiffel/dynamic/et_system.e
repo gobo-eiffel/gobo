@@ -325,10 +325,10 @@ feature -- Types
 								end
 							elseif l_base_class = universe.typed_pointer_class then
 								create Result.make (l_base_type, l_base_class)
-									-- Make feature 'pointer_item' alive at the first position
+									-- Make feature 'to_pointer' alive at the first position
 									-- in the feature list of the TYPED_POINTER type.
-								if typed_pointer_pointer_item_feature /= Void then
-									l_dynamic_feature := Result.dynamic_query (typed_pointer_pointer_item_feature, Current)
+								if typed_pointer_to_pointer_feature /= Void then
+									l_dynamic_feature := Result.dynamic_query (typed_pointer_to_pointer_feature, Current)
 								end
 							elseif l_base_class = universe.procedure_class then
 								l_actual_parameters := l_base_type.actual_parameters
@@ -478,10 +478,10 @@ feature -- Types
 					end
 				elseif l_base_class = universe.typed_pointer_class then
 					create Result.make (l_base_type, l_base_class)
-						-- Make feature 'pointer_item' alive at the first position
+						-- Make feature 'to_pointer' alive at the first position
 						-- in the feature list of the TYPED_POINTER type.
-					if typed_pointer_pointer_item_feature /= Void then
-						l_dynamic_feature := Result.dynamic_query (typed_pointer_pointer_item_feature, Current)
+					if typed_pointer_to_pointer_feature /= Void then
+						l_dynamic_feature := Result.dynamic_query (typed_pointer_to_pointer_feature, Current)
 					end
 				elseif l_base_class = universe.procedure_class then
 					l_any := universe.any_class
@@ -1295,7 +1295,7 @@ feature {NONE} -- Compilation
 				end
 			end
 				-- Class TYPED_POINTER.
-			typed_pointer_pointer_item_feature := Void
+			typed_pointer_to_pointer_feature := Void
 			l_class := universe.typed_pointer_class
 			if not l_class.is_preparsed then
 				set_fatal_error
@@ -1307,27 +1307,27 @@ feature {NONE} -- Compilation
 						-- processing on `l_class'.
 					set_fatal_error
 				else
-						-- Check feature 'pointer_item' of class TYPED_POINTER.
-					typed_pointer_pointer_item_feature := l_class.named_query (tokens.pointer_item_feature_name)
-					if typed_pointer_pointer_item_feature = Void then
-						l_procedure := l_class.named_procedure (tokens.pointer_item_feature_name)
+						-- Check feature 'to_pointer' of class TYPED_POINTER.
+					typed_pointer_to_pointer_feature := l_class.named_query (tokens.to_pointer_feature_name)
+					if typed_pointer_to_pointer_feature = Void then
+						l_procedure := l_class.named_procedure (tokens.to_pointer_feature_name)
 						if l_procedure /= Void then
 							set_fatal_error
-							error_handler.report_gvkfe2a_error (l_class, typed_pointer_pointer_item_feature)
+							error_handler.report_gvkfe2a_error (l_class, typed_pointer_to_pointer_feature)
 						else
 							set_fatal_error
-							error_handler.report_gvkfe1a_error (l_class, tokens.pointer_item_feature_name)
+							error_handler.report_gvkfe1a_error (l_class, tokens.to_pointer_feature_name)
 						end
-					elseif not typed_pointer_pointer_item_feature.type.same_named_type (universe.pointer_class, l_class, l_class, universe) then
+					elseif not typed_pointer_to_pointer_feature.type.same_named_type (universe.pointer_class, l_class, l_class, universe) then
 						set_fatal_error
-						error_handler.report_gvkfe3a_error (l_class, typed_pointer_pointer_item_feature, universe.pointer_class)
-						typed_pointer_pointer_item_feature := Void
-					elseif not typed_pointer_pointer_item_feature.is_attribute then
-						l_external_function ?= typed_pointer_pointer_item_feature
+						error_handler.report_gvkfe3a_error (l_class, typed_pointer_to_pointer_feature, universe.pointer_class)
+						typed_pointer_to_pointer_feature := Void
+					elseif not typed_pointer_to_pointer_feature.is_attribute then
+						l_external_function ?= typed_pointer_to_pointer_feature
 						if l_external_function = Void or else l_external_function.builtin_code /= tokens.builtin_pointer_feature (tokens.builtin_pointer_item) then
 							set_fatal_error
-							error_handler.report_gvkfe2a_error (l_class, typed_pointer_pointer_item_feature)
-							typed_pointer_pointer_item_feature := Void
+							error_handler.report_gvkfe2a_error (l_class, typed_pointer_to_pointer_feature)
+							typed_pointer_to_pointer_feature := Void
 						end
 					end
 				end
@@ -1409,7 +1409,7 @@ feature {NONE} -- Features
 	array_upper_feature: ET_QUERY
 			-- Expected attributes in class ARRAY
 
-	typed_pointer_pointer_item_feature: ET_QUERY
+	typed_pointer_to_pointer_feature: ET_QUERY
 			-- Expected attributes in class TYPED_POINTER
 
 feature {NONE} -- Implementation
