@@ -25,6 +25,9 @@ inherit
 	XM_XSLT_NUMBER_ROUTINES
 		export {NONE} all end
 
+	XM_XPATH_SHARED_DECIMAL_CONTEXTS
+		export {NONE} all end
+
 	DT_SHARED_WEEK_DAYS_FROM_MONDAY
 		export {NONE} all end
 
@@ -449,27 +452,27 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_calendar_value, "Y specifier not allowed for format-time()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "1", False)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
-					create a_number.make_from_integer (a_calendar_value.absolute_year)
-					a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-					if a_string.count < minimum_width then
+					l_numberer := selected_numberer (a_language)
+					create l_number.make_from_integer (a_calendar_value.absolute_year)
+					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					if l_string.count < minimum_width then
 						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
+							l_string := prepended_with_zeros (l_string)
 						else
-							a_string := appended_with_blanks (a_string)
+							l_string := appended_with_blanks (l_string)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
@@ -486,33 +489,36 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
 			an_integer: INTEGER
-			a_number: MA_DECIMAL
+			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_calendar_value, "M specifier not allowed for format-time()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "1", True)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
+					l_numberer := selected_numberer (a_language)
 					an_integer := a_calendar_value.month
 					if is_name_modifier then
-						a_string := correctly_cased_name (a_numberer.month_name (an_integer, minimum_width, maximum_width))
+						l_string := correctly_cased_name (l_numberer.month_name (an_integer, minimum_width, maximum_width))
 					else
-						create a_number.make_from_integer (an_integer)
-						a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-						if a_string.count < minimum_width then
+						create l_number.make_from_integer (an_integer)
+						l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+						if l_string.count < minimum_width then
 							if is_decimal_format then
-								a_string := prepended_with_zeros (a_string)
+								l_string := prepended_with_zeros (l_string)
 							else
-								a_string := appended_with_blanks (a_string)
+								l_string := appended_with_blanks (l_string)
 							end
-						elseif a_string.count > maximum_width then
-							a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+						elseif l_string.count > maximum_width then
+							l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 						end
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
@@ -529,27 +535,27 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_calendar_value, "D specifier not allowed for format-time()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "1", False)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
-					create a_number.make_from_integer (a_calendar_value.day_in_month)
-					a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-					if a_string.count < minimum_width then
+					l_numberer := selected_numberer (a_language)
+					create l_number.make_from_integer (a_calendar_value.day_in_month)
+					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					if l_string.count < minimum_width then
 						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
+							l_string := prepended_with_zeros (l_string)
 						else
-							a_string := appended_with_blanks (a_string)
+							l_string := appended_with_blanks (l_string)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
@@ -566,28 +572,31 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_calendar_value, "d specifier not allowed for format-time()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "1", False)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
-					create a_number.make_from_integer (a_calendar_value.day_in_year)
-					a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-					if a_string.count < minimum_width then
+					l_numberer := selected_numberer (a_language)
+					create l_number.make_from_integer (a_calendar_value.day_in_year)
+					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					if l_string.count < minimum_width then
 						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
+							l_string := prepended_with_zeros (l_string)
 						else
-							a_string := appended_with_blanks (a_string)
+							l_string := appended_with_blanks (l_string)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
 				end
-				STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+				if not ANY_.same_types (a_result_string, l_string) then
+					l_string := new_unicode_string (l_string)
+				end
+				STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 			end
 		end
 
@@ -603,33 +612,36 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 			an_iso_day_number: INTEGER
 		do
 			check_not_time_value (a_calendar_value, "F specifier not allowed for format-time()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "n", True)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
+					l_numberer := selected_numberer (a_language)
 					an_iso_day_number := a_calendar_value.week_day_number
 					if is_name_modifier then
-						a_string := correctly_cased_name (a_numberer.day_name (an_iso_day_number, minimum_width, maximum_width))
+						l_string := correctly_cased_name (l_numberer.day_name (an_iso_day_number, minimum_width, maximum_width))
 					else
-						create a_number.make_from_integer (week_day_number (an_iso_day_number, a_calendar, a_country))
-						a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-						if a_string.count < minimum_width then
+						create l_number.make_from_integer (week_day_number (an_iso_day_number, a_calendar, a_country))
+						l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+						if l_string.count < minimum_width then
 							if is_decimal_format then
-								a_string := prepended_with_zeros (a_string)
+								l_string := prepended_with_zeros (l_string)
 							else
-								a_string := appended_with_blanks (a_string)
+								l_string := appended_with_blanks (l_string)
 							end
-						elseif a_string.count > maximum_width then
-							a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+						elseif l_string.count > maximum_width then
+							l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 						end
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end					
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
@@ -646,29 +658,32 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_calendar_value, "W specifier not allowed for format-time()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "1", False)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
-					create a_number.make_from_integer (a_calendar_value.week_in_year)
+					l_numberer := selected_numberer (a_language)
+					create l_number.make_from_integer (a_calendar_value.week_in_year)
 					-- TODO: this is result in ISO calendar - adjust for others, if you can find out what they are!
-					a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-					if a_string.count < minimum_width then
+					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					if l_string.count < minimum_width then
 						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
+							l_string := prepended_with_zeros (l_string)
 						else
-							a_string := appended_with_blanks (a_string)
+							l_string := appended_with_blanks (l_string)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
 				end
-				STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+				if not ANY_.same_types (a_result_string, l_string) then
+					l_string := new_unicode_string (l_string)
+				end				
+				STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 			end
 		end
 	
@@ -684,28 +699,31 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_calendar_value, "w specifier not allowed for format-time()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "1", False)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
-					create a_number.make_from_integer (a_calendar_value.week_in_month)
-					a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-					if a_string.count < minimum_width then
+					l_numberer := selected_numberer (a_language)
+					create l_number.make_from_integer (a_calendar_value.week_in_month)
+					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					if l_string.count < minimum_width then
 						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
+							l_string := prepended_with_zeros (l_string)
 						else
-							a_string := appended_with_blanks (a_string)
+							l_string := appended_with_blanks (l_string)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
 				end
-				STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+				if not ANY_.same_types (a_result_string, l_string) then
+					l_string := new_unicode_string (l_string)
+				end
+				STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 			end
 		end
 
@@ -721,27 +739,30 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 		do
 			check_not_date_value (a_calendar_value, "H specifier not allowed for format-date()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "1", False)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
-					create a_number.make_from_integer (a_calendar_value.hour)
-					a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-					if a_string.count < minimum_width then
+					l_numberer := selected_numberer (a_language)
+					create l_number.make_from_integer (a_calendar_value.hour)
+					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					if l_string.count < minimum_width then
 						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
+							l_string := prepended_with_zeros (l_string)
 						else
-							a_string := appended_with_blanks (a_string)
+							l_string := appended_with_blanks (l_string)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
@@ -758,27 +779,30 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 		do
 			check_not_date_value (a_calendar_value, "h specifier not allowed for format-date()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "1", False)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
-					create a_number.make_from_integer (a_calendar_value.half_day_hour)
-					a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-					if a_string.count < minimum_width then
+					l_numberer := selected_numberer (a_language)
+					create l_number.make_from_integer (a_calendar_value.half_day_hour)
+					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					if l_string.count < minimum_width then
 						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
+							l_string := prepended_with_zeros (l_string)
 						else
-							a_string := appended_with_blanks (a_string)
+							l_string := appended_with_blanks (l_string)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
@@ -795,17 +819,20 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
 		do
 			check_not_date_value (a_calendar_value, "P specifier not allowed for format-date()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "n", True)
 				if last_evaluated_item = Void then
 					if not is_name_modifier then primary_modifier := "n" end
-					a_numberer := selected_numberer (a_language)
-					a_string := correctly_cased_name (a_numberer.half_day_name (a_calendar_value.minutes_in_day, minimum_width, maximum_width))
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					l_numberer := selected_numberer (a_language)
+					l_string := correctly_cased_name (l_numberer.half_day_name (a_calendar_value.minutes_in_day, minimum_width, maximum_width))
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
@@ -822,27 +849,30 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 		do
 			check_not_date_value (a_calendar_value, "m specifier not allowed for format-date()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "01", False)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
-					create a_number.make_from_integer (a_calendar_value.minute)
-					a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-					if a_string.count < minimum_width then
+					l_numberer := selected_numberer (a_language)
+					create l_number.make_from_integer (a_calendar_value.minute)
+					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					if l_string.count < minimum_width then
 						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
+							l_string := prepended_with_zeros (l_string)
 						else
-							a_string := appended_with_blanks (a_string)
+							l_string := appended_with_blanks (l_string)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
@@ -859,32 +889,35 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 		do
 			check_not_date_value (a_calendar_value, "s specifier not allowed for format-date()")
 			if last_evaluated_item = Void then
 				check_modifiers (some_modifiers, "01", False)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
-					create a_number.make_from_integer (a_calendar_value.second)
-					a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-					if a_string.count < minimum_width then
+					l_numberer := selected_numberer (a_language)
+					create l_number.make_from_integer (a_calendar_value.second)
+					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					if l_string.count < minimum_width then
 						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
+							l_string := prepended_with_zeros (l_string)
 						else
-							a_string := appended_with_blanks (a_string)
+							l_string := appended_with_blanks (l_string)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
 
-	format_millisecond (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_millisecond (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format fractional seconds from `a_calendar_value'.
 		require
 			result_string_not_void: a_result_string /= Void
@@ -893,32 +926,45 @@ feature {NONE} -- Implementation
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
-			modifiers_exist: some_modifiers /= Void
+			modifiers_exist: a_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
-			a_numberer: XM_XSLT_NUMBERER
-			a_number: MA_DECIMAL
+			l_string: STRING
+			l_numberer: XM_XSLT_NUMBERER
+			l_number: MA_DECIMAL
 		do
 			check_not_date_value (a_calendar_value, "f specifier not allowed for format-date()")
 			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "1", False)
+				check_modifiers (a_modifiers, "1", False)
 				if last_evaluated_item = Void then
-					a_numberer := selected_numberer (a_language)
-					create a_number.make_from_integer (a_calendar_value.millisecond)
-					a_string := a_numberer.formatted_string (a_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
-					if a_string.count < minimum_width then
-						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
-						else
-							a_string := appended_with_blanks (a_string)
+					l_numberer := selected_numberer (a_language)
+					create l_number.make_from_integer (a_calendar_value.millisecond)
+					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					if l_string.count < minimum_width then
+						l_string := appended_with_zeros (l_string)
+					elseif l_string.count > maximum_width then
+						l_number := l_number / one_thousand
+						l_number := l_number.rescale (0 - maximum_width, shared_half_even_context)
+						l_string := l_number.to_scientific_string
+						if l_string.count > 2 then
+							-- chop off 0.
+							l_string := l_string.substring (3, l_string.count)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
+		end
+
+	one_thousand: MA_DECIMAL is
+			-- One thousand
+		once
+			create Result.make_from_integer (1000)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	format_time_zone (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
@@ -933,26 +979,29 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
+			l_string: STRING
 		do
 			if a_calendar_value.zoned then
 				check_modifiers (some_modifiers, "1", True)
 				if last_evaluated_item = Void then
 					if is_decimal_format then
-						a_string := a_calendar_value.time_zone_description
+						l_string := a_calendar_value.time_zone_description
 					else
-						a_string := "???" -- TODO
+						l_string := "???" -- TODO
 					end
-					if a_string.count < minimum_width then
+					if l_string.count < minimum_width then
 						if is_decimal_format then
-							a_string := prepended_with_zeros (a_string)
+							l_string := prepended_with_zeros (l_string)
 						else
-							a_string := appended_with_blanks (a_string)
+							l_string := appended_with_blanks (l_string)
 						end
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
@@ -969,21 +1018,21 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
+			l_string: STRING
 		do
 			if a_calendar_value.zoned then
 				check_modifiers (some_modifiers, "1", False)
 				if last_evaluated_item = Void then
-					a_string := STRING_.concat ("GMT", a_calendar_value.time_zone_description)
-					if a_string.count < minimum_width then
-						a_string := appended_with_blanks (a_string)
-					elseif a_string.count > maximum_width then
-						a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+					l_string := STRING_.concat ("GMT", a_calendar_value.time_zone_description)
+					if l_string.count < minimum_width then
+						l_string := appended_with_blanks (l_string)
+					elseif l_string.count > maximum_width then
+						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
-					if not ANY_.same_types (a_result_string, a_string) then
-						a_string := new_unicode_string (a_string)
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
 					end
-					STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
 		end
@@ -999,23 +1048,26 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
+			l_string: STRING
 		do
 			check_modifiers (some_modifiers, "n", True)
 			if not is_name_modifier then primary_modifier := "n" end
 			if last_evaluated_item = Void then
 				if maximum_width <= 2 then
-					a_string := a_calendar
+					l_string := a_calendar
 				else
-					a_string := calendar_name (a_calendar)
+					l_string := calendar_name (a_calendar)
 				end
-				a_string := correctly_cased_name (a_string)
-				if a_string.count < minimum_width then
-					a_string := appended_with_blanks (a_string)
-				elseif a_string.count > maximum_width then
-					a_string := a_string.substring (a_string.count - maximum_width + 1, a_string.count)
+				l_string := correctly_cased_name (l_string)
+				if l_string.count < minimum_width then
+					l_string := appended_with_blanks (l_string)
+				elseif l_string.count > maximum_width then
+					l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 				end
-				STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+				if not ANY_.same_types (a_result_string, l_string) then
+					l_string := new_unicode_string (l_string)
+				end				
+				STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 			end
 		end
 
@@ -1031,7 +1083,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
-			a_string: STRING
+			l_string: STRING
 		do
 			check_not_time_value (a_calendar_value, "E specifier not allowed for format-time()")
 			if last_evaluated_item = Void then
@@ -1040,12 +1092,15 @@ feature {NONE} -- Implementation
 				if last_evaluated_item = Void then
 					if a_calendar_value.is_time_value then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Era is not available with time values", Xpath_errors_uri, "XTDE1350", Dynamic_error)
-						a_string := era (a_calendar_value, a_language, a_calendar, a_country)
-						a_string := correctly_cased_name (a_string)
-						if a_string.count < minimum_width then
-							a_string := appended_with_blanks (a_string)
+						l_string := era (a_calendar_value, a_language, a_calendar, a_country)
+						l_string := correctly_cased_name (l_string)
+						if l_string.count < minimum_width then
+							l_string := appended_with_blanks (l_string)
 						end
-						STRING_.append_substring_to_string (a_result_string, a_string, 1, a_string.count)
+						if not ANY_.same_types (a_result_string, l_string) then
+							l_string := new_unicode_string (l_string)
+						end
+						STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 					end
 				end
 			end
@@ -1054,7 +1109,8 @@ feature {NONE} -- Implementation
 	is_decimal_format: BOOLEAN is
 			-- Does `primary_modifier' indicate a decimal format?
 		do
-			Result := is_zeros_plus_one (primary_modifier)			
+			Result := is_zeros_plus_one (primary_modifier) or
+				(primary_modifier.count = 1 and then is_one (primary_modifier.item_code (1)))
 		end
 	
 	check_modifiers (some_modifiers, a_default: STRING; use_names: BOOLEAN) is
@@ -1083,11 +1139,19 @@ feature {NONE} -- Implementation
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
 				elseif some_components.count = 2 then
 					a_modifier := some_components.item (1)
-					set_widths (some_components.item (2))
+					if a_modifier.count /= 1 or else (a_modifier.item (1) /= 'i' and a_modifier.item (1) /= 'I') then
+						-- widths are ignored for roman numerals
+						set_widths (some_components.item (2))
+					end
 				else
 					a_modifier := some_modifiers
-					minimum_width := 1
-					maximum_width := Platform.Maximum_integer
+					if is_zeros_plus_one (a_modifier) then
+						minimum_width := a_modifier.count
+						maximum_width := a_modifier.count
+					else
+						minimum_width := 1
+						maximum_width := Platform.Maximum_integer
+					end
 				end
 				if last_evaluated_item = Void then
 					STRING_.left_adjust (a_modifier)
@@ -1135,13 +1199,14 @@ feature {NONE} -- Implementation
 		do
 			primary_modifier := Void
 			if is_zeros_plus_one (a_modifier)
-				or else STRING_.same_string (a_modifier, "A")
-				or else STRING_.same_string (a_modifier, "a")
-				or else STRING_.same_string (a_modifier, "I")
-				or else STRING_.same_string (a_modifier, "i")
-				or else STRING_.same_string (a_modifier, "W")
-				or else STRING_.same_string (a_modifier, "w")
-				or else STRING_.same_string (a_modifier, "Ww") then
+				or (a_modifier.count = 1 and then is_one (a_modifier.item_code (1)))
+				or STRING_.same_string (a_modifier, "A")
+				or STRING_.same_string (a_modifier, "a")
+				or STRING_.same_string (a_modifier, "I")
+				or STRING_.same_string (a_modifier, "i")
+				or STRING_.same_string (a_modifier, "W")
+				or STRING_.same_string (a_modifier, "w")
+				or STRING_.same_string (a_modifier, "Ww") then
 				primary_modifier := a_modifier
 			elseif STRING_.same_string (a_modifier, "Nn")
 				or else STRING_.same_string (a_modifier, "N")
@@ -1156,7 +1221,7 @@ feature {NONE} -- Implementation
 			widths_not_empty: a_width /= Void and then not a_width.is_empty
 		local
 			a_splitter: ST_SPLITTER
-			a_message, a_string: STRING
+			a_message, l_string: STRING
 			some_components: DS_LIST [STRING]
 		do
 			create a_splitter.make_with_separators ("-")
@@ -1171,30 +1236,30 @@ feature {NONE} -- Implementation
 					a_message := STRING_.appended_string (a_message, "'")
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
 				elseif some_components.count = 2 then
-					a_string := some_components.item (1)
-					STRING_.left_adjust (a_string)
-					STRING_.right_adjust (a_string)
-					if STRING_.same_string (a_string, "*") then
+					l_string := some_components.item (1)
+					STRING_.left_adjust (l_string)
+					STRING_.right_adjust (l_string)
+					if STRING_.same_string (l_string, "*") then
 						minimum_width := 1
-					elseif a_string.is_integer then
-						minimum_width := a_string.to_integer
+					elseif l_string.is_integer then
+						minimum_width := l_string.to_integer
 					end
-					a_string := some_components.item (2)
-					STRING_.left_adjust (a_string)
-					STRING_.right_adjust (a_string)
-					if STRING_.same_string (a_string, "*") then
+					l_string := some_components.item (2)
+					STRING_.left_adjust (l_string)
+					STRING_.right_adjust (l_string)
+					if STRING_.same_string (l_string, "*") then
 						maximum_width := Platform.Maximum_integer
-					elseif a_string.is_integer then
-						maximum_width := a_string.to_integer
+					elseif l_string.is_integer then
+						maximum_width := l_string.to_integer
 					end
 				else
-					a_string := a_width
-					STRING_.left_adjust (a_string)
-					STRING_.right_adjust (a_string)
-					if STRING_.same_string (a_string, "*") then
+					l_string := a_width
+					STRING_.left_adjust (l_string)
+					STRING_.right_adjust (l_string)
+					if STRING_.same_string (l_string, "*") then
 						minimum_width := 1
-					elseif a_string.is_integer then
-						minimum_width := a_string.to_integer
+					elseif l_string.is_integer then
+						minimum_width := l_string.to_integer
 					end
 					maximum_width := Platform.Maximum_integer
 				end
@@ -1435,6 +1500,18 @@ feature {NONE} -- Implementation
 			short_string: a_string.count < minimum_width
 		do
 			create Result.make_filled (' ', minimum_width - a_string.count)
+			Result := STRING_.concat (a_string, Result)
+		ensure
+			minimum_width: Result.count = minimum_width
+		end
+
+	appended_with_zeros (a_string: STRING): STRING is
+			-- Right-padded version of `a_string'
+		require
+			string_not_void: a_string /= Void
+			short_string: a_string.count < minimum_width
+		do
+			create Result.make_filled ('0', minimum_width - a_string.count)
 			Result := STRING_.concat (a_string, Result)
 		ensure
 			minimum_width: Result.count = minimum_width

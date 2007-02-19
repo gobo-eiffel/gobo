@@ -43,7 +43,7 @@ feature -- Access
 				Result := new_unicode_string (a_number.to_scientific_string)
 			elseif a_picture.count = 0 then
 				Result := new_unicode_string (a_number.to_scientific_string)
-			elseif is_zeros_plus_one (a_picture) then
+			elseif is_zeros_plus_one (a_picture) or (a_picture.count = 1 and then is_one (a_picture.item_code (1))) then
 				Result := converted_number (a_number, decimal_digits_set (a_picture), a_picture.count, a_group_size, a_group_separator, an_ordinal)
 			elseif a_picture.count = 1 then
 				a_character_code := a_picture.item_code (1)
@@ -77,9 +77,9 @@ feature -- Access
 				when 87 then -- 'W' -- Upper case words
 					if a_number.is_integer then
 						if an_ordinal.count > 0 then
-							Result := cased_ordinal_number (a_number.to_integer, True, True)
+							Result := cased_ordinal_number (a_number.to_integer, False, True)
 						else
-							Result := cased_words_number (a_number.to_integer, True, True)
+							Result := cased_words_number (a_number.to_integer, False, True)
 						end
 					else
 						Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			Result.put (new_unicode_string ("l"), 5)
 			Result.put (new_unicode_string ("lx"), 6)
 			Result.put (new_unicode_string ("lxx"), 7)
-			Result.put (new_unicode_string ("lxxxx"), 8)
+			Result.put (new_unicode_string ("lxxx"), 8)
 			Result.put (new_unicode_string ("xc"), 9)
 		ensure
 			roman_tens_not_void: Result /= Void
@@ -561,9 +561,10 @@ feature {NONE} -- Implementation
 				Result := english_ordinal_units.item (a_number)
 			else
 				l_remainder := a_number \\ 10
-				Result := english_ordinal_tens.item (a_number // 10)
-				if l_remainder /= 0 then
-					Result := Result + new_unicode_string (" ") + english_ordinal_units.item (l_remainder)
+				if l_remainder = 0 then
+					Result := english_ordinal_tens.item (a_number // 10)
+				else
+					Result := english_tens.item (a_number // 10) + new_unicode_string ("-") + english_ordinal_units.item (l_remainder)
 				end
 			end
 		ensure

@@ -58,13 +58,15 @@ feature -- Access
 		local
 			a_unit, a_zero, a_count, an_index: INTEGER
 		do
-			a_unit := a_picture.item_code (a_picture.count)
-			if is_one (a_unit) then
-				from
-					an_index := 1; Result := True; a_zero := a_unit - 1; a_count := a_picture.count
-				until Result = False or else an_index = a_count loop
-					Result := a_picture.item_code (an_index) = a_zero
-					an_index := an_index + 1
+			if a_picture.count > 1 then
+				a_unit := a_picture.item_code (a_picture.count)
+				if is_one (a_unit) then
+					from
+						an_index := 1; Result := True; a_zero := a_unit - 1; a_count := a_picture.count
+					until Result = False or else an_index = a_count loop
+						Result := a_picture.item_code (an_index) = a_zero
+						an_index := an_index + 1
+					end
 				end
 			end
 		end
@@ -73,7 +75,7 @@ feature -- Access
 			-- Set of decimal digits from 0 to 9
 		require
 			picture_not_empty: a_picture /= Void and then not a_picture.is_empty
-			zeros_plus_one: is_zeros_plus_one (a_picture)
+			zeros_plus_one: is_zeros_plus_one (a_picture) or (a_picture.count = 1 and then is_one (a_picture.item_code (1)))
 		local
 			a_zero, a_count: INTEGER
 		do
@@ -88,8 +90,6 @@ feature -- Access
 			decimal_digits_set_not_void: Result /= Void
 			ten_digits: Result.count = 10
 		end
-
-feature {NONE} -- Implementation
 
 	is_one (an_integer: INTEGER): BOOLEAN is
 			-- Is `an_integer' a Unicode code-point of decimal value 1?
