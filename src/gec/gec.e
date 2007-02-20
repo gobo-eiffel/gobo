@@ -52,9 +52,9 @@ feature -- Execution
 			if a_file.is_open_read then
 				last_universe := Void
 				nb := a_filename.count
-				if nb > 5 and then a_filename.substring (nb - 4, nb).is_equal (".xace") then
+				if nb > 5 and then STRING_.same_string (a_filename.substring (nb - 4, nb), ".xace") then
 					parse_xace_file (a_file)
-				elseif nb > 4 and then a_filename.substring (nb - 3, nb).is_equal (".ecf") then
+				elseif nb > 4 and then STRING_.same_string (a_filename.substring (nb - 3, nb), ".ecf") then
 					parse_ecf_file (a_file)
 				else
 					parse_ace_file (a_file)
@@ -116,49 +116,47 @@ feature {NONE} -- Eiffel config file parsing
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		local
---			l_xace_parser: ET_XACE_UNIVERSE_PARSER
---			l_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
---			l_xace_variables: DS_HASH_TABLE [STRING, STRING]
---			l_splitter: ST_SPLITTER
---			l_cursor: DS_LIST_CURSOR [STRING]
---			l_definition: STRING
---			l_index: INTEGER
---			gobo_eiffel: STRING
+			l_xace_parser: ET_XACE_UNIVERSE_PARSER
+			l_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
+			l_xace_variables: DS_HASH_TABLE [STRING, STRING]
+			l_splitter: ST_SPLITTER
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_definition: STRING
+			l_index: INTEGER
+			gobo_eiffel: STRING
+			defined_variables: STRING
 		do
-				-- Xace is not supported.
-				-- Parse Ace file as default.
-			parse_ace_file (a_file)
---			last_universe := Void
---			create l_xace_error_handler.make_standard
---			create l_xace_variables.make_map (100)
---			l_xace_variables.set_key_equality_tester (string_equality_tester)
---			gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
---			if gobo_eiffel /= Void then
---				l_xace_variables.force_last (gobo_eiffel, "GOBO_EIFFEL")
---			end
---			if defined_variables /= Void then
---				create l_splitter.make
---				l_cursor := l_splitter.split (defined_variables).new_cursor
---				from l_cursor.start until l_cursor.after loop
---					l_definition := l_cursor.item
---					if l_definition.count > 0 then
---						l_index := l_definition.index_of ('=', 1)
---						if l_index = 0 then
---							l_xace_variables.force_last ("", l_definition)
---						elseif l_index = l_definition.count then
---							l_xace_variables.force_last ("", l_definition.substring (1, l_index - 1))
---						elseif l_index /= 1 then
---							l_xace_variables.force_last (l_definition.substring (l_index + 1, l_definition.count), l_definition.substring (1, l_index - 1))
---						end
---					end
---					l_cursor.forth
---				end
---			end
---			create l_xace_parser.make_with_variables (l_xace_variables, l_xace_error_handler)
---			l_xace_parser.parse_file (a_file)
---			if not l_xace_error_handler.has_error then
---				last_universe := l_xace_parser.last_universe
---			end
+			last_universe := Void
+			create l_xace_error_handler.make_standard
+			create l_xace_variables.make_map (100)
+			l_xace_variables.set_key_equality_tester (string_equality_tester)
+			gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
+			if gobo_eiffel /= Void then
+				l_xace_variables.force_last (gobo_eiffel, "GOBO_EIFFEL")
+			end
+			if defined_variables /= Void then
+				create l_splitter.make
+				l_cursor := l_splitter.split (defined_variables).new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_definition := l_cursor.item
+					if l_definition.count > 0 then
+						l_index := l_definition.index_of ('=', 1)
+						if l_index = 0 then
+							l_xace_variables.force_last ("", l_definition)
+						elseif l_index = l_definition.count then
+							l_xace_variables.force_last ("", l_definition.substring (1, l_index - 1))
+						elseif l_index /= 1 then
+							l_xace_variables.force_last (l_definition.substring (l_index + 1, l_definition.count), l_definition.substring (1, l_index - 1))
+						end
+					end
+					l_cursor.forth
+				end
+			end
+			create l_xace_parser.make_with_variables (l_xace_variables, l_xace_error_handler)
+			l_xace_parser.parse_file (a_file)
+			if not l_xace_error_handler.has_error then
+				last_universe := l_xace_parser.last_universe
+			end
 		end
 
 	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
@@ -216,7 +214,6 @@ feature {NONE} -- Processing
 					-- C code generation.
 				l_base_name := a_universe.system_name
 				if l_base_name = Void then
-				else
 					l_base_name := l_class.lower_name
 				end
 				l_filename := l_base_name + ".c"
@@ -228,7 +225,8 @@ feature {NONE} -- Processing
 					l_file.close
 						-- C code compilation.
 					l_c_config := c_config
-					create l_variables.make (10)
+					create l_variables.make_map (10)
+					l_variables.set_key_equality_tester (string_equality_tester)
 					l_variables.put ("", "includes")
 					l_variables.put ("", "libs")
 					l_variables.put (l_base_name + l_c_config.item ("exe"), "exe")
@@ -322,7 +320,8 @@ feature {NONE} -- Processing
 					l_name := "gcc"
 				end
 			end
-			create Result.make (10)
+			create Result.make_map (10)
+			Result.set_key_equality_tester (string_equality_tester)
 				-- Put some platform-dependent default values.
 			if operating_system.is_windows then
 				Result.put ("cl -nologo $cflags $includes -c $c", "cc")
