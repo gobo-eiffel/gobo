@@ -1011,7 +1011,6 @@ feature {NONE} -- Feature generation
 -- TODO: syntax error
 					end
 					from
-						i := i + 1
 						stop := False
 						create l_include_filename.make (50)
 					until
@@ -3441,13 +3440,16 @@ feature {NONE} -- Instruction generation
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
+			had_error: BOOLEAN
 		do
 				-- Look for the dynamic type of the creation type.
 			l_target := an_instruction.target
 			l_type := an_instruction.type
 			if l_type /= Void then
+				had_error := has_fatal_error
 				l_resolved_type := resolved_formal_parameters (l_type)
 				if not has_fatal_error then
+					has_fatal_error := had_error
 					l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type.base_type)
 				end
 			else
@@ -3879,6 +3881,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			l_comma: BOOLEAN
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			had_error: BOOLEAN
 		do
 			l_actuals := an_instruction.arguments
 			if l_actuals /= Void then
@@ -3897,6 +3900,8 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
+				had_error := has_fatal_error
+				has_fatal_error := False
 				if l_parent_type.is_generic then
 					l_current_class := current_type.base_class
 					l_class_impl := current_feature.static_feature.implementation_class
@@ -3921,6 +3926,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 					end
 				end
 				if not has_fatal_error then
+					has_fatal_error := had_error
 					l_precursor_keyword := an_instruction.precursor_keyword
 					l_class := l_parent_type.direct_base_class (universe)
 					l_procedure := l_class.seeded_procedure (l_precursor_keyword.seed)
@@ -4318,10 +4324,13 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			i, nb: INTEGER
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			had_error: BOOLEAN
 		do
 			l_type := an_instruction.type
+			had_error := has_fatal_error
 			l_resolved_type := resolved_formal_parameters (l_type)
 			if not has_fatal_error then
+				has_fatal_error := had_error
 				l_actuals := an_instruction.arguments
 				if l_actuals /= Void then
 					nb := l_actuals.count
@@ -5869,6 +5878,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			l_assignment_target: ET_WRITABLE
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			had_error: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -5889,6 +5899,8 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
+				had_error := has_fatal_error
+				has_fatal_error := False
 				if l_parent_type.is_generic then
 					l_current_class := current_type.base_class
 					l_class_impl := current_feature.static_feature.implementation_class
@@ -5914,6 +5926,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					end
 				end
 				if not has_fatal_error then
+					has_fatal_error := had_error
 					l_precursor_keyword := an_expression.precursor_keyword
 					l_class := l_parent_type.direct_base_class (universe)
 					l_query := l_class.seeded_query (l_precursor_keyword.seed)
@@ -7053,12 +7066,15 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			l_assignment_target: ET_WRITABLE
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			had_error: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
 			l_type := an_expression.type
+			had_error := has_fatal_error
 			l_resolved_type := resolved_formal_parameters (l_type)
 			if not has_fatal_error then
+				has_fatal_error := had_error
 				l_actuals := an_expression.arguments
 				if l_actuals /= Void then
 					nb := l_actuals.count
@@ -18085,14 +18101,13 @@ feature {NONE} -- Type resolving
 		require
 			a_type_not_void: a_type /= Void
 		do
--- TODO.
---			has_fatal_error := False
+			has_fatal_error := False
 			Result := type_checker.resolved_formal_parameters (a_type, current_feature.static_feature.implementation_class, current_type.base_type)
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			end
 		ensure
-			resolved_type_not_void: not has_fatal_error implies Result /= Void
+			resolved_type_not_void: Result /= Void
 		end
 
 	type_checker: ET_TYPE_CHECKER
