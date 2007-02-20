@@ -159,7 +159,7 @@ feature -- Status report
 	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that have same dynamic type as `an_object'.
 		do
-			Result := find_instance_of (internal.dynamic_type (an_object),
+			Result := find_instance_of (internal_.dynamic_type (an_object),
 				special_any_dynamic_type)
 		end
 
@@ -197,7 +197,7 @@ feature -- Status report
 			loop
 				l_item := l_spec.item (i)
 				if l_item /= Void then
-					dtype := internal.dynamic_type (l_item)
+					dtype := internal_.dynamic_type (l_item)
 					l_memory_count_map.force (l_memory_count_map.item (dtype) + 1, dtype)
 				end
 				i := i + 1
@@ -215,7 +215,7 @@ feature -- Status report
 			loop
 				l_item := l_spec.item (i)
 				if l_item /= Void then
-					dtype := internal.dynamic_type (l_item)
+					dtype := internal_.dynamic_type (l_item)
 					Result.search (dtype)
 					if Result.found then
 						l_list := Result.found_item
@@ -254,7 +254,7 @@ feature -- Status report
 			loop
 				l_item := l_spec.item (i)
 				if l_item /= Void then
-					dtype := internal.dynamic_type (l_item)
+					dtype := internal_.dynamic_type (l_item)
 					Result.search (dtype)
 					if Result.found then
 						Result.force (Result.found_item + 1, dtype)
@@ -459,10 +459,10 @@ feature {NONE} -- Implementation
 		once
 			create a.make (0, 0)
 			spec := a.area
-			Result := internal.dynamic_type (spec)
+			Result := internal_.dynamic_type (spec)
 		end
 
-	internal: INTERNAL is
+	internal_: INTERNAL is
 			-- Internal features
 		once
 			create Result
