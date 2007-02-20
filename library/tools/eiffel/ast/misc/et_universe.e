@@ -5,7 +5,7 @@ indexing
 		"Eiffel class universes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2642,7 +2642,7 @@ feature -- Compilation
 			-- `flat_dbc_mode' means that the inherited pre- and postconditions
 			-- are checked again in the redeclaration of features during Degree 3.
 		do
-			if root_class = Void or root_class = none_class then
+			if root_class = Void or root_class = none_class or root_class = any_class then
 				compile_all
 			else
 				compile_system

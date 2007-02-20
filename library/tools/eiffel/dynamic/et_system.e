@@ -604,9 +604,9 @@ feature -- Compilation
 			l_class: ET_CLASS
 		do
 			l_class := universe.root_class
-			if l_class = universe.none_class then
+			if l_class = Void or l_class = universe.none_class or l_class = universe.any_class then
 				compile_all
-			elseif l_class /= Void then
+			else
 				compile_system
 			end
 		end
