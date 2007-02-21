@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			value_set: value = a_value
 		end
 
-	make_from_integer (a_value: INTEGER_32) is
+	make_from_integer (a_value: INTEGER) is
 		do
 			make_atomic_value
 			create value.make_from_integer (a_value)

@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date:  $"
-	revision: "$Revision:  $"
+	date: "$Date: $"
+	revision: "$Revision: $"
 
 class XM_XPATH_MACHINE_INTEGER_VALUE
 
@@ -42,7 +42,8 @@ feature {NONE} -- Initialization
 
 	make_from_string (a_value: STRING) is
 		require
-			is_integer: a_value.is_integer_64
+-- TODO: does not compile with ISE 5.6.
+--			is_integer: a_value.is_integer_64
 		do
 			make_atomic_value
 			value := a_value.to_integer_64
