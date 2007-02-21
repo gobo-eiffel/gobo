@@ -571,7 +571,7 @@ feature {NONE} -- Feature validity
 		do
 			has_fatal_error := False
 			l_type := a_feature.type
-			check_signature_type_validity (l_type)
+			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_current_type_needed
 				universe.report_result_supplier (l_type, current_class, a_feature)
@@ -593,7 +593,7 @@ feature {NONE} -- Feature validity
 		do
 			has_fatal_error := False
 			l_type := a_feature.type
-			check_signature_type_validity (l_type)
+			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				universe.report_result_supplier (l_type, current_class, a_feature)
 				l_constant := a_feature.constant
@@ -740,7 +740,7 @@ feature {NONE} -- Feature validity
 				had_error := has_fatal_error
 			end
 			l_type := a_feature.type
-			check_signature_type_validity (l_type)
+			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_declaration (l_type)
 				universe.report_result_supplier (l_type, current_class, a_feature)
@@ -784,7 +784,7 @@ feature {NONE} -- Feature validity
 				had_error := has_fatal_error
 			end
 			l_type := a_feature.type
-			check_signature_type_validity (l_type)
+			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_declaration (l_type)
 				universe.report_result_supplier (l_type, current_class, a_feature)
@@ -886,7 +886,7 @@ feature {NONE} -- Feature validity
 				had_error := has_fatal_error
 			end
 			l_type := a_feature.type
-			check_signature_type_validity (l_type)
+			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_declaration (l_type)
 				universe.report_result_supplier (l_type, current_class, a_feature)
@@ -928,7 +928,7 @@ feature {NONE} -- Feature validity
 				had_error := has_fatal_error
 			end
 			l_type := a_feature.type
-			check_signature_type_validity (l_type)
+			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_declaration (l_type)
 				universe.report_result_supplier (l_type, current_class, a_feature)
@@ -972,7 +972,7 @@ feature {NONE} -- Feature validity
 				had_error := has_fatal_error
 			end
 			l_type := a_feature.type
-			check_signature_type_validity (l_type)
+			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_declaration (l_type)
 				universe.report_result_supplier (l_type, current_class, a_feature)
@@ -1047,7 +1047,7 @@ feature {NONE} -- Feature validity
 		do
 			has_fatal_error := False
 			l_type := a_feature.type
-			check_signature_type_validity (l_type)
+			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				universe.report_result_supplier (l_type, current_class, a_feature)
 				if l_type.same_named_type (universe.integer_class, current_type, current_type, universe) then
@@ -1094,22 +1094,33 @@ feature {NONE} -- Locals/Formal arguments validity
 			i, nb: INTEGER
 			l_type: ET_TYPE
 			l_formal: ET_FORMAL_ARGUMENT
+			l_formals_impl: ET_FORMAL_ARGUMENT_LIST
 			had_error: BOOLEAN
 		do
 				-- Note that validity rules VREG and VRFA have already been checked
 				-- when flattening the features (in ET_FEATURE_FLATTENER).
 			has_fatal_error := False
 			nb := an_arguments.count
-			from i := 1 until i > nb loop
-				l_formal := an_arguments.formal_argument (i)
-				l_type := l_formal.type
-				had_error := had_error or has_fatal_error
-				check_signature_type_validity (l_type)
-				if not has_fatal_error then
-					report_formal_argument_declaration (l_formal)
-					universe.report_argument_supplier (l_type, current_class, a_feature)
+			if nb > 0 then
+				l_formals_impl := a_feature.implementation_feature.arguments
+				if l_formals_impl = Void or else l_formals_impl.count /= nb then
+						-- Internal error: a feature should have the same number
+						-- of formal arguments as its implementation feature.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					from i := 1 until i > nb loop
+						l_formal := an_arguments.formal_argument (i)
+						l_type := l_formal.type
+						had_error := had_error or has_fatal_error
+						check_signature_type_validity (l_formals_impl.formal_argument (i).type)
+						if not has_fatal_error then
+							report_formal_argument_declaration (l_formal)
+							universe.report_argument_supplier (l_type, current_class, a_feature)
+						end
+						i := i + 1
+					end
 				end
-				i := i + 1
 			end
 			has_fatal_error := has_fatal_error or had_error
 		end
