@@ -240,11 +240,13 @@
         <ref name="getest"/>
         <ref name="gexace"/>
         <ref name="gexmlsplit"/>
+        <ref name="input"/>
         <ref name="ise"/>
         <ref name="mkdir"/>
         <ref name="move"/>
         <ref name="outofdate"/>
         <ref name="precursor"/>
+        <ref name="replace"/>
         <ref name="se"/>
         <ref name="set"/>
         <ref name="setenv"/>
