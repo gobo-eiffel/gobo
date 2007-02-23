@@ -1,5 +1,16 @@
 Version 3.6 - ????
 
+	gec:
+
+	* Implemented inline agents.
+
+	Gobo Eiffel String Library:
+
+	* Fixed a bug in string formatter where format("$11.9f",941.65899999999817)
+	  would return 942.589999910 instead of 941.659000000. Regression tests
+	  have been added, and this fix also pointed out a bug in one of the
+	  test cases.
+
 	Miscellaneous:
 
 	* Now uses the MIT License, which is an OSI Approved License and
