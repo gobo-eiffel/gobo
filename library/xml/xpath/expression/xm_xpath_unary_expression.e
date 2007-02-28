@@ -132,12 +132,15 @@ feature -- Optimization
 
 				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
 					eagerly_evaluate (Void)
-					set_replacement (last_evaluation)
-
+					
 					-- if early evaluation fails, suppress the error: the value might not be needed at run-time
-
-					if is_error then
+					
+					if is_error or last_evaluation.is_error then
 						error_value := Void
+						last_evaluation := Void
+						last_evaluated_item := Void
+					else
+						set_replacement (last_evaluation)
 					end
 				end
 			end
@@ -164,12 +167,15 @@ feature -- Optimization
 				
 				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
 					eagerly_evaluate (Void)
-					set_replacement (last_evaluation)
 					
 					-- if early evaluation fails, suppress the error: the value might not be needed at run-time
 					
-					if is_error then
+					if is_error or last_evaluation.is_error then
 						error_value := Void
+						last_evaluation := Void
+						last_evaluated_item := Void
+					else
+						set_replacement (last_evaluation)
 					end
 				end
 			end

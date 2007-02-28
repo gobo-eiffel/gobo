@@ -142,31 +142,35 @@ feature -- Element change
 			loop
 				a_when ?= a_child_iterator.item
 				if a_when /= Void then
-					compile_when (an_executable, a_when)
+					if not a_when.is_excluded then
+						compile_when (an_executable, a_when)
+					end
 				else
 					an_otherwise ?= a_child_iterator.item
 					check
 						otherwise: an_otherwise /= Void
 						-- validation has already checked for this
 					end
-					compiled_actions_count := compiled_actions_count + 1
-					create {XM_XPATH_BOOLEAN_VALUE} a_condition.make (True)
-					compiled_conditions.put_last (a_condition)
-					compile_sequence_constructor (an_executable, an_otherwise.new_axis_iterator (Child_axis), True)
-					an_action := last_generated_expression
-					if an_action = Void then create {XM_XPATH_EMPTY_SEQUENCE} an_action.make end
-					an_action.simplify
-					if an_action.was_expression_replaced then an_action := an_action.replacement_expression end
-					if an_action.is_error then
-						report_compile_error (an_action.error_value)
-					else
-						if configuration.is_tracing then
-							a_trace_wrapper := new_trace_wrapper (an_action, an_executable, an_otherwise)
-							a_trace_wrapper.set_parent (an_otherwise)
-							an_action := a_trace_wrapper
+					if not an_otherwise.is_excluded then
+						compiled_actions_count := compiled_actions_count + 1
+						create {XM_XPATH_BOOLEAN_VALUE} a_condition.make (True)
+						compiled_conditions.put_last (a_condition)
+						compile_sequence_constructor (an_executable, an_otherwise.new_axis_iterator (Child_axis), True)
+						an_action := last_generated_expression
+						if an_action = Void then create {XM_XPATH_EMPTY_SEQUENCE} an_action.make end
+						an_action.simplify
+						if an_action.was_expression_replaced then an_action := an_action.replacement_expression end
+						if an_action.is_error then
+							report_compile_error (an_action.error_value)
+						else
+							if configuration.is_tracing then
+								a_trace_wrapper := new_trace_wrapper (an_action, an_executable, an_otherwise)
+								a_trace_wrapper.set_parent (an_otherwise)
+								an_action := a_trace_wrapper
+							end
+							compiled_actions.put_last (an_action)
+							has_compile_loop_finished := True
 						end
-						compiled_actions.put_last (an_action)
-						has_compile_loop_finished := True
 					end
 				end
 				if not has_compile_loop_finished then a_child_iterator.forth end

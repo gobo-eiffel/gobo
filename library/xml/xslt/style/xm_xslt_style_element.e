@@ -1902,6 +1902,7 @@ feature -- Element change
 			not_excluded: not is_excluded
 			not_in_error: not is_error
 			no_previous_error: not any_compile_errors
+			validated: validated
 			validation_complete: post_validated
 			executable_not_void: an_executable /= Void
 		deferred
