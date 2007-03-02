@@ -45,7 +45,7 @@ feature -- Access
 			elseif a_fingerprint = Format_number_function_type_code and then not is_restricted then
 				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
 			elseif a_fingerprint = Format_time_function_type_code and then not is_restricted then
-				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 5			
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 5
 			elseif a_fingerprint = Function_available_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
 			elseif a_fingerprint = Generate_id_function_type_code and then not is_restricted then
@@ -66,7 +66,7 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
 			elseif a_fingerprint = Unparsed_text_available_function_type_code and then not is_restricted then
 				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
-			else			
+			else
 				Result := Precursor (a_fingerprint, an_arity, is_restricted)
 			end
 		end
@@ -79,44 +79,45 @@ feature -- Element change
 			a_function_call: XM_XPATH_FUNCTION_CALL
 			precursor_called: BOOLEAN
 		do
-			if a_fingerprint = Current_function_type_code then
+			inspect a_fingerprint
+			when Current_function_type_code then
 				create {XM_XSLT_CURRENT} a_function_call.make
-			elseif a_fingerprint = Current_group_function_type_code then
+			when Current_group_function_type_code then
 				create {XM_XSLT_CURRENT_GROUP} a_function_call.make
-			elseif a_fingerprint = Current_grouping_key_function_type_code then
+			when Current_grouping_key_function_type_code then
 				create {XM_XSLT_CURRENT_GROUPING_KEY} a_function_call.make
-			elseif a_fingerprint = Document_function_type_code then
+			when Document_function_type_code then
 				create {XM_XSLT_DOCUMENT_FUNCTION} a_function_call.make
-			elseif a_fingerprint = Element_available_function_type_code then
-				create {XM_XSLT_ELEMENT_AVAILABLE} a_function_call.make								
-			elseif a_fingerprint = Format_date_function_type_code then
+			when Element_available_function_type_code then
+				create {XM_XSLT_ELEMENT_AVAILABLE} a_function_call.make
+			when Format_date_function_type_code then
 				create {XM_XSLT_FORMAT_DATE_TIME} a_function_call.make_date
-			elseif a_fingerprint = Format_datetime_function_type_code then
+			when Format_datetime_function_type_code then
 				create {XM_XSLT_FORMAT_DATE_TIME} a_function_call.make_date_time
-			elseif a_fingerprint = Format_number_function_type_code then
+			when Format_number_function_type_code then
 				create {XM_XSLT_FORMAT_NUMBER} a_function_call.make
-			elseif a_fingerprint = Format_time_function_type_code then
-				create {XM_XSLT_FORMAT_DATE_TIME} a_function_call.make_time				
-			elseif a_fingerprint = Function_available_function_type_code then
-				create {XM_XSLT_FUNCTION_AVAILABLE} a_function_call.make				
-			elseif a_fingerprint = Generate_id_function_type_code then
+			when Format_time_function_type_code then
+				create {XM_XSLT_FORMAT_DATE_TIME} a_function_call.make_time
+			when Function_available_function_type_code then
+				create {XM_XSLT_FUNCTION_AVAILABLE} a_function_call.make
+			when Generate_id_function_type_code then
 				create {XM_XSLT_GENERATE_ID} a_function_call.make
-			elseif a_fingerprint = Key_function_type_code then
+			when Key_function_type_code then
 				create {XM_XSLT_KEY_FUNCTION} a_function_call.make
-			elseif a_fingerprint = Regex_group_function_type_code then
-				create {XM_XSLT_REGEX_GROUP} a_function_call.make				
-			elseif a_fingerprint = System_property_function_type_code then
-				create {XM_XSLT_SYSTEM_PROPERTY} a_function_call.make				
-			elseif a_fingerprint = Type_available_function_type_code then
-				create {XM_XSLT_TYPE_AVAILABLE} a_function_call.make				
-			elseif a_fingerprint = Unparsed_entity_uri_function_type_code then
-				create {XM_XSLT_UNPARSED_ENTITY_URI} a_function_call.make								
-			elseif a_fingerprint = Unparsed_entity_public_id_function_type_code then
-				create {XM_XSLT_UNPARSED_ENTITY_PUBLIC_ID} a_function_call.make								
-			elseif a_fingerprint = Unparsed_text_function_type_code then
-				create {XM_XSLT_UNPARSED_TEXT} a_function_call.make								
-			elseif a_fingerprint = Unparsed_text_available_function_type_code then
-				create {XM_XSLT_UNPARSED_TEXT_AVAILABLE} a_function_call.make								
+			when Regex_group_function_type_code then
+				create {XM_XSLT_REGEX_GROUP} a_function_call.make
+			when System_property_function_type_code then
+				create {XM_XSLT_SYSTEM_PROPERTY} a_function_call.make
+			when Type_available_function_type_code then
+				create {XM_XSLT_TYPE_AVAILABLE} a_function_call.make
+			when Unparsed_entity_uri_function_type_code then
+				create {XM_XSLT_UNPARSED_ENTITY_URI} a_function_call.make
+			when Unparsed_entity_public_id_function_type_code then
+				create {XM_XSLT_UNPARSED_ENTITY_PUBLIC_ID} a_function_call.make
+			when Unparsed_text_function_type_code then
+				create {XM_XSLT_UNPARSED_TEXT} a_function_call.make
+			when Unparsed_text_available_function_type_code then
+				create {XM_XSLT_UNPARSED_TEXT_AVAILABLE} a_function_call.make
 			else
 				precursor_called := True
 				Precursor (a_fingerprint, some_arguments, is_restricted)
@@ -132,4 +133,4 @@ feature -- Element change
 		end
 
 end
-	
+
