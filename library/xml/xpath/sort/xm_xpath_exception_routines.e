@@ -28,6 +28,8 @@ class XM_XPATH_EXCEPTION_ROUTINES
 
 inherit
 
+	ANY
+
 	KL_SHARED_EXCEPTIONS
 		export {NONE} all end
 
@@ -53,4 +55,4 @@ feature -- Basic operations
 		end
 
 end
-	
+
