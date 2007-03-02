@@ -543,91 +543,92 @@ feature -- Transformation
 			result_not_void: a_result /= Void
 			no_error_yet: not is_error
 		local
-			a_start_node: XM_XPATH_NODE
-			a_builder: XM_XPATH_BUILDER
-			a_parser: XM_PARSER
-			a_document: XM_XPATH_DOCUMENT
-			an_error: XM_XPATH_ERROR_VALUE
-			a_media_type: UT_MEDIA_TYPE
-			a_media_type_map: XM_XSLT_MEDIA_TYPE_MAP
-			a_fragment_id: STRING
-			a_date_time: DT_DATE_TIME
-			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			l_start_node: XM_XPATH_NODE
+			l_builder: XM_XPATH_BUILDER
+			l_parser: XM_PARSER
+			l_document: XM_XPATH_DOCUMENT
+			l_error: XM_XPATH_ERROR_VALUE
+			l_media_type: UT_MEDIA_TYPE
+			l_media_type_map: XM_XSLT_MEDIA_TYPE_MAP
+			l_fragment_id: STRING
+			l_date_time: DT_DATE_TIME
+			l_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 			a_uri: UT_URI
 		do
-			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now)) -- reset for each transformations
-			create a_time_zone.make (implicit_timezone.fixed_offset)
-			create a_date_time.make_from_epoch (0)
-			create current_date_time.make (a_date_time, a_time_zone) -- reset for each transformations
+			create l_date_time.make_from_epoch (0)
+			utc_system_clock.set_date_time_to_now (l_date_time)
+			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
+			create l_time_zone.make (implicit_timezone.fixed_offset)
+			create current_date_time.make (l_date_time, l_time_zone) -- reset for each transformations
 			if a_source /= Void then
 				a_source.ignore_media_types
 				if	document_pool.is_document_mapped (a_source.system_id) then
-					a_document := document_pool.document (a_source.system_id)
+					l_document := document_pool.document (a_source.system_id)
 					if a_source.fragment_identifier /= Void then
-						a_media_type := document_pool.media_type (a_source.system_id)
-						if a_media_type = Void then a_media_type := configuration.default_media_type (a_source.system_id) end
-						a_media_type_map := configuration.media_type_map
-						a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.assume_html_is_xhtml)
-						if a_media_type_map.may_use_xpointer then
-							a_start_node := fragment_node (a_document, a_source.fragment_identifier)
-						elseif a_media_type_map.may_use_id then
-							a_start_node := a_document.selected_id (a_fragment_id)
-							if a_start_node = Void then
-								create an_error.make_from_string ("Fragment identifier did not select a node", Xpath_errors_uri, "XTRE1160", Dynamic_error)
-								report_recoverable_error (an_error)
+						l_media_type := document_pool.media_type (a_source.system_id)
+						if l_media_type = Void then l_media_type := configuration.default_media_type (a_source.system_id) end
+						l_media_type_map := configuration.media_type_map
+						l_media_type_map.check_fragment_processing_rules (l_media_type, configuration.assume_html_is_xhtml)
+						if l_media_type_map.may_use_xpointer then
+							l_start_node := fragment_node (l_document, a_source.fragment_identifier)
+						elseif l_media_type_map.may_use_id then
+							l_start_node := l_document.selected_id (l_fragment_id)
+							if l_start_node = Void then
+								create l_error.make_from_string ("Fragment identifier did not select a node", Xpath_errors_uri, "XTRE1160", Dynamic_error)
+								report_recoverable_error (l_error)
 								if not is_error then
-									a_start_node := a_document
+									l_start_node := l_document
 								end
 							end
 						else
-							create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", Xpath_errors_uri, "XTRE1160", Dynamic_error)
-							report_recoverable_error (an_error)
+							create l_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", Xpath_errors_uri, "XTRE1160", Dynamic_error)
+							report_recoverable_error (l_error)
 							if not is_error then
-								a_start_node := a_document
+								l_start_node := l_document
 							end
 						end
 					else
-						a_start_node := a_document
+						l_start_node := l_document
 					end
 				elseif configuration.is_uri_written (a_source.system_id) or STRING_.same_string (a_source.system_id, a_result.system_id) then
-					create an_error.make_from_string ("The system has already written to source URI " + a_source.system_id, Xpath_errors_uri, "XTRE1500", Dynamic_error)
+					create l_error.make_from_string ("The system has already written to source URI " + a_source.system_id, Xpath_errors_uri, "XTRE1500", Dynamic_error)
 				else
-					a_parser := new_parser
+					l_parser := new_parser
 					create a_uri.make (a_source.uri_reference)
-					a_builder := new_builder (a_parser, a_source.uri_reference, a_uri)
-					a_source.send (a_parser, new_stripper (a_builder), a_uri, False)
-					a_media_type := a_source.media_type
-					if a_builder.has_error then
-						create an_error.make_from_string (a_builder.last_error, Gexslt_eiffel_type_uri, "BUILD_ERROR", Static_error)
-						report_fatal_error (an_error)
+					l_builder := new_builder (l_parser, a_source.uri_reference, a_uri)
+					a_source.send (l_parser, new_stripper (l_builder), a_uri, False)
+					l_media_type := a_source.media_type
+					if l_builder.has_error then
+						create l_error.make_from_string (l_builder.last_error, Gexslt_eiffel_type_uri, "BUILD_ERROR", Static_error)
+						report_fatal_error (l_error)
 					else
-						a_document := a_builder.current_root.as_document
-						register_document (a_document, a_media_type, a_source.system_id)
-						a_fragment_id := a_source.fragment_identifier
-						if a_fragment_id = Void then
-							a_start_node := a_document
+						l_document := l_builder.current_root.as_document
+						register_document (l_document, l_media_type, a_source.system_id)
+						l_fragment_id := a_source.fragment_identifier
+						if l_fragment_id = Void then
+							l_start_node := l_document
 						else
-							a_media_type := document_pool.media_type (a_source.system_id)
-							if a_media_type = Void then a_media_type := configuration.default_media_type (a_source.system_id) end
-							a_media_type_map := configuration.media_type_map
-							a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.assume_html_is_xhtml)
-							if a_media_type_map.may_use_xpointer then
-								a_start_node := fragment_node (a_document, a_fragment_id)
-							elseif a_media_type_map.may_use_id then
-								a_start_node := a_document.selected_id (a_fragment_id)
-								if a_start_node = Void then
-									create an_error.make_from_string ("Fragment identifier did not select a node", Xpath_errors_uri, "XTRE1160", Dynamic_error)
-									report_recoverable_error (an_error)
+							l_media_type := document_pool.media_type (a_source.system_id)
+							if l_media_type = Void then l_media_type := configuration.default_media_type (a_source.system_id) end
+							l_media_type_map := configuration.media_type_map
+							l_media_type_map.check_fragment_processing_rules (l_media_type, configuration.assume_html_is_xhtml)
+							if l_media_type_map.may_use_xpointer then
+								l_start_node := fragment_node (l_document, l_fragment_id)
+							elseif l_media_type_map.may_use_id then
+								l_start_node := l_document.selected_id (l_fragment_id)
+								if l_start_node = Void then
+									create l_error.make_from_string ("Fragment identifier did not select a node", Xpath_errors_uri, "XTRE1160", Dynamic_error)
+									report_recoverable_error (l_error)
 									if not is_error then
-										a_start_node := a_document
+										l_start_node := l_document
 									end
 								end
 							else
-								create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type",
+								create l_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type",
 																			 Xpath_errors_uri, "XTRE1160", Dynamic_error)
-								report_recoverable_error (an_error)
+								report_recoverable_error (l_error)
 								if not is_error then
-									a_start_node := a_document
+									l_start_node := l_document
 								end
 							end
 						end
@@ -636,7 +637,7 @@ feature -- Transformation
 			end
 
 			if not is_error and then configuration.final_execution_phase = Run_to_completion then
-				transform_document (a_start_node, a_result)
+				transform_document (l_start_node, a_result)
 			end
 			configuration.reset_entity_resolver
 		end

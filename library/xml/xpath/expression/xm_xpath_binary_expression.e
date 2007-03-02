@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		require
 			operand_1_not_void: a_operand_one /= Void
 			operand_2_not_void: a_operand_two /= Void
-			-- TODO: is_binary_op?
+			valid_operator: is_valid_operator (a_token)
 		do
 			operator := a_token
 			set_first_operand (a_operand_one)
@@ -101,6 +101,12 @@ feature -- Comparison
 		end
 
 feature -- Status report
+
+	is_valid_operator (a_operator: INTEGER): BOOLEAN is
+			-- Is `a_operator' valid for `Current'?
+		do
+			Result := True
+		end
 
 	is_commutative (an_operator: INTEGER): BOOLEAN is
 			-- Is `an_operator' a commutative operator?

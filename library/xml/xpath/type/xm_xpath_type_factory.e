@@ -483,11 +483,13 @@ feature -- Status report
 	is_primitive_type (a_fingerprint: INTEGER): BOOLEAN is
 			-- Does `a_fingerprint' represent a primitive type?
 		do
-			Result := (a_fingerprint > 0 and then a_fingerprint <= Integer_type_code)
-						  or else a_fingerprint = Numeric_type_code
-						  or else a_fingerprint = Untyped_atomic_type_code
-						  or else a_fingerprint = Any_atomic_type_code
-						  or else a_fingerprint = Any_simple_type_code
+			Result := (a_fingerprint > 0 and then a_fingerprint <= Integer_type_code) or
+				a_fingerprint = Numeric_type_code or
+				a_fingerprint = Untyped_atomic_type_code or
+				a_fingerprint = Any_atomic_type_code or
+				a_fingerprint = Day_time_duration_type_code or
+				a_fingerprint = Year_month_duration_type_code or
+				a_fingerprint = Any_simple_type_code
 		end
 
 	conventional_prefix (a_fingerprint: INTEGER): STRING is

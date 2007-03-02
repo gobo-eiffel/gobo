@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			simplify, create_iterator, compute_special_properties, is_repeated_sub_expression,
-			sub_expressions -- TODO promote
+			sub_expressions, create_node_iterator -- TODO promote
 		end
 
 create
@@ -194,7 +194,7 @@ feature -- Optimization
 		end
 
 feature -- Evaluation
-	
+
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
@@ -234,7 +234,54 @@ feature -- Evaluation
 						a_cursor.forth
 					end
 				end
-				create {XM_XSLT_SORTED_ITERATOR} last_iterator.make (an_evaluation_context, a_sequence_iterator, reduced_sort_keys)
+				if a_sequence_iterator.is_node_iterator then
+					create {XM_XSLT_SORTED_NODE_ITERATOR} last_iterator.make (an_evaluation_context, a_sequence_iterator.as_node_iterator, reduced_sort_keys)
+				else
+					create {XM_XSLT_SORTED_ITERATOR} last_iterator.make (an_evaluation_context, a_sequence_iterator, reduced_sort_keys)
+				end
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Iterator over the nodes of a sequence
+		local
+			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			reduced_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
+			a_sort_key: XM_XSLT_SORT_KEY_DEFINITION
+		do
+			select_expression.create_node_iterator (a_context)
+			a_sequence_iterator := select_expression.last_node_iterator
+			if a_sequence_iterator.is_error then
+				last_node_iterator := a_sequence_iterator
+			else
+				an_evaluation_context ?= a_context.new_context
+				check
+					evaluation_context_not_void: an_evaluation_context /= Void
+					-- as this is XSLT
+				end
+				
+				if fixed_sort_key_list /= Void then
+					reduced_sort_keys := fixed_sort_key_list
+				else
+					from
+						create reduced_sort_keys.make (sort_key_list.count)
+						a_cursor := sort_key_list.new_cursor; a_cursor.start
+					variant
+						sort_key_list.count + 1 - a_cursor.index
+					until
+						a_cursor.after
+					loop
+						a_sort_key := a_cursor.item
+						if not a_sort_key.is_reducible then
+							a_sort_key.evaluate_expressions (an_evaluation_context)
+						end
+						reduced_sort_keys.put_last (a_sort_key.reduced_definition (an_evaluation_context))
+						a_cursor.forth
+					end
+				end
+				create {XM_XSLT_SORTED_NODE_ITERATOR} last_node_iterator.make (an_evaluation_context, a_sequence_iterator, reduced_sort_keys)
 			end
 		end
 

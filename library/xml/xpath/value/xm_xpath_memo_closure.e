@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_CLOSURE
 		redefine
 			make, create_iterator, same_expression, generate_events, is_memo_closure, as_memo_closure, count,
-			item_at, is_node_sequence
+			item_at, is_node_sequence, create_node_iterator
 		end
 
 create {XM_XPATH_EXPRESSION_FACTORY}
@@ -216,8 +216,13 @@ feature -- Evaluation
 					state
 				when Unread_state then
 					state := Busy_state
-					base_expression.create_iterator (saved_xpath_context)
-					input_iterator := base_expression.last_iterator
+					if is_node_sequence then
+						base_expression.create_node_iterator (saved_xpath_context)
+						input_iterator := base_expression.last_node_iterator
+					else
+						base_expression.create_iterator (saved_xpath_context)
+						input_iterator := base_expression.last_iterator
+					end
 					state := Maybe_more_state
 					if input_iterator.is_error then
 						last_iterator := input_iterator
@@ -229,19 +234,57 @@ feature -- Evaluation
 				when Maybe_more_state then
 					if input_iterator.is_error then
 						last_iterator := input_iterator
-					elseif  is_node_sequence then
+					elseif is_node_sequence then
 						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_iterator.make (node_reservoir, input_iterator.as_node_iterator, Current)
 					else
 						create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (reservoir, input_iterator, Current)
 					end
 				when All_read_state then
-					if is_node_sequence then
-						create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_iterator.make (node_reservoir)
-					else
-						create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (reservoir)
-					end
+					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_reservoir)
 				when Busy_state then
 					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Attempting to access a variable while it is being evaluated", Xpath_errors_uri, "XTDE0640", Dynamic_error)
+					check
+						busy_memo_closure: False
+						-- BUG
+					end
+				end
+			end
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over a node sequence
+		do
+			last_node_iterator := Void
+			if node_reservoir.count > 0 then
+				if input_iterator.is_error then
+					last_node_iterator := input_iterator.as_node_iterator
+				elseif input_iterator /= Void and then input_iterator.after then
+					state := All_read_state
+				end
+			end
+			if last_node_iterator = Void then
+				inspect
+					state
+				when Unread_state then
+					state := Busy_state
+					base_expression.create_node_iterator (saved_xpath_context)
+					input_iterator := base_expression.last_node_iterator
+					state := Maybe_more_state
+					if input_iterator.is_error then
+						last_node_iterator := input_iterator.as_node_iterator
+					else
+						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_node_iterator.make (node_reservoir, input_iterator.as_node_iterator, Current)
+					end
+				when Maybe_more_state then
+					if input_iterator.is_error then
+						last_node_iterator := input_iterator.as_node_iterator
+					else
+						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_node_iterator.make (node_reservoir, input_iterator.as_node_iterator, Current)
+					end
+				when All_read_state then
+					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_node_iterator.make (node_reservoir)
+				when Busy_state then
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("Attempting to access a variable while it is being evaluated", Xpath_errors_uri, "XTDE0640", Dynamic_error)
 					check
 						busy_memo_closure: False
 						-- BUG

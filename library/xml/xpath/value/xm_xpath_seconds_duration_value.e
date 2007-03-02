@@ -19,11 +19,11 @@ inherit
 			make as make_duration,
 			make_from_duration as make_duration_from_duration
 		redefine
-			is_duration, string_value,
+			is_duration,
 			is_seconds_duration, as_seconds_duration,
 			same_expression, plus, minus,
 			multiply, divide, scalar_divide,
-			display, item_type
+			display, item_type, is_comparable
 		end
 
 	KL_SHARED_PLATFORM
@@ -68,63 +68,60 @@ feature -- Access
 			end
 		end
 
-	string_value: STRING is
-			--Value of the item as a string
-		local
-			a_string: STRING
-			a_millisecond_count, a_second_count, a_minute_count,
-			an_hour_count, a_day_count: INTEGER
-		do
-			a_millisecond_count := duration.millisecond_count
-			if a_millisecond_count = 0 then
-				Result := "PT0S"
-			else
-				if a_millisecond_count < 0 then a_millisecond_count := 0 - a_millisecond_count end
-				a_second_count := a_millisecond_count // 1000; a_millisecond_count := a_millisecond_count \\ 1000
-				a_minute_count := a_second_count // 60; a_second_count := a_second_count \\ 60
-				an_hour_count := a_minute_count // 60; a_minute_count := a_minute_count \\ 60
-				a_day_count := an_hour_count // 24; an_hour_count := an_hour_count \\ 24
-				if is_negative then Result := "-P" else Result := "P" end
-				if a_day_count /= 0 then Result := Result + a_day_count.out + "D" end
-				if an_hour_count /= 0 or else a_minute_count /= 0
-					or else a_second_count /= 0 or else a_millisecond_count /= 0 then
-					Result := Result + "T"
-				end
-				if an_hour_count /= 0 then Result := Result + an_hour_count.out + "H" end
-				if a_minute_count /= 0 then Result := Result + a_minute_count.out + "M" end
-				if a_second_count /= 0 or else a_millisecond_count /= 0 then
-					Result := Result + a_second_count.out
-					if a_millisecond_count /= 0 then
-						Result := Result + "."
-						a_string := a_millisecond_count.out
-						from  until a_string.count = 3 loop
-							a_string.insert_character ('0', 1)
-						end
-						Result := Result + a_string
-					end
-					Result := Result + "S"
-				end
-			end
-		end
+-- commented out 2007/02/25 by CPA as ancestor version looks better. So Delete it before April
+--	string_value: STRING is
+--			--Value of the item as a string
+--		local
+--			a_string: STRING
+--			a_millisecond_count, a_second_count, a_minute_count,
+--			an_hour_count, a_day_count: INTEGER
+--		do
+--			a_millisecond_count := milliseconds
+--			if a_millisecond_count = 0 then
+--					Result := "PT0S"
+--				else
+--					if a_millisecond_count < 0 then a_millisecond_count := 0 - a_millisecond_count end
+--					a_second_count := a_millisecond_count // 1000; a_millisecond_count := a_millisecond_count \\ 1000
+--					a_minute_count := a_second_count // 60; a_second_count := a_second_count \\ 60
+--					an_hour_count := a_minute_count // 60; a_minute_count := a_minute_count \\ 60
+--					a_day_count := an_hour_count // 24; an_hour_count := an_hour_count \\ 24
+--					if is_negative then Result := "-P" else Result := "P" end
+--					if a_day_count /= 0 then Result := Result + a_day_count.out + "D" end
+--					if an_hour_count /= 0 or else a_minute_count /= 0
+--						or else a_second_count /= 0 or else a_millisecond_count /= 0 then
+--						Result := Result + "T"
+--					end
+--					if an_hour_count /= 0 then Result := Result + an_hour_count.out + "H" end
+--					if a_minute_count /= 0 then Result := Result + a_minute_count.out + "M" end
+--					if a_second_count /= 0 or else a_millisecond_count /= 0 then
+--						Result := Result + a_second_count.out
+--						if a_millisecond_count /= 0 then
+--							Result := Result + "."
+--							a_string := a_millisecond_count.out
+--							from  until a_string.count = 3 loop
+--								a_string.insert_character ('0', 1)
+--							end
+--							from  until a_string.item (a_string.count) /= '0' loop
+--								a_string.remove_tail (1)
+--							end
+--							Result := Result + a_string
+--						end
+--						Result := Result + "S"
+--					end
+--				end
+--			end
 
-	seconds: MA_DECIMAL is
-			-- Seconds component (including milliseconds)
+	milliseconds: MA_DECIMAL is
+			-- Length in milliseconds
 		local
-			a_string: STRING
+			l_milliseconds: MA_DECIMAL
 		do
-			a_string := duration.second.out
-			if duration.millisecond /= 0 then
-				a_string := a_string + "." + duration.millisecond.abs.out
-			end
-			create Result.make_from_string (a_string)
+			create Result.make_from_integer (duration.day)
+			Result := Result * milliseconds_in_day
+			create l_milliseconds.make_from_integer (duration.millisecond_count)
+			Result := Result + l_milliseconds
 		ensure
 			result_not_void: Result /= Void
-		end
-
-	milliseconds: INTEGER is
-			-- Length in milliseconds
-		do
-			Result := duration.millisecond_count + duration.day * 24 * 60 * 60 * 1000
 		end
 
 feature -- Comparison
@@ -172,6 +169,12 @@ feature -- Status report
 				Result := an_hour_count < 14
 					or else an_hour_count = 14 and then duration.minute.abs = 0
 			end
+		end
+
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+			-- Is `other' comparable to `Current'?
+		do
+			Result := other.is_seconds_duration
 		end
 	
 	display (a_level: INTEGER) is
@@ -223,7 +226,7 @@ feature -- Basic operations
 			a_result: INTEGER
 			a_double: DOUBLE
 		do
-			a_double := milliseconds * a_scalar
+			a_double := milliseconds.to_double * a_scalar
 			if a_double.abs + 0.5 < (Platform.Maximum_integer + 1.0) then
 				a_result := DOUBLE_.rounded_to_integer (a_double)
 				if a_result = Platform.Minimum_integer then
@@ -249,16 +252,16 @@ feature -- Basic operations
 			a_decimal, another_decimal: MA_DECIMAL
 		do
 			if other.is_seconds_duration then
-				if other.as_seconds_duration.milliseconds = 0 then
+				if other.as_seconds_duration.milliseconds.is_zero then
 					create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Division by zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
 				else
-					create a_decimal.make_from_integer (milliseconds)
-					create another_decimal.make_from_integer (other.as_seconds_duration.milliseconds)
+					a_decimal := milliseconds
+					another_decimal := other.as_seconds_duration.milliseconds
 					a_decimal := a_decimal / another_decimal
 					create {XM_XPATH_DECIMAL_VALUE} Result.make (a_decimal)
 				end
 			else
-				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration division", Gexslt_eiffel_type_uri, "MIXED-DURATIONS", Dynamic_error)
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration division", Xpath_errors_uri, "XPTY0004", Dynamic_error)
 			end
 		end
 		
@@ -267,20 +270,29 @@ feature {NONE} -- Implementation
 	normalize is
 			-- Normalize `duration'
 		local
-			a_day, an_hour: INTEGER
-			a_minute, a_second, a_millisecond: INTEGER
-			total_hours, total_minutes: INTEGER
+			l_day, l_hour: INTEGER
+			l_minute, l_second, l_millisecond: INTEGER
+			l_total_hours, l_total_minutes: INTEGER
 		do
-			a_second := INTEGER_.mod (duration.second_count, 60)
-			a_millisecond := INTEGER_.mod (duration.millisecond_count, 1000)
-			total_minutes := INTEGER_.div (duration.second_count, 60)
-			a_minute := INTEGER_.mod (total_minutes, 60)
-			total_hours := INTEGER_.div (total_minutes, 60) + duration.day * 24
-			an_hour := INTEGER_.mod (total_hours, 24)
-			a_day := INTEGER_.div (total_hours, 24)
-			create duration.make_precise (0, 0, a_day, an_hour, a_minute, a_second, a_millisecond)
+			duration.set_time_canonical
+			l_second := INTEGER_.mod (duration.second_count, 60)
+			l_millisecond := INTEGER_.mod (duration.millisecond_count, 1000)
+			l_total_minutes := INTEGER_.div (duration.second_count, 60)
+			l_minute := INTEGER_.mod (l_total_minutes, 60)
+			l_total_hours := INTEGER_.div (l_total_minutes, 60) + duration.day * 24
+			l_hour := INTEGER_.mod (l_total_hours, 24)
+			l_day := INTEGER_.div (l_total_hours, 24)
+			create duration.make_precise (0, 0, l_day, l_hour, l_minute, l_second, l_millisecond)
 		ensure
 			normal_duration: is_normal
+		end
+
+	milliseconds_in_day: MA_DECIMAL is
+			-- Number of milliseconds in one day
+		once
+			create Result.make_from_integer (24 * 60 * 60 * 1000)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 invariant

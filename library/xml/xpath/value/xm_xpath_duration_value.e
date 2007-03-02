@@ -65,9 +65,9 @@ feature -- Access
 		end
 
 	string_value: STRING is
-			--Value of the item as a string
+			-- Value of the item as a string
 		local
-			a_string: STRING
+			l_string: STRING
 		do
 
 			-- XML Schema does not define a canonical representation. We omit all zero components,
@@ -94,11 +94,14 @@ feature -- Access
 					Result := Result + duration.second.abs.out
 					if duration.millisecond /= 0 then
 						Result := Result + "."
-						a_string := duration.millisecond.abs.out
-						from  until a_string.count = 3 loop
-							a_string.insert_character ('0', 1)
+						l_string := duration.millisecond.abs.out
+						from  until l_string.count = 3 loop
+							l_string.insert_character ('0', 1)
 						end
-						Result := Result + a_string
+						from  until l_string.item (l_string.count) /= '0' loop
+							l_string.remove_tail (1)
+						end
+						Result := Result + l_string
 					end
 					Result := Result + "S"
 				end
@@ -111,6 +114,28 @@ feature -- Access
 			Result := duration.hash_code
 		end
 
+
+	seconds: MA_DECIMAL is
+			-- Seconds component (including milliseconds)
+		local
+			l_string, l_milliseconds: STRING
+		do
+			l_string := duration.second.out
+			if duration.millisecond /= 0 then
+				l_milliseconds := duration.millisecond.abs.out
+				from  until l_milliseconds.count = 3 loop
+					l_milliseconds.insert_character ('0', 1)
+				end
+				from  until l_milliseconds.item (l_milliseconds.count) /= '0' loop
+					l_milliseconds.remove_tail (1)
+				end
+				l_string := l_string + "." + l_milliseconds
+			end
+			create Result.make_from_string (l_string)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	duration: DT_DATE_TIME_DURATION
 			-- Duration
 
@@ -119,32 +144,38 @@ feature -- Comparison
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
 		local
-			a_duration: like duration
+			l_duration: like duration
 		do
 			if other.is_duration_value then
-				a_duration := other.as_duration_value.duration
 
-				-- XML Schema says two xs:durations are equal iff all their components are equal
+				l_duration := other.as_duration_value.duration
 
-				Result := duration.year = a_duration.year
-					and then duration.month = a_duration.month
-					and then duration.day = a_duration.day
-					and then duration.hour = a_duration.hour
-					and then duration.minute = a_duration.minute
-					and then duration.second = a_duration.second
-					and then duration.millisecond = a_duration.millisecond
+				Result := duration.year = l_duration.year
+					and then duration.month = l_duration.month
+					and then duration.day = l_duration.day
+					and then duration.hour = l_duration.hour
+					and then duration.minute = l_duration.minute
+					and then duration.second = l_duration.second
+					and then duration.millisecond = l_duration.millisecond
 			end
 		end
-	
+
+	equal_duration (a_other: XM_XPATH_DURATION_VALUE): BOOLEAN is
+			-- Is `Current' equal to `a_other'?
+			-- XPath functions and operators says two xs:durations are equal iff all their seconds count and their months count are equal
+		do
+			Result := normalized_duration.same_expression (a_other.normalized_duration)
+		end
+
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Comparison of `Current' to `other'
 		local
-			a_duration: like duration
+			l_duration: like duration
 		do
-			a_duration := other.as_duration_value.duration
-			if duration < a_duration then
+			l_duration := other.as_duration_value.duration
+			if duration < l_duration then
 				Result := -1
-			elseif duration > a_duration then
+			elseif duration > l_duration then
 				Result := 1
 			end
 		end
@@ -192,7 +223,7 @@ feature -- Status report
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
 		do
-			Result := other.is_duration_value
+			-- Result := False
 		end
 
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
@@ -211,12 +242,12 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
-			a_string: STRING
+			l_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "duration (")
-			a_string := STRING_.appended_string (a_string, string_value)
-			a_string := STRING_.appended_string (a_string, ")")
-			std.error.put_string (a_string)
+			l_string := STRING_.appended_string (indentation (a_level), "duration (")
+			l_string := STRING_.appended_string (l_string, string_value)
+			l_string := STRING_.appended_string (l_string, ")")
+			std.error.put_string (l_string)
 			std.error.put_new_line
 		end
 
@@ -301,7 +332,7 @@ feature -- Basic operations
 			result_may_be_in_error: Result /= Void
 		end
 		
-feature {NONE} -- Implementation
+feature {XM_XPATH_DURATION_VALUE} -- Implementation
 
 	normalized_duration: XM_XPATH_DURATION_VALUE is
 			-- Normal form of `duration'

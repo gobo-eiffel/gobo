@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make (an_integer, another_integer: INTEGER) is
 			-- Establish invariant.
 		require
-			strictly_positive_lower_bound: an_integer > 0
+			non_negative_lower_bound: an_integer >= 0
 			valid_upper_bound: another_integer >= an_integer
 		do
 			minimum_position := an_integer
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	minimum_position: minimum_position > 0
+	minimum_position: minimum_position >= 0
 	proper_range: maximum_position >= minimum_position 
 
 end

@@ -75,6 +75,9 @@ feature -- Access
 				set_last_error (an_iterator.error_value)
 			elseif an_iterator.is_last_position_finder then
 				Result := an_iterator.as_last_position_finder.last_position
+				if an_iterator.as_last_position_finder.is_error then
+					set_last_error (an_iterator.as_last_position_finder.error_value)
+				end
 			else
 				from
 					an_iterator.start

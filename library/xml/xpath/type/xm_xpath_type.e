@@ -195,7 +195,17 @@ feature -- Status report
 		do
 			Result := is_sub_type (a_type, type_factory.any_atomic_type)
 		end
-	
+
+	is_numeric_primitive_type (a_fingerprint: INTEGER): BOOLEAN is
+			-- Is `a_fingerprint' a primitive numeric type?
+		do
+			Result := a_fingerprint = Integer_type_code or
+				a_fingerprint = Double_type_code or
+				a_fingerprint = Float_type_code or
+				a_fingerprint = Decimal_type_code or
+				a_fingerprint = Numeric_type_code
+		end
+
 	is_sub_type (a_sub_type, a_super_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `a_sub_type' a (non-proper) descendant of `a_super_type'?
 		require

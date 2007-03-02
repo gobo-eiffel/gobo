@@ -216,9 +216,9 @@ feature -- Comparison
 			a_date: DT_DATE
 		do
 			a_time := other.as_time_value
+			create a_date.make (1972, December, 31)
 			if zoned = a_time.zoned then
 				if zoned then
-					create a_date.make (1972, December, 31)
 					create dt2.make_from_date_time (a_date, a_time.zoned_time.time)
 					a_time.zoned_time.time_zone.convert_to_utc (dt2)
 					create a_date.make (1972, December, 31)
@@ -231,7 +231,6 @@ feature -- Comparison
 					Result := dt1.three_way_comparison (dt2)
 				end
  			elseif zoned then
-				create a_date.make (1972, December, 31)
 				create dt2.make_from_date_time (a_date, a_time.local_time)
 				a_context.implicit_timezone.convert_to_utc (dt2)
 				create a_date.make (1972, December, 31)
@@ -239,7 +238,6 @@ feature -- Comparison
 				zoned_time.time_zone.convert_to_utc (dt1)
 				Result := dt1.three_way_comparison (dt2)
 			else
-				create a_date.make (1972, December, 31)
 				create dt2.make_from_date_time (a_date, a_time.zoned_time.time)
 				a_time.zoned_time.time_zone.convert_to_utc (dt2)
 				create a_date.make (1972, December, 31)
@@ -331,15 +329,15 @@ feature -- Basic operations
 		do
 			a_duration.duration.set_year_month_day (0, 0, 0)
 			if zoned then
-				a_time := zoned_time.time
+				a_time := zoned_time.time.twin
 			else
-				a_time := local_time
+				a_time := local_time.twin
 			end
 			create a_date.make (1970, 1, 1)
 			create a_dt.make_from_date_time (a_date, a_time)
 			a_dt.add_duration (a_duration.duration)
 			if zoned then
-				create a_zoned_time.make (a_dt.time, zoned_time.time_zone)
+				create a_zoned_time.make (a_dt.time, zoned_time.time_zone.twin)
 				create Result.make_from_zoned_time (a_zoned_time)
 			else
 				create Result.make_from_time (a_dt.time)

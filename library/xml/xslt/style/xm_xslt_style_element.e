@@ -1445,19 +1445,20 @@ feature -- Element change
 			end				
 		end
 
-	style_element_allocate_slots (an_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	style_element_allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- Allocate slots in the stack frame for local variables contained in `an_expression'.
 			-- This version can be called by XM_XSLT_TEMPLATE, even though it redefines `allocate_slots'.
 		require
 			not_excluded: not is_excluded
-			expression_not_replaced: an_expression /= Void and then not an_expression.was_expression_replaced
+			expression_not_in_error: a_expression /= Void and then not a_expression.is_error
+			expression_not_replaced: not a_expression.was_expression_replaced
 			slot_manager_not_void: a_slot_manager /= Void
 		local
 			a_first_slot, a_high_water_mark: INTEGER
 		do
 			a_first_slot := a_slot_manager.number_of_variables + 1
-			an_expression.allocate_slots (a_first_slot, a_slot_manager)
-			a_high_water_mark := an_expression.last_slot_number
+			a_expression.allocate_slots (a_first_slot, a_slot_manager)
+			a_high_water_mark := a_expression.last_slot_number
 			if a_high_water_mark > a_first_slot then
 				a_slot_manager.set_number_of_variables (a_high_water_mark)
 			end
@@ -1465,14 +1466,14 @@ feature -- Element change
 			no_fewer_slots_allocated: a_slot_manager.number_of_variables >= old a_slot_manager.number_of_variables
 		end
 	
-	allocate_slots (an_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- Allocate slots in the stack frame for local variables contained in `an_expression'.
 		require
 			not_excluded: not is_excluded
-			expression_not_void: an_expression /= Void
+			expression_not_in_error: a_expression /= Void and then not a_expression.is_error
 			slot_manager_not_void: a_slot_manager /= Void
 		do
-			style_element_allocate_slots (an_expression, a_slot_manager)
+			style_element_allocate_slots (a_expression, a_slot_manager)
 		end
 
 	prepare_attributes is

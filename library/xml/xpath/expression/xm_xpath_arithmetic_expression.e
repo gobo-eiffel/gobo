@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			check_static_type, evaluate_item, make, is_arithmetic_expression, as_arithmetic_expression
+			check_static_type, evaluate_item, make, is_arithmetic_expression, as_arithmetic_expression, is_valid_operator
 		end
 
 	XM_XPATH_ARITHMETIC_ROUTINES
@@ -53,30 +53,55 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		local
-			a_type, another_type: XM_XPATH_ITEM_TYPE
+			l_type, l_other_type: XM_XPATH_ITEM_TYPE
+			l_primitive_type, l_other_primitive_type: INTEGER
+			l_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE]
+			l_table_index: INTEGER
 		do
-			a_type := first_operand.item_type
-			another_type := second_operand.item_type
-			Result := common_item_type (a_type, another_type)
-			if Result = type_factory.numeric_type then
-				Result := lowest_commom_promotion_super_type (a_type, another_type)
+			l_type := first_operand.item_type
+			l_other_type := second_operand.item_type
+			l_primitive_type := l_type.primitive_type
+			l_other_primitive_type := l_other_type.primitive_type
 
-				-- Exception: integer / integer => decimal
+			l_table := signature_table (operator)
+			l_table_index := signature_table_index (l_table, l_primitive_type, l_other_primitive_type)
 
-				if operator = Division_token and Result = type_factory.integer_type then
-					Result := type_factory.decimal_type
+			if l_table_index = 0 then
+				-- type not known statically
+				Result := type_factory.any_atomic_type
+			else
+				Result := l_table.item (l_table_index).result_type
+				if Result = type_factory.numeric_type then
+					Result := lowest_commom_promotion_super_type (l_type, l_other_type)
+					-- Exception: integer / integer => decimal
+					if operator = Division_token and Result = type_factory.integer_type then
+						Result := type_factory.decimal_type
+					end
+				elseif Result = type_factory.duration_type then
+					-- if one of the operands is a subtype of duration, then the result will be the same subtype
+					if is_sub_type (l_type, type_factory.day_time_duration_type) then
+						Result := type_factory.day_time_duration_type
+					elseif is_sub_type (l_other_type, type_factory.day_time_duration_type) then
+						Result := type_factory.day_time_duration_type
+					elseif is_sub_type (l_type, type_factory.year_month_duration_type) then
+						Result := type_factory.year_month_duration_type
+					elseif is_sub_type (l_other_type, type_factory.year_month_duration_type) then
+						Result := type_factory.year_month_duration_type
+					end
 				end
 			end
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end			
 		end
 
 feature -- Status report
 
 	is_backwards_compatible_mode: BOOLEAN
 			-- Is XPath 1.0 Backwards Compatible Mode used?
+
+	is_valid_operator (a_operator: INTEGER): BOOLEAN is
+			-- Is `a_operator' valid for `Current'?
+		do
+			Result := is_arithmetic_operator	(a_operator)
+		end
 
 feature -- Status_setting
 
@@ -129,11 +154,10 @@ feature -- Optimization
 						create_1_0_expression  (a_context, a_context_item_type)
 					elseif first_operand.cardinality_is_empty then
 						set_replacement (first_operand)
-					elseif second_operand.cardinality_is_empty then
 						set_replacement (second_operand)
 					else
 						Precursor (a_context, a_context_item_type)
-						if not was_expression_replaced then
+						if not was_expression_replaced and not is_error then
 							type_check_arithmetic_expression (a_context)
 						end
 					end
@@ -153,6 +177,7 @@ feature -- Evaluation
 			a_numeric_value, another_numeric_value: XM_XPATH_NUMERIC_VALUE
 			a_string: STRING
 		do
+			last_evaluated_item := Void
 			first_operand.evaluate_item (a_context)
 			if first_operand.last_evaluated_item = Void then
 				last_evaluated_item := Void
@@ -173,16 +198,7 @@ feature -- Evaluation
 						else
 							an_atomic_value := first_operand.last_evaluated_item.as_atomic_value
 							another_atomic_value := second_operand.last_evaluated_item.as_atomic_value
-							an_action := action (an_atomic_value.item_type, another_atomic_value.item_type, operator)
-							if an_action = Date_difference_action then
-								if (an_atomic_value.is_date_value and another_atomic_value.is_date_value) or
-									(an_atomic_value.is_time_value and another_atomic_value.is_time_value) or
-									(an_atomic_value.is_date_time_value and another_atomic_value.is_date_time_value) then
-									-- OK
-								else
-									an_action := Unknown_action -- to trigger type error
-								end
-							end
+							an_action := action (an_atomic_value.item_type.primitive_type, another_atomic_value.item_type.primitive_type, operator)
 							inspect
 								an_action
 							when Numeric_arithmetic_action then
@@ -248,6 +264,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 	type_check_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static type checking of `Current' and its subexpressions
 		require
+			no_previous_error: not is_error
 			a_context_not_void: a_context /= Void
 			first_operand_not_in_error: not first_operand.is_error
 			second_operand_not_in_error: not second_operand.is_error
@@ -259,16 +276,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 		do
 			l_type := first_operand.item_type
 			l_second_type := second_operand.item_type
-			l_action := action (l_type, l_second_type, operator)
-			if l_action = Date_difference_action then
-				if (first_operand.is_date_value and second_operand.is_date_value) or
-					(first_operand.is_time_value and second_operand.is_time_value) or
-					(first_operand.is_date_time_value and second_operand.is_date_time_value) then
-					-- OK
-				else
-					l_action := Unknown_action -- to trigger type error
-				end
-			end
+			l_action := action (l_type.primitive_type, l_second_type.primitive_type, operator)
 			inspect
 				l_action
 			when Numeric_arithmetic_action then
@@ -277,6 +285,8 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 				create {XM_XPATH_DURATION_ADDITION} l_expression.make (first_operand, operator, second_operand)
 			when Duration_multiplication_action then
 				create {XM_XPATH_DURATION_MULTIPLICATION} l_expression.make (first_operand, operator, second_operand)
+			when Duration_division_action then
+				create {XM_XPATH_DURATION_DIVISION} l_expression.make (first_operand, operator, second_operand)				
 			when Date_and_duration_action then
 				create {XM_XPATH_DATE_AND_DURATION} l_expression.make (first_operand, operator, second_operand)
 			when Date_difference_action then
@@ -482,6 +492,10 @@ feature {NONE} -- Optimization
 				end
 			end
 		end
+
+invariant
+
+	valid_operator: is_arithmetic_operator (operator)
 
 end
 	

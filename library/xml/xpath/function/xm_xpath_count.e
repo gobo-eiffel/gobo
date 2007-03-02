@@ -76,7 +76,7 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			an_integer: INTEGER
 		do
 			arguments.item (1).create_iterator (a_context)
@@ -84,8 +84,12 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 			elseif an_iterator.is_last_position_finder then
-				create an_integer_value.make_from_integer (an_iterator.as_last_position_finder.last_position)
-				last_evaluated_item := an_integer_value
+				create an_integer_value.make (an_iterator.as_last_position_finder.last_position)
+				if an_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				else
+					last_evaluated_item := an_integer_value
+				end
 			else
 				from
 					an_integer := 0
@@ -97,7 +101,7 @@ feature -- Evaluation
 					an_iterator.forth
 				end
 				if not an_iterator.is_error then
-					create an_integer_value.make_from_integer (an_integer)
+					create an_integer_value.make (an_integer)
 					last_evaluated_item := an_integer_value
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)

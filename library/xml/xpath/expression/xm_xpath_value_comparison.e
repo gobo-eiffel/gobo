@@ -655,6 +655,8 @@ feature {NONE} -- Implementation
 				when Fortran_less_equal_token then
 					last_check_result := a_atomic_comparer.three_way_comparison (a_atomic_value, a_other_value) /= 1
 				end
+			elseif a_operator = Fortran_equal_token and a_atomic_value.is_duration_value and a_other_value.is_duration_value then
+				last_check_result := a_atomic_value.as_duration_value.equal_duration (a_other_value.as_duration_value)
 			else
 				l_message := STRING_.appended_string ("Cannot compare ", a_atomic_value.item_type.conventional_name)
 				l_message := STRING_.appended_string (l_message, " with ")

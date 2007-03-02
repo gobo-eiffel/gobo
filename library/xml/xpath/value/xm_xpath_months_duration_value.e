@@ -19,11 +19,11 @@ inherit
 			make as make_duration,
 			make_from_duration as make_duration_from_duration
 		redefine
-			is_duration, string_value,
+			is_duration, string_value, is_normal,
 			is_months_duration, as_months_duration,
-			same_expression, plus, minus,
+			same_expression, plus, minus, seconds,
 			multiply, scalar_divide, divide,
-			display, item_type
+			display, item_type, is_comparable
 		end
 
 	KL_SHARED_PLATFORM
@@ -73,6 +73,7 @@ feature -- Access
 		local
 			total_months, a_year, a_month: INTEGER
 		do
+			if not is_normal then normalize end
 			total_months := months
 			if total_months = 0 then
 				Result := "P0M"
@@ -95,6 +96,12 @@ feature -- Access
 			-- total number of months
 		do
 			Result := 12 * duration.year + duration.month
+		end
+
+	seconds: MA_DECIMAL is
+			-- Seconds component (including milliseconds)
+		do
+			create Result.make_zero
 		end
 
 feature -- Comparison
@@ -127,6 +134,14 @@ feature -- Status report
 			Result := True
 		end
 
+	is_normal: BOOLEAN is
+			-- Is `duration' in normal form?
+		do
+			Result := duration.month = 0 or
+				duration.year = 0 or
+				(duration.month.sign = duration.year.sign)
+		end
+
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
@@ -137,6 +152,12 @@ feature -- Status report
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)
 			std.error.put_new_line
+		end
+
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+			-- Is `other' comparable to `Current'?
+		do
+			Result := other.is_months_duration
 		end
 
 feature -- Conversions
@@ -220,11 +241,12 @@ feature {NONE} -- Implementation
 
 	normalize is
 			-- Normalize `duration'
+		local
+			l_total_months: INTEGER
 		do
-			if duration.month.abs > 11 then
-				duration.set_year (duration.year + (INTEGER_.div (duration.month, 12)))
-				duration.set_month (INTEGER_.mod (duration.month, 12))
-			end
+			l_total_months := duration.year * 12 + duration.month
+			duration.set_year (INTEGER_.div (l_total_months, 12))
+			duration.set_month (INTEGER_.mod (l_total_months, 12))
 		end
 
 invariant

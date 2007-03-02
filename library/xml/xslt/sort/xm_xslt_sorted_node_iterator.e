@@ -2,19 +2,19 @@ indexing
 
 	description:
 
-		"Objects that render a sorted iteration of items."
+		"Objects that render a sorted iteration of nodes."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date:  $"
+	revision: "$Revision: $"
 
-class	XM_XSLT_SORTED_ITERATOR
+class	XM_XSLT_SORTED_NODE_ITERATOR
 
 inherit
 
-	XM_XPATH_LAST_POSITION_FINDER [XM_XPATH_ITEM]
+	XM_XPATH_LAST_POSITION_FINDER [XM_XPATH_NODE]
 
 	KL_COMPARATOR [XM_XSLT_SORT_RECORD]
 
@@ -23,7 +23,7 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
-
+	
 	XM_XPATH_ERROR_TYPES
 		export {NONE} all end
 
@@ -34,7 +34,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_context: XM_XSLT_EVALUATION_CONTEXT;
-			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM];
+			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE];
 			some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]) is
 			-- Establish invariant
 		require
@@ -70,10 +70,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_ITEM is
-			-- Value or node at the current position
+	item: XM_XPATH_NODE is
+			-- Node at the current position
 		do
-			Result := node_keys.item (index).item
+			Result := node_keys.item (index).item.as_node
 		end
 
 	last_position: INTEGER is
@@ -193,7 +193,7 @@ feature -- Duplication
 		end
 
 
-feature {XM_XSLT_SORTED_ITERATOR} -- Local
+feature {XM_XSLT_SORTED_NODE_ITERATOR} -- Local
 
 	set_count (a_count: INTEGER) is
 			-- Set `count'.
@@ -217,7 +217,7 @@ feature {XM_XSLT_SORTED_ITERATOR} -- Local
 
 feature {NONE} -- Implementation
 
-	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Sequence to be sorted
 	
 	sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]

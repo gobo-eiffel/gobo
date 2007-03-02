@@ -177,6 +177,13 @@ feature {NONE} -- Implementation
 					-- No problems
 				when Date_time_type_code, Time_type_code, Date_type_code then
 					-- The implicit time-zone is available from the dynamic context, if needed, within the XM_XPATH_ATMIC_COMPARER
+				when Duration_type_code then
+					if atomic_value.is_months_duration or atomic_value.is_seconds_duration then
+						-- OK
+					else
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat ("Invalid type for fn:min/max(): ", atomic_value.item_type.conventional_name), Xpath_errors_uri, "FORG0006", Dynamic_error)
+						already_finished := True
+					end
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat ("Invalid base type for fn:min/max(): ", atomic_value.item_type.conventional_name), Xpath_errors_uri, "FORG0006", Dynamic_error)
 					already_finished := True

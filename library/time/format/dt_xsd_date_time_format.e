@@ -57,6 +57,8 @@ feature -- Conversion
 
 	time_to_string (a_time: DT_TIME): STRING is
 			-- Formatted time
+		local
+			l_millisecond: STRING
 		do
 			Result := time_part_to_string (a_time.hour)
 			Result.append_character (':')
@@ -65,7 +67,14 @@ feature -- Conversion
 			Result := Result + time_part_to_string (a_time.second)
 			if a_time.millisecond > 0 then
 				Result.append_character ('.')
-				INTEGER_.append_decimal_integer (a_time.millisecond, Result)
+				l_millisecond := a_time.millisecond.out
+				from  until l_millisecond.count = 3 loop
+					l_millisecond.insert_character ('0', 1)
+				end
+				from  until l_millisecond.item (l_millisecond.count) /= '0' loop
+					l_millisecond.remove_tail (1)
+				end
+				Result.append_string (l_millisecond)
 			end
 		end
 

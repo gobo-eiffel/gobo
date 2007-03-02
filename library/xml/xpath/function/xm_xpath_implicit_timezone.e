@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			evaluate_item
+			evaluate_item, pre_evaluate
 		end
 
 create
@@ -79,6 +79,12 @@ feature -- Evaluation
 			-- Create an iterator over a node sequence
 		do
 			-- pre-condition is never met
+		end
+
+	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Pre-evaluate `Current' at compile time.
+		do
+			--	do_nothing
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

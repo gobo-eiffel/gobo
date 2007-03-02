@@ -381,13 +381,13 @@ feature -- Basic operations
 			a_zoned_date_time: like zoned_date_time
 		do
 			if zoned then
-				a_date_time := zoned_date_time.date_time
+				a_date_time := zoned_date_time.date_time.twin
 			else
-				a_date_time := local_date_time
+				a_date_time := local_date_time.twin
 			end
 			a_date_time.add_duration (a_duration.duration)
 			if zoned then
-				create a_zoned_date_time.make (a_date_time, zoned_date_time.time_zone)
+				create a_zoned_date_time.make (a_date_time, zoned_date_time.time_zone.twin)
 				create Result.make_from_zoned_date_time (a_zoned_date_time)
 			else
 				create Result.make_from_date_time (a_date_time)

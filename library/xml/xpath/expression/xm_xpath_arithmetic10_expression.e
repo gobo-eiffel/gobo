@@ -52,7 +52,7 @@ feature -- Optimization
 			if l_second_type = type_factory.boolean_type or l_second_type = type_factory.string_type then
 				l_second_type := type_factory.numeric_type
 			end
-			l_action := action (l_type, l_second_type, operator)
+			l_action := action (l_type.primitive_type, l_second_type.primitive_type, operator)
 			inspect
 				l_action
 			when Numeric_arithmetic_action then
@@ -140,7 +140,7 @@ feature {NONE} -- Evaluation
 			l_expression: XM_XPATH_EXPRESSION
 			l_string: STRING
 		do
-			l_action := action (a_first_operand.item_type, a_second_operand.item_type, operator)
+			l_action := action (a_first_operand.item_type.primitive_type, a_second_operand.item_type.primitive_type, operator)
 			inspect
 				l_action
 			when Numeric_arithmetic_action then

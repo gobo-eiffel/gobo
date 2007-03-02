@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			a_primary_type: XM_XPATH_ITEM_TYPE
 			a_message, a_local_name, a_uri: STRING
 			a_parser: XM_XPATH_QNAME_PARSER
-			a_fingerprint: INTEGER
+			a_fingerprint, a_uri_code: INTEGER
 			is_empty_sequence: BOOLEAN
 		do
 			a_primary_type := any_item
@@ -279,8 +279,9 @@ feature {NONE} -- Implementation
 							-- because of is_qname
 						end
 					a_local_name := a_parser.local_name
-					if not a_parser.is_prefix_present then
-						a_uri := ""
+						if not a_parser.is_prefix_present then
+							a_uri_code := environment.default_element_namespace
+							a_uri := shared_name_pool.uri_from_uri_code (a_uri_code)
 					elseif environment.is_prefix_declared (a_parser.optional_prefix) then
 						a_uri := environment.uri_for_prefix (a_parser.optional_prefix)
 					else
@@ -289,8 +290,8 @@ feature {NONE} -- Implementation
 						report_parse_error (a_message, "XPST0081")
 					end
 					if not is_parse_error then
-						a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
-						if a_fingerprint /= -1 then
+						if a_uri /= Void and then (is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri)) then
+							a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
 							a_primary_type := type_factory.schema_type (a_fingerprint)
 							check
 								primary_type_not_void: a_primary_type /= Void

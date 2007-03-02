@@ -115,11 +115,11 @@ feature -- Status setting
 
 feature -- Element change
 
-	allocate_slots (an_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- Allocate slots in the stack frame for local variables contained in `an_expression', which will include a match pattern.
 		do
-			an_expression.allocate_slots (1, a_slot_manager)
-			containing_stylesheet.allocate_pattern_slots (an_expression.last_slot_number)
+			a_expression.allocate_slots (1, a_slot_manager)
+			containing_stylesheet.allocate_pattern_slots (a_expression.last_slot_number)
 		end
 	
 	prepare_attributes is
@@ -285,47 +285,50 @@ feature -- Element change
 						a_content := a_trace_wrapper
 					end
 					compiled_template.initialize (an_executable, a_content, template_fingerprint, precedence, minimum_import_precedence, system_id, line_number, slot_manager)
-					style_element_allocate_slots (a_content, slot_manager)
-					if match /= Void then
-						a_rule_manager := principal_stylesheet.rule_manager
-						from
-							a_cursor := mode_name_codes.new_cursor
-							a_cursor.start
-						variant
-							mode_name_codes.count + 1 - a_cursor.index
-						until
-							a_cursor.after
-						loop
-							a_name_code := a_cursor.item
-							if not a_rule_manager.is_mode_registered (a_name_code) then
-								a_rule_manager.register_mode (a_name_code)
-							end
-							a_mode := a_rule_manager.mode (a_name_code)
-							create a_rule_value.make (compiled_template)
-							if is_priority_specified then
-								a_rule_manager.set_handler (match, a_rule_value, a_mode, precedence, priority)
-							else
-								a_rule_manager.set_handler_with_default_priority (match, a_rule_value, a_mode, precedence)
-							end
-							a_cursor.forth
-						end
-					end
-					if is_explaining or else principal_stylesheet.is_all_explaining then
-						std.error.put_string ("Compiled template ")
-						if template_fingerprint /= -1 then
-							std.error.put_string (" name=")
-							std.error.put_string (shared_name_pool.display_name_from_name_code (template_fingerprint))
-						end
+					if a_content.is_error then
+						report_compile_error (a_content.error_value)
+					else
+						style_element_allocate_slots (a_content, slot_manager)
 						if match /= Void then
-							std.error.put_string (" match=")
-							std.error.put_string (match.original_text)
+							a_rule_manager := principal_stylesheet.rule_manager
+							from
+								a_cursor := mode_name_codes.new_cursor
+								a_cursor.start
+							variant
+								mode_name_codes.count + 1 - a_cursor.index
+							until
+								a_cursor.after
+							loop
+								a_name_code := a_cursor.item
+								if not a_rule_manager.is_mode_registered (a_name_code) then
+									a_rule_manager.register_mode (a_name_code)
+								end
+								a_mode := a_rule_manager.mode (a_name_code)
+								create a_rule_value.make (compiled_template)
+								if is_priority_specified then
+									a_rule_manager.set_handler (match, a_rule_value, a_mode, precedence, priority)
+								else
+									a_rule_manager.set_handler_with_default_priority (match, a_rule_value, a_mode, precedence)
+								end
+								a_cursor.forth
+							end
 						end
-						std.error.put_new_line
-						-- TODO - add mode names
-						std.error.put_string (" Optimized template body:%N")
-						compiled_template.body.display (2)
+						if is_explaining or else principal_stylesheet.is_all_explaining then
+							std.error.put_string ("Compiled template ")
+							if template_fingerprint /= -1 then
+								std.error.put_string (" name=")
+								std.error.put_string (shared_name_pool.display_name_from_name_code (template_fingerprint))
+							end
+							if match /= Void then
+								std.error.put_string (" match=")
+								std.error.put_string (match.original_text)
+							end
+							std.error.put_new_line
+							-- TODO - add mode names
+							std.error.put_string (" Optimized template body:%N")
+							compiled_template.body.display (2)
+						end
 					end
-
 				end
 			end
 			last_generated_expression := Void

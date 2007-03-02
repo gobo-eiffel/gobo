@@ -266,6 +266,9 @@ feature -- Evaluation
 			else
 				from
 					an_iterator.start
+					if an_iterator.is_error then
+						a_transformer.report_fatal_error (an_iterator.error_value)
+					end
 				until
 					a_transformer.is_error or else an_iterator.is_error or else an_iterator.after
 				loop

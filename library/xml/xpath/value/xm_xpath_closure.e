@@ -178,13 +178,8 @@ feature -- Evaluation
 			-- An iterator over the values of a sequence
 		do
 			if input_iterator = Void then
-				if base_expression.is_node_sequence then
-					base_expression.create_node_iterator (saved_xpath_context)
-					input_iterator := base_expression.last_node_iterator
-				else
-					base_expression.create_iterator (saved_xpath_context)
-					input_iterator := base_expression.last_iterator
-				end
+				base_expression.create_iterator (saved_xpath_context)
+				input_iterator := base_expression.last_iterator
 				last_iterator := input_iterator
 			elseif input_iterator.is_error then
 				last_iterator := input_iterator
@@ -200,8 +195,20 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
 		do
-			create_iterator (a_context)
-			last_node_iterator := last_iterator.as_node_iterator
+			if input_iterator = Void then
+				base_expression.create_node_iterator (saved_xpath_context)
+				input_iterator := base_expression.last_node_iterator
+				last_node_iterator := input_iterator.as_node_iterator
+			elseif input_iterator.is_error then
+				last_node_iterator := input_iterator.as_node_iterator
+			else
+
+				-- This ought not to happen, as a MEMO_CLOSURE should have been selected instead,
+				--  but it does.
+
+				last_node_iterator := input_iterator.another.as_node_iterator
+			end
+
 		end
 
 	generate_events (a_context: XM_XPATH_CONTEXT) is

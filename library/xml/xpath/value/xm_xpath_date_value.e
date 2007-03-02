@@ -224,7 +224,7 @@ feature -- Comparison
 				Result := dt1.three_way_comparison (dt2)
 			else -- `other' is zoned
 				create a_time.make (0,0,0)
-				create dt2.make_from_date_time (a_date.local_date, a_time)
+				create dt2.make_from_date_time (a_date.zoned_date.date, a_time)
 				a_date.zoned_date.time_zone.convert_to_utc (dt2)
 				create a_time.make (0,0,0)
 				create dt1.make_from_date_time (local_date, a_time)
@@ -355,14 +355,14 @@ feature -- Basic operations
 			a_zoned_date: like zoned_date
 		do
 			if zoned then
-				a_date := zoned_date.date
+				a_date := zoned_date.date.twin
 			else
-				a_date := local_date
+				a_date := local_date.twin
 			end
 			create a_date_time.make_from_date (a_date)
 			a_date_time.add_duration (a_duration.duration)
 			if zoned then
-				create a_zoned_date.make (a_date_time.date, zoned_date.time_zone)
+				create a_zoned_date.make (a_date_time.date, zoned_date.time_zone.twin)
 				create Result.make_from_zoned_date (a_zoned_date)
 			else
 				create Result.make_from_date (a_date_time.date)

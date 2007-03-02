@@ -16,6 +16,9 @@ inherit
 
 	KL_COMPARATOR  [XM_XPATH_ATOMIC_VALUE]
 
+	XM_XPATH_EXCEPTION_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -80,7 +83,11 @@ feature -- Comparison
 	less_than (u, v: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `u' considered less than `v'?
 		do
-			Result := three_way_comparison (u, v) = -1
+			if are_comparable (u, v) then
+				Result := three_way_comparison (u, v) = -1
+			else
+				raise_non_comparable_exception
+			end
 		end
 
 feature -- Status report

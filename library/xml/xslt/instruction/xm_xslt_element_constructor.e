@@ -88,41 +88,67 @@ feature -- Optimization
 	simplify is
 			-- Perform context-free optimizations.
 		do
-			content.simplify
-			if content.was_expression_replaced then
-				content := content.replacement_expression
-				adopt_child_expression (content)
+			if content.is_error then
+				set_last_error (content.error_value)
+			else
+				content.simplify
+				if content.is_error then
+					set_last_error (content.error_value)
+				elseif content.was_expression_replaced then
+					content := content.replacement_expression
+					adopt_child_expression (content)
+				end
 			end
 		end
 
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			content.check_static_type (a_context, a_context_item_type)
-			if content.was_expression_replaced then
-				content := content.replacement_expression
-				adopt_child_expression (content)
+			if content.is_error then
+				set_last_error (content.error_value)
+			else
+				content.check_static_type (a_context, a_context_item_type)
+				if content.is_error then
+					set_last_error (content.error_value)
+				elseif content.was_expression_replaced then
+					content := content.replacement_expression
+					adopt_child_expression (content)
+				end
+				if not is_error then
+					check_contents_for_attributes (a_context)
+				end
 			end
-			check_contents_for_attributes (a_context)
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			content.optimize (a_context, a_context_item_type)
-			if content.was_expression_replaced then
-				content := content.replacement_expression
-				adopt_child_expression (content)
+			if content.is_error then
+				set_last_error (content.error_value)
+			else
+				content.optimize (a_context, a_context_item_type)
+				if content.is_error then
+					set_last_error (content.error_value)
+				elseif content.was_expression_replaced then
+					content := content.replacement_expression
+					adopt_child_expression (content)
+				end
 			end
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		do
-			content.promote (an_offer)
-			if content.was_expression_replaced then
-				content := content.replacement_expression
-				adopt_child_expression (content)
+			if content.is_error then
+				set_last_error (content.error_value)
+			else
+				content.promote (an_offer)
+				if content.is_error then
+					set_last_error (content.error_value)
+				elseif content.was_expression_replaced then
+					content := content.replacement_expression
+					adopt_child_expression (content)
+				end
 			end
 		end
 

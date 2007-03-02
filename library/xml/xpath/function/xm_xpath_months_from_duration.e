@@ -55,7 +55,7 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			create Result.make_optional_year_month_duration
+			create Result.make_optional_duration
 		end
 
 feature -- Evaluation
@@ -63,12 +63,12 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			a_months_value: XM_XPATH_MONTHS_DURATION_VALUE
+			a_months_value: XM_XPATH_DURATION_VALUE
 		do
 			arguments.item (1).evaluate_item (a_context)
 			last_evaluated_item := arguments.item (1).last_evaluated_item
 			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
-				a_months_value := last_evaluated_item.as_atomic_value.as_months_duration
+				a_months_value := last_evaluated_item.as_atomic_value.as_duration_value
 				create {XM_XPATH_MACHINE_INTEGER_VALUE} last_evaluated_item.make (a_months_value.duration.month)
 			end
 		end
