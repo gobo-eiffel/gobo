@@ -183,6 +183,32 @@ feature -- Status report
 
 	is_integer (a_string: STRING): BOOLEAN is
 			-- Is `a_string' only made up of digits?
+		obsolete "Use `is_decimal' instead"
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			nb := a_string.count
+			if nb = 0 then
+				Result := False
+			else
+				Result := True
+				from i := 1 until i > nb loop
+					c := a_string.item (i)
+					if c < '0' or c > '9' then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	is_decimal (a_string: STRING): BOOLEAN is
+			-- Is `a_string' only made up of characters '0'-'9'?
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -210,40 +236,67 @@ feature -- Status report
 			-- Does `a_string' represent a positive INTEGER_64?
 		require
 			a_string_not_void: a_string /= Void
-			digits_only: is_integer (a_string)
 		local
 			i, j, k, l, m: INTEGER
+			l_is_negative: BOOLEAN
+			c: CHARACTER
 		do
 			i := a_string.count
-			from
+			if i > 0 then
 				k := 1
-				j := 1
-			until
-				k /= j or j > i
-			loop
-				if a_string.item (j) = '0' then
+				c := a_string.item (1)
+				if c = '+' then
 					k := k + 1
+				elseif c = '-' then
+					k := k + 1
+					l_is_negative := True
 				end
-				j := j + 1
-			end
-			i := i - k + 1
-			if i < 20 then
-				Result := True
-				if i = 19 then
+				from
+					j := k
+				until
+					k /= j or j > i
+				loop
+					if a_string.item (j) = '0' then
+						k := k + 1
+					end
+					j := j + 1
+				end
+				i := i - k + 1
+				if i < 20 then
+					Result := True
 					from
-						l := a_string.count
-						m := l - i
+						l := k
 					until
-						not Result or k > l
+						l > i + k - 1
 					loop
-						j := a_string.item_code (k) - code_zero
-						i := max_integer_64_digits.item (k - m)
-						if  j < i then
-							Result := True
-							k := l + 1
+						c := a_string.item (l)
+						if c < '0' or c > '9' then
+							Result := False
+							l := i + k + 1 -- Jump out of the loop.
 						else
-							Result := j = i
-							k := k + 1
+							l := l + 1
+						end
+					end
+					if Result and i = 19 then
+						from
+							l := a_string.count
+							m := l - i
+						until
+							not Result or k > l
+						loop
+							j := a_string.item_code (k) - code_zero
+							if l_is_negative then
+								i := min_negative_integer_64_digits.item (k - m)
+							else
+								i := max_integer_64_digits.item (k - m)
+							end
+							if  j < i then
+								Result := True
+								k := l + 1
+							else
+								Result := j = i
+								k := k + 1
+							end
 						end
 					end
 				end
@@ -1707,12 +1760,10 @@ feature -- Resizing
 
 feature -- Conversion
 
-#ifndef VE
 	to_integer_64 (a_string: STRING): INTEGER_64 is
 			-- `a_string' as `INTEGER_64'
 		require
 			a_string_not_void: a_string /= Void
-			digits_only: is_integer (a_string)
 			integer_64_string: is_integer_64 (a_string)
 #ifdef ISE || GE
 		do
@@ -1721,19 +1772,32 @@ feature -- Conversion
 #endif
 #ifdef SE
 		local
-			i, c: INTEGER
+			i, v, nb: INTEGER
+			c: CHARACTER
+			l_is_negative: BOOLEAN
 		do
+			i := 1
+			c := a_string.item (1)
+			if c = '+' then
+				i := i + 1
+			elseif c = '-' then
+				i := i + 1
+				l_is_negative := True
+			end
 			from
-				c := a_string.count
-				i := 1
+				nb := a_string.count
 			until
-				i > c
+				i > nb
 			loop
-				Result := 10 * Result + a_string.item_code (i) - code_zero
+				v := a_string.item_code (i)
+				if l_is_negative then
+					Result := 10 * Result - v + code_zero
+				else
+					Result := 10 * Result + v - code_zero
+				end
 				i := i + 1
 			end
 		end
-#endif
 #endif
 
 feature {NONE} -- Implementation
@@ -1747,7 +1811,16 @@ feature {NONE} -- Implementation
 			Result  := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 7>>
 		ensure
 			result_not_void: Result /= Void
-			nionteen_digits: Result.count = 19
+			ninteen_digits: Result.count = 19
+		end
+
+	min_negative_integer_64_digits: ARRAY [INTEGER] is
+			-- Digits of minimum INTEGER_64 value
+		once
+			Result  := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 8>>
+		ensure
+			result_not_void: Result /= Void
+			ninteen_digits: Result.count = 19
 		end
 
 	code_zero: INTEGER is
