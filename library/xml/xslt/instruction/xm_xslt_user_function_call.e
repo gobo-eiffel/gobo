@@ -119,6 +119,7 @@ feature -- Evaluation
 			l_execution_context: XM_XSLT_EVALUATION_CONTEXT
 			l_value: DS_CELL [XM_XPATH_VALUE]
 		do
+			last_iterator := Void
 			l_execution_context ?= a_context
 			check
 				execution_context: l_execution_context /= Void
@@ -147,6 +148,7 @@ feature -- Evaluation
 			l_value: DS_CELL [XM_XPATH_VALUE]
 			l_package: XM_XSLT_FUNCTION_CALL_PACKAGE
 		do
+			last_node_iterator := Void
 			l_execution_context ?= a_context
 			check
 				execution_context: l_execution_context /= Void
@@ -173,6 +175,7 @@ feature -- Evaluation
 			l_execution_context: XM_XSLT_EVALUATION_CONTEXT
 			l_value: DS_CELL [XM_XPATH_VALUE]
 		do
+			last_evaluated_item := Void
 			l_execution_context ?= a_context
 			check
 				execution_context: l_execution_context /= Void

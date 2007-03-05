@@ -293,6 +293,7 @@ feature -- Evaluation
 		local
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
+			last_iterator := Void
 			select_expression.create_iterator (a_context)
 			last_iterator := select_expression.last_iterator
 			a_new_context ?= a_context.new_context
@@ -324,6 +325,7 @@ feature -- Evaluation
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
+			last_node_iterator := Void
 			select_expression.create_iterator (a_context)
 			l_iterator := select_expression.last_iterator
 			l_new_context ?= a_context.new_context

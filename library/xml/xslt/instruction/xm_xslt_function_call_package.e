@@ -150,6 +150,7 @@ feature -- Evaluation
 			l_flattener: XM_XSLT_FUNCTION_CALL_FLATTENER
 			l_value: DS_CELL [XM_XPATH_VALUE]
 		do
+			last_iterator := Void
 			create l_value.make (Void)
 			call (l_value)
 			l_value.item.create_iterator (a_context)
@@ -170,6 +171,7 @@ feature -- Evaluation
 			l_flattener: XM_XSLT_NODE_FUNCTION_CALL_FLATTENER
 			l_value: DS_CELL [XM_XPATH_VALUE]
 		do
+			last_node_iterator := Void
 			create l_value.make (Void)
 			call (l_value)
 			l_value.item.create_node_iterator (a_context)
