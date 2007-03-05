@@ -257,6 +257,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1
 			when Zero_or_one_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			else
+				Result := False
 			end
 		end
 

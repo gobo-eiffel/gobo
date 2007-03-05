@@ -155,6 +155,7 @@ feature -- Evaluation
 			counter: INTEGER
 			finished: BOOLEAN
 		do
+			last_boolean_value := Void
 			base_expression.create_iterator (a_context)
 			an_iterator := base_expression.last_iterator
 			if an_iterator.is_error then
