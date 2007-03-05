@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			namespace_codes_not_void: a_namespace_code_list /= Void
 			validation: a_validation_action >= Validation_strict  and then Validation_strip >= a_validation_action
 			content_not_void: a_content /= Void
+			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
 		do
 			executable := an_executable
 			fixed_name_code := a_name_code
@@ -175,6 +176,7 @@ feature {NONE} -- Implementation
 invariant
 
 	namespace_codes_not_void: initialized implies namespace_code_list /= Void
+	valid_name_code: shared_name_pool.is_valid_name_code (fixed_name_code)
 
 end
 	

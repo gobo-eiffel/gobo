@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			base_uri := base_receiver.base_uri
 			create namespaces_in_scope.make (50)
 			create count_stack.make (50)
+			create disinherit_stack.make (50)
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end
@@ -58,12 +59,13 @@ feature -- Events
 
 			-- If disinheriting namespaces, keep a list of namespaces that need to be undeclared.
 
-			if is_disinherit_namespaces (properties) then
+			if disinherit_stack.count > 0 and then disinherit_stack.item then
 				create pending_undeclarations.make_from_linear (namespaces_in_scope)
 			else
 				pending_undeclarations := Void
 			end
 			count_stack.force (0)
+			disinherit_stack.force (is_disinherit_namespaces (properties))
 
 			-- Ensure that the element namespace is output, unless this is done
 			--  automatically by the caller (which is true, for example,
@@ -147,7 +149,7 @@ feature -- Events
 				loop
 					a_namespace_code := a_cursor.item
 					if a_namespace_code /= -1 then
-						base_receiver.notify_namespace ((a_namespace_code // bits_16) * bits_16, 0)
+						notify_namespace ((a_namespace_code // bits_16) * bits_16, 0)
 					end
 					a_cursor.forth
 				end
@@ -181,8 +183,11 @@ feature {NONE} -- Implementation
 	pending_undeclarations: DS_ARRAYED_LIST [INTEGER]
 			-- Pending undeclarations
 
+	disinherit_stack: DS_ARRAYED_STACK [BOOLEAN]
+			-- Should namespaces be disinherited at next level?
+
 	cancel_pending_undeclarations (a_prefix_code: INTEGER) is
-			-- Cancel any pendinf undeclarations for `a_prefix_code'.
+			-- Cancel any pending undeclarations for `a_prefix_code'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
@@ -289,6 +294,7 @@ invariant
 
 	namespaces_in_scope_not_void: namespaces_in_scope /= Void
 	count_stack_not_void: count_stack /= Void
+	disinherit_stack_not_void: disinherit_stack /= Void
 
 end
 	

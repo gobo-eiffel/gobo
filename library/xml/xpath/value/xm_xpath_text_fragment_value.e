@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 		do
 			text := a_value
 			base_uri := a_base_uri
+			system_id := base_uri
 			shared_serial_number_generator.generate_next_serial_number
 			set_document_number (shared_serial_number_generator.last_generated_serial_number)
 			node_type := Document_node
@@ -253,6 +254,8 @@ invariant
 
 	value_not_void: text /= Void
 	document_node: node_type = Document_node
+	system_id_not_void: system_id /= Void
+	base_uri_not_void: base_uri /= Void
 
 end
 	

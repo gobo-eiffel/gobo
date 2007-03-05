@@ -203,7 +203,11 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		do
 			Precursor (a_context)
-			stylesheet_base_uri := a_context.base_uri
+			-- the not-void test is to avoid the correct value being overridden
+			-- when compiling a template - see W3C test case mdocs21
+			if stylesheet_base_uri = Void then
+				stylesheet_base_uri := a_context.base_uri
+			end
 			arguments.item (1).set_unsorted (False)
 			if arguments.item (1).was_expression_replaced then
 				arguments.replace (arguments.item (1).replacement_expression, 1)

@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if a_level_attribute = Void then
-				level := Simple_numbering
+				level := Single_level
 			elseif STRING_.same_string (a_level_attribute, "single") then
 				level := Single_level
 			elseif STRING_.same_string (a_level_attribute, "multiple") then

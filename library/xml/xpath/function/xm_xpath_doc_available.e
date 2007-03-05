@@ -67,31 +67,29 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			a_uri_item: XM_XPATH_ITEM
-			a_namespace_uri, an_error_code, an_iri_reference: STRING
-			a_uri: UT_URI
+			l_uri_item: XM_XPATH_ITEM
+			l_iri_reference: STRING
+			l_uri: UT_URI
 		do
 			arguments.item (1).evaluate_item (a_context)
-			a_uri_item := arguments.item (1).last_evaluated_item
-			if a_uri_item = Void or else a_uri_item.is_error then -- suppress errors
+			l_uri_item := arguments.item (1).last_evaluated_item
+			if l_uri_item = Void or else l_uri_item.is_error then -- suppress errors
 				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
 			else
-				an_iri_reference := escaped_uri (a_uri_item.string_value)
-				create a_uri.make_resolve (base_uri, an_iri_reference)
-				parse_document (a_uri_item.string_value, base_uri, a_context)
-				if last_evaluated_document = Void then
-					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
-				elseif last_evaluated_document.is_error then
-					a_namespace_uri := last_evaluated_document.error_value.namespace_uri
-					an_error_code :=  last_evaluated_document.error_value.code
-					if STRING_.same_string (a_namespace_uri, Xpath_errors_uri) and then
-						STRING_.same_string (an_error_code, "FODC0005") then
-						last_evaluated_item := last_evaluated_document
-					else
-						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False) -- suppress all other errors
-					end
+				l_iri_reference := escaped_uri (l_uri_item.string_value)
+				if Url_encoding.has_excluded_characters (l_iri_reference) or l_iri_reference.occurrences ('#') > 1 then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat (l_iri_reference, " is not a valid xs:anyURI"),
+						Xpath_errors_uri, "FODC0005", Dynamic_error)
 				else
-					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (last_evaluated_document.is_document)
+					create l_uri.make_resolve (base_uri, l_iri_reference)
+					parse_document (l_uri_item.string_value, base_uri, a_context)
+					if last_evaluated_document = Void then
+						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+					elseif last_evaluated_document.is_error then
+						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+					else
+						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (last_evaluated_document.is_document)
+					end
 				end
 			end
 		end

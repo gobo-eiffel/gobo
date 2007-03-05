@@ -128,7 +128,6 @@ feature -- Access
 						an_error.set_location (system_id, line_number)
 						a_context.transformer.report_recoverable_error (an_error)
 						Result := -1
-						check False end
 					end
 				else
 					namespace.evaluate_as_string (a_context)

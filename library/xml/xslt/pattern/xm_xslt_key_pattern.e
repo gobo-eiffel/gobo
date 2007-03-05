@@ -151,11 +151,13 @@ feature -- Matching
 						end
 						l_iter.forth
 					end
-					if l_nodes.is_error then
-						set_error_value (l_nodes.error_value)
-					elseif l_iter.is_error then
-						set_error_value (l_iter.error_value)
-					end					
+					if not is_error then
+						if l_nodes /= Void and then l_nodes.is_error then
+							set_error_value (l_nodes.error_value)
+						elseif l_iter.is_error then
+							set_error_value (l_iter.error_value)
+						end
+					end
 				end
 			end
 		end

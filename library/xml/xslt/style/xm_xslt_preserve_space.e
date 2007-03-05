@@ -160,11 +160,15 @@ feature {NONE} -- Implementation
 			else
 				create a_parser.make (a_token)
 				if a_parser.is_valid then
-					a_uri := uri_for_prefix (a_parser.optional_prefix, False)
+					if a_parser.optional_prefix.is_empty then
+						a_uri := shared_name_pool.uri_from_uri_code (default_xpath_namespace_code)
+					else
+						a_uri := uri_for_prefix (a_parser.optional_prefix, False)
+					end
 					if a_uri = Void then
 						a_message := STRING_.concat ("Element name ", a_token)
 						a_message := STRING_.appended_string (a_message, " is not a valid QName")
-						create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "STRIPPER", Static_error)
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0280", Static_error)
 						report_compile_error (an_error)
 					else
 						if not shared_name_pool.is_name_code_allocated ("", a_uri, a_parser.local_name) then
@@ -180,7 +184,7 @@ feature {NONE} -- Implementation
 				else
 					a_message := STRING_.concat ("Element name ", a_token)
 					a_message := STRING_.appended_string (a_message, " is not a valid QName")
-					create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "STRIPPER", Static_error)
+					create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0280", Static_error)
 					report_compile_error (an_error)
 				end
 			end

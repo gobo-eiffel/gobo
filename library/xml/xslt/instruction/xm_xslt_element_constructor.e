@@ -190,7 +190,7 @@ feature -- Evaluation
 						-- Only Basic XSLT processor is supported now
 					end
 				end
-				if not is_inherit_namespaces then some_properties := Disinherit_namespaces  end
+				if not is_inherit_namespaces then some_properties := Disinherit_namespaces end
 				-- N.B. The element is constructed as a parentless element
 				a_receiver.start_element (a_name_code, -1, some_properties)
 				output_namespace_nodes (a_new_context, a_receiver)

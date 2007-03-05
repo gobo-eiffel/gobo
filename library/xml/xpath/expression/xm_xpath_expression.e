@@ -1409,22 +1409,28 @@ feature -- Status report
 
 	calls_function (a_name_code: INTEGER): BOOLEAN is
 			-- Does `Current' include a call to function named by `a_name_code'?
+		require
+			not_replaced: not was_expression_replaced
 		local
-			a_fingerprint: INTEGER
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_fingerprint: INTEGER
+			l_expression: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			a_fingerprint := fingerprint_from_name_code (a_name_code)
+			l_fingerprint := fingerprint_from_name_code (a_name_code)
 			if is_function_call then
-				Result := as_function_call.fingerprint = a_fingerprint
+				Result := as_function_call.fingerprint = l_fingerprint
 			end
 			if not Result then
 				from
-					a_cursor := sub_expressions.new_cursor; a_cursor.start
+					l_cursor := sub_expressions.new_cursor; l_cursor.start
 				until
-					Result or else a_cursor.after
+					Result or else l_cursor.after
 				loop
-					Result := a_cursor.item.calls_function (a_name_code)
-					a_cursor.forth
+					l_expression := l_cursor.item
+					if not l_expression.was_expression_replaced then
+						Result := l_expression.calls_function (a_name_code)
+					end
+					l_cursor.forth
 				end
 			end
 		end

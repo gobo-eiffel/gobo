@@ -88,21 +88,26 @@ feature -- Element change
 				report_absence ("name")
 			else
 				key_name := a_name_attribute
-				generate_name_code (a_name_attribute)
-				if last_generated_name_code = -1 then
-					report_compile_error (name_code_error_value)
-				else
-					key_fingerprint :=  fingerprint_from_name_code (last_generated_name_code)
-					if a_match_attribute = Void then
-						report_absence ("match")
+				if is_qname (key_name) then
+					generate_name_code (a_name_attribute)
+					if last_generated_name_code = -1 then
+						report_compile_error (name_code_error_value)
 					else
-						generate_pattern (a_match_attribute)
-						match := last_generated_pattern
-						if a_use_attribute /= Void then
-							generate_expression (a_use_attribute)
-							use := last_generated_expression -- a compile error may have been reported
+						key_fingerprint :=  fingerprint_from_name_code (last_generated_name_code)
+						if a_match_attribute = Void then
+							report_absence ("match")
+						else
+							generate_pattern (a_match_attribute)
+							match := last_generated_pattern
+							if a_use_attribute /= Void then
+								generate_expression (a_use_attribute)
+								use := last_generated_expression -- a compile error may have been reported
+							end
 						end
 					end
+				else
+					report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (key_name, " is not a lexical QName"),
+						Xpath_errors_uri, "XTDE1260", Static_error))
 				end
 			end
 			attributes_prepared := True

@@ -598,9 +598,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	-- TODO transform_to_stylesheet is
-	-- Implement "Literal Result Element As Stylesheet" facility.
-
 invariant
 
 	attribute_lists_not_void: attributes_prepared implies attribute_name_codes /= Void and attribute_values /= Void and attribute_clean_flags /= Void

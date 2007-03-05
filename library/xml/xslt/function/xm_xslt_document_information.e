@@ -14,11 +14,13 @@ class XM_XSLT_DOCUMENT_INFORMATION
 
 inherit
 
-	ANY -- SE 2.1
-
+	ANY
+	
 	XM_XPATH_NODE_MAPPING_FUNCTION
+		export {NONE} all end
 
 	XM_XPATH_DOC_ROUTINES
+		export {NONE} all end
 
 create
 
@@ -54,32 +56,37 @@ feature -- Access
 
 feature -- Evaluation
 	
-	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
-			-- Map `an_item' to a sequence
+	map_nodes (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+			-- Map `a_item' to a sequence
 		local
-			a_base_uri, a_uri: UT_URI
-			a_document: XM_XPATH_DOCUMENT
-			a_uri_reference: STRING
-			an_error: XM_XPATH_ERROR_VALUE
+			l_base_uri, l_uri: UT_URI
+			l_document: XM_XPATH_DOCUMENT
+			l_uri_reference: STRING
+			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if a_base_uri = Void then
-				if an_item.is_node then
-					create a_base_uri.make (an_item.as_node.base_uri)
+			if base_uri = Void then
+				if a_item.is_node then
+					create l_base_uri.make (a_item.as_node.base_uri)
 				else
-					a_base_uri := stylesheet_base_uri
-				end
-			end
-			a_uri_reference := an_item.string_value
-			if uri_encoding.has_excluded_characters (a_uri_reference) then
-				create an_error.make_from_string ("Argument to fn:document is not a valid URI", Xpath_errors_uri, "FODC0005", Dynamic_error)
-				transformer.report_recoverable_error (an_error)
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
- 				if transformer.is_error then
-					last_node_iterator.set_last_error (an_error)
+					l_base_uri := stylesheet_base_uri
 				end
 			else
-				create a_uri.make_resolve (a_base_uri, a_uri_reference)
-				parse_document (an_item.string_value, a_base_uri, a_context)
+				l_base_uri := base_uri
+			end
+			l_uri_reference := a_item.string_value
+			if uri_encoding.has_excluded_characters (l_uri_reference) then
+				l_uri_reference := escaped_uri (l_uri_reference)
+			end
+			if l_uri_reference.occurrences ('#') > 1 then
+				create l_error.make_from_string ("Argument to fn:document is not a valid URI", Xpath_errors_uri, "FODC0005", Dynamic_error)
+				transformer.report_recoverable_error (l_error)
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+ 				if transformer.is_error then
+					last_node_iterator.set_last_error (l_error)
+				end
+			else
+				create l_uri.make_resolve (l_base_uri, l_uri_reference)
+				parse_document (a_item.string_value, l_base_uri, a_context)
 				if last_evaluated_document.is_error then
 					transformer.report_recoverable_error (last_evaluated_document.error_value)
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
@@ -88,15 +95,15 @@ feature -- Evaluation
 						document: last_evaluated_document.is_document
 						-- as `parse_document' only returns documents or invalid items
 					end
-					a_document := last_evaluated_document.as_document
-					if a_uri.has_fragment then
-						last_node_iterator := fragment (a_uri, a_document)
+					l_document := last_evaluated_document.as_document
+					if l_uri.has_fragment then
+						last_node_iterator := fragment (l_uri, l_document)
 						if last_node_iterator = Void then
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
 							last_node_iterator.set_last_error (fragment_error_value)
 						end
 					else
-						create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (a_document)
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (l_document)
 					end
 				end
 			end

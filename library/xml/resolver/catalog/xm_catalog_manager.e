@@ -65,6 +65,7 @@ feature -- Access
 			a_character_set := STRING_.appended_string (a_character_set, Rfc_reserved_characters)
 			a_character_set := STRING_.appended_string (a_character_set, Rfc_extra_reserved_characters)
 			a_character_set := STRING_.appended_string (a_character_set, "#")
+			a_character_set := STRING_.appended_string (a_character_set, "%%")
 			Result := new_character_set (a_character_set)
 		end
 

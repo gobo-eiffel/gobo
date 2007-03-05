@@ -221,7 +221,8 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 					
 					key_fingerprint := an_xslt_context.fingerprint (a_string_value.string_value, False)
 					if key_fingerprint = -1 then
-						todo ("check_arguments - issue a dynamic error", True)
+						set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (a_string_value.string_value, " is not a defined key"),
+							Xpath_errors_uri, "XTDE1260", Static_error))
 					end
 				else
 					namespace_context := an_xslt_context.namespace_context

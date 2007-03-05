@@ -33,6 +33,8 @@ class SCHEMATRON
 
 inherit
 
+	ANY
+
 	KL_SHARED_ARGUMENTS
 		export {NONE} all end
 

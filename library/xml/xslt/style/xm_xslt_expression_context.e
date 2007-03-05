@@ -148,19 +148,23 @@ feature -- Access
 			a_uri: STRING
 		do
 			create a_parser.make (a_qname)
-			if not a_parser.is_prefix_present then
-				if use_default_namespace then
-					a_uri := style_element.uri_for_prefix (a_parser.optional_prefix, True)
-				else
-					a_uri := ""
-				end
-			elseif is_prefix_declared (a_parser.optional_prefix) then
-				a_uri := uri_for_prefix (a_parser.optional_prefix)
-			else
+			if not a_parser.is_valid then
 				Result := -1
-			end
-			if Result /= -1 then
-				Result := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+			else
+				if not a_parser.is_prefix_present then
+					if use_default_namespace then
+						a_uri := style_element.uri_for_prefix (a_parser.optional_prefix, True)
+					else
+						a_uri := ""
+					end
+				elseif is_prefix_declared (a_parser.optional_prefix) then
+					a_uri := uri_for_prefix (a_parser.optional_prefix)
+				else
+					Result := -1
+				end
+				if Result /= -1 then
+					Result := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+				end
 			end
 		end
 

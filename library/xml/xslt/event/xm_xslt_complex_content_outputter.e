@@ -141,12 +141,12 @@ feature -- Events
 				suppress_attributes := True
 			else
 				suppress_attributes := False
-				start_element_properties := properties
 				if pending_start_tag >= 0 then start_content end
 				debug ("XSLT content output")
 					std.error.put_string ("Starting element " + shared_name_pool.display_name_from_name_code (a_name_code))
 					std.error.put_new_line
 				end
+				start_element_properties := properties
 				pending_attributes_lists_size := 0
 				pending_namespaces_list_size := 0
 				pending_start_tag := a_name_code

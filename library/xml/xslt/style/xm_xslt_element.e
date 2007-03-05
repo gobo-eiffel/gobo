@@ -102,7 +102,7 @@ feature -- Element change
 				else
 					if element_name.is_string_value then
 						if not is_qname (element_name.as_string_value.string_value) then
-							create an_error.make_from_string ("Element name is not a valid QName", Xpath_errors_uri, "XTSE0020", Static_error)
+							create an_error.make_from_string ("Element name is not a valid QName", Xpath_errors_uri, "XTDE0820", Static_error)
 							report_compile_error (an_error)
 							
 							-- Prevent a duplicate error message.
@@ -119,6 +119,8 @@ feature -- Element change
 				namespace := last_generated_expression
 				if namespace.is_error then
 					report_compile_error (namespace.error_value)
+				elseif namespace.is_string_value and then namespace.as_string_value.string_value.occurrences ('#') > 1 then
+					report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Namespace attribute is not a valid xs:anyURI", Xpath_errors_uri, "XTDE0835", Static_error))
 				end
 			end
 			prepare_attributes_2 (a_validation_attribute, a_type_attribute, an_inherit_namespaces_attribute)
@@ -172,8 +174,12 @@ feature -- Element change
 					end
 				end
 				if namespace = Void then
-					compile_fixed_element (a_executable, l_name_code)
-				elseif namespace.is_string_value then
+					if namespace_uri = Void then
+						report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Prefix for element name is not in scope", Xpath_errors_uri, "XTDE0830", Static_error))
+					else
+						compile_fixed_element (a_executable, l_name_code)
+					end
+				elseif namespace_uri /= Void and then namespace.is_string_value then
 					namespace_uri := namespace.as_string_value.string_value
 					if namespace_uri.count = 0 then
 						qname_prefix := ""
@@ -188,7 +194,7 @@ feature -- Element change
 				end
 			end
 			
-			if last_generated_expression = Void then
+			if last_generated_expression = Void and not any_compile_errors then
 				
 				-- If the namespace URI must be deduced at run-time from the element name prefix,
 				--  we need to save the namespace context of the instruction.
@@ -297,14 +303,13 @@ feature {NONE} -- Implementation
 					namespace_uri := uri_for_prefix (qname_prefix, True)
 				end
 			end
-		ensure
-			namespace_uri: namespace = Void implies namespace_uri /= Void
 		end
 
 	compile_fixed_element (a_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER) is
 			-- Compile to a fixed element.
 		require
 			executable_not_void: a_executable /= Void
+			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
 		local
 			a_fixed_element: XM_XSLT_FIXED_ELEMENT
 			some_namespace_codes: DS_ARRAYED_LIST [INTEGER]
