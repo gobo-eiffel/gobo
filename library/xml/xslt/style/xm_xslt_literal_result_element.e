@@ -39,6 +39,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_inherit_namespaces: BOOLEAN
+		-- Do we inherit namespaces?
+
 	trace_property (an_expanded_name: STRING): STRING is
 			-- Value of trace-property
 		do
@@ -295,9 +298,6 @@ feature {NONE} -- Implementation
 	validation: INTEGER
 			-- Validation level
 
-	is_inherit_namespaces: BOOLEAN
-		-- Do we inherit namespaces?
-
 	grafted_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER; a_version: STRING): XM_XPATH_TREE_DOCUMENT is
 			-- Simlified stylesheet constructed around `Current'
 		require
@@ -411,13 +411,14 @@ feature {NONE} -- Implementation
 
 			-- If this LRE has a parent that is also an LRE,
 			--  and if this LRE has no namespace declarations
+			--  and if the parent doesn't specify inherit-namespaces="no",
 			--  and if this element name is in the same namespace as its parent,
 			--  and if there are no attributes in a non-null namespace,
 			--  then we don't need to output any namespace declarations to the result.
 
 			a_literal_result_element ?= parent
-			if a_literal_result_element /= Void and then
-				namespace_code_list.count = 0 and then
+			if (a_literal_result_element /= Void and then a_literal_result_element.is_inherit_namespaces) and
+				namespace_code_list.count = 0 and
 				an_element_uri_code = shared_name_pool.uri_code_from_name_code (parent.fingerprint) then
 				Result := True
 			end
