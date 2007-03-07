@@ -333,11 +333,7 @@ feature -- Validity checking
 								set_fatal_error
 								l_named_type := l_assertion_context.named_type (universe)
 								l_class_impl := current_feature_impl.implementation_class
-								if current_class = l_class_impl then
-									error_handler.report_vwbe0a_error (current_class, l_expression, l_named_type)
-								else
-									error_handler.report_vwbe0b_error (current_class, l_class_impl, l_expression, l_named_type)
-								end
+								error_handler.report_vwbe0a_error (current_class, l_class_impl, l_expression, l_named_type)
 							end
 							l_assertion_context.wipe_out
 						end
@@ -435,11 +431,7 @@ feature -- Validity checking
 								set_fatal_error
 								l_named_type := l_assertion_context.named_type (universe)
 								l_class_impl := current_feature_impl.implementation_class
-								if current_class = l_class_impl then
-									error_handler.report_vwbe0a_error (current_class, l_expression, l_named_type)
-								else
-									error_handler.report_vwbe0b_error (current_class, l_class_impl, l_expression, l_named_type)
-								end
+								error_handler.report_vwbe0a_error (current_class, l_class_impl, l_expression, l_named_type)
 							end
 							l_assertion_context.wipe_out
 						end
@@ -529,11 +521,7 @@ feature -- Validity checking
 							elseif not l_assertion_context.same_named_type (boolean_type, current_type, universe) then
 								set_fatal_error
 								l_named_type := l_assertion_context.named_type (universe)
-								if current_class = current_class_impl then
-									error_handler.report_vwbe0a_error (current_class, l_expression, l_named_type)
-								else
-									error_handler.report_vwbe0b_error (current_class, l_class_impl, l_expression, l_named_type)
-								end
+								error_handler.report_vwbe0a_error (current_class, l_class_impl, l_expression, l_named_type)
 							end
 							l_assertion_context.wipe_out
 						end
@@ -600,11 +588,7 @@ feature {NONE} -- Feature validity
 				if l_constant.is_boolean_constant then
 					if not l_type.same_named_type (universe.boolean_class, current_type, current_type, universe) then
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vqmc1a_error (current_class, a_feature)
-						else
-							error_handler.report_vqmc1b_error (current_class, current_class_impl, a_feature)
-						end
+						error_handler.report_vqmc1a_error (current_class, current_class_impl, a_feature)
 					end
 				elseif l_constant.is_character_constant then
 					if l_type.same_named_type (universe.character_class, current_type, current_type, universe) then
@@ -615,11 +599,7 @@ feature {NONE} -- Feature validity
 						-- OK.
 					else
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vqmc2a_error (current_class, a_feature)
-						else
-							error_handler.report_vqmc2b_error (current_class, current_class_impl, a_feature)
-						end
+						error_handler.report_vqmc2a_error (current_class, current_class_impl, a_feature)
 					end
 				elseif l_constant.is_integer_constant then
 					l_integer_constant ?= l_constant
@@ -656,11 +636,7 @@ feature {NONE} -- Feature validity
 						l_integer_constant.set_type (universe.natural_64_class)
 					else
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vqmc3a_error (current_class, a_feature)
-						else
-							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature)
-						end
+						error_handler.report_vqmc3a_error (current_class, current_class_impl, a_feature)
 					end
 				elseif l_constant.is_real_constant then
 					l_real_constant ?= l_constant
@@ -679,11 +655,7 @@ feature {NONE} -- Feature validity
 						l_real_constant.set_type (universe.real_64_class)
 					else
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vqmc4a_error (current_class, a_feature)
-						else
-							error_handler.report_vqmc4b_error (current_class, current_class_impl, a_feature)
-						end
+						error_handler.report_vqmc4a_error (current_class, current_class_impl, a_feature)
 					end
 				elseif l_constant.is_string_constant then
 					if l_type.same_named_type (universe.string_class, current_type, current_type, universe) then
@@ -696,11 +668,7 @@ feature {NONE} -- Feature validity
 						-- OK: this is an Eiffel for .NET extension.
 					else
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vqmc5a_error (current_class, a_feature)
-						else
-							error_handler.report_vqmc5b_error (current_class, current_class_impl, a_feature)
-						end
+						error_handler.report_vqmc5a_error (current_class, current_class_impl, a_feature)
 					end
 				elseif l_constant.is_bit_constant then
 					l_bit_type ?= l_type.named_type (current_type, universe)
@@ -708,11 +676,7 @@ feature {NONE} -- Feature validity
 -- TODO: check bit size.
 					else
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vqmc6a_error (current_class, a_feature)
-						else
-							error_handler.report_vqmc6b_error (current_class, current_class_impl, a_feature)
-						end
+						error_handler.report_vqmc6a_error (current_class, current_class_impl, a_feature)
 					end
 				else
 						-- Internal error: no other kind of constant.
@@ -1072,11 +1036,7 @@ feature {NONE} -- Feature validity
 					-- Valid with ISE Eiffel. To be checked with other compilers.
 				else
 					set_fatal_error
-					if current_class = current_class_impl then
-						error_handler.report_vqui0a_error (current_class, a_feature)
-					else
-						error_handler.report_vqui0b_error (current_class, current_class_impl, a_feature)
-					end
+					error_handler.report_vqui0a_error (current_class, current_class_impl, a_feature)
 				end
 			end
 		end
@@ -1880,11 +1840,7 @@ feature {NONE} -- Instruction validity
 					if not l_query.is_exported_to (current_class, universe) then
 							-- Report error: the feature is not exported to `current_class'.
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vuex2b_error (current_class, l_name, l_query, l_class)
-						else
-							error_handler.report_vuex2c_error (current_class, current_class_impl, l_name, l_query, l_class)
-						end
+						error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, l_query, l_class)
 					end
 					had_error := has_fatal_error
 						-- Check validity of the arguments of the call.
@@ -1982,11 +1938,7 @@ feature {NONE} -- Instruction validity
 							set_fatal_error
 							l_source_named_type := l_source_context.named_type (universe)
 							l_target_named_type := l_target_context.named_type (universe)
-							if current_class = current_class_impl then
-								error_handler.report_vbac1a_error (current_class, an_instruction, l_source_named_type, l_target_named_type)
-							else
-								error_handler.report_vbac1b_error (current_class, current_class_impl, an_instruction, l_source_named_type, l_target_named_type)
-							end
+							error_handler.report_vbac1a_error (current_class, current_class_impl, an_instruction, l_source_named_type, l_target_named_type)
 						end
 					end
 				end
@@ -2198,11 +2150,7 @@ feature {NONE} -- Instruction validity
 						set_fatal_error
 						l_source_named_type := l_source_context.named_type (universe)
 						l_target_named_type := l_target_context.named_type (universe)
-						if current_class = current_class_impl then
-							error_handler.report_vjar0a_error (current_class, an_instruction, l_source_named_type, l_target_named_type)
-						else
-							error_handler.report_vjar0b_error (current_class, current_class_impl, an_instruction, l_source_named_type, l_target_named_type)
-						end
+						error_handler.report_vjar0a_error (current_class, current_class_impl, an_instruction, l_source_named_type, l_target_named_type)
 					end
 				else
 					report_assignment (an_instruction)
@@ -2256,7 +2204,7 @@ feature {NONE} -- Instruction validity
 					had_error := True
 					set_fatal_error
 					l_target_named_type := l_target_context.named_type (universe)
-					error_handler.report_vjrv0a_error (current_class, l_target, l_target_named_type)
+					error_handler.report_vjrv0a_error (current_class, current_class_impl, l_target, l_target_named_type)
 				elseif current_class_impl /= universe.any_class or else not universe.is_ise then
 						-- Note: Do not report this error if the assignment
 						-- attempt appears in class ANY because of a design
@@ -2264,7 +2212,7 @@ feature {NONE} -- Instruction validity
 					had_error := True
 					set_fatal_error
 					l_target_named_type := l_target_context.named_type (universe)
-					error_handler.report_vjrv0b_error (current_class, current_class_impl, l_target, l_target_named_type)
+					error_handler.report_vjrv0a_error (current_class, current_class_impl, l_target, l_target_named_type)
 				end
 			end
 				-- Check the validity of the source.
@@ -2336,11 +2284,7 @@ feature {NONE} -- Instruction validity
 					set_fatal_error
 					had_error := True
 					l_named_type := l_assertion_context.named_type (universe)
-					if current_class = current_class_impl then
-						error_handler.report_vwbe0a_error (current_class, l_expression, l_named_type)
-					else
-						error_handler.report_vwbe0b_error (current_class, current_class_impl, l_expression, l_named_type)
-					end
+					error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
 				end
 				l_assertion_context.wipe_out
 				i := i + 1
@@ -2559,7 +2503,7 @@ feature {NONE} -- Instruction validity
 												if l_query /= Void then
 														-- This is not a procedure.
 													set_fatal_error
-													error_handler.report_vgcc6f_error (current_class, l_name, l_query, l_class)
+													error_handler.report_vgcc6d_error (current_class, l_name, l_query, l_class)
 												else
 													set_fatal_error
 														-- ISE Eiffel 5.4 reports this error as a VEEN,
@@ -2620,11 +2564,7 @@ feature {NONE} -- Instruction validity
 						set_fatal_error
 						l_creation_named_type := l_explicit_creation_context.named_type (universe)
 						l_target_named_type := l_target_context.named_type (universe)
-						if current_class = current_class_impl then
-							error_handler.report_vgcc3a_error (current_class, an_instruction, l_creation_named_type, l_target_named_type)
-						else
-							error_handler.report_vgcc3b_error (current_class, current_class_impl, an_instruction, l_creation_named_type, l_target_named_type)
-						end
+						error_handler.report_vgcc3a_error (current_class, current_class_impl, an_instruction, l_creation_named_type, l_target_named_type)
 					else
 						universe.report_create_supplier (l_explicit_creation_type, current_class, current_feature)
 					end
@@ -2647,11 +2587,7 @@ feature {NONE} -- Instruction validity
 					end
 					if l_class.creators /= Void then
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vgcc5c_error (current_class, an_instruction, l_class)
-						else
-							error_handler.report_vgcc5d_error (current_class, current_class_impl, an_instruction, l_class)
-						end
+						error_handler.report_vgcc5b_error (current_class, current_class_impl, an_instruction, l_class)
 					end
 				else
 					l_formal_parameter_type ?= l_creation_named_type
@@ -2676,11 +2612,7 @@ feature {NONE} -- Instruction validity
 									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
 									l_name := l_name_identifier
 								end
-								if current_class = current_class_impl then
-									error_handler.report_vgcc8c_error (current_class, l_name, l_procedure, l_class, l_formal_parameter)
-								else
-									error_handler.report_vgcc8d_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
-								end
+								error_handler.report_vgcc8b_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
 							end
 						end
 					elseif not l_procedure.is_creation_exported_to (current_class, l_class, universe) then
@@ -2700,11 +2632,7 @@ feature {NONE} -- Instruction validity
 									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
 									l_name := l_name_identifier
 								end
-								if current_class = current_class_impl then
-									error_handler.report_vgcc6h_error (current_class, l_name, l_procedure, l_class)
-								else
-									error_handler.report_vgcc6i_error (current_class, current_class_impl, l_name, l_procedure, l_class)
-								end
+								error_handler.report_vgcc6e_error (current_class, current_class_impl, l_name, l_procedure, l_class)
 							end
 						end
 					end
@@ -2772,11 +2700,7 @@ feature {NONE} -- Instruction validity
 				had_error := True
 				set_fatal_error
 				l_named_type := l_conditional_context.named_type (universe)
-				if current_class = current_class_impl then
-					error_handler.report_vwbe0a_error (current_class, l_conditional, l_named_type)
-				else
-					error_handler.report_vwbe0b_error (current_class, current_class_impl, l_conditional, l_named_type)
-				end
+				error_handler.report_vwbe0a_error (current_class, current_class_impl, l_conditional, l_named_type)
 			end
 			free_context (l_conditional_context)
 			l_compound := an_instruction.then_compound
@@ -2800,11 +2724,7 @@ feature {NONE} -- Instruction validity
 						had_error := True
 						set_fatal_error
 						l_named_type := l_conditional_context.named_type (universe)
-						if current_class = current_class_impl then
-							error_handler.report_vwbe0a_error (current_class, l_conditional, l_named_type)
-						else
-							error_handler.report_vwbe0b_error (current_class, current_class_impl, l_conditional, l_named_type)
-						end
+						error_handler.report_vwbe0a_error (current_class, current_class_impl, l_conditional, l_named_type)
 					end
 					free_context (l_conditional_context)
 					l_compound := l_elseif.then_compound
@@ -2894,11 +2814,7 @@ feature {NONE} -- Instruction validity
 				had_error := True
 				set_fatal_error
 				l_value_named_type := l_value_context.named_type (universe)
-				if current_class = current_class_impl then
-					error_handler.report_vomb1a_error (current_class, l_expression, l_value_named_type)
-				else
-					error_handler.report_vomb1b_error (current_class, current_class_impl, l_expression, l_value_named_type)
-				end
+				error_handler.report_vomb1a_error (current_class, current_class_impl, l_expression, l_value_named_type)
 			end
 			had_value_error := had_error
 			l_when_parts := an_instruction.when_parts
@@ -2978,11 +2894,7 @@ feature {NONE} -- Instruction validity
 									set_fatal_error
 									l_value_named_type := l_value_context.named_type (universe)
 									l_choice_named_type := l_choice_context.named_type (universe)
-									if current_class = current_class_impl then
-										error_handler.report_vomb2a_error (current_class, l_choice_constant, l_choice_named_type, l_value_named_type)
-									else
-										error_handler.report_vomb2b_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
-									end
+									error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
 								end
 							end
 						end
@@ -3054,11 +2966,7 @@ feature {NONE} -- Instruction validity
 										set_fatal_error
 										l_value_named_type := l_value_context.named_type (universe)
 										l_choice_named_type := l_choice_context.named_type (universe)
-										if current_class = current_class_impl then
-											error_handler.report_vomb2a_error (current_class, l_choice_constant, l_choice_named_type, l_value_named_type)
-										else
-											error_handler.report_vomb2b_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
-										end
+										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
 									end
 								end
 							end
@@ -3149,11 +3057,7 @@ feature {NONE} -- Instruction validity
 				had_error := True
 				set_fatal_error
 				l_named_type := l_expression_context.named_type (universe)
-				if current_class = current_class_impl then
-					error_handler.report_vwbe0a_error (current_class, l_expression, l_named_type)
-				else
-					error_handler.report_vwbe0b_error (current_class, current_class_impl, l_expression, l_named_type)
-				end
+				error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
 			end
 			free_context (l_expression_context)
 			l_compound := an_instruction.loop_compound
@@ -3194,11 +3098,7 @@ feature {NONE} -- Instruction validity
 					had_error := True
 					set_fatal_error
 					l_named_type := l_expression_context.named_type (universe)
-					if current_class = current_class_impl then
-						error_handler.report_vwbe0a_error (current_class, l_expression, l_named_type)
-					else
-						error_handler.report_vwbe0b_error (current_class, current_class_impl, l_expression, l_named_type)
-					end
+					error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
 				end
 				l_expression_context.wipe_out
 				i := i + 1
@@ -3233,11 +3133,7 @@ feature {NONE} -- Instruction validity
 					had_error := True
 					set_fatal_error
 					l_named_type := l_expression_context.named_type (universe)
-					if current_class = current_class_impl then
-						error_handler.report_vave0a_error (current_class, l_expression, l_named_type)
-					else
-						error_handler.report_vave0b_error (current_class, current_class_impl, l_expression, l_named_type)
-					end
+					error_handler.report_vave0a_error (current_class, current_class_impl, l_expression, l_named_type)
 				end
 				free_context (l_expression_context)
 			else
@@ -3531,11 +3427,7 @@ feature {NONE} -- Instruction validity
 					if not l_procedure.is_exported_to (current_class, universe) then
 							-- The feature is not exported to `current_class'.
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vuex2b_error (current_class, l_name, l_procedure, l_class)
-						else
-							error_handler.report_vuex2c_error (current_class, current_class_impl, l_name, l_procedure, l_class)
-						end
+						error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, l_procedure, l_class)
 					end
 					had_error := has_fatal_error
 					check_qualified_vape_validity (l_name, l_procedure, l_class)
@@ -3729,11 +3621,7 @@ feature {NONE} -- Instruction validity
 						if not l_procedure.is_exported_to (current_class, universe) then
 								-- The feature is not exported to `current_class'.
 							set_fatal_error
-							if current_class = current_class_impl then
-								error_handler.report_vuex2b_error (current_class, l_name, l_procedure, l_class)
-							else
-								error_handler.report_vuex2c_error (current_class, current_class_impl, l_name, l_procedure, l_class)
-							end
+							error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, l_procedure, l_class)
 						end
 						had_error := has_fatal_error
 						check_qualified_vape_validity (l_name, l_procedure, l_class)
@@ -4306,11 +4194,7 @@ feature {NONE} -- Expression validity
 							-- The class explicit declares creation procedures,
 							-- so the creation call was required.
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vgcc5a_error (current_class, a_type_position, l_class)
-						else
-							error_handler.report_vgcc5b_error (current_class, current_class_impl, a_type_position, l_class)
-						end
+						error_handler.report_vgcc5a_error (current_class, current_class_impl, a_type_position, l_class)
 					end
 				else
 					l_formal_parameter_type ?= l_named_creation_type
@@ -4340,11 +4224,7 @@ feature {NONE} -- Expression validity
 									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
 									l_name := l_name_identifier
 								end
-								if current_class = current_class_impl then
-									error_handler.report_vgcc8a_error (current_class, l_name, l_procedure, l_class, l_formal_parameter)
-								else
-									error_handler.report_vgcc8b_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
-								end
+								error_handler.report_vgcc8a_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
 							end
 						end
 					elseif not l_procedure.is_creation_exported_to (current_class, l_class, universe) then
@@ -4365,11 +4245,7 @@ feature {NONE} -- Expression validity
 									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
 									l_name := l_name_identifier
 								end
-								if current_class = current_class_impl then
-									error_handler.report_vgcc6d_error (current_class, l_name, l_procedure, l_class)
-								else
-									error_handler.report_vgcc6e_error (current_class, current_class_impl, l_name, l_procedure, l_class)
-								end
+								error_handler.report_vgcc6c_error (current_class, current_class_impl, l_name, l_procedure, l_class)
 							end
 						end
 					end
@@ -4521,11 +4397,7 @@ feature {NONE} -- Expression validity
 								set_fatal_error
 								left_named_type := left_context.named_type (universe)
 								right_named_type := right_context.named_type (universe)
---								if current_class_impl = current_class then
-									error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
---								else
---									error_handler.report_vweq0b_error (current_class, current_class_impl, an_expression, left_named_type, right_named_type)
---								end
+								error_handler.report_vweq0a_error (current_class, current_class_impl, an_expression, left_named_type, right_named_type)
 							end
 						end
 					end
@@ -5372,11 +5244,7 @@ feature {NONE} -- Expression validity
 					if not l_query.is_exported_to (current_class, universe) then
 							-- The feature is not exported to `current_class'.
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vuex2b_error (current_class, l_name, l_query, l_class)
-						else
-							error_handler.report_vuex2c_error (current_class, current_class_impl, l_name, l_query, l_class)
-						end
+						error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, l_query, l_class)
 					end
 					had_error := has_fatal_error
 					check_qualified_vape_validity (l_name, l_query, l_class)
@@ -5610,11 +5478,7 @@ feature {NONE} -- Expression validity
 										set_fatal_error
 										l_named_actual_type := l_actual_context.named_type (universe)
 										l_named_formal_type := l_formal_type.named_type (l_formal_context, universe)
-										if current_class = current_class_impl then
-											error_handler.report_vuar2a_error (current_class, l_name, l_query, l_class, 1, l_named_actual_type, l_named_formal_type)
-										else
-											error_handler.report_vuar2b_error (current_class, current_class_impl, l_name, l_query, l_class, 1, l_named_actual_type, l_named_formal_type)
-										end
+										error_handler.report_vuar2a_error (current_class, current_class_impl, l_name, l_query, l_class, 1, l_named_actual_type, l_named_formal_type)
 									end
 								end
 							end
@@ -5674,7 +5538,8 @@ feature {NONE} -- Expression validity
 			l_type: ET_TYPE
 		do
 			has_fatal_error := False
-			if in_precondition or in_postcondition then
+			if current_inline_agent = Void and (in_precondition or in_postcondition) then
+-- TODO: check the case where we are in the pre- or postcondition of an inline agent.
 					-- The local entity appears in a pre- or postcondition.
 				set_fatal_error
 				if current_class_impl = current_class then
@@ -6398,11 +6263,7 @@ feature {NONE} -- Expression validity
 					if not l_query.is_exported_to (current_class, universe) then
 							-- The feature is not exported to `current_class'.
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vuex2b_error (current_class, l_name, l_query, l_class)
-						else
-							error_handler.report_vuex2c_error (current_class, current_class_impl, l_name, l_query, l_class)
-						end
+						error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, l_query, l_class)
 					end
 					had_error := has_fatal_error
 					check_qualified_vape_validity (l_name, l_query, l_class)
@@ -7004,11 +6865,7 @@ feature {NONE} -- Expression validity
 						if not l_query.is_exported_to (current_class, universe) then
 								-- The feature is not exported to `current_class'.
 							set_fatal_error
-							if current_class = current_class_impl then
-								error_handler.report_vuex2b_error (current_class, l_name, l_query, l_class)
-							else
-								error_handler.report_vuex2c_error (current_class, current_class_impl, l_name, l_query, l_class)
-							end
+							error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, l_query, l_class)
 						end
 						had_error := has_fatal_error
 						check_qualified_vape_validity (l_name, l_query, l_class)
@@ -7684,9 +7541,9 @@ feature {NONE} -- Expression validity
 										l_arguments := current_closure_impl.arguments
 										if l_arguments /= Void and then l_arguments.index_of (l_identifier) /= 0 then
 											if current_inline_agent /= Void then
-												error_handler.report_vjaw0d_error (current_class, l_identifier, current_inline_agent)
+												error_handler.report_vjaw0c_error (current_class, l_identifier, current_inline_agent)
 											elseif current_feature_impl.is_feature then
-												error_handler.report_vjaw0c_error (current_class, l_identifier, current_feature_impl.as_feature)
+												error_handler.report_vjaw0b_error (current_class, l_identifier, current_feature_impl.as_feature)
 											else
 												-- Internal error: invariants don't have writables.
 												error_handler.report_giaaa_error
@@ -7738,7 +7595,7 @@ feature {NONE} -- Expression validity
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			if in_precondition then
+			if in_precondition and then current_feature.is_feature then
 					-- VAPE validity rule only applies to preconditions.
 				l_void_seed := universe.void_seed
 				if l_void_seed > 0 and then a_feature.has_seed (l_void_seed) then
@@ -7758,21 +7615,7 @@ feature {NONE} -- Expression validity
 							if not a_feature.is_exported_to (l_client, universe) then
 									-- The feature is not exported to `l_client'.
 								set_fatal_error
-								if current_class = current_class_impl then
-									if current_feature.is_feature then
-										error_handler.report_vape0c_error (current_class, a_name, a_feature, a_class, current_feature.as_feature, l_client)
-									else
-											-- Internal error: invariants don't have preconditions.
-										error_handler.report_giaaa_error
-									end
-								else
-									if current_feature.is_feature then
-										error_handler.report_vape0d_error (current_class, current_class_impl, a_name, a_feature, a_class, current_feature.as_feature, l_client)
-									else
-											-- Internal error: invariants don't have preconditions.
-										error_handler.report_giaaa_error
-									end
-								end
+								error_handler.report_vape0c_error (current_class, current_class_impl, a_name, a_feature, a_class, current_feature.as_feature, l_client)
 							end
 						elseif not l_feature_clients.has_class_name (l_client_name) and then not l_feature_clients.has_any then
 								-- The feature is not exported to `l_client_name'.
@@ -7781,21 +7624,7 @@ feature {NONE} -- Expression validity
 								-- listed in the client list of `a_feature' or that `a_feature'
 								-- be exported to ANY.
 							set_fatal_error
-							if current_class = current_class_impl then
-								if current_feature.is_feature then
-									error_handler.report_vape0g_error (current_class, a_name, a_feature, a_class, current_feature.as_feature, l_client_name)
-								else
-										-- Internal error: invariants don't have preconditions.
-									error_handler.report_giaaa_error
-								end
-							else
-								if current_feature.is_feature then
-									error_handler.report_vape0h_error (current_class, current_class_impl, a_name, a_feature, a_class, current_feature.as_feature, l_client_name)
-								else
-										-- Internal error: invariants don't have preconditions.
-									error_handler.report_giaaa_error
-								end
-							end
+							error_handler.report_vape0d_error (current_class, current_class_impl, a_name, a_feature, a_class, current_feature.as_feature, l_client_name)
 						end
 						i := i + 1
 					end
@@ -7822,7 +7651,7 @@ feature {NONE} -- Expression validity
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			if in_precondition then
+			if in_precondition and then current_feature.is_feature then
 					-- VAPE validity rule only applies to preconditions.
 				l_void_seed := universe.void_seed
 				if l_void_seed > 0 and then a_feature.has_seed (l_void_seed) then
@@ -7842,21 +7671,7 @@ feature {NONE} -- Expression validity
 							if not a_feature.is_exported_to (l_client, universe) then
 									-- The feature is not exported to `l_client'.
 								set_fatal_error
-								if current_class = current_class_impl then
-									if current_feature.is_feature then
-										error_handler.report_vape0a_error (current_class, a_name, a_feature, current_feature.as_feature, l_client)
-									else
-											-- Internal error: invariants don't have preconditions.
-										error_handler.report_giaaa_error
-									end
-								else
-									if current_feature.is_feature then
-										error_handler.report_vape0b_error (current_class, current_class_impl, a_name, a_feature, current_feature.as_feature, l_client)
-									else
-											-- Internal error: invariants don't have preconditions.
-										error_handler.report_giaaa_error
-									end
-								end
+								error_handler.report_vape0a_error (current_class, current_class_impl, a_name, a_feature, current_feature.as_feature, l_client)
 							end
 						elseif not l_feature_clients.has_class_name (l_client_name) and then not l_feature_clients.has_any then
 								-- The feature is not exported to `l_client_name'.
@@ -7865,21 +7680,7 @@ feature {NONE} -- Expression validity
 								-- listed in the client list of `a_feature' or that `a_feature'
 								-- be exported to ANY.
 							set_fatal_error
-							if current_class = current_class_impl then
-								if current_feature.is_feature then
-									error_handler.report_vape0e_error (current_class, a_name, a_feature, current_feature.as_feature, l_client_name)
-								else
-											-- Internal error: invariants don't have preconditions.
-									error_handler.report_giaaa_error
-								end
-							else
-								if current_feature.is_feature then
-									error_handler.report_vape0f_error (current_class, current_class_impl, a_name, a_feature, current_feature.as_feature, l_client_name)
-								else
-										-- Internal error: invariants don't have preconditions.
-									error_handler.report_giaaa_error
-								end
-							end
+							error_handler.report_vape0b_error (current_class, current_class_impl, a_name, a_feature, current_feature.as_feature, l_client_name)
 						end
 						i := i + 1
 					end
@@ -8128,24 +7929,12 @@ feature {NONE} -- Expression validity
 							l_formal_named_type := l_formal_context.named_type (universe)
 							if a_class /= Void then
 								if a_name.is_precursor then
-									if current_class = current_class_impl then
-										error_handler.report_vdpr4c_error (current_class, a_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
-									else
-										error_handler.report_vdpr4d_error (current_class, current_class_impl, a_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
-									end
+									error_handler.report_vdpr4b_error (current_class, current_class_impl, a_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
 								else
-									if current_class = current_class_impl then
-										error_handler.report_vuar2a_error (current_class, a_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
-									else
-										error_handler.report_vuar2b_error (current_class, current_class_impl, a_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
-									end
+									error_handler.report_vuar2a_error (current_class, current_class_impl, a_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
 								end
 							else
-								if current_class = current_class_impl then
-									error_handler.report_vuar2c_error (current_class, a_name, a_feature, i, l_actual_named_type, l_formal_named_type)
-								else
-									error_handler.report_vuar2d_error (current_class, current_class_impl, a_name, a_feature, i, l_actual_named_type, l_formal_named_type)
-								end
+								error_handler.report_vuar2b_error (current_class, current_class_impl, a_name, a_feature, i, l_actual_named_type, l_formal_named_type)
 							end
 						end
 					end
@@ -8641,11 +8430,7 @@ feature {NONE} -- Agent validity
 			if not a_query.is_exported_to (current_class, universe) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
-				if current_class = current_class_impl then
-					error_handler.report_vpca2a_error (current_class, a_name, a_query, a_context.base_class (universe))
-				else
-					error_handler.report_vpca2b_error (current_class, current_class_impl, a_name, a_query, a_context.base_class (universe))
-				end
+				error_handler.report_vpca2a_error (current_class, current_class_impl, a_name, a_query, a_context.base_class (universe))
 			end
 			a_formal_arguments := a_query.arguments
 			if a_formal_arguments /= Void then
@@ -8716,11 +8501,7 @@ feature {NONE} -- Agent validity
 			if not a_procedure.is_exported_to (current_class, universe) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
-				if current_class = current_class_impl then
-					error_handler.report_vpca2a_error (current_class, a_name, a_procedure, a_context.base_class (universe))
-				else
-					error_handler.report_vpca2b_error (current_class, current_class_impl, a_name, a_procedure, a_context.base_class (universe))
-				end
+				error_handler.report_vpca2a_error (current_class, current_class_impl, a_name, a_procedure, a_context.base_class (universe))
 			end
 			a_formal_arguments := a_procedure.arguments
 			if a_formal_arguments /= Void then
@@ -9042,11 +8823,7 @@ feature {NONE} -- Agent validity
 			if not a_query.is_exported_to (current_class, universe) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
-				if current_class = current_class_impl then
-					error_handler.report_vpca2a_error (current_class, a_name, a_query, a_context.base_class (universe))
-				else
-					error_handler.report_vpca2b_error (current_class, current_class_impl, a_name, a_query, a_context.base_class (universe))
-				end
+				error_handler.report_vpca2a_error (current_class, current_class_impl, a_name, a_query, a_context.base_class (universe))
 			end
 			a_formal_arguments := a_query.arguments
 			if a_formal_arguments /= Void then
@@ -9119,11 +8896,7 @@ feature {NONE} -- Agent validity
 			if not a_procedure.is_exported_to (current_class, universe) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
-				if current_class = current_class_impl then
-					error_handler.report_vpca2a_error (current_class, a_name, a_procedure, a_context.base_class (universe))
-				else
-					error_handler.report_vpca2b_error (current_class, current_class_impl, a_name, a_procedure, a_context.base_class (universe))
-				end
+				error_handler.report_vpca2a_error (current_class, current_class_impl, a_name, a_procedure, a_context.base_class (universe))
 			end
 			a_formal_arguments := a_procedure.arguments
 			if a_formal_arguments /= Void then
@@ -9718,7 +9491,7 @@ feature {NONE} -- Agent validity
 								if l_call_agent.is_qualified_call then
 									error_handler.report_vpca3a_error (current_class, l_call_agent.name, a_feature, a_context.base_class (universe))
 								else
-									error_handler.report_vpca3c_error (current_class, l_call_agent.name, a_feature)
+									error_handler.report_vpca3b_error (current_class, l_call_agent.name, a_feature)
 								end
 							else
 -- TODO: inline agent
@@ -9739,7 +9512,7 @@ feature {NONE} -- Agent validity
 							if l_call_agent.is_qualified_call then
 								error_handler.report_vpca3a_error (current_class, l_call_agent.name, a_feature, a_context.base_class (universe))
 							else
-								error_handler.report_vpca3c_error (current_class, l_call_agent.name, a_feature)
+								error_handler.report_vpca3b_error (current_class, l_call_agent.name, a_feature)
 							end
 						else
 -- TODO: inline agent
@@ -9847,18 +9620,10 @@ feature {NONE} -- Agent validity
 												-- Make sure that `a_context' (which is the same object as `l_formal_context') represents
 												-- the type of the target of the agent and not the type of the formal argument.
 											l_formal_context.remove_last
-											if current_class = current_class_impl then
-												error_handler.report_vpca4a_error (current_class, l_call_agent.name, a_feature, a_context.base_class (universe), i, l_actual_named_type, l_formal_named_type)
-											else
-												error_handler.report_vpca4b_error (current_class, current_class_impl, l_call_agent.name, a_feature, a_context.base_class (universe), i, l_actual_named_type, l_formal_named_type)
-											end
+											error_handler.report_vpca4a_error (current_class, current_class_impl, l_call_agent.name, a_feature, a_context.base_class (universe), i, l_actual_named_type, l_formal_named_type)
 											l_formal_context.force_last (l_formal_type)
 										else
-											if current_class = current_class_impl then
-												error_handler.report_vpca4c_error (current_class, l_call_agent.name, a_feature, i, l_actual_named_type, l_formal_named_type)
-											else
-												error_handler.report_vpca4d_error (current_class, current_class_impl, l_call_agent.name, a_feature, i, l_actual_named_type, l_formal_named_type)
-											end
+											error_handler.report_vpca4b_error (current_class, current_class_impl, l_call_agent.name, a_feature, i, l_actual_named_type, l_formal_named_type)
 										end
 									else
 -- TODO: inline agent
@@ -9884,17 +9649,9 @@ feature {NONE} -- Agent validity
 										l_call_agent ?= an_agent
 										if l_call_agent /= Void then
 											if l_call_agent.is_qualified_call then
-												if current_class = current_class_impl then
-													error_handler.report_vpca5a_error (current_class, l_call_agent.name, a_feature, a_context.base_class (universe), i, l_actual_named_type, l_formal_named_type)
-												else
-													error_handler.report_vpca5b_error (current_class, current_class_impl, l_call_agent.name, a_feature, a_context.base_class (universe), i, l_actual_named_type, l_formal_named_type)
-												end
+												error_handler.report_vpca5a_error (current_class, current_class_impl, l_call_agent.name, a_feature, a_context.base_class (universe), i, l_actual_named_type, l_formal_named_type)
 											else
-												if current_class = current_class_impl then
-													error_handler.report_vpca5c_error (current_class, l_call_agent.name, a_feature, i, l_actual_named_type, l_formal_named_type)
-												else
-													error_handler.report_vpca5d_error (current_class, current_class_impl, l_call_agent.name, a_feature, i, l_actual_named_type, l_formal_named_type)
-												end
+												error_handler.report_vpca5b_error (current_class, current_class_impl, l_call_agent.name, a_feature, i, l_actual_named_type, l_formal_named_type)
 											end
 										else
 -- TODO: inline agent

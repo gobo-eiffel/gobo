@@ -20,6 +20,8 @@ inherit
 			report_error_message
 		end
 
+	KL_IMPORTED_ARRAY_ROUTINES
+
 create
 
 	make_standard, make_null
@@ -708,10 +710,17 @@ feature -- Validity errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			has_eiffel_error := True
-			report_info (an_error)
-			if info_file = std.output then
-				info_file.put_line ("----")
+			if
+				(is_ise and an_error.ise_reported) or
+				(is_se and an_error.se_reported) or
+				(is_ve and an_error.ve_reported) or
+				(is_ge and an_error.ge_reported)
+			then
+				has_eiffel_error := True
+				report_info (an_error)
+				if info_file = std.output then
+					info_file.put_line ("----")
+				end
 			end
 		end
 
@@ -733,35 +742,11 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
-			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
-			-- call in a precondition of `a_pre_feature' in `a_class', is not exported to
-			-- class `a_client' to which `a_pre_feature' is exported.
-			--
-			-- ETL2: p.122
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_pre_feature_not_void: a_pre_feature /= Void
-			a_client_not_void: a_client /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vape_error (a_class) then
-				create an_error.make_vape0a (a_class, a_name, a_feature, a_pre_feature, a_client)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vape0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+	report_vape0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
-			-- one of its descendants `a_class', is not exported to class `a_client' to
-			-- which `a_pre_feature' is exported.
+			-- one of its descendants `a_class' (possibly itself), is not exported to class
+			-- `a_client' to which `a_pre_feature' is exported.
 			--
 			-- ETL2: p.122
 		require
@@ -776,43 +761,44 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vape_error (a_class) then
-				create an_error.make_vape0b (a_class, a_class_impl, a_name, a_feature, a_pre_feature, a_client)
+				create an_error.make_vape0a (a_class, a_class_impl, a_name, a_feature, a_pre_feature, a_client)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vape0c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
-			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
-			-- call with target's base class `a_target_class' in a precondition of
-			-- `a_pre_feature' in `a_class', is not exported to class `a_client' to
-			-- which `a_pre_feature' is exported.
+	report_vape0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client_name: ET_CLASS_NAME) is
+			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
+			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
+			-- one of its descendants `a_class' (possibly itself), is not exported to class
+			-- `a_client_name' to which `a_pre_feature' is exported.
+			-- Note that `l_client_name' is assumed not to be a class in the universe.
+			-- Therefore we expect this class name to be explicitly listed in the client
+			-- list of `a_feature' or that `a_feature' be exported to ANY.
 			--
 			-- ETL2: p.122
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
-			a_target_class_not_void: a_target_class /= Void
 			a_pre_feature_not_void: a_pre_feature /= Void
-			a_client_not_void: a_client /= Void
+			a_client_name_not_void: a_client_name /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vape_error (a_class) then
-				create an_error.make_vape0c (a_class, a_name, a_feature, a_target_class, a_pre_feature, a_client)
+				create an_error.make_vape0b (a_class, a_class_impl, a_name, a_feature, a_pre_feature, a_client_name)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vape0d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+	report_vape0c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
 			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
-			-- a_class', is not exported to class `a_client' to which `a_pre_feature'
-			-- is exported.
+			-- a_class' (possibly itself), is not exported to class `a_client' to which
+			-- `a_pre_feature' is exported.
 			--
 			-- ETL2: p.122
 		require
@@ -828,91 +814,20 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vape_error (a_class) then
-				create an_error.make_vape0d (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client)
+				create an_error.make_vape0c (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vape0e_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
-			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
-			-- call in a precondition of `a_pre_feature' in `a_class', is not exported to
-			-- class `a_client' to which `a_pre_feature' is exported.
-			--
-			-- ETL2: p.122
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_pre_feature_not_void: a_pre_feature /= Void
-			a_client_not_void: a_client /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vape_error (a_class) then
-				create an_error.make_vape0e (a_class, a_name, a_feature, a_pre_feature, a_client)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vape0f_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
-			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
-			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
-			-- one of its descendants `a_class', is not exported to class `a_client' to
-			-- which `a_pre_feature' is exported.
-			--
-			-- ETL2: p.122
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_pre_feature_not_void: a_pre_feature /= Void
-			a_client_not_void: a_client /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vape_error (a_class) then
-				create an_error.make_vape0f (a_class, a_class_impl, a_name, a_feature, a_pre_feature, a_client)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vape0g_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
-			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
-			-- call with target's base class `a_target_class' in a precondition of
-			-- `a_pre_feature' in `a_class', is not exported to class `a_client' to
-			-- which `a_pre_feature' is exported.
-			--
-			-- ETL2: p.122
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_class_not_void: a_target_class /= Void
-			a_pre_feature_not_void: a_pre_feature /= Void
-			a_client_not_void: a_client /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vape_error (a_class) then
-				create an_error.make_vape0g (a_class, a_name, a_feature, a_target_class, a_pre_feature, a_client)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vape0h_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
+	report_vape0d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client_name: ET_CLASS_NAME) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
 			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
-			-- a_class', is not exported to class `a_client' to which `a_pre_feature'
-			-- is exported.
+			-- a_class' (possibly itself), is not exported to class `a_client_name' to
+			-- which `a_pre_feature' is exported.
+			-- Note that `l_client_name' is assumed not to be a class in the universe.
+			-- Therefore we expect this class name to be explicitly listed in the client
+			-- list of `a_feature' or that `a_feature' be exported to ANY.
 			--
 			-- ETL2: p.122
 		require
@@ -923,41 +838,21 @@ feature -- Validity errors
 			a_feature_not_void: a_feature /= Void
 			a_target_class_not_void: a_target_class /= Void
 			a_pre_feature_not_void: a_pre_feature /= Void
-			a_client_not_void: a_client /= Void
+			a_client_name_not_void: a_client_name /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vape_error (a_class) then
-				create an_error.make_vape0h (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client)
+				create an_error.make_vape0d (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client_name)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vave0a_error (a_class: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
-			-- Report VAVE error: the expression `an_expression' of a
-			-- loop variant in `a_class' is of type `a_type' which is
-			-- not "INTEGER".
-			--
-			-- ETL2: p.130
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_expression_not_void: an_expression /= Void
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vave_error (a_class) then
-				create an_error.make_vave0a (a_class, an_expression, a_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vave0b_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+	report_vave0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
 			-- Report VAVE error: the expression `an_expression' of a
 			-- loop variant in `a_class_impl' and viewed from one of
-			-- its descendants `a_class' is of type `a_type' which is
-			-- not "INTEGER".
+			-- its descendants `a_class' (possibly itself) is of type
+			-- `a_type' which is not "INTEGER".
 			--
 			-- ETL2: p.130
 		require
@@ -970,36 +865,15 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vave_error (a_class) then
-				create an_error.make_vave0b (a_class, a_class_impl, an_expression, a_type)
+				create an_error.make_vave0a (a_class, a_class_impl, an_expression, a_type)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vbac1a_error (a_class: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION; a_source_type, a_target_type: ET_NAMED_TYPE) is
-			-- Report VBAC-1 error: the source expression of `an_assigner' does
-			-- not conform nor convert to its target.
-			--
-			-- ECMA 367-2: p.119
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_assigner_not_void: an_assigner /= Void
-			a_source_type_not_void: a_source_type /= Void
-			a_source_type_is_named_type: a_source_type.is_named_type
-			a_target_type_not_void: a_target_type /= Void
-			a_target_type_is_named_type: a_target_type.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vbac1_error (a_class) then
-				create an_error.make_vbac1a (a_class, an_assigner, a_source_type, a_target_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vbac1b_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION; a_source_type, a_target_type: ET_NAMED_TYPE) is
-			-- Report VBAC-1 error: the source expression of `an_assigner' does
-			-- not conform nor convert to its target when viewed from `a_class'.
+	report_vbac1a_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION; a_source_type, a_target_type: ET_NAMED_TYPE) is
+			-- Report VBAC-1 error: the source expression of `an_assigner' in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) does not conform nor convert to its target.
 			--
 			-- ECMA 367-2: p.119
 		require
@@ -1015,7 +889,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vbac1_error (a_class) then
-				create an_error.make_vbac1b (a_class, a_class_impl, an_assigner, a_source_type, a_target_type)
+				create an_error.make_vbac1a (a_class, a_class_impl, an_assigner, a_source_type, a_target_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -1095,11 +969,10 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if is_se or is_ve or is_ge then
-				if reportable_vcch2_error (a_class) then
-					create an_error.make_vcch2a (a_class)
-					report_validity_error (an_error)
-				end
+			if reportable_vcch2_error (a_class) then
+				create an_error.make_vcch2a (a_class)
+				an_error.set_ise_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1161,7 +1034,6 @@ feature -- Validity errors
 				create an_error.make_vcfg3a (a_class, a_type)
 				an_error.set_ise_reported (False)
 				an_error.set_se_reported (False)
-				an_error.set_se_fatal (False)
 				report_validity_error (an_error)
 			end
 		end
@@ -1201,7 +1073,6 @@ feature -- Validity errors
 			if reportable_vcfg3_error (a_class) then
 				create an_error.make_vcfg3c (a_class, a_type)
 				an_error.set_se_reported (False)
-				an_error.set_se_fatal (False)
 				report_validity_error (an_error)
 			end
 		end
@@ -1220,21 +1091,18 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if is_se then
-				if reportable_vtct_error (a_class) then
-					create an_error.make_vtct0b (a_class, a_constraint)
-					an_error.set_compilers (False)
-					an_error.set_se_reported (True)
-					an_error.set_se_fatal (True)
-					report_validity_error (an_error)
-				end
+			if reportable_vtct_error (a_class) then
+				create an_error.make_vtct0b (a_class, a_constraint)
+				an_error.set_ise_reported (False)
+				an_error.set_ve_reported (False)
+				an_error.set_ge_reported (False)
+				report_validity_error (an_error)
 			end
 			if reportable_vcfg3_error (a_class) then
-				if is_ise or is_ge then
-					create an_error.make_vcfg3d (a_class, a_formal, a_constraint)
-					an_error.set_ise_reported (False)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vcfg3d (a_class, a_formal, a_constraint)
+				an_error.set_ve_reported (False)
+				an_error.set_se_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1255,12 +1123,11 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vcfg3_error (a_class) then
-				if is_ise then
-					create an_error.make_vcfg3e (a_class, a_formal, a_constraint)
-					an_error.set_compilers (False)
-					an_error.set_ise_fatal (True)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vcfg3e (a_class, a_formal, a_constraint)
+				an_error.set_ve_reported (False)
+				an_error.set_ge_reported (False)
+				an_error.set_se_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1280,14 +1147,12 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if is_ise then
-				if reportable_vtct_error (a_class) then
-					create an_error.make_vtct0b (a_class, a_constraint)
-					an_error.set_compilers (False)
-					an_error.set_ise_reported (True)
-					an_error.set_ise_fatal (True)
-					report_validity_error (an_error)
-				end
+			if reportable_vtct_error (a_class) then
+				create an_error.make_vtct0b (a_class, a_constraint)
+				an_error.set_ve_reported (False)
+				an_error.set_ge_reported (False)
+				an_error.set_se_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1307,14 +1172,10 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vcfg3_error (a_class) then
-				if is_se or is_ge then
-					create an_error.make_vcfg3g (a_class, a_cycle)
-					an_error.set_compilers (False)
-					an_error.set_se_fatal (True)
-					an_error.set_ge_reported (True)
-					an_error.set_ge_fatal (True)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vcfg3g (a_class, a_cycle)
+				an_error.set_ve_reported (False)
+				an_error.set_ise_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1332,21 +1193,20 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if is_se then
-				if reportable_vtct_error (a_class) then
-					create an_error.make_vtct0b (a_class, a_type)
-					an_error.set_compilers (False)
-					an_error.set_se_reported (True)
-					an_error.set_se_fatal (True)
-					report_validity_error (an_error)
-				end
+			if reportable_vtct_error (a_class) then
+				create an_error.make_vtct0b (a_class, a_type)
+				an_error.set_ve_reported (False)
+				an_error.set_ise_reported (False)
+				an_error.set_ge_reported (False)
+				report_validity_error (an_error)
 			end
 			if reportable_vcfg3_error (a_class) then
-				if
-					not (is_ise or is_se or is_ve) and
-					not is_ge and is_pedantic
-				then
+				if is_pedantic then
 					create an_error.make_vcfg3h (a_class, a_formal, a_type)
+					an_error.set_ve_reported (False)
+					an_error.set_ise_reported (False)
+					an_error.set_se_reported (False)
+					an_error.set_ge_reported (False)
 					report_validity_error (an_error)
 				end
 			end
@@ -1367,14 +1227,12 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if is_ise then
-				if reportable_vtct_error (a_class) then
-					create an_error.make_vtct0b (a_class, a_type)
-					an_error.set_compilers (False)
-					an_error.set_ise_reported (True)
-					an_error.set_ise_fatal (True)
-					report_validity_error (an_error)
-				end
+			if reportable_vtct_error (a_class) then
+				create an_error.make_vtct0b (a_class, a_type)
+				an_error.set_ve_reported (False)
+				an_error.set_se_reported (False)
+				an_error.set_ge_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1394,12 +1252,11 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vcfg3_error (a_class) then
-				if is_se then
-					create an_error.make_vcfg3j (a_class, a_cycle)
-					an_error.set_compilers (False)
-					an_error.set_se_fatal (True)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vcfg3j (a_class, a_cycle)
+				an_error.set_ve_reported (False)
+				an_error.set_ise_reported (False)
+				an_error.set_ge_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1683,38 +1540,11 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr4c_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE;
-		a_parent: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
-			-- Report VDPR-4B error: the `arg'-th actual argument in the precursor
-			-- call `a_precursor' appearing in `a_class' does not conform to the
-			-- corresponding formal argument of `a_feature' in class `a_parent'.
-			--
-			-- ETL3-4.82-00-00: p.215
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_precursor_not_void: a_precursor /= Void
-			a_feature_not_void: a_feature /= Void
-			a_parent_not_void: a_parent /= Void
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vdpr4_error (a_class) then
-				create an_error.make_vdpr4c (a_class, a_precursor, a_feature, a_parent, arg, an_actual, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vdpr4d_error (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE;
-		a_parent: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vdpr4b_error (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Report VDPR-4B error: the `arg'-th actual argument in the precursor
 			-- call `a_precursor' appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' does not conform to the corresponding formal
-			-- argument of `a_feature' in class `a_parent'.
+			-- descendants `a_class' (possibly itself) does not conform to the corresponding
+			-- formal argument of `a_feature' in class `a_parent'.
 			--
 			-- ETL3-4.82-00-00: p.215
 		require
@@ -1732,7 +1562,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vdpr4_error (a_class) then
-				create an_error.make_vdpr4d (a_class, a_class_impl, a_precursor, a_feature, a_parent, arg, an_actual, a_formal)
+				create an_error.make_vdpr4b (a_class, a_class_impl, a_precursor, a_feature, a_parent, arg, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end
@@ -1886,10 +1716,11 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vdrd4_error (a_class) then
-				if is_ge then
-					create an_error.make_vdrd4a (a_class, f1, f2)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vdrd4a (a_class, f1, f2)
+				an_error.set_ve_reported (False)
+				an_error.set_ise_reported (False)
+				an_error.set_se_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1912,10 +1743,10 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vdrd4_error (a_class) then
-				if is_se or is_ge then
-					create an_error.make_vdrd4b (a_class, f1, f2)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vdrd4b (a_class, f1, f2)
+				an_error.set_ve_reported (False)
+				an_error.set_ise_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1938,10 +1769,10 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vdrd4_error (a_class) then
-				if is_se or is_ge then
-					create an_error.make_vdrd4c (a_class, f1, f2)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vdrd4c (a_class, f1, f2)
+				an_error.set_ve_reported (False)
+				an_error.set_ise_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1964,10 +1795,10 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vdrd5_error (a_class) then
-				if is_ise or is_ge then
-					create an_error.make_vdrd5a (a_class, f1, f2)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vdrd5a (a_class, f1, f2)
+				an_error.set_ve_reported (False)
+				an_error.set_se_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -2201,10 +2032,11 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vdrs4_error (a_class) then
-				if is_ge then
-					create an_error.make_vdrs4b (a_class, a_deferred, an_effective)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vdrs4b (a_class, a_deferred, an_effective)
+				an_error.set_ve_reported (False)
+				an_error.set_se_reported (False)
+				an_error.set_ise_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -2288,10 +2120,10 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vdus3_error (a_class) then
-				if is_ise or is_ge then
-					create an_error.make_vdus3a (a_class, a_parent, f)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vdus3a (a_class, a_parent, f)
+				an_error.set_ve_reported (False)
+				an_error.set_se_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -2561,33 +2393,11 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfac3a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
+	report_vfac3a_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
 			-- Report VFAC-3 error: the type of the first argument of the
-			-- assigner procedure `a_procedure' and the result type of `a_query'
-			-- do not have the same deanchored form.
-			--
-			-- ECMA 367-2: p.41
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_assigner_not_void: an_assigner /= Void
-			a_query_not_void: a_query /= Void
-			a_query_has_assigner: a_query.assigner /= Void
-			a_procedure_not_void: a_procedure /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vfac3_error (a_class) then
-				create an_error.make_vfac3a (a_class, an_assigner, a_query, a_procedure)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vfac3b_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
-			-- Report VFAC-3 error: the type of the first argument of the
-			-- assigner procedure `a_procedure' (redeclared in `a_class') and the
-			-- result type of `a_query' (inherited from the ancestor class
-			-- `a_class_impl') do not have the same deanchored form.
+			-- assigner procedure `a_procedure' in `a_class' and the result type
+			-- of `a_query' declared in `a_class_impl' (an ancestor of `a_class',
+			-- possibly itself) do not have the same deanchored form.
 			--
 			-- ECMA 367-2: p.41
 		require
@@ -2602,39 +2412,16 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfac3_error (a_class) then
-				create an_error.make_vfac3b (a_class, a_class_impl, an_assigner, a_query, a_procedure)
+				create an_error.make_vfac3a (a_class, a_class_impl, an_assigner, a_query, a_procedure)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfac4a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE; arg: INTEGER) is
+	report_vfac4a_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE; arg: INTEGER) is
 			-- Report VFAC-4 error: the type of the `arg'-th + 1 argument of the
-			-- assigner procedure `a_procedure' and the type of the `arg'-th argument
-			-- of `a_query' do not have the same deanchored form.
-			--
-			-- ECMA 367-2: p.41
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_assigner_not_void: an_assigner /= Void
-			a_query_not_void: a_query /= Void
-			a_query_has_assigner: a_query.assigner /= Void
-			a_procedure_not_void: a_procedure /= Void
-			arg_not_negative: arg > 0
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vfac4_error (a_class) then
-				create an_error.make_vfac4a (a_class, an_assigner, a_query, a_procedure, arg)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vfac4b_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE; arg: INTEGER) is
-			-- Report VFAC-4 error: the type of the `arg'-th + 1 argument of the
-			-- assigner procedure `a_procedure' (redeclared in `a_class') and the type
-			-- of the `arg'-th argument of `a_query' (inherited from the ancestor class
-			-- `a_class_impl') do not have the same deanchored form.
+			-- assigner procedure `a_procedure' in `a_class' and the type of the
+			-- `arg'-th argument of `a_query' declared in `a_class_impl' (an ancestor
+			-- of `a_class', possibly itself) do not have the same deanchored form.
 			--
 			-- ECMA 367-2: p.41
 		require
@@ -2650,7 +2437,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfac4_error (a_class) then
-				create an_error.make_vfac4b (a_class, a_class_impl, an_assigner, a_query, a_procedure, arg)
+				create an_error.make_vfac4a (a_class, a_class_impl, an_assigner, a_query, a_procedure, arg)
 				report_validity_error (an_error)
 			end
 		end
@@ -3024,35 +2811,11 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc3a_error (a_class: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION;
-		a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
+	report_vgcc3a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
 			-- Report VGCC-3 error: the explicit creation type in creation instruction
-			-- `a_creation' does not conform to the declared type of the target entity.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_creation_not_void: a_creation /= Void
-			explicit_creation_type: a_creation.type /= Void
-			a_creation_named_type_not_void: a_creation_named_type /= Void
-			a_creation_named_type: a_creation_named_type.is_named_type
-			a_target_named_type_not_void: a_target_named_type /= Void
-			a_target_named_type: a_target_named_type.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc3_error (a_class) then
-				create an_error.make_vgcc3a (a_class, a_creation, a_creation_named_type, a_target_named_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc3b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION;
-		a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
-			-- Report VGCC-3 error: the explicit creation type in creation instruction
-			-- `a_creation' does not conform to the declared type of the target entity
-			-- when viewed from `a_class'.
+			-- `a_creation' appearing in `a_class_impl' does not conform to the declared
+			-- type of the target entity when viewed from one of its descendants
+			-- `a_class' (possibly `a_class_impl' itself).
 			--
 			-- ETL2: p.286
 		require
@@ -3069,36 +2832,17 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vgcc3_error (a_class) then
-				create an_error.make_vgcc3b (a_class, a_class_impl, a_creation, a_creation_named_type, a_target_named_type)
+				create an_error.make_vgcc3a (a_class, a_class_impl, a_creation, a_creation_named_type, a_target_named_type)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vgcc5a_error (a_class: ET_CLASS; a_position: ET_POSITION; a_target: ET_CLASS) is
-			-- Report VGCC-5 error: the creation expression appearing in `a_class'
-			-- at position `a_position', has no Creation_call part but the
-			-- base class `a_target' of the creation type has a Creators part.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_position_not_void: a_position /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc5_error (a_class) then
-				create an_error.make_vgcc5a (a_class, a_position, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc5b_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; a_target: ET_CLASS) is
+	report_vgcc5a_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; a_target: ET_CLASS) is
 			-- Report VGCC-5 error: the creation expression appearing in
 			-- `a_class_impl' at position `a_position' and viewed from one
-			-- of its descendants `a_class', has no Creation_call part but the
-			-- base class `a_target' of the creation type has a Creators part.
+			-- of its descendants `a_class' (possibly itself), has no
+			-- Creation_call part but the base class `a_target' of the
+			-- creation type has a Creators part.
 			--
 			-- ETL2: p.286
 		require
@@ -3111,36 +2855,17 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vgcc5_error (a_class) then
-				create an_error.make_vgcc5b (a_class, a_class_impl, a_position, a_target)
+				create an_error.make_vgcc5a (a_class, a_class_impl, a_position, a_target)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vgcc5c_error (a_class: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
-			-- Report VGCC-5 error: the creation instruction `a_creation',
-			-- appearing in `a_class', has no Creation_call part but the
-			-- base class `a_target' of the creation type has a Creators part.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_creation_not_void: a_creation /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc5_error (a_class) then
-				create an_error.make_vgcc5c (a_class, a_creation, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc5d_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
+	report_vgcc5b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
 			-- Report VGCC-5 error: the creation instruction `a_creation',
 			-- appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class', has no Creation_call part but the
-			-- base class `a_target' of the creation type has a Creators part.
+			-- descendants `a_class' (possibly itself), has no Creation_call
+			-- part but the base class `a_target' of the creation type
+			-- has a Creators part.
 			--
 			-- ETL2: p.286
 		require
@@ -3153,7 +2878,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vgcc5_error (a_class) then
-				create an_error.make_vgcc5d (a_class, a_class_impl, a_creation, a_target)
+				create an_error.make_vgcc5b (a_class, a_class_impl, a_creation, a_target)
 				report_validity_error (an_error)
 			end
 		end
@@ -3201,10 +2926,32 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc6d_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vgcc6c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in `a_class',
-			-- is not exported for creation to `a_class'.
+			-- a creation expression with creation procedure name `a_name' in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself), is not exported for creation to `a_class'.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc6_error (a_class) then
+				create an_error.make_vgcc6c (a_class, a_class_impl, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc6d_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VGCC-6 error: the feature name `a_name', appearing
+			-- in a creation instruction in `a_class', is not a procedure.
 			--
 			-- ETL2: p.286
 		require
@@ -3224,8 +2971,9 @@ feature -- Validity errors
 
 	report_vgcc6e_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in `a_class_impl',
-			-- is not exported for creation to `a_class'.
+			-- a creation instruction with creation procedure name `a_name' in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself), is not exported for creation to `a_class'.
 			--
 			-- ETL2: p.286
 		require
@@ -3244,79 +2992,18 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc6f_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VGCC-6 error: the feature name `a_name', appearing
-			-- in a creation instruction in `a_class', is not a procedure.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc6_error (a_class) then
-				create an_error.make_vgcc6f (a_class, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc6h_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation instruction with creation procedure name `a_name' in `a_class',
-			-- is not exported for creation to `a_class'.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc6_error (a_class) then
-				create an_error.make_vgcc6h (a_class, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc6i_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation instruction with creation procedure name `a_name' in `a_class_impl',
-			-- is not exported for creation to `a_class'.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc6_error (a_class) then
-				create an_error.make_vgcc6i (a_class, a_class_impl, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc8a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+	report_vgcc8a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
 			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in `a_class',
-			-- is not listed as creation procedure for the formal parameter `a_formal'
+			-- a creation expression with creation procedure name `a_name' in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself), is
+			-- not listed as creation procedure for the formal parameter `a_formal'
 			-- in `a_class'.
 			--
 			-- In ISE Eiffel only.
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
@@ -3325,16 +3012,16 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vgcc8_error (a_class) then
-				create an_error.make_vgcc8a (a_class, a_name, a_feature, a_target, a_formal)
+				create an_error.make_vgcc8a (a_class, a_class_impl, a_name, a_feature, a_target, a_formal)
 				report_validity_error (an_error)
 			end
 		end
 
 	report_vgcc8b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
 			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class', is not listed as creation
-			-- procedure for the formal parameter `a_formal' in `a_class'.
+			-- a creation instruction with creation procedure name `a_name' in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself), is
+			-- not listed as creation procedure for the formal parameter `a_formal' in `a_class'.
 			--
 			-- In ISE Eiffel only.
 		require
@@ -3350,53 +3037,6 @@ feature -- Validity errors
 		do
 			if reportable_vgcc8_error (a_class) then
 				create an_error.make_vgcc8b (a_class, a_class_impl, a_name, a_feature, a_target, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc8c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
-			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
-			-- a creation instruction with creation procedure name `a_name' in `a_class',
-			-- is not listed as creation procedure for the formal parameter `a_formal'
-			-- in `a_class'.
-			--
-			-- In ISE Eiffel only.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			a_formal_not_void: a_formal /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc8_error (a_class) then
-				create an_error.make_vgcc8c (a_class, a_name, a_feature, a_target, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc8d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
-			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
-			-- a creation instruction with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class', is not listed as creation
-			-- procedure for the formal parameter `a_formal' in `a_class'.
-			--
-			-- In ISE Eiffel only.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			a_formal_not_void: a_formal /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc8_error (a_class) then
-				create an_error.make_vgcc8d (a_class, a_class_impl, a_name, a_feature, a_target, a_formal)
 				report_validity_error (an_error)
 			end
 		end
@@ -3587,7 +3227,6 @@ feature -- Validity errors
 				create an_error.make_vhpr3a (a_class, a_type)
 				an_error.set_ise_reported (False)
 				an_error.set_se_reported (False)
-				an_error.set_se_fatal (False)
 				report_validity_error (an_error)
 			end
 		end
@@ -3604,14 +3243,11 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if is_pedantic then
-				if reportable_vhpr3_error (a_class) then
-					create an_error.make_vhpr3b (a_class, a_type)
-					an_error.set_ise_reported (False)
-					an_error.set_se_reported (False)
-					an_error.set_se_fatal (False)
-					report_validity_error (an_error)
-				end
+			if reportable_vhpr3_error (a_class) then
+				create an_error.make_vhpr3b (a_class, a_type)
+				an_error.set_ise_reported (False)
+				an_error.set_se_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -3630,7 +3266,6 @@ feature -- Validity errors
 			if reportable_vhpr3_error (a_class) then
 				create an_error.make_vhpr3c (a_class, a_type)
 				an_error.set_se_reported (False)
-				an_error.set_se_fatal (False)
 				report_validity_error (an_error)
 			end
 		end
@@ -3798,31 +3433,10 @@ feature -- Validity errors
 			end
 		end
 
-	report_vjar0a_error (a_class: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE) is
-			-- Report VJAR error: the source expression of `an_assignment' does
-			-- not conform to its target entity.
-			--
-			-- ETL2: p. 311
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_assignment_not_void: an_assignment /= Void
-			a_source_type_not_void: a_source_type /= Void
-			a_source_type_is_named_type: a_source_type.is_named_type
-			a_target_type_not_void: a_target_type /= Void
-			a_target_type_is_named_type: a_target_type.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vjar_error (a_class) then
-				create an_error.make_vjar0a (a_class, an_assignment, a_source_type, a_target_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vjar0b_error (a_class, a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE) is
-			-- Report VJAR error: the source expression of `an_assignment' does
-			-- not conform to its target entity when viewed from `a_class'.
+	report_vjar0a_error (a_class, a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE) is
+			-- Report VJAR error: the source expression of `an_assignment' in `a_class_impl'
+			-- does not conform to its target entity when viewed from `one of its descendants
+			-- a_class' (possibly itself).
 			--
 			-- ETL2: p. 311
 		require
@@ -3838,7 +3452,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vjar_error (a_class) then
-				create an_error.make_vjar0b (a_class, a_class_impl, an_assignment, a_source_type, a_target_type)
+				create an_error.make_vjar0a (a_class, a_class_impl, an_assignment, a_source_type, a_target_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -3862,7 +3476,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vjaw0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+	report_vjaw0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
 			-- Report VJAW error: `a_name' is supposed to be a Writable but
 			-- it is a formal argument name of `a_feature'.
 			--
@@ -3876,12 +3490,12 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vjaw_error (a_class) then
-				create an_error.make_vjaw0c (a_class, a_name, a_feature)
+				create an_error.make_vjaw0b (a_class, a_name, a_feature)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vjaw0d_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+	report_vjaw0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
 			-- Report VJAW error: `a_name' is supposed to be a Writable but
 			-- it is a formal argument name of inline agent `an_agent'.
 			--
@@ -3895,37 +3509,16 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vjaw_error (a_class) then
-				create an_error.make_vjaw0d (a_class, a_name, an_agent)
+				create an_error.make_vjaw0c (a_class, a_name, an_agent)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vjrv0a_error (a_class: ET_CLASS; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE) is
-			-- Report VJRV error: the type `a_target_type' of the target
-			-- `a_target' of an assignment attempt appearing in `a_class'
-			-- is not a reference type.
-			--
-			-- ETL2: p. 332
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_target_not_void: a_target /= Void
-			a_target_type_not_void: a_target_type /= Void
-			a_target_type_is_named_type: a_target_type.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vjrv_error (a_class) then
-				create an_error.make_vjrv0a (a_class, a_target, a_target_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vjrv0b_error (a_class, a_class_impl: ET_CLASS; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE) is
+	report_vjrv0a_error (a_class, a_class_impl: ET_CLASS; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE) is
 			-- Report VJRV error: the type `a_target_type' of the target
 			-- `a_target' of an assignment attempt appearing in `a_class_impl'
-			-- and viewed from one of its descedants `a_class' is not a
-			-- reference type.
+			-- and viewed from one of its descedants `a_class' (possibly itself)
+			-- is not a reference type.
 			--
 			-- ETL2: p. 332
 		require
@@ -3939,7 +3532,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vjrv_error (a_class) then
-				create an_error.make_vjrv0b (a_class, a_class_impl, a_target, a_target_type)
+				create an_error.make_vjrv0a (a_class, a_class_impl, a_target, a_target_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -4123,13 +3716,11 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vmfn_error (a_class) then
-				if is_ise then
-					create an_error.make_vmfn0b (a_class, f1, f2)
-					an_error.set_compilers (False)
-					an_error.set_ise_reported (True)
-					an_error.set_ise_fatal (True)
-					report_validity_error (an_error)
-				end
+				create an_error.make_vmfn0b (a_class, f1, f2)
+				an_error.set_se_reported (False)
+				an_error.set_ve_reported (False)
+				an_error.set_ge_reported (False)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -4300,39 +3891,18 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vmss3_error (a_class) then
-				if is_ise or is_ge then
-					create an_error.make_vmss3a (a_class, a_feature)
-					an_error.set_se_reported (False)
-					an_error.set_se_fatal (False)
-					report_validity_error (an_error)
-				end
-			end
-		end
-
-	report_vomb1a_error (a_class: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
-			-- Report VOMB-1 error: the inspect expression `an_expression'
-			-- in `a_class' is of type `a_type' which is not "INTEGER" or
-			-- "CHARACTER".
-			--
-			-- ETL2: p.239
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_expression_not_void: an_expression /= Void
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vomb1_error (a_class) then
-				create an_error.make_vomb1a (a_class, an_expression, a_type)
+				create an_error.make_vmss3a (a_class, a_feature)
+				an_error.set_se_reported (False)
+				an_error.set_ve_reported (False)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vomb1b_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+	report_vomb1a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
 			-- Report VOMB-1 error: the inspect expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants `a_class'
-			-- is of type `a_type' which is not "INTEGER" or "CHARACTER".
+			-- (possibly itself) is of type `a_type' which is not "INTEGER"
+			-- or "CHARACTER".
 			--
 			-- ETL2: p.239
 		require
@@ -4345,38 +3915,16 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vomb1_error (a_class) then
-				create an_error.make_vomb1b (a_class, a_class_impl, an_expression, a_type)
+				create an_error.make_vomb1a (a_class, a_class_impl, an_expression, a_type)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vomb2a_error (a_class: ET_CLASS; a_constant: ET_CHOICE_CONSTANT; a_constant_type, a_value_type: ET_NAMED_TYPE) is
-			-- Report VOMB-2 error: the inspect constant `a_constant' in `a_class'
-			-- is of type `a_consant_type' which is not the same as the type
-			-- `a_value_type' of the inspect expression.
-			--
-			-- ETL2: p.239
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_constant_not_void: a_constant /= Void
-			a_constant_type_not_void: a_constant_type /= Void
-			a_value_type_not_void: a_value_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vomb2_error (a_class) then
-				create an_error.make_vomb2a (a_class, a_constant, a_constant_type, a_value_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vomb2b_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHOICE_CONSTANT;
-		a_constant_type, a_value_type: ET_NAMED_TYPE) is
+	report_vomb2a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHOICE_CONSTANT; a_constant_type, a_value_type: ET_NAMED_TYPE) is
 			-- Report VOMB-2 error: the inspect constant `a_constant' in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
-			-- is of type `a_constant_type' which is not the same as the
-			-- type `a_value_type' of the inspect expression.
+			-- (possibly itself) is of type `a_constant_type' which is not
+			-- the same as the type `a_value_type' of the inspect expression.
 			--
 			-- ETL2: p.239
 		require
@@ -4390,7 +3938,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vomb2_error (a_class) then
-				create an_error.make_vomb2b (a_class, a_class_impl, a_constant, a_constant_type, a_value_type)
+				create an_error.make_vomb2a (a_class, a_class_impl, a_constant, a_constant_type, a_value_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -4438,32 +3986,11 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca2a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VPCA-2 error: `a_feature' of class `a_target',
-			-- is not exported to `a_class' where the qualified call
-			-- agent `a_name' appears.
-			--
-			-- ETL3 (4.82-00-00): p.581
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vpca2_error (a_class) then
-				create an_error.make_vpca2a (a_class, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vpca2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vpca2a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VPCA-2 error: `a_feature' of class `a_target'
 			-- is not exported to `a_class', one of the descendants
-			-- of `a_class_impl' where the qualified call agent
-			-- `a_name' appears.
+			-- of `a_class_impl' (possibly itself) where the qualified
+			-- call agent `a_name' appears.
 			--
 			-- ETL3 (4.82-00-00): p.581
 		require
@@ -4477,7 +4004,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vpca2_error (a_class) then
-				create an_error.make_vpca2b (a_class, a_class_impl, a_name, a_feature, a_target)
+				create an_error.make_vpca2a (a_class, a_class_impl, a_name, a_feature, a_target)
 				report_validity_error (an_error)
 			end
 		end
@@ -4504,7 +4031,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca3c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	report_vpca3b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Report VPCA-3 error: the number of actual arguments in
 			-- the unqualified call agent `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in `a_class'.
@@ -4519,43 +4046,16 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vpca3_error (a_class) then
-				create an_error.make_vpca3c (a_class, a_name, a_feature)
+				create an_error.make_vpca3b (a_class, a_name, a_feature)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vpca4a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
-		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
-			-- Report VPCA-4 error: the `arg'-th actual argument in the qualified
-			-- call agent `a_name' appearing in `a_class' does not conform to the corresponding
-			-- formal argument of `a_feature' in class `a_target'.
-			--
-			-- ETL3 (4.82-00-00): p.581
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vpca4_error (a_class) then
-				create an_error.make_vpca4a (a_class, a_name, a_feature, a_target, arg, an_actual, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vpca4b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
-		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vpca4a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Report VPCA-4 error: the `arg'-th actual argument in the qualified
 			-- call agent `a_name' appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' does not conform to the corresponding formal
-			-- argument of `a_feature' in class `a_target'.
+			-- descendants `a_class' (possibly itself) does not conform to the
+			-- corresponding formal argument of `a_feature' in class `a_target'.
 			--
 			-- ETL3 (4.82-00-00): p.581
 		require
@@ -4573,21 +4073,22 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vpca4_error (a_class) then
-				create an_error.make_vpca4b (a_class, a_class_impl, a_name, a_feature, a_target, arg, an_actual, a_formal)
+				create an_error.make_vpca4a (a_class, a_class_impl, a_name, a_feature, a_target, arg, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vpca4c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
-		arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vpca4b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Report VPCA-4 error: the `arg'-th actual argument in the unqualified
-			-- call agent `a_name' appearing in `a_class' does not conform to the corresponding
-			-- formal argument of `a_feature' in `a_class'.
+			-- call agent `a_name' appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class' (possibly itself) does not conform to the corresponding
+			-- formal argument of `a_feature' in `a_class_impl'.
 			--
 			-- ETL3 (4.82-00-00): p.581
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			an_actual_not_void: an_actual /= Void
@@ -4598,16 +4099,44 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vpca4_error (a_class) then
-				create an_error.make_vpca4c (a_class, a_name, a_feature, arg, an_actual, a_formal)
+				create an_error.make_vpca4b (a_class, a_class_impl, a_name, a_feature, arg, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vpca4d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
-		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
-			-- Report VPCA-4 error: the `arg'-th actual argument in the unqualified
-			-- call agent `a_name' appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' does not conform to the corresponding formal
+	report_vpca5a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VPCA-5 error: the type specified for the `arg'-th actual
+			-- argument in the qualified call agent `a_name' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) does not conform to the corresponding formal
+			-- argument of `a_feature' in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca5_error (a_class) then
+				create an_error.make_vpca5a (a_class, a_class_impl, a_name, a_feature, a_target, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca5b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VPCA-5 error: the type speciified for the `arg'-th actual
+			-- argument in the unqualified call agent `a_name' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) does not conform to the corresponding formal
 			-- argument of `a_feature' in `a_class_impl'.
 			--
 			-- ETL3 (4.82-00-00): p.581
@@ -4624,118 +4153,8 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vpca4_error (a_class) then
-				create an_error.make_vpca4d (a_class, a_class_impl, a_name, a_feature, arg, an_actual, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vpca5a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
-		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
-			-- Report VPCA-5 error: the type specified for the `arg'-th
-			-- actual argument in the qualified call agent `a_name' appearing
-			-- in `a_class' does not conform to the corresponding formal
-			-- argument of `a_feature' in class `a_target'.
-			--
-			-- ETL3 (4.82-00-00): p.581
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
 			if reportable_vpca5_error (a_class) then
-				create an_error.make_vpca5a (a_class, a_name, a_feature, a_target, arg, an_actual, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vpca5b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
-		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
-			-- Report VPCA-5 error: the type specified for the `arg'-th actual
-			-- argument in the qualified call agent `a_name' appearing in
-			-- `a_class_impl' and viewed from one of its descendants `a_class'
-			-- does not conform to the corresponding formal argument of `a_feature'
-			-- in class `a_target'.
-			--
-			-- ETL3 (4.82-00-00): p.581
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vpca5_error (a_class) then
-				create an_error.make_vpca5b (a_class, a_class_impl, a_name, a_feature, a_target, arg, an_actual, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vpca5c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
-		arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
-			-- Report VPCA-5 error: the type specified for the `arg'-th actual
-			-- argument in the unqualified call agent `a_name' appearing in
-			-- `a_class' does not conform to the corresponding formal argument
-			-- of `a_feature' in `a_class'.
-			--
-			-- ETL3 (4.82-00-00): p.581
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vpca5_error (a_class) then
-				create an_error.make_vpca5c (a_class, a_name, a_feature, arg, an_actual, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vpca5d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
-		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
-			-- Report VPCA-5 error: the type speciified for the `arg'-th actual
-			-- argument in the unqualified call agent `a_name' appearing in
-			-- `a_class_impl' and viewed from one of its descendants `a_class'
-			-- does not conform to the corresponding formal argument of `a_feature'
-			-- in `a_class_impl'.
-			--
-			-- ETL3 (4.82-00-00): p.581
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vpca5_error (a_class) then
-				create an_error.make_vpca5d (a_class, a_class_impl, a_name, a_feature, arg, an_actual, a_formal)
+				create an_error.make_vpca5b (a_class, a_class_impl, a_name, a_feature, arg, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end
@@ -4820,29 +4239,10 @@ feature -- Validity errors
 			end
 		end
 
-	report_vqmc1a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-1 error: `an_attribute' introduces a boolean constant
-			-- but its type is not "BOOLEAN".
-			--
-			-- ETL2: p.264
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_attribute_not_void: an_attribute /= Void
-			boolean_constant: an_attribute.constant.is_boolean_constant
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vqmc1_error (a_class) then
-				create an_error.make_vqmc1a (a_class, an_attribute)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vqmc1b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-1 error: `an_attribute' introduces a boolean constant
-			-- but its type is not "BOOLEAN" when viewed from `a_class' (a descendant
-			-- of `a_class_impl' where `an_attribute' has been declared).
+	report_vqmc1a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-1 error: `an_attribute', declared in `a_class_impl, introduces
+			-- a boolean constant but its type is not "BOOLEAN" when viewed from one of its
+			-- descendants `a_class' (possibly itself).
 			--
 			-- ETL2: p.264
 		require
@@ -4855,34 +4255,15 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vqmc1_error (a_class) then
-				create an_error.make_vqmc1b (a_class, a_class_impl, an_attribute)
+				create an_error.make_vqmc1a (a_class, a_class_impl, an_attribute)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vqmc2a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-2 error: `an_attribute' introduces a character constant
-			-- but its type is not "CHARACTER".
-			--
-			-- ETL2: p.264
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_attribute_not_void: an_attribute /= Void
-			character_constant: an_attribute.constant.is_character_constant
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vqmc2_error (a_class) then
-				create an_error.make_vqmc2a (a_class, an_attribute)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vqmc2b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-2 error: `an_attribute' introduces a character constant
-			-- but its type is not "CHARACTER" when viewed from `a_class' (a descendant
-			-- of `a_class_impl' where `an_attribute' has been declared).
+	report_vqmc2a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-2 error: `an_attribute', declared in `a_class_impl', introduces
+			-- a character constant but its type is not "CHARACTER" when viewed from one of its
+			-- descendants `a_class' (possibly itself).
 			--
 			-- ETL2: p.264
 		require
@@ -4895,34 +4276,15 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vqmc2_error (a_class) then
-				create an_error.make_vqmc2b (a_class, a_class_impl, an_attribute)
+				create an_error.make_vqmc2a (a_class, a_class_impl, an_attribute)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vqmc3a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-3 error: `an_attribute' introduces an integer constant
-			-- but its type is not "INTEGER".
-			--
-			-- ETL2: p.264
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_attribute_not_void: an_attribute /= Void
-			integer_constant: an_attribute.constant.is_integer_constant
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vqmc3_error (a_class) then
-				create an_error.make_vqmc3a (a_class, an_attribute)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vqmc3b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-3 error: `an_attribute' introduces an integer constant
-			-- but its type is not "INTEGER" when viewed from `a_class' (a descendant
-			-- of `a_class_impl' where `an_attribute' has been declared).
+	report_vqmc3a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-3 error: `an_attribute', declared in `a_class_impl' introduces
+			-- an integer constant but its type is not "INTEGER" when viewed from one of its
+			-- descendants `a_class' (possibly itself).
 			--
 			-- ETL2: p.264
 		require
@@ -4935,34 +4297,15 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vqmc3_error (a_class) then
-				create an_error.make_vqmc3b (a_class, a_class_impl, an_attribute)
+				create an_error.make_vqmc3a (a_class, a_class_impl, an_attribute)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vqmc4a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-4 error: `an_attribute' introduces a real constant
-			-- but its type is not "REAL" or "DOUBLE".
-			--
-			-- ETL2: p.264
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_attribute_not_void: an_attribute /= Void
-			real_constant: an_attribute.constant.is_real_constant
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vqmc4_error (a_class) then
-				create an_error.make_vqmc4a (a_class, an_attribute)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vqmc4b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-4 error: `an_attribute' introduces a real constant
-			-- but its type is not "REAL" or "DOUBLE" when viewed from `a_class' (a descendant
-			-- of `a_class_impl' where `an_attribute' has been declared).
+	report_vqmc4a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-4 error: `an_attribute', declared in `a_class_imp', introduces
+			-- a real constant but its type is not "REAL" or "DOUBLE" when viewed from one of
+			-- its descendants `a_class' (possiby itself).
 			--
 			-- ETL2: p.264
 		require
@@ -4975,34 +4318,15 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vqmc4_error (a_class) then
-				create an_error.make_vqmc4b (a_class, a_class_impl, an_attribute)
+				create an_error.make_vqmc4a (a_class, a_class_impl, an_attribute)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vqmc5a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-5 error: `an_attribute' introduces a string constant
-			-- but its type is not "STRING".
-			--
-			-- ETL2: p.264
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_attribute_not_void: an_attribute /= Void
-			string_constant: an_attribute.constant.is_string_constant
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vqmc5_error (a_class) then
-				create an_error.make_vqmc5a (a_class, an_attribute)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vqmc5b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-5 error: `an_attribute' introduces a string constant
-			-- but its type is not "STRING" when viewed from `a_class' (a descendant
-			-- of `a_class_impl' where `an_attribute' has been declared).
+	report_vqmc5a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-5 error: `an_attribute', declared in `a_class_impl', introduces
+			-- a string constant but its type is not "STRING" when viewed from one of its
+			-- descendants `a_class' (possibly itself).
 			--
 			-- ETL2: p.264
 		require
@@ -5015,34 +4339,15 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vqmc5_error (a_class) then
-				create an_error.make_vqmc5b (a_class, a_class_impl, an_attribute)
+				create an_error.make_vqmc5a (a_class, a_class_impl, an_attribute)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vqmc6a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-6 error: `an_attribute' introduces a bit constant
-			-- but its type is not a Bit_type.
-			--
-			-- ETL2: p.264
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_attribute_not_void: an_attribute /= Void
-			bit_constant: an_attribute.constant.is_bit_constant
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vqmc6_error (a_class) then
-				create an_error.make_vqmc6a (a_class, an_attribute)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vqmc6b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-6 error: `an_attribute' introduces a bit constant
-			-- but its type is not a Bit_type when viewed from `a_class' (a descendant
-			-- of `a_class_impl' where `an_attribute' has been declared).
+	report_vqmc6a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-6 error: `an_attribute', declared in `a_class_impl, introduces
+			-- a bit constant but its type is not a Bit_type when viewed from one of its
+			-- descendants `a_class' (possibly itself).
 			--
 			-- ETL2: p.264
 		require
@@ -5055,32 +4360,14 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vqmc6_error (a_class) then
-				create an_error.make_vqmc6b (a_class, a_class_impl, an_attribute)
+				create an_error.make_vqmc6a (a_class, a_class_impl, an_attribute)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vqui0a_error (a_class: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE) is
-			-- Report VQUI error: the type of `a_unique' is not "INTEGER".
-			--
-			-- ETL2: p.266
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_unique_not_void: a_unique /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vqui_error (a_class) then
-				create an_error.make_vqui0a (a_class, a_unique)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vqui0b_error (a_class, a_class_impl: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE) is
-			-- Report VQUI error: the type of `a_unique' is not "INTEGER"
-			-- when viewed from `a_class' (a descendant of `a_class_impl'
-			-- where `a_unique' has been declared).
+	report_vqui0a_error (a_class, a_class_impl: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE) is
+			-- Report VQUI error: the type of `a_unique', declared in `a_class_impl', is
+			-- not "INTEGER" when viewed from one of its descendants `a_class' (possibly itself).
 			--
 			-- ETL2: p.266
 		require
@@ -5092,7 +4379,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vqui_error (a_class) then
-				create an_error.make_vqui0b (a_class, a_class_impl, a_unique)
+				create an_error.make_vqui0a (a_class, a_class_impl, a_unique)
 				report_validity_error (an_error)
 			end
 		end
@@ -5742,20 +5029,45 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if is_se or is_pedantic then
+			if is_pedantic then
 				if reportable_vtbt_error (a_class) then
 					create an_error.make_vtbt0d (a_class, a_type)
 					an_error.set_ise_reported (False)
-					an_error.set_ise_fatal (False)
+					an_error.set_ge_reported (False)
+					an_error.set_ve_reported (False)
 					report_validity_error (an_error)
 				end
 			end
 		end
 
-	report_vtcg3a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual, a_constraint: ET_TYPE) is
-			-- Report VTCG-3 error: actual generic paramater
-			-- `an_actual' of `a_type' in `a_class' does not conform to
+	report_vtcg3a_error (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual, a_constraint: ET_TYPE) is
+			-- Report VTCG-3 error: actual generic paramater `an_actual'
+			-- of `a_type' appearing in `a_class_impl' and viewed from one of
+			-- its decendants `a_class' (possibly itself) does not conform to
 			-- constraint `a_constraint'.
+			--
+			-- Note that it is possible that the actual paramater conforms
+			-- to the constraint in `a_class_impl' but not in `a_class'.
+			-- Here is an example:
+			--
+			--   class A
+			--   feature
+			--       y: Y [like Current, X [A]]
+			--   end
+			--
+			--   class B
+			--   inherit
+			--       A
+			--   end
+			--
+			--   class X
+			--   end
+			--
+			--   class Y [G, H -> X [G]]
+			--   end
+			--
+			-- In class B the actual generic parameter 'X [A]' does not conform
+			-- to its constraint 'X [like Current]'.
 			--
 			-- ETL2: p.203
 			-- ETR: p.46
@@ -5769,35 +5081,12 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vtcg3_error (a_class) then
-				create an_error.make_vtcg3a (a_class, a_type, an_actual, a_constraint)
+				create an_error.make_vtcg3a (a_class, a_class_impl, a_type, an_actual, a_constraint)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vtcg4a_error (a_class: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER;
-		a_name: ET_FEATURE_NAME; an_actual_base_class, a_generic_class: ET_CLASS) is
-			-- Report VTCG-4 error: `an_actual_base_class' does not make
-			-- feature `a_name' available as creation procedure to `a_generic_class'.
-			--
-			-- Only in ISE Eiffel
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_position_not_void: a_position /= Void
-			a_name_not_void: a_name /= Void
-			an_actual_base_class_not_void: an_actual_base_class /= Void
-			a_generic_class_not_void: a_generic_class /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vtcg4_error (a_class) then
-				create an_error.make_vtcg4a (a_class, a_position, an_actual_index, a_name, an_actual_base_class, a_generic_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vtcg4b_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER;
-		a_name: ET_FEATURE_NAME; an_actual_base_class, a_generic_class: ET_CLASS) is
+	report_vtcg4a_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER; a_name: ET_FEATURE_NAME; an_actual_base_class, a_generic_class: ET_CLASS) is
 			-- Report VTCG-4 error: `an_actual_base_class' does not make
 			-- feature `a_name' available as creation procedure to `a_generic_class'.
 			--
@@ -5814,35 +5103,12 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vtcg4_error (a_class) then
-				create an_error.make_vtcg4b (a_class, a_class_impl, a_position, an_actual_index, a_name, an_actual_base_class, a_generic_class)
+				create an_error.make_vtcg4a (a_class, a_class_impl, a_position, an_actual_index, a_name, an_actual_base_class, a_generic_class)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vtcg4c_error (a_class: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER;
-		a_name: ET_FEATURE_NAME; an_actual: ET_FORMAL_PARAMETER; a_generic_class: ET_CLASS) is
-			-- Report VTCG-4 error: `an_actual', which is a formal generic parameter
-			-- of `a_class' does not list feature `a_name' as creation procedure.
-			--
-			-- Only in ISE Eiffel
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_position_not_void: a_position /= Void
-			a_name_not_void: a_name /= Void
-			an_actual_not_void: an_actual /= Void
-			a_generic_class_not_void: a_generic_class /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vtcg4_error (a_class) then
-				create an_error.make_vtcg4c (a_class, a_position, an_actual_index, a_name, an_actual, a_generic_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vtcg4d_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER;
-		a_name: ET_FEATURE_NAME; an_actual: ET_FORMAL_PARAMETER; a_generic_class: ET_CLASS) is
+	report_vtcg4b_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER; a_name: ET_FEATURE_NAME; an_actual: ET_FORMAL_PARAMETER; a_generic_class: ET_CLASS) is
 			-- Report VTCG-4 error: `an_actual', which is a formal generic parameter
 			-- of `a_class' does not list feature `a_name' as creation procedure.
 			--
@@ -5859,7 +5125,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vtcg4_error (a_class) then
-				create an_error.make_vtcg4d (a_class, a_class_impl, a_position, an_actual_index, a_name, an_actual, a_generic_class)
+				create an_error.make_vtcg4b (a_class, a_class_impl, a_position, an_actual_index, a_name, an_actual, a_generic_class)
 				report_validity_error (an_error)
 			end
 		end
@@ -6024,38 +5290,11 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar2a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
-			-- Report VUAR-2 error: the `arg'-th actual argument in the qualified
-			-- call `a_name' appearing in `a_class' does not conform to the corresponding
-			-- formal argument of `a_feature' in class `a_target'.
-			--
-			-- ETL2: p.369
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vuar2_error (a_class) then
-				create an_error.make_vuar2a (a_class, a_name, a_feature, a_target, arg, an_actual, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vuar2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vuar2a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER_32; an_actual, a_formal: ET_NAMED_TYPE)
 			-- Report VUAR-2 error: the `arg'-th actual argument in the qualified
 			-- call `a_name' appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' does not conform to the corresponding formal
-			-- argument of `a_feature' in class `a_target'.
+			-- descendants `a_class' (possibly itself) does not conform to the
+			-- corresponding formal argument of `a_feature' in class `a_target'.
 			--
 			-- ETL2: p.369
 		require
@@ -6073,42 +5312,16 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuar2_error (a_class) then
-				create an_error.make_vuar2b (a_class, a_class_impl, a_name, a_feature, a_target, arg, an_actual, a_formal)
+				create an_error.make_vuar2a (a_class, a_class_impl, a_name, a_feature, a_target, arg, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vuar2c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
-		arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
-			-- Report VUAR-2 error: the `arg'-th actual argument in the unqualified
-			-- call `a_name' appearing in `a_class' does not conform to the corresponding
-			-- formal argument of `a_feature' in `a_class'.
-			--
-			-- ETL2: p.369
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vuar2_error (a_class) then
-				create an_error.make_vuar2c (a_class, a_name, a_feature, arg, an_actual, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vuar2d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME;
-		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vuar2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Report VUAR-2 error: the `arg'-th actual argument in the unqualified
 			-- call `a_name' appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' does not conform to the corresponding formal
-			-- argument of `a_feature' in `a_class_impl'.
+			-- descendants `a_class' (possibly itself) does not conform to the
+			-- corresponding formal argument of `a_feature' in `a_class'.
 			--
 			-- ETL2: p.369
 		require
@@ -6125,7 +5338,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuar2_error (a_class) then
-				create an_error.make_vuar2d (a_class, a_class_impl, a_name, a_feature, arg, an_actual, a_formal)
+				create an_error.make_vuar2b (a_class, a_class_impl, a_name, a_feature, arg, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end
@@ -6192,31 +5405,11 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuex2b_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VUEX-2 error: `a_feature' of class `a_target',
-			-- is not exported to `a_class' where the qualified call
-			-- `a_name' appears.
-			--
-			-- ETL2: p.368
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vuex2_error (a_class) then
-				create an_error.make_vuex2b (a_class, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vuex2c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vuex2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VUEX-2 error: `a_feature' of class `a_target'
 			-- is not exported to `a_class', one of the descendants
-			-- of `a_class_impl' where the qualified call `a_name' appears.
+			-- of `a_class_impl' (possibly itself) where the qualified
+			-- call `a_name' appears.
 			--
 			-- ETL2: p.368
 		require
@@ -6230,34 +5423,16 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuex2_error (a_class) then
-				create an_error.make_vuex2c (a_class, a_class_impl, a_name, a_feature, a_target)
+				create an_error.make_vuex2b (a_class, a_class_impl, a_name, a_feature, a_target)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vwbe0a_error (a_class: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
-			-- Report VWBE error: the boolean expression `an_expression'
-			-- in `a_class' is of type `a_type' which is not "BOOLEAN".
-			--
-			-- ETL2: p.374
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_expression_not_void: an_expression /= Void
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vwbe_error (a_class) then
-				create an_error.make_vwbe0a (a_class, an_expression, a_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vwbe0b_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+	report_vwbe0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
 			-- Report VWBE error: the boolean expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants
-			-- `a_class' is of type `a_type' which is not "BOOLEAN".
+			-- `a_class' (possibly itself) is of type `a_type' which is
+			-- not "BOOLEAN".
 			--
 			-- ETL2: p.374
 		require
@@ -6270,38 +5445,16 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vwbe_error (a_class) then
-				create an_error.make_vwbe0b (a_class, a_class_impl, an_expression, a_type)
+				create an_error.make_vwbe0a (a_class, a_class_impl, an_expression, a_type)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vweq0a_error (a_class: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION;
-		a_type1, a_type2: ET_NAMED_TYPE) is
-			-- Report VWEQ error: none of the operands of the equality
-			-- expression `an_expression' appearing in `a_class' conforms to
-			-- the other.
-			--
-			-- ETL2: p.375
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			an_expression_not_void: an_expression /= Void
-			a_type1_not_void: a_type1 /= Void
-			a_type2_not_void: a_type2 /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vweq_error (a_class) then
-				create an_error.make_vweq0a (a_class, an_expression, a_type1, a_type2)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vweq0b_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION;
-		a_type1, a_type2: ET_NAMED_TYPE) is
+	report_vweq0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE) is
 			-- Report VWEQ error: none of the operands of the equality
 			-- expression `an_expression' appearing in `a_class_impl' and viewed
-			-- from one of its descendants `a_class' conforms to the other.
+			-- from one of its descendants `a_class' (possibly itself) conforms
+			-- to the other.
 			--
 			-- ETL2: p.375
 		require
@@ -6315,7 +5468,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vweq_error (a_class) then
-				create an_error.make_vweq0b (a_class, a_class_impl, an_expression, a_type1, a_type2)
+				create an_error.make_vweq0a (a_class, a_class_impl, an_expression, a_type1, a_type2)
 				report_validity_error (an_error)
 			end
 		end
@@ -6413,7 +5566,6 @@ feature -- Validity errors
 		do
 			if reportable_gvagp_error (a_class) then
 				create an_error.make_gvagp0a (a_class, anc1, anc2)
-				an_error.set_ise_reported (False)
 				an_error.set_se_reported (False)
 				an_error.set_ve_reported (False)
 				report_validity_error (an_error)
@@ -6492,8 +5644,8 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvkbs1a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.twin' built-in
+	report_gvkbs0a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_expected_arguments: ARRAY [ET_TYPE]; a_expected_type: ET_TYPE) is
+			-- Report GVKBS error: wrong signature for built-in
 			-- routine `a_feature' in class `a_class'.
 			--
 			-- Not in ETL
@@ -6503,2097 +5655,12 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
 			a_feature_builtin: a_feature.is_builtin
+			no_void_argument: a_expected_arguments /= Void implies not ANY_ARRAY_.has (a_expected_arguments, Void)
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.standard_is_equal'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1b (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.standard_copy'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1c (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.same_type'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1d (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.conforms_to'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1e (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.generator'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1f (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1g_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.generating_type'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1g (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1h_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.tagged_out'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1h (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1i_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.standard_twin'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1i (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1j_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.is_deep_equal'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1j (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1k_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.deep_twin'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1k (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs1l_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-1 error: wrong signature for 'ANY.copy'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs1_error (a_class) then
-				create an_error.make_gvkbs1l (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs2a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.item'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs2_error (a_class) then
-				create an_error.make_gvkbs2a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs2b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.put'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs2_error (a_class) then
-				create an_error.make_gvkbs2b (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs2c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.make'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs2_error (a_class) then
-				create an_error.make_gvkbs2c (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs2d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.count'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs2_error (a_class) then
-				create an_error.make_gvkbs2d (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs2e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.element_size'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs2_error (a_class) then
-				create an_error.make_gvkbs2e (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs2f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.aliased_resized_area'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs2_error (a_class) then
-				create an_error.make_gvkbs2f (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs3a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.code'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs3_error (a_class) then
-				create an_error.make_gvkbs3a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs3b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_character_class: ET_CLASS) is
-			-- Report GVKBS-3 error: wrong signature for `a_feature' in `a_class',
-			-- built-in routine 'item' from ref class of sized character class `a_character_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-			a_character_class_not_void: a_character_class /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs3_error (a_class) then
-				create an_error.make_gvkbs3b (a_class, a_feature, a_character_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs3c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_character_class: ET_CLASS) is
-			-- Report GVKBS-3 error: wrong signature for `a_feature' in `a_class',
-			-- built-in routine 'set_item' from ref class of sized character class `a_character_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-			a_character_class_not_void: a_character_class /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs3_error (a_class) then
-				create an_error.make_gvkbs3c (a_class, a_feature, a_character_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs3d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.natural_32_code'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs3_error (a_class) then
-				create an_error.make_gvkbs3d (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs3e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.to_character_8'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs3_error (a_class) then
-				create an_error.make_gvkbs3e (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs3f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.to_character_32'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs3_error (a_class) then
-				create an_error.make_gvkbs3f (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "+"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "-"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4b (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "*"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4c (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "/"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4d (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "//"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4e (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "\\"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4f (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4g_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.prefix "-"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4g (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4h_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "<"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4h (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4i_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_character_8'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4i (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4j_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_or'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4j (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4k_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_shift_left'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4k (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4l_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_shift_right'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4l (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4m_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_xor'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4m (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4n_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_not'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4n (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4o_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_and'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4o (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4p_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; an_integer_class: ET_CLASS) is
-			-- Report GVKBS-4 error: wrong signature for `a_feature' in `a_class',
-			-- built-in routine 'item' from ref class of sized integer class `an_integer_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-			an_integer_class_not_void: an_integer_class /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4p (a_class, a_feature, an_integer_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4q_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; an_integer_class: ET_CLASS) is
-			-- Report GVKBS-4 error: wrong signature for `a_feature' in `a_class',
-			-- built-in routine 'set_item' from ref class of sized integer class `an_integer_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-			an_integer_class_not_void: an_integer_class /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4q (a_class, a_feature, an_integer_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4r_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.prefix "+"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4r (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4s_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "^"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4s (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4t_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_real'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4t (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4u_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_double'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4u (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4v_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_natural_8'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4v (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4w_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_natural_16'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4w (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4x_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_natural_32'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4x (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4y_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_natural_64'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4y (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4z_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_integer_8'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4z (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4aa_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_integer_16'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4aa (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4ab_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_integer_32'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4ab (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4ac_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.as_integer_64'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4ac (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4ad_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_real_32'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4ad (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4ae_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_real_64'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4ae (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs4af_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_character_32'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs4_error (a_class) then
-				create an_error.make_gvkbs4af (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs5a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN.infix "and then"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs5_error (a_class) then
-				create an_error.make_gvkbs5a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs5b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN.infix "or else"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs5_error (a_class) then
-				create an_error.make_gvkbs5b (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs5c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN.infix "implies"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs5_error (a_class) then
-				create an_error.make_gvkbs5c (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs5d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN.infix "and"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs5_error (a_class) then
-				create an_error.make_gvkbs5d (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs5e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN.infix "or"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs5_error (a_class) then
-				create an_error.make_gvkbs5e (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs5f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN.infix "xor"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs5_error (a_class) then
-				create an_error.make_gvkbs5f (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs5g_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN.prefix "not"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs5_error (a_class) then
-				create an_error.make_gvkbs5g (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs5h_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN_REF.item'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs5_error (a_class) then
-				create an_error.make_gvkbs5h (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs5i_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN_REF.set_item'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs5_error (a_class) then
-				create an_error.make_gvkbs5i (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs6a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-6 error: wrong signature for 'POINTER_REF.item'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs6_error (a_class) then
-				create an_error.make_gvkbs6a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs6b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-6 error: wrong signature for 'POINTER_REF.set_item'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs6_error (a_class) then
-				create an_error.make_gvkbs6b (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs6c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-6 error: wrong signature for 'POINTER.infix "+"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs6_error (a_class) then
-				create an_error.make_gvkbs6c (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs6d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-6 error: wrong signature for 'POINTER.to_integer_32'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs6_error (a_class) then
-				create an_error.make_gvkbs6d (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs6e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-6 error: wrong signature for 'POINTER.out'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs6_error (a_class) then
-				create an_error.make_gvkbs6e (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs6f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-6 error: wrong signature for 'POINTER.hash_code'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs6_error (a_class) then
-				create an_error.make_gvkbs6f (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs7a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-7 error: wrong signature for 'ARGUMENTS.argument'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs7_error (a_class) then
-				create an_error.make_gvkbs7a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs7b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-7 error: wrong signature for 'ARGUMENTS.argument_count'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs7_error (a_class) then
-				create an_error.make_gvkbs7b (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_real_class: ET_CLASS) is
-			-- Report GVKBS-8 error: wrong signature for `a_feature' in `a_class',
-			-- built-in routine 'item' from ref class of sized real class `a_real_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-			a_real_class_not_void: a_real_class /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8a (a_class, a_feature, a_real_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_real_class: ET_CLASS) is
-			-- Report GVKBS-8 error: wrong signature for `a_feature' in `a_class',
-			-- built-in routine 'set_item' from ref class of sized real class `a_real_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-			a_real_class_not_void: a_real_class /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8b (a_class, a_feature, a_real_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "+"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8c (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "-"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8d (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "*"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8e (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "/"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8f (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8g_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "^"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8g (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8h_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.prefix "-"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8h (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8i_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.prefix "+"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8i (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8j_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.infix "<"'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8j (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8k_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.truncated_to_integer'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8k (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8l_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.truncated_to_integer_64'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8l (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8m_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.truncated_to_real'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8m (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8n_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.to_double'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8n (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8o_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.ceiling_real_32'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8o (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8p_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.ceiling_real_64'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8p (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8q_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.floor_real_32'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8q (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8r_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.floor_real_64'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8r (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs8s_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-8 error: wrong signature for 'REAL.out'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs8_error (a_class) then
-				create an_error.make_gvkbs8s (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.is_dotnet'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.is_unix'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9b (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.is_vms'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9c (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.is_windows'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9d (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.boolean_bytes'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9e (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.character_bytes'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9f (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9g_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.integer_bytes'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9g (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9h_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.pointer_bytes'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9h (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9i_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.real_bytes'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9i (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9j_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.is_thread_capable'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9j (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs9k_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-9 error: wrong signature for 'PLATFORM.wide_character_bytes'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs9_error (a_class) then
-				create an_error.make_gvkbs9k (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs10a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-10 error: wrong signature for 'PROCEDURE.call'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs10_error (a_class) then
-				create an_error.make_gvkbs10a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvkbs11a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Report GVKBS-11 error: wrong signature for 'FUNCTION.item'
-			-- built-in routine `a_feature' in class `a_class'.
-			--
-			-- Not in ETL
-			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_builtin: a_feature.is_builtin
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvkbs11_error (a_class) then
-				create an_error.make_gvkbs11a (a_class, a_feature)
+			if reportable_gvkbs_error (a_class) then
+				create an_error.make_gvkbs0a (a_class, a_feature, a_expected_arguments, a_expected_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -10087,108 +7154,8 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvkbs1_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-1 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvkbs2_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-2 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvkbs3_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-3 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvkbs4_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-4 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvkbs5_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-5 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvkbs6_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-6 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvkbs7_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-7 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvkbs8_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-8 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvkbs9_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-9 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvkbs10_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-10 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvkbs11_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a GVKBS-11 error be reported when it
+	reportable_gvkbs_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

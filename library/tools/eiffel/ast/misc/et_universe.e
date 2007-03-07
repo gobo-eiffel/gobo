@@ -193,6 +193,18 @@ feature {NONE} -- Initialization
 			create any_type.make (Void, any_class.name, any_class)
 				-- Type "NONE".
 			create none_type.make (Void, none_class.name, none_class)
+				-- Type "INTEGER".
+			create integer_type.make (Void, tokens.integer_class_name, integer_class)
+				-- Type "NATURAL".
+			create natural_type.make (Void, tokens.natural_class_name, natural_class)
+				-- Type "CHARACTER".
+			create character_type.make (Void, tokens.character_class_name, character_class)
+				-- Type "STRING".
+			create string_type.make (Void, tokens.string_class_name, string_class)
+				-- Type "REAL".
+			create real_type.make (Void, tokens.real_class_name, real_class)
+				-- Type "DOUBLE".
+			create double_type.make (Void, tokens.double_class_name, double_class)
 				-- Type "TUPLE".
 			create tuple_type.make (Void)
 				-- Type "ARRAY [ANY]".
@@ -212,18 +224,18 @@ feature {NONE} -- Initialization
 			create system_object_parents.make_with_capacity (1)
 			system_object_parents.put_first (a_system_object_parent)
 				-- Built-in conversion features.
-			create integer_convert_feature.make (integer_class)
+			create integer_convert_feature.make (integer_type)
 			create integer_8_convert_feature.make (integer_8_class)
 			create integer_16_convert_feature.make (integer_16_class)
 			create integer_32_convert_feature.make (integer_32_class)
 			create integer_64_convert_feature.make (integer_64_class)
-			create natural_convert_feature.make (natural_class)
+			create natural_convert_feature.make (natural_type)
 			create natural_8_convert_feature.make (natural_8_class)
 			create natural_16_convert_feature.make (natural_16_class)
 			create natural_32_convert_feature.make (natural_32_class)
 			create natural_64_convert_feature.make (natural_64_class)
-			create real_convert_feature.make (real_class)
-			create double_convert_feature.make (double_class)
+			create real_convert_feature.make (real_type)
+			create double_convert_feature.make (double_type)
 			create real_32_convert_feature.make (real_32_class)
 			create real_64_convert_feature.make (real_64_class)
 				-- Needed for compatibility with 5.6.0610 (to be removed later):
@@ -311,8 +323,14 @@ feature {NONE} -- Initialization
 			system_string_class_not_void: system_string_class /= Void
 			unknown_class_not_void: unknown_class /= Void
 			any_type_not_void: any_type /= Void
-			tuple_type_not_void: tuple_type /= Void
 			none_type_not_void: none_type /= Void
+			integer_type_not_void: integer_type /= Void
+			natural_type_not_void: natural_type /= Void
+			character_type_not_void: character_type /= Void
+			string_type_not_void: string_type /= Void
+			real_type_not_void: real_type /= Void
+			double_type_not_void: double_type /= Void
+			tuple_type_not_void: tuple_type /= Void
 			array_any_type_not_void: array_any_type /= Void
 			array_none_type_not_void: array_none_type /= Void
 			any_parent_not_void: any_parent /= Void
@@ -757,6 +775,42 @@ feature -- Basic classes
 	none_type: ET_CLASS_TYPE
 			-- Class type "NONE"
 
+	integer_type: ET_CLASS_TYPE
+			-- Class type "INTEGER"
+			-- (To be used instead of `integer_class' when the name of the type
+			-- matters, in error messages for example where it will display "INTEGER"
+			-- instead of say "INTEGER_32" if it is mapped this way.)
+
+	natural_type: ET_CLASS_TYPE
+			-- Class type "NATURAL"
+			-- (To be used instead of `natural_class' when the name of the type
+			-- matters, in error messages for example where it will display "NATURAL"
+			-- instead of say "NATURAL_32" if it is mapped this way.)
+
+	character_type: ET_CLASS_TYPE
+			-- Class type "CHARACTER"
+			-- (To be used instead of `character_class' when the name of the type
+			-- matters, in error messages for example where it will display "CHARACTER"
+			-- instead of say "CHARACTER_8" if it is mapped this way.)
+
+	string_type: ET_CLASS_TYPE
+			-- Class type "STRING"
+			-- (To be used instead of `string_class' when the name of the type
+			-- matters, in error messages for example where it will display "STRING"
+			-- instead of say "STRING_8" if it is mapped this way.)
+
+	real_type: ET_CLASS_TYPE
+			-- Class type "REAL"
+			-- (To be used instead of `real_class' when the name of the type
+			-- matters, in error messages for example where it will display "REAL"
+			-- instead of say "REAL_32" if it is mapped this way.)
+
+	double_type: ET_CLASS_TYPE
+			-- Class type "DOUBLE"
+			-- (To be used instead of `double_class' when the name of the type
+			-- matters, in error messages for example where it will display "DOUBLE"
+			-- instead of say "REAL_64" if it is mapped this way.)
+
 	tuple_type: ET_TUPLE_TYPE
 			-- Class type "TUPLE"
 
@@ -1038,6 +1092,7 @@ feature -- Setting
 				classes.force_last (l_class, l_name)
 				l_class.set_in_system (True)
 				string_class := l_class
+				create string_type.make (Void, tokens.string_class_name, string_class)
 			end
 				-- Class "CHARACTER".
 			if character_class.id /= character_class_id then
@@ -1046,6 +1101,7 @@ feature -- Setting
 				classes.force_last (l_class, l_name)
 				l_class.set_in_system (True)
 				character_class := l_class
+				create character_type.make (Void, tokens.character_class_name, character_class)
 			end
 				-- Class "CHARACTER_REF".
 			if character_ref_class.id /= character_ref_class_id then
@@ -1078,6 +1134,8 @@ feature -- Setting
 				classes.force_last (l_class, l_name)
 				l_class.set_in_system (True)
 				integer_class := l_class
+				create integer_type.make (Void, tokens.integer_class_name, integer_class)
+				create integer_convert_feature.make (integer_type)
 			end
 				-- Class "INTEGER_REF".
 			if integer_ref_class.id /= integer_class_id then
@@ -1094,6 +1152,8 @@ feature -- Setting
 				classes.force_last (l_class, l_name)
 				l_class.set_in_system (True)
 				natural_class := l_class
+				create natural_type.make (Void, tokens.natural_class_name, natural_class)
+				create natural_convert_feature.make (natural_type)
 			end
 				-- Class "NATURAL_REF".
 			if natural_ref_class.id /= natural_ref_class_id then
@@ -1110,6 +1170,8 @@ feature -- Setting
 				classes.force_last (l_class, l_name)
 				l_class.set_in_system (True)
 				real_class := l_class
+				create real_type.make (Void, tokens.real_class_name, real_class)
+				create real_convert_feature.make (real_type)
 			end
 				-- Class "REAL_REF".
 			if real_ref_class.id /= real_ref_class_id then
@@ -1126,6 +1188,8 @@ feature -- Setting
 				classes.force_last (l_class, l_name)
 				l_class.set_in_system (True)
 				double_class := l_class
+				create double_type.make (Void, tokens.double_class_name, double_class)
+				create double_convert_feature.make (double_type)
 			end
 				-- Class "DOUBLE_REF".
 			if double_ref_class.id /= double_ref_class_id then
@@ -1150,6 +1214,7 @@ feature -- Setting
 				l_class := string_8_class
 				classes.force_last (l_class, l_name)
 				string_class := l_class
+				create string_type.make (Void, tokens.string_class_name, string_class)
 			end
 				-- Class "CHARACTER".
 			if character_class.id = character_class_id then
@@ -1157,6 +1222,7 @@ feature -- Setting
 				l_class := character_8_class
 				classes.force_last (l_class, l_name)
 				character_class := l_class
+				create character_type.make (Void, tokens.character_class_name, character_class)
 			end
 				-- Class "CHARACTER_REF".
 			if character_ref_class.id = character_ref_class_id then
@@ -1185,6 +1251,8 @@ feature -- Setting
 				l_class := integer_32_class
 				classes.force_last (l_class, l_name)
 				integer_class := l_class
+				create integer_type.make (Void, tokens.integer_class_name, integer_class)
+				create integer_convert_feature.make (integer_type)
 			end
 				-- Class "INTEGER_REF".
 			if integer_ref_class.id = integer_class_id then
@@ -1199,6 +1267,8 @@ feature -- Setting
 				l_class := natural_32_class
 				classes.force_last (l_class, l_name)
 				natural_class := l_class
+				create natural_type.make (Void, tokens.natural_class_name, natural_class)
+				create natural_convert_feature.make (natural_type)
 			end
 				-- Class "NATURAL_REF".
 			if natural_ref_class.id = natural_ref_class_id then
@@ -1213,6 +1283,8 @@ feature -- Setting
 				l_class := real_32_class
 				classes.force_last (l_class, l_name)
 				real_class := l_class
+				create real_type.make (Void, tokens.real_class_name, real_class)
+				create real_convert_feature.make (real_type)
 			end
 				-- Class "REAL_REF".
 			if real_ref_class.id = real_ref_class_id then
@@ -1227,6 +1299,8 @@ feature -- Setting
 				l_class := real_64_class
 				classes.force_last (l_class, l_name)
 				double_class := l_class
+				create double_type.make (Void, tokens.double_class_name, double_class)
+				create double_convert_feature.make (double_type)
 			end
 				-- Class "DOUBLE_REF".
 			if double_ref_class.id = double_ref_class_id then
@@ -3339,6 +3413,12 @@ invariant
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
 	none_type_not_void: none_type /= Void
+	integer_type_not_void: integer_type /= Void
+	natural_type_not_void: natural_type /= Void
+	character_type_not_void: character_type /= Void
+	string_type_not_void: string_type /= Void
+	real_type_not_void: real_type /= Void
+	double_type_not_void: double_type /= Void
 	tuple_type_not_void: tuple_type /= Void
 	array_any_type_not_void: array_any_type /= Void
 	array_none_type_not_void: array_none_type /= Void

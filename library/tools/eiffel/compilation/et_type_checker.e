@@ -180,11 +180,7 @@ feature -- Validity checking
 											if not has_formal_type_error then
 												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
 													set_fatal_error
-													if a_current_class = a_current_class_impl then
-														error_handler.report_vtcg4c_error (a_current_class, a_position, i, a_name, a_formal_parameter, a_type_class)
-													else
-														error_handler.report_vtcg4d_error (a_current_class, a_current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
-													end
+													error_handler.report_vtcg4b_error (a_current_class, a_current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
 												end
 											end
 										elseif
@@ -192,11 +188,7 @@ feature -- Validity checking
 											(a_base_class.creators /= Void or else not a_creation_procedure.has_seed (universe.default_create_seed))
 										then
 											set_fatal_error
-											if a_current_class = a_current_class_impl then
-												error_handler.report_vtcg4a_error (a_current_class, a_position, i, a_name, a_base_class, a_type_class)
-											else
-												error_handler.report_vtcg4b_error (a_current_class, a_current_class_impl, a_position, i, a_name, a_base_class, a_type_class)
-											end
+											error_handler.report_vtcg4a_error (a_current_class, a_current_class_impl, a_position, i, a_name, a_base_class, a_type_class)
 										end
 										j := j + 1
 									end
@@ -929,13 +921,17 @@ feature {NONE} -- Validity checking
 							a_constraint := a_formal.constraint
 							if a_constraint /= Void then
 									-- If we have:
-									--    class A [G, H -> LIST [G]] ...
-									--    class X feature foo: A [ANY, LIST [STRING]] ...
+									--
+									--   class A [G, H -> LIST [G]] ...
+									--   class X feature foo: A [ANY, LIST [STRING]] ...
+									--
 									-- we need to check that "LIST[STRING]" conforms to
 									-- "LIST[ANY]", not just "LIST[G]".
 									-- Likewise if we have:
-									--    class A [G -> LIST [G]] ...
-									--    class X feature foo: A [LIST [FOO]] ...
+									--
+									--   class A [G -> LIST [G]] ...
+									--   class X feature foo: A [LIST [FOO]] ...
+									--
 									-- we need to check that "LIST[FOO]" conforms to
 									-- "LIST[LIST[FOO]]", not just "LIST[G]".
 									-- Hence the necessary resolving of formal parameters in the constraint.
@@ -951,24 +947,60 @@ feature {NONE} -- Validity checking
 								if not an_actual.reference_conforms_to_type (a_constraint, current_type, current_type, universe) then
 										-- The actual parameter does not conform to the
 										-- constraint of its corresponding formal parameter.
+										--
+										-- Note that it is possible that the actual paramater conforms
+										-- to the constraint in `current_class_impl' but not in `current_class'.
+										-- Here is an example:
+										--
+										--   class A
+										--   feature
+										--       y: Y [like Current, X [A]]
+										--   end
+										--
+										--   class B
+										--   inherit
+										--       A
+										--   end
+										--
+										--   class X
+										--   end
+										--
+										--   class Y [G, H -> X [G]]
+										--   end
+										--
+										-- In class B the actual generic parameter 'X [A]' does not conform
+										-- to its constraint 'X [like Current]'.
 									set_fatal_error
-									if current_class = current_class_impl then
-										error_handler.report_vtcg3a_error (current_class, a_type, an_actual, a_constraint)
-									else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-										error_handler.report_vtcg3a_error (current_class_impl, a_type, an_actual, a_constraint)
-									end
+									error_handler.report_vtcg3a_error (current_class, current_class_impl, a_type, an_actual, a_constraint)
 								end
 							elseif not an_actual.conforms_to_type (a_constraint, current_type, current_type, universe) then
 									-- The actual parameter does not conform to the
 									-- constraint of its corresponding formal parameter.
+									--
+									-- Note that it is possible that the actual paramater conforms
+									-- to the constraint in `current_class_impl' but not in `current_class'.
+									-- Here is an example:
+									--
+									--   class A
+									--   feature
+									--       y: Y [like Current, X [A]]
+									--   end
+									--
+									--   class B
+									--   inherit
+									--       A
+									--   end
+									--
+									--   class X
+									--   end
+									--
+									--   class Y [G, H -> X [G]]
+									--   end
+									--
+									-- In class B the actual generic parameter 'X [A]' does not conform
+									-- to its constraint 'X [like Current]'.
 								set_fatal_error
-								if current_class = current_class_impl then
-									error_handler.report_vtcg3a_error (current_class, a_type, an_actual, a_constraint)
-								else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-									error_handler.report_vtcg3a_error (current_class_impl, a_type, an_actual, a_constraint)
-								end
+								error_handler.report_vtcg3a_error (current_class, current_class_impl, a_type, an_actual, a_constraint)
 							end
 							i := i + 1
 						end

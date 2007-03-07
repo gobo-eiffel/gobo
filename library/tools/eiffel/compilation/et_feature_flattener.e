@@ -1644,7 +1644,7 @@ feature -- Assigner validity
 								l_other_type := l_procedure_arguments.formal_argument (1).type
 								if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
 									set_fatal_error (current_class)
-									error_handler.report_vfac3a_error (current_class, l_feature_name, l_query, l_procedure)
+									error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
 								end
 								nb_args := l_procedure_arguments.count
 								l_query_arguments := l_query.arguments
@@ -1653,7 +1653,7 @@ feature -- Assigner validity
 									l_other_type := l_procedure_arguments.formal_argument (j).type
 									if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
 										set_fatal_error (current_class)
-										error_handler.report_vfac4a_error (current_class, l_feature_name, l_query, l_procedure, j - 1)
+										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
 									end
 									j := j + 1
 								end
@@ -1715,7 +1715,7 @@ feature -- Assigner validity
 								l_other_type := l_procedure_arguments.formal_argument (1).type
 								if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
 									set_fatal_error (current_class)
-									error_handler.report_vfac3b_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+									error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
 								end
 								nb_args := l_procedure_arguments.count
 								l_query_arguments := l_query.arguments
@@ -1724,7 +1724,7 @@ feature -- Assigner validity
 									l_other_type := l_procedure_arguments.formal_argument (j).type
 									if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
 										set_fatal_error (current_class)
-										error_handler.report_vfac4b_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
+										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
 									end
 									j := j + 1
 								end

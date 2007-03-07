@@ -207,7 +207,7 @@ feature {NONE} -- Parent validity
 												if not has_formal_type_error then
 													if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
 														set_fatal_error
-														error_handler.report_vtcg4c_error (current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
+														error_handler.report_vtcg4b_error (current_class, current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
 													end
 												end
 											elseif
@@ -215,7 +215,7 @@ feature {NONE} -- Parent validity
 												(an_actual_class.creators /= Void or else not a_creation_procedure.has_seed (universe.default_create_seed))
 											then
 												set_fatal_error
-												error_handler.report_vtcg4a_error (current_class, a_type.position, i, a_name, an_actual_class, a_class)
+												error_handler.report_vtcg4a_error (current_class, current_class, a_type.position, i, a_name, an_actual_class, a_class)
 											end
 											j := j + 1
 										end
