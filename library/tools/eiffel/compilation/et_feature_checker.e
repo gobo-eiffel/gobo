@@ -4935,7 +4935,7 @@ feature {NONE} -- Expression validity
 			l_class_impl: ET_CLASS
 		do
 			has_fatal_error := False
-			if in_invariant then
+			if current_inline_agent = Void and in_invariant then
 					-- VEEN-3: the formal argument appears in an invariant.
 					-- Internal error: the invariant has no formal argument.
 				set_fatal_error
