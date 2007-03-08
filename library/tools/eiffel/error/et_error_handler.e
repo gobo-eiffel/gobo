@@ -1127,6 +1127,7 @@ feature -- Validity errors
 				an_error.set_ve_reported (False)
 				an_error.set_ge_reported (False)
 				an_error.set_se_reported (False)
+				an_error.set_ise_reported (False)
 				report_validity_error (an_error)
 			end
 		end
