@@ -155,24 +155,24 @@ feature -- Element change
 				establish_attribute_names (a_stylesheet)
 				remove_excluded_namespaces (a_stylesheet)
 				
-				create a_namespace_code_list.make (namespace_codes.count - excluded_namespace_count)
-				if namespace_codes.count  > 0 then
-					from
-						a_cursor := namespace_codes.new_cursor
-						a_cursor.start
-					variant
-						namespace_codes.count + 1 - a_cursor.index
-					until
-						a_cursor.after
-					loop
-						a_namespace_code := a_cursor.item
-						if a_namespace_code /= -1 then
-							a_namespace_code_list.put_last (a_namespace_code)
-						end
-						a_cursor.forth
-					end
-				end
-				namespace_code_list := a_namespace_code_list
+				--create a_namespace_code_list.make (namespace_codes.count - excluded_namespace_count)
+				--if namespace_codes.count  > 0 then
+				--	from
+				--		a_cursor := namespace_codes.new_cursor
+				--		a_cursor.start
+				--	variant
+				--		namespace_codes.count + 1 - a_cursor.index
+				--	until
+				--		a_cursor.after
+				--	loop
+				--		a_namespace_code := a_cursor.item
+				--		if a_namespace_code /= -1 then
+				--			a_namespace_code_list.put_last (a_namespace_code)
+				--		end
+				--		a_cursor.forth
+				--	end
+				--end
+				--namespace_code_list := a_namespace_code_list
 			end
 			validated := True
 		end
@@ -554,8 +554,6 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				--translate (an_alias)
-				--a_cursor.replace (last_translated_name_code)
 				an_expression := attribute_values.item (a_cursor.index)
 				type_check_expression (shared_name_pool.display_name_from_name_code (an_alias), an_expression)
 				if an_expression.was_expression_replaced then
