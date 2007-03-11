@@ -323,7 +323,7 @@ feature -- Basic operations
 							create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (0)
 							Result.set_last_error_from_string ("Division by zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
 						else
-							create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (value \\ l_value)
+							create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (value // l_value)
 						end
 					when Division_token then
 						-- The result of dividing two integers is a decimal

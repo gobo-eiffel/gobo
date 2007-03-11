@@ -114,8 +114,6 @@ feature -- Events
 			-- Notify an unparsed entity URI.
 		require
 			name_not_void: a_name /= Void
-			system_id_not_void: a_system_id /= Void
-			public_id_not_void: a_public_id /= Void
 		deferred
 		ensure
 			not_empty: is_written

@@ -136,29 +136,31 @@ feature -- Optimization
 			elseif second_operand.was_expression_replaced then
 				set_second_operand (second_operand.replacement_expression)
 			end
-			create l_sequence_type.make_optional_atomic
-			create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-			create l_type_checker
-			l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, is_backwards_compatible_mode, l_role)
-			if l_type_checker.is_static_type_check_error then
-				set_last_error (l_type_checker.static_type_check_error)
-			else
-				set_first_operand (l_type_checker.checked_expression)
-				create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-				l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, is_backwards_compatible_mode, another_role)
+			if not is_error then
+				create l_sequence_type.make_optional_atomic
+				create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
+				create l_type_checker
+				l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, is_backwards_compatible_mode, l_role)
 				if l_type_checker.is_static_type_check_error then
 					set_last_error (l_type_checker.static_type_check_error)
 				else
-					set_second_operand (l_type_checker.checked_expression)
-					if is_backwards_compatible_mode then
-						create_1_0_expression  (a_context, a_context_item_type)
-					elseif first_operand.cardinality_is_empty then
-						set_replacement (first_operand)
-						set_replacement (second_operand)
+					set_first_operand (l_type_checker.checked_expression)
+					create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
+					l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, is_backwards_compatible_mode, another_role)
+					if l_type_checker.is_static_type_check_error then
+						set_last_error (l_type_checker.static_type_check_error)
 					else
-						Precursor (a_context, a_context_item_type)
-						if not was_expression_replaced and not is_error then
-							type_check_arithmetic_expression (a_context)
+						set_second_operand (l_type_checker.checked_expression)
+						if is_backwards_compatible_mode then
+							create_1_0_expression  (a_context, a_context_item_type)
+						elseif first_operand.cardinality_is_empty then
+							set_replacement (first_operand)
+							set_replacement (second_operand)
+						else
+							Precursor (a_context, a_context_item_type)
+							if not was_expression_replaced and not is_error then
+								type_check_arithmetic_expression (a_context)
+							end
 						end
 					end
 				end

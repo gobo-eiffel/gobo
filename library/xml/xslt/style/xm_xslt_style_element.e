@@ -662,6 +662,8 @@ feature -- Status_report
 		do
 			if a_uri_code = Xslt_uri_code then
 				Result := True
+			elseif is_extension_instruction_namespace (a_uri_code) then
+				Result := True
 			else
 				from
 					a_style_element := Current
@@ -2017,58 +2019,57 @@ feature -- Element change
 			end
 		end
 		
-	fallback_processing (an_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT) is
+	fallback_processing (a_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT) is
 			-- Perform fallback processing.
 		require
 			not_excluded: not is_excluded
-			executable_not_void: an_executable /= Void
+			executable_not_void: a_executable /= Void
 			style_element_not_void: a_style_element /= Void and then a_style_element.validation_error /= Void
 		local
-			found_fallback: BOOLEAN
-			an_iterator, another_iterator:XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_block: XM_XSLT_BLOCK
-			a_fallback: XM_XSLT_FALLBACK
-			a_deferred_error: XM_XSLT_DEFERRED_ERROR
-			a_stylesheet: XM_XSLT_STYLESHEET
-			a_fallback_expression, an_expression: XM_XPATH_EXPRESSION
+			l_found_fallback: BOOLEAN
+			l_iterator, l_other_iterator:XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_fallback: XM_XSLT_FALLBACK
+			l_deferred_error: XM_XSLT_DEFERRED_ERROR
+			l_stylesheet: XM_XSLT_STYLESHEET
+			l_fallback_expression, l_expression: XM_XPATH_EXPRESSION
 		do
 
 			-- Process any xsl:fallback children; if there are none,
 			--  generate code to report the original failure reason
 
 			from
-				an_iterator := a_style_element.new_axis_iterator (Child_axis)
-				an_iterator.start
+				l_iterator := a_style_element.new_axis_iterator (Child_axis)
+				l_iterator.start
 			until
-				an_iterator.after
+				l_iterator.after
 			loop
-				a_fallback ?= an_iterator.item
-				if a_fallback /= Void then
-					found_fallback := True
-					a_stylesheet := principal_stylesheet
+				l_fallback ?= l_iterator.item
+				if l_fallback /= Void then
+					l_found_fallback := True
+					l_stylesheet := principal_stylesheet
 					check
-						module_registered: a_stylesheet.is_module_registered (a_fallback.system_id)
+						module_registered: l_stylesheet.is_module_registered (l_fallback.system_id)
 					end
-					another_iterator := a_fallback.new_axis_iterator (Child_axis)
-					a_fallback.compile_sequence_constructor (an_executable, another_iterator, True)
-					an_expression := a_fallback.last_generated_expression
-					if an_expression = Void then create {XM_XPATH_EMPTY_SEQUENCE} an_expression.make end
-					if a_fallback_expression = Void then
-						a_fallback_expression := an_expression
+					l_other_iterator := l_fallback.new_axis_iterator (Child_axis)
+					l_fallback.compile_sequence_constructor (a_executable, l_other_iterator, True)
+					l_expression := l_fallback.last_generated_expression
+					if l_expression = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_expression.make end
+					if l_fallback_expression = Void then
+						l_fallback_expression := l_expression
 					else
-						create a_block.make (an_executable, a_fallback_expression, an_expression, a_stylesheet.module_number (a_fallback.system_id), a_fallback.line_number)
+						create {XM_XSLT_BLOCK} l_fallback_expression.make (a_executable, l_fallback_expression, l_expression, l_stylesheet.module_number (l_fallback.system_id), l_fallback.line_number)
 					end
 				end
-				an_iterator.forth
+				l_iterator.forth
 			end
-			if not found_fallback then
-				create a_deferred_error.make (a_style_element.validation_error, a_style_element.node_name)
+			if not l_found_fallback then
+				create l_deferred_error.make (a_style_element.validation_error, a_style_element.node_name)
 				if not system_id.is_empty and then not a_style_element.validation_error.is_location_known then
 					a_style_element.validation_error.set_location (system_id, line_number)
 				end
-				last_generated_expression := a_deferred_error
+				last_generated_expression := l_deferred_error
 			else
-				last_generated_expression := a_fallback_expression
+				last_generated_expression := l_fallback_expression
 			end
 		end
 

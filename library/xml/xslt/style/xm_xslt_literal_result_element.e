@@ -131,48 +131,27 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			an_element_uri_code, a_namespace_code: INTEGER
-			a_stylesheet: XM_XSLT_STYLESHEET
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]
+			l_element_uri_code: INTEGER
+			l_stylesheet: XM_XSLT_STYLESHEET
 		do
 			result_name_code := name_code
-			an_element_uri_code := shared_name_pool.uri_code_from_name_code (result_name_code)
+			l_element_uri_code := shared_name_pool.uri_code_from_name_code (result_name_code)
 			if is_top_level then
-				validate_top_level_element (an_element_uri_code)
+				validate_top_level_element (l_element_uri_code)
 			else
-				a_stylesheet := principal_stylesheet
+				l_stylesheet := principal_stylesheet
 				
 				-- Build the list of output namespace nodes
 				
-				if should_namespaces_be_omitted (an_element_uri_code) then
+				if should_namespaces_be_omitted (l_element_uri_code) then
 					create namespace_codes.make (0)
 				else
 					namespace_codes := namespace_codes_in_scope
 				end
-				apply_namespace_aliases (an_element_uri_code, a_stylesheet)				
+				apply_namespace_aliases (l_element_uri_code, l_stylesheet)				
 				validate_special_attributes
-				establish_attribute_names (a_stylesheet)
-				remove_excluded_namespaces (a_stylesheet)
-				
-				--create a_namespace_code_list.make (namespace_codes.count - excluded_namespace_count)
-				--if namespace_codes.count  > 0 then
-				--	from
-				--		a_cursor := namespace_codes.new_cursor
-				--		a_cursor.start
-				--	variant
-				--		namespace_codes.count + 1 - a_cursor.index
-				--	until
-				--		a_cursor.after
-				--	loop
-				--		a_namespace_code := a_cursor.item
-				--		if a_namespace_code /= -1 then
-				--			a_namespace_code_list.put_last (a_namespace_code)
-				--		end
-				--		a_cursor.forth
-				--	end
-				--end
-				--namespace_code_list := a_namespace_code_list
+				establish_attribute_names (l_stylesheet)
+				remove_excluded_namespaces (l_stylesheet)
 			end
 			validated := True
 		end
