@@ -1,5 +1,5 @@
-If you downloaded the source code of Gobo from CVS and
-don't have a previous version of Gobo already installed
+If you downloaded the source code of Gobo from subversion 
+and don't have a previous version of Gobo already installed
 on your computer, you will need to run this bootstrap
 procedure in order to compile the tools which will be
 placed in $GOBO/bin and generate other files in various
