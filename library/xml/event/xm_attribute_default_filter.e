@@ -1,7 +1,7 @@
 indexing
 
 	description:
-	
+
 		"Fill default attribute values"
 
 	library: "Gobo Eiffel XML Library"
@@ -40,7 +40,7 @@ inherit
 
 	UC_UNICODE_FACTORY
 		export {NONE} all end
-	
+
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
 
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			-- Next is null processor.
 		do
 			make_callbacks_null
-			make_dtd_null			
+			make_dtd_null
 		end
 
 feature -- Setting
@@ -173,7 +173,7 @@ feature {NONE} -- Attribute queue
 	reset_attributes is
 			-- Clear attributes queue.
 		do
-			namespaces := Void
+			--namespaces := Void
 			names := Void
 			values := Void
 		end
@@ -196,7 +196,7 @@ feature {NONE} -- Attribute queue
 		do
 				-- Create structure if not.
 			if names = Void then
-				namespaces := new_string_arrayed_list
+				--namespaces := new_string_arrayed_list
 				names := new_string_arrayed_list
 				values := new_string_arrayed_list
 			end
@@ -211,7 +211,7 @@ feature {NONE} -- Attribute queue
 			end
 			if not found then
 				--namespaces.force_last (a_ns)
-				names.force_last (a_local)
+				names.force_last (dtd_name (a_prefix, a_local))
 				values.force_last (a_value)
 			end
 		end
@@ -253,7 +253,7 @@ feature {NONE} -- Content implementation
 			dtd_name_not_void: Result /= Void
 			no_prefix_same: not has_prefix (a_prefix) implies (Result = a_local)
 		end
-	
+
 	dtd_prefix (a_dtd_name: STRING): STRING is
 			-- Prefix from a DTD name
 		require
