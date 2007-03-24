@@ -55,8 +55,8 @@ feature {NONE} -- Initialization
 feature -- Resetting
 
 	reset is
-			-- Reset is needed only if options must be changed.
-			-- For an option change a recompilation is needed.
+			-- Reset the pattern.
+			-- Do not change the options (see `set_default_options' for the list of options).
 		do
 			precursor
 			wipe_out

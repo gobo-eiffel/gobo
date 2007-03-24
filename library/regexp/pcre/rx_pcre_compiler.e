@@ -515,7 +515,8 @@ feature {NONE} -- Error setting
 feature -- Reset
 
 	reset is
-			-- Reset compiler.
+			-- Reset the pattern.
+			-- Do not change the options (see `set_default_options' for the list of options).
 		do
 			set_error (err_msg_99, 99, 0)
 			STRING_.wipe_out (pattern)
