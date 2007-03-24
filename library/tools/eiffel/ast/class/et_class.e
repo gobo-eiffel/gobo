@@ -380,6 +380,29 @@ feature -- Preparsing
 			end
 		end
 
+	class_in_group (a_group: ET_GROUP): ET_CLASS is
+			-- First class among current class and its overridden classes that
+			-- is in `a_group' or recursively one of its subgroups;
+			-- Void if no such class
+		require
+			a_group_not_void: a_group /= Void
+		local
+			l_class: ET_CLASS
+		do
+			from
+				l_class := Current
+			until
+				l_class = Void
+			loop
+				if l_class.is_in_group (a_group) then
+					Result := l_class
+					l_class := Void
+				else
+					l_class := l_class.overridden_class
+				end
+			end
+		end
+
 	master_class: ET_CLASS
 			-- Class known by the universe with same name as current class
 			-- (This class is the current class when it is not overridden.)
