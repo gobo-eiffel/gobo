@@ -202,7 +202,7 @@ feature {NONE} -- `struct tm' encapsulation
 	get_tm_year (p: POINTER): INTEGER is
 			-- Get `p->tm_year', number of years since 1900.
 		external
-			"C inline <time.h>"
+			"C inline use <time.h>"
 		alias
 			"return ((struct tm *) $p)->tm_year;"
 		end
@@ -210,7 +210,7 @@ feature {NONE} -- `struct tm' encapsulation
 	get_tm_mon (p: POINTER): INTEGER is
 			-- Get `p->tm_mon'.
 		external
-			"C inline <time.h>"
+			"C inline use <time.h>"
 		alias
 			"return ((struct tm *) $p)->tm_mon;"
 		end
@@ -218,7 +218,7 @@ feature {NONE} -- `struct tm' encapsulation
 	get_tm_mday (p: POINTER): INTEGER is
 			-- Get `p->tm_mday'.
 		external
-			"C inline <time.h>"
+			"C inline use <time.h>"
 		alias
 			"return ((struct tm *) $p)->tm_mday;"
 		end
@@ -226,7 +226,7 @@ feature {NONE} -- `struct tm' encapsulation
 	get_tm_hour (p: POINTER): INTEGER is
 			-- Get `p->tm_hour'.
 		external
-			"C inline <time.h>"
+			"C inline use <time.h>"
 		alias
 			"return ((struct tm *) $p)->tm_hour;"
 		end
@@ -234,7 +234,7 @@ feature {NONE} -- `struct tm' encapsulation
 	get_tm_min (p: POINTER): INTEGER is
 			-- Get `p->tm_min'.
 		external
-			"C inline <time.h>"
+			"C inline use <time.h>"
 		alias
 			"return ((struct tm *) $p)->tm_min;"
 		end
@@ -242,7 +242,7 @@ feature {NONE} -- `struct tm' encapsulation
 	get_tm_sec (p: POINTER): INTEGER is
 			-- Get `p->tm_sec'.
 		external
-			"C inline <time.h>"
+			"C inline use <time.h>"
 		alias
 			"return ((struct tm *) $p)->tm_sec;"
 		end
