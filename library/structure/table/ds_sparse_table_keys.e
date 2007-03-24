@@ -5,13 +5,13 @@ indexing
 		"Keys of sparse tables, viewed as linear containers."
 
 	remark:
-	
+
 		"Ideally the sparse tables should be descendants of both %
 		% DS_LINEAR [G] and DS_LINEAR [K], but this does not work %
 		%in Eiffel."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -86,6 +86,149 @@ feature -- Status report
 			-- as argument in current state of container?
 		do
 			Result := False
+		end
+
+feature -- Iteration
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [K]]) is
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		local
+			l_cursor: like new_cursor
+--			t: TUPLE [K]
+		do
+--			create t
+			l_cursor := new_cursor
+			from l_cursor.start until l_cursor.after loop
+--				t.put (l_cursor.item, 1)
+--				an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				an_action.call ([l_cursor.item])
+				l_cursor.forth
+			end
+		end
+
+	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [K, INTEGER]]) is
+			-- Apply `an_action' to every item, from first to last.
+			-- `an_action' receives the item and its index.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		local
+			l_cursor: like new_cursor
+			i: INTEGER
+--			t: TUPLE [K, INTEGER]
+		do
+--			create t
+			l_cursor := new_cursor
+			from l_cursor.start until l_cursor.after loop
+				i := i + 1
+--				t.put (l_cursor.item, 1)
+--				t.put (i, 2)
+--				an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				an_action.call ([l_cursor.item, i])
+				l_cursor.forth
+			end
+		end
+
+	do_if (an_action: PROCEDURE [ANY, TUPLE [K]]; a_test: FUNCTION [ANY, TUPLE [K], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		local
+			l_cursor: like new_cursor
+--			t: TUPLE [K]
+			l_item: K
+		do
+--			create t
+			l_cursor := new_cursor
+			from l_cursor.start until l_cursor.after loop
+--				t.put (l_cursor.item, 1)
+--				if a_test.item (t) then
+--					an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				l_item := l_cursor.item
+				if a_test.item ([l_item]) then
+					an_action.call ([l_item])
+				end
+				l_cursor.forth
+			end
+		end
+
+	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [K, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [K, INTEGER], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- `an_action' and `a_test' receive the item and its index.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		local
+			l_cursor: like new_cursor
+			i: INTEGER
+--			t: TUPLE [K, INTEGER]
+			l_item: K
+		do
+--			create t
+			l_cursor := new_cursor
+			from l_cursor.start until l_cursor.after loop
+				i := i + 1
+--				t.put (l_cursor.item, 1)
+--				t.put (i, 2)
+--				if a_test.item (t) then
+--					an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				l_item := l_cursor.item
+				if a_test.item ([l_item, i]) then
+					an_action.call ([l_item, i])
+				end
+				l_cursor.forth
+			end
+		end
+
+	there_exists (a_test: FUNCTION [ANY, TUPLE [K], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one item?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			l_cursor: like new_cursor
+--			t: TUPLE [K]
+		do
+--			create t
+			l_cursor := new_cursor
+			from l_cursor.start until l_cursor.after loop
+--				t.put (l_cursor.item, 1)
+--				if a_test.item (t) then
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				if a_test.item ([l_cursor.item]) then
+					Result := True
+					l_cursor.go_after -- Jump out of the loop.
+				else
+					l_cursor.forth
+				end
+			end
+		end
+
+	for_all (a_test: FUNCTION [ANY, TUPLE [K], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all items?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			l_cursor: like new_cursor
+--			t: TUPLE [K]
+		do
+--			create t
+			Result := True
+			l_cursor := new_cursor
+			from l_cursor.start until l_cursor.after loop
+--				t.put (l_cursor.item, 1)
+--				if not a_test.item (t) then
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				if not a_test.item ([l_cursor.item]) then
+					Result := False
+					l_cursor.go_after -- Jump out of the loop.
+				else
+					l_cursor.forth
+				end
+			end
 		end
 
 feature -- Comparison

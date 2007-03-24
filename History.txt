@@ -11,6 +11,14 @@ Version 3.6 - ????
 	  have been added, and this fix also pointed out a bug in one of the
 	  test cases.
 
+	Gobo Eiffel Structure Library:
+
+	* Added iterator features (`do_all', `do_all_with_index', `do_if', 
+	  `do_if_with_index', `there_exists') to relevant classes.
+
+	* Fixed bug in invariant of DS_MULTIARRAYED_SPARSE_SET and
+	  DS_MULTIARRAYED_SPARSE_TABLE when `capacity' is zero.
+
 	Miscellaneous:
 
 	* Now uses the MIT License, which is an OSI Approved License and

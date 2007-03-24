@@ -5,7 +5,7 @@ indexing
 		"Lists implemented with linked cells"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,9 @@ inherit
 	DS_LIST [G]
 		redefine
 			has, occurrences, swap,
-			cursor_off
+			cursor_off, do_all, do_if,
+			do_all_with_index, do_if_with_index,
+			there_exists, for_all
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
@@ -242,6 +244,149 @@ feature -- Status report
 			Result := True
 		ensure then
 			definition: Result = True
+		end
+
+feature -- Iteration
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		local
+			a_cell: like first_cell
+--			t: TUPLE [G]
+		do
+--			create t
+			a_cell := first_cell
+			from until (a_cell = Void) loop
+--				t.put (a_cell.item, 1)
+--				an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				an_action.call ([a_cell.item])
+				a_cell := a_cell.right
+			end
+		end
+
+	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]) is
+			-- Apply `an_action' to every item, from first to last.
+			-- `an_action' receives the item and its index.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		local
+			a_cell: like first_cell
+			i: INTEGER
+--			t: TUPLE [G, INTEGER]
+		do
+--			create t
+			a_cell := first_cell
+			from until (a_cell = Void) loop
+				i := i + 1
+--				t.put (a_cell.item, 1)
+--				t.put (i, 2)
+--				an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				an_action.call ([a_cell.item, i])
+				a_cell := a_cell.right
+			end
+		end
+
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		local
+			a_cell: like first_cell
+--			t: TUPLE [G]
+			l_item: G
+		do
+--			create t
+			a_cell := first_cell
+			from until (a_cell = Void) loop
+--				t.put (a_cell.item, 1)
+--				if a_test.item (t) then
+--					an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				l_item := a_cell.item
+				if a_test.item ([l_item]) then
+					an_action.call ([l_item])
+				end
+				a_cell := a_cell.right
+			end
+		end
+
+	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- `an_action' and `a_test' receive the item and its index.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		local
+			a_cell: like first_cell
+			i: INTEGER
+--			t: TUPLE [G, INTEGER]
+			l_item: G
+		do
+--			create t
+			a_cell := first_cell
+			from until (a_cell = Void) loop
+				i := i + 1
+--				t.put (a_cell.item, 1)
+--				t.put (i, 2)
+--				if a_test.item (t) then
+--					an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				l_item := a_cell.item
+				if a_test.item ([l_item, i]) then
+					an_action.call ([l_item, i])
+				end
+				a_cell := a_cell.right
+			end
+		end
+
+	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one item?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			a_cell: like first_cell
+--			t: TUPLE [G]
+		do
+--			create t
+			a_cell := first_cell
+			from until (a_cell = Void) loop
+--				t.put (a_cell.item, 1)
+--				if a_test.item (t) then
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				if a_test.item ([a_cell.item]) then
+					Result := True
+					a_cell := Void -- Jump out of the loop.
+				else
+					a_cell := a_cell.right
+				end
+			end
+		end
+
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all items?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			a_cell: like first_cell
+--			t: TUPLE [G]
+		do
+--			create t
+			a_cell := first_cell
+			Result := True
+			from until (a_cell = Void) loop
+--				t.put (a_cell.item, 1)
+--				if not a_test.item (t) then
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				if not a_test.item ([a_cell.item]) then
+					Result := False
+					a_cell := Void -- Jump out of the loop.
+				else
+					a_cell := a_cell.right
+				end
+			end
 		end
 
 feature -- Duplication
@@ -826,7 +971,7 @@ feature -- Removal
 				move_all_cursors (old_cell, a_cell)
 			end
 		end
-		
+
 	remove_left_cursor (a_cursor: like new_cursor) is
 			-- Remove item to left of `a_cusor' position.
 			-- Move any cursors at this position `forth'.
@@ -922,7 +1067,7 @@ feature -- Removal
 		do
 			keep_first (count - n)
 		end
-			
+
 	prune (n: INTEGER; i: INTEGER) is
 			-- Remove `n' items at and after `i'-th position.
 			-- Move all cursors `off'.
@@ -1118,7 +1263,7 @@ feature -- Removal
 						end
 						if a_cell /= last_cell then
 								-- The last items in the list were occurrences
-								-- of `v'. Set the new last cell of the list 
+								-- of `v'. Set the new last cell of the list
 								-- accordingly.
 							set_last_cell (a_cell)
 						end
@@ -1165,7 +1310,7 @@ feature -- Removal
 						end
 						if a_cell /= last_cell then
 								-- The last items in the list were occurrences
-								-- of `v'. Set the new last cell of the list 
+								-- of `v'. Set the new last cell of the list
 								-- accordingly.
 							set_last_cell (a_cell)
 						end

@@ -74,4 +74,147 @@ feature -- Test
 			assert_iarrays_same ("keys", <<INTEGER_.to_integer (5), 4, 3, 2, 1>>, l_list.to_array)
 		end
 
+	test_do_all is
+			-- Test feature `do_all'.
+		local
+			a_table1: DS_HASH_TABLE [INTEGER, STRING]
+			a_list2: DS_ARRAYED_LIST [INTEGER]
+		do
+			create a_table1.make (5)
+			a_table1.force_last (1, "one")
+			a_table1.force_last (2, "two")
+			a_table1.force_last (3, "three")
+			a_table1.force_last (4, "four")
+			a_table1.force_last (5, "five")
+			create a_list2.make (5)
+			a_table1.do_all (agent a_list2.force_first)
+			assert_iarrays_same ("items1", <<INTEGER_.to_integer (5), 4, 3, 2, 1>>, a_list2.to_array)
+				-- Empty table.
+			create a_table1.make (0)
+			create a_list2.make (0)
+			a_table1.do_all (agent a_list2.force_first)
+			assert ("empty1", a_list2.is_empty)
+		end
+
+	test_do_all_with_index is
+			-- Test feature `do_all_with_index'.
+		local
+			a_table1: DS_HASH_TABLE [INTEGER, STRING]
+			an_array2: ARRAY [INTEGER]
+		do
+			create a_table1.make (5)
+			a_table1.force_last (5, "five")
+			a_table1.force_last (4, "four")
+			a_table1.force_last (3, "three")
+			a_table1.force_last (2, "two")
+			a_table1.force_last (1, "one")
+			create an_array2.make (0, 6)
+			a_table1.do_all_with_index (agent an_array2.put)
+			assert_iarrays_same ("items1", <<INTEGER_.to_integer (0), 5, 4, 3, 2, 1, 0>>, an_array2)
+				-- Empty table.
+			create a_table1.make (0)
+			create an_array2.make (0, 1)
+			a_table1.do_all_with_index (agent an_array2.put)
+			assert_iarrays_same ("items2", <<INTEGER_.to_integer (0), 0>>, an_array2)
+		end
+
+	test_do_if is
+			-- Test feature `do_if'.
+		local
+			a_table1: DS_HASH_TABLE [INTEGER, STRING]
+			a_list2: DS_ARRAYED_LIST [INTEGER]
+		do
+			create a_table1.make (5)
+			a_table1.force_last (1, "one")
+			a_table1.force_last (2, "two")
+			a_table1.force_last (3, "three")
+			a_table1.force_last (4, "four")
+			a_table1.force_last (5, "five")
+			create a_list2.make (5)
+			a_table1.do_if (agent a_list2.force_first, agent INTEGER_.is_even)
+			assert_iarrays_same ("items1", <<INTEGER_.to_integer (4), 2>>, a_list2.to_array)
+				-- Empty table.
+			create a_table1.make (0)
+			create a_list2.make (0)
+			a_table1.do_if (agent a_list2.force_first, agent INTEGER_.is_even)
+			assert ("empty1", a_list2.is_empty)
+		end
+
+	test_do_if_with_index is
+			-- Test feature `do_if_with_index'.
+		local
+			a_table1: DS_HASH_TABLE [INTEGER, STRING]
+			an_array2: ARRAY [INTEGER]
+		do
+			create a_table1.make (5)
+			a_table1.force_last (5, "five")
+			a_table1.force_last (2, "two")
+			a_table1.force_last (6, "six")
+			a_table1.force_last (4, "four")
+			a_table1.force_last (1, "one")
+			create an_array2.make (1, 5)
+			a_table1.do_if_with_index (agent an_array2.put, agent same_integers)
+			assert_iarrays_same ("items1", <<INTEGER_.to_integer (0), 2, 0, 4, 0>>, an_array2)
+				-- Empty table.
+			create a_table1.make (0)
+			create an_array2.make (0, 1)
+			a_table1.do_if_with_index (agent an_array2.put, agent same_integers)
+			assert_iarrays_same ("items2", <<INTEGER_.to_integer (0), 0>>, an_array2)
+		end
+
+	test_there_exists is
+			-- Test feature `there_exists'.
+		local
+			a_table1: DS_HASH_TABLE [INTEGER, STRING]
+		do
+			create a_table1.make (5)
+			a_table1.force_last (1, "one")
+			a_table1.force_last (2, "two")
+			a_table1.force_last (3, "three")
+			a_table1.force_last (4, "four")
+			a_table1.force_last (5, "five")
+			assert ("there_exists1", a_table1.there_exists (agent INTEGER_.is_even))
+			create a_table1.make (3)
+			a_table1.force_last (1, "one")
+			a_table1.force_last (3, "three")
+			a_table1.force_last (5, "five")
+			assert ("there_dont_exist1", not a_table1.there_exists (agent INTEGER_.is_even))
+				-- Empty table.
+			create a_table1.make (0)
+			assert ("there_dont_exist2", not a_table1.there_exists (agent INTEGER_.is_even))
+		end
+
+	test_for_all is
+			-- Test feature `for_all'.
+		local
+			a_table1: DS_HASH_TABLE [INTEGER, STRING]
+		do
+			create a_table1.make (5)
+			a_table1.force_last (1, "one")
+			a_table1.force_last (2, "two")
+			a_table1.force_last (3, "three")
+			a_table1.force_last (4, "four")
+			a_table1.force_last (5, "five")
+			assert ("not_for_all1", not a_table1.for_all (agent INTEGER_.is_even))
+			create a_table1.make (3)
+			a_table1.force_last (2, "two")
+			a_table1.force_last (4, "four")
+			a_table1.force_last (6, "six")
+			assert ("for_all1", a_table1.for_all (agent INTEGER_.is_even))
+				-- Empty table.
+			create a_table1.make (0)
+			assert ("for_all2", a_table1.for_all (agent INTEGER_.is_even))
+		end
+
+feature {NONE} -- Implementation
+
+	same_integers (i, j: INTEGER): BOOLEAN is
+			-- Is `i' equal to `j'?
+			-- (Used as agent to test iterators.)
+		do
+			Result := (i = j)
+		ensure
+			definition: Result = (i = j)
+		end
+
 end

@@ -6,7 +6,7 @@ indexing
 		%modified through integer access"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -279,6 +279,153 @@ feature -- Removal
 		deferred
 		ensure
 			new_count: count = n
+		end
+
+feature -- Iteration
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i: INTEGER
+--			t: TUPLE [G]
+		do
+--			create t
+			from i := 1 until i > count loop
+--				t.put (item (i), 1)
+--				an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				an_action.call ([item (i)])
+				i := i + 1
+			end
+		end
+
+	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]) is
+			-- Apply `an_action' to every item, from first to last.
+			-- `an_action' receives the item and its index.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i: INTEGER
+--			t: TUPLE [G, INTEGER]
+		do
+--			create t
+			from i := 1 until i > count loop
+--				t.put (item (i), 1)
+--				t.put (i, 2)
+--				an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				an_action.call ([item (i), i])
+				i := i + 1
+			end
+		end
+
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i: INTEGER
+--			t: TUPLE [G]
+			l_item: G
+		do
+--			create t
+			from i := 1 until i > count loop
+--				t.put (item (i), 1)
+--				if a_test.item (t) then
+--					an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				l_item := item (i)
+				if a_test.item ([l_item]) then
+					an_action.call ([l_item])
+				end
+				i := i + 1
+			end
+		end
+
+	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- `an_action' and `a_test' receive the item and its index.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i: INTEGER
+--			t: TUPLE [G, INTEGER]
+			l_item: G
+		do
+--			create t
+			from i := 1 until i > count loop
+--				t.put (item (i), 1)
+--				t.put (i, 2)
+--				if a_test.item (t) then
+--					an_action.call (t)
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				l_item := item (i)
+				if a_test.item ([l_item, i]) then
+					an_action.call ([l_item, i])
+				end
+				i := i + 1
+			end
+		end
+
+	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one item?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		require
+			a_test_not_void: a_test /= Void
+		local
+			i: INTEGER
+--			t: TUPLE [G]
+		do
+--			create t
+			from i := 1 until i > count loop
+--				t.put (item (i), 1)
+--				if a_test.item (t) then
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				if a_test.item ([item (i)]) then
+					Result := True
+					i := count + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all items?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		require
+			a_test_not_void: a_test /= Void
+		local
+			i: INTEGER
+--			t: TUPLE [G]
+		do
+--			create t
+			Result := True
+			from i := 1 until i > count loop
+--				t.put (item (i), 1)
+--				if not a_test.item (t) then
+-- SmartEiffel 1.2r7 requires that manifest tuples be used when
+-- calling `call' and `item'.
+				if not a_test.item ([item (i)]) then
+					Result := False
+					i := count + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
 		end
 
 end
