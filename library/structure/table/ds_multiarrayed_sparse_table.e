@@ -575,18 +575,15 @@ invariant
 
 	chunk_size_positive: chunk_size > 0
 	item_storage_not_void: item_storage /= Void
-	item_storage_count1: capacity = 0 implies item_storage.count = 0
-	item_storage_count2: capacity > 0 implies (item_storage.count = ((capacity) // chunk_size) + 1)
+	item_storage_count: item_storage.count = (capacity // chunk_size) + 1
 	special_item_routines_not_void: special_item_routines /= Void
 	array_special_item_routines_not_void: array_special_item_routines /= Void
 	key_storage_not_void: key_storage /= Void
-	key_storage_count1: capacity = 0 implies key_storage.count = 0
-	key_storage_count2: capacity > 0 implies (key_storage.count = ((capacity) // chunk_size) + 1)
+	key_storage_count: key_storage.count = (capacity // chunk_size) + 1
 	special_key_routines_not_void: special_key_routines /= Void
 	array_special_key_routines_not_void: array_special_key_routines /= Void
 	clashes_not_void: clashes /= Void
-	clashes_count1: capacity = 0 implies clashes.count = 0
-	clashes_count2: capacity > 0 implies (clashes.count = ((capacity) // chunk_size) + 1)
+	clashes_count: clashes.count = (capacity // chunk_size) + 1
 	slots_not_void: slots /= Void
 	slots_count: slots.count = (modulus // chunk_size) + 1
 
