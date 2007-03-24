@@ -197,6 +197,27 @@ feature -- Access
 			position_small_enough: Result <= subject_end
 		end
 
+	captured_substring_count (n: INTEGER): INTEGER is
+			-- Size of `n'-th captured substring;
+			-- 'n = 0' represents the whole matched string.
+		require
+			has_matched: has_matched
+			n_large_enough: n >= 0
+			n_small_enough: n < match_count
+		local
+			i, nb: INTEGER
+		do
+			i := captured_start_position (n)
+			nb := captured_end_position (n)
+			if i >= 1 and nb <= subject.count then
+				Result := nb - i + 1
+			else
+				Result := 0
+			end
+		ensure
+			count_not_negative: Result >= 0
+		end
+
 	captured_substring (n: INTEGER): STRING is
 			-- `n'-th captured substring;
 			-- 'n = 0' represents the whole matched string.
