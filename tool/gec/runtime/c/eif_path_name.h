@@ -13,6 +13,10 @@
 #ifndef EIF_PATH_NAME_H
 #define EIF_PATH_NAME_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern EIF_BOOLEAN eif_is_volume_name_valid(EIF_CHARACTER* p);
 extern EIF_BOOLEAN eif_is_directory_name_valid(EIF_CHARACTER* p);
 extern void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER* p, EIF_CHARACTER* v);
@@ -31,5 +35,9 @@ extern EIF_BOOLEAN eif_case_sensitive_path_names(void);
 extern EIF_REFERENCE eif_current_dir_representation(void);
 extern EIF_REFERENCE eif_home_directory_name(void);
 extern EIF_REFERENCE eif_root_directory_name(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

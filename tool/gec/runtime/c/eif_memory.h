@@ -13,6 +13,10 @@
 #ifndef EIF_MEMORY_H
 #define EIF_MEMORY_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct gacstat {
 	long count;
 	long mem_used;
@@ -68,5 +72,9 @@ extern void eif_mem_coalesc(void);
 extern int collect(void);
 extern void plsc(void);
 extern void eif_gc_mon(char flag);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

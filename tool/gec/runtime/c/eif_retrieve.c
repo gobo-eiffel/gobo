@@ -13,6 +13,10 @@
 #ifndef EIF_RETRIEVE_C
 #define EIF_RETRIEVE_C
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 char* eretrieve(EIF_INTEGER file_desc) {
 	/* TODO */
 	printf("'eretrieve' in 'eif_retrieve.h' not implemented\n");
@@ -62,5 +66,9 @@ char* class_translation_new (EIF_INTEGER i) {
 	printf("'class_translation_new' in 'eif_retrieve.h' not implemented\n");
 	return (char*)0;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

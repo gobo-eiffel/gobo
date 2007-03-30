@@ -23,6 +23,10 @@
 #define PATH_MAX 1024 /* Maximum length of full path name */
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 EIF_INTEGER eif_system(char* s) {
 	return (EIF_INTEGER)system(s);
 }
@@ -75,5 +79,9 @@ void eif_system_asynchronous(char* cmd) {
 	exit(0);
 #endif
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

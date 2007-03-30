@@ -13,6 +13,10 @@
 #ifndef EIF_STORE_C
 #define EIF_STORE_C
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void estore(EIF_INTEGER file_desc, char* object) {
 	/* TODO */
 	printf("'estore' in 'eif_store.h' not implemented\n");
@@ -77,5 +81,9 @@ void set_buffer_size(EIF_INTEGER) {
 	/* TODO */
 	printf("'set_buffer_size' in 'eif_store.h' not implemented\n");
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

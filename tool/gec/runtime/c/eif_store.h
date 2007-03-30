@@ -13,6 +13,10 @@
 #ifndef EIF_STORE_H
 #define EIF_STORE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern void estore(EIF_INTEGER file_desc, char* object);
 extern void eestore(EIF_INTEGER file_desc, char* object);
 extern void sstore (EIF_INTEGER file_desc, char* object);
@@ -25,5 +29,9 @@ extern EIF_INTEGER stream_sstore(EIF_POINTER* buffer, EIF_INTEGER size, EIF_REFE
 extern EIF_POINTER* stream_malloc(EIF_INTEGER stream_size);
 extern void stream_free(EIF_POINTER* stream);
 extern void set_buffer_size(EIF_INTEGER);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

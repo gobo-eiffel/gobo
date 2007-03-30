@@ -23,6 +23,7 @@
 #include <sys/utime.h>
 #endif
 #include <io.h> /* for access, chmod */
+#include <direct.h> /* for (ch|mk|rm)dir */
 #else
 #include <utime.h>
 #include <unistd.h>
@@ -96,6 +97,10 @@
 #define ST_MODE 0x0fff
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void file_mkdir(char* dirname) {
 #ifdef WIN32
 	mkdir(dirname);
@@ -104,15 +109,15 @@ void file_mkdir(char* dirname) {
 #endif
 }
 
-void file_rename(char* old, char* new) {
+void file_rename(char* from, char* to) {
 #ifdef WIN32
 	struct stat buf;
 
-	if (stat(new, &buf) != -1) {
-		remove (new);
+	if (stat(to, &buf) != -1) {
+		remove(to);
 	}
 #endif
-	rename(old, new);
+	rename(from, to);
 }
 
 void file_link(char *from, char *to) {
@@ -894,5 +899,9 @@ void file_prb(FILE* f, EIF_REAL_32 number) {
 void file_pdb(FILE* f, EIF_REAL_64 val) {
 	fwrite (&val, sizeof(EIF_REAL_64), 1, f);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

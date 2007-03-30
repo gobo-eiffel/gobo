@@ -14,15 +14,25 @@
 #define GE_DIRECTORY_C
 
 #ifdef WIN32
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct {
 	HANDLE handle;
 	WIN32_FIND_DATA data;
 	int entry_used;
 	char *pattern;
 } ge_directory;
+#ifdef __cplusplus
+}
+#endif
 #else
 #include <dirent.h>
 #include <unistd.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 void* ge_directory_open_read(char* dirname)
@@ -95,5 +105,9 @@ int ge_directory_close (void* dir)
 	return closedir((DIR*)dir);
 #endif
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

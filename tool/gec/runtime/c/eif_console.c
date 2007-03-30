@@ -15,6 +15,10 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 EIF_POINTER console_def(EIF_INTEGER file) {
 	switch (file) {
 	case 0:
@@ -97,5 +101,9 @@ EIF_INTEGER console_readstream(FILE* f, char* s, EIF_INTEGER bound) {
 void console_file_close (FILE* f) {
 	file_close(f);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

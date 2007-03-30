@@ -96,6 +96,9 @@ inherit
 	ET_TOKEN_CODES
 		export {NONE} all end
 
+	UT_SHARED_TEMPLATE_EXPANDER
+		export {NONE} all end
+
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
@@ -178,9 +181,12 @@ feature {NONE} -- Initialization
 			create included_header_filenames.make (100)
 			included_header_filenames.set_equality_tester (string_equality_tester)
 			create included_runtime_header_files.make (100)
-			included_runtime_header_files.set_equality_tester (string_equality_tester)
+			included_runtime_header_files.set_key_equality_tester (string_equality_tester)
 			create included_runtime_c_files.make (100)
 			included_runtime_c_files.set_equality_tester (string_equality_tester)
+			create c_filenames.make (100)
+			create cpp_filenames.make (10)
+			make_external_regexps
 		end
 
 feature -- Access
@@ -192,19 +198,258 @@ feature -- Access
 
 feature -- Status report
 
+	is_finalize: BOOLEAN
+			-- Compilation with optimizations turned on?
+
 	has_fatal_error: BOOLEAN
 			-- Has a fatal error occurred when generating `current_system'?
 
 	short_names: BOOLEAN
 			-- Should short names be generated for type and feature names?
 
+feature -- Status setting
+
+	set_finalize (b: BOOLEAN) is
+			-- Set `is_finalize' to `b'.
+		do
+			is_finalize := b
+		ensure
+			finalize_set: is_finalize = b
+		end
+
 feature -- Generation
 
-	generate (a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Generate C code for `current_system' in to `a_file'.
+	generate (a_system_name: STRING) is
+			-- Generate C code and C compilation script file for `current_system'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
+			a_system_name_not_void: a_system_name /= Void
+		do
+			has_fatal_error := False
+			generate_c_code (a_system_name)
+			generate_compilation_script (a_system_name)
+			c_filenames.wipe_out
+			cpp_filenames.wipe_out
+		end
+
+feature {NONE} -- Compilation script generation
+
+	generate_compilation_script (a_system_name: STRING) is
+			-- Generate C compilation script file for `current_system'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_system_name_not_void: a_system_name /= Void
+		local
+			l_c_config: DS_HASH_TABLE [STRING, STRING]
+			l_c_filenames: STRING
+			l_cpp_filenames: STRING
+			l_obj_filenames: STRING
+			l_variables: DS_HASH_TABLE [STRING, STRING]
+			l_file: KL_TEXT_OUTPUT_FILE
+			l_command: KL_SHELL_COMMAND
+			l_command_name: STRING
+			l_cc_template: STRING
+			l_link_template: STRING
+			l_filename: STRING
+			l_base_name: STRING
+			i, nb: INTEGER
+			l_c, l_cpp, l_obj: STRING
+		do
+			l_base_name := a_system_name
+			l_c_config := c_config
+			create l_variables.make_map (10)
+			l_variables.set_key_equality_tester (string_equality_tester)
+			l_variables.force ("", "includes")
+			l_variables.force ("", "libs")
+			l_variables.force (l_base_name + l_c_config.item ("exe"), "exe")
+			create l_c_filenames.make (100)
+			create l_cpp_filenames.make (100)
+			create l_obj_filenames.make (100)
+			l_c := ".c"
+			l_cpp := ".cpp"
+			l_obj := l_c_config.item ("obj")
+			nb := c_filenames.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					l_c_filenames.append_character (' ')
+					l_obj_filenames.append_character (' ')
+				end
+				l_filename := c_filenames.item (i)
+				l_c_filenames.append_string (l_filename)
+				l_c_filenames.append_string (l_c)
+				l_obj_filenames.append_string (l_filename)
+				l_obj_filenames.append_string (l_obj)
+				i := i + 1
+			end
+			nb := cpp_filenames.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					l_cpp_filenames.append_character (' ')
+				end
+				l_obj_filenames.append_character (' ')
+				l_filename := cpp_filenames.item (i)
+				l_cpp_filenames.append_string (l_filename)
+				l_cpp_filenames.append_string (l_cpp)
+				l_obj_filenames.append_string (l_filename)
+				l_obj_filenames.append_string (l_obj)
+				i := i + 1
+			end
+			l_variables.force (l_c_filenames, "c")
+			l_variables.force (l_obj_filenames, "objs")
+			if is_finalize and then l_c_config.has ("cflags_finalize") then
+				l_variables.force (l_c_config.item ("cflags_finalize"), "cflags")
+			elseif l_c_config.has ("cflags") then
+				l_variables.force (l_c_config.item ("cflags"), "cflags")
+			else
+				l_variables.force ("", "cflags")
+			end
+			if is_finalize and then l_c_config.has ("lflags_finalize") then
+				l_variables.force (l_c_config.item ("lflags_finalize"), "lflags")
+			elseif l_c_config.has ("lflags") then
+				l_variables.force (l_c_config.item ("lflags"), "lflags")
+			else
+				l_variables.force ("", "lflags")
+			end
+			if operating_system.is_windows then
+				l_filename := l_base_name + ".bat"
+			else
+				l_filename := l_base_name + ".sh"
+			end
+			create l_file.make (l_filename)
+			l_file.open_write
+			if l_file.is_open_write then
+				if operating_system.is_windows then
+					l_file.put_line ("@echo off")
+				else
+					l_file.put_line ("#!/bin/sh")
+				end
+				l_cc_template := l_c_config.item ("cc")
+				l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
+				l_file.put_line (l_command_name)
+				if not l_cpp_filenames.is_empty then
+					l_variables.replace (l_cpp_filenames, "c")
+					l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
+				end
+				l_link_template := l_c_config.item ("link")
+				l_command_name := template_expander.expand_from_values (l_link_template, l_variables)
+				l_file.put_line (l_command_name)
+				l_file.close
+				if not operating_system.is_windows then
+					create l_command.make ("chmod a+x " + l_filename)
+					l_command.execute
+				end
+			else
+				set_fatal_error
+				report_cannot_write_error (l_filename)
+			end
+		end
+
+	c_config: DS_HASH_TABLE [STRING, STRING] is
+			-- C compiler configuration
+		local
+			l_name: STRING
+			l_filename: STRING
+			l_file: KL_TEXT_INPUT_FILE
+			l_default: BOOLEAN
+			l_line: STRING
+			i: INTEGER
+			l_value, l_variable: STRING
+		do
+			l_name := Execution_environment.variable_value ("GOBO_CC")
+			if l_name = Void then
+				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", "default.cfg">>)
+				l_filename := Execution_environment.interpreted_string (l_filename)
+				create l_file.make (l_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					l_file.read_line
+					if not l_file.end_of_file then
+						l_name := STRING_.cloned_string (l_file.last_string)
+						STRING_.left_adjust (l_name)
+						STRING_.right_adjust (l_name)
+					end
+					l_file.close
+				end
+			end
+			if l_name = Void then
+				l_default := True
+				if operating_system.is_windows then
+					l_name := "msc"
+				else
+					l_name := "gcc"
+				end
+			end
+			create Result.make_map (10)
+			Result.set_key_equality_tester (string_equality_tester)
+				-- Put some platform-dependent default values.
+			if operating_system.is_windows then
+				Result.put ("cl -nologo $cflags $includes -c $c", "cc")
+				Result.put ("link -nologo $lflags -out:$exe $objs $libs", "link")
+				Result.put (".obj", "obj")
+				Result.put (".exe", "exe")
+				Result.put ("", "cflags")
+				Result.put ("", "lflags")
+			else
+				Result.put ("gcc $cflags $includes -c $c", "cc")
+				Result.put ("gcc $lflags -o $exe $objs $libs", "link")
+				Result.put (".o", "obj")
+				Result.put ("", "exe")
+				Result.put ("", "cflags")
+				Result.put ("", "lflags")
+			end
+			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", l_name>>)
+			l_filename := Execution_environment.interpreted_string (l_filename)
+			if not file_system.has_extension (l_filename, ".cfg") then
+				l_filename := l_filename + ".cfg"
+			end
+			create l_file.make (l_filename)
+			l_file.open_read
+			if l_file.is_open_read then
+				from
+					l_file.read_line
+				until
+					l_file.end_of_file
+				loop
+					l_line := STRING_.cloned_string (l_file.last_string)
+					STRING_.left_adjust (l_line)
+					STRING_.right_adjust (l_line)
+					if l_line.count >= 2 then
+						if l_line.item (1) = '-' and l_line.item (2) = '-' then
+							-- Ignore comments.
+						else
+							i := l_line.index_of (':', 2)
+							if i /= 0 then
+								l_variable := l_line.substring (1, i - 1)
+								STRING_.right_adjust (l_variable)
+								l_value := l_line.substring (i + 1, l_line.count)
+								STRING_.left_adjust (l_value)
+								Result.force (l_value, l_variable)
+							end
+						end
+					end
+					l_file.read_line
+				end
+				l_file.close
+			elseif not l_default then
+				set_fatal_error
+				report_cannot_read_error (l_filename)
+			end
+		ensure
+			c_config_not_void: Result /= Void
+			no_void_variables: not Result.has_item (Void)
+			cc_defined: Result.has ("cc")
+			link_defined: Result.has ("link")
+			exe_defined: Result.has ("exe")
+			obj_defined: Result.has ("obj")
+		end
+
+feature {NONE} -- C code Generation
+
+	generate_c_code (a_system_name: STRING) is
+			-- Generate C code for `current_system'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_system_name_not_void: a_system_name /= Void
 		local
 			old_file: KI_TEXT_OUTPUT_STREAM
 			old_header_file: KI_TEXT_OUTPUT_STREAM
@@ -212,39 +457,53 @@ feature -- Generation
 			l_header_file: KL_TEXT_OUTPUT_FILE
 			l_root_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_c_filename: STRING
+			l_c_file: KL_TEXT_OUTPUT_FILE
+			l_base_name: STRING
 		do
-			has_fatal_error := False
-			if current_system.universe.system_name /= Void then
-				l_header_filename := current_system.universe.system_name + ".h"
-			else
-				l_header_filename := current_system.universe.root_class.lower_name + ".h"
-			end
+			l_base_name := a_system_name
+			l_c_filename := l_base_name + ".c"
+			l_header_filename := l_base_name + ".h"
+			create l_c_file.make (l_c_filename)
+			l_c_file.open_write
 			create l_header_file.make (l_header_filename)
 			l_header_file.open_write
-			if not l_header_file.is_open_write then
+			if not l_c_file.is_open_write then
 				set_fatal_error
--- TODO: report error.
+				report_cannot_write_error (l_c_filename)
+			elseif not l_header_file.is_open_write then
+				set_fatal_error
+				report_cannot_write_error (l_header_filename)
 			else
+				c_filenames.force_last (l_base_name)
 				old_header_file := header_file
 				header_file := l_header_file
 				old_file := current_file
-				current_file := a_file
+				current_file := l_c_file
 				generate_ids
-				include_runtime_header_file ("ge_eiffel.h", header_file)
+				include_runtime_header_file ("ge_eiffel.h", True, header_file)
 				header_file.put_new_line
-				a_file.put_string ("#include %"")
-				a_file.put_string (l_header_filename)
-				a_file.put_character ('%"')
-				a_file.put_new_line
-				a_file.put_new_line
+				l_c_file.put_string ("#include %"")
+				l_c_file.put_string (l_header_filename)
+				l_c_file.put_character ('%"')
+				l_c_file.put_new_line
+				l_c_file.put_new_line
+				include_runtime_header_file ("ge_arguments.h", True, header_file)
+				header_file.put_new_line
+				include_runtime_header_file ("ge_exception.h", True, header_file)
+				header_file.put_new_line
+				l_c_file.put_line ("#ifdef __cpluscplus")
+				l_c_file.put_line ("extern %"C%" {")
+				l_c_file.put_line ("#endif")
+				l_c_file.put_new_line
+				header_file.put_line ("#ifdef __cpluscplus")
+				header_file.put_line ("extern %"C%" {")
+				header_file.put_line ("#endif")
+				header_file.put_new_line
 				print_types (header_file)
 				header_file.put_new_line
-				include_runtime_header_file ("ge_arguments.h", header_file)
-				header_file.put_new_line
-				include_runtime_header_file ("ge_exception.h", header_file)
-				header_file.put_new_line
 				print_gems_function
-				a_file.put_new_line
+				l_c_file.put_new_line
 					-- Print polymorphic calls.
 				print_polymorphic_query_calls
 				print_polymorphic_procedure_calls
@@ -262,36 +521,59 @@ feature -- Generation
 					-- Print features which build manifest arrays.
 				from manifest_array_types.start until manifest_array_types.after loop
 					print_gema_function (manifest_array_types.item_for_iteration)
-					a_file.put_new_line
+					l_c_file.put_new_line
 					manifest_array_types.forth
 				end
 				manifest_array_types.wipe_out
 					-- Print features which build manifest tuples.
 				from manifest_tuple_types.start until manifest_tuple_types.after loop
 					print_gemt_function (manifest_tuple_types.item_for_iteration)
-					a_file.put_new_line
+					l_c_file.put_new_line
 					manifest_tuple_types.forth
 				end
 				manifest_tuple_types.wipe_out
 					-- Print call-on-void-target function.
 				print_gevoid_function
-				a_file.put_new_line
+				l_c_file.put_new_line
 					-- Print constants declarations.
 				print_constants_declaration
-				a_file.put_new_line
+				l_c_file.put_new_line
 				print_geconst_function
-				a_file.put_new_line
+				l_c_file.put_new_line
 					-- Print 'getypes' array.
 				print_getypes_array
-				a_file.put_new_line
+				l_c_file.put_new_line
 					-- Print 'main' function.
 				print_main_function
-				a_file.put_new_line
-					-- Include runtime C files.
+				l_c_file.put_new_line
+				l_c_file.put_line ("#ifdef __cpluscplus")
+				l_c_file.put_line ("}")
+				l_c_file.put_line ("#endif")
+				l_c_file.put_new_line
+				header_file.put_line ("#ifdef __cpluscplus")
+				header_file.put_line ("}")
+				header_file.put_line ("#endif")
 				header_file.put_new_line
+					-- Include runtime C files.
 				from included_runtime_c_files.start until included_runtime_c_files.after loop
-					include_runtime_c_file (included_runtime_c_files.item_for_iteration, a_file)
+					include_runtime_c_file (included_runtime_c_files.item_for_iteration, l_c_file)
 					included_runtime_c_files.forth
+				end
+					-- Include runtime header files.
+				header_file.put_new_line
+				from included_runtime_header_files.start until included_runtime_header_files.after loop
+					if not included_runtime_header_files.item_for_iteration then
+						include_runtime_c_file (included_runtime_header_files.key_for_iteration, header_file)
+					end
+					included_runtime_header_files.forth
+				end
+					-- Include header files.
+				from included_header_filenames.start until included_header_filenames.after loop
+					header_file.put_string (c_include)
+					header_file.put_character (' ')
+					header_file.put_string (included_header_filenames.item_for_iteration)
+					header_file.put_new_line
+					included_header_filenames.forth
 				end
 				included_header_filenames.wipe_out
 				included_runtime_header_files.wipe_out
@@ -300,13 +582,12 @@ feature -- Generation
 				constant_features.wipe_out
 				header_file := old_header_file
 				l_header_file.close
+				l_c_file.close
 				current_file := old_file
 				current_type := current_system.none_type
 				current_feature := dummy_feature
 			end
 		end
-
-feature {NONE} -- Generation
 
 	generate_ids is
 			-- Generate types and feature ids.
@@ -570,36 +851,23 @@ feature {NONE} -- Feature generation
 			l_argument_type: ET_DYNAMIC_TYPE
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_name: ET_IDENTIFIER
-			i, nb, nb_args: INTEGER
+			i, nb_args: INTEGER
 			l_language: ET_EXTERNAL_LANGUAGE
 			l_language_value: ET_MANIFEST_STRING
 			l_language_string: STRING
-			l_language_name: STRING
-			l_inline: STRING
-			l_blocking: STRING
-			l_macro: STRING
-			l_include_filename: STRING
-			l_signature: STRING
-			l_use: STRING
 			l_signature_arguments: STRING
 			l_signature_result: STRING
-			c: CHARACTER
-			stop: BOOLEAN
 			l_comma: BOOLEAN
 			l_alias: ET_EXTERNAL_ALIAS
 			l_alias_value: ET_MANIFEST_STRING
 			l_splitter: ST_SPLITTER
 			l_list: DS_LIST [STRING]
-			l_cursor: DS_LIST_CURSOR [STRING]
-			l_struct: STRING
-			l_access: STRING
-			l_type: STRING
-			l_get: STRING
 			l_struct_field_name: STRING
 			l_struct_field_type: STRING
 			l_struct_type: STRING
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_buffer: STRING
+			l_is_inline: BOOLEAN
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -702,482 +970,10 @@ feature {NONE} -- Feature generation
 			l_language := a_feature.language
 			l_language_value := l_language.manifest_string
 			l_language_string := l_language_value.value
-			nb := l_language_string.count
-				-- Remove leading spaces.
-			from
-				i := 1
-			until
-				i > nb or stop
-			loop
-				inspect l_language_string.item (i)
-				when ' ', '%R', '%T', '%N' then
-					i := i + 1
-				else
-					stop := True
-				end
+			if external_c_inline_regexp.recognizes (l_language_string) then
+				l_is_inline := True
 			end
-				-- Read language name.
-			from
-				stop := False
-				create l_language_name.make (10)
-			until
-				i > nb or stop
-			loop
-				c := l_language_string.item (i)
-				inspect c
-				when ' ', '%R', '%T', '%N' then
-					stop := True
-				else
-					l_language_name.append_character (c)
-					i := i + 1
-				end
-			end
-				-- Remove spaces.
-			from
-				stop := False
-			until
-				i > nb or stop
-			loop
-				inspect l_language_string.item (i)
-				when ' ', '%R', '%T', '%N' then
-					i := i + 1
-				else
-					stop := True
-				end
-			end
-			if l_language_name.is_empty then
--- TODO: error
-			elseif STRING_.same_case_insensitive (l_language_name, e_c) then
-					-- Look for 'blocking' keyword.
-				if i + 7 <= nb then
-					l_blocking := l_language_string.substring (i, i + 7)
-					if not STRING_.same_case_insensitive (l_blocking, e_blocking) then
-						l_blocking := Void
-					else
-							-- Remove spaces.
-						from
-							i := i + 8
-							stop := False
-						until
-							i > nb or stop
-						loop
-							inspect l_language_string.item (i)
-							when ' ', '%R', '%T', '%N' then
-								i := i + 1
-							else
-								stop := True
-							end
-						end
-					end
-				end
-					-- Look for 'inline' keyword.
-				if i + 5 <= nb then
-					l_inline := l_language_string.substring (i, i + 5)
-					if not STRING_.same_case_insensitive (l_inline, e_inline) then
-						l_inline := Void
-					else
-							-- Remove spaces.
-						from
-							i := i + 6
-							stop := False
-						until
-							i > nb or stop
-						loop
-							inspect l_language_string.item (i)
-							when ' ', '%R', '%T', '%N' then
-								i := i + 1
-							else
-								stop := True
-							end
-						end
-					end
-				end
-					-- Look for 'macro' keyword.
-				if i + 4 <= nb then
-					l_macro := l_language_string.substring (i, i + 4)
-					if not STRING_.same_case_insensitive (l_macro, e_macro) then
-						l_macro := Void
-					else
-							-- Remove spaces.
-						from
-							i := i + 5
-							stop := False
-						until
-							i > nb or stop
-						loop
-							inspect l_language_string.item (i)
-							when ' ', '%R', '%T', '%N' then
-								i := i + 1
-							else
-								stop := True
-							end
-						end
-					end
-				end
-					-- Look for 'struct' keyword.
-				if i + 5 <= nb then
-					l_struct := l_language_string.substring (i, i + 5)
-					if not STRING_.same_case_insensitive (l_struct, e_struct) then
-						l_struct := Void
-					else
-							-- Look for struct type.
-						from
-							i := i + 6
-							stop := False
-							create l_struct_type.make (10)
-						until
-							i > nb or stop
-						loop
-							c := l_language_string.item (i)
-							inspect c
-							when 'a', 'A' then
-								if i + 5 <= nb then
-									l_access := l_language_string.substring (i, i + 5)
-									if not STRING_.same_case_insensitive (l_access, e_access) then
-										l_access := Void
-									else
-										i := i + 6
-										stop := True
-									end
-								end
-								if not stop then
-									l_struct_type.append_character (c)
-									i := i + 1
-								end
-							when 'g', 'G' then
-								if i + 2 <= nb then
-									l_get := l_language_string.substring (i, i + 2)
-									if not STRING_.same_case_insensitive (l_get, e_get) then
-										l_get := Void
-									else
-										i := i + 3
-										stop := True
-									end
-								end
-								if not stop then
-									l_struct_type.append_character (c)
-									i := i + 1
-								end
-							else
-								l_struct_type.append_character (c)
-								i := i + 1
-							end
-						end
-							-- Look for field name.
-						from
-							stop := False
-							create l_struct_field_name.make (10)
-						until
-							i > nb or stop
-						loop
-							c := l_language_string.item (i)
-							inspect c
-							when 't', 'T' then
-								if i + 3 <= nb then
-									l_type := l_language_string.substring (i, i + 3)
-									if not STRING_.same_case_insensitive (l_type, e_type) then
-										l_type := Void
-									else
-										i := i + 4
-										stop := True
-									end
-								end
-								if not stop then
-									l_struct_field_name.append_character (c)
-									i := i + 1
-								end
-							when 'u', 'U' then
-								if i + 2 <= nb then
-									l_use := l_language_string.substring (i, i + 2)
-									if not STRING_.same_case_insensitive (l_use, e_use) then
-										l_use := Void
-									else
-										stop := True
-									end
-								end
-								if not stop then
-									l_struct_field_name.append_character (c)
-									i := i + 1
-								end
-							else
-								l_struct_field_name.append_character (c)
-								i := i + 1
-							end
-						end
-							-- Look for field type.
-						if l_type /= Void then
-							from
-								stop := False
-								create l_struct_field_type.make (10)
-							until
-								i > nb or stop
-							loop
-								c := l_language_string.item (i)
-								inspect c
-								when 'u', 'U' then
-									if i + 2 <= nb then
-										l_use := l_language_string.substring (i, i + 2)
-										if not STRING_.same_case_insensitive (l_use, e_use) then
-											l_use := Void
-										else
-											stop := True
-										end
-									end
-									if not stop then
-										l_struct_field_type.append_character (c)
-										i := i + 1
-									end
-								else
-									l_struct_field_type.append_character (c)
-									i := i + 1
-								end
-							end
-						end
-							-- Remove spaces.
-						from
-							i := i + 6
-							stop := False
-						until
-							i > nb or stop
-						loop
-							inspect l_language_string.item (i)
-							when ' ', '%R', '%T', '%N' then
-								i := i + 1
-							else
-								stop := True
-							end
-						end
-					end
-				end
-					-- Look for old 'macro' or 'struct' syntax.
-				if i <= nb and then l_language_string.item (i) = '[' then
-						-- Remove spaces.
-					from
-						i := i + 1
-						stop := False
-					until
-						i > nb or stop
-					loop
-						inspect l_language_string.item (i)
-						when ' ', '%R', '%T', '%N' then
-							i := i + 1
-						else
-							stop := True
-						end
-					end
-					if i + 4 <= nb then
-						l_macro := l_language_string.substring (i, i + 4)
-						if not STRING_.same_case_insensitive (l_macro, e_macro) then
-							l_macro := Void
-						else
-								-- Remove spaces.
-							from
-								i := i + 5
-								stop := False
-							until
-								i > nb or stop
-							loop
-								inspect l_language_string.item (i)
-								when ' ', '%R', '%T', '%N' then
-									i := i + 1
-								else
-									stop := True
-								end
-							end
-						end
-					end
-					if i + 5 <= nb then
-						l_struct := l_language_string.substring (i, i + 5)
-						if not STRING_.same_case_insensitive (l_struct, e_struct) then
-							l_struct := Void
-						else
-								-- Remove spaces.
-							from
-								i := i + 6
-								stop := False
-							until
-								i > nb or stop
-							loop
-								inspect l_language_string.item (i)
-								when ' ', '%R', '%T', '%N' then
-									i := i + 1
-								else
-									stop := True
-								end
-							end
-						end
-					end
-					if l_macro = Void and l_struct = Void then
--- TODO: syntax error
-					end
-					from
-						stop := False
-						create l_include_filename.make (50)
-					until
-						i > nb or stop
-					loop
-						c := l_language_string.item (i)
-						inspect c
-						when ']' then
-							stop := True
-						else
-							l_include_filename.append_character (c)
-							i := i + 1
-						end
-					end
-					if i > nb then
--- TODO: error
-					else
-						i := i + 1
-						STRING_.left_adjust (l_include_filename)
-						STRING_.right_adjust (l_include_filename)
-						include_header_filename (l_include_filename, header_file)
-					end
-						-- Remove spaces.
-					from
-						stop := False
-					until
-						i > nb or stop
-					loop
-						inspect l_language_string.item (i)
-						when ' ', '%R', '%T', '%N' then
-							i := i + 1
-						else
-							stop := True
-						end
-					end
-				end
-					-- Look for signature.
-				if i + 8 <= nb then
-					l_signature := l_language_string.substring (i, i + 8)
-					if not STRING_.same_case_insensitive (l_signature, e_signature) then
-						l_signature := Void
-					else
-							-- Remove spaces.
-						from
-							i := i + 9
-							stop := False
-						until
-							i > nb or stop
-						loop
-							inspect l_language_string.item (i)
-							when ' ', '%R', '%T', '%N' then
-								i := i + 1
-							else
-								stop := True
-							end
-						end
-					end
-				end
-				if i <= nb and then l_language_string.item (i) = '(' then
-						-- Read signature arguments.
-					from
-						i := i + 1
-						stop := False
-						create l_signature_arguments.make (50)
-					until
-						i > nb or stop
-					loop
-						c := l_language_string.item (i)
-						inspect c
-						when ')' then
-							stop := True
-						else
-							l_signature_arguments.append_character (c)
-							i := i + 1
-						end
-					end
-					if i > nb then
--- TODO: error
-					else
-						i := i + 1
-					end
-						-- Remove spaces.
-					from
-						stop := False
-					until
-						i > nb or stop
-					loop
-						inspect l_language_string.item (i)
-						when ' ', '%R', '%T', '%N' then
-							i := i + 1
-						else
-							stop := True
-						end
-					end
-				end
-				if i <= nb and then l_language_string.item (i) = ':' then
-						-- Read signature result.
-					from
-						i := i + 1
-						stop := False
-						create l_signature_result.make (10)
-					until
-						i > nb or stop
-					loop
-						c := l_language_string.item (i)
-						inspect c
-						when '|' then
-							stop := True
-						when 'u', 'U' then
-							if i + 2 <= nb then
-								l_use := l_language_string.substring (i, i + 2)
-								if not STRING_.same_case_insensitive (l_use, e_use) then
-									l_use := Void
-								else
-									stop := True
-								end
-							end
-							if not stop then
-								l_signature_result.append_character (c)
-								i := i + 1
-							end
-						else
-							l_signature_result.append_character (c)
-							i := i + 1
-						end
-					end
-				end
-				if l_signature_arguments = Void and l_signature_result = Void then
-					if l_signature /= Void then
--- TODO: syntax error.
-					end
-				elseif l_signature = Void then
-					l_signature := e_signature
-				end
-					-- Look for use.
-				if i <= nb and then l_language_string.item (i) = '|' then
-					l_use := e_use
-					i := i + 1
-				elseif i + 2 <= nb then
-					l_use := l_language_string.substring (i, i + 2)
-					if not STRING_.same_case_insensitive (l_use, e_use) then
-						l_use := Void
-					else
-						i := i + 3
-					end
-				end
-				if l_use /= Void then
-					if i > nb then
--- TODO: syntax error
-					else
-						create l_splitter.make_with_separators (",")
-						l_list := l_splitter.split (l_language_string.substring (i, nb))
-						l_cursor := l_list.new_cursor
-						from l_cursor.start until l_cursor.after loop
-							l_include_filename := l_cursor.item
-							STRING_.left_adjust (l_include_filename)
-							STRING_.right_adjust (l_include_filename)
-							include_header_filename (l_include_filename, header_file)
-							l_cursor.forth
-						end
-					end
-				end
-			elseif not a_feature.is_builtin then
--- TODO: not supported
-			end
-				-- Print body.
-			if l_inline = Void and l_result_type_set /= Void then
+			if not l_is_inline and l_result_type_set /= Void then
 				print_indentation
 				print_type_declaration (l_result_type_set.static_type, current_file)
 				current_file.put_character (' ')
@@ -1193,173 +989,201 @@ feature {NONE} -- Feature generation
 			if a_creation then
 				print_malloc_current (a_feature)
 			end
-			if a_feature.is_builtin then
-				print_external_builtin_body (a_feature)
-			elseif l_inline /= Void then
-					-- external "C inline".
-				if l_signature /= Void then
--- TODO: syntax error
+			if l_is_inline then
+					-- Regexp: C inline [use {<include> "," ...}+]
+					-- \2: include files
+				debug ("gec")
+					print ("external C inline")
+					if external_c_inline_regexp.captured_substring_count (2) > 0 then
+						print (" use " + external_c_inline_regexp.captured_substring (2))
+					end
+					print ("%N")
+				end
+				if external_c_inline_regexp.captured_substring_count (2) > 0 then
+					print_external_c_includes (external_c_inline_regexp.captured_substring (2))
 				end
 				print_external_c_inline_body (a_feature)
-			elseif l_struct /= Void then
-				if l_result_type_set /= Void then
-					print_result_name (current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_type_cast (l_result_type_set.static_type, current_file)
-					current_file.put_character ('(')
+			elseif a_feature.is_builtin then
+				debug ("gec")
+					print ("external built_in%N")
 				end
-				if l_struct_type = Void then
-					if l_signature_arguments = Void then
--- TODO: syntax error
-					else
-						create l_splitter.make_with_separators (",")
-						l_list := l_splitter.split (l_signature_arguments)
-						inspect l_list.count
-						when 1 then
-							l_struct_type := l_list.item (1)
-						when 2 then
-							l_struct_type := l_list.item (1)
-							l_struct_field_type := l_list.item (2)
-						else
--- TODO: syntax error
+				print_external_builtin_body (a_feature)
+			elseif external_c_regexp.recognizes (l_language_string) then
+					-- Regexp: C [blocking] [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+					-- \4: has signature arguments
+					-- \5: signature arguments
+					-- \10: signature result
+					-- \17: include files
+				debug ("gec")
+					print ("external C")
+					if external_c_regexp.captured_substring_count (4) > 0 then
+						print (" signature (" + external_c_regexp.captured_substring (5) + ")")
+					end
+					if external_c_regexp.captured_substring_count (10) > 0 then
+						print (": " + external_c_regexp.captured_substring (10))
+					end
+					if external_c_regexp.captured_substring_count (17) > 0 then
+						print (" use " + external_c_regexp.captured_substring (17))
+					end
+					print ("%N")
+				end
+				if external_c_regexp.captured_substring_count (17) > 0 then
+					print_external_c_includes (external_c_regexp.captured_substring (17))
+				end
+				if external_c_regexp.captured_substring_count (4) > 0 then
+					l_signature_arguments := external_c_regexp.captured_substring (5)
+				end
+				if external_c_regexp.captured_substring_count (10) > 0 then
+					l_signature_result := external_c_regexp.captured_substring (10)
+				end
+				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, False)
+			elseif external_c_macro_regexp.recognizes (l_language_string) then
+					-- Regexp: C [blocking] macro [signature ["(" {<type> "," ...}* ")"] [":" <type>]] use {<include> "," ...}+
+					-- \4: has signature arguments
+					-- \5: signature arguments
+					-- \10: signature result
+					-- \17: include files
+				debug ("gec")
+					print ("external C macro")
+					if external_c_macro_regexp.captured_substring_count (4) > 0 then
+						print (" signature (" + external_c_macro_regexp.captured_substring (5) + ")")
+					end
+					if external_c_macro_regexp.captured_substring_count (10) > 0 then
+						print (": " + external_c_macro_regexp.captured_substring (10))
+					end
+					print (" use " + external_c_macro_regexp.captured_substring (17))
+					print ("%N")
+				end
+				print_external_c_includes (external_c_macro_regexp.captured_substring (17))
+				if external_c_macro_regexp.captured_substring_count (4) > 0 then
+					l_signature_arguments := external_c_macro_regexp.captured_substring (5)
+				end
+				if external_c_macro_regexp.captured_substring_count (10) > 0 then
+					l_signature_result := external_c_macro_regexp.captured_substring (10)
+				end
+				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, True)
+			elseif external_c_struct_regexp.recognizes (l_language_string) then
+					-- Regexp: C struct <struct-type> (access|get) <field-name> [type <field-type>] use {<include> "," ...}+
+					-- \1: struct type
+					-- \6: field name
+					-- \9: field type
+					-- \16: include files
+				debug ("gec")
+					print ("external C struct ")
+					print (external_c_struct_regexp.captured_substring (1))
+					print (" access ")
+					print (external_c_struct_regexp.captured_substring (6))
+					if external_c_struct_regexp.captured_substring_count (9) > 0 then
+						print (" type " + external_c_struct_regexp.captured_substring (9))
+					end
+					print (" use " + external_c_struct_regexp.captured_substring (16))
+					print ("%N")
+				end
+				print_external_c_includes (external_c_struct_regexp.captured_substring (16))
+				l_struct_type := external_c_struct_regexp.captured_substring (1)
+				l_struct_field_name := external_c_struct_regexp.captured_substring (6)
+				if external_c_struct_regexp.captured_substring_count (9) > 0 then
+					l_struct_field_type := external_c_struct_regexp.captured_substring (9)
+				end
+				print_external_c_struct_body (l_arguments, l_result_type_set, l_struct_type, l_struct_field_name, l_struct_field_type)
+			elseif old_external_c_regexp.recognizes (l_language_string) then
+					-- Regexp: C ["(" {<type> "," ...}* ")" [":" <type>]] ["|" {<include> "," ...}+]
+					-- \1: has signature
+					-- \2: signature arguments
+					-- \4: signature result
+					-- \6: include files
+				debug ("gec")
+					print ("external C")
+					if old_external_c_regexp.captured_substring_count (1) > 0 then
+						print (" (" + old_external_c_regexp.captured_substring (2) + ")")
+						if old_external_c_regexp.captured_substring_count (4) > 0 then
+							print (": " + old_external_c_regexp.captured_substring (4))
 						end
 					end
-					if l_signature_result /= Void then
-						l_struct_field_type := l_signature_result
+					if old_external_c_regexp.captured_substring_count (6) > 0 then
+						print (" | " + old_external_c_regexp.captured_substring (6))
 					end
-					l_alias := a_feature.alias_clause
-					if l_alias /= Void then
-						l_alias_value := l_alias.manifest_string
-						l_struct_field_name := l_alias_value.value
-					else
-						l_struct_field_name := a_feature.implementation_feature.name.lower_name
+					print ("%N")
+				end
+				if old_external_c_regexp.captured_substring_count (6) > 0 then
+					print_external_c_includes (old_external_c_regexp.captured_substring (6))
+				end
+				if old_external_c_regexp.captured_substring_count (1) > 0 then
+					l_signature_arguments := old_external_c_regexp.captured_substring (2)
+					if old_external_c_regexp.captured_substring_count (4) > 0 then
+						l_signature_result := old_external_c_regexp.captured_substring (4)
 					end
 				end
-				if l_struct_type /= Void and l_struct_field_name /= Void then
-					if not l_struct_field_name.is_empty then
-						inspect l_struct_field_name.item (1)
-						when '@' then
-							l_struct_field_name.remove_head (1)
-						when '&' then
-							l_struct_field_name.remove_head (1)
-							current_file.put_character ('&')
-						else
-						end
+				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, False)
+			elseif old_external_c_macro_regexp.recognizes (l_language_string) then
+					-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
+					-- \1: include file
+					-- \2: has signature arguments
+					-- \3: signature arguments
+					-- \5: signature result
+				debug ("gec")
+					print ("external C [macro ")
+					print (old_external_c_macro_regexp.captured_substring (1) + "]")
+					if old_external_c_macro_regexp.captured_substring_count (2) > 0 then
+						print (" (" + old_external_c_macro_regexp.captured_substring (3) + ")")
 					end
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					current_file.put_string (l_struct_type)
-					current_file.put_character ('*')
-					current_file.put_character (')')
-					if nb_args >= 1 then
-						l_name := l_arguments.formal_argument (1).name
-						print_argument_name (l_name, current_file)
-					else
--- TODO: error
+					if old_external_c_macro_regexp.captured_substring_count (5) > 0 then
+						print (": " + old_external_c_macro_regexp.captured_substring (5))
 					end
-					current_file.put_character (')')
-					current_file.put_character ('-')
-					current_file.put_character ('>')
-					current_file.put_string (l_struct_field_name)
-					current_file.put_character (')')
-					if l_result_type_set = Void then
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						if l_struct_field_type /= Void then
-							current_file.put_character ('(')
-							current_file.put_string (l_struct_field_type)
-							current_file.put_character (')')
-						end
-						if nb_args >= 2 then
-							l_name := l_arguments.formal_argument (2).name
-							print_argument_name (l_name, current_file)
-						else
--- TODO: error
-						end
+					print ("%N")
+				end
+				print_external_c_includes (old_external_c_regexp.captured_substring (1))
+				if old_external_c_macro_regexp.captured_substring_count (2) > 0 then
+					l_signature_arguments := old_external_c_macro_regexp.captured_substring (3)
+					if old_external_c_macro_regexp.captured_substring_count (5) > 0 then
+						l_signature_result := old_external_c_macro_regexp.captured_substring (5)
 					end
 				end
-				if l_result_type_set /= Void then
-					current_file.put_character (')')
-				end
-				current_file.put_character (';')
-				current_file.put_new_line
-			else
-					-- external "C".
-				print_indentation
-				if l_result_type_set /= Void then
-					print_result_name (current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_type_declaration (l_result_type_set.static_type, current_file)
-					current_file.put_character (')')
-					if l_signature_result /= Void then
-						current_file.put_character ('(')
-						current_file.put_string (l_signature_result)
-						current_file.put_character (')')
+				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, True)
+			elseif old_external_c_struct_regexp.recognizes (l_language_string) then
+					-- Regexp: C "[" struct <include> "]" "(" {<type> "," ...}+ ")" [":" <type>]
+					-- \1: include file
+					-- \2: signature arguments
+					-- \4: signature result
+				debug ("gec")
+					print ("external C [struct ")
+					print (old_external_c_struct_regexp.captured_substring (1) + "]")
+					print (" (" + old_external_c_struct_regexp.captured_substring (2) + ")")
+					if old_external_c_struct_regexp.captured_substring_count (4) > 0 then
+						print (": " + old_external_c_struct_regexp.captured_substring (4))
 					end
+					print ("%N")
+				end
+				print_external_c_includes (old_external_c_struct_regexp.captured_substring (1))
+				l_signature_arguments := old_external_c_struct_regexp.captured_substring (2)
+				if old_external_c_struct_regexp.captured_substring_count (4) > 0 then
+					l_signature_result := old_external_c_struct_regexp.captured_substring (4)
 				end
 				l_alias := a_feature.alias_clause
 				if l_alias /= Void then
 					l_alias_value := l_alias.manifest_string
-					current_file.put_string (l_alias_value.value)
+					l_struct_field_name := l_alias_value.value
 				else
-					current_file.put_string (a_feature.implementation_feature.name.lower_name)
+					l_struct_field_name := a_feature.implementation_feature.name.lower_name
 				end
-				if nb_args > 0 then
-					current_file.put_character ('(')
-					if l_signature_arguments /= Void then
-						create l_splitter.make_with_separators (",")
-						l_list := l_splitter.split (l_signature_arguments)
-						if l_list.count /= nb_args then
--- TODO: error
-						end
-						l_cursor := l_list.new_cursor
-						l_cursor.start
-						if not l_cursor.after then
-							current_file.put_character ('(')
-							current_file.put_string (l_cursor.item)
-							current_file.put_character (')')
-							l_cursor.forth
-						end
-						l_name := l_arguments.formal_argument (1).name
-						print_argument_name (l_name, current_file)
-						from i := 2 until i > nb_args loop
-							current_file.put_character (',')
-							if not l_cursor.after then
-								current_file.put_character ('(')
-								current_file.put_string (l_cursor.item)
-								current_file.put_character (')')
-								l_cursor.forth
-							end
-							l_name := l_arguments.formal_argument (i).name
-							print_argument_name (l_name, current_file)
-							i := i + 1
-						end
-					else
-						l_name := l_arguments.formal_argument (1).name
-						print_argument_name (l_name, current_file)
-						from i := 2 until i > nb_args loop
-							current_file.put_character (',')
-							l_name := l_arguments.formal_argument (i).name
-							print_argument_name (l_name, current_file)
-							i := i + 1
-						end
-					end
-					current_file.put_character (')')
-				elseif l_macro = Void or else l_signature_arguments /= Void then
-					current_file.put_character ('(')
-					current_file.put_character (')')
+				create l_splitter.make_with_separators (",")
+				l_list := l_splitter.split (l_signature_arguments)
+				inspect l_list.count
+				when 1 then
+					l_struct_type := l_list.item (1)
+					l_struct_field_type := l_signature_result
+					print_external_c_struct_body (l_arguments, l_result_type_set, l_struct_type, l_struct_field_name, l_struct_field_type)
+				when 2 then
+					l_struct_type := l_list.item (1)
+					l_struct_field_type := l_list.item (2)
+					print_external_c_struct_body (l_arguments, l_result_type_set, l_struct_type, l_struct_field_name, l_struct_field_type)
+				else
+-- TODO: syntax error
 				end
-				current_file.put_character (';')
-				current_file.put_new_line
+			else
+print ("**** language not recognized: " + l_language_string + "%N")
 			end
-			if l_inline = Void and l_result_type_set /= Void then
+			if not l_is_inline and l_result_type_set /= Void then
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
@@ -2194,6 +2018,178 @@ feature {NONE} -- Feature generation
 			end
 		end
 
+	print_external_c_body (a_feature_name: ET_FEATURE_NAME;
+		a_arguments: ET_FORMAL_ARGUMENT_LIST; a_result_type_set: ET_DYNAMIC_TYPE_SET;
+		a_signature_arguments, a_signature_result: STRING;
+		a_alias: ET_EXTERNAL_ALIAS; is_macro: BOOLEAN) is
+			-- Print body of external C function to `current_file'.
+			-- If `a_feature_name' is Void then the name of the C function will be found in the alias.
+			-- `a_signature_arguments' and `a_signature_result', if not Void,
+			-- are the signature types declared in the Language part.
+			-- `a_result_type_set' is not Void if the external feature is a query.
+		require
+			name_not_void: a_feature_name /= Void or else a_alias /= Void
+		local
+			l_alias_value: ET_MANIFEST_STRING
+			i, nb_args: INTEGER
+			l_splitter: ST_SPLITTER
+			l_list: DS_LIST [STRING]
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_name: ET_IDENTIFIER
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			print_indentation
+			if a_result_type_set /= Void then
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_type_declaration (a_result_type_set.static_type, current_file)
+				current_file.put_character (')')
+				if a_signature_result /= Void then
+					current_file.put_character ('(')
+					current_file.put_string (a_signature_result)
+					current_file.put_character (')')
+				end
+			end
+			if a_alias /= Void then
+				l_alias_value := a_alias.manifest_string
+				current_file.put_string (l_alias_value.value)
+			else
+				current_file.put_string (a_feature_name.lower_name)
+			end
+			if a_arguments /= Void and then not a_arguments.is_empty then
+				nb_args := a_arguments.count
+				current_file.put_character ('(')
+				if a_signature_arguments /= Void then
+					create l_splitter.make_with_separators (",")
+					l_list := l_splitter.split (a_signature_arguments)
+					if l_list.count /= nb_args then
+-- TODO: error
+					end
+					l_cursor := l_list.new_cursor
+					l_cursor.start
+					from i := 1 until i > nb_args loop
+						if i /= 1 then
+							current_file.put_character (',')
+						end
+						if not l_cursor.after then
+							current_file.put_character ('(')
+							current_file.put_string (l_cursor.item)
+							current_file.put_character (')')
+							l_cursor.forth
+						end
+						l_name := a_arguments.formal_argument (i).name
+						print_argument_name (l_name, current_file)
+						i := i + 1
+					end
+				else
+					from i := 1 until i > nb_args loop
+						if i /= 1 then
+							current_file.put_character (',')
+						end
+						l_name := a_arguments.formal_argument (i).name
+						l_argument_type_set := current_feature.dynamic_type_set (l_name)
+						if l_argument_type_set = Void then
+								-- Internal error: the dynamic type set of the formal arguments
+								-- should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif l_argument_type_set.static_type = current_system.pointer_type then
+								-- When compiling with C++, MSVC++ does not want to convert
+								-- 'void*' to non-'void*' implicitly.
+							current_file.put_string ("(char*)")
+						end
+						print_argument_name (l_name, current_file)
+						i := i + 1
+					end
+				end
+				current_file.put_character (')')
+			elseif not is_macro or else a_signature_arguments /= Void then
+				current_file.put_character ('(')
+				current_file.put_character (')')
+			end
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_external_c_struct_body (a_arguments: ET_FORMAL_ARGUMENT_LIST; a_result_type_set: ET_DYNAMIC_TYPE_SET;
+		a_struct_type, a_field_name, a_field_type: STRING) is
+			-- Print body of external C struct to `current_file'.
+			-- `a_result_type_set' is not Void if the external feature is a query.
+		require
+			a_struct_type_not_void: a_struct_type /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_field_name: STRING
+			l_name: ET_IDENTIFIER
+			nb_args: INTEGER
+		do
+			if a_result_type_set /= Void then
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_type_cast (a_result_type_set.static_type, current_file)
+				current_file.put_character ('(')
+			end
+			l_field_name := a_field_name
+			if not l_field_name.is_empty then
+				inspect l_field_name.item (1)
+				when '@' then
+					l_field_name := STRING_.cloned_string (l_field_name)
+					l_field_name.remove_head (1)
+				when '&' then
+					l_field_name := STRING_.cloned_string (l_field_name)
+					l_field_name.remove_head (1)
+					current_file.put_character ('&')
+				else
+				end
+			end
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			current_file.put_string (a_struct_type)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			if a_arguments /= Void then
+				nb_args := a_arguments.count
+				if nb_args >= 1 then
+					l_name := a_arguments.formal_argument (1).name
+					print_argument_name (l_name, current_file)
+				end
+			else
+-- TODO: error
+			end
+			current_file.put_character (')')
+			current_file.put_character ('-')
+			current_file.put_character ('>')
+			current_file.put_string (l_field_name)
+			current_file.put_character (')')
+			if a_result_type_set = Void then
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if a_field_type /= Void then
+					current_file.put_character ('(')
+					current_file.put_string (a_field_type)
+					current_file.put_character (')')
+				end
+				if nb_args >= 2 then
+					l_name := a_arguments.formal_argument (2).name
+					print_argument_name (l_name, current_file)
+				else
+-- TODO: error
+				end
+			end
+			if a_result_type_set /= Void then
+				current_file.put_character (')')
+			end
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
 	print_external_c_inline_body (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print body of external "C inline" `a_feature' to `current_file'.
 		require
@@ -2333,6 +2329,31 @@ feature {NONE} -- Feature generation
 					current_file.put_character (';')
 				end
 				current_file.put_new_line
+			end
+		end
+
+	print_external_c_includes (a_include_filenames: STRING) is
+			-- Print C includes declarations to `header_file'.
+			-- `a_incluse_filenames' are the filenames (with the
+			-- < > or " " characters included) separated by
+			-- commas.
+		require
+			a_include_filenames_not_void: a_include_filenames /= Void
+		local
+			l_splitter: ST_SPLITTER
+			l_list: DS_LIST [STRING]
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_include_filename: STRING
+		do
+			create l_splitter.make_with_separators (",")
+			l_list := l_splitter.split (a_include_filenames)
+			l_cursor := l_list.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_include_filename := l_cursor.item
+				STRING_.left_adjust (l_include_filename)
+				STRING_.right_adjust (l_include_filename)
+				include_header_filename (l_include_filename, header_file)
+				l_cursor.forth
 			end
 		end
 
@@ -8434,7 +8455,7 @@ feature {NONE} -- Agent generation
 				current_file.put_character ('0')
 				current_file.put_character (';')
 				current_file.put_new_line
-					-- Make sure that `ageent_target' is set correctly
+					-- Make sure that `agent_target' is set correctly
 					-- before calling `print_agent_body_declaration'.
 				if l_target.is_open_operand then
 					agent_target := agent_open_operands.item (1)
@@ -11577,7 +11598,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					include_runtime_header_file ("ge_integer.h", header_file)
+					include_runtime_header_file ("ge_integer.h", False, header_file)
 					print_type_cast (current_system.double_type, current_file)
 					current_file.put_string (c_gepower)
 					current_file.put_character ('(')
@@ -14285,7 +14306,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					include_runtime_header_file ("ge_real.h", header_file)
+					include_runtime_header_file ("ge_real.h", False, header_file)
 					print_type_cast (current_system.double_type, current_file)
 					current_file.put_string (c_gepower)
 					current_file.put_character ('(')
@@ -14653,7 +14674,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				include_runtime_header_file ("ge_real.h", header_file)
+				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_32_type, current_file)
 				current_file.put_string (c_geceiling)
 				current_file.put_character ('(')
@@ -14701,7 +14722,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				include_runtime_header_file ("ge_real.h", header_file)
+				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_64_type, current_file)
 				current_file.put_string (c_geceiling)
 				current_file.put_character ('(')
@@ -14749,7 +14770,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				include_runtime_header_file ("ge_real.h", header_file)
+				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_32_type, current_file)
 				current_file.put_string (c_gefloor)
 				current_file.put_character ('(')
@@ -14797,7 +14818,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				include_runtime_header_file ("ge_real.h", header_file)
+				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_64_type, current_file)
 				current_file.put_string (c_gefloor)
 				current_file.put_character ('(')
@@ -17513,44 +17534,46 @@ feature {NONE} -- Include files
 		do
 			if not included_header_filenames.has (a_filename) then
 				if a_filename.same_string ("%"eif_console.h%"") then
-					include_runtime_header_file ("eif_file.h", a_file)
-					include_runtime_header_file ("eif_console.h", a_file)
+					include_runtime_header_file ("eif_file.h", False, a_file)
+					include_runtime_header_file ("eif_console.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_dir.h%"") then
-					include_runtime_header_file ("eif_dir.h", a_file)
+					include_runtime_header_file ("eif_dir.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_eiffel.h%"") then
-					include_runtime_header_file ("eif_eiffel.h", a_file)
+					include_runtime_header_file ("eif_eiffel.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_except.h%"") then
-					include_runtime_header_file ("eif_except.h", a_file)
+					include_runtime_header_file ("eif_except.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_file.h%"") then
-					include_runtime_header_file ("eif_file.h", a_file)
+					include_runtime_header_file ("eif_file.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_memory.h%"") then
-					include_runtime_header_file ("eif_memory.h", a_file)
+					include_runtime_header_file ("eif_memory.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_misc.h%"") then
-					include_runtime_header_file ("eif_misc.h", a_file)
+					include_runtime_header_file ("eif_misc.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_path_name.h%"") then
-					include_runtime_header_file ("eif_path_name.h", a_file)
+					include_runtime_header_file ("eif_path_name.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_retrieve.h%"") then
-					include_runtime_header_file ("eif_retrieve.h", a_file)
+					include_runtime_header_file ("eif_retrieve.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_sig.h%"") then
-					include_runtime_header_file ("eif_sig.h", a_file)
+					include_runtime_header_file ("eif_sig.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_store.h%"") then
-					include_runtime_header_file ("eif_store.h", a_file)
+					include_runtime_header_file ("eif_store.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_traverse.h%"") then
-					include_runtime_header_file ("eif_traverse.h", a_file)
+					include_runtime_header_file ("eif_traverse.h", False, a_file)
 				elseif a_filename.same_string ("%"ge_time.h%"") then
-					include_runtime_header_file ("ge_time.h", a_file)
+					include_runtime_header_file ("ge_time.h", False, a_file)
 				else
-					a_file.put_string (c_include)
-					a_file.put_character (' ')
-					a_file.put_string (a_filename)
-					a_file.put_new_line
+					included_header_filenames.force (a_filename)
+--					a_file.put_string (c_include)
+--					a_file.put_character (' ')
+--					a_file.put_string (a_filename)
+--					a_file.put_new_line
 				end
-				included_header_filenames.force (a_filename)
+--				included_header_filenames.force (a_filename)
 			end
 		end
 
-	include_runtime_header_file (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	include_runtime_header_file (a_filename: STRING; a_force: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Include runtime header file `a_filename' to `a_file'.
+			-- `a_force' means that the file should be included now.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_file_not_void: a_file /= Void
@@ -17566,7 +17589,7 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_dir.h") then
 					included_runtime_c_files.force ("eif_dir.c")
 				elseif a_filename.same_string ("eif_except.h") then
-					include_runtime_header_file ("ge_exception.h", a_file)
+					include_runtime_header_file ("ge_exception.h", False, a_file)
 					included_runtime_c_files.force ("eif_except.c")
 				elseif a_filename.same_string ("eif_file.h") then
 					included_runtime_c_files.force ("eif_file.c")
@@ -17585,16 +17608,24 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_traverse.h") then
 					included_runtime_c_files.force ("eif_traverse.c")
 				end
+				if a_force then
+					include_runtime_c_file (a_filename, a_file)
+					included_runtime_header_files.force (True, a_filename)
+				else
+					included_runtime_header_files.force (False, a_filename)
+				end
+			elseif a_force and then not included_runtime_header_files.item (a_filename) then
 				include_runtime_c_file (a_filename, a_file)
-				included_runtime_header_files.force (a_filename)
+				included_runtime_header_files.replace (True, a_filename)
 			end
 		end
 
 	included_header_filenames: DS_HASH_SET [STRING]
 			-- Name of header filenames already included
 
-	included_runtime_header_files: DS_HASH_SET [STRING]
-			-- Name of runtime header files already included
+	included_runtime_header_files: DS_HASH_TABLE [BOOLEAN, STRING]
+			-- Name of runtime header files already included;
+			-- True means that it has already been printed
 
 	included_runtime_c_files: DS_HASH_SET [STRING]
 			-- Name of runtime C files already included
@@ -18091,6 +18122,30 @@ feature {NONE} -- Error handling
 			has_fatal_error: has_fatal_error
 		end
 
+	report_cannot_read_error (a_filename: STRING) is
+			-- Report that `a_filename' cannot be
+			-- opened in read mode.
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			an_error: UT_CANNOT_READ_FILE_ERROR
+		do
+			create an_error.make (a_filename)
+			error_handler.report_error (an_error)
+		end
+
+	report_cannot_write_error (a_filename: STRING) is
+			-- Report that `a_filename' cannot be
+			-- opened in write mode.
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			an_error: UT_CANNOT_WRITE_TO_FILE_ERROR
+		do
+			create an_error.make (a_filename)
+			error_handler.report_error (an_error)
+		end
+
 feature {NONE} -- Type resolving
 
 	resolved_formal_parameters (a_type: ET_TYPE): ET_TYPE is
@@ -18138,6 +18193,12 @@ feature {NONE} -- Access
 
 	header_file: KI_TEXT_OUTPUT_STREAM
 			-- Header file
+
+	c_filenames: DS_ARRAYED_LIST [STRING]
+			-- List of C filenames generated
+
+	cpp_filenames: DS_ARRAYED_LIST [STRING]
+			-- List of C++ filenames generated
 
 	called_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
 			-- Features being called
@@ -18388,6 +18449,94 @@ feature {NONE} -- Implementation
 			dummy_feature_not_void: Result /= Void
 		end
 
+feature {NONE} -- External regexp
+
+	external_c_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C [blocking] [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+			-- \4: has signature arguments
+			-- \5: signature arguments
+			-- \10: signature result
+			-- \17: include files
+
+	external_c_macro_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C [blocking] macro [signature ["(" {<type> "," ...}* ")"] [":" <type>]] use {<include> "," ...}+
+			-- \4: has signature arguments
+			-- \5: signature arguments
+			-- \10: signature result
+			-- \17: include files
+
+	external_c_struct_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C struct <struct-type> (access|get) <field-name> [type <field-type>] use {<include> "," ...}+
+			-- \1: struct type
+			-- \6: field name
+			-- \9: field type
+			-- \16: include files
+
+	external_c_inline_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C inline [use {<include> "," ...}+]
+			-- \2: include files
+
+	old_external_c_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C ["(" {<type> "," ...}* ")" [":" <type>]] ["|" {<include> "," ...}+]
+			-- \1: has signature
+			-- \2: signature arguments
+			-- \4: signature result
+			-- \6: include files
+
+	old_external_c_macro_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
+			-- \1: include file
+			-- \2: has signature arguments
+			-- \3: signature arguments
+			-- \5: signature result
+
+	old_external_c_struct_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C "[" struct <include> "]" "(" {<type> "," ...}+ ")" [":" <type>]
+			-- \1: include file
+			-- \2: signature arguments
+			-- \4: signature result
+
+	make_external_regexps is
+			-- Create external regular expressions.
+		do
+				-- Regexp: C [blocking] [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+			create external_c_regexp.make
+			external_c_regexp.compile ("[ \t\r\n]*C([ \t\r\n]+blocking)?([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))?")
+				-- Regexp: C [blocking] macro [signature ["(" {<type> "," ...}* ")"] [":" <type>]] use {<include> "," ...}+
+			create external_c_macro_regexp.make
+			external_c_macro_regexp.compile ("[ \t\r\n]*C([ \t\r\n]+blocking)?[ \t\r\n]+macro([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))")
+				-- Regexp: C struct <struct-type> (access|get) <field-name> [type <field-type>] use {<include> "," ...}+
+			create external_c_struct_regexp.make
+			external_c_struct_regexp.compile ("[ \t\r\n]*C[ \t\r\n]+struct[ \t\r\n]+((a|ac|acc|acce|acces|g|ge|[^ag \t\r\n][^ \t\r\n]*|g[^e \t\r\n][^ \t\r\n]*|ge[^t \t\r\n][^ \t\r\n]*|get[^ \t\r\n]+|a[^c \t\r\n][^ \t\r\n]*|ac[^c \t\r\n][^ \t\r\n]*|acc[^e \t\r\n][^ \t\r\n]*|acce[^s \t\r\n][^ \t\r\n]*|acces[^s \t\r\n][^ \t\r\n]*|access[^ \t\r\n]+)[ \t\r\n]+((a|ac|acc|acce|acces|g|ge|[^ag \t\r\n][^ \t\r\n]*|g[^e \t\r\n][^ \t\r\n]*|ge[^t \t\r\n][^ \t\r\n]*|get[^ \t\r\n]+|a[^c \t\r\n][^ \t\r\n]*|ac[^c \t\r\n][^ \t\r\n]*|acc[^e \t\r\n][^ \t\r\n]*|acce[^s \t\r\n][^ \t\r\n]*|acces[^s \t\r\n][^ \t\r\n]*|access[^ \t\r\n]+)[ \t\r\n]+)*)(access|get)[ \t\r\n]+([^ \t\r\n]+)([ \t\r\n]+|$)(type[ \t\r\n]+((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?(use[ \t\r\n]*((.|\n)+))")
+				-- Regexp: C inline [use {<include> "," ...}+]
+			create external_c_inline_regexp.make
+			external_c_inline_regexp.compile ("[ \t\r\n]*C[ \t\r\n]+inline([ \t\r\n]+use[ \t\r\n]*((.|\n)+))?")
+				-- Regexp: C ["(" {<type> "," ...}* ")" [":" <type>]] ["|" {<include> "," ...}+]
+			create old_external_c_regexp.make
+			old_external_c_regexp.compile ("[ \t\r\n]*C([ \t\r\n]*\(([^)]*)\)([ \t\r\n]*:[ \t\r\n]*([^|]+))?)?([ \t\r\n]*\|[ \t\r\n]*((.|\n)+))?")
+				-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
+			create old_external_c_macro_regexp.make
+			old_external_c_macro_regexp.compile ("[ \t\r\n]*C[ \t\r\n]*\[[ \t\r\n]*macro[ \t\r\n]*([^]]+)[ \t\r\n]*\]([ \t\r\n]*\(([^)]*)\))?([ \t\r\n]*:[ \t\r\n]*((.|\n)+))?")
+				-- Regexp: C "[" struct <include> "]" "(" {<type> "," ...}+ ")" [":" <type>]
+			create old_external_c_struct_regexp.make
+			old_external_c_struct_regexp.compile ("[ \t\r\n]*C[ \t\r\n]*\[[ \t\r\n]*struct[ \t\r\n]*([^]]+)[ \t\r\n]*\][ \t\r\n]*\(([^)]+)\)([ \t\r\n]*:[ \t\r\n]*((.|\n)+))?")
+		ensure
+			external_c_regexp_not_void: external_c_regexp /= Void
+			external_c_regexp_compiled: external_c_regexp.is_compiled
+			external_c_macro_regexp_not_void: external_c_macro_regexp /= Void
+			external_c_macro_regexp_compiled: external_c_macro_regexp.is_compiled
+			external_c_struct_regexp_not_void: external_c_struct_regexp /= Void
+			external_c_struct_regexp_compiled: external_c_struct_regexp.is_compiled
+			external_c_inline_regexp_not_void: external_c_inline_regexp /= Void
+			external_c_inline_regexp_compiled: external_c_inline_regexp.is_compiled
+			old_external_c_regexp_not_void: old_external_c_regexp /= Void
+			old_external_c_regexp_compiled: old_external_c_regexp.is_compiled
+			old_external_c_macro_regexp_not_void: old_external_c_macro_regexp /= Void
+			old_external_c_macro_regexp_compiled: old_external_c_macro_regexp.is_compiled
+			old_external_c_struct_regexp_not_void: old_external_c_struct_regexp /= Void
+			old_external_c_struct_regexp_compiled: old_external_c_struct_regexp.is_compiled
+		end
+
 feature {NONE} -- Constants
 
 	e_access: STRING is "access"
@@ -18543,5 +18692,23 @@ invariant
 	no_void_included_runtime_header_file: not included_runtime_header_files.has (Void)
 	included_runtime_c_files_not_void: included_runtime_c_files /= Void
 	no_void_included_runtime_c_file: not included_runtime_c_files.has (Void)
+	c_filenames_not_void: c_filenames /= Void
+	no_void_c_filename: not c_filenames.has (Void)
+	cpp_filenames_not_void: cpp_filenames /= Void
+	no_void_cpp_filename: not cpp_filenames.has (Void)
+	external_c_regexp_not_void: external_c_regexp /= Void
+	external_c_regexp_compiled: external_c_regexp.is_compiled
+	external_c_macro_regexp_not_void: external_c_macro_regexp /= Void
+	external_c_macro_regexp_compiled: external_c_macro_regexp.is_compiled
+	external_c_struct_regexp_not_void: external_c_struct_regexp /= Void
+	external_c_struct_regexp_compiled: external_c_struct_regexp.is_compiled
+	external_c_inline_regexp_not_void: external_c_inline_regexp /= Void
+	external_c_inline_regexp_compiled: external_c_inline_regexp.is_compiled
+	old_external_c_regexp_not_void: old_external_c_regexp /= Void
+	old_external_c_regexp_compiled: old_external_c_regexp.is_compiled
+	old_external_c_macro_regexp_not_void: old_external_c_macro_regexp /= Void
+	old_external_c_macro_regexp_compiled: old_external_c_macro_regexp.is_compiled
+	old_external_c_struct_regexp_not_void: old_external_c_struct_regexp /= Void
+	old_external_c_struct_regexp_compiled: old_external_c_struct_regexp.is_compiled
 
 end

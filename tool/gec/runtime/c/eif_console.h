@@ -13,6 +13,10 @@
 #ifndef EIF_CONSOLE_H
 #define EIF_CONSOLE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern EIF_POINTER console_def(EIF_INTEGER file);
 extern EIF_BOOLEAN console_eof(FILE* fp);
 extern EIF_CHARACTER console_separator(FILE* f);
@@ -31,5 +35,9 @@ extern EIF_INTEGER console_readline(FILE* f, char* s, EIF_INTEGER bound, EIF_INT
 extern void console_next_line(FILE* f);
 extern EIF_INTEGER console_readstream(FILE* f, char* s, EIF_INTEGER bound);
 extern void console_file_close (FILE* f);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -13,7 +13,15 @@
 #ifndef GE_ARGUMENTS_C
 #define GE_ARGUMENTS_C
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int geargc;
 char** geargv;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

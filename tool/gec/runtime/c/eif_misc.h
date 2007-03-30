@@ -13,7 +13,15 @@
 #ifndef EIF_MISC_H
 #define EIF_MISC_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern EIF_INTEGER eif_system(char* s);
 extern void eif_system_asynchronous(char* cmd);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

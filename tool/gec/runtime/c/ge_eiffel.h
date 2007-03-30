@@ -51,6 +51,10 @@
 #define EIF_IS_VMS EIF_FALSE
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef _MSC_VER /* MSVC */
 typedef signed char int8_t;
 typedef signed short int16_t;
@@ -128,6 +132,10 @@ typedef double EIF_REAL_64;
 #ifdef _MSC_VER /* MSVC */
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
 #define snprintf(a,b,c,d) sprintf(a,c,d)
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

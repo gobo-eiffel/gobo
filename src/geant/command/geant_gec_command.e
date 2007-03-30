@@ -155,6 +155,13 @@ feature -- Execution
 						file_system.delete_file (a_name)
 					end
 				end
+				a_name := clean + ".cpp"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [gec] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
 				a_name := clean + ".h"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)

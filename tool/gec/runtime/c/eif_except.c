@@ -13,6 +13,10 @@
 #ifndef EIF_EXCEPT_C
 #define EIF_EXCEPT_C
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void eraise(char* name, long code) {
 	geraise((int)code);
 }
@@ -95,5 +99,9 @@ void eetrace(char b) {
 	/* TODO */
 	printf("'eetrace' in 'eif_except.h' not implemented\n");
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

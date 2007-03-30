@@ -13,6 +13,10 @@
 #ifndef GE_EXCEPTION_C
 #define GE_EXCEPTION_C
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 	Context of last feature entered containing a rescue clause.
 	Warning: this is not thread-safe.
@@ -29,5 +33,9 @@ void geraise(int code) {
 	fprintf(stderr, "Unhandled exception\n");
 	exit(1);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

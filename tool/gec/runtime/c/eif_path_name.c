@@ -19,13 +19,17 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 EIF_BOOLEAN eif_is_volume_name_valid(EIF_CHARACTER* p) {
 #ifdef WIN32
 	char rootpath[4];
 
 	if (p)
-		if ((strlen(p) == 2) && (*(p+1) == ':')) {
-			strncpy(rootpath, p, 2);
+		if ((strlen((char*)p) == 2) && (*(p+1) == ':')) {
+			strncpy((char*)rootpath, (char*)p, 2);
 			rootpath[2] = '\\';
 			rootpath [3] = '\0';
 			return (EIF_BOOLEAN)(GetDriveType(rootpath) != 1);
@@ -68,7 +72,7 @@ void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER* p, EIF_CHARACTER* v)
 
 EIF_BOOLEAN eif_path_name_compare(EIF_CHARACTER* s, EIF_CHARACTER* t, EIF_INTEGER length) {
 #ifdef EIF_WINDOWS
-	return EIF_TEST(!strnicmp(s, t, length));
+	return EIF_TEST(!strnicmp((char*)s, (char*)t, length));
 #else /* Unix */
 	return EIF_TEST(!strncmp((char*)s, (char*)t, length));
 #endif
@@ -167,5 +171,9 @@ EIF_REFERENCE eif_root_directory_name(void) {
 	return gems("/", 1);
 #endif
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

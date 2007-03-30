@@ -16,8 +16,12 @@
 #include <time.h>
 #include <sys/stat.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern void file_mkdir(char* dirname);
-extern void file_rename(char* old, char* new);
+extern void file_rename(char* from, char* to);
 extern void file_link(char *from, char *to);
 extern void file_unlink(char *name);
 extern EIF_POINTER file_open(char *name, int how);
@@ -73,5 +77,9 @@ extern EIF_POINTER file_binary_reopen(char* name, int how, FILE* old);
 extern void file_pib(FILE* f, EIF_INTEGER number);
 extern void file_prb(FILE* f, EIF_REAL_32 number);
 extern void file_pdb(FILE* f, EIF_REAL_64 val);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

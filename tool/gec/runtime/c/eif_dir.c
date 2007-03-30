@@ -14,12 +14,19 @@
 #define EIF_DIR_C
 
 #ifdef WIN32
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct {
 	HANDLE handle;
 	WIN32_FIND_DATA data;
 	char *pattern;
 } ge_directory;
+#ifdef __cplusplus
+}
+#endif
 #include <io.h> /* for 'access' */
+#include <direct.h> /* (ch|rm)dir */
 #else
 #include <dirent.h>
 #include <unistd.h>
@@ -85,11 +92,15 @@ typedef struct {
 #define ST_MODE 0x0fff
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void* dir_open(char* dirname) {
 #ifdef WIN32
 	int len = strlen((char*)dirname);
-	char* pattern = malloc(len + 5);
-	ge_directory* result = malloc(sizeof(ge_directory));
+	char* pattern = (char*)malloc(len + 5);
+	ge_directory* result = (ge_directory*)malloc(sizeof(ge_directory));
 
 	pattern = strncpy(pattern, (char*)dirname, len);
 	if (pattern[len - 1] != '\\')
@@ -282,5 +293,9 @@ EIF_REFERENCE dir_current(void) {
 EIF_INTEGER eif_chdir(char* path) {
 	return chdir(path);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

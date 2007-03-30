@@ -13,6 +13,10 @@
 #ifndef EIF_SIG_C
 #define EIF_SIG_C
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 char esigdefined(long int sig) {
 	/* TODO */
 	printf("'esigdefined' in 'eif_sig.h' not implemented\n");
@@ -62,5 +66,9 @@ char* esigname(long int sig) {
 	printf("'esigname' in 'eif_sig.h' not implemented\n");
 	return (char*)0;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

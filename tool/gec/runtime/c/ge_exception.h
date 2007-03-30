@@ -32,6 +32,10 @@
 #define gelongjmp(x,y) longjmp((x),(y))
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 	Context of features containing a rescue clause.
 */
@@ -47,5 +51,9 @@ struct gerescue {
 extern struct gerescue *gerescue;
 
 extern void geraise(int code);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

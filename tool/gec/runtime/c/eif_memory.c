@@ -13,6 +13,10 @@
 #ifndef EIF_MEMORY_C
 #define EIF_MEMORY_C
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void eif_gc_stat(EIF_POINTER item, EIF_INTEGER type) {
 	/* TODO */
 }
@@ -127,5 +131,9 @@ void plsc(void) {
 void eif_gc_mon(char flag) {
 	/* TODO */
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -13,6 +13,10 @@
 #ifndef EIF_EXCEPT_H
 #define EIF_EXCEPT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern void eraise(char* name, long code);
 extern void esdie(int code);
 extern EIF_REFERENCE eename(long except);
@@ -28,5 +32,9 @@ extern char* eeoclass(void);
 extern void eecatch(long code);
 extern void eeignore(long code);
 extern void eetrace(char b);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
