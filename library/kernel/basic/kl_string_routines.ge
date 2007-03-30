@@ -11,7 +11,7 @@ indexing
 		%whenever a STRING is expected."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -182,8 +182,9 @@ feature -- Status report
 		end
 
 	is_integer (a_string: STRING): BOOLEAN is
-			-- Is `a_string' only made up of digits?
-		obsolete "Use `is_decimal' instead"
+			-- Is `a_string' only made up of characters 0-9?
+		obsolete
+			"[070302] Use `is_decimal' instead."
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -208,7 +209,8 @@ feature -- Status report
 		end
 
 	is_decimal (a_string: STRING): BOOLEAN is
-			-- Is `a_string' only made up of characters '0'-'9'?
+			-- Is `a_string' only made up of characters 0-9?
+			-- (Not in ELKS 2001 STRING)
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -304,7 +306,7 @@ feature -- Status report
 		end
 
 	is_hexadecimal (a_string: STRING): BOOLEAN is
-			-- Is a string made up of digits or A-F or a-f?
+			-- Is a string made up of characters 0-9 or A-F or a-f?
 			-- (Not in ELKS 2001 STRING)
 		require
 			a_string_not_void: a_string /= Void
@@ -330,7 +332,7 @@ feature -- Status report
 		end
 
 	is_base64 (a_string: STRING): BOOLEAN is
-			-- Is a string made up of +, /, =, XML whitespace, digits or A-Z or a-z?
+			-- Is a string made up of characters +, /, =, XML whitespace, 0-9 or A-Z or a-z?
 			-- (Not in ELKS 2001 STRING)
 		require
 			a_string_not_void: a_string /= Void

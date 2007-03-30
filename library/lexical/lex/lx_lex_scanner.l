@@ -318,9 +318,12 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 <NUM>{
 	{WS}			-- Separator.
 	[0-9]+		{
-					last_token := NUMBER
-					check is_integer: STRING_.is_integer (text) end
-					last_integer_value := text.to_integer
+					if text.is_integer then
+						last_token := NUMBER
+						last_integer_value := text.to_integer
+					else
+						report_integer_too_large_error (text)
+					end
 				}
 	","				last_token := Comma_code
 	"}"			{

@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 				-- TODO: add support for gexslt when it supports this
 				if has_attribute (Indent_attribute_name) then
 					a_value := attribute_value (Indent_attribute_name)
-					if STRING_.is_integer (a_value) then
+					if a_value.is_integer then
 						command.set_indent (a_value)
 					end
 				end

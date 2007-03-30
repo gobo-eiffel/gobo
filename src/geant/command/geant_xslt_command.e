@@ -171,7 +171,7 @@ feature -- Setting
 		require
 			a_indent_not_void : a_indent /= Void
 			a_indent_not_empty: a_indent.count > 0
-			a_indent_is_integer: STRING_.is_integer (a_indent)
+			a_indent_is_integer: a_indent.is_integer
 		do
 			indent := a_indent
 		ensure

@@ -119,7 +119,7 @@ feature -- Access
 								end
 							end
 						end
-						if STRING_.is_integer (str) then
+						if str.is_integer then
 							j := str.to_integer
 							if a_parameters.valid_index (j) then
 								Result := STRING_.appended_string (Result, a_parameters.item (j))

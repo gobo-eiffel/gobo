@@ -865,7 +865,7 @@ feature {NONE} -- Initialization
 			make
 			if
 				Arguments.argument_count < 2 or else
-				not STRING_.is_integer (Arguments.argument (1))
+				not Arguments.argument (1).is_integer
 			then
 				std.error.put_string ("usage: eiffel_parser nb filename%N")
 				Exceptions.die (1)

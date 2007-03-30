@@ -43,10 +43,10 @@ feature {NONE} -- Initialization
 		ensure
 			value_set: value.to_integer = a_value
 		end
-	
+
 	make_from_string (a_value: STRING) is
 		require
-			is_integer: STRING_.is_integer (a_value)
+			is_integer: STRING_.is_decimal (a_value)
 		do
 			make_atomic_value
 			create value.make_from_string_ctx (a_value, shared_integer_context)
@@ -107,7 +107,7 @@ feature -- Access
 		end
 
 feature -- Comparison
-	
+
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Compare `Current' to `other'
 		local
@@ -142,7 +142,7 @@ feature -- Status report
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end
-	
+
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
@@ -211,7 +211,7 @@ feature -- Status report
 				-- because xs:integer cannot become inifinite
 			end
 		end
-	
+
 
 feature -- Conversion
 
@@ -262,13 +262,13 @@ feature -- Conversion
 				create Result.make (a_decimal)
 			end
 		end
-	
+
 	floor: like Current is
 			-- Value rounded towards minus infinity
 		do
 			Result := Current
 		end
-	
+
 	ceiling: like Current is
 			-- Value rounded towards plus infinity
 		do

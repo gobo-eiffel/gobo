@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 				-- size:
 			if has_attribute (Size_attribute_name) then
 				a_value := attribute_value (Size_attribute_name)
-				if STRING_.is_integer (a_value) then
+				if a_value.is_integer then
 					command.set_size (a_value)
 				end
 			end

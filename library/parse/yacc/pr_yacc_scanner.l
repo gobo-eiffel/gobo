@@ -220,26 +220,34 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					end
 				}
 	\$[0-9]+	{
-					check is_integer: STRING_.is_integer (text_substring (2, text_count)) end
-					if rule /= Void then
-						if start_condition = ERROR_ACTION then
-							process_dollar_n (text_substring (2, text_count).to_integer, last_error - 1, rule)
+					if text_substring (2, text_count).is_integer then
+						if rule /= Void then
+							if start_condition = ERROR_ACTION then
+								process_dollar_n (text_substring (2, text_count).to_integer, last_error - 1, rule)
+							else
+								process_dollar_n (text_substring (2, text_count).to_integer, rule.rhs.count, rule)
+							end
 						else
-							process_dollar_n (text_substring (2, text_count).to_integer, rule.rhs.count, rule)
+							action_buffer.append_string (text)
 						end
 					else
+						report_integer_too_large_error (text_substring (2, text_count))
 						action_buffer.append_string (text)
 					end
 				}
 	\$\-[0-9]+	{
-					check is_integer: STRING_.is_integer (text_substring (3, text_count)) end
-					if rule /= Void then
-						if start_condition = ERROR_ACTION then
-							process_dollar_n (- text_substring (3, text_count).to_integer, last_error - 1, rule)
+					if text_substring (3, text_count).is_integer then
+						if rule /= Void then
+							if start_condition = ERROR_ACTION then
+								process_dollar_n (- text_substring (3, text_count).to_integer, last_error - 1, rule)
+							else
+								process_dollar_n (- text_substring (3, text_count).to_integer, rule.rhs.count, rule)
+							end
 						else
-							process_dollar_n (- text_substring (3, text_count).to_integer, rule.rhs.count, rule)
+							action_buffer.append_string (text)
 						end
 					else
+						report_integer_too_large_error (text_substring (3, text_count))
 						action_buffer.append_string (text)
 					end
 				}

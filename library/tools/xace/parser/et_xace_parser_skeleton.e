@@ -920,7 +920,7 @@ feature {NONE} -- Element change
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when fst_expansion_factor_code then
-									if STRING_.is_integer (a_value) then
+									if a_value.is_integer then
 										an_int := a_value.to_integer
 										if an_int >= 0 then
 											an_option.set_fst_expansion_factor (an_int)
@@ -953,7 +953,7 @@ feature {NONE} -- Element change
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when heap_size_code then
-									if STRING_.is_integer (a_value) then
+									if a_value.is_integer then
 										an_int := a_value.to_integer
 										if an_int >= 0 then
 											an_option.set_heap_size (an_int)
@@ -990,7 +990,7 @@ feature {NONE} -- Element change
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_inlining, a_position_table.item (an_element))
 									end
 								when inlining_size_code then
-									if STRING_.is_integer (a_value) then
+									if a_value.is_integer then
 										an_int := a_value.to_integer
 										if an_int >= 0 then
 											an_option.set_inlining_size (an_int)
@@ -1163,7 +1163,7 @@ feature {NONE} -- Element change
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when stack_size_code then
-									if STRING_.is_integer (a_value) then
+									if a_value.is_integer then
 										an_int := a_value.to_integer
 										if an_int >= 0 then
 											an_option.set_stack_size (an_int)

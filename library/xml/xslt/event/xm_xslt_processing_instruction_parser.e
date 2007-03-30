@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 					if a_dquote = 0 or else (an_squote /= 0 and then an_squote < a_dquote) then
 						a_quote_index := an_squote
 						a_quote := '%''
-					else 
+					else
 						a_quote_index := a_dquote
 						a_quote := '"'
 					end
@@ -207,7 +207,7 @@ feature {NONE} -- Initialization
 				or else STRING_.same_string (a_name, "charset")
 				or else STRING_.same_string (a_name, "alternate")
 		end
-			
+
 	process_attribute (a_name, a_value: STRING) is
 			-- Process a pseudo-attribute.
 		require
@@ -458,7 +458,7 @@ feature {NONE} -- Initialization
 						end
 					end
 				else
-					if STRING_.is_integer (a_value) then
+					if STRING_.is_decimal (a_value) then
 						an_entity.from_decimal (a_value)
 						if an_entity.is_valid then
 							Result := an_entity.to_utf8

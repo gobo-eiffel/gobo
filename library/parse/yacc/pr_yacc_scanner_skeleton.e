@@ -233,6 +233,20 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
+	report_integer_too_large_error (an_int: STRING) is
+			-- Report that integer `an_int' is too large (implementation limitation).
+		require
+			an_int_not_void: an_int /= Void
+		local
+			an_error: PR_INTEGER_TOO_LARGE_ERROR
+		do
+			create an_error.make (filename, line_nb, an_int)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
 	report_invalid_string_token_error (a_string: STRING) is
 			-- Report that a literal string token must 
 			-- have at least two characters.

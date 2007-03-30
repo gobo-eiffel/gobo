@@ -93,7 +93,7 @@ feature -- Setting
 			-- Set `size' to `a_size'.
 		require
 			a_size_not_void: a_size /= Void
-			a_size_is_integer: STRING_.is_integer (a_size)
+			a_size_is_integer: a_size.is_integer
 		do
 			size := a_size
 		ensure

@@ -38,7 +38,7 @@ feature -- Initialization
 			-- Set entity from decimal representation.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_decimal: STRING_.is_integer (a_string)
+			a_string_is_decimal: STRING_.is_decimal (a_string)
 		local
 			i, nb: INTEGER
 		do
@@ -119,7 +119,7 @@ feature -- Status report
 		ensure
 			definition: Result = (code <= 127)
 		end
-		
+
 feature -- Conversion
 
 	to_character: CHARACTER is

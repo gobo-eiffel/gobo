@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 			if has_attribute (Code_attribute_name) then
 				a_value := attribute_value (Code_attribute_name)
-				if not STRING_.is_integer (a_value) then
+				if not a_value.is_integer then
 					a_project.log (<<"  [exit] warning: code '", a_value, "' is not a valid integer value. Using value '1' instead.">>)
 					command.set_code (1)
 				else
