@@ -13,31 +13,31 @@ feature -- Platform
 	is_thread_capable: BOOLEAN is
 			-- Is current platform capable of multi-threading?
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 	is_dotnet: BOOLEAN is
 			-- Are we targetting .NET?
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 	is_windows: BOOLEAN is
 			-- Are we running on Windows platform?
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 	is_unix: BOOLEAN is
 			-- Are we running on a Unix like platform?
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 	is_vms: BOOLEAN is
 			-- Are we running on VMS?
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 	is_little_endian: BOOLEAN is
@@ -58,19 +58,19 @@ feature -- Access bytes size
 	boolean_bytes: INTEGER is
 			-- Number of bytes in a value of type `BOOLEAN'
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 	character_bytes: INTEGER is
 			-- Number of bytes in a value of type `CHARACTER'
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 	wide_character_bytes: INTEGER is
 			-- Number of bytes in a value of type `WIDE_CHARACTER'
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 	natural_8_bytes: INTEGER is 1
@@ -88,7 +88,7 @@ feature -- Access bytes size
 	integer_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER'
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 	integer_8_bytes: INTEGER is 1
@@ -106,7 +106,7 @@ feature -- Access bytes size
 	real_bytes: INTEGER is
 			-- Number of bytes in a value of type `REAL'
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 	real_32_bytes: INTEGER is 4
@@ -118,7 +118,7 @@ feature -- Access bytes size
 	pointer_bytes: INTEGER is
 			-- Number of bytes in a value of type `POINTER'
 		external
-			"static built_in"
+			"built_in static"
 		end
 
 feature -- Access bits size

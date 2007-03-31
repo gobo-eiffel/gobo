@@ -210,7 +210,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct gacstat *) $a_ptr)->count;"
+			"return (EIF_INTEGER) ((struct gacstat *) $a_ptr)->count;"
 		end
 
 	c_mem_used (a_ptr: POINTER): INTEGER is
@@ -218,7 +218,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct gacstat *) $a_ptr)->mem_used;"
+			"return (EIF_INTEGER) ((struct gacstat *) $a_ptr)->mem_used;"
 		end
 
 	c_mem_collect (a_ptr: POINTER): INTEGER is
@@ -226,7 +226,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct gacstat *) $a_ptr)->mem_collect;"
+			"return (EIF_INTEGER) ((struct gacstat *) $a_ptr)->mem_collect;"
 		end
 
 	c_mem_avg (a_ptr: POINTER): INTEGER is
@@ -234,7 +234,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct gacstat *) $a_ptr)->mem_avg;"
+			"return (EIF_INTEGER) ((struct gacstat *) $a_ptr)->mem_avg;"
 		end
 
 	c_real_time (a_ptr: POINTER): INTEGER is
@@ -242,7 +242,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct gacstat *) $a_ptr)->real_time;"
+			"return (EIF_INTEGER) ((struct gacstat *) $a_ptr)->real_time;"
 		end
 
 	c_real_avg (a_ptr: POINTER): INTEGER is
@@ -250,7 +250,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct gacstat *) $a_ptr)->real_avg;"
+			"return (EIF_INTEGER) ((struct gacstat *) $a_ptr)->real_avg;"
 		end
 
 	c_real_itime (a_ptr: POINTER): INTEGER is
@@ -258,7 +258,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct gacstat *) $a_ptr)->real_itime;"
+			"return (EIF_INTEGER) ((struct gacstat *) $a_ptr)->real_itime;"
 		end
 
 	c_real_iavg (a_ptr: POINTER): INTEGER is
@@ -266,7 +266,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct gacstat *) $a_ptr)->real_iavg;"
+			"return (EIF_INTEGER) ((struct gacstat *) $a_ptr)->real_iavg;"
 		end
 
 	c_cpu_time (a_ptr: POINTER): DOUBLE is

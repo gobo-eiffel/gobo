@@ -593,10 +593,10 @@ feature -- Comparison
 feature -- Status report
 
 	is_string_8: BOOLEAN is True
-			-- Current is not a STRING_8 instance
+			-- Current is a STRING_8 instance
 
 	is_string_32: BOOLEAN is False
-			-- Current is a STRING_32 instance
+			-- Current is a not STRING_32 instance
 
 	is_valid_as_string_8: BOOLEAN is True
 			-- Is `Current' convertible to STRING_8 without information loss?

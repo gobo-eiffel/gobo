@@ -115,7 +115,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct emallinfo *) $a_ptr)->ml_total;"
+			"return (EIF_INTEGER) ((struct emallinfo *) $a_ptr)->ml_total;"
 		end
 
 	c_ml_used (a_ptr: POINTER): INTEGER is
@@ -123,7 +123,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct emallinfo *) $a_ptr)->ml_used;"
+			"return (EIF_INTEGER) ((struct emallinfo *) $a_ptr)->ml_used;"
 		end
 
 	c_ml_over (a_ptr: POINTER): INTEGER is
@@ -131,7 +131,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct emallinfo *) $a_ptr)->ml_over;"
+			"return (EIF_INTEGER) ((struct emallinfo *) $a_ptr)->ml_over;"
 		end
 
 	c_ml_chunk (a_ptr: POINTER): INTEGER is
@@ -139,7 +139,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return ((struct emallinfo *) $a_ptr)->ml_chunk;"
+			"return (EIF_INTEGER) ((struct emallinfo *) $a_ptr)->ml_chunk;"
 		end
 
 	c_sizeof_emallinfo: INTEGER is

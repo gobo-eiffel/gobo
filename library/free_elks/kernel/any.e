@@ -26,6 +26,7 @@ feature -- Access
 			"built_in"
 		ensure
 			generator_not_void: Result /= Void
+			generator_not_empty: not Result.is_empty
 		end
 
  	generating_type: STRING is
@@ -35,6 +36,7 @@ feature -- Access
 			"built_in"
  		ensure
  			generating_type_not_void: Result /= Void
+			generating_type_not_empty: not Result.is_empty
  		end
 
 feature -- Status report
@@ -157,15 +159,15 @@ feature -- Duplication
 			twin_not_void: Result /= Void
 			is_equal: Result.is_equal (Current)
 		end
-		
+
 	copy (other: like Current) is
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		require
 			other_not_void: other /= Void
 			type_identity: same_type (other)
-		do
-			standard_copy (other)
+		external
+			"built_in"
 		ensure
 			is_equal: is_equal (other)
 		end
@@ -221,7 +223,7 @@ feature -- Duplication
 			standard_twin_not_void: Result /= Void
 			equal: standard_equal (Result, Current)
 		end
-		
+
 	frozen deep_twin: like Current is
 			-- New object structure recursively duplicated from Current.
 		external

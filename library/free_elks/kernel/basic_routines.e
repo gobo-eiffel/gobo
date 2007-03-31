@@ -15,7 +15,7 @@ feature -- Conversion
 	charconv (i: INTEGER): CHARACTER is
 			-- Character associated with integer value `i'
 		do
-			Result := (i & 0x000000FF).to_character
+			Result := (i & 0x000000FF).to_character_8
 		end
 
 feature -- Basic operations

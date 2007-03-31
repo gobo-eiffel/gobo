@@ -483,7 +483,7 @@ feature -- Resizing
 			old_size, new_size, old_count: INTEGER
 			new_lower, new_upper: INTEGER
 			offset: INTEGER
-			v: G
+			v: like item
 		do
 			if empty_area then
 				new_lower := min_index
@@ -641,7 +641,7 @@ feature {NONE} -- Implementation
 			old_size, new_size: INTEGER
 			new_lower, new_upper: INTEGER
 			offset: INTEGER
-			v: G
+			v: like item
 		do
 			if empty_area then
 				new_lower := min_index

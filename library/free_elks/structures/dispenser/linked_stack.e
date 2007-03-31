@@ -28,7 +28,7 @@ class LINKED_STACK [G] inherit
 			{NONE} all
 			{LINKED_STACK}
 				cursor, start, forth, go_to, index, first_element,
-				last_element, valid_cursor
+				last_element, valid_cursor, ll_item
 			{ANY}
 				count, readable, writable, extendible,
 				make, wipe_out, off, after

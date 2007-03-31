@@ -27,8 +27,11 @@ class LINKED_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 			item as sl_item
 		export
 			{NONE} all
-			{LINKED_PRIORITY_QUEUE} cursor, start, forth, go_to, index, after,
-				first_element, last_element, valid_cursor
+			{LINKED_PRIORITY_QUEUE}
+				cursor, start, forth, go_to, index, after,
+				first_element, last_element, valid_cursor, sl_item
+			{ANY}
+				off
 		end
 
 create

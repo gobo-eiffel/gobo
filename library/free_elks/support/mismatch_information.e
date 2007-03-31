@@ -26,7 +26,7 @@ inherit
 			out
 		end
 
-create
+create {MISMATCH_CORRECTOR}
 	default_create
 
 feature -- Initialization

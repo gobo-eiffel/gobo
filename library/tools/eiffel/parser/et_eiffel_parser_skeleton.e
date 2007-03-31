@@ -1213,6 +1213,8 @@ feature {NONE} -- AST factory
 			if Result /= Void then
 				if STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.builtin_marker) then
 					set_builtin_function (Result)
+				elseif STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.builtin_static_marker) then
+					set_builtin_function (Result)
 				elseif STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.static_builtin_marker) then
 					set_builtin_function (Result)
 				end
@@ -1232,6 +1234,8 @@ feature {NONE} -- AST factory
 				an_end, a_semicolon, a_clients, a_feature_clause, a_class)
 			if Result /= Void then
 				if STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.builtin_marker) then
+					set_builtin_procedure (Result)
+				elseif STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.builtin_static_marker) then
 					set_builtin_procedure (Result)
 				elseif STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.static_builtin_marker) then
 					set_builtin_procedure (Result)

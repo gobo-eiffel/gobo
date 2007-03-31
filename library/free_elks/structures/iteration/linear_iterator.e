@@ -16,10 +16,10 @@ class LINEAR_ITERATOR [G] inherit
 		redefine
 			target, set
 		end
-		
+
 create
 	set
-	
+
 feature -- Initialization
 
 	set (s: like target) is
@@ -34,23 +34,24 @@ feature -- Access
 	item: G is
 			-- The item at cursor position in `target'
 		require
-			traversable_exists: target /= Void
+			not_off: not target.off
 		do
 			Result := target.item
 		end
-		
+
 	item_tuple: TUPLE [G] is
 			-- Tuple containing a single element,
 			-- the item at cursor position in `target'''
+		require
+			not_off: not target.off
 		do
 			internal_item_tuple.put (target.item, 1)
-			Result := internal_item_tuple			
+			Result := internal_item_tuple
 		end
-	
-		
+
 	target: LINEAR [G]
 			-- The structure to which iteration features will apply.
-	
+
 feature -- Cursor movement
 
 	start is
@@ -194,7 +195,7 @@ feature -- Iteration
 			until
 				exhausted or else test.item (item_tuple)
 			loop
-				forth 
+				forth
 				if not exhausted then action.call (item_tuple) end
 			end
 		ensure then
@@ -280,7 +281,7 @@ feature -- Iteration
 				until
 					exhausted or else j = k
 				loop
-					forth 
+					forth
 					j := j + 1
 				end
 			end
@@ -301,7 +302,7 @@ feature -- Iteration
 			search (test, True)
 			Result := not exhausted
 		end
-		
+
 feature -- Implementation
 
 	internal_item_tuple: TUPLE [G]
@@ -310,8 +311,8 @@ feature -- Implementation
 invariant
 
 	target_exists: target /= Void
-	item_tuple_exists: item_tuple /= Void
 	internal_item_tuple_exists: internal_item_tuple /= Void
+	item_tuple_exists: not exhausted implies item_tuple /= Void
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."

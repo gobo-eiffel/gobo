@@ -232,7 +232,7 @@ feature -- Element change
 			n_non_negative: n >= 0
 			n_is_small_enough_for_source: source_index + n <= other.count
 			n_is_small_enough_for_destination: destination_index + n <= count
-			same_type: same_type (other)
+			same_type: other.conforms_to (Current)
 		local
 			i, j, nb: INTEGER
 		do

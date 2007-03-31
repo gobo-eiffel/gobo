@@ -2425,6 +2425,9 @@ feature -- Built-in
 	static_builtin_marker: STRING is "static built_in"
 			-- Static built-in marker
 
+	builtin_static_marker: STRING is "built_in static"
+			-- Bbuilt-in static marker
+
 feature -- Position
 
 	null_position: ET_POSITION is

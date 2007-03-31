@@ -728,6 +728,7 @@ feature {NONE} -- String handler
 				-- Insert basic strings in `strings'.
 			Result.force_new (-1, tokens.builtin_marker)
 			Result.force_new (-1, tokens.static_builtin_marker)
+			Result.force_new (-1, tokens.builtin_static_marker)
 				-- Class names.
 			Result.force_new (-1, tokens.capitalized_any_name)
 			Result.force_new (-1, tokens.capitalized_arguments_name)
