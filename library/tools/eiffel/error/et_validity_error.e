@@ -10367,7 +10367,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuex2a_template_code)
 			etl_code := vuex2_etl_code
 			default_template := default_message_template (vuex2a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
