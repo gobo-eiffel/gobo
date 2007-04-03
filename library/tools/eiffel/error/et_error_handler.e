@@ -5291,7 +5291,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar2a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER_32; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vuar2a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Report VUAR-2 error: the `arg'-th actual argument in the qualified
 			-- call `a_name' appearing in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself) does not conform to the
