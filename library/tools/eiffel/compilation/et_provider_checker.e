@@ -126,7 +126,9 @@ feature {NONE} -- Cluster dependence constraints
 						if not l_provider.is_preparsed then
 							universe.preparse
 						end
-						if l_provider.is_preparsed then
+						if l_provider = none_class then
+							-- Skip this one: no constraint on class NONE.
+						elseif l_provider.is_preparsed then
 							l_dependant_constraint := Void
 							l_provider_group := l_provider.group
 							if l_provider_group.is_cluster then
