@@ -96,6 +96,18 @@ feature -- Status report
 			end
 		end
 
+	has_non_empty_comment: BOOLEAN is
+			-- Is there a non-empty comment after current node?
+			-- (Comments only made up of white characters or minus signs are not taken into account.)
+		local
+			a_break: like break
+		do
+			a_break := break
+			if a_break /= Void then
+				Result := a_break.has_non_empty_comment
+			end
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is

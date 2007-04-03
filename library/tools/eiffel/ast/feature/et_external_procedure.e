@@ -38,7 +38,6 @@ feature {NONE} -- Initialization
 			extended_name := a_name
 			hash_code := name.hash_code
 			arguments := args
-			is_keyword := tokens.is_keyword
 			language := a_language
 			end_keyword := tokens.end_keyword
 			clients := tokens.any_clients

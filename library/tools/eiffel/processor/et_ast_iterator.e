@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -793,6 +793,7 @@ feature {ET_AST_NODE} -- Processing
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			a_is_keyword: ET_KEYWORD
 			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
@@ -821,7 +822,10 @@ feature {ET_AST_NODE} -- Processing
 			if an_assigner /= Void then
 				an_assigner.process (Current)
 			end
-			a_feature.is_keyword.process (Current)
+			a_is_keyword := a_feature.is_keyword
+			if a_is_keyword /= Void then
+				a_is_keyword.process (Current)
+			end
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
 				an_indexing.process (Current)
@@ -857,6 +861,7 @@ feature {ET_AST_NODE} -- Processing
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			a_is_keyword: ET_KEYWORD
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -879,7 +884,10 @@ feature {ET_AST_NODE} -- Processing
 			if an_arguments /= Void then
 				an_arguments.process (Current)
 			end
-			a_feature.is_keyword.process (Current)
+			a_is_keyword := a_feature.is_keyword
+			if a_is_keyword /= Void then
+				a_is_keyword.process (Current)
+			end
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
 				an_indexing.process (Current)
@@ -917,6 +925,7 @@ feature {ET_AST_NODE} -- Processing
 			a_postconditions: ET_POSTCONDITIONS
 			a_compound: ET_COMPOUND
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			a_is_keyword: ET_KEYWORD
 			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
@@ -945,7 +954,10 @@ feature {ET_AST_NODE} -- Processing
 			if an_assigner /= Void then
 				an_assigner.process (Current)
 			end
-			a_feature.is_keyword.process (Current)
+			a_is_keyword := a_feature.is_keyword
+			if a_is_keyword /= Void then
+				a_is_keyword.process (Current)
+			end
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
 				an_indexing.process (Current)
@@ -1037,6 +1049,7 @@ feature {ET_AST_NODE} -- Processing
 			a_postconditions: ET_POSTCONDITIONS
 			a_compound: ET_COMPOUND
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			a_is_keyword: ET_KEYWORD
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -1059,7 +1072,10 @@ feature {ET_AST_NODE} -- Processing
 			if an_arguments /= Void then
 				an_arguments.process (Current)
 			end
-			a_feature.is_keyword.process (Current)
+			a_is_keyword := a_feature.is_keyword
+			if a_is_keyword /= Void then
+				a_is_keyword.process (Current)
+			end
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
 				an_indexing.process (Current)
@@ -1163,6 +1179,7 @@ feature {ET_AST_NODE} -- Processing
 			a_synonym: ET_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			a_is_keyword: ET_KEYWORD
 			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
@@ -1191,7 +1208,10 @@ feature {ET_AST_NODE} -- Processing
 			if an_assigner /= Void then
 				an_assigner.process (Current)
 			end
-			a_feature.is_keyword.process (Current)
+			a_is_keyword := a_feature.is_keyword
+			if a_is_keyword /= Void then
+				a_is_keyword.process (Current)
+			end
 			a_feature.end_keyword.process (Current)
 			a_semicolon := a_feature.semicolon
 			if a_semicolon /= Void then
@@ -1206,6 +1226,7 @@ feature {ET_AST_NODE} -- Processing
 			a_synonym: ET_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			a_is_keyword: ET_KEYWORD
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -1228,7 +1249,10 @@ feature {ET_AST_NODE} -- Processing
 			if an_arguments /= Void then
 				an_arguments.process (Current)
 			end
-			a_feature.is_keyword.process (Current)
+			a_is_keyword := a_feature.is_keyword
+			if a_is_keyword /= Void then
+				a_is_keyword.process (Current)
+			end
 			a_feature.end_keyword.process (Current)
 			a_semicolon := a_feature.semicolon
 			if a_semicolon /= Void then
@@ -1314,6 +1338,7 @@ feature {ET_AST_NODE} -- Processing
 			an_alias_clause: ET_EXTERNAL_ALIAS
 			a_postconditions: ET_POSTCONDITIONS
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			a_is_keyword: ET_KEYWORD
 			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
@@ -1342,7 +1367,10 @@ feature {ET_AST_NODE} -- Processing
 			if an_assigner /= Void then
 				an_assigner.process (Current)
 			end
-			a_feature.is_keyword.process (Current)
+			a_is_keyword := a_feature.is_keyword
+			if a_is_keyword /= Void then
+				a_is_keyword.process (Current)
+			end
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
 				an_indexing.process (Current)
@@ -1418,6 +1446,7 @@ feature {ET_AST_NODE} -- Processing
 			an_alias_clause: ET_EXTERNAL_ALIAS
 			a_postconditions: ET_POSTCONDITIONS
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			a_is_keyword: ET_KEYWORD
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -1440,7 +1469,10 @@ feature {ET_AST_NODE} -- Processing
 			if an_arguments /= Void then
 				an_arguments.process (Current)
 			end
-			a_feature.is_keyword.process (Current)
+			a_is_keyword := a_feature.is_keyword
+			if a_is_keyword /= Void then
+				a_is_keyword.process (Current)
+			end
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
 				an_indexing.process (Current)
@@ -2161,6 +2193,7 @@ feature {ET_AST_NODE} -- Processing
 			a_postconditions: ET_POSTCONDITIONS
 			a_compound: ET_COMPOUND
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			a_is_keyword: ET_KEYWORD
 			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
@@ -2189,7 +2222,10 @@ feature {ET_AST_NODE} -- Processing
 			if an_assigner /= Void then
 				an_assigner.process (Current)
 			end
-			a_feature.is_keyword.process (Current)
+			a_is_keyword := a_feature.is_keyword
+			if a_is_keyword /= Void then
+				a_is_keyword.process (Current)
+			end
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
 				an_indexing.process (Current)
@@ -2288,6 +2324,7 @@ feature {ET_AST_NODE} -- Processing
 			a_postconditions: ET_POSTCONDITIONS
 			a_compound: ET_COMPOUND
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			a_is_keyword: ET_KEYWORD
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -2310,7 +2347,10 @@ feature {ET_AST_NODE} -- Processing
 			if an_arguments /= Void then
 				an_arguments.process (Current)
 			end
-			a_feature.is_keyword.process (Current)
+			a_is_keyword := a_feature.is_keyword
+			if a_is_keyword /= Void then
+				a_is_keyword.process (Current)
+			end
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
 				an_indexing.process (Current)

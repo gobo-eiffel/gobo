@@ -94,6 +94,37 @@ feature -- Access
 			end
 		end
 
+	header_break: ET_BREAK is
+			-- Break which appears where the header comment is expected
+		do
+			Result := break
+		end
+
+feature -- Status report
+
+	has_header_comment: BOOLEAN is
+			-- Does current feature clause have a header comment?
+		local
+			a_break: like break
+		do
+			a_break := header_break
+			if a_break /= Void then
+				Result := a_break.has_comment
+			end
+		end
+
+	has_non_empty_header_comment: BOOLEAN is
+			-- Does current feature clause have a non-empty header comment?
+			-- (Comments only made up of white characters or minus signs are not taken into account.)
+		local
+			a_break: like break
+		do
+			a_break := header_break
+			if a_break /= Void then
+				Result := a_break.has_non_empty_comment
+			end
+		end
+
 feature -- Setting
 
 	set_feature_keyword (a_feature: like feature_keyword) is

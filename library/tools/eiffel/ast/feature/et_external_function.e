@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 			hash_code := name.hash_code
 			arguments := args
 			declared_type := a_type
-			is_keyword := tokens.is_keyword
 			language := a_language
 			end_keyword := tokens.end_keyword
 			clients := tokens.any_clients

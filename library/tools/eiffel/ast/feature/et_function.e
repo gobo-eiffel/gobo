@@ -49,7 +49,6 @@ feature {NONE} -- Initialization
 			hash_code := name.hash_code
 			arguments := args
 			declared_type := a_type
-			is_keyword := tokens.is_keyword
 			end_keyword := tokens.end_keyword
 			clients := tokens.any_clients
 			implementation_class := a_class
@@ -86,6 +85,18 @@ feature -- Status report
 			-- the form 'alias "[]"'?
 		do
 			Result := arguments /= Void and then arguments.count > 0
+		end
+
+feature -- Access
+
+	header_break: ET_BREAK is
+			-- Break which appears where the header comment is expected
+		do
+			if is_keyword /= Void then
+				Result := is_keyword.break
+			else
+				Result := declared_type.break
+			end
 		end
 
 feature -- Conversion

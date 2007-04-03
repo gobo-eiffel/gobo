@@ -32,12 +32,6 @@ feature -- Access
 	is_keyword: ET_KEYWORD
 			-- 'is' keyword
 
-	header_break: ET_BREAK is
-			-- Break which appears where the header comment is expected
-		do
-			Result := is_keyword.break
-		end
-
 	obsolete_message: ET_OBSOLETE
 			-- Obsolete message
 
@@ -74,8 +68,6 @@ feature -- Setting
 
 	set_is_keyword (an_is: like is_keyword) is
 			-- Set `is_keyword' to `an_is'.
-		require
-			an_is_not_void: an_is /= Void
 		do
 			is_keyword := an_is
 		ensure
@@ -130,7 +122,6 @@ feature -- Setting
 
 invariant
 
-	is_keyword_not_void: is_keyword /= Void
 	end_keyword_not_void: end_keyword /= Void
 
 end

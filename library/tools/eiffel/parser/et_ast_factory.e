@@ -1865,6 +1865,9 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_class)
+				if an_is = tokens.is_keyword then
+					Result.set_is_keyword (an_is)
+				end
 				Result.set_assigner (an_assigner)
 				Result.set_obsolete_message (an_obsolete)
 				Result.set_preconditions (a_preconditions)
@@ -1883,6 +1886,9 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_class)
+				if an_is = tokens.is_keyword then
+					Result.set_is_keyword (an_is)
+				end
 				Result.set_obsolete_message (an_obsolete)
 				Result.set_preconditions (a_preconditions)
 				Result.set_postconditions (a_postconditions)
@@ -1910,6 +1916,9 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_class)
+				if an_is = tokens.is_keyword then
+					Result.set_is_keyword (an_is)
+				end
 				Result.set_assigner (an_assigner)
 				Result.set_obsolete_message (an_obsolete)
 				Result.set_preconditions (a_preconditions)
@@ -1951,6 +1960,9 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_class)
+				if an_is = tokens.is_keyword then
+					Result.set_is_keyword (an_is)
+				end
 				Result.set_obsolete_message (an_obsolete)
 				Result.set_preconditions (a_preconditions)
 				Result.set_locals (a_locals)
@@ -2066,6 +2078,9 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_language, a_class)
+				if an_is = tokens.is_keyword then
+					Result.set_is_keyword (an_is)
+				end
 				Result.set_assigner (an_assigner)
 				Result.set_obsolete_message (an_obsolete)
 				Result.set_preconditions (a_preconditions)
@@ -2108,6 +2123,9 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_language, a_class)
+				if an_is = tokens.is_keyword then
+					Result.set_is_keyword (an_is)
+				end
 				Result.set_obsolete_message (an_obsolete)
 				Result.set_preconditions (a_preconditions)
 				Result.set_postconditions (a_postconditions)
@@ -2827,6 +2845,9 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_class)
+				if an_is = tokens.is_keyword then
+					Result.set_is_keyword (an_is)
+				end
 				Result.set_assigner (an_assigner)
 				Result.set_obsolete_message (an_obsolete)
 				Result.set_preconditions (a_preconditions)
@@ -2878,6 +2899,9 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_class)
+				if an_is = tokens.is_keyword then
+					Result.set_is_keyword (an_is)
+				end
 				Result.set_obsolete_message (an_obsolete)
 				Result.set_preconditions (a_preconditions)
 				Result.set_locals (a_locals)

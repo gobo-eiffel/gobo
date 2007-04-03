@@ -251,6 +251,18 @@ feature -- Status report
 			end
 		end
 
+	has_non_empty_header_comment: BOOLEAN is
+			-- Does current feature have a non-empty header comment?
+			-- (Comments only made up of white characters or minus signs are not taken into account.)
+		local
+			a_break: like break
+		do
+			a_break := header_break
+			if a_break /= Void then
+				Result := a_break.has_non_empty_comment
+			end
+		end
+
 	is_frozen: BOOLEAN is
 			-- Has feature been declared as frozen?
 		do

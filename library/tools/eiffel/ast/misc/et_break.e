@@ -41,6 +41,24 @@ feature -- Status report
 			Result := text.has ('-')
 		end
 
+	has_non_empty_comment: BOOLEAN is
+			-- Does current break contain a non-empty comment?
+			-- (Comments only made up of white characters or minus signs are not taken into account.)
+		local
+			i, nb: INTEGER
+		do
+			nb := text.count
+			from i := 1 until i > nb loop
+				inspect text.item (i)
+				when '-', ' ', '%T', '%R', '%N' then
+					i := i + 1
+				else
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				end
+			end
+		end
+
 invariant
 
 	text_not_void: text /= Void

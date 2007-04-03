@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			extended_name := a_name
 			hash_code := name.hash_code
 			arguments := args
-			is_keyword := tokens.is_keyword
 			end_keyword := tokens.end_keyword
 			clients := tokens.any_clients
 			implementation_class := a_class
@@ -58,6 +57,20 @@ feature -- Conversion
 			Result.set_first_indexing (first_indexing)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
+		end
+
+feature -- Access
+
+	header_break: ET_BREAK is
+			-- Break which appears where the header comment is expected
+		do
+			if is_keyword /= Void then
+				Result := is_keyword.break
+			elseif arguments /= Void then
+				Result := arguments.break
+			else
+				Result := extended_name.break
+			end
 		end
 
 feature -- Type processing

@@ -61,11 +61,19 @@ feature -- Access
 
 	header_break: ET_BREAK is
 			-- Break which appears where the header comment is expected
+		local
+			l_break: ET_BREAK
 		do
 			if semicolon /= Void then
 				Result := semicolon.break
 			else
 				Result := constant.break
+			end
+			if Result = Void or else not Result.has_comment then
+				l_break := is_keyword.break
+				if l_break /= Void and then l_break.has_comment then
+					Result := l_break
+				end
 			end
 		end
 
