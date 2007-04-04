@@ -27,7 +27,7 @@ inherit
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
 
-feature
+feature -- Test
 
 	test_shorthand_pointer is
 			-- Transform books3.xml with books1.xsl.
@@ -107,7 +107,7 @@ feature
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
 			create l_error_listener.make (l_configuration.recovery_policy)
-			l_configuration.set_error_listener (l_error_listener)			
+			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			l_configuration.use_tiny_tree_model (False)
 			l_configuration.set_recovery_policy (Do_not_recover)
@@ -125,7 +125,7 @@ feature
 			assert ("Transform successfull", not l_transformer.is_error)
 			assert ("Correct output", STRING_.same_string (l_output.last_output, expected_output_2))
 		end
-	
+
 	test_embedded_stylesheet is
 			-- Transform embedded.xml by itself, without using xml-stylesheet-pi
 		local
@@ -140,7 +140,7 @@ feature
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
 			create l_error_listener.make (l_configuration.recovery_policy)
-			l_configuration.set_error_listener (l_error_listener)			
+			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_string_mode_ascii
 			l_configuration.use_tiny_tree_model (False)
 			create l_transformer_factory.make (l_configuration)
@@ -264,11 +264,6 @@ feature
 			assert ("Correct output", l_output.last_output.count = 81)
 		end
 
-	expected_output_1: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Number, the Language of Science</output>"
-
-	expected_output_2: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Danzig</output>"
-
-
 feature {NONE} -- Implementation
 
 	data_dirname: STRING is
@@ -289,7 +284,7 @@ feature {NONE} -- Implementation
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
+
 	books1_xsl_uri: UT_URI is
 			-- URI of file 'books1.xsl'
 		local
@@ -311,7 +306,7 @@ feature {NONE} -- Implementation
 			xpath_data_dirname_not_void: Result /= Void
 			xpath_data_dirname_not_empty: not Result.is_empty
 		end
-		
+
 	books3_xml_uri: UT_URI is
 			-- URI of file 'books3.xml'
 		local
@@ -355,5 +350,11 @@ feature {NONE} -- Implementation
 		ensure
 			example0_xsl_uri_not_void: Result /= Void
 		end
+
+	expected_output_1: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Number, the Language of Science</output>"
+			-- An expected output
+
+	expected_output_2: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Danzig</output>"
+			-- An expected output
 
 end

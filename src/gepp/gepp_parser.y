@@ -36,7 +36,6 @@ create
 
 	make
 
-feature
 %}
 
 %token P_IFDEF P_IFNDEF P_INCLUDE P_DEFINE P_UNDEF

@@ -17,7 +17,7 @@ inherit
 	KL_TEST_CASE
 	UC_IMPORTED_UTF16_ROUTINES
 
-feature
+feature -- Test
 
 	test_valid is
 			-- Test feature `valid_utf16' when valid.
@@ -77,6 +77,9 @@ feature
 feature {NONE} -- Constants
 
 	Big_endian: STRING is "%/254/%/255/"
+			-- Big-endian BOM
+
 	Little_endian: STRING is "%/255/%/254/"
+			-- Little-endian BOM
 
 end

@@ -32,7 +32,7 @@ inherit
 		-- and exercise the DOM-like navigation features,
 		-- and the XPath axes.
 
-feature
+feature -- Test
 
 	test_simple is
 			-- Simple tree.
@@ -113,7 +113,7 @@ feature
 			assert ("Document not void", document /= Void)
 
 			-- Test document_element
-			
+
 			document_element ?= document.document_element
 			assert ("Document element not void", document_element /= Void)
 			a_name := document_element.node_name
@@ -129,14 +129,14 @@ feature
 			-- Test parent
 
 			assert ("Parent", document_element.is_same_node (books_element.parent))
-			
+
 			-- Test first_child of first child
 
 			item_element ?= books_element.first_child
 			assert ("First child not void", item_element /= Void)
 			a_name := item_element.node_name
 			assert_strings_equal ("First child 2 name", "ITEM", a_name)
-			
+
 			-- Test next_sibling loop to last child
 
 			from
@@ -174,7 +174,7 @@ feature
 				descendants.forth
 			end
 			assert ("Eight descendants", counter = 9)
-			
+
 			-- Test ancestor axis - look for "BOOKLIST" ancestor of "ITEM"
 
 			create ancestors.make (item_element, any_node_test, False)
@@ -208,7 +208,7 @@ feature
 			create preceding.make (categories_element, any_pi_test)
 				check
 					preceding_before: preceding.before
-				end	
+				end
 			from
 				counter := 1
 				preceding.start
@@ -253,12 +253,12 @@ feature
 				counter := counter + 1
 			end
 			assert ("Six following elements", counter = 7)
-			
+
 			-- Test attributes axis - look for NOTE attribute on CATEGORY element
 
 			a_fingerprint := shared_name_pool.fingerprint ("", "NOTE")
 			an_element := element_list_1.item (2)
-					
+
 			create attribute_test.make (Attribute_node, a_fingerprint, "NODE")
 			create attributes.make (an_element, attribute_test)
 				check
@@ -303,7 +303,7 @@ feature
 			assert ("Document not void", document /= Void)
 
 			-- Test document_element
-			
+
 			document_element ?= document.document_element
 			assert ("Document element not void", document_element /= Void)
 			a_name := document_element.node_name
@@ -322,6 +322,7 @@ feature
 feature {NONE} -- Implementation
 
 	make_parser (a_base_uri: STRING) is
+			-- Create XML parser.
 		require
 			a_base_uri_not_void: a_base_uri /= Void
 		local
@@ -336,10 +337,15 @@ feature {NONE} -- Implementation
 			parser.set_callbacks (tree_pipe.start)
 			parser.set_dtd_callbacks (tree_pipe.emitter)
 			parser.set_string_mode_ascii
+		ensure
+			parser_not_void: parser /= Void
 		end
-		
+
 	parser: XM_EIFFEL_PARSER
+			-- XML parser
+
 	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
+			-- Tree pipe
 
 	data_dirname: STRING is
 			-- Name of directory containing data files
@@ -350,7 +356,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
+
 	books_xml_uri: UT_URI is
 			-- URI of file 'books.xml'
 		local

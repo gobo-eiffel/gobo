@@ -33,7 +33,6 @@ create
 
 	make, make_from_description
 
-feature
 %}
 
 %token <INTEGER> CHAR NUMBER

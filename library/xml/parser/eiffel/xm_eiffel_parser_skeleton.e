@@ -392,7 +392,7 @@ feature {NONE} -- Error reporting
 			in_error: not is_correct
 		end
 
-feature {XM_PARSER_STOP_ON_ERROR_FILTER}
+feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- Error reporting
 
 	force_unreported_error (an_error: STRING) is
 			-- Stop the parser, but do not issue an event error because
@@ -492,8 +492,13 @@ feature {NONE} -- DTD
 		end
 
 	One_or_more_repetition: STRING is "+"
+			-- Special symbol: One of more
+
 	Zero_or_one_repetition: STRING is "?"
+			-- Special symbol: Zero or one
+
 	Zero_or_more_repetition: STRING is "*"
+			-- Special symbol: Zero or more
 
 	element_name (a_name: STRING): XM_DTD_ELEMENT_CONTENT is
 			-- New element content name node

@@ -5,7 +5,7 @@ indexing
 		"Parser generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,7 @@ inherit
 	PR_PARSER_ENGINE
 
 	KL_IMPORTED_ARRAY_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 	UT_IMPORTED_FORMATTERS
 
 create
@@ -578,10 +579,21 @@ feature {NONE} -- Generation
 		local
 			i, j, k, nb: INTEGER
 			a_table_upper: INTEGER
+			a_name_count: INTEGER
 		do
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
 			a_file.put_string (": SPECIAL [INTEGER] is%N")
+			a_file.put_string ("%T%T%T-- ")
+			a_name_count := a_name.count
+			if a_name_count > 9 and then STRING_.same_string (a_name.substring (a_name_count - 8, a_name_count), "_template") then
+				a_file.put_string ("Template for `")
+				a_file.put_string (a_name.substring (1, a_name_count - 9))
+				a_file.put_character ('%'')
+			else
+				a_file.put_string (a_name)
+			end
+			a_file.put_new_line
 			if array_size = 0 then
 				nb := 1
 			else
@@ -619,8 +631,22 @@ feature {NONE} -- Generation
 					a_file.put_string (a_name)
 					a_file.put_character ('_')
 					a_file.put_integer (j)
-					a_file.put_string (" (an_array: ARRAY [INTEGER]) is%N%
-						%%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
+					a_file.put_line (" (an_array: ARRAY [INTEGER]) is")
+					a_file.put_string ("%T%T%T-- ")
+					if a_name_count > 9 and then STRING_.same_string (a_name.substring (a_name_count - 8, a_name_count), "_template") then
+						a_file.put_string ("Fill chunk #")
+						a_file.put_integer (j)
+						a_file.put_string (" of template for `")
+						a_file.put_string (a_name.substring (1, a_name_count - 9))
+						a_file.put_string ("'.")
+					else
+						a_file.put_string (a_name)
+						a_file.put_string (" #")
+						a_file.put_integer (j)
+						a_file.put_character ('.')
+					end
+					a_file.put_new_line
+					a_file.put_line ("%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<")
 					k := a_table_upper.min (i + array_size - 1)
 					ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, k)
 					a_file.put_string (", yyDummy>>,%N%T%T%T")

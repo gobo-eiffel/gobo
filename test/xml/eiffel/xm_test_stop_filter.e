@@ -13,9 +13,10 @@ indexing
 deferred class XM_TEST_STOP_FILTER
 
 inherit
+
 	TS_TEST_CASE
-	
-feature
+
+feature -- Test
 
 	test_stop is
 			-- Test stop filter stops the parser.
@@ -30,10 +31,10 @@ feature
 			error_filter := parser.new_stop_on_error_filter
 			create result_filter.set_next (error_filter)
 			create ns_filter.set_next (result_filter)
-			
+
 			parser.set_callbacks (ns_filter)
 			parser.parse_from_string ("<doc broken:attr=''>hello</doc>")
-			
+
 			assert ("error", not parser.is_correct)
 			assert_equal ("no_content", "", result_filter.content)
 			assert_equal ("ns_error", "Undeclared namespace error", parser.last_error_description)
@@ -42,5 +43,6 @@ feature
 feature {NONE} -- Implementation
 
 	parser: XM_EIFFEL_PARSER
+			-- XML parser
 
 end

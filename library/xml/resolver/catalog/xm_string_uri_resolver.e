@@ -25,18 +25,19 @@ inherit
 create
 
 	make
-	
-feature
+
+feature -- Initialization
 
 	make is
 			-- Create.
 		do
 		end
-		
+
 feature -- Status report
 
 	scheme: STRING is "string"
-		
+			-- Scheme
+
 feature -- Action(s)
 
 	resolve (a_uri: UT_URI) is
@@ -53,7 +54,7 @@ feature -- Action(s)
 				last_error := System_id_not_known_error
 			end
 		end
-		
+
 feature -- Result
 
 	last_stream: KI_CHARACTER_INPUT_STREAM
@@ -69,7 +70,7 @@ feature -- Result
 		end
 
 	has_media_type: BOOLEAN is
-			-- Is the media type available.
+			-- Is the media type available?
 		do
 			Result := False
 		end
@@ -81,7 +82,8 @@ feature -- Result
 		end
 
 feature {NONE} -- Error messages
-	
+
 	System_id_not_known_error: STRING is "SYSTEM id not known to bootstrap resolver "
-	
+			-- Error message
+
 end

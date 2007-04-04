@@ -32,7 +32,7 @@ inherit
 
 		-- These tests check the system_id and base_uri rotuines
 
-feature
+feature -- Test
 
 	test_with_dtd_using_tiny_tree is
 			-- Test using tiny tree
@@ -178,6 +178,7 @@ feature
 feature {NONE} -- Implementation
 
 	make_parser (a_base_uri: STRING; is_tiny: BOOLEAN) is
+			-- Create XML parser.
 		require
 			a_base_uri_not_void: a_base_uri /= Void
 		local
@@ -198,11 +199,18 @@ feature {NONE} -- Implementation
 				parser.set_dtd_callbacks (tree_pipe.emitter)
 			end
 			parser.set_string_mode_ascii
+		ensure
+			parser_not_void: parser /= Void
 		end
 
 	parser: XM_EIFFEL_PARSER
+			-- XML parser
+
 	tiny_tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
+			-- Tiny tree pipe
+
 	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
+			-- Tree pipe
 
 	data_dirname: STRING is
 			-- Name of directory containing data files

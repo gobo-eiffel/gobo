@@ -16,7 +16,7 @@ class XM_XPATH_NAME_POOL
 	-- a Namespace prefix, and a local name
 	-- plus a collection of namespaces, each consisting of a prefix/URI pair.
 	-- Also an index of names used as schema types.
-	
+
 	-- The equivalence betweem names depends only on the URI and the local name.
 	-- The prefix is retained for documentary purposes only; it is useful when
 	-- reconstructing a document to use prefixes that the user is familiar with.
@@ -43,7 +43,7 @@ class XM_XPATH_NAME_POOL
 	-- Fingerprints with depth 0 (i.e., in the range 0-2047) are reserved
 	--  for predefined names (names of XSLT elements and attributes, and of built-in types).
 	-- These names are not stored in the name pool, but are accessible as if they were.
-	-- 
+	--
 	--
 	-- A name_code contains the fingerprint in the bottom 20 bits. It also contains
 	-- an 8-bit prefix index. This distinguishes the prefix used, among all the
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			create hash_slots.make (0, Maximum_hash_chain_depth - 1)
-			
+
 			create prefixes.make (100)
 			prefixes.set_equality_tester (string_equality_tester)
 
@@ -98,31 +98,31 @@ feature {NONE} -- Initialization
 			prefixes_for_uri.put ("xml ", Xml_prefix_index)
 
 			prefixes.put ("xs", Xml_schema_prefix_index)
-			uris.put (Xml_schema_uri, Xml_schema_prefix_index)			
+			uris.put (Xml_schema_uri, Xml_schema_prefix_index)
 			prefixes_for_uri.put ("xs ", Xml_schema_prefix_index)
-						
+
 			prefixes.put ("xdt", Xpath_defined_datatypes_prefix_index)
-			uris.put (Xpath_defined_datatypes_uri, Xpath_defined_datatypes_prefix_index)			
+			uris.put (Xpath_defined_datatypes_uri, Xpath_defined_datatypes_prefix_index)
 			prefixes_for_uri.put ("xdt ", Xpath_defined_datatypes_prefix_index)
-						
+
 			prefixes.put ("gexslt", Gexslt_uri_prefix_index)
-			uris.put (Gexslt_eiffel_type_uri, Gexslt_uri_prefix_index)			
+			uris.put (Gexslt_eiffel_type_uri, Gexslt_uri_prefix_index)
 			prefixes_for_uri.put ("gexslt ", Gexslt_uri_prefix_index)
 
 			prefixes.put ("xsl", Xslt_prefix_index)
 			uris.put (Xslt_uri, Xslt_prefix_index)
 			prefixes_for_uri.put ("xsl ", Xslt_prefix_index)
-			
+
 			prefixes.put ("xsi", Xml_schema_instance_prefix_index)
-			uris.put (Xml_schema_instance_uri, Xml_schema_instance_prefix_index)			
+			uris.put (Xml_schema_instance_uri, Xml_schema_instance_prefix_index)
 			prefixes_for_uri.put ("xsi ", Xml_schema_instance_prefix_index)
 
 			prefixes.put ("fn", Xpath_standard_functions_prefix_index)
-			uris.put (Xpath_standard_functions_uri, Xpath_standard_functions_prefix_index)			
+			uris.put (Xpath_standard_functions_uri, Xpath_standard_functions_prefix_index)
 			prefixes_for_uri.put ("fn ", Xpath_standard_functions_prefix_index)
 
 			prefixes.put ("xhtml", Xhtml_prefix_index)
-			uris.put (Xhtml_uri, Xhtml_prefix_index)			
+			uris.put (Xhtml_uri, Xhtml_prefix_index)
 			prefixes_for_uri.put ("xhtml ", Xhtml_prefix_index)
 
 			prefixes.put ("err", Xpath_errors_prefix_index)
@@ -133,7 +133,7 @@ feature {NONE} -- Initialization
 			uris_used := 10
 
 		end
-	
+
 feature -- Access
 
 	Maximum_hash_chain_depth: INTEGER is 2048
@@ -221,7 +221,7 @@ feature -- Access
 				std.error.put_string ("code_for_prefix: prefix is ")
 				std.error.put_string (an_xml_prefix)
 				std.error.put_new_line
-			end			
+			end
 			from
 				a_counter := 1
 			variant
@@ -233,7 +233,7 @@ feature -- Access
 					std.error.put_string ("code_for_prefix: current prefix is ")
 					std.error.put_string (prefixes.item (a_counter))
 					std.error.put_new_line
-				end				
+				end
 				if STRING_.same_string (prefixes.item (a_counter),an_xml_prefix) then
 					Result := a_counter - 1
 					found := True
@@ -340,7 +340,7 @@ feature -- Access
 							std.error.put_string (" to position ")
 							std.error.put_string ((a_blank - 1).out)
 							std.error.put_new_line
-						end	
+						end
 						last_blank := a_blank + 1 -- position AFTER the last blank
 						if last_blank > length_of_prefixes then found := True end
 						if a_counter = an_index then
@@ -386,7 +386,7 @@ feature -- Access
 		ensure
 			valid_name_code: is_valid_name_code (Result)
 		end
-	
+
 	fingerprint (a_uri: STRING; a_local_name: STRING): INTEGER is
 			-- Fingerprint for the name with a given uri and local name;
 			-- The fingerprint has the property that if two fingerprint are the same,
@@ -425,7 +425,7 @@ feature -- Access
 					Result := -1
 				else
 					a_hash_code := a_local_name.hash_code \\ Maximum_hash_chain_depth
-					
+
 					if hash_slots.item (a_hash_code) = Void then
 						Result := -1
 					else
@@ -546,7 +546,7 @@ feature -- Status report
 			Result := (is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri))
 				and then type_factory.is_built_in_fingerprint (type_factory.standard_fingerprint (a_uri, a_local_name))
 		end
-			
+
 	is_valid_uri_code (a_uri_code: INTEGER): BOOLEAN is
 			-- Does `a_uri_code' represent a URI in `Current'?
 		do
@@ -579,7 +579,7 @@ feature -- Status report
 						std.error.put_string ("looking at ")
 						std.error.put_string (uris.item (a_counter))
 						std.error.put_new_line
-					end	
+					end
 					if STRING_.same_string (uris.item (a_counter), a_uri) then
 						Result := True
 					end
@@ -611,7 +611,7 @@ feature -- Status report
 					std.error.put_string ("code_for_prefix: current prefix is ")
 					std.error.put_string (prefixes.item (a_counter))
 					std.error.put_new_line
-				end				
+				end
 				if STRING_.same_string (prefixes.item (a_counter), an_xml_prefix) then
 					Result := True
 				end
@@ -620,6 +620,7 @@ feature -- Status report
 		end
 
 	is_prefix_declared (a_qname: STRING): BOOLEAN is
+			-- Is prefix declared?
 		require
 			valid_qname: a_qname /= Void and then is_qname (a_qname)
 		local
@@ -661,7 +662,7 @@ feature -- Status report
 			a_prefix := prefix_from_name_code (a_name_code)
 			Result := is_code_for_prefix_allocated (a_prefix)
 		end
-		
+
 	is_name_code_allocated (a_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING): BOOLEAN is
 			-- Has a name code been allocated for `an_xml_prefix' with `a_uri' and `a_local_name'?
 		require
@@ -743,7 +744,7 @@ feature -- Status report
 				std.error.put_string ("is_name_code_allocated_using_uricode: result is ")
 				std.error.put_string (Result.out)
 				std.error.put_new_line
-			end				
+			end
 		end
 
 	is_name_pool_full (a_uri, a_local_name: STRING): BOOLEAN is
@@ -957,7 +958,7 @@ feature -- Status setting
 		do
 			make
 		end
-	
+
 feature -- Element change
 
 	allocate_namespace_code (an_xml_prefix: STRING; a_uri: STRING) is
@@ -1027,7 +1028,7 @@ feature -- Element change
 		ensure
 			namespace_code_allocated: is_namespace_code_allocated_for_name_code (a_name_code)
 		end
-		
+
 	allocate_code_for_uri (a_uri: STRING) is
 			-- Allocate the uri code for a given URI;
 			-- WARNING - this code is not thread safe
@@ -1232,7 +1233,7 @@ feature -- Element change
 		ensure
 			expanded_name_allocated: is_expanded_name_allocated (an_expanded_name)
 		end
-		
+
 feature -- Conversion
 
 	namespace_code_from_name_code (a_name_code: INTEGER): INTEGER is
@@ -1312,7 +1313,7 @@ feature -- Conversion
 			end
 		ensure
 			result_not_void: Result /= Void
-		end		
+		end
 
 	prefix_from_name_code (a_name_code: INTEGER): STRING is
 			-- Xml prefix, given its name code
@@ -1393,7 +1394,7 @@ feature -- Conversion
 		ensure
 			uri_not_void: Result /= Void
 		end
-		
+
 	uri_from_uri_code (a_uri_code: INTEGER): STRING is
 			-- Namespace URI from `a_uri_code'
 		require
@@ -1405,7 +1406,7 @@ feature -- Conversion
 	prefix_from_namespace_code (a_namespace_code: INTEGER): STRING is
 			-- Namespace prefix from `namespace_code'
 		require
-			valid_code: is_valid_namespace_code (a_namespace_code)		
+			valid_code: is_valid_namespace_code (a_namespace_code)
 		local
 			b16: INTEGER
 		do
@@ -1493,7 +1494,7 @@ feature {NONE} -- Implementation
 		do
 
 			-- look for quick wins
-			
+
 			if an_xml_prefix.is_empty then
 				Result := 0
 			else
@@ -1556,7 +1557,7 @@ feature {NONE} -- Implementation
 			-- hash_code := a_name_code & 0x000003ff
 			a_scaled_prefix_index := name_code_to_prefix_index (a_name_code) * bits_20
 			a_depth := (a_name_code - a_scaled_prefix_index) // bits_11
-			
+
 			Result := (a_name_code - a_scaled_prefix_index - (a_depth * bits_11))
 		ensure
 			positive_result: Result >= 0 and Result < Maximum_hash_chain_depth
@@ -1584,22 +1585,24 @@ feature {NONE} -- Implementation
 
 	hash_slots: ARRAY [XM_XPATH_NAME_ENTRY]
 			-- Fixed size hash table
-feature
+
+feature -- Access
+
 	prefixes: DS_ARRAYED_LIST [STRING]
 			-- The XML prefixes in use
-	
+
 	prefixes_used: INTEGER
 			-- Highest number XML prefix in use
 
 	uris: DS_ARRAYED_LIST [STRING]
 			-- The URIs in use
-	
+
 	prefixes_for_uri: DS_ARRAYED_LIST [STRING]
 			-- The XML prefixes in use for a given URI
-	
+
 	uris_used: INTEGER
 			-- Highest number uri in use
-	
+
 invariant
 
 	fixed_hash_slots: hash_slots /= Void and then hash_slots.count = Maximum_hash_chain_depth
@@ -1608,7 +1611,7 @@ invariant
 	uris_not_void: uris /= Void
 	prefixes_for_uri_not_void: prefixes_for_uri /= Void
 	uris_used: uris_used >= 3
-	
+
 end
 
-	
+

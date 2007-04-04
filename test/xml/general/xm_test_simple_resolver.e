@@ -1,9 +1,9 @@
 indexing
 
 	description:
-		
+
 		"Test XML simple resolver(s)"
-		
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"
@@ -13,13 +13,13 @@ indexing
 deferred class XM_TEST_SIMPLE_RESOLVER
 
 inherit
-	
+
 	TS_TEST_CASE
 
 	XM_RESOLVER_FACTORY
 		export {NONE} all end
 
-feature
+feature -- Test
 
 	test_balanced is
 			-- Test resolve/resolve_finish calls are balanced.
@@ -27,7 +27,7 @@ feature
 			string_resolver: TEST_STRING_EXTERNAL_RESOLVER
 		do
 			create parser.make
-			
+
 			create string_resolver.make
 			string_resolver.strings.put ("<!DOCTYPE doc SYSTEM 'dtd'><doc/>", "doc")
 			string_resolver.strings.put ("<!ELEMENT doc EMPTY>", "dtd")
@@ -36,7 +36,7 @@ feature
 			parser.parse_from_system ("doc")
 			assert ("parsed", parser.is_correct)
 			assert_integers_equal ("balanced resolver", 0, string_resolver.depth)
-		
+
 				-- Second time to check resolver left in a good state.
 			parser.parse_from_system ("doc")
 			assert ("parsed second time", parser.is_correct)
@@ -48,10 +48,10 @@ feature
 		do
 			create parser.make
 			parser.set_resolver (new_file_resolver_current_directory)
-			
+
 			parser.parse_from_system (Relative_data)
 			assert ("parsed", parser.is_correct)
-		
+
 				-- Second time to check resolver left in a good state.
 			parser.parse_from_system (Relative_data)
 			assert ("parsed second time", parser.is_correct)
@@ -70,7 +70,7 @@ feature
 			parser.parse_from_system (Relative_data)
 			assert ("parsed second time", parser.is_correct)
 		end
-	
+
 	test_file_error is
 			-- Test file error resolver.
 		do
@@ -83,13 +83,13 @@ feature
 			assert_integers_equal ("position count", 2, parser.positions.count)
 			assert_position ("top", parser.position, 1, 8)
 			assert_position ("parent ", parser.positions.item (2), 6, 1)
-			
+
 				-- Parse correct file after error
 				-- to check resolver left in a good state.
 			parser.parse_from_system (Relative_data)
 			assert ("ok", parser.is_correct)
 		end
-		
+
 	test_stream is
 			-- Test parse_from_stream and resolver interaction.
 		local
@@ -101,7 +101,7 @@ feature
 			create a_stream.make (Relative_xml)
 			parser.parse_from_stream (a_stream)
 			assert ("parsed", parser.is_correct)
-			
+
 				-- Second time to check resolver left in a good state.
 			create a_stream.make (Relative_xml)
 			parser.parse_from_stream (a_stream)
@@ -119,16 +119,17 @@ feature {NONE} -- Implementation
 			assert_integers_equal (a_prefix + " row", a_row, a_position.row)
 			assert_integers_equal (a_prefix + " column", a_column, a_position.column)
 		end
-		
-feature {NONE} -- Implementation
 
 	parser: XM_EIFFEL_PARSER
-			-- Test parser.
+			-- XML parser
 
 	Relative_xml: STRING is "<!DOCTYPE doc [ <!ELEMENT doc (child*)> <!ELEMENT child EMPTY> <!ENTITY e SYSTEM 'data/relative2.xml'> ]><doc>&e;</doc>"
 			-- Top level doc for stream test.
 
 	Relative_data: STRING is "data/relative.xml"
+			-- Data filename "relative.xml"
+
 	Brokensub_data: STRING is "data/brokensub.xml"
+			-- Data filename "brokensub.xml"
 
 end

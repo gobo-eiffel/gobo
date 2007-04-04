@@ -26,7 +26,7 @@ create
 
 	make
 
-feature
+feature -- Initialization
 
 	make is
 			-- Create.
@@ -36,6 +36,7 @@ feature
 feature -- Status report
 
 	scheme: STRING is "file"
+			-- Scheme
 
 feature -- Action(s)
 
@@ -83,5 +84,6 @@ feature -- Result
 feature {NONE} -- Error messages
 
 	Cannot_open_file_error: STRING is "Cannot open file "
+			-- Error message
 
 end
