@@ -329,6 +329,7 @@ feature {NONE} -- Compilation script generation
 				if not l_cpp_filenames.is_empty then
 					l_variables.replace (l_cpp_filenames, "c")
 					l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
+					l_file.put_line (l_command_name)
 				end
 				l_link_template := l_c_config.item ("link")
 				l_command_name := template_expander.expand_from_values (l_link_template, l_variables)
@@ -492,11 +493,11 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_exception.h", True, header_file)
 				header_file.put_new_line
-				l_c_file.put_line ("#ifdef __cpluscplus")
+				l_c_file.put_line ("#ifdef __cplusplus")
 				l_c_file.put_line ("extern %"C%" {")
 				l_c_file.put_line ("#endif")
 				l_c_file.put_new_line
-				header_file.put_line ("#ifdef __cpluscplus")
+				header_file.put_line ("#ifdef __cplusplus")
 				header_file.put_line ("extern %"C%" {")
 				header_file.put_line ("#endif")
 				header_file.put_new_line
@@ -546,11 +547,11 @@ feature {NONE} -- C code Generation
 					-- Print 'main' function.
 				print_main_function
 				l_c_file.put_new_line
-				l_c_file.put_line ("#ifdef __cpluscplus")
+				l_c_file.put_line ("#ifdef __cplusplus")
 				l_c_file.put_line ("}")
 				l_c_file.put_line ("#endif")
 				l_c_file.put_new_line
-				header_file.put_line ("#ifdef __cpluscplus")
+				header_file.put_line ("#ifdef __cplusplus")
 				header_file.put_line ("}")
 				header_file.put_line ("#endif")
 				header_file.put_new_line
@@ -868,6 +869,12 @@ feature {NONE} -- Feature generation
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_buffer: STRING
 			l_is_inline: BOOLEAN
+			l_is_cpp: BOOLEAN
+			l_cpp_class_type: STRING
+			l_cpp_file: KL_TEXT_OUTPUT_FILE
+			l_cpp_filename: STRING
+			l_base_name: STRING
+			l_header_filename: STRING
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -972,6 +979,9 @@ feature {NONE} -- Feature generation
 			l_language_string := l_language_value.value
 			if external_c_inline_regexp.recognizes (l_language_string) then
 				l_is_inline := True
+			elseif external_cpp_inline_regexp.recognizes (l_language_string) then
+				l_is_inline := True
+				l_is_cpp := True
 			end
 			if not l_is_inline and l_result_type_set /= Void then
 				print_indentation
@@ -990,51 +1000,37 @@ feature {NONE} -- Feature generation
 				print_malloc_current (a_feature)
 			end
 			if l_is_inline then
-					-- Regexp: C inline [use {<include> "," ...}+]
-					-- \2: include files
-				debug ("gec")
-					print ("external C inline")
-					if external_c_inline_regexp.captured_substring_count (2) > 0 then
-						print (" use " + external_c_inline_regexp.captured_substring (2))
+				if l_is_cpp then
+						-- Regexp: C++ [blocking] inline [use {<include> "," ...}+]
+						-- \3: include files
+					if external_cpp_inline_regexp.captured_substring_count (3) > 0 then
+						print_external_c_includes (external_cpp_inline_regexp.captured_substring (3))
 					end
-					print ("%N")
+					print_external_c_inline_body (a_feature)
+				else
+						-- Regexp: C [blocking] inline [use {<include> "," ...}+]
+						-- \3: include files
+					if external_c_inline_regexp.captured_substring_count (3) > 0 then
+						print_external_c_includes (external_c_inline_regexp.captured_substring (3))
+					end
+					print_external_c_inline_body (a_feature)
 				end
-				if external_c_inline_regexp.captured_substring_count (2) > 0 then
-					print_external_c_includes (external_c_inline_regexp.captured_substring (2))
-				end
-				print_external_c_inline_body (a_feature)
 			elseif a_feature.is_builtin then
-				debug ("gec")
-					print ("external built_in%N")
-				end
 				print_external_builtin_body (a_feature)
 			elseif external_c_regexp.recognizes (l_language_string) then
 					-- Regexp: C [blocking] [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
-					-- \4: has signature arguments
-					-- \5: signature arguments
-					-- \10: signature result
-					-- \17: include files
-				debug ("gec")
-					print ("external C")
-					if external_c_regexp.captured_substring_count (4) > 0 then
-						print (" signature (" + external_c_regexp.captured_substring (5) + ")")
-					end
-					if external_c_regexp.captured_substring_count (10) > 0 then
-						print (": " + external_c_regexp.captured_substring (10))
-					end
-					if external_c_regexp.captured_substring_count (17) > 0 then
-						print (" use " + external_c_regexp.captured_substring (17))
-					end
-					print ("%N")
+					-- \5: has signature arguments
+					-- \6: signature arguments
+					-- \11: signature result
+					-- \18: include files
+				if external_c_regexp.captured_substring_count (18) > 0 then
+					print_external_c_includes (external_c_regexp.captured_substring (18))
 				end
-				if external_c_regexp.captured_substring_count (17) > 0 then
-					print_external_c_includes (external_c_regexp.captured_substring (17))
+				if external_c_regexp.captured_substring_count (5) > 0 then
+					l_signature_arguments := external_c_regexp.captured_substring (6)
 				end
-				if external_c_regexp.captured_substring_count (4) > 0 then
-					l_signature_arguments := external_c_regexp.captured_substring (5)
-				end
-				if external_c_regexp.captured_substring_count (10) > 0 then
-					l_signature_result := external_c_regexp.captured_substring (10)
+				if external_c_regexp.captured_substring_count (11) > 0 then
+					l_signature_result := external_c_regexp.captured_substring (11)
 				end
 				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, False)
 			elseif external_c_macro_regexp.recognizes (l_language_string) then
@@ -1043,17 +1039,6 @@ feature {NONE} -- Feature generation
 					-- \5: signature arguments
 					-- \10: signature result
 					-- \17: include files
-				debug ("gec")
-					print ("external C macro")
-					if external_c_macro_regexp.captured_substring_count (4) > 0 then
-						print (" signature (" + external_c_macro_regexp.captured_substring (5) + ")")
-					end
-					if external_c_macro_regexp.captured_substring_count (10) > 0 then
-						print (": " + external_c_macro_regexp.captured_substring (10))
-					end
-					print (" use " + external_c_macro_regexp.captured_substring (17))
-					print ("%N")
-				end
 				print_external_c_includes (external_c_macro_regexp.captured_substring (17))
 				if external_c_macro_regexp.captured_substring_count (4) > 0 then
 					l_signature_arguments := external_c_macro_regexp.captured_substring (5)
@@ -1068,17 +1053,6 @@ feature {NONE} -- Feature generation
 					-- \6: field name
 					-- \9: field type
 					-- \16: include files
-				debug ("gec")
-					print ("external C struct ")
-					print (external_c_struct_regexp.captured_substring (1))
-					print (" access ")
-					print (external_c_struct_regexp.captured_substring (6))
-					if external_c_struct_regexp.captured_substring_count (9) > 0 then
-						print (" type " + external_c_struct_regexp.captured_substring (9))
-					end
-					print (" use " + external_c_struct_regexp.captured_substring (16))
-					print ("%N")
-				end
 				print_external_c_includes (external_c_struct_regexp.captured_substring (16))
 				l_struct_type := external_c_struct_regexp.captured_substring (1)
 				l_struct_field_name := external_c_struct_regexp.captured_substring (6)
@@ -1092,19 +1066,6 @@ feature {NONE} -- Feature generation
 					-- \2: signature arguments
 					-- \4: signature result
 					-- \6: include files
-				debug ("gec")
-					print ("external C")
-					if old_external_c_regexp.captured_substring_count (1) > 0 then
-						print (" (" + old_external_c_regexp.captured_substring (2) + ")")
-						if old_external_c_regexp.captured_substring_count (4) > 0 then
-							print (": " + old_external_c_regexp.captured_substring (4))
-						end
-					end
-					if old_external_c_regexp.captured_substring_count (6) > 0 then
-						print (" | " + old_external_c_regexp.captured_substring (6))
-					end
-					print ("%N")
-				end
 				if old_external_c_regexp.captured_substring_count (6) > 0 then
 					print_external_c_includes (old_external_c_regexp.captured_substring (6))
 				end
@@ -1121,18 +1082,7 @@ feature {NONE} -- Feature generation
 					-- \2: has signature arguments
 					-- \3: signature arguments
 					-- \5: signature result
-				debug ("gec")
-					print ("external C [macro ")
-					print (old_external_c_macro_regexp.captured_substring (1) + "]")
-					if old_external_c_macro_regexp.captured_substring_count (2) > 0 then
-						print (" (" + old_external_c_macro_regexp.captured_substring (3) + ")")
-					end
-					if old_external_c_macro_regexp.captured_substring_count (5) > 0 then
-						print (": " + old_external_c_macro_regexp.captured_substring (5))
-					end
-					print ("%N")
-				end
-				print_external_c_includes (old_external_c_regexp.captured_substring (1))
+				print_external_c_includes (old_external_c_macro_regexp.captured_substring (1))
 				if old_external_c_macro_regexp.captured_substring_count (2) > 0 then
 					l_signature_arguments := old_external_c_macro_regexp.captured_substring (3)
 					if old_external_c_macro_regexp.captured_substring_count (5) > 0 then
@@ -1145,15 +1095,6 @@ feature {NONE} -- Feature generation
 					-- \1: include file
 					-- \2: signature arguments
 					-- \4: signature result
-				debug ("gec")
-					print ("external C [struct ")
-					print (old_external_c_struct_regexp.captured_substring (1) + "]")
-					print (" (" + old_external_c_struct_regexp.captured_substring (2) + ")")
-					if old_external_c_struct_regexp.captured_substring_count (4) > 0 then
-						print (": " + old_external_c_struct_regexp.captured_substring (4))
-					end
-					print ("%N")
-				end
 				print_external_c_includes (old_external_c_struct_regexp.captured_substring (1))
 				l_signature_arguments := old_external_c_struct_regexp.captured_substring (2)
 				if old_external_c_struct_regexp.captured_substring_count (4) > 0 then
@@ -1180,6 +1121,25 @@ feature {NONE} -- Feature generation
 				else
 -- TODO: syntax error
 				end
+			elseif external_cpp_regexp.recognizes (l_language_string) then
+					-- Regexp: C [blocking] <class_type> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+					-- \2: class type
+					-- \5: has signature arguments
+					-- \6: signature arguments
+					-- \11: signature result
+					-- \18: include files
+				l_is_cpp := True
+				if external_cpp_regexp.captured_substring_count (18) > 0 then
+					print_external_c_includes (external_cpp_regexp.captured_substring (18))
+				end
+				l_cpp_class_type := external_cpp_regexp.captured_substring (2)
+				if external_cpp_regexp.captured_substring_count (5) > 0 then
+					l_signature_arguments := external_cpp_regexp.captured_substring (6)
+				end
+				if external_cpp_regexp.captured_substring_count (11) > 0 then
+					l_signature_result := external_cpp_regexp.captured_substring (11)
+				end
+				print_external_cpp_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_cpp_class_type, l_signature_arguments, l_signature_result, a_feature.alias_clause)
 			else
 print ("**** language not recognized: " + l_language_string + "%N")
 			end
@@ -1203,12 +1163,61 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_new_line
 			current_file.put_new_line
 			current_file := old_file
-			l_buffer := current_function_header_buffer.string
-			current_file.put_string (l_buffer)
-			STRING_.wipe_out (l_buffer)
-			l_buffer := current_function_body_buffer.string
-			current_file.put_string (l_buffer)
-			STRING_.wipe_out (l_buffer)
+			if l_is_cpp then
+				if cpp_filenames.is_empty then
+					if not c_filenames.is_empty then
+						l_base_name := c_filenames.last
+					else
+-- TODO:
+						l_base_name := "foo"
+					end
+					l_header_filename := l_base_name + ".h"
+					l_base_name := l_base_name + "_cpp"
+					cpp_filenames.force_last (l_base_name)
+					l_cpp_filename := l_base_name + ".cpp"
+					create l_cpp_file.make (l_cpp_filename)
+					l_cpp_file.open_write
+				else
+					l_cpp_filename := cpp_filenames.last + ".cpp"
+					create l_cpp_file.make (l_cpp_filename)
+					l_cpp_file.open_append
+				end
+				if not l_cpp_file.is_open_write then
+					set_fatal_error
+					report_cannot_write_error (l_cpp_filename)
+				else
+					if l_header_filename /= Void then
+						l_cpp_file.put_string ("#include %"")
+						l_cpp_file.put_string (l_header_filename)
+						l_cpp_file.put_character ('%"')
+						l_cpp_file.put_new_line
+					end
+					l_cpp_file.put_new_line
+					l_cpp_file.put_line ("#ifdef __cplusplus")
+					l_cpp_file.put_line ("extern %"C%" {")
+					l_cpp_file.put_line ("#endif")
+					l_cpp_file.put_new_line
+					l_buffer := current_function_header_buffer.string
+					l_cpp_file.put_string (l_buffer)
+					STRING_.wipe_out (l_buffer)
+					l_buffer := current_function_body_buffer.string
+					l_cpp_file.put_string (l_buffer)
+					STRING_.wipe_out (l_buffer)
+					l_cpp_file.put_new_line
+					l_cpp_file.put_line ("#ifdef __cplusplus")
+					l_cpp_file.put_line ("}")
+					l_cpp_file.put_line ("#endif")
+					l_cpp_file.put_new_line
+					l_cpp_file.close
+				end
+			else
+				l_buffer := current_function_header_buffer.string
+				current_file.put_string (l_buffer)
+				STRING_.wipe_out (l_buffer)
+				l_buffer := current_function_body_buffer.string
+				current_file.put_string (l_buffer)
+				STRING_.wipe_out (l_buffer)
+			end
 			free_temp_variables.wipe_out
 			used_temp_variables.wipe_out
 		end
@@ -2106,7 +2115,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					end
 				end
 				current_file.put_character (')')
-			elseif not is_macro or else a_signature_arguments /= Void then
+			elseif not is_macro then
 				current_file.put_character ('(')
 				current_file.put_character (')')
 			end
@@ -2355,6 +2364,115 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				include_header_filename (l_include_filename, header_file)
 				l_cursor.forth
 			end
+		end
+
+	print_external_cpp_body (a_feature_name: ET_FEATURE_NAME;
+		a_arguments: ET_FORMAL_ARGUMENT_LIST; a_result_type_set: ET_DYNAMIC_TYPE_SET;
+		a_cpp_class_type, a_signature_arguments, a_signature_result: STRING; a_alias: ET_EXTERNAL_ALIAS) is
+			-- Print body of external C++ function to `current_file'.
+			-- If `a_feature_name' is Void then the name of the C++ function will be found in the alias.
+			-- `a_cpp_class_type' is the name of the C++ class type.
+			-- `a_signature_arguments' and `a_signature_result', if not Void,
+			-- are the signature types declared in the Language part.
+			-- `a_result_type_set' is not Void if the external feature is a query.
+		require
+			name_not_void: a_feature_name /= Void or else a_alias /= Void
+			a_cpp_class_type_not_void: a_cpp_class_type /= Void
+		local
+			l_alias_value: ET_MANIFEST_STRING
+			i, nb_args: INTEGER
+			l_splitter: ST_SPLITTER
+			l_list: DS_LIST [STRING]
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_name: ET_IDENTIFIER
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			print_indentation
+			if a_result_type_set /= Void then
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_type_declaration (a_result_type_set.static_type, current_file)
+				current_file.put_character (')')
+				if a_signature_result /= Void then
+					current_file.put_character ('(')
+					current_file.put_string (a_signature_result)
+					current_file.put_character (')')
+					current_file.put_character ('(')
+				end
+			end
+			if a_arguments = Void or else a_arguments.is_empty then
+-- TODO: error
+			else
+				nb_args := a_arguments.count
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (a_cpp_class_type)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				l_name := a_arguments.formal_argument (1).name
+				print_argument_name (l_name, current_file)
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+				if a_alias /= Void then
+					l_alias_value := a_alias.manifest_string
+					current_file.put_string (l_alias_value.value)
+				else
+					current_file.put_string (a_feature_name.lower_name)
+				end
+				current_file.put_character ('(')
+				if a_signature_arguments /= Void then
+					create l_splitter.make_with_separators (",")
+					l_list := l_splitter.split (a_signature_arguments)
+					if l_list.count /= nb_args - 1 then
+-- TODO: error
+					end
+					l_cursor := l_list.new_cursor
+					l_cursor.start
+					from i := 2 until i > nb_args loop
+						if i /= 2 then
+							current_file.put_character (',')
+						end
+						if not l_cursor.after then
+							current_file.put_character ('(')
+							current_file.put_string (l_cursor.item)
+							current_file.put_character (')')
+							l_cursor.forth
+						end
+						l_name := a_arguments.formal_argument (i).name
+						print_argument_name (l_name, current_file)
+						i := i + 1
+					end
+				else
+					from i := 2 until i > nb_args loop
+						if i /= 2 then
+							current_file.put_character (',')
+						end
+						l_name := a_arguments.formal_argument (i).name
+						l_argument_type_set := current_feature.dynamic_type_set (l_name)
+						if l_argument_type_set = Void then
+								-- Internal error: the dynamic type set of the formal arguments
+								-- should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif l_argument_type_set.static_type = current_system.pointer_type then
+								-- When compiling with C++, MSVC++ does not want to convert
+								-- 'void*' to non-'void*' implicitly.
+							current_file.put_string ("(char*)")
+						end
+						print_argument_name (l_name, current_file)
+						i := i + 1
+					end
+				end
+				current_file.put_character (')')
+			end
+			if a_result_type_set /= Void and then a_signature_result /= Void then
+				current_file.put_character (')')
+			end
+			current_file.put_character (';')
+			current_file.put_new_line
 		end
 
 	print_internal_function (a_feature: ET_INTERNAL_FUNCTION) is
@@ -10072,6 +10190,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 		do
 -- TODO
 print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
+			current_file.put_line ("printf(%"deep_twin not implemented!\n%");")
+			print_builtin_any_standard_twin_body (a_feature)
 		end
 
 	print_builtin_any_same_type_call (a_target_type: ET_DYNAMIC_TYPE) is
@@ -18453,10 +18573,10 @@ feature {NONE} -- External regexp
 
 	external_c_regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Regexp: C [blocking] [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
-			-- \4: has signature arguments
-			-- \5: signature arguments
-			-- \10: signature result
-			-- \17: include files
+			-- \5: has signature arguments
+			-- \6: signature arguments
+			-- \11: signature result
+			-- \18: include files
 
 	external_c_macro_regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Regexp: C [blocking] macro [signature ["(" {<type> "," ...}* ")"] [":" <type>]] use {<include> "," ...}+
@@ -18473,8 +18593,8 @@ feature {NONE} -- External regexp
 			-- \16: include files
 
 	external_c_inline_regexp: RX_PCRE_REGULAR_EXPRESSION
-			-- Regexp: C inline [use {<include> "," ...}+]
-			-- \2: include files
+			-- Regexp: C [blocking] inline [use {<include> "," ...}+]
+			-- \3: include files
 
 	old_external_c_regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Regexp: C ["(" {<type> "," ...}* ")" [":" <type>]] ["|" {<include> "," ...}+]
@@ -18496,30 +18616,48 @@ feature {NONE} -- External regexp
 			-- \2: signature arguments
 			-- \4: signature result
 
+	external_cpp_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C [blocking] <class_type> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+			-- \2: class type
+			-- \5: has signature arguments
+			-- \6: signature arguments
+			-- \11: signature result
+			-- \18: include files
+
+	external_cpp_inline_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C++ [blocking] inline [use {<include> "," ...}+]
+			-- \3: include files
+
 	make_external_regexps is
 			-- Create external regular expressions.
 		do
 				-- Regexp: C [blocking] [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
 			create external_c_regexp.make
-			external_c_regexp.compile ("[ \t\r\n]*C([ \t\r\n]+blocking)?([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))?")
+			external_c_regexp.compile ("[ \t\r\n]*[Cc]([ \t\r\n]+|$)(blocking([ \t\r\n]+|$))?(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))?")
 				-- Regexp: C [blocking] macro [signature ["(" {<type> "," ...}* ")"] [":" <type>]] use {<include> "," ...}+
 			create external_c_macro_regexp.make
-			external_c_macro_regexp.compile ("[ \t\r\n]*C([ \t\r\n]+blocking)?[ \t\r\n]+macro([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))")
+			external_c_macro_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]+(blocking[ \t\r\n]+)?macro([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))")
 				-- Regexp: C struct <struct-type> (access|get) <field-name> [type <field-type>] use {<include> "," ...}+
 			create external_c_struct_regexp.make
-			external_c_struct_regexp.compile ("[ \t\r\n]*C[ \t\r\n]+struct[ \t\r\n]+((a|ac|acc|acce|acces|g|ge|[^ag \t\r\n][^ \t\r\n]*|g[^e \t\r\n][^ \t\r\n]*|ge[^t \t\r\n][^ \t\r\n]*|get[^ \t\r\n]+|a[^c \t\r\n][^ \t\r\n]*|ac[^c \t\r\n][^ \t\r\n]*|acc[^e \t\r\n][^ \t\r\n]*|acce[^s \t\r\n][^ \t\r\n]*|acces[^s \t\r\n][^ \t\r\n]*|access[^ \t\r\n]+)[ \t\r\n]+((a|ac|acc|acce|acces|g|ge|[^ag \t\r\n][^ \t\r\n]*|g[^e \t\r\n][^ \t\r\n]*|ge[^t \t\r\n][^ \t\r\n]*|get[^ \t\r\n]+|a[^c \t\r\n][^ \t\r\n]*|ac[^c \t\r\n][^ \t\r\n]*|acc[^e \t\r\n][^ \t\r\n]*|acce[^s \t\r\n][^ \t\r\n]*|acces[^s \t\r\n][^ \t\r\n]*|access[^ \t\r\n]+)[ \t\r\n]+)*)(access|get)[ \t\r\n]+([^ \t\r\n]+)([ \t\r\n]+|$)(type[ \t\r\n]+((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?(use[ \t\r\n]*((.|\n)+))")
-				-- Regexp: C inline [use {<include> "," ...}+]
+			external_c_struct_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]+struct[ \t\r\n]+((a|ac|acc|acce|acces|g|ge|[^ag \t\r\n][^ \t\r\n]*|g[^e \t\r\n][^ \t\r\n]*|ge[^t \t\r\n][^ \t\r\n]*|get[^ \t\r\n]+|a[^c \t\r\n][^ \t\r\n]*|ac[^c \t\r\n][^ \t\r\n]*|acc[^e \t\r\n][^ \t\r\n]*|acce[^s \t\r\n][^ \t\r\n]*|acces[^s \t\r\n][^ \t\r\n]*|access[^ \t\r\n]+)[ \t\r\n]+((a|ac|acc|acce|acces|g|ge|[^ag \t\r\n][^ \t\r\n]*|g[^e \t\r\n][^ \t\r\n]*|ge[^t \t\r\n][^ \t\r\n]*|get[^ \t\r\n]+|a[^c \t\r\n][^ \t\r\n]*|ac[^c \t\r\n][^ \t\r\n]*|acc[^e \t\r\n][^ \t\r\n]*|acce[^s \t\r\n][^ \t\r\n]*|acces[^s \t\r\n][^ \t\r\n]*|access[^ \t\r\n]+)[ \t\r\n]+)*)(access|get)[ \t\r\n]+([^ \t\r\n]+)([ \t\r\n]+|$)(type[ \t\r\n]+((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?(use[ \t\r\n]*((.|\n)+))")
+				-- Regexp: C [blocking] inline [use {<include> "," ...}+]
 			create external_c_inline_regexp.make
-			external_c_inline_regexp.compile ("[ \t\r\n]*C[ \t\r\n]+inline([ \t\r\n]+use[ \t\r\n]*((.|\n)+))?")
+			external_c_inline_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]+(blocking[ \t\r\n]+)?inline([ \t\r\n]+use[ \t\r\n]*((.|\n)+))?")
 				-- Regexp: C ["(" {<type> "," ...}* ")" [":" <type>]] ["|" {<include> "," ...}+]
 			create old_external_c_regexp.make
-			old_external_c_regexp.compile ("[ \t\r\n]*C([ \t\r\n]*\(([^)]*)\)([ \t\r\n]*:[ \t\r\n]*([^|]+))?)?([ \t\r\n]*\|[ \t\r\n]*((.|\n)+))?")
+			old_external_c_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*(\(([^)]*)\)[ \t\r\n]*(:[ \t\r\n]*([^|]+))?)?[ \t\r\n]*(\|[ \t\r\n]*((.|\n)+))?")
 				-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
 			create old_external_c_macro_regexp.make
-			old_external_c_macro_regexp.compile ("[ \t\r\n]*C[ \t\r\n]*\[[ \t\r\n]*macro[ \t\r\n]*([^]]+)[ \t\r\n]*\]([ \t\r\n]*\(([^)]*)\))?([ \t\r\n]*:[ \t\r\n]*((.|\n)+))?")
+			old_external_c_macro_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*\[[ \t\r\n]*macro[ \t\r\n]*([^]]+)\][ \t\r\n]*(\(([^)]*)\))?[ \t\r\n]*(:[ \t\r\n]*((.|\n)+))?")
 				-- Regexp: C "[" struct <include> "]" "(" {<type> "," ...}+ ")" [":" <type>]
 			create old_external_c_struct_regexp.make
-			old_external_c_struct_regexp.compile ("[ \t\r\n]*C[ \t\r\n]*\[[ \t\r\n]*struct[ \t\r\n]*([^]]+)[ \t\r\n]*\][ \t\r\n]*\(([^)]+)\)([ \t\r\n]*:[ \t\r\n]*((.|\n)+))?")
+			old_external_c_struct_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*\[[ \t\r\n]*struct[ \t\r\n]*([^]]+)\][ \t\r\n]*\(([^)]+)\)[ \t\r\n]*(:[ \t\r\n]*((.|\n)+))?")
+				-- Regexp: C++ [blocking] <class_type> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+			create external_cpp_regexp.make
+			external_cpp_regexp.compile ("[ \t\r\n]*[Cc]\+\+[ \t\r\n]+(blocking[ \t\r\n]+)?([^ \t\r\n]+)([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))?")
+				-- Regexp: C++ [blocking] inline [use {<include> "," ...}+]
+			create external_cpp_inline_regexp.make
+			external_cpp_inline_regexp.compile ("[ \t\r\n]*[Cc]\+\+[ \t\r\n]+(blocking[ \t\r\n]+)?inline([ \t\r\n]+use[ \t\r\n]*((.|\n)+))?")
 		ensure
 			external_c_regexp_not_void: external_c_regexp /= Void
 			external_c_regexp_compiled: external_c_regexp.is_compiled
@@ -18535,20 +18673,14 @@ feature {NONE} -- External regexp
 			old_external_c_macro_regexp_compiled: old_external_c_macro_regexp.is_compiled
 			old_external_c_struct_regexp_not_void: old_external_c_struct_regexp /= Void
 			old_external_c_struct_regexp_compiled: old_external_c_struct_regexp.is_compiled
+			external_cpp_regexp_not_void: external_cpp_regexp /= Void
+			external_cpp_regexp_compiled: external_cpp_regexp.is_compiled
+			external_cpp_inline_regexp_not_void: external_cpp_inline_regexp /= Void
+			external_cpp_inline_regexp_compiled: external_cpp_inline_regexp.is_compiled
 		end
 
 feature {NONE} -- Constants
 
-	e_access: STRING is "access"
-	e_blocking: STRING is "blocking"
-	e_c: STRING is "C"
-	e_get: STRING is "get"
-	e_inline: STRING is "inline"
-	e_macro: STRING is "macro"
-	e_signature: STRING is "signature"
-	e_struct: STRING is "struct"
-	e_type: STRING is "type"
-	e_use: STRING is "use"
 	c_arrow: STRING is "->"
 	c_break: STRING is "break"
 	c_case: STRING is "case"
@@ -18710,5 +18842,9 @@ invariant
 	old_external_c_macro_regexp_compiled: old_external_c_macro_regexp.is_compiled
 	old_external_c_struct_regexp_not_void: old_external_c_struct_regexp /= Void
 	old_external_c_struct_regexp_compiled: old_external_c_struct_regexp.is_compiled
+	external_cpp_regexp_not_void: external_cpp_regexp /= Void
+	external_cpp_regexp_compiled: external_cpp_regexp.is_compiled
+	external_cpp_inline_regexp_not_void: external_cpp_inline_regexp /= Void
+	external_cpp_inline_regexp_compiled: external_cpp_inline_regexp.is_compiled
 
 end
