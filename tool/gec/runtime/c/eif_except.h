@@ -33,6 +33,11 @@ extern void eecatch(long code);
 extern void eeignore(long code);
 extern void eetrace(char b);
 
+#ifdef EIF_WINDOWS
+/* Needed to compile some code at AXAR */
+extern void set_windows_exception_filter();
+#endif
+
 #ifdef __cplusplus
 }
 #endif

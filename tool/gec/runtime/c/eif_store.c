@@ -77,7 +77,7 @@ void stream_free(EIF_POINTER* stream) {
 	printf("'stream_free' in 'eif_store.h' not implemented\n");
 }
 
-void set_buffer_size(EIF_INTEGER) {
+void set_buffer_size(EIF_INTEGER new_size) {
 	/* TODO */
 	printf("'set_buffer_size' in 'eif_store.h' not implemented\n");
 }

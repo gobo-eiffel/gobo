@@ -100,6 +100,12 @@ void eetrace(char b) {
 	printf("'eetrace' in 'eif_except.h' not implemented\n");
 }
 
+#ifdef EIF_WINDOWS
+void set_windows_exception_filter() {
+/* Needed to compile some code at AXAR */
+}
+#endif
+
 #ifdef __cplusplus
 }
 #endif

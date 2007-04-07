@@ -20,6 +20,12 @@ extern "C" {
 int geargc;
 char** geargv;
 
+	/* Clean up function */
+typedef void (* EIF_CLEANUP)(EIF_BOOLEAN);
+void eif_register_cleanup(EIF_CLEANUP f){
+/* Needed to compile some code at AXAR */
+}
+
 #ifdef __cplusplus
 }
 #endif
