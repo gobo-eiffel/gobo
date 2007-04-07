@@ -154,29 +154,30 @@ feature {NONE} -- Implementation
 			last_error_is_void: last_error = Void
 			a_context_not_void: a_context /= Void
 		local
-			l_argument: XM_XPATH_ITEM
+			l_argument: DS_CELL [XM_XPATH_ITEM]
 			l_source: XM_XSLT_URI_SOURCE
 			l_factory: XM_XSLT_TRANSFORMER_FACTORY
 		do
-			arguments.item (1).evaluate_item (a_context)
-			l_argument := arguments.item (1).last_evaluated_item
-			if l_argument.is_error then
-				last_error := l_argument.error_value
+			create l_argument.make (Void)
+			arguments.item (1).evaluate_item (l_argument, a_context)
+			if l_argument.item.is_error then
+				last_error := l_argument.item.error_value
 			else
-				create l_source.make (l_argument.as_string_value.string_value)
+				create l_source.make (l_argument.item.as_string_value.string_value)
 				l_factory := a_context.transformer.transformer_factory
 				l_factory.create_new_transformer (l_source, static_context.base_uri)
 				if l_factory.was_error then
 					create last_error.make_from_string (l_factory.last_error_message, Gexslt_eiffel_type_uri, "COMPILE_FAILED", Static_error)
 				else
 					transformer := l_factory.created_transformer
-					arguments.item (2).evaluate_item (a_context)
-					if arguments.item (2).last_evaluated_item = Void then
+					create l_argument.make (Void)
+					arguments.item (2).evaluate_item (l_argument, a_context)
+					if l_argument.item = Void then
 						initial_context := Void
-					elseif arguments.item (2).last_evaluated_item.is_error then
-						last_error := arguments.item (2).last_evaluated_item.error_value
+					elseif l_argument.item.is_error then
+						last_error := l_argument.item.error_value
 					else
-						initial_context := arguments.item (2).last_evaluated_item.as_node
+						initial_context := l_argument.item.as_node
 					end
 					if arguments.count > 2 then
 						evaluate_optional_arguments (a_context)
@@ -195,26 +196,26 @@ feature {NONE} -- Implementation
 			transformer_not_void: transformer /= Void
 			seven_arguments: arguments.count = 7
 		local
-			l_argument: XM_XPATH_ITEM
+			l_argument: DS_CELL [XM_XPATH_ITEM]
 			l_iterator, l_iterator_2: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			arguments.item (3).evaluate_item (a_context)
-			l_argument := arguments.item (3).last_evaluated_item
-			if l_argument /= Void then
-				if l_argument.is_error then
-					last_error := l_argument.error_value
+			create l_argument.make (Void)
+			arguments.item (3).evaluate_item (l_argument, a_context)
+			if l_argument.item /= Void then
+				if l_argument.item.is_error then
+					last_error := l_argument.item.error_value
 				else
-					transformer.set_initial_template (l_argument.as_qname_value.expanded_name)
+					transformer.set_initial_template (l_argument.item.as_qname_value.expanded_name)
 				end
 			end
 			if not is_error then
-				arguments.item (4).evaluate_item (a_context)
-				l_argument := arguments.item (4).last_evaluated_item
-				if l_argument /= Void then
-					if l_argument.is_error then
-						last_error := l_argument.error_value
+				create l_argument.make (Void)
+				arguments.item (4).evaluate_item (l_argument, a_context)
+				if l_argument.item /= Void then
+					if l_argument.item.is_error then
+						last_error := l_argument.item.error_value
 					else
-						transformer.set_initial_mode (l_argument.as_qname_value.expanded_name)
+						transformer.set_initial_mode (l_argument.item.as_qname_value.expanded_name)
 					end
 				end
 			end

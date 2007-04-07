@@ -68,7 +68,6 @@ feature -- Evaluation
 	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_item: XM_XPATH_ITEM
 			l_string, l_prefix, l_local_part: STRING
 			l_qname_parts: DS_LIST [STRING]
 			l_splitter: ST_SPLITTER
