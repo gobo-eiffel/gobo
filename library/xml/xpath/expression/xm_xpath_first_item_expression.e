@@ -78,8 +78,8 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
@@ -91,15 +91,15 @@ feature -- Evaluation
 				l_iterator := base_expression.last_iterator
 			end
 			if l_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 			else
 				l_iterator.start
 				if l_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 				elseif not l_iterator.after then
-					last_evaluated_item := l_iterator.item
+					a_result.put (l_iterator.item)
 				else
-					last_evaluated_item := Void
+					a_result.put (Void)
 				end
 			end
 		end

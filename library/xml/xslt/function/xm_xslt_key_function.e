@@ -112,6 +112,7 @@ feature -- Evaluation
 			l_values_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
 			l_local_order_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
 			l_error: XM_XPATH_ERROR_VALUE
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			l_evaluation_context ?= a_context
 			check
@@ -119,9 +120,10 @@ feature -- Evaluation
 				-- as this is an XSLT function
 			end
 			l_transformer := l_evaluation_context.transformer
-			arguments.item (3).evaluate_item (l_evaluation_context)
-			if arguments.item (3).last_evaluated_item.is_node then
-				l_node := arguments.item (3).last_evaluated_item.as_node
+			create l_item.make (Void)
+			arguments.item (3).evaluate_item (l_item, l_evaluation_context)
+			if l_item.item.is_node then
+				l_node := l_item.item.as_node
 				l_context_document := l_node.document_root
 			end
 			if l_context_document = Void then
@@ -133,8 +135,9 @@ feature -- Evaluation
 			else
 				l_fingerprint := key_fingerprint
 				if l_fingerprint = -1 then
-					arguments.item (1).evaluate_item (l_evaluation_context)
-					l_given_key_name := arguments.item (1).last_evaluated_item.string_value
+					create l_item.make (Void)
+					arguments.item (1).evaluate_item (l_item, l_evaluation_context)
+					l_given_key_name := l_item.item.string_value
 					l_fingerprint := namespace_context.fingerprint (l_given_key_name, False)
 					if l_fingerprint = -1 then
 						a_message := STRING_.concat ("Key '", l_given_key_name)
@@ -151,8 +154,9 @@ feature -- Evaluation
 
 					l_expression := arguments.item (2)
 					if not l_expression.cardinality_allows_many then
-						l_expression.evaluate_item (l_evaluation_context)
-						l_atomic_value ?= l_expression.last_evaluated_item
+						create l_item.make (Void)
+						l_expression.evaluate_item (l_item, l_evaluation_context)
+						l_atomic_value ?= l_item.item
 						if l_atomic_value /= Void then
 							l_transformer.key_manager.generate_keyed_sequence (l_fingerprint, l_context_document, l_atomic_value, l_evaluation_context)
 							if l_transformer.is_error then

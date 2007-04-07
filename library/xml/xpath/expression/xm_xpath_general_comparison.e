@@ -229,11 +229,11 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
-			last_evaluated_item := last_boolean_value
+			a_result.put (last_boolean_value)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -652,15 +652,18 @@ feature {NONE} -- Implementation
 
 	evaluate_two_constants is
 			-- Evaluate the expression now if both arguments are constant
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
 				and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
-				evaluate_item (Void)
+				create l_result.make (Void)
+				evaluate_item (l_result, Void)
 				check
-					boolean_value: last_evaluated_item.is_boolean_value
+					boolean_value: l_result.item.is_boolean_value
 					-- We are guarenteed a boolean value
 				end
-				set_replacement (last_evaluated_item.as_boolean_value)
+				set_replacement (l_result.item.as_boolean_value)
 			end
 		end
 

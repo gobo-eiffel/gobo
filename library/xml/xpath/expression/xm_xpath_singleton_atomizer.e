@@ -138,59 +138,58 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_item: XM_XPATH_ITEM
-			items_count: INTEGER
-			a_value: XM_XPATH_VALUE
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_item: XM_XPATH_ITEM
+			l_items_count: INTEGER
+			l_value: XM_XPATH_VALUE
 		do
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				set_last_error (an_iterator.error_value)
+			l_iterator := base_expression.last_iterator
+			if l_iterator.is_error then
+				set_last_error (l_iterator.error_value)
 			else
 				from
-					an_iterator.start
+					l_iterator.start
 				until
-					is_error or else an_iterator.after 
+					is_error or else l_iterator.after 
 				loop
-					an_item := an_iterator.item
-					if an_item.is_atomic_value then
-						items_count := items_count + 1
-						if items_count > 1 then
+					l_item := l_iterator.item
+					if l_item.is_atomic_value then
+						l_items_count := l_items_count + 1
+						if l_items_count > 1 then
 							set_last_error_from_string (STRING_.concat ("A sequence of more than one item is not allowed as the ",
-																					  role.message), role.namespace_uri, role.error_code, Type_error)
+								role.message), role.namespace_uri, role.error_code, Type_error)
 						else
-							last_evaluated_item := an_item
+							a_result.put (l_item)
 						end
 					else -- Node
-						a_value := an_item.as_node.atomized_value
-						items_count := a_value.count
-						if items_count > 1 then
-							set_last_error_from_string (STRING_.concat ("A sequence of more than one item is not allowed as the ",
-																					  role.message), role.namespace_uri, role.error_code, Type_error)
-						elseif items_count = 1 then
-							last_evaluated_item := a_value.item_at (1)
+						l_value := l_item.as_node.atomized_value
+						l_items_count := l_value.count
+						if l_items_count > 1 then
+							set_last_error_from_string (STRING_.concat ("A sequence of more than one item is not allowed as the ", role.message), role.namespace_uri, role.error_code, Type_error)
+						elseif l_items_count = 1 then
+							a_result.put (l_value.item_at (1))
 						end
 					end
 					if not is_error then
-						an_iterator.forth
-						if an_iterator.is_error then
-							set_last_error (an_iterator.error_value)
+						l_iterator.forth
+						if l_iterator.is_error then
+							set_last_error (l_iterator.error_value)
 						end
 					end
 				end
 			end
 			if is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (error_value)
-			elseif items_count = 0 then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
+			elseif l_items_count = 0 then
 				if allows_empty then
-					last_evaluated_item := Void
+					a_result.put (Void)
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat ("An empty sequence is not allowed as the ",
-																																	 role.message), role.namespace_uri, role.error_code, Type_error)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.concat ("An empty sequence is not allowed as the ",
+						role.message), role.namespace_uri, role.error_code, Type_error))
 				end
 			end
 		end

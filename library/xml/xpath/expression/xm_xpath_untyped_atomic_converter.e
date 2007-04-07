@@ -114,25 +114,23 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_message: STRING
+			l_message: STRING
 		do
-			base_expression.evaluate_item (a_context)
-			if base_expression.last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif base_expression.last_evaluated_item.is_error then
-				last_evaluated_item := base_expression.last_evaluated_item
-			elseif base_expression.last_evaluated_item.is_untyped_atomic then
-				if base_expression.last_evaluated_item.as_untyped_atomic.is_convertible (target_type) then
-					last_evaluated_item := base_expression.last_evaluated_item.as_untyped_atomic.convert_to_type (target_type)
+			base_expression.evaluate_item (a_result, a_context)
+			if a_result.item = Void or else a_result.item.is_error then
+				-- nothing to do
+			elseif a_result.item.is_untyped_atomic then
+				if a_result.item.as_untyped_atomic.is_convertible (target_type) then
+					a_result.put (a_result.item.as_untyped_atomic.convert_to_type (target_type))
 				else
-					a_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, error_code, Type_error)
+					l_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (l_message, Xpath_errors_uri, error_code, Type_error))
 				end
 			else
-				last_evaluated_item := base_expression.last_evaluated_item
+				-- nothing to do
 			end
 		end
 

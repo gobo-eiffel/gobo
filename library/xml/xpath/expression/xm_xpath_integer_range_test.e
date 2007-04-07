@@ -108,30 +108,30 @@ feature -- Optimization
 
 feature -- Evaluation
 
-		evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
 			l_value: XM_XPATH_NUMERIC_VALUE
 		do
-			value.evaluate_item (a_context)
-			if value.last_evaluated_item = Void then
-				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
-			elseif value.last_evaluated_item.is_error then
-				last_evaluated_item := value.last_evaluated_item
-			else
-				l_value := value.last_evaluated_item.as_numeric_value
-				minimum_bound.evaluate_item (a_context)
-				if minimum_bound.last_evaluated_item.is_error then
-					last_evaluated_item := minimum_bound.last_evaluated_item
+			value.evaluate_item (a_result, a_context)
+			if a_result.item = Void then
+				a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
+			elseif not a_result.item.is_error then
+				l_value := a_result.item.as_numeric_value
+				a_result.put (Void)
+				minimum_bound.evaluate_item (a_result, a_context)
+				if a_result.item = Void or else a_result.item.is_error then
+					-- nothing to do
 				else
-					if l_value.three_way_comparison (minimum_bound.last_evaluated_item.as_numeric_value, a_context) = -1 then
-						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+					if l_value.three_way_comparison (a_result.item.as_numeric_value, a_context) = -1 then
+						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 					else
-						maximum_bound.evaluate_item (a_context)
-						if maximum_bound.last_evaluated_item.is_error then
-							last_evaluated_item := maximum_bound.last_evaluated_item
+						a_result.put (Void)
+						maximum_bound.evaluate_item (a_result, a_context)
+						if a_result.item = Void or else a_result.item.is_error then
+							-- nothing to do
 						else
-							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (l_value.three_way_comparison (maximum_bound.last_evaluated_item.as_numeric_value, a_context) < 1)
+							a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (l_value.three_way_comparison (a_result.item.as_numeric_value, a_context) < 1))
 						end
 					end
 				end

@@ -62,38 +62,39 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_href, an_encoding: STRING
-			a_uri: UT_URI
+			l_href, l_encoding: STRING
+			l_uri: UT_URI
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void then
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void then
 				-- logically can't happen - needs a change to the spec
-				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (True)
-			elseif arguments.item (1).last_evaluated_item.is_error then
-				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+				a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (True))
+			elseif a_result.item.is_error then
+				a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 			else
-				an_href := arguments.item (1).last_evaluated_item.string_value
-				if Url_encoding.has_excluded_characters (an_href) then
-					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
-				elseif an_href.has ('#') then
-					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+				l_href := a_result.item.string_value
+				if Url_encoding.has_excluded_characters (l_href) then
+					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
+				elseif l_href.has ('#') then
+					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 				else
-					create a_uri.make_resolve (base_uri, an_href)
+					create l_uri.make_resolve (base_uri, l_href)
 					if arguments.count = 2 then
-						arguments.item (2).evaluate_item (a_context)
-						if arguments.item (2).last_evaluated_item /= Void then
-							if arguments.item (2).last_evaluated_item.is_error then
-								create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+						a_result.put (Void)
+						arguments.item (2).evaluate_item (a_result, a_context)
+						if a_result.item /= Void then
+							if a_result.item.is_error then
+								a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 							else
-								an_encoding := arguments.item (2).last_evaluated_item.string_value
+								l_encoding := a_result.item.string_value
 							end
 						end
 					end
-					if last_evaluated_item = Void then -- no result yet
-						last_evaluated_item := evaluated_unparsed_text (a_uri, an_encoding, a_context, True)
+					if a_result.item = Void then -- no result yet
+						a_result.put (evaluated_unparsed_text (l_uri, l_encoding, a_context, True))
 					end
 				end
 			end

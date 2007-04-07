@@ -27,7 +27,7 @@ inherit
 
 create
 
-	make, make_from_string
+	make
 
 
 feature {NONE} -- Initialization
@@ -38,15 +38,6 @@ feature {NONE} -- Initialization
 			value := a_value
 		ensure
 			value_set: value = a_value
-		end
-
-	make_from_string (a_value: STRING) is
-		require
--- TODO: does not compile with ISE 5.6.
---			is_integer: a_value.is_integer_64
-		do
-			make_atomic_value
-			value := a_value.to_integer_64
 		end
 
 feature -- Access

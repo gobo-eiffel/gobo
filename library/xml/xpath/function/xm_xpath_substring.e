@@ -66,43 +66,41 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
 			l_string: STRING
-			l_item: XM_XPATH_ITEM
 			l_double_value: XM_XPATH_DOUBLE_VALUE
 			l_starting_position, l_ending_position, l_count: INTEGER
 		do
-			last_evaluated_item := Void
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void then
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
-			else
-				l_string := arguments.item (1).last_evaluated_item.string_value
-				arguments.item (2).evaluate_item (a_context)
-				if arguments.item (2).last_evaluated_item /= Void and then arguments.item (2).last_evaluated_item.is_error then
-					last_evaluated_item := arguments.item (2).last_evaluated_item
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void then
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+			elseif not a_result.item.is_error then
+				l_string := a_result.item.string_value
+				a_result.put (Void)
+				arguments.item (2).evaluate_item (a_result, a_context)
+				if a_result.item /= Void and then a_result.item.is_error then
+					-- nothing to do
 				else
-					l_item := arguments.item (2).last_evaluated_item
 					check
-						second_argument_convertible_to_double: l_item.is_atomic_value and then	l_item.as_atomic_value.is_convertible (type_factory.double_type)
+						second_argument_convertible_to_double: a_result.item.is_atomic_value and then	a_result.item.as_atomic_value.is_convertible (type_factory.double_type)
 						-- static typing
 					end
-					l_double_value := l_item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
+					l_double_value := a_result.item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
 					if l_double_value.is_platform_integer then
 						l_starting_position := DOUBLE_.truncated_to_integer (l_double_value.value)
 						if arguments.count = 3 then
-							arguments.item (3).evaluate_item (a_context)
-							if arguments.item (3).last_evaluated_item.is_error then
-								last_evaluated_item := arguments.item (3).last_evaluated_item
+							a_result.put (Void)
+							arguments.item (3).evaluate_item (a_result, a_context)
+							if  a_result.item /= Void and then a_result.item.is_error then
+								-- nothing to do
 							else
-								l_item := arguments.item (3).last_evaluated_item
 								check
-									third_argument_convertible_to_double: l_item.is_atomic_value and then l_item.as_atomic_value.is_convertible (type_factory.double_type)
+									third_argument_convertible_to_double: a_result.item.is_atomic_value and then	a_result.item.as_atomic_value.is_convertible (type_factory.double_type)
 									-- static typing
 								end
-								l_double_value := l_item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
+								l_double_value := a_result.item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
 								if l_double_value.is_platform_integer then
 									l_count := DOUBLE_.truncated_to_integer (l_double_value.value)
 									if l_count < 1 then
@@ -113,23 +111,23 @@ feature -- Evaluation
 										l_ending_position := l_string.count
 									end
 								else
-									create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+									a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 								end
 							end
 						else
 							l_ending_position := l_string.count
 						end
 					else
-						create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+						a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 					end
 				end
 			end
-			if last_evaluated_item = Void then
+			if a_result.item = Void then
 				if l_starting_position < 1 then l_starting_position := 1 end
 				if l_ending_position < l_starting_position then
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 				else
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (l_string.substring (l_starting_position, l_ending_position))
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_string.substring (l_starting_position, l_ending_position)))
 				end
 			end
 		end

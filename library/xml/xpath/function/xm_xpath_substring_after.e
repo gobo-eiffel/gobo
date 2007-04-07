@@ -71,40 +71,38 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_collator: ST_COLLATOR
-			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
-			an_item: XM_XPATH_ITEM
-			s1, s2: STRING
+			l_collator: ST_COLLATOR
+			l_atomic_value, l_other_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_s1, l_s2: STRING
 		do
-			a_collator := collator (3, a_context, True)
-			if a_collator = Void then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
+			l_collator := collator (3, a_context, True)
+			if l_collator = Void then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error))
 			else
-				arguments.item (1).evaluate_item (a_context)
-				an_item := arguments.item (1).last_evaluated_item
-				if not an_item.is_atomic_value then
-					create {XM_XPATH_STRING_VALUE} an_atomic_value.make ("")
+				arguments.item (1).evaluate_item (a_result, a_context)
+				if not a_result.item.is_atomic_value then
+					create {XM_XPATH_STRING_VALUE} l_atomic_value.make ("")
 				else
-					an_atomic_value := an_item.as_atomic_value
+					l_atomic_value := a_result.item.as_atomic_value
 				end
-				arguments.item (2).evaluate_item (a_context)
-				an_item := arguments.item (2).last_evaluated_item
-				if not an_item.is_atomic_value then
-					create {XM_XPATH_STRING_VALUE} another_atomic_value.make ("")
+				a_result.put (Void)
+				arguments.item (2).evaluate_item (a_result, a_context)
+				if not a_result.item.is_atomic_value then
+					create {XM_XPATH_STRING_VALUE} l_other_atomic_value.make ("")
 				else
-					another_atomic_value := an_item.as_atomic_value
+					l_other_atomic_value := a_result.item.as_atomic_value
 				end
-				s1 := an_atomic_value.string_value
-				s2 := another_atomic_value.string_value
-				if s2.count = 0 then
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (s1)
-				elseif s1.count = 0 then
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+				l_s1 := l_atomic_value.string_value
+				l_s2 := l_other_atomic_value.string_value
+				if l_s2.count = 0 then
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_s1))
+				elseif l_s1.count = 0 then
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 				else
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (substring_after (s1, s2, a_collator))
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (substring_after (l_s1, l_s2, l_collator)))
 				end
 			end
 		end

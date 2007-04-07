@@ -384,41 +384,39 @@ feature -- Evaluation
 			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			a_new_context: XM_XSLT_EVALUATION_CONTEXT
-			an_action: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_action: XM_XPATH_EXPRESSION
 		do
-			last_evaluated_item := Void
-			a_new_context ?= a_context
+			l_new_context ?= a_context
 			check
-				evaluation_context: a_new_context /= Void
+				evaluation_context: l_new_context /= Void
 				-- This is XSLT
 			end
 			from
-				a_cursor := conditions.new_cursor; a_cursor.start
+				l_cursor := conditions.new_cursor; l_cursor.start
 			variant
-				conditions.count + 1 - a_cursor.index
+				conditions.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_cursor.item.calculate_effective_boolean_value (a_context)
-				a_boolean_value := a_cursor.item.last_boolean_value
-				if a_boolean_value.is_error then
-					a_boolean_value.error_value.set_location (system_id, line_number)
-					a_new_context.transformer.report_fatal_error (a_boolean_value.error_value)
-					last_evaluated_item := a_boolean_value
-					a_cursor.go_after
-				elseif a_boolean_value.value then
-					an_action := actions.item (a_cursor.index)
-					an_action.evaluate_item (a_context)
-					last_evaluated_item := an_action.last_evaluated_item
-					a_cursor.go_after
+				l_cursor.item.calculate_effective_boolean_value (a_context)
+				l_boolean_value := l_cursor.item.last_boolean_value
+				if l_boolean_value.is_error then
+					l_boolean_value.error_value.set_location (system_id, line_number)
+					l_new_context.transformer.report_fatal_error (l_boolean_value.error_value)
+					a_result.put (l_boolean_value)
+					l_cursor.go_after
+				elseif l_boolean_value.value then
+					l_action := actions.item (l_cursor.index)
+					l_action.evaluate_item (a_result, a_context)
+					l_cursor.go_after
 				else
-					a_cursor.forth
+					l_cursor.forth
 				end
 			end
 		end

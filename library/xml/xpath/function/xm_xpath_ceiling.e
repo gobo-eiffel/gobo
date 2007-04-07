@@ -63,18 +63,17 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			arguments.item (1).evaluate_item (a_context)
-			last_evaluated_item := arguments.item (1).last_evaluated_item
-			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
 				check
-					is_atomic: last_evaluated_item.is_atomic_value
-					is_numeric: last_evaluated_item.as_atomic_value.primitive_value.is_numeric_value
+					is_atomic: a_result.item.is_atomic_value
+					is_numeric: a_result.item.as_atomic_value.primitive_value.is_numeric_value
 					-- static typing
 				end
-				last_evaluated_item := last_evaluated_item.as_atomic_value.primitive_value.as_numeric_value.ceiling
+				a_result.put (a_result.item.as_atomic_value.primitive_value.as_numeric_value.ceiling)
 			end
 		end
 

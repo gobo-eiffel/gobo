@@ -133,23 +133,23 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_orphan: XM_XPATH_ORPHAN
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_orphan: XM_XPATH_ORPHAN
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			an_evaluation_context ?= a_context
+			l_evaluation_context ?= a_context
 			check
-				evaluation_context: an_evaluation_context /= Void
+				evaluation_context: l_evaluation_context /= Void
 				-- This is XSLT
 			end
-			expand_children (an_evaluation_context)
+			expand_children (l_evaluation_context)
 			if not is_error then
-				create an_orphan.make (Text_node, last_string_value)
-				last_evaluated_item := an_orphan
+				create l_orphan.make (Text_node, last_string_value)
+				a_result.put (l_orphan)
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (error_value)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
 			end
 		end
 

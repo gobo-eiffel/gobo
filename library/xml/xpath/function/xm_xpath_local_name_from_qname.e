@@ -65,17 +65,13 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif arguments.item (1).last_evaluated_item.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_item
-			else
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
 				if conformance.basic_xslt_processor then
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (arguments.item (1).last_evaluated_item.as_qname_value.local_name)
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (a_result.item.as_qname_value.local_name))
 				else
 					todo ("evaluate_item (schema-aware)", True)
 				end

@@ -116,14 +116,16 @@ feature -- Matching
 			l_strings:  DS_LIST [STRING]
 			l_cursor: DS_LIST_CURSOR [STRING]
 			l_element: XM_XPATH_ELEMENT
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			internal_last_match_result := False
 			if a_node.node_type = Element_node then
 				l_doc := a_node.document_root
 				if l_doc /= Void then
-					id_expression.evaluate_item (a_context)
-					if id_expression.last_evaluated_item.is_string_value then
-						l_ids := id_expression.last_evaluated_item.as_string_value.string_value
+					create l_item.make (Void)
+					id_expression.evaluate_item (l_item, a_context)
+					if l_item.item.is_string_value then
+						l_ids := l_item.item.as_string_value.string_value
 						create l_splitter.make
 						l_strings := l_splitter.split (l_ids)
 						check

@@ -60,26 +60,25 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_time_value: XM_XPATH_TIME_VALUE
-			a_millisecond: INTEGER
-			a_decimal_value: XM_XPATH_DECIMAL_VALUE
-			a_decimal: MA_DECIMAL
+			l_time_value: XM_XPATH_TIME_VALUE
+			l_millisecond: INTEGER
+			l_decimal_value: XM_XPATH_DECIMAL_VALUE
+			l_decimal: MA_DECIMAL
 		do
-			arguments.item (1).evaluate_item (a_context)
-			last_evaluated_item := arguments.item (1).last_evaluated_item
-			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
-				a_time_value := last_evaluated_item.as_atomic_value.as_time_value
-				create a_decimal_value.make_from_integer (a_time_value.time.second)
-				a_millisecond := a_time_value.time.millisecond
-				if a_millisecond /= 0 then
-					create a_decimal.make_from_integer (a_millisecond)
-					a_decimal := a_decimal / one_thousand
-					create a_decimal_value.make (a_decimal_value.value + a_decimal)
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
+				l_time_value := a_result.item.as_atomic_value.as_time_value
+				create l_decimal_value.make_from_integer (l_time_value.time.second)
+				l_millisecond := l_time_value.time.millisecond
+				if l_millisecond /= 0 then
+					create l_decimal.make_from_integer (l_millisecond)
+					l_decimal := l_decimal / one_thousand
+					create l_decimal_value.make (l_decimal_value.value + l_decimal)
 				end
-				last_evaluated_item := a_decimal_value
+				a_result.put (l_decimal_value)
 			end
 		end
 

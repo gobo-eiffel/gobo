@@ -169,22 +169,25 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
-			last_evaluated_item := last_boolean_value
+			a_result.put (last_boolean_value)
 		end
 
 	
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			base_expression.evaluate_item (a_context)
-			if not base_expression.last_evaluated_item.is_atomic_value then
+			create l_result.make (Void)
+			base_expression.evaluate_item (l_result, a_context)
+			if not l_result.item.is_atomic_value then
 				create last_boolean_value.make (is_empty_allowed)
 			else
-				create last_boolean_value.make (base_expression.last_evaluated_item.as_atomic_value.is_convertible (target_type))
+				create last_boolean_value.make (l_result.item.as_atomic_value.is_convertible (target_type))
 			end
 		end
 

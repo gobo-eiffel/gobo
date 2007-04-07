@@ -69,101 +69,105 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			evaluate_as_string (a_context)
-			last_evaluated_item := last_evaluated_string
+			a_result.put (last_evaluated_string)
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a String
 		local
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			a_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
-			a_number: XM_XPATH_NUMERIC_VALUE
-			a_uri: STRING
-			a_parser: XM_XPATH_QNAME_PARSER
-			in_error: BOOLEAN
-			a_fingerprint: INTEGER
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
+			l_number: XM_XPATH_NUMERIC_VALUE
+			l_uri: STRING
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_in_error: BOOLEAN
+			l_fingerprint: INTEGER
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void then
-				create {XM_XPATH_DOUBLE_VALUE} a_number.make_nan
-			elseif arguments.item (1).last_evaluated_item.is_error then
+			create l_item.make (Void)
+			arguments.item (1).evaluate_item (l_item, a_context)
+			if l_item.item = Void then
+				create {XM_XPATH_DOUBLE_VALUE} l_number.make_nan
+			elseif l_item.item.is_error then
 				create last_evaluated_string.make ("")
-				last_evaluated_string.set_last_error (arguments.item (1).last_evaluated_item.error_value)
-				in_error := True
+				last_evaluated_string.set_last_error (l_item.item.error_value)
+				l_in_error := True
 			else
 				check
-					numeric: arguments.item (1).last_evaluated_item.is_numeric_value -- static typing
+					numeric: l_item.item.is_numeric_value -- static typing
 				end
-				a_number := arguments.item (1).last_evaluated_item.as_numeric_value
+				l_number := l_item.item.as_numeric_value
 			end
-			if not in_error then
+			if not l_in_error then
 				if decimal_format = Void then
 					if is_fixup_required then
 						create last_evaluated_string.make ("")
 						last_evaluated_string.set_last_error_from_string ("Unknown decimal format name",
 																						  Xpath_errors_uri, "XTDE1280", Dynamic_error)
-						in_error := True
+						l_in_error := True
 					else
-						an_evaluation_context ?= a_context
+						l_evaluation_context ?= a_context
 						check
-							evaluation_context_not_void: an_evaluation_context /= Void
+							evaluation_context_not_void: l_evaluation_context /= Void
 							-- as this is an XSLT function
 						end
-						a_dfm := an_evaluation_context.transformer.decimal_format_manager
+						l_dfm := l_evaluation_context.transformer.decimal_format_manager
 						if arguments.count = 2 then
-							decimal_format := a_dfm.default_decimal_format
+							decimal_format := l_dfm.default_decimal_format
 						else
-							arguments.item (3).evaluate_item (a_context)
-							if arguments.item (3).last_evaluated_item.is_error then
+							create l_item.make (Void)
+							arguments.item (3).evaluate_item (l_item, a_context)
+							if l_item.item.is_error then
 								create last_evaluated_string.make ("")
 								last_evaluated_string.set_last_error_from_string ("Invalid decimal format name",
 																								  Xpath_errors_uri, "XTDE1280", Dynamic_error)
-								in_error := True
+								l_in_error := True
 							else
-								create a_parser.make (arguments.item (3).last_evaluated_item.string_value)
-								if a_parser.is_prefix_present then
-									a_uri := namespace_resolver.uri_for_defaulted_prefix (a_parser.optional_prefix, False)
-									if a_uri = Void then
+								create l_parser.make (l_item.item.string_value)
+								if l_parser.is_prefix_present then
+									l_uri := namespace_resolver.uri_for_defaulted_prefix (l_parser.optional_prefix, False)
+									if l_uri = Void then
 										create last_evaluated_string.make ("")
 										last_evaluated_string.set_last_error_from_string ("Prefix for decimal format name has not been declared",
 																										  Xpath_errors_uri, "XTDE1280", Dynamic_error)
-										in_error := True
+										l_in_error := True
 									end
 								else
-									a_uri := Null_uri
+									l_uri := Null_uri
 								end
-								if not in_error then
-									a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
-									if a_dfm.has_named_format (a_fingerprint) then
-										decimal_format := a_dfm.named_format (a_fingerprint)
+								if not l_in_error then
+									l_fingerprint := shared_name_pool.fingerprint (l_uri, l_parser.local_name)
+									if l_dfm.has_named_format (l_fingerprint) then
+										decimal_format := l_dfm.named_format (l_fingerprint)
 									else
 										create last_evaluated_string.make ("")
 										last_evaluated_string.set_last_error_from_string ("Named decimal format has not been declared",
 																										  Xpath_errors_uri, "XTDE1280", Dynamic_error)
-										in_error := True
+										l_in_error := True
 									end
 								end
 							end
 						end
 					end
 				end
-				if not in_error then
+				if not l_in_error then
 					if sub_pictures = Void then
-						arguments.item (2).evaluate_item (a_context)
-						if arguments.item (2).last_evaluated_item.is_error then
+						create l_item.make (Void)
+						arguments.item (2).evaluate_item (l_item, a_context)
+						if l_item.item.is_error then
 							create last_evaluated_string.make ("")
-							last_evaluated_string.set_last_error (last_evaluated_item.error_value)
+							last_evaluated_string.set_last_error (l_item.item.error_value)
 						else
-							picture := arguments.item (2).last_evaluated_item.string_value
+							picture := l_item.item.string_value
 							sub_pictures := analyzed_sub_pictures (picture, decimal_format)
 						end
 					end
 					if sub_pictures /= Void then
-						create last_evaluated_string.make (formatted_number (a_number))
+						create last_evaluated_string.make (formatted_number (l_number))
 					else
 						create last_evaluated_string.make ("")
 						last_evaluated_string.set_last_error (error_value)

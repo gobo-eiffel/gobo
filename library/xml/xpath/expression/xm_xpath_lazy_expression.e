@@ -52,11 +52,10 @@ feature -- Conversion
 	
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			base_expression.evaluate_item (a_context)
-			last_evaluated_item := base_expression.last_evaluated_item
+			base_expression.evaluate_item (a_result, a_context)
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is

@@ -184,11 +184,11 @@ feature -- Evaluation
 			no_tail_calls: not a_context.is_process_error implies True -- l_tail_call = Void
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
-			another_context: XM_XSLT_EVALUATION_CONTEXT
+			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
+			l_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			check
 				emulation: not is_evaluate_item_supported
@@ -196,75 +196,77 @@ feature -- Evaluation
 			if is_iterator_supported then
 				create_iterator (a_context)
 				if last_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
 				else
 					last_iterator.start
 					if last_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
 					elseif last_iterator.after then
-						last_evaluated_item := Void
+						a_result.put (Void)
 					else
-						last_evaluated_item := last_iterator.item
+						a_result.put (last_iterator.item)
 					end
 				end
 			else
-				another_context ?= a_context.new_minor_context
+				l_context ?= a_context.new_minor_context
 				check
-					evaluation_context: another_context /= Void
+					evaluation_context: l_context /= Void
 					-- This is XSLT
 				end
-				create a_receiver.make_with_size (1, another_context.transformer)
-				another_context.change_to_sequence_output_destination (a_receiver)
-				generate_events (another_context)
-				a_receiver.close
-				last_evaluated_item := a_receiver.first_item
+				create l_receiver.make_with_size (1, l_context.transformer)
+				l_context.change_to_sequence_output_destination (l_receiver)
+				generate_events (l_context)
+				l_receiver.close
+				a_result.put (l_receiver.first_item)
 			end
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			a_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
-			another_context: XM_XSLT_EVALUATION_CONTEXT
+			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
+			l_other_context: XM_XSLT_EVALUATION_CONTEXT
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			check
 				emulation: not is_iterator_supported
 			end
 			if is_evaluate_item_supported then
-				evaluate_item (a_context)
-				if last_evaluated_item = Void then
+				create l_item.make (Void)
+				evaluate_item (l_item, a_context)
+				if l_item.item = Void then
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-				elseif last_evaluated_item.is_error then
+				elseif l_item.item.is_error then
 					if is_node_sequence then
-						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_item.item.error_value)
 					else
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.item.error_value)
 					end
 				else
-					if not last_evaluated_item.is_node then
-						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item)
+					if not l_item.item.is_node then
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_item.item)
 					else
-						create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (last_evaluated_item.as_node)
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_item.item.as_node)
 					end
 				end
 			else
-				another_context ?= a_context.new_minor_context
+				l_other_context ?= a_context.new_minor_context
 				check
-					evaluation_context: another_context /= Void
+					evaluation_context: l_other_context /= Void
 					-- This is XSLT
 				end
-				create a_receiver.make (another_context.transformer)
-				another_context.change_to_sequence_output_destination (a_receiver)
-				generate_events (another_context)
-				if a_receiver.is_open then a_receiver.close end
-				if not another_context.transformer.is_error then
-					a_receiver.sequence.create_iterator (another_context)
-					last_iterator := a_receiver.sequence.last_iterator
+				create l_receiver.make (l_other_context.transformer)
+				l_other_context.change_to_sequence_output_destination (l_receiver)
+				generate_events (l_other_context)
+				if l_receiver.is_open then l_receiver.close end
+				if not l_other_context.transformer.is_error then
+					l_receiver.sequence.create_iterator (l_other_context)
+					last_iterator := l_receiver.sequence.last_iterator
 				else
 					if is_node_sequence then
-						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (another_context.transformer.last_error)
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_other_context.transformer.last_error)
 					else
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (another_context.transformer.last_error)
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_other_context.transformer.last_error)
 					end
 				end
 			end
@@ -280,19 +282,19 @@ feature -- Evaluation
 	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
 			-- Eager evaluation via `generate_events'
 		local
-			a_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
-			another_context: XM_XSLT_EVALUATION_CONTEXT
+			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
+			l_other_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			another_context ?= a_context.new_minor_context
+			l_other_context ?= a_context.new_minor_context
 				check
-					evaluation_context: another_context /= Void
+					evaluation_context: l_other_context /= Void
 					-- This is XSLT
 				end
-			create a_receiver.make (another_context.transformer)
-			another_context.change_to_sequence_output_destination (a_receiver)
-			generate_events (another_context)
-			a_receiver.close
-			Result := a_receiver.sequence
+			create l_receiver.make (l_other_context.transformer)
+			l_other_context.change_to_sequence_output_destination (l_receiver)
+			generate_events (l_other_context)
+			l_receiver.close
+			Result := l_receiver.sequence
 		end
 
 feature -- Element change

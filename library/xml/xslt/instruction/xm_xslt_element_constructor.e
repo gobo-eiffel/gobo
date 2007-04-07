@@ -154,35 +154,35 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			an_old_receiver, a_receiver: XM_XPATH_SEQUENCE_RECEIVER
-			a_validator: XM_XPATH_RECEIVER
-			a_new_context: XM_XSLT_EVALUATION_CONTEXT
-			an_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
-			a_name_code, some_properties: INTEGER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_old_receiver, l_receiver: XM_XPATH_SEQUENCE_RECEIVER
+			l_validator: XM_XPATH_RECEIVER
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
+			l_name_code, l_properties: INTEGER
 		do
-			a_new_context ?= a_context.new_minor_context
+			l_new_context ?= a_context.new_minor_context
 			check
-				evaluation_context: a_new_context /= Void
+				evaluation_context: l_new_context /= Void
 				-- This is XSLT
 			end
-			a_transformer := a_new_context.transformer
-			an_old_receiver := a_new_context.current_receiver
-			an_outputter ?= an_old_receiver
-			if an_outputter = Void or else an_outputter.is_under_construction then
-				create an_outputter.make_with_size (1, a_transformer)
+			l_transformer := l_new_context.transformer
+			l_old_receiver := l_new_context.current_receiver
+			l_outputter ?= l_old_receiver
+			if l_outputter = Void or else l_outputter.is_under_construction then
+				create l_outputter.make_with_size (1, l_transformer)
 			end
-			a_receiver := an_outputter
-			a_name_code := name_code (a_new_context)
-			if not a_transformer.is_error then
-				a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
-				if a_validator = a_receiver then
-					a_new_context.change_to_sequence_output_destination (a_receiver)
-					if a_receiver.base_uri.is_empty then
-						a_receiver.set_base_uri (new_base_uri (a_context))
+			l_receiver := l_outputter
+			l_name_code := name_code (l_new_context)
+			if not l_transformer.is_error then
+				l_validator := l_transformer.configuration.element_validator (l_receiver, l_name_code, Void, validation_action)
+				if l_validator = l_receiver then
+					l_new_context.change_to_sequence_output_destination (l_receiver)
+					if l_receiver.base_uri.is_empty then
+						l_receiver.set_base_uri (new_base_uri (a_context))
 					end
 				else
 					check
@@ -190,18 +190,18 @@ feature -- Evaluation
 						-- Only Basic XSLT processor is supported now
 					end
 				end
-				if not is_inherit_namespaces then some_properties := Disinherit_namespaces end
+				if not is_inherit_namespaces then l_properties := Disinherit_namespaces end
 				-- N.B. The element is constructed as a parentless element
-				a_receiver.start_element (a_name_code, -1, some_properties)
-				output_namespace_nodes (a_new_context, a_receiver)
-				content.generate_events (a_new_context)
-				if not a_transformer.is_error then
-					a_receiver.end_element
-					a_receiver.close
-					an_outputter.pop_last_item
-					last_evaluated_item := an_outputter.last_popped_item
+				l_receiver.start_element (l_name_code, -1, l_properties)
+				output_namespace_nodes (l_new_context, l_receiver)
+				content.generate_events (l_new_context)
+				if not l_transformer.is_error then
+					l_receiver.end_element
+					l_receiver.close
+					l_outputter.pop_last_item
+					a_result.put (l_outputter.last_popped_item)
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (a_transformer.last_error)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_transformer.last_error))
 				end
 			end
 		end
@@ -212,7 +212,7 @@ feature -- Evaluation
 			a_name_code, some_properties: INTEGER
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
-			a_validator: XM_XPATH_RECEIVER
+			l_validator: XM_XPATH_RECEIVER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_name_code := name_code (a_context)
@@ -224,8 +224,8 @@ feature -- Evaluation
 					a_context.transformer.report_fatal_error (an_error)
 				else
 					a_receiver := a_context.current_receiver
-					a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
-					if a_validator /= a_receiver then
+					l_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
+					if l_validator /= a_receiver then
 						check
 							schema_aware: False
 							-- Only Basic XSLT processor is supported now

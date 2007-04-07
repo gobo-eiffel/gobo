@@ -71,39 +71,38 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_item, another_item: XM_XPATH_ITEM
-			a_language: STRING
+			l_item, l_other_item: XM_XPATH_ITEM
+			l_language: STRING
 		do
-			last_evaluated_item := Void
 			if arguments.count = 2 then
-				arguments.item (2).evaluate_item (a_context)
-				an_item := arguments.item (2).last_evaluated_item
+				arguments.item (2).evaluate_item (a_result, a_context)
+				l_item := a_result.item
+				a_result.put (Void)
 			else
-				an_item := a_context.context_item
+				l_item := a_context.context_item
 			end
-			if an_item = Void then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is undefined", Xpath_errors_uri, "FONC0001", Dynamic_error)
-			elseif an_item.is_error then
-				last_evaluated_item := an_item
+			if l_item = Void then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("The context item is undefined", Xpath_errors_uri, "FONC0001", Dynamic_error))
+			elseif l_item.is_error then
+				a_result.put (l_item)
 			else
-				if not an_item.is_node then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not a node", Xpath_errors_uri, "FOTY0011", Dynamic_error)
+				if not l_item.is_node then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("The context item is not a node", Xpath_errors_uri, "FOTY0011", Dynamic_error))
 				else
-					arguments.item (1).evaluate_item (a_context)
-					another_item := arguments.item (1).last_evaluated_item
-					if another_item = Void then
-						a_language := ""
-					elseif another_item.is_error then
-						last_evaluated_item := another_item
-					else
-						a_language := another_item.string_value
+					arguments.item (1).evaluate_item (a_result, a_context)
+					l_other_item := a_result.item
+					a_result.put (Void)
+					if l_other_item = Void then
+						l_language := ""
+					elseif not l_other_item.is_error then
+						l_language := l_other_item.string_value
 					end
 				end
-				if last_evaluated_item = Void then -- no error
-					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (is_lang (a_language, an_item.as_node))
+				if a_result.item = Void then -- no error
+					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (is_lang (l_language, l_item.as_node)))
 				end
 			end
 		end

@@ -104,28 +104,31 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate an expression as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			create_iterator (a_context)
 			if last_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
 			else
 				last_iterator.start
 				if not last_iterator.after then
-					last_evaluated_item := last_iterator.item
+					a_result.put (last_iterator.item) -- the assumption is cardinality is zero or one
 				end
 			end
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a String
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			evaluate_item (a_context)
-			if not last_evaluated_item.is_string_value then
+			create l_result.make (Void)
+			evaluate_item (l_result, a_context)
+			if not l_result.item.is_string_value then
 				create last_evaluated_string.make ("")
 			else
-				last_evaluated_string := last_evaluated_item.as_string_value 
+				last_evaluated_string := l_result.item.as_string_value 
 			end
 		end
 

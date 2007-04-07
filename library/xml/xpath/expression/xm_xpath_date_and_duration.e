@@ -41,40 +41,38 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item;
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
-			a_calendar_value: XM_XPATH_CALENDAR_VALUE
-			a_duration: XM_XPATH_DURATION_VALUE
-			an_item: XM_XPATH_ITEM
+			l_calendar_value: XM_XPATH_CALENDAR_VALUE
+			l_duration: XM_XPATH_DURATION_VALUE
+			l_item: XM_XPATH_ITEM
 		do
-			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif first_operand.last_evaluated_item.is_error then
-				last_evaluated_item := first_operand.last_evaluated_item
+			first_operand.evaluate_item (a_result, a_context)
+			if a_result.item = Void or else a_result.item.is_error then
+				-- nothing to do
 			else
-				second_operand.evaluate_item (a_context)
-				if second_operand.last_evaluated_item = Void then
-				last_evaluated_item := Void
-				elseif second_operand.last_evaluated_item.is_error then
-					last_evaluated_item := second_operand.last_evaluated_item
+				l_item := a_result.item
+				a_result.put (Void)
+				second_operand.evaluate_item (a_result, a_context)
+				if a_result.item = Void or else a_result.item.is_error then
+					-- nothing to do
 				else
-					a_calendar_value := first_operand.last_evaluated_item.as_atomic_value.as_calendar_value
-					a_duration := second_operand.last_evaluated_item.as_atomic_value.as_duration_value
+					l_calendar_value := l_item.as_atomic_value.as_calendar_value
+					l_duration := a_result.item.as_atomic_value.as_duration_value
 					if operator = Plus_token then
-						last_evaluated_item := a_calendar_value.plus (a_duration)
+						a_result.put (l_calendar_value.plus (l_duration))
 					else
 						check
 							minus: operator = Minus_token
 						end
-						an_item := a_duration.multiply (-1.0)
-						if an_item.is_error then
-							last_evaluated_item := an_item
+						l_item := l_duration.multiply (-1.0)
+						if l_item.is_error then
+							a_result.put (l_item)
 						else
-							a_duration := an_item.as_atomic_value.as_duration_value
-							last_evaluated_item := a_calendar_value.plus (a_duration)
+							l_duration := l_item.as_atomic_value.as_duration_value
+							a_result.put (l_calendar_value.plus (l_duration))
 						end
 					end
 				end

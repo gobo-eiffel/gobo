@@ -173,17 +173,20 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			generate_events (a_context)
-			last_evaluated_item := Void
+			a_result.put (Void)
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
-			evaluate_item (a_context)
+			create l_item.make (Void)
+			evaluate_item (l_item, a_context)
 			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 		end
 	

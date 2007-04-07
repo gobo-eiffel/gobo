@@ -66,30 +66,27 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_item: XM_XPATH_ITEM
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			a_zero: XM_XPATH_INTEGER_VALUE
+			l_numeric_value: XM_XPATH_NUMERIC_VALUE
+			l_zero: XM_XPATH_INTEGER_VALUE
 		do
-			arguments.item (1).evaluate_item (a_context)
-			last_evaluated_item := arguments.item (1).last_evaluated_item
-			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
-				an_item := last_evaluated_item
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
 				check
-					is_atomic: an_item.is_atomic_value
-					is_numeric: an_item.as_atomic_value.primitive_value.is_numeric_value
+					is_atomic: a_result.item.is_atomic_value
+					is_numeric: a_result.item.as_atomic_value.primitive_value.is_numeric_value
 					-- static typing
 				end
-				a_numeric_value := an_item.as_atomic_value.primitive_value.as_numeric_value
-				if a_numeric_value.is_zero then
-					create a_zero.make (decimal.zero)
-					last_evaluated_item := a_numeric_value.arithmetic (Plus_token, a_zero)
-				elseif a_numeric_value.is_negative then
-					last_evaluated_item := a_numeric_value.negated_value
+				l_numeric_value := a_result.item.as_atomic_value.primitive_value.as_numeric_value
+				if l_numeric_value.is_zero then
+					create l_zero.make (decimal.zero)
+					a_result.put (l_numeric_value.arithmetic (Plus_token, l_zero))
+				elseif l_numeric_value.is_negative then
+					a_result.put (l_numeric_value.negated_value)
 				else
-					last_evaluated_item := a_numeric_value
+					a_result.put (l_numeric_value)
 				end
 			end
 		end

@@ -60,23 +60,22 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_date_time_value: XM_XPATH_DATE_TIME_VALUE
-			a_dt_duration: DT_DATE_TIME_DURATION
-			a_date_duration: DT_DATE_DURATION
+			l_date_time_value: XM_XPATH_DATE_TIME_VALUE
+			l_dt_duration: DT_DATE_TIME_DURATION
+			l_date_duration: DT_DATE_DURATION
 		do
-			arguments.item (1).evaluate_item (a_context)
-			last_evaluated_item := arguments.item (1).last_evaluated_item
-			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
-				a_date_time_value := last_evaluated_item.as_atomic_value.as_date_time_value
-				if a_date_time_value.zoned then
-					create a_date_duration.make (0, 0, 0)
-					create a_dt_duration.make_from_date_time_duration (a_date_duration, a_date_time_value.zoned_date_time.time_zone.fixed_offset)
-					create {XM_XPATH_SECONDS_DURATION_VALUE} last_evaluated_item.make_from_duration (a_dt_duration)
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
+				l_date_time_value := a_result.item.as_atomic_value.as_date_time_value
+				if l_date_time_value.zoned then
+					create l_date_duration.make (0, 0, 0)
+					create l_dt_duration.make_from_date_time_duration (l_date_duration, l_date_time_value.zoned_date_time.time_zone.fixed_offset)
+					a_result.put (create {XM_XPATH_SECONDS_DURATION_VALUE}.make_from_duration (l_dt_duration))
 				else
-					last_evaluated_item := Void
+					a_result.put (Void)
 				end
 			end
 		end

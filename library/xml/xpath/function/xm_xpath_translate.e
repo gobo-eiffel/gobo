@@ -67,32 +67,46 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_item: XM_XPATH_ITEM
-			a_string: STRING
-			a_source_map, a_target_map: XM_XPATH_STRING_VALUE
+			l_string: STRING
+			l_source_map, l_target_map: XM_XPATH_STRING_VALUE
 		do
-			arguments.item (1).evaluate_item (a_context)
-			an_item := arguments.item (1).last_evaluated_item
-			if an_item /= Void then a_string := an_item.string_value end
-			if a_string = Void then
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then a_result.item.is_error then
+				-- nothing to do
 			else
-				arguments.item (2).evaluate_item (a_context)
-				check
-					source_map: arguments.item (2).last_evaluated_item /= Void and then arguments.item (2).last_evaluated_item.is_string_value
-					-- static typing
+				if a_result.item /= Void then
+					l_string := a_result.item.string_value
 				end
-				a_source_map := arguments.item (2).last_evaluated_item.as_string_value
-				arguments.item (3).evaluate_item (a_context)
-				check
-					target_map: arguments.item (3).last_evaluated_item /= Void and then arguments.item (3).last_evaluated_item.is_string_value
-					-- static typing
+				if l_string = Void then
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+				else
+					a_result.put (Void)
+					arguments.item (2).evaluate_item (a_result, a_context)
+					if a_result.item /= Void and then a_result.item.is_error then
+						-- nothing to do
+					else
+						check
+							source_map: a_result.item /= Void and then a_result.item.is_string_value
+							-- static typing
+						end
+						l_source_map := a_result.item.as_string_value
+						a_result.put (Void)
+						arguments.item (3).evaluate_item (a_result, a_context)
+						if a_result.item /= Void and then a_result.item.is_error then
+							-- nothing to do
+						else
+							check
+								target_map: a_result.item /= Void and then a_result.item.is_string_value
+								-- static typing
+							end
+							l_target_map := a_result.item.as_string_value
+							a_result.put (create {XM_XPATH_STRING_VALUE}.make (translated_string (l_string, l_source_map.string_value, l_target_map.string_value)))
+						end
+					end
 				end
-				a_target_map := arguments.item (3).last_evaluated_item.as_string_value
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (translated_string (a_string, a_source_map.string_value, a_target_map.string_value))
 			end
 		end
 
@@ -120,7 +134,7 @@ feature {NONE} -- Implementation
 			target_map_not_void: a_target_map /= Void
 		local
 			an_index, a_count: INTEGER
-			a_char, a_string: STRING
+			a_char, l_string: STRING
 		do
 			from
 				Result := ""
@@ -130,11 +144,11 @@ feature {NONE} -- Implementation
 				an_index > a_count
 			loop
 				a_char := a_value.substring (an_index,an_index)
-				a_string := translated_character (a_char, a_source_map, a_target_map)
-				if a_string = Void then
-					a_string := a_char
+				l_string := translated_character (a_char, a_source_map, a_target_map)
+				if l_string = Void then
+					l_string := a_char
 				end
-				Result := STRING_.appended_string (Result, a_string)												  
+				Result := STRING_.appended_string (Result, l_string)												  
 				an_index := an_index + 1
 			end
 		ensure

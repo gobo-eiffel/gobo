@@ -59,10 +59,10 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			create {XM_XPATH_DATE_TIME_VALUE} last_evaluated_item.make_from_zoned_date_time (a_context.current_date_time)
+			a_result.put (create {XM_XPATH_DATE_TIME_VALUE}.make_from_zoned_date_time (a_context.current_date_time))
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is

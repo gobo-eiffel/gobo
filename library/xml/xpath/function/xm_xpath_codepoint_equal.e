@@ -64,29 +64,23 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			s1, s2: STRING
-			an_item, another_item: XM_XPATH_ITEM
+			l_s1, l_s2: STRING
 		do
-			arguments.item (1).evaluate_item (a_context)
-			an_item := arguments.item (1).last_evaluated_item
-			if an_item = Void then
-				last_evaluated_item := Void
-			elseif arguments.item (1).last_evaluated_item.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_item
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void or else a_result.item.is_error then
+				-- nothing to do
 			else
-				arguments.item (2).evaluate_item (a_context)
-				another_item := arguments.item (2).last_evaluated_item
-				if another_item = Void then
-					last_evaluated_item := Void
-				elseif arguments.item (2).last_evaluated_item.is_error then
-					last_evaluated_item := arguments.item (2).last_evaluated_item
+				l_s1 := a_result.item.as_atomic_value.string_value
+				a_result.put (Void)
+				arguments.item (2).evaluate_item (a_result, a_context)
+				if a_result.item = Void or else a_result.item.is_error then
+					-- nothing to do
 				else
-					s1 := an_item.as_atomic_value.string_value
-					s2 := another_item.as_atomic_value.string_value
-					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (STRING_.same_string (s1, s2))
+					l_s2 := a_result.item.as_atomic_value.string_value
+					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (STRING_.same_string (l_s1, l_s2)))
 				end
 			end
 		end

@@ -89,21 +89,19 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_item: XM_XPATH_ITEM
-			a_uri_string: STRING
+			l_uri_string: STRING
 		do
-			arguments.item (1).evaluate_item (a_context)
-			an_item := arguments.item (1).last_evaluated_item
-			if an_item = Void then
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
-			elseif an_item.is_error then
-				last_evaluated_item := an_item
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void then
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+			elseif a_result.item.is_error then
+				-- nothing to do
 			else
-				a_uri_string := an_item.string_value
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (escaped_uri (a_uri_string))
+				l_uri_string := a_result.item.string_value
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (escaped_uri (l_uri_string)))
 			end
 		end
 

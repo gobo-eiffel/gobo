@@ -93,11 +93,11 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
-			last_evaluated_item := last_boolean_value
+			a_result.put (last_boolean_value)
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is

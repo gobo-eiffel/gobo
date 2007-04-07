@@ -87,31 +87,25 @@ feature -- Optimization
 		
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_input_string: STRING
-			an_item: XM_XPATH_ITEM
+			l_input_string: STRING
 		do
-			last_evaluated_item := Void
-			arguments.item (1).evaluate_item (a_context)
-			an_item := arguments.item (1).last_evaluated_item
-			if an_item = Void then
-				an_input_string := ""
-			elseif an_item.is_error then
-				last_evaluated_item := an_item
-			else
-				an_input_string := an_item.string_value
-				an_input_string := utf8.to_utf8 (an_input_string)
-			end
-			if last_evaluated_item = Void then -- else it's an error
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void then
+				l_input_string := ""
+			elseif not a_result.item.is_error then
+				l_input_string := a_result.item.string_value
+				a_result.put (Void)
+				l_input_string := utf8.to_utf8 (l_input_string)
 				if regexp_cache_entry = Void then
-					compile_regexp (a_context)
+					compile_regexp (a_result, a_context)
 				else
 					regexp := regexp_cache_entry.regexp
 				end
-				if last_evaluated_item = Void then
-					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (regexp.matches (an_input_string))
+				if a_result.item = Void then
+					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (regexp.matches (l_input_string)))
 				end
 			end
 		end
@@ -135,67 +129,65 @@ feature {NONE} -- Implementation
 	regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Regular expression
 
-	compile_regexp (a_context: XM_XPATH_CONTEXT) is
+	compile_regexp (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
 			-- Compile and execute `regexp' at evaluation time
 		require
+			a_result_not_void: a_result /= Void
+			a_result_is_empty: a_result.item = Void
 			dynamic_context_not_void: a_context /= Void
 		local
-			a_regexp_cache_entry: like regexp_cache_entry
-			a_pattern_string, a_flags_string, a_key: STRING
-			an_item: XM_XPATH_ITEM
+			l_regexp_cache_entry: like regexp_cache_entry
+			l_pattern_string, l_flags_string, l_key: STRING
 		do
-			arguments.item (2).evaluate_item (a_context)
-			an_item := arguments.item (2).last_evaluated_item
+			arguments.item (2).evaluate_item (a_result, a_context)
 			check
-				pattern_not_empty: an_item /= Void
+				pattern_not_empty: a_result.item /= Void
 				--static typing
 			end
-			if an_item.is_error then
-				last_evaluated_item := an_item
-			else	
+			if not a_result.item.is_error then
 				check
-					atomic_pattern: an_item.is_atomic_value
+					atomic_pattern: a_result.item.is_atomic_value
 					-- Statically typed as a single string
 				end
-				a_pattern_string := an_item.as_atomic_value.string_value
-				a_pattern_string := utf8.to_utf8 (a_pattern_string)
+				l_pattern_string := a_result.item.as_atomic_value.string_value
+				l_pattern_string := utf8.to_utf8 (l_pattern_string)
 				if arguments.count = 2 then
-					a_flags_string := ""
+					l_flags_string := ""
 				else
-					arguments.item (3).evaluate_item (a_context)
-					an_item := arguments.item (3).last_evaluated_item
-					check
-						flags_not_empty: an_item /= Void
-						--static typing
-					end
-					if an_item.is_error then
-						last_evaluated_item := an_item
-					else
+					a_result.put (Void)
+					arguments.item (3).evaluate_item (a_result, a_context)
+					if not a_result.item.is_error then
 						check
-							atomic_pattern: an_item.is_atomic_value
+							flags_not_empty: a_result.item /= Void
+							atomic_pattern: a_result.item.is_atomic_value
 							-- Statically typed as a single string
 						end
-						a_flags_string := normalized_flags_string (an_item.as_atomic_value.string_value)
+						l_flags_string := normalized_flags_string (a_result.item.as_atomic_value.string_value)
 					end
 				end
-				if a_flags_string = Void then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)
-				else
-					a_key := composed_key (a_pattern_string, a_flags_string)
-					a_regexp_cache_entry := shared_regexp_cache.item (a_key)
-					if a_regexp_cache_entry = Void then
-						create a_regexp_cache_entry.make (a_pattern_string, a_flags_string)
-						if not a_regexp_cache_entry.is_error then
-							shared_regexp_cache.put (a_regexp_cache_entry, a_key)
-						end
-					end
-					if not a_regexp_cache_entry.is_error then
-						regexp := a_regexp_cache_entry.regexp
+				if not a_result.item.is_error then
+					if l_flags_string = Void then
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error))
 					else
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Invalid regular expression", Xpath_errors_uri, "FORX0002", Dynamic_error)
+						l_key := composed_key (l_pattern_string, l_flags_string)
+						l_regexp_cache_entry := shared_regexp_cache.item (l_key)
+						if l_regexp_cache_entry = Void then
+							create l_regexp_cache_entry.make (l_pattern_string, l_flags_string)
+							if not l_regexp_cache_entry.is_error then
+								shared_regexp_cache.put (l_regexp_cache_entry, l_key)
+							end
+						end
+						if not l_regexp_cache_entry.is_error then
+							regexp := l_regexp_cache_entry.regexp
+						else
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid regular expression", Xpath_errors_uri, "FORX0002", Dynamic_error))
+						end
 					end
 				end
 			end
+		ensure
+			regexp_not_void: a_result.item = Void implies regexp /= Void
+			error: a_result.item /= Void implies a_result.item.is_error
 		end
 	
 end

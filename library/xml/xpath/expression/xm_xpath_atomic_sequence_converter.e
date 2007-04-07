@@ -113,19 +113,15 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			base_expression.evaluate_item (a_context)
-			if base_expression.last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif base_expression.last_evaluated_item.is_error then
-				last_evaluated_item := base_expression.last_evaluated_item
-			else
+			base_expression.evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
 				check
-					atomic_value: base_expression.last_evaluated_item.is_atomic_value
+					atomic_value: a_result.item.is_atomic_value
 				end
-				last_evaluated_item := base_expression.last_evaluated_item.as_atomic_value.convert_to_type (required_type)
+				a_result.put (a_result.item.as_atomic_value.convert_to_type (required_type))
 			end
 		end
 

@@ -85,39 +85,45 @@ feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 		local
-			some_idrefs: DS_ARRAYED_LIST [STRING]
-			a_node: XM_XPATH_NODE
-			a_splitter: ST_SPLITTER
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_idrefs: DS_ARRAYED_LIST [STRING]
+			l_node: XM_XPATH_NODE
+			l_splitter: ST_SPLITTER
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			arguments.item (2).evaluate_item (a_context)
-			check
-				node: arguments.item (2).last_evaluated_item.is_node
-				-- `required_type' will have ensured this
-			end
-			a_node := arguments.item (2).last_evaluated_item.as_node.root
-			if a_node.is_document then
-				arguments.item (1).create_iterator (a_context)
-				if arguments.item (1).last_iterator.is_error then
-					last_iterator := arguments.item (1).last_iterator
-				else
-					create some_idrefs.make_default
-					some_idrefs.set_equality_tester (string_equality_tester)
-					an_iterator := arguments.item (1).last_iterator
-					from an_iterator.start until an_iterator.is_error or else an_iterator.after loop
-						create a_splitter.make
-						some_idrefs.append_last (a_splitter.split (an_iterator.item.string_value))
-						an_iterator.forth
-					end
-					if an_iterator.is_error then
-						last_iterator := an_iterator
-					else
-						last_iterator := a_node.as_document.idrefs_nodes (some_idrefs)
-					end
-				end
+			create l_result.make (Void)
+			arguments.item (2).evaluate_item (l_result, a_context)
+			if l_result.item.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
 			else
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("In the idref() function," +
-													 " the tree being searched must be one whose root is a document node", Xpath_errors_uri, "FODC0001", Dynamic_error)
+				check
+					node: l_result.item.is_node
+					-- `required_type' will have ensured this
+				end
+				l_node := l_result.item.as_node.root
+				if l_node.is_document then
+					arguments.item (1).create_iterator (a_context)
+					if arguments.item (1).last_iterator.is_error then
+						last_iterator := arguments.item (1).last_iterator
+					else
+						create l_idrefs.make_default
+						l_idrefs.set_equality_tester (string_equality_tester)
+						l_iterator := arguments.item (1).last_iterator
+						from l_iterator.start until l_iterator.is_error or else l_iterator.after loop
+							create l_splitter.make
+							l_idrefs.append_last (l_splitter.split (l_iterator.item.string_value))
+							l_iterator.forth
+						end
+						if l_iterator.is_error then
+							last_iterator := l_iterator
+						else
+							last_iterator := l_node.as_document.idrefs_nodes (l_idrefs)
+						end
+					end
+				else
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("In the idref() function," +
+						" the tree being searched must be one whose root is a document node", Xpath_errors_uri, "FODC0001", Dynamic_error)
+				end
 			end
 		end
 

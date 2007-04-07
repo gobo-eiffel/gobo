@@ -397,69 +397,77 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			last_evaluated_item := Void
 			create_iterator (a_context)
 			if last_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
 			else
 				last_iterator.start
 				if last_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
 				elseif last_iterator.after then
-					last_evaluated_item := Void -- Empty sequence
+					a_result.put (Void) -- Empty sequence
 				else
-					last_evaluated_item := last_iterator.item
+					a_result.put (last_iterator.item) -- the assumption in cardinality is zero-or-one
 				end
 			end
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a String
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			evaluate_item (a_context)
-			if last_evaluated_item = Void then
+			create l_result.make (Void)
+			evaluate_item (l_result, a_context)
+			if l_result.item = Void then
 				create last_evaluated_string.make ("")
-			elseif last_evaluated_item.is_error then
+			elseif l_result.item.is_error then
 				create last_evaluated_string.make ("")
-				last_evaluated_string.set_last_error (last_evaluated_item.error_value)
-			elseif not last_evaluated_item.is_string_value then
+				last_evaluated_string.set_last_error (l_result.item.error_value)
+			elseif not l_result.item.is_string_value then
 				create last_evaluated_string.make ("")
 			else
-				last_evaluated_string := last_evaluated_item.as_string_value
+				last_evaluated_string := l_result.item.as_string_value
 			end
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
+			create l_result.make (Void)
 			
 			-- The value of every expression can be regarded as a sequence, s
 			--  so this routine is supported for all expressions.
 			-- This default implementation handles iteration for expressions that
 			--  return singleton values: for non-singleton expressions, the subclass must
-			--  provide its own implementation.
+			--  provide its own imple%mentation.
 
 			check
-					singleton_expression: not cardinality_allows_many
-				end
-			evaluate_item (a_context)
-			if last_evaluated_item = Void then
+				singleton_expression: not cardinality_allows_many
+			end
+			evaluate_item (l_result, a_context)
+			if l_result.item = Void then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-			elseif last_evaluated_item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
-			elseif last_evaluated_item.is_node then
-				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (last_evaluated_item.as_node) 
+			elseif l_result.item.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
+			elseif l_result.item.is_node then
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_result.item.as_node) 
 			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item) 
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_result.item) 
 			end
 		end
 	
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence.
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
+			create l_result.make (Void)
 				
 			-- The value of every expression can be regarded as a sequence, s
 			--  so this routine is supported for all expressions.
@@ -469,39 +477,41 @@ feature -- Evaluation
 
 			check
 					singleton_expression: not cardinality_allows_many
-				end
-			evaluate_item (a_context)
-			if last_evaluated_item = Void then
+			end
+			evaluate_item (l_result, a_context)
+			if l_result.item = Void then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
-			elseif last_evaluated_item.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (last_evaluated_item.error_value)
+			elseif l_result.item.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_result.item.error_value)
 			else
-				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (last_evaluated_item.as_node) 
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (l_result.item.as_node) 
 			end		
 		end
 
 	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			an_error_value: XM_XPATH_ERROR_VALUE
+			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_error_value: XM_XPATH_ERROR_VALUE
 		do
 			if is_evaluate_item_supported then
-				evaluate_item (a_context)
-				if last_evaluated_item /= Void then
-					if last_evaluated_item.is_error then
-						a_context.report_fatal_error (last_evaluated_item.error_value)
+				create l_result.make (Void)
+				evaluate_item (l_result, a_context)
+				if l_result.item /= Void then
+					if l_result.item.is_error then
+						a_context.report_fatal_error (l_result.item.error_value)
 					else
-						last_evaluated_item.send (a_context.current_receiver)
+						l_result.item.send (a_context.current_receiver)
 					end
 				end
 			elseif is_iterator_supported then
 				create_iterator (a_context)
 				if last_iterator.is_error then
-					an_error_value := last_iterator.error_value
-					if not an_error_value.is_location_known and then not system_id.is_empty then
-						an_error_value.set_location (system_id, line_number)
+					l_error_value := last_iterator.error_value
+					if not l_error_value.is_location_known and then not system_id.is_empty then
+						l_error_value.set_location (system_id, line_number)
 					end
-					a_context.report_fatal_error (an_error_value)
+					a_context.report_fatal_error (l_error_value)
 				else
 					from
 						last_iterator.start
@@ -512,11 +522,11 @@ feature -- Evaluation
 						last_iterator.forth
 					end
 					if last_iterator.is_error then
-						an_error_value := last_iterator.error_value
-						if not an_error_value.is_location_known and then not system_id.is_empty then
-							an_error_value.set_location (system_id, line_number)
+						l_error_value := last_iterator.error_value
+						if not l_error_value.is_location_known and then not system_id.is_empty then
+							l_error_value.set_location (system_id, line_number)
 						end
-						a_context.report_fatal_error (an_error_value)
+						a_context.report_fatal_error (l_error_value)
 					end
 				end
 			else

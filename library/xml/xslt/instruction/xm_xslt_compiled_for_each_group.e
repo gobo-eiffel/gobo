@@ -446,38 +446,38 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 		local
-			a_collation_name: STRING
+			l_collation_name: STRING
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			if cached_collator /= Void then
 				Result := cached_collator
 			else
 				if collation_name /= Void then
-					collation_name.evaluate_item (a_context)
-					a_collation_name := collation_name.last_evaluated_item.string_value
-					if a_context.is_known_collation (a_collation_name) then
-						Result := a_context.collator (a_collation_name)
+					create l_item.make (Void)
+					collation_name.evaluate_item (l_item, a_context)
+					l_collation_name := l_item.item.string_value
+					if a_context.is_known_collation (l_collation_name) then
+						Result := a_context.collator (l_collation_name)
 					else
 						Result := Void
+						report_unknown_collator (l_collation_name, a_context.transformer)
 					end
 				else
 					Result := a_context.collator (default_collation_name)
 				end
-
 			end
 			cached_collator := Result
 		end
 
-	report_unknown_collator (a_transformer: XM_XSLT_TRANSFORMER) is
+	report_unknown_collator (a_collation_name: STRING; a_transformer: XM_XSLT_TRANSFORMER) is
 			-- Report `collation_name' is unknown to implementation.
 		require
-			collation_name_not_void: collation_name /= Void
-			collation_name_evaluated: collation_name.last_evaluated_item /= Void
-											  and then collation_name.last_evaluated_item.string_value /= Void
+			collation_name_not_void: a_collation_name /= Void
 			a_transformer_not_void: a_transformer /= Void
 		local
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			create l_error.make_from_string (STRING_.concat (collation_name.last_evaluated_item.string_value, " is not a known collation"), Xpath_errors_uri, "XTDE1110", Dynamic_error)
+			create l_error.make_from_string (STRING_.concat (a_collation_name, " is not a known collation"), Xpath_errors_uri, "XTDE1110", Dynamic_error)
 			a_transformer.report_fatal_error (l_error)
 		end
 
@@ -510,16 +510,12 @@ feature {NONE} -- Implementation
 					l_new_context := a_context.new_minor_context
 					l_new_context.set_current_iterator (l_population)
 					l_collator := collator (a_context)
-					if l_collator = Void then
-						report_unknown_collator (a_context.transformer)
-					else
+					if l_collator /= Void then
 						create {XM_XSLT_GROUP_BY_ITERATOR} l_group_iterator.make (l_population, key_expression, l_new_context, l_collator)
 					end
 				when Group_adjacent_algorithm then
 					l_collator := collator (a_context)
-					if l_collator = Void then
-						report_unknown_collator (a_context.transformer)
-					else
+					if l_collator /= Void then
 						create {XM_XSLT_GROUP_ADJACENT_ITERATOR} l_group_iterator.make (l_population, key_expression, a_context, l_collator)
 					end
 				when Group_starting_with_algorithm then

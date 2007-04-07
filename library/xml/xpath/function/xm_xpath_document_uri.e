@@ -59,26 +59,24 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
 			l_uri: UT_URI
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif arguments.item (1).last_evaluated_item.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_item
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void or else a_result.item.is_error then
+				-- nothing to do
 			else
-				if arguments.item (1).last_evaluated_item.is_document then
-					l_uri := arguments.item (1).last_evaluated_item.as_document.document_uri
+				if a_result.item.is_document then
+					l_uri := a_result.item.as_document.document_uri
 					if l_uri /= Void and then l_uri.is_absolute then
-						create {XM_XPATH_ANY_URI_VALUE} last_evaluated_item.make (l_uri.full_reference)
+						a_result.put (create {XM_XPATH_ANY_URI_VALUE}.make (l_uri.full_reference))
 					else
-						last_evaluated_item := Void
+						a_result.put (Void)
 					end
 				else
-					last_evaluated_item := Void
+					a_result.put (Void)
 				end
 			end
 		end

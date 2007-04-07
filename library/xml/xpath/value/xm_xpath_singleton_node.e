@@ -130,10 +130,10 @@ feature -- Evaluation
 			create last_boolean_value.make (node /= Void)
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			last_evaluated_item := node
+			a_result.put (node)
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is

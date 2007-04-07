@@ -108,6 +108,7 @@ feature -- Optimization
 		local
 			l_expression: XM_XPATH_EXPRESSION
 			l_relation: INTEGER
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			mark_unreplaced
 			base_expression.check_static_type (a_context, a_context_item_type)
@@ -118,9 +119,10 @@ feature -- Optimization
 				set_last_error (base_expression.error_value)
 			else
 				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
-					evaluate_item (Void)
-					if last_evaluated_item /= Void then
-						set_replacement (last_evaluated_item.as_atomic_value)
+					create l_result.make (Void)
+					evaluate_item (l_result, Void)
+					if l_result.item /= Void then
+						set_replacement (l_result.item.as_atomic_value)
 					end
 				else
 					
@@ -187,11 +189,11 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
-			last_evaluated_item := last_boolean_value
+			a_result.put (last_boolean_value)
 		end
 
 feature {NONE} -- Implementation

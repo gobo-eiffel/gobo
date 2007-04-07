@@ -106,13 +106,13 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			if a_context /= Void and then a_context.is_context_position_set then
-				last_evaluated_item := a_context.context_item
+				a_result.put (a_context.context_item)
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)				
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("The context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)				)
 			end
 		end
 

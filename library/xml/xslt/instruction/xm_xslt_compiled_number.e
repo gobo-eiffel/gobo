@@ -599,15 +599,17 @@ feature {NONE} -- Implementation
 		local
 			l_source: XM_XPATH_NODE
 			l_error: XM_XPATH_ERROR_VALUE
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			value := -1
 			if value_expression /= Void then
 				calculate_value (a_context)
 			else
 				if select_expression /= Void then
-					select_expression.evaluate_item (a_context)
-					if select_expression.last_evaluated_item.is_node then
-						l_source := select_expression.last_evaluated_item.as_node
+					create l_item.make (Void)
+					select_expression.evaluate_item (l_item, a_context)
+					if l_item.item.is_node then
+						l_source := l_item.item.as_node
 					else
 						create l_error.make_from_string ("Context item for xsl:number must be a node",
 																	 Xpath_errors_uri, "XTTE0990", Type_error)

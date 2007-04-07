@@ -259,24 +259,24 @@ feature {NONE} -- Implementation
 	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate name code.
 		local
-			l_item: XM_XPATH_ITEM
+			l_item: DS_CELL [XM_XPATH_ITEM]
 			l_error: XM_XPATH_ERROR_VALUE
 			l_qname: XM_XPATH_STRING_VALUE
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_prefix, l_local: STRING
 		do
-			attribute_name.evaluate_item (a_context)
-			l_item := attribute_name.last_evaluated_item
-			if l_item = Void then
+			create l_item.make (Void)
+			attribute_name.evaluate_item (l_item, a_context)
+			if l_item.item = Void then
 				create l_error.make_from_string ("Attribute 'name' must be a string", Xpath_errors_uri, "XPTY0004", Dynamic_error)
 				set_last_error (l_error)
-			elseif l_item.is_error then
-				set_last_error (l_item.error_value)
-			elseif not l_item.is_string_value then
+			elseif l_item.item.is_error then
+				set_last_error (l_item.item.error_value)
+			elseif not l_item.item.is_string_value then
 				create l_error.make_from_string ("Attribute 'name' must be a string", Xpath_errors_uri, "XPTY0004", Dynamic_error)
 				set_last_error (l_error)
 			else
-				l_qname := l_item.as_string_value
+				l_qname := l_item.item.as_string_value
 				create l_parser.make (l_qname.string_value)
 				if not l_parser.is_valid then
 					create l_error.make_from_string ("Attribute 'name' must be a lexical QName", Xpath_errors_uri, "XTDE0850", Dynamic_error)

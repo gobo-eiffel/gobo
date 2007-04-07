@@ -66,33 +66,29 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_item: XM_XPATH_ITEM
-			an_xml_prefix: STRING
-			a_uri_code: INTEGER
+			l_xml_prefix: STRING
+			l_uri_code: INTEGER
+			l_element: XM_XPATH_ELEMENT
 		do
-			last_evaluated_item := Void
-			arguments.item (2).evaluate_item (a_context)
-			an_item := arguments.item (2).last_evaluated_item 
-			if not an_item.is_error then
-				if an_item.is_element then
-					arguments.item (1).evaluate_item (a_context)
-					if arguments.item (1).last_evaluated_item.is_error then
-						last_evaluated_item := arguments.item (1).last_evaluated_item
-					else
-						an_xml_prefix := arguments.item (1).last_evaluated_item.string_value
-						a_uri_code := an_item.as_element.uri_code_for_prefix (an_xml_prefix)
-						if shared_name_pool.is_valid_uri_code (a_uri_code) then
-							create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (shared_name_pool.uri_from_uri_code (a_uri_code))
+			arguments.item (2).evaluate_item (a_result, a_context)
+			if not a_result.item.is_error then
+				if a_result.item.is_element then
+					l_element := a_result.item.as_element
+					a_result.put (Void)
+					arguments.item (1).evaluate_item (a_result, a_context)
+					if not a_result.item.is_error then
+						l_xml_prefix := a_result.item.string_value
+						l_uri_code := l_element.uri_code_for_prefix (l_xml_prefix)
+						if shared_name_pool.is_valid_uri_code (l_uri_code) then
+							a_result.put (create {XM_XPATH_STRING_VALUE}.make (shared_name_pool.uri_from_uri_code (l_uri_code)))
 						end
 					end
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Second argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error))
 				end
-			else
-				last_evaluated_item := an_item
 			end
 		end
 

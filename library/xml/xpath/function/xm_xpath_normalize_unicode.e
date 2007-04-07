@@ -65,72 +65,73 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_form: INTEGER
-			a_requested_form, a_message, a_result: STRING
+			l_form: INTEGER
+			l_requested_form, l_message, l_result: STRING
+			l_item: XM_XPATH_ITEM
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void then
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
-			elseif arguments.item (1).last_evaluated_item.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_item
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void then
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+			elseif a_result.item.is_error then
+				-- nothing to do
 			else
 				
 				-- TODO: fast-path for ASCII?
 
 				if arguments.count = 2 then
+					l_item := a_result.item
+					a_result.put (Void)
 					arguments.item (2).evaluate_as_string (a_context)
 					if arguments.item (2).last_evaluated_string.is_error then
-						last_evaluated_item := arguments.item (2).last_evaluated_string
+						a_result.put (arguments.item (2).last_evaluated_string)
 					else
-						a_requested_form := arguments.item (2).last_evaluated_string.string_value
-						STRING_.left_adjust (a_requested_form)
-						STRING_.right_adjust (a_requested_form)
-						a_requested_form := a_requested_form.as_upper
-						if a_requested_form.is_empty then
-							last_evaluated_item := arguments.item (1).last_evaluated_item
+						l_requested_form := arguments.item (2).last_evaluated_string.string_value
+						STRING_.left_adjust (l_requested_form)
+						STRING_.right_adjust (l_requested_form)
+						l_requested_form := l_requested_form.as_upper
+						if l_requested_form.is_empty then
+							a_result.put (l_item)
 						else
-							if STRING_.same_string ("NFC", a_requested_form) then
-								a_form := Nfc
-							elseif STRING_.same_string ("NFKC", a_requested_form) then
-								a_form := Nfkc
-							elseif STRING_.same_string ("NFD", a_requested_form) then
-								a_form := Nfd
-							elseif STRING_.same_string ("NFKD", a_requested_form) then
-								a_form := Nfkd
+							if STRING_.same_string ("NFC", l_requested_form) then
+								l_form := Nfc
+							elseif STRING_.same_string ("NFKC", l_requested_form) then
+								l_form := Nfkc
+							elseif STRING_.same_string ("NFD", l_requested_form) then
+								l_form := Nfd
+							elseif STRING_.same_string ("NFKD", l_requested_form) then
+								l_form := Nfkd
 							else
-								a_message := STRING_.concat ("Requested normalization form ", a_requested_form)
-								a_message := STRING_.appended_string (a_message, " is not supported")
-								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message,
-																															Xpath_errors_uri,
-																															"FOCH0003",
-																															Dynamic_error)
+								l_message := STRING_.concat ("Requested normalization form ", l_requested_form)
+								l_message := STRING_.appended_string (l_message, " is not supported")
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (l_message,
+									Xpath_errors_uri, "FOCH0003",	Dynamic_error))
 							end
-							if last_evaluated_item = Void then
+							if a_result.item = Void then
 
 								-- no previous error
 
 								inspect
-									a_form
+									l_form
 								when Nfc then
-									a_result := normalization.to_nfc (arguments.item (1).last_evaluated_item.string_value)
+									l_result := normalization.to_nfc (l_item.string_value)
 								when Nfkc then
-									a_result := normalization.to_nfkc (arguments.item (1).last_evaluated_item.string_value)
+									l_result := normalization.to_nfkc (l_item.string_value)
 								when Nfd then
-									a_result := normalization.as_nfd (arguments.item (1).last_evaluated_item.string_value)
+									l_result := normalization.as_nfd (l_item.string_value)
 								when Nfkd then
-									a_result := normalization.as_nfkd (arguments.item (1).last_evaluated_item.string_value)
+									l_result := normalization.as_nfkd (l_item.string_value)
 								end
 							end
 						end
 					end
 				else
-					a_result := normalization.to_nfc (arguments.item (1).last_evaluated_item.string_value)
+					l_result := normalization.to_nfc (a_result.item.string_value)
 				end
-				if a_result /= Void then
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_result)
+				if l_result /= Void then
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_result))
 				end
 			end
 		end

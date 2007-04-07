@@ -73,38 +73,38 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
-			a_base_iterator, an_insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_insert_position: INTEGER
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
-			an_item: XM_XPATH_ITEM
+			l_base_iterator, l_insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_insert_position: INTEGER
+			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			arguments.item (1).create_iterator (a_context)
-			a_base_iterator := arguments.item (1).last_iterator
-			if a_base_iterator.is_error then
-				last_iterator := a_base_iterator
+			l_base_iterator := arguments.item (1).last_iterator
+			if l_base_iterator.is_error then
+				last_iterator := l_base_iterator
 			else
 				arguments.item (3).create_iterator (a_context)
-				an_insertion_iterator := arguments.item (3).last_iterator
-				if an_insertion_iterator.is_error then
-					last_iterator := an_insertion_iterator
+				l_insertion_iterator := arguments.item (3).last_iterator
+				if l_insertion_iterator.is_error then
+					last_iterator := l_insertion_iterator
 				else
-					arguments.item (2).evaluate_item (a_context)
-					an_item := arguments.item (2).last_evaluated_item
+					create l_result.make (Void)
+					arguments.item (2).evaluate_item (l_result, a_context)
 					check
-						item_not_void: an_item /= Void
+						item_not_void: l_result.item /= Void
 						-- static typing
 					end
-					if an_item.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
+					if l_result.item.is_error then
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
 					else
 						check
-							insertion_position_is_integer: an_item.is_machine_integer_value
+							insertion_position_is_integer: l_result.item.is_machine_integer_value
 							-- Static typing
 						end
-						an_integer_value := an_item.as_machine_integer_value
-						if an_integer_value.is_platform_integer then
-							an_insert_position := an_integer_value.value.to_integer
-							create {XM_XPATH_INSERT_ITERATOR} last_iterator.make (a_base_iterator, an_insertion_iterator, an_insert_position)
+						l_integer_value := l_result.item.as_machine_integer_value
+						if l_integer_value.is_platform_integer then
+							l_insert_position := l_integer_value.value.to_integer
+							create {XM_XPATH_INSERT_ITERATOR} last_iterator.make (l_base_iterator, l_insertion_iterator, l_insert_position)
 						else
 							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Position exceeds maximum platform integer", Gexslt_eiffel_type_uri, "MAX-INTEGER", Dynamic_error)
 						end

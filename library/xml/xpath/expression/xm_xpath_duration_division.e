@@ -25,27 +25,24 @@ create
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item;
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
-			a_duration, another_duration: XM_XPATH_DURATION_VALUE
+			l_duration, l_other_duration: XM_XPATH_DURATION_VALUE
 		do
-			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif first_operand.last_evaluated_item.is_error then
-				last_evaluated_item := first_operand.last_evaluated_item
+			first_operand.evaluate_item (a_result, a_context)
+			if a_result.item = Void  or else a_result.item.is_error then
+				-- nothing to do
 			else
-				a_duration := first_operand.last_evaluated_item.as_atomic_value.as_duration_value
-				second_operand.evaluate_item (a_context)
-				if second_operand.last_evaluated_item = Void then
-				last_evaluated_item := Void
-				elseif second_operand.last_evaluated_item.is_error then
-					last_evaluated_item := second_operand.last_evaluated_item
+				l_duration := a_result.item.as_atomic_value.as_duration_value
+				a_result.put (Void)
+				second_operand.evaluate_item (a_result, a_context)
+				if a_result.item = Void  or else a_result.item.is_error then
+					-- nothing to do
 				else
-					another_duration := second_operand.last_evaluated_item.as_atomic_value.as_duration_value
-					last_evaluated_item := a_duration.divide (another_duration)
+					l_other_duration := a_result.item.as_atomic_value.as_duration_value
+					a_result.put (l_duration.divide (l_other_duration))
 				end
 			end
 		end

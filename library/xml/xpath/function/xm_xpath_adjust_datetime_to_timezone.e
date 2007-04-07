@@ -76,41 +76,42 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_date_time_value: XM_XPATH_DATE_TIME_VALUE
-			a_zone: DT_FIXED_OFFSET_TIME_ZONE
-			a_duration: DT_DATE_TIME_DURATION
-			a_duration_value: XM_XPATH_SECONDS_DURATION_VALUE
-			a_zero_duration: DT_DATE_DURATION
-			finished: BOOLEAN
+			l_date_time_value: XM_XPATH_DATE_TIME_VALUE
+			l_zone: DT_FIXED_OFFSET_TIME_ZONE
+			l_duration: DT_DATE_TIME_DURATION
+			l_duration_value: XM_XPATH_SECONDS_DURATION_VALUE
+			l_zero_duration: DT_DATE_DURATION
+			l_finished: BOOLEAN
 		do
-			arguments.item (1).evaluate_item (a_context)
-			last_evaluated_item := arguments.item (1).last_evaluated_item
-			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
-				a_date_time_value := last_evaluated_item.as_atomic_value.as_date_time_value
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
+				l_date_time_value := a_result.item.as_atomic_value.as_date_time_value
 				if arguments.count = 1 then
-					a_zone := a_context.implicit_timezone
-					create a_zero_duration.make (0, 0, 0)
-					create a_duration.make_from_date_time_duration (a_zero_duration, a_zone.fixed_offset)
-					create a_duration_value.make_from_duration (a_duration)
+					l_zone := a_context.implicit_timezone
+					create l_zero_duration.make (0, 0, 0)
+					create l_duration.make_from_date_time_duration (l_zero_duration, l_zone.fixed_offset)
+					create l_duration_value.make_from_duration (l_duration)
 				else
-					arguments.item (2).evaluate_item (a_context)
-					if arguments.item (2).last_evaluated_item = Void then
-						last_evaluated_item := a_date_time_value.as_zoneless; finished := True
-					elseif arguments.item (2).last_evaluated_item.is_error then
-						last_evaluated_item := arguments.item (2).last_evaluated_item; finished := True
+					a_result.put (Void)
+					arguments.item (2).evaluate_item (a_result, a_context)
+					if a_result.item = Void then
+						a_result.put (l_date_time_value.as_zoneless)
+						l_finished := True
+					elseif a_result.item.is_error then
+						l_finished := True
 					else
-						a_duration_value := arguments.item (2).last_evaluated_item.as_atomic_value.as_seconds_duration
-						if not a_duration_value.is_valid_time_zone then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Time zone has bad values", Xpath_errors_uri, "FODT0003", Dynamic_error)
-							finished := True
+						l_duration_value := a_result.item.as_atomic_value.as_seconds_duration
+						if not l_duration_value.is_valid_time_zone then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Time zone has bad values", Xpath_errors_uri, "FODT0003", Dynamic_error))
+							l_finished := True
 						end
 					end
 				end
-				if not finished then
-					last_evaluated_item := a_date_time_value.to_another_time_zone (a_duration_value)
+				if not l_finished then
+					a_result.put (l_date_time_value.to_another_time_zone (l_duration_value))
 				end
 			end
 		end

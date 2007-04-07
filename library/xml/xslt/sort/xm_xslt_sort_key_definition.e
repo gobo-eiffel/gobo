@@ -156,10 +156,13 @@ feature {NONE} -- Implementation
 			-- Evaluate `collation_name_expression'
 		require
 			context_not_void: a_context /= Void
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			if collation_name_expression /= Void then
-				collation_name_expression.evaluate_item (a_context)
-				collation_name := collation_name_expression.last_evaluated_item.string_value
+				create l_item.make (Void)
+				collation_name_expression.evaluate_item (l_item, a_context)
+				collation_name := l_item.item.string_value
 			end
 		end
 
@@ -167,12 +170,15 @@ feature {NONE} -- Implementation
 			-- Evaluate `order_expression'
 		require
 			context_not_void: a_context /= Void
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			if order_expression = Void then
 				order := "ascending"
 			else
-				order_expression.evaluate_item (a_context)
-				order := order_expression.last_evaluated_item.string_value
+				create l_item.make (Void)
+				order_expression.evaluate_item (l_item, a_context)
+				order := l_item.item.string_value
 			end
 		ensure
 			order_not_void: order /= Void
@@ -182,12 +188,15 @@ feature {NONE} -- Implementation
 			-- Evaluate `case_order_expression'
 		require
 			context_not_void: a_context /= Void
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			if case_order_expression = Void then
 				case_order := "#default"
 			else
-				case_order_expression.evaluate_item (a_context)
-				case_order := case_order_expression.last_evaluated_item.string_value
+				create l_item.make (Void)
+				case_order_expression.evaluate_item (l_item, a_context)
+				case_order := l_item.item.string_value
 			end
 		ensure
 			case_order_not_void: case_order /= Void
@@ -197,12 +206,15 @@ feature {NONE} -- Implementation
 			-- Evaluate `language_expression'
 		require
 			context_not_void: a_context /= Void
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			if language_expression = Void then
 				language := ""
 			else
-				language_expression.evaluate_item (a_context)
-				language := language_expression.last_evaluated_item.string_value
+				create l_item.make (Void)
+				language_expression.evaluate_item (l_item, a_context)
+				language := l_item.item.string_value
 			end
 		ensure
 			language_not_void: language /= Void
@@ -212,15 +224,18 @@ feature {NONE} -- Implementation
 			-- Evaluate `data_type_expression'
 		require
 			context_not_void: a_context /= Void
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			if data_type_expression = Void then
 				data_type := ""
 			else
-				data_type_expression.evaluate_item (a_context)
-				if data_type_expression.last_evaluated_item = Void then
+				create l_item.make (Void)
+				data_type_expression.evaluate_item (l_item, a_context)
+				if l_item.item = Void then
 					data_type := ""
 				else
-					data_type := data_type_expression.last_evaluated_item.string_value
+					data_type := l_item.item.string_value
 				end
 			end
 		ensure

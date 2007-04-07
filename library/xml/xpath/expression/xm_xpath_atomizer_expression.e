@@ -194,31 +194,29 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 		do
-			base_expression.evaluate_item (a_context)
-			if base_expression.last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif base_expression.last_evaluated_item.is_error then
-				last_evaluated_item := base_expression.last_evaluated_item
+			base_expression.evaluate_item (a_result, a_context)
+			if a_result.item = Void or else a_result.item.is_error then
+				-- nothing to do
 			else
-				if base_expression.last_evaluated_item.is_node then
-					an_iterator := base_expression.last_evaluated_item.as_node.typed_value
-					if an_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				if a_result.item.is_node then
+					l_iterator := a_result.item.as_node.typed_value
+					if l_iterator.is_error then
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 					else
-						an_iterator.start
-						if an_iterator.is_error then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+						l_iterator.start
+						if l_iterator.is_error then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 						else
-							last_evaluated_item := an_iterator.item
+							a_result.put (l_iterator.item)
 						end
 					end
 				else
-					last_evaluated_item := base_expression.last_evaluated_item
+					-- nothing to do
 				end
 			end
 		end

@@ -64,31 +64,29 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			l_uri_item: XM_XPATH_ITEM
 			l_iri_reference: STRING
 			l_uri: UT_URI
 		do
-			arguments.item (1).evaluate_item (a_context)
-			l_uri_item := arguments.item (1).last_evaluated_item
-			if l_uri_item = Void or else l_uri_item.is_error then -- suppress errors
-				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void or else a_result.item.is_error then -- suppress errors
+				a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 			else
-				l_iri_reference := escaped_uri (l_uri_item.string_value)
+				l_iri_reference := escaped_uri (a_result.item.string_value)
 				if Url_encoding.has_excluded_characters (l_iri_reference) or l_iri_reference.occurrences ('#') > 1 then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat (l_iri_reference, " is not a valid xs:anyURI"),
-						Xpath_errors_uri, "FODC0005", Dynamic_error)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.concat (l_iri_reference, " is not a valid xs:anyURI"),
+						Xpath_errors_uri, "FODC0005", Dynamic_error))
 				else
 					create l_uri.make_resolve (base_uri, l_iri_reference)
-					parse_document (l_uri_item.string_value, base_uri, a_context)
+					parse_document (a_result.item.string_value, base_uri, a_context)
 					if last_evaluated_document = Void then
-						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 					elseif last_evaluated_document.is_error then
-						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 					else
-						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (last_evaluated_document.is_document)
+						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (last_evaluated_document.is_document))
 					end
 				end
 			end

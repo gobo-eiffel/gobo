@@ -59,23 +59,20 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_item: XM_XPATH_ITEM
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
+			l_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
-			arguments.item (1).evaluate_item (a_context)
-			last_evaluated_item := arguments.item (1).last_evaluated_item
-			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
-				an_item := last_evaluated_item
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
 				check
-					is_atomic: an_item.is_atomic_value
-					is_numeric: an_item.as_atomic_value.primitive_value.is_numeric_value
+					is_atomic: a_result.item.is_atomic_value
+					is_numeric: a_result.item.as_atomic_value.primitive_value.is_numeric_value
 					-- static typing
 				end
-				a_numeric_value := an_item.as_atomic_value.primitive_value.as_numeric_value
-				last_evaluated_item := a_numeric_value.rounded_value
+				l_numeric_value := a_result.item.as_atomic_value.primitive_value.as_numeric_value
+				a_result.put (l_numeric_value.rounded_value)
 			end
 		end
 

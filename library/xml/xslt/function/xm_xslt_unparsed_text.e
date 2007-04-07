@@ -66,39 +66,32 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_href, an_encoding: STRING
-			a_uri: UT_URI
+			l_href, l_encoding: STRING
+			l_uri: UT_URI
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif arguments.item (1).last_evaluated_item.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_item
-			else
-				an_href := arguments.item (1).last_evaluated_item.string_value
-				if Url_encoding.has_excluded_characters (an_href) then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("URI in unparsed-text() contains invalid characters",
-																												Xpath_errors_uri, "XTDE1170", Dynamic_error)
-				elseif an_href.has ('#') then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("URI in unparsed-text() contains a fragment identifier",
-																												Xpath_errors_uri, "XTDE1170", Dynamic_error)
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
+				l_href := a_result.item.string_value
+				if Url_encoding.has_excluded_characters (l_href) then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("URI in unparsed-text() contains invalid characters",
+						Xpath_errors_uri, "XTDE1170", Dynamic_error))
+				elseif l_href.has ('#') then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("URI in unparsed-text() contains a fragment identifier",
+						Xpath_errors_uri, "XTDE1170", Dynamic_error))
 				else
-					create a_uri.make_resolve (base_uri, an_href)
+					a_result.put (Void)
+					create l_uri.make_resolve (base_uri, l_href)
 					if arguments.count = 2 then
-						arguments.item (2).evaluate_item (a_context)
-						if arguments.item (2).last_evaluated_item /= Void then
-							if arguments.item (2).last_evaluated_item.is_error then
-								last_evaluated_item := arguments.item (2).last_evaluated_item
-							else
-								an_encoding := arguments.item (2).last_evaluated_item.string_value
-							end
+						arguments.item (2).evaluate_item (a_result, a_context)
+						if a_result.item /= Void and then not a_result.item.is_error then
+							l_encoding := a_result.item.string_value
 						end
 					end
-					if last_evaluated_item = Void then -- no error yet
-						last_evaluated_item := evaluated_unparsed_text (a_uri, an_encoding, a_context, False)
+					if a_result.item = Void then -- no error yet
+						a_result.put (evaluated_unparsed_text (l_uri, l_encoding, a_context, False))
 					end
 				end
 			end

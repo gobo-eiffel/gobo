@@ -68,24 +68,20 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_uri: STRING
+			l_uri: STRING
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif arguments.item (1).last_evaluated_item.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_item
-			else
-				a_uri := arguments.item (1).last_evaluated_item.as_node.base_uri
-				if a_uri = Void then
-					last_evaluated_item := Void
-				elseif a_uri.count = 0 then
-					last_evaluated_item := Void
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
+				l_uri := a_result.item.as_node.base_uri
+				if l_uri = Void then
+					a_result.put (Void)
+				elseif l_uri.count = 0 then
+					a_result.put (Void)
 				else
-					create {XM_XPATH_ANY_URI_VALUE} last_evaluated_item.make (a_uri)
+					a_result.put (create {XM_XPATH_ANY_URI_VALUE}.make (l_uri))
 				end
 			end
 		end

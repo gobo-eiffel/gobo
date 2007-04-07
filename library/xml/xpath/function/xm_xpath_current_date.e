@@ -59,15 +59,15 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			dt: DT_FIXED_OFFSET_ZONED_DATE_TIME
-			zd: DT_FIXED_OFFSET_ZONED_DATE
+			l_dt: DT_FIXED_OFFSET_ZONED_DATE_TIME
+			l_zd: DT_FIXED_OFFSET_ZONED_DATE
 		do
-			dt := a_context.current_date_time
-			create zd.make (dt.date_time.date, dt.time_zone)
-			create {XM_XPATH_DATE_VALUE} last_evaluated_item.make_from_zoned_date (zd)
+			l_dt := a_context.current_date_time
+			create l_zd.make (l_dt.date_time.date, l_dt.time_zone)
+			a_result.put (create {XM_XPATH_DATE_VALUE}.make_from_zoned_date (l_zd))
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is

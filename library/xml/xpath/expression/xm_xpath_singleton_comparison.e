@@ -66,43 +66,48 @@ feature -- Evaluation
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
-			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
+			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER
+			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_item: XM_XPATH_ITEM
 		do
-			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item = Void then
+			create l_result.make (Void)
+			first_operand.evaluate_item (l_result, a_context)
+			if l_result.item = Void then
 				create last_boolean_value.make (False)
-			elseif first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
+			elseif l_result.item /= Void and then l_result.item.is_error then
 				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (first_operand.last_evaluated_item.error_value)
-			elseif not first_operand.last_evaluated_item.is_atomic_value then
+				last_boolean_value.set_last_error (l_result.item.error_value)
+			elseif not l_result.item.is_atomic_value then
 				create last_boolean_value.make (False)
 			else
-				second_operand.evaluate_item (a_context)
-				if second_operand.last_evaluated_item.is_error then
+				l_item := l_result.item
+				create l_result.make (Void)
+				second_operand.evaluate_item (l_result, a_context)
+				if l_result.item.is_error then
 					create last_boolean_value.make (False)
-					last_boolean_value.set_last_error (second_operand.last_evaluated_item.error_value)
-				elseif second_operand.last_evaluated_item = Void or else not second_operand.last_evaluated_item.is_atomic_value then
+					last_boolean_value.set_last_error (l_result.item.error_value)
+				elseif l_result.item = Void or else not l_result.item.is_atomic_value then
 					create last_boolean_value.make (False)
 				else
-					create a_comparison_checker
-					a_comparison_checker.check_correct_general_relation (first_operand.last_evaluated_item.as_atomic_value,
+					create l_comparison_checker
+					l_comparison_checker.check_correct_general_relation (l_item.as_atomic_value,
 																						  singleton_value_operator (operator), atomic_comparer,
-																						  second_operand.last_evaluated_item.as_atomic_value, False)
-					if a_comparison_checker.is_comparison_type_error then
-						set_last_error (a_comparison_checker.last_type_error)
+																						  l_result.item.as_atomic_value, False)
+					if l_comparison_checker.is_comparison_type_error then
+						set_last_error (l_comparison_checker.last_type_error)
 						create last_boolean_value.make (False)
 					else
-						create last_boolean_value.make (a_comparison_checker.last_check_result)
+						create last_boolean_value.make (l_comparison_checker.last_check_result)
 					end
 				end
 			end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
-			last_evaluated_item := last_boolean_value
+			a_result.put (last_boolean_value)
 		end
 	
 feature {NONE} -- Implementation

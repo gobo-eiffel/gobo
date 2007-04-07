@@ -25,43 +25,44 @@ create
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item;
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
-			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_string: STRING
+			l_atomic_value, l_other_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_string: STRING
 		do
-			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_atomic_value then
-				an_atomic_value := first_operand.last_evaluated_item.as_atomic_value.primitive_value
-				if an_atomic_value.is_untyped_atomic then
-					a_string := an_atomic_value.as_untyped_atomic.string_value
-					if a_string.is_double then
-						create {XM_XPATH_DOUBLE_VALUE} an_atomic_value.make_from_string (a_string)
+			first_operand.evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then a_result.item.is_atomic_value then
+				l_atomic_value := a_result.item.as_atomic_value.primitive_value
+				if l_atomic_value.is_untyped_atomic then
+					l_string := l_atomic_value.as_untyped_atomic.string_value
+					if l_string.is_double then
+						create {XM_XPATH_DOUBLE_VALUE} l_atomic_value.make_from_string (l_string)
 					else
-						create {XM_XPATH_DOUBLE_VALUE} an_atomic_value.make_nan
+						create {XM_XPATH_DOUBLE_VALUE} l_atomic_value.make_nan
 					end
 				end
-				second_operand.evaluate_item (a_context)
-				if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_atomic_value then
-					another_atomic_value := second_operand.last_evaluated_item.as_atomic_value.primitive_value
-					if another_atomic_value.is_untyped_atomic then
-						a_string := another_atomic_value.as_untyped_atomic.string_value
-						if a_string.is_double then
-							create {XM_XPATH_DOUBLE_VALUE} another_atomic_value.make_from_string (a_string)
+				a_result.put (Void)
+				second_operand.evaluate_item (a_result, a_context)
+				if a_result.item /= Void and then a_result.item.is_atomic_value then
+					l_other_atomic_value := a_result.item.as_atomic_value.primitive_value
+					if l_other_atomic_value.is_untyped_atomic then
+						l_string := l_other_atomic_value.as_untyped_atomic.string_value
+						if l_string.is_double then
+							create {XM_XPATH_DOUBLE_VALUE} l_other_atomic_value.make_from_string (l_string)
 						else
-							create {XM_XPATH_DOUBLE_VALUE} another_atomic_value.make_nan
+							create {XM_XPATH_DOUBLE_VALUE} l_other_atomic_value.make_nan
 						end
 					end
-					if an_atomic_value.is_numeric_value and then another_atomic_value.is_numeric_value then
-						last_evaluated_item := an_atomic_value.as_numeric_value.arithmetic (operator, another_atomic_value.as_numeric_value)
+					if l_atomic_value.is_numeric_value and then l_other_atomic_value.is_numeric_value then
+						a_result.put (l_atomic_value.as_numeric_value.arithmetic (operator, l_other_atomic_value.as_numeric_value))
 					end
 				else
-					last_evaluated_item := Void
+					a_result.put (Void)
 				end
 			else
-				last_evaluated_item := Void
+				a_result.put (Void)
 			end
 		end
 

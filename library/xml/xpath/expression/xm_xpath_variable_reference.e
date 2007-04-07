@@ -213,14 +213,14 @@ feature -- Evaluation
 			end
 		end
 	
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			evaluate_variable (a_context)
 			if last_evaluated_binding.is_convertible_to_item (a_context) then
-				last_evaluated_item := last_evaluated_binding.as_item (a_context)
+				a_result.put (last_evaluated_binding.as_item (a_context))
 			else
-				last_evaluated_item := Void
+				a_result.put (Void)
 			end
 		end
 

@@ -60,19 +60,21 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			tz: DT_FIXED_OFFSET_TIME_ZONE
-			td: DT_TIME_DURATION
-			dd: DT_DATE_DURATION
-			a_duration: DT_DATE_TIME_DURATION
+			l_tz: DT_FIXED_OFFSET_TIME_ZONE
+			l_td: DT_TIME_DURATION
+			l_dd: DT_DATE_DURATION
+			l_duration: DT_DATE_TIME_DURATION
 		do
-			tz := a_context.implicit_timezone
-			td := tz.fixed_offset
-			create dd.make (0, 0, 0)
-			create a_duration.make_from_date_time_duration (dd, td)
-			create {XM_XPATH_SECONDS_DURATION_VALUE} last_evaluated_item.make_from_duration (a_duration)
+			l_tz := a_context.implicit_timezone
+			l_td := l_tz.fixed_offset
+			create l_dd.make (0, 0, 0)
+			create l_duration.make_from_date_time_duration (l_dd, l_td)
+			a_result.put (create {XM_XPATH_SECONDS_DURATION_VALUE}.make_from_duration (l_duration))
+		ensure then
+			good_result: a_result.item /= Void and then not a_result.item.is_error
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is

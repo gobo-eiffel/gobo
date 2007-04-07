@@ -63,29 +63,26 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_uri: STRING
 			l_name_code: INTEGER
 		do
-			last_evaluated_item := Void
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void then
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void then
 				l_uri := ""
-			elseif arguments.item (1).last_evaluated_item.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_item
+			elseif a_result.item.is_error then
+				-- nothing to do
+			else
+				l_uri := a_result.item.string_value
 			end
-			if last_evaluated_item = Void then
-				if l_uri = Void then
-					l_uri := arguments.item (1).last_evaluated_item.string_value
-				end
-				arguments.item (2).evaluate_item (a_context)
-				if arguments.item (2).last_evaluated_item.is_error then
-					last_evaluated_item := arguments.item (2).last_evaluated_item
-				else
-					create l_parser.make (arguments.item (2).last_evaluated_item.string_value)
+			if l_uri /= Void then
+				a_result.put (Void)
+				arguments.item (2).evaluate_item (a_result, a_context)
+				if not a_result.item.is_error then
+					create l_parser.make (a_result.item.string_value)
 					if l_parser.is_valid then
 						if not shared_name_pool.is_name_code_allocated (l_parser.optional_prefix, l_uri, l_parser.local_name) then
 							shared_name_pool.allocate_name (l_parser.optional_prefix, l_uri, l_parser.local_name)
@@ -93,10 +90,10 @@ feature -- Evaluation
 						else
 							l_name_code := shared_name_pool.name_code (l_parser.optional_prefix, l_uri, l_parser.local_name)
 						end
-						create {XM_XPATH_QNAME_VALUE} last_evaluated_item.make (l_name_code)
+						a_result.put (create {XM_XPATH_QNAME_VALUE}.make (l_name_code))
 					else
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Second argument to fn:QName() is not a lexical QName",
-																													Xpath_errors_uri, "FOCA0002", Dynamic_error)
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:QName() is not a lexical QName",
+							Xpath_errors_uri, "FOCA0002", Dynamic_error))
 					end
 				end
 			end

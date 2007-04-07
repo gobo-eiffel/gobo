@@ -78,13 +78,13 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			if a_context.is_context_position_set then
-				create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (a_context.last)
+				a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (a_context.last))
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context position is undefined.", Xpath_errors_uri, "XPDY0002", Dynamic_error)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("The context position is undefined.", Xpath_errors_uri, "XPDY0002", Dynamic_error))
 			end
 		end
 

@@ -64,8 +64,8 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			check
 				sequence_result: False
@@ -76,33 +76,35 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
-			an_item: XM_XPATH_ITEM
-			a_string: STRING
-			an_array: ARRAY [XM_XPATH_INTEGER_VALUE]
-			an_index, a_count: INTEGER
-			an_integer: XM_XPATH_INTEGER_VALUE
+			l_item: XM_XPATH_ITEM
+			l_string: STRING
+			l_array: ARRAY [XM_XPATH_INTEGER_VALUE]
+			l_index, l_count: INTEGER
+			l_integer: XM_XPATH_INTEGER_VALUE
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			arguments.item (1).evaluate_item (a_context)
-			an_item := arguments.item (1).last_evaluated_item
-			if an_item = Void then
+			create l_result.make (Void)
+			arguments.item (1).evaluate_item (l_result, a_context)
+			l_item := l_result.item
+			if l_item = Void then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-			elseif an_item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
+			elseif l_item.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.error_value)
 			else
-				a_string := an_item.string_value
-				if a_string.is_empty then
+				l_string := l_item.string_value
+				if l_string.is_empty then
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 				else
 					from
-						create an_array.make (1, a_string.count); an_index := 1; a_count := a_string.count
+						create l_array.make (1, l_string.count); l_index := 1; l_count := l_string.count
 					until
-						an_index > a_count
+						l_index > l_count
 					loop
-						create an_integer.make_from_integer (a_string.item_code (an_index))
-						an_array.put (an_integer, an_index)
-						an_index := an_index + 1
+						create l_integer.make_from_integer (l_string.item_code (l_index))
+						l_array.put (l_integer, l_index)
+						l_index := l_index + 1
 					end
-					create {XM_XPATH_ARRAY_ITERATOR [XM_XPATH_INTEGER_VALUE]} last_iterator.make (an_array, 1, a_count)
+					create {XM_XPATH_ARRAY_ITERATOR [XM_XPATH_INTEGER_VALUE]} last_iterator.make (l_array, 1, l_count)
 				end
 			end
 		end

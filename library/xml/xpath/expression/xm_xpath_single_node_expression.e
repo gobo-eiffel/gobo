@@ -95,13 +95,13 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			if is_valid_context_for_node (a_context) then
-				last_evaluated_item := node (a_context)
+				a_result.put (node (a_context))
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (dynamic_error_value (a_context))
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (dynamic_error_value (a_context)))
 			end
 		end
 

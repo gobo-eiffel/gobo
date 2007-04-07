@@ -73,22 +73,22 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_group_iterator: XM_XSLT_GROUP_ITERATOR
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_group_iterator: XM_XSLT_GROUP_ITERATOR
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			an_evaluation_context ?= a_context
+			l_evaluation_context ?= a_context
 			check
-				evaluation_context: an_evaluation_context /= Void
+				evaluation_context: l_evaluation_context /= Void
 				-- as this is an XSLT function
 			end
-			a_group_iterator := an_evaluation_context.current_group_iterator
-			if a_group_iterator = Void then
-				last_evaluated_item := Void
+			l_group_iterator := l_evaluation_context.current_group_iterator
+			if l_group_iterator = Void then
+				a_result.put (Void)
 			else
-				last_evaluated_item := a_group_iterator.current_grouping_key
+				a_result.put (l_group_iterator.current_grouping_key)
 			end
 		end
 

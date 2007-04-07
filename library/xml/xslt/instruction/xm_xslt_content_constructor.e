@@ -165,38 +165,38 @@ feature -- Optimization
 		
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			last_evaluated_item := Void
 			if select_expression.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (select_expression.error_value)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (select_expression.error_value))
 			elseif is_singleton then
 
 				-- common case, so optimize
 	
-				select_expression.evaluate_item (a_context)
-				if select_expression.last_evaluated_item /= Void then
-					if select_expression.last_evaluated_item.is_error then
-						last_evaluated_item := select_expression.last_evaluated_item
-					elseif select_expression.last_evaluated_item.is_string_value then
-						last_evaluated_item := select_expression.last_evaluated_item.as_string_value
-					elseif select_expression.last_evaluated_item.is_atomic_value then
-						last_evaluated_item := select_expression.last_evaluated_item.as_atomic_value.convert_to_type (type_factory.string_type)
+				select_expression.evaluate_item (a_result, a_context)
+				if a_result.item /= Void then
+					if a_result.item.is_error then
+						-- nothing to do
+					elseif a_result.item.is_string_value then
+						a_result.put (a_result.item.as_string_value)
+					elseif a_result.item.is_atomic_value then
+						a_result.put (a_result.item.as_atomic_value.convert_to_type (type_factory.string_type))
 					else
-						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} an_iterator.make (select_expression.last_evaluated_item)
-						evaluate_sequence (a_context, an_iterator)
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} l_iterator.make (a_result.item)
+						a_result.put (Void)
+						evaluate_sequence (a_result, a_context, l_iterator)
 					end
 				end
 			else
 				select_expression.create_iterator (a_context)
-				an_iterator := select_expression.last_iterator
-				if an_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				l_iterator := select_expression.last_iterator
+				if l_iterator.is_error then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 				else
-					evaluate_sequence (a_context, an_iterator)
+					evaluate_sequence (a_result, a_context, l_iterator)
 				end
 			end
 		end
@@ -220,99 +220,103 @@ feature {NONE} -- Implementation
 	is_singleton: BOOLEAN
 			-- Is `select_expression' a single item?
 	
-	evaluate_sequence (a_context: XM_XPATH_CONTEXT; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
-			-- Evaluate `an_iterator' setting `last_evaluated_item'.
+	evaluate_sequence (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+			-- Evaluate `a_iterator'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			context_may_be_void: True
 			expression_not_in_error: not is_error
-			iterator_is_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
+			iterator_is_before: a_iterator /= Void and then not a_iterator.is_error and then a_iterator.before
 		local
-			a_buffer, a_separator, a_text: STRING
-			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_NODE
-			is_first_item, was_previous_item_text: BOOLEAN
-			a_typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_buffer, l_separator, l_text: STRING
+			l_item: XM_XPATH_ITEM
+			l_node: XM_XPATH_NODE
+			l_is_first_item, l_was_previous_item_text: BOOLEAN
+			l_typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
+			l_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			from
-				is_first_item := True; a_buffer := ""; an_iterator.start
+				l_is_first_item := True; l_buffer := ""; a_iterator.start
 			until
-				last_evaluated_item /= Void or else an_iterator.is_error or else an_iterator.after
+				a_result.item /= Void or a_iterator.is_error or else a_iterator.after
 			loop
-				an_item := an_iterator.item
-				if an_item.is_error then
-					last_evaluated_item := an_item
+				l_item := a_iterator.item
+				if l_item.is_error then
+					a_result.put (l_item)
 				else
-					if an_item.is_node then
-						a_node := an_item.as_node
-						if a_node.node_type = Text_node then
-							a_text := a_node.string_value
-							if a_text.count > 0 then
-								if not is_first_item and then not was_previous_item_text then
-									if a_separator = Void then a_separator := separator_value (a_context) end
-									if last_evaluated_item = Void then a_buffer := STRING_.appended_string (a_buffer, a_separator) end
+					if l_item.is_node then
+						l_node := l_item.as_node
+						if l_node.node_type = Text_node then
+							l_text := l_node.string_value
+							if l_text.count > 0 then
+								if not l_is_first_item and then not l_was_previous_item_text then
+									if l_separator = Void then l_separator := separator_value (a_result, a_context) end
+									if a_result.item = Void then l_buffer := STRING_.appended_string (l_buffer, l_separator) end
 								end
-								a_buffer := STRING_.appended_string (a_buffer, a_text)
-								is_first_item := False
-								was_previous_item_text := True
+								l_buffer := STRING_.appended_string (l_buffer, l_text)
+								l_is_first_item := False
+								l_was_previous_item_text := True
 							end
 						else
 							from
-								was_previous_item_text := False;	a_typed_value := a_node.typed_value; a_typed_value.start
+								l_was_previous_item_text := False;	l_typed_value := l_node.typed_value; l_typed_value.start
 							until
-								a_typed_value.after
+								l_typed_value.after
 							loop
-								an_atomic_value := a_typed_value.item
-								if not is_first_item then
-									if a_separator = Void then a_separator := separator_value (a_context) end
-									if last_evaluated_item = Void then a_buffer := STRING_.appended_string (a_buffer, a_separator) end
+								l_atomic_value := l_typed_value.item
+								if not l_is_first_item then
+									if l_separator = Void then l_separator := separator_value (a_result, a_context) end
+									if a_result.item = Void then l_buffer := STRING_.appended_string (l_buffer, l_separator) end
 								end
-								is_first_item := False
-								a_buffer := STRING_.appended_string (a_buffer, an_atomic_value.string_value)
-								a_typed_value.forth
+								l_is_first_item := False
+								l_buffer := STRING_.appended_string (l_buffer, l_atomic_value.string_value)
+								l_typed_value.forth
 							end
 						end
 					else
-						if not is_first_item then
-							if a_separator = Void then a_separator := separator_value (a_context) end
-							if last_evaluated_item = Void then a_buffer := STRING_.appended_string (a_buffer, a_separator) end
+						if not l_is_first_item then
+							if l_separator = Void then l_separator := separator_value (a_result, a_context) end
+							if a_result.item = Void then l_buffer := STRING_.appended_string (l_buffer, l_separator) end
 						end
-						is_first_item := False
-						if last_evaluated_item = Void then a_buffer := STRING_.appended_string (a_buffer, an_item.string_value) end
+						l_is_first_item := False
+						if a_result.item = Void then l_buffer := STRING_.appended_string (l_buffer, l_item.string_value) end
 					end
 				end
-				an_iterator.forth
+				a_iterator.forth
 			end
-			if an_iterator.is_error then
-				an_evaluation_context ?= a_context
-				an_iterator.error_value.set_location (system_id, line_number)
-				an_evaluation_context.transformer.report_fatal_error (an_iterator.error_value)
+			if a_iterator.is_error then
+				l_evaluation_context ?= a_context
+				a_iterator.error_value.set_location (system_id, line_number)
+				l_evaluation_context.transformer.report_fatal_error (a_iterator.error_value)
 			end
-			if last_evaluated_item = Void then create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_buffer) end
+			if a_result.item = Void then
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_buffer))
+			end
 		ensure
 			item_evaluated_but_may_be_void: True
 		end
 
-	separator_value  (a_context: XM_XPATH_CONTEXT): STRING is
+	separator_value  (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT): STRING is
 			-- Value of `separator_expression';
-			-- N.B. May put `last_evaluated_item' into error status, so not pure.
+			-- Trashes `a_result', so not pure.
 		require
-			not_yet_evaluated: last_evaluated_item = Void
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 		do
-			separator_expression.evaluate_item (a_context)
-			if separator_expression.last_evaluated_item /= Void then
-				if separator_expression.last_evaluated_item.is_error then
-					last_evaluated_item := separator_expression.last_evaluated_item
-				else
-					Result := separator_expression.last_evaluated_item.string_value
+			separator_expression.evaluate_item (a_result, a_context)
+			if a_result.item /= Void then
+				if not a_result.item.is_error then
+					Result := a_result.item.string_value
+					a_result.put (Void)
 				end
 			else
 				Result := ""
 			end
 		ensure
-			no_error_implies_result_not_void: last_evaluated_item = Void implies Result /= Void
-			error_implies_result_is_void: last_evaluated_item /= Void implies last_evaluated_item.is_error and then Result = Void
+			no_error_implies_result_not_void: a_result.item = Void implies Result /= Void
+			error_implies_result_is_void: a_result.item /= Void implies a_result.item.is_error and then Result = Void
 		end
 	
 invariant

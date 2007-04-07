@@ -131,32 +131,31 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_content: STRING
-			an_orphan: XM_XPATH_ORPHAN
+			l_content: STRING
+			l_orphan: XM_XPATH_ORPHAN
 			l_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			last_evaluated_item := Void
 			if select_expression = Void then
-				a_content := ""
+				l_content := ""
 			else
 				select_expression.evaluate_as_string (a_context)
 				if select_expression.last_evaluated_string.is_error then
-					last_evaluated_item := select_expression.last_evaluated_string
+					a_result.put (select_expression.last_evaluated_string)
 				else
-					a_content := select_expression.last_evaluated_string.string_value
+					l_content := select_expression.last_evaluated_string.string_value
 				end
 			end
-			if last_evaluated_item = Void then
-				check_content (a_content, a_context)
+			if a_result.item = Void then
+				check_content (l_content, a_context)
 				if not is_error then
 					evaluate_name_code (a_context)
 					if not is_error then
-						create an_orphan.make (item_type.primitive_type, last_string_value)
-						an_orphan.set_name_code (last_name_code)
-						last_evaluated_item := an_orphan
+						create l_orphan.make (item_type.primitive_type, last_string_value)
+						l_orphan.set_name_code (last_name_code)
+						a_result.put (l_orphan)
 					else
 						l_context ?= a_context
 						check
@@ -171,16 +170,19 @@ feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
-			evaluate_item (a_context)
-			if last_evaluated_item = Void then
+			create l_item.make (Void)
+			evaluate_item (l_item, a_context)
+			if l_item.item = Void then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-			elseif last_evaluated_item.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
-			elseif last_evaluated_item.is_node then
-				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (last_evaluated_item.as_node)
+			elseif l_item.item.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_item.item.error_value)
+			elseif l_item.item.is_node then
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_item.item.as_node)
 			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_item.item)
 			end
 		end
 
@@ -190,19 +192,22 @@ feature -- Evaluation
 			context_not_void: a_context /= Void
 			select_expression_not_void: select_expression /= Void
 			no_error: not a_context.transformer.is_error
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			if not is_error then
 				if select_expression.is_error then
 					set_last_error (select_expression.error_value)
 				else
-					select_expression.evaluate_item (a_context)
-					if select_expression.last_evaluated_item = Void then
+					create l_item.make (Void)
+					select_expression.evaluate_item (l_item, a_context)
+					if l_item.item = Void then
 						last_string_value := ""
-					elseif select_expression.last_evaluated_item.is_error then
+					elseif l_item.item.is_error then
 						last_string_value := Void
-						set_last_error (select_expression.last_evaluated_item.error_value)
+						set_last_error (l_item.item.error_value)
 					else
-						last_string_value := select_expression.last_evaluated_item.string_value
+						last_string_value := l_item.item.string_value
 					end
 				end
 			end

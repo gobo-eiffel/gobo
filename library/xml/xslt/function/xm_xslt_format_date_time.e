@@ -123,56 +123,50 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_calendar_value: XM_XPATH_CALENDAR_VALUE
-			a_picture, a_language, a_country, a_calendar: STRING
+			l_calendar_value: XM_XPATH_CALENDAR_VALUE
+			l_picture, l_language, l_country, l_calendar: STRING
 		do
-			last_evaluated_item := Void
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void or else arguments.item (1).last_evaluated_item.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_item
-			else
-				a_calendar_value := arguments.item (1).last_evaluated_item.as_atomic_value.as_calendar_value
-				arguments.item (2).evaluate_item (a_context)
-				if arguments.item (2).last_evaluated_item.is_error then
-					last_evaluated_item := arguments.item (2).last_evaluated_item
-				else
-					a_picture := arguments.item (2).last_evaluated_item.string_value
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
+				l_calendar_value := a_result.item.as_atomic_value.as_calendar_value
+				a_result.put (Void)
+				arguments.item (2).evaluate_item (a_result, a_context)
+				if not a_result.item.is_error then
+					l_picture := a_result.item.string_value
+					a_result.put (Void)
 					if arguments.count > 2 then
-						arguments.item (3).evaluate_item (a_context)
-						if arguments.item (3).last_evaluated_item = Void then
-							a_language := Default_language
-						elseif arguments.item (3).last_evaluated_item.is_error then
-							last_evaluated_item := arguments.item (3).last_evaluated_item
-						else
-							a_language := arguments.item (3).last_evaluated_item.string_value
+						arguments.item (3).evaluate_item (a_result, a_context)
+						if a_result.item = Void then
+							l_language := Default_language
+						elseif not a_result.item.is_error then
+							l_language := a_result.item.string_value
+							a_result.put (Void)
+							arguments.item (4).evaluate_item (a_result, a_context)
+							if a_result.item = Void then
+								l_calendar := Default_calendar
+							elseif not a_result.item.is_error then
+								l_calendar := a_result.item.string_value
+								-- TODO: check for lexical QName when bug 2319 is resolved by WG
+							end
+							a_result.put (Void)
+							arguments.item (5).evaluate_item (a_result, a_context)
+							if a_result.item = Void then
+								l_country := Default_country
+							elseif not a_result.item.is_error then
+								l_country := a_result.item.string_value
+								a_result.put (Void)
+							end
 						end
-						arguments.item (4).evaluate_item (a_context)
-						if arguments.item (4).last_evaluated_item = Void then
-							a_calendar := Default_calendar
-						elseif arguments.item (4).last_evaluated_item.is_error then
-							last_evaluated_item := arguments.item (4).last_evaluated_item
-						else
-							a_calendar := arguments.item (4).last_evaluated_item.string_value
-							-- TODO: check for lexical QName when bug 2319 is resolved by WG
-						end
-						arguments.item (5).evaluate_item (a_context)
-						if arguments.item (5).last_evaluated_item = Void then
-							a_country := Default_country
-						elseif arguments.item (5).last_evaluated_item.is_error then
-							last_evaluated_item := arguments.item (5).last_evaluated_item
-						else
-							a_country := arguments.item (5).last_evaluated_item.string_value
-						end						
 					else
-						a_language := Default_language
-						a_calendar := Default_calendar
-						a_country  := Default_country
+						l_language := Default_language
+						l_calendar := Default_calendar
+						l_country  := Default_country
 					end
-					if last_evaluated_item = Void then -- no error yet
-						format_date_time (a_calendar_value, a_picture, a_language, a_calendar, a_country)
+					if a_result.item = Void then -- no error yet
+						format_date_time (a_result, l_calendar_value, l_picture, l_language, l_calendar, l_country)
 					end
 				end
 			end
@@ -209,41 +203,44 @@ feature {NONE} -- Implementation
 	primary_modifier: STRING
 			-- Specifier in current variable marker
 
-	format_date_time (a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_picture, a_requested_language, a_requested_calendar, a_country: STRING) is
+	format_date_time (a_result: DS_CELL [XM_XPATH_ITEM]; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_picture, a_requested_language, a_requested_calendar, a_country: STRING) is
 			-- Format the result.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			calendar_value_not_void: a_calendar_value /= Void
 			picture_string_not_void: a_picture /= Void
 			requested_language_not_void: a_requested_language /= Void
 			requested_calendar_not_void: a_requested_calendar /= Void
 			country_not_void: a_country /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
-			a_result_string, a_language, a_calendar: STRING
+			l_result_string, l_language, l_calendar: STRING
 		do
 			if a_picture.is_empty then
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 			else
-				a_result_string := new_unicode_string_with_capacity (32)
+				l_result_string := new_unicode_string_with_capacity (32)
 				if not is_language_supported (a_requested_language) then
-					a_language := language (a_requested_language)
-					a_result_string := STRING_.appended_string (a_result_string, language_prefix (a_requested_language))
+					l_language := language (a_requested_language)
+					l_result_string := STRING_.appended_string (l_result_string, language_prefix (a_requested_language))
 				else
-					a_language := a_requested_language
+					l_language := a_requested_language
 				end
 				if not is_calendar_supported (a_requested_calendar) then
-					a_calendar := calendar (a_requested_calendar)
-					a_result_string := STRING_.appended_string (a_result_string, calendar_prefix (a_requested_calendar, a_language))
+					l_calendar := calendar (a_requested_calendar)
+					l_result_string := STRING_.appended_string (l_result_string, calendar_prefix (a_requested_calendar, l_language))
 				else
-					a_calendar := a_requested_calendar
+					l_calendar := a_requested_calendar
 				end
-				parse_picture_string (a_result_string, a_calendar_value, a_picture, a_language, a_calendar, a_country)
+				parse_picture_string (a_result, l_result_string, a_calendar_value, a_picture, l_language, l_calendar, a_country)
 			end
 		end
 
-	parse_picture_string (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE;	a_picture, a_language, a_calendar, a_country: STRING) is
+	parse_picture_string (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE;	a_picture, a_language, a_calendar, a_country: STRING) is
 			-- Parse `a_picture' and format output.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			picture_string_not_empty: a_picture /= Void and then not a_picture.is_empty
@@ -251,48 +248,47 @@ feature {NONE} -- Implementation
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			i, l_count, l_open, l_close: INTEGER
-			finished, finished_inner: BOOLEAN
+			l_finished, l_finished_inner: BOOLEAN
 		do
 			from
 				i := 1; l_count := a_picture.count
-			until finished loop
-				from finished_inner := False until i > l_count or else finished_inner loop
+			until l_finished loop
+				from l_finished_inner := False until i > l_count or else l_finished_inner loop
 					if a_picture.index_of ('[', i) = i then
 						l_open := i
-						finished_inner := True
+						l_finished_inner := True
 					else
 						a_result_string.insert_character (a_picture.item (i), a_result_string.count + 1)
 						if a_picture.index_of (']', i) = i then
 							i := i + 1
 							if a_picture.index_of (']', i) /= i then
-								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("] must be doubled in picture string", Xpath_errors_uri, "XTDE1340", Dynamic_error)
-								finished := True; finished_inner := True
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("] must be doubled in picture string", Xpath_errors_uri, "XTDE1340", Dynamic_error))
+								l_finished := True; l_finished_inner := True
 							end
 						end
 					end
 					i := i + 1
 				end
 				if i > l_count then
-					finished := True
+					l_finished := True
 					if l_open > 0 and l_close = 0 then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("] not found after [ in picture string", Xpath_errors_uri, "XTDE1340", Dynamic_error)
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("] not found after [ in picture string", Xpath_errors_uri, "XTDE1340", Dynamic_error))
 					end
-				elseif not finished then
+				elseif not l_finished then
 					if a_picture.index_of ('[', i) = i then
 						a_result_string.insert_character ('[', a_result_string.count + 1)
 						i := i + 1
 					else
 						l_close := a_picture.index_of (']', i)
 						if l_close = 0 then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("] not found after [ in picture string", Xpath_errors_uri, "XTDE1340", Dynamic_error)
-							finished := True
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("] not found after [ in picture string", Xpath_errors_uri, "XTDE1340", Dynamic_error))
+							l_finished := True
 						else
-							format_marker (a_result_string, a_calendar_value, a_picture.substring (l_open + 1, l_close - 1), a_language, a_calendar, a_country)
-							if last_evaluated_item /= Void then
-								finished := True
+							format_marker (a_result, a_result_string, a_calendar_value, a_picture.substring (l_open + 1, l_close - 1), a_language, a_calendar, a_country)
+							if a_result.item /= Void then
+								l_finished := True
 							else
 								i := l_close + 1
 							end
@@ -300,14 +296,16 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if last_evaluated_item = Void then -- no error
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_result_string)
+			if a_result.item = Void then -- no error
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (a_result_string))
 			end
 		end
 
-	format_marker (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_marker, a_language, a_calendar, a_country: STRING) is
+	format_marker (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_marker, a_language, a_calendar, a_country: STRING) is
 			-- Parse `a_marker' and format output by appending to `a_result_string'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			marker_not_void: a_marker /= Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
@@ -315,33 +313,34 @@ feature {NONE} -- Implementation
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
-			a_matcher: RX_PCRE_REGULAR_EXPRESSION
-			a_specifier: CHARACTER
-			some_modifiers: STRING
-			a_match_count, a_count: INTEGER
+			l_matcher: RX_PCRE_REGULAR_EXPRESSION
+			l_specifier: CHARACTER
+			l_modifiers: STRING
+			l_match_count, l_count: INTEGER
 		do
-			a_matcher := pattern_matcher (a_marker)
-			if not a_matcher.has_matched then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat ("The picture string has an invalid variable marker: ", a_marker),
-				Xpath_errors_uri, "XTDE1340", Dynamic_error)
+			l_matcher := pattern_matcher (a_marker)
+			if not l_matcher.has_matched then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.concat ("The picture string has an invalid variable marker: ", a_marker),
+					Xpath_errors_uri, "XTDE1340", Dynamic_error))
 			else
-				a_match_count := a_matcher.match_count
-				if a_match_count = 1 then a_count := 0 else a_count := 1 end
-				a_specifier := a_matcher.captured_substring (a_count).item (1)
-				if a_match_count = 1 then
-					some_modifiers := ""
+				l_match_count := l_matcher.match_count
+				if l_match_count = 1 then l_count := 0 else l_count := 1 end
+				l_specifier := l_matcher.captured_substring (l_count).item (1)
+				if l_match_count = 1 then
+					l_modifiers := ""
 				else
-					some_modifiers := a_matcher.captured_substring (a_match_count - 1)
+					l_modifiers := l_matcher.captured_substring (l_match_count - 1)
 				end
-				parse_and_format_marker (a_result_string, a_calendar_value, a_specifier, some_modifiers, a_language, a_calendar, a_country)
+				parse_and_format_marker (a_result, a_result_string, a_calendar_value, l_specifier, l_modifiers, a_language, a_calendar, a_country)
 			end
 		end
 
-	parse_and_format_marker (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_specifier: CHARACTER; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	parse_and_format_marker (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_specifier: CHARACTER; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format `a_calendar_value' according to `a_specifier' and `some_modifiers' by appending to `a_result_string'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -350,68 +349,69 @@ feature {NONE} -- Implementation
 			country_not_void: a_country /= Void
 			valid_specifier: is_valid_specifier (a_specifier)
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		do
 			inspect
 				a_specifier
 			when 'Y' then
-				format_year (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_year (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'M' then
-				format_month (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_month (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'D' then
-				format_day_in_month (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_day_in_month (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'd' then
-				format_day_in_year (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_day_in_year (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'F' then
-				format_day_of_week (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_day_of_week (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'W' then
-				format_week_in_year (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_week_in_year (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'w' then
-				format_week_in_month (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_week_in_month (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'H' then
-				format_hour (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_hour (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'h' then
-				format_hour_in_half_day (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_hour_in_half_day (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'P' then
-				format_am_pm (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_am_pm (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'm' then
-				format_minute (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_minute (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 's' then
-				format_second (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_second (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'f' then
-				format_millisecond (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_millisecond (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'Z' then
-				format_time_zone (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_time_zone (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'z' then
-				format_gmt_offset (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_gmt_offset (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'C' then
-				format_calendar_name (a_result_string, some_modifiers, a_language, a_calendar, a_country)
+				format_calendar_name (a_result, a_result_string, some_modifiers, a_language, a_calendar, a_country)
 			when 'E' then
-				format_era (a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
+				format_era (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			end
 		end
 
-	check_not_date_value (a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_message: STRING) is
+	check_not_date_value (a_result: DS_CELL [XM_XPATH_ITEM]; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_message: STRING) is
 			-- Check `a_calendar_value' is not an xs:date.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			calendar_value_not_void: a_calendar_value /= Void
 			message_not_empty: a_message /= Void and then not a_message.is_empty
-			no_error_yet: last_evaluated_item = Void
 		do
 			if a_calendar_value.is_date_value then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1350", Dynamic_error)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (a_message, Xpath_errors_uri, "XTDE1350", Dynamic_error))
 			end
 		end
 
-	check_not_time_value (a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_message: STRING) is
+	check_not_time_value (a_result: DS_CELL [XM_XPATH_ITEM]; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_message: STRING) is
 			-- Check `a_calendar_value' is not an xs:time.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			calendar_value_not_void: a_calendar_value /= Void
 			message_not_empty: a_message /= Void and then not a_message.is_empty
-			no_error_yet: last_evaluated_item = Void
 		do
 			if a_calendar_value.is_time_value then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1350", Dynamic_error)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (a_message, Xpath_errors_uri, "XTDE1350", Dynamic_error))
 			end
 		end
 
@@ -440,9 +440,11 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	format_year (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_year (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format year from `a_calendar_value' and append to `a_result_string'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -450,16 +452,15 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
-			check_not_time_value (a_calendar_value, "Y specifier not allowed for format-time()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "1", False)
-				if last_evaluated_item = Void then
+			check_not_time_value (a_result, a_calendar_value, "Y specifier not allowed for format-time()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "1", False)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.absolute_year)
 					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
@@ -477,9 +478,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_month (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_month (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format month from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -487,23 +490,22 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
-			an_integer: INTEGER
+			l_integer: INTEGER
 			l_number: MA_DECIMAL
 		do
-			check_not_time_value (a_calendar_value, "M specifier not allowed for format-time()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "1", True)
-				if last_evaluated_item = Void then
+			check_not_time_value (a_result, a_calendar_value, "M specifier not allowed for format-time()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "1", True)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
-					an_integer := a_calendar_value.month
+					l_integer := a_calendar_value.month
 					if is_name_modifier then
-						l_string := correctly_cased_name (l_numberer.month_name (an_integer, minimum_width, maximum_width))
+						l_string := correctly_cased_name (l_numberer.month_name (l_integer, minimum_width, maximum_width))
 					else
-						create l_number.make_from_integer (an_integer)
+						create l_number.make_from_integer (l_integer)
 						l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 						if l_string.count < minimum_width then
 							if is_decimal_format then
@@ -523,9 +525,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_in_month (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_in_month (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-in-month from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -533,16 +537,15 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
-			check_not_time_value (a_calendar_value, "D specifier not allowed for format-time()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "1", False)
-				if last_evaluated_item = Void then
+			check_not_time_value (a_result, a_calendar_value, "D specifier not allowed for format-time()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "1", False)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.day_in_month)
 					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
@@ -560,9 +563,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_in_year (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_in_year (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-in-year from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -570,16 +575,15 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
-			check_not_time_value (a_calendar_value, "d specifier not allowed for format-time()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "1", False)
-				if last_evaluated_item = Void then
+			check_not_time_value (a_result, a_calendar_value, "d specifier not allowed for format-time()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "1", False)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.day_in_year)
 					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
@@ -600,9 +604,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_of_week (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_of_week (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-of-week from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -610,23 +616,22 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
-			an_iso_day_number: INTEGER
+			l_iso_day_number: INTEGER
 		do
-			check_not_time_value (a_calendar_value, "F specifier not allowed for format-time()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "n", True)
-				if last_evaluated_item = Void then
+			check_not_time_value (a_result, a_calendar_value, "F specifier not allowed for format-time()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "n", True)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
-					an_iso_day_number := a_calendar_value.week_day_number
+					l_iso_day_number := a_calendar_value.week_day_number
 					if is_name_modifier then
-						l_string := correctly_cased_name (l_numberer.day_name (an_iso_day_number, minimum_width, maximum_width))
+						l_string := correctly_cased_name (l_numberer.day_name (l_iso_day_number, minimum_width, maximum_width))
 					else
-						create l_number.make_from_integer (week_day_number (an_iso_day_number, a_calendar, a_country))
+						create l_number.make_from_integer (week_day_number (l_iso_day_number, a_calendar, a_country))
 						l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 						if l_string.count < minimum_width then
 							if is_decimal_format then
@@ -646,9 +651,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_week_in_year (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_week_in_year (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format week-in-year from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -656,16 +663,15 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
-			check_not_time_value (a_calendar_value, "W specifier not allowed for format-time()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "1", False)
-				if last_evaluated_item = Void then
+			check_not_time_value (a_result, a_calendar_value, "W specifier not allowed for format-time()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "1", False)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.week_in_year)
 					-- TODO: this is result in ISO calendar - adjust for others, if you can find out what they are!
@@ -687,9 +693,11 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	format_week_in_month (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_week_in_month (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format week-in-month from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -697,16 +705,15 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
-			check_not_time_value (a_calendar_value, "w specifier not allowed for format-time()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "1", False)
-				if last_evaluated_item = Void then
+			check_not_time_value (a_result, a_calendar_value, "w specifier not allowed for format-time()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "1", False)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.week_in_month)
 					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
@@ -727,9 +734,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_hour (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_hour (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format hour-in-day from `a_calendar_value' using 24-hour clock.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -737,16 +746,15 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
-			check_not_date_value (a_calendar_value, "H specifier not allowed for format-date()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "1", False)
-				if last_evaluated_item = Void then
+			check_not_date_value (a_result, a_calendar_value, "H specifier not allowed for format-date()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "1", False)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.hour)
 					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
@@ -767,9 +775,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_hour_in_half_day (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_hour_in_half_day (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format hour-in-half-day from `a_calendar_value' using 12-hour clock.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -777,16 +787,15 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
-			check_not_date_value (a_calendar_value, "h specifier not allowed for format-date()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "1", False)
-				if last_evaluated_item = Void then
+			check_not_date_value (a_result, a_calendar_value, "h specifier not allowed for format-date()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "1", False)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.half_day_hour)
 					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
@@ -807,9 +816,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_am_pm (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_am_pm (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format AM/PM marker from `a_calendar_value' using 24-hour clock.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -817,15 +828,14 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 		do
-			check_not_date_value (a_calendar_value, "P specifier not allowed for format-date()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "n", True)
-				if last_evaluated_item = Void then
+			check_not_date_value (a_result, a_calendar_value, "P specifier not allowed for format-date()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "n", True)
+				if a_result.item = Void then
 					if not is_name_modifier then primary_modifier := "n" end
 					l_numberer := selected_numberer (a_language)
 					l_string := correctly_cased_name (l_numberer.half_day_name (a_calendar_value.minutes_in_day, minimum_width, maximum_width))
@@ -837,9 +847,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_minute (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_minute (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format minute-in-hour from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -847,16 +859,15 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
-			check_not_date_value (a_calendar_value, "m specifier not allowed for format-date()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "01", False)
-				if last_evaluated_item = Void then
+			check_not_date_value (a_result, a_calendar_value, "m specifier not allowed for format-date()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "01", False)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.minute)
 					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
@@ -877,9 +888,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_second (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_second (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format second-in-hour from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -887,16 +900,15 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
-			check_not_date_value (a_calendar_value, "s specifier not allowed for format-date()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "01", False)
-				if last_evaluated_item = Void then
+			check_not_date_value (a_result, a_calendar_value, "s specifier not allowed for format-date()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "01", False)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.second)
 					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
@@ -917,9 +929,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_millisecond (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_millisecond (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format fractional seconds from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -927,16 +941,15 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: a_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 			l_numberer: XM_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
-			check_not_date_value (a_calendar_value, "f specifier not allowed for format-date()")
-			if last_evaluated_item = Void then
-				check_modifiers (a_modifiers, "1", False)
-				if last_evaluated_item = Void then
+			check_not_date_value (a_result, a_calendar_value, "f specifier not allowed for format-date()")
+			if a_result.item = Void then
+				check_modifiers (a_result, a_modifiers, "1", False)
+				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.millisecond)
 					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
@@ -967,9 +980,11 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	format_time_zone (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_time_zone (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from UTC, or as the conventional name from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -977,13 +992,12 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 		do
 			if a_calendar_value.zoned then
-				check_modifiers (some_modifiers, "1", True)
-				if last_evaluated_item = Void then
+				check_modifiers (a_result, some_modifiers, "1", True)
+				if a_result.item = Void then
 					if is_decimal_format then
 						l_string := a_calendar_value.time_zone_description
 					else
@@ -1006,9 +1020,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_gmt_offset (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_gmt_offset (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from GMT from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -1016,13 +1032,12 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 		do
 			if a_calendar_value.zoned then
-				check_modifiers (some_modifiers, "1", False)
-				if last_evaluated_item = Void then
+				check_modifiers (a_result, some_modifiers, "1", False)
+				if a_result.item = Void then
 					l_string := STRING_.concat ("GMT", a_calendar_value.time_zone_description)
 					if l_string.count < minimum_width then
 						l_string := appended_with_blanks (l_string)
@@ -1037,22 +1052,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_calendar_name (a_result_string: STRING; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_calendar_name (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format calendar name.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 		do
-			check_modifiers (some_modifiers, "n", True)
+			check_modifiers (a_result, some_modifiers, "n", True)
 			if not is_name_modifier then primary_modifier := "n" end
-			if last_evaluated_item = Void then
+			if a_result.item = Void then
 				if maximum_width <= 2 then
 					l_string := a_calendar
 				else
@@ -1071,9 +1087,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_era (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_era (a_result: DS_CELL [XM_XPATH_ITEM]; a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from GMT from `a_calendar_value'.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			result_string_not_void: a_result_string /= Void
 			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
@@ -1081,17 +1099,17 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
-			no_error_yet: last_evaluated_item = Void
 		local
 			l_string: STRING
 		do
-			check_not_time_value (a_calendar_value, "E specifier not allowed for format-time()")
-			if last_evaluated_item = Void then
-				check_modifiers (some_modifiers, "n", True)
+			check_not_time_value (a_result, a_calendar_value, "E specifier not allowed for format-time()")
+			if a_result.item = Void then
+				check_modifiers (a_result, some_modifiers, "n", True)
 				if not is_name_modifier then primary_modifier := "n" end
-				if last_evaluated_item = Void then
+				if a_result.item = Void then
 					if a_calendar_value.is_time_value then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Era is not available with time values", Xpath_errors_uri, "XTDE1350", Dynamic_error)
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Era is not available with time values", Xpath_errors_uri, "XTDE1350", Dynamic_error))
+					else
 						l_string := era (a_calendar_value, a_language, a_calendar, a_country)
 						l_string := correctly_cased_name (l_string)
 						if l_string.count < minimum_width then
@@ -1113,12 +1131,13 @@ feature {NONE} -- Implementation
 				(primary_modifier.count = 1 and then is_one (primary_modifier.item_code (1)))
 		end
 	
-	check_modifiers (some_modifiers, a_default: STRING; use_names: BOOLEAN) is
+	check_modifiers (a_result: DS_CELL [XM_XPATH_ITEM]; some_modifiers, a_default: STRING; use_names: BOOLEAN) is
 			-- Check `some_modifiers' for syntax errors.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			modifiers_exist: some_modifiers /= Void
 			default_modifier_not_empty: a_default /= Void and then not a_default.is_empty
-			no_error_yet: last_evaluated_item = Void
 		local
 			a_splitter: ST_SPLITTER
 			a_modifier, a_message: STRING
@@ -1136,12 +1155,12 @@ feature {NONE} -- Implementation
 				if some_components.count > 2 then
 					a_message := STRING_.concat ("More than one comma present in '", some_modifiers)
 					a_message := STRING_.appended_string (a_message, "'")
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error))
 				elseif some_components.count = 2 then
 					a_modifier := some_components.item (1)
 					if a_modifier.count /= 1 or else (a_modifier.item (1) /= 'i' and a_modifier.item (1) /= 'I') then
 						-- widths are ignored for roman numerals
-						set_widths (some_components.item (2))
+						set_widths (a_result, some_components.item (2))
 					end
 				else
 					a_modifier := some_modifiers
@@ -1153,7 +1172,7 @@ feature {NONE} -- Implementation
 						maximum_width := Platform.Maximum_integer
 					end
 				end
-				if last_evaluated_item = Void then
+				if a_result.item = Void then
 					STRING_.left_adjust (a_modifier)
 					STRING_.right_adjust (a_modifier)
 					an_index := a_modifier.index_of ('t', 1)
@@ -1163,7 +1182,7 @@ feature {NONE} -- Implementation
 						else
 							a_message := STRING_.concat ("Misplaced 't' in '", a_modifier)
 							a_message := STRING_.appended_string (a_message, "'")
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error))
 						end
 					end
 					an_index := a_modifier.index_of ('o', 1)
@@ -1173,11 +1192,11 @@ feature {NONE} -- Implementation
 						else
 							a_message := STRING_.concat ("Misplaced 'o' in '", a_modifier)
 							a_message := STRING_.appended_string (a_message, "'")
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error))
 						end
 					end					
 				end
-				if last_evaluated_item = Void then
+				if a_result.item = Void then
 					if is_traditional or else is_ordinal then
 						a_modifier := a_modifier.substring (1, a_modifier.count - 1)
 					end
@@ -1186,16 +1205,15 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if last_evaluated_item = Void and then primary_modifier = Void then primary_modifier := a_default end
+			if a_result.item = Void and then primary_modifier = Void then primary_modifier := a_default end
 		ensure
-			primary_modifier_set: last_evaluated_item = Void implies primary_modifier /= Void and then not primary_modifier.is_empty
+			primary_modifier_set: a_result.item = Void implies primary_modifier /= Void and then not primary_modifier.is_empty
 		end
 
 	set_primary_modifier (a_modifier: STRING; use_names: BOOLEAN) is
 			-- Set `primary_modifier' to `a_modifier' if valid.
 		require
 			modifier_not_empty: a_modifier /= Void and then not a_modifier.is_empty
-			no_error_yet: last_evaluated_item = Void
 		do
 			primary_modifier := Void
 			if is_zeros_plus_one (a_modifier)
@@ -1215,9 +1233,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_widths (a_width: STRING) is
+	set_widths (a_result: DS_CELL [XM_XPATH_ITEM]; a_width: STRING) is
 			-- Set widths.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			widths_not_empty: a_width /= Void and then not a_width.is_empty
 		local
 			a_splitter: ST_SPLITTER
@@ -1228,13 +1248,13 @@ feature {NONE} -- Implementation
 			if a_width.index_of ('+', 1) > 0 then
 				a_message := STRING_.concat ("Plus sign present in '", a_width)
 				a_message := STRING_.appended_string (a_message, "'")
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error))
 			else
 				some_components := a_splitter.split_greedy (a_width)
 				if some_components.count > 2 then
 					a_message := STRING_.concat ("Two many hyphens in '", a_width)
 					a_message := STRING_.appended_string (a_message, "'")
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error))
 				elseif some_components.count = 2 then
 					l_string := some_components.item (1)
 					STRING_.left_adjust (l_string)

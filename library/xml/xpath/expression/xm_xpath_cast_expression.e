@@ -101,12 +101,13 @@ feature -- Optimization
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			an_expression: XM_XPATH_EXPRESSION
-			a_qname_cast: XM_XPATH_CAST_AS_QNAME_EXPRESSION
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_expression: XM_XPATH_EXPRESSION
+			l_qname_cast: XM_XPATH_CAST_AS_QNAME_EXPRESSION
+			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			mark_unreplaced
 			base_expression.check_static_type (a_context, a_context_item_type)
@@ -116,43 +117,44 @@ feature -- Optimization
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			else
-				create a_sequence_type.make (type_factory.any_atomic_type, cardinality)
-				create a_role.make (Type_operation_role, "cast as", 1, Xpath_errors_uri, "XPTY0004")
-				create a_type_checker
-				a_type_checker.static_type_check (a_context, base_expression, a_sequence_type, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error (a_type_checker.static_type_check_error)
+				create l_sequence_type.make (type_factory.any_atomic_type, cardinality)
+				create l_role.make (Type_operation_role, "cast as", 1, Xpath_errors_uri, "XPTY0004")
+				create l_type_checker
+				l_type_checker.static_type_check (a_context, base_expression, l_sequence_type, False, l_role)
+				if l_type_checker.is_static_type_check_error then
+					set_last_error (l_type_checker.static_type_check_error)
 				else
-					an_expression := a_type_checker.checked_expression
-					if is_sub_type (an_expression.item_type, target_type) then
-						set_replacement (an_expression)
+					l_expression := l_type_checker.checked_expression
+					if is_sub_type (l_expression.item_type, target_type) then
+						set_replacement (l_expression)
 
 						-- It's not entirely clear that the spec permits this. Perhaps we should change the type label?
 						-- On the other hand, it's generally true that any expression defined to return an X
 						--  is allowed to return a subtype of X:
 
 					elseif is_sub_type (target_type, type_factory.qname_type) then --or else (type_factory.notation_type /= Void and then is_sub_type (target_type, type_factory.notation_type)) then
-						create a_qname_cast.make (an_expression)
-						a_qname_cast.check_static_type (a_context, a_context_item_type)
-						if a_qname_cast.is_error then
-							set_last_error (a_qname_cast.error_value)
+						create l_qname_cast.make (l_expression)
+						l_qname_cast.check_static_type (a_context, a_context_item_type)
+						if l_qname_cast.is_error then
+							set_last_error (l_qname_cast.error_value)
 						else
-							check replaced: a_qname_cast.was_expression_replaced end
-							set_replacement (a_qname_cast.replacement_expression)
+							check replaced: l_qname_cast.was_expression_replaced end
+							set_replacement (l_qname_cast.replacement_expression)
 						end
 					else
-						if an_expression.is_atomic_value then
-							evaluate_item (Void)
-							if last_evaluated_item = Void then
-								create an_empty_sequence.make
-								set_replacement (an_empty_sequence)
-							elseif last_evaluated_item.is_error then
-								set_last_error (last_evaluated_item.error_value)
-							elseif last_evaluated_item.is_atomic_value then
-								set_replacement (last_evaluated_item.as_atomic_value)
+						if l_expression.is_atomic_value then
+							create l_result.make (Void)
+							evaluate_item (l_result, Void)
+							if l_result.item = Void then
+								create l_empty_sequence.make
+								set_replacement (l_empty_sequence)
+							elseif l_result.item.is_error then
+								set_last_error (l_result.item.error_value)
+							elseif l_result.item.is_atomic_value then
+								set_replacement (l_result.item.as_atomic_value)
 							end
 						else
-							set_base_expression (an_expression)
+							set_base_expression (l_expression)
 						end
 					end
 				end
@@ -161,25 +163,25 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			base_expression.evaluate_item (a_context)
-			if base_expression.last_evaluated_item = Void or else base_expression.last_evaluated_item.is_error then
-				last_evaluated_item := base_expression.last_evaluated_item
-			elseif not base_expression.last_evaluated_item.is_atomic_value then
+			base_expression.evaluate_item (a_result, a_context)
+			if a_result.item = Void or else a_result.item.is_error then
+				-- nothing to do
+			elseif not a_result.item.is_atomic_value then
 				if is_empty_allowed then
-					last_evaluated_item := Void
+					a_result.put (Void)
 				end
-			elseif base_expression.last_evaluated_item.as_atomic_value.is_convertible (target_type) then
-				last_evaluated_item := base_expression.last_evaluated_item.as_atomic_value.convert_to_type (target_type)
+			elseif a_result.item.as_atomic_value.is_convertible (target_type) then
+				a_result.put (a_result.item.as_atomic_value.convert_to_type (target_type))
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ",
-																																			 target_type.conventional_name), Xpath_errors_uri, "FORG0001", Dynamic_error)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.appended_string ("Could not cast expression to type ",
+					target_type.conventional_name), Xpath_errors_uri, "FORG0001", Dynamic_error))
 			end
-			if last_evaluated_item = Void and then not is_empty_allowed then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Target type for cast as does not allow empty sequence",
-																																			 target_type.conventional_name), Xpath_errors_uri, "XPTY0004", Type_error)
+			if a_result.item = Void and then not is_empty_allowed then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.appended_string ("Target type for cast as does not allow empty sequence",
+					target_type.conventional_name), Xpath_errors_uri, "XPTY0004", Type_error))
 			end
 		end
 

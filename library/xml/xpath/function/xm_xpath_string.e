@@ -93,19 +93,16 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
-		local
-			an_argument: XM_XPATH_ITEM
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			arguments.item (1).evaluate_item (a_context)
-			an_argument := arguments.item (1).last_evaluated_item
-			if an_argument = Void then
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
-			elseif an_argument.is_error then
-				last_evaluated_item := an_argument
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void then
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+			elseif a_result.item.is_error then
+				-- nothing to do
 			else
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (an_argument.string_value)
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (a_result.item.string_value))
 			end
 		end
 

@@ -82,60 +82,60 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_result, a_string, a_separator: STRING
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_result, l_string, l_separator: STRING
 		do
 
 			-- We ensure that we don't evaluate the
 			--  separator argument unless there are at least two items in the sequence.
 
 			arguments.item (1).create_iterator (a_context)
-			an_iterator := arguments.item (1).last_iterator
-			if an_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+			l_iterator := arguments.item (1).last_iterator
+			if l_iterator.is_error then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 			else
-				an_iterator.start
-				if an_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
-				elseif an_iterator.after then
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+				l_iterator.start
+				if l_iterator.is_error then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
+				elseif l_iterator.after then
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 				else
-					a_string := an_iterator.item.string_value
-					an_iterator.forth
-					if an_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
-					elseif an_iterator.after then
-						create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_string)
+					l_string := l_iterator.item.string_value
+					l_iterator.forth
+					if l_iterator.is_error then
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
+					elseif l_iterator.after then
+						a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_string))
 					else
 
 						-- Type checking ensured that the separator was not an empty sequence.
 
-						arguments.item (2).evaluate_item (a_context)
+						arguments.item (2).evaluate_item (a_result, a_context)
 						check
-							second_string_not_void: arguments.item (2).last_evaluated_item /= Void
+							second_string_not_void: a_result.item /= Void
 							-- static typing
 						end
-						if arguments.item (2).last_evaluated_item.is_error then
-							last_evaluated_item := arguments.item (2).last_evaluated_item
+						if a_result.item.is_error then
+							-- nothing to do
 						else
-							a_separator := arguments.item (2).last_evaluated_item.string_value
-							a_result := STRING_.cloned_string (a_string)
+							l_separator := a_result.item.string_value
+							l_result := STRING_.cloned_string (l_string)
 							from
 							until
-								an_iterator.is_error or else an_iterator.after
+								l_iterator.is_error or else l_iterator.after
 							loop
-								a_string := an_iterator.item.string_value
-								a_result := STRING_.appended_string (a_result, a_separator)
-								a_result := STRING_.appended_string (a_result, a_string)
-								an_iterator.forth
+								l_string := l_iterator.item.string_value
+								l_result := STRING_.appended_string (l_result, l_separator)
+								l_result := STRING_.appended_string (l_result, l_string)
+								l_iterator.forth
 							end
-							if an_iterator.is_error then
-								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+							if l_iterator.is_error then
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 							else
-								create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_result)
+								a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_result))
 							end
 						end
 					end

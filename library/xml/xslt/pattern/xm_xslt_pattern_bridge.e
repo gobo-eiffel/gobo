@@ -143,25 +143,31 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
-			last_evaluated_item := last_boolean_value
+			a_result.put (last_boolean_value)
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a String.
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]		
 		do
-			evaluate_item (a_context)
-			create last_evaluated_string.make (last_evaluated_item.string_value)
+			create l_item.make (Void)
+			evaluate_item (l_item, a_context)
+			create last_evaluated_string.make (l_item.item.string_value)
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over the values of a sequence
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
-			evaluate_item (a_context)
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item)
+			create l_item.make (Void)
+			evaluate_item (l_item, a_context)
+			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_item.item)
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is

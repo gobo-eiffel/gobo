@@ -94,27 +94,33 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_string: STRING
+			l_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_string: STRING
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void or else not arguments.item (1).last_evaluated_item.is_atomic_value then
-				create {XM_XPATH_STRING_VALUE} an_atomic_value.make ("")
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item = Void then
+				create {XM_XPATH_STRING_VALUE} l_atomic_value.make ("")
+			elseif a_result.item.is_error then
+				-- nothing to do
+			elseif  not a_result.item.is_atomic_value then
+				create {XM_XPATH_STRING_VALUE} l_atomic_value.make ("")
 			else
-				an_atomic_value := arguments.item (1).last_evaluated_item.as_atomic_value
+				l_atomic_value := a_result.item.as_atomic_value
 			end
-			a_string := an_atomic_value.string_value
-			if is_test_for_zero then
-				if a_string.count = 0 then
-					create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (0)
+			if not a_result.item.is_error then
+				l_string := l_atomic_value.string_value
+				if is_test_for_zero then
+					if l_string.count = 0 then
+						a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (0))
+					else
+						a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (1))
+					end
 				else
-					create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (1)
+					a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (l_string.count))
 				end
-			else
-				create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (a_string.count)
 			end
 		end
 

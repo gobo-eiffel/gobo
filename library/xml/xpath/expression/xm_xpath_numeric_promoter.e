@@ -138,23 +138,17 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			base_expression.evaluate_item (a_context)
-			if base_expression.last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif base_expression.last_evaluated_item.is_error then
-				last_evaluated_item := base_expression.last_evaluated_item
+			base_expression.evaluate_item (a_result, a_context)
+			if a_result.item = Void or else a_result.item.is_error then
+				-- nothing to do
+			elseif a_result.item.is_atomic_value then
+				promote_number (a_result)
 			else
-				if base_expression.last_evaluated_item.is_error then
-					last_evaluated_item := base_expression.last_evaluated_item
-				elseif base_expression.last_evaluated_item.is_atomic_value then
-					promote_number (base_expression.last_evaluated_item.as_atomic_value)
-				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
-																				Xpath_errors_uri, "XPTY0004", Type_error)
-				end
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot numerically promote a node",
+					Xpath_errors_uri, "XPTY0004", Type_error))
 			end
 		end
 
@@ -172,18 +166,21 @@ feature -- Evaluation
 			end
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+	map (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			if an_item.is_error then
-				last_evaluated_item := an_item
-			elseif an_item.is_atomic_value then
-				promote_number (an_item.as_atomic_value)
+			if a_item.is_error then
+				create last_mapped_item.make_item (a_item)
+			elseif a_item.is_atomic_value then
+				create l_result.make (a_item.as_atomic_value)
+				promote_number (l_result)
+				create last_mapped_item.make_item (l_result.item)
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
-																	  Xpath_errors_uri, "XPTY0004", Dynamic_error)
+				create last_mapped_item.make_item (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot numerically promote a node",
+					Xpath_errors_uri, "XPTY0004", Dynamic_error))
 			end
-			create last_mapped_item.make_item (last_evaluated_item)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -196,23 +193,23 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	promote_number (an_atomic_value: XM_XPATH_ATOMIC_VALUE) is
+	promote_number (a_result: DS_CELL [XM_XPATH_ITEM]) is
 			-- Promote of `an_atomic_value'.
 		require
-			atomic_value_not_void: an_atomic_value /= Void
-			no_previous_error: not is_error
+			a_result_not_void: a_result /= Void
+			a_result_contains_atomic_value: a_result.item.is_atomic_value
 		local
-			a_primitive_value: XM_XPATH_ATOMIC_VALUE
+			l_primitive_value: XM_XPATH_ATOMIC_VALUE
 		do
-			a_primitive_value := an_atomic_value.primitive_value
-			if a_primitive_value.is_convertible (item_type) then
-				last_evaluated_item := a_primitive_value.convert_to_type (item_type)
+			l_primitive_value := a_result.item.as_atomic_value.primitive_value
+			if l_primitive_value.is_convertible (item_type) then
+				a_result.put (l_primitive_value.convert_to_type (item_type))
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot promote non-numeric value to " + item_type.conventional_name,
-													 Xpath_errors_uri, "XPTY0004", Dynamic_error)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot promote non-numeric value to " + item_type.conventional_name,
+					Xpath_errors_uri, "XPTY0004", Dynamic_error))
 			end
 		ensure
-			promotion_not_void: last_evaluated_item /= Void
+			promotion_not_void: a_result.item /= Void
 		end
 
 end

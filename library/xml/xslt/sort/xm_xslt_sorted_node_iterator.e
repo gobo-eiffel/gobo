@@ -280,6 +280,7 @@ feature {NONE} -- Implementation
 			a_sort_record: XM_XSLT_SORT_RECORD
 			a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
 			a_sort_key: XM_XPATH_ATOMIC_VALUE
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			create node_keys.make_default
 			
@@ -300,15 +301,16 @@ feature {NONE} -- Implementation
 					until
 						a_cursor.after
 					loop
-						a_cursor.item.sort_key.evaluate_item (context)
-						if a_cursor.item.sort_key.last_evaluated_item /= Void then
-							if a_cursor.item.sort_key.last_evaluated_item.is_error then
-								context.transformer.report_fatal_error (a_cursor.item.sort_key.last_evaluated_item.error_value)
+						create l_item.make (Void)
+						a_cursor.item.sort_key.evaluate_item (l_item, context)
+						if l_item.item /= Void then
+							if l_item.item.is_error then
+								context.transformer.report_fatal_error (l_item.item.error_value)
 							else
 								check
-									sort_key_is_atomic: a_cursor.item.sort_key.last_evaluated_item.is_atomic_value
+									sort_key_is_atomic: l_item.item.is_atomic_value
 								end
-								a_sort_key := a_cursor.item.sort_key.last_evaluated_item.as_atomic_value
+								a_sort_key := l_item.item.as_atomic_value
 							end
 						else
 							a_sort_key := Void  -- = () - an empty sequence

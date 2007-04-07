@@ -77,26 +77,26 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_context_position: INTEGER
+			l_context_position: INTEGER
 		do
 			if a_context = Void then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Dynamic context is Void", Xpath_errors_uri, "FONC0001", Dynamic_error)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Dynamic context is Void", Xpath_errors_uri, "FONC0001", Dynamic_error))
 			elseif not a_context.is_context_position_set then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position is not available",  Xpath_errors_uri, "FONC0001", Dynamic_error)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Context position is not available",  Xpath_errors_uri, "FONC0001", Dynamic_error))
 			else
-				a_context_position := a_context.context_position
-				if a_context_position = 0 then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position cannot be zero", Xpath_errors_uri, "FONC0001", Dynamic_error)
+				l_context_position := a_context.context_position
+				if l_context_position = 0 then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Context position cannot be zero", Xpath_errors_uri, "FONC0001", Dynamic_error))
 				else
-					create {XM_XPATH_MACHINE_INTEGER_VALUE} last_evaluated_item.make (a_context_position)
+					a_result.put (create {XM_XPATH_MACHINE_INTEGER_VALUE}.make (l_context_position))
 				end
 			end
 		ensure then
-			possible_dynamic_error: last_evaluated_item.is_error implies
-				last_evaluated_item.error_value.type = Dynamic_error
+			possible_dynamic_error: a_result.item /= Void and then a_result.item.is_error implies
+				a_result.item.error_value.type = Dynamic_error
 		end
 
 

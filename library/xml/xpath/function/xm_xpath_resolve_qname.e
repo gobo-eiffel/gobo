@@ -49,10 +49,6 @@ feature -- Access
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.qname_type
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
 		end
 
 feature -- Status report
@@ -69,57 +65,51 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_item: XM_XPATH_ITEM
-			a_string, a_prefix, a_local_part: STRING
-			some_qname_parts: DS_LIST [STRING]
-			a_splitter: ST_SPLITTER
-			a_count: INTEGER
-			an_element: XM_XPATH_ELEMENT
+			l_item: XM_XPATH_ITEM
+			l_string, l_prefix, l_local_part: STRING
+			l_qname_parts: DS_LIST [STRING]
+			l_splitter: ST_SPLITTER
+			l_count: INTEGER
+			l_element: XM_XPATH_ELEMENT
 		do
-			arguments.item (1).evaluate_item (a_context)
-			an_item := arguments.item (1).last_evaluated_item
-			if an_item = Void then
-				last_evaluated_item := Void
-			elseif an_item.is_error then
-				last_evaluated_item := an_item
-			else
-				a_string := an_item.string_value
-				create a_splitter.make
-				a_splitter.set_separators (":")
-				some_qname_parts := a_splitter.split (a_string)
-				a_count := some_qname_parts.count
-				if a_count < 1 or else a_count > 2 then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument of resolve-qname() is not a lexical QName",
-																												Xpath_errors_uri, "FOCA0002", Dynamic_error)
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
+				l_string := a_result.item.string_value
+				create l_splitter.make
+				l_splitter.set_separators (":")
+				l_qname_parts := l_splitter.split (l_string)
+				l_count := l_qname_parts.count
+				if l_count < 1 or else l_count > 2 then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("First argument of resolve-qname() is not a lexical QName",
+						Xpath_errors_uri, "FOCA0002", Dynamic_error))
 				else
-					if a_count = 1 then
-						a_prefix := ""
-						a_local_part := some_qname_parts.item (1)
+					if l_count = 1 then
+						l_prefix := ""
+						l_local_part := l_qname_parts.item (1)
 					else
-						a_prefix := some_qname_parts.item (1)
-						a_local_part := some_qname_parts.item (2)
+						l_prefix := l_qname_parts.item (1)
+						l_local_part := l_qname_parts.item (2)
 					end
-					arguments.item (2).evaluate_item (a_context)
-					an_item := arguments.item (2).last_evaluated_item
-					if an_item.is_error then
-						last_evaluated_item := an_item
-					else
-						an_element := an_item.as_element
-						if not shared_name_pool.is_code_for_prefix_allocated (a_prefix) then
+					a_result.put (Void)
+					arguments.item (2).evaluate_item (a_result, a_context)
+					if not a_result.item.is_error then
+						l_element := a_result.item.as_element
+						if not shared_name_pool.is_code_for_prefix_allocated (l_prefix) then
 							check
-								not_null_prefix: a_prefix.count > 0
+								not_null_prefix: l_prefix.count > 0
 							end
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Prefix is not declared during resolve-qname()",
-																														Xpath_errors_uri, "FONS0004", Dynamic_error)
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Prefix is not declared during resolve-qname()",
+								Xpath_errors_uri, "FONS0004", Dynamic_error))
 						else
-							if is_ncname (a_local_part) then
-								resolve_qname (an_element, a_prefix, a_local_part)
+							if is_ncname (l_local_part) then
+								a_result.put (Void)
+								resolve_qname (a_result, l_element, l_prefix, l_local_part)
 							else
-								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Invalid local name in resolve-qname()",
-																															Xpath_errors_uri, "FOCA0002", Dynamic_error)
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid local name in resolve-qname()",
+									Xpath_errors_uri, "FOCA0002", Dynamic_error))
 							end
 						end
 					end
@@ -143,51 +133,56 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	resolve_qname (an_element: XM_XPATH_ELEMENT; a_prefix, a_local_part: STRING) is
+	resolve_qname (a_result: DS_CELL [XM_XPATH_ITEM]; a_element: XM_XPATH_ELEMENT; a_prefix, a_local_part: STRING) is
 			-- Resolve qname in scope of `an_element'.
 		require
-			element_not_void: an_element /= Void
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
+			element_not_void: a_element /= Void
 			prefix_not_void: a_prefix /= Void
 			valid_local_part: a_local_part /= Void and then (a_local_part.count > 0 implies is_ncname (a_local_part))
 		local
-			found: BOOLEAN
-			a_name_code, a_namespace_code, a_prefix_code, a_uri_code: INTEGER
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_found: BOOLEAN
+			l_name_code, l_namespace_code, l_prefix_code, l_uri_code: INTEGER
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
-			a_prefix_code := shared_name_pool.code_for_prefix (a_prefix)
+			l_prefix_code := shared_name_pool.code_for_prefix (a_prefix)
 			from
-				a_cursor := an_element.namespace_codes_in_scope.new_cursor; a_cursor.start
+				l_cursor := a_element.namespace_codes_in_scope.new_cursor
+				l_cursor.start
 			until
-				found or else a_cursor.after
+				l_found or l_cursor.after
 			loop
-				a_namespace_code := a_cursor.item
-				if a_prefix_code = prefix_code_from_namespace_code (a_namespace_code) then
-					a_uri_code := uri_code_from_namespace_code (a_namespace_code)
-					found := True
+				l_namespace_code := l_cursor.item
+				if l_prefix_code = prefix_code_from_namespace_code (l_namespace_code) then
+					l_uri_code := uri_code_from_namespace_code (l_namespace_code)
+					l_found := True
 				else
-					a_cursor.forth
+					l_cursor.forth
 				end
 			end
-			if found then
-				if shared_name_pool.is_name_code_allocated_using_uri_code (a_prefix, a_uri_code, a_local_part) then
-					a_name_code := shared_name_pool.name_code (a_prefix, shared_name_pool.uri_from_uri_code (a_uri_code), a_local_part)
+			if l_found then
+				if shared_name_pool.is_name_code_allocated_using_uri_code (a_prefix, l_uri_code, a_local_part) then
+					l_name_code := shared_name_pool.name_code (a_prefix, shared_name_pool.uri_from_uri_code (l_uri_code), a_local_part)
 				else
-					shared_name_pool.allocate_name_using_uri_code (a_prefix, a_uri_code, a_local_part)
-					a_name_code := shared_name_pool.last_name_code
+					shared_name_pool.allocate_name_using_uri_code (a_prefix, l_uri_code, a_local_part)
+					l_name_code := shared_name_pool.last_name_code
 				end
-				create {XM_XPATH_QNAME_VALUE} last_evaluated_item.make (a_name_code)
+				a_result.put (create {XM_XPATH_QNAME_VALUE}.make (l_name_code))
 			elseif a_prefix.count = 0 then
 				if shared_name_pool.is_name_code_allocated (a_prefix, Null_uri, a_local_part) then
-					a_name_code := shared_name_pool.name_code (a_prefix, Null_uri, a_local_part)
+					l_name_code := shared_name_pool.name_code (a_prefix, Null_uri, a_local_part)
 				else
 					shared_name_pool.allocate_name (a_prefix, Null_uri, a_local_part)
-					a_name_code := shared_name_pool.last_name_code
+					l_name_code := shared_name_pool.last_name_code
 				end
-				create {XM_XPATH_QNAME_VALUE} last_evaluated_item.make (a_name_code)
+				a_result.put (create {XM_XPATH_QNAME_VALUE}.make (l_name_code))
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Prefix is not declared during resolve-qname()",
-																											Xpath_errors_uri, "FONS0004", Dynamic_error)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Prefix is not declared during resolve-qname()",
+					Xpath_errors_uri, "FONS0004", Dynamic_error))
 			end
+		ensure
+			a_result_not_empty: a_result.item /= Void
 		end
 	
 end

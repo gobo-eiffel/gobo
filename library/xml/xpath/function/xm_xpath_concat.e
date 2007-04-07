@@ -67,41 +67,41 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			evaluate_as_string (a_context)
-			last_evaluated_item := last_evaluated_string
+			a_result.put (last_evaluated_string)
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a String.
 		local
-			a_string: STRING
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			an_item: XM_XPATH_ITEM
+			l_string: STRING
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			from
-				create a_string.make (0)
-				a_cursor := arguments.new_cursor; a_cursor.start
+				create l_string.make (0)
+				l_cursor := arguments.new_cursor; l_cursor.start
 			variant
-				arguments.count + 1 - a_cursor.index
+				arguments.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_cursor.item.evaluate_item (a_context)
-				if a_cursor.item.last_evaluated_item /= Void then
-					an_item := a_cursor.item.last_evaluated_item
-					if an_item.is_error then
-						a_string := ""
-						set_last_error (an_item.error_value)
+				create l_result.make (Void)
+				l_cursor.item.evaluate_item (l_result, a_context)
+				if l_result.item /= Void then
+					if l_result.item.is_error then
+						l_string := ""
+						set_last_error (l_result.item.error_value)
 					else
-						a_string := STRING_.appended_string (a_string, an_item.string_value)
+						l_string := STRING_.appended_string (l_string, l_result.item.string_value)
 					end
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
-			create last_evaluated_string.make (a_string)
+			create last_evaluated_string.make (l_string)
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is

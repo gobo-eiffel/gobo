@@ -89,31 +89,33 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
-			a_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_item: XM_XPATH_ITEM
-			a_count: INTEGER
+			l_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_item: XM_XPATH_ITEM
+			l_count: INTEGER
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			arguments.item (1).create_iterator (a_context)
-			a_sequence := arguments.item (1).last_iterator
-			if a_sequence.is_error then
-				last_iterator := a_sequence
+			l_sequence := arguments.item (1).last_iterator
+			if l_sequence.is_error then
+				last_iterator := l_sequence
 			else
-				arguments.item (2).evaluate_item (a_context)
-				an_item := arguments.item (2).last_evaluated_item
+				create l_result.make (Void)
+				arguments.item (2).evaluate_item (l_result, a_context)
+				l_item := l_result.item
 				check
-					position_not_void: an_item /= Void
+					position_not_void: l_item /= Void
 					-- Static typing
 				end
-				if an_item.is_error then
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
+				if l_item.is_error then
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.error_value)
 				else
 					check
-						integer: an_item.is_numeric_value
+						integer: l_item.is_numeric_value
 						-- static typing
 					end
-					if an_item.as_numeric_value.is_platform_integer then
-						a_count := an_item.as_numeric_value.as_integer
-						create {XM_XPATH_REMOVE_ITERATOR} last_iterator.make (a_sequence, a_count)
+					if l_item.as_numeric_value.is_platform_integer then
+						l_count := l_item.as_numeric_value.as_integer
+						create {XM_XPATH_REMOVE_ITERATOR} last_iterator.make (l_sequence, l_count)
 					else
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Position exceeds implementation limit", Gexslt_eiffel_type_uri, "SEQUENCE_TOO_LONG", Dynamic_error)
 					end

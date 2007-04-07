@@ -95,40 +95,35 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_entity, an_id: STRING
+			l_entity, l_id: STRING
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_item
-			else
-				an_entity := arguments.item (1).last_evaluated_item.string_value
-				arguments.item (2).evaluate_item (a_context)
-				if arguments.item (2).last_evaluated_item.is_error then
-					if STRING_.same_string (arguments.item (2).last_evaluated_item.error_value.namespace_uri, Xpath_errors_uri) then
-						if STRING_.same_string (arguments.item (2).last_evaluated_item.error_value.code, "XPDY0002") then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("May not call fn:unparsed-entity-uri() when there is no context node",
-							Xpath_errors_uri, "XTDE1370", Static_error)
-						elseif STRING_.same_string (arguments.item (2).last_evaluated_item.error_value.code, "XPDY0050") then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("May not call fn:unparsed-entity-uri() when the context node is rooted at a document node",
-							Xpath_errors_uri, "XTDE1370", Static_error)
-						else
-							last_evaluated_item := arguments.item (2).last_evaluated_item
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if not a_result.item.is_error then
+				l_entity := a_result.item.string_value
+				a_result.put (Void)
+				arguments.item (2).evaluate_item (a_result, a_context)
+				if a_result.item.is_error then
+					if STRING_.same_string (a_result.item.error_value.namespace_uri, Xpath_errors_uri) then
+						if STRING_.same_string (a_result.item.error_value.code, "XPDY0002") then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("May not call fn:unparsed-entity-uri() when there is no context node",
+								Xpath_errors_uri, "XTDE1370", Static_error))
+						elseif STRING_.same_string (a_result.item.error_value.code, "XPDY0050") then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("May not call fn:unparsed-entity-uri() when the context node is rooted at a document node",
+								Xpath_errors_uri, "XTDE1370", Static_error))
 						end
-					else
-						last_evaluated_item := arguments.item (2).last_evaluated_item
 					end
-				elseif arguments.item (2).last_evaluated_item.is_document then
-					an_id := arguments.item (2).last_evaluated_item.as_document.unparsed_entity_system_id (an_entity)
-					if an_id = Void then
-						an_id := ""
+				elseif a_result.item.is_document then
+					l_id := a_result.item.as_document.unparsed_entity_system_id (l_entity)
+					if l_id = Void then
+						l_id := ""
 					end
-					create {XM_XPATH_ANY_URI_VALUE} last_evaluated_item.make (an_id)
+					a_result.put (create {XM_XPATH_ANY_URI_VALUE}.make (l_id))
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context node is not set or it's root is not a document node.",
-						Xpath_errors_uri, "XTDE1370", Dynamic_error)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Context node is not set or it's root is not a document node.",
+						Xpath_errors_uri, "XTDE1370", Dynamic_error))
 				end
 			end
 		end

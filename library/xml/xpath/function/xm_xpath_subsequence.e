@@ -81,60 +81,63 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_item: XM_XPATH_ITEM
-			a_double_value: XM_XPATH_DOUBLE_VALUE
-			a_starting_location, a_final_position, a_length: INTEGER
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_item: XM_XPATH_ITEM
+			l_double_value: XM_XPATH_DOUBLE_VALUE
+			l_starting_location, l_final_position, a_length: INTEGER
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			arguments.item (1).create_iterator (a_context)
-			an_iterator := arguments.item (1).last_iterator
-			if an_iterator.is_error then
-				last_iterator := an_iterator
-			elseif an_iterator.is_empty_iterator then
-				last_iterator := an_iterator
+			l_iterator := arguments.item (1).last_iterator
+			if l_iterator.is_error then
+				last_iterator := l_iterator
+			elseif l_iterator.is_empty_iterator then
+				last_iterator := l_iterator
 			else
-				arguments.item (2).evaluate_item (a_context)
-				an_item := arguments.item (2).last_evaluated_item
+				create l_result.make (Void)
+				arguments.item (2).evaluate_item (l_result, a_context)
+				l_item := l_result.item
 				check
-					item_not_void: an_item /= Void
+					item_not_void: l_item /= Void
 					-- static typing
 				end
-				if an_item.is_error then
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
+				if l_item.is_error then
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.error_value)
 				else
 					check
-						starting_location_is_double: an_item.is_double_value
+						starting_location_is_double: l_item.is_double_value
 						-- Static typing
 					end
-					a_double_value := an_item.as_double_value.rounded_value
-					a_starting_location := a_double_value.as_integer
+					l_double_value := l_item.as_double_value.rounded_value
+					l_starting_location := l_double_value.as_integer
 					if arguments.count = 2 then
-						if a_starting_location <= 1 then
-							last_iterator := an_iterator
-						elseif an_iterator.is_node_iterator then
-							create {XM_XPATH_NODE_TAIL_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, a_starting_location)
+						if l_starting_location <= 1 then
+							last_iterator := l_iterator
+						elseif l_iterator.is_node_iterator then
+							create {XM_XPATH_NODE_TAIL_ITERATOR} last_iterator.make (l_iterator.as_node_iterator, l_starting_location)
 						else
-							create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (an_iterator, a_starting_location)
+							create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (l_iterator, l_starting_location)
 						end
 					else
-						arguments.item (3).evaluate_item (a_context)
-						an_item := arguments.item (3).last_evaluated_item
+						create l_result.make (Void)
+						arguments.item (3).evaluate_item (l_result, a_context)
+						l_item := l_result.item
 						check
-							item_not_void: an_item /= Void
+							item_not_void: l_item /= Void
 							-- static typing
 						end
-						if an_item.is_error then
-							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
+						if l_item.is_error then
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.error_value)
 						else
 							check
-								length_is_double: an_item.is_double_value
+								length_is_double: l_item.is_double_value
 								-- Static typing
 							end
-							a_double_value := an_item.as_double_value.rounded_value
-							a_length := a_double_value.as_integer
-							a_final_position := a_length + a_starting_location - 1
-							if a_starting_location <= 1 then a_starting_location := 1 end
-							last_iterator := expression_factory.created_position_iterator (an_iterator, a_starting_location, a_final_position)
+							l_double_value := l_item.as_double_value.rounded_value
+							a_length := l_double_value.as_integer
+							l_final_position := a_length + l_starting_location - 1
+							if l_starting_location <= 1 then l_starting_location := 1 end
+							last_iterator := expression_factory.created_position_iterator (l_iterator, l_starting_location, l_final_position)
 						end
 					end
 				end

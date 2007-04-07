@@ -137,10 +137,10 @@ feature -- Evaluation
 			last_boolean_value.set_last_error_from_string (a_message, "", "XPTY0004", Type_error)
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			last_evaluated_item := Current
+			a_result.put (Current)
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
@@ -163,10 +163,13 @@ feature -- Evaluation
 
 	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			evaluate_item (a_context)
-			if last_evaluated_item /= Void then
-				a_context.current_receiver.append_item (last_evaluated_item)
+			create l_result.make (Void)
+			evaluate_item (l_result, a_context)
+			if l_result.item /= Void then
+				a_context.current_receiver.append_item (l_result.item)
 			end
 		end
 

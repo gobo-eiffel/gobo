@@ -88,24 +88,24 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_new_context: XM_XPATH_CONTEXT
-			an_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
-			another_context: XM_XSLT_EVALUATION_CONTEXT
+			l_new_context: XM_XPATH_CONTEXT
+			l_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
+			l_other_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			a_new_context := a_context.new_minor_context
-			another_context ?= a_new_context
+			l_new_context := a_context.new_minor_context
+			l_other_context ?= l_new_context
 			check
-				evaluation_context: another_context /= Void
+				evaluation_context: l_other_context /= Void
 				-- this is XSLT
 			end
-			create an_outputter.make_with_size (1, another_context.transformer)
-			a_new_context.change_to_sequence_output_destination (an_outputter)
-			generate_events (a_new_context)
-			an_outputter.close
-			last_evaluated_item := an_outputter.first_item
+			create l_outputter.make_with_size (1, l_other_context.transformer)
+			l_new_context.change_to_sequence_output_destination (l_outputter)
+			generate_events (l_new_context)
+			l_outputter.close
+			a_result.put (l_outputter.first_item)
 		end
 
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is

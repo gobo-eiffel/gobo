@@ -71,22 +71,18 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_item: XM_XPATH_ITEM
+			l_item: XM_XPATH_ITEM
 		do
-			last_evaluated_item := Void
-			arguments.item (1).evaluate_item (a_context)
-			an_item := arguments.item (1).last_evaluated_item
-			if an_item /= Void then
-				if an_item.is_error then
-					last_evaluated_item := an_item
-				else
-					if not an_item.is_node then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not a node", Xpath_errors_uri, "FOTY0011", Dynamic_error)
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void then
+				if not a_result.item.is_error then
+					if not a_result.item.is_node then
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("The context item is not a node", Xpath_errors_uri, "FOTY0011", Dynamic_error))
 					else
-						last_evaluated_item := an_item.as_node.root
+						a_result.put (a_result.item.as_node.root)
 					end
 				end
 			end

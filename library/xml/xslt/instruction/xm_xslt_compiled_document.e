@@ -143,8 +143,8 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
 			l_text_value, l_error: STRING
 			l_builder: XM_XPATH_TINY_BUILDER
@@ -155,7 +155,6 @@ feature -- Evaluation
 			l_splitter: ST_SPLITTER
 			l_words: DS_LIST [STRING]
 		do
-			last_evaluated_item := Void
 			if is_text_only then
 				if constant_text /= Void then
 					l_text_value := constant_text
@@ -165,7 +164,7 @@ feature -- Evaluation
 						content.create_iterator (a_context)
 						l_iterator := content.last_iterator
 						if l_iterator.is_error then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 						else
 							l_iterator.start
 						end
@@ -176,10 +175,12 @@ feature -- Evaluation
 						l_iterator.forth
 					end
 					if l_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 					end
 				end
-				if last_evaluated_item = Void then create {XM_XPATH_TEXT_FRAGMENT_VALUE} last_evaluated_item.make (l_text_value, base_uri) end
+				if a_result.item = Void then
+					a_result.put (create {XM_XPATH_TEXT_FRAGMENT_VALUE}.make (l_text_value, base_uri))
+				end
 			else
 				l_new_context ?= a_context.new_minor_context
 				create l_builder.make (base_uri, Void)
@@ -199,23 +200,26 @@ feature -- Evaluation
 					l_words := l_splitter.split (l_builder.last_error)
 					l_error := l_words.item (1)
 					l_words.remove (1)
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (l_splitter.join_unescaped (l_words), Xpath_errors_uri, l_error, Dynamic_error)
-					set_last_error (last_evaluated_item.error_value)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (l_splitter.join_unescaped (l_words), Xpath_errors_uri, l_error, Dynamic_error))
+					set_last_error (a_result.item.error_value)
 				else
-					last_evaluated_item := l_builder.current_root
+					a_result.put (l_builder.current_root)
 				end
 			end
 		end
 
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
-			evaluate_item (a_context)
-			if last_evaluated_item /= Void then
-				if last_evaluated_item.is_error then
-					a_context.transformer.report_recoverable_error (error_value)
+			create l_item.make (Void)
+			evaluate_item (l_item, a_context)
+			if l_item.item /= Void then
+				if l_item.item.is_error then
+					a_context.transformer.report_recoverable_error (l_item.item.error_value)
 				else
-					a_context.current_receiver.append_item (last_evaluated_item)
+					a_context.current_receiver.append_item (l_item.item)
 				end
 			end
 		end

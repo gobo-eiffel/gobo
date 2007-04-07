@@ -64,28 +64,28 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_string: STRING
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
-			an_integer: INTEGER
+			l_string: STRING
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
+			l_integer: INTEGER
 		do
 			arguments.item (1).create_iterator (a_context)
-			an_iterator := arguments.item (1).last_iterator
-			if an_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (arguments.item (1).last_iterator.error_value)
+			l_iterator := arguments.item (1).last_iterator
+			if l_iterator.is_error then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (arguments.item (1).last_iterator.error_value))
 			else
-				a_string := ""
-				from an_iterator.start until is_error or else an_iterator.after loop
-					an_integer_value := an_iterator.item.as_machine_integer_value
-					if an_integer_value.is_platform_integer then
-						an_integer := an_integer_value.as_integer
-						if is_char (an_integer) then
-							a_string := STRING_.appended_string (a_string, unicode.code_to_string (an_integer))
-							an_iterator.forth
-							if an_iterator.is_error then set_last_error (an_iterator.error_value) end
+				l_string := ""
+				from l_iterator.start until is_error or else l_iterator.after loop
+					l_integer_value := l_iterator.item.as_machine_integer_value
+					if l_integer_value.is_platform_integer then
+						l_integer := l_integer_value.as_integer
+						if is_char (l_integer) then
+							l_string := STRING_.appended_string (l_string, unicode.code_to_string (l_integer))
+							l_iterator.forth
+							if l_iterator.is_error then set_last_error (l_iterator.error_value) end
 						else
 							set_last_error_from_string ("Codepoint is not a valid XML Character", Xpath_errors_uri, "FOCH0001", Dynamic_error)
 						end
@@ -94,9 +94,9 @@ feature -- Evaluation
 					end
 				end
 				if is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (error_value)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
 				else
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_string)
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_string))
 				end
 			end
 		end
@@ -104,12 +104,15 @@ feature -- Evaluation
 	
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			evaluate_item (a_context)
-			if last_evaluated_item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+			create l_result.make (Void)
+			evaluate_item (l_result, a_context)
+			if l_result.item.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
 			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_result.item)
 			end
 		end
 

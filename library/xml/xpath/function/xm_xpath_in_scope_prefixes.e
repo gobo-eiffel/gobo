@@ -65,16 +65,16 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
-			an_item: XM_XPATH_ITEM
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			arguments.item (1).evaluate_item (a_context)
-			an_item := arguments.item (1).last_evaluated_item
-			if an_item = Void then
+			create l_result.make (Void)
+			arguments.item (1).evaluate_item (l_result, a_context)
+			if l_result.item = Void then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("First argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)
-			elseif an_item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
-			elseif an_item.is_element then
-				last_iterator := an_item.as_element.prefixes_in_scope
+			elseif l_result.item.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
+			elseif l_result.item.is_element then
+				last_iterator := l_result.item.as_element.prefixes_in_scope
 			else
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("First argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)
 			end

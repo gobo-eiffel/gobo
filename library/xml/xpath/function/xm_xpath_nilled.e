@@ -63,31 +63,29 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_node: XM_XPATH_NODE
+			l_node: XM_XPATH_NODE
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif arguments.item (1).last_evaluated_item.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_item
-			elseif arguments.item (1).last_evaluated_item.is_node then
-				a_node := arguments.item (1).last_evaluated_item.as_node
-				if a_node.node_type = Element_node then
-					check
-						not_schema_aware: conformance.basic_xslt_processor
-						-- Actually, the real critereon is that
-						--  the data model has been built from an infoset,
-						--  not a PSVI
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item /= Void and not a_result.item.is_error then
+				if a_result.item.is_node then
+					l_node := a_result.item.as_node
+					if l_node.node_type = Element_node then
+						check
+							not_schema_aware: conformance.basic_xslt_processor
+							-- Actually, the real critereon is that
+							--  the data model has been built from an infoset,
+							--  not a PSVI
+						end
+						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
+					else
+						a_result.put (Void)
 					end
-					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
 				else
-					last_evaluated_item := Void
+					a_result.put (Void)
 				end
-			else
-				last_evaluated_item := Void
 			end
 		end
 

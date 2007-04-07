@@ -81,15 +81,14 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_finished: BOOLEAN
 			l_items: INTEGER
 			l_item: XM_XPATH_ITEM
 		do
-			last_evaluated_item := Void
 			base_expression.create_iterator (a_context)
 			l_iterator := base_expression.last_iterator
 			if not l_iterator.is_error then
@@ -105,15 +104,15 @@ feature -- Evaluation
 					else
 						l_item := l_iterator.item
 						if l_item /= Void then
-							last_evaluated_item := l_item
+							a_result.put (l_item)
 							l_items := l_items + 1
 						end
 						if l_items > 1 then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ",
-																																						 role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error)
-							l_iterator.set_last_error (last_evaluated_item.error_value)
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ",
+								role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error))
+							l_iterator.set_last_error (a_result.item.error_value)
 							if not system_id.is_empty then
-								last_evaluated_item.error_value.set_location (system_id, line_number)
+								a_result.item.error_value.set_location (system_id, line_number)
 							end
 							l_finished := True
 						else
@@ -124,22 +123,22 @@ feature -- Evaluation
 
 				if not l_iterator.is_error then
 					if l_items = 0 and then not is_cardinality_allows_zero (required_cardinality) then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
-																																					 role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error)
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
+							role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error))
 						if not system_id.is_empty then
-							last_evaluated_item.error_value.set_location (system_id, line_number)
+							a_result.item.error_value.set_location (system_id, line_number)
 						end
 					end
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 					if not system_id.is_empty then
-						last_evaluated_item.error_value.set_location (system_id, line_number)
+						a_result.item.error_value.set_location (system_id, line_number)
 					end
 				end
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (l_iterator.error_value)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 				if not system_id.is_empty then
-					last_evaluated_item.error_value.set_location (system_id, line_number)
+					a_result.item.error_value.set_location (system_id, line_number)
 				end
 			end
 		end

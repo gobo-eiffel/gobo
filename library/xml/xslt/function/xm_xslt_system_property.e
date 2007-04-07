@@ -65,30 +65,31 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_uri: STRING
-			a_parser: XM_XPATH_QNAME_PARSER
-			a_string_value: XM_XPATH_STRING_VALUE
+			l_uri: STRING
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_string_value: XM_XPATH_STRING_VALUE
 		do
 			product_name := a_context.configuration.product_name
 			check
 				string_value: arguments.item (1).is_string_value
 				-- from static typing, and `pre_evaluate' is only called for fixed values
 			end
-			create a_parser.make (arguments.item (1).as_string_value.string_value)
-			if not a_parser.is_valid then
+			create l_parser.make (arguments.item (1).as_string_value.string_value)
+			if not l_parser.is_valid then
 				set_last_error_from_string ("Argument to 'system-property' is not a QName",
-													 Xpath_errors_uri, "XTDE1390", Static_error)
+					Xpath_errors_uri, "XTDE1390", Static_error)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
 			else
-				if not a_parser.is_prefix_present then
-					a_uri := ""
+				if not l_parser.is_prefix_present then
+					l_uri := ""
 				else
-					a_uri := namespace_context.uri_for_defaulted_prefix (a_parser.optional_prefix, False)
+					l_uri := namespace_context.uri_for_defaulted_prefix (l_parser.optional_prefix, False)
 				end
-				create a_string_value.make (system_property (a_uri, a_parser.local_name))
-				set_replacement (a_string_value)
+				create l_string_value.make (system_property (l_uri, l_parser.local_name))
+				a_result.put (l_string_value)
 			end
 		end
 
@@ -96,27 +97,27 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		local
-			a_uri: STRING
-			a_parser: XM_XPATH_QNAME_PARSER
-			a_string_value: XM_XPATH_STRING_VALUE
+			l_uri: STRING
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_string_value: XM_XPATH_STRING_VALUE
 		do
 			product_name := a_context.configuration.product_name
 			check
 				string_value: arguments.item (1).is_string_value
 				-- from static typing, and `pre_evaluate' is only called for fixed values
 			end
-			create a_parser.make (arguments.item (1).as_string_value.string_value)
-			if not a_parser.is_valid then
+			create l_parser.make (arguments.item (1).as_string_value.string_value)
+			if not l_parser.is_valid then
 				set_last_error_from_string ("Argument to 'system-property' is not a QName",
 													 Xpath_errors_uri, "XTDE1390", Static_error)
 			else
-				if not a_parser.is_prefix_present then
-					a_uri := ""
+				if not l_parser.is_prefix_present then
+					l_uri := ""
 				else
-					a_uri := a_context.uri_for_prefix (a_parser.optional_prefix)
+					l_uri := a_context.uri_for_prefix (l_parser.optional_prefix)
 				end
-				create a_string_value.make (system_property (a_uri, a_parser.local_name))
-				set_replacement (a_string_value)
+				create l_string_value.make (system_property (l_uri, l_parser.local_name))
+				set_replacement (l_string_value)
 			end
 		end
 

@@ -112,13 +112,13 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
 			p: INTEGER
 		do
 			p := a_context.context_position
-			create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (p >= minimum_position and then p <= maximum_position)	
+			a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (p >= minimum_position and then p <= maximum_position)	)
 		end
 
 feature {NONE} -- Implementation

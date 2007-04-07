@@ -263,22 +263,19 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			last_evaluated_item := Void
 			condition.calculate_effective_boolean_value (a_context)
-			a_boolean_value := condition.last_boolean_value
-			if a_boolean_value.is_error then
-				last_evaluated_item := a_boolean_value
-			elseif a_boolean_value.value then
-				then_expression.evaluate_item (a_context)
-				last_evaluated_item := then_expression.last_evaluated_item
+			l_boolean_value := condition.last_boolean_value
+			if l_boolean_value.is_error then
+				a_result.put (l_boolean_value)
+			elseif l_boolean_value.value then
+				then_expression.evaluate_item (a_result, a_context)
 			else
-				else_expression.evaluate_item (a_context)
-				last_evaluated_item := else_expression.last_evaluated_item
+				else_expression.evaluate_item (a_result, a_context)
 			end
 		end
 

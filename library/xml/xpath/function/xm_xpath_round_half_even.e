@@ -69,40 +69,38 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_item: XM_XPATH_ITEM
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
-			a_scale: INTEGER
-			in_error: BOOLEAN
+			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
+			l_scale: INTEGER
+			l_in_error: BOOLEAN
 		do
 			if arguments.count = 2 then
-				arguments.item (2).evaluate_item (a_context)
-				an_item := arguments.item (2).last_evaluated_item
+				arguments.item (2).evaluate_item (a_result, a_context)
 				check
-					integer_precision: an_item.is_machine_integer_value
+					integer_precision: a_result.item.is_machine_integer_value
 					-- static typing
 				end
-				an_integer_value := an_item.as_machine_integer_value
-				if an_integer_value.value.abs <= Platform.Maximum_integer then
-					a_scale := an_integer_value.value.to_integer
+				l_integer_value := a_result.item.as_machine_integer_value
+				if l_integer_value.value.abs <= Platform.Maximum_integer then
+					l_scale := l_integer_value.value.to_integer
 				else
-					in_error := True
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Precision specified in round-to-half-even is outside the supported range.", Gexslt_eiffel_type_uri,
-																												"PRECISION_OUT_OF_RANGE", Dynamic_error)
+					l_in_error := True
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Precision specified in round-to-half-even is outside the supported range.", Gexslt_eiffel_type_uri,
+						"PRECISION_OUT_OF_RANGE", Dynamic_error))
 				end
 			end
-			if not in_error then
-				arguments.item (1).evaluate_item (a_context)
-				last_evaluated_item := arguments.item (1).last_evaluated_item
-				if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
+			if not l_in_error then
+				a_result.put (Void)
+				arguments.item (1).evaluate_item (a_result, a_context)
+				if a_result.item /= Void and then not a_result.item.is_error then
 					check
-						is_atomic: last_evaluated_item.is_atomic_value
-						is_numeric: last_evaluated_item.as_atomic_value.primitive_value.is_numeric_value
+						is_atomic: a_result.item.is_atomic_value
+						is_numeric: a_result.item.as_atomic_value.primitive_value.is_numeric_value
 						-- static typing
 					end
-					last_evaluated_item := last_evaluated_item.as_atomic_value.primitive_value.as_numeric_value.rounded_half_even (a_scale)
+					a_result.put (a_result.item.as_atomic_value.primitive_value.as_numeric_value.rounded_half_even (l_scale))
 				end
 			end
 		end

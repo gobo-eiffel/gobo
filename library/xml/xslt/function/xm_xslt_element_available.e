@@ -59,44 +59,44 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			a_uri, an_xml_prefix: STRING
-			a_parser: XM_XPATH_QNAME_PARSER
-			a_boolean: BOOLEAN
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_uri, l_xml_prefix: STRING
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_boolean: BOOLEAN
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			arguments.item (1).evaluate_item (a_context)
-			if arguments.item (1).last_evaluated_item.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Argument to 'element-available' is not a lexical QName",
-																											Xpath_errors_uri, "XTDE1440", Dynamic_error)
+			arguments.item (1).evaluate_item (a_result, a_context)
+			if a_result.item.is_error then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Argument to 'element-available' is not a lexical QName",
+					Xpath_errors_uri, "XTDE1440", Dynamic_error))
 			else
-				if not arguments.item (1).last_evaluated_item.is_atomic_value then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Argument to 'element-available' is not a lexical QName",
-																												Xpath_errors_uri, "XTDE1440", Dynamic_error)
+				if not a_result.item.is_atomic_value then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Argument to 'element-available' is not a lexical QName",
+						Xpath_errors_uri, "XTDE1440", Dynamic_error))
 				else
-					create a_parser.make (arguments.item (1).last_evaluated_item.as_atomic_value.string_value)
-					if not a_parser.is_valid then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Argument to 'element-available' is not a lexical QName",
-																													Xpath_errors_uri, "XTDE1440", Dynamic_error)
+					create l_parser.make (a_result.item.as_atomic_value.string_value)
+					if not l_parser.is_valid then
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Argument to 'element-available' is not a lexical QName",
+							Xpath_errors_uri, "XTDE1440", Dynamic_error))
 					else
-						if not a_parser.is_prefix_present then
-							a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, True)
-							an_xml_prefix := ""
+						if not l_parser.is_prefix_present then
+							l_uri := namespace_context.uri_for_defaulted_prefix (l_xml_prefix, True)
+							l_xml_prefix := ""
 						else
-							an_xml_prefix := a_parser.optional_prefix
-							a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, False)
+							l_xml_prefix := l_parser.optional_prefix
+							l_uri := namespace_context.uri_for_defaulted_prefix (l_xml_prefix, False)
 						end
-						if a_uri = Void then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("QName prefix in argument to 'element-available' has not been declared.",
-																														Xpath_errors_uri, "XTDE1440", Dynamic_error)
+						if l_uri = Void then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("QName prefix in argument to 'element-available' has not been declared.",
+								Xpath_errors_uri, "XTDE1440", Dynamic_error))
 						else
-							an_evaluation_context ?= a_context
-							a_boolean := is_element_available (a_uri, a_parser.local_name, an_evaluation_context)
-							create a_boolean_value.make (a_boolean)
-							last_evaluated_item := a_boolean_value
+							l_evaluation_context ?= a_context
+							l_boolean := is_element_available (l_uri, l_parser.local_name, l_evaluation_context)
+							create l_boolean_value.make (l_boolean)
+							a_result.put (l_boolean_value)
 						end
 					end
 				end
@@ -106,24 +106,24 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		local
-			a_parser: XM_XPATH_QNAME_PARSER
-			a_boolean: BOOLEAN
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_boolean: BOOLEAN
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
 			check
 				fixed_string: arguments.item (1).is_string_value
 				-- static typing and `pre_evaluate' is only called for fixed values
 			end
-			create a_parser.make (arguments.item (1).as_string_value.string_value)
-			if not a_parser.is_valid then
+			create l_parser.make (arguments.item (1).as_string_value.string_value)
+			if not l_parser.is_valid then
 				set_last_error_from_string ("Argument to 'element-available' is not a lexical QName",
 													 Xpath_errors_uri, "XTDE1440", Static_error)
 			else
-				an_expression_context ?= a_context
-				a_boolean := an_expression_context.is_element_available (arguments.item (1).as_string_value.string_value)
-				create a_boolean_value.make (a_boolean)
-				set_replacement (a_boolean_value)
+				l_expression_context ?= a_context
+				l_boolean := l_expression_context.is_element_available (arguments.item (1).as_string_value.string_value)
+				create l_boolean_value.make (l_boolean)
+				set_replacement (l_boolean_value)
 			end
 		end
 
@@ -139,18 +139,18 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			namespaces_needed: BOOLEAN
-			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
+			l_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
 			if not checked then
 				Precursor (a_context)
 				if not arguments.item (1).is_value then
 					namespaces_needed := True
-					an_expression_context ?= a_context
+					l_expression_context ?= a_context
 					check
-						expression_context: an_expression_context /= Void
+						expression_context: l_expression_context /= Void
 						-- as this is XSLT
 					end
-					namespace_context := an_expression_context.namespace_context
+					namespace_context := l_expression_context.namespace_context
 				end
 				checked := True
 			end

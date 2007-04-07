@@ -169,90 +169,80 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item;
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
-			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
-			an_action: INTEGER
-			an_expression: XM_XPATH_EXPRESSION
-			a_numeric_value, another_numeric_value: XM_XPATH_NUMERIC_VALUE
-			a_string: STRING
+			l_atomic_value, l_other_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_action: INTEGER
+			l_expression: XM_XPATH_EXPRESSION
+			l_numeric_value, l_other_numeric_value: XM_XPATH_NUMERIC_VALUE
+			l_string: STRING
 		do
-			last_evaluated_item := Void
-			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif first_operand.last_evaluated_item.is_error then
-				last_evaluated_item := first_operand.last_evaluated_item
+			first_operand.evaluate_item (a_result, a_context)
+			if a_result.item = Void or else a_result.item.is_error then
+				-- nothing to do
 			else
-				if not first_operand.last_evaluated_item.is_atomic_value then
-					last_evaluated_item := Void
+				if not a_result.item.is_atomic_value then
+					a_result.put (Void)
 				else
-					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item = Void then
-						last_evaluated_item := Void
-					elseif second_operand.last_evaluated_item.is_error then
-						last_evaluated_item := second_operand.last_evaluated_item
+					l_atomic_value := a_result.item.as_atomic_value
+					a_result.put (Void)
+					second_operand.evaluate_item (a_result, a_context)
+					if a_result.item = Void or else a_result.item.is_error then
+						-- nothing to do
 					else
-						if not second_operand.last_evaluated_item.is_atomic_value then
-							last_evaluated_item := Void
+						if not a_result.item.is_atomic_value then
+							a_result.put (Void)
 						else
-							an_atomic_value := first_operand.last_evaluated_item.as_atomic_value
-							another_atomic_value := second_operand.last_evaluated_item.as_atomic_value
-							an_action := action (an_atomic_value.item_type.primitive_type, another_atomic_value.item_type.primitive_type, operator)
+							l_other_atomic_value := a_result.item.as_atomic_value
+							a_result.put (Void)
+							l_action := action (l_atomic_value.item_type.primitive_type, l_other_atomic_value.item_type.primitive_type, operator)
 							inspect
-								an_action
+								l_action
 							when Numeric_arithmetic_action then
-								create {XM_XPATH_NUMERIC_ARITHMETIC} an_expression.make (an_atomic_value, operator, another_atomic_value)
-								an_expression.evaluate_item (a_context)
-								last_evaluated_item := an_expression.last_evaluated_item
+								create {XM_XPATH_NUMERIC_ARITHMETIC} l_expression.make (l_atomic_value, operator, l_other_atomic_value)
+								l_expression.evaluate_item (a_result, a_context)
 							when Duration_addition_action then
-								create {XM_XPATH_DURATION_ADDITION} an_expression.make (an_atomic_value, operator, another_atomic_value)
-								an_expression.evaluate_item (a_context)
-								last_evaluated_item := an_expression.last_evaluated_item
+								create {XM_XPATH_DURATION_ADDITION} l_expression.make (l_atomic_value, operator, l_other_atomic_value)
+								l_expression.evaluate_item (a_result, a_context)
 							when Duration_multiplication_action then
-								create {XM_XPATH_DURATION_MULTIPLICATION} an_expression.make (an_atomic_value, operator, another_atomic_value)
-								an_expression.evaluate_item (a_context)
-								last_evaluated_item := an_expression.last_evaluated_item
+								create {XM_XPATH_DURATION_MULTIPLICATION} l_expression.make (l_atomic_value, operator, l_other_atomic_value)
+								l_expression.evaluate_item (a_result, a_context)
 							when Duration_division_action then
-								create {XM_XPATH_DURATION_DIVISION} an_expression.make (an_atomic_value, operator, another_atomic_value)
-								an_expression.evaluate_item (a_context)
-								last_evaluated_item := an_expression.last_evaluated_item
+								create {XM_XPATH_DURATION_DIVISION} l_expression.make (l_atomic_value, operator, l_other_atomic_value)
+								l_expression.evaluate_item (a_result, a_context)
 							when Date_and_duration_action then
-								create {XM_XPATH_DATE_AND_DURATION} an_expression.make (an_atomic_value, operator, another_atomic_value)
-								an_expression.evaluate_item (a_context)
-								last_evaluated_item := an_expression.last_evaluated_item
+								create {XM_XPATH_DATE_AND_DURATION} l_expression.make (l_atomic_value, operator, l_other_atomic_value)
+								l_expression.evaluate_item (a_result, a_context)
 							when Date_difference_action then
-								create {XM_XPATH_DATE_DIFFERENCE} an_expression.make (an_atomic_value, operator, another_atomic_value)
-								an_expression.evaluate_item (a_context)
-								last_evaluated_item := an_expression.last_evaluated_item
+								create {XM_XPATH_DATE_DIFFERENCE} l_expression.make (l_atomic_value, operator, l_other_atomic_value)
+								l_expression.evaluate_item (a_result, a_context)
 							else
 								
 								-- Types are not known yet. Force to numeric if in 1.0 mode
 								
 								if is_backwards_compatible_mode then
-									if an_atomic_value.is_convertible (type_factory.numeric_type) and another_atomic_value.is_convertible (type_factory.numeric_type) then
-										a_numeric_value := an_atomic_value.convert_to_type (type_factory.numeric_type).as_numeric_value
-										another_numeric_value := another_atomic_value.convert_to_type (type_factory.numeric_type).as_numeric_value
-										create {XM_XPATH_NUMERIC_ARITHMETIC} an_expression.make (a_numeric_value, operator, another_numeric_value)
-										an_expression.evaluate_item (a_context)
-										last_evaluated_item := an_expression.last_evaluated_item
+									if l_atomic_value.is_convertible (type_factory.numeric_type) and l_other_atomic_value.is_convertible (type_factory.numeric_type) then
+										l_numeric_value := l_atomic_value.convert_to_type (type_factory.numeric_type).as_numeric_value
+										l_other_numeric_value := l_other_atomic_value.convert_to_type (type_factory.numeric_type).as_numeric_value
+										create {XM_XPATH_NUMERIC_ARITHMETIC} l_expression.make (l_numeric_value, operator, l_other_numeric_value)
+										l_expression.evaluate_item (a_result, a_context)
 									else
-										a_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", an_atomic_value.item_type.conventional_name)
-										a_string := STRING_.appended_string (a_string, ", ")
-										a_string := STRING_.appended_string (a_string, another_atomic_value.item_type.conventional_name)
-										a_string := STRING_.appended_string (a_string,  ")")
-										set_last_error_from_string (a_string, Xpath_errors_uri, "XPTY0004", Type_error)
-										create {XM_XPATH_INVALID_VALUE} last_evaluated_item.make (error_value)
+										l_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", l_atomic_value.item_type.conventional_name)
+										l_string := STRING_.appended_string (l_string, ", ")
+										l_string := STRING_.appended_string (l_string, l_other_atomic_value.item_type.conventional_name)
+										l_string := STRING_.appended_string (l_string,  ")")
+										set_last_error_from_string (l_string, Xpath_errors_uri, "XPTY0004", Type_error)
+										a_result.put (create {XM_XPATH_INVALID_VALUE}.make (error_value))
 									end
 								else
-									a_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", an_atomic_value.item_type.conventional_name)
-									a_string := STRING_.appended_string (a_string, ", ")
-									a_string := STRING_.appended_string (a_string, another_atomic_value.item_type.conventional_name)
-									a_string := STRING_.appended_string (a_string,  ")")
-									set_last_error_from_string (a_string, Xpath_errors_uri, "XPTY0004", Type_error)
-									create {XM_XPATH_INVALID_VALUE} last_evaluated_item.make (error_value)
+									l_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", l_atomic_value.item_type.conventional_name)
+									l_string := STRING_.appended_string (l_string, ", ")
+									l_string := STRING_.appended_string (l_string, l_other_atomic_value.item_type.conventional_name)
+									l_string := STRING_.appended_string (l_string,  ")")
+									set_last_error_from_string (l_string, Xpath_errors_uri, "XPTY0004", Type_error)
+									a_result.put (create {XM_XPATH_INVALID_VALUE}.make (error_value))
 								end
 							end
 						end

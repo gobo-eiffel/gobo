@@ -21,13 +21,13 @@ inherit
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_message: STRING
+			l_message: STRING
 		do
-			a_message := "Internal error: function " + name + " should have been resolved at compile-time"
-			create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Gexslt_eiffel_type_uri, "INTERNAL_ERROR", Dynamic_error)
+			l_message := "Internal error: function " + name + " should have been resolved at compile-time"
+			a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (l_message, Gexslt_eiffel_type_uri, "INTERNAL_ERROR", Dynamic_error))
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is

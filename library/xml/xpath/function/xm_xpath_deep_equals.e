@@ -69,30 +69,30 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_comparer: XM_XPATH_ATOMIC_COMPARER
-			an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_comparer: XM_XPATH_ATOMIC_COMPARER
+			l_iterator, l_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			a_comparer := atomic_comparer (3, a_context)
-			if a_comparer = Void then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
+			l_comparer := atomic_comparer (3, a_context)
+			if l_comparer = Void then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error))
 			else
 				arguments.item (1).create_iterator (a_context)
-				an_iterator := arguments.item (1).last_iterator
-				if an_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				l_iterator := arguments.item (1).last_iterator
+				if l_iterator.is_error then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 				else
 					arguments.item (2).create_iterator (a_context)
-					another_iterator := arguments.item (2).last_iterator
-					if another_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (another_iterator.error_value)
+					l_other_iterator := arguments.item (2).last_iterator
+					if l_other_iterator.is_error then
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_other_iterator.error_value))
 					else
-						a_comparer.set_dynamic_context (a_context)
-						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (deep_equals (an_iterator, another_iterator, a_comparer))
+						l_comparer.set_dynamic_context (a_context)
+						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (deep_equals (l_iterator, l_other_iterator, l_comparer)))
 						if is_error then
-							last_evaluated_item.set_last_error (error_value)
+							a_result.item.set_last_error (error_value)
 						end
 					end
 				end

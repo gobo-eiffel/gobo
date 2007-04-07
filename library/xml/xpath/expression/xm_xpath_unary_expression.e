@@ -138,7 +138,6 @@ feature -- Optimization
 					if is_error or last_evaluation.is_error then
 						error_value := Void
 						last_evaluation := Void
-						last_evaluated_item := Void
 					else
 						set_replacement (last_evaluation)
 					end
@@ -173,7 +172,6 @@ feature -- Optimization
 					if is_error or last_evaluation.is_error then
 						error_value := Void
 						last_evaluation := Void
-						last_evaluated_item := Void
 					else
 						set_replacement (last_evaluation)
 					end

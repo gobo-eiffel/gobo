@@ -175,45 +175,48 @@ feature -- Evaluation
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
-			an_item, another_item: XM_XPATH_ITEM
-			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_item, l_other_item: XM_XPATH_ITEM
+			l_atomic_value, l_other_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			first_operand.evaluate_item (a_context)
-			an_item := first_operand.last_evaluated_item
-			if an_item = Void then
+			create l_result.make (Void)
+			first_operand.evaluate_item (l_result, a_context)
+			l_item := l_result.item
+			if l_item = Void then
 
 				-- empty sequence
 
 				create last_boolean_value.make (False)
-			elseif an_item.is_error then
+			elseif l_item.is_error then
 				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (an_item.error_value)
+				last_boolean_value.set_last_error (l_item.error_value)
 			else
-				second_operand.evaluate_item (a_context)
-				another_item := second_operand.last_evaluated_item
-				if another_item = Void then
+				create l_result.make (Void)
+				second_operand.evaluate_item (l_result, a_context)
+				l_other_item := l_result.item
+				if l_other_item = Void then
 					create last_boolean_value.make (False)
-				elseif another_item.is_error then
+				elseif l_other_item.is_error then
 					create last_boolean_value.make (False)
-					last_boolean_value.set_last_error (another_item.error_value)
+					last_boolean_value.set_last_error (l_other_item.error_value)
 				else
-					if not an_item.is_atomic_value then
+					if not l_item.is_atomic_value then
 						create last_boolean_value.make (False)
 						last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XPTY0004", Type_error)
-					elseif not another_item.is_atomic_value then
+					elseif not l_other_item.is_atomic_value then
 						create last_boolean_value.make (False)
 						last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XPTY0004", Type_error)
 					else
-						an_atomic_value := an_item.as_atomic_value
-						if an_atomic_value.is_untyped_atomic then
-							an_atomic_value := an_atomic_value.convert_to_type (type_factory.string_type)
+						l_atomic_value := l_item.as_atomic_value
+						if l_atomic_value.is_untyped_atomic then
+							l_atomic_value := l_atomic_value.convert_to_type (type_factory.string_type)
 						end
-						another_atomic_value := another_item.as_atomic_value
-						if another_atomic_value.is_untyped_atomic then
-							another_atomic_value := another_atomic_value.convert_to_type (type_factory.string_type)
+						l_other_atomic_value := l_other_item.as_atomic_value
+						if l_other_atomic_value.is_untyped_atomic then
+							l_other_atomic_value := l_other_atomic_value.convert_to_type (type_factory.string_type)
 						end
 						if a_context /= Void then atomic_comparer.set_dynamic_context (a_context) end
-						check_correct_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)
+						check_correct_relation (l_atomic_value, operator, atomic_comparer, l_other_atomic_value)
 						if is_error then
 							create last_boolean_value.make (False)
 							last_boolean_value.set_last_error (error_value)
@@ -227,48 +230,42 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_atomic_value, l_other_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif first_operand.last_evaluated_item.is_error then
-				last_evaluated_item := first_operand.last_evaluated_item
-			else
+			first_operand.evaluate_item (a_result, a_context)
+			if a_result.item /= Void and then not a_result.item.is_error then
 				check
-					atomic_value: first_operand.last_evaluated_item.is_atomic_value
+					atomic_value: a_result.item.is_atomic_value
 				end
-				an_atomic_value := first_operand.last_evaluated_item.as_atomic_value
-				if an_atomic_value.is_untyped_atomic then
-					an_atomic_value := an_atomic_value.convert_to_type (type_factory.string_type)
+				l_atomic_value := a_result.item.as_atomic_value
+				if l_atomic_value.is_untyped_atomic then
+					l_atomic_value := l_atomic_value.convert_to_type (type_factory.string_type)
 				end
-				second_operand.evaluate_item (a_context)
-				if second_operand.last_evaluated_item = Void then
-					last_evaluated_item := Void
-				elseif second_operand.last_evaluated_item.is_error then
-					last_evaluated_item := second_operand.last_evaluated_item
-				else
+				a_result.put (Void)
+				second_operand.evaluate_item (a_result, a_context)
+				if a_result.item /= Void and then not a_result.item.is_error then
 					check
-						second_atomic_value: second_operand.last_evaluated_item.is_atomic_value
+						second_atomic_value: a_result.item.is_atomic_value
 					end
-					another_atomic_value := second_operand.last_evaluated_item.as_atomic_value
-					if another_atomic_value.is_untyped_atomic then
-						another_atomic_value := another_atomic_value.convert_to_type (type_factory.string_type)
+					l_other_atomic_value := a_result.item.as_atomic_value
+					if l_other_atomic_value.is_untyped_atomic then
+						l_other_atomic_value := l_other_atomic_value.convert_to_type (type_factory.string_type)
 					end
 					if a_context /= Void then atomic_comparer.set_dynamic_context (a_context) end
-					check_correct_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)
+					check_correct_relation (l_atomic_value, operator, atomic_comparer, l_other_atomic_value)
 					if is_error then
-						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error (error_value)
+						create l_boolean_value.make (False)
+						l_boolean_value.set_last_error (error_value)
 					elseif last_check_result then
-						create last_boolean_value.make (True)
+						create l_boolean_value.make (True)
 					else
-						create last_boolean_value.make (False)
+						create l_boolean_value.make (False)
 					end
-					last_evaluated_item := last_boolean_value
+					a_result.put (l_boolean_value)
 				end
 			end
 		end
@@ -568,20 +565,22 @@ feature {NONE} -- Implementation
 	evaluate_now is
 			-- Evaluate the expression now if both arguments are constant.
 		local
-			an_invalid_value: XM_XPATH_INVALID_VALUE
+			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_invalid_value: XM_XPATH_INVALID_VALUE
 		do
 			if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
 				and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
-				evaluate_item (Void)
+				create l_result.make (Void)
+				evaluate_item (l_result, Void)
 				check
-					empty_sequence_not_possible: last_evaluated_item /= Void
+					empty_sequence_not_possible: l_result.item /= Void
 					-- boolean comparison
 				end
-				if last_evaluated_item.is_error then
-					create an_invalid_value.make (last_evaluated_item.error_value)
-					set_replacement (an_invalid_value)
+				if l_result.item.is_error then
+					create l_invalid_value.make (l_result.item.error_value)
+					set_replacement (l_invalid_value)
 				else
-					set_replacement (last_evaluated_item.as_boolean_value)
+					set_replacement (l_result.item.as_boolean_value)
 				end
 			end
 		end

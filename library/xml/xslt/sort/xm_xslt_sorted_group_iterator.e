@@ -74,20 +74,21 @@ feature {NONE} -- Implementation
 	build_array is
 			-- Build `node_keys'.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
-			a_sort_record: XM_XSLT_GROUP_SORT_RECORD
-			a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
-			a_sort_key: XM_XPATH_ATOMIC_VALUE
-			a_new_context: like context
+			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
+			l_sort_record: XM_XSLT_GROUP_SORT_RECORD
+			l_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
+			l_sort_key: XM_XPATH_ATOMIC_VALUE
+			l_new_context: like context
 		do
 			create node_keys.make_default
 
 			-- This provides the context for evaluating the sort key:
 			-- Note that current() must return the node being sorted.
 
-			a_new_context := context.new_context
-			a_new_context.set_current_iterator (base_iterator)
-			a_new_context.set_current_group_iterator (group_iterator)
+			l_new_context := context.new_context
+			l_new_context.set_current_iterator (base_iterator)
+			l_new_context.set_current_group_iterator (group_iterator)
 			
 			-- Initialize the array with data.
 
@@ -100,19 +101,20 @@ feature {NONE} -- Implementation
 					node_keys.resize (node_keys.count * 2)
 				end
 				from
-					create a_key_list.make (sort_keys.count)
-					a_cursor := sort_keys.new_cursor; a_cursor.start
+					create l_key_list.make (sort_keys.count)
+					l_cursor := sort_keys.new_cursor; l_cursor.start
 				until
-					a_cursor.after
+					l_cursor.after
 				loop
-					a_cursor.item.sort_key.evaluate_item (context)
-					if a_cursor.item.sort_key.last_evaluated_item /= Void then
-						a_sort_key := a_cursor.item.sort_key.last_evaluated_item.as_atomic_value
+					create l_item.make (Void)
+					l_cursor.item.sort_key.evaluate_item (l_item, context)
+					if l_item.item /= Void then
+						l_sort_key := l_item.item.as_atomic_value
 					else
-						a_sort_key := Void  -- = () - an empty sequence
+						l_sort_key := Void  -- = () - an empty sequence
 					end
-					a_key_list.put_last (a_sort_key)
-					a_cursor.forth
+					l_key_list.put_last (l_sort_key)
+					l_cursor.forth
 				end
 
 				-- Make the sort stable by adding the record number.
@@ -120,12 +122,12 @@ feature {NONE} -- Implementation
 				count := count + 1
 
 				-- next line is the only difference from the Precursor
-				-- (apart from the type of `a_sort_record',
+				-- (apart from the type of `l_sort_record',
 				--  the use of `group_iterator' for `base_iterator' throughout)
 				--  and the setting and saving of the current group iterator).
 
-				create a_sort_record.make (group_iterator.item, a_key_list, count,group_iterator.current_grouping_key, group_iterator.current_group_iterator)
-				node_keys.put_last (a_sort_record)
+				create l_sort_record.make (group_iterator.item, l_key_list, count,group_iterator.current_grouping_key, group_iterator.current_group_iterator)
+				node_keys.put_last (l_sort_record)
 				group_iterator.forth
 			end
 			if group_iterator.is_error then

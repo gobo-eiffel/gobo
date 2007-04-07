@@ -73,29 +73,27 @@ feature -- Evaluation
 			-- Suppress compile-time evaluation
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
-			a_label: STRING
-			is_suppressed: BOOLEAN
+			l_string_value: XM_XPATH_STRING_VALUE
+			l_label: STRING
+			l_is_suppressed: BOOLEAN
 		do
-			last_evaluated_item := Void
-			is_suppressed :=  a_context.configuration.is_tracing_suppressed
-			if not is_suppressed then
+			l_is_suppressed :=  a_context.configuration.is_tracing_suppressed
+			if not l_is_suppressed then
 				arguments.item (2).evaluate_as_string (a_context)
-				a_string_value := arguments.item (2).last_evaluated_string
-				if a_string_value.is_error then
-					last_evaluated_item := a_string_value
+				l_string_value := arguments.item (2).last_evaluated_string
+				if l_string_value.is_error then
+					a_result.put (l_string_value)
 				else
-					a_label := a_string_value.string_value
+					l_label := l_string_value.string_value
 				end
 			end
-			if last_evaluated_item = Void then
-				arguments.item (1).evaluate_item (a_context)
-				last_evaluated_item := arguments.item (1).last_evaluated_item
-				if not is_suppressed then
-					trace_item (a_label, last_evaluated_item, a_context)
+			if a_result.item = Void then
+				arguments.item (1).evaluate_item (a_result, a_context)
+				if not l_is_suppressed then
+					trace_item (l_label, a_result.item, a_context)
 				end
 			end
 		end

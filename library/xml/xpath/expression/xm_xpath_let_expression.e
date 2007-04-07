@@ -332,39 +332,38 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_let_expression: XM_XPATH_LET_EXPRESSION
-			a_value: XM_XPATH_VALUE
-			finished: BOOLEAN
+			l_let_expression: XM_XPATH_LET_EXPRESSION
+			l_value: XM_XPATH_VALUE
+			l_finished: BOOLEAN
 		do
 						
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
-				a_let_expression := current
+				l_let_expression := Current
 			until
-				is_error or else finished
+				is_error or else l_finished
 			loop
-				a_let_expression.sequence.lazily_evaluate (a_context, a_let_expression.reference_count)
-				a_value := a_let_expression.sequence.last_evaluation
-				if a_value.is_error then
-					set_last_error (a_value.error_value)
+				l_let_expression.sequence.lazily_evaluate (a_context, l_let_expression.reference_count)
+				l_value := l_let_expression.sequence.last_evaluation
+				if l_value.is_error then
+					set_last_error (l_value.error_value)
 				else
-					a_context.set_local_variable (a_value, a_let_expression.slot_number)
-					if a_let_expression.action.is_let_expression then
-						a_let_expression := a_let_expression.action.as_let_expression
+					a_context.set_local_variable (l_value, l_let_expression.slot_number)
+					if l_let_expression.action.is_let_expression then
+						l_let_expression := l_let_expression.action.as_let_expression
 					else
-						finished := True
+						l_finished := True
 					end
 				end
 			end
 			if is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (error_value)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
 			else
-				a_let_expression.action.evaluate_item (a_context)
-				last_evaluated_item := a_let_expression.action.last_evaluated_item
+				l_let_expression.action.evaluate_item (a_result, a_context)
 			end
 		end
 

@@ -73,49 +73,49 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			an_href_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_base_uri: UT_URI
-			a_base_node: XM_XPATH_NODE
-			an_item: XM_XPATH_ITEM
-			a_map_object: XM_XSLT_DOCUMENT_INFORMATION
-			a_mapping_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
-			a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER
-			an_xslt_context: XM_XSLT_EVALUATION_CONTEXT
+			l_href_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_base_uri: UT_URI
+			l_base_node: XM_XPATH_NODE
+			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_map_object: XM_XSLT_DOCUMENT_INFORMATION
+			l_mapping_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
+			l_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER
+			l_xslt_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			last_iterator := Void
 			arguments.item (1).create_iterator (a_context)
-			an_href_iterator := arguments.item (1).last_iterator
-			if not an_href_iterator.is_error then
+			l_href_iterator := arguments.item (1).last_iterator
+			if not l_href_iterator.is_error then
 				if supplied_argument_count = 2 then
-					arguments.item (2).evaluate_item (a_context)
-					an_item := arguments.item (2).last_evaluated_item
-					if an_item.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
+					create l_item.make (Void)
+					arguments.item (2).evaluate_item (l_item, a_context)
+					if l_item.item.is_error then
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.item.error_value)
 					else
 						check
-							item_is_node: an_item.is_node
+							item_is_node: l_item.item.is_node
 							-- Static typing
 						end
-						a_base_node := an_item.as_node
-						create a_base_uri.make (a_base_node.base_uri)
+						l_base_node := l_item.item.as_node
+						create l_base_uri.make (l_base_node.base_uri)
 					end
 				end
 				if last_iterator = Void then -- no error yet
 					if transformer = Void then
-						an_xslt_context ?= a_context
+						l_xslt_context ?= a_context
 						check
-							xslt_context_not_void: an_xslt_context /= Void
+							xslt_context_not_void: l_xslt_context /= Void
 							-- as this is an XSLT function
 						end
-						transformer := an_xslt_context.transformer
+						transformer := l_xslt_context.transformer
 					end
-					create a_map_object.make (a_base_uri, stylesheet_base_uri, transformer)
-					create a_mapping_iterator.make (an_href_iterator, a_map_object, a_context)
-					create a_comparer
-					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_mapping_iterator, a_comparer) -- to eliminate duplicates if two hrefs are the same
+					create l_map_object.make (l_base_uri, stylesheet_base_uri, transformer)
+					create l_mapping_iterator.make (l_href_iterator, l_map_object, a_context)
+					create l_comparer
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (l_mapping_iterator, l_comparer) -- to eliminate duplicates if two hrefs are the same
 				end
 			else
-				last_iterator := an_href_iterator
+				last_iterator := l_href_iterator
 			end
 		end
 
@@ -128,49 +128,49 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence.
 		local
-			an_href_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_base_uri: UT_URI
-			a_base_node: XM_XPATH_NODE
-			an_item: XM_XPATH_ITEM
-			a_map_object: XM_XSLT_DOCUMENT_INFORMATION
-			a_mapping_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
-			a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER
-			an_xslt_context: XM_XSLT_EVALUATION_CONTEXT
+			l_href_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_base_uri: UT_URI
+			l_base_node: XM_XPATH_NODE
+			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_map_object: XM_XSLT_DOCUMENT_INFORMATION
+			l_mapping_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
+			l_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER
+			l_xslt_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			last_node_iterator := Void
 			arguments.item (1).create_iterator (a_context)
-			an_href_iterator := arguments.item (1).last_iterator
-			if not an_href_iterator.is_error then
+			l_href_iterator := arguments.item (1).last_iterator
+			if not l_href_iterator.is_error then
 				if supplied_argument_count = 2 then
-					arguments.item (2).evaluate_item (a_context)
-					an_item := arguments.item (2).last_evaluated_item
-					if an_item.is_error then
-						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (an_item.error_value)
+					create l_item.make (Void)
+					arguments.item (2).evaluate_item (l_item, a_context)
+					if l_item.item.is_error then
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_item.item.error_value)
 					else
 						check
-							item_is_node: an_item.is_node
+							item_is_node: l_item.item.is_node
 							-- Static typing
 						end
-						a_base_node := an_item.as_node
-						create a_base_uri.make (a_base_node.base_uri)
+						l_base_node := l_item.item.as_node
+						create l_base_uri.make (l_base_node.base_uri)
 					end
 				end
 				if last_node_iterator = Void then -- no error yet
 					if transformer = Void then
-						an_xslt_context ?= a_context
+						l_xslt_context ?= a_context
 						check
-							xslt_context_not_void: an_xslt_context /= Void
+							xslt_context_not_void: l_xslt_context /= Void
 							-- as this is an XSLT function
 						end
-						transformer := an_xslt_context.transformer
+						transformer := l_xslt_context.transformer
 					end
-					create a_map_object.make (a_base_uri, stylesheet_base_uri, transformer)
-					create a_mapping_iterator.make (an_href_iterator, a_map_object, a_context)
-					create a_comparer
-					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_node_iterator.make (a_mapping_iterator, a_comparer) -- to eliminate duplicates if two hrefs are the same
+					create l_map_object.make (l_base_uri, stylesheet_base_uri, transformer)
+					create l_mapping_iterator.make (l_href_iterator, l_map_object, a_context)
+					create l_comparer
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_node_iterator.make (l_mapping_iterator, l_comparer) -- to eliminate duplicates if two hrefs are the same
 				end
 			else
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (an_href_iterator.error_value)
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_href_iterator.error_value)
 			end
 		end
 

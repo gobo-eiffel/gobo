@@ -115,6 +115,8 @@ feature -- Optimization
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			check
 				backwards_compatible_mode: a_context.is_backwards_compatible_mode
@@ -140,13 +142,14 @@ feature -- Optimization
 					if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
 					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
 						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
-						evaluate_item (Void)
+						create  l_result.make (Void)
+						evaluate_item (l_result, Void)
 						check
-							boolean_value: last_evaluated_item.is_boolean_value
+							boolean_value: l_result.item.is_boolean_value
 							-- We are guarenteed a boolean value
 						end
 						if not is_error then
-							set_replacement (last_evaluated_item.as_boolean_value)
+							set_replacement (l_result.item.as_boolean_value)
 						end
 					else
 						optimize_stage_2 (a_context, a_context_item_type)
@@ -237,11 +240,11 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
-			last_evaluated_item := last_boolean_value
+			a_result.put (last_boolean_value)
 		end
 
 		

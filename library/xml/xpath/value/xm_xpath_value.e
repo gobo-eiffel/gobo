@@ -97,30 +97,29 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
-			-- Item at `an_index'
+	item_at (a_index: INTEGER) :XM_XPATH_ITEM is
+			-- Item at `a_index'
 		require
-			index_in_range: an_index > 0 and then an_index <= count
+			index_in_range: a_index > 0 and then a_index <= count
 		local
-			an_integer: INTEGER
-			a_saved_item: XM_XPATH_ITEM
-			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_integer: INTEGER
+			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			if is_evaluate_item_supported and then an_index = 1 then
-				a_saved_item := last_evaluated_item -- to avoid state change
-				evaluate_item (Void)
-				Result := last_evaluated_item
-				last_evaluated_item := a_saved_item
+			if is_evaluate_item_supported and then a_index = 1 then
+				create l_result.make (Void)
+				evaluate_item (l_result, Void)
+				Result := l_result.item
 			else
-				a_saved_iterator := last_iterator -- to avoid state change
+				l_saved_iterator := last_iterator -- to avoid state change
 				create_iterator (Void)
 				from
-					an_integer := 1
+					l_integer := 1
 				until
-					an_integer > an_index or else last_iterator.is_error or else (not last_iterator.before and then last_iterator.after)
+					l_integer > a_index or else last_iterator.is_error or else (not last_iterator.before and then last_iterator.after)
 				loop
-					if an_integer = 1 then last_iterator.start else last_iterator.forth end
-					an_integer := an_integer + 1
+					if l_integer = 1 then last_iterator.start else last_iterator.forth end
+					l_integer := l_integer + 1
 				end
 				if last_iterator.is_error then
 					create {XM_XPATH_INVALID_ITEM} Result.make (last_iterator.error_value)
@@ -129,10 +128,10 @@ feature -- Access
 				else
 					check
 						out_of_range: False
-						-- pre-condition on `an_index'
+						-- pre-condition on `a_index'
 					end
 				end
-				last_iterator := a_saved_iterator
+				last_iterator := l_saved_iterator
 			end
 		ensure
 			item_may_be_void: True

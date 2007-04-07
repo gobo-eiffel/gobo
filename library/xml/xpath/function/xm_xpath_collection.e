@@ -71,41 +71,41 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
-			a_uri: UT_URI
-			a_reference: STRING
-			an_item: XM_XPATH_ITEM
-			a_resolver: XM_XPATH_COLLECTION_RESOLVER
+			l_uri: UT_URI
+			l_reference: STRING
+			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_resolver: XM_XPATH_COLLECTION_RESOLVER
 		do
 			last_iterator := Void
 			if arguments.count = 0 then
-				create a_uri.make (Default_collection_scheme + ":")
+				create l_uri.make (Default_collection_scheme + ":")
 			else
-				arguments.item (1).evaluate_item (a_context)
-				an_item := arguments.item (1).last_evaluated_item
-				if an_item = Void then
-					create a_uri.make (Default_collection_scheme + ":")
-				elseif an_item.is_error then
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
+				create l_result.make (Void)
+				arguments.item (1).evaluate_item (l_result, a_context)
+				if l_result.item = Void then
+					create l_uri.make (Default_collection_scheme + ":")
+				elseif l_result.item.is_error then
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
 				else
-					a_reference := an_item.string_value
-					if Url_encoding.has_excluded_characters (a_reference) then
+					l_reference := l_result.item.string_value
+					if Url_encoding.has_excluded_characters (l_reference) then
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Argument to fn:collection() contains invalid characters",
 																												 Xpath_errors_uri, "FODC0002", Dynamic_error)
 					else
-						create a_uri.make_resolve (base_uri, a_reference)
+						create l_uri.make_resolve (base_uri, l_reference)
 					end
 				end
 			end
 			if last_iterator = Void then -- no error yet
-				if a_context.available_documents.is_collection_mapped (a_uri.full_reference) then
-					last_iterator := a_context.available_documents.collection (a_uri.full_reference)
+				if a_context.available_documents.is_collection_mapped (l_uri.full_reference) then
+					last_iterator := a_context.available_documents.collection (l_uri.full_reference)
 				else
-					a_resolver := a_context.configuration.collection_resolver
-					a_resolver.resolve (a_uri, a_context)
-					if a_resolver.was_error then
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_resolver.last_error)
+					l_resolver := a_context.configuration.collection_resolver
+					l_resolver.resolve (l_uri, a_context)
+					if l_resolver.was_error then
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_resolver.last_error)
 					else
-						last_iterator := a_resolver.last_collection
+						last_iterator := l_resolver.last_collection
 					end
 				end
 			end

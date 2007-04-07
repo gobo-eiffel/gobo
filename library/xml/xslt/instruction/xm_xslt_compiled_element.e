@@ -93,65 +93,67 @@ feature -- Access
 			-- Name code;
 			-- Not 100% pure as it may report an error.
 		local
-			a_name_value: XM_XPATH_ITEM
-			a_string_value: XM_XPATH_STRING_VALUE
-			a_uri, an_xml_prefix: STRING
-			a_parser: XM_XPATH_QNAME_PARSER
-			an_error: XM_XPATH_ERROR_VALUE 
+			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_name_value: XM_XPATH_ITEM
+			l_string_value: XM_XPATH_STRING_VALUE
+			l_uri, l_xml_prefix: STRING
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_error: XM_XPATH_ERROR_VALUE 
 		do
-			element_name.evaluate_item (a_context)
-			a_name_value := element_name.last_evaluated_item
-			if a_name_value = Void or else a_name_value.is_error then -- empty sequence
-				create an_error.make_from_string ("xsl:element has no 'name'",
+			create l_item.make (Void)
+			element_name.evaluate_item (l_item, a_context)
+			l_name_value := l_item.item
+			if l_name_value = Void or else l_name_value.is_error then -- empty sequence
+				create l_error.make_from_string ("xsl:element has no 'name'",
 															 Xpath_errors_uri,"XTDE0820", Dynamic_error)
-				an_error.set_location (system_id, line_number)
-				a_context.transformer.report_fatal_error (an_error)
+				l_error.set_location (system_id, line_number)
+				a_context.transformer.report_fatal_error (l_error)
 				Result := -1
 			else
-				a_string_value := a_name_value.as_string_value
-				create a_parser.make (a_string_value.string_value)
-				if not a_parser.is_valid then
-					create an_error.make_from_string ("'name' attribute of xsl:element does not evaluate to a lexical QName.",
+				l_string_value := l_name_value.as_string_value
+				create l_parser.make (l_string_value.string_value)
+				if not l_parser.is_valid then
+					create l_error.make_from_string ("'name' attribute of xsl:element does not evaluate to a lexical QName.",
 																 Xpath_errors_uri,"XTDE0820", Dynamic_error)
-					an_error.set_location (system_id, line_number)
-					a_context.transformer.report_recoverable_error (an_error)
+					l_error.set_location (system_id, line_number)
+					a_context.transformer.report_recoverable_error (l_error)
 					Result := -1
 				end
 			end
 			if Result /= -1 then
-				an_xml_prefix := a_parser.optional_prefix
+				l_xml_prefix := l_parser.optional_prefix
 				if namespace = Void then
-					a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, True)
-					if a_uri = Void then
-						create an_error.make_from_string (STRING_.concat ("'name' attribute of xsl:element has an undeclared prefix: ", an_xml_prefix),
+					l_uri := namespace_context.uri_for_defaulted_prefix (l_xml_prefix, True)
+					if l_uri = Void then
+						create l_error.make_from_string (STRING_.concat ("'name' attribute of xsl:element has an undeclared prefix: ", l_xml_prefix),
 																	 Xpath_errors_uri,"XTDE0830", Dynamic_error)
-						an_error.set_location (system_id, line_number)
-						a_context.transformer.report_recoverable_error (an_error)
+						l_error.set_location (system_id, line_number)
+						a_context.transformer.report_recoverable_error (l_error)
 						Result := -1
 					end
 				else
 					namespace.evaluate_as_string (a_context)
 					if namespace.last_evaluated_string.is_error then
 						a_context.transformer.report_warning ("'namespace' attribute of xsl:element failed evaluation - using null namespace", Current)
-						a_uri := ""
+						l_uri := ""
 					else
-						a_uri := namespace.last_evaluated_string.string_value
+						l_uri := namespace.last_evaluated_string.string_value
 					end
-					if a_uri.count = 0 then
-						an_xml_prefix := ""
+					if l_uri.count = 0 then
+						l_xml_prefix := ""
 					else
-						an_xml_prefix := a_parser.optional_prefix
+						l_xml_prefix := l_parser.optional_prefix
 					end
-					if STRING_.same_string (an_xml_prefix, "xmlns") then
+					if STRING_.same_string (l_xml_prefix, "xmlns") then
 						-- not legal, so:
-						an_xml_prefix := "x-xmlns"
+						l_xml_prefix := "x-xmlns"
 					end
 				end
 				if Result /= -1 then
-					if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_parser.local_name) then
-						Result := shared_name_pool.name_code (an_xml_prefix, a_uri, a_parser.local_name)
+					if shared_name_pool.is_name_code_allocated (l_xml_prefix, l_uri, l_parser.local_name) then
+						Result := shared_name_pool.name_code (l_xml_prefix, l_uri, l_parser.local_name)
 					else
-						shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_parser.local_name)
+						shared_name_pool.allocate_name (l_xml_prefix, l_uri, l_parser.local_name)
 						Result := shared_name_pool.last_name_code
 					end
 				end

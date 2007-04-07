@@ -153,17 +153,16 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			base_expression.evaluate_item (a_context)
-			last_evaluated_item := base_expression.last_evaluated_item
-			if last_evaluated_item = Void then
-				-- do nothing - can this occur?
-			elseif last_evaluated_item.is_error then
+			base_expression.evaluate_item (a_result, a_context)
+			if a_result.item = Void then
+				-- do nothing
+			elseif a_result.item.is_error then
 				-- do nothing
 			else
-				test_conformance (last_evaluated_item)
+				test_conformance (a_result.item)
 			end
 		end
 
@@ -197,25 +196,25 @@ feature -- Evaluation
 			end
 		end
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
-			-- Map `an_item' to a sequence
+	map (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+			-- Map `a_item' to a sequence
 		do
-			if not an_item.is_error then test_conformance (an_item) end
-			create last_mapped_item.make_item (an_item)
+			if not a_item.is_error then test_conformance (a_item) end
+			create last_mapped_item.make_item (a_item)
 		end
 
-	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
-			-- Map `an_item' to a sequence
+	map_nodes (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+			-- Map `a_item' to a sequence
 		do
-			if not an_item.is_error then
-				test_conformance (an_item)
-				if an_item.is_error then
-					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (an_item.error_value)
+			if not a_item.is_error then
+				test_conformance (a_item)
+				if a_item.is_error then
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (a_item.error_value)
 				else
-					create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (an_item.as_node)
+					create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (a_item.as_node)
 				end
 			else
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (an_item.error_value)
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (a_item.error_value)
 			end
 		end
 
@@ -241,21 +240,21 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	test_conformance (an_item: XM_XPATH_ITEM) is
-			-- Test conformance to `required_item_type'.
-			-- Marks `an_item' as in error if check fails.
+	test_conformance (a_item: XM_XPATH_ITEM) is
+			-- Test conformance of `a_item' to `required_item_type'.
+			-- Marks `a_item' as in error if check fails.
 		require
-			item_not_in_error: an_item /= Void and then not an_item.is_error 
+			item_not_in_error: a_item /= Void and then not a_item.is_error 
 		local
-			a_message: STRING
+			l_message: STRING
 		do
-			if not required_item_type.matches_item (an_item, True) then
-				a_message := STRING_.appended_string ("Required type of ", role_locator.message)
-				a_message := STRING_.appended_string (a_message, " is ")
-				a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)
-				a_message := STRING_.appended_string (a_message, "; supplied value is ")
-				a_message := STRING_.appended_string (a_message, an_item.item_type.conventional_name)
-				an_item.set_last_error_from_string (a_message, Xpath_errors_uri, error_code, Type_error)
+			if not required_item_type.matches_item (a_item, True) then
+				l_message := STRING_.appended_string ("Required type of ", role_locator.message)
+				l_message := STRING_.appended_string (l_message, " is ")
+				l_message := STRING_.appended_string (l_message, required_item_type.conventional_name)
+				l_message := STRING_.appended_string (l_message, "; supplied value is ")
+				l_message := STRING_.appended_string (l_message, a_item.item_type.conventional_name)
+				a_item.set_last_error_from_string (l_message, Xpath_errors_uri, error_code, Type_error)
 			end
 		end
 

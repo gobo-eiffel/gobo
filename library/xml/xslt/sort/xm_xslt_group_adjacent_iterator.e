@@ -134,10 +134,11 @@ feature {NONE} -- Implementation
 	advance is
 			-- Advance iterator to next item.
 		local
-			finished: BOOLEAN
-			a_candidate_key: like current_grouping_key
-			a_candidate: like item
-			an_error: XM_XPATH_ERROR_VALUE
+			l_finished: BOOLEAN
+			l_candidate_key: like current_grouping_key
+			l_candidate: like item
+			l_error: XM_XPATH_ERROR_VALUE
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 
 			-- TODO use comparison keys
@@ -148,38 +149,39 @@ feature {NONE} -- Implementation
 				if index = 1 then
 					population.start
 				end
-			until finished loop
+			until l_finished loop
 				if population.is_error then
-					finished := True;	set_last_error (population.error_value)
+					l_finished := True;	set_last_error (population.error_value)
 				elseif not population.after then
-					a_candidate := population.item
-					if a_candidate.is_error then
-						set_last_error (a_candidate.error_value); finished := True
+					l_candidate := population.item
+					if l_candidate.is_error then
+						set_last_error (l_candidate.error_value); l_finished := True
 					end
 				else
-					next_key := Void; finished := True
+					next_key := Void; l_finished := True
 				end
-				if not finished then
-					key_expression.evaluate_item (running_context)
-					if key_expression.last_evaluated_item = Void then
-						create an_error.make_from_string ("Key expression is an empty sequence", Xpath_errors_uri, "XTTE1100", Type_error)
-						set_last_error (an_error)
-						next_item := Void; finished := True
-					elseif key_expression.last_evaluated_item.is_error then
-						set_last_error (key_expression.last_evaluated_item.error_value); finished := True
-					elseif  key_expression.last_evaluated_item.is_atomic_value then
-						a_candidate_key := key_expression.last_evaluated_item.as_atomic_value
-						if next_key = Void then next_key := a_candidate_key end
-						if next_key.is_comparable (a_candidate_key) and then comparer.three_way_comparison (next_key, a_candidate_key) = 0 then
-							current_members.force_last (a_candidate)
+				if not l_finished then
+					create l_item.make (Void)
+					key_expression.evaluate_item (l_item, running_context)
+					if l_item.item = Void then
+						create l_error.make_from_string ("Key expression is an empty sequence", Xpath_errors_uri, "XTTE1100", Type_error)
+						set_last_error (l_error)
+						next_item := Void; l_finished := True
+					elseif l_item.item.is_error then
+						set_last_error (l_item.item.error_value); l_finished := True
+					elseif l_item.item.is_atomic_value then
+						l_candidate_key := l_item.item.as_atomic_value
+						if next_key = Void then next_key := l_candidate_key end
+						if next_key.is_comparable (l_candidate_key) and then comparer.three_way_comparison (next_key, l_candidate_key) = 0 then
+							current_members.force_last (l_candidate)
 						else
-							next_key := a_candidate_key
-							next_item := a_candidate; finished := True
+							next_key := l_candidate_key
+							next_item := l_candidate; l_finished := True
 						end
 					else
-						create an_error.make_from_string ("Key expression does not evaluate to an atomic item", Xpath_errors_uri, "XTTE1100", Type_error)
-						set_last_error (an_error)
-						finished := True
+						create l_error.make_from_string ("Key expression does not evaluate to an atomic item", Xpath_errors_uri, "XTTE1100", Type_error)
+						set_last_error (l_error)
+						l_finished := True
 					end
 				end
 				if not population.after then

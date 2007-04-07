@@ -163,14 +163,15 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
-			create_iterator (a_context); last_iterator.start
+			create_iterator (a_context)
+			last_iterator.start
 			if last_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
 			elseif not last_iterator.after then
-				last_evaluated_item := last_iterator.item
+				a_result.put (last_iterator.item) -- the assumption is cardinality is zero or one
 			end
 		end
 
@@ -221,9 +222,12 @@ feature  -- Conversion
 
 	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Convert to an item
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			evaluate_item (a_context)
-			Result := last_evaluated_item 
+			create l_result.make (Void)
+			evaluate_item (l_result, a_context)
+			Result := l_result.item
 		end
 	
 feature {XM_XPATH_CLOSURE} -- Local

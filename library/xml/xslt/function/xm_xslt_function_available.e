@@ -65,67 +65,68 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_arity, a_fingerprint: INTEGER
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
-			a_uri, an_xml_prefix: STRING
-			a_parser: XM_XPATH_QNAME_PARSER
-			a_boolean: BOOLEAN
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_arity, l_fingerprint: INTEGER
+			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
+			l_uri, l_xml_prefix: STRING
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_boolean: BOOLEAN
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			an_arity := -1
+			l_arity := -1
 			if arguments.count = 2 then
-				arguments.item (2).evaluate_item (a_context)
-				if arguments.item (2).last_evaluated_item.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (arguments.item (2).last_evaluated_item.error_value)
+				arguments.item (2).evaluate_item (a_result, a_context)
+				if a_result.item.is_error then
+					set_last_error (a_result.item.error_value)
 				else
 					check
-						integer: arguments.item (2).last_evaluated_item.is_machine_integer_value
+						integer: a_result.item.is_machine_integer_value
 						-- static typing
 					end
-					an_integer_value := arguments.item (2).last_evaluated_item.as_machine_integer_value
-					an_arity := an_integer_value.value.to_integer
+					l_integer_value := a_result.item.as_machine_integer_value
+					l_arity := l_integer_value.value.to_integer
 				end
 			end
 			if not is_error then
-				arguments.item (1).evaluate_item (a_context)
-				if arguments.item (1).last_evaluated_item.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName",
-																												Xpath_errors_uri, "XTDE1400", Dynamic_error)
+				a_result.put (Void)
+				arguments.item (1).evaluate_item (a_result, a_context)
+				if a_result.item.is_error then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("First argument to 'function-available' is not a lexical QName",
+						Xpath_errors_uri, "XTDE1400", Dynamic_error))
 				else
-					if not arguments.item (1).last_evaluated_item.is_atomic_value then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName",
-																													Xpath_errors_uri, "XTDE1400", Dynamic_error)
+					if not a_result.item.is_atomic_value then
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("First argument to 'function-available' is not a lexical QName",
+							Xpath_errors_uri, "XTDE1400", Dynamic_error))
 					else
-						create a_parser.make (arguments.item (1).last_evaluated_item.as_atomic_value.string_value)
-						if not a_parser.is_valid then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName",
-																														Xpath_errors_uri, "XTDE1400", Dynamic_error)
+						create l_parser.make (a_result.item.as_atomic_value.string_value)
+						if not l_parser.is_valid then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("First argument to 'function-available' is not a lexical QName",
+								Xpath_errors_uri, "XTDE1400", Dynamic_error))
 						else
-							if not a_parser.is_prefix_present then
-								a_uri := Xpath_standard_functions_uri
-								an_xml_prefix := ""
+							if not l_parser.is_prefix_present then
+								l_uri := Xpath_standard_functions_uri
+								l_xml_prefix := ""
 							else
 								check
 									namespace_context_saved: namespaces_needed and namespace_context /= Void
 									-- from `check_arguments'.
 								end
-								an_xml_prefix := a_parser.optional_prefix
-								a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, False)
+								l_xml_prefix := l_parser.optional_prefix
+								l_uri := namespace_context.uri_for_defaulted_prefix (l_xml_prefix, False)
 							end
-							if a_uri = Void then
-								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("QName prefix in first argument to 'function-available' has not been declared.",
-																															Xpath_errors_uri, "XTDE1400", Dynamic_error)
+							if l_uri = Void then
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("QName prefix in first argument to 'function-available' has not been declared.",
+									Xpath_errors_uri, "XTDE1400", Dynamic_error))
 							else
-								if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_parser.local_name) then
-									shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_parser.local_name)
+								if not shared_name_pool.is_name_code_allocated (l_xml_prefix, l_uri, l_parser.local_name) then
+									shared_name_pool.allocate_name (l_xml_prefix, l_uri, l_parser.local_name)
 								end
-								a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
-								a_boolean := a_context.available_functions.is_function_available (a_fingerprint, an_arity, a_context.is_restricted)
-								create a_boolean_value.make (a_boolean)
-								last_evaluated_item := a_boolean_value
+								l_fingerprint := shared_name_pool.fingerprint (l_uri, l_parser.local_name)
+								l_boolean := a_context.available_functions.is_function_available (l_fingerprint, l_arity, a_context.is_restricted)
+								create l_boolean_value.make (l_boolean)
+								a_result.put (l_boolean_value)
 							end
 						end
 					end
@@ -137,23 +138,25 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		local
-			an_arity, a_fingerprint: INTEGER
-			a_uri: STRING
-			a_parser: XM_XPATH_QNAME_PARSER
-			a_boolean: BOOLEAN
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_arity, l_fingerprint: INTEGER
+			l_uri: STRING
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_boolean: BOOLEAN
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
-			an_arity := -1
+			l_arity := -1
 			if arguments.count = 2 then
-				arguments.item (2).evaluate_item (Void)
-				if arguments.item (2).last_evaluated_item.is_error then
-					set_last_error (arguments.item (2).last_evaluated_item.error_value)
+				create l_item.make (Void)
+				arguments.item (2).evaluate_item (l_item, Void)
+				if l_item.item.is_error then
+					set_last_error (l_item.item.error_value)
 				else
 					check
-						integer: arguments.item (2).last_evaluated_item.is_machine_integer_value
+						integer: l_item.item.is_machine_integer_value
 						-- static typing
 					end
-					an_arity := arguments.item (2).last_evaluated_item.as_machine_integer_value.value.to_integer
+					l_arity := l_item.item.as_machine_integer_value.value.to_integer
 				end
 			end
 			if not is_error then
@@ -161,27 +164,27 @@ feature -- Evaluation
 					fixed_string: arguments.item (1).is_string_value
 					-- static typing and `pre_evaluate' is only called for fixed values
 				end
-				create a_parser.make (arguments.item (1).as_string_value.string_value)
-				if not a_parser.is_valid then
+				create l_parser.make (arguments.item (1).as_string_value.string_value)
+				if not l_parser.is_valid then
 					set_last_error_from_string ("First argument to 'function-available' is not a lexical QName",
 														 Xpath_errors_uri, "XTDE1400", Static_error)
 				else
-					if not a_parser.is_prefix_present then
-						a_uri := Xpath_standard_functions_uri
-					elseif a_context.is_prefix_declared (a_parser.optional_prefix) then
-						a_uri := a_context.uri_for_prefix (a_parser.optional_prefix)
+					if not l_parser.is_prefix_present then
+						l_uri := Xpath_standard_functions_uri
+					elseif a_context.is_prefix_declared (l_parser.optional_prefix) then
+						l_uri := a_context.uri_for_prefix (l_parser.optional_prefix)
 					else
 						set_last_error_from_string ("Prefix in first argument to 'function-available' is not bound to an in-scope namespace",
 															 Xpath_errors_uri, "XTDE1400", Static_error)
 					end
 					if not is_error then
-						if not shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
-							shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
+						if not shared_name_pool.is_name_code_allocated (l_parser.optional_prefix, l_uri, l_parser.local_name) then
+							shared_name_pool.allocate_name (l_parser.optional_prefix, l_uri, l_parser.local_name)
 						end
-						a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
-						a_boolean := a_context.available_functions.is_function_available (a_fingerprint, an_arity, a_context.is_restricted)
-						create a_boolean_value.make (a_boolean)
-						set_replacement (a_boolean_value)
+						l_fingerprint := shared_name_pool.fingerprint (l_uri, l_parser.local_name)
+						l_boolean := a_context.available_functions.is_function_available (l_fingerprint, l_arity, a_context.is_restricted)
+						create l_boolean_value.make (l_boolean)
+						set_replacement (l_boolean_value)
 					end
 				end
 			end

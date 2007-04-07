@@ -64,14 +64,12 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		do
 			arguments.item (1).evaluate_as_string (a_context)
-			if arguments.item (1).last_evaluated_string.is_error then
-				last_evaluated_item := arguments.item (1).last_evaluated_string
-			else
-				evaluate_qname (arguments.item (1).last_evaluated_string.string_value)
+			if not a_result.item.is_error then
+				evaluate_qname (a_result, arguments.item (1).last_evaluated_string.string_value)
 			end
 		end
 	
@@ -94,25 +92,27 @@ feature {NONE} -- Implementation
 	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
 			-- Saved namespace context from static context
 	
-	evaluate_qname (a_qname: STRING) is
+	evaluate_qname (a_result: DS_CELL [XM_XPATH_ITEM]; a_qname: STRING) is
 			-- Evaluate if `a_qname' represents an available type
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			a_qname_not_void: a_qname /= Void
 			namespace_resolver_not_void: namespace_resolver /= Void
 		local
 			l_fingerprint: INTEGER
 		do
 			if not is_qname (a_qname) then
-				create {XM_XPATH_INVALID_VALUE} last_evaluated_item.make_from_string ("Argument is not a lexical QNAME", Xpath_errors_uri, "XTDE1428", Dynamic_error)
+				a_result.put (create {XM_XPATH_INVALID_VALUE}.make_from_string ("Argument is not a lexical QNAME", Xpath_errors_uri, "XTDE1428", Dynamic_error))
 			else
 				l_fingerprint := namespace_resolver.fingerprint (a_qname, true)
 				if l_fingerprint = -2 then
-					create {XM_XPATH_INVALID_VALUE} last_evaluated_item.make_from_string ("There is no namespace in scope for argument's prefix", Xpath_errors_uri, "XTDE1428", Dynamic_error)
+					a_result.put (create {XM_XPATH_INVALID_VALUE}.make_from_string ("There is no namespace in scope for argument's prefix", Xpath_errors_uri, "XTDE1428", Dynamic_error))
 				elseif l_fingerprint = -1 then
-					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 				else
 					-- TODO: will need to be changed for user-defined types in schema-aware version
-					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (type_factory.is_built_in_fingerprint (l_fingerprint) and then type_factory.schema_type (l_fingerprint) /= Void)
+					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (type_factory.is_built_in_fingerprint (l_fingerprint) and then type_factory.schema_type (l_fingerprint) /= Void))
 				end
 			end
 		end

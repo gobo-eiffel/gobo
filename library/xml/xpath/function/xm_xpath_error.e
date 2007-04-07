@@ -77,65 +77,66 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			a_namespace_uri, an_error_code, a_description: STRING
-			an_item: XM_XPATH_ITEM
-			a_qname: XM_XPATH_QNAME_VALUE
-			an_error_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_error_value: XM_XPATH_ERROR_VALUE
+			l_namespace_uri, l_error_code, l_description: STRING
+			l_qname: XM_XPATH_QNAME_VALUE
+			l_item: XM_XPATH_ITEM
+			l_error_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_error_value: XM_XPATH_ERROR_VALUE
 		do
-			a_namespace_uri := Xpath_errors_uri
-			an_error_code := "FOER0000"
-			a_description := ""
+			l_namespace_uri := Xpath_errors_uri
+			l_error_code := "FOER0000"
+			l_description := ""
 			if arguments.count > 0 then
-				arguments.item (1).evaluate_item (a_context)
-				an_item := arguments.item (1).last_evaluated_item
-				if an_item = Void then
+				arguments.item (1).evaluate_item (a_result, a_context)
+				l_item := a_result.item 
+				if l_item = Void then
 					if arguments.count = 1 then
-						a_description := "Error evaluating fn:error()! :-)"
+						l_description := "Error evaluating fn:error()! :-)"
 					end
-				elseif an_item.is_error then
-					a_namespace_uri := an_item.error_value.namespace_uri
-					an_error_code := an_item.error_value.code
-					a_description := an_item.error_value.description
-					an_error_sequence := an_item.error_value.value
+				elseif l_item.is_error then
+					l_namespace_uri := l_item.error_value.namespace_uri
+					l_error_code := l_item.error_value.code
+					l_description := l_item.error_value.description
+					l_error_sequence := l_item.error_value.value
 				else
 					check
-						qname: an_item.is_qname_value
+						qname: l_item.is_qname_value
 						-- static typing
 					end
-					a_qname := an_item.as_qname_value
-					a_namespace_uri := a_qname.namespace_uri
-					an_error_code := a_qname.local_name
+					l_qname := l_item.as_qname_value
+					l_namespace_uri := l_qname.namespace_uri
+					l_error_code := l_qname.local_name
 				end
 			end
 			if arguments.count > 1 then
-				arguments.item (2).evaluate_item (a_context)
-				an_item := arguments.item (2).last_evaluated_item
-				if an_item.is_error then
-					a_namespace_uri := an_item.error_value.namespace_uri
-					an_error_code := an_item.error_value.code
-					a_description := an_item.error_value.description
-					an_error_sequence := an_item.error_value.value
+				a_result.put (Void)
+				arguments.item (2).evaluate_item (a_result, a_context)
+				l_item := a_result.item
+				if l_item.is_error then
+					l_namespace_uri := l_item.error_value.namespace_uri
+					l_error_code := l_item.error_value.code
+					l_description := l_item.error_value.description
+					l_error_sequence := l_item.error_value.value
 				else
 					check
-						description: an_item.is_string_value
+						description: l_item.is_string_value
 						-- static typing
 					end
-					a_description := an_item.as_string_value.string_value
+					l_description := l_item.as_string_value.string_value
 				end
 			end
 			if arguments.count = 3 then
 				arguments.item (3).create_iterator (a_context)
-				an_error_sequence := arguments.item (3).last_iterator
+				l_error_sequence := arguments.item (3).last_iterator
 			end
-			create an_error_value.make (a_description, a_namespace_uri, an_error_code, an_error_sequence, Dynamic_error)
-			an_error_value.set_location (system_id, line_number)
-			create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_error_value)
+			create l_error_value.make (l_description, l_namespace_uri, l_error_code, l_error_sequence, Dynamic_error)
+			l_error_value.set_location (system_id, line_number)
+			a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 		ensure then
-			invalid_item: last_evaluated_item.is_error
+			invalid_item: a_result.item.is_error
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -147,9 +148,12 @@ feature -- Evaluation
 	
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence.
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			evaluate_item (a_context)
-			create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (last_evaluated_item.error_value)
+			create l_result.make (Void)
+			evaluate_item (l_result, a_context)
+			create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_result.item.error_value)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

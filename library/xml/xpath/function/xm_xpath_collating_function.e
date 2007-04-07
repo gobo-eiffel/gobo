@@ -26,26 +26,28 @@ feature -- Access
 	default_collation_name: STRING
 			-- Default_collation_name
 
-	collator (an_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT; use_default_collator: BOOLEAN): ST_COLLATOR is
+	collator (a_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT; use_default_collator: BOOLEAN): ST_COLLATOR is
 			-- Collator to be used
 		require
 			context_not_void: a_context /= Void
 			default_collation_name_not_void: default_collation_name /= Void
 		local
-			an_item: XM_XPATH_ITEM
-			a_collation_name: STRING
+			l_item: XM_XPATH_ITEM
+			l_collation_name: STRING
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			if arguments.count >= an_argument_number then
-				arguments.item (an_argument_number).evaluate_item (a_context)
-				an_item := arguments.item (an_argument_number).last_evaluated_item
+			if arguments.count >= a_argument_number then
+				create l_result.make (Void)
+				arguments.item (a_argument_number).evaluate_item (l_result, a_context)
+				l_item := l_result.item
 				check
-					atomic_value: an_item.is_atomic_value
-					string_value: an_item.as_atomic_value.primitive_value.is_string_value
+					atomic_value: l_item.is_atomic_value
+					string_value: l_item.as_atomic_value.primitive_value.is_string_value
 					-- it's statically typed as a string
 				end
-				a_collation_name := an_item.as_atomic_value.primitive_value.as_string_value.string_value
-				if a_context.is_known_collation (a_collation_name) then
-					Result := a_context.collator (a_collation_name)
+				l_collation_name := l_item.as_atomic_value.primitive_value.as_string_value.string_value
+				if a_context.is_known_collation (l_collation_name) then
+					Result := a_context.collator (l_collation_name)
 					-- otherwise `Result' = `Void' and a FOCH0002 error will be reported by the caller 
 				end
 			elseif use_default_collator then
@@ -60,7 +62,7 @@ feature -- Access
 			Maybe_unsupported_collation: True
 		end
 
-	atomic_comparer (an_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT): XM_XPATH_ATOMIC_COMPARER is
+	atomic_comparer (a_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT): XM_XPATH_ATOMIC_COMPARER is
 			-- Atomic comparer to be used
 		require
 			context_not_void: a_context /= Void
@@ -68,7 +70,7 @@ feature -- Access
 		local
 			a_collator: ST_COLLATOR
 		do
-			a_collator := collator (an_argument_number, a_context, True)
+			a_collator := collator (a_argument_number, a_context, True)
 			if a_collator /= Void then
 				create Result.make (a_collator)
 				Result.set_dynamic_context (a_context)
@@ -77,7 +79,7 @@ feature -- Access
 			Maybe_unsupported_collation: True
 		end
 
-	atomic_sort_comparer (an_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT): XM_XPATH_ATOMIC_SORT_COMPARER is
+	atomic_sort_comparer (a_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT): XM_XPATH_ATOMIC_SORT_COMPARER is
 			-- Atomic sort comparer to be used
 		require
 			context_not_void: a_context /= Void
@@ -85,7 +87,7 @@ feature -- Access
 		local
 			a_collator: ST_COLLATOR
 		do
-			a_collator := collator (an_argument_number, a_context, True)
+			a_collator := collator (a_argument_number, a_context, True)
 			if a_collator /= Void then
 				create Result.make (a_collator)
 				Result.set_dynamic_context (a_context)

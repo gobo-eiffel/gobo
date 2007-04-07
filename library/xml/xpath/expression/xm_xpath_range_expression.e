@@ -168,27 +168,32 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			l_integer_value, l_other_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE 
+			l_integer_value, l_other_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
+			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_item: XM_XPATH_ITEM
 		do
-			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (first_operand.last_evaluated_item.error_value)
+			create l_result.make (Void)
+			first_operand.evaluate_item (l_result, a_context)
+			if l_result.item.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
 			else
-				if not (first_operand.last_evaluated_item.is_machine_integer_value or first_operand.last_evaluated_item.is_integer_value) then
+				if not (l_result.item.is_machine_integer_value or l_result.item.is_integer_value) then
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 				else
-					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (second_operand.last_evaluated_item.error_value)
+					l_item := l_result.item
+					create l_result.make (Void)
+					second_operand.evaluate_item (l_result, a_context)
+					if l_result.item /= Void and then l_result.item.is_error then
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
 					else
-						if not (second_operand.last_evaluated_item.is_machine_integer_value or second_operand.last_evaluated_item.is_integer_value) then
+						if not (l_result.item.is_machine_integer_value or l_result.item.is_integer_value) then
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						else
-							if first_operand.last_evaluated_item.is_machine_integer_value and second_operand.last_evaluated_item.is_machine_integer_value
-								and first_operand.last_evaluated_item.as_machine_integer_value.is_platform_integer
-								and second_operand.last_evaluated_item.as_machine_integer_value.is_platform_integer then
-								l_integer_value := first_operand.last_evaluated_item.as_machine_integer_value
-								l_other_integer_value := second_operand.last_evaluated_item.as_machine_integer_value
+							if l_item.is_machine_integer_value and l_result.item.is_machine_integer_value
+								and l_item.as_machine_integer_value.is_platform_integer
+								and l_result.item.as_machine_integer_value.is_platform_integer then
+								l_integer_value := l_item.as_machine_integer_value
+								l_other_integer_value := l_result.item.as_machine_integer_value
 								if l_integer_value.value > l_other_integer_value.value then
 									create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 								else

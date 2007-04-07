@@ -74,19 +74,19 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			an_error: XM_XPATH_ERROR_VALUE
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_error: XM_XPATH_ERROR_VALUE
 		do
-			an_evaluation_context ?= a_context
+			l_evaluation_context ?= a_context
 			check
-				evaluation_context: an_evaluation_context /= Void
+				evaluation_context: l_evaluation_context /= Void
 				-- as this is an XSLT function
 			end
-			create an_error.make_from_string ("Current().should not be called at runtime, as it should have been promoted", Gexslt_eiffel_type_uri,  "CURRENT_PROMOTION", Dynamic_error)
-			an_evaluation_context.transformer.report_fatal_error (an_error)
+			create l_error.make_from_string ("Current().should not be called at runtime, as it should have been promoted", Gexslt_eiffel_type_uri,  "CURRENT_PROMOTION", Dynamic_error)
+			l_evaluation_context.transformer.report_fatal_error (l_error)
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is

@@ -79,61 +79,66 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item;
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
 			l_atomic_value, l_second_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
-			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item = Void then
-				create {XM_XPATH_DOUBLE_VALUE} last_evaluated_item.make_nan
-			elseif first_operand.last_evaluated_item.is_error then
-				last_evaluated_item := first_operand.last_evaluated_item
+			first_operand.evaluate_item (a_result, a_context)
+			if a_result.item = Void then
+				a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
+			elseif a_result.item.is_error then
+				-- nothing to do
 			else
-				if not first_operand.last_evaluated_item.is_atomic_value then
-					create {XM_XPATH_DOUBLE_VALUE} last_evaluated_item.make_nan
+				if not a_result.item.is_atomic_value then
+					a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 				else
-					l_atomic_value := first_operand.last_evaluated_item.as_atomic_value
+					l_atomic_value := a_result.item.as_atomic_value
+					a_result.put (Void)
 					if l_atomic_value.is_boolean_value or l_atomic_value.is_string_value or l_atomic_value.is_numeric_value then
 						if l_atomic_value.is_convertible (type_factory.double_type) then
 							l_atomic_value := l_atomic_value.convert_to_type (type_factory.double_type)
 						else
-							create {XM_XPATH_DOUBLE_VALUE} last_evaluated_item.make_nan
+							a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 						end
 					end
 				end
-				if last_evaluated_item = Void then -- no error yet
-					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item = Void then
-						create {XM_XPATH_DOUBLE_VALUE} last_evaluated_item.make_nan
-					elseif second_operand.last_evaluated_item.is_error then
-						last_evaluated_item := second_operand.last_evaluated_item
+				if a_result.item = Void then -- no error yet
+					second_operand.evaluate_item (a_result, a_context)
+					if a_result.item = Void then
+						a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
+					elseif a_result.item.is_error then
+						-- nothing to do
 					else
-						if not second_operand.last_evaluated_item.is_atomic_value then
-							create {XM_XPATH_DOUBLE_VALUE} last_evaluated_item.make_nan
+						if not a_result.item.is_atomic_value then
+							a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 						else
-							l_second_atomic_value := second_operand.last_evaluated_item.as_atomic_value
+							a_result.put (Void)
+							l_second_atomic_value := a_result.item.as_atomic_value
 							if l_second_atomic_value.is_boolean_value or l_second_atomic_value.is_string_value or l_second_atomic_value.is_numeric_value then
 								if l_second_atomic_value.is_convertible (type_factory.double_type) then
 									l_second_atomic_value := l_second_atomic_value.convert_to_type (type_factory.double_type)
 								else
-									create {XM_XPATH_DOUBLE_VALUE} last_evaluated_item.make_nan
+									a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 								end
 							end
 						end
 					end
 				end
-				if last_evaluated_item = Void then -- no error yet
-					evaluate_item_stage_2 (a_context, l_atomic_value, l_second_atomic_value)
+				if a_result.item = Void then -- no error yet
+					evaluate_item_stage_2 (a_result, a_context, l_atomic_value, l_second_atomic_value)
 				end
 			end
 		end
 
 feature {NONE} -- Evaluation
 
-	evaluate_item_stage_2 (a_context: XM_XPATH_CONTEXT; a_first_operand, a_second_operand: XM_XPATH_ATOMIC_VALUE) is
+	evaluate_item_stage_2 (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT; a_first_operand, a_second_operand: XM_XPATH_ATOMIC_VALUE) is
 			-- Evaluate `Current' as a single item.
+		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 		local
 			l_action: INTEGER
 			l_numeric_arithmetic: XM_XPATH_NUMERIC_ARITHMETIC
@@ -146,35 +151,29 @@ feature {NONE} -- Evaluation
 			when Numeric_arithmetic_action then
 				create l_numeric_arithmetic.make (first_operand, operator, second_operand)
 				l_numeric_arithmetic.set_backwards_compatible_mode
-				l_numeric_arithmetic.evaluate_item (a_context)
-				last_evaluated_item := l_expression.last_evaluated_item
+				l_numeric_arithmetic.evaluate_item (a_result, a_context)
 			when Duration_addition_action then
 				create {XM_XPATH_DURATION_ADDITION} l_expression.make (a_first_operand, operator, a_second_operand)
-				l_expression.evaluate_item (a_context)
-				last_evaluated_item := l_expression.last_evaluated_item
+				l_expression.evaluate_item (a_result, a_context)
 			when Duration_multiplication_action then
 				create {XM_XPATH_DURATION_MULTIPLICATION} l_expression.make (a_first_operand, operator, a_second_operand)
-				l_expression.evaluate_item (a_context)
-				last_evaluated_item := l_expression.last_evaluated_item
+				l_expression.evaluate_item (a_result, a_context)
 			when Duration_division_action then
 				create {XM_XPATH_DURATION_DIVISION} l_expression.make (a_first_operand, operator, a_second_operand)
-				l_expression.evaluate_item (a_context)
-				last_evaluated_item := l_expression.last_evaluated_item
+				l_expression.evaluate_item (a_result, a_context)
 			when Date_and_duration_action then
 				create {XM_XPATH_DATE_AND_DURATION} l_expression.make (a_first_operand, operator, a_second_operand)
-				l_expression.evaluate_item (a_context)
-				last_evaluated_item := l_expression.last_evaluated_item
+				l_expression.evaluate_item (a_result, a_context)
 			when Date_difference_action then
 				create {XM_XPATH_DATE_DIFFERENCE} l_expression.make (a_first_operand, operator, a_second_operand)
-				l_expression.evaluate_item (a_context)
-				last_evaluated_item := l_expression.last_evaluated_item
+				l_expression.evaluate_item (a_result, a_context)
 			else
 				l_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", a_first_operand.item_type.conventional_name)
 				l_string := STRING_.appended_string (l_string, ", ")
 				l_string := STRING_.appended_string (l_string, a_second_operand.item_type.conventional_name)
 				l_string := STRING_.appended_string (l_string,  ")")
 				set_last_error_from_string (l_string, Xpath_errors_uri, "XPTY0004", Type_error)
-				create {XM_XPATH_INVALID_VALUE} last_evaluated_item.make (error_value)
+				a_result.put (create {XM_XPATH_INVALID_VALUE}.make (error_value))
 			end
 		end
 

@@ -120,29 +120,28 @@ feature -- Optimization
 
 feature -- Evaluation
 	
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
 		local
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			a_trace_listener: XM_XSLT_TRACE_LISTENER
-			is_tracing: BOOLEAN
-			a_transformer: XM_XSLT_TRANSFORMER
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_trace_listener: XM_XSLT_TRACE_LISTENER
+			l_is_tracing: BOOLEAN
+			l_transformer: XM_XSLT_TRANSFORMER
 		do
-			an_evaluation_context ?= a_context
+			l_evaluation_context ?= a_context
 			check
-				evaluation_context: an_evaluation_context /= Void
+				evaluation_context: l_evaluation_context /= Void
 				-- This is XSLT
 			end
-			a_transformer := an_evaluation_context.transformer
-			is_tracing := a_transformer.is_tracing
-			if is_tracing then
-				a_trace_listener := a_transformer.trace_listener
-				a_trace_listener.trace_instruction_entry (trace_details)
+			l_transformer := l_evaluation_context.transformer
+			l_is_tracing := l_transformer.is_tracing
+			if l_is_tracing then
+				l_trace_listener := l_transformer.trace_listener
+				l_trace_listener.trace_instruction_entry (trace_details)
 			end
-			child.evaluate_item (a_context)
-			last_evaluated_item := child.last_evaluated_item
-			if is_tracing then
-				a_trace_listener.trace_instruction_exit (trace_details)
+			child.evaluate_item (a_result, a_context)
+			if l_is_tracing then
+				l_trace_listener.trace_instruction_exit (trace_details)
 			end
 		end
 

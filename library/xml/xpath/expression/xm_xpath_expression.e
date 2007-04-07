@@ -1377,9 +1377,6 @@ feature -- Status report
 	last_evaluation: XM_XPATH_VALUE
 			-- Value from last call to `eagerly_evaluate' or `lazily_evaluate'
 
-	last_evaluated_item: XM_XPATH_ITEM
-			-- Value from last call to `evaluate_item'
-
 	last_evaluated_string: XM_XPATH_STRING_VALUE
 			-- Value from last call to `evaluate_as_string'
 
@@ -1724,14 +1721,15 @@ feature -- Evaluation
 			value_not_void_but_may_be_in_error: last_boolean_value /= Void
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item.
-			-- This always sets `last_evaluated_item' to either a single Item or Void (denoting the empty sequence). No conversion is done.
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item to `a_result'.
+			-- This always sets `a_result.item' to either a single Item or Void (denoting the empty sequence). No conversion is done.
 			-- This routine should not be used unless the static type of the expression is a subtype of "item" or "item?":
 			--  that is, it should not be called if the expression may return a sequence.
-			-- There is no guarantee that this condition will be detected.
-			-- If an error condition is detected, this routine MUST set `last_evaluated_item' to an item marked in error.
+			-- If an error condition is detected, this routine MUST set `a_result.item' to an item marked in error.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
 			context_may_be_void: True
 			expression_not_in_error: not is_error
 			not_replaced: not was_expression_replaced
@@ -1801,32 +1799,33 @@ feature -- Evaluation
 			context_may_be_void: True
 			not_replaced: not was_expression_replaced
 		local
-			a_length: INTEGER
-			an_item: XM_XPATH_ITEM
-			a_binding: XM_XPATH_VALUE
-			a_closure: XM_XPATH_CLOSURE
-			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
-			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
+			l_length: INTEGER
+			l_item: XM_XPATH_ITEM
+			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_binding: XM_XPATH_VALUE
+			l_closure: XM_XPATH_CLOSURE
+			l_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			l_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 		do
 			last_evaluation := Void
 			if is_value and then not is_closure then
 				last_evaluation := as_value
 			else
 				if is_variable_reference then
-					a_variable_reference := as_variable_reference
-					a_variable_reference.evaluate_variable (a_context)
-					a_binding := a_variable_reference.last_evaluated_binding
-					if a_binding.is_closure then
-						a_closure := a_binding.as_closure
-						a_closure.create_iterator (Void)
-						if a_closure.last_iterator.is_error then
-							create {XM_XPATH_INVALID_VALUE} last_evaluation.make (a_closure.last_iterator.error_value)
+					l_variable_reference := as_variable_reference
+					l_variable_reference.evaluate_variable (a_context)
+					l_binding := l_variable_reference.last_evaluated_binding
+					if l_binding.is_closure then
+						l_closure := l_binding.as_closure
+						l_closure.create_iterator (Void)
+						if l_closure.last_iterator.is_error then
+							create {XM_XPATH_INVALID_VALUE} last_evaluation.make (l_closure.last_iterator.error_value)
 						else
-							expression_factory.create_sequence_extent (a_closure.last_iterator)
+							expression_factory.create_sequence_extent (l_closure.last_iterator)
 							last_evaluation := expression_factory.last_created_closure
 						end
 					else
-						last_evaluation := a_binding
+						last_evaluation := l_binding
 					end
 				end
 				if last_evaluation = Void then
@@ -1836,32 +1835,32 @@ feature -- Evaluation
 							if last_iterator.is_empty_iterator then
 								create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 							elseif last_iterator.is_singleton_iterator then
-								a_singleton_iterator := last_iterator.as_singleton_iterator
-								a_singleton_iterator.start
-								if a_singleton_iterator.is_error then
-									create {XM_XPATH_INVALID_VALUE} last_evaluation.make (a_singleton_iterator.error_value)
+								l_singleton_iterator := last_iterator.as_singleton_iterator
+								l_singleton_iterator.start
+								if l_singleton_iterator.is_error then
+									create {XM_XPATH_INVALID_VALUE} last_evaluation.make (l_singleton_iterator.error_value)
 								else
-									if not a_singleton_iterator.off then an_item := a_singleton_iterator.item end
-									if an_item = Void then
+									if not l_singleton_iterator.off then l_item := l_singleton_iterator.item end
+									if l_item = Void then
 										create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
-									elseif an_item.is_error then
-										create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
+									elseif l_item.is_error then
+										create {XM_XPATH_INVALID_VALUE} last_evaluation.make (l_item.error_value)
 									else
-										last_evaluation := an_item.as_item_value -- May still be `Void'
+										last_evaluation := l_item.as_item_value -- May still be `Void'
 									end
 								end
 							else
 								expression_factory.create_sequence_extent (last_iterator)
 								last_evaluation := expression_factory.last_created_closure								
-								a_length := last_evaluation.count
-								if a_length = 0 then
+								l_length := last_evaluation.count
+								if l_length = 0 then
 									create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
-								elseif a_length = 1 then
-									an_item := last_evaluation.item_at (1)
-									if an_item.is_error then
-										create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
+								elseif l_length = 1 then
+									l_item := last_evaluation.item_at (1)
+									if l_item.is_error then
+										create {XM_XPATH_INVALID_VALUE} last_evaluation.make (l_item.error_value)
 									else
-										last_evaluation := an_item.as_item_value
+										last_evaluation := l_item.as_item_value
 									end
 								end
 							end
@@ -1869,12 +1868,13 @@ feature -- Evaluation
 							create {XM_XPATH_INVALID_VALUE} last_evaluation.make (last_iterator.error_value)
 						end
 					elseif is_evaluate_item_supported then
-						evaluate_item (a_context)
-						if last_evaluated_item /= Void then
-							if last_evaluated_item.is_error then
-								create {XM_XPATH_INVALID_VALUE} last_evaluation.make (last_evaluated_item.error_value)
+						create l_result.make (Void)
+						evaluate_item (l_result, a_context)
+						if l_result.item /= Void then
+							if l_result.item.is_error then
+								create {XM_XPATH_INVALID_VALUE} last_evaluation.make (l_result.item.error_value)
 							else
-								last_evaluation := last_evaluated_item.as_item_value
+								last_evaluation := l_result.item.as_item_value
 							end
 						end
 					else
