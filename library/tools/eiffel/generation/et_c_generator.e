@@ -6530,12 +6530,15 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					else
 						l_unique_attribute ?= l_query
 						if l_unique_attribute /= Void then
--- TODO: compute the values of the unique features.
 							l_printed := True
 							print_type_cast (current_system.integer_type, current_file)
 							current_file.put_character ('(')
-							unique_count := unique_count + 1
-							current_file.put_integer (unique_count)
+								-- In the current implementation unique values is based on
+								-- the id of the implementation feature (the feature in the
+								-- class where this unique attribute has been written). For
+								-- synonyms the fetaure id is in the reverse order, hence the
+								-- arithmetic below.
+							current_file.put_integer (universe.feature_count - l_unique_attribute.implementation_feature.id + 1)
 							current_file.put_character (')')
 						end
 					end
@@ -7273,11 +7276,14 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 						print_expression (l_constant_attribute.constant)
 					end
 				elseif l_query.is_unique_attribute then
--- TODO.
 					print_type_cast (current_system.integer_type, current_file)
 					current_file.put_character ('(')
-					unique_count := unique_count + 1
-					current_file.put_integer (unique_count)
+						-- In the current implementation unique values is based on
+						-- the id of the implementation feature (the feature in the
+						-- class where this unique attribute has been written). For
+						-- synonyms the fetaure id is in the reverse order, hence the
+						-- arithmetic below.
+					current_file.put_integer (universe.feature_count - l_query.implementation_feature.id + 1)
 					current_file.put_character (')')
 				else
 					l_dynamic_feature := l_target_type.dynamic_query (l_query, current_system)
@@ -18334,9 +18340,6 @@ feature {NONE} -- Access
 
 	constant_features: DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE]
 			-- Features returning a constant
-
-	unique_count: INTEGER
-			-- Number of unique attributes found so far
 
 	operand_stack: DS_ARRAYED_STACK [ET_EXPRESSION]
 			-- Operand stack
