@@ -268,7 +268,7 @@ feature {NONE} -- Compilation script generation
 			create l_variables.make_map (10)
 			l_variables.set_key_equality_tester (string_equality_tester)
 			create l_regexp.make
-			l_regexp.compile ("\$\(([^}]+\)")
+			l_regexp.compile ("\$\(([^)]+)\)")
 			create l_includes.make (256)
 			l_external_include_pathnames := universe.external_include_pathnames
 			nb := l_external_include_pathnames.count
@@ -281,9 +281,8 @@ feature {NONE} -- Compilation script generation
 				if i /= 1 then
 					l_includes.append_character (' ')
 				end
-				l_includes.append_string ("-I%"")
+				l_includes.append_string ("-I")
 				l_includes.append_string (l_pathname)
-				l_includes.append_character ('%"')
 				i := i + 1
 			end
 			l_variables.force (l_includes, "includes")
@@ -299,9 +298,7 @@ feature {NONE} -- Compilation script generation
 				if i /= 1 then
 					l_libs.append_character (' ')
 				end
-				l_libs.append_character ('%"')
 				l_libs.append_string (l_pathname)
-				l_libs.append_character ('%"')
 				i := i + 1
 			end
 			l_variables.force (l_libs, "libs")
@@ -347,9 +344,7 @@ feature {NONE} -- Compilation script generation
 				l_replacement.append_string ("${\1\}")
 				l_pathname := Execution_environment.interpreted_string (l_regexp.replace_all (l_replacement))
 				l_obj_filenames.append_character (' ')
-				l_obj_filenames.append_character ('%"')
 				l_obj_filenames.append_string (l_pathname)
-				l_obj_filenames.append_character ('%"')
 				i := i + 1
 			end
 			l_variables.force (l_c_filenames, "c")
