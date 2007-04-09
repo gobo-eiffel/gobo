@@ -6,7 +6,7 @@ indexing
 		"Lace parsers"
   
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,7 @@ create
 %type <ET_LACE_CLUSTER> Cluster Nested_cluster Recursive_cluster Subcluster Qualified_subcluster
 %type <ET_LACE_CLUSTERS> Cluster_list Clusters_opt Subclusters_opt Subcluster_list
 %type <ET_LACE_EXCLUDE> Excludes Exclude_list Cluster_options_opt
-%type <ET_IDENTIFIER> Identifier Root_cluster_opt Creation_procedure_opt Prefix_opt
+%type <ET_IDENTIFIER> Identifier Root_cluster_opt Creation_procedure_opt Prefix_opt External_items
 %type <ET_LACE_DOTNET_ASSEMBLY> Assembly
 %type <ET_LACE_DOTNET_ASSEMBLIES> Assembly_list Assemblies_opt
 
@@ -331,13 +331,21 @@ External_list: External External_terminator
 	| External External_separator External_list
 	;
 
-External: Identifier ':' External_items
+External: External_items
 	| Identifier '(' Identifier ')'
 	| Identifier '(' L_ALL ')'
 	;
 
-External_items: Identifier
+External_items: Identifier ':' Identifier
+		{
+			add_external_value ($1, $3)
+			$$ := $1
+		}
 	| External_items ',' Identifier
+		{
+			add_external_value ($1, $3)
+			$$ := $1
+		}
 	;
 
 External_terminator: -- Empty

@@ -254,13 +254,57 @@ feature {NONE} -- Compilation script generation
 			l_base_name: STRING
 			i, nb: INTEGER
 			l_c, l_cpp, l_obj: STRING
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_replacement: STRING
+			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
+			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
+			l_external_object_pathnames: DS_ARRAYED_LIST [STRING]
+			l_includes: STRING
+			l_libs: STRING
+			l_pathname: STRING
 		do
 			l_base_name := a_system_name
 			l_c_config := c_config
 			create l_variables.make_map (10)
 			l_variables.set_key_equality_tester (string_equality_tester)
-			l_variables.force ("", "includes")
-			l_variables.force ("", "libs")
+			create l_regexp.make
+			l_regexp.compile ("\$\(([^}]+\)")
+			create l_includes.make (256)
+			l_external_include_pathnames := universe.external_include_pathnames
+			nb := l_external_include_pathnames.count
+			from i := 1 until i > nb loop
+				l_pathname := l_external_include_pathnames.item (i)
+				l_regexp.match (l_pathname)
+				l_replacement := STRING_.new_empty_string (l_pathname, 6)
+				l_replacement.append_string ("${\1\}")
+				l_pathname := Execution_environment.interpreted_string (l_regexp.replace_all (l_replacement))
+				if i /= 1 then
+					l_includes.append_character (' ')
+				end
+				l_includes.append_string ("-I%"")
+				l_includes.append_string (l_pathname)
+				l_includes.append_character ('%"')
+				i := i + 1
+			end
+			l_variables.force (l_includes, "includes")
+			create l_libs.make (256)
+			l_external_library_pathnames := universe.external_library_pathnames
+			nb := l_external_library_pathnames.count
+			from i := 1 until i > nb loop
+				l_pathname := l_external_library_pathnames.item (i)
+				l_regexp.match (l_pathname)
+				l_replacement := STRING_.new_empty_string (l_pathname, 6)
+				l_replacement.append_string ("${\1\}")
+				l_pathname := Execution_environment.interpreted_string (l_regexp.replace_all (l_replacement))
+				if i /= 1 then
+					l_libs.append_character (' ')
+				end
+				l_libs.append_character ('%"')
+				l_libs.append_string (l_pathname)
+				l_libs.append_character ('%"')
+				i := i + 1
+			end
+			l_variables.force (l_libs, "libs")
 			l_variables.force (l_base_name + l_c_config.item ("exe"), "exe")
 			create l_c_filenames.make (100)
 			create l_cpp_filenames.make (100)
@@ -292,6 +336,20 @@ feature {NONE} -- Compilation script generation
 				l_cpp_filenames.append_string (l_cpp)
 				l_obj_filenames.append_string (l_filename)
 				l_obj_filenames.append_string (l_obj)
+				i := i + 1
+			end
+			l_external_object_pathnames := universe.external_object_pathnames
+			nb := l_external_object_pathnames.count
+			from i := 1 until i > nb loop
+				l_pathname := l_external_object_pathnames.item (i)
+				l_regexp.match (l_pathname)
+				l_replacement := STRING_.new_empty_string (l_pathname, 6)
+				l_replacement.append_string ("${\1\}")
+				l_pathname := Execution_environment.interpreted_string (l_regexp.replace_all (l_replacement))
+				l_obj_filenames.append_character (' ')
+				l_obj_filenames.append_character ('%"')
+				l_obj_filenames.append_string (l_pathname)
+				l_obj_filenames.append_character ('%"')
 				i := i + 1
 			end
 			l_variables.force (l_c_filenames, "c")

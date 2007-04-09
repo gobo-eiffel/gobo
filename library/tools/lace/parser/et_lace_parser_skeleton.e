@@ -5,7 +5,7 @@ indexing
 		"Lace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,6 +64,8 @@ feature {NONE} -- Initialization
 			ast_factory := a_factory
 			create named_clusters.make (100)
 			create override_cluster_names.make (5)
+			create external_include_pathnames.make (20)
+			create external_object_pathnames.make (20)
 			make_lace_scanner ("unknown file", an_error_handler)
 			make_parser_skeleton
 		ensure
@@ -85,6 +87,8 @@ feature -- Parsing
 			last_universe := Void
 			override_cluster_names.wipe_out
 			named_clusters.wipe_out
+			external_include_pathnames.wipe_out
+			external_object_pathnames.wipe_out
 			yyparse
 		end
 
@@ -117,6 +121,12 @@ feature -- Default options
 
 	override_cluster_names: DS_HASH_SET [ET_IDENTIFIER]
 			-- Override cluster names, if any
+
+	external_include_pathnames: DS_ARRAYED_LIST [STRING]
+			-- External include pathnames
+
+	external_object_pathnames: DS_ARRAYED_LIST [STRING]
+			-- External object pathnames
 
 feature {NONE} -- AST factory
 
@@ -159,6 +169,32 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_clusters (a_cluster)
 		ensure
 			clusters_not_void: Result /= Void
+		end
+
+	new_default_value (a_name, a_value: ET_IDENTIFIER): ANY is
+			-- New default value;
+			-- Void if not recognized
+		require
+			a_name_not_void: a_name /= Void
+			a_value_not_void: a_value /= Void
+		do
+			if a_name.same_identifier (override_cluster_option) then
+				override_cluster_names.force_last (a_value)
+			elseif a_name.same_identifier (msil_clr_version_option) then
+				if msil_clr_version_value /= Void then
+						-- TODO: better error handling
+					report_error ("Option 'msil_clr_version' already set to '" + msil_clr_version_value.name + "'.")
+				else
+					msil_clr_version_value := a_value
+				end
+			elseif a_name.same_identifier (metadata_cache_path_option) then
+				if metadata_cache_path_value /= Void then
+						-- TODO: better error handling
+					report_error ("Option 'metadata_cache_path' already set to '" + metadata_cache_path_value.name + "'.")
+				else
+					metadata_cache_path_value := a_value
+				end
+			end
 		end
 
 	new_gac_assembly (a_name: ET_IDENTIFIER; an_assembly_name, a_version, a_culture, a_public_key_token: ET_IDENTIFIER): ET_LACE_DOTNET_GAC_ASSEMBLY is
@@ -255,33 +291,25 @@ feature {NONE} -- AST factory
 			an_error_handler := ast_factory.new_error_handler
 			a_factory := ast_factory.new_ast_factory
 			Result := ast_factory.new_universe (a_clusters, a_factory, an_error_handler)
+			Result.set_external_include_pathnames (external_include_pathnames)
+			create external_include_pathnames.make (20)
+			Result.set_external_object_pathnames (external_object_pathnames)
+			create external_object_pathnames.make (20)
 		ensure
 			universe_not_void: Result /= Void
 		end
 
-	new_default_value (a_name, a_value: ET_IDENTIFIER): ANY is
-			-- New default value;
-			-- Void if not recognized
+	add_external_value (a_name, a_value: ET_IDENTIFIER) is
+			-- Add external value.
+			-- Do nothing if not recognized.
 		require
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
 		do
-			if a_name.same_identifier (override_cluster_option) then
-				override_cluster_names.force_last (a_value)
-			elseif a_name.same_identifier (msil_clr_version_option) then
-				if msil_clr_version_value /= Void then
-						-- TODO: better error handling
-					report_error ("Option 'msil_clr_version' already set to '" + msil_clr_version_value.name + "'.")
-				else
-					msil_clr_version_value := a_value
-				end
-			elseif a_name.same_identifier (metadata_cache_path_option) then
-				if metadata_cache_path_value /= Void then
-						-- TODO: better error handling
-					report_error ("Option 'metadata_cache_path' already set to '" + metadata_cache_path_value.name + "'.")
-				else
-					metadata_cache_path_value := a_value
-				end
+			if a_name.same_identifier (include_path_option) then
+				external_include_pathnames.force_last (a_value.name)
+			elseif a_name.same_identifier (object_option) then
+				external_object_pathnames.force_last (a_value.name)
 			end
 		end
 
@@ -316,6 +344,14 @@ feature -- Error handling
 
 feature {NONE} -- Constants
 
+	include_path_option: ET_IDENTIFIER is
+			-- 'include_path' external option name
+		once
+			Result := new_identifier ("include_path")
+		ensure
+			include_path_option_not_void: Result /= Void
+		end
+
 	metadata_cache_path_option: ET_IDENTIFIER is
 			-- 'metadata_cache_path' default option name
 		once
@@ -330,6 +366,14 @@ feature {NONE} -- Constants
 			Result := new_identifier ("msil_clr_version")
 		ensure
 			msil_clr_version_option_not_void: Result /= Void
+		end
+
+	object_option: ET_IDENTIFIER is
+			-- 'object' external option name
+		once
+			Result := new_identifier ("object")
+		ensure
+			object_option_not_void: Result /= Void
 		end
 
 	override_cluster_option: ET_IDENTIFIER is
@@ -347,5 +391,9 @@ invariant
 	no_void_named_cluster: not named_clusters.has_item (Void)
 	override_cluster_names_not_void: override_cluster_names /= Void
 	no_void_override_cluster_name: not override_cluster_names.has (Void)
+	external_include_pathnames_not_void: external_include_pathnames /= Void
+	no_void_external_include_pathname: not external_include_pathnames.has (Void)
+	external_object_pathnames_not_void: external_object_pathnames /= Void
+	no_void_external_object_pathname: not external_object_pathnames.has (Void)
 
 end

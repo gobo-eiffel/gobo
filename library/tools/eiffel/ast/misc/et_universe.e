@@ -79,6 +79,9 @@ feature {NONE} -- Initialization
 			error_handler := an_error_handler
 			ast_factory := a_factory
 			set_default_keyword_usage
+			create external_include_pathnames.make (20)
+			create external_object_pathnames.make (20)
+			create external_library_pathnames.make (20)
 			make_basic_classes
 			create null_processor.make (Current)
 			provider_checker := null_processor
@@ -490,6 +493,15 @@ feature -- Access
 
 	system_name: STRING
 			-- Name of system
+
+	external_include_pathnames: DS_ARRAYED_LIST [STRING]
+			-- External include pathnames
+
+	external_object_pathnames: DS_ARRAYED_LIST [STRING]
+			-- External object pathnames
+
+	external_library_pathnames: DS_ARRAYED_LIST [STRING]
+			-- External library pathnames
 
 	classes: DS_HASH_TABLE [ET_CLASS, ET_CLASS_NAME]
 			-- Classes in universe
@@ -1373,6 +1385,39 @@ feature -- Setting
 			ast_factory := a_factory
 		ensure
 			ast_factory_set: ast_factory = a_factory
+		end
+
+	set_external_include_pathnames (a_pathnames: like external_include_pathnames) is
+			-- Set `external_include_pathnames' to `a_pathnames'.
+		require
+			a_pathnames_not_void: a_pathnames /= Void
+			no_void_pathname: not a_pathnames.has (Void)
+		do
+			external_include_pathnames := a_pathnames
+		ensure
+			external_include_pathnames_set: external_include_pathnames = a_pathnames
+		end
+
+	set_external_object_pathnames (a_pathnames: like external_object_pathnames) is
+			-- Set `external_object_pathnames' to `a_pathnames'.
+		require
+			a_pathnames_not_void: a_pathnames /= Void
+			no_void_pathname: not a_pathnames.has (Void)
+		do
+			external_object_pathnames := a_pathnames
+		ensure
+			external_object_pathnames_set: external_object_pathnames = a_pathnames
+		end
+
+	set_external_library_pathnames (a_pathnames: like external_library_pathnames) is
+			-- Set `external_library_pathnames' to `a_pathnames'.
+		require
+			a_pathnames_not_void: a_pathnames /= Void
+			no_void_pathname: not a_pathnames.has (Void)
+		do
+			external_library_pathnames := a_pathnames
+		ensure
+			external_library_pathnames_set: external_library_pathnames = a_pathnames
 		end
 
 feature -- Parser status report
@@ -3489,5 +3534,11 @@ invariant
 	natural_ref_class_id_positive: natural_ref_class_id > 0
 	real_ref_class_id_positive: real_ref_class_id > 0
 	double_ref_class_id_positive: double_ref_class_id > 0
+	external_include_pathnames_not_void: external_include_pathnames /= Void
+	no_void_external_include_pathname: not external_include_pathnames.has (Void)
+	external_object_pathnames_not_void: external_object_pathnames /= Void
+	no_void_external_object_pathname: not external_object_pathnames.has (Void)
+	external_library_pathnames_not_void: external_library_pathnames /= Void
+	no_void_external_library_pathname: not external_library_pathnames.has (Void)
 
 end

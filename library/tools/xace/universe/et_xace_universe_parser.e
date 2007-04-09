@@ -5,7 +5,7 @@ indexing
 		"Xace universe parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2007, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,9 @@ inherit
 			parse_file,
 			last_universe, new_universe
 		end
+
+	UT_STRING_ROUTINES
+		export {NONE} all end
 
 create
 
@@ -82,12 +85,42 @@ feature {NONE} -- Xace AST factory
 		local
 			an_error_handler: ET_ERROR_HANDLER
 			a_factory: ET_AST_FACTORY
+			l_externals: ET_XACE_EXTERNALS
+			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
+			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
+			l_pathname: STRING
+			l_cursor: DS_LINKED_LIST_CURSOR [STRING]
 		do
 			an_error_handler := new_eiffel_error_handler
 			a_factory := new_eiffel_ast_factory
 			create Result.make_with_factory (Void, a_factory, an_error_handler)
 			fill_system (Result, an_element, a_position_table)
 			Result.mount_libraries
+			create l_externals.make
+			Result.merge_externals (l_externals)
+			l_external_include_pathnames := Result.external_include_pathnames
+			l_cursor := l_externals.c_compiler_options.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_external_include_pathnames.force_last ("some123/fake432/path567 " + l_cursor.item)
+				l_cursor.forth
+			end
+			l_cursor := l_externals.include_directories.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_pathname := l_cursor.item
+				l_pathname := replace_all_characters (l_pathname, '{', '(')
+				l_pathname := replace_all_characters (l_pathname, '}', ')')
+				l_external_include_pathnames.force_last (l_pathname)
+				l_cursor.forth
+			end
+			l_external_library_pathnames := Result.external_library_pathnames
+			l_cursor := l_externals.link_libraries.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_pathname := l_cursor.item
+				l_pathname := replace_all_characters (l_pathname, '{', '(')
+				l_pathname := replace_all_characters (l_pathname, '}', ')')
+				l_external_library_pathnames.force_last (l_pathname)
+				l_cursor.forth
+			end
 		end
 
 feature {NONE} -- Eiffel AST factory
