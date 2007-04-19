@@ -129,9 +129,10 @@ feature {NONE} -- Initialization
 			current_class_impl := current_feature_impl.implementation_class
 			create enclosing_inline_agents.make (10)
 			create overloaded_procedures.make (10)
+			create unused_overloaded_procedures_list.make (10)
 			create overloaded_queries.make (10)
+			create unused_overloaded_queries_list.make (10)
 			create best_overloaded_features.make (10)
-			create used_contexts.make (20)
 			create unused_contexts.make (20)
 			current_context := new_context (current_type)
 			free_context (current_context)
@@ -10950,12 +10951,50 @@ feature {NONE} -- Overloading (useful in .NET)
 			l_invalid_found: BOOLEAN
 			nb_all: INTEGER
 			nb_one: INTEGER
+			l_old_overloaded_queries: DS_ARRAYED_LIST [ET_QUERY]
+			l_old_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 		do
 			has_fatal_error := False
 			l_actual_context := new_context (current_type)
 			l_any := universe.any_class
 			nb := a_features.count
 			nb_args := an_actuals.count
+			if nb_args > 0 then
+				if not overloaded_queries.is_empty then
+						-- We use `overloaded_queries' as a shared object in order to avoid
+						-- having to create such list again and again and hence putting too
+						-- much stress on the GC. Here `overloaded_queries' is already used
+						-- (i.e. it already contains some queries), but the call to
+						-- `check_expression_validity' below might end up using it again
+						-- to determine the right query if an actual argument is for example
+						-- a call expression. Therefore we need to put another unused query
+						-- list in place.
+					l_old_overloaded_queries := overloaded_queries
+					if unused_overloaded_queries_list.is_empty then
+						create overloaded_queries.make (20)
+					else
+						overloaded_queries := unused_overloaded_queries_list.last
+						unused_overloaded_queries_list.remove_last
+					end
+				end
+				if not overloaded_procedures.is_empty then
+						-- We use `overloaded_procedures' as a shared object in order to avoid
+						-- having to create such list again and again and hence putting too
+						-- much stress on the GC. Here `overloaded_procedures' is already used
+						-- (i.e. it already contains some procedures), but the call to
+						-- `check_expression_validity' below might end up using it again
+						-- to determine the right creation procedure if an actual argument is
+						-- for example a creation expression. Therefore we need to put another
+						-- unused procedure list in place.
+					l_old_overloaded_procedures := overloaded_procedures
+					if unused_overloaded_procedures_list.is_empty then
+						create overloaded_procedures.make (20)
+					else
+						overloaded_procedures := unused_overloaded_procedures_list.last
+						unused_overloaded_procedures_list.remove_last
+					end
+				end
+			end
 			from j := 1 until j > nb_args loop
 				l_actual := an_actuals.actual_argument (j)
 				check_expression_validity (l_actual, l_actual_context, l_any)
@@ -11098,6 +11137,14 @@ feature {NONE} -- Overloading (useful in .NET)
 				j := j + 1
 			end
 			free_context (l_actual_context)
+			if l_old_overloaded_queries /= Void then
+				unused_overloaded_queries_list.force_last (overloaded_queries)
+				overloaded_queries := l_old_overloaded_queries
+			end
+			if l_old_overloaded_procedures /= Void then
+				unused_overloaded_procedures_list.force_last (overloaded_procedures)
+				overloaded_procedures := l_old_overloaded_procedures
+			end
 			if had_error then
 				set_fatal_error
 				a_features.wipe_out
@@ -11117,14 +11164,51 @@ feature {NONE} -- Overloading (useful in .NET)
 	overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 			-- List of overloaded procedures for a given name
 			-- (useful in .NET)
+			-- (`overloaded_procedures' is created once and for all and then used and
+			-- reused by which ever feature which need it. This avoid putting too
+			-- much stress on the GC by creating a new object each time we need one.
+			-- However it is possible that two different feature calls try to use
+			-- `overloaded_procedures' at the same time. In that case we pick another
+			-- one in the pool of unused lists `unused_overloaded_procedures_list'.)
+
+	unused_overloaded_procedures_list: DS_ARRAYED_LIST [DS_ARRAYED_LIST [ET_PROCEDURE]]
+			-- List of not currently used lists of overloaded procedures for a given name
+			-- (useful in .NET)
+			-- (`overloaded_procedures' is created once and for all and then used and
+			-- reused by which ever feature which need it. This avoid putting too
+			-- much stress on the GC by creating a new object each time we need one.
+			-- However it is possible that two different feature calls try to use
+			-- `overloaded_procedures' at the same time. In that case we pick another
+			-- one in the pool of unused lists `unused_overloaded_procedures_list'.)
 
 	overloaded_queries: DS_ARRAYED_LIST [ET_QUERY]
 			-- List of overloaded queries for a given name
 			-- (useful in .NET)
+			-- (`overloaded_queries' is created once and for all and then used and
+			-- reused by which ever feature which need it. This avoid putting too
+			-- much stress on the GC by creating a new object each time we need one.
+			-- However it is possible that two different feature calls try to use
+			-- `overloaded_queries' at the same time. In that case we pick another
+			-- one in the pool of unused lists `unused_overloaded_queries_list'.)
+
+	unused_overloaded_queries_list: DS_ARRAYED_LIST [DS_ARRAYED_LIST [ET_QUERY]]
+			-- List of not currently used lists of overloaded queries for a given name
+			-- (useful in .NET)
+			-- (`overloaded_queries' is created once and for all and then used and
+			-- reused by which ever feature which need it. This avoid putting too
+			-- much stress on the GC by creating a new object each time we need one.
+			-- However it is possible that two different feature calls try to use
+			-- `overloaded_queries' at the same time. In that case we pick another
+			-- one in the pool of unused lists `unused_overloaded_queries_list'.)
 
 	best_overloaded_features: DS_ARRAYED_LIST [ET_FEATURE]
 			-- List of best overloaded features for a given argument
 			-- (useful in .NET)
+			-- (This object is created once and for all and then used and reused
+			-- by which ever feature which needs it. This avoid putting too much
+			-- stress on the GC by creating a new object each time we need one.
+			-- Therefore, beware of not having two different feature calls using
+			-- this object at the same time.)
 
 feature {NONE} -- Type contexts
 
@@ -11141,7 +11225,6 @@ feature {NONE} -- Type contexts
 				unused_contexts.remove_last
 				Result.reset (a_root_context)
 			end
-			used_contexts.force_last (Result)
 		ensure
 			new_context_not_void: Result /= Void
 			root_context_set: Result.root_context = a_root_context
@@ -11152,27 +11235,10 @@ feature {NONE} -- Type contexts
 			-- Free `a_context' so that it can be reused.
 		require
 			a_context_not_void: a_context /= Void
-		local
-			i: INTEGER
 		do
-			from
-				i := used_contexts.count
-			until
-				i < 1
-			loop
-				if used_contexts.item (i) = a_context then
-					used_contexts.remove (i)
-					i := 0
-				else
-					i := i - 1
-				end
-			end
 			unused_contexts.force_last (a_context)
 			a_context.reset (universe.unknown_class)
 		end
-
-	used_contexts: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
-			-- Contexts currently being used
 
 	unused_contexts: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
 			-- Contexts that are not currently used
@@ -11207,13 +11273,17 @@ invariant
 	type_checker_not_void: type_checker /= Void
 	overloaded_procedures_not_void: overloaded_procedures /= Void
 	no_void_overloaded_procedure: not overloaded_procedures.has (Void)
+	unused_overloaded_procedures_list_not_void: unused_overloaded_procedures_list /= Void
+	no_void_unused_overloaded_procedures: not unused_overloaded_procedures_list.has (Void)
+	empty_unused_overloaded_procedures: unused_overloaded_procedures_list.for_all (agent {DS_ARRAYED_LIST [ET_PROCEDURE]}.is_empty)
 	overloaded_queries_not_void: overloaded_queries /= Void
 	no_void_overloaded_queries: not overloaded_queries.has (Void)
+	unused_overloaded_queries_list_not_void: unused_overloaded_queries_list /= Void
+	no_void_unused_overloaded_queries: not unused_overloaded_queries_list.has (Void)
+	empty_unused_overloaded_queries: unused_overloaded_queries_list.for_all (agent {DS_ARRAYED_LIST [ET_QUERY]}.is_empty)
 	best_overloaded_features_not_void: best_overloaded_features /= Void
 	no_void_best_overloaded_feature: not best_overloaded_features.has (Void)
 	current_context_not_void: current_context /= Void
-	used_contexts_not_void: used_contexts /= Void
-	no_void_used_context: not used_contexts.has (Void)
 	unused_contexts_not_void: unused_contexts /= Void
 	no_void_unused_context: not unused_contexts.has (Void)
 
