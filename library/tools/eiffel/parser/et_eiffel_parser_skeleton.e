@@ -5,7 +5,7 @@ indexing
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -505,7 +505,7 @@ feature -- AST processing
 						if current_class.is_in_cluster then
 							a_filename := current_class.filename
 							a_cluster := current_class.group.cluster
-							current_class.reset_all
+							current_class.reset
 							a_file := tmp_file
 							a_file.reset (a_filename)
 							if eiffel_compiler.is_se then
@@ -1584,7 +1584,7 @@ feature {NONE} -- AST factory
 				if cluster.is_override then
 						-- Cannot override built-in class NONE.
 					l_other_class := Result.cloned_class
-					l_other_class.reset_all
+					l_other_class.reset
 					l_other_class.set_filename (filename)
 					l_other_class.set_group (cluster)
 					Result.set_overridden_class (l_other_class)
@@ -1593,7 +1593,7 @@ feature {NONE} -- AST factory
 				else
 						-- Error: class "NONE" should be built-in.
 					l_other_class := Result.cloned_class
-					l_other_class.reset_all
+					l_other_class.reset
 					l_other_class.set_filename (filename)
 					l_other_class.set_group (cluster)
 					Result.set_overridden_class (l_other_class)
@@ -1605,7 +1605,7 @@ feature {NONE} -- AST factory
 					if Result.group.is_override then
 							-- Two classes with the same name in two override groups.
 						l_other_class := Result.cloned_class
-						l_other_class.reset_all
+						l_other_class.reset
 						l_other_class.set_filename (filename)
 						l_other_class.set_group (cluster)
 						l_other_class.set_name (a_name)
@@ -1625,7 +1625,7 @@ feature {NONE} -- AST factory
 					elseif Result.is_in_dotnet_assembly then
 							-- Cannot override .NET assembly classes.
 						l_other_class := Result.cloned_class
-						l_other_class.reset_all
+						l_other_class.reset
 						l_other_class.set_filename (filename)
 						l_other_class.set_group (cluster)
 						l_other_class.set_name (a_name)
@@ -1639,8 +1639,8 @@ feature {NONE} -- AST factory
 					else
 							-- Override.
 						l_other_class := Result.cloned_class
-						l_other_class.reset
-						Result.reset_all
+						l_other_class.reset_after_parsed
+						Result.reset
 						Result.set_filename (filename)
 						Result.set_group (cluster)
 						Result.set_name (a_name)
@@ -1653,7 +1653,7 @@ feature {NONE} -- AST factory
 				elseif not Result.is_in_override_cluster then
 						-- Two classes with the same name in two non-override groups.
 					l_other_class := Result.cloned_class
-					l_other_class.reset_all
+					l_other_class.reset
 					l_other_class.set_filename (filename)
 					l_other_class.set_group (cluster)
 					l_other_class.set_name (a_name)
@@ -1673,7 +1673,7 @@ feature {NONE} -- AST factory
 						-- Overridden.
 					l_other_class := Result.cloned_class
 					Result.set_in_system (True)
-					l_other_class.reset_all
+					l_other_class.reset
 					l_other_class.set_filename (filename)
 					l_other_class.set_group (cluster)
 					l_other_class.set_name (a_name)
@@ -1754,6 +1754,8 @@ feature {NONE} -- Built-in
 			a_class := a_feature.implementation_class
 			if a_class = universe.any_class then
 				set_builtin_any_function (a_feature)
+			elseif a_class = universe.type_class then
+				set_builtin_type_function (a_feature)
 			elseif a_class = universe.special_class then
 				set_builtin_special_function (a_feature)
 			elseif a_class = universe.character_8_ref_class then
@@ -1835,6 +1837,8 @@ feature {NONE} -- Built-in
 		local
 			a_class: ET_CLASS
 			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_type_like_current: ET_GENERIC_CLASS_TYPE
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 				-- List function names first, then procedure names.
 			a_class := a_feature.implementation_class
@@ -1912,11 +1916,17 @@ feature {NONE} -- Built-in
 				end
 			elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generating_type))
+				create l_parameters.make_with_capacity (1)
+				l_parameters.put_first (tokens.like_current)
+				create l_type_like_current.make (Void, tokens.type_class_name, l_parameters, universe.type_class)
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'generating_type: STRING'.
+						-- The signature should be 'generating_type: STRING' or 'generating_type: TYPE [like Current]'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.string_type)
+				elseif a_feature.type.same_syntactical_type (l_type_like_current, a_class, a_class, universe) then
+						-- The signature is 'generating_type: TYPE [like Current]'.
+					a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generating_type2))
 				elseif not a_feature.type.same_syntactical_type (universe.string_class, a_class, a_class, universe) then
 						-- The signature should be 'generating_type: STRING'.
 					set_fatal_error (a_class)
@@ -1984,6 +1994,45 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_copy))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, <<tokens.like_current.type>>, Void)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_type_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class TYPE.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_type_any: ET_GENERIC_CLASS_TYPE
+			l_type_type_any: ET_GENERIC_CLASS_TYPE
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generating_type))
+				create l_parameters.make_with_capacity (1)
+				l_parameters.put_first (universe.any_type)
+				create l_type_any.make (Void, tokens.type_class_name, l_parameters, universe.type_class)
+				create l_parameters.make_with_capacity (1)
+				l_parameters.put_first (l_type_any)
+				create l_type_type_any.make (Void, tokens.type_class_name, l_parameters, universe.type_class)
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'generating_type: TYPE [TYPE [ANY]]'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, l_type_type_any)
+				elseif not a_feature.type.same_syntactical_type (l_type_type_any, a_class, a_class, universe) then
+						-- The signature should be 'generating_type: TYPE [TYPE [ANY]]'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, l_type_type_any)
+				end
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -3472,6 +3521,8 @@ feature {NONE} -- Built-in
 			a_class := a_feature.implementation_class
 			if a_class = universe.any_class then
 				set_builtin_any_procedure (a_feature)
+			elseif a_class = universe.type_class then
+				set_builtin_type_procedure (a_feature)
 			elseif a_class = universe.special_class then
 				set_builtin_special_procedure (a_feature)
 			elseif a_class = universe.character_8_ref_class then
@@ -3630,6 +3681,37 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_deep_twin))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, tokens.like_current)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_type_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class TYPE.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_type_any: ET_GENERIC_CLASS_TYPE
+			l_type_type_any: ET_GENERIC_CLASS_TYPE
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
+					-- 'TYPE.generating_type' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generating_type))
+				create l_parameters.make_with_capacity (1)
+				l_parameters.put_first (universe.any_type)
+				create l_type_any.make (Void, tokens.type_class_name, l_parameters, universe.type_class)
+				create l_parameters.make_with_capacity (1)
+				l_parameters.put_first (l_type_any)
+				create l_type_type_any.make (Void, tokens.type_class_name, l_parameters, universe.type_class)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, l_type_type_any)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

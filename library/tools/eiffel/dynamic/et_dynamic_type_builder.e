@@ -711,6 +711,8 @@ feature {NONE} -- Feature validity
 							report_builtin_any_generating_type (a_feature)
 						when builtin_any_tagged_out then
 							report_builtin_any_tagged_out (a_feature)
+						when builtin_any_generating_type2 then
+							report_builtin_any_generating_type2 (a_feature)
 						else
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
@@ -811,6 +813,16 @@ feature {NONE} -- Feature validity
 							report_builtin_platform_real_bytes (a_feature)
 						when builtin_platform_wide_character_bytes then
 							report_builtin_platform_wide_character_bytes (a_feature)
+						else
+								-- Internal error: invalid built-in feature.
+								-- Error already reported during parsing.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
+					when builtin_type_class then
+						inspect l_builtin_code \\ builtin_capacity
+						when builtin_type_generating_type then
+							report_builtin_type_generating_type (a_feature)
 						else
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
@@ -3114,6 +3126,31 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_any_generating_type2 (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.generating_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'type: TYPE [like Current]'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_result_type := l_result_type_set.static_type
+					l_result_type.set_alive
+					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+				end
+			end
+		end
+
 	report_builtin_any_tagged_out (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'ANY.tagged_out' is being analyzed.
 		require
@@ -3146,6 +3183,31 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+			end
+		end
+
+	report_builtin_type_generating_type (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TYPE.generating_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'type: TYPE [TYPE [ANY]]'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_result_type := l_result_type_set.static_type
+					l_result_type.set_alive
+					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+				end
 			end
 		end
 

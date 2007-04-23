@@ -165,6 +165,7 @@ feature -- Built-in codes
 	builtin_any_standard_twin: INTEGER is 10
 	builtin_any_deep_twin: INTEGER is 11
 	builtin_any_copy: INTEGER is 12
+	builtin_any_generating_type2: INTEGER is 13
 			-- Codes for built-in features from class ANY
 
 	builtin_special_feature (a_feature_code: INTEGER): INTEGER is
@@ -318,6 +319,7 @@ feature -- Built-in codes
 	builtin_platform_pointer_bytes: INTEGER is 9
 	builtin_platform_is_thread_capable: INTEGER is 10
 	builtin_platform_wide_character_bytes: INTEGER is 11
+			-- Codes for built-in features from class PLATFORM
 
 	builtin_procedure_feature (a_feature_code: INTEGER): INTEGER is
 			-- Full code for built-in feature from class PROCEDURE
@@ -327,6 +329,7 @@ feature -- Built-in codes
 
 	builtin_procedure_class: INTEGER is 19
 	builtin_procedure_call: INTEGER is 1
+			-- Codes for built-in features from class PROCEDURE
 
 	builtin_function_feature (a_feature_code: INTEGER): INTEGER is
 			-- Full code for built-in feature from class FUNCTION
@@ -337,5 +340,16 @@ feature -- Built-in codes
 	builtin_function_class: INTEGER is 20
 	builtin_function_item: INTEGER is 1
 	builtin_function_call: INTEGER is 2
+			-- Codes for built-in features from class FUNCTION
+
+	builtin_type_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class TYPE
+		do
+			Result := builtin_type_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_type_class: INTEGER is 21
+	builtin_type_generating_type: INTEGER is 1
+			-- Codes for built-in features from class TYPE
 
 end

@@ -1324,6 +1324,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						print_builtin_any_generating_type_call (current_type)
 						print_semicolon_newline
 						call_operands.wipe_out
+					when builtin_any_generating_type2 then
+						print_builtin_any_generating_type2_body (a_feature)
 					when builtin_any_standard_twin then
 						print_builtin_any_standard_twin_body (a_feature)
 					when builtin_any_tagged_out then
@@ -1332,6 +1334,16 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						print_builtin_any_is_deep_equal_body (a_feature)
 					when builtin_any_deep_twin then
 						print_builtin_any_deep_twin_body (a_feature)
+					else
+							-- Internal error: unknown built-in feature.
+							-- This error should already have been reported during parsing.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					end
+				when builtin_type_class then
+					inspect l_builtin_code \\ builtin_capacity
+					when builtin_type_generating_type then
+						print_builtin_type_generating_type_body (a_feature)
 					else
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
@@ -10530,6 +10542,15 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			current_file.put_character (')')
 		end
 
+	print_builtin_any_generating_type2_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'ANY.generating_type' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+-- TODO
+		end
+
 	print_builtin_any_standard_is_equal_call (a_target_type: ET_DYNAMIC_TYPE) is
 			-- Print call to built-in feature 'ANY.standard_is_equal' (static binding) to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -10801,6 +10822,15 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			print_builtin_any_standard_copy_call (a_target_type)
+		end
+
+	print_builtin_type_generating_type_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TYPE.generating_type' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+-- TODO
 		end
 
 	print_builtin_special_item_call (a_target_type: ET_DYNAMIC_TYPE) is
@@ -14092,6 +14122,8 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
+-- TODO: We should use the dynamic type set of call_operands.item (2) instead of
+-- the declared static type `l_tuple_type'.
 					l_tuple_type := current_system.dynamic_type (l_actuals.type (2), universe.any_class)
 				end
 			end
@@ -14159,6 +14191,8 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
+-- TODO: We should use the dynamic type set of call_operands.item (2) instead of
+-- the declared static type `l_tuple_type'.
 					l_tuple_type := current_system.dynamic_type (l_actuals.type (2), universe.any_class)
 				end
 			end
