@@ -35,12 +35,10 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset feature as it was when it was first parsed.
+			-- Reset feature as it was just after it was last parsed.
 		local
 			l_type: like type
 			l_arguments: like arguments
-			l_preconditions: like preconditions
-			l_postconditions: like postconditions
 		do
 			name.reset
 			first_seed := id
@@ -56,18 +54,27 @@ feature -- Initialization
 			if l_arguments /= Void then
 				l_arguments.reset
 			end
-			l_preconditions := preconditions
-			if l_preconditions /= Void then
-				l_preconditions.reset
+			reset_after_features_flattened
+		end
+
+	reset_after_features_flattened is
+			-- Reset features at index 1 to `declared_count' as they were just after its features were last flattened.
+		local
+			l_preconditions: like preconditions
+			l_postconditions: like postconditions
+		do
+			if assertions_checked then
+				l_preconditions := preconditions
+				if l_preconditions /= Void then
+					l_preconditions.reset
+				end
+				l_postconditions := postconditions
+				if l_postconditions /= Void then
+					l_postconditions.reset
+				end
 			end
-			l_postconditions := postconditions
-			if l_postconditions /= Void then
-				l_postconditions.reset
-			end
-			implementation_checked := False
-			has_implementation_error := False
-			assertions_checked := False
-			has_assertions_error := False
+			reset_assertions_checked
+			reset_implementation_checked
 		end
 
 feature -- Access

@@ -23,7 +23,7 @@ create
 feature -- Initialization
 
 	reset is
-			-- Reset features at index 1 to `declared_count' as they were when it was first parsed.
+			-- Reset features at index 1 to `declared_count' as they were just after it was last parsed.
 		local
 			i, nb: INTEGER
 		do
@@ -35,6 +35,21 @@ feature -- Initialization
 				i := i - 1
 			end
 		end
+
+	reset_after_features_flattened is
+			-- Reset features at index 1 to `declared_count' as they were just after its features were last flattened.
+		local
+			i, nb: INTEGER
+		do
+				-- The code below takes advantage of the fact that the features
+				-- are stored in `storage' from 'count - 1' to '0'.
+			nb := count - declared_count
+			from i := count - 1 until i < nb loop
+				storage.item (i).reset_after_features_flattened
+				i := i - 1
+			end
+		end
+
 feature -- Access
 
 	named_feature (a_name: ET_CALL_NAME): like item is

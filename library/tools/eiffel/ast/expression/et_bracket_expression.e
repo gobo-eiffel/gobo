@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset call as it was when it was first parsed.
+			-- Reset call as it was just after it was last parsed.
 		do
 			target.reset
 			name.reset

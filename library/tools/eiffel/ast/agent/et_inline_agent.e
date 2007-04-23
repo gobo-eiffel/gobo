@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset inline agent as it was when it was first parsed.
+			-- Reset inline agent as it was just after it was last parsed.
 		local
 			l_actuals: ET_AGENT_ARGUMENT_OPERAND_LIST
 			l_type: like type

@@ -5,7 +5,7 @@ indexing
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,7 +87,8 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset current class as it was when it was first parsed.
+			-- Reset current class as it was when it was created
+			-- (i.e. before it was preparsed or parsed).
 			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			reset_flat_implementation_checked
@@ -95,36 +96,152 @@ feature -- Initialization
 			reset_interface_checked
 			reset_features_flattened
 			reset_ancestors_built
-			if is_preparsed then
-				queries.reset
-				procedures.reset
-				if formal_parameters /= Void then
-					formal_parameters.reset
-				end
-				if parents /= Void then
-					parents.reset
-				end
-				if invariants /= Void then
-					invariants.reset
-				end
-				if creators /= Void then
-					creators.reset
-				end
-				if convert_features /= Void then
-					convert_features.reset
-				end
-			else
-					-- When reporting VTCT errors on a class, `is_parsed'
-					-- is set to True even if it was not preparsed
-					-- (and hence not actually parsed).
-				has_syntax_error := False
-				is_parsed := False
-			end
+			reset_parsed
+			reset_preparsed
 			index := 0
 			in_system := False
 		ensure
 			same_name: name = old name
 			same_id: id = old id
+		end
+
+	reset_after_parsed is
+			-- Reset current class as it was just after it was last parsed.
+			-- Do nothing if not parsed.
+			-- (Do not alter `overridden_class' and `master_class'.)
+		do
+			reset_flat_implementation_checked
+			reset_implementation_checked
+			reset_interface_checked
+			reset_features_flattened
+			reset_ancestors_built
+			queries.reset
+			procedures.reset
+			if formal_parameters /= Void then
+				formal_parameters.reset
+			end
+			if parents /= Void then
+				parents.reset
+			end
+			if invariants /= Void then
+				invariants.reset
+			end
+			if creators /= Void then
+				creators.reset
+			end
+			if convert_features /= Void then
+				convert_features.reset
+			end
+		ensure
+			same_name: name = old name
+			same_id: id = old id
+			same_preparsed: is_preparsed = old is_preparsed
+			same_parsed: is_parsed = old is_parsed
+			same_syntax_error: has_syntax_error = old has_syntax_error
+			ancestors_not_built: not ancestors_built
+			features_not_flattened: not features_flattened
+			interface_not_checked: not interface_checked
+			implementation_not_checked: not implementation_checked
+			flat_implementation_not_checked: not flat_implementation_checked
+		end
+
+	reset_after_ancestors_built is
+			-- Reset current class as it was just after its ancestors were last built.
+			-- Do nothing if ancestors not built.
+			-- (Do not alter `overridden_class' and `master_class'.)
+		do
+			reset_flat_implementation_checked
+			reset_implementation_checked
+			reset_interface_checked
+			reset_features_flattened
+			queries.reset
+			procedures.reset
+			if formal_parameters /= Void then
+				formal_parameters.reset
+			end
+			if parents /= Void then
+				parents.reset
+			end
+			if invariants /= Void then
+				invariants.reset
+			end
+			if creators /= Void then
+				creators.reset
+			end
+			if convert_features /= Void then
+				convert_features.reset
+			end
+		ensure
+			same_name: name = old name
+			same_id: id = old id
+			same_preparsed: is_preparsed = old is_preparsed
+			same_parsed: is_parsed = old is_parsed
+			same_syntax_error: has_syntax_error = old has_syntax_error
+			same_ancestors_built: ancestors_built = old ancestors_built
+			same_ancestors_error: has_ancestors_error = old has_ancestors_error
+			features_not_flattened: not features_flattened
+			interface_not_checked: not interface_checked
+			implementation_not_checked: not implementation_checked
+			flat_implementation_not_checked: not flat_implementation_checked
+		end
+
+	reset_after_features_flattened is
+			-- Reset current class as it was just after its features were last flattened.
+			-- Do nothing if features not flattened.
+			-- (Do not alter `overridden_class' and `master_class'.)
+		do
+			reset_flat_implementation_checked
+			reset_implementation_checked
+			reset_interface_checked
+			queries.reset_after_features_flattened
+			procedures.reset_after_features_flattened
+			if formal_parameters /= Void then
+				formal_parameters.reset
+			end
+			if invariants /= Void then
+				invariants.reset
+			end
+		ensure
+			same_name: name = old name
+			same_id: id = old id
+			same_preparsed: is_preparsed = old is_preparsed
+			same_parsed: is_parsed = old is_parsed
+			same_syntax_error: has_syntax_error = old has_syntax_error
+			same_ancestors_built: ancestors_built = old ancestors_built
+			same_ancestors_error: has_ancestors_error = old has_ancestors_error
+			same_features_flattened: features_flattened = old features_flattened
+			same_flattening_error: has_flattening_error = old has_flattening_error
+			interface_not_checked: not interface_checked
+			implementation_not_checked: not implementation_checked
+			flat_implementation_not_checked: not flat_implementation_checked
+		end
+
+	reset_after_interface_checked is
+			-- Reset current class as it was just after its interface was last checked.
+			-- Do nothing if interface not checked.
+			-- (Do not alter `overridden_class' and `master_class'.)
+		do
+			reset_flat_implementation_checked
+			reset_implementation_checked
+			queries.reset_after_features_flattened
+			procedures.reset_after_features_flattened
+			if invariants /= Void then
+				invariants.reset
+			end
+		ensure
+			same_name: name = old name
+			same_id: id = old id
+			same_preparsed: is_preparsed = old is_preparsed
+			same_parsed: is_parsed = old is_parsed
+			same_syntax_error: has_syntax_error = old has_syntax_error
+			same_ancestors_built: ancestors_built = old ancestors_built
+			same_ancestors_error: has_ancestors_error = old has_ancestors_error
+			same_features_flattened: features_flattened = old features_flattened
+			same_flattening_error: has_flattening_error = old has_flattening_error
+			same_interface_checked: interface_checked = old interface_checked
+			same_interface_erorr: has_interface_error = old has_interface_error
+			implementation_not_checked: not implementation_checked
+			flat_implementation_not_checked: not flat_implementation_checked
 		end
 
 	reset_errors is
@@ -160,25 +277,6 @@ feature -- Initialization
 			elseif has_flat_implementation_error then
 				reset_flat_implementation_checked
 			end
-		end
-
-	reset_all is
-			-- Reset current class as it was when it was created
-			-- (i.e. before it was preparsed or parsed).
-			-- (Do not alter `overridden_class' and `master_class'.)
-		do
-			reset_flat_implementation_checked
-			reset_implementation_checked
-			reset_interface_checked
-			reset_features_flattened
-			reset_ancestors_built
-			reset_parsed
-			reset_preparsed
-			index := 0
-			in_system := False
-		ensure
-			same_name: name = old name
-			same_id: id = old id
 		end
 
 feature -- Status report
@@ -988,6 +1086,14 @@ feature -- Ancestor building status
 			has_ancestors_error: has_ancestors_error
 		end
 
+	unset_ancestors_error is
+			-- Set `has_ancestors_error' to False.
+		do
+			has_ancestors_error := False
+		ensure
+			not_has_ancestors_error: not has_ancestors_error
+		end
+
 	reset_ancestors_built is
 			-- Set `ancestors_built' to False.
 		do
@@ -1265,6 +1371,14 @@ feature -- Feature flattening status
 			has_flattening_error: has_flattening_error
 		end
 
+	unset_flattening_error is
+			-- Set `has_flattening_error' to False.
+		do
+			has_flattening_error := False
+		ensure
+			not_has_flattening_error: not has_flattening_error
+		end
+
 	reset_features_flattened is
 			-- Set `features_flattened' to False.
 		do
@@ -1300,6 +1414,14 @@ feature -- Interface checking status
 			has_interface_error := True
 		ensure
 			has_interface_error: has_interface_error
+		end
+
+	unset_interface_error is
+			-- Set `has_interface_error' to False.
+		do
+			has_interface_error := False
+		ensure
+			not_has_interface_error: not has_interface_error
 		end
 
 	reset_interface_checked is
@@ -1366,6 +1488,14 @@ feature -- Implementation checking status
 			has_implementation_error := True
 		ensure
 			has_implementation_error: has_implementation_error
+		end
+
+	unset_implementation_error is
+			-- Set `has_implementation_error' to False.
+		do
+			has_implementation_error := False
+		ensure
+			not_has_implementation_error: not has_implementation_error
 		end
 
 	reset_implementation_checked is

@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset instruction as it was when it was first parsed.
+			-- Reset instruction as it was just after it was last parsed.
 		local
 			l_convert: ET_CONVERT_EXPRESSION
 		do

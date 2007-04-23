@@ -150,7 +150,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset identifier as it was when it was first parsed.
+			-- Reset identifier as it was just after it was last parsed.
 		do
 			if not is_local and not is_argument then
 				seed := 0

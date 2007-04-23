@@ -22,7 +22,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset instruction as it was when it was first parsed.
+			-- Reset instruction as it was just after it was last parsed.
 		local
 			l_type: ET_TYPE
 		do
@@ -56,7 +56,7 @@ feature -- Access
 				Result := creation_call.arguments
 			end
 		end
-		
+
 invariant
 
 	target_not_void: target /= Void

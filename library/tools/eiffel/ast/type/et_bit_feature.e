@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset type as it was when it was first parsed.
+			-- Reset type as it was just after it was last parsed.
 		do
 			name.reset
 		end

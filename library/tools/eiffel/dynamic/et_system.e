@@ -31,12 +31,19 @@ feature {NONE} -- Initialization
 			a_universe_not_void: a_universe /= Void
 		local
 			nb: INTEGER
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 		do
 			universe := a_universe
 			nb := a_universe.classes.capacity
 			create null_dynamic_type_set_builder.make (Current)
 			set_dynamic_type_set_builder (null_dynamic_type_set_builder)
 			create dynamic_types.make (nb)
+				-- Reset the index of classes so that `dynamic_type' can work properly.
+			l_cursor := a_universe.classes.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_cursor.item.set_index (0)
+				l_cursor.forth
+			end
 			make_basic_types
 		ensure
 			universe_set: universe = a_universe

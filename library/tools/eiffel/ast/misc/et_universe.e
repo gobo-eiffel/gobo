@@ -386,7 +386,8 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset_classes is
-			-- Reset classes as they were when they were first parsed.
+			-- Reset classes as they were just after they were last parsed.
+			-- Do nothing if not parsed.
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
@@ -398,8 +399,168 @@ feature -- Initialization
 				until
 					l_class = Void
 				loop
-					l_class.reset
+					l_class.reset_after_parsed
 					l_class := l_class.overridden_class
+				end
+				l_cursor.forth
+			end
+		end
+
+	reset_classes_incremental is
+			-- Reset parts of the classes which may not be valid anymore
+			-- because of changes in other classes. Re-processing these
+			-- classes will not affect the parts which didn't need to be reset.
+			-- This allows to perform incremental code analysis or compilation
+			-- when only a few classes have been modified.
+			--
+			-- For example, when a class have been modified, we need to
+			-- reparse that class, but not necessarily the other classes.
+			-- When a class has been reparsed, we need to rebuild its ancestors
+			-- as well as the ancestors of its descendant classes. When the
+			-- ancestors of a class have been rebuilt, we need to rebuild
+			-- the feature table for this class. When the feature table of
+			-- a class has been rebuild, we need to recheck the validity
+			-- of the feature calls in the clients of this class.
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			l_class: ET_CLASS
+			l_ancestors_status_checker: ET_ANCESTORS_STATUS_CHECKER
+			l_flattening_status_checker: ET_FLATTENING_STATUS_CHECKER
+			l_interface_status_checker: ET_INTERFACE_STATUS_CHECKER
+			l_implementation_status_checker: ET_IMPLEMENTATION_STATUS_CHECKER
+		do
+				-- Start by taking care of classes containing errors, and
+				-- also reset overridden class as they were when last parsed.
+			l_cursor := classes.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_class := l_cursor.item
+				if l_class.ancestors_built then
+					if l_class.has_ancestors_error then
+							-- This class had an error, so we need to reprocess it.
+						l_class.reset_after_parsed
+					else
+							-- We mark this class with an error here to indicate that
+							-- we need to check whether it is still correct. If the error
+							-- is confirmed (because the class processing has become
+							-- invalid due to other classes having been modified or
+							-- recursively made invalid), then the class will be reset
+							-- to the previous processing step. Otherwise the error
+							-- flag will be cleared.
+						l_class.set_ancestors_error
+					end
+				end
+				if l_class.features_flattened then
+					if l_class.has_flattening_error then
+							-- This class had an error, so we need to reprocess it.
+						l_class.reset_after_ancestors_built
+					else
+							-- We mark this class with an error here to indicate that
+							-- we need to check whether it is still correct. If the error
+							-- is confirmed (because the class processing has become
+							-- invalid due to other classes having been modified or
+							-- recursively made invalid), then the class will be reset
+							-- to the previous processing step. Otherwise the error
+							-- flag will be cleared.
+						l_class.set_flattening_error
+					end
+				end
+				if l_class.interface_checked then
+					if not l_class.implementation_checked then
+							-- It is possible to check the implementation of features
+							-- individiually without setting ET_CLASS.implementation_checked.
+							-- It is safer to force a reset just in case we are in this
+							-- situation.
+						l_class.reset_after_interface_checked
+					end
+					if l_class.has_interface_error then
+							-- This class had an error, so we need to reprocess it.
+						l_class.reset_after_features_flattened
+					else
+							-- We mark this class with an error here to indicate that
+							-- we need to check whether it is still correct. If the error
+							-- is confirmed (because the class processing has become
+							-- invalid due to other classes having been modified or
+							-- recursively made invalid), then the class will be reset
+							-- to the previous processing step. Otherwise the error
+							-- flag will be cleared.
+						l_class.set_interface_error
+					end
+				end
+				if l_class.implementation_checked then
+					if l_class.has_implementation_error then
+							-- This class had an error, so we need to reprocess it.
+						l_class.reset_after_interface_checked
+					else
+							-- We mark this class with an error here to indicate that
+							-- we need to check whether it is still correct. If the error
+							-- is confirmed (because the class processing has become
+							-- invalid due to other classes having been modified or
+							-- recursively made invalid), then the class will be reset
+							-- to the previous processing step. Otherwise the error
+							-- flag will be cleared.
+						l_class.set_implementation_error
+					end
+				end
+				if l_class.flat_implementation_checked then
+					if l_class.has_flat_implementation_error then
+							-- This class had an error, so we need to reprocess it.
+						l_class.reset_after_interface_checked
+					else
+							-- We mark this class with an error here to indicate that
+							-- we need to check whether it is still correct. If the error
+							-- is confirmed (because the class processing has become
+							-- invalid due to other classes having been modified or
+							-- recursively made invalid), then the class will be reset
+							-- to the previous processing step. Otherwise the error
+							-- flag will be cleared.
+						l_class.reset_flat_implementation_checked
+						l_class.set_implementation_error
+					end
+				end
+					-- Reset overridden class as they were when last parsed.
+				from
+					l_class := l_class.overridden_class
+				until
+					l_class = Void
+				loop
+					l_class.reset_after_parsed
+					l_class := l_class.overridden_class
+				end
+				l_cursor.forth
+			end
+				-- Reset ancestors building.
+			create l_ancestors_status_checker.make (Current)
+			from l_cursor.start until l_cursor.after loop
+				l_class := l_cursor.item
+				if l_class.ancestors_built then
+					l_class.process (l_ancestors_status_checker)
+				end
+				l_cursor.forth
+			end
+				-- Reset feature flattening.
+			create l_flattening_status_checker.make (Current)
+			from l_cursor.start until l_cursor.after loop
+				l_class := l_cursor.item
+				if l_class.features_flattened then
+					l_class.process (l_flattening_status_checker)
+				end
+				l_cursor.forth
+			end
+				-- Reset interface checking.
+			create l_interface_status_checker.make (Current)
+			from l_cursor.start until l_cursor.after loop
+				l_class := l_cursor.item
+				if l_class.interface_checked then
+					l_class.process (l_interface_status_checker)
+				end
+				l_cursor.forth
+			end
+				-- Reset implementation checking.
+			create l_implementation_status_checker.make (Current)
+			from l_cursor.start until l_cursor.after loop
+				l_class := l_cursor.item
+				if l_class.implementation_checked then
+					l_class.process (l_implementation_status_checker)
 				end
 				l_cursor.forth
 			end
@@ -1704,119 +1865,19 @@ feature -- Parsing
 			-- left unparsed. New classes are added to `classes', but are not parsed.
 			-- Filenames are supposed to be of the form 'classname.e'.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class, a_class1, a_class2: ET_CLASS
-			a_modified: BOOLEAN
-			a_time_stamp: INTEGER
-			a_cluster: ET_CLUSTER
+			a_modified: DS_CELL [BOOLEAN]
 		do
 			if not is_preparsed then
 				preparse_shallow
 			elseif clusters /= Void then
 					-- Take care of possibly removed classes (either their old files do not exist anymore).
-				a_cursor := classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					from
-						a_class1 := a_class
-						a_class2 := a_class1.overridden_class
-					until
-						a_class2 = Void
-					loop
-						if a_class2.is_preparsed then
-							if a_class2.is_in_cluster then
-								a_cluster := a_class2.group.cluster
-								if a_cluster.is_read_only then
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_abstract then
-									a_class2 := a_class2.overridden_class
-									a_class1.set_overridden_class (a_class2)
-								elseif a_class2.is_parsed then
-									a_time_stamp := a_class2.time_stamp
-									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
-										a_class2 := a_class2.overridden_class
-										a_class1.set_overridden_class (a_class2)
-									else
-										a_class1 := a_class2
-										a_class2 := a_class1.overridden_class
-									end
-								elseif not file_system.file_exists (a_class2.filename) then
-									a_class2 := a_class2.overridden_class
-									a_class1.set_overridden_class (a_class2)
-								else
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								end
-							elseif a_class2.is_in_dotnet_assembly then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							else
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							end
-						else
-							a_class2 := a_class2.overridden_class
-							a_class1.set_overridden_class (a_class2)
-						end
-					end
-					if a_class.is_preparsed then
-						if a_class.is_in_cluster then
-							a_cluster := a_class.group.cluster
-							if a_cluster.is_read_only then
-								-- Do nothing.
-							elseif a_cluster.is_abstract then
-								a_modified := True
-								a_class2 := a_class.overridden_class
-								if a_class2 /= Void then
-									a_class.copy (a_class2)
-								else
-									a_class.reset_all
-								end
-							elseif a_class.is_parsed then
-								a_time_stamp := a_class.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
-									a_modified := True
-									a_class2 := a_class.overridden_class
-									if a_class2 /= Void then
-										a_class.copy (a_class2)
-									else
-										a_class.reset_all
-									end
-								end
-							elseif not file_system.file_exists (a_class.filename) then
-								a_modified := True
-								a_class2 := a_class.overridden_class
-								if a_class2 /= Void then
-									a_class.copy (a_class2)
-								else
-									a_class.reset_all
-								end
-							end
-						elseif a_class.is_in_dotnet_assembly then
-							-- Do nothing.
-						else
-							-- Do nothing.
-						end
-					else
-						a_class2 := a_class.overridden_class
-						if a_class2 /= Void then
-							a_modified := True
-							a_class.copy (a_class2)
-						elseif a_class.is_parsed then
-								-- When reporting VTCT errors on a class, `is_parsed'
-								-- is set to True even if it was not preparsed
-								-- (and hence not actually parsed).
-							a_modified := True
-						end
-					end
-					a_cursor.forth
-				end
+				create a_modified.make (False)
+				reset_modified_classes (True, False, False, False, a_modified)
 				eiffel_preparser.repreparse_clusters_shallow (clusters, False, False)
-				if a_modified or eiffel_preparser.overriding_class_added then
+				if a_modified.item or eiffel_preparser.overriding_class_added then
 						-- A class has been modified (or removed) or
 						-- may have been overridden by a new class.
-					reset_classes
+					reset_classes_incremental
 				end
 			end
 		ensure
@@ -1829,106 +1890,20 @@ feature -- Parsing
 			-- left unparsed. New classes are added to `classes', but are not parsed.
 			-- Each Eiffel file is supposed to contain exactly one class.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class, a_class1, a_class2: ET_CLASS
-			a_time_stamp: INTEGER
-			a_modified: BOOLEAN
-			a_cluster: ET_CLUSTER
+			a_modified: DS_CELL [BOOLEAN]
 		do
 			if not is_preparsed then
 				preparse_single
 			elseif clusters /= Void then
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
-				a_cursor := classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					from
-						a_class1 := a_class
-						a_class2 := a_class1.overridden_class
-					until
-						a_class2 = Void
-					loop
-						if a_class2.is_preparsed then
-							if a_class2.is_in_cluster then
-								a_cluster := a_class2.group.cluster
-								if a_cluster.is_read_only then
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_abstract then
-									a_class2 := a_class2.overridden_class
-									a_class1.set_overridden_class (a_class2)
-								else
-									a_time_stamp := a_class2.time_stamp
-									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
-										a_class2 := a_class2.overridden_class
-										a_class1.set_overridden_class (a_class2)
-									else
-										a_class1 := a_class2
-										a_class2 := a_class1.overridden_class
-									end
-								end
-							elseif a_class2.is_in_dotnet_assembly then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							else
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							end
-						else
-							a_class2 := a_class2.overridden_class
-							a_class1.set_overridden_class (a_class2)
-						end
-					end
-					if a_class.is_preparsed then
-						if a_class.is_in_cluster then
-							a_cluster := a_class.group.cluster
-							if a_cluster.is_read_only then
-								-- Do nothing.
-							elseif a_cluster.is_abstract then
-								a_modified := True
-								a_class2 := a_class.overridden_class
-								if a_class2 /= Void then
-									a_class.copy (a_class2)
-								else
-									a_class.reset_all
-								end
-							else
-								a_time_stamp := a_class.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
-									a_modified := True
-									a_class2 := a_class.overridden_class
-									if a_class2 /= Void then
-										a_class.copy (a_class2)
-									else
-										a_class.reset_all
-									end
-								end
-							end
-						elseif a_class.is_in_dotnet_assembly then
-							-- Do nothing.
-						else
-							-- Do nothing.
-						end
-					else
-						a_class2 := a_class.overridden_class
-						if a_class2 /= Void then
-							a_modified := True
-							a_class.copy (a_class2)
-						elseif a_class.is_parsed then
-								-- When reporting VTCT errors on a class, `is_parsed'
-								-- is set to True even if it was not preparsed
-								-- (and hence not actually parsed).
-							a_modified := True
-						end
-					end
-					a_cursor.forth
-				end
+				create a_modified.make (False)
+				reset_modified_classes (False, False, False, False, a_modified)
 				eiffel_preparser.repreparse_clusters_single (clusters, False, False)
-				if a_modified or eiffel_preparser.overriding_class_added then
+				if a_modified.item or eiffel_preparser.overriding_class_added then
 						-- A class has been modified (or removed) or
 						-- may have been overridden by a new class.
-					reset_classes
+					reset_classes_incremental
 				end
 			end
 		ensure
@@ -1941,109 +1916,23 @@ feature -- Parsing
 			-- left unparsed. New classes are added to `classes', but are not parsed.
 			-- Each Eiffel file can contain more than one class.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class, a_class1, a_class2: ET_CLASS
-			a_time_stamp: INTEGER
-			a_modified: BOOLEAN
-			a_cluster: ET_CLUSTER
+			a_modified: DS_CELL [BOOLEAN]
 		do
 			if not is_preparsed then
-				preparse_single
+				preparse_multiple
 			elseif clusters /= Void then
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
 					-- Note that if a file contains two classes and is modified between the
 					-- time we check the first class and the second class then the preparse
 					-- will give inconsistent results and will need to be rerun again.
-				a_cursor := classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					from
-						a_class1 := a_class
-						a_class2 := a_class1.overridden_class
-					until
-						a_class2 = Void
-					loop
-						if a_class2.is_preparsed then
-							if a_class2.is_in_cluster then
-								a_cluster := a_class2.group.cluster
-								if a_cluster.is_read_only then
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_abstract then
-									a_class2 := a_class2.overridden_class
-									a_class1.set_overridden_class (a_class2)
-								else
-									a_time_stamp := a_class2.time_stamp
-									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
-										a_class2 := a_class2.overridden_class
-										a_class1.set_overridden_class (a_class2)
-									else
-										a_class1 := a_class2
-										a_class2 := a_class1.overridden_class
-									end
-								end
-							elseif a_class2.is_in_dotnet_assembly then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							else
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							end
-						else
-							a_class2 := a_class2.overridden_class
-							a_class1.set_overridden_class (a_class2)
-						end
-					end
-					if a_class.is_preparsed then
-						if a_class.is_in_cluster then
-							a_cluster := a_class.group.cluster
-							if a_cluster.is_read_only then
-								-- Do nothing.
-							elseif a_cluster.is_abstract then
-								a_modified := True
-								a_class2 := a_class.overridden_class
-								if a_class2 /= Void then
-									a_class.copy (a_class2)
-								else
-									a_class.reset_all
-								end
-							else
-								a_time_stamp := a_class.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
-									a_modified := True
-									a_class2 := a_class.overridden_class
-									if a_class2 /= Void then
-										a_class.copy (a_class2)
-									else
-										a_class.reset_all
-									end
-								end
-							end
-						elseif a_class.is_in_dotnet_assembly then
-							-- Do nothing.
-						else
-							-- Do nothing.
-						end
-					else
-						a_class2 := a_class.overridden_class
-						if a_class2 /= Void then
-							a_modified := True
-							a_class.copy (a_class2)
-						elseif a_class.is_parsed then
-								-- When reporting VTCT errors on a class, `is_parsed'
-								-- is set to True even if it was not preparsed
-								-- (and hence not actually parsed).
-							a_modified := True
-						end
-					end
-					a_cursor.forth
-				end
+				create a_modified.make (False)
+				reset_modified_classes (False, False, False, False, a_modified)
 				eiffel_preparser.repreparse_clusters_multiple (clusters, False, False)
-				if a_modified or eiffel_preparser.overriding_class_added then
+				if a_modified.item or eiffel_preparser.overriding_class_added then
 						-- A class has been modified (or removed) or
 						-- may have been overridden by a new class.
-					reset_classes
+					reset_classes_incremental
 				end
 			end
 		ensure
@@ -2056,114 +1945,19 @@ feature -- Parsing
 			-- and left unparsed. New classes are added to `classes', but are not parsed.
 			-- Filenames are supposed to be of the form 'classname.e'.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class, a_class1, a_class2: ET_CLASS
-			a_modified: BOOLEAN
-			a_time_stamp: INTEGER
-			a_cluster: ET_CLUSTER
+			a_modified: DS_CELL [BOOLEAN]
 		do
 			if not is_preparsed then
 				preparse_shallow
 			elseif clusters /= Void then
 					-- Take care of possibly removed classes (either their old files do not exist anymore).
-				a_cursor := classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					from
-						a_class1 := a_class
-						a_class2 := a_class1.overridden_class
-					until
-						a_class2 = Void
-					loop
-						if a_class2.is_preparsed then
-							if a_class2.is_in_cluster then
-								a_cluster := a_class2.group.cluster
-								if not a_cluster.is_override then
-										-- Skip.
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_read_only then
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_abstract then
-									a_class2 := a_class2.overridden_class
-									a_class1.set_overridden_class (a_class2)
-								elseif a_class2.is_parsed then
-									a_time_stamp := a_class2.time_stamp
-									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
-										a_class2 := a_class2.overridden_class
-										a_class1.set_overridden_class (a_class2)
-									else
-										a_class1 := a_class2
-										a_class2 := a_class1.overridden_class
-									end
-								elseif not file_system.file_exists (a_class2.filename) then
-									a_class2 := a_class2.overridden_class
-									a_class1.set_overridden_class (a_class2)
-								else
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								end
-							elseif a_class2.is_in_dotnet_assembly then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							else
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							end
-						else
-							a_class1 := a_class2
-							a_class2 := a_class1.overridden_class
-						end
-					end
-					if a_class.is_preparsed then
-						if a_class.is_in_cluster then
-							a_cluster := a_class.group.cluster
-							if not a_cluster.is_override then
-								-- Skip
-							elseif a_cluster.is_read_only then
-								-- Do nothing.
-							elseif a_cluster.is_abstract then
-								a_modified := True
-								a_class2 := a_class.overridden_class
-								if a_class2 /= Void then
-									a_class.copy (a_class2)
-								else
-									a_class.reset_all
-								end
-							elseif a_class.is_parsed then
-								a_time_stamp := a_class.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
-									a_modified := True
-									a_class2 := a_class.overridden_class
-									if a_class2 /= Void then
-										a_class.copy (a_class2)
-									else
-										a_class.reset_all
-									end
-								end
-							elseif not file_system.file_exists (a_class.filename) then
-								a_modified := True
-								a_class2 := a_class.overridden_class
-								if a_class2 /= Void then
-									a_class.copy (a_class2)
-								else
-									a_class.reset_all
-								end
-							end
-						elseif a_class.is_in_dotnet_assembly then
-							-- Do nothing.
-						else
-							-- Do nothing.
-						end
-					end
-					a_cursor.forth
-				end
+				create a_modified.make (False)
+				reset_modified_classes (True, False, True, False, a_modified)
 				eiffel_preparser.repreparse_clusters_shallow (clusters, True, False)
-				if a_modified or eiffel_preparser.overriding_class_added then
+				if a_modified.item or eiffel_preparser.overriding_class_added then
 						-- A class has been modified (or removed) or
 						-- may have been overridden by a new class.
-					reset_classes
+					reset_classes_incremental
 				end
 			end
 		ensure
@@ -2176,101 +1970,20 @@ feature -- Parsing
 			-- and left unparsed. New classes are added to `classes', but are not parsed.
 			-- Each Eiffel file is supposed to contain exactly one class.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class, a_class1, a_class2: ET_CLASS
-			a_time_stamp: INTEGER
-			a_modified: BOOLEAN
-			a_cluster: ET_CLUSTER
+			a_modified: DS_CELL [BOOLEAN]
 		do
 			if not is_preparsed then
 				preparse_single
 			elseif clusters /= Void then
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
-				a_cursor := classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					from
-						a_class1 := a_class
-						a_class2 := a_class1.overridden_class
-					until
-						a_class2 = Void
-					loop
-						if a_class2.is_preparsed then
-							if a_class2.is_in_cluster then
-								a_cluster := a_class2.group.cluster
-								if not a_cluster.is_override then
-										-- Skip.
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_read_only then
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_abstract then
-									a_class2 := a_class2.overridden_class
-									a_class1.set_overridden_class (a_class2)
-								else
-									a_time_stamp := a_class2.time_stamp
-									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
-										a_class2 := a_class2.overridden_class
-										a_class1.set_overridden_class (a_class2)
-									else
-										a_class1 := a_class2
-										a_class2 := a_class1.overridden_class
-									end
-								end
-							elseif a_class2.is_in_dotnet_assembly then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							else
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							end
-						else
-							a_class1 := a_class2
-							a_class2 := a_class1.overridden_class
-						end
-					end
-					if a_class.is_preparsed then
-						if a_class.is_in_cluster then
-							a_cluster := a_class.group.cluster
-							if not a_class.group.is_override then
-								-- Skip.
-							elseif a_cluster.is_read_only then
-								-- Do nothing.
-							elseif a_cluster.is_abstract then
-								a_modified := True
-								a_class2 := a_class.overridden_class
-								if a_class2 /= Void then
-									a_class.copy (a_class2)
-								else
-									a_class.reset_all
-								end
-							else
-								a_time_stamp := a_class.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
-									a_modified := True
-									a_class2 := a_class.overridden_class
-									if a_class2 /= Void then
-										a_class.copy (a_class2)
-									else
-										a_class.reset_all
-									end
-								end
-							end
-						elseif a_class.is_in_dotnet_assembly then
-							-- Do nothing.
-						else
-							-- Do nothing.
-						end
-					end
-					a_cursor.forth
-				end
+				create a_modified.make (False)
+				reset_modified_classes (False, False, True, False, a_modified)
 				eiffel_preparser.repreparse_clusters_single (clusters, True, False)
-				if a_modified or eiffel_preparser.overriding_class_added then
+				if a_modified.item or eiffel_preparser.overriding_class_added then
 						-- A class has been modified (or removed) or
 						-- may have been overridden by a new class.
-					reset_classes
+					reset_classes_incremental
 				end
 			end
 		ensure
@@ -2283,104 +1996,23 @@ feature -- Parsing
 			-- and left unparsed. New classes are added to `classes', but are not parsed.
 			-- Each Eiffel file can contain more than one class.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class, a_class1, a_class2: ET_CLASS
-			a_time_stamp: INTEGER
-			a_modified: BOOLEAN
-			a_cluster: ET_CLUSTER
+			a_modified: DS_CELL [BOOLEAN]
 		do
 			if not is_preparsed then
-				preparse_single
+				preparse_multiple
 			elseif clusters /= Void then
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
 					-- Note that if a file contains two classes and is modified between the
 					-- time we check the first class and the second class then the preparse
 					-- will give inconsistent results and will need to be rerun again.
-				a_cursor := classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					from
-						a_class1 := a_class
-						a_class2 := a_class1.overridden_class
-					until
-						a_class2 = Void
-					loop
-						if a_class2.is_preparsed then
-							if a_class2.is_in_cluster then
-								a_cluster := a_class2.group.cluster
-								if not a_cluster.is_override then
-										-- Skip.
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_read_only then
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_abstract then
-									a_class2 := a_class2.overridden_class
-									a_class1.set_overridden_class (a_class2)
-								else
-									a_time_stamp := a_class2.time_stamp
-									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
-										a_class2 := a_class2.overridden_class
-										a_class1.set_overridden_class (a_class2)
-									else
-										a_class1 := a_class2
-										a_class2 := a_class1.overridden_class
-									end
-								end
-							elseif a_class2.is_in_dotnet_assembly then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							else
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							end
-						else
-							a_class1 := a_class2
-							a_class2 := a_class1.overridden_class
-						end
-					end
-					if a_class.is_preparsed then
-						if a_class.is_in_cluster then
-							a_cluster := a_class.group.cluster
-							if not a_cluster.is_override then
-								-- Skip.
-							elseif a_cluster.is_read_only then
-								-- Do nothing.
-							elseif a_cluster.is_abstract then
-								a_modified := True
-								a_class2 := a_class.overridden_class
-								if a_class2 /= Void then
-									a_class.copy (a_class2)
-								else
-									a_class.reset_all
-								end
-							else
-								a_time_stamp := a_class.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
-									a_modified := True
-									a_class2 := a_class.overridden_class
-									if a_class2 /= Void then
-										a_class.copy (a_class2)
-									else
-										a_class.reset_all
-									end
-								end
-							end
-						elseif a_class.is_in_dotnet_assembly then
-							-- Do nothing.
-						else
-							-- Do nothing.
-						end
-					end
-					a_cursor.forth
-				end
+				create a_modified.make (False)
+				reset_modified_classes (False, False, True, False, a_modified)
 				eiffel_preparser.repreparse_clusters_multiple (clusters, True, False)
-				if a_modified or eiffel_preparser.overriding_class_added then
+				if a_modified.item or eiffel_preparser.overriding_class_added then
 						-- A class has been modified (or removed) or
 						-- may have been overridden by a new class.
-					reset_classes
+					reset_classes_incremental
 				end
 			end
 		ensure
@@ -2411,11 +2043,7 @@ feature -- Parsing
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class, a_class1, a_class2: ET_CLASS
-			a_time_stamp: INTEGER
-			a_modified: BOOLEAN
-			a_cluster: ET_CLUSTER
+			a_modified: DS_CELL [BOOLEAN]
 		do
 			if not is_preparsed then
 				parse_all
@@ -2425,92 +2053,13 @@ feature -- Parsing
 					-- Note that if a file contains two classes and is modified between the
 					-- time we check the first class and the second class then the preparse
 					-- will give inconsistent results and will need to be rerun again.
-				a_cursor := classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					from
-						a_class1 := a_class
-						a_class2 := a_class1.overridden_class
-					until
-						a_class2 = Void
-					loop
-						if a_class2.is_preparsed and then a_class2.is_parsed then
-							if a_class2.is_in_cluster then
-								a_cluster := a_class2.group.cluster
-								if a_cluster.is_read_only then
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_abstract then
-									a_class2 := a_class2.overridden_class
-									a_class1.set_overridden_class (a_class2)
-								else
-									a_time_stamp := a_class2.time_stamp
-									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
-										a_class2 := a_class2.overridden_class
-										a_class1.set_overridden_class (a_class2)
-									else
-										a_class1 := a_class2
-										a_class2 := a_class1.overridden_class
-									end
-								end
-							elseif a_class2.is_in_dotnet_assembly then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							else
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							end
-						else
-							a_class2 := a_class2.overridden_class
-							a_class1.set_overridden_class (a_class2)
-						end
-					end
-					if a_class.is_preparsed and then a_class.is_parsed then
-						if a_class.is_in_cluster then
-							a_cluster := a_class.group.cluster
-							if a_cluster.is_read_only then
-								-- Do nothing.
-							elseif a_cluster.is_abstract then
-								a_modified := True
-								a_class2 := a_class.overridden_class
-								if a_class2 /= Void then
-									a_class.copy (a_class2)
-								else
-									a_class.reset_all
-								end
-							else
-								a_time_stamp := a_class.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
-									a_modified := True
-									a_class2 := a_class.overridden_class
-									if a_class2 /= Void then
-										a_class.copy (a_class2)
-									else
-										a_class.reset_all
-									end
-								end
-							end
-						elseif a_class.is_in_dotnet_assembly then
-							-- Do nothing.
-						else
-							-- Do nothing.
-						end
-					else
-						a_modified := True
-						a_class2 := a_class.overridden_class
-						if a_class2 /= Void then
-							a_class.copy (a_class2)
-						else
-							a_class.reset_all
-						end
-					end
-					a_cursor.forth
-				end
+				create a_modified.make (False)
+				reset_modified_classes (False, True, False, False, a_modified)
 				eiffel_parser.reparse_clusters (clusters, False, False)
-				if a_modified or eiffel_parser.overriding_class_added then
+				if a_modified.item or eiffel_parser.overriding_class_added then
 						-- A class has been modified (or removed) or
 						-- may have been overridden by a new class.
-					reset_classes
+					reset_classes_incremental
 				end
 			end
 		ensure
@@ -2523,11 +2072,7 @@ feature -- Parsing
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class, a_class1, a_class2: ET_CLASS
-			a_time_stamp: INTEGER
-			a_modified: BOOLEAN
-			a_cluster: ET_CLUSTER
+			a_modified: DS_CELL [BOOLEAN]
 		do
 			if not is_preparsed then
 				parse_all
@@ -2537,90 +2082,13 @@ feature -- Parsing
 					-- Note that if a file contains two classes and is modified between the
 					-- time we check the first class and the second class then the preparse
 					-- will give inconsistent results and will need to be rerun again.
-				a_cursor := classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					from
-						a_class1 := a_class
-						a_class2 := a_class1.overridden_class
-					until
-						a_class2 = Void
-					loop
-						if a_class2.is_preparsed and then a_class2.is_parsed then
-							if a_class2.is_in_cluster then
-								a_cluster := a_class2.group.cluster
-								if not a_cluster.is_override then
-										-- Skip.
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_read_only then
-									a_class1 := a_class2
-									a_class2 := a_class1.overridden_class
-								elseif a_cluster.is_abstract then
-									a_class2 := a_class2.overridden_class
-									a_class1.set_overridden_class (a_class2)
-								else
-									a_time_stamp := a_class2.time_stamp
-									if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
-										a_class2 := a_class2.overridden_class
-										a_class1.set_overridden_class (a_class2)
-									else
-										a_class1 := a_class2
-										a_class2 := a_class1.overridden_class
-									end
-								end
-							elseif a_class2.is_in_dotnet_assembly then
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							else
-								a_class1 := a_class2
-								a_class2 := a_class1.overridden_class
-							end
-						else
-							a_class1 := a_class2
-							a_class2 := a_class1.overridden_class
-						end
-					end
-					if a_class.is_preparsed and then a_class.is_parsed then
-						if a_class.is_in_cluster then
-							a_cluster := a_class.group.cluster
-							if not a_cluster.is_override then
-								-- Skip.
-							elseif a_cluster.is_read_only then
-								-- Do nothing.
-							elseif a_cluster.is_abstract then
-								a_modified := True
-								a_class2 := a_class.overridden_class
-								if a_class2 /= Void then
-									a_class.copy (a_class2)
-								else
-									a_class.reset_all
-								end
-							else
-								a_time_stamp := a_class.time_stamp
-								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
-									a_modified := True
-									a_class2 := a_class.overridden_class
-									if a_class2 /= Void then
-										a_class.copy (a_class2)
-									else
-										a_class.reset_all
-									end
-								end
-							end
-						elseif a_class.is_in_dotnet_assembly then
-							-- Do nothing.
-						else
-							-- Do nothing.
-						end
-					end
-					a_cursor.forth
-				end
+				create a_modified.make (False)
+				reset_modified_classes (False, True, True, False, a_modified)
 				eiffel_parser.reparse_clusters (clusters, True, False)
-				if a_modified or eiffel_parser.overriding_class_added then
+				if a_modified.item or eiffel_parser.overriding_class_added then
 						-- A class has been modified (or removed) or
 						-- may have been overridden by a new class.
-					reset_classes
+					reset_classes_incremental
 				end
 			end
 		ensure
@@ -2672,6 +2140,217 @@ feature -- Parsing
 			a_cluster_not_void: a_cluster /= Void
 		do
 			eiffel_parser.parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+		end
+
+feature {NONE} -- Parsing
+
+	reset_modified_classes (a_shallow, a_parse_all, a_override, a_read_only: BOOLEAN; a_modified: DS_CELL [BOOLEAN]) is
+			-- Take care of modified and possibly removed classes (either their
+			-- old files do not exist anymore, or they have been modified and
+			-- may contain another class) so that they will be (pre)parsed again.
+			-- Note that if a file contains two classes and is modified between
+			-- the time we check the first class and the second class then the
+			-- re(pre)parse will give inconsistent results and will need to be
+			-- rerun again.
+			-- `a_shallow' means that the "shallow" algorithm is been used for
+			-- preparsing (i.e. the file is named "classname.e").
+			-- `a_parse_all' means that files will be fully parsed without going
+			-- through the preparsing phase.
+			-- `a_override' means that only override clusters are taken into account.
+			-- `a_read_only' means that read-only clusters are taken into account.
+		require
+			a_modified_not_void: a_modified /= Void
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class, a_class1, a_class2: ET_CLASS
+			a_time_stamp: INTEGER
+			a_cluster: ET_CLUSTER
+		do
+			a_cursor := classes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_class := a_cursor.item
+					--
+					-- Start to process the overridden classes.
+					--
+				from
+					a_class1 := a_class
+					a_class2 := a_class1.overridden_class
+				until
+					a_class2 = Void
+				loop
+					if a_class2.is_preparsed and then (a_parse_all implies a_class2.is_parsed) then
+						if a_class2.is_in_cluster then
+							a_cluster := a_class2.group.cluster
+							if a_override and then not a_cluster.is_override then
+									-- This class does not belong to an override cluster.
+									-- Just skip it.
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							elseif not a_read_only and then a_cluster.is_read_only then
+									-- This class belongs to an read-only cluster (i.e. a cluster
+									-- which is not traversed again during incremental compilation).
+									-- Just skip this class.
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							elseif a_cluster.is_abstract then
+									-- The class belongs to a cluster which is marked as abstract.
+									-- This means that the class of this cluster are ignored.
+									-- So we have to get rid of this class.
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							elseif not a_shallow or else a_class2.is_parsed then
+									-- With the "shallow" algorithm the time-stamp is only set when
+									-- parsing the class. Hence the test above.
+								a_time_stamp := a_class2.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+										-- The time-stamp of the file has changed or was never recorded.
+										-- The file may have been modified or removed. Get rid of this
+										-- class so that the (pre-)parser will look for its content again.
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								else
+										-- The time-stamp of tje file has not changed.
+										-- Just skip this class.
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								end
+							elseif a_shallow then
+									-- The class is not marked as parsed. It has only been
+									-- preparsed using the "shallow" algorithm (i.e. the
+									-- file is named "classname.e").
+								if not file_system.file_exists (a_class2.filename) then
+										-- The file does not exist anymore.
+										-- So we have to get rid of this class.
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								else
+										-- The file still exists.
+										-- Just skip this class.
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								end
+							end
+						elseif a_class2.is_in_dotnet_assembly then
+								-- This class belongs to a .NET assembly.
+								-- Just skip it.
+							a_class1 := a_class2
+							a_class2 := a_class1.overridden_class
+						else
+								-- This class does not belong to a cluster.
+								-- Just skip it.
+							a_class1 := a_class2
+							a_class2 := a_class1.overridden_class
+						end
+					elseif a_override then
+							-- This class is not preparsed and hence not in an
+							-- override cluster. Just skip it.
+						a_class1 := a_class2
+						a_class2 := a_class1.overridden_class
+					else
+							-- This class is not preparsed. We can just
+							-- get rid of it since it belongs to no group.
+						a_class2 := a_class2.overridden_class
+						a_class1.set_overridden_class (a_class2)
+					end
+				end
+					--
+					-- Now take care of the master class.
+					--
+				if a_class.is_preparsed and then (a_parse_all implies a_class.is_parsed) then
+					if a_class.is_in_cluster then
+						a_cluster := a_class.group.cluster
+						if a_override and then not a_cluster.is_override then
+							-- This class does not belong to an override cluster.
+							-- Just skip it.
+						elseif not a_read_only and then a_cluster.is_read_only then
+							-- This class belongs to an read-only cluster (i.e. a cluster
+							-- which is not traversed again during incremental compilation).
+							-- Just skip this class.
+						elseif a_cluster.is_abstract then
+								-- The class belongs to a cluster which is marked as abstract.
+								-- This means that the class of this cluster are ignored.
+								-- So we can get rid of this class if it overrides other
+								-- classes. Otherwise we will mark it as not preparsed.
+							a_modified.put (True)
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset
+							end
+						elseif not a_shallow or else a_class.is_parsed then
+								-- With the "shallow" algorithm the time-stamp is only set when
+								-- parsing the class. Hence the test above.
+							a_time_stamp := a_class.time_stamp
+							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+									-- The time-stamp of the file has changed or was never recorded.
+									-- The file may have been modified or removed. Get rid of this
+									-- class if it overrides other class, or otherwise mark it as
+									-- not preparsed. That way the (pre-)parser will look for its
+									-- content again.
+								a_modified.put (True)
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset
+								end
+							end
+						elseif a_shallow then
+								-- The class is not marked as parsed. It has only been
+								-- preparsed using the "shallow" algorithm (i.e. the
+								-- file is named "classname.e").
+							if not file_system.file_exists (a_class.filename) then
+									-- The file does not exist anymore. Get rid of this
+									-- class if it overrides other class, or otherwise mark it as
+									-- not preparsed. That way the (pre-)parser will look for its
+									-- content again.
+								a_modified.put (True)
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset
+								end
+							end
+						end
+					elseif a_class.is_in_dotnet_assembly then
+						-- This class belongs to a .NET assembly.
+						-- Just skip it.
+					else
+						-- This class does not belong to a cluster.
+						-- Just skip it.
+					end
+				elseif a_override then
+						-- This class is not preparsed and hence not in an
+						-- override cluster. Just skip it.
+					if a_class.is_parsed then
+							-- When reporting VTCT errors on a class, `is_parsed'
+							-- is set to True even if it was not preparsed
+							-- (and hence not actually parsed).
+						a_class.reset_parsed
+					end
+				else
+						-- This class is not preparsed. We can get rid of it if it
+						-- overrides other classes since it belongs to no group.
+						-- Otherwise we will let it marked as not preparsed.
+					a_class2 := a_class.overridden_class
+					if a_class2 /= Void then
+						a_modified.put (True)
+						a_class.copy (a_class2)
+					elseif a_class.is_parsed then
+							-- When reporting VTCT errors on a class, `is_parsed'
+							-- is set to True even if it was not preparsed
+							-- (and hence not actually parsed).
+						a_modified.put (True)
+						a_class.reset_parsed
+					elseif a_parse_all then
+						a_modified.put (True)
+						a_class.reset
+					end
+				end
+				a_cursor.forth
+			end
 		end
 
 feature -- Compilation status report

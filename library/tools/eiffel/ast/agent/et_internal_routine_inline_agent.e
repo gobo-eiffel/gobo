@@ -23,7 +23,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset inline agent as it was when it was first parsed.
+			-- Reset inline agent as it was just after it was last parsed.
 		do
 			precursor
 			if locals /= Void then

@@ -22,7 +22,7 @@ inherit
 
 	ET_DOTNET_FEATURE
 		undefine
-			type
+			reset, type
 		end
 
 end

@@ -18,6 +18,8 @@ inherit
 		rename
 			make as make_assertions,
 			make_with_capacity as make_assertions_with_capacity
+		redefine
+			reset
 		end
 
 	ET_STANDALONE_CLOSURE
@@ -58,6 +60,18 @@ feature {NONE} -- Initialization
 			is_empty: is_empty
 			capacity_set: capacity = nb
 			implementation_class_set: implementation_class = a_class
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset invariants as they were just after they were last parsed.
+		do
+			if assertions_checked or implementation_checked then
+				precursor
+				reset_assertions_checked
+				reset_implementation_checked
+			end
 		end
 
 feature -- Status report

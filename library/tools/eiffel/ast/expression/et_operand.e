@@ -19,7 +19,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset operand as it was when it was first parsed.
+			-- Reset operand as it was just after it was last parsed.
 		do
 		end
 

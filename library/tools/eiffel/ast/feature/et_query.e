@@ -16,7 +16,22 @@ inherit
 
 	ET_FEATURE
 		redefine
-			type
+			reset, type
+		end
+
+
+feature -- Initialization
+
+	reset is
+			-- Reset feature as it was just after it was last parsed.
+		local
+			l_assigner: ET_ASSIGNER
+		do
+			precursor
+			l_assigner := assigner
+			if l_assigner /= Void then
+				l_assigner.reset
+			end
 		end
 
 feature -- Access

@@ -1572,6 +1572,7 @@ feature {NONE} -- Convert validity
 			a_name: ET_FEATURE_NAME
 			a_feature: ET_FEATURE
 		do
+-- TODO: check the conversion type.
 			a_convert_features := current_class.convert_features
 			if a_convert_features /= Void then
 				nb := a_convert_features.count

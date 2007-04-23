@@ -129,7 +129,7 @@ feature -- Processing
 			if a_class = none_class then
 				a_class.set_implementation_checked
 				if flat_mode then
-					a_class.set_implementation_checked
+					a_class.set_flat_implementation_checked
 				end
 			elseif current_class /= unknown_class then
 					-- Internal error (recursive call)

@@ -42,7 +42,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset constant as it was when it was first parsed.
+			-- Reset constant as it was just after it was last parsed.
 		do
 			type := Void
 			if cast_type /= Void then

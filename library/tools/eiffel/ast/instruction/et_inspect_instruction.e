@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset instruction as it was when it was first parsed.
+			-- Reset instruction as it was just after it was last parsed.
 		do
 			expression.reset
 			if when_parts /= Void then

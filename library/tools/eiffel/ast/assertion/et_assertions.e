@@ -21,7 +21,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset assertions as they were when they were first parsed.
+			-- Reset assertions as they were just after they were last parsed.
 		local
 			i, nb: INTEGER
 		do

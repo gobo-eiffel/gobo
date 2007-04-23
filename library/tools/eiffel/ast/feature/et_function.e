@@ -31,7 +31,7 @@ inherit
 
 	ET_ROUTINE
 		undefine
-			type, is_prefixable, is_infixable, is_bracketable
+			reset, type, is_prefixable, is_infixable, is_bracketable
 		redefine
 			is_function
 		end

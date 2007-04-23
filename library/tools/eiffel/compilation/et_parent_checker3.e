@@ -157,6 +157,10 @@ feature {NONE} -- Parent validity
 								if not an_actual_class.features_flattened or else an_actual_class.has_flattening_error then
 									set_fatal_error
 								elseif a_class.interface_checked and then a_class.has_interface_error then
+										-- If the interface has already been checked but at error
+										-- has been found, then we have to stop here. The case
+										-- where the interface has not been checked will be taken
+										-- care of below.
 									set_fatal_error
 								else
 									from j := 1 until j > nb2 loop
@@ -227,6 +231,9 @@ feature {NONE} -- Parent validity
 								-- is possible to create instances of `an_actual'
 								-- through that means. So we need to check recursively
 								-- its validity as a creation type.
+-- TODO: I think that we should take care of the case where `an_actual' is a tuple,
+-- eg: inherit   FOO [TUPLE [MY_EXPANDED [BAR]]
+-- Somehow, `process_tuple_type' has not been included in this class.
 							an_actual.process (Current)
 						else
 								-- We need to check whether `an_actual' is expanded.

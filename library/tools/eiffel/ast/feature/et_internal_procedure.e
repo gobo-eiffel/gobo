@@ -16,7 +16,7 @@ inherit
 
 	ET_PROCEDURE
 		undefine
-			reset, locals
+			reset_after_features_flattened, locals
 		end
 
 	ET_INTERNAL_ROUTINE

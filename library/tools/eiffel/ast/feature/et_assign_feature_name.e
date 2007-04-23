@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset feature name as it was when it was first parsed.
+			-- Reset assigner as it was just after it was last parsed.
 		do
 			feature_name.reset
 		end

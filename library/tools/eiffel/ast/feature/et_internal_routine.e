@@ -16,24 +16,26 @@ inherit
 
 	ET_ROUTINE
 		redefine
-			reset, locals
+			reset_after_features_flattened, locals
 		end
 
 feature -- Initialization
 
-	reset is
-			-- Reset feature as it was when it was first parsed.
+	reset_after_features_flattened is
+			-- Reset features at index 1 to `declared_count' as they were just after its features were last flattened.
 		do
+			if implementation_checked then
+				if locals /= Void then
+					locals.reset
+				end
+				if compound /= Void then
+					compound.reset
+				end
+				if rescue_clause /= Void then
+					rescue_clause.reset
+				end
+			end
 			precursor
-			if locals /= Void then
-				locals.reset
-			end
-			if compound /= Void then
-				compound.reset
-			end
-			if rescue_clause /= Void then
-				rescue_clause.reset
-			end
 		end
 
 feature -- Access

@@ -21,7 +21,7 @@ inherit
 
 	ET_EXTERNAL_ROUTINE
 		undefine
-			type, is_prefixable, is_infixable,
+			reset, type, is_prefixable, is_infixable,
 			is_bracketable, is_function
 		end
 

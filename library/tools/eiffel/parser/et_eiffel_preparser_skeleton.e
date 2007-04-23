@@ -122,7 +122,7 @@ feature -- Parsing
 									if a_class.group.is_override then
 											-- Two classes with the same name in two override groups.
 										l_other_class := a_class.cloned_class
-										l_other_class.reset_all
+										l_other_class.reset
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
@@ -138,7 +138,7 @@ feature -- Parsing
 									elseif a_class.is_in_dotnet_assembly then
 											-- Cannot override .NET assembly classes.
 										l_other_class := a_class.cloned_class
-										l_other_class.reset_all
+										l_other_class.reset
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
@@ -146,7 +146,7 @@ feature -- Parsing
 									elseif a_class.is_none then
 											-- Cannot override built-in class NONE.
 										l_other_class := a_class.cloned_class
-										l_other_class.reset_all
+										l_other_class.reset
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
@@ -154,8 +154,8 @@ feature -- Parsing
 									else
 											-- Override.
 										l_other_class := a_class.cloned_class
-										l_other_class.reset
-										a_class.reset_all
+										l_other_class.reset_after_parsed
+										a_class.reset
 										a_class.set_filename (a_filename)
 										a_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
@@ -164,7 +164,7 @@ feature -- Parsing
 								elseif not a_class.group.is_override then
 										-- Two classes with the same name in two non-override groups.
 									l_other_class := a_class.cloned_class
-									l_other_class.reset_all
+									l_other_class.reset
 									l_other_class.set_filename (a_filename)
 									l_other_class.set_group (a_cluster)
 									a_class.set_overridden_class (l_other_class)
@@ -180,7 +180,7 @@ feature -- Parsing
 								else
 										-- Overridden.
 									l_other_class := a_class.cloned_class
-									l_other_class.reset_all
+									l_other_class.reset
 									l_other_class.set_filename (a_filename)
 									l_other_class.set_group (a_cluster)
 									l_other_class.set_overridden_class (Void)
@@ -300,7 +300,7 @@ feature -- Parsing
 										if a_class.group.is_override then
 												-- Two classes with the same name in two override groups.
 											l_other_class := a_class.cloned_class
-											l_other_class.reset_all
+											l_other_class.reset
 											l_other_class.set_filename (a_filename)
 											l_other_class.set_group (a_cluster)
 											a_class.set_overridden_class (l_other_class)
@@ -316,7 +316,7 @@ feature -- Parsing
 										elseif a_class.is_in_dotnet_assembly then
 												-- Cannot override .NET assembly classes.
 											l_other_class := a_class.cloned_class
-											l_other_class.reset_all
+											l_other_class.reset
 											l_other_class.set_filename (a_filename)
 											l_other_class.set_group (a_cluster)
 											a_class.set_overridden_class (l_other_class)
@@ -324,7 +324,7 @@ feature -- Parsing
 										elseif a_class.is_none then
 												-- Cannot override built-in class NONE.
 											l_other_class := a_class.cloned_class
-											l_other_class.reset_all
+											l_other_class.reset
 											l_other_class.set_filename (a_filename)
 											l_other_class.set_group (a_cluster)
 											a_class.set_overridden_class (l_other_class)
@@ -332,8 +332,8 @@ feature -- Parsing
 										else
 												-- Override.
 											l_other_class := a_class.cloned_class
-											l_other_class.reset
-											a_class.reset_all
+											l_other_class.reset_after_parsed
+											a_class.reset
 											a_class.set_filename (a_filename)
 											a_class.set_group (a_cluster)
 											a_class.set_overridden_class (l_other_class)
@@ -342,7 +342,7 @@ feature -- Parsing
 									elseif not a_class.group.is_override then
 											-- Two classes with the same name in two non-override groups.
 										l_other_class := a_class.cloned_class
-										l_other_class.reset_all
+										l_other_class.reset
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_group (a_cluster)
 										a_class.set_overridden_class (l_other_class)
@@ -358,17 +358,17 @@ feature -- Parsing
 									else
 											-- Overridden.
 										l_other_class := a_class.cloned_class
-										l_other_class.reset_all
+										l_other_class.reset
 										l_other_class.set_filename (a_filename)
 										l_other_class.set_group (a_cluster)
 										l_other_class.set_overridden_class (Void)
 										a_class.add_overridden_class (l_other_class)
 									end
 								else
-										-- We need to `reset_all' when repreparsing, especially
+										-- We need to `reset' when repreparsing, especially
 										-- if the class was used by other classes (some error
 										-- flags may have been set in that case).
-									a_class.reset_all
+									a_class.reset
 									a_class.set_filename (a_filename)
 									a_class.set_group (a_cluster)
 								end
@@ -472,7 +472,7 @@ feature -- Parsing
 						if a_class.group.is_override then
 								-- Two classes with the same name in two override groups.
 							l_other_class := a_class.cloned_class
-							l_other_class.reset_all
+							l_other_class.reset
 							l_other_class.set_filename (a_filename)
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_group (a_cluster)
@@ -489,7 +489,7 @@ feature -- Parsing
 						elseif a_class.is_in_dotnet_assembly then
 								-- Cannot override .NET assembly classes.
 							l_other_class := a_class.cloned_class
-							l_other_class.reset_all
+							l_other_class.reset
 							l_other_class.set_filename (a_filename)
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_group (a_cluster)
@@ -498,7 +498,7 @@ feature -- Parsing
 						elseif a_class.is_none then
 								-- Cannot override built-in class NONE.
 							l_other_class := a_class.cloned_class
-							l_other_class.reset_all
+							l_other_class.reset
 							l_other_class.set_filename (a_filename)
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_group (a_cluster)
@@ -507,8 +507,8 @@ feature -- Parsing
 						else
 								-- Override.
 							l_other_class := a_class.cloned_class
-							l_other_class.reset
-							a_class.reset_all
+							l_other_class.reset_after_parsed
+							a_class.reset
 							a_class.set_filename (a_filename)
 							a_class.set_time_stamp (a_time_stamp)
 							a_class.set_group (a_cluster)
@@ -518,7 +518,7 @@ feature -- Parsing
 					elseif not a_class.group.is_override then
 							-- Two classes with the same name in two non-override groups.
 						l_other_class := a_class.cloned_class
-						l_other_class.reset_all
+						l_other_class.reset
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_group (a_cluster)
@@ -535,7 +535,7 @@ feature -- Parsing
 					else
 							-- Overridden.
 						l_other_class := a_class.cloned_class
-						l_other_class.reset_all
+						l_other_class.reset
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_group (a_cluster)
@@ -543,10 +543,10 @@ feature -- Parsing
 						a_class.add_overridden_class (l_other_class)
 					end
 				else
-						-- We need to `reset_all' when repreparsing, especially
+						-- We need to `reset' when repreparsing, especially
 						-- if the class was used by other classes (some error
 						-- flags may have been set in that case).
-					a_class.reset_all
+					a_class.reset
 					a_class.set_filename (a_filename)
 					a_class.set_time_stamp (a_time_stamp)
 					a_class.set_group (a_cluster)
@@ -836,7 +836,7 @@ feature -- Parsing
 						if a_class.group.is_override then
 								-- Two classes with the same name in two override groups.
 							l_other_class := a_class.cloned_class
-							l_other_class.reset_all
+							l_other_class.reset
 							l_other_class.set_filename (a_filename)
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_group (a_cluster)
@@ -853,7 +853,7 @@ feature -- Parsing
 						elseif a_class.is_in_dotnet_assembly then
 								-- Cannot override .NET assembly classes.
 							l_other_class := a_class.cloned_class
-							l_other_class.reset_all
+							l_other_class.reset
 							l_other_class.set_filename (a_filename)
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_group (a_cluster)
@@ -862,7 +862,7 @@ feature -- Parsing
 						elseif a_class.is_none then
 								-- Cannot override built-in class NONE.
 							l_other_class := a_class.cloned_class
-							l_other_class.reset_all
+							l_other_class.reset
 							l_other_class.set_filename (a_filename)
 							l_other_class.set_time_stamp (a_time_stamp)
 							l_other_class.set_group (a_cluster)
@@ -871,8 +871,8 @@ feature -- Parsing
 						else
 								-- Override.
 							l_other_class := a_class.cloned_class
-							l_other_class.reset
-							a_class.reset_all
+							l_other_class.reset_after_parsed
+							a_class.reset
 							a_class.set_filename (a_filename)
 							a_class.set_time_stamp (a_time_stamp)
 							a_class.set_group (a_cluster)
@@ -882,7 +882,7 @@ feature -- Parsing
 					elseif not a_class.group.is_override then
 							-- Two classes with the same name in two non-override groups.
 						l_other_class := a_class.cloned_class
-						l_other_class.reset_all
+						l_other_class.reset
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_group (a_cluster)
@@ -899,7 +899,7 @@ feature -- Parsing
 					else
 							-- Overridden.
 						l_other_class := a_class.cloned_class
-						l_other_class.reset_all
+						l_other_class.reset
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_time_stamp (a_time_stamp)
 						l_other_class.set_group (a_cluster)
@@ -907,10 +907,10 @@ feature -- Parsing
 						a_class.add_overridden_class (l_other_class)
 					end
 				else
-						-- We need to `reset_all' when repreparsing, especially
+						-- We need to `reset' when repreparsing, especially
 						-- if the class was used by other classes (some error
 						-- flags may have been set in that case).
-					a_class.reset_all
+					a_class.reset
 					a_class.set_filename (a_filename)
 					a_class.set_time_stamp (a_time_stamp)
 					a_class.set_group (a_cluster)

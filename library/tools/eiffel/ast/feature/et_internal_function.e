@@ -16,12 +16,12 @@ inherit
 
 	ET_FUNCTION
 		undefine
-			reset, locals
+			reset_after_features_flattened, locals
 		end
 
 	ET_INTERNAL_ROUTINE
 		undefine
-			type, is_prefixable, is_infixable,
+			reset, type, is_prefixable, is_infixable,
 			is_bracketable, is_function
 		end
 

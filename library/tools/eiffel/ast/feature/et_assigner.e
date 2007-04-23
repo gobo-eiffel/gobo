@@ -16,6 +16,13 @@ inherit
 
 	ET_AST_NODE
 
+feature -- Initialization
+
+	reset is
+			-- Reset assigner as it was just after it was last parsed.
+		deferred
+		end
+
 feature -- Access
 
 	feature_name: ET_FEATURE_NAME is

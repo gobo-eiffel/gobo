@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset expression as it was when it was first parsed.
+			-- Reset expression as it was just after it was last parsed.
 		do
 			left.reset
 			right.reset
