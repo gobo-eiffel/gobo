@@ -2274,6 +2274,7 @@ feature {NONE} -- Parsing
 							a_modified.put (True)
 							a_class2 := a_class.overridden_class
 							if a_class2 /= Void then
+								a_class2.reset_after_parsed
 								a_class.copy (a_class2)
 							else
 								a_class.reset
@@ -2291,6 +2292,7 @@ feature {NONE} -- Parsing
 								a_modified.put (True)
 								a_class2 := a_class.overridden_class
 								if a_class2 /= Void then
+									a_class2.reset_after_parsed
 									a_class.copy (a_class2)
 								else
 									a_class.reset
@@ -2308,6 +2310,7 @@ feature {NONE} -- Parsing
 								a_modified.put (True)
 								a_class2 := a_class.overridden_class
 								if a_class2 /= Void then
+									a_class2.reset_after_parsed
 									a_class.copy (a_class2)
 								else
 									a_class.reset
@@ -2337,6 +2340,7 @@ feature {NONE} -- Parsing
 					a_class2 := a_class.overridden_class
 					if a_class2 /= Void then
 						a_modified.put (True)
+						a_class2.reset_after_parsed
 						a_class.copy (a_class2)
 					elseif a_class.is_parsed then
 							-- When reporting VTCT errors on a class, `is_parsed'
