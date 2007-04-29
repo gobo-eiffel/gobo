@@ -145,7 +145,7 @@ feature {NONE} -- Formal parameters and parents validity
 					set_fatal_error (current_class)
 				else
 					l_cursor := l_suppliers.new_cursor
-					from l_cursor.forth until l_cursor.after loop
+					from l_cursor.start until l_cursor.after loop
 						l_class := l_cursor.item
 						if not l_class.interface_checked or else l_class.has_interface_error then
 								-- This check is probably too strong in many cases.
