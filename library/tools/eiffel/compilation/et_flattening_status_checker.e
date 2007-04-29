@@ -239,6 +239,7 @@ feature {NONE} -- Formal parameters, parents and signatures validity
 					l_query := l_queries.item (i)
 					class_type_checker.check_type_validity (l_query.type)
 					if class_type_checker.has_fatal_error then
+						set_fatal_error (current_class)
 						i := nb + 1 -- Jump out of the loop.
 					else
 						l_arguments := l_query.arguments

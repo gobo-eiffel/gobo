@@ -166,6 +166,16 @@ feature -- Setting
 			invariant_keyword_not_void: invariant_keyword = an_invariant
 		end
 
+	set_implementation_class (a_class: like implementation_class) is
+			-- Set `implementation_class' to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			implementation_class := a_class
+		ensure
+			implementation_class_set: implementation_class = a_class
+		end
+
 feature -- Conversion
 
 	as_invariants: ET_INVARIANTS is

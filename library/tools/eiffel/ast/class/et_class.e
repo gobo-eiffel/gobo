@@ -1604,7 +1604,7 @@ feature -- Duplication
 				standard_copy (other)
 				eiffel_class := Current
 					-- Set the implementation class of features
-					-- declared in this class.
+					-- and invariants declared in this class.
 				l_queries := queries
 				nb := l_queries.declared_count
 				from i := 1 until i > nb loop
@@ -1616,6 +1616,9 @@ feature -- Duplication
 				from i := 1 until i > nb loop
 					l_procedures.item (i).set_implementation_class (Current)
 					i := i + 1
+				end
+				if invariants /= Void then
+					invariants.set_implementation_class (Current)
 				end
 			end
 		end
