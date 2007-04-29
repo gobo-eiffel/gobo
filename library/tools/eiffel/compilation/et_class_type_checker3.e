@@ -62,13 +62,15 @@ feature {NONE} -- Type validity
 				set_fatal_error
 			else
 				l_actuals := a_type.actual_parameters
-				nb := l_actuals.count
-				from i := 1 until i > nb loop
-					l_actuals.type (i).process (Current)
-					if has_fatal_error then
-						i := nb + 1 -- Jump out of the loop.
+				if l_actuals /= Void then
+					nb := l_actuals.count
+					from i := 1 until i > nb loop
+						l_actuals.type (i).process (Current)
+						if has_fatal_error then
+							i := nb + 1 -- Jump out of the loop.
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
 		end
