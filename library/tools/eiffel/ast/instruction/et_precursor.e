@@ -34,7 +34,13 @@ feature -- Initialization
 	reset is
 			-- Reset precursor as it was when it was first parsed.
 		do
-			parent_type := Void
+				-- Note: do not reset `parent_type' to Void. `parent_type'
+				-- is set by the feature flattener regardless of whether
+				-- it was already set or not. It is then used by the
+				-- implementation checker. So we don't want to reset things
+				-- set by the feature flattener if we only want to reset
+				-- what the implementation checker did, and especially since
+				-- it does not hurt to leave it there.
 			if arguments /= Void then
 				arguments.reset
 			end
