@@ -95,6 +95,8 @@ feature -- Test
 				if ise_5_6 = Void or else ise_5_6.count = 0 then
 					ise_version := ise_5_7_latest
 				end
+			elseif eiffel_compiler.is_ge then
+				ise_version := ise_5_7_latest
 			end
 			a_universe.set_ise_version (ise_version)
 			a_universe.set_ecma_version (ecma_version)
