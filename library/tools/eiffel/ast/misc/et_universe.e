@@ -76,6 +76,8 @@ feature {NONE} -- Initialization
 			clusters := a_clusters
 			create classes.make_map (3000)
 			classes.set_key_equality_tester (class_name_tester)
+			create basic_classes.make_map (sized_basic_type_count)
+			basic_classes.set_key_equality_tester (class_name_tester)
 			error_handler := an_error_handler
 			ast_factory := a_factory
 			set_default_keyword_usage
@@ -120,8 +122,7 @@ feature {NONE} -- Initialization
 			string_32_class := eiffel_class (tokens.string_32_class_name)
 			string_32_class.set_in_system (True)
 			string_class := string_8_class
-			classes.force_last (string_class, tokens.string_class_name)
-			string_class_id := classes.count
+			basic_classes.force_last (string_class, tokens.string_class_name)
 			array_class := eiffel_class (tokens.array_class_name)
 			array_class.set_in_system (True)
 			special_class := eiffel_class (tokens.special_class_name)
@@ -135,11 +136,9 @@ feature {NONE} -- Initialization
 			character_32_class := eiffel_class (tokens.character_32_class_name)
 			character_32_class.set_in_system (True)
 			character_class := character_8_class
-			classes.force_last (character_class, tokens.character_class_name)
-			character_class_id := classes.count
+			basic_classes.force_last (character_class, tokens.character_class_name)
 			wide_character_class := character_32_class
-			classes.force_last (wide_character_class, tokens.wide_character_class_name)
-			wide_character_class_id := classes.count
+			basic_classes.force_last (wide_character_class, tokens.wide_character_class_name)
 			integer_8_class := eiffel_class (tokens.integer_8_class_name)
 			integer_8_class.set_in_system (True)
 			integer_16_class := eiffel_class (tokens.integer_16_class_name)
@@ -149,8 +148,7 @@ feature {NONE} -- Initialization
 			integer_64_class := eiffel_class (tokens.integer_64_class_name)
 			integer_64_class.set_in_system (True)
 			integer_class := integer_32_class
-			classes.force_last (integer_class, tokens.integer_class_name)
-			integer_class_id := classes.count
+			basic_classes.force_last (integer_class, tokens.integer_class_name)
 			natural_8_class := eiffel_class (tokens.natural_8_class_name)
 			natural_8_class.set_in_system (True)
 			natural_16_class := eiffel_class (tokens.natural_16_class_name)
@@ -160,18 +158,15 @@ feature {NONE} -- Initialization
 			natural_64_class := eiffel_class (tokens.natural_64_class_name)
 			natural_64_class.set_in_system (True)
 			natural_class := natural_32_class
-			classes.force_last (natural_class, tokens.natural_class_name)
-			natural_class_id := classes.count
+			basic_classes.force_last (natural_class, tokens.natural_class_name)
 			real_32_class := eiffel_class (tokens.real_32_class_name)
 			real_32_class.set_in_system (True)
 			real_64_class := eiffel_class (tokens.real_64_class_name)
 			real_64_class.set_in_system (True)
 			real_class := real_32_class
-			classes.force_last (real_class, tokens.real_class_name)
-			real_class_id := classes.count
+			basic_classes.force_last (real_class, tokens.real_class_name)
 			double_class := real_64_class
-			classes.force_last (double_class, tokens.double_class_name)
-			double_class_id := classes.count
+			basic_classes.force_last (double_class, tokens.double_class_name)
 			pointer_class := eiffel_class (tokens.pointer_class_name)
 			pointer_class.set_in_system (True)
 			typed_pointer_class := eiffel_class (tokens.typed_pointer_class_name)
@@ -246,33 +241,27 @@ feature {NONE} -- Initialization
 			character_8_ref_class := eiffel_class (tokens.character_8_ref_class_name)
 			character_32_ref_class := eiffel_class (tokens.character_32_ref_class_name)
 			character_ref_class := character_8_ref_class
-			classes.force_last (character_ref_class, tokens.character_ref_class_name)
-			character_ref_class_id := classes.count
+			basic_classes.force_last (character_ref_class, tokens.character_ref_class_name)
 			wide_character_ref_class := character_32_ref_class
-			classes.force_last (wide_character_ref_class, tokens.wide_character_ref_class_name)
-			wide_character_ref_class_id := classes.count
+			basic_classes.force_last (wide_character_ref_class, tokens.wide_character_ref_class_name)
 			integer_8_ref_class := eiffel_class (tokens.integer_8_ref_class_name)
 			integer_16_ref_class := eiffel_class (tokens.integer_16_ref_class_name)
 			integer_32_ref_class := eiffel_class (tokens.integer_32_ref_class_name)
 			integer_64_ref_class := eiffel_class (tokens.integer_64_ref_class_name)
 			integer_ref_class := integer_32_ref_class
-			classes.force_last (integer_ref_class, tokens.integer_ref_class_name)
-			integer_ref_class_id := classes.count
+			basic_classes.force_last (integer_ref_class, tokens.integer_ref_class_name)
 			natural_8_ref_class := eiffel_class (tokens.natural_8_ref_class_name)
 			natural_16_ref_class := eiffel_class (tokens.natural_16_ref_class_name)
 			natural_32_ref_class := eiffel_class (tokens.natural_32_ref_class_name)
 			natural_64_ref_class := eiffel_class (tokens.natural_64_ref_class_name)
 			natural_ref_class := natural_32_ref_class
-			classes.force_last (natural_ref_class, tokens.natural_ref_class_name)
-			natural_ref_class_id := classes.count
+			basic_classes.force_last (natural_ref_class, tokens.natural_ref_class_name)
 			real_32_ref_class := eiffel_class (tokens.real_32_ref_class_name)
 			real_64_ref_class := eiffel_class (tokens.real_64_ref_class_name)
 			real_ref_class := real_32_ref_class
-			classes.force_last (real_ref_class, tokens.real_ref_class_name)
-			real_ref_class_id := classes.count
+			basic_classes.force_last (real_ref_class, tokens.real_ref_class_name)
 			double_ref_class := real_64_ref_class
-			classes.force_last (double_ref_class, tokens.double_ref_class_name)
-			double_ref_class_id := classes.count
+			basic_classes.force_last (double_ref_class, tokens.double_ref_class_name)
 			pointer_ref_class := eiffel_class (tokens.pointer_ref_class_name)
 			numeric_class := eiffel_class (tokens.numeric_class_name)
 			comparable_class := eiffel_class (tokens.comparable_class_name)
@@ -601,6 +590,12 @@ feature -- Status report
 			if classes.found then
 				l_class := classes.found_item
 				Result := l_class.is_preparsed
+			else
+				basic_classes.search (a_name)
+				if basic_classes.found then
+					l_class := basic_classes.found_item
+					Result := l_class.is_preparsed
+				end
 			end
 		ensure
 			is_preparsed: Result implies eiffel_class (a_name).is_preparsed
@@ -667,6 +662,11 @@ feature -- Access
 	classes: DS_HASH_TABLE [ET_CLASS, ET_CLASS_NAME]
 			-- Classes in universe
 
+	basic_classes: DS_HASH_TABLE [ET_CLASS, ET_CLASS_NAME]
+			-- Mapping between sized basic type names (e.g. INTEGER, STRING)
+			-- and their actual classes (which are stored in `classes' under
+			-- their actual names) when aliased
+
 	eiffel_class (a_name: ET_CLASS_NAME): ET_CLASS is
 			-- Class named `a_name' in universe;
 			-- add this class to universe if not found
@@ -677,8 +677,13 @@ feature -- Access
 			if classes.found then
 				Result := classes.found_item
 			else
-				Result := ast_factory.new_class (a_name, classes.count + 1)
-				classes.force_last (Result, a_name)
+				basic_classes.search (a_name)
+				if basic_classes.found then
+					Result := basic_classes.found_item
+				else
+					Result := ast_factory.new_class (a_name, classes.count + 1)
+					classes.force_last (Result, a_name)
+				end
 			end
 		ensure
 			eiffel_class_not_void: Result /= Void
@@ -697,6 +702,11 @@ feature -- Access
 			classes.search (a_class_name)
 			if classes.found then
 				Result := classes.found_item
+			else
+				basic_classes.search (a_class_name)
+				if basic_classes.found then
+					Result := basic_classes.found_item
+				end
 			end
 		end
 
@@ -1256,121 +1266,120 @@ feature -- Setting
 			-- INTEGER, NATURAL, REAL, DOUBLE) to be non-aliased.
 		local
 			l_name: ET_CLASS_NAME
-			l_class: ET_CLASS
 		do
 				-- Class "STRING".
-			if string_class.id /= string_class_id then
-				l_name := tokens.string_class_name
-				l_class := ast_factory.new_class (l_name, string_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				string_class := l_class
+			l_name := tokens.string_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				string_class := eiffel_class (l_name)
+				string_class.set_in_system (True)
 				create string_type.make (Void, tokens.string_class_name, string_class)
 			end
 				-- Class "CHARACTER".
-			if character_class.id /= character_class_id then
-				l_name := tokens.character_class_name
-				l_class := ast_factory.new_class (l_name, character_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				character_class := l_class
+			l_name := tokens.character_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				character_class := eiffel_class (l_name)
+				character_class.set_in_system (True)
 				create character_type.make (Void, tokens.character_class_name, character_class)
 			end
 				-- Class "CHARACTER_REF".
-			if character_ref_class.id /= character_ref_class_id then
-				l_name := tokens.character_ref_class_name
-				l_class := ast_factory.new_class (l_name, character_ref_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				character_ref_class := l_class
+			l_name := tokens.character_ref_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				character_ref_class := eiffel_class (l_name)
+				character_ref_class.set_in_system (True)
 			end
 				-- Class "WIDE_CHARACTER".
-			if wide_character_class.id /= wide_character_class_id then
-				l_name := tokens.wide_character_class_name
-				l_class := ast_factory.new_class (l_name, wide_character_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				wide_character_class := l_class
+			l_name := tokens.wide_character_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				wide_character_class := eiffel_class (l_name)
+				wide_character_class.set_in_system (True)
 			end
 				-- Class "WIDE_CHARACTER_REF".
-			if wide_character_ref_class.id /= wide_character_ref_class_id then
-				l_name := tokens.wide_character_ref_class_name
-				l_class := ast_factory.new_class (l_name, wide_character_ref_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				wide_character_ref_class := l_class
+			l_name := tokens.wide_character_ref_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				wide_character_ref_class := eiffel_class (l_name)
+				wide_character_ref_class.set_in_system (True)
 			end
 				-- Class "INTEGER".
-			if integer_class.id /= integer_class_id then
-				l_name := tokens.integer_class_name
-				l_class := ast_factory.new_class (l_name, integer_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				integer_class := l_class
+			l_name := tokens.integer_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				integer_class := eiffel_class (l_name)
+				integer_class.set_in_system (True)
 				create integer_type.make (Void, tokens.integer_class_name, integer_class)
 				create integer_convert_feature.make (integer_type)
 			end
 				-- Class "INTEGER_REF".
-			if integer_ref_class.id /= integer_class_id then
-				l_name := tokens.integer_ref_class_name
-				l_class := ast_factory.new_class (l_name, integer_ref_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				integer_ref_class := l_class
+			l_name := tokens.integer_ref_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				integer_ref_class := eiffel_class (l_name)
+				integer_ref_class.set_in_system (True)
 			end
 				-- Class "NATURAL".
-			if natural_class.id /= natural_class_id then
-				l_name := tokens.natural_class_name
-				l_class := ast_factory.new_class (l_name, natural_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				natural_class := l_class
+			l_name := tokens.natural_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				natural_class := eiffel_class (l_name)
+				natural_class.set_in_system (True)
 				create natural_type.make (Void, tokens.natural_class_name, natural_class)
 				create natural_convert_feature.make (natural_type)
 			end
 				-- Class "NATURAL_REF".
-			if natural_ref_class.id /= natural_ref_class_id then
-				l_name := tokens.natural_ref_class_name
-				l_class := ast_factory.new_class (l_name, natural_ref_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				natural_ref_class := l_class
+			l_name := tokens.natural_ref_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				natural_ref_class := eiffel_class (l_name)
+				natural_ref_class.set_in_system (True)
 			end
 				-- Class "REAL".
-			if real_class.id /= real_class_id then
-				l_name := tokens.real_class_name
-				l_class := ast_factory.new_class (l_name, real_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				real_class := l_class
+			l_name := tokens.real_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				real_class := eiffel_class (l_name)
+				real_class.set_in_system (True)
 				create real_type.make (Void, tokens.real_class_name, real_class)
 				create real_convert_feature.make (real_type)
 			end
 				-- Class "REAL_REF".
-			if real_ref_class.id /= real_ref_class_id then
-				l_name := tokens.real_ref_class_name
-				l_class := ast_factory.new_class (l_name, real_ref_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				real_ref_class := l_class
+			l_name := tokens.real_ref_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				real_ref_class := eiffel_class (l_name)
+				real_ref_class.set_in_system (True)
 			end
 				-- Class "DOUBLE".
-			if double_class.id /= double_class_id then
-				l_name := tokens.double_class_name
-				l_class := ast_factory.new_class (l_name, double_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				double_class := l_class
+			l_name := tokens.double_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				double_class := eiffel_class (l_name)
+				double_class.set_in_system (True)
 				create double_type.make (Void, tokens.double_class_name, double_class)
 				create double_convert_feature.make (double_type)
 			end
 				-- Class "DOUBLE_REF".
-			if double_ref_class.id /= double_ref_class_id then
-				l_name := tokens.double_ref_class_name
-				l_class := ast_factory.new_class (l_name, double_ref_class_id)
-				classes.force_last (l_class, l_name)
-				l_class.set_in_system (True)
-				double_ref_class := l_class
+			l_name := tokens.double_ref_class_name
+			basic_classes.search (l_name)
+			if basic_classes.found then
+				basic_classes.remove_found_item
+				double_ref_class := eiffel_class (l_name)
+				double_ref_class.set_in_system (True)
 			end
 		end
 
@@ -1379,108 +1388,120 @@ feature -- Setting
 			-- INTEGER, NATURAL, REAL, DOUBLE) to be aliased to their default.
 		local
 			l_name: ET_CLASS_NAME
-			l_class: ET_CLASS
 		do
 				-- Class "STRING".
-			if string_class.id = string_class_id then
-				l_name := tokens.string_class_name
-				l_class := string_8_class
-				classes.force_last (l_class, l_name)
-				string_class := l_class
+			l_name := tokens.string_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				string_class := string_8_class
+				basic_classes.force_last (string_class, l_name)
 				create string_type.make (Void, tokens.string_class_name, string_class)
 			end
 				-- Class "CHARACTER".
-			if character_class.id = character_class_id then
-				l_name := tokens.character_class_name
-				l_class := character_8_class
-				classes.force_last (l_class, l_name)
-				character_class := l_class
+			l_name := tokens.character_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				character_class := character_8_class
+				basic_classes.force_last (character_class, l_name)
 				create character_type.make (Void, tokens.character_class_name, character_class)
 			end
 				-- Class "CHARACTER_REF".
-			if character_ref_class.id = character_ref_class_id then
-				l_name := tokens.character_ref_class_name
-				l_class := character_8_ref_class
-				classes.force_last (l_class, l_name)
-				character_ref_class := l_class
+			l_name := tokens.character_ref_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				character_ref_class := character_8_ref_class
+				basic_classes.force_last (character_ref_class, l_name)
 			end
 				-- Class "WIDE_CHARACTER".
-			if wide_character_class.id = wide_character_class_id then
-				l_name := tokens.wide_character_class_name
-				l_class := character_32_class
-				classes.force_last (l_class, l_name)
-				wide_character_class := l_class
+			l_name := tokens.wide_character_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				wide_character_class := character_32_class
+				basic_classes.force_last (wide_character_class, l_name)
 			end
 				-- Class "WIDE_CHARACTER_REF".
-			if wide_character_ref_class.id = wide_character_ref_class_id then
-				l_name := tokens.wide_character_ref_class_name
-				l_class := character_32_ref_class
-				classes.force_last (l_class, l_name)
-				wide_character_ref_class := l_class
+			l_name := tokens.wide_character_ref_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				wide_character_ref_class := character_32_ref_class
+				basic_classes.force_last (wide_character_ref_class, l_name)
 			end
 				-- Class "INTEGER".
-			if integer_class.id = integer_class_id then
-				l_name := tokens.integer_class_name
-				l_class := integer_32_class
-				classes.force_last (l_class, l_name)
-				integer_class := l_class
+			l_name := tokens.integer_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				integer_class := integer_32_class
+				basic_classes.force_last (integer_class, l_name)
 				create integer_type.make (Void, tokens.integer_class_name, integer_class)
 				create integer_convert_feature.make (integer_type)
 			end
 				-- Class "INTEGER_REF".
-			if integer_ref_class.id = integer_class_id then
-				l_name := tokens.integer_ref_class_name
-				l_class := integer_32_ref_class
-				classes.force_last (l_class, l_name)
-				integer_ref_class := l_class
+			l_name := tokens.integer_ref_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				integer_ref_class := integer_32_ref_class
+				basic_classes.force_last (integer_ref_class, l_name)
 			end
 				-- Class "NATURAL".
-			if natural_class.id = natural_class_id then
-				l_name := tokens.natural_class_name
-				l_class := natural_32_class
-				classes.force_last (l_class, l_name)
-				natural_class := l_class
+			l_name := tokens.natural_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				natural_class := natural_32_class
+				basic_classes.force_last (natural_class, l_name)
 				create natural_type.make (Void, tokens.natural_class_name, natural_class)
 				create natural_convert_feature.make (natural_type)
 			end
 				-- Class "NATURAL_REF".
-			if natural_ref_class.id = natural_ref_class_id then
-				l_name := tokens.natural_ref_class_name
-				l_class := natural_32_ref_class
-				classes.force_last (l_class, l_name)
-				natural_ref_class := l_class
+			l_name := tokens.natural_ref_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				natural_ref_class := natural_32_ref_class
+				basic_classes.force_last (natural_ref_class, l_name)
 			end
 				-- Class "REAL".
-			if real_class.id = real_class_id then
-				l_name := tokens.real_class_name
-				l_class := real_32_class
-				classes.force_last (l_class, l_name)
-				real_class := l_class
+			l_name := tokens.real_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				real_class := real_32_class
+				basic_classes.force_last (real_class, l_name)
 				create real_type.make (Void, tokens.real_class_name, real_class)
 				create real_convert_feature.make (real_type)
 			end
 				-- Class "REAL_REF".
-			if real_ref_class.id = real_ref_class_id then
-				l_name := tokens.real_ref_class_name
-				l_class := real_32_ref_class
-				classes.force_last (l_class, l_name)
-				real_ref_class := l_class
+			l_name := tokens.real_ref_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				real_ref_class := real_32_ref_class
+				basic_classes.force_last (real_ref_class, l_name)
 			end
 				-- Class "DOUBLE".
-			if double_class.id = double_class_id then
-				l_name := tokens.double_class_name
-				l_class := real_64_class
-				classes.force_last (l_class, l_name)
-				double_class := l_class
+			l_name := tokens.double_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				double_class := real_64_class
+				basic_classes.force_last (double_class, l_name)
 				create double_type.make (Void, tokens.double_class_name, double_class)
 				create double_convert_feature.make (double_type)
 			end
 				-- Class "DOUBLE_REF".
-			if double_ref_class.id = double_ref_class_id then
-				l_name := tokens.double_ref_class_name
-				l_class := real_64_ref_class
-				classes.force_last (l_class, l_name)
-				double_ref_class := l_class
+			l_name := tokens.double_ref_class_name
+			basic_classes.search (l_name)
+			if not basic_classes.found then
+				classes.remove (l_name)
+				double_ref_class := real_64_ref_class
+				basic_classes.force_last (double_ref_class, l_name)
 			end
 		end
 
@@ -3029,47 +3050,6 @@ feature -- Timing
 			end
 		end
 
-feature {NONE} -- Basic class aliasing
-
-	string_class_id: INTEGER
-			-- Id of class "STRING" when not aliased
-
-	character_class_id: INTEGER
-			-- Id of class "CHARACTER" when not aliased
-
-	wide_character_class_id: INTEGER
-			-- Id of class "WIDE_CHARACTER" when not aliased
-
-	integer_class_id: INTEGER
-			-- Id of class "INTEGER" when not aliased
-
-	natural_class_id: INTEGER
-			-- Id of class "NATURAL" when not aliased
-
-	real_class_id: INTEGER
-			-- Id of class "REAL" when not aliased
-
-	double_class_id: INTEGER
-			-- Id of class "DOUBLE" when not aliased	
-
-	character_ref_class_id: INTEGER
-			-- Id of class "CHARACTER_REF" when not aliased
-
-	wide_character_ref_class_id: INTEGER
-			-- Id of class "WIDE_CHARACTER_REF" when not aliased
-
-	integer_ref_class_id: INTEGER
-			-- Id of class "INTEGER_REF" when not aliased
-
-	natural_ref_class_id: INTEGER
-			-- Id of class "NATURAL_REF" when not aliased
-
-	real_ref_class_id: INTEGER
-			-- Id of class "REAL_REF" when not aliased
-
-	double_ref_class_id: INTEGER
-			-- Id of class "DOUBLE_REF" when not aliased
-
 feature {NONE} -- Implementation
 
 	internal_eiffel_preparser: ET_EIFFEL_PREPARSER
@@ -3083,6 +3063,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
+	sized_basic_type_count: INTEGER is 13
+			-- Number of sized basic types
+			-- (STRING, CHARATER, WIDE_CHARACTER, INTEGER, NATURAL, REAL, DOUBLE,
+			-- CHARACTER_REF, WIDE_CHARACTER_REF, INTEGER_REF, NATURAL_REF, REAL_REF, DOUBLE_REF)
+
 	initial_classes_by_group_capacity: INTEGER is
 			-- Initial capacity for `classes_by_group'
 		once
@@ -3095,6 +3080,8 @@ invariant
 
 	classes_not_void: classes /= Void
 	no_void_class: not classes.has_item (Void)
+	basic_classes_not_void: basic_classes /= Void
+	no_void_basic_class: not basic_classes.has_item (Void)
 	error_handler_not_void: error_handler /= Void
 	ast_factory_not_void: ast_factory /= Void
 	any_class_not_void: any_class /= Void
@@ -3204,19 +3191,6 @@ invariant
 	character_convert_feature_not_void: character_convert_feature /= Void
 	wide_character_convert_feature_not_void: wide_character_convert_feature /= Void
 	pointer_convert_feature_not_void: pointer_convert_feature /= Void
-	string_class_id_positive: string_class_id > 0
-	character_class_id_positive: character_class_id > 0
-	wide_character_class_id_positive: wide_character_class_id > 0
-	integer_class_id_positive: integer_class_id > 0
-	natural_class_id_positive: natural_class_id > 0
-	real_class_id_positive: real_class_id > 0
-	double_class_id_positive: double_class_id > 0
-	character_ref_class_id_positive: character_ref_class_id > 0
-	wide_character_ref_class_id_positive: wide_character_ref_class_id > 0
-	integer_ref_class_id_positive: integer_ref_class_id > 0
-	natural_ref_class_id_positive: natural_ref_class_id > 0
-	real_ref_class_id_positive: real_ref_class_id > 0
-	double_ref_class_id_positive: double_ref_class_id > 0
 	external_include_pathnames_not_void: external_include_pathnames /= Void
 	no_void_external_include_pathname: not external_include_pathnames.has (Void)
 	external_object_pathnames_not_void: external_object_pathnames /= Void
