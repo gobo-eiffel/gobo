@@ -120,6 +120,7 @@ feature {NONE} -- Processing
 					set_fatal_error (current_class)
 				else
 					check_suppliers_validity
+					check_providers_validity
 				end
 			end
 			current_class := old_class
@@ -145,6 +146,38 @@ feature {NONE} -- Formal parameters and parents validity
 					set_fatal_error (current_class)
 				else
 					l_cursor := l_suppliers.new_cursor
+					from l_cursor.start until l_cursor.after loop
+						l_class := l_cursor.item
+						if not l_class.interface_checked or else l_class.has_interface_error then
+								-- This check is probably too strong in many cases.
+								-- But that would be too long to check. We don't
+								-- need such level of fine-grained checking here.
+							set_fatal_error (current_class)
+							l_cursor.go_after -- Jump out of the loop.
+						else
+							l_cursor.forth
+						end
+					end
+				end
+			end
+		end
+
+	check_providers_validity is
+			-- Check whether none of the provider classes
+			-- of `current_class' have been modified.
+		local
+			l_providers: DS_HASH_SET [ET_CLASS]
+			l_cursor: DS_HASH_SET_CURSOR [ET_CLASS]
+			l_class: ET_CLASS
+		do
+			if current_class.implementation_checked then
+				l_providers := current_class.providers
+				if l_providers = Void then
+						-- Force implementation to be checked again.
+						-- It would be too long to recompute the providers.
+					set_fatal_error (current_class)
+				else
+					l_cursor := l_providers.new_cursor
 					from l_cursor.start until l_cursor.after loop
 						l_class := l_cursor.item
 						if not l_class.interface_checked or else l_class.has_interface_error then
