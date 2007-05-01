@@ -561,11 +561,15 @@ feature -- Initialization
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
+			l_reparse_needed: BOOLEAN
 		do
 			l_cursor := classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				from
 					l_class := l_cursor.item
+					if l_class.is_parsed and then l_class.has_syntax_error then
+						l_reparse_needed := True
+					end
 				until
 					l_class = Void
 				loop
@@ -573,6 +577,12 @@ feature -- Initialization
 					l_class := l_class.overridden_class
 				end
 				l_cursor.forth
+			end
+			if l_reparse_needed then
+					-- Some classes which had a syntax error will be reparsed.
+					-- As a consequence, it is wiser to incrementally reset
+					-- the classes that depend on them.
+				reset_classes_incremental
 			end
 		end
 
