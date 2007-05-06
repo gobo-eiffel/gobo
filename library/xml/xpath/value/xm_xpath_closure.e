@@ -214,8 +214,13 @@ feature -- Evaluation
 
 	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			l_context: XM_XPATH_CONTEXT
 		do
-			todo ("process", False)
+			l_context := saved_xpath_context.new_context
+			l_context.set_current_receiver (a_context.current_receiver)
+			l_context.set_temporary_destination (True)
+			base_expression.generate_events (l_context)
 		end
 	
 feature  -- Conversion
