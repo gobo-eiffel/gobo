@@ -142,9 +142,7 @@ feature -- Optimization
 		do
 			Precursor (a_context, a_context_item_type)
 			if not was_expression_replaced and function /= Void then
-				if argument_evaluation_modes = Void then
-					compute_argument_evaluation_modes
-				end
+				compute_argument_evaluation_modes
 				if static_type = Void or static_type.primary_type = any_item then
 					-- try and do better
 					static_type := function.result_type
@@ -156,8 +154,7 @@ feature -- Optimization
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			Precursor (a_context, a_context_item_type)
-			if not was_expression_replaced and function /= Void
-				and argument_evaluation_modes = Void then
+			if not was_expression_replaced and function /= Void then
 				compute_argument_evaluation_modes
 			end
 		end
@@ -373,7 +370,6 @@ feature {NONE} -- Implementation
 	compute_argument_evaluation_modes is
 			-- Create and populate `argument_evaluation_modes'.
 		require
-			argument_evaluation_modes_void: argument_evaluation_modes = Void
 			fixed_up: function /= Void
 		local
 			i, l_count, l_reference_count: INTEGER

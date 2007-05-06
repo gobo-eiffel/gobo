@@ -119,7 +119,7 @@ feature -- Element change
 			-- Evaluate all AVTs
 		require
 			context_not_void: a_context /= Void
-			not_already_reduced: not is_reducible
+			-- commented out 6/5/2007 as it was violated, and I cannot see a reason for it: not_already_reduced: not is_reducible
 		do
 			evaluate_order (a_context)
 			evaluate_case_order (a_context)

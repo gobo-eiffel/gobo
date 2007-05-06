@@ -185,7 +185,7 @@ feature -- Duplication
 			-- The new iterator is the same as the old one,
 			--  except for its start position.
 
-			create Result.make (context, base_iterator, sort_keys)
+			create Result.make (context, base_iterator.another, sort_keys)
 			Result.set_count (count)
 			Result.set_node_keys (node_keys)
 		ensure then

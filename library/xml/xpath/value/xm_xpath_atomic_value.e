@@ -19,7 +19,7 @@ inherit
 			is_integer_value, as_integer_value, is_string_value, as_string_value, is_decimal_value, as_decimal_value,
 			is_qname_value, as_qname_value, is_boolean_value, as_boolean_value, is_numeric_value, as_numeric_value,
 			is_atomic_value, as_atomic_value, is_untyped_atomic, as_untyped_atomic, is_function_package,
-			is_any_uri, as_any_uri, is_machine_integer_value, as_machine_integer_value, lazy_evaluation_mode, eager_evaluation_mode
+			is_any_uri, as_any_uri, is_machine_integer_value, as_machine_integer_value
 		redefine
 			generate_events, count, calculate_effective_boolean_value 
 		end
@@ -80,18 +80,6 @@ feature -- Access
 			-- Number of items in `Current'
 		do
 			Result := 1
-		end
-
-	lazy_evaluation_mode: INTEGER is
-			-- Method used for lazy evaluation of `Current'
-		do
-			Result := No_evaluation_needed
-		end
-
-	eager_evaluation_mode: INTEGER is
-			-- Method used for eager evaluation of `Current'
-		do
-			Result := No_evaluation_needed
 		end
 
 feature -- Comparison

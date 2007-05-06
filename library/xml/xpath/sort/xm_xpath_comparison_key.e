@@ -100,7 +100,7 @@ feature -- Comparison
 feature {XM_XPATH_COMPARISON_KEY} -- Implementation
 
 	category: INTEGER
-			-- Category
+			-- Category of keys being compared
 
 	value: XM_XPATH_ATOMIC_VALUE
 			-- Value

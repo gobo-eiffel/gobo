@@ -19,7 +19,7 @@ inherit
 
 	XM_XPATH_EXPRESSION
 		redefine
-			is_value, as_value
+			is_value, as_value, eager_evaluation_mode, lazy_evaluation_mode
 		end
 
 feature {NONE} -- Initialization
@@ -135,6 +135,18 @@ feature -- Access
 			end
 		ensure
 			item_may_be_void: True
+		end
+
+	lazy_evaluation_mode: INTEGER is
+			-- Method used for lazy evaluation of `Current'
+		do
+			Result := No_evaluation_needed
+		end
+
+	eager_evaluation_mode: INTEGER is
+			-- Method used for eager evaluation of `Current'
+		do
+			Result := No_evaluation_needed
 		end
 
 feature -- Status report

@@ -94,10 +94,10 @@ feature -- Cursor movement
 			if item /= Void then current_members.force_last (item) end
 			from
 			until
-				population.after or else next_group_reached
+				is_error or else population.after or next_group_reached
 			loop
 				population.forth
-				if population.after then
+				if not is_error and then population.after then
 					next_candidate := Void
 				else
 					next_candidate := population.item

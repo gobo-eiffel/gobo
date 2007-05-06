@@ -127,7 +127,7 @@ feature -- Element change
 				end
 			end
 			if group_adjacent /= Void then
-				type_check_expression ("group-by", group_adjacent)
+				type_check_expression ("group-adjacent", group_adjacent)
 				if group_adjacent.was_expression_replaced then
 					group_adjacent := group_adjacent.replacement_expression
 				end

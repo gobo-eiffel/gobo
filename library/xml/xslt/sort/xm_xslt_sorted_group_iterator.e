@@ -20,15 +20,13 @@ inherit
 		end
 
 	XM_XSLT_SORTED_ITERATOR
-		rename
-			make as make_sorted_iterator
 		redefine
-			build_array
+			make, build_array
 		end
 
 create
 
-	make, make_sorted_iterator
+	make
 
 feature {NONE} -- Initialization
 
@@ -36,13 +34,9 @@ feature {NONE} -- Initialization
 			a_base_iterator: XM_XSLT_GROUP_ITERATOR;
 			some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]) is
 			-- Establish invariant
-		require
-			context_not_void: a_context /= Void
-			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
-			at_least_one_sort_key: some_sort_keys /= Void and then some_sort_keys.count > 0
 		do
-			make_sorted_iterator (a_context, a_base_iterator, some_sort_keys)
 			group_iterator := a_base_iterator
+			Precursor (a_context, a_base_iterator, some_sort_keys)
 		end
 
 feature -- Access

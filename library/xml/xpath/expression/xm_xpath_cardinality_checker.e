@@ -17,7 +17,8 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			check_static_type, create_iterator, evaluate_item, compute_cardinality, create_node_iterator
+			check_static_type, create_iterator, evaluate_item, compute_cardinality,
+			create_node_iterator, optimize
 		end
 
 create {XM_XPATH_EXPRESSION_FACTORY}
@@ -61,6 +62,29 @@ feature -- Optimization
 		do
 			mark_unreplaced
 			base_expression.check_static_type (a_context, a_context_item_type)
+			if base_expression.was_expression_replaced then
+				if base_expression.replacement_expression.is_error then
+					set_last_error (base_expression.replacement_expression.error_value)
+				else
+					set_base_expression (base_expression.replacement_expression)
+				end
+			end
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
+			else
+				if required_cardinality = Required_cardinality_zero_or_more then
+					set_replacement (base_expression)
+				elseif base_expression.cardinality_subsumed_by (required_cardinality) then
+					set_replacement (base_expression)
+				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			mark_unreplaced
+			base_expression.optimize (a_context, a_context_item_type)
 			if base_expression.was_expression_replaced then
 				if base_expression.replacement_expression.is_error then
 					set_last_error (base_expression.replacement_expression.error_value)

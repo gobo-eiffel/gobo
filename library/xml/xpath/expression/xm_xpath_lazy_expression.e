@@ -18,7 +18,8 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			is_lazy_expression, as_lazy_expression, evaluate_item, create_iterator, generate_events
+			is_lazy_expression, as_lazy_expression, evaluate_item, create_iterator,
+			create_node_iterator, generate_events
 		end
 
 create {XM_XPATH_EXPRESSION_FACTORY}
@@ -63,6 +64,13 @@ feature -- Evaluation
 		do
 			base_expression.create_iterator (a_context)
 			last_iterator := base_expression.last_iterator
+		end
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Iterator over the nodes of a sequence
+		do
+			base_expression.create_node_iterator (a_context)
+			last_node_iterator := base_expression.last_node_iterator
 		end
 
 	generate_events (a_context: XM_XPATH_CONTEXT) is

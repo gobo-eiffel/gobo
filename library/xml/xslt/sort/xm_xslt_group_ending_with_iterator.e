@@ -94,7 +94,7 @@ feature -- Cursor movement
 				from
 					next_candidate := item
 				until
-					population.after or else matched or else next_candidate = Void
+					is_error or else population.after or matched or next_candidate = Void
 				loop
 					population.forth
 					if not population.after then
@@ -110,7 +110,9 @@ feature -- Cursor movement
 						end
 					end
 				end
-				if population.after then after_pending := True end
+				if not is_error and then population.after then
+					after_pending := True
+				end
 			end
 		end
 

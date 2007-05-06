@@ -94,6 +94,9 @@ feature -- Cursor movement
 				after := True
 			else
 				advance
+				if next_item = Void then
+					after := True
+				end
 			end
 		end
 
@@ -167,8 +170,10 @@ feature {NONE} -- Implementation
 						create l_error.make_from_string ("Key expression is an empty sequence", Xpath_errors_uri, "XTTE1100", Type_error)
 						set_last_error (l_error)
 						next_item := Void; l_finished := True
+						running_context.transformer.report_fatal_error (l_error)
 					elseif l_item.item.is_error then
 						set_last_error (l_item.item.error_value); l_finished := True
+						running_context.transformer.report_fatal_error (l_item.item.error_value)
 					elseif l_item.item.is_atomic_value then
 						l_candidate_key := l_item.item.as_atomic_value
 						if next_key = Void then next_key := l_candidate_key end
@@ -182,9 +187,10 @@ feature {NONE} -- Implementation
 						create l_error.make_from_string ("Key expression does not evaluate to an atomic item", Xpath_errors_uri, "XTTE1100", Type_error)
 						set_last_error (l_error)
 						l_finished := True
+						running_context.transformer.report_fatal_error (l_error)
 					end
 				end
-				if not population.after then
+				if not is_error and then not population.after then
 					population.forth
 				end
 			end

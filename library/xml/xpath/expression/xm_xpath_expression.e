@@ -184,7 +184,7 @@ feature -- Access
 				Result := Create_closure
 			end
 		ensure
-			lazy_evaluation_modet_large_enough: Result >= Evaluation_method_undecided
+			lazy_evaluation_mode_large_enough: Result >= Evaluation_method_undecided
 			lazy_evaluation_mode_small_enough: Result <= Create_memo_closure
 			none_needed_implies_value: Result = No_evaluation_needed implies is_value
 			closure_over_computed_expression: Result = Create_closure implies is_computed_expression
