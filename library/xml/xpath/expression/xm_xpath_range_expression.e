@@ -189,9 +189,17 @@ feature -- Evaluation
 						if not (l_result.item.is_machine_integer_value or l_result.item.is_integer_value) then
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						else
-							if l_item.is_machine_integer_value and l_result.item.is_machine_integer_value
-								and l_item.as_machine_integer_value.is_platform_integer
-								and l_result.item.as_machine_integer_value.is_platform_integer then
+							if l_item.is_integer_value then
+								if l_item.as_integer_value.is_platform_integer then
+									create {XM_XPATH_MACHINE_INTEGER_VALUE} l_item.make (l_item.as_integer_value.as_integer)
+								end
+							end
+							if l_result.item.is_integer_value then
+								if l_result.item.as_integer_value.is_platform_integer then
+									l_result.put (create {XM_XPATH_MACHINE_INTEGER_VALUE}.make (l_result.item.as_integer_value.as_integer))
+								end
+							end
+							if l_item.is_machine_integer_value and l_result.item.is_machine_integer_value then
 								l_integer_value := l_item.as_machine_integer_value
 								l_other_integer_value := l_result.item.as_machine_integer_value
 								if l_integer_value.value > l_other_integer_value.value then

@@ -260,6 +260,6 @@ invariant
 
 	valid_operator: operator = For_token or operator = Some_token or operator = Every_token or operator = Let_token
 	sequence_not_void: initialized implies sequence /= Void
-	action_not_void: initialized implies action /= Void
+	action_not_void: initialized implies action_expression /= Void
 	
 end
