@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_VALUE
 		redefine
 			generate_events, is_singleton_node, as_singleton_node, count,
-			item_at, calculate_effective_boolean_value 
+			item_at, calculate_effective_boolean_value
 		end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
@@ -179,7 +179,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
 		do
-			Result := Supports_evaluate_item
+			Result := Supports_evaluate
 		end
 	
 end

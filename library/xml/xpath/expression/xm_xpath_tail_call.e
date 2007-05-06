@@ -16,11 +16,6 @@ inherit
 
 	ANY
 
-feature -- Status report
-
-	--	commented out 2006/11/10 in favour of DS_CELL argument last_tail_call: XM_XPATH_TAIL_CALL
-			-- Residue from last call to `generate_tail_call'
-
 feature -- Evaluation
 
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XPATH_CONTEXT) is

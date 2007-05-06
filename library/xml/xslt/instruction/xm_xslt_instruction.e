@@ -191,7 +191,7 @@ feature -- Evaluation
 			l_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			check
-				emulation: not is_evaluate_item_supported
+				emulation: not is_evaluate_supported
 			end
 			if is_iterator_supported then
 				create_iterator (a_context)
@@ -231,7 +231,7 @@ feature -- Evaluation
 			check
 				emulation: not is_iterator_supported
 			end
-			if is_evaluate_item_supported then
+			if is_evaluate_supported then
 				create l_item.make (Void)
 				evaluate_item (l_item, a_context)
 				if l_item.item = Void then

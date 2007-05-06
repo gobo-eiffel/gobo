@@ -66,6 +66,53 @@ feature -- Element change
 			variables.force (a_value, a_slot_number)
 		end
 
+	set_variables (a_variables: like variables) is
+			-- Set `variables' to `a_variables'.
+		require
+			a_variables_not_void: a_variables /= Void
+		do
+			variables := a_variables
+		ensure
+			variables_set: variables = a_variables
+		end
+
+	set_slot_manager (a_slot_manager: XM_XPATH_SLOT_MANAGER; a_parameter_count: INTEGER) is
+			-- Set `slot_manager' to `a_slot_manager' and re-allocate `variables' if necessary.
+		require
+			a_slot_manager_not_void: a_slot_manager /= Void
+			non_negative_parameter_count: a_parameter_count >= 0
+			a_parameter_count_small_enough: a_parameter_count <= a_slot_manager.number_of_variables
+		local
+			i: INTEGER
+			l_variables: like variables
+		do
+			slot_manager := a_slot_manager
+			if variables.count /= a_slot_manager.number_of_variables then
+				create l_variables.make (1, a_slot_manager.number_of_variables)
+				from
+					i := 1
+				until
+					i > a_parameter_count
+				loop
+					l_variables.put (variables.item (i), i)
+					i := i + 1
+				end
+				variables := l_variables
+			else
+				from
+					i := a_parameter_count + 1
+				until
+					i > variables.count
+				loop
+					variables.put (Void, i)
+					i := i + 1
+				end
+			end
+		ensure
+			slot_manager_set: slot_manager = a_slot_manager
+			correct_size: variables.count = a_slot_manager.number_of_variables
+		end
+
 invariant
 
 	slot_manager_not_void: slot_manager /= Void

@@ -241,6 +241,9 @@ feature -- Access
 			end
 		end
 
+	tail_call_function: XM_XSLT_COMPILED_USER_FUNCTION
+			-- Next tail call
+
 feature -- Status report
 
 	last_build_error: STRING
@@ -266,11 +269,6 @@ feature -- Status report
 		do
 			Result := STRING_.same_string (a_uri, transformer.principal_result_uri) or else Precursor (a_uri)
 		end
-
-feature {NONE} -- Implementation
-
-	saved_receiver: like current_receiver
-			-- Previous value for `current_receiver'
 
 feature -- Creation
 
@@ -333,6 +331,64 @@ feature -- Element change
 			-- Set stack frame.
 		do
 			internal_local_variable_frame := a_local_variable_frame
+		end
+
+	reset_stack_frame_map (a_slot_manager: XM_XPATH_SLOT_MANAGER; a_parameter_count: INTEGER) is
+			-- Reset `local_variable_frame.slot_manager' and conditionally resize `local_variable_frame.variables'.
+		require
+			a_slot_manager_not_void: a_slot_manager /= Void
+			non_negative_parameter_count: a_parameter_count >= 0
+			a_parameter_count_small_enough: a_parameter_count <= a_slot_manager.number_of_variables
+			major_context: not is_minor
+		do
+			local_variable_frame.set_slot_manager (a_slot_manager, a_parameter_count)
+		ensure
+			slot_manager_set: local_variable_frame.slot_manager = a_slot_manager
+			correct_size: local_variable_frame.variables.count = a_slot_manager.number_of_variables
+		end
+
+	set_tail_call (a_function: XM_XSLT_COMPILED_USER_FUNCTION; a_variables: ARRAY [XM_XPATH_VALUE]) is
+			-- Set `a_function' as the next tail call, with `a_variables' on stack frame.
+		require
+			a_function_not_void: a_function /= Void
+			a_variables_not_void: a_variables /= Void
+		local
+			i: INTEGER
+			l_variables: like a_variables
+		do
+			tail_call_function := a_function
+			if a_variables.count /= local_variable_frame.variables.count then
+				create l_variables.make (1, a_function.slot_manager.number_of_variables)
+				from
+					i := 1
+				until
+					i > a_variables.count
+				loop
+					l_variables.put (a_variables.item (i), i)
+					i := i + 1
+				end
+				local_variable_frame.set_variables (l_variables)
+			else
+				from
+					i := 1
+				until
+					i > a_variables.count
+				loop
+					local_variable_frame.variables.put (a_variables.item (i), i)
+					i := i + 1
+				end
+			end
+		ensure
+			tail_call_function_set: tail_call_function = a_function
+			minimum_variables_count: local_variable_frame.variables.count >= a_variables.count
+		end
+
+	clear_tail_call_function is
+			-- Set `tail_call_function' to `Void'.
+		do
+			tail_call_function := Void
+		ensure
+			tail_call_function = Void
 		end
 
 	open_stack_frame (a_slot_manager: XM_XPATH_SLOT_MANAGER) is
@@ -565,6 +621,9 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	saved_receiver: like current_receiver
+			-- Previous value for `current_receiver'
 
 	set_build_error (a_message: STRING) is
 			-- Set `last_build_error'.

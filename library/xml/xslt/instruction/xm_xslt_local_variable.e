@@ -40,9 +40,12 @@ feature -- Evaluation
 
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
-			select_expression.lazily_evaluate (a_context, Many_references)
-			a_context.set_local_variable (last_evaluation, slot_number)
+			create l_result.make (Void)
+			select_expression.evaluate (l_result, select_expression.lazy_evaluation_mode, Many_references, a_context)
+			a_context.set_local_variable (l_result.item, slot_number)
 		end
 
 	evaluate_variable (a_context: XM_XPATH_CONTEXT) is 

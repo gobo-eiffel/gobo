@@ -206,7 +206,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
 		do
-			Result := Supports_evaluate_item
+			Result := Supports_evaluate
 		end
 
 	compute_cardinality is

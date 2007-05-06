@@ -195,11 +195,17 @@ feature -- Evaluation
 		require
 			context_not_void: a_context /= Void
 			select_expression_not_void: select_expression /= Void
+		local
+			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
-			select_expression.lazily_evaluate (a_context, Many_references)
-			Result := select_expression.last_evaluation
+			create l_result.make (Void)
+			select_expression.evaluate (l_result, select_expression.lazy_evaluation_mode, Many_references, a_context)
+			Result := l_result.item
+			if Result = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+			end
 		ensure
-			variable_value_not_void: Result /= Void
+			select_value_not_void: Result /= Void
 		end
 
 feature -- Element change

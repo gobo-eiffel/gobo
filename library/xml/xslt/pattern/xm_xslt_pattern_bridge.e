@@ -188,19 +188,12 @@ feature -- Evaluation
 			-- pre-condition cannot be met
 		end
 
-	lazily_evaluate (a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
-			-- Lazily evaluate `Current'.
-		do
-			-- no lazy evaluations for patterns
-			eagerly_evaluate (a_context)
-		end
-
 feature {XM_XPATH_EXPRESSION} -- Local
 
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
 		do
-			Result := Supports_evaluate_item
+			Result := Supports_evaluate
 		end
 
 invariant

@@ -164,7 +164,7 @@ feature -- Access
 			end
 		end
 
-	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
+	item_at (an_index: INTEGER): XM_XPATH_ITEM is
 			-- Item at `an_index'
 		do
 			Result := item (an_index)

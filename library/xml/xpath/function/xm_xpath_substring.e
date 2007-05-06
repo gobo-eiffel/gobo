@@ -90,8 +90,8 @@ feature -- Evaluation
 					l_double_value := a_result.item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
 					if l_double_value.is_platform_integer then
 						l_starting_position := DOUBLE_.truncated_to_integer (l_double_value.value)
+						a_result.put (Void)
 						if arguments.count = 3 then
-							a_result.put (Void)
 							arguments.item (3).evaluate_item (a_result, a_context)
 							if  a_result.item /= Void and then a_result.item.is_error then
 								-- nothing to do
@@ -110,6 +110,7 @@ feature -- Evaluation
 									if l_ending_position > l_string.count then
 										l_ending_position := l_string.count
 									end
+									a_result.put (Void)
 								else
 									a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 								end

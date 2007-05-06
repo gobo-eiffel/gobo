@@ -114,17 +114,19 @@ feature -- Evaluation
 	select_value (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XPATH_VALUE is
 			-- Value of `select_expression'
 		local
-			a_new_context: XM_XSLT_EVALUATION_CONTEXT
-			an_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
-			a_new_context := a_context.new_clean_context
-			create an_iterator.make (a_new_context.transformer.principal_source_document)
-			a_new_context.set_current_iterator (an_iterator)
+			l_new_context := a_context.new_clean_context
+			create l_iterator.make (l_new_context.transformer.principal_source_document)
+			l_new_context.set_current_iterator (l_iterator)
 			if slot_manager.number_of_variables > 0 then
-				a_new_context.open_stack_frame (slot_manager)
+				l_new_context.open_stack_frame (slot_manager)
 			end
-			select_expression.lazily_evaluate (a_new_context, Many_references)
-			Result := select_expression.last_evaluation
+			create l_result.make (Void)
+			select_expression.evaluate (l_result, select_expression.lazy_evaluation_mode, Many_references, l_new_context)
+			Result := l_result.item
 		end
 
 feature -- Element_change

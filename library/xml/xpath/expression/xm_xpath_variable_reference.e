@@ -16,10 +16,10 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			same_expression, promote, create_iterator, evaluate_item, lazily_evaluate,
+			same_expression, promote, create_iterator, evaluate_item,
 			native_implementations, compute_special_properties, compute_intrinsic_dependencies,
 			is_variable_reference, as_variable_reference, accumulate_slots_used,
-			create_node_iterator, generate_events
+			create_node_iterator, generate_events, lazy_evaluation_mode, eager_evaluation_mode
 		end
 
 create
@@ -76,6 +76,17 @@ feature -- Access
 			-- Binding for variable;
 			-- will be `Void' until `fix_up' is called.
 
+	lazy_evaluation_mode: INTEGER is
+			-- Method used for lazy evaluation of `Current'
+		do
+			Result := Call_evaluate_variable
+		end
+
+	eager_evaluation_mode: INTEGER is
+			-- Method used for eager evaluation of `Current'
+		do
+			Result := Evaluate_and_materialize_variable
+		end
 
 feature -- Comparison
 
@@ -236,13 +247,6 @@ feature -- Evaluation
 			evaluation: last_evaluated_binding /= Void			
 		end
 
-	lazily_evaluate (a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
-			-- Lazily evaluate `Current'.
-		do
-			evaluate_variable (a_context)
-			last_evaluation := last_evaluated_binding
-		end
-
 feature -- Element change
 
 	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: XM_XPATH_VALUE; a_dependencies_set: ARRAY [BOOLEAN]; a_cardinalities_set: ARRAY [BOOLEAN]; a_special_properties_set: ARRAY [BOOLEAN]) is
@@ -297,7 +301,7 @@ feature {NONE} -- Implementation
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
 		do
-				Result := Supports_process + Supports_evaluate_item + Supports_iterator
+				Result := Supports_process + Supports_evaluate + Supports_iterator
 		end
 
 	compute_cardinality is

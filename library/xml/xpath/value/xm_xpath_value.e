@@ -106,7 +106,7 @@ feature -- Access
 			l_result: DS_CELL [XM_XPATH_ITEM]
 			l_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			if is_evaluate_item_supported and then a_index = 1 then
+			if is_evaluate_supported and then a_index = 1 then
 				create l_result.make (Void)
 				evaluate_item (l_result, Void)
 				Result := l_result.item
@@ -185,12 +185,6 @@ feature -- Optimization
 		end
 
 feature -- Evaluation
-
-	lazily_evaluate (a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
-			-- Lazily evaluate `Current'.
-		do
-				last_evaluation := Current
-		end
 
 	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.

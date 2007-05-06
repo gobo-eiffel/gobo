@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			evaluate_item, create_iterator, create_node_iterator
+			evaluate_item, create_iterator, create_node_iterator, is_deferred_error
 		end
 
 create
@@ -61,6 +61,12 @@ feature -- Status report
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			todo ("display", False)
+		end
+
+	is_deferred_error: BOOLEAN is
+			-- Is `Current' a deferred error?
+		do
+			Result := True
 		end
 
 feature -- Optimization

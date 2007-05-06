@@ -154,58 +154,28 @@ feature -- Creation
 			iterator_created: Result /= Void
 		end
 
-	create_closure (an_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
+	create_closure (a_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
 			-- New `XM_XPATH_CLOSURE' (or sometimes, an `XM_XPATH_SEQUENCE_EXTENT', or others).
 		require
-			expression_not_void: an_expression /= Void
+			expression_not_void: a_expression /= Void
 			context_not_void: a_context /= Void
 		local
-			a_tail_expression: XM_XPATH_TAIL_EXPRESSION
-			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
-			a_value: XM_XPATH_VALUE
-			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
-			a_realizable_iterator: XM_XPATH_REALIZABLE_ITERATOR [XM_XPATH_ITEM]
-			a_start, an_end: INTEGER
+			l_tail_expression: XM_XPATH_TAIL_EXPRESSION
+			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
 			last_created_closure := Void
 
 			-- Treat tail recursion as a special case.
 
-			if an_expression.is_tail_expression then
-				a_tail_expression := an_expression.as_tail_expression
-				if a_tail_expression.base_expression.is_variable_reference then
-					a_variable_reference := a_tail_expression.base_expression.as_variable_reference
-					a_variable_reference.lazily_evaluate (a_context, a_reference_count)
-					a_value := a_variable_reference.last_evaluation
-					if a_value.is_memo_closure then
-						a_value.create_iterator (Void)
-						if a_value.last_iterator.is_error then
-							create {XM_XPATH_INVALID_VALUE} last_created_closure.make (a_value.last_iterator.error_value)
-						else
-							a_realizable_iterator := a_value.last_iterator.as_realizable_iterator
-							a_realizable_iterator.realize
-							a_value := a_realizable_iterator.last_realized_value
-						end
-					end
-					if a_value.is_integer_range then
-						a_start := a_value.as_integer_range.minimum + 1
-						an_end := a_value.as_integer_range.maximum
-						if a_start = an_end then
-							create {XM_XPATH_INTEGER_VALUE} last_created_closure.make_from_integer (a_start)
-						else
-							create {XM_XPATH_INTEGER_RANGE} last_created_closure.make (a_start, an_end)
-						end
-					elseif a_value.is_sequence_extent then
-						a_sequence_extent := a_value.as_sequence_extent
-						create {XM_XPATH_SEQUENCE_EXTENT} last_created_closure.make_as_view (a_sequence_extent, a_tail_expression.start, a_sequence_extent.count -  a_tail_expression.start + 1)
-					end
-				end
-			end
-			if last_created_closure = Void then
+			if a_expression.is_tail_expression then
+				create l_result.make (Void)
+				l_tail_expression.evaluate_lazy_tail_expression (l_result, a_context, a_reference_count)
+				last_created_closure := l_result.item
+			else
 				if a_reference_count /= 1 then
-					create {XM_XPATH_MEMO_CLOSURE} last_created_closure.make (an_expression, a_context)
+					create {XM_XPATH_MEMO_CLOSURE} last_created_closure.make (a_expression, a_context)
 				else
-					create {XM_XPATH_CLOSURE} last_created_closure.make (an_expression, a_context)
+					create {XM_XPATH_CLOSURE} last_created_closure.make (a_expression, a_context)
 				end
 			end
 		ensure

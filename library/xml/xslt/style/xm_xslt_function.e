@@ -335,7 +335,8 @@ feature -- Element change
 					end
 					allocate_slots (a_body, slot_manager)
 					a_body.mark_tail_function_calls
-					create compiled_function.make (an_executable, a_body, function_name, system_id, line_number, slot_manager, result_type, is_memo_function)
+					create compiled_function.make (an_executable, a_body, function_name, function_fingerprint, arity, system_id,
+						line_number, slot_manager, result_type, is_memo_function)
 					set_parameter_definitions (compiled_function)
 					fixup_instruction (compiled_function)
 					if is_explaining then

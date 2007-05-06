@@ -293,8 +293,9 @@ feature {NONE} -- Implementation
 								a_closure := a_value.as_closure
 								a_depth := a_closure.depth
 								if a_depth >= Maximum_closure_nesting_depth then
-									a_closure.eagerly_evaluate (a_context)
-									a_value := a_closure.last_evaluation
+									a_closure.create_iterator (a_context)
+									expression_factory.create_sequence_extent (a_closure.last_iterator)
+									a_value := expression_factory.last_created_closure
 									if a_value.is_error then
 										set_last_error (a_value.error_value)
 									else

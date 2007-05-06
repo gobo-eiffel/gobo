@@ -352,51 +352,6 @@ feature -- Optimization
 	
 feature -- Evaluation
 
-	lazily_evaluate (a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
-			-- Lazily evaluate `Current'.
-			-- This will set a value, which may optionally be an XM_XPATH_CLOSURE,
-			--  which is a wrapper around an iterator over the value of the expression.
-		local
-			a_count: INTEGER
-		do
-			check
-				context_not_void: a_context /= Void
-				-- We are not evaluating a value, as XM_XPATH_VALUE redefines this routine
-			end
-			if depends_upon_position or else depends_upon_last
-				or else depends_upon_current_item or else depends_upon_current_group
-				or else depends_upon_regexp_group then
-				
-				-- We can't save these values in the closure, so we evaluate
-				-- the expression now if they are needed
-				
-				eagerly_evaluate (a_context)
-			elseif is_lazy_expression then
-
-				-- A LazyExpression is always evaluated lazily (if at all possible) to
-            --  prevent spurious errors
-
-				if a_reference_count = 1 then
-					a_count := Many_references
-				else
-					a_count := a_reference_count
-				end
-				expression_factory.create_closure (Current, a_context, a_count)
-				last_evaluation := expression_factory.last_created_closure
-			elseif not cardinality_allows_many then
-
-				-- Singletons are always evaluated eagerly
-				
-				eagerly_evaluate (a_context)
-			else
-				
-				-- Create a Closure, a wrapper for the expression and its context
-				
-				expression_factory.create_closure (Current, a_context, a_reference_count)
-				last_evaluation := expression_factory.last_created_closure
-			end
-		end
-
 	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item to `a_result'.
 		do
@@ -494,7 +449,7 @@ feature -- Evaluation
 			l_result: DS_CELL [XM_XPATH_ITEM]
 			l_error_value: XM_XPATH_ERROR_VALUE
 		do
-			if is_evaluate_item_supported then
+			if is_evaluate_supported then
 				create l_result.make (Void)
 				evaluate_item (l_result, a_context)
 				if l_result.item /= Void then
@@ -639,7 +594,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			if cardinality_allows_many then
 				Result := Supports_iterator
 			else
-				Result := Supports_evaluate_item
+				Result := Supports_evaluate
 			end
 		end
 

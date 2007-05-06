@@ -62,8 +62,7 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			create {XM_XPATH_STRING_VALUE} last_evaluation.make (a_context.default_collation_name)
-			set_replacement (last_evaluation)
+			set_replacement (create {XM_XPATH_STRING_VALUE}.make (a_context.default_collation_name))
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

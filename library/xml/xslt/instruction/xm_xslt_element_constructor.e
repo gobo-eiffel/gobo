@@ -319,7 +319,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
 		do
-			Result := INTEGER_.bit_or (Supports_process, Supports_evaluate_item)
+			Result := INTEGER_.bit_or (Supports_process, Supports_evaluate)
 		end
 
 feature {NONE} -- Implementation

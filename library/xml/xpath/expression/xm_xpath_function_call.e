@@ -300,8 +300,16 @@ feature -- Evaluation
 			no_error: not is_error
 			context_not_void: a_context /= Void
 		do
-			eagerly_evaluate (Void)
-			set_replacement (last_evaluation)
+			-- TODO - need an early evaluation context)
+			create_iterator (Void)
+			if last_iterator.is_error then
+				if not is_error then
+					set_last_error (last_iterator.error_value)
+				end
+			else
+				expression_factory.create_sequence_extent (last_iterator)
+				set_replacement (expression_factory.last_created_closure)
+			end
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local

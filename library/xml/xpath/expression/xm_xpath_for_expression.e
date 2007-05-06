@@ -17,7 +17,8 @@ inherit
 	XM_XPATH_ASSIGNATION
 		redefine
 			create_iterator, is_repeated_sub_expression, native_implementations,
-			mark_tail_function_calls, is_tail_recursive, create_node_iterator
+			contains_recursive_tail_function_calls,
+			create_node_iterator, mark_tail_function_calls
 		end
 
 	XM_XPATH_ROLE
@@ -74,14 +75,6 @@ feature -- Access
 			Result := a_child = action_expression
 		end
 
-	is_tail_recursive: BOOLEAN is
-			-- Is `Current' a tail recursive function call?
-		do
-			if not sequence.cardinality_allows_many then
-				Result := action_expression.is_tail_recursive
-			end
-		end
-	
 feature -- Status report
 
 	display (a_level: INTEGER) is
@@ -100,15 +93,26 @@ feature -- Status report
 			action_expression.display (a_level + 1)
 		end
 
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+			-- Does `Current' contains recursive tail calls of stylesheet functions?
+			-- `Undecided' means it contains a tail call to another function.
+		do
+			if sequence.cardinality_allows_many then
+				create Result.make_false
+			else
+				Result := action_expression.contains_recursive_tail_function_calls (a_name_code, a_arity)
+			end
+		end
+
 feature -- Status setting
 	
 	mark_tail_function_calls is
-			-- Mark tail-recursive calls on stylesheet functions.
-		do
-			if not sequence.cardinality_allows_many then
+  			-- Mark tail calls on stylesheet functions.
+  		do
+  			if not sequence.cardinality_allows_many then
 				action_expression.mark_tail_function_calls
 			end
-		end
+  		end
 
 feature -- Optimization
 

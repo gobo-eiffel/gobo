@@ -17,8 +17,9 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			sub_expressions, item_type, compute_cardinality,
-			promote_instruction, is_block, mark_tail_function_calls,
-			native_implementations, create_iterator, creates_new_nodes
+			promote_instruction, is_block, contains_recursive_tail_function_calls,
+			native_implementations, create_iterator, creates_new_nodes,
+			mark_tail_function_calls
 		end
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
@@ -191,7 +192,14 @@ feature -- Status report
 			end
 		end
 
-feature -- Status report
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+			-- Does `Current' contains recursive tail calls of stylesheet functions?
+			-- `Undecided' means it contains a tail call to another function.
+		do
+			Result := children.last.contains_recursive_tail_function_calls (a_name_code, a_arity)
+		end
+
+feature -- Status setting
 
 	mark_tail_function_calls is
 			-- Mark tail-recursive calls on stylesheet functions.

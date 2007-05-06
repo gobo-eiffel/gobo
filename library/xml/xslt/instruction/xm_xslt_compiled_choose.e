@@ -15,7 +15,8 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			item_type, creates_new_nodes, sub_expressions, evaluate_item, create_iterator,
-			native_implementations, promote_instruction, mark_tail_function_calls
+			native_implementations, promote_instruction, contains_recursive_tail_function_calls,
+			mark_tail_function_calls
 		end
 
 create
@@ -135,24 +136,41 @@ feature -- Status report
 			end
 		end
 
-feature -- Status report
-
-	mark_tail_function_calls is
-			-- Mark tail-recursive calls on stylesheet functions.
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+			-- Does `Current' contains recursive tail calls of stylesheet functions?
+			-- `Undecided' means it contains a tail call to another function.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_state: UT_TRISTATE
 		do
 			from
+				create Result.make_false
 				l_cursor := actions.new_cursor
 				l_cursor.start
 			until
 				l_cursor.after
 			loop
-				l_cursor.item.mark_tail_function_calls
-				l_cursor.forth
+				l_state := l_cursor.item.contains_recursive_tail_function_calls (a_name_code, a_arity)
+				if l_state.is_true then
+					Result.set_true
+					l_cursor.go_after
+				elseif Result.is_undefined then
+					Result.set_undefined
+					l_cursor.forth
+				else
+					l_cursor.forth
+				end
 			end
 		end
-	
+
+feature -- Status setting
+
+	mark_tail_function_calls is
+			-- Mark tail-recursive calls on stylesheet functions.
+		do
+			actions.do_all (agent {XM_XPATH_EXPRESSION}.mark_tail_function_calls)
+		end
+
 feature -- Optimization
 
 	simplify is
@@ -472,7 +490,7 @@ feature {NONE} -- Implementation
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
 		do
-				Result := Supports_process + Supports_evaluate_item + Supports_iterator
+				Result := Supports_process + Supports_evaluate + Supports_iterator
 		end
 
 invariant

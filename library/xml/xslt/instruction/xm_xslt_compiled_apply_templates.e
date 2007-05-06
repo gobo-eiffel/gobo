@@ -231,6 +231,7 @@ feature {NONE} -- Implementation
 			l_parameters, l_tunnel_parameters: XM_XSLT_PARAMETER_SET
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_tail_call: XM_XPATH_TAIL_CALL
+			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
 			l_evaluation_context ?= a_context
 			check
@@ -250,8 +251,9 @@ feature {NONE} -- Implementation
 
 			if returns_tail_call then
 				l_new_context := a_context.new_context
-				select_expression.lazily_evaluate (a_context, 1)
-				create {XM_XSLT_APPLY_TEMPLATES_PACKAGE} l_tail_call.make (select_expression.last_evaluation,
+				create l_result.make (Void)
+				select_expression.evaluate (l_result, select_expression.lazy_evaluation_mode, 1, a_context)
+				create {XM_XSLT_APPLY_TEMPLATES_PACKAGE} l_tail_call.make (l_result.item,
 																									l_mode, l_parameters,
 																									l_tunnel_parameters,
 																									l_new_context

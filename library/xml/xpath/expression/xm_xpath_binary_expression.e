@@ -161,6 +161,8 @@ feature -- Optimization
 
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			mark_unreplaced
 			first_operand.check_static_type (a_context, a_context_item_type)
@@ -181,11 +183,18 @@ feature -- Optimization
 					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
 
 					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
-						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
-						eagerly_evaluate (Void)
-						if last_evaluation= Void or else not last_evaluation.is_error then
+						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone
+						and not cardinality_allows_many then
+						-- TODO: need an early evaluation context
+						create l_result.make (Void)
+						evaluate_item (l_result, Void)
+						if l_result.item = Void or else not l_result.item.is_error then
 							-- the value might not be needed at runtime
-							set_replacement (last_evaluation)
+							if l_result.item.is_node then
+								set_replacement (create {XM_XPATH_SINGLETON_NODE}.make (l_result.item.as_node))
+							else
+								set_replacement (l_result.item.as_atomic_value)
+							end
 						end
 					end
 				end
@@ -194,6 +203,8 @@ feature -- Optimization
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			mark_unreplaced
 			first_operand.optimize (a_context, a_context_item_type)
@@ -214,11 +225,18 @@ feature -- Optimization
 					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
 					
 					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
-						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
-						eagerly_evaluate (Void)
-						if last_evaluation = Void or else not last_evaluation.is_error then
+						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone
+						and not cardinality_allows_many then
+						-- TODO: need an early evaluation context
+						create l_result.make (Void)
+						evaluate_item (l_result, Void)
+						if l_result.item = Void or else not l_result.item.is_error then
 							-- the value might not be needed at runtime
-							set_replacement (last_evaluation)
+							if l_result.item.is_node then
+								set_replacement (create {XM_XPATH_SINGLETON_NODE}.make (l_result.item.as_node))
+							else
+								set_replacement (l_result.item.as_atomic_value)
+							end
 						end
 					end
 				end

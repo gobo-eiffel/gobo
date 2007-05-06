@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			sub_expressions, same_expression, simplify, promote, compute_special_properties,
-			is_unary_expression, as_unary_expression, mark_tail_function_calls
+			is_unary_expression, as_unary_expression
 		end
 
 feature {NONE} -- Initialization
@@ -88,15 +88,7 @@ feature -- Status report
 			std.error.put_new_line
 			base_expression.display (a_level + 1)
 		end
-
-feature -- Status setting
-
-	mark_tail_function_calls is
-			-- Mark tail-recursive calls on stylesheet functions.
-		do
-			base_expression.mark_tail_function_calls
-		end
-
+	
 feature -- Optimization	
 
 	simplify is
@@ -128,18 +120,19 @@ feature -- Optimization
 				set_last_error (base_expression.error_value)
 			else
 
-				-- If  operand value is, pre-evaluate the expression
+				-- If operand is a value, pre-evaluate the expression
 
 				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
-					eagerly_evaluate (Void)
+					-- TODO - need an early evaluation context
+					create_iterator (Void)
+					expression_factory.create_sequence_extent (last_iterator)
 					
 					-- if early evaluation fails, suppress the error: the value might not be needed at run-time
 					
-					if is_error or last_evaluation.is_error then
+					if is_error or expression_factory.last_created_closure.is_error then
 						error_value := Void
-						last_evaluation := Void
 					else
-						set_replacement (last_evaluation)
+						set_replacement (expression_factory.last_created_closure)
 					end
 				end
 			end
@@ -165,15 +158,16 @@ feature -- Optimization
 				-- If  operand value is, pre-evaluate the expression
 				
 				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
-					eagerly_evaluate (Void)
+					-- TODO - need an early evaluation context
+					create_iterator (Void)
+					expression_factory.create_sequence_extent (last_iterator)
 					
 					-- if early evaluation fails, suppress the error: the value might not be needed at run-time
 					
-					if is_error or last_evaluation.is_error then
+					if is_error or expression_factory.last_created_closure.is_error then
 						error_value := Void
-						last_evaluation := Void
 					else
-						set_replacement (last_evaluation)
+						set_replacement (expression_factory.last_created_closure)
 					end
 				end
 			end

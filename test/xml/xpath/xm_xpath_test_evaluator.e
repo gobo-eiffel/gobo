@@ -571,7 +571,7 @@ feature -- Test
 			an_evaluator.evaluate ("//TITLE/(string(.), 'fred', 2.01, 2.01e3, 7)")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("Five evaluated items", evaluated_items /= Void and then evaluated_items.count = 40)
+			assert ("Forty evaluated items", evaluated_items /= Void and then evaluated_items.count = 40)
 		end
 
 	test_zero_is_false is

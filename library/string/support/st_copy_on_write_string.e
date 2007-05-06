@@ -86,6 +86,7 @@ feature -- Element change
 				changed := True
 			end
 		ensure
+			new_count: item.count = old item.count + s.count
 			safe_to_edit: changed
 		end
 

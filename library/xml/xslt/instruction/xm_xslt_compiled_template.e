@@ -134,13 +134,37 @@ feature -- Evaluation
 			no_tail_call: a_tail.item = Void
 			context_not_void: a_context /= Void
 		local
-			an_instruction: XM_XSLT_INSTRUCTION
+			l_instruction: XM_XSLT_INSTRUCTION
+			l_user_call: XM_XSLT_USER_FUNCTION_CALL
+			l_function, l_previous_function: XM_XSLT_COMPILED_USER_FUNCTION
+			l_value: DS_CELL [XM_XPATH_VALUE]
+			l_finished: BOOLEAN
 		do
-			an_instruction ?= body
-			if an_instruction /= Void then
-				an_instruction.generate_tail_call (a_tail, a_context)
+			l_instruction ?= body
+			if l_instruction /= Void then
+				l_instruction.generate_tail_call (a_tail, a_context)
 			else
-				body.generate_events (a_context)
+				from
+					body.generate_events (a_context)
+				until l_finished loop
+					l_function := a_context.tail_call_function
+					a_context.clear_tail_call_function
+					if l_previous_function = Void and body.is_user_function_call then
+						l_user_call ?= body
+						l_previous_function := l_user_call.function
+					end
+					if l_function /= Void then
+						if l_function /= l_previous_function then
+						a_context.reset_stack_frame_map (l_function.slot_manager, l_function.parameter_definitions.count)
+						end
+						l_previous_function := l_function
+						create l_value.make (Void)
+						l_function.body.evaluate (l_value, l_function.evaluation_mode, 1, a_context)
+						l_value.item.generate_events (a_context)
+					else
+						l_finished := True
+					end
+				end
 			end
 		ensure
 			possible_tail_call: a_tail.item /= Void xor a_tail.item = Void

@@ -18,8 +18,8 @@ inherit
 	XM_XPATH_ASSIGNATION
 		redefine
 			promote, create_iterator, create_node_iterator, evaluate_item, compute_special_properties,
-			mark_tail_function_calls, action, is_let_expression, as_let_expression,
-			is_tail_recursive, generate_events, is_tail_call, as_tail_call
+			contains_recursive_tail_function_calls, action, is_let_expression, as_let_expression,
+			generate_events, is_tail_call, as_tail_call, mark_tail_function_calls
 		end
 
 	XM_XPATH_ROLE
@@ -96,12 +96,6 @@ feature -- Access
 			create Result.make (sequence.item_type, sequence.cardinality)
 		end
 
-	is_tail_recursive: BOOLEAN is
-			-- Is `Current' a tail recursive function call?
-		do
-			Result := action_expression.is_tail_recursive
-		end
-
 feature -- Status report
 
 	is_tail_call: BOOLEAN is
@@ -126,6 +120,13 @@ feature -- Status report
 			action_expression.display (a_level + 1)
 		end
 
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+			-- Does `Current' contains recursive tail calls of stylesheet functions?
+			-- `Undecided' means it contains a tail call to another function.
+		do
+			Result := action_expression.contains_recursive_tail_function_calls (a_name_code, a_arity)
+		end
+
 feature -- Status setting
 
 	mark_tail_function_calls is
@@ -133,7 +134,6 @@ feature -- Status setting
 		do
 			action_expression.mark_tail_function_calls
 		end
-
 	  
 feature -- Optimization
 
@@ -328,6 +328,9 @@ feature -- Optimization
 					if replacement_expression.is_computed_expression then replacement_expression.as_computed_expression.reset_static_properties end
 				end
 			end
+			if not was_expression_replaced then
+				evaluation_mode := sequence.lazy_evaluation_mode
+			end
 		end
 
 feature -- Evaluation
@@ -338,17 +341,20 @@ feature -- Evaluation
 			l_let_expression: XM_XPATH_LET_EXPRESSION
 			l_value: XM_XPATH_VALUE
 			l_finished: BOOLEAN
+			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
 						
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
 				l_let_expression := Current
+				create l_result.make (Void)
 			until
 				is_error or else l_finished
 			loop
-				l_let_expression.sequence.lazily_evaluate (a_context, l_let_expression.reference_count)
-				l_value := l_let_expression.sequence.last_evaluation
+				l_result.put (Void)
+				l_let_expression.evaluate_let_expression (l_result, a_context)
+				l_value := l_result.item
 				if l_value.is_error then
 					set_last_error (l_value.error_value)
 				else
@@ -370,100 +376,109 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			a_let_expression: XM_XPATH_LET_EXPRESSION
-			a_value: XM_XPATH_VALUE
-			finished: BOOLEAN
+			l_let_expression: XM_XPATH_LET_EXPRESSION
+			l_value: XM_XPATH_VALUE
+			l_finished: BOOLEAN
+			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
 						
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
-				a_let_expression := current
+				l_let_expression := Current
+				create l_result.make (Void)
 			until
-				is_error or else finished
+				is_error or else l_finished
 			loop
-				a_let_expression.sequence.lazily_evaluate (a_context, a_let_expression.reference_count)
-				a_value := a_let_expression.sequence.last_evaluation
-				if a_value.is_error then
-					set_last_error (a_value.error_value)
+				l_result.put (Void)
+				l_let_expression.evaluate_let_expression (l_result, a_context)
+				l_value := l_result.item
+				if l_value.is_error then
+					set_last_error (l_value.error_value)
 				else
-					a_context.set_local_variable (a_value, a_let_expression.slot_number)
-					if a_let_expression.action.is_let_expression then
-						a_let_expression := a_let_expression.action.as_let_expression
+					a_context.set_local_variable (l_value, l_let_expression.slot_number)
+					if l_let_expression.action.is_let_expression then
+						l_let_expression := l_let_expression.action.as_let_expression
 					else
-						finished := True
+						l_finished := True
 					end
 				end
 			end
 			if is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (error_value)
 			else
-				a_let_expression.action.create_iterator (a_context)
-				last_iterator := a_let_expression.action.last_iterator
+				l_let_expression.action.create_iterator (a_context)
+				last_iterator := l_let_expression.action.last_iterator
 			end
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a node sequence
 		local
-			a_let_expression: XM_XPATH_LET_EXPRESSION
-			a_value: XM_XPATH_VALUE
-			finished: BOOLEAN
+			l_let_expression: XM_XPATH_LET_EXPRESSION
+			l_value: XM_XPATH_VALUE
+			l_finished: BOOLEAN
+			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
 						
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
-				a_let_expression := current
+				l_let_expression := Current
+				create l_result.make (Void)
 			until
-				is_error or else finished
+				is_error or else l_finished
 			loop
-				a_let_expression.sequence.lazily_evaluate (a_context, a_let_expression.reference_count)
-				a_value := a_let_expression.sequence.last_evaluation
-				if a_value.is_error then
-					set_last_error (a_value.error_value)
+				l_result.put (Void)
+				l_let_expression.evaluate_let_expression (l_result, a_context)
+				l_value := l_result.item
+				if l_value.is_error then
+					set_last_error (l_value.error_value)
 				else
-					a_context.set_local_variable (a_value, a_let_expression.slot_number)
-					if a_let_expression.action.is_let_expression then
-						a_let_expression := a_let_expression.action.as_let_expression
+					a_context.set_local_variable (l_value, l_let_expression.slot_number)
+					if l_let_expression.action.is_let_expression then
+						l_let_expression := l_let_expression.action.as_let_expression
 					else
-						finished := True
+						l_finished := True
 					end
 				end
 			end
 			if is_error then
 				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (error_value)
 			else
-				a_let_expression.action.create_node_iterator (a_context)
-				last_node_iterator := a_let_expression.action.last_node_iterator
+				l_let_expression.action.create_node_iterator (a_context)
+				last_node_iterator := l_let_expression.action.last_node_iterator
 			end
 		end
 
 	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_let_expression: XM_XPATH_LET_EXPRESSION
-			a_value: XM_XPATH_VALUE
-			finished: BOOLEAN
+			l_let_expression: XM_XPATH_LET_EXPRESSION
+			l_value: XM_XPATH_VALUE
+			l_finished: BOOLEAN
+			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
 						
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
-				a_let_expression := current
+				l_let_expression := Current
+				create l_result.make (Void)
 			until
-				is_error or a_context.is_process_error or finished
+				is_error or a_context.is_process_error or l_finished
 			loop
-				a_let_expression.sequence.lazily_evaluate (a_context, a_let_expression.reference_count)
-				a_value := a_let_expression.sequence.last_evaluation
-				if a_value.is_error then
-					set_last_error (a_value.error_value)
+				l_result.put (Void)
+				l_let_expression.evaluate_let_expression (l_result, a_context)
+				l_value := l_result.item
+				if l_value.is_error then
+					set_last_error (l_value.error_value)
 				else
-					a_context.set_local_variable (a_value, a_let_expression.slot_number)
-					if a_let_expression.action.is_let_expression then
-						a_let_expression := a_let_expression.action.as_let_expression
+					a_context.set_local_variable (l_value, l_let_expression.slot_number)
+					if l_let_expression.action.is_let_expression then
+						l_let_expression := l_let_expression.action.as_let_expression
 					else
-						finished := True
+						l_finished := True
 					end
 				end
 			end
@@ -472,35 +487,38 @@ feature -- Evaluation
 			elseif is_error then
 				a_context.report_fatal_error (error_value)
 			else
-				a_let_expression.action.generate_events (a_context)
+				l_let_expression.action.generate_events (a_context)
 			end
 		end
 
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_let_expression: XM_XPATH_LET_EXPRESSION
-			a_value: XM_XPATH_VALUE
-			finished: BOOLEAN
+			l_let_expression: XM_XPATH_LET_EXPRESSION
+			l_value: XM_XPATH_VALUE
+			l_finished: BOOLEAN
+			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
 			
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
-				a_let_expression := current
+				l_let_expression := Current
+				create l_result.make (Void)
 			until
-				is_error or else finished
+				is_error or else l_finished
 			loop
-				a_let_expression.lazily_evaluate (a_context, a_let_expression.reference_count)
-				a_value := a_let_expression.last_evaluation
-				if a_value.is_error then
-					set_last_error (a_value.error_value)
+				l_result.put (Void)
+				l_let_expression.evaluate_let_expression (l_result, a_context)
+				l_value := l_result.item
+				if l_value.is_error then
+					set_last_error (l_value.error_value)
 				else
-					a_context.set_local_variable (a_value, a_let_expression.slot_number)
-					if a_let_expression.action.is_let_expression then
-						a_let_expression := a_let_expression.action.as_let_expression
+					a_context.set_local_variable (l_value, l_let_expression.slot_number)
+					if l_let_expression.action.is_let_expression then
+						l_let_expression := l_let_expression.action.as_let_expression
 					else
-						finished := True
+						l_finished := True
 					end
 				end
 			end
@@ -508,10 +526,10 @@ feature -- Evaluation
 			if is_error then
 				a_context.report_fatal_error (error_value)
 			else
-				if a_let_expression.action.is_tail_call then
-					a_let_expression.action.as_tail_call.generate_tail_call (a_tail, a_context)
+				if l_let_expression.action.is_tail_call then
+					l_let_expression.action.as_tail_call.generate_tail_call (a_tail, a_context)
 				else
-					a_let_expression.action.generate_events (a_context)
+					l_let_expression.action.generate_events (a_context)
 				end
 			end
 		end
@@ -522,6 +540,20 @@ feature -- Conversion
 			-- `Current' seen as an XPath tail call
 		do
 			Result := Current
+		end
+
+feature {XM_XPATH_LET_EXPRESSION} -- Local
+
+	evaluate_let_expression (a_result: DS_CELL [XM_XPATH_VALUE]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate `Current'.
+		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
+		do
+			if evaluation_mode = Evaluation_method_undecided then
+				evaluation_mode := sequence.lazy_evaluation_mode
+			end
+			sequence.evaluate (a_result, evaluation_mode, reference_count, a_context)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -543,6 +575,9 @@ feature {NONE} -- Implementation
 			set_cardinality (action_expression.cardinality)
 		end
 
+	evaluation_mode: INTEGER
+			-- Method used for evaluating `Current'
+
 	Maximum_optimization_attempts: INTEGER is 5
 
 	replace_variable (a_var_ref: XM_XPATH_VARIABLE_REFERENCE) is
@@ -562,10 +597,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
+
 invariant
 
 	operator_is_let: operator = Let_token
-
+	evaluation_mode_large_enough: evaluation_mode >= Evaluation_method_undecided
+	evaluation_mode_small_enough: evaluation_mode <= Create_memo_closure
+	
 end
 
 

@@ -17,8 +17,9 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			simplify, evaluate_item, promote, create_iterator,
-			sub_expressions, mark_tail_function_calls,
-			compute_special_properties, is_tail_recursive, create_node_iterator
+			sub_expressions, contains_recursive_tail_function_calls,
+			compute_special_properties,
+			create_node_iterator, mark_tail_function_calls
 		end
 
 create
@@ -77,13 +78,6 @@ feature -- Access
 			Result.put (else_expression, 3)
 		end
 
-	is_tail_recursive: BOOLEAN is
-			-- Is `Current' a tail recursive function call?
-		do
-			Result := then_expression.is_tail_recursive or else
-			else_expression.is_tail_recursive
-		end
-
 feature -- Status report
 
 	display (a_level: INTEGER) is
@@ -105,14 +99,31 @@ feature -- Status report
 			else_expression.display (a_level + 1)				
 		end
 
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+			-- Does `Current' contains recursive tail calls of stylesheet functions?
+			-- `Undecided' means it contains a tail call to another function.
+		local
+			l_then, l_else: UT_TRISTATE
+		do
+			l_then := then_expression.contains_recursive_tail_function_calls (a_name_code, a_arity)
+			l_else := else_expression.contains_recursive_tail_function_calls (a_name_code, a_arity)
+			if l_then.is_true or l_else.is_true then
+				create Result.make_true
+			elseif l_then.is_undefined or l_else.is_undefined then
+				create Result.make_undefined
+			else
+				create Result.make_false
+			end
+		end
+
 feature -- Status setting
 	
 	mark_tail_function_calls is
-			-- Mark tail-recursive calls on stylesheet functions.
-		do
+  			-- Mark tail calls on stylesheet functions.
+  		do
 			then_expression.mark_tail_function_calls
 			else_expression.mark_tail_function_calls
-		end
+  		end
 
 feature -- Optimization
 
