@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date:  $"
-	revision: "$Revision:  $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XPATH_EVALUATION_CONSTANTS
 
