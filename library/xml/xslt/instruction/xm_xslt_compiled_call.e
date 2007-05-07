@@ -128,19 +128,24 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_events (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
 			l_tail_call: XM_XPATH_TAIL_CALL
-			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_context, l_new_context: XM_XSLT_EVALUATION_CONTEXT
 			l_transformer: XM_XSLT_TRANSFORMER
 		do
-			l_new_context := a_context.new_context
+			l_context ?= a_context
+			check
+				l_context_not_void: l_context /= Void
+				-- this is xslt
+			end
+			l_new_context := l_context.new_context
 			l_new_context.open_stack_frame (target.slot_manager)
-			l_new_context.set_local_parameters (assembled_parameters (a_context, actual_parameter_list))
-			l_new_context.set_tunnel_parameters (assembled_tunnel_parameters (a_context, tunnel_parameter_list))
-			l_transformer := a_context.transformer
+			l_new_context.set_local_parameters (assembled_parameters (l_context, actual_parameter_list))
+			l_new_context.set_tunnel_parameters (assembled_tunnel_parameters (l_context, tunnel_parameter_list))
+			l_transformer := l_new_context.transformer
 			create l_tail.make (Void)
 			target.expand (l_tail, l_new_context)
 			from

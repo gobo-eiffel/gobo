@@ -66,6 +66,15 @@ feature -- Status report
 					if a_fingerprint /= -1 then
 						Result := is_xslt_instruction (a_fingerprint)
 					end
+				elseif STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
+					a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+					inspect
+						a_fingerprint
+					when Gexslt_memo_function_type_code then
+						Result := True
+					else
+						-- not available
+					end
 				else
 					-- No others are currently available
 				end
@@ -356,7 +365,7 @@ feature {NONE} -- Implementation
 
 	new_gexslt_user_defined_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT is
-			-- New gexslt User-defined Element or child of such.
+			-- New gexslt instruction or User-defined Element (or child of latter).
 		require
 			document_not_void: a_document /= Void
 			strictly_positive_sequence_number: a_sequence_number > 0
@@ -371,6 +380,8 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_GEXSLT_COLLATION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Gexslt_isolation_level_type_code then
 				create {XM_XSLT_GEXSLT_ISOLATION_LEVEL} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
+			when Gexslt_memo_function_type_code then
+				create {XM_XSLT_MEMO_FUNCTION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			else
 			end
 			if Result /= Void then

@@ -273,7 +273,7 @@ feature -- Access
 				another_stylesheet := Result.importer
 			end
 		ensure
-			-- the next line is true in the case of well-formedness errors
+			-- the next line is true except in the case of well-formedness errors
 			-- prinicpal_stylesheet_not_void: Result /= Void
 		end
 

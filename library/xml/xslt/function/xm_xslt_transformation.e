@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "transformation"; namespace_uri := Gexslt_eiffel_type_uri
-			fingerprint := Transformation_function_type_code
+			fingerprint := Gexslt_transformation_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 7
 			create arguments.make (7)

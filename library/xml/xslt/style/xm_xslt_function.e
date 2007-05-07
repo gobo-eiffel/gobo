@@ -7,7 +7,7 @@ indexing
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date  $"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class XM_XSLT_FUNCTION
@@ -217,18 +217,18 @@ feature -- Element change
 						report_compile_error (an_error)
 					end
 				elseif STRING_.same_string (an_expanded_name, Gexslt_memo_function_attribute) then
-					debug ("XSLT memo function")
-						std.error.put_string ("gexslt:memo-function found%N")
-					end
 					a_memo_function_attribute := attribute_value_by_index (a_cursor.index)
 					STRING_.left_adjust (a_memo_function_attribute)
 					STRING_.right_adjust (a_memo_function_attribute)
 					if STRING_.same_string (a_memo_function_attribute, "yes") then
-						is_memo_function := True
+						is_memo_function := False
+						report_compile_warning ("Gexslt:memo-function is no longer supported. Use the gexslt:function extension instruction instead.%NNo memoization will occur")
 					elseif STRING_.same_string (a_memo_function_attribute, "no") then
 						is_memo_function := False
+						report_compile_warning ("Gexslt:memo-function is no longer supported. Use the gexslt:function extension instruction instead.%NNo memoization will occur")
 					else
-						create an_error.make_from_string ("Xsl:function memo-function extension attribute must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+						create an_error.make_from_string ("Xsl:function memo-function extension attribute must be 'yes' or 'no' (but is obsolete - se the gexslt:function extension instruction instead).",
+						Xpath_errors_uri, "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					end
 				else

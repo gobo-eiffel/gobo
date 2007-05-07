@@ -57,25 +57,7 @@
 	  <listitem>
 	    <para>
 	      <warning>
-	       This attribute makes gexslt non-compliant, and support will be dropped without warning in the future.
-	       The first stage of dropping support will be to issue a warning saying the attribute is ignored. If you have used
-	       it correctly, this will only make a performance change. Later, it might be changed to issue an error message.
-	      </warning>
-	    </para>
-	    <para>
-	      This attribute may be set on any xsl:function declaration in the stylesheet. The permitted values are "yes" and "no". 
-	      If the value is "yes", then the result of calling the function with a given set of parameters is cached.
-	    </para>
-	    <para>
-	      <warning>
-		This should not be set to "yes" if the function has any side effects, or if it accesses context information, such as position(),
-		last() or the context item.
-	      </warning>
-	    </para>
-	    <para>
-	      <warning>
-		If the function constructs and returns a temporary tree, the same tree will be returned each time. The only consequence
-		of this is if you compare node identities on that tree. 
+	       This attribute used to make gexslt non-compliant. It is now ignored. Use the gexslt:function extension instruction instead.
 	      </warning>
 	    </para>
 	  </listitem>
@@ -191,8 +173,24 @@
  </section>
  <section>
     <title>Extension instructions</title>
+    <section>
+     <title>Gexslt:function</title>
+     <para>
+      <xslt>gexslt:function</xslt> is identical in syntax to xsl:function. However it is implemented as a memo-function
+      for performance.
+     </para>
+     <para>
+      If the function has any side effects (which can only occur if it uses
+      user-written extension functions with side-effects), or if it access context information, such as position(),
+      last() or the context item, then you may not get what you expect.
+     </para>
+     <para>
+      If the function constructs and returns a temporary tree, the same tree will be returned each time. The only consequence
+      of this is if you compare node identities on that tree. 
+     </para>
+    </section>
     <para>
-      None are provided at present. <xslt>gexslt:serialize</xslt> may be defined in the future. Or maybe not.
+      <xslt>gexslt:serialize</xslt> may be defined in the future. Or maybe not.
       Users can always use <ulink url="http://xmlportfolio.com/xml-to-string/">Evan Lenz's serializer written in XSLT 1.0</ulink>.
       (I think an XSLT 2.0 html serializer has also been written).
     </para>

@@ -39,7 +39,7 @@ feature -- Access
 			-- Note that all extension functions are said to be "available" at use-when time,
 			--  although they are not designed to be used then.
 		do
-			if a_fingerprint = Transformation_function_type_code then
+			if a_fingerprint = Gexslt_transformation_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 7
 			end
 		end
@@ -52,7 +52,7 @@ feature -- Element change
 			l_function_call: XM_XPATH_FUNCTION_CALL
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if a_fingerprint = Transformation_function_type_code then
+			if a_fingerprint = Gexslt_transformation_function_type_code then
 				if is_restricted then
 					create l_error.make_from_string ("Extension function gexslt:transformation may not be used in [xsl:]use-when processing",
 																Gexslt_eiffel_type_uri, "USE_WHEN", Dynamic_error)

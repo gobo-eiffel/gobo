@@ -21,7 +21,7 @@ inherit
 
 	XM_XSLT_SORTED_ITERATOR
 		redefine
-			make, build_array
+			make, build_array, another
 		end
 
 create
@@ -58,6 +58,27 @@ feature -- Evaluation
 				-- `build_array' assures this
 			end
 			Result := node_keys.item (index).as_group_sort_record.current_group_iterator.another
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original
+		do
+
+			-- Make sure the sort has been done, so that multiple iterators over the
+			--  same sorted data only do the sorting once.
+
+			if not count_determined then perform_sorting end
+
+			-- The new iterator is the same as the old one,
+			--  except for its start position.
+
+			create Result.make (context, group_iterator.another, sort_keys)
+			Result.set_count (count)
+			Result.set_node_keys (node_keys)
+		ensure then
+			not is_error implies count_determined			
 		end
 
 feature {NONE} -- Implementation

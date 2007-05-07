@@ -212,20 +212,30 @@ feature -- Status report
 		require
 			valid_qname: is_qname (a_qname)
 		local
-			a_parser: XM_XPATH_QNAME_PARSER
-			a_uri: STRING
+			l_parser: XM_XPATH_QNAME_PARSER
+			l_uri: STRING
+			l_node_factory: XM_XSLT_NODE_FACTORY
+			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_configuration: XM_XSLT_CONFIGURATION
 		do
-			create a_parser.make (a_qname)
+			create l_parser.make (a_qname)
 			check
-				valid_parse: a_parser.is_valid
+				valid_parse: l_parser.is_valid
 				-- from pre-condition
 			end
-			if a_parser.optional_prefix.is_empty then
-				a_uri := style_element.uri_for_prefix (a_parser.optional_prefix, True)
+			if l_parser.optional_prefix.is_empty then
+				l_uri := style_element.uri_for_prefix (l_parser.optional_prefix, True)
 			else
-				a_uri := uri_for_prefix (a_parser.optional_prefix)
+				l_uri := uri_for_prefix (l_parser.optional_prefix)
 			end
-			Result := style_element.stylesheet_compiler.node_factory.is_element_available (a_uri, a_parser.local_name)
+			l_stylesheet_compiler := style_element.stylesheet_compiler
+			if l_stylesheet_compiler /= Void then
+				l_node_factory := l_stylesheet_compiler.node_factory
+			else
+				l_configuration ?= configuration
+				create l_node_factory.make (l_configuration.error_listener, l_configuration)
+			end
+			Result := l_node_factory.is_element_available (l_uri, l_parser.local_name)
 		end
 
 feature -- Element change

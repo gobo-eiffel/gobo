@@ -186,13 +186,19 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_events (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
+			l_context: XM_XSLT_EVALUATION_CONTEXT
 		do
+			l_context ?= a_context
+			check
+				l_context_not_void: l_context /= Void
+				-- this is xslt
+			end
 			create l_tail.make (Void)
-			apply (l_tail, a_context, False)
+			apply (l_tail, l_context, False)
 		end
 
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
