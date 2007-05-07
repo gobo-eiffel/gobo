@@ -31,9 +31,10 @@ feature {NONE} -- Initialization
 			a_locator: XM_XPATH_LOCATOR) is
 			-- Establish invariant.
 		require
-			population_not_void: a_population /= Void
-			key_not_void: a_key /= Void
-			context_not_void: a_context /= Void
+			a_population_not_void: a_population /= Void
+			a_population_before: a_population.before
+			a_key_not_void: a_key /= Void
+			a_context_not_void: a_context /= Void
 		do
 			population := a_population.another
 			key_pattern := a_key
@@ -133,7 +134,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			create Result.make (population, key_pattern, base_context, locator)
+			create Result.make (population.another, key_pattern, base_context, locator)
 		end
 	
 feature {NONE} -- Implementation

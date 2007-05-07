@@ -145,7 +145,7 @@ feature -- Evaluation
 						create l_error.make_from_string ("Namespace prefix of 'xml' may only be used with 'http://www.w3.org/XML/1998/namespace'", Xpath_errors_uri, "XTDE0925", Dynamic_error)
 						l_error.set_location (system_id, line_number)
 						a_context.transformer.report_fatal_error (l_error)
-					elseif STRING_.same_string (l_uri, Xml_prefix_namespace) then
+					elseif STRING_.same_string (l_uri, Xml_prefix_namespace) and not STRING_.same_string (last_evaluated_prefix, Xml_prefix) then
 						create l_error.make_from_string ("Namespace prefix of 'xml' must be used with 'http://www.w3.org/XML/1998/namespace'", Xpath_errors_uri, "XTDE0925", Dynamic_error)
 						l_error.set_location (system_id, line_number)
 						a_context.transformer.report_fatal_error (l_error)

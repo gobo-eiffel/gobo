@@ -149,7 +149,7 @@ feature -- Access
 				-- Equality implies same `hash_code', but
 				--  not vice-versa:
 
-				Result := utc_date.hash_code + zoned_date.time_zone.fixed_offset.hash_code
+				Result := utc_date.hash_code
 			end
 		end
 
