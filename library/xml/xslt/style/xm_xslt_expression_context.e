@@ -98,8 +98,28 @@ feature -- Access
 
 	available_functions: XM_XPATH_FUNCTION_LIBRARY is
 			-- Available functions
+		local
+			l_function_library: XM_XPATH_FUNCTION_LIBRARY
+			l_configuration: XM_XSLT_CONFIGURATION
 		do
-			Result := style_sheet.function_library
+			if is_restricted then
+				if cached_function_manager = Void then
+					l_configuration ?= configuration
+					check
+						l_configuration_not_void: l_configuration /= Void
+						-- this is XSLT
+					end
+					create cached_function_manager.make
+					create {XM_XSLT_SYSTEM_FUNCTION_LIBRARY} l_function_library.make
+					cached_function_manager.add_function_library (l_function_library)
+					create {XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY} l_function_library.make
+					cached_function_manager.add_function_library (l_function_library)
+					l_configuration.extension_functions.do_all (agent add_function_library (cached_function_manager, ?))
+				end
+				Result := cached_function_manager
+			else
+				Result := style_sheet.function_library
+			end
 		end
 
 	host_language: STRING is
@@ -269,6 +289,9 @@ feature {NONE} -- Implementation
 	internal_default_function_namespace_uri: STRING
 			-- Namespace for non-prefixed XPath functions
 
+	cached_function_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER
+			-- Function library manager for use-when processing
+
 	code_point_collator: ST_COLLATOR is
 			-- Unicode code-point collator
 		once
@@ -291,6 +314,15 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			displayed_argument_count_not_void: Result /= Void
+		end
+
+	add_function_library (a_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER; a_library: XM_XPATH_FUNCTION_LIBRARY) is
+			-- Add `a_library' to `a_manager'.
+		require
+			a_manager_not_void: a_manager /= Void
+			a_library_not_void: a_library /= Void
+		do
+			a_manager.add_function_library (a_library)
 		end
 
 invariant
