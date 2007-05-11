@@ -341,8 +341,7 @@
       <term>External objects</term>
       <listitem>
        <para>
-	External objects may return type <featurename>object_type</featurename> as defined in
-	<classname>XM_XPATH_TYPE_FACTORY</classname>.
+	None.
        </para>
       </listitem>
      </varlistentry>

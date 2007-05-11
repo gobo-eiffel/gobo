@@ -1797,9 +1797,14 @@ feature -- Element change
 				l_child_iterator.after
 			loop
 				l_style_element ?= l_child_iterator.item
-				if l_style_element /= Void and then l_style_element.is_excluded then
-					l_child_iterator.remove
-					l_pruned := True
+				if l_style_element /= Void then
+					if l_style_element.is_excluded then
+						l_child_iterator.remove
+						l_pruned := True
+					else
+						l_style_element.prune_children
+						l_child_iterator.forth
+					end
 				else
 					l_child_iterator.forth
 				end

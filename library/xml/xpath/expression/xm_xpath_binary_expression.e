@@ -87,11 +87,11 @@ feature -- Comparison
 				other_binary := other.as_binary_expression
 				if operator = other_binary.operator then
 					if first_operand.same_expression (other_binary.first_operand)
-						and then second_operand.same_expression ( other_binary.second_operand) then
+						and second_operand.same_expression ( other_binary.second_operand) then
 						Result := True
-					elseif is_commutative (operator) and then
+					elseif is_commutative (operator) and
 						first_operand.same_expression ( other_binary.second_operand)
-							and then second_operand.same_expression ( other_binary.first_operand) then
+							and second_operand.same_expression ( other_binary.first_operand) then
 							Result := True
 							-- TODO: recognize associative operators (A|(B|C)) == ((A|B)|C)
 							-- TODO: hang-on! What is the purpose of same expression, after all?
@@ -182,8 +182,8 @@ feature -- Optimization
 
 					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
 
-					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
-						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone
+					if first_operand.is_value and not first_operand.depends_upon_implicit_timezone
+						and second_operand.is_value and not second_operand.depends_upon_implicit_timezone
 						and not cardinality_allows_many then
 						-- TODO: need an early evaluation context
 						create l_result.make (Void)
@@ -224,13 +224,13 @@ feature -- Optimization
 					
 					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
 					
-					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
-						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone
+					if first_operand.is_value and not first_operand.depends_upon_implicit_timezone
+						and second_operand.is_value and not second_operand.depends_upon_implicit_timezone
 						and not cardinality_allows_many then
 						-- TODO: need an early evaluation context
 						create l_result.make (Void)
 						evaluate_item (l_result, Void)
-						if l_result.item = Void or else not l_result.item.is_error then
+						if l_result.item /= Void and then not l_result.item.is_error then
 							-- the value might not be needed at runtime
 							if l_result.item.is_node then
 								set_replacement (create {XM_XPATH_SINGLETON_NODE}.make (l_result.item.as_node))
@@ -303,7 +303,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			if first_operand.cardinality_allows_zero and then
+			if first_operand.cardinality_allows_zero and
 				second_operand.cardinality_allows_zero then
 				set_cardinality_optional
 			else

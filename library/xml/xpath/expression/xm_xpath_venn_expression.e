@@ -175,7 +175,7 @@ feature -- Evaluation
 				last_iterator := an_iterator
 			else
 				if an_iterator.is_node_iterator then a_node_iterator := an_iterator.as_node_iterator end
-				if not first_operand.ordered_nodeset and then an_iterator.is_node_iterator then
+				if not first_operand.ordered_nodeset and an_iterator.is_node_iterator then
 					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} a_node_iterator.make (an_iterator.as_node_iterator, global_order_comparer)
 				end
 				if a_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} a_node_iterator.make end
@@ -185,7 +185,7 @@ feature -- Evaluation
 					last_iterator := another_iterator
 				else
 					if another_iterator.is_node_iterator then another_node_iterator := another_iterator.as_node_iterator end
-					if not second_operand.ordered_nodeset and then another_iterator.is_node_iterator then
+					if not second_operand.ordered_nodeset and another_iterator.is_node_iterator then
 						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} another_node_iterator.make (another_iterator.as_node_iterator, global_order_comparer)
 					end
 					if another_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} another_node_iterator.make end
@@ -240,7 +240,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			if test_subtree_nodeset then
 				set_subtree_nodeset
 			end
-			if first_operand.non_creating and then second_operand.non_creating then
+			if first_operand.non_creating and second_operand.non_creating then
 				set_non_creating
 			end
 		end
@@ -257,11 +257,11 @@ feature {XM_XPATH_VENN_EXPRESSION} -- Local
 			inspect
 				operator
 			when Union_token then
-				if first_operand.is_empty_sequence and then second_operand.ordered_nodeset then
+				if first_operand.is_empty_sequence and second_operand.ordered_nodeset then
 					set_replacement (second_operand)
 					finished := True
 				else
-					if second_operand.is_empty_sequence and then first_operand.ordered_nodeset then
+					if second_operand.is_empty_sequence and first_operand.ordered_nodeset then
 						set_replacement (first_operand)
 						finished := True
 					end
@@ -281,7 +281,7 @@ feature {XM_XPATH_VENN_EXPRESSION} -- Local
 					set_replacement (first_operand)
 					finished := True
 				else
-					if second_operand.is_empty_sequence and then first_operand.ordered_nodeset then
+					if second_operand.is_empty_sequence and first_operand.ordered_nodeset then
 						set_replacement (first_operand)
 						finished := True
 					end
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 				clone_cardinality (second_operand)
 			elseif second_operand.is_empty_sequence then
 				clone_cardinality (first_operand)
-			elseif first_operand.cardinality_allows_zero or else second_operand.cardinality_allows_zero then
+			elseif first_operand.cardinality_allows_zero or second_operand.cardinality_allows_zero then
 				set_cardinality_zero_or_more
 			else
 				set_cardinality_one_or_more
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 				set_cardinality_empty
 			elseif second_operand.is_empty_sequence then
 				set_cardinality_empty
-			elseif first_operand.cardinality_allows_many or else second_operand.cardinality_allows_many then
+			elseif first_operand.cardinality_allows_many or second_operand.cardinality_allows_many then
 				set_cardinality_zero_or_more
 			else
 				set_cardinality_optional
@@ -340,9 +340,9 @@ feature {NONE} -- Implementation
 			inspect
 				operator
 			when Union_token then
-				Result := first_operand.context_document_nodeset and then second_operand.context_document_nodeset
+				Result := first_operand.context_document_nodeset and second_operand.context_document_nodeset
 			when Intersect_token then
-				Result := first_operand.context_document_nodeset or else second_operand.context_document_nodeset
+				Result := first_operand.context_document_nodeset or second_operand.context_document_nodeset
 			when Except_token then
 				Result := first_operand.context_document_nodeset
 			end				
@@ -354,9 +354,9 @@ feature {NONE} -- Implementation
 			inspect
 				operator
 			when Union_token then
-				Result := first_operand.subtree_nodeset and then second_operand.subtree_nodeset
+				Result := first_operand.subtree_nodeset and second_operand.subtree_nodeset
 			when Intersect_token then
-				Result := first_operand.subtree_nodeset or else second_operand.subtree_nodeset
+				Result := first_operand.subtree_nodeset or second_operand.subtree_nodeset
 			when Except_token then
 				Result := first_operand.subtree_nodeset
 			end				
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation
 			an_axis_expression, another_axis_expression: XM_XPATH_AXIS_EXPRESSION
 			a_combined_node_test: XM_XPATH_COMBINED_NODE_TEST
 		do
-			if first_operand.is_axis_expression and then second_operand.is_axis_expression then
+			if first_operand.is_axis_expression and second_operand.is_axis_expression then
 				an_axis_expression := first_operand.as_axis_expression;
 				another_axis_expression := second_operand.as_axis_expression;
 				if an_axis_expression.axis = another_axis_expression.axis then
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			a_path_expression, another_path_expression: XM_XPATH_PATH_EXPRESSION
 			a_venn_expression: XM_XPATH_VENN_EXPRESSION
 		do
-			if first_operand.is_path_expression and then second_operand.is_path_expression then
+			if first_operand.is_path_expression and second_operand.is_path_expression then
 				a_path_expression := first_operand.as_path_expression
 				another_path_expression := second_operand.as_path_expression
 				if a_path_expression.first_step.same_expression (another_path_expression.first_step) then
@@ -420,10 +420,10 @@ feature {NONE} -- Implementation
 			a_filter_expression, another_filter_expression: XM_XPATH_FILTER_EXPRESSION
 			arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
-			if first_operand.is_filter_expression and then second_operand.is_filter_expression then
+			if first_operand.is_filter_expression and second_operand.is_filter_expression then
 				a_filter_expression := first_operand.as_filter_expression
 				another_filter_expression := second_operand.as_filter_expression
-				if not a_filter_expression.is_positional and then not another_filter_expression.is_positional then
+				if not a_filter_expression.is_positional and not another_filter_expression.is_positional then
 					inspect
 						operator
 					when Union_token then
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	venn_operator: operator = Union_token or else operator = Intersect_token or else operator = Except_token
+	venn_operator: operator = Union_token or operator = Intersect_token or operator = Except_token
 	strictly_positive_not_function_fingerprint: initialized implies not_function_fingerprint > 0
 	function_library_not_void: initialized implies function_library /= Void
 
