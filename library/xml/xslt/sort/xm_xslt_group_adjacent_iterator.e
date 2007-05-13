@@ -65,7 +65,7 @@ feature -- Access
 	item: XM_XPATH_ITEM is
 			-- Initial item of current group
 		do
-			Result := next_item
+			Result := current_members.first
 		end
 
 feature -- Status report
@@ -110,6 +110,9 @@ feature -- Duplication
 		
 feature {NONE} -- Implementation
 
+	Estimated_group_size: INTEGER is 20
+			-- Initial size for `current_members'
+
 	population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Iterator over population
 
@@ -129,7 +132,7 @@ feature {NONE} -- Implementation
 			-- members of current group
 
 	next_item: like item
-			-- Next item isn sequence
+			-- Next item in sequence
 
 	current_key, next_key: like current_grouping_key
 			-- Current and next grouping key to consider
@@ -146,22 +149,26 @@ feature {NONE} -- Implementation
 
 			-- TODO use comparison keys
 
-			create current_members.make (20)
-			if next_item /= Void then current_members.put_first (next_item) end
+			create current_members.make (Estimated_group_size)
+			if next_item /= Void then
+				current_members.put_first (next_item)
+			end
 			from
 				if index = 1 then
 					population.start
 				end
 			until l_finished loop
 				if population.is_error then
-					l_finished := True;	set_last_error (population.error_value)
+					l_finished := True
+					set_last_error (population.error_value)
 				elseif not population.after then
 					l_candidate := population.item
 					if l_candidate.is_error then
 						set_last_error (l_candidate.error_value); l_finished := True
 					end
 				else
-					next_key := Void; l_finished := True
+					next_key := Void
+					l_finished := True
 				end
 				if not l_finished then
 					create l_item.make (Void)
@@ -169,19 +176,27 @@ feature {NONE} -- Implementation
 					if l_item.item = Void then
 						create l_error.make_from_string ("Key expression is an empty sequence", Xpath_errors_uri, "XTTE1100", Type_error)
 						set_last_error (l_error)
-						next_item := Void; l_finished := True
+						next_item := Void
+						l_finished := True
 						running_context.transformer.report_fatal_error (l_error)
 					elseif l_item.item.is_error then
-						set_last_error (l_item.item.error_value); l_finished := True
+						set_last_error (l_item.item.error_value)
+						l_finished := True
 						running_context.transformer.report_fatal_error (l_item.item.error_value)
 					elseif l_item.item.is_atomic_value then
 						l_candidate_key := l_item.item.as_atomic_value
-						if next_key = Void then next_key := l_candidate_key end
+						if next_key = Void then
+							next_key := l_candidate_key
+						end
+						if index = 1 and current_key = Void then
+							current_key := next_key
+						end
 						if next_key.is_comparable (l_candidate_key) and then comparer.three_way_comparison (next_key, l_candidate_key) = 0 then
 							current_members.force_last (l_candidate)
 						else
 							next_key := l_candidate_key
-							next_item := l_candidate; l_finished := True
+							next_item := l_candidate
+							l_finished := True
 						end
 					else
 						create l_error.make_from_string ("Key expression does not evaluate to an atomic item", Xpath_errors_uri, "XTTE1100", Type_error)

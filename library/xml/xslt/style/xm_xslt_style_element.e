@@ -1459,6 +1459,9 @@ feature -- Element change
 			a_first_slot, a_high_water_mark: INTEGER
 		do
 			a_first_slot := a_slot_manager.number_of_variables + 1
+			if a_expression.last_slot_number > a_first_slot then
+				a_first_slot := a_expression.last_slot_number + 1
+			end
 			a_expression.allocate_slots (a_first_slot, a_slot_manager)
 			a_high_water_mark := a_expression.last_slot_number
 			if a_high_water_mark > a_first_slot then

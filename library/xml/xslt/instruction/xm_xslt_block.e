@@ -375,26 +375,53 @@ feature -- Evaluation
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			a_child: XM_XPATH_EXPRESSION
-			an_instruction: XM_XSLT_INSTRUCTION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_child: XM_XPATH_EXPRESSION
+			l_instruction: XM_XSLT_INSTRUCTION
+			l_user_call: XM_XSLT_USER_FUNCTION_CALL
+			l_function, l_previous_function: XM_XSLT_COMPILED_USER_FUNCTION
+			l_value: DS_CELL [XM_XPATH_VALUE]
+			l_finished: BOOLEAN
 		do
 			from
-				a_cursor := children.new_cursor; a_cursor.start
+				l_cursor := children.new_cursor; l_cursor.start
 			variant
-				children.count + 1 - a_cursor.index
+				children.count + 1 - l_cursor.index
 			until
-				a_context.transformer.is_error or else a_cursor.after
+				a_context.transformer.is_error or else l_cursor.after
 			loop
-				a_child := a_cursor.item
+				l_child := l_cursor.item
 				a_tail.put (Void)
-				an_instruction ?= a_child
-				if an_instruction /= Void then
-					an_instruction.generate_tail_call (a_tail, a_context)
+				l_instruction ?= l_child
+				if l_instruction /= Void then
+					l_instruction.generate_tail_call (a_tail, a_context)
 				else
-					a_child.generate_events (a_context)
+					l_child.generate_events (a_context)
+					if a_context.tail_call_function /= Void then
+						from
+							l_finished := False
+						until l_finished loop
+							l_function := a_context.tail_call_function
+							a_context.clear_tail_call_function
+							if l_previous_function = Void and l_child.is_user_function_call then
+								l_user_call ?= l_child
+								l_previous_function := l_user_call.function
+							end
+							if l_function /= Void then
+								if l_function /= l_previous_function then
+									a_context.reset_stack_frame_map (l_function.slot_manager, l_function.parameter_definitions.count)
+								end
+								l_previous_function := l_function
+								create l_value.make (Void)
+								l_function.body.evaluate (l_value, l_function.evaluation_mode, 1, a_context)
+								l_value.item.generate_events (a_context)
+							else
+								l_finished := True
+							end
+						end
+					end
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 		end
 

@@ -1275,36 +1275,42 @@ feature -- Evaluation
 
 feature -- Element change
 	
-	allocate_slots (next_free_slot: INTEGER; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	allocate_slots (a_next_free_slot: INTEGER; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- Allocate slot numbers for all range variable in `Current' and it's sub-expresions.
 		require
-			strictly_positive_slot_number: next_free_slot > 0
+			strictly_positive_slot_number: a_next_free_slot > 0
+			a_next_free_slot_large_enough: a_next_free_slot >= last_slot_number
 			slot_manager_may_be_void: True
 			not_in_error: not is_error -- should really be all sub-expressions not in error - think about this
 			not_replaced: not was_expression_replaced
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_last_slot: INTEGER
 		do
 
 			-- This version only allocates slots to the children.
 			-- Redefined in `XM_XPATH_ASSIGNATION'.
 
-			last_slot_number := next_free_slot
+			last_slot_number := a_next_free_slot
 
 			from
-				a_cursor := sub_expressions.new_cursor
-				a_cursor.start
+				l_cursor := sub_expressions.new_cursor
+				l_cursor.start
 			variant
-				sub_expressions.count + 1 - a_cursor.index
+				sub_expressions.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				if not a_cursor.item.is_error then
-					a_cursor.item.mark_unreplaced -- in case it's a path expression replaced by `Current'
-					a_cursor.item.allocate_slots (last_slot_number, a_slot_manager)
-					last_slot_number := a_cursor.item.last_slot_number
+				if not l_cursor.item.is_error then
+					l_cursor.item.mark_unreplaced -- in case it's a path expression replaced by `Current'
+					l_last_slot := l_cursor.item.last_slot_number
+					if l_last_slot > last_slot_number then
+						last_slot_number := l_last_slot
+					end
+					l_cursor.item.allocate_slots (last_slot_number, a_slot_manager)
+					last_slot_number := l_cursor.item.last_slot_number
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 		ensure
 			last_slot_number_not_less: last_slot_number >= old last_slot_number

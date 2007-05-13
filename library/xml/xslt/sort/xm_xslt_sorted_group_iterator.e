@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 					l_cursor.after
 				loop
 					create l_item.make (Void)
-					l_cursor.item.sort_key.evaluate_item (l_item, context)
+					l_cursor.item.sort_key.evaluate_item (l_item, l_new_context)
 					if l_item.item /= Void then
 						l_sort_key := l_item.item.as_atomic_value
 					else
