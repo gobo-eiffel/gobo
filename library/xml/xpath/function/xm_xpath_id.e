@@ -110,7 +110,7 @@ feature -- Evaluation
 					if l_item = Void then
 						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 					elseif l_item.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.error_value)
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_item.error_value)
 					elseif l_item.is_atomic_value then
 						l_idrefs := l_item.as_atomic_value.string_value
 						create l_splitter.make
@@ -141,9 +141,11 @@ feature -- Evaluation
 					end
 				end
 			else
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("In the id() function," +
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make_from_string ("In the id() function," +
 													 " the tree being searched must be one whose root is a document node", Xpath_errors_uri, "FODC0001", Dynamic_error)
 			end
+		ensure then
+			node_iterator: last_iterator.is_node_iterator
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -156,7 +158,8 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
 		do
-			todo ("create_node_iterator", False)
+			create_iterator (a_context)
+			last_node_iterator := last_iterator.as_node_iterator
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local

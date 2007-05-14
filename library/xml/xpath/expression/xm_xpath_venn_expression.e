@@ -166,42 +166,38 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over the values of a sequence
 		local
-			an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_node_iterator, another_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_iterator, l_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			first_operand.create_iterator (a_context)
-			an_iterator := first_operand.last_iterator
-			if an_iterator.is_error then
-				last_iterator := an_iterator
+			first_operand.create_node_iterator (a_context)
+			l_iterator := first_operand.last_node_iterator
+			if l_iterator.is_error then
+				last_iterator := l_iterator
 			else
-				if an_iterator.is_node_iterator then a_node_iterator := an_iterator.as_node_iterator end
-				if not first_operand.ordered_nodeset and an_iterator.is_node_iterator then
-					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} a_node_iterator.make (an_iterator.as_node_iterator, global_order_comparer)
+				if not first_operand.ordered_nodeset then
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} l_iterator.make (l_iterator, global_order_comparer)
 				end
-				if a_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} a_node_iterator.make end
-				second_operand.create_iterator (a_context)
-				another_iterator := second_operand.last_iterator
-				if another_iterator.is_error then
-					last_iterator := another_iterator
+				second_operand.create_node_iterator (a_context)
+				l_other_iterator := second_operand.last_node_iterator
+				if l_other_iterator.is_error then
+					last_iterator := l_other_iterator
 				else
-					if another_iterator.is_node_iterator then another_node_iterator := another_iterator.as_node_iterator end
-					if not second_operand.ordered_nodeset and another_iterator.is_node_iterator then
-						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} another_node_iterator.make (another_iterator.as_node_iterator, global_order_comparer)
+					if not second_operand.ordered_nodeset then
+						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} l_other_iterator.make (l_other_iterator, global_order_comparer)
 					end
-					if another_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} another_node_iterator.make end
 					inspect
 						operator
 					when Union_token then
-						create {XM_XPATH_UNION_ENUMERATION} last_iterator.make (a_node_iterator, another_node_iterator, global_order_comparer)
+						create {XM_XPATH_UNION_ENUMERATION} last_iterator.make (l_iterator, l_other_iterator, global_order_comparer)
 					when Intersect_token then
-						create {XM_XPATH_INTERSECTION_ENUMERATION} last_iterator.make (a_node_iterator, another_node_iterator, global_order_comparer)
+						create {XM_XPATH_INTERSECTION_ENUMERATION} last_iterator.make (l_iterator, l_other_iterator, global_order_comparer)
 					when Except_token then
-						create {XM_XPATH_DIFFERENCE_ENUMERATION} last_iterator.make (a_node_iterator, another_node_iterator, global_order_comparer)
+						create {XM_XPATH_DIFFERENCE_ENUMERATION} last_iterator.make (l_iterator, l_other_iterator, global_order_comparer)
 					end
 				end
 			end
 		ensure then
 			unique_document_order: True -- The result will always be sorted in document order, with duplicates eliminated
+			node_iterator: last_iterator.is_node_iterator
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is

@@ -137,8 +137,8 @@ feature -- Access
 			counter: INTEGER
 		do
 			if cached_item_type = Void then
-				if count = 1 then
-					Result := any_item
+				if count <= 1 then
+					cached_item_type := any_item
 				else
 					cached_item_type := item (1).item_type
 					from
@@ -158,10 +158,6 @@ feature -- Access
 				end
 			end
 			Result := cached_item_type
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
 		end
 
 	item_at (an_index: INTEGER): XM_XPATH_ITEM is

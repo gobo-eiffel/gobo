@@ -84,9 +84,15 @@ feature -- Evaluation
 
 	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item to `a_result'.
+		local
+			l_double: XM_XPATH_DOUBLE_VALUE
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			a_result.put (item_to_double (a_result.item))
+			l_double := item_to_double (a_result.item)
+			if l_double.is_error then
+				create l_double.make_nan
+			end
+			a_result.put (l_double)
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is

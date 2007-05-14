@@ -64,10 +64,12 @@ feature -- Status report
 	is_template: BOOLEAN
 			-- Is `Current' an `XM_XSLT_COMPILED_TEMPLATE'?
 
-feature {NONE} -- Implementation
+feature {XM_XSLT_MODE} -- Debugging and implementation
 
 	template_value: XM_XSLT_COMPILED_TEMPLATE
 			-- Template value
+
+feature {NONE} -- Implementation
 
 	boolean_value: BOOLEAN
 			-- Boolean value

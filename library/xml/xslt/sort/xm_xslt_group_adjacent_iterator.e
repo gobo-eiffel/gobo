@@ -94,7 +94,7 @@ feature -- Cursor movement
 				after := True
 			else
 				advance
-				if next_item = Void then
+				if next_item = Void and current_members.is_empty then
 					after := True
 				end
 			end

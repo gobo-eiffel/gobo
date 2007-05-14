@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			category := Numeric_type_code
+			create {XM_XPATH_DOUBLE_VALUE} value.make_nan
 			is_nan := True
 		ensure
 			nan: is_nan

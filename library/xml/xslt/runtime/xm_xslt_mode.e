@@ -359,6 +359,16 @@ feature -- Element change
 				-- Each list is sorted in precedence/priority order so we find the highest-priority rule first
 
 				a_key := rule_key (a_pattern.fingerprint, a_pattern.node_kind)
+				debug ("XSLT template rules")
+					if a_handler.is_template then
+						std.error.put_string ("Added rule to match " + a_pattern.original_text)
+						std.error.put_string (" with key " + a_key.out + ", with precedence of " + a_precedence.out)
+						std.error.put_string (" and priority of " + a_priority.to_scientific_string + "%N")
+						std.error.put_string ("Template fingerprint is " + a_handler.template_value.template_fingerprint.out + "%N")
+						std.error.put_string ("System id is " + a_handler.template_value.system_id + "%N")
+						std.error.put_string ("Line number is " + a_handler.template_value.line_number.out + "%N")
+					end
+				end
 				create a_new_rule.make (a_pattern, a_handler, a_precedence, a_priority, sequence_number)
 				sequence_number := sequence_number + 1
 				a_rule := rule_dictionary.item (a_key)

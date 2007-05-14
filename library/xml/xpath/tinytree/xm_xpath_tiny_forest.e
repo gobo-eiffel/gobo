@@ -705,7 +705,7 @@ feature -- Element change
 			if alpha.item (a_parent) = 0 then alpha.put (number_of_attributes, a_parent) end
 
 			if a_document /= Void then
-				if a_type_code = Id_type_code then -- TODO: maybe expand this for schema-aware version
+				if a_type_code = Id_type_code or fingerprint_from_name_code (a_name_code) = Xml_id_type_code then -- TODO: maybe expand this for schema-aware version
 
 					-- The attribute is marked as being an ID. But we don't trust it - it
 					-- might come from a non-validating parser. Before adding it to the index, we

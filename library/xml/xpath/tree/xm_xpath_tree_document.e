@@ -394,39 +394,41 @@ feature {NONE} -- Implementation
 			-- Mapping of IDs to elements.
 			-- Implemented as a memo function
 		local
-			a_node: XM_XPATH_TREE_NODE
-			an_element: XM_XPATH_TREE_ELEMENT
-			an_index: INTEGER
-			a_value: STRING
+			l_node: XM_XPATH_TREE_NODE
+			l_element: XM_XPATH_TREE_ELEMENT
+			l_index: INTEGER
+			l_value: STRING
 		do
 			if cached_id_table = Void then
 				create cached_id_table.make_with_equality_testers (10, Void, string_equality_tester)
 				from
-					a_node := Current
+					l_node := Current
 				until
-					a_node = Void
+					l_node = Void
 				loop
-					if a_node.node_type = Element_node then
-						an_element := a_node.as_tree_element
+					if l_node.node_type = Element_node then
+						l_element := l_node.as_tree_element
 						from
-							an_index := 1
+							l_index := 1
 						variant
-							an_element.number_of_attributes + 1 - an_index
+							l_element.number_of_attributes + 1 - l_index
 						until
-							an_index > an_element.number_of_attributes
+							l_index > l_element.number_of_attributes
 						loop
-							if an_element.is_id (an_index) then
-								a_value := an_element.attribute_value_by_index (an_index)
-								if is_ncname (a_value) then
-									if not cached_id_table.has (a_value) then
-										cached_id_table.force_new (an_element, a_value)
+							if l_element.is_id (l_index) then
+								l_value := l_element.attribute_value_by_index (l_index)
+								STRING_.left_adjust (l_value)
+								STRING_.right_adjust (l_value)
+								if is_ncname (l_value) then
+									if not cached_id_table.has (l_value) then
+										cached_id_table.force_new (l_element, l_value)
 									end
 								end
 							end
-							an_index := an_index + 1
+							l_index := l_index + 1
 						end
 					end
-					a_node := a_node.next_node_in_document_order (Current)
+					l_node := l_node.next_node_in_document_order (Current)
 				end
 			end
 			Result := cached_id_table
