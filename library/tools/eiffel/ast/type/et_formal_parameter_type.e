@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,7 @@ inherit
 	ET_NAMED_TYPE
 		redefine
 			named_type,
+			shallow_named_type,
 			named_type_has_class,
 			name, is_formal_type,
 			is_type_reference,
@@ -193,6 +194,58 @@ feature -- Access
 			end
 		end
 
+	shallow_base_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', but where the actual generic parameters
+			-- are not replaced by their named version and should still
+			-- be considered as viewed from `a_context'
+		local
+			an_actual: ET_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_class: ET_CLASS
+			a_formals: ET_FORMAL_PARAMETER_LIST
+			a_formal: ET_FORMAL_PARAMETER
+			a_base_type: ET_BASE_TYPE
+			an_index: INTEGER
+		do
+			if index <= a_context.actual_parameter_count then
+				an_actual := a_context.actual_parameters.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+					a_class := a_context.direct_base_class (a_universe)
+					a_formals := a_class.formal_parameters
+					an_index := a_formal_type.index
+					if a_formals /= Void and then an_index <= a_formals.count then
+						a_formal := a_formals.formal_parameter (an_index)
+						a_base_type := a_formal.constraint_base_type
+						if a_base_type /= Void then
+							Result := a_base_type
+						else
+								-- This formal parameter has either no constraint
+								-- or a cyclic constraint of the form "[G -> H,
+								-- H -> G]". The base type is considered to be
+								-- "ANY" in these two cases.
+							Result := a_universe.any_type
+						end
+					else
+							-- Error: formal parameter not matched.
+						Result := a_universe.unknown_class
+					end
+				else
+					Result ?= an_actual
+					if Result = Void then
+							 -- Should never happen: `a_context' is a valid context,
+							 -- so its actual parameters are either formal generic
+							 -- parameters or a base types.
+						 Result := a_universe.unknown_class
+					end
+				end
+			else
+					-- Error: formal parameter not matched.
+				Result := a_universe.unknown_class
+			end
+		end
+
 	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- `i'-th actual generic parameter's type of the base type of current
 			-- type when it appears in `a_context' in `a_universe'
@@ -336,6 +389,27 @@ feature -- Access
 		do
 			if index <= a_context.base_type_actual_count (a_universe) then
 				Result := a_context.base_type_actual (index, a_universe)
+			else
+					-- Error: formal parameter not matched.
+				Result := a_universe.unknown_class
+			end
+		end
+
+	shallow_named_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- Same as `shallow_base_type' except when current type is still
+			-- a formal generic parameter after having been replaced
+			-- by its actual counterpart in `a_context'. Return this
+			-- new formal type in that case instead of the base
+			-- type of its constraint.
+		do
+			if index <= a_context.actual_parameter_count then
+				Result ?= a_context.actual_parameters.type (index)
+				if Result = Void then
+						 -- Should never happen: `a_context' is a valid context,
+						 -- so its actual parameters are either formal generic
+						 -- parameters or a base types.
+					Result := a_universe.unknown_class
+				end
 			else
 					-- Error: formal parameter not matched.
 				Result := a_universe.unknown_class

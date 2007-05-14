@@ -1360,9 +1360,11 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_NAMED_TYPE;
+	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE;
 		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
-			-- Report that a creation expression has been processed.
+			-- Report that a creation expression, with creation type
+			-- `a_creation_type' in context of `current_type', has
+			-- been processed.
 		local
 			i, nb: INTEGER
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
@@ -1386,8 +1388,10 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_NAMED_TYPE; a_procedure: ET_PROCEDURE) is
-			-- Report that a creation instruction has been processed.
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
+			-- Report that a creation instruction, with creation type
+			-- `a_creation_type' in context of `current_type', has
+			-- been processed.
 		local
 			i, nb: INTEGER
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE

@@ -5,7 +5,7 @@ indexing
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -90,14 +90,12 @@ feature -- Validity checking
 		end
 
 	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE; a_position: ET_POSITION) is
-			-- Check validity of `a_type' as base type of a creation type
-			-- written in `a_current_class_impl' and viewed from `a_current_type'.
-			-- Note that `a_type' should already be a valid type by itself (call
-			-- `check_type_validity' for that). Set `has_fatal_error' if
-			-- an error occurred.
+			-- Check validity of `a_type' as a creation type written in `a_current_class_impl'
+			-- and viewed from `a_current_type'. Note that `a_type' should already be a valid
+			-- type by itself (call `check_type_validity' for that).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
-			a_type_named_type: a_type.is_named_type
 			a_current_class_impl_not_void: a_current_class_impl /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
@@ -107,6 +105,7 @@ feature -- Validity checking
 			a_base_class: ET_CLASS
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			an_actual: ET_TYPE
+			a_named_actual: ET_NAMED_TYPE
 			a_formals: ET_FORMAL_PARAMETER_LIST
 			a_formal: ET_FORMAL_PARAMETER
 			a_creator: ET_CONSTRAINT_CREATOR
@@ -143,11 +142,12 @@ feature -- Validity checking
 					a_formal_parameters := a_current_class.formal_parameters
 					from i := 1 until i > nb loop
 						an_actual := an_actuals.type (i)
+						a_named_actual := an_actual.shallow_named_type (a_current_type, universe)
 						a_formal := a_formals.formal_parameter (i)
 						a_creator := a_formal.creation_procedures
 						if a_creator /= Void and then not a_creator.is_empty then
-							a_base_class := an_actual.base_class (a_current_type, universe)
-							a_formal_type ?= an_actual
+							a_base_class := a_named_actual.base_class (a_current_type, universe)
+							a_formal_type ?= a_named_actual
 							if a_formal_type /= Void then
 								an_index := a_formal_type.index
 								if a_formal_parameters = Void or else an_index > a_formal_parameters.count then
@@ -183,12 +183,79 @@ feature -- Validity checking
 													error_handler.report_vtcg4b_error (a_current_class, a_current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
 												end
 											end
-										elseif
-											not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class, universe) and then
-											(a_base_class.creators /= Void or else not a_creation_procedure.has_seed (universe.default_create_seed))
-										then
-											set_fatal_error
-											error_handler.report_vtcg4a_error (a_current_class, a_current_class_impl, a_position, i, a_name, a_base_class, a_type_class)
+										elseif not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class, universe) then
+											if universe.is_ise and then (a_current_class.is_deferred and an_actual.is_like_current) then
+												-- ISE accepts code of the form:
+												--
+												--   class A [G -> B create default_create end]
+												--   feature
+												--     f is
+												--       local
+												--         b: G
+												--       do
+												--         create b
+												--         print (b.generating_type)
+												--       end
+												--   end
+												--
+												--   deferred class B
+												--   feature
+												--     f is
+												--        local
+												--          a: A [like Current]
+												--        do
+												--          create a
+												--          a.f
+												--        end
+												--   end
+												--
+												-- This is indeed safe (i.e. no possible creation of instances of
+												-- a deferred class), provided that non-deferred descendants of
+												-- class B make their version of 'default_create' available for
+												-- creation to class A.
+												-- The following case is also accepted:
+												--
+												--   deferred class B
+												--   feature
+												--     f is
+												--        local
+												--          a: like a1
+												--        do
+												--          create a
+												--          a.f
+												--        end
+												--     a1: A [like Current]
+												--   end
+												--
+												-- However, note that it rejects this one:
+												--
+												--   deferred class B
+												--   feature
+												--     f is
+												--        local
+												--          a: A [like b]
+												--        do
+												--          create a
+												--          a.f
+												--        end
+												--     b: like Current
+												--   end
+												--
+												-- which was nevertheless not more unsafe than the other cases above.
+											elseif
+												(universe.is_ise and then universe.ise_version < ise_6_0_6_7358) and then
+												(a_base_class.is_deferred and a_creation_procedure.has_seed (universe.default_create_seed))
+											then
+												-- ISE started to report this VTCG error with version 6.0.6.7358.
+												-- However we report it anyway, except when the creation procedure
+												-- is the version of 'default_create' in a deferred class. There is
+												-- no occurrence of the other cases in the code at AXA Rosenberg,
+												-- and we don't want new occurrences to appear because it is dangerous
+												-- at run-time (we may end up creating instances of deferred classes).
+											else
+												set_fatal_error
+												error_handler.report_vtcg4a_error (a_current_class, a_current_class_impl, a_position, i, a_name, a_base_class, a_type_class)
+											end
 										end
 										j := j + 1
 									end
@@ -199,11 +266,8 @@ feature -- Validity checking
 								-- is possible to create instances of `an_actual'
 								-- through that means. So we need to check recursively
 								-- its validity as a creation type.
-							l_class_type ?= an_actual
+							l_class_type ?= a_named_actual
 							if l_class_type /= Void then
-								check
-									is_named_type: l_class_type.is_named_type
-								end
 								had_error := has_fatal_error
 								check_creation_type_validity (l_class_type, a_current_class_impl, a_current_type, a_position)
 								if had_error then
@@ -215,11 +279,8 @@ feature -- Validity checking
 								-- In that case the creation of an instance of that
 								-- type will be implicit, so we need to check recursively
 								-- its validity as a creation type.
-							l_class_type ?= an_actual
+							l_class_type ?= a_named_actual
 							if l_class_type /= Void and then l_class_type.is_expanded then
-								check
-									is_named_type: l_class_type.is_named_type
-								end
 								had_error := has_fatal_error
 								check_creation_type_validity (l_class_type, a_current_class_impl, a_current_type, a_position)
 								if had_error then

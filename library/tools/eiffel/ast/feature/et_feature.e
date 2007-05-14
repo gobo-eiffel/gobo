@@ -404,16 +404,25 @@ feature -- Export status
 		end
 
 	is_creation_exported_to (a_client, a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current feature listed in the creation clauses
-			-- of `a_class' and exported to `a_client'?
+			-- Is current feature listed in the creation clauses of `a_class'
+			-- and exported to `a_client', or is current feature the version of
+			-- 'default_create' in `a_class' with `a_class' being a non-deferred
+			-- class with no creation clauses?
 			-- (Note: Use `a_universe.ancestor_builder' on the classes whose ancestors
-			-- need to be built in order to check for descendants.)
+			-- need to be built in order to check for descendants. Also use
+			-- `a_universe.feature_flattener' on `a_class' if needed to determine
+			-- whether current feature is the version of 'default_create' in `a_class'.)
 		require
 			a_client_not_void: a_client /= Void
 			a_class_not_void: a_class /= Void
 			a_universe_not_void: a_universe /= Void
 		do
-			Result := a_class.is_creation_exported_to (name, a_client, a_universe)
+			if a_class.is_creation_exported_to (name, a_client, a_universe) then
+				Result := True
+			elseif a_class.creators = Void and not a_class.is_deferred then
+				a_class.process (a_universe.feature_flattener)
+				Result := has_seed (a_universe.default_create_seed)
+			end
 		end
 
 	is_creation_directly_exported_to (a_client, a_class: ET_CLASS): BOOLEAN is

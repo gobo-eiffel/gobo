@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,7 @@ inherit
 		redefine
 			reset,
 			named_type,
+			shallow_named_type,
 			named_type_has_class,
 			is_formal_type,
 			has_formal_type,
@@ -228,6 +229,59 @@ feature -- Access
 			end
 		end
 
+	shallow_base_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', but where the actual generic parameters
+			-- are not replaced by their named version and should still
+			-- be considered as viewed from `a_context'
+		local
+			a_class: ET_CLASS
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := a_universe.unknown_class
+			elseif is_like_argument then
+				a_class := a_context.direct_base_class (a_universe)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
+				if l_feature /= Void then
+					args := l_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := a_universe.unknown_class
+					else
+						Result := args.item (an_index).type.shallow_base_type (a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := a_universe.unknown_class
+				end
+			else
+				a_class := a_context.direct_base_class (a_universe)
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.shallow_base_type (a_context, a_universe)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := a_universe.unknown_class
+				end
+			end
+		end
+
 	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- `i'-th actual generic parameter's type of the base type of current
 			-- type when it appears in `a_context' in `a_universe'
@@ -428,6 +482,60 @@ feature -- Access
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
 					Result := l_query.type.named_type (a_context, a_universe)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := a_universe.unknown_class
+				end
+			end
+		end
+
+	shallow_named_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- Same as `shallow_base_type' except when current type is still
+			-- a formal generic parameter after having been replaced
+			-- by its actual counterpart in `a_context'. Return this
+			-- new formal type in that case instead of the base
+			-- type of its constraint.
+		local
+			a_class: ET_CLASS
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := a_universe.unknown_class
+			elseif is_like_argument then
+				a_class := a_context.direct_base_class (a_universe)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
+				if l_feature /= Void then
+					args := l_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := a_universe.unknown_class
+					else
+						Result := args.item (an_index).type.shallow_named_type (a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := a_universe.unknown_class
+				end
+			else
+				a_class := a_context.direct_base_class (a_universe)
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.shallow_named_type (a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved

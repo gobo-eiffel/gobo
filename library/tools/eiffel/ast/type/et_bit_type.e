@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'BIT N' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,7 @@ inherit
 			lower_name as bit_keyword_lower_name
 		redefine
 			bit_keyword,
+			shallow_base_type,
 			same_syntactical_bit_type,
 			same_named_bit_type,
 			same_base_bit_type,
@@ -96,6 +97,15 @@ feature -- Access
 					-- Unresolved "BIT name".
 				Result := a_universe.unknown_class
 			end
+		end
+
+	shallow_base_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', but where the actual generic parameters
+			-- are not replaced by their named version and should still
+			-- be considered as viewed from `a_context'
+		do
+			Result := base_type (a_context, a_universe)
 		end
 
 feature -- Setting

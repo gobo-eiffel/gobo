@@ -1453,7 +1453,7 @@ feature {NONE} -- Type checking
 					set_fatal_error
 				else
 					if a_type.is_type_expanded (current_type, universe) then
-						l_class_type ?= a_type.named_type (current_type, universe)
+						l_class_type ?= a_type.shallow_named_type (current_type, universe)
 						if l_class_type /= Void then
 							type_checker.check_creation_type_validity (l_class_type, current_class_impl, current_type, a_type.position)
 							if type_checker.has_fatal_error then
@@ -1485,7 +1485,7 @@ feature {NONE} -- Type checking
 				set_fatal_error
 			else
 				if a_type.is_type_expanded (current_type, universe) then
-					l_class_type ?= a_type.named_type (current_type, universe)
+					l_class_type ?= a_type.shallow_named_type (current_type, universe)
 					if l_class_type /= Void then
 						type_checker.check_creation_type_validity (l_class_type, current_class_impl, current_type, a_type.position)
 						if type_checker.has_fatal_error then
@@ -1511,13 +1511,12 @@ feature {NONE} -- Type checking
 		end
 
 	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_position: ET_POSITION) is
-			-- Check validity of `a_type' as base type of a creation type
-			-- in `current_type'. Note that `a_type' should already be a
-			-- valid type by itself (call `check_type_validity' for that).
+			-- Check validity of `a_type' as a creation type in `current_type'.
+			-- Note that `a_type' should already be a valid type by itself
+			-- (call `check_type_validity' for that).
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
-			a_type_named_type: a_type.is_named_type
 			a_position_not_void: a_position /= Void
 		do
 			has_fatal_error := False
@@ -2312,6 +2311,7 @@ feature {NONE} -- Instruction validity
 			an_instruction_not_void: an_instruction /= Void
 		local
 			l_creation_context: ET_NESTED_TYPE_CONTEXT
+			l_creation_type: ET_TYPE
 			l_class: ET_CLASS
 			l_creation_named_type: ET_NAMED_TYPE
 			l_target_named_type: ET_NAMED_TYPE
@@ -2327,7 +2327,6 @@ feature {NONE} -- Instruction validity
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
 			l_explicit_creation_type: ET_TYPE
-			l_explicit_creation_context: ET_NESTED_TYPE_CONTEXT
 			l_seed: INTEGER
 			l_call: ET_QUALIFIED_CALL
 			l_name: ET_FEATURE_NAME
@@ -2348,7 +2347,7 @@ feature {NONE} -- Instruction validity
 			l_target := an_instruction.target
 			l_target_context := new_context (current_type)
 			l_explicit_creation_type := an_instruction.type
-			l_explicit_creation_context := new_context (current_type)
+			l_creation_context := new_context (current_type)
 			if l_explicit_creation_type /= Void then
 				check_type_validity (l_explicit_creation_type)
 				l_position := l_explicit_creation_type.position
@@ -2430,14 +2429,14 @@ feature {NONE} -- Instruction validity
 						else
 							check_writable_validity (l_target, l_target_context)
 							if not has_fatal_error then
-								l_target_type := tokens.like_current
+								l_target_type := l_target_context.last
 								if l_explicit_creation_type /= Void then
-									l_explicit_creation_context.force_last (l_explicit_creation_type)
-									l_creation_context := l_explicit_creation_context
+									l_creation_type := l_explicit_creation_type
 								else
-									l_creation_context := l_target_context
+									l_creation_type := l_target_type
 								end
-								l_class := l_creation_context.base_class (universe)
+								l_creation_context.force_last (l_creation_type)
+								l_class := l_creation_type.base_class (current_type, universe)
 								l_class.process (universe.interface_checker)
 								if not l_class.interface_checked or else l_class.has_interface_error then
 									set_fatal_error
@@ -2527,19 +2526,19 @@ feature {NONE} -- Instruction validity
 				if l_procedure = Void then
 					check_writable_validity (l_target, l_target_context)
 					if not has_fatal_error then
-						l_target_type := tokens.like_current
+						l_target_type := l_target_context.last
 						if l_explicit_creation_type /= Void then
 							l_explicit_creation_type := resolved_formal_parameters (l_explicit_creation_type, current_class_impl, current_type)
 							if not has_fatal_error then
-								l_explicit_creation_context.force_last (l_explicit_creation_type)
-								l_creation_context := l_explicit_creation_context
+								l_creation_type := l_explicit_creation_type
 							end
 						else
-							l_creation_context := l_target_context
+							l_creation_type := l_target_type
 						end
 					end
 					if not has_fatal_error then
-						l_class := l_creation_context.base_class (universe)
+						l_creation_context.force_last (l_creation_type)
+						l_class := l_creation_type.base_class (current_type, universe)
 						l_class.process (universe.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
@@ -2558,19 +2557,19 @@ feature {NONE} -- Instruction validity
 			if not has_fatal_error then
 				check
 					l_class_not_void: l_class /= Void
-					l_creation_context_not_void: l_creation_context /= Void
+					l_creation_type_not_void: l_creation_type /= Void
 				end
 				if l_explicit_creation_type /= Void then
-					if not l_explicit_creation_context.conforms_to_type (l_target_type, l_target_context, universe) then
+					if not l_explicit_creation_type.conforms_to_type (l_target_type, current_type, current_type, universe) then
 						set_fatal_error
-						l_creation_named_type := l_explicit_creation_context.named_type (universe)
-						l_target_named_type := l_target_context.named_type (universe)
+						l_creation_named_type := l_explicit_creation_type.named_type (current_type, universe)
+						l_target_named_type := l_target_type.named_type (current_type, universe)
 						error_handler.report_vgcc3a_error (current_class, current_class_impl, an_instruction, l_creation_named_type, l_target_named_type)
 					else
 						universe.report_create_supplier (l_explicit_creation_type, current_class, current_feature)
 					end
 				end
-				l_creation_named_type := l_creation_context.named_type (universe)
+				l_creation_named_type := l_creation_type.shallow_named_type (current_type, universe)
 				l_class_type ?= l_creation_named_type
 				if l_class_type /= Void then
 					had_error := has_fatal_error
@@ -2617,24 +2616,23 @@ feature {NONE} -- Instruction validity
 							end
 						end
 					elseif not l_procedure.is_creation_exported_to (current_class, l_class, universe) then
-						if l_class.creators /= Void or else not l_procedure.has_seed (universe.default_create_seed) then
-								-- The procedure is not a creation procedure exported to `current_class'.
-							if current_class /= current_class_impl and current_class.is_deferred and l_creation_context.is_like_current then
-								-- In case of flat Degree 3, it is OK to create an entity
-								-- declared of type 'like Current' in the current class
-								-- if the current class is deferred.
-							else
-								set_fatal_error
-								if l_name = tokens.default_create_feature_name then
-										-- The creation has no call part. Make sure that
-										-- the error message will give a valid position.
-									create l_name_identifier.make (l_name.name)
-									l_name_position := an_instruction.last_position
-									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
-									l_name := l_name_identifier
-								end
-								error_handler.report_vgcc6e_error (current_class, current_class_impl, l_name, l_procedure, l_class)
+							-- The procedure is not a creation procedure exported to `current_class',
+							-- and it is not the implicit creation procedure 'default_create'.
+						if current_class /= current_class_impl and current_class.is_deferred and l_creation_type.is_like_current then
+							-- In case of flat Degree 3, it is OK to create an entity
+							-- declared of type 'like Current' in the current class
+							-- if the current class is deferred.
+						else
+							set_fatal_error
+							if l_name = tokens.default_create_feature_name then
+									-- The creation has no call part. Make sure that
+									-- the error message will give a valid position.
+								create l_name_identifier.make (l_name.name)
+								l_name_position := an_instruction.last_position
+								l_name_identifier.set_position (l_name_position.line, l_name_position.column)
+								l_name := l_name_identifier
 							end
+							error_handler.report_vgcc6e_error (current_class, current_class_impl, l_name, l_procedure, l_class)
 						end
 					end
 					had_error := has_fatal_error
@@ -2654,7 +2652,7 @@ feature {NONE} -- Instruction validity
 					end
 				end
 			end
-			free_context (l_explicit_creation_context)
+			free_context (l_creation_context)
 			free_context (l_target_context)
 		end
 
@@ -4064,7 +4062,7 @@ feature {NONE} -- Expression validity
 							end
 						else
 							a_context.force_last (l_creation_type)
-							l_class := a_context.base_class (universe)
+							l_class := l_creation_type.base_class (current_type, universe)
 							l_class.process (universe.interface_checker)
 							if not l_class.interface_checked or else l_class.has_interface_error then
 								set_fatal_error
@@ -4160,7 +4158,7 @@ feature {NONE} -- Expression validity
 					l_creation_type := resolved_formal_parameters (l_creation_type, current_class_impl, current_type)
 					if not has_fatal_error then
 						a_context.force_last (l_creation_type)
-						l_class := a_context.base_class (universe)
+						l_class := l_creation_type.base_class (current_type, universe)
 						l_class.process (universe.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
@@ -4179,7 +4177,7 @@ feature {NONE} -- Expression validity
 			if not has_fatal_error then
 				check l_class_not_void: l_class /= Void end
 				universe.report_create_supplier (l_creation_type, current_class, current_feature)
-				l_named_creation_type := a_context.named_type (universe)
+				l_named_creation_type := l_creation_type.shallow_named_type (current_type, universe)
 				l_class_type ?= l_named_creation_type
 				if l_class_type /= Void then
 					check_creation_type_validity (l_class_type, a_type_position)
@@ -4229,25 +4227,23 @@ feature {NONE} -- Expression validity
 							end
 						end
 					elseif not l_procedure.is_creation_exported_to (current_class, l_class, universe) then
-						if l_class.creators /= Void or else not l_procedure.has_seed (universe.default_create_seed) then
-								-- The procedure is not a creation procedure exported to `current_class',
-								-- and it is not the implicit creation procedure 'default_create'.
-							if current_class /= current_class_impl and current_class.is_deferred and a_context.is_like_current then
-								-- In case of flat Degree 3, it is OK to create an entity
-								-- declared of type 'like Current' in the current class
-								-- if the current class is deferred.
-							else
-								set_fatal_error
-								if l_name = tokens.default_create_feature_name then
-										-- The creation has no call part. Make sure that
-										-- the error message will give a valid position.
-									create l_name_identifier.make (l_name.name)
-									l_name_position := an_expression.last_position
-									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
-									l_name := l_name_identifier
-								end
-								error_handler.report_vgcc6c_error (current_class, current_class_impl, l_name, l_procedure, l_class)
+							-- The procedure is not a creation procedure exported to `current_class',
+							-- and it is not the implicit creation procedure 'default_create'.
+						if current_class /= current_class_impl and current_class.is_deferred and l_creation_type.is_like_current then
+							-- In case of flat Degree 3, it is OK to create an entity
+							-- declared of type 'like Current' in the current class
+							-- if the current class is deferred.
+						else
+							set_fatal_error
+							if l_name = tokens.default_create_feature_name then
+									-- The creation has no call part. Make sure that
+									-- the error message will give a valid position.
+								create l_name_identifier.make (l_name.name)
+								l_name_position := an_expression.last_position
+								l_name_identifier.set_position (l_name_position.line, l_name_position.column)
+								l_name := l_name_identifier
 							end
+							error_handler.report_vgcc6c_error (current_class, current_class_impl, l_name, l_procedure, l_class)
 						end
 					end
 					had_error := has_fatal_error
@@ -7573,6 +7569,8 @@ feature {NONE} -- Expression validity
 			if not has_fatal_error then
 				universe.report_expression_supplier (a_context, current_class, current_feature)
 			end
+		ensure
+			type_appended_to_context: not has_fatal_error implies (a_context.count = old (a_context.count) + 1)
 		end
 
 	check_qualified_vape_validity (a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
@@ -9765,9 +9763,11 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_NAMED_TYPE;
+	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE;
 		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
-			-- Report that a creation expression has been processed.
+			-- Report that a creation expression, with creation type
+			-- `a_creation_type' in context of `current_type', has
+			-- been processed.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
@@ -9776,8 +9776,10 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_NAMED_TYPE; a_procedure: ET_PROCEDURE) is
-			-- Report that a creation instruction has been processed.
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
+			-- Report that a creation instruction, with creation type
+			-- `a_creation_type' in context of `current_type', has
+			-- been processed.
 		require
 			no_error: not has_fatal_error
 			an_instruction_not_void: an_instruction /= Void

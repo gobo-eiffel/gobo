@@ -5,7 +5,7 @@ indexing
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -105,6 +105,15 @@ feature -- Access
 			-- Actual generic parameters
 		do
 			-- Result := Void
+		end
+
+	shallow_base_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', but where the actual generic parameters
+			-- are not replaced by their named version and should still
+			-- be considered as viewed from `a_context'
+		do
+			Result := Current
 		end
 
 	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is

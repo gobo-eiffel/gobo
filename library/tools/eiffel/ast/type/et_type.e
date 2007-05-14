@@ -5,7 +5,7 @@ indexing
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -90,6 +90,21 @@ feature -- Access
 			deep_base_type: Result.is_named_type
 		end
 
+	shallow_base_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', but where the actual generic parameters
+			-- are not replaced by their named version and should still
+			-- be considered as viewed from `a_context'
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		ensure
+			shallow_base_type_not_void: Result /= Void
+		end
+
 	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- `i'-th actual generic parameter's type of the base type of current
 			-- type when it appears in `a_context' in `a_universe'
@@ -161,6 +176,23 @@ feature -- Access
 			named_type_named: Result.is_named_type
 		end
 
+	shallow_named_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- Same as `shallow_base_type' except when current type is still
+			-- a formal generic parameter after having been replaced
+			-- by its actual counterpart in `a_context'. Return this
+			-- new formal type in that case instead of the base
+			-- type of its constraint.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := shallow_base_type (a_context, a_universe)
+		ensure
+			shallow_named_type_not_void: Result /= Void
+		end
+
 	named_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
 			-- Same as current actual parameter but its type
 			-- replaced by its named type
@@ -198,6 +230,12 @@ feature -- Measurement
 		end
 
 feature -- Status report
+
+	is_like_current: BOOLEAN is
+			-- Is current type of the form 'like Current'?
+		do
+			-- Result := False
+		end
 
 	is_named_type: BOOLEAN is
 			-- Is current type only made up of named types?

@@ -214,10 +214,7 @@ feature {NONE} -- Parent validity
 														error_handler.report_vtcg4b_error (current_class, current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
 													end
 												end
-											elseif
-												not a_creation_procedure.is_creation_exported_to (a_class, an_actual_class, universe) and then
-												(an_actual_class.creators /= Void or else not a_creation_procedure.has_seed (universe.default_create_seed))
-											then
+											elseif not a_creation_procedure.is_creation_exported_to (a_class, an_actual_class, universe) then
 												set_fatal_error
 												error_handler.report_vtcg4a_error (current_class, current_class, a_type.position, i, a_name, an_actual_class, a_class)
 											end
