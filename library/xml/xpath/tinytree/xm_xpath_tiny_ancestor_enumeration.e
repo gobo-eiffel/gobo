@@ -75,7 +75,11 @@ feature -- Cursor movement
 			index := index + 1
 			from
 				l_node := current_item.parent
-				current_item := l_node
+				if node_test.matches_item (l_node, False) then
+					current_item := l_node
+				else
+					current_item := Void
+				end
 			until
 				l_node = Void or else node_test.matches_item (l_node, False)
 			loop
