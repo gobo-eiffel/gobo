@@ -203,6 +203,16 @@ feature -- Element change
 			line_number_set: a_line_number > 0 implies line_number = a_line_number
 		end
 
+	set_code (a_code: like code) is
+			--	Set `code' to `a_code'.
+		require
+			a_code_not_void: a_code /= Void
+		do
+			code := a_code
+		ensure
+			code_set: code = a_code
+		end
+
 invariant
 
 	error_value_not_void: value /= Void

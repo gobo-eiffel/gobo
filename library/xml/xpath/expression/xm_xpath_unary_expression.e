@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			sub_expressions, same_expression, simplify, promote, compute_special_properties,
-			is_unary_expression, as_unary_expression
+			is_unary_expression, as_unary_expression, processed_eager_evaluation
 		end
 
 feature {NONE} -- Initialization
@@ -191,7 +191,15 @@ feature -- Optimization
 				end
 			end
 		end
-	
+
+feature -- Evaluation
+
+	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+			-- Eager evaluation via `generate_events'
+		do
+			Result := base_expression.processed_eager_evaluation (a_context)
+		end
+
 feature -- Element change
 
 	set_base_expression (an_operand: XM_XPATH_EXPRESSION) is

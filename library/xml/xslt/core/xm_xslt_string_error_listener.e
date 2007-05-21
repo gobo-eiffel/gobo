@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 		do
 			recovered := True
 			recovery_policy := a_recovery_policy
+			create error_change_stack.make_default
 		ensure
 			recovery_policy_set: recovery_policy = a_recovery_policy
 		end
@@ -61,27 +62,40 @@ feature -- Events
 			end
 		end
 
-	error (an_error: XM_XPATH_ERROR_VALUE) is
+	error (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a recoverable error.
 		local
-			a_msg: STRING
+			l_msg: STRING
+			l_error: like a_error
 		do
 			recovered := True
 			if recovery_policy /= Recover_silently then
 				if recovery_policy = Recover_with_warnings then
-					a_msg := "Recoverable error: "
+					l_msg := "Recoverable error: "
 				elseif recovery_policy = Do_not_recover then
 					recovered := False
-					a_msg := "Error: "
+					l_msg := "Error: "
 				end
-				set_error_text (STRING_.concat (a_msg, an_error.error_message), an_error)
+				if is_error_code_editing then
+					create l_error.make (a_error.description, error_change_stack.item.first, error_change_stack.item.second, a_error.value, a_error.type)
+				else
+					l_error := a_error
+				end
+				set_error_text (STRING_.concat (l_msg, l_error.error_message), a_error)
 			end
 		end
 
-	fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
+	fatal_error (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a non-recoverable error.
+		local
+			l_error: like a_error
 		do
-			set_error_text (STRING_.concat ("Fatal error: ", an_error.error_message), an_error)
+			if is_error_code_editing then
+				create l_error.make (a_error.description, error_change_stack.item.first, error_change_stack.item.second, a_error.value, a_error.type)
+			else
+				l_error := a_error
+			end
+			set_error_text (STRING_.concat ("Fatal error: ", l_error.error_message), a_error)
 		end
 
 feature {NONE} -- Implementation

@@ -494,7 +494,11 @@ feature -- Evaluation
 	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
 			-- Eager evaluation via `generate_events'
 		do
-			-- pre-condition will not be met for this implementation
+			check
+				not_called: not is_process_supported
+				-- Precondition assumed not met for this implementation.
+				-- Descendants must redefine if this is not the case
+			end
 		end
 
 feature -- Element change

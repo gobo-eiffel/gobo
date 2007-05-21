@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			recovery_policy := a_recovery_policy
 			create reported_errors.make (10)
 			reported_errors.set_equality_tester (string_equality_tester)
+			create error_change_stack.make_default
 		ensure
 			recovery_policy_set: recovery_policy = a_recovery_policy
 		end
@@ -75,16 +76,23 @@ feature -- Events
 
 	error (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a recoverable error.
+		local
+			l_error: like a_error
 		do
 			if recovery_policy = Do_not_recover then
 				recovered := False
 			else
 				recovered := True
 			end
-			if reported_errors.has (a_error.error_identifier) then
+			if is_error_code_editing then
+					create l_error.make (a_error.description, error_change_stack.item.first, error_change_stack.item.second, a_error.value, a_error.type)
+				else
+					l_error := a_error
+				end
+			if reported_errors.has (l_error.error_identifier) then
 				-- do nothing
 			else
-				reported_errors.force_new (a_error.error_identifier)
+				reported_errors.force_new (l_error.error_identifier)
 			end
 		end
 

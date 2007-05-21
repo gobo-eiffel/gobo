@@ -354,6 +354,14 @@ feature -- Status report
 
 feature -- Status setting
 
+	force_explaining is
+			-- Force gexslt:explain="all" on.
+		do
+			is_all_explaining := True
+		ensure
+			explaining_forced_on: is_all_explaining
+		end
+
 	set_compile_errors is
 			-- Mark this stylesheet as having compile errors
 		do
@@ -590,6 +598,7 @@ feature -- Element change
 			-- Done once per stylesheet, so the stylesheet can be reused for multiple source documents.
 		require
 			indices_not_built: not indices_built
+			no_compile_errors_yet: not any_compile_errors
 		local
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
@@ -600,53 +609,63 @@ feature -- Element change
 
 			-- Build indices for selected top-level elements.
 
-			build_indices
-
+			if not any_compile_errors then
+				build_indices
+			end
+			
 			-- Process the attributes of every node in the tree
 
-			process_all_attributes
+			if not any_compile_errors then
+				process_all_attributes
+			end
 
 			-- Collect any namespace aliases.
 
-			collect_namespace_aliases
+			if not any_compile_errors then
+				collect_namespace_aliases
+			end
 
 			-- Fix up references from XPath expressions to variables and functions, for static typing
 
-			from
-				a_cursor := top_level_elements.new_cursor
-				a_cursor.start
-			variant
-				top_level_elements.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				a_style_element := a_cursor.item
-				if not a_style_element.is_excluded then
-					a_style_element.fixup_references
+			if not any_compile_errors then
+				from
+					a_cursor := top_level_elements.new_cursor
+					a_cursor.start
+				variant
+					top_level_elements.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					a_style_element := a_cursor.item
+					if not a_style_element.is_excluded then
+						a_style_element.fixup_references
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
-
+			
 			-- Validate the whole logical style sheet (i.e. with included and imported sheets)
 
-			validate
+			if not any_compile_errors then
+				validate
 				from
-				a_cursor := top_level_elements.new_cursor
-				a_cursor.start
-			variant
-				top_level_elements.count + 1 - a_cursor.index
-			until
-				any_compile_errors or else a_cursor.after
-			loop
-				a_style_element := a_cursor.item
-				if not a_style_element.is_excluded then
-					a_style_element.validate_subtree
+					a_cursor := top_level_elements.new_cursor
+					a_cursor.start
+				variant
+					top_level_elements.count + 1 - a_cursor.index
+				until
+					any_compile_errors or else a_cursor.after
+				loop
+					a_style_element := a_cursor.item
+					if not a_style_element.is_excluded then
+						a_style_element.validate_subtree
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
+				post_validated := True
 			end
-			post_validated := True
 		ensure
-			indices_built: indices_built
+			indices_built: not any_compile_errors implies indices_built
 		end
 
 	splice_includes is
@@ -654,80 +673,86 @@ feature -- Element change
 		require
 			includes_not_processed: not includes_processed
 		local
-			a_previous_style_element: XM_XSLT_STYLE_ELEMENT
-			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_child: XM_XPATH_NODE
-			a_data_element: XM_XSLT_DATA_ELEMENT
-			a_module: XM_XSLT_MODULE
-			found_non_import: BOOLEAN
-			an_included_stylesheet: XM_XSLT_STYLESHEET
-			an_error: XM_XPATH_ERROR_VALUE
+			l_previous_style_element: XM_XSLT_STYLE_ELEMENT
+			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_child: XM_XPATH_NODE
+			l_data_element: XM_XSLT_DATA_ELEMENT
+			l_module: XM_XSLT_MODULE
+			l_found_non_import: BOOLEAN
+			l_included_stylesheet: XM_XSLT_STYLESHEET
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			prune_children
 			create top_level_elements.make
 			minimum_import_precedence := import_precedence
-			a_previous_style_element := Current
+			l_previous_style_element := Current
 			register_module (system_id)
 			from
-				a_child_iterator := new_axis_iterator (Child_axis)
-				a_child_iterator.start
+				l_child_iterator := new_axis_iterator (Child_axis)
+				l_child_iterator.start
 			until
-				a_child_iterator.after
+				any_compile_errors or l_child_iterator.after
 			loop
-				a_child := a_child_iterator.item
-				if a_child.node_type = Text_node then
+				l_child := l_child_iterator.item
+				if l_child.node_type = Text_node then
 
 					-- In an embedded stylesheet, white space nodes may still be there
 
-					if not is_all_whitespace (a_child.string_value) then
-						create an_error.make_from_string ("No character data is allowed between top-level elements", Xpath_errors_uri, "XTSE0120", Static_error)
-						 a_previous_style_element.report_compile_error (an_error)
+					if not is_all_whitespace (l_child.string_value) then
+						create l_error.make_from_string ("No character data is allowed between top-level elements", Xpath_errors_uri, "XTSE0120", Static_error)
+						 l_previous_style_element.report_compile_error (l_error)
 					end
 				else
-					a_data_element ?= a_child
-					if a_data_element /= Void then
-						found_non_import := True
+					l_data_element ?= l_child
+					if l_data_element /= Void then
+						l_found_non_import := True
 					else
-						a_previous_style_element ?= a_child
+						l_previous_style_element ?= l_child
 						check
-							child_is_style_element: a_previous_style_element /= Void
+							child_is_style_element: l_previous_style_element /= Void
 							-- Only data elements, style elements and white-space text nodes may be present
 						end
-						if a_previous_style_element.is_module then
-							a_module := a_previous_style_element.as_module
-							a_module.create_static_context
-							a_module.process_attributes
-							if a_module.is_import then
-								if found_non_import then
-									create an_error.make_from_string ("xsl:import elements must come first", Xpath_errors_uri, "XTSE0200", Static_error)
-									a_module.report_compile_error (an_error)
+						if l_previous_style_element.is_module then
+							l_module := l_previous_style_element.as_module
+							l_module.create_static_context
+							l_module.process_attributes
+							if l_module.is_import then
+								if l_found_non_import then
+									create l_error.make_from_string ("xsl:import elements must come first", Xpath_errors_uri, "XTSE0200", Static_error)
+									l_module.report_compile_error (l_error)
 								end
 							else
-								found_non_import := True
+								l_found_non_import := True
 							end
-							an_included_stylesheet := a_module.included_stylesheet (Current, import_precedence)
-							if an_included_stylesheet /= Void then
-								an_included_stylesheet.prune_children
-								
-								-- After processing the imported stylesheet and any others it brought in,
-								--  adjust the import precedence of this stylesheet if necessary.
-								
-								if a_module.is_import then
-									import_precedence := an_included_stylesheet.precedence + 1
-								else
-									import_precedence := an_included_stylesheet.precedence
-									an_included_stylesheet.set_minimum_import_precedence (minimum_import_precedence)
-									an_included_stylesheet.set_was_included
+							if not any_compile_errors then
+								l_included_stylesheet := l_module.included_stylesheet (Current, import_precedence)
+								if l_included_stylesheet /= Void then
+									if l_included_stylesheet.any_compile_errors then
+										set_compile_errors
+									else
+										l_included_stylesheet.prune_children
+										
+										-- After processing the imported stylesheet and any others it brought in,
+										--  adjust the import precedence of this stylesheet if necessary.
+										
+										if l_module.is_import then
+											import_precedence := l_included_stylesheet.precedence + 1
+										else
+											import_precedence := l_included_stylesheet.precedence
+											l_included_stylesheet.set_minimum_import_precedence (minimum_import_precedence)
+											l_included_stylesheet.set_was_included
+										end
+										copy_top_level_elements (l_included_stylesheet)
+									end
 								end
-								copy_top_level_elements (an_included_stylesheet)
 							end
 						else
-							found_non_import := True
-							top_level_elements.force_last (a_previous_style_element)
+							l_found_non_import := True
+							top_level_elements.force_last (l_previous_style_element)
 						end
 					end
-				end
-				a_child_iterator.forth
+				end	
+				l_child_iterator.forth
 			end
 		ensure
 			top_level_elements_created: top_level_elements /= Void
@@ -1014,6 +1039,7 @@ feature {NONE} -- Implementation
 			-- Build indices from selected top-level declarations.
 		require
 			indices_not_built: not indices_built
+			no_compile_errors_yet: not any_compile_errors
 		local
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 		do

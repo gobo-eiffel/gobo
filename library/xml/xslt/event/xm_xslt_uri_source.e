@@ -164,7 +164,7 @@ feature -- Events
 			create l_uri.make (system_id)
 			a_receiver.set_document_uri (l_uri)
 			a_parser.set_callbacks (start)
-			a_parser.set_dtd_callbacks (oasis_xml_catalog_filter)
+			a_parser.set_dtd_callbacks (xpointer_filter)
 			l_entity_resolver.push_uri (l_uri)
 			a_parser.parse_from_stream (a_stream)
 			a_parser.entity_resolver.resolve_finish

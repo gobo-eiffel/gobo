@@ -70,6 +70,15 @@
     </para>
   </section>
   <section>
+    <title>Naming the initial context node</title>
+    <para>
+     If you supply a source document to the transformation, then the initial context node will be chosen as the document node of
+     that document.
+     If you wish another node in the document to be chosen as the initial context node, then call <featurecall><featurename>set_initial_context</featurename></featurecall>
+     on the transformer, passing the text of an XPath expression to the routine call.
+    </para>
+  </section>
+  <section>
     <title>Setting Global Parameters</title>
     <para>
       If your stylesheet has any top-level <xslt>&lt;xsl:param&gt;</xslt>s, then

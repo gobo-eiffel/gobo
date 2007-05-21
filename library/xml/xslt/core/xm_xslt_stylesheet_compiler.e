@@ -122,7 +122,7 @@ feature -- Compilation
 			error_or_executable: executable = Void implies load_stylesheet_module_failed
 		end
 
-	load_stylesheet_module (a_source: XM_XSLT_URI_SOURCE; a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI) is
+	load_stylesheet_module (a_source: XM_XSLT_URI_SOURCE; a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI; a_error_code: STRING) is
 			-- Create a tree-representation of a subordinate stylesheet module
 		require
 			source_not_void: a_source /= Void
@@ -130,31 +130,33 @@ feature -- Compilation
 			system_id_is_absolute: a_system_id /= Void and then a_system_id.is_absolute
 			no_error_loading_previous_stylesheet_modules: not load_stylesheet_module_failed
 			stylesheet_not_yet_compiled: executable = Void
+			a_error_code_not_void: a_error_code /= Void
+			a_error_code_not_empty: not a_error_code.is_empty
 		local
-			a_stylesheet_stripper: XM_XSLT_STYLESHEET_STRIPPER
-			a_comment_stripper: XM_XSLT_COMMENT_STRIPPER
-			a_tree_builder: XM_XPATH_TREE_BUILDER
-			a_parser: XM_EIFFEL_PARSER
-			a_locator: XM_XPATH_RESOLVER_LOCATOR
+			l_stylesheet_stripper: XM_XSLT_STYLESHEET_STRIPPER
+			l_comment_stripper: XM_XSLT_COMMENT_STRIPPER
+			l_tree_builder: XM_XPATH_TREE_BUILDER
+			l_parser: XM_EIFFEL_PARSER
+			l_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
 			last_loaded_module := Void
-			create a_parser.make
-			a_parser.set_resolver (configuration.entity_resolver)
-			a_parser.copy_string_mode (configuration)
-			create a_tree_builder.make (node_factory, a_system_id.full_reference, a_system_id)
-			create a_locator.make (a_parser)
-			a_tree_builder.set_document_locator (a_locator)
-			a_tree_builder.set_line_numbering (configuration.is_line_numbering)
-			create a_stylesheet_stripper.make (a_tree_builder)
-			create a_comment_stripper.make (a_stylesheet_stripper)
-			a_source.send_from_stream (a_stream, a_system_id, a_parser, a_comment_stripper, True)
-			if a_tree_builder.has_xpath_error then
-				error_listener.fatal_error (a_tree_builder.last_xpath_error)
-				report_error (a_tree_builder.last_xpath_error.error_message)
-			elseif a_tree_builder.has_error then
-				report_error (a_tree_builder.last_error)
+			create l_parser.make
+			l_parser.set_resolver (configuration.entity_resolver)
+			l_parser.copy_string_mode (configuration)
+			create l_tree_builder.make (node_factory, a_system_id.full_reference, a_system_id)
+			create l_locator.make (l_parser)
+			l_tree_builder.set_document_locator (l_locator)
+			l_tree_builder.set_line_numbering (configuration.is_line_numbering)
+			create l_stylesheet_stripper.make (l_tree_builder)
+			create l_comment_stripper.make (l_stylesheet_stripper)
+			a_source.send_from_stream (a_stream, a_system_id, l_parser, l_comment_stripper, True)
+			if l_tree_builder.has_xpath_error then
+				error_listener.fatal_error (l_tree_builder.last_xpath_error)
+				report_error (l_tree_builder.last_xpath_error.error_message)
+			elseif l_tree_builder.has_error then
+				report_fatal_error (l_tree_builder.last_error, a_error_code)
 			else
-				last_loaded_module := a_tree_builder.tree_document
+				last_loaded_module := l_tree_builder.tree_document
 			end
 			configuration.reset_entity_resolver
 		ensure
@@ -236,6 +238,9 @@ feature -- Compilation
 					-- Compile the stylesheet, retaining the resulting  executable
 					
 					if not a_stylesheet.any_compile_errors then
+						if configuration.is_explaining then
+							a_stylesheet.force_explaining
+						end
 						a_stylesheet.compile_stylesheet (configuration)
 					end
 					if a_stylesheet.any_compile_errors then

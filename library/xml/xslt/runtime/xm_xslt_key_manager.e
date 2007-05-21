@@ -359,86 +359,92 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_key_node (a_node: XM_XPATH_NODE; use: XM_XPATH_EXPRESSION; a_sought_item_type: INTEGER;
+	process_key_node (a_node: XM_XPATH_NODE; a_use: XM_XPATH_EXPRESSION; a_sought_item_type: INTEGER;
 		a_collator: ST_COLLATOR; a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE];
-		a_context: XM_XSLT_EVALUATION_CONTEXT; is_first: BOOLEAN) is
+		a_context: XM_XSLT_EVALUATION_CONTEXT; a_is_first: BOOLEAN) is
 			-- Process one matching node, adding entries to the index if appropriate.
 		require
 			node_not_void: a_node /= Void
-			use_not_void: use /= Void
+			a_use_not_void: a_use /= Void
 			map_not_void: a_map /= Void
 			collator: a_collator /= Void
 			context_not_void: a_context /= Void
 		local
-			a_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_atomic_value, a_value: XM_XPATH_ATOMIC_VALUE
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			an_actual_item_type: INTEGER
+			l_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_atomic_value, l_value: XM_XPATH_ATOMIC_VALUE
+			l_numeric_value: XM_XPATH_NUMERIC_VALUE
+			l_actual_item_type: INTEGER
+			l_finished: BOOLEAN
 		do
 
 			-- Make the node we are testing the context node and the current node,
 			--  with context position and context size set to 1
 
-			create a_singleton_iterator.make (a_node)
-			a_singleton_iterator.start
-			a_context.set_current_iterator (a_singleton_iterator)
+			create l_singleton_iterator.make (a_node)
+			l_singleton_iterator.start
+			a_context.set_current_iterator (l_singleton_iterator)
 
 			-- Evaluate the "use" expression against this context node
 
 			from
-				use.create_iterator (a_context)
-				an_iterator := use.last_iterator
-				if an_iterator.is_error then
-					a_context.transformer.report_fatal_error (an_iterator.error_value)
+				a_use.create_iterator (a_context)
+				l_iterator := a_use.last_iterator
+				if l_iterator.is_error then
+					a_context.transformer.report_fatal_error (l_iterator.error_value)
 				else
-					an_iterator.start
+					l_iterator.start
 				end
 			until
-				an_iterator.is_error or else an_iterator.after
+				l_finished or l_iterator.is_error or else l_iterator.after
 			loop
-				an_atomic_value ?= an_iterator.item
+				l_atomic_value ?= l_iterator.item
 				check
-					atomic_values: an_atomic_value /= Void
+					atomic_values: l_atomic_value /= Void
 					-- Use attribute is statically type-checked - sequence constructor is not yet supported
 				end
-				an_actual_item_type := an_atomic_value.item_type.primitive_type
-				if are_types_comparable (an_actual_item_type, a_sought_item_type) then
+				l_actual_item_type := l_atomic_value.item_type.primitive_type
+				if are_types_comparable (l_actual_item_type, a_sought_item_type) then
 					if a_sought_item_type = Untyped_atomic_type_code then
 
 						-- If the supplied key value is untyped atomic, we build an index using the
 						--  actual type returned by the use expression.
 						-- TODO: collation keys
 
-						create {XM_XPATH_STRING_VALUE} a_value.make (an_atomic_value.string_value)
+						create {XM_XPATH_STRING_VALUE} l_value.make (l_atomic_value.string_value)
 					elseif a_sought_item_type = String_type_code then
 
 						-- If the supplied key value is a string, there is no match unless the use expression
 						--  returns a string or an untyped atomic value.
 						-- TODO: collation keys
 
-						create {XM_XPATH_STRING_VALUE} a_value.make (an_atomic_value.string_value)
+						create {XM_XPATH_STRING_VALUE} l_value.make (l_atomic_value.string_value)
 					else
-						a_numeric_value ?= an_atomic_value
-						if a_numeric_value /= Void and then a_numeric_value.is_nan then
+						l_numeric_value ?= l_atomic_value
+						if l_numeric_value /= Void and then l_numeric_value.is_nan then
 							-- ignore NaN
+							l_finished := True
 						else
-							if an_atomic_value.is_convertible (type_factory.schema_type (a_sought_item_type)) then
-								a_value := an_atomic_value.convert_to_type(type_factory.schema_type (a_sought_item_type))
+							if l_atomic_value.is_convertible (type_factory.schema_type (a_sought_item_type)) then
+								l_value := l_atomic_value.convert_to_type(type_factory.schema_type (a_sought_item_type))
+							else
+								l_finished := True
 							end
 						end
 					end
-					add_node_to_index (a_node, a_map, a_value, is_first)
+					if not l_finished then
+						add_node_to_index (a_node, a_map, l_value, a_is_first)
+					end
 				end
-				an_iterator.forth
+				l_iterator.forth
 			end
-			if an_iterator.is_error then
-				a_context.transformer.report_fatal_error (an_iterator.error_value)
+			if l_iterator.is_error then
+				a_context.transformer.report_fatal_error (l_iterator.error_value)
 			end
 		end
 
 	add_node_to_index (a_node: XM_XPATH_NODE; a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE];
-							 a_value: XM_XPATH_ATOMIC_VALUE; is_first: BOOLEAN) is
+							 a_value: XM_XPATH_ATOMIC_VALUE; a_is_first: BOOLEAN) is
 			-- Add `a_node' to `a_map'.
 		require
 			node_not_void: a_node /= Void
@@ -458,7 +464,7 @@ feature {NONE} -- Implementation
             -- Add the node to the list of nodes for this key,
 				--  unless it's already there
 
-				if is_first then
+				if a_is_first then
 
 					-- If this is the first index definition that we're processing,
 					--  then this node must be after all existing nodes in document

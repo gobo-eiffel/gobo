@@ -101,7 +101,7 @@ feature -- Access
 				Result := STRING_.concat (parent_pattern.original_text, "/")
 				Result := STRING_.appended_string (Result, node_test.original_text)
 			elseif ancestor_pattern /= Void then
-				Result := STRING_.concat (parent_pattern.original_text, "/")
+				Result := STRING_.concat (ancestor_pattern.original_text, "/")
 				Result := STRING_.appended_string (Result, node_test.original_text)
 			else
 				Result := node_test.original_text
@@ -676,7 +676,8 @@ feature {NONE} -- Implementation
 			create l_iterator.make (a_node)
 			l_iterator.start
 			if l_iterator.is_error then
-				set_error_value (l_iterator.error_value)
+				-- optional recovery action
+				internal_last_match_result := False
 			else
 				l_context.set_current_iterator (l_iterator)
 				equivalent_expression.create_node_iterator (l_context)
@@ -696,7 +697,8 @@ feature {NONE} -- Implementation
 						end
 					end
 					if l_node_iterator.is_error then
-						set_error_value (l_node_iterator.error_value)
+						-- optional recovery action
+						internal_last_match_result := False
 					end
 				end
 			end

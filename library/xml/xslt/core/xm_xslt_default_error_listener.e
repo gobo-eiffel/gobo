@@ -31,19 +31,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_recovery_policy: INTEGER; an_error_reporter: UT_ERROR_HANDLER) is
+	make (a_recovery_policy: INTEGER; a_error_reporter: UT_ERROR_HANDLER) is
 			-- Establish invariant.
 		require
 			recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover			
-			error_reporter_not_void: an_error_reporter /= Void
+			error_reporter_not_void: a_error_reporter /= Void
 		do
 			recovery_policy := a_recovery_policy
-			error_reporter := an_error_reporter
+			error_reporter := a_error_reporter
 			warning_threshold := 25
 			recoverable_error_threshold := 25
+			create error_change_stack.make_default
 		ensure
 			recovery_policy_set: recovery_policy = a_recovery_policy
-			error_reporter_set: error_reporter = an_error_reporter
+			error_reporter_set: error_reporter = a_error_reporter
 		end
 
 feature -- Access
@@ -62,11 +63,11 @@ feature -- Events
 	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a warning.
 		local
-			an_error: XM_XPATH_ERROR_VALUE
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if warnings_are_recoverable_errors then
-				create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "WARNING", Dynamic_error)
-				error (an_error)
+				create l_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "WARNING", Dynamic_error)
+				error (l_error)
 			elseif (warning_threshold > 0 and then warnings <= warning_threshold) or warning_threshold < 0 then
 				if a_locator /= Void then display_location_information (a_locator, False) end
 				error_reporter.report_warning_message (STRING_.concat ("Warning: ", a_message))
@@ -77,23 +78,29 @@ feature -- Events
 			end
 		end
 
-	error (an_error: XM_XPATH_ERROR_VALUE) is
+	error (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a recoverable error.
 		local
-			a_msg: STRING
+			l_msg: STRING
+			l_error: like a_error
 		do
 			if recovery_policy /= Recover_silently then
-					display_location_information (an_error, True)
+					display_location_information (a_error, True)
 			end
 			recovered := True
 			if recovery_policy = Recover_with_warnings then
-				a_msg := "Recoverable error: "
+				l_msg := "Recoverable error: "
 			elseif recovery_policy = Do_not_recover then
 				recovered := False
-				a_msg := "Error: "
+				l_msg := "Error: "
 			end
 			if recovery_policy /= Recover_silently then
-				error_reporter.report_error_message (STRING_.concat (a_msg, an_error.error_message))
+				if is_error_code_editing then
+					create l_error.make (a_error.description, error_change_stack.item.first, error_change_stack.item.second, a_error.value, a_error.type)
+				else
+					l_error := a_error
+				end
+				error_reporter.report_error_message (STRING_.concat (l_msg, l_error.error_message))
 			end
 			errors := errors + 1
 			if recovery_policy = Recover_with_warnings and then recoverable_error_threshold >=0 and then errors >= recoverable_error_threshold then
@@ -102,11 +109,18 @@ feature -- Events
 			end
 		end
 
-	fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
+	fatal_error (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a non-recoverable error.
+		local
+			l_error: like a_error
 		do
-			display_location_information (an_error, True)
-			error_reporter.report_error_message (STRING_.concat ("Fatal error: ", an_error.error_message))
+			display_location_information (a_error, True)
+			if is_error_code_editing then
+				create l_error.make (a_error.description, error_change_stack.item.first, error_change_stack.item.second, a_error.value, a_error.type)
+			else
+				l_error := a_error
+			end
+			error_reporter.report_error_message (STRING_.concat ("Fatal error: ", l_error.error_message))
 			fatal_errors := fatal_errors + 1
 		end
 

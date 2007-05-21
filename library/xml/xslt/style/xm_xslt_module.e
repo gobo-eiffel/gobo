@@ -75,10 +75,11 @@ feature -- Access
 					check_recursion (a_source, a_stylesheet)
 					if not any_compile_errors then
 						create a_node_factory.make (a_configuration.error_listener, a_configuration)
-						a_stylesheet_compiler.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id)
+						a_configuration.error_listener.set_next_error_code (Xpath_errors_uri, "XTSE0165")
+						a_stylesheet_compiler.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id, an_error_code)
+						a_configuration.error_listener.clear_next_error_code_change
 						if a_stylesheet_compiler.load_stylesheet_module_failed then
-							create an_error.make_from_string (a_stylesheet_compiler.load_stylesheet_module_error, Xpath_errors_uri, "XTSE0165", Static_error)
-							report_compile_error (an_error)
+							principal_stylesheet.set_compile_errors
 						else
 							included_document := a_stylesheet_compiler.last_loaded_module
 
@@ -152,7 +153,7 @@ feature -- Element change
 			variant
 				attribute_collection.number_of_attributes + 1 - a_cursor.index				
 			until
-				a_cursor.after
+				any_compile_errors or a_cursor.after
 			loop
 				a_name_code := a_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
@@ -165,7 +166,9 @@ feature -- Element change
 				end
 				a_cursor.forth
 			end
-			if href = Void then
+			if any_compile_errors then
+				-- nothing more to do
+			elseif href = Void then
 				report_absence ("href")
 			elseif uri_encoding.has_excluded_characters (href) then
 				create an_error.make_from_string ("'href' attribute contains invalid characters", Xpath_errors_uri, "XTSE0165", Static_error)
@@ -239,7 +242,7 @@ feature {NONE} -- Implementation
 						an_error_code := "XTSE0180"
 						a_message := "A stylesheet may not import include"
 					end
-					create an_error.make_from_string (a_message, "", an_error_code, Static_error)
+					create an_error.make_from_string (a_message, Xpath_errors_uri, an_error_code, Static_error)
 					report_compile_error (an_error)
 				else
 					an_ancestor := an_ancestor.importer

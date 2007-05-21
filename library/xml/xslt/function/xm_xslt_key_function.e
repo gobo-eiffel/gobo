@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplify, compute_special_properties, create_iterator, pre_evaluate, check_arguments
+			simplify, compute_special_properties, create_iterator, pre_evaluate, check_arguments,
+			check_static_type
 		end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
@@ -92,6 +93,15 @@ feature -- Optimization
 				set_context_document_nodeset
 			end
 			merge_dependencies (arguments.item (3).dependencies)
+		end
+
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Perform static type-checking of `Current' and its subexpressions.
+		do
+			Precursor (a_context, a_context_item_type)
+			if is_error and then error_value.code.is_equal ("XPDY0002") and then error_value.namespace_uri.is_equal (Xpath_errors_uri) then
+				error_value.set_code ("XTDE1270")
+			end
 		end
 
 feature -- Evaluation

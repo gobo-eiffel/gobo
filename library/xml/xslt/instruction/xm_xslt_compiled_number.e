@@ -391,6 +391,7 @@ feature -- Evaluation
 		do
 			transformer := a_context.transformer
 			l_receiver := a_context.current_receiver
+			atomic_vector := Void
 			calculate_vector (a_context)
 			if not transformer.is_error then calculate_group_size (a_context)	end
 			if not transformer.is_error then calculate_group_separator (a_context) end
@@ -638,7 +639,7 @@ feature {NONE} -- Implementation
 							end
 						end
 					elseif level = Any_level then
-						calculate_any_number (l_source, a_context)
+						calculate_any_number (l_source, count_pattern, a_context)
 						if not transformer.is_error then
 							value := last_single_number
 						end
@@ -857,71 +858,83 @@ feature {NONE} -- Implementation
 			positive_integer: not transformer.is_error implies last_single_number >= 0
 		end
 
-	calculate_any_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	calculate_any_number (a_node: XM_XPATH_NODE; a_count: XM_XSLT_PATTERN; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- One plus number of previous nodes that match `count_pattern'
 		require
 			source_node_not_void: a_node /= Void
 			transformer_not_void: transformer /= Void
 		local
-			a_memo: DS_CELL [INTEGER_64]
-			memoize, finished: BOOLEAN
-			a_count: INTEGER_64
-			a_filter: XM_XPATH_NODE_TEST
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_memo: DS_CELL [INTEGER_64]
+			l_memoize, l_finished: BOOLEAN
+			l_count: INTEGER_64
+			l_filter: XM_XPATH_NODE_TEST
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_count_pattern: XM_XSLT_PATTERN
+			l_node: XM_XPATH_NODE
 		do
 			last_single_number := -1
-			memoize := not has_variables_in_patterns and then count_pattern /= Void
-			if count_pattern = Void then
+			l_memoize := not has_variables_in_patterns
+			if a_count = Void then
 				if a_node.fingerprint = -1 then
-						create {XM_XSLT_NODE_KIND_TEST} count_pattern.make_without_location (a_node.node_type)
+						create {XM_XSLT_NODE_KIND_TEST} l_count_pattern.make_without_location (a_node.node_type)
 					else
-						create {XM_XSLT_NAME_TEST} count_pattern.make_without_location (a_node)
+						create {XM_XSLT_NAME_TEST} l_count_pattern.make_without_location (a_node)
 				end
-				a_count := 1
+				l_count := 1
 			else
-				count_pattern.match (a_node, a_context)
-				if not transformer.is_error and count_pattern.last_match_result then
-					a_count := 1
+				l_count_pattern := a_count
+				l_count_pattern.match (a_node, a_context)
+				if not transformer.is_error and l_count_pattern.last_match_result then
+					l_count := 1
 				end
 			end
 
 			-- Pass part of the filtering down to the axis iterator if possible
 
 			if from_pattern = Void then
-				a_filter := count_pattern.node_test
-			elseif from_pattern.node_kind = Element_node and then count_pattern.node_kind = Element_node then
-				a_filter := element_node_kind_test
+				l_filter := l_count_pattern.node_test
+			elseif from_pattern.node_kind = Element_node and then l_count_pattern.node_kind = Element_node then
+				l_filter := element_node_kind_test
 			else
-				a_filter := any_node_test
+				l_filter := any_node_test
 			end
 			from
-				an_iterator := a_node.new_axis_iterator_with_node_test (Preceding_or_ancestor_axis, a_filter); an_iterator.start
-			until finished or an_iterator.after or transformer.is_error loop
-				if from_pattern /= Void then
-					from_pattern.match (an_iterator.item, a_context)
-					if not transformer.is_error and from_pattern.last_match_result then
-						last_single_number := a_count; finished := True
-					end
-				else
-					count_pattern.match (an_iterator.item, a_context)
-					if not transformer.is_error and count_pattern.last_match_result then
-						if memoize and then a_count = 1 then
-							a_memo := transformer.remembered_number (an_iterator.item)
-							if a_memo /= Void then
-								a_count := a_memo.item + 1; finished := True
-							end
+				l_iterator := a_node.new_axis_iterator_with_node_test (Preceding_or_ancestor_axis, l_filter)
+				l_iterator.start
+			until l_finished or l_iterator.after or transformer.is_error loop
+				l_node := l_iterator.item
+				l_count_pattern.match (l_node, a_context)
+				if not transformer.is_error and l_count_pattern.last_match_result then
+					if l_memoize and l_count = 1 then
+						l_memo := transformer.remembered_number (l_iterator.item)
+						if l_memo /= Void then
+							last_single_number := l_memo.item + 1
+							l_finished := True
 						end
-						if not finished then a_count := a_count + 1 end
+					end
+					if not l_finished then
+						l_count := l_count + 1
 					end
 				end
-				an_iterator.forth
+				if not l_finished then
+					if from_pattern /= Void then
+						from_pattern.match (l_iterator.item, a_context)
+						if not transformer.is_error and from_pattern.last_match_result then
+							last_single_number := l_count
+							l_finished := True
+						end
+					end
+				end
+				l_iterator.forth
 			end
-			if from_pattern /= Void and then last_single_number = -1 then
-				last_single_number := 0
-			else
-				last_single_number := a_count
+			if not l_finished then
+				if from_pattern /= Void and then last_single_number = -1 then
+					last_single_number := 0
+				else
+					last_single_number := l_count
+				end
 			end
-			if memoize then
+			if l_memoize then
 				transformer.set_remembered_number (last_single_number, a_node)
 			end
 		ensure

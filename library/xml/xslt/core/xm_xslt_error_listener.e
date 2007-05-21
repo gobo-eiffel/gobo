@@ -34,7 +34,15 @@ feature -- Status report
 
 	recovered: BOOLEAN
 			-- Did `Current' recover from the last recoverable error?
-	
+
+	is_error_code_editing: BOOLEAN is
+			-- Will the next error code be edited?
+		do
+			Result := not error_change_stack.is_empty
+		ensure
+			definition: Result = not error_change_stack.is_empty
+		end
+
 feature -- Events
 
 	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
@@ -44,21 +52,21 @@ feature -- Events
 		deferred
 		end
 
-	error (an_error: XM_XPATH_ERROR_VALUE) is
+	error (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a recoverable error.
 		require
-			error_not_void: an_error /= Void
+			error_not_void: a_error /= Void
 		deferred
 		end
 
-	fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
+	fatal_error (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a non-recoverable error.
 		require
-			error_not_void: an_error /= Void
+			error_not_void: a_error /= Void
 		deferred
 		end
 
-feature -- Element change
+feature -- Status setting
 
 	set_recovery_policy (a_recovery_policy: like recovery_policy) is
 			-- Set recovery policy.
@@ -92,9 +100,41 @@ feature -- Element change
 			warnings_are_recoverable_errors := True
 		end
 
+feature -- Element change
+	
+	set_next_error_code (a_uri, a_code: STRING) is
+			-- Change the next reported error code to `a_uri'#`a_code'
+		require
+			a_uri_not_void: a_uri /= Void
+			a_uri_not_empty: not a_uri.is_empty
+			a_code_not_void: a_code /= Void
+			a_code_not_empty: not a_code.is_empty
+		do
+			error_change_stack.force (create {DS_PAIR [STRING, STRING]}.make (a_uri, a_code))
+		ensure
+			one_more_change: error_change_stack.count = old error_change_stack.count + 1
+			correct_error_code_set: error_change_stack.item.first.is_equal (a_uri) and error_change_stack.item.second.is_equal (a_code)
+		end
+
+	clear_next_error_code_change is
+			-- Reverse effect of last call to `set_next_error_code'.
+		require
+			next_error_code_set: is_error_code_editing
+		do
+			error_change_stack.remove
+		ensure
+			one_less: error_change_stack.count = old error_change_stack.count - 1
+		end
+
+feature {NONE} -- Implementation
+
+	error_change_stack: DS_ARRAYED_STACK [DS_PAIR [STRING, STRING]]
+			-- Stack for implementing `set_next_error_code'
+
 invariant
 
 	recovery_policy_in_range: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
+	error_change_stack_not_void: error_change_stack /= Void
 
 end
 	

@@ -84,6 +84,7 @@ feature -- Execution
 			end
 			initial_template_name := Void
 			initial_mode_name := Void
+			initial_context := Void
 			create uris.make (nb)
 			uris.set_equality_tester (string_equality_tester)
 			is_line_numbering := True
@@ -154,6 +155,9 @@ feature -- Status report
 
 	initial_mode_name: STRING
 			-- Name of initial mode
+
+	initial_context: STRING
+			-- XPath expression to determine initial context node
 
 	is_tracing: BOOLEAN
 			-- Is tracing requested?
@@ -447,10 +451,12 @@ feature -- Error handling
 									  "       --html-text-ok%N" +
 									  "       --mode=[namespace-uri#]local-name%N" +
 									  "       --template=[namespace-uri#]local-name%N" +
+									  "       --context=xpath-expression%N" +
 									  "       --param=[namespace-uri#]local-name=string-value%N" +
 									  "       --xpath-param=[namespace-uri#]local-name=xpath-expression%N" +
 									  "       --stop-after-compilation%N" +
 									  "       --stop-after-source-document%N" +
+									  "       --force-explaining%N" +
 									  additional_options)
 		ensure
 			usage_message_not_void: Result /= Void
@@ -519,6 +525,8 @@ feature {NONE} -- Implementation
 		do
 			if an_option.is_equal ("no-line-numbers") then
 				is_line_numbering := False
+			elseif an_option.is_equal ("force-explaining") then
+				configuration.force_explaining
 			elseif an_option.is_equal ("tiny-tree") then
 				is_tiny_tree_model := True
 			elseif an_option.is_equal ("report-document-statistics") then
@@ -596,6 +604,8 @@ feature {NONE} -- Implementation
 				initial_template_name := an_option.substring (10, an_option.count)
 			elseif an_option.substring_index ("mode=", 1) = 1 and then an_option.count > 5 then
 				initial_mode_name := an_option.substring (6, an_option.count)
+			elseif an_option.substring_index ("context=", 1) = 1 and then an_option.count > 8 then
+				initial_context := an_option.substring (9, an_option.count)
 			elseif an_option.is_equal ("no-gc") then
 				collection_off
 			elseif an_option.is_equal ("secure") then
@@ -847,6 +857,9 @@ feature {NONE} -- Implementation
 			end
 			if not a_transformer.is_error and initial_mode_name /= Void then
 				a_transformer.set_initial_mode (initial_mode_name)
+			end
+			if not a_transformer.is_error and initial_context /= Void then
+				a_transformer.set_initial_context (initial_context)
 			end
 			if not a_transformer.is_error then
 				create a_destination -- To standard output

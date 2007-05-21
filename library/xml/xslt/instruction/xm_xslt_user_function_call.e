@@ -19,7 +19,7 @@ inherit
 			pre_evaluate, evaluate_item, create_iterator, display,
 			mark_tail_function_calls, compute_intrinsic_dependencies,
 			create_node_iterator, native_implementations,
-			generate_events, check_static_type, optimize,
+			generate_events, check_static_type, optimize, processed_eager_evaluation,
 			contains_recursive_tail_function_calls, is_user_function_call
 		end
 
@@ -274,6 +274,24 @@ feature -- Evaluation
 				end
 			end
 		end
+
+	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+			-- Eager evaluation via `generate_events'
+		local
+			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
+			l_other_context: XM_XSLT_EVALUATION_CONTEXT
+		do
+			l_other_context ?= a_context.new_minor_context
+				check
+					evaluation_context: l_other_context /= Void
+					-- This is XSLT
+				end
+			create l_receiver.make (l_other_context.transformer)
+			l_other_context.change_to_sequence_output_destination (l_receiver)
+			generate_events (l_other_context)
+			l_receiver.close
+			Result := l_receiver.sequence
+			end
 
 feature -- Element change
 

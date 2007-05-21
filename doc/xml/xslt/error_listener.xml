@@ -91,7 +91,7 @@
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><featurename>error (a_message: STRING; a_locator: XM_XPATH_LOCATOR)</featurename></term>
+	  <term><featurename>error (a_error: XM_XPATH_ERROR_VALUE)</featurename></term>
 	  <listitem>
 	    <para>
 	      This routine is called by the library to inform the user (in some unspecified way) about a recoverable
@@ -103,14 +103,24 @@
 	      This routine <emphasis>must</emphasis> set <featurename>recovered</featurename> to <featurename>True</featurename>
 	      if it recovers from an error, so that the transformer can take the defined recovery action.
 	    </para>
+	    <para>
+	     If the error listener exposes the error code (and its namespace uri) in any way, then it <emphasis>must</emphasis> honour
+	     the <featurename>error_change_stack</featurename>. See <classname>XM_XSLT_DEFAULT_ERROR_LISTENER</classname> for how to do
+	     this. It may be necessary to copy the error location information.
+	    </para>
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><featurename>fatal_error (a_message: STRING; a_locator: XM_XPATH_LOCATOR)</featurename></term>
+	  <term><featurename>fatal_error (a_error: XM_XPATH_ERROR_VALUE)</featurename></term>
 	  <listitem>
 	    <para>
 	      This routine is called by the library to inform the user (in some unspecified way) about a
 	      non-recoverable error.
+	    </para>
+	    <para>
+	     If the error listener exposes the error code (and its namespace uri) in any way, then it <emphasis>must</emphasis> honour
+	     the <featurename>error_change_stack</featurename>. See <classname>XM_XSLT_DEFAULT_ERROR_LISTENER</classname> for how to do
+	     this. It may be necessary to copy the error location information.
 	    </para>
 	  </listitem>
 	</varlistentry>

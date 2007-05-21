@@ -216,9 +216,6 @@
 	    </para>
 	    <para>
 	      If this parameter is omitted (the usual situation), then the initial context node is the document node of the source document.
-	      <warning>
-	       Not yet implemented. Ask if you think you need it.
-	      </warning>
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -647,6 +644,14 @@
   <section>
     <title>Miscellaneous</title>
     <variablelist>
+      <varlistentry>
+	<term>--force-explaining</term>
+	<listitem>
+	  <para>
+	   Act as if the principal stylesheet module had a gexslt:explain="all" attribute coded.
+	  </para>
+	</listitem>
+      </varlistentry>
       <varlistentry>
 	<term>--digits=[maximum_decimal_digits]</term>
 	<listitem>

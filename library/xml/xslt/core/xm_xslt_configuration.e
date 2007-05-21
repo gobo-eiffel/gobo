@@ -172,6 +172,9 @@ feature -- Access
 	message_emitter_factory: XM_XSLT_MESSAGE_EMITTER_FACTORY
 			-- Message-emitter factory
 
+	is_explaining: BOOLEAN
+			-- Is gexslt:explain="all" forced on?
+	
 feature -- Status report
 
 	is_uri_written (a_uri: STRING): BOOLEAN is
@@ -196,6 +199,14 @@ feature -- Creation
 		end
 
 feature -- Element change
+
+	force_explaining is
+			-- Force gexslt:explain="all" on.
+		do
+			is_explaining := True
+		ensure
+			explaining_forced_on: is_explaining
+		end
 
 	set_warns_on_default_action (a_status: BOOLEAN) is
 			-- Set whether warning messages are issued when a default template is invoked.

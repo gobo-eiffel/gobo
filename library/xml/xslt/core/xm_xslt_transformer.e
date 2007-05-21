@@ -386,7 +386,7 @@ feature -- Element change
 			end
 			initial_mode := shared_name_pool.fingerprint_from_expanded_name (a_mode_name)
 			if not rule_manager.is_mode_registered (initial_mode) then
-				create an_error.make_from_string (STRING_.concat (a_mode_name, " is not a mode within the stylesheet"), Gexslt_eiffel_type_uri, "INVALID_INITIAL_MODE", Dynamic_error)
+				create an_error.make_from_string (STRING_.concat (a_mode_name, " is not a mode declared within the transformation"), Xpath_errors_uri, "XTDE0045", Dynamic_error)
 				report_fatal_error (an_error)
 			end
 		end
@@ -431,8 +431,8 @@ feature -- Element change
 			parameter_name_not_void: a_parameter_name /= Void and then is_valid_expanded_name (a_parameter_name)
 			parameter_value_not_void: a_parameter_value /= Void
 		local
-			a_fingerprint: INTEGER
-			an_expression_factory: XM_XPATH_EXPRESSION_FACTORY
+			l_fingerprint: INTEGER
+			l_expression_factory: XM_XPATH_EXPRESSION_FACTORY
 		do
 			if xpath_parameters = Void then
 				create xpath_parameters.make_map_default
@@ -440,14 +440,25 @@ feature -- Element change
 			if not shared_name_pool.is_expanded_name_allocated (a_parameter_name) then
 				shared_name_pool.allocate_expanded_name (a_parameter_name)
 			end
-			a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
-			create an_expression_factory
-			an_expression_factory.make_expression (a_parameter_value, static_context, 1, 0, 1, executable.system_id (1))
-			if an_expression_factory.is_parse_error then
-				report_recoverable_error (an_expression_factory.parsed_error_value)
+			l_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
+			create l_expression_factory
+			l_expression_factory.make_expression (a_parameter_value, static_context, 1, 0, 1, executable.system_id (1))
+			if l_expression_factory.is_parse_error then
+				report_recoverable_error (l_expression_factory.parsed_error_value)
 			else
-				xpath_parameters.force (an_expression_factory.parsed_expression, a_fingerprint)
+				xpath_parameters.force (l_expression_factory.parsed_expression, l_fingerprint)
 			end
+		end
+
+	set_initial_context (a_expression: STRING) is
+			-- Set initial context node from XPath in `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_expression_not_empty: not a_expression.is_empty
+		do
+			initial_context_expression := a_expression
+		ensure
+			initial_context_expression_set: initial_context_expression = a_expression
 		end
 
 	register_document (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING) is
@@ -636,12 +647,55 @@ feature -- Transformation
 				end
 			end
 
+			if l_start_node /= Void and initial_context_expression /= Void then
+				evaluate_initial_context_node (l_start_node)
+				if not is_error then
+					l_start_node := last_context_node
+				end
+			end
 			if not is_error and then configuration.final_execution_phase = Run_to_completion then
 				transform_document (l_start_node, a_result)
 			end
 			configuration.reset_entity_resolver
 		end
 
+feature {NONE} -- Implementation
+
+	last_context_node: XM_XPATH_NODE
+			-- Result from `evaluate_initial_context_node'
+
+	evaluate_initial_context_node (a_start: XM_XPATH_NODE) is
+			-- Evaluate `initial_context_expression' against `a_start' and set `last_context_node' to resulting node.
+		require
+			initial_context_expression_not_void: initial_context_expression /= Void
+		local
+			l_expression_factory: XM_XPATH_EXPRESSION_FACTORY
+			l_expression: XM_XPATH_EXPRESSION
+			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_context: like new_xpath_context
+		do
+			create l_expression_factory
+			l_expression_factory.make_expression (initial_context_expression, static_context, 1, 0, 1, executable.system_id (1))
+			if l_expression_factory.is_parse_error then
+				report_fatal_error (l_expression_factory.parsed_error_value)
+			else
+				l_expression := l_expression_factory.parsed_expression
+				create l_result.make (Void)
+				l_context := new_xpath_context
+				l_context.set_current_iterator (create {XM_XPATH_SINGLETON_NODE_ITERATOR}.make (a_start))
+				l_expression.evaluate_item (l_result, l_context)
+				if l_result.item = Void then
+					last_context_node := Void
+				elseif l_result.item.is_error then
+					report_fatal_error (l_result.item.error_value)
+				elseif l_result.item.is_node then
+					last_context_node := l_result.item.as_node
+				else
+					report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Initial context expression does not evaluate to a single node", Xpath_errors_uri, "XPTY0004", Dynamic_error))
+				end
+			end
+		end
+	
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATION} -- Transformation internals
 
 	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
@@ -723,6 +777,9 @@ feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
 			l_tail_call: XM_XPATH_TAIL_CALL
 		do
+			if initial_mode /= -1 and initial_template /= Void then
+				report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Initial mode and initial template are mutually exclusive", Xpath_errors_uri, "XTDE0047", Dynamic_error))
+			end
 			if not is_error then
 				create l_sequence_iterator.make (a_start_node)
 				from
@@ -757,6 +814,9 @@ feature -- Implementation
 
 	initial_context: XM_XSLT_EVALUATION_CONTEXT
 			-- Initial dynamic context for a transformation
+
+	initial_context_expression: STRING
+			-- XPath expression for initial context node
 
 	temporary_destination_depth: INTEGER
 			-- Count of temporary output destinations
@@ -1017,6 +1077,7 @@ invariant
 	implicit_timezone_not_void: implicit_timezone /= Void
 	current_date_time_not_void: current_date_time /= Void
 	output_resolver_not_void: output_resolver /= Void
+	initial_context_expression_not_empty: initial_context_expression /= Void implies not initial_context_expression.is_empty
 
 end
 

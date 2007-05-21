@@ -1117,6 +1117,11 @@ feature -- Evaluation
 			when Evaluate_as_lazy_tail_expression then
 				evaluate_lazy_tail_expression (a_result, a_context, a_reference_count)
 			end
+			if a_result.item = Void then
+				a_result.put (create {XM_XPATH_EMPTY_SEQUENCE}.make)
+			end
+		ensure
+			evaluation_not_void: a_result.item /= Void
 		end
 
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
@@ -1271,6 +1276,8 @@ feature -- Evaluation
 			process_supported: is_process_supported
 			not_replaced: not was_expression_replaced
 		deferred
+		ensure
+			processed_eager_evaluation_not_void: Result /= Void
 		end
 
 feature -- Element change

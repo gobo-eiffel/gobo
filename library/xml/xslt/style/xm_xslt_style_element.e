@@ -1731,55 +1731,67 @@ feature -- Element change
 			end
 		end
 
-	process_excluded_namespaces_attribute (an_attribute_name: STRING) is
+	process_excluded_namespaces_attribute (a_attribute_name: STRING) is
 			--	Process the  [xsl:]exclude-result-prefixes attribute.
 		require
 			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
-			valid_attribute_name: an_attribute_name /= Void
-				and then	is_valid_expanded_name (an_attribute_name)
-					and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Exclude_result_prefixes_attribute)
-						and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
-							or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
+			valid_attribute_name: a_attribute_name /= Void
+				and then	is_valid_expanded_name (a_attribute_name)
+					and then STRING_.same_string (local_name_from_expanded_name (a_attribute_name), Exclude_result_prefixes_attribute)
+						and then ( namespace_uri_from_expanded_name (a_attribute_name).count = 0
+							or else STRING_.same_string (namespace_uri_from_expanded_name (a_attribute_name), Xslt_uri))
 		local
-			exclusions, an_exclusion: STRING
-			a_splitter: ST_SPLITTER
-			an_exclusion_list: DS_LIST [STRING]
-			a_cursor: DS_LIST_CURSOR [STRING]
-			an_error: XM_XPATH_ERROR_VALUE
+			l_exclusions, l_exclusion: STRING
+			l_splitter: ST_SPLITTER
+			l_exclusion_list: DS_LIST [STRING]
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_error: XM_XPATH_ERROR_VALUE
+			l_code: INTEGER
 		do
-			exclusions := attribute_value_by_expanded_name (an_attribute_name)
-			if exclusions /= Void then
-				STRING_.left_adjust (exclusions)
-				STRING_.right_adjust (exclusions)
-				if STRING_.same_string (exclusions, "#all") then
+			l_exclusions := attribute_value_by_expanded_name (a_attribute_name)
+			if l_exclusions /= Void then
+				STRING_.left_adjust (l_exclusions)
+				STRING_.right_adjust (l_exclusions)
+				if STRING_.same_string (l_exclusions, "#all") then
 					todo ("process_excluded_namespaces_attribute - #all", True)
 				else
-					create a_splitter.make
-					an_exclusion_list := a_splitter.split (exclusions)
-					if an_exclusion_list.count > 0 then
-						create excluded_namespaces.make (an_exclusion_list.count)
+					create l_splitter.make
+					l_exclusion_list := l_splitter.split (l_exclusions)
+					if l_exclusion_list.count > 0 then
+						create excluded_namespaces.make (l_exclusion_list.count)
 						from
-							a_cursor := an_exclusion_list.new_cursor
-							a_cursor.start
+							l_cursor := l_exclusion_list.new_cursor
+							l_cursor.start
 						variant
-							an_exclusion_list.count + 1 - a_cursor.index
+							l_exclusion_list.count + 1 - l_cursor.index
 						until
-							a_cursor.after
+							l_cursor.after
 						loop
-							an_exclusion := a_cursor.item
-							if STRING_.same_string (an_exclusion, "#default") then
-								an_exclusion := ""
-							elseif STRING_.same_string (an_exclusion, "#all") then
-								create an_error.make_from_string ("In exclude-result-prefixes, cannot mix #all with other values", Xpath_errors_uri, "XTSE0550", Static_error)
-								report_compile_error (an_error)
-								a_cursor.go_after
+							l_exclusion := l_cursor.item
+							if STRING_.same_string (l_exclusion, "#default") then
+								l_exclusion := ""
+							elseif STRING_.same_string (l_exclusion, "#all") then
+								create l_error.make_from_string ("In exclude-result-prefixes, cannot mix #all with other values", Xpath_errors_uri, "XTSE0550", Static_error)
+								report_compile_error (l_error)
+								l_cursor.go_after
 							end
-							if not shared_name_pool.is_code_for_prefix_allocated (an_exclusion) then
-								shared_name_pool.allocate_code_for_prefix (an_exclusion)
+							if not shared_name_pool.is_code_for_prefix_allocated (l_exclusion) then
+								shared_name_pool.allocate_code_for_prefix (l_exclusion)
 							end
-							excluded_namespaces.put_last (uri_code_for_prefix (an_exclusion))
-							a_cursor.forth
+							l_code := uri_code_for_prefix (l_exclusion)
+							if l_code = -1 then
+								create l_error.make_from_string (STRING_.concat ("No namespace declaration for prefix ", l_exclusion), Xpath_errors_uri, "XTSE0808", Static_error)
+								report_compile_error (l_error)
+								l_cursor.go_after
+							elseif l_code = 0 and l_exclusion.is_empty then
+								create l_error.make_from_string ("No declaration for default namespace", Xpath_errors_uri, "XTSE0809", Static_error)
+								report_compile_error (l_error)
+								l_cursor.go_after
+							else
+								excluded_namespaces.put_last (l_code)
+								l_cursor.forth
+							end
 						end
 					end					
 				end
