@@ -1595,31 +1595,10 @@ feature -- Duplication
 
 	copy (other: like Current) is
 			-- Copy `other' to current class.
-		local
-			i, nb: INTEGER
-			l_queries: like queries
-			l_procedures: like procedures
 		do
 			if other /= Current then
 				standard_copy (other)
 				eiffel_class := Current
-					-- Set the implementation class of features
-					-- and invariants declared in this class.
-				l_queries := queries
-				nb := l_queries.declared_count
-				from i := 1 until i > nb loop
-					l_queries.item (i).set_implementation_class (Current)
-					i := i + 1
-				end
-				l_procedures := procedures
-				nb := l_procedures.declared_count
-				from i := 1 until i > nb loop
-					l_procedures.item (i).set_implementation_class (Current)
-					i := i + 1
-				end
-				if invariants /= Void then
-					invariants.set_implementation_class (Current)
-				end
 			end
 		end
 

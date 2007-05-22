@@ -1294,9 +1294,9 @@ feature {NONE} -- AST factory
 		do
 			i := assertions.count
 			if i = 0 then
-				Result := ast_factory.new_invariants (an_invariant, last_class, 0)
+				Result := ast_factory.new_invariants (an_invariant, last_class.master_class, 0)
 			else
-				Result := ast_factory.new_invariants (an_invariant, last_class, i)
+				Result := ast_factory.new_invariants (an_invariant, last_class.master_class, i)
 				if Result /= Void then
 					from until i < 1 loop
 						Result.put_first (assertions.item (i))
