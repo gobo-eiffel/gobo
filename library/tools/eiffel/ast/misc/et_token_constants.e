@@ -2154,82 +2154,232 @@ feature -- Keyword and symbol names
 		-- Eiffel class names
 
 	aliased_resized_area_name: STRING is "aliased_resized_area"
+		-- Name of Eiffel feature 'aliased_resized_area'
+
 	area_name: STRING is "area"
+		-- Name of Eiffel feature 'area'
+
 	argument_name: STRING is "argument"
+		-- Name of Eiffel feature 'argument'
+
 	argument_count_name: STRING is "argument_count"
-	as_natural_8_name: STRING is "as_natural_8"
-	as_natural_16_name: STRING is "as_natural_16"
-	as_natural_32_name: STRING is "as_natural_32"
-	as_natural_64_name: STRING is "as_natural_64"
+		-- Name of Eiffel feature 'argument_count'
+
 	as_integer_8_name: STRING is "as_integer_8"
+		-- Name of Eiffel feature 'as_integer_8'
+
 	as_integer_16_name: STRING is "as_integer_16"
+		-- Name of Eiffel feature 'as_integer_16'
+
 	as_integer_32_name: STRING is "as_integer_32"
+		-- Name of Eiffel feature 'as_integer_32'
+
 	as_integer_64_name: STRING is "as_integer_64"
+		-- Name of Eiffel feature 'as_integer_64'
+
+	as_natural_8_name: STRING is "as_natural_8"
+		-- Name of Eiffel feature 'as_natural_8'
+
+	as_natural_16_name: STRING is "as_natural_16"
+		-- Name of Eiffel feature 'as_natural_16'
+
+	as_natural_32_name: STRING is "as_natural_32"
+		-- Name of Eiffel feature 'as_natural_32'
+
+	as_natural_64_name: STRING is "as_natural_64"
+		-- Name of Eiffel feature 'as_natural_64'
+
 	bit_and_name: STRING is "bit_and"
+		-- Name of Eiffel feature 'bit_and'
+
 	bit_not_name: STRING is "bit_not"
+		-- Name of Eiffel feature 'bit_not'
+
 	bit_or_name: STRING is "bit_or"
+		-- Name of Eiffel feature 'bit_or'
+
 	bit_shift_left_name: STRING is "bit_shift_left"
+		-- Name of Eiffel feature 'bit_shift_left'
+
 	bit_shift_right_name: STRING is "bit_shift_right"
+		-- Name of Eiffel feature 'bit_shift_right'
+
 	bit_xor_name: STRING is "bit_xor"
+		-- Name of Eiffel feature 'bit_xor'
+
 	boolean_bytes_name: STRING is "boolean_bytes"
+		-- Name of Eiffel feature 'boolean_bytes'
+
 	call_name: STRING is "call"
+		-- Name of Eiffel feature 'call'
+
 	ceiling_real_32_name: STRING is "ceiling_real_32"
+		-- Name of Eiffel feature 'ceiling_real_32'
+
 	ceiling_real_64_name: STRING is "ceiling_real_64"
+		-- Name of Eiffel feature 'ceiling_real_64'
+
 	character_bytes_name: STRING is "character_bytes"
+		-- Name of Eiffel feature 'character_bytes'
+
 	code_name: STRING is "code"
+		-- Name of Eiffel feature 'code'
+
 	conforms_to_name: STRING is "conforms_to"
+		-- Name of Eiffel feature 'conforms_to'
+
 	copy_name: STRING is "copy"
+		-- Name of Eiffel feature 'copy'
+
 	count_name: STRING is "count"
+		-- Name of Eiffel feature 'count'
+
 	deep_twin_name: STRING is "deep_twin"
+		-- Name of Eiffel feature 'deep_twin'
+
 	default_create_name: STRING is "default_create"
+		-- Name of Eiffel feature 'default_create'
+
 	element_size_name: STRING is "element_size"
+		-- Name of Eiffel feature 'element_size'
+
 	floor_real_32_name: STRING is "floor_real_32"
+		-- Name of Eiffel feature 'floor_real_32'
+
 	floor_real_64_name: STRING is "floor_real_64"
+		-- Name of Eiffel feature 'floor_real_64'
+
 	generating_type_name: STRING is "generating_type"
+		-- Name of Eiffel feature 'generating_type'
+
 	generator_name: STRING is "generator"
+		-- Name of Eiffel feature 'generator'
+
 	hash_code_name: STRING is "hash_code"
+		-- Name of Eiffel feature 'hash_code'
+
 	integer_bytes_name: STRING is "integer_bytes"
+		-- Name of Eiffel feature 'integer_bytes'
+
 	is_deep_equal_name: STRING is "is_deep_equal"
+		-- Name of Eiffel feature 'is_deep_equal'
+
 	is_dotnet_name: STRING is "is_dotnet"
+		-- Name of Eiffel feature 'is_dotnet'
+
 	is_thread_capable_name: STRING is "is_thread_capable"
+		-- Name of Eiffel feature 'is_thread_capable'
+
 	is_unix_name: STRING is "is_unix"
+		-- Name of Eiffel feature 'is_unix'
+
 	is_vms_name: STRING is "is_vms"
+		-- Name of Eiffel feature 'is_vms'
+
 	is_windows_name: STRING is "is_windows"
+		-- Name of Eiffel feature 'is_windows'
+
 	item_name: STRING is "item"
+		-- Name of Eiffel feature 'item'
+
 	last_result_name: STRING is "last_result"
+		-- Name of Eiffel feature 'last_result'
+
 	lower_name: STRING is "lower"
+		-- Name of Eiffel feature 'lower'
+
 	make_name: STRING is "make"
+		-- Name of Eiffel feature 'make'
+
 	natural_32_code_name: STRING is "natural_32_code"
+		-- Name of Eiffel feature 'natural_32_code'
+
 	out_name: STRING is "out"
+		-- Name of Eiffel feature 'out'
+
 	pointer_bytes_name: STRING is "pointer_bytes"
+		-- Name of Eiffel feature 'pointer_bytes'
+
 	pointer_item_name: STRING is "pointer_item"
+		-- Name of Eiffel feature 'pointer_item'
+
 	put_name: STRING is "put"
+		-- Name of Eiffel feature 'put'
+
 	put_reference_name: STRING is "put_reference"
+		-- Name of Eiffel feature 'put_reference'
+
 	real_bytes_name: STRING is "real_bytes"
+		-- Name of Eiffel feature 'real_bytes'
+
 	reference_item_name: STRING is "reference_item"
+		-- Name of Eiffel feature 'reference_item'
+
 	same_type_name: STRING is "same_type"
+		-- Name of Eiffel feature 'same_type'
+
 	set_item_name: STRING is "set_item"
+		-- Name of Eiffel feature 'set_item'
+
 	set_operands_name: STRING is "set_operands"
+		-- Name of Eiffel feature 'set_operands'
+
 	standard_copy_name: STRING is "standard_copy"
+		-- Name of Eiffel feature 'standard_copy'
+
 	standard_is_equal_name: STRING is "standard_is_equal"
+		-- Name of Eiffel feature 'standard_is_equal'
+
 	standard_twin_name: STRING is "standard_twin"
+		-- Name of Eiffel feature 'standard_twin'
+
 	tagged_out_name: STRING is "tagged_out"
+		-- Name of Eiffel feature 'tagged_out'
+
 	to_character_name: STRING is "to_character"
+		-- Name of Eiffel feature 'tagged_out'
+
 	to_character_8_name: STRING is "to_character_8"
+		-- Name of Eiffel feature 'to_character_8'
+
 	to_character_32_name: STRING is "to_character_32"
+		-- Name of Eiffel feature 'to_character_32'
+
 	to_double_name: STRING is "to_double"
+		-- Name of Eiffel feature 'to_double'
+
 	to_integer_32_name: STRING is "to_integer_32"
+		-- Name of Eiffel feature 'to_integer_32'
+
 	to_pointer_name: STRING is "to_pointer"
+		-- Name of Eiffel feature 'to_pointer'
+
 	to_real_name: STRING is "to_real"
+		-- Name of Eiffel feature 'to_real'
+
 	to_real_32_name: STRING is "to_real_32"
+		-- Name of Eiffel feature 'to_real_32'
+
 	to_real_64_name: STRING is "to_real_64"
+		-- Name of Eiffel feature 'to_real_64'
+
 	truncated_to_integer_name: STRING is "truncated_to_integer"
+		-- Name of Eiffel feature 'truncated_to_integer'
+
 	truncated_to_integer_64_name: STRING is "truncated_to_integer_64"
+		-- Name of Eiffel feature 'truncated_to_integer_64'
+
 	truncated_to_real_name: STRING is "truncated_to_real"
+		-- Name of Eiffel feature 'truncated_to_real'
+
 	twin_name: STRING is "twin"
+		-- Name of Eiffel feature 'twin'
+
 	upper_name: STRING is "upper"
+		-- Name of Eiffel feature 'upper'
+
 	wide_character_bytes_name: STRING is "wide_character_bytes"
-		-- Eiffel feature names
+		-- Name of Eiffel feature 'wide_character_bytes'
 
 	capitalized_current_keyword_name: STRING is "Current"
 	capitalized_false_keyword_name: STRING is "False"
