@@ -26,6 +26,9 @@ inherit
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 		export {NONE} all end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 create
 
 	make
@@ -99,7 +102,7 @@ feature -- Optimization
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			Precursor (a_context, a_context_item_type)
-			if is_error and then error_value.code.is_equal ("XPDY0002") and then error_value.namespace_uri.is_equal (Xpath_errors_uri) then
+			if is_error and then error_value.code.is_equal (new_unicode_string ("XPDY0002")) and then error_value.namespace_uri.is_equal (new_unicode_string (Xpath_errors_uri)) then
 				error_value.set_code ("XTDE1270")
 			end
 		end

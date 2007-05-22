@@ -57,6 +57,8 @@ feature -- Evaluation
 					end
 					if l_atomic_value.is_numeric_value and then l_other_atomic_value.is_numeric_value then
 						a_result.put (l_atomic_value.as_numeric_value.arithmetic (operator, l_other_atomic_value.as_numeric_value))
+					else
+						a_result.put (Void)
 					end
 				else
 					a_result.put (Void)
