@@ -16,6 +16,9 @@ inherit
 
 	ANY
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
@@ -1315,7 +1318,11 @@ feature {NONE} -- Compilation
 					set_fatal_error
 				else
 						-- Check feature 'to_pointer' of class TYPED_POINTER.
-					typed_pointer_to_pointer_feature := l_class.named_query (tokens.to_pointer_feature_name)
+					if universe.is_ise and then universe.ise_version < ise_6_0_6_7057 then
+						typed_pointer_to_pointer_feature := l_class.named_query (tokens.pointer_item_feature_name)
+					else
+						typed_pointer_to_pointer_feature := l_class.named_query (tokens.to_pointer_feature_name)
+					end
 					if typed_pointer_to_pointer_feature = Void then
 						l_procedure := l_class.named_procedure (tokens.to_pointer_feature_name)
 						if l_procedure /= Void then

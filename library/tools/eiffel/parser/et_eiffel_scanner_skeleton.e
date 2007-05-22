@@ -822,6 +822,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.natural_32_code_name)
 			Result.force_new (-1, tokens.out_name)
 			Result.force_new (-1, tokens.pointer_bytes_name)
+			Result.force_new (-1, tokens.pointer_item_name)
 			Result.force_new (-1, tokens.put_name)
 			Result.force_new (-1, tokens.put_reference_name)
 			Result.force_new (-1, tokens.real_bytes_name)

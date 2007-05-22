@@ -101,8 +101,18 @@ feature -- Access
 			ise_6_0_0_not_void: Result /= Void
 		end
 
+	ise_6_0_6_7057: UT_VERSION is
+			-- ISE 6.0.6.7057
+			-- First release using FreeELKS.
+		once
+			create Result.make (6, 0, 6, 7057)
+		ensure
+			ise_6_0_6_7057_not_void: Result /= Void
+		end
+
 	ise_6_0_6_7358: UT_VERSION is
 			-- ISE 6.0.6.7358
+			-- First release with multiple generic constraints.
 		once
 			create Result.make (6, 0, 6, 7358)
 		ensure

@@ -1147,6 +1147,13 @@ feature -- Feature names
 		ensure
 			pointer_bytes_feature_name_not_void: Result /= Void
 		end
+	pointer_item_feature_name: ET_FEATURE_NAME is
+			-- 'pointer_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (pointer_item_name)
+		ensure
+			pointer_item_feature_name_not_void: Result /= Void
+		end
 
 	prefix_minus_feature_name: ET_FEATURE_NAME is
 			-- 'prefix "-"' feature name
@@ -2195,6 +2202,7 @@ feature -- Keyword and symbol names
 	natural_32_code_name: STRING is "natural_32_code"
 	out_name: STRING is "out"
 	pointer_bytes_name: STRING is "pointer_bytes"
+	pointer_item_name: STRING is "pointer_item"
 	put_name: STRING is "put"
 	put_reference_name: STRING is "put_reference"
 	real_bytes_name: STRING is "real_bytes"
