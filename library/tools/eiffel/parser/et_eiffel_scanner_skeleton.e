@@ -686,11 +686,19 @@ feature -- Tokens
 feature {NONE} -- Positions
 
 	last_literal_start: INTEGER
+			-- Start position of the last literal read
+
 	last_literal_end: INTEGER
+			-- End position of the last literal read
+
 	last_text_count: INTEGER
+			-- Number of characters in the last text read
+
 	last_break_end: INTEGER
+			-- End position of the last break read
+
 	last_comment_end: INTEGER
-			-- Positions of various parts of the token
+			-- End position of the last comment read
 
 feature {NONE} -- String handler
 
@@ -1042,21 +1050,61 @@ feature {NONE} -- Breaks
 			-- following break or comment
 
 	identifier_break: INTEGER is 1
+			-- Internal code corresponding to a break that
+			-- follows an identifier
+
 	freeop_break: INTEGER is 2
+			-- Internal code corresponding to a break that
+			-- follows a freeop
+
 	character_break: INTEGER is 3
+			-- Internal code corresponding to a break that
+			-- follows a character
+
 	integer_break: INTEGER is 4
+			-- Internal code corresponding to a break that
+			-- follows an integer
+
 	uinteger_break: INTEGER is 5
+			-- Internal code corresponding to a break that
+			-- follows an integer with underscores
+
 	hinteger_break: INTEGER is 6
+			-- Internal code corresponding to a break that
+			-- follows an hexadecimal integer
+
 	real_break: INTEGER is 7
+			-- Internal code corresponding to a break that
+			-- follows a real
+
 	ureal_break: INTEGER is 8
+			-- Internal code corresponding to a break that
+			-- follows a real with underscores
+
 	bit_break: INTEGER is 9
+			-- Internal code corresponding to a break that
+			-- follows a bit
+
 	string_break: INTEGER is 10
+			-- Internal code corresponding to a break that
+			-- follows a manifest string
+
 	str_freeop_break: INTEGER is 11
+			-- Internal code corresponding to a break that
+			-- follows a manifest string containing the
+			-- name of a freeop
+
 	str_special_break: INTEGER is 12
+			-- Internal code corresponding to a break that
+			-- follows a manifest string with special characters
+
 	str_verbatim_break: INTEGER is 13
+			-- Internal code corresponding to a break that
+			-- follows a verbatim manifest string
+
 	str_left_aligned_verbatim_break: INTEGER is 14
-			-- Various kinds of breaks being parsed when
-			-- reading the following break or comment
+			-- Internal code corresponding to a break that
+			-- follows a left-aligned verbatim manifest string
 
 feature {NONE} -- Processing
 

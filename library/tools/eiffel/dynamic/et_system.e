@@ -5,7 +5,7 @@ indexing
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1419,9 +1419,13 @@ feature -- Processors
 feature {NONE} -- Features
 
 	array_area_feature: ET_QUERY
+			-- Expected attribute 'area' in class ARRAY
+
 	array_lower_feature: ET_QUERY
+			-- Expected attribute 'lower' in class ARRAY
+
 	array_upper_feature: ET_QUERY
-			-- Expected attributes in class ARRAY
+			-- Expected attribute 'upper' in class ARRAY
 
 	typed_pointer_to_pointer_feature: ET_QUERY
 			-- Expected attributes in class TYPED_POINTER
