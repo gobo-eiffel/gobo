@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			check_static_type, evaluate_item, make, is_arithmetic_expression, as_arithmetic_expression, is_valid_operator
+			check_static_type, evaluate_item, make, is_arithmetic_expression, as_arithmetic_expression,
+			is_valid_operator
 		end
 
 	XM_XPATH_ARITHMETIC_ROUTINES
@@ -113,6 +114,7 @@ feature -- Status_setting
 			is_backwards_compatible_mode_set: is_backwards_compatible_mode = True
 		end
 
+
 feature -- Optimization
 
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -124,42 +126,45 @@ feature -- Optimization
 		do
 			mark_unreplaced
 			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
-			first_operand.check_static_type (a_context, a_context_item_type)
-			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
-			elseif first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
-			end
-			second_operand.check_static_type (a_context, a_context_item_type)
-			if second_operand.is_error then
-				set_last_error (second_operand.error_value)
-			elseif second_operand.was_expression_replaced then
-				set_second_operand (second_operand.replacement_expression)
-			end
-			if not is_error then
-				create l_sequence_type.make_optional_atomic
-				create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-				create l_type_checker
-				l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, is_backwards_compatible_mode, l_role)
-				if l_type_checker.is_static_type_check_error then
-					set_last_error (l_type_checker.static_type_check_error)
-				else
-					set_first_operand (l_type_checker.checked_expression)
-					create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-					l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, is_backwards_compatible_mode, another_role)
+			if is_backwards_compatible_mode then
+				create_1_0_expression (a_context, a_context_item_type)
+			else
+				first_operand.check_static_type (a_context, a_context_item_type)
+				if first_operand.is_error then
+					set_last_error (first_operand.error_value)
+				elseif first_operand.was_expression_replaced then
+					set_first_operand (first_operand.replacement_expression)
+				end
+				second_operand.check_static_type (a_context, a_context_item_type)
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				elseif second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
+				end
+				if not is_error then
+					create l_sequence_type.make_optional_atomic
+					create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
+					create l_type_checker
+					l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, False, l_role)
 					if l_type_checker.is_static_type_check_error then
 						set_last_error (l_type_checker.static_type_check_error)
 					else
-						set_second_operand (l_type_checker.checked_expression)
-						if is_backwards_compatible_mode then
-							create_1_0_expression  (a_context, a_context_item_type)
-						elseif first_operand.cardinality_is_empty then
-							set_replacement (first_operand)
-							set_replacement (second_operand)
+						set_first_operand (l_type_checker.checked_expression)
+						create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
+						l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, False, another_role)
+						if l_type_checker.is_static_type_check_error then
+							set_last_error (l_type_checker.static_type_check_error)
 						else
-							Precursor (a_context, a_context_item_type)
-							if not was_expression_replaced and not is_error then
-								type_check_arithmetic_expression (a_context)
+							set_second_operand (l_type_checker.checked_expression)
+							if first_operand.cardinality_is_empty then
+								set_replacement (first_operand)
+							elseif second_operand.cardinality_is_empty then
+								set_replacement (second_operand)
+							else
+								Precursor (a_context, a_context_item_type)
+								if not was_expression_replaced and not is_error then
+									type_check_arithmetic_expression (a_context)
+								end
 							end
 						end
 					end
@@ -459,14 +464,14 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 
 feature {NONE} -- Optimization
 
-	create_1_0_expression  (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	create_1_0_expression (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Create XPath 1.0 compatibility expression.
 		require
-			a_context_not_void: a_context /= Void
-			context_item_may_not_be_set: True
 			no_previous_error: not is_error
 			not_replaced: not was_expression_replaced
 			static_properties_computed: are_static_properties_computed
+			a_context_not_void: a_context /= Void
+			a_context_item_type_not_void: a_context_item_type /= Void
 		local
 			l_nan: XM_XPATH_DOUBLE_VALUE
 			l_backwards: XM_XPATH_ARITHMETIC10_EXPRESSION
@@ -483,6 +488,8 @@ feature {NONE} -- Optimization
 					set_replacement (l_backwards)
 				end
 			end
+		ensure
+			expression_replaced: was_expression_replaced
 		end
 
 invariant
