@@ -179,6 +179,16 @@
 	  </listitem>
 	</varlistentry>
     	<varlistentry>
+	  <term><featurename>suppress_dtd</featurename></term>
+	  <listitem>
+	    <para>
+	      Prevents the XML parser from reading external DTDs.
+	      This applies to all uses of the fn:doc(), fn:document() and fn:collection() functions,
+	      as well as the principal source document and all tranformation modules.
+	    </para>
+	  </listitem>
+	</varlistentry>
+    	<varlistentry>
 	  <term><featurename>set_recovery_policy (a_recovery_policy: INTEGER)</featurename></term>
 	  <listitem>
 	    <para>

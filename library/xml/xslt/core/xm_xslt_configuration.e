@@ -174,7 +174,10 @@ feature -- Access
 
 	is_explaining: BOOLEAN
 			-- Is gexslt:explain="all" forced on?
-	
+
+	is_dtd_suppressed: BOOLEAN
+			-- Is the xml parser supposed to read the DTD or not?
+
 feature -- Status report
 
 	is_uri_written (a_uri: STRING): BOOLEAN is
@@ -379,7 +382,16 @@ feature -- Element change
 			estimated_namespaces_set: estimated_namespaces = some_estimated_namespaces
 			estimated_characters_set: estimated_characters = some_estimated_characters
 		end
-			
+
+
+	suppress_dtd is
+			-- Suppress reading of external DTDs by XML parser.
+		do
+			is_dtd_suppressed := True
+		ensure
+			dtd_suppressed: is_dtd_suppressed
+		end
+
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
 
 	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;

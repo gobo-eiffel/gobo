@@ -294,7 +294,11 @@ feature -- Creation
 			-- XML Parser
 		do
 			Result := parser_factory.new_eiffel_parser
-			Result.set_resolver (configuration.entity_resolver)
+			if configuration.is_dtd_suppressed then
+				Result.set_entity_resolver (configuration.entity_resolver)
+			else
+				Result.set_resolver (configuration.entity_resolver)
+			end
 			Result.copy_string_mode (configuration)
 		ensure
 			parser_not_void: Result /= Void

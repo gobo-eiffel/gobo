@@ -457,6 +457,7 @@ feature -- Error handling
 									  "       --stop-after-compilation%N" +
 									  "       --stop-after-source-document%N" +
 									  "       --force-explaining%N" +
+									  "       --suppress-dtd%N" +
 									  additional_options)
 		ensure
 			usage_message_not_void: Result /= Void
@@ -527,6 +528,8 @@ feature {NONE} -- Implementation
 				is_line_numbering := False
 			elseif an_option.is_equal ("force-explaining") then
 				configuration.force_explaining
+			elseif an_option.is_equal ("suppress-dtd") then
+				configuration.suppress_dtd
 			elseif an_option.is_equal ("tiny-tree") then
 				is_tiny_tree_model := True
 			elseif an_option.is_equal ("report-document-statistics") then

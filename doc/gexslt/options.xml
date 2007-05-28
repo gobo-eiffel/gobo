@@ -645,6 +645,15 @@
     <title>Miscellaneous</title>
     <variablelist>
       <varlistentry>
+	<term>--suppress-dtd</term>
+	<listitem>
+	  <para>
+	   Prevent the XML parser from reading external DTDs. This applies to the fn:document(), fn:doc() and fn:collection()
+	   functions, as well to the principal source document and all transformation modules.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
 	<term>--force-explaining</term>
 	<listitem>
 	  <para>
