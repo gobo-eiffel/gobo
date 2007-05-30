@@ -3,7 +3,7 @@
 <!--
 	description:
 
-		"CVS Repository"
+		"SVN Repository"
 
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"
@@ -12,7 +12,7 @@
 
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/cvs">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/svn">
 <chapterinfo>
 	<copyright>
 		<year>2001-2005</year>
@@ -25,10 +25,10 @@
 	<date>8 March 2005</date>
 </chapterinfo>
 
-<title>CVS Repository</title>
+<title>SVN Repository</title>
 
 <para>
-The CVS repository should not include generated files. These files should be 
+The SVN repository should not include generated files. These files should be 
 generated either when building the package or when running the 
 <link linkend="installation">installation procedure</link>.
 </para>

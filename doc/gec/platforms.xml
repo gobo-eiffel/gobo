@@ -148,11 +148,11 @@ And using computers from SourceForge's
 <section><title>Testing gec on a new platform</title>
 <para>
 This section explains what to do in order to test <projectname>gec</projectname>
-on a new platform or with a new C compiler using the code from CVS.
+on a new platform or with a new C compiler using the code from SVN.
 </para>
 <para>
 First you need to check-out the code from the
-<ulink url="https://sourceforge.net/cvs/?group_id=24591">Gobo CVS
+<ulink url="https://sourceforge.net/svn/?group_id=24591">Gobo SVN
 repository</ulink>. Then you should set the environment variable $GOBO
 to the directory where you checked out the code, and add
 <filename class="directory">$GOBO/bin</filename> to your $PATH.

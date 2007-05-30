@@ -19,7 +19,7 @@
 	<cluster name="base" location="${ISE_EIFFEL}/library/base" if="${GOBO_EIFFEL}=ise">
 		<option name="recursive" value="true"/>
 		<option name="read_only" value="true"/>
-		<option name="exclude" value="CVS"/>
+		<option name="exclude" value=".svn"/>
 		<option name="exclude" value="table_eiffel3"/>
 	</cluster>
 

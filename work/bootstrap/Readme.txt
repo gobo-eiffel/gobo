@@ -7,7 +7,7 @@ subdirectories of $GOBO.
 
 The procedure is quite simple:
 
-. Check out the source code from the Gobo CVS repository.
+. Check out the source code from the Gobo SVN repository.
 . Set the environment variable $GOBO.
 . Add $GOBO/bin to your $PATH. Some Eiffel distributions
   such as Visual Eiffel provide older versions of the Gobo
@@ -33,7 +33,7 @@ support other C compilers.
 After having run this bootstrap procedure, the Gobo package
 should be fully installed on your computer and ready to be
 used. Later on, if you check out new classes or clusters
-from CVS, there is usually no need to redo a full bootstrap
+from SVN, there is usually no need to redo a full bootstrap
 again (unless incompatible changes have been applied to the
 building tools such as 'geant', 'gexace', ...). Just run:
 
@@ -48,7 +48,7 @@ type:
 
    geant help
 
-Finally, note that the version of the Gobo package in CVS
+Finally, note that the version of the Gobo package in SVN
 is a development version and not an official release. The
 bootstrap procedure is meant to be used by the Gobo developers
 and by those who are interested in experiencing with new

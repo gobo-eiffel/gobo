@@ -210,7 +210,6 @@ feature -- Test
 			name_sorter: DS_QUICK_SORTER [STRING]
 			expected_entries: ARRAY [STRING]
 			an_entry: STRING
-			cvs_dir: STRING
 			dot_svn: STRING
 		do
 			a_name := data_dirname
@@ -219,7 +218,6 @@ feature -- Test
 			a_directory.open_read
 			if a_directory.is_open_read then
 				assert ("not_eof", not a_directory.end_of_input)
-				cvs_dir := "CVS"
 				dot_svn := ".svn"
 				from
 					create filenames.make (10)
@@ -231,7 +229,6 @@ feature -- Test
 						an_entry := a_directory.last_entry
 						if
 							not STRING_.same_string (an_entry, dot_svn) and
-							not STRING_.same_string (an_entry, cvs_dir) and
 							not STRING_.same_string (an_entry, file_system.relative_current_directory) and
 							not STRING_.same_string (an_entry, file_system.relative_parent_directory)
 						then
@@ -258,7 +255,7 @@ feature -- Test
 			filenames: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
 			an_entry: STRING
-			cvs_dir: STRING
+			dot_svn: STRING
 		do
 			a_name := new_dirname ("gobo")
 			assert ("not_readable1", not file_system.is_directory_readable (a_name))
@@ -268,7 +265,7 @@ feature -- Test
 			a_directory.open_read
 			if a_directory.is_open_read then
 				assert ("not_eof", not a_directory.end_of_input)
-				cvs_dir := "CVS"
+				dot_svn := ".svn"
 				from
 					create filenames.make (10)
 				until
@@ -278,7 +275,7 @@ feature -- Test
 					if not a_directory.end_of_input then
 						an_entry := a_directory.last_entry
 						if
-							not STRING_.same_string (an_entry, cvs_dir) and
+							not STRING_.same_string (an_entry, dot_svn) and
 							not STRING_.same_string (an_entry, file_system.relative_current_directory) and
 							not STRING_.same_string (an_entry, file_system.relative_parent_directory)
 						then

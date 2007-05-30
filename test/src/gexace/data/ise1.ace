@@ -34,7 +34,7 @@ cluster
 	all gefoo: "${GOBO}/test/src/gexace/data"
 	library base: "${ISE_EIFFEL}/library/base"
 		exclude
-			"CVS";
+			".svn";
 			"table_eiffel3"
 		end
 

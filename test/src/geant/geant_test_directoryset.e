@@ -66,7 +66,7 @@ feature -- Test
 		do
 			ds.set_directory_name (Execution_environment.interpreted_string ("${GOBO}"))
 			ds.set_include_wc_string ("**/library/**/*")
-			ds.set_exclude_wc_string ("@(**/spec/**/*|**/kernel/**/*|**/CVS)")
+			ds.set_exclude_wc_string ("@(**/spec/**/*|**/kernel/**/*|**/.svn)")
 --			project.options.set_debug_mode (True)
 			ds.execute
 			assert ("not_empty_1", not ds.is_empty)

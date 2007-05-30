@@ -81,10 +81,7 @@
 		<delete directory="doc/structure/visio"/>
 		<delete directory="doc/time/visio"/>
 		<delete>
-			<fileset include="@(**/.cvsignore)"/>
-		</delete>
-		<delete>
-			<directoryset directory="." include="@(**/CVS)"/>
+			<directoryset directory="." include="@(**/.svn)"/>
 		</delete>
 	</target>
 

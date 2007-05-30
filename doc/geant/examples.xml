@@ -216,12 +216,12 @@ dir.dir:
  Volume in drive D is D
  Volume Serial Number is 5C52-67D3
 
- Directory of D:\cvsstuff\gobo-eiffel\gobo\example\geant\exec
+ Directory of D:\svnstuff\gobo-eiffel\gobo\example\geant\exec
 
 09/08/2002  07:32a      <DIR>          .
 09/08/2002  07:32a      <DIR>          ..
 05/04/2002  01:45p               2,429 build.eant
-11/26/2002  08:41p      <DIR>          CVS
+11/26/2002  08:41p      <DIR>          .svn
 09/01/2001  01:30p                 261 dir.eant
 09/01/2001  01:30p                 519 dir2.eant
 09/08/2002  07:32a                 875 exec1.eant
@@ -557,11 +557,11 @@ if_demo2.list_for_windows:
  Volume in drive D is D
  Volume Serial Number is 5C52-67D3
 
- Directory of D:\cvsstuff\gobo-eiffel\gobo\example\geant\conditional
+ Directory of D:\svnstuff\gobo-eiffel\gobo\example\geant\conditional
 
 09/03/2002  08:15p      <DIR>          .
 09/03/2002  08:15p      <DIR>          ..
-11/26/2002  08:41p      <DIR>          CVS
+11/26/2002  08:41p      <DIR>          .svn
 11/11/2001  10:58p                 261 if1.eant
 11/11/2001  10:58p                 316 if2.eant
 11/11/2001  10:58p                 593 if3.eant

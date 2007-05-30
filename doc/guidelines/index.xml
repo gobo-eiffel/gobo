@@ -120,10 +120,10 @@ This document is structured as follows:
 	
 	<varlistentry>
 		<term>
-			<link linkend="cvs">CVS Repository</link>
+			<link linkend="svn">SVN Repository</link>
 		</term>
 		<listitem><para>
-			How to use the CVS Repository.
+			How to use the SVN Repository.
 		</para></listitem>
 	</varlistentry>
 	

@@ -67,7 +67,7 @@ The following files need to be imported:
  ftp://www.unicode.org/Public/UNIDATA/DerivedNormalizationProps.txt
  ftp://www.unicode.org/Public/UNIDATA/CaseFolding.txt
 
-Do NOT add these files to CVS.
+Do NOT add these files to SVN.
 
 Note that only the latest version of the files should be obtained.
 The idea is that we generate unversioned Eiffel classes, which always
@@ -109,9 +109,9 @@ versioned class.
 
 If any of the classes are new (which will be the case if you are
 generating a new version, or if you are adding a new facility from the
-database), then don't forget to add the files to CVS (contrary to the
+database), then don't forget to add the files to SVN (contrary to the
 rest of Gobo, with geuc, we store the GENERATED files, and not the
-source files). Also create by hand and add to CVS a shared access class.
+source files). Also create by hand and add to SVN a shared access class.
 E.g. ST_UNICODE_CHARACTER_CLASS_ROUTINES has a corresponding shared access
 class ST_IMPORTED_UNICODE_CHARACTER_CLASS_ROUTINES, and
 ST_UNICODE_V410_CHARACTER_CLASS_ROUTINES has

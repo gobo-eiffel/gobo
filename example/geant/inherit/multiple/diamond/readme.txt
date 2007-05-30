@@ -5,10 +5,10 @@ Invocation:
 Expected output:
 ________________________________________________________________
 Loading Project's configuration from d1.eant
-Loading Project's configuration from D:\cvsstuff\gobo-eiffel\gobo/example/geant/inherit/multiple/diamond/b1.eant
-Loading Project's configuration from D:\cvsstuff\gobo-eiffel\gobo/example/geant/inherit/multiple/diamond/a1.eant
-Loading Project's configuration from D:\cvsstuff\gobo-eiffel\gobo/example/geant/inherit/multiple/diamond/c1.eant
-Loading Project's configuration from D:\cvsstuff\gobo-eiffel\gobo/example/geant/inherit/multiple/diamond/a1.eant
+Loading Project's configuration from D:\svnstuff\gobo-eiffel\gobo/example/geant/inherit/multiple/diamond/b1.eant
+Loading Project's configuration from D:\svnstuff\gobo-eiffel\gobo/example/geant/inherit/multiple/diamond/a1.eant
+Loading Project's configuration from D:\svnstuff\gobo-eiffel\gobo/example/geant/inherit/multiple/diamond/c1.eant
+Loading Project's configuration from D:\svnstuff\gobo-eiffel\gobo/example/geant/inherit/multiple/diamond/a1.eant
 Building Project
 
 D.cf:

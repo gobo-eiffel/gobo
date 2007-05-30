@@ -21,7 +21,7 @@ by other Eiffel projects. So now that the code of these tools and Eiffel
 libraries is stable, it was deemed useful to make it available in an
 official package rather that still requiring those third party Eiffel
 projects to tell their users to download the development version of Gobo
-under CVS. The next releases will be devoted to making the documentation
+under SVN. The next releases will be devoted to making the documentation
 more uptodate and providing more tests and examples.
 
 This package consists of fourteen Eiffel libraries:
@@ -55,7 +55,7 @@ and nine utilities:
 
 Note that these utilities are not needed if you just want to use the
 library classes provided in this package (unless you got the classes
-from CVS).
+from SVN).
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
@@ -96,7 +96,7 @@ For other platforms:
       the corresponding tools, and copy the generated executables
       to $GOBO/bin.
 
-Note that if you downloaded this package from CVS on SourceForge, you
+Note that if you downloaded this package from SVN on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
 The supported Eiffel compilers, in alphabetical order, are: ISE Eiffel
@@ -192,7 +192,7 @@ fixes, workarounds and new releases. You can also subscribe to the
 Gobo Eiffel mailing list (http://groups.yahoo.com/group/gobo-eiffel/)
 and take part to the discussions or ask your questions there. Another
 mailing list (http://lists.sourceforge.net/lists/listinfo/gobo-eiffel-develop)
-for discussions about the features under development in the CVS version
+for discussions about the features under development in the SVN version
 is hosted at SourceForge.
 
 Although the license allows you to do pretty much whatever you want with
