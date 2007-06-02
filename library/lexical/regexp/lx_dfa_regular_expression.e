@@ -9,7 +9,6 @@ indexing
 		"Pattern syntax:                                                       %
 		% x          match the character 'x'.                                  %
 		% .          any character except new-line.                            %
-		%            than '/', followed by '/').                               %
 		% \X         if 'X' is an 'a', 'b', 'f', 'n', 'r', 't', or 'v', then   %
 		%            the ANSI-C interpretation of \X. Otherwise, a literal 'X' %
 		%            (used to escape operators such as '*').                   %
