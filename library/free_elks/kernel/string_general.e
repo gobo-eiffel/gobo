@@ -260,7 +260,7 @@ feature -- Duplication
 		ensure
 			substring_not_void: Result /= Void
 			substring_count: Result.count = end_index - start_index + 1 or Result.count = 0
-			first_item: Result.count > 0 implies Result.code (1) = code (start_index)
+			first_code: Result.count > 0 implies Result.code (1) = code (start_index)
 			recurse: Result.count > 0 implies
 				Result.substring (2, Result.count).is_equal (substring (start_index + 1, end_index))
 		end

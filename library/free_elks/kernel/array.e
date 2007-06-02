@@ -336,7 +336,7 @@ feature -- Element change
 feature -- Iteration
 
 	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
-			-- Apply `action' to every item.
+			-- Apply `action' to every item, from first to last.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		require
@@ -361,7 +361,7 @@ feature -- Iteration
 		end
 
 	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
-			-- Apply `action' to every item that satisfies `test'.
+			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		require
@@ -431,6 +431,67 @@ feature -- Iteration
 			loop
 				t.put (l_area.item (i), 1)
 				Result := test.item (t)
+				i := i + 1
+			end
+		end
+
+	do_all_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]]) is
+			-- Apply `action' to every item, from first to last.
+			-- `action' receives item and its index.
+			-- Semantics not guaranteed if `action' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		require
+			action_not_void: action /= Void
+		local
+			t: TUPLE [G, INTEGER]
+			i, j, nb: INTEGER
+			l_area: like area
+		do
+			from
+				create t
+				i := 0
+				j := lower
+				nb := capacity - 1
+				l_area := area
+			until
+				i > nb
+			loop
+				t.put (l_area.item (i), 1)
+				t.put (j, 2)
+				action.call (t)
+				j := j + 1
+				i := i + 1
+			end
+		end
+
+	do_if_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN]) is
+			-- Apply `action' to every item that satisfies `test', from first to last.
+			-- `action' and `test' receive the item and its index.
+			-- Semantics not guaranteed if `action' or `test' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		require
+			action_not_void: action /= Void
+			test_not_void: test /= Void
+		local
+			t: TUPLE [G, INTEGER]
+			i, j, nb: INTEGER
+			l_area: like area
+		do
+			from
+				create t
+				i := 0
+				j := lower
+				nb := capacity - 1
+				l_area := area
+			until
+				i > nb
+			loop
+				t.put (l_area.item (i), 1)
+				t.put (j, 2)
+				if test.item (t) then
+					action.call (t)
+				end
+				j := j + 1
 				i := i + 1
 			end
 		end

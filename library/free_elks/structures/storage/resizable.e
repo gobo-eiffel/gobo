@@ -1,9 +1,6 @@
 indexing
-
-	description:
-		"Finite structures whose item count is subject to change"
+	description: "Finite structures whose item count is subject to change"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: storage;
 	size: resizable;
@@ -16,7 +13,6 @@ deferred class RESIZABLE [G] inherit
 
 feature -- Measurement
 
-
 	Growth_percentage: INTEGER is 50
 			-- Percentage by which structure will grow automatically
 
@@ -27,7 +23,8 @@ feature -- Measurement
 			-- Proposed number of additional items
 			--| Result is a reasonable value, resulting from a space-time tradeoff.
 		do
-			Result := (capacity * Growth_percentage // 100).max (Minimal_increase)
+				-- To prevent overflow we do not use `growth_percentage' but its known value.
+			Result := (capacity // 2).max (Minimal_increase)
 		ensure
 			At_least_one: Result >= 1
 		end
@@ -50,8 +47,7 @@ feature -- Resizing
 		do
 			grow (capacity + additional_space)
 		ensure
-			increased_capacity:
-				capacity >= old capacity + old capacity * Growth_percentage // 100
+			increased_capacity: capacity >= old capacity + old additional_space
 		end
 
 	grow (i: INTEGER) is

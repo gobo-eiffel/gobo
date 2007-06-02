@@ -103,6 +103,7 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 	MISMATCH_CORRECTOR
 		export
 			{NONE} all
+			{ANY} mismatch_information
 		undefine
 			copy, is_equal
 		redefine
@@ -121,17 +122,19 @@ feature -- Initialization
 		local
 			clever: PRIMES
 			l_void_item: G
+			l_size: INTEGER
 		do
 			create clever
-			capacity := n.Max (Minimum_capacity)
-			capacity := capacity + capacity // 2 + 1
-			capacity := clever.higher_prime (capacity)
-			create content.make (capacity + 1)
-			create keys.make (capacity + 1)
+			l_size := n.Max (minimum_capacity)
+			l_size := l_size + l_size // 2 + 1
+			l_size := clever.higher_prime (l_size)
+			capacity := l_size
 					-- Position `capacity' ignored by hash sequences,
 					-- used to store value for default key.
-			create deleted_marks.make (capacity + 1)
-			iteration_position := capacity + 1
+			create content.make (l_size + 1)
+			create keys.make (l_size + 1)
+			create deleted_marks.make (l_size + 1)
+			iteration_position := l_size + 1
 			count := 0
 			deleted_position := 0
 			control := 0
@@ -141,8 +144,7 @@ feature -- Initialization
 			used_slot_count := 0
 		ensure
 			breathing_space: n < capacity
-			minimum_space: Minimum_capacity < capacity
-			more_than_minimum: capacity >= Minimum_capacity
+			more_than_minimum: capacity > minimum_capacity
 			no_status: not special_status
 		end
 
@@ -467,11 +469,33 @@ feature -- Status report
 
 	valid_key (k: H): BOOLEAN is
 			-- Is `k' a valid key?
-			-- (Answer: always yes for hash tables in this version)
+		local
+			l_internal: INTERNAL
+			l_default_key: H
+			l_index, i, nb: INTEGER
+			l_name: STRING
 		do
 			Result := True
-		ensure then
-			Result
+			debug ("prevent_hash_table_catcall")
+				if k /= l_default_key then
+					create l_internal
+					from
+						i := 1
+						nb := l_internal.field_count (Current)
+						l_name := "static_type_of_keys"
+					until
+						i >= nb
+					loop
+						if l_internal.field_name (i, Current).is_equal (l_name) then
+							l_index := i
+							i := nb + 1
+						end
+						i := i + 1
+					end
+					Result := l_internal.field_static_type_of_type (
+						l_index, l_internal.dynamic_type (Current)) = l_internal.dynamic_type (k)
+				end
+			end
 		end
 
 feature -- Cursor movement
@@ -1395,7 +1419,7 @@ feature {NONE} -- Implementation
 			breathing_space: count < capacity
 		end
 
-	Minimum_capacity: INTEGER is 5
+	minimum_capacity: INTEGER is 2
 
 	frozen static_type_of_keys: H
 			-- Store the static type of the keys. Used in `valid_key' when one wants

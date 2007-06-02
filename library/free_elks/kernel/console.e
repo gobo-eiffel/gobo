@@ -26,10 +26,14 @@ class CONSOLE inherit
 				last_natural_64,
 				last_real, last_string, last_double, file_readable,
 				lastchar, lastint, lastreal, laststring, lastdouble,
-				readable, is_closed, extendible, is_open_write
+				readable, is_closed, extendible, is_open_write,
+				putint, put_integer, put_integer_8, put_integer_16, put_integer_32, put_integer_64,
+				readint, read_integer, read_integer_8, read_integer_16, read_integer_32, read_integer_64,
+				put_natural, put_natural_8, put_natural_16, put_natural_32, put_natural_64,
+				read_natural, read_natural_8, read_natural_16, read_natural_32, read_natural_64
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
-			 read_real, read_double, read_character,
+			read_real, read_double, read_character,
 			read_line, read_stream, read_word, next_line,
 			put_boolean, put_real, put_double, put_string, put_character,
 			put_new_line, new_line, end_of_file, file_close,
