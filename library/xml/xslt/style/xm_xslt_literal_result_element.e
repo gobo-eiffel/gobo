@@ -113,7 +113,7 @@ feature -- Element change
 								report_compile_error (an_error)
 							end
 						else
-							create an_error.make_from_string (STRING_.concat ("Unknown XSL attribute ", shared_name_pool.display_name_from_name_code (a_name_code)), Xpath_errors_uri, "XTSE0090", Static_error)
+							create an_error.make_from_string (STRING_.concat ("Unknown XSL attribute ", shared_name_pool.display_name_from_name_code (a_name_code)), Xpath_errors_uri, "XTSE0805", Static_error)
 							report_compile_error (an_error)
 						end
 					else
@@ -152,6 +152,7 @@ feature -- Element change
 				validate_special_attributes
 				establish_attribute_names (l_stylesheet)
 				remove_excluded_namespaces (l_stylesheet)
+				namespace_codes.delete (-1)
 			end
 			validated := True
 		end
@@ -533,6 +534,7 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+				a_cursor.replace (an_alias)
 				an_expression := attribute_values.item (a_cursor.index)
 				type_check_expression (shared_name_pool.display_name_from_name_code (an_alias), an_expression)
 				if an_expression.was_expression_replaced then

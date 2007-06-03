@@ -1167,61 +1167,72 @@ feature {NONE} -- Implementation
 			indices_built: indices_built
 			namespaces_alias_list_not_void: namespace_alias_list /= Void
 		local
-			a_precedence_boundary, a_current_precedence, a_precedence, a_uri_code, a_namespace_code, an_index: INTEGER
-			an_alias: XM_XSLT_NAMESPACE_ALIAS
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_NAMESPACE_ALIAS]
-			an_error: XM_XPATH_ERROR_VALUE
+			l_precedence_boundary, l_current_precedence, l_precedence, l_uri_code, l_namespace_code, l_index: INTEGER
+			l_alias: XM_XSLT_NAMESPACE_ALIAS
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_NAMESPACE_ALIAS]
+			l_error: XM_XPATH_ERROR_VALUE
+			i: INTEGER
 		do
 			if namespace_alias_list.count > 0 then
 				create namespace_alias_namespace_codes.make (1, namespace_alias_list.count)
 				create namespace_alias_uri_codes.make (1, namespace_alias_list.count)
-				a_current_precedence := -1
+				from
+					i := 1
+				until
+					i > namespace_alias_list.count
+				loop
+					namespace_alias_namespace_codes.put (-1, i)
+					namespace_alias_uri_codes.put (-1, i)
+					i := i + 1
+				end
+
+				l_current_precedence := -1
 
 				-- Note that we are processing the list in reverse stylesheet order,
 				--  that is, highest precedence first (as `build_indices' proceeds in that order).
 
 				from
-					a_cursor := namespace_alias_list.new_cursor
-					a_cursor.start
+					l_cursor := namespace_alias_list.new_cursor
+					l_cursor.start
 				variant
-					namespace_alias_list.count + 1 - a_cursor.index
+					namespace_alias_list.count + 1 - l_cursor.index
 				until
-					a_cursor.after
+					l_cursor.after
 				loop
-					an_alias := a_cursor.item
-					a_uri_code := an_alias.stylesheet_uri_code
-					a_namespace_code := an_alias.result_namespace_code
-					a_precedence := an_alias.precedence
+					l_alias := l_cursor.item
+					l_uri_code := l_alias.stylesheet_uri_code
+					l_namespace_code := l_alias.result_namespace_code
+					l_precedence := l_alias.precedence
 
 					-- Check that there isn't a conflict with another xsl:namespace-alias
 					--  at the same precedence
 
-					if a_current_precedence /= a_precedence then
-						a_current_precedence := a_precedence
-						a_precedence_boundary := a_cursor.index
+					if l_current_precedence /= l_precedence then
+						l_current_precedence := l_precedence
+						l_precedence_boundary := l_cursor.index
 					end
 
 					from
-						an_index := a_precedence_boundary
+						l_index := l_precedence_boundary
 					variant
-						namespace_alias_list.count + 1 - an_index
+						namespace_alias_list.count + 1 - l_index
 					until
-						an_index > namespace_alias_list.count
+						l_index > namespace_alias_list.count
 					loop
-						if a_uri_code = namespace_alias_uri_codes.item (an_index) then
-							if fingerprint_from_name_code (a_namespace_code) /= fingerprint_from_name_code (namespace_alias_namespace_codes.item (an_index)) then
-								create an_error.make_from_string ("Inconsistent namespace aliases", Xpath_errors_uri, "XTSE0810", Static_error)
-								an_alias.report_compile_error (an_error)								
+						if l_uri_code = namespace_alias_uri_codes.item (l_index) then
+							if uri_code_from_namespace_code (l_namespace_code) /= uri_code_from_namespace_code (namespace_alias_namespace_codes.item (l_index)) then
+								create l_error.make_from_string ("Inconsistent namespace aliases", Xpath_errors_uri, "XTSE0810", Static_error)
+								l_alias.report_compile_error (l_error)								
 							end
 						end
 
-						an_index := an_index + 1
+						l_index := l_index + 1
 					end
 
-					namespace_alias_uri_codes.put (a_uri_code, a_cursor.index)
-					namespace_alias_namespace_codes.put (a_namespace_code, a_cursor.index)
+					namespace_alias_uri_codes.put (l_uri_code, l_cursor.index)
+					namespace_alias_namespace_codes.put (l_namespace_code, l_cursor.index)
 
-					a_cursor.forth
+					l_cursor.forth
 				end
 				
 			end

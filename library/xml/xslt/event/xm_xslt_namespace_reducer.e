@@ -43,9 +43,12 @@ feature {NONE} -- Initialization
 			base_receiver := an_underlying_receiver
 			document_uri := base_receiver.document_uri
 			base_uri := base_receiver.base_uri
-			create namespaces_in_scope.make (50)
-			create count_stack.make (50)
-			create disinherit_stack.make (50)
+			create namespaces_in_scope.make_default
+			create count_stack.make_default
+			create disinherit_stack.make_default
+			stack_depth := 1
+			count_stack.put (0, 1)
+			disinherit_stack.put (False, 1)
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end
@@ -59,13 +62,23 @@ feature -- Events
 
 			-- If disinheriting namespaces, keep a list of namespaces that need to be undeclared.
 
-			if disinherit_stack.count > 0 and then disinherit_stack.item then
+			if stack_depth > 1 and then disinherit_stack.item (stack_depth - 1) then
 				create pending_undeclarations.make_from_linear (namespaces_in_scope)
 			else
 				pending_undeclarations := Void
 			end
-			count_stack.force (0)
-			disinherit_stack.force (is_disinherit_namespaces (properties))
+			if count_stack.capacity < stack_depth then
+				count_stack.resize (stack_depth * 2)
+				disinherit_stack.resize (stack_depth * 2)
+			end
+			if stack_depth <= count_stack.count then
+				count_stack.replace (0, stack_depth)
+				disinherit_stack.replace (is_disinherit_namespaces (properties), stack_depth)
+			else
+				count_stack.put (0, stack_depth)
+				disinherit_stack.put (is_disinherit_namespaces (properties), stack_depth)
+			end
+			stack_depth := stack_depth + 1
 
 			-- Ensure that the element namespace is output, unless this is done
 			--  automatically by the caller (which is true, for example,
@@ -91,7 +104,7 @@ feature -- Events
 			cancel_pending_undeclarations (l_prefix_code)
 			if is_needed (a_namespace_code, l_prefix_code) then
 				namespaces_in_scope.force_last (a_namespace_code)
-				count_stack.replace (count_stack.item + 1)
+				count_stack.replace (count_stack.item (stack_depth - 1) + 1, stack_depth - 1)
 				Precursor (a_namespace_code, properties)
 			end
 			mark_as_written
@@ -163,11 +176,15 @@ feature -- Events
 		local
 			a_namespace_count: INTEGER
 		do
+			stack_depth := stack_depth - 1
+			check
+				strictly_positive_stack_depth: stack_depth > 0
+				-- element nesting logic
+			end
 			
 			-- Discard the namespaces declared on this element
 
-			a_namespace_count := count_stack.item
-			count_stack.remove
+			a_namespace_count := count_stack.item (stack_depth)
 			namespaces_in_scope.prune_last (a_namespace_count)
 			Precursor
 		end
@@ -177,13 +194,16 @@ feature {NONE} -- Implementation
 	namespaces_in_scope: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes in scope
 
-	count_stack: DS_ARRAYED_STACK [INTEGER]
+	stack_depth: INTEGER
+			-- Index into `count_stack' and `disinherit_stack'
+
+	count_stack: DS_ARRAYED_LIST [INTEGER]
 			-- Count of namespaces per element
 
 	pending_undeclarations: DS_ARRAYED_LIST [INTEGER]
 			-- Pending undeclarations
 
-	disinherit_stack: DS_ARRAYED_STACK [BOOLEAN]
+	disinherit_stack: DS_ARRAYED_LIST [BOOLEAN]
 			-- Should namespaces be disinherited at next level?
 
 	cancel_pending_undeclarations (a_prefix_code: INTEGER) is
@@ -295,6 +315,9 @@ invariant
 	namespaces_in_scope_not_void: namespaces_in_scope /= Void
 	count_stack_not_void: count_stack /= Void
 	disinherit_stack_not_void: disinherit_stack /= Void
+	consistent_stack_depth: count_stack.capacity = disinherit_stack.capacity and
+		count_stack.count = disinherit_stack.count and
+		count_stack.capacity >= stack_depth and count_stack.count >= stack_depth - 1
 
 end
 	

@@ -231,9 +231,11 @@ feature -- Compilation
 					end
 					
 					-- Preprocess the stylesheet, performing validation and preparing template  definitions
-					
-					a_stylesheet.set_stylesheet_compiler (Current, configuration)
-					a_stylesheet.preprocess
+
+					if not a_stylesheet.any_compile_errors then
+						a_stylesheet.set_stylesheet_compiler (Current, configuration)
+						a_stylesheet.preprocess
+					end
 					
 					-- Compile the stylesheet, retaining the resulting  executable
 					

@@ -1748,13 +1748,16 @@ feature -- Element change
 			l_cursor: DS_LIST_CURSOR [STRING]
 			l_error: XM_XPATH_ERROR_VALUE
 			l_code: INTEGER
+			l_namespaces: DS_ARRAYED_LIST [INTEGER]
 		do
 			l_exclusions := attribute_value_by_expanded_name (a_attribute_name)
 			if l_exclusions /= Void then
 				STRING_.left_adjust (l_exclusions)
 				STRING_.right_adjust (l_exclusions)
 				if STRING_.same_string (l_exclusions, "#all") then
-					todo ("process_excluded_namespaces_attribute - #all", True)
+					l_namespaces := namespace_codes_in_scope
+					create excluded_namespaces.make_from_linear (l_namespaces)
+					l_namespaces.do_all_with_index (agent exclude_namespace)
 				else
 					create l_splitter.make
 					l_exclusion_list := l_splitter.split (l_exclusions)
@@ -2432,6 +2435,17 @@ feature {NONE} -- Implementation
 
 	extension_namespaces: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace URI codes of extension elements
+
+	
+	exclude_namespace (a_namespace_code, a_index: INTEGER) is
+			-- Mark `a_namespace_code' as excluded.
+		require
+			excluded_namespaces_not_void: excluded_namespaces /= Void
+			a_index_strictly_positive: a_index > 0
+			a_index_small_enough: a_index <= excluded_namespaces.count
+		do
+			excluded_namespaces.replace (INTEGER_.bit_and (a_namespace_code, 0xffff), a_index)
+		end
 
 	common_child_item_type: XM_XPATH_ITEM_TYPE is
 			-- Most general type of item returned by the children of this instruction
