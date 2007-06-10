@@ -179,6 +179,9 @@ feature {NONE} -- Implementation
 								item_is_node: item /= Void
 								-- This relies upon correct logic within routines which create `Current'
 							end
+							if item.is_error then
+								set_last_error (item.error_value)
+							end
 							finished := True
 						end
 

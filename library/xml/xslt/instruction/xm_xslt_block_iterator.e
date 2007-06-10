@@ -67,7 +67,7 @@ feature -- Cursor movement
 				end
 			else
 				child_iterator.forth
-				if child_iterator.after and then child_index < child_list.count then
+				if not child_iterator.is_error and then child_iterator.after and then child_index < child_list.count then
 					from
 					until
 						(child_iterator /= Void and then child_iterator.is_error or else not child_iterator.after) or else child_index = child_list.count

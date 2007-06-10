@@ -131,7 +131,7 @@ feature -- Optimization
 				set_replacement (base_expression)
 			else
 				a_relation := type_relationship (required_item_type, base_expression.item_type)
-				if a_relation = Same_item_type or else a_relation = Subsuming_type then
+				if a_relation = Same_item_type or else a_relation = Subsumed_type then
 					set_replacement (base_expression)
 				elseif a_relation = Disjoint_types then
 					if base_expression.cardinality_allows_zero then
@@ -185,14 +185,14 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (an_iterator.error_value)
+			base_expression.create_node_iterator (a_context)
+			l_iterator := base_expression.last_node_iterator
+			if l_iterator.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_iterator.error_value)
 			else
-				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (an_iterator, Current, Void)
+				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (l_iterator, Current, Void)
 			end
 		end
 

@@ -37,6 +37,9 @@ inherit
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 		export {NONE} all end
 
+	XM_XPATH_PROMOTION_ACTIONS
+		export {NONE} all end
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_TOKENS
@@ -1097,13 +1100,61 @@ feature -- Status setting
 		require
 			pattern_not_void: a_pattern /= Void
 			valid_name: a_name /= Void and then a_name.count > 0
+		local
+			l_uses_current, l_name_code_created: BOOLEAN
+			l_sub_expressions: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_let_expression: XM_XPATH_LET_EXPRESSION
+			l_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION
+			l_name_code, l_counter: INTEGER
+			l_required_type: XM_XPATH_SEQUENCE_TYPE
+			l_sequence_expression: XM_XPATH_CONTEXT_ITEM_EXPRESSION
+			l_offer: XM_XPATH_PROMOTION_OFFER
+			l_local_name_prefix, l_local_name: STRING
 		do
 			a_pattern.type_check (static_context, any_node_test)
 			if a_pattern.is_error then
+				-- TODO - this should be a dynamic error
 				report_compile_error (a_pattern.error_value)
 			end
-			-- TODO: need to resolve calls to current ()
-			-- probably need the full pattern expression stuff first.
+			if a_pattern.is_location_pattern then
+				from
+					l_sub_expressions := a_pattern.sub_expressions.new_cursor
+					l_sub_expressions.start
+				until
+					l_sub_expressions.after
+				loop
+					if l_sub_expressions.item.calls_function (Current_function_type_code) then
+						l_uses_current := True
+						l_sub_expressions.go_after
+					else
+						l_sub_expressions.forth
+					end
+				end
+				if l_uses_current then
+					from
+						l_local_name_prefix := "current_"; l_counter := 0
+					until
+						l_name_code_created
+					loop
+						l_local_name := STRING_.concat (l_local_name_prefix, l_counter.out)
+						if not shared_name_pool.is_name_code_allocated ("gexslt_system_usage", Gexslt_examples_uri, l_local_name) then
+							shared_name_pool.allocate_name ("gexslt_system_usage", Gexslt_examples_uri, l_local_name)
+							l_name_code_created := True
+							l_name_code := shared_name_pool.last_name_code
+						else
+							l_counter := l_counter + 1
+						end
+					end
+					create l_required_type.make_single_item
+					create l_range_variable.make ("gexslt_system_usage:current_function", l_name_code, l_required_type)
+					create l_sequence_expression.make
+					create l_let_expression.make (l_range_variable, l_sequence_expression, create {XM_XPATH_EMPTY_SEQUENCE}.make)
+					create l_offer.make (Replace_current, Void, l_let_expression, False, False)
+					a_pattern.as_location_pattern.resolve_current (l_let_expression, l_offer)
+					allocate_slots (l_let_expression, containing_slot_manager)
+					l_range_variable.fix_up_references (l_let_expression)
+				end
+			end
 		end
 
 	check_within_template is

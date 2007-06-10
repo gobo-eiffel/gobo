@@ -176,7 +176,7 @@ feature -- Element change
 				end
 			end
 			if not any_compile_errors and then a_match_attribute = Void and then a_name_attribute = Void then
-				create an_error.make_from_string ("xsl:template must have a name or match attribute (or both)", Xpath_errors_uri, "XTSE0010", Static_error)
+				create an_error.make_from_string ("xsl:template must have a name or match attribute (or both)", Xpath_errors_uri, "XTSE0500", Static_error)
 				report_compile_error (an_error)
 			end
 			if an_as_attribute /= Void then
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 				mode_name_codes.put_last (Default_mode)
 			else
 				if is_match_attribute_void then
-					create an_error.make_from_string ("The mode attribute must be absent if the match attribute is absent", Xpath_errors_uri, "XTSE0010", Static_error)
+					create an_error.make_from_string ("The mode attribute must be absent if the match attribute is absent", Xpath_errors_uri, "XTSE0500", Static_error)
 					report_compile_error (an_error)
 				else
 					create a_splitter.make
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 			if a_priority_attribute /= Void then
 				is_priority_specified := True
 				if is_match_attribute_void then
-					create an_error.make_from_string ("The priority attribute must be absent if the match attribute is absent", Xpath_errors_uri, "XTSE0010", Static_error)
+					create an_error.make_from_string ("The priority attribute must be absent if the match attribute is absent", Xpath_errors_uri, "XTSE0500", Static_error)
 					report_compile_error (an_error)
 				else
 					create a_decimal_parser.make

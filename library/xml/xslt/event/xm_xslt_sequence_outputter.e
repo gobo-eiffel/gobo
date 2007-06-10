@@ -344,7 +344,7 @@ feature -- Events
 			-- Notify end of event stream.
 		do
 			is_open := False
-			if tree /= Void then
+			if tree /= Void and then tree.is_open then
 				tree.close
 			end
 		end

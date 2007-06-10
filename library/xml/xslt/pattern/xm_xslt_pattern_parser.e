@@ -129,30 +129,35 @@ feature {NONE} -- Implementation
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			a_left_pattern, a_right_pattern: XM_XSLT_PATTERN
-			finished: BOOLEAN
+			l_left_pattern, l_right_pattern: XM_XSLT_PATTERN
+			l_finished: BOOLEAN
 		do
 			parse_path_pattern
 			if not is_parse_error then
 				from
-					a_left_pattern := internal_last_parsed_pattern
-					finished := tokenizer.last_token /= Union_token
+					l_left_pattern := internal_last_parsed_pattern
+					l_finished := tokenizer.last_token /= Union_token
 				until
-					finished or else tokenizer.last_token /= Union_token
+					l_finished or else tokenizer.last_token /= Union_token
 				loop
-					tokenizer.next
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-						finished := True
+					if STRING_.same_string ("union", tokenizer.last_token_value) then
+						report_parse_error ("'union' is not permitted in patterns - use '|' instead", "XTSE0340")
+						l_finished := True
 					else
-						parse_path_pattern
-						if not is_parse_error then
-							a_right_pattern := internal_last_parsed_pattern
-							create {XM_XSLT_UNION_PATTERN} a_left_pattern.make (environment, a_left_pattern, a_right_pattern)
+						tokenizer.next
+						if tokenizer.is_lexical_error then
+							report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
+							l_finished := True
+						else
+							parse_path_pattern
+							if not is_parse_error then
+								l_right_pattern := internal_last_parsed_pattern
+								create {XM_XSLT_UNION_PATTERN} l_left_pattern.make (environment, l_left_pattern, l_right_pattern)
+							end
 						end
 					end
 				end
-				internal_last_parsed_pattern := a_left_pattern
+				internal_last_parsed_pattern := l_left_pattern
 			end
 		ensure
 			pattern_not_void_unless_error: not is_parse_error implies internal_last_parsed_pattern /= Void
@@ -402,24 +407,26 @@ feature {NONE} -- Implementation
 														report_parse_error ("id value must be either a literal or a variable reference", "XTSE0340")
 														l_finished := True
 													end
-													generate_name_code (l_key_name, False)
-													create {XM_XSLT_KEY_PATTERN} l_key.make (environment, last_generated_name_code, l_id_value)
-													l_pattern := l_key
-													tokenizer.next
-													if tokenizer.is_lexical_error then
-														report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-														l_finished := True
-													else
-														if tokenizer.last_token /= Right_parenthesis_token then
-															l_message := "expected %")%", found "
-															l_message := STRING_.appended_string (l_message, display_current_token)
-															report_parse_error (l_message, "XTSE0340")
+													if not is_parse_error then
+														generate_name_code (l_key_name, False)
+														create l_key.make (environment, last_generated_name_code, l_id_value)
+														l_pattern := l_key
+														tokenizer.next
+														if tokenizer.is_lexical_error then
+															report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 															l_finished := True
 														else
-															tokenizer.next
-															if tokenizer.is_lexical_error then
-																report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
+															if tokenizer.last_token /= Right_parenthesis_token then
+																l_message := "expected %")%", found "
+																l_message := STRING_.appended_string (l_message, display_current_token)
+																report_parse_error (l_message, "XTSE0340")
 																l_finished := True
+															else
+																tokenizer.next
+																if tokenizer.is_lexical_error then
+																	report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
+																l_finished := True
+																end
 															end
 														end
 													end

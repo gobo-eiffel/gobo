@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 			-- Set defaults.
 		require
 			action: a_requested_action = Range_independent
-				or else a_requested_action = Focus_independent
-				or else a_requested_action = Inline_variable_references
-				or else a_requested_action = Unordered
-				or else a_requested_action = Replace_current
+				or a_requested_action = Focus_independent
+				or a_requested_action = Inline_variable_references
+				or a_requested_action = Unordered
+				or a_requested_action = Replace_current
 			binding_for_range_variable: action = Range_independent implies a_binding_list /= Void and then a_binding_list.count > 0
 			binding_for_inline_variables: action = Inline_variable_references implies a_binding_list /= Void and then a_binding_list.count = 1
 			containing: a_requested_action /= Unordered implies containing /= Void
@@ -273,9 +273,9 @@ feature {NONE} -- Implementation
 
 invariant
 
-	action: action = Range_independent or else action = Focus_independent
-		or else action = Inline_variable_references or else action = Unordered
-		or else action = Replace_current
+	action: action = Range_independent or  action = Focus_independent
+		or action = Inline_variable_references or action = Unordered
+		or action = Replace_current
 	binding_for_range_variable: action = Range_independent implies binding_list /= Void and then binding_list.count > 0
 	binding_for_inline_variables: action = Inline_variable_references implies binding_list /= Void and then binding_list.count = 1
 	containing_expression: action /= Unordered implies containing_expression /= Void

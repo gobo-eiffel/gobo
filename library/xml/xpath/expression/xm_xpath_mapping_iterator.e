@@ -169,6 +169,9 @@ feature {NONE} -- Implementation
 								results := Void
 								finished := True
 								item := a_mapped_item.item
+								if item.is_error then
+									set_last_error (item.error_value)
+								end
 							else
 								results := a_mapped_item.sequence
 								if results.is_error then

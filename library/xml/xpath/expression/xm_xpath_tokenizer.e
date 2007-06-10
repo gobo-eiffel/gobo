@@ -213,8 +213,8 @@ feature --Element change
 					else
 						std.error.put_string (operator_type.out)
 					end
-				std.error.put_new_line
-			end
+					std.error.put_new_line
+				end
 				if operator_type /= Unknown_token and then not is_operator then
 					current_token := operator_type
 				end

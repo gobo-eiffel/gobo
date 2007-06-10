@@ -384,7 +384,7 @@ feature -- Optimization
 					end
 				end
 				if an_offer.action = Inline_variable_references
-				 or else an_offer.action = Replace_current then
+				 or an_offer.action = Replace_current then
 
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					--  them to say we are interested in subexpressions that don't depend on either the

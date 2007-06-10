@@ -154,7 +154,9 @@ feature -- Evaluation
 					evaluate_name_code (a_context)
 					if not is_error then
 						create l_orphan.make (item_type.primitive_type, last_string_value)
-						l_orphan.set_name_code (last_name_code)
+						if last_name_code /= -1 then
+							l_orphan.set_name_code (last_name_code)
+						end
 						a_result.put (l_orphan)
 					else
 						l_context ?= a_context

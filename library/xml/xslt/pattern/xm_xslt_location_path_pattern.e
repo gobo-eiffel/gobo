@@ -80,6 +80,9 @@ feature -- Access
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			Result := Precursor
+			if variable_binding /= Void then
+				Result.force_last (variable_binding)
+			end
 			if parent_pattern /= Void then
 				Result.append_last (parent_pattern.sub_expressions)
 			end
@@ -163,6 +166,33 @@ feature -- Status setting
 			finished: is_constructed
 		end
 
+	resolve_current (a_let_expression: XM_XPATH_LET_EXPRESSION; a_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Resolve calls to fn:current().
+		require
+			a_let_expression_not_void: a_let_expression /= Void
+			a_offer_not_void: a_offer /= Void
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			if filters /= Void then
+				from l_cursor := filters.new_cursor; l_cursor.start until l_cursor.after loop
+					l_cursor.item.promote (a_offer)
+					if l_cursor.item.was_expression_replaced then
+						l_cursor.replace (l_cursor.item.replacement_expression)
+					end
+					l_cursor.forth
+				end
+			end
+			if parent_pattern /= Void and then parent_pattern.is_location_pattern then
+				parent_pattern.as_location_pattern.resolve_current (a_let_expression, a_offer)
+			end
+			if ancestor_pattern /= Void and then ancestor_pattern.is_location_pattern then
+				ancestor_pattern.as_location_pattern.resolve_current (a_let_expression, a_offer)
+			end
+			variable_binding := a_let_expression
+		end
+
+
 feature -- Optimization
 
 	simplified_pattern: XM_XSLT_PATTERN is
@@ -187,14 +217,8 @@ feature -- Optimization
 
 				if parent_pattern /= Void then
 					l_result_pattern.set_parent_pattern (parent_pattern.simplified_pattern)
-					if l_result_pattern.parent_pattern.is_location_pattern then
-						l_result_pattern.set_uses_current (l_result_pattern.parent_pattern.as_location_pattern.uses_current)
-					end
 				elseif ancestor_pattern /= Void then
 					l_result_pattern.set_ancestor_pattern (ancestor_pattern.simplified_pattern)
-					if l_result_pattern.ancestor_pattern.is_location_pattern then
-						l_result_pattern.set_uses_current (l_result_pattern.ancestor_pattern.as_location_pattern.uses_current)
-					end
 				end
 
 				if filters /= Void then
@@ -212,9 +236,6 @@ feature -- Optimization
 							l_filter_expression := l_filter_expression.replacement_expression
 						end
 						l_cursor.replace (l_filter_expression)
-						if l_filter_expression.depends_upon_current_item then
-							l_result_pattern.set_uses_current (True)
-						end
 						l_cursor.forth
 					end
 				end
@@ -356,18 +377,13 @@ feature -- Matching
 	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Does `Current' match `a_node'?
 		local
-			l_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
+			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
-			l_saved_iterator := a_context.current_iterator
-			if uses_current then
-				create l_singleton_iterator.make (a_node)
-				a_context.set_current_iterator (l_singleton_iterator)
-				internal_match (a_node, a_context)
-			else
-				internal_match (a_node, a_context)
+			if variable_binding /= Void then
+				create l_item.make (Void)
+				variable_binding.evaluate_item (l_item, a_context)
 			end
-			a_context.set_current_iterator (l_saved_iterator)
+			internal_match (a_node, a_context)
 		end
 
 feature -- Element change
@@ -454,17 +470,6 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 
 	filters: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Filters applied to `node_test`
-
-	uses_current: BOOLEAN
-			-- At least one component depends upon `Current'
-
-	set_uses_current (u: BOOLEAN) is
-			-- Set `uses_current'.
-		do
-			uses_current := u
-		ensure
-			set: uses_current = u
-		end
 
 	set_first_element_pattern (f: BOOLEAN) is
 			-- Set `is_first_element_pattern'.
@@ -558,6 +563,9 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 			-- `Current' is a special filter
 
 feature {XM_XSLT_PATTERN} -- Implementation
+
+	variable_binding: XM_XPATH_EXPRESSION
+			-- Bound variable for replacing calls to fn:current()
 
 	internal_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Does `Current' match `a_node'?

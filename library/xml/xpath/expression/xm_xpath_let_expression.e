@@ -270,8 +270,8 @@ feature -- Optimization
 					reset_static_properties
 				end
 				
-				if an_offer.action = Inline_variable_references	or else an_offer.action = Unordered
-					or else an_offer.action = Replace_current then
+				if an_offer.action = Inline_variable_references	or an_offer.action = Unordered
+				or an_offer.action = Replace_current then
 
 					-- Pass the offer to the action expression only if the action isn't depending on the
                --  variable bound by this let expression

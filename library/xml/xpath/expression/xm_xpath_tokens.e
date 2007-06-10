@@ -205,6 +205,12 @@ feature	-- Access
 	Default_token: INTEGER is 60
 			-- Keyword "default"
 
+	Node_kind_token: INTEGER is 61
+			-- Node kind, e.g. "node()" or "comment()"
+
+	Suffix_token: INTEGER is 112
+			-- "*:local-name" token
+
 
 		-- The following tokens are used only in the query prolog. They are categorized
 		-- as operators on the basis that a following name is treated as a name rather than
@@ -278,14 +284,8 @@ feature	-- Access
 	Number_token: INTEGER is 109
 			-- Numeric literal
 
-	Node_kind_token: INTEGER is 110
-			-- Node kind, e.g. "node()" or "comment()"
-
 	For_token: INTEGER is 111
 			-- "for" keyword
-
-	Suffix_token: INTEGER is 112
-			-- "*:local-name" token
 
 	Question_mark_token: INTEGER is 113
 			-- "?" symbol

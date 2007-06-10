@@ -317,8 +317,8 @@ feature -- Optimization
 			--  and conditions after the first mustn't be evaluated if a previous condition is true.
 			-- So we don't pass all promotion offers on
 
-			if an_offer.action = Inline_variable_references	or else an_offer.action = Unordered
-				or else an_offer.action = Replace_current then
+			if an_offer.action = Inline_variable_references	or an_offer.action = Unordered
+				or an_offer.action = Replace_current then
 				from
 					a_cursor := conditions.new_cursor; a_cursor.start
 				until
