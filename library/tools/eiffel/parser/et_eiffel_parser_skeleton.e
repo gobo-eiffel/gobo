@@ -518,7 +518,19 @@ feature -- AST processing
 							if a_file.is_open_read then
 								parse_file (a_file, a_filename, a_time_stamp, a_cluster)
 								a_file.close
+								if not current_class.is_preparsed then
+										-- Make sure that `current_class' is as it was
+										-- after it was last preparsed when the file
+										-- does not contain this class anymore.
+									current_class.set_filename (a_filename)
+									current_class.set_group (a_cluster)
+								end
 							else
+									-- Make sure that `current_class' is as it was
+									-- after it was last preparsed when the file
+									-- cannot be read.
+								current_class.set_filename (a_filename)
+								current_class.set_group (a_cluster)
 								set_fatal_error (current_class)
 								error_handler.report_gcaab_error (a_cluster, a_filename)
 							end
