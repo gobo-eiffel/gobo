@@ -224,7 +224,7 @@ goto exit
 	goto exit
 
 :delivery
-	if .%DELIVERY. == .. goto exit
+	if .%DELIVERY%. == .. goto exit
 	cd %GOBO%
 	geant %VERBOSE% delivery
 	cd %BIN_DIR%
