@@ -1774,7 +1774,8 @@ feature -- Conversion
 #endif
 #ifdef SE
 		local
-			i, v, nb: INTEGER
+			i, nb: INTEGER
+			v: INTEGER_64
 			c: CHARACTER
 			l_is_negative: BOOLEAN
 		do
@@ -1791,11 +1792,11 @@ feature -- Conversion
 			until
 				i > nb
 			loop
-				v := a_string.item_code (i)
+				v := a_string.item_code (i) - code_zero
 				if l_is_negative then
-					Result := 10 * Result - v + code_zero
+					Result := 10 * Result - v
 				else
-					Result := 10 * Result + v - code_zero
+					Result := 10 * Result + v
 				end
 				i := i + 1
 			end
