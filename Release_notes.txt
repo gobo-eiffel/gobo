@@ -32,42 +32,16 @@ ISE 5.6 (ISE Eiffel)
 	    geant clobber
 	    geant install
 
+SE 1.2r7 (SmartEiffel)
+
+	* MA_DECIMAL.hash_code may violate a precondition in INTEGER.infix "+".
+
+	* 'short' crashes when running 'geant test_se' in $GOBO/test/precomp.
+
 SE 2.* (SmartEiffel)
 
 	* This version of the SmartEiffel compiler is not supported anymore.
 
-SE 1.2r7 (SmartEiffel)
-
 VE 5.0b build 2508 (Visual Eiffel)
 
-	* The decimal classes violate invariants inherited from class
-	  NUMERIC. You should compile them with invariant monitoring off.
-
-	* Some Eiffel distributions such as Visual Eiffel may provide older
-	  versions of the Gobo tools in their installation directories.
-	  Make sure that $GOBO/bin is listed before these directories in
-	  your $PATH.
-
-	* Visual Eiffel does not consider that the default value for
-	  'console_application' in Xace is true, so this option has to
-	  be explicitly set in system.xace files.
-
-	* Visual Eiffel requires that the current working directory be
-	  one of the clusters listed in the Xace file. So either you
-	  launch the compilation in one of the directories listed in
-	  the Xace file, or you add the following line in your system.xace
-	  file:
-
-	    <cluster name="<app_name>_ve" location="." if="${GOBO_EIFFEL}=ve"/>
-
-	  where <app_name> stands for the name of your application.
-
-	* There is a linking error when trying to compile the test in
-	  $GOBO/test/xml/expat under Windows. In order to work around this
-	  problem you have to convert the format of 'libexpat.lib' to the
-	  old lib format using the following command:
-
-	    lib /convert libexpat.lib
-
-	  Note that you have to use 'lib.exe' provided with MSVC 6.0,
-	  the version in MSVC 7.1 does not support the option /convert.
+	* The Visual Eiffel compiler is not supported anymore.

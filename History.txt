@@ -1,4 +1,4 @@
-Version 3.6 - ????
+Version 3.6 - 14 June 2007
 
 	gec:
 
@@ -23,6 +23,13 @@ Version 3.6 - ????
 
 	* Now uses the MIT License, which is an OSI Approved License and
 	  a GPL-Compatible Free Software License.
+
+	* Bugs can now be reported on SourceForge bug tracker.
+
+	* Does not support Visual Eifel compiler anymore. Indeed Visual Eiffel
+	  does not support Agents, Tuples, INTEGER_64 among other things. The
+	  Gobo project tried not to use these constructs so far, but this is
+	  becoming too constraining.
 
 Version 3.5 - 23 January 2007
 

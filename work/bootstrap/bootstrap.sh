@@ -12,8 +12,8 @@
 
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  msc | bcc | lcc | gcc | tcc | no_c"
-	echo "   eiffel_compiler:  ge | ise | se | ve"
+	echo "   c_compiler:  msc | bcc | gcc | tcc | no_c"
+	echo "   eiffel_compiler:  ge | ise | se"
 }
 
 if [ "$1" = "-v" ]; then
@@ -99,30 +99,30 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	$RM gepp$EXE gepp.tds
 	GOBO_CC=bcc
 	export GOBO_CC
-elif [ "$CC" = "lcc" ]; then
-	CFLAGS='-O'
-	LNK='lcclnk'
-	LNKFLAGS='-s'
-	$CC $CFLAGS gec.c
-	$LNK $LNKFLAGS -o $BIN_DIR/gec$EXE gec$OBJ
-	$RM gec$OBJ
-	$CC $CFLAGS gexace.c
-	$LNK $LNKFLAGS -o $BIN_DIR/gexace$EXE gexace$OBJ
-	$RM gexace$OBJ
-	$CC $CFLAGS geant.c
-	$LNK $LNKFLAGS -o $BIN_DIR/geant$EXE geant$OBJ
-	$RM geant$OBJ
-	$CC $CFLAGS gelex.c
-	$LNK $LNKFLAGS -o $BIN_DIR/gelex$EXE gelex$OBJ
-	$RM gelex$OBJ
-	$CC $CFLAGS geyacc.c
-	$LNK $LNKFLAGS -o $BIN_DIR/geyacc$EXE geyacc$OBJ
-	$RM geyacc$OBJ
-	$CC $CFLAGS gepp.c
-	$LNK $LNKFLAGS -o $BIN_DIR/gepp$EXE gepp$OBJ
-	$RM gepp$OBJ
-	GOBO_CC=lcc
-	export GOBO_CC
+#elif [ "$CC" = "lcc" ]; then
+#	CFLAGS='-O'
+#	LNK='lcclnk'
+#	LNKFLAGS='-s'
+#	$CC $CFLAGS gec.c
+#	$LNK $LNKFLAGS -o $BIN_DIR/gec$EXE gec$OBJ
+#	$RM gec$OBJ
+#	$CC $CFLAGS gexace.c
+#	$LNK $LNKFLAGS -o $BIN_DIR/gexace$EXE gexace$OBJ
+#	$RM gexace$OBJ
+#	$CC $CFLAGS geant.c
+#	$LNK $LNKFLAGS -o $BIN_DIR/geant$EXE geant$OBJ
+#	$RM geant$OBJ
+#	$CC $CFLAGS gelex.c
+#	$LNK $LNKFLAGS -o $BIN_DIR/gelex$EXE gelex$OBJ
+#	$RM gelex$OBJ
+#	$CC $CFLAGS geyacc.c
+#	$LNK $LNKFLAGS -o $BIN_DIR/geyacc$EXE geyacc$OBJ
+#	$RM geyacc$OBJ
+#	$CC $CFLAGS gepp.c
+#	$LNK $LNKFLAGS -o $BIN_DIR/gepp$EXE gepp$OBJ
+#	$RM gepp$OBJ
+#	GOBO_CC=lcc
+#	export GOBO_CC
 elif [ "$CC" = "gcc" ]; then
 #	CFLAGS='-O2'
 	CFLAGS=''
@@ -158,9 +158,9 @@ elif [ "$EIF" = "ise" ]; then
 elif [ "$EIF" = "se" ]; then
 	GOBO_EIFFEL=se
 	export GOBO_EIFFEL
-elif [ "$EIF" = "ve" ]; then
-	GOBO_EIFFEL=ve
-	export GOBO_EIFFEL
+#elif [ "$EIF" = "ve" ]; then
+#	GOBO_EIFFEL=ve
+#	export GOBO_EIFFEL
 else
 	echo "Unknown Eiffel compiler: $EIF"
 	exit 1

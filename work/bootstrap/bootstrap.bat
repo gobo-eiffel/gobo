@@ -59,7 +59,6 @@ if .%CC%. == .msc. goto msc
 if .%CC%. == .cl. goto msc
 if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
-if .%CC%. == .lcc. goto lcc
 if .%CC%. == .gcc. goto gcc
 if .%CC%. == .tcc. goto tcc
 if .%CC%. == .no_c. goto install
@@ -162,7 +161,6 @@ goto exit
 	if .%EIF%. == .ge. goto ge
 	if .%EIF%. == .ise. goto ise
 	if .%EIF%. == .se. goto se
-	if .%EIF%. == .ve. goto ve
 	echo Unknown Eiffel compiler: %EIF%
 	goto exit
 
@@ -201,8 +199,8 @@ goto exit
 
 :usage
 	echo "usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  msc | bcc | lcc | gcc | tcc | no_c"
-	echo "   eiffel_compiler:  ge | ise | se | ve"
+	echo "   c_compiler:  msc | bcc | gcc | tcc | no_c"
+	echo "   eiffel_compiler:  ge | ise | se"
 	goto exit
 
 :exit

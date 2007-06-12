@@ -1,4 +1,4 @@
-Gobo Eiffel, version 3.5
+Gobo Eiffel, version 3.6
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
 libraries and tools that are portable across various Eiffel compilers
@@ -59,7 +59,7 @@ from SVN).
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
-has only been tested under Windows XP and Linux Ubuntu 6.10. Since
+has only been tested under Windows XP and Linux Ubuntu 7.04. Since
 most Eiffel compilers use the notation $NAME for environment variables
 in their Ace files (or equivalent), this convention has been used instead
 of the Windowish %NAME%. Likewise, the directory separator used through
@@ -100,13 +100,13 @@ Note that if you downloaded this package from SVN on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
 The supported Eiffel compilers, in alphabetical order, are: ISE Eiffel
-5.6.1218, 5.7.64493 and 6.0.65740 (Classic and .NET), SmartEiffel 1.2r7,
-Visual Eiffel 5.0b (Build 2508) and Gobo Eiffel Compiler (gec) 3.5. For
-more details about the supported Eiffel compilers, please see the file
-"Release_notes.txt". This software might work with other Eiffel compilers
-and/or other compiler versions, however no test has been done. To have
-a better understanding of the way this software has been designed and
-implemented, you can also have a look at "$GOBO/doc/portability".
+5.6.1218, 5.7.64493 and 6.0.6.8996 (Classic and .NET), SmartEiffel 1.2r7,
+and Gobo Eiffel Compiler (gec) 3.6. For more details about the supported
+Eiffel compilers, please see the file "Release_notes.txt". This software
+might work with other Eiffel compilers and/or other compiler versions,
+however no test has been done. To have a better understanding of the way
+this software has been designed and implemented, you can also have a look
+at "$GOBO/doc/portability".
 
 In this distribution:
 
@@ -204,4 +204,4 @@ for your specific needs. Thank you in advance.
 
 --
 Copyright (c) 1997-2007, Eric Bezault and others
-23 January 2007
+14 June 2007

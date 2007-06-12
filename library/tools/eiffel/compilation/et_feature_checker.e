@@ -11277,12 +11277,14 @@ invariant
 	no_void_overloaded_procedure: not overloaded_procedures.has (Void)
 	unused_overloaded_procedures_list_not_void: unused_overloaded_procedures_list /= Void
 	no_void_unused_overloaded_procedures: not unused_overloaded_procedures_list.has (Void)
-	empty_unused_overloaded_procedures: unused_overloaded_procedures_list.for_all (agent {DS_ARRAYED_LIST [ET_PROCEDURE]}.is_empty)
+	-- SE 1.2r7 crashes when compiling this line:
+	-- empty_unused_overloaded_procedures: unused_overloaded_procedures_list.for_all (agent {DS_ARRAYED_LIST [ET_PROCEDURE]}.is_empty)
 	overloaded_queries_not_void: overloaded_queries /= Void
 	no_void_overloaded_queries: not overloaded_queries.has (Void)
 	unused_overloaded_queries_list_not_void: unused_overloaded_queries_list /= Void
 	no_void_unused_overloaded_queries: not unused_overloaded_queries_list.has (Void)
-	empty_unused_overloaded_queries: unused_overloaded_queries_list.for_all (agent {DS_ARRAYED_LIST [ET_QUERY]}.is_empty)
+	-- SE 1.2r7 crashes when compiling this line:
+	-- empty_unused_overloaded_queries: unused_overloaded_queries_list.for_all (agent {DS_ARRAYED_LIST [ET_QUERY]}.is_empty)
 	best_overloaded_features_not_void: best_overloaded_features /= Void
 	no_void_best_overloaded_feature: not best_overloaded_features.has (Void)
 	current_context_not_void: current_context /= Void

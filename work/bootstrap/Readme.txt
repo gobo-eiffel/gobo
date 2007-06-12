@@ -1,4 +1,4 @@
-If you downloaded the source code of Gobo from subversion 
+If you downloaded the source code of Gobo from Subversion 
 and don't have a previous version of Gobo already installed
 on your computer, you will need to run this bootstrap
 procedure in order to compile the tools which will be
