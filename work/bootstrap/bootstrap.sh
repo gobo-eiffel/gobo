@@ -7,23 +7,39 @@
 # revision: "$Revision$"
 
 
-# usage: bootstrap.sh [-v] <c_compiler> <eiffel_compiler>
+# usage: bootstrap.sh [-v][--delivery] <c_compiler> <eiffel_compiler>
 
 
 gobo_usage() {
-	echo "usage: bootstrap.sh [-v] <c_compiler> <eiffel_compiler>"
+	echo "usage: bootstrap.sh [-v][--delivery] <c_compiler> <eiffel_compiler>"
 	echo "   c_compiler:  msc | bcc | gcc | tcc | no_c"
 	echo "   eiffel_compiler:  ge | ise | se"
 }
 
 if [ "$1" = "-v" ]; then
-	VERBOSE=-v
-	CC=$2
-	EIF=$3
+	if [ "$2" = "--delivery" ]; then
+		VERBOSE=-v
+		DELIVERY=--delivery
+		CC=$3
+		EIF=$4
+	else
+		VERBOSE=-v
+		DELIVERY=
+		CC=$2
+		EIF=$3
+	fi
 else
-	VERBOSE=
-	CC=$1
-	EIF=$2
+	if [ "$1" = "--delivery" ]; then
+		VERBOSE=
+		DELIVERY=--delivery
+		CC=$2
+		EIF=$3
+	else
+		VERBOSE=
+		DELIVERY=
+		CC=$1
+		EIF=$2
+	fi
 fi
 
 if [ "$GOBO" = "" ]; then
@@ -178,3 +194,10 @@ $RM geant1$EXE
 cd $GOBO
 geant $VERBOSE bootstrap2
 if [ $? -gt 0 ]; then exit 1; fi
+if [ "$DELIVERY" = "--delivery" ]; then
+	cd $GOBO
+	geant $VERBOSE delivery
+	cd $BIN_DIR
+	$RM geant$EXE
+	cd $GOBO
+fi

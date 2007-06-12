@@ -7,22 +7,46 @@ rem date: "$Date$"
 rem revision: "$Revision$"
 
 
-rem "usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>"
+rem "usage: bootstrap.bat [-v][--delivery] <c_compiler> <eiffel_compiler>"
 
 
 if .%1. == .-v. goto verbose
 goto no_verbose
 
 :no_verbose
+	if .%1. == .--delivery. goto no_verbose_delivery
+	goto no_verbose_no_delivery
+
+:verbose
+	if .%2. == .--delivery. goto verbose_delivery
+	goto verbose_no_delivery
+
+:no_verbose_no_delivery
 	set VERBOSE=
+	set DELIVERY=
 	set CC=%1
 	set EIF=%2
 	goto do_it
 
-:verbose
-	set VERBOSE=-v
+:no_verbose_delivery
+	set VERBOSE=
+	set DELIVERY=--delivery
 	set CC=%2
 	set EIF=%3
+	goto do_it
+
+:verbose_no_delivery
+	set VERBOSE=-v
+	set DELIVERY=
+	set CC=%2
+	set EIF=%3
+	goto do_it
+
+:verbose_delivery
+	set VERBOSE=-v
+	set DELIVERY=--delivery
+	set CC=%3
+	set EIF=%4
 	goto do_it
 
 :do_it
@@ -195,10 +219,20 @@ goto exit
 	%RM% geant1%EXE%
 	cd %GOBO%
 	geant %VERBOSE% bootstrap2
+	if .%ERRORLEVEL%. == .. goto delivery
+	if %ERRORLEVEL% == 0 goto delivery
 	goto exit
 
+:delivery
+	if .%DELIVERY. == .. goto exit
+	cd %GOBO%
+	geant %VERBOSE% delivery
+	cd %BIN_DIR%
+	%RM% geant%EXE%
+	cd %GOBO%
+
 :usage
-	echo "usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>"
+	echo "usage: bootstrap.bat [-v][--delivery] <c_compiler> <eiffel_compiler>"
 	echo "   c_compiler:  msc | bcc | gcc | tcc | no_c"
 	echo "   eiffel_compiler:  ge | ise | se"
 	goto exit

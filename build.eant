@@ -68,34 +68,6 @@
 		<geant target="clean"/>
 	</target>
 
-	<target name="delivery" depend="init">
-		<description>
-			Build delivery package.
-			The bootstrap should be run first.
-		</description>
-
-		<geant target="clobber"/>
-		<geant target="install"/>
-		<geant target="clean"/>
-		<geant file="../src/gec/build.eant" target="clobber" dir="bin"/>
-		<geant file="../src/gexace/build.eant" target="clobber" dir="bin"/>
-		<geant file="../src/gelex/build.eant" target="clobber" dir="bin"/>
-		<geant file="../src/geyacc/build.eant" target="clobber" dir="bin"/>
-		<geant file="../src/gepp/build.eant" target="clobber" dir="bin"/>
-		<geant file="../src/getest/build.eant" target="clobber" dir="bin"/>
-		<geant file="../src/gelint/build.eant" target="clobber" dir="bin"/>
-		<geant file="../src/gexslt/build.eant" target="clobber" dir="bin"/>
-		<copy file="work/bootstrap/gec.c" to_directory="bin"/>
-		<copy file="work/bootstrap/gec.h" to_directory="bin"/>
-		<delete directory="work"/>
-		<delete directory="doc/structure/visio"/>
-		<delete directory="doc/time/visio"/>
-		<delete>
-			<directoryset directory="." include="@(**/.svn)"/>
-		</delete>
-		<echo message="Please delete $$GOBO/bin/geant$exe"/>
-	</target>
-
 	<target name="bootstrap1" depend="init">
 		<description>
 			Bootstrap the Gobo Eiffel package (first pass).
@@ -151,6 +123,29 @@
 		<geant file="build.eant" target="install" dir="test"/>
 		<geant file="build.eant" target="install" dir="doc"/>
 		<geant target="clean"/>
+	</target>
+
+	<target name="delivery" depend="init">
+		<description>
+			Build delivery package (third pass of bootstrap).
+		</description>
+
+		<geant file="../src/gec/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/gexace/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/gelex/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/geyacc/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/gepp/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/getest/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/gelint/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/gexslt/build.eant" target="clobber" dir="bin"/>
+		<copy file="work/bootstrap/gec.c" to_directory="bin"/>
+		<copy file="work/bootstrap/gec.h" to_directory="bin"/>
+		<delete>
+			<directoryset directory="." include="@(**/.svn)"/>
+		</delete>
+		<delete directory="work"/>
+		<delete directory="doc/structure/visio"/>
+		<delete directory="doc/time/visio"/>
 	</target>
 
 <!-- Implementation -->
