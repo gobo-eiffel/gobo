@@ -230,7 +230,7 @@ goto exit
 	cd %BIN_DIR%
 	%RM% geant%EXE%
 	cd %GOBO%
-	gobo exit
+	goto exit
 
 :usage
 	echo "usage: bootstrap.bat [-v][--delivery] <c_compiler> <eiffel_compiler>"
