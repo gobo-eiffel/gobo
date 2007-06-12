@@ -146,6 +146,7 @@ feature -- Optimization
 				if static_type = Void or static_type.primary_type = any_item then
 					-- try and do better
 					static_type := function.result_type
+					reset_static_properties
 				end
 			end
 		end
@@ -301,6 +302,7 @@ feature -- Element change
 			static_type_not_void: a_static_type /= Void
 		do
 			static_type := a_static_type
+			reset_static_properties
 		ensure
 			static_type_set: static_type = a_static_type
 		end

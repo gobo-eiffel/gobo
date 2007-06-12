@@ -295,7 +295,8 @@ feature -- Basic operations
 		do
 			if other.is_machine_integer_value then
 				l_value := other.as_machine_integer_value.value
-				if l_value > Platform.Maximum_integer or l_value < Platform.Minimum_integer then
+				if l_value > Platform.Maximum_integer or l_value < Platform.Minimum_integer
+					or value > Platform.Maximum_integer or value < Platform.Minimum_integer then
 					-- to avoid overflow, use decimal_arithmetic
 					-- this is over-cautious - can we do better?
 						create l_decimal_value.make_from_integer_64 (value)
