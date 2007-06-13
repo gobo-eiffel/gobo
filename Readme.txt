@@ -75,26 +75,22 @@ Under Windows:
       set the environment variable %GOBO% to that directory, known as
       the distribution directory. Also put the directory %GOBO%\bin
       in your PATH.
+    . execute the script:
+          %GOBO%\install.bat <c_compiler>
+      where <c_compiler> is a C compiler installed on your computer
+      (for example use "msc" for Microsoft C compiler).
 
-Under Linux:
-
-    . download the package gobo35.tar.gz
-    . copy the files to a directory of your choice on your disk and
-      set the environment variable $GOBO to that directory, known as
-      the distribution directory. Also put the directory $GOBO/bin
-      in your PATH.
-
-For other platforms:
+Under Unix/Linux:
 
     . download the package gobo35.tar.gz
     . copy the files to a directory of your choice on your disk and
       set the environment variable $GOBO to that directory, known as
       the distribution directory. Also put the directory $GOBO/bin
       in your PATH.
-    . go to each directories under $GOBO/src and use your favorite
-      Eiffel compiler and the Ace or Xace files provided to compile
-      the corresponding tools, and copy the generated executables
-      to $GOBO/bin.
+    . execute the script:
+          $GOBO/install.sh <c_compiler>
+      where <c_compiler> is a C compiler installed on your computer
+      (for example use "gcc" for GNU C compiler).
 
 Note that if you downloaded this package from SVN on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
@@ -110,7 +106,7 @@ at "$GOBO/doc/portability".
 
 In this distribution:
 
-    bin                         Windows or Linux executables (gelex, geyacc, etc.)
+    bin                         Executables (gelex, geyacc, etc.)
     doc                         Gobo Eiffel documentation
     doc/argument                Gobo Eiffel Argument Library documentation
     doc/geant                   geant documentation
