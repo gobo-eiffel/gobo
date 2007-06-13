@@ -474,26 +474,28 @@ feature -- Status report
 			l_default_key: H
 			l_index, i, nb: INTEGER
 			l_name: STRING
+			l_cell: CELL [H]
 		do
 			Result := True
 			debug ("prevent_hash_table_catcall")
 				if k /= l_default_key then
 					create l_internal
+					create l_cell
 					from
 						i := 1
-						nb := l_internal.field_count (Current)
-						l_name := "static_type_of_keys"
+						nb := l_internal.field_count (l_cell)
+						l_name := "item"
 					until
 						i >= nb
 					loop
-						if l_internal.field_name (i, Current).is_equal (l_name) then
+						if l_internal.field_name (i, l_cell).is_equal (l_name) then
 							l_index := i
 							i := nb + 1
 						end
 						i := i + 1
 					end
 					Result := l_internal.field_static_type_of_type (
-						l_index, l_internal.dynamic_type (Current)) = l_internal.dynamic_type (k)
+						l_index, l_internal.dynamic_type (l_cell)) = l_internal.dynamic_type (k)
 				end
 			end
 		end
@@ -1420,10 +1422,6 @@ feature {NONE} -- Implementation
 		end
 
 	minimum_capacity: INTEGER is 2
-
-	frozen static_type_of_keys: H
-			-- Store the static type of the keys. Used in `valid_key' when one wants
-			-- the key to be of the exact same type as the declared type of the keys.
 
 feature {NONE} -- Inapplicable
 
