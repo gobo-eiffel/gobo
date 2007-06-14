@@ -70,7 +70,7 @@ To install this package, please follow the instructions below:
 
 Under Windows:
 
-    . download the package gobo35.zip
+    . download the package gobo36.zip
     . copy the files to a directory of your choice on your disk and
       set the environment variable %GOBO% to that directory, known as
       the distribution directory. Also put the directory %GOBO%\bin
@@ -82,7 +82,7 @@ Under Windows:
 
 Under Unix/Linux:
 
-    . download the package gobo35.tar.gz
+    . download the package gobo36.tar.gz
     . copy the files to a directory of your choice on your disk and
       set the environment variable $GOBO to that directory, known as
       the distribution directory. Also put the directory $GOBO/bin
