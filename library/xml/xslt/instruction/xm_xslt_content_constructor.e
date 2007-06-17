@@ -281,6 +281,7 @@ feature {NONE} -- Implementation
 							if a_result.item = Void then l_buffer := STRING_.appended_string (l_buffer, l_separator) end
 						end
 						l_is_first_item := False
+						l_was_previous_item_text := False
 						if a_result.item = Void then l_buffer := STRING_.appended_string (l_buffer, l_item.string_value) end
 					end
 				end

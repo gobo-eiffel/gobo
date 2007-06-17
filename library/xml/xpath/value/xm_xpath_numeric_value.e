@@ -59,6 +59,8 @@ feature -- Comparison
 		do
 			if not other.is_numeric_value then
 				Result := False
+			elseif is_nan then
+				Result := other.as_numeric_value.is_nan
 			else
 				if (is_integer_value or is_machine_integer_value) and (other.is_integer_value or other.is_machine_integer_value) then
 					if is_integer_value then

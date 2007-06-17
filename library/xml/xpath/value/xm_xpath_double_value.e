@@ -113,7 +113,7 @@ feature -- Access
 				end			
 			elseif is_nan then
 				Result := "NaN"
-			elseif value.abs >= 1.0e-6 or else value.abs < 1.0e6 then
+			elseif value.abs >= 1.0e-6 or value.abs < 1.0e6 then
 				create a_decimal.make_from_string (value.out)
 				Result := a_decimal.to_scientific_string
 			else
@@ -183,11 +183,15 @@ feature -- Status report
 		local
 			l_value: DOUBLE
 		do
-			l_value := value
-			Result := value /= l_value
-			if not Result then
-				if internal_is_nan or else not is_zero and then value = 2.0 * value then
-					Result := True
+			if is_infinite then
+				Result := False
+			else
+				l_value := value
+				Result := value /= l_value
+				if not Result then
+					if internal_is_nan or else not is_zero and then value = 2.0 * value then
+						Result := True
+					end
 				end
 			end
 		end
@@ -201,7 +205,7 @@ feature -- Status report
 	is_negative: BOOLEAN is
 			-- Is value less than zero?
 		do
-			Result := value.sign = -1
+			Result := is_negative_zero or value.sign = -1
 		end
 
 	is_infinite: BOOLEAN is
@@ -326,54 +330,82 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
+	arithmetic (a_operator: INTEGER; a_other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
 			-- Arithmetic calculation
 		local
-			a_double, another_double: DOUBLE
-			an_integer, another_integer: INTEGER
+			l_double, l_other_double, l_third_double: DOUBLE
+			l_value: XM_XPATH_DOUBLE_VALUE
 		do
 			if is_nan then
 				Result := Current
+			elseif a_other.is_nan then
+				Result := a_other
 			else
 				inspect
-					an_operator
+					a_operator
 				when Plus_token then
-					create {XM_XPATH_DOUBLE_VALUE} Result.make (value + other.as_double)
+					create {XM_XPATH_DOUBLE_VALUE} Result.make (value + a_other.as_double)
 				when Minus_token then
-					create {XM_XPATH_DOUBLE_VALUE} Result.make (value - other.as_double)
+					l_double := value - a_other.as_double
+					create l_value.make (l_double)
+					if is_zero and a_other.is_zero and (is_negative = a_other.is_negative)  then
+						l_value.set_negative_zero
+					end
+					Result := l_value
 				when Multiply_token then
-					create {XM_XPATH_DOUBLE_VALUE} Result.make (value * other.as_double)
+					create {XM_XPATH_DOUBLE_VALUE} Result.make (value * a_other.as_double)
 				when Division_token then
-					create {XM_XPATH_DOUBLE_VALUE} Result.make (value / other.as_double)
-				when Integer_division_token then
-					create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value / other.as_double))
-				when Modulus_token then
-					a_double := other.as_double
-					if is_whole_number and then other.is_whole_number then
-						an_integer := as_integer
-						another_integer := other.as_integer
-						if another_integer = 0 then
+					if is_zero then
+						if a_other.is_zero then
 							create {XM_XPATH_DOUBLE_VALUE} Result.make_nan
 						else
-							create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (an_integer \\ another_integer)
+							create {XM_XPATH_DOUBLE_VALUE} Result.make (value / a_other.as_double)
+						end
+					elseif is_infinite and a_other.is_infinite then
+						create {XM_XPATH_DOUBLE_VALUE} Result.make_nan
+					elseif a_other.is_zero then
+						if is_negative /= a_other.is_negative then
+							create {XM_XPATH_DOUBLE_VALUE} Result.make_from_string ("-INF")
+						else
+							create {XM_XPATH_DOUBLE_VALUE} Result.make_from_string ("INF")
 						end
 					else
-						if is_nan or else other.is_nan or else other.is_zero or else is_infinite then
-							create {XM_XPATH_DOUBLE_VALUE} Result.make_nan
-						elseif other.is_infinite then
-							Result := Current
-						elseif is_zero then
-							Result := Current
-						else
-							another_double := (value / a_double).floor
-							create {XM_XPATH_DOUBLE_VALUE} Result.make (value - another_double)
+						create {XM_XPATH_DOUBLE_VALUE} Result.make (value / a_other.as_double)
+					end
+				when Integer_division_token then
+					create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value / a_other.as_double))
+				when Modulus_token then
+					l_double := a_other.as_double
+					if is_nan or else a_other.is_nan or else a_other.is_zero or else is_infinite then
+						create {XM_XPATH_DOUBLE_VALUE} Result.make_nan
+					elseif a_other.is_infinite then
+						Result := Current
+					elseif is_zero then
+						Result := Current
+					else
+						l_other_double := DOUBLE_.truncated_to_integer (value / l_double).to_double
+						l_third_double := l_double * l_other_double
+						create l_value.make (value - l_third_double)
+						if l_third_double.abs = value.abs and value.sign = -1 then
+							l_value.set_negative_zero
 						end
+						Result := l_value
 					end
 				end
 			end
 		end
 
 feature -- Element change
+
+	set_negative_zero is
+			-- Set `is_negative_zero' to `True'.
+		require
+			zero_value: is_zero
+		do
+			is_negative_zero := True
+		ensure
+			negative_zero_set: is_negative_zero
+		end
 
 	set_value_from_string (a_value: STRING) is
 			-- Set from `a_value'.
@@ -391,6 +423,9 @@ feature -- Element change
 				value := 0.0
 			elseif a_value.is_double then
 				value := a_value.to_double
+				if value = 0 and a_value.item (1) = '-' then
+					is_negative_zero := True
+				end
 			else
 				set_last_error_from_string ("Invalid xs:double string value", Xpath_errors_uri, "XPTY0004", Type_error)
 			end
@@ -400,5 +435,8 @@ feature {NONE} -- Implementation
 
 	internal_is_nan: BOOLEAN
 			-- Fabricated NaN
+
+	is_negative_zero: BOOLEAN
+			--	 Is zero negative?
 
 end

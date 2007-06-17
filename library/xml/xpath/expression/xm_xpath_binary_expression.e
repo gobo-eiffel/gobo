@@ -189,12 +189,14 @@ feature -- Optimization
 						create l_result.make (Void)
 						evaluate_item (l_result, Void)
 						if l_result.item = Void or else not l_result.item.is_error then
-							-- the value might not be needed at runtime
 							if l_result.item.is_node then
 								set_replacement (create {XM_XPATH_SINGLETON_NODE}.make (l_result.item.as_node))
 							else
 								set_replacement (l_result.item.as_atomic_value)
 							end
+						elseif is_error then
+							-- the value might not be needed at runtime
+							error_value := Void
 						end
 					end
 				end

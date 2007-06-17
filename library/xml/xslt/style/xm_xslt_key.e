@@ -107,7 +107,7 @@ feature -- Element change
 					end
 				else
 					report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (key_name, " is not a lexical QName"),
-						Xpath_errors_uri, "XTDE1260", Static_error))
+						Xpath_errors_uri, "XTSE0020", Static_error))
 				end
 			end
 			attributes_prepared := True

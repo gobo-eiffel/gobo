@@ -67,10 +67,6 @@ feature -- Events
 			else
 				pending_undeclarations := Void
 			end
-			if count_stack.capacity < stack_depth then
-				count_stack.resize (stack_depth * 2)
-				disinherit_stack.resize (stack_depth * 2)
-			end
 			if stack_depth <= count_stack.count then
 				count_stack.replace (0, stack_depth)
 				disinherit_stack.replace (is_disinherit_namespaces (properties), stack_depth)
@@ -79,6 +75,10 @@ feature -- Events
 				disinherit_stack.put (is_disinherit_namespaces (properties), stack_depth)
 			end
 			stack_depth := stack_depth + 1
+			if count_stack.capacity < stack_depth then
+				count_stack.resize (stack_depth * 2)
+				disinherit_stack.resize (stack_depth * 2)
+			end
 
 			-- Ensure that the element namespace is output, unless this is done
 			--  automatically by the caller (which is true, for example,

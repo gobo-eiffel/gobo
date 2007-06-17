@@ -998,9 +998,14 @@ feature -- Element change
 
 			a_key2 := prefixes_for_uri.item (a_uri_code + 1)
 			a_key := STRING_.cloned_string (an_xml_prefix)
-			a_key := STRING_.appended_string (a_key, " ")
-			a_key := STRING_.appended_string (a_key, a_key2)
-			prefixes_for_uri.replace (a_key, a_uri_code + 1)
+			if not a_key2.is_empty then
+				a_key2 := STRING_.appended_string (a_key2, " ")
+				a_key2 := STRING_.appended_string (a_key2, a_key)
+				a_key2 := STRING_.appended_string (a_key2, " ")
+			else
+				a_key2 := STRING_.appended_string (a_key, " ")
+			end
+			prefixes_for_uri.replace (a_key2, a_uri_code + 1)
 
 			debug ("XPath name pool - namespaces")
 				std.error.put_string ("allocate_namespace_code: code for prefix is ")
@@ -1576,9 +1581,14 @@ feature {NONE} -- Implementation
 
 			a_key2 := prefixes_for_uri.item (a_uri_code + 1)
 			a_key := STRING_.cloned_string (an_xml_prefix)
-			a_key := STRING_.appended_string (a_key, " ")
-			a_key := STRING_.appended_string (a_key, a_key2)
-			prefixes_for_uri.replace (a_key, a_uri_code + 1)
+			if not a_key2.is_empty then
+				a_key2 := STRING_.appended_string (a_key2, " ")
+				a_key2 := STRING_.appended_string (a_key2, a_key)
+				a_key2 := STRING_.appended_string (a_key2, " ")
+			else
+				a_key2 := STRING_.appended_string (a_key, " ")
+			end
+			prefixes_for_uri.replace (a_key2, a_uri_code + 1)
 		ensure
 			prefix_allocated: prefix_index (a_uri_code, an_xml_prefix) > -1
 		end
