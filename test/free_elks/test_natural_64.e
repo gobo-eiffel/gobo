@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TEST_NATURAL64
+class TEST_NATURAL_64
 
 inherit
 
