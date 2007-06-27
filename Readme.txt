@@ -10,7 +10,7 @@ The software included in this package is copyrighted freeware
 distributed under the terms and conditions of the MIT License as
 specified in file License.txt. Gobo Eiffel is a multi-developer
 open-source project whose development is hosted at SourceForge
-(https://sourceforge.net/projects/gobo-eiffel/) while the official stite
+(https://sourceforge.net/projects/gobo-eiffel/) while the official site
 (for stable releases) is still located at http://www.gobosoft.com/.
 
 Note that this release is not a full-fledged version. In particular
