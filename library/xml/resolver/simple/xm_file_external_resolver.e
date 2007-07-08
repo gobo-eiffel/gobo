@@ -37,7 +37,7 @@ feature -- Action(s)
 			-- Open file with corresponding name.
 		do
 			last_error := Void
-			create {KL_TEXT_INPUT_FILE} last_stream.make (a_system_name)
+			create {KL_BINARY_INPUT_FILE} last_stream.make (a_system_name)
 			last_stream.open_read
 			if not last_stream.is_open_read then
 				last_error := STRING_.concat ("cannot open input file: ", a_system_name)
@@ -47,7 +47,7 @@ feature -- Action(s)
 
 feature -- Result
 
-	last_stream: KI_TEXT_INPUT_FILE
+	last_stream: KI_BINARY_INPUT_FILE
 			-- File matching stream
 
 	last_error: STRING

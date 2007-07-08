@@ -46,7 +46,7 @@ feature -- Action(s)
 			l_path: STRING
 		do
 			l_path := File_uri.uri_to_filename (a_uri)
-			create {KL_TEXT_INPUT_FILE} last_stream.make (l_path)
+			create {KL_BINARY_INPUT_FILE} last_stream.make (l_path)
 			last_stream.open_read
 			if last_stream.is_open_read then
 				last_error := Void
@@ -57,7 +57,7 @@ feature -- Action(s)
 
 feature -- Result
 
-	last_stream: KI_TEXT_INPUT_FILE
+	last_stream: KI_BINARY_INPUT_FILE
 			-- File matching stream
 
 	last_error: STRING
