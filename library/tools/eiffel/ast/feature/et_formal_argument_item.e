@@ -14,7 +14,7 @@ deferred class ET_FORMAL_ARGUMENT_ITEM
 
 inherit
 
-	ET_AST_NODE
+	ET_ENTITY_DECLARATION
 
 feature -- Access
 
@@ -23,13 +23,6 @@ feature -- Access
 		deferred
 		ensure
 			formal_argument_not_void: Result /= Void
-		end
-
-	type: ET_TYPE is
-			-- Type
-		deferred
-		ensure
-			type_not_void: Result /= Void
 		end
 
 feature -- Duplication

@@ -16,12 +16,22 @@ inherit
 
 	ET_LOCAL_VARIABLE
 		redefine
+			is_last_entity,
 			break, last_leaf, process
 		end
 
 create
 
 	make
+
+feature -- Status report
+
+	is_last_entity: BOOLEAN is
+			-- Is current entity the last entity in an
+			-- entity declaration group?
+		do
+			Result := False
+		end
 
 feature -- Access
 

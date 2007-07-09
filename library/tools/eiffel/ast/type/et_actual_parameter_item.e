@@ -38,6 +38,17 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status report
+
+	is_last_entity: BOOLEAN is
+			-- Is current entity the last entity in an
+			-- entity declaration group?
+		require
+			is_entity: label /= Void
+		do
+			Result := True
+		end
+
 feature -- Type processing
 
 	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM is

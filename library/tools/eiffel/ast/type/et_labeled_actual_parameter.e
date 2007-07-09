@@ -15,8 +15,15 @@ class ET_LABELED_ACTUAL_PARAMETER
 inherit
 
 	ET_ACTUAL_PARAMETER
+		undefine
+			is_last_entity
 		redefine
 			named_parameter_with_type
+		end
+
+	ET_ENTITY_DECLARATION
+		rename
+			name as label
 		end
 
 create
@@ -51,8 +58,6 @@ feature -- Access
 			-- Useful when part of a labeled tuple, Void if no label
 		do
 			Result := label_item.identifier
-		ensure then
-			label_not_void: Result /= Void
 		end
 
 	label_item: ET_LABEL

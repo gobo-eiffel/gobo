@@ -113,6 +113,7 @@ feature {ET_AST_NODE} -- Processing
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		do
+			precursor (a_constant)
 			file.put_character ('%'')
 			file.put_character (a_constant.value)
 			file.put_character ('%'')
@@ -122,6 +123,7 @@ feature {ET_AST_NODE} -- Processing
 	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		do
+			precursor (a_constant)
 			file.put_character ('%'')
 			file.put_character ('%%')
 			file.put_character (a_constant.literal)
@@ -132,6 +134,7 @@ feature {ET_AST_NODE} -- Processing
 	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		do
+			precursor (a_constant)
 			file.put_character ('%'')
 			file.put_character ('%%')
 			file.put_character ('/')
@@ -143,36 +146,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
-		local
-			a_sign: ET_SYMBOL
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
-			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
-			end
+			precursor (a_constant)
 			file.put_string (a_constant.literal)
 			process_break (a_constant.break)
 		end
 
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
-		local
-			a_sign: ET_SYMBOL
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
-			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
-			end
+			precursor (a_constant)
 			file.put_string (a_constant.literal)
 			process_break (a_constant.break)
 		end
@@ -180,6 +163,7 @@ feature {ET_AST_NODE} -- Processing
 	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
 			-- Process `a_string'.
 		do
+			precursor (a_string)
 			file.put_character ('%"')
 			file.put_string (a_string.literal)
 			file.put_character ('%"')
@@ -188,18 +172,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
 			-- Process `a_constant'.
-		local
-			a_sign: ET_SYMBOL
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
-			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
-			end
+			precursor (a_constant)
 			file.put_string (a_constant.literal)
 			process_break (a_constant.break)
 		end
@@ -207,6 +181,7 @@ feature {ET_AST_NODE} -- Processing
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
 			-- Process `a_string'.
 		do
+			precursor (a_string)
 			file.put_character ('%"')
 			file.put_string (a_string.literal)
 			file.put_character ('%"')
@@ -229,36 +204,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
-		local
-			a_sign: ET_SYMBOL
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
-			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
-			end
+			precursor (a_constant)
 			file.put_string (a_constant.literal)
 			process_break (a_constant.break)
 		end
 
 	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
 			-- Process `a_constant'.
-		local
-			a_sign: ET_SYMBOL
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
-			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
-			end
+			precursor (a_constant)
 			file.put_string (a_constant.literal)
 			process_break (a_constant.break)
 		end
@@ -266,6 +221,7 @@ feature {ET_AST_NODE} -- Processing
 	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
 			-- Process `a_string'.
 		do
+			precursor (a_string)
 			file.put_character ('%"')
 			file.put_string (a_string.marker)
 			if a_string.is_left_aligned then

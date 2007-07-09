@@ -15,7 +15,7 @@ class ET_LOCAL_VARIABLE
 inherit
 
 	ET_LOCAL_VARIABLE_ITEM
- 
+
 create
 
 	make
@@ -50,8 +50,6 @@ feature -- Access
 			-- Name
 		do
 			Result := name_item.identifier
-		ensure
-			name_not_void: Result /= Void
 		end
 
 	type: ET_TYPE is

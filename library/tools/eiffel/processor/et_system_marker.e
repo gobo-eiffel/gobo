@@ -30,6 +30,9 @@ inherit
 			process_braced_type_list,
 			process_bracket_argument_list,
 			process_bracket_expression,
+			process_c1_character_constant,
+			process_c2_character_constant,
+			process_c3_character_constant,
 			process_call_agent,
 			process_call_expression,
 			process_call_instruction,
@@ -93,7 +96,9 @@ inherit
 			process_precursor_instruction,
 			process_prefix_expression,
 			process_regular_integer_constant,
+			process_regular_manifest_string,
 			process_regular_real_constant,
+			process_special_manifest_string,
 			process_static_call_expression,
 			process_static_call_instruction,
 			process_tagged_assertion,
@@ -102,6 +107,7 @@ inherit
 			process_underscored_real_constant,
 			process_unique_attribute,
 			process_variant,
+			process_verbatim_string,
 			process_when_part,
 			process_when_part_list
 		end
@@ -300,6 +306,39 @@ feature {ET_AST_NODE} -- Processing
 			l_arguments := an_expression.arguments
 			if l_arguments /= Void then
 				l_arguments.process (Current)
+			end
+		end
+
+	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+		end
+
+	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+		end
+
+	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
 			end
 		end
 
@@ -1342,12 +1381,34 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
+			-- Process `a_string'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_string.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+		end
+
 	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
 			-- Process `a_constant'.
 		local
 			a_type: ET_TARGET_TYPE
 		do
 			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+		end
+
+	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
+			-- Process `a_string'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_string.cast_type
 			if a_type /= Void then
 				a_type.process (Current)
 			end
@@ -1443,6 +1504,17 @@ feature {ET_AST_NODE} -- Processing
 			an_expression := a_variant.expression
 			if an_expression /= Void then
 				an_expression.process (Current)
+			end
+		end
+
+	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
+			-- Process `a_string'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_string.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
 			end
 		end
 

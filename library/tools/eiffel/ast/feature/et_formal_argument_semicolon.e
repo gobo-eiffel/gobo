@@ -43,6 +43,12 @@ feature -- Access
 	semicolon: ET_SYMBOL
 			-- Semicolon separator
 
+	name: ET_IDENTIFIER is
+			-- Name
+		do
+			Result := formal_argument.name
+		end
+
 	type: ET_TYPE is
 			-- Type
 		do

@@ -187,13 +187,8 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon: ET_SEMICOLON_SYMBOL
 			an_assigner: ET_ASSIGNER
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -322,17 +317,35 @@ feature {ET_AST_NODE} -- Processing
 
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 		end
 
 	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 		end
 
 	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 		end
 
 	process_call_agent (an_expression: ET_CALL_AGENT) is
@@ -558,13 +571,8 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon: ET_SEMICOLON_SYMBOL
 			an_assigner: ET_ASSIGNER
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -1805,9 +1813,17 @@ feature {ET_AST_NODE} -- Processing
 
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+			a_sign: ET_SYMBOL_OPERATOR
 		do
-			if a_constant.cast_type /= Void then
-				a_constant.cast_type.process (Current)
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+			a_sign := a_constant.sign
+			if a_sign /= Void then
+				a_sign.process (Current)
 			end
 		end
 
@@ -2619,22 +2635,44 @@ feature {ET_AST_NODE} -- Processing
 
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+			a_sign: ET_SYMBOL_OPERATOR
 		do
-			if a_constant.cast_type /= Void then
-				a_constant.cast_type.process (Current)
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+			a_sign := a_constant.sign
+			if a_sign /= Void then
+				a_sign.process (Current)
 			end
 		end
 
 	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
 			-- Process `a_string'.
+		local
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_string.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 		end
 
 	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
 			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+			a_sign: ET_SYMBOL_OPERATOR
 		do
-			if a_constant.cast_type /= Void then
-				a_constant.cast_type.process (Current)
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+			a_sign := a_constant.sign
+			if a_sign /= Void then
+				a_sign.process (Current)
 			end
 		end
 
@@ -2693,7 +2731,13 @@ feature {ET_AST_NODE} -- Processing
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
 			-- Process `a_string'.
+		local
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_string.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 		end
 
 	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
@@ -2811,17 +2855,33 @@ feature {ET_AST_NODE} -- Processing
 
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+			a_sign: ET_SYMBOL_OPERATOR
 		do
-			if a_constant.cast_type /= Void then
-				a_constant.cast_type.process (Current)
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+			a_sign := a_constant.sign
+			if a_sign /= Void then
+				a_sign.process (Current)
 			end
 		end
 
 	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
 			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+			a_sign: ET_SYMBOL_OPERATOR
 		do
-			if a_constant.cast_type /= Void then
-				a_constant.cast_type.process (Current)
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+			a_sign := a_constant.sign
+			if a_sign /= Void then
+				a_sign.process (Current)
 			end
 		end
 
@@ -2882,7 +2942,13 @@ feature {ET_AST_NODE} -- Processing
 
 	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
 			-- Process `a_string'.
+		local
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_string.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 		end
 
 	process_void (an_expression: ET_VOID) is
