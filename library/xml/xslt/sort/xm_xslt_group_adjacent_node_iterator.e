@@ -2,19 +2,19 @@ indexing
 
 	description:
 
-		"Group iterator implementing group-adjacent algorithm"
+		"Group iterator implementing group-adjacent algorithm for node sequences"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XSLT_GROUP_ADJACENT_ITERATOR
+class	XM_XSLT_GROUP_ADJACENT_NODE_ITERATOR
 
 inherit
 
-	XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
+	XM_XSLT_GROUP_NODE_ITERATOR
 
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM];
+	make (a_population: like population;
 			a_key: XM_XPATH_EXPRESSION;
 			a_context: XM_XSLT_EVALUATION_CONTEXT;
 			a_collator: ST_COLLATOR) is
@@ -62,7 +62,7 @@ feature -- Access
 			end
 		end
 
-	item: XM_XPATH_ITEM is
+	item: XM_XPATH_NODE is
 			-- Initial item of current group
 		do
 			Result := current_members.first
@@ -75,11 +75,11 @@ feature -- Status report
 	
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Iterator over the members of the current group, in population order.
 		do
 			if current_members /= Void then
-				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (current_members)
+				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (current_members)
 			end
 		end
 
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 	Estimated_group_size: INTEGER is 20
 			-- Initial size for `current_members'
 
-	population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Iterator over population
 
 	key_expression: XM_XPATH_EXPRESSION
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 	stored_collator: ST_COLLATOR
 			-- Stored collator for use by `another'
 
-	current_members: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+	current_members: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			-- members of current group
 
 	next_item: like item

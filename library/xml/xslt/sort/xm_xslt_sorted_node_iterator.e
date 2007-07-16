@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_LAST_POSITION_FINDER [XM_XPATH_NODE]
 
-	KL_COMPARATOR [XM_XSLT_SORT_RECORD]
+	KL_COMPARATOR [XM_XSLT_NODE_SORT_RECORD]
 
 	XM_XPATH_EXCEPTION_ROUTINES
 		export {NONE} all end
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Status report
 
-	less_than (u, v: XM_XSLT_SORT_RECORD): BOOLEAN is
+	less_than (u, v: XM_XSLT_NODE_SORT_RECORD): BOOLEAN is
 			-- Is `u' considered less than `v'?
 		local
 			l_sort_key, l_other_sort_key: XM_XPATH_ITEM
@@ -207,7 +207,7 @@ feature {XM_XSLT_SORTED_NODE_ITERATOR} -- Local
 			count_set: count = a_count
 		end
 
-	set_node_keys (some_node_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_RECORD]) is
+	set_node_keys (some_node_keys: DS_ARRAYED_LIST [XM_XSLT_NODE_SORT_RECORD]) is
 			-- Set `node_keys'.
 		do
 			node_keys := some_node_keys
@@ -229,8 +229,8 @@ feature {NONE} -- Implementation
 	key_comparers: DS_ARRAYED_LIST [KL_COMPARATOR [XM_XPATH_ITEM]]
 			-- Comparers
 
-	node_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_RECORD]
-			-- List of items with their sort-keys
+	node_keys: DS_ARRAYED_LIST [XM_XSLT_NODE_SORT_RECORD]
+			-- List of nodes with their sort-keys
 
 	make_default is
 			-- Purely for compatibility with the interface
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 		require
 			not_yet_sorted: not count_determined
 		local
-			l_sorter: DS_QUICK_SORTER [XM_XSLT_SORT_RECORD]
+			l_sorter: DS_QUICK_SORTER [XM_XSLT_NODE_SORT_RECORD]
 			l_retried: BOOLEAN
 			l_error: XM_XPATH_ERROR_VALUE
 		do
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			not_yet_sorted: not count_determined
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
-			a_sort_record: XM_XSLT_SORT_RECORD
+			a_sort_record: XM_XSLT_NODE_SORT_RECORD
 			a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
 			a_sort_key: XM_XPATH_ATOMIC_VALUE
 			l_item: DS_CELL [XM_XPATH_ITEM]

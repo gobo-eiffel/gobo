@@ -2,19 +2,19 @@ indexing
 
 	description:
 
-		"Group iterator implementing group-strating-with algorithm"
+		"Group iterator over node sets implementing group-ending-with algorithm"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_GROUP_STARTING_WITH_ITERATOR
+class	XM_XSLT_GROUP_ENDING_WITH_NODE_ITERATOR
 
 inherit
 
-	XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
+	XM_XSLT_GROUP_NODE_ITERATOR
 
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM];
+	make (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE];
 			a_key: XM_XSLT_PATTERN;
 			a_context: XM_XSLT_EVALUATION_CONTEXT;
 			a_locator: XM_XPATH_LOCATOR) is
@@ -36,14 +36,14 @@ feature {NONE} -- Initialization
 			a_key_not_void: a_key /= Void
 			a_context_not_void: a_context /= Void
 		do
-			population := a_population.another
+			population := a_population
 			key_pattern := a_key
 			base_context := a_context
 			running_context := a_context.new_minor_context
 			running_context.set_current_iterator (population)
 			locator := a_locator
 		ensure
-			population_before: population.before
+			population_set: population = a_population
 			key_set: key_pattern = a_key
 			base_context_set: base_context = a_context
 			locator_set: locator = a_locator
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_ITEM
+	item: XM_XPATH_NODE
 			-- Initial item of current group
 
 	current_grouping_key: XM_XPATH_ATOMIC_VALUE is
@@ -62,71 +62,68 @@ feature -- Access
 	
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
-		do
-			Result := index > 0 and then item = Void
-		end
 
 feature -- Cursor movement
 
 	forth is
 			-- Move to next position
 		local
-			next_group_reached: BOOLEAN
 			an_error: XM_XPATH_ERROR_VALUE
+			matched: BOOLEAN
 		do
 			index := index + 1
-			create current_members.make_default
-			if index = 1 then
-				population.start
-				if not population.after then
-					item := population.item
-					if not item.is_node then
-						create an_error.make_from_string ("Member of group-starting-with population is not a node.",
-																	 Xpath_errors_uri, "XTTE1120", Dynamic_error)
-						an_error.set_location (locator.system_id, locator.line_number)
-						running_context.transformer.report_fatal_error (an_error)
-					end
-				end
+			if after_pending then
+				after := True
 			else
-				item := next_candidate
-			end
-			if item /= Void then current_members.force_last (item) end
-			from
-			until
-				is_error or else population.after or next_group_reached
-			loop
-				population.forth
-				if not is_error and then population.after then
-					next_candidate := Void
+				create current_members.make_default
+				if index = 1 then
+					population.start
+					if not population.after then
+						item := population.item
+						if not item.is_node then
+							create an_error.make_from_string ("Member of group-ending-with population is not a node.",
+																		 Xpath_errors_uri, "XTTE1120", Dynamic_error)
+							an_error.set_location (locator.system_id, locator.line_number)
+							running_context.transformer.report_fatal_error (an_error)
+						end
+					end
 				else
-					next_candidate := population.item
-					if not next_candidate.is_node then
-						create an_error.make_from_string ("Member of group-starting-with population is not a node.",
-																	 Xpath_errors_uri, "XTTE1120", Dynamic_error)
-						an_error.set_location (locator.system_id, locator.line_number)
-						running_context.transformer.report_fatal_error (an_error)
-					else
+					item := next_candidate
+				end
+				if item /= Void then current_members.force_last (item) end
+				from
+					next_candidate := item
+				until
+					is_error or else population.after or matched or next_candidate = Void
+				loop
+					population.forth
+					if not population.after then
 						key_pattern.match (next_candidate.as_node , running_context)
 						if key_pattern.is_error then
 							set_last_error (key_pattern.error_value)
 						elseif key_pattern.last_match_result then
-							next_group_reached := True
+							next_candidate := population.item
+							matched := True
 						else
+							next_candidate := population.item
 							current_members.force_last (next_candidate)
 						end
 					end
+				end
+				if not is_error and then population.after then
+					after_pending := True
 				end
 			end
 		end
 
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Iterator over the members of the current group, in population order.
 		do
-			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (current_members)
+			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (current_members)
 		end
 
 feature -- Duplication
@@ -139,7 +136,7 @@ feature -- Duplication
 	
 feature {NONE} -- Implementation
 
-	population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Iterator over population
 
 	key_pattern: XM_XSLT_PATTERN
@@ -154,11 +151,14 @@ feature {NONE} -- Implementation
 	next_candidate: like item
 			-- Next item in population
 
-	current_members: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+	current_members: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			-- Members of current group
 
 	locator: XM_XPATH_LOCATOR
 			-- Location of xsl:for-each-group
+
+	after_pending: BOOLEAN
+			-- `True' if next call to forth will go `after'
 
 invariant
 

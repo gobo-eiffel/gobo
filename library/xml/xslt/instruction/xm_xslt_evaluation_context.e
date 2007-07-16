@@ -123,7 +123,7 @@ feature -- Access
 			end
 		end
 
-	current_group_iterator:  XM_XSLT_GROUP_ITERATOR is
+	current_group_iterator:  XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM] is
 			-- Current group iterator
 		do
 			if is_minor then
@@ -643,7 +643,7 @@ feature {NONE} -- Implementation
 	internal_local_parameters:  XM_XSLT_PARAMETER_SET
 			--	 Local parameters for major context
 
-	internal_current_group_iterator: XM_XSLT_GROUP_ITERATOR
+	internal_current_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
 			-- Current group iterator
 
 	internal_current_mode: XM_XSLT_MODE

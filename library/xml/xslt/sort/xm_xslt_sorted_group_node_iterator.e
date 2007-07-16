@@ -2,26 +2,46 @@ indexing
 
 	description:
 
-		"Objects that render a sorted iteration of groups"
+		"Objects that render a sorted iteration of groups of nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XSLT_SORTED_GROUP_ITERATOR
+class	XM_XSLT_SORTED_GROUP_NODE_ITERATOR
 
 inherit
 
-	XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
+	XM_XSLT_GROUP_NODE_ITERATOR
 		undefine
-			is_last_position_finder, as_last_position_finder
+			is_array_iterator, as_array_iterator, 
+			is_last_position_finder, as_last_position_finder,
+			is_realizable_iterator, as_realizable_iterator,
+			is_reversible_iterator, as_reversible_iterator,
+			is_singleton_iterator, as_singleton_iterator
+		redefine
+			current_group_iterator
+		select
+			is_error, error_value, index
 		end
 
-	XM_XSLT_SORTED_ITERATOR
+	XM_XSLT_SORTED_NODE_ITERATOR
+		rename
+			is_error as is_sorted_error,
+			error_value as sorted_error_value,
+			index as sorted_index,
+			make as old_make
+		undefine
+			set_last_error,
+			is_empty_iterator, as_empty_iterator,
+			is_axis_iterator, as_axis_iterator,
+			is_node_iterator, as_node_iterator,
+			is_invulnerable,
+			before, start, off
 		redefine
-			make, build_array, another
+			build_array, another
 		end
 
 create
@@ -31,12 +51,35 @@ create
 feature {NONE} -- Initialization
 
 	make (a_context: XM_XSLT_EVALUATION_CONTEXT;
-			a_base_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM];
+			a_base_iterator: XM_XSLT_GROUP_NODE_ITERATOR;
 			some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]) is
 			-- Establish invariant
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 		do
 			group_iterator := a_base_iterator
-			Precursor (a_context, a_base_iterator, some_sort_keys)
+			context := a_context.new_minor_context
+			base_iterator := a_base_iterator
+			context.set_current_iterator (base_iterator)
+			sort_keys := some_sort_keys
+			from
+				create key_comparers.make (sort_keys.count)
+				a_cursor := sort_keys.new_cursor; a_cursor.start
+			variant
+				sort_keys.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				key_comparers.put_last (a_cursor.item.comparer)
+				a_cursor.forth
+			end
+
+			-- Avoid doing the sort until the user wants the first item. This is because
+			--  sometimes the user only wants to know whether the collection is empty.
+
+		ensure
+			base_iterator_set: base_iterator = a_base_iterator
+			sort_keys_set: sort_keys = some_sort_keys
 		end
 
 feature -- Access
@@ -45,19 +88,19 @@ feature -- Access
 			-- Grouping key for current group;
 			-- (or `Void' for group-starting/ending-with)
 		do
-			Result := node_keys.item (index).as_group_sort_record.current_grouping_key
+			Result := node_keys.item (index).as_group_node_sort_record.current_grouping_key
 		end
 
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Iterator over the members of the current group, in population order.
 		do
 			check
-				group_sort_record: node_keys.item (index).is_group_sort_record
+				group_sort_record: node_keys.item (index).is_group_node_sort_record
 				-- `build_array' assures this
 			end
-			Result := node_keys.item (index).as_group_sort_record.current_group_iterator.another
+			Result := node_keys.item (index).as_group_node_sort_record.current_group_iterator.another
 		end
 
 feature -- Duplication
@@ -83,7 +126,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
+	group_iterator: XM_XSLT_GROUP_NODE_ITERATOR
 			-- Sequence to be sorted
 
 	build_array is
@@ -91,7 +134,7 @@ feature {NONE} -- Implementation
 		local
 			l_item: DS_CELL [XM_XPATH_ITEM]
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
-			l_sort_record: XM_XSLT_GROUP_SORT_RECORD
+			l_sort_record: XM_XSLT_GROUP_NODE_SORT_RECORD
 			l_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
 			l_sort_key: XM_XPATH_ATOMIC_VALUE
 			l_new_context: like context

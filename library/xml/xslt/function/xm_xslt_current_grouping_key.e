@@ -76,7 +76,7 @@ feature -- Evaluation
 	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_group_iterator: XM_XSLT_GROUP_ITERATOR
+			l_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
 			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			l_evaluation_context ?= a_context

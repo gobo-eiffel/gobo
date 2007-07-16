@@ -2,19 +2,19 @@ indexing
 
 	description:
 
-		"Group iterator implementing group-by algorithm"
+		"Group iterator over node sets implementing group-by algorithm"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XSLT_GROUP_BY_ITERATOR
+class	XM_XSLT_GROUP_BY_NODE_ITERATOR
 
 inherit
 
-	XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
+	XM_XSLT_GROUP_NODE_ITERATOR
 
 	XM_XPATH_SHARED_COMPARISON_KEY_TESTER
 		export {NONE} all end
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM];
+	make (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE];
 			a_key: XM_XPATH_EXPRESSION;
 			a_context: XM_XSLT_EVALUATION_CONTEXT;
 			a_collator: ST_COLLATOR) is
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_ITEM  is
+	item: XM_XPATH_NODE  is
 			-- Initial item of current group
 		do
 			Result := groups.item (index).item (1)
@@ -89,10 +89,10 @@ feature -- Status report
 
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Iterator over the members of the current group, in population order.
 		do
-			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (groups.item (index))
+			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (groups.item (index))
 		end
 
 feature -- Cursor movement
@@ -113,7 +113,7 @@ feature -- Duplication
 	
 feature {NONE} -- Implementation
 
-	population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Iterator over population
 
 	key_expression: XM_XPATH_EXPRESSION
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 	indexed_groups_built: BOOLEAN
 			-- Have the grouping tables been built yet?
 
-	groups: DS_ARRAYED_LIST [DS_ARRAYED_LIST [XM_XPATH_ITEM]]
+	groups: DS_ARRAYED_LIST [DS_ARRAYED_LIST [XM_XPATH_NODE]]
 			-- Main data structure holds one entry for each group;
 			-- The entry is a list which contains the items
 			--  that are members of the group, in population order.
@@ -146,14 +146,14 @@ feature {NONE} -- Implementation
 		require
 			not_already_built: not indexed_groups_built
 		local
-			a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_ITEM], XM_XPATH_COMPARISON_KEY]
+			a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_COMPARISON_KEY]
 			a_context: XM_XSLT_EVALUATION_CONTEXT
-			an_item: XM_XPATH_ITEM
+			an_item: XM_XPATH_NODE
 			a_keys_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			first_key: BOOLEAN
 			a_key: XM_XPATH_ATOMIC_VALUE
 			a_comparison_key: XM_XPATH_COMPARISON_KEY
-			a_group: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+			a_group: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			a_transformer: XM_XSLT_TRANSFORMER
 		do
 			create a_map.make_with_equality_testers (20, Void, comparison_key_tester)

@@ -76,7 +76,7 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			a_group_iterator: XM_XSLT_GROUP_ITERATOR
+			a_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			an_evaluation_context ?= a_context

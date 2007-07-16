@@ -10,11 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class	XM_XSLT_GROUP_ITERATOR
+deferred class	XM_XSLT_GROUP_ITERATOR [G -> XM_XPATH_ITEM]
 
 inherit
 
-	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	XM_XPATH_SEQUENCE_ITERATOR [G]
 
 	XM_XPATH_ERROR_TYPES
 
@@ -26,11 +26,30 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status report
+
+	is_group_node_iterator: BOOLEAN is
+			-- Is `Current' a group-node-iterator?
+		do
+			Result := False
+		end
+
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [G] is
 			-- Iterator over the members of the current group, in population order.
 		deferred
+		end
+
+feature -- Conversion
+
+	as_group_node_iterator: XM_XSLT_GROUP_NODE_ITERATOR is
+			-- `Current' seen as a group-node-iterator.
+		require
+			group_node_iterator: is_group_node_iterator
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
 		end
 
 end
