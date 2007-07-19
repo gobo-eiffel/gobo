@@ -23,7 +23,8 @@ char** geargv;
 	/* Clean up function */
 typedef void (* EIF_CLEANUP)(EIF_BOOLEAN);
 void eif_register_cleanup(EIF_CLEANUP f){
-/* Needed to compile some code at AXAR */
+	/* TODO: Needed to compile some code at AXAR */
+	printf("'eif_register_cleanup' in 'ge_arguments.h' not implemented\n");
 }
 
 #ifdef __cplusplus

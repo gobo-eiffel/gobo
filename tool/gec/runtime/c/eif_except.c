@@ -102,7 +102,8 @@ void eetrace(char b) {
 
 #ifdef EIF_WINDOWS
 void set_windows_exception_filter() {
-/* Needed to compile some code at AXAR */
+	/* TODO: Needed to compile some code at AXAR */
+	printf("'set_windows_exception_filter' in 'eif_except.h' not implemented\n");
 }
 #endif
 

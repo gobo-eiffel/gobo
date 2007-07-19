@@ -97,6 +97,7 @@ typedef void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
 #define EIF_PROCEDURE EIF_POINTER
+#define INTEGER EIF_INTEGER_32
 
 #define EIF_VOID ((EIF_REFERENCE)0)
 #define EIF_FALSE ((EIF_BOOLEAN)'\0')
