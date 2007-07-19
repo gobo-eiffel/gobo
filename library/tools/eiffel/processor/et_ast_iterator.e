@@ -804,13 +804,8 @@ feature {ET_AST_NODE} -- Processing
 			a_is_keyword: ET_KEYWORD
 			an_assigner: ET_ASSIGNER
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -871,13 +866,8 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon: ET_SEMICOLON_SYMBOL
 			a_is_keyword: ET_KEYWORD
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -936,13 +926,8 @@ feature {ET_AST_NODE} -- Processing
 			a_is_keyword: ET_KEYWORD
 			an_assigner: ET_ASSIGNER
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -1059,13 +1044,8 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon: ET_SEMICOLON_SYMBOL
 			a_is_keyword: ET_KEYWORD
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -1190,13 +1170,8 @@ feature {ET_AST_NODE} -- Processing
 			a_is_keyword: ET_KEYWORD
 			an_assigner: ET_ASSIGNER
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -1236,13 +1211,8 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon: ET_SEMICOLON_SYMBOL
 			a_is_keyword: ET_KEYWORD
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -1349,13 +1319,8 @@ feature {ET_AST_NODE} -- Processing
 			a_is_keyword: ET_KEYWORD
 			an_assigner: ET_ASSIGNER
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -1456,13 +1421,8 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon: ET_SEMICOLON_SYMBOL
 			a_is_keyword: ET_KEYWORD
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -1875,6 +1835,19 @@ feature {ET_AST_NODE} -- Processing
 			an_indexing.terms.process (Current)
 		end
 
+	process_indexing_list (a_list: ET_INDEXING_LIST) is
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.indexing_keyword.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
 	process_indexing_semicolon (an_indexing: ET_INDEXING_SEMICOLON) is
 			-- Process `an_indexing'.
 		do
@@ -1894,19 +1867,6 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.item (i).process (Current)
-				i := i + 1
-			end
-		end
-
-	process_indexing_list (a_list: ET_INDEXING_LIST) is
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			a_list.indexing_keyword.process (Current)
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
@@ -2212,13 +2172,8 @@ feature {ET_AST_NODE} -- Processing
 			a_is_keyword: ET_KEYWORD
 			an_assigner: ET_ASSIGNER
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -2342,13 +2297,8 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon: ET_SEMICOLON_SYMBOL
 			a_is_keyword: ET_KEYWORD
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
@@ -2893,13 +2843,8 @@ feature {ET_AST_NODE} -- Processing
 			a_semicolon: ET_SEMICOLON_SYMBOL
 			an_assigner: ET_ASSIGNER
 		do
-			a_frozen_keyword := a_feature.frozen_keyword
-			if a_frozen_keyword /= Void then
-				a_frozen_keyword.process (Current)
-			end
-			a_feature.extended_name.process (Current)
 			from
-				a_synonym := a_feature.synonym
+				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop

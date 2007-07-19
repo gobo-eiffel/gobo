@@ -2027,6 +2027,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	retry_keyword: ET_RETRY_INSTRUCTION is
+			-- 'retry' keyword
+		once
+			create Result.make
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	select_keyword: ET_KEYWORD is
 			-- 'select' keyword
 		once
@@ -2047,6 +2055,14 @@ feature -- Keywords
 			-- 'then' keyword
 		once
 			create Result.make_then
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	true_keyword: ET_TRUE_CONSTANT is
+			-- 'True' keyword
+		once
+			create Result.make
 		ensure
 			keyword_not_void: Result /= Void
 		end
