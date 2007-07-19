@@ -12,7 +12,7 @@
 
 gobo_usage() {
 	echo "usage: install.sh [-v] <c_compiler>"
-	echo "   c_compiler:  msc | bcc | gcc | tcc | no_c"
+	echo "   c_compiler:  msc | bcc | gcc | tcc | cc | icc | no_c"
 }
 
 if [ "$1" = "-v" ]; then
@@ -85,6 +85,13 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 elif [ "$CC" = "gcc" ]; then
 #	CFLAGS='-O2'
 	CFLAGS=''
+	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+elif [ "$CC" = "cc" ]; then
+	CFLAGS='-fast'
+	CFLAGS=''
+	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+elif [ "$CC" = "icc" ]; then
+	CFLAGS='-O2'
 	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
 elif [ "$CC" = "tcc" ]; then
 	CFLAGS='-O2'

@@ -6,7 +6,7 @@
 		"Supported Platforms"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -95,6 +95,12 @@ has already been used successfully:
 			<entry>OpenBSD 3.8</entry>
 			<entry>gcc ???</entry>
 			<entry>32-bit x86</entry>
+			<entry></entry>
+		</row>
+		<row>
+			<entry>alpha OSF1 V5.1</entry>
+			<entry>Compaq C V6.4</entry>
+			<entry>64-bit, little endian, Tru64</entry>
 			<entry></entry>
 		</row>
 	</tbody>
