@@ -14106,6 +14106,8 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_tuple: ET_EXPRESSION
 			l_tuple_type: ET_DYNAMIC_TYPE
+			l_tuple_type_set: ET_DYNAMIC_TYPE_SET
+			l_tuple_dynamic_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 		do
 			l_procedure_type ?= a_target_type
@@ -14149,12 +14151,36 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
 				l_tuple := call_operands.item (2)
+				if not l_tuple_type.is_alive then
+					l_tuple_type_set := current_feature.dynamic_type_set (l_tuple)
+					if l_tuple_type_set = Void then
+							-- Internal error: the dynamic type set of the argument
+							-- of the call should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_tuple_dynamic_type := l_tuple_type_set.first_type
+					end
+				end
 				l_open_operand_type_sets := l_procedure_type.open_operand_type_sets
 				nb := l_open_operand_type_sets.count
 				from i := 1 until i > nb loop
 					current_file.put_character (',')
 -- TODO: check to see if tuple items need to be boxed or unboxed.
-					print_attribute_tuple_item_access (i, l_tuple, l_tuple_type)
+					if l_tuple_type.is_alive then
+						print_attribute_tuple_item_access (i, l_tuple, l_tuple_type)
+					elseif l_tuple_dynamic_type /= Void then
+						print_attribute_tuple_item_access (i, l_tuple, l_tuple_dynamic_type)
+					else
+							-- Call on Void target.
+						current_file.put_character ('(')
+						print_type_declaration (l_open_operand_type_sets.item (i).static_type, current_file)
+						current_file.put_character (')')
+						current_file.put_string (c_gevoid)
+						current_file.put_character ('(')
+						print_target_expression (l_tuple, l_tuple_type)
+						current_file.put_character (')')
+					end
 					i := i + 1
 				end
 				current_file.put_character (')')
@@ -14175,6 +14201,8 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_tuple: ET_EXPRESSION
 			l_tuple_type: ET_DYNAMIC_TYPE
+			l_tuple_type_set: ET_DYNAMIC_TYPE_SET
+			l_tuple_dynamic_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 		do
 			l_function_type ?= a_target_type
@@ -14218,12 +14246,36 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				current_file.put_character ('(')
 				print_expression (call_operands.first)
 				l_tuple := call_operands.item (2)
+				if not l_tuple_type.is_alive then
+					l_tuple_type_set := current_feature.dynamic_type_set (l_tuple)
+					if l_tuple_type_set = Void then
+							-- Internal error: the dynamic type set of the argument
+							-- of the call should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_tuple_dynamic_type := l_tuple_type_set.first_type
+					end
+				end
 				l_open_operand_type_sets := l_function_type.open_operand_type_sets
 				nb := l_open_operand_type_sets.count
 				from i := 1 until i > nb loop
 					current_file.put_character (',')
 -- TODO: check to see if tuple items need to be boxed or unboxed.
-					print_attribute_tuple_item_access (i, l_tuple, l_tuple_type)
+					if l_tuple_type.is_alive then
+						print_attribute_tuple_item_access (i, l_tuple, l_tuple_type)
+					elseif l_tuple_dynamic_type /= Void then
+						print_attribute_tuple_item_access (i, l_tuple, l_tuple_dynamic_type)
+					else
+							-- Call on Void target.
+						current_file.put_character ('(')
+						print_type_declaration (l_open_operand_type_sets.item (i).static_type, current_file)
+						current_file.put_character (')')
+						current_file.put_string (c_gevoid)
+						current_file.put_character ('(')
+						print_target_expression (l_tuple, l_tuple_type)
+						current_file.put_character (')')
+					end
 					i := i + 1
 				end
 				current_file.put_character (')')
