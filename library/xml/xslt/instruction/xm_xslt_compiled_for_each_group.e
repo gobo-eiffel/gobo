@@ -11,7 +11,7 @@ indexing
 class XM_XSLT_COMPILED_FOR_EACH_GROUP
 
 inherit
-	
+
 	XM_XSLT_INSTRUCTION
 		redefine
 			item_type, compute_dependencies, creates_new_nodes, promote_instruction,
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 				adopt_child_expression (l_cursor.item)
 				l_cursor.forth
 			end
-			
+
 		ensure
 			executable_set: executable = a_executable
 			select_expression_set: select_expression = a_select_expression
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			collation_name_set: collation_name = a_collation_name
 			default_collation_name_set: default_collation_name = a_default_collation_name
 		end
-	
+
 	make_pattern (a_executable: XM_XSLT_EXECUTABLE; a_select_expression, a_action: XM_XPATH_EXPRESSION; a_key_pattern: XM_XSLT_PATTERN;
 		a_algorithm: INTEGER; a_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION];
 		a_collation_name: XM_XPATH_EXPRESSION; a_default_collation_name: STRING) is
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
@@ -330,8 +330,8 @@ feature -- Optimization
 				adopt_child_expression (key_expression)
 				reset_static_properties
 			end
-		end	
-	
+		end
+
 feature -- Evaluation
 
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -403,7 +403,7 @@ feature -- Evaluation
 				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_group_iterator, Current, a_new_context)
 			end
 		end
-	
+
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over nodes of a sequence
 		local
@@ -428,7 +428,7 @@ feature -- Evaluation
 				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (l_group_iterator.as_node_iterator, Current, l_new_context)
 			end
 		end
-	
+
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		do
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 
 	action: XM_XPATH_EXPRESSION
 			-- Action to be taken for each group
-	
+
 	key_expression: XM_XPATH_EXPRESSION
 			-- Key for all algorithms
 
@@ -471,10 +471,10 @@ feature {NONE} -- Implementation
 
 	last_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
 			-- Result from `create_group_iterator'
-	
+
 	last_group_node_iterator: XM_XSLT_GROUP_NODE_ITERATOR
 			-- Result from `create_group_node_iterator'
-	
+
 	collator (a_context: XM_XSLT_EVALUATION_CONTEXT): ST_COLLATOR is
 			-- Collator (memo function)
 		require
@@ -577,7 +577,6 @@ feature {NONE} -- Implementation
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			l_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
-			l_pattern: XM_XSLT_PATTERN_BRIDGE
 		do
 			create l_reduced_sort_keys.make (sort_keys.count)
 			l_new_context := a_context.new_minor_context
@@ -608,7 +607,6 @@ feature {NONE} -- Implementation
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			l_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
-			l_pattern: XM_XSLT_PATTERN_BRIDGE
 		do
 			create l_reduced_sort_keys.make (sort_keys.count)
 			l_new_context := a_context.new_minor_context
@@ -697,4 +695,4 @@ invariant
 	default_collation_name_not_void: initialized implies default_collation_name /= Void
 
 end
-	
+
