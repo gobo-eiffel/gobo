@@ -5587,7 +5587,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 								print_routine_name (l_query, current_type, current_file)
 							end
 						else
-							l_procedure := current_type.seeded_dynamic_query (l_name.seed, current_system)
+							l_procedure := current_type.seeded_dynamic_procedure (l_name.seed, current_system)
 							if l_procedure /= Void then
 								if not l_procedure.is_generated then
 									l_procedure.set_generated (True)
@@ -16440,7 +16440,7 @@ feature {NONE} -- Type generation
 					a_file.put_new_line
 					if l_type.is_expanded and then not l_type.is_generic then
 							-- For expanded types with no generics, there is no type
-							-- other then themselves that conform to them. Therefore
+							-- other than themselves that conform to them. Therefore
 							-- we do not keep the type-id in each object for those types
 							-- because if it is used as static type of an entity there
 							-- will be no polymorphic call. A boxed version (containing
