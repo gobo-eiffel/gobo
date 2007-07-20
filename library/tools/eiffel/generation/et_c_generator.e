@@ -1056,14 +1056,14 @@ feature {NONE} -- Feature generation
 				if l_is_cpp then
 						-- Regexp: C++ [blocking] inline [use {<include> "," ...}+]
 						-- \3: include files
-					if external_cpp_inline_regexp.captured_substring_count (3) > 0 then
+					if external_cpp_inline_regexp.match_count > 3 and then external_cpp_inline_regexp.captured_substring_count (3) > 0 then
 						print_external_c_includes (external_cpp_inline_regexp.captured_substring (3))
 					end
 					print_external_c_inline_body (a_feature)
 				else
 						-- Regexp: C [blocking] inline [use {<include> "," ...}+]
 						-- \3: include files
-					if external_c_inline_regexp.captured_substring_count (3) > 0 then
+					if external_c_inline_regexp.match_count > 3 and then external_c_inline_regexp.captured_substring_count (3) > 0 then
 						print_external_c_includes (external_c_inline_regexp.captured_substring (3))
 					end
 					print_external_c_inline_body (a_feature)
@@ -1076,13 +1076,13 @@ feature {NONE} -- Feature generation
 					-- \6: signature arguments
 					-- \11: signature result
 					-- \18: include files
-				if external_c_regexp.captured_substring_count (18) > 0 then
+				if external_c_regexp.match_count > 18 and then external_c_regexp.captured_substring_count (18) > 0 then
 					print_external_c_includes (external_c_regexp.captured_substring (18))
 				end
-				if external_c_regexp.captured_substring_count (5) > 0 then
+				if external_c_regexp.match_count > 5 and then external_c_regexp.captured_substring_count (5) > 0 then
 					l_signature_arguments := external_c_regexp.captured_substring (6)
 				end
-				if external_c_regexp.captured_substring_count (11) > 0 then
+				if external_c_regexp.match_count > 11 and then external_c_regexp.captured_substring_count (11) > 0 then
 					l_signature_result := external_c_regexp.captured_substring (11)
 				end
 				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, False)
@@ -1093,10 +1093,10 @@ feature {NONE} -- Feature generation
 					-- \10: signature result
 					-- \17: include files
 				print_external_c_includes (external_c_macro_regexp.captured_substring (17))
-				if external_c_macro_regexp.captured_substring_count (4) > 0 then
+				if external_c_macro_regexp.match_count > 4 and then external_c_macro_regexp.captured_substring_count (4) > 0 then
 					l_signature_arguments := external_c_macro_regexp.captured_substring (5)
 				end
-				if external_c_macro_regexp.captured_substring_count (10) > 0 then
+				if external_c_macro_regexp.match_count > 10 and then external_c_macro_regexp.captured_substring_count (10) > 0 then
 					l_signature_result := external_c_macro_regexp.captured_substring (10)
 				end
 				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, True)
@@ -1109,7 +1109,7 @@ feature {NONE} -- Feature generation
 				print_external_c_includes (external_c_struct_regexp.captured_substring (16))
 				l_struct_type := external_c_struct_regexp.captured_substring (1)
 				l_struct_field_name := external_c_struct_regexp.captured_substring (6)
-				if external_c_struct_regexp.captured_substring_count (9) > 0 then
+				if external_c_struct_regexp.match_count > 9 and then external_c_struct_regexp.captured_substring_count (9) > 0 then
 					l_struct_field_type := external_c_struct_regexp.captured_substring (9)
 				end
 				print_external_c_struct_body (l_arguments, l_result_type_set, l_struct_type, l_struct_field_name, l_struct_field_type)
@@ -1119,12 +1119,12 @@ feature {NONE} -- Feature generation
 					-- \2: signature arguments
 					-- \4: signature result
 					-- \6: include files
-				if old_external_c_regexp.captured_substring_count (6) > 0 then
+				if old_external_c_regexp.match_count > 6 and then old_external_c_regexp.captured_substring_count (6) > 0 then
 					print_external_c_includes (old_external_c_regexp.captured_substring (6))
 				end
-				if old_external_c_regexp.captured_substring_count (1) > 0 then
+				if old_external_c_regexp.match_count > 1 and then old_external_c_regexp.captured_substring_count (1) > 0 then
 					l_signature_arguments := old_external_c_regexp.captured_substring (2)
-					if old_external_c_regexp.captured_substring_count (4) > 0 then
+					if old_external_c_regexp.match_count > 4 and then old_external_c_regexp.captured_substring_count (4) > 0 then
 						l_signature_result := old_external_c_regexp.captured_substring (4)
 					end
 				end
@@ -1136,9 +1136,9 @@ feature {NONE} -- Feature generation
 					-- \3: signature arguments
 					-- \5: signature result
 				print_external_c_includes (old_external_c_macro_regexp.captured_substring (1))
-				if old_external_c_macro_regexp.captured_substring_count (2) > 0 then
+				if old_external_c_macro_regexp.match_count > 2 and then old_external_c_macro_regexp.captured_substring_count (2) > 0 then
 					l_signature_arguments := old_external_c_macro_regexp.captured_substring (3)
-					if old_external_c_macro_regexp.captured_substring_count (5) > 0 then
+					if old_external_c_macro_regexp.match_count > 5 and then old_external_c_macro_regexp.captured_substring_count (5) > 0 then
 						l_signature_result := old_external_c_macro_regexp.captured_substring (5)
 					end
 				end
@@ -1150,7 +1150,7 @@ feature {NONE} -- Feature generation
 					-- \4: signature result
 				print_external_c_includes (old_external_c_struct_regexp.captured_substring (1))
 				l_signature_arguments := old_external_c_struct_regexp.captured_substring (2)
-				if old_external_c_struct_regexp.captured_substring_count (4) > 0 then
+				if old_external_c_struct_regexp.match_count > 4 and then old_external_c_struct_regexp.captured_substring_count (4) > 0 then
 					l_signature_result := old_external_c_struct_regexp.captured_substring (4)
 				end
 				l_alias := a_feature.alias_clause
@@ -1182,14 +1182,14 @@ feature {NONE} -- Feature generation
 					-- \11: signature result
 					-- \18: include files
 				l_is_cpp := True
-				if external_cpp_regexp.captured_substring_count (18) > 0 then
+				if external_cpp_regexp.match_count > 18 and then external_cpp_regexp.captured_substring_count (18) > 0 then
 					print_external_c_includes (external_cpp_regexp.captured_substring (18))
 				end
 				l_cpp_class_type := external_cpp_regexp.captured_substring (2)
-				if external_cpp_regexp.captured_substring_count (5) > 0 then
+				if external_cpp_regexp.match_count > 5 and then external_cpp_regexp.captured_substring_count (5) > 0 then
 					l_signature_arguments := external_cpp_regexp.captured_substring (6)
 				end
-				if external_cpp_regexp.captured_substring_count (11) > 0 then
+				if external_cpp_regexp.match_count > 11 and then external_cpp_regexp.captured_substring_count (11) > 0 then
 					l_signature_result := external_cpp_regexp.captured_substring (11)
 				end
 				print_external_cpp_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_cpp_class_type, l_signature_arguments, l_signature_result, a_feature.alias_clause)
