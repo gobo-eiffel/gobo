@@ -4804,7 +4804,8 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			-- Print access to `an_attribute' applied to `a_target'
 			-- of type the boxed version of `a_type'.
 			-- (The boxed version of a type makes sure that each object
-			-- of that type contains its type-id.)
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			an_attribute_not_void: an_attribute /= Void
 			a_target_not_void: a_target /= Void
@@ -4830,7 +4831,8 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 	print_boxed_attribute_item_access (a_target: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
 			-- Print access to 'item' pseudo attribute of boxed version of `a_type'.
 			-- (The boxed version of a type makes sure that each object
-			-- of that type contains its type-id.)
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			a_type_not_void: a_type /= Void
 		do
@@ -4848,7 +4850,8 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			-- Print access to 'type_id' pseudo attribute applied to `a_target'
 			-- of type  the boxed version of `a_type'.
 			-- (The boxed version of a type makes sure that each object
-			-- of that type contains its type-id.)
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			a_target_not_void: a_target /= Void
 			a_type_not_void: a_type /= Void
@@ -4868,7 +4871,8 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 	print_boxed_expression (an_expression: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
 			-- Print boxed version of `an_expression' of type `a_type'.
 			-- (The boxed version of a type makes sure that each object
-			-- of that type contains its type-id.)
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			an_expression_not_void: an_expression /= Void
 			a_type_not_void: a_type /= Void
@@ -15870,7 +15874,9 @@ feature {NONE} -- C function generation
 	print_geboxed_function (a_type: ET_DYNAMIC_TYPE) is
 			-- Print 'geboxed' function to `current_file' and its signature to `header_file'.
 			-- 'geboxed<type-id>' is used to create boxed objects of type `a_type' (with id <type_id>).
-			-- (The boxed version of a type makes sure that each object of that type contains its type-id.)
+			-- (The boxed version of a type makes sure that each object
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			a_type_not_void: a_type /= Void
 		do
@@ -16152,17 +16158,13 @@ feature {NONE} -- Type generation
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_type: ET_DYNAMIC_TYPE
-			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
-			l_function_type: ET_DYNAMIC_FUNCTION_TYPE
-			l_procedure_type: ET_DYNAMIC_PROCEDURE_TYPE
-			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_item_type_set: ET_DYNAMIC_TYPE_SET
-			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_query: ET_DYNAMIC_FEATURE
+			l_attribute_type: ET_DYNAMIC_TYPE
 			j, nb2: INTEGER
+			l_expanded_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_TYPE]
+			l_expanded_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 		do
 				-- Type with just the type_id attribute 'id'.
 			a_file.put_string (c_define)
@@ -16172,6 +16174,170 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_object)
 			a_file.put_new_line
 				-- Aliased basic types.
+			print_aliased_character_type_definition (a_file)
+			print_aliased_wide_character_type_definition (a_file)
+			print_aliased_integer_type_definition (a_file)
+			print_aliased_natural_type_definition (a_file)
+			print_aliased_real_type_definition (a_file)
+			print_aliased_double_type_definition (a_file)
+				-- Alive types.
+			create l_expanded_sorter.make_default
+			l_dynamic_types := current_system.dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				if l_type.is_alive then
+					a_file.put_character ('/')
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					a_file.put_string (l_type.static_type.base_type.to_text)
+					a_file.put_character (' ')
+					a_file.put_character ('*')
+					a_file.put_character ('/')
+					a_file.put_new_line
+					if l_type.is_expanded then
+							-- Keep track of expanded types.
+						l_expanded_sorter.force (l_type)
+						if not l_type.is_generic then
+								-- For expanded types with no generics, there is no type
+								-- other than themselves that conform to them. Therefore
+								-- we do not keep the type-id in each object for those types
+								-- because if it is used as static type of an entity there
+								-- will be no polymorphic call. A boxed version (containing
+								-- the type-id) is nevertheless generated when those objects
+								-- are attached to entities of reference types (which might
+								-- be polymorphic).
+							if l_type = current_system.boolean_type then
+								print_boolean_type_definition (l_type, a_file)
+							elseif l_type = current_system.character_8_type then
+								print_character_8_type_definition (l_type, a_file)
+							elseif l_type = current_system.character_32_type then
+								print_character_32_type_definition (l_type, a_file)
+							elseif l_type = current_system.character_type then
+									-- This should never happen when compliant to ECMA 367.
+								print_character_type_definition (l_type, a_file)
+							elseif l_type = current_system.wide_character_type then
+									-- This should never happen when compliant to ECMA 367.
+								print_wide_character_type_definition (l_type, a_file)
+							elseif l_type = current_system.integer_8_type then
+								print_integer_8_type_definition (l_type, a_file)
+							elseif l_type = current_system.integer_16_type then
+								print_integer_16_type_definition (l_type, a_file)
+							elseif l_type = current_system.integer_32_type then
+								print_integer_32_type_definition (l_type, a_file)
+							elseif l_type = current_system.integer_64_type then
+								print_integer_64_type_definition (l_type, a_file)
+							elseif l_type = current_system.integer_type then
+									-- This should never happen when compliant to ECMA 367.
+								print_integer_type_definition (l_type, a_file)
+							elseif l_type = current_system.natural_8_type then
+								print_natural_8_type_definition (l_type, a_file)
+							elseif l_type = current_system.natural_16_type then
+								print_natural_16_type_definition (l_type, a_file)
+							elseif l_type = current_system.natural_32_type then
+								print_natural_32_type_definition (l_type, a_file)
+							elseif l_type = current_system.natural_64_type then
+								print_natural_64_type_definition (l_type, a_file)
+							elseif l_type = current_system.natural_type then
+									-- This should never happen when compliant to ECMA 367.
+								print_natural_type_definition (l_type, a_file)
+							elseif l_type = current_system.real_32_type then
+								print_real_32_type_definition (l_type, a_file)
+							elseif l_type = current_system.real_64_type then
+								print_real_64_type_definition (l_type, a_file)
+							elseif l_type = current_system.real_type then
+									-- This should never happen when compliant to ECMA 367.
+								print_real_type_definition (l_type, a_file)
+							elseif l_type = current_system.double_type then
+									-- This should never happen when compliant to ECMA 367.
+								print_double_type_definition (l_type, a_file)
+							elseif l_type = current_system.pointer_type then
+								print_pointer_type_definition (l_type, a_file)
+							else
+								print_type_definition (l_type, a_file)
+									-- Keep track of dependencies between expanded types.
+								l_queries := l_type.queries
+								nb2 := l_queries.count
+								from j := 1 until j > nb2 loop
+									l_query := l_queries.item (j)
+									if l_query.is_attribute then
+										l_attribute_type := l_query.result_type_set.static_type
+										if l_attribute_type.is_expanded then
+											l_expanded_sorter.force_relation (l_attribute_type, l_type)
+										end
+									end
+									j := j + 1
+								end
+							end
+							print_geboxed_function (l_type)
+						end
+					end
+					print_boxed_type_definition (l_type, a_file)
+					a_file.put_new_line
+				end
+				i := i + 1
+			end
+			l_expanded_sorter.sort
+			if l_expanded_sorter.has_cycle then
+					-- Internal error: this should already have been taken care of, either by
+					-- Eiffel validity rule (see VLEC in ETL2), or by proper handling if ECMA
+					-- relaxed this rule (through the introduction of attached types).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+				-- Struct for each expanded type.
+			l_expanded_types := l_expanded_sorter.sorted_items
+			nb := l_expanded_types.count
+			from i := 1 until i > nb loop
+				l_type := l_expanded_types.item (i)
+				print_type_struct (l_type, a_file)
+				print_boxed_type_struct (l_type, a_file)
+				i := i + 1
+			end
+				-- Struct for each non-expanded type.
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				if l_type.is_alive and not l_type.is_expanded then
+					print_type_struct (l_type, a_file)
+				end
+				i := i + 1
+			end
+				-- Type EIF_TYPE representing Eiffel types.
+			a_file.put_string (c_typedef)
+			a_file.put_character (' ')
+			a_file.put_string (c_struct)
+			a_file.put_character (' ')
+			a_file.put_character ('{')
+			a_file.put_new_line
+			a_file.put_character ('%T')
+			a_file.put_string (c_int)
+			a_file.put_character (' ')
+			print_attribute_type_id_name (current_system.any_type, a_file)
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_character ('%T')
+			a_file.put_string (c_eif_boolean)
+			a_file.put_character (' ')
+			a_file.put_string (c_is_special)
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_character ('}')
+			a_file.put_character (' ')
+			a_file.put_string (c_eif_type)
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_new_line
+		end
+
+	print_aliased_character_type_definition (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of aliased type "CHARACTER".
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
 			l_type := current_system.character_type
 			if l_type = current_system.character_8_type then
 				a_file.put_character ('/')
@@ -16204,6 +16370,16 @@ feature {NONE} -- Type generation
 				a_file.put_line (c_eif_character_32)
 				a_file.put_new_line
 			end
+		end
+
+	print_aliased_wide_character_type_definition (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of aliased type "WIDE_CHARACTER".
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
 			l_type := current_system.wide_character_type
 			if l_type = current_system.character_8_type then
 				a_file.put_character ('/')
@@ -16236,6 +16412,16 @@ feature {NONE} -- Type generation
 				a_file.put_line (c_eif_character_32)
 				a_file.put_new_line
 			end
+		end
+
+	print_aliased_integer_type_definition (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of aliased type "INTEGER".
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
 			l_type := current_system.integer_type
 			if l_type = current_system.integer_8_type then
 				a_file.put_character ('/')
@@ -16298,6 +16484,16 @@ feature {NONE} -- Type generation
 				a_file.put_line (c_eif_integer_64)
 				a_file.put_new_line
 			end
+		end
+
+	print_aliased_natural_type_definition (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of aliased type "NATURAL".
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
 			l_type := current_system.natural_type
 			if l_type = current_system.natural_8_type then
 				a_file.put_character ('/')
@@ -16360,6 +16556,16 @@ feature {NONE} -- Type generation
 				a_file.put_line (c_eif_natural_64)
 				a_file.put_new_line
 			end
+		end
+
+	print_aliased_real_type_definition (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of aliased type "REAL".
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
 			l_type := current_system.real_type
 			if l_type = current_system.real_32_type then
 				a_file.put_character ('/')
@@ -16392,6 +16598,16 @@ feature {NONE} -- Type generation
 				a_file.put_line (c_eif_real_64)
 				a_file.put_new_line
 			end
+		end
+
+	print_aliased_double_type_definition (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of aliased type "DOUBLE".
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
 			l_type := current_system.double_type
 			if l_type = current_system.real_32_type then
 				a_file.put_character ('/')
@@ -16424,439 +16640,589 @@ feature {NONE} -- Type generation
 				a_file.put_line (c_eif_real_64)
 				a_file.put_new_line
 			end
-				-- Alive types.
-			l_dynamic_types := current_system.dynamic_types
-			nb := l_dynamic_types.count
-			from i := 1 until i > nb loop
-				l_type := l_dynamic_types.item (i)
-				if l_type.is_alive then
-					a_file.put_character ('/')
-					a_file.put_character ('*')
-					a_file.put_character (' ')
-					a_file.put_string (l_type.static_type.base_type.to_text)
-					a_file.put_character (' ')
-					a_file.put_character ('*')
-					a_file.put_character ('/')
-					a_file.put_new_line
-					if l_type.is_expanded and then not l_type.is_generic then
-							-- For expanded types with no generics, there is no type
-							-- other than themselves that conform to them. Therefore
-							-- we do not keep the type-id in each object for those types
-							-- because if it is used as static type of an entity there
-							-- will be no polymorphic call. A boxed version (containing
-							-- the type-id) is nevertheless generated when those objects
-							-- are attached to entities of reference types (which might
-							-- be polymorphic).
-						if l_type = current_system.boolean_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_boolean)
-						elseif l_type = current_system.character_8_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_character_8)
-						elseif l_type = current_system.character_32_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_character_32)
-						elseif l_type = current_system.character_type then
-								-- This should never happen when compliant to ECMA 367.
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_character)
-						elseif l_type = current_system.wide_character_type then
-								-- This should never happen when compliant to ECMA 367.
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_wide_char)
-						elseif l_type = current_system.integer_8_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_integer_8)
-						elseif l_type = current_system.integer_16_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_integer_16)
-						elseif l_type = current_system.integer_32_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_integer_32)
-						elseif l_type = current_system.integer_64_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_integer_64)
-						elseif l_type = current_system.integer_type then
-								-- This should never happen when compliant to ECMA 367.
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_integer)
-						elseif l_type = current_system.natural_8_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_natural_8)
-						elseif l_type = current_system.natural_16_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_natural_16)
-						elseif l_type = current_system.natural_32_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_natural_32)
-						elseif l_type = current_system.natural_64_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_natural_64)
-						elseif l_type = current_system.natural_type then
-								-- This should never happen when compliant to ECMA 367.
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_natural)
-						elseif l_type = current_system.real_32_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_real_32)
-						elseif l_type = current_system.real_64_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_real_64)
-						elseif l_type = current_system.real_type then
-								-- This should never happen when compliant to ECMA 367.
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_real_32)
-						elseif l_type = current_system.double_type then
-								-- This should never happen when compliant to ECMA 367.
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_real_64)
-						elseif l_type = current_system.pointer_type then
-							a_file.put_string (c_define)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (' ')
-							a_file.put_line (c_eif_pointer)
-						else
-							a_file.put_string (c_typedef)
-							a_file.put_character (' ')
-							a_file.put_string (c_struct)
-							a_file.put_character (' ')
-							print_struct_name (l_type, a_file)
-							a_file.put_character (' ')
-							print_type_name (l_type, a_file)
-							a_file.put_character (';')
-							a_file.put_new_line
-						end
-						print_geboxed_function (l_type)
-					end
-					a_file.put_string (c_typedef)
-					a_file.put_character (' ')
-					a_file.put_string (c_struct)
-					a_file.put_character (' ')
-					print_boxed_struct_name (l_type, a_file)
-					a_file.put_character (' ')
-					print_boxed_type_name (l_type, a_file)
-					a_file.put_character (';')
-					a_file.put_new_line
-					a_file.put_new_line
-				end
-				i := i + 1
-			end
-				-- Struct for each type.
-			from i := 1 until i > nb loop
-				l_type := l_dynamic_types.item (i)
-				if l_type.is_alive then
-					if l_type.is_expanded and then not l_type.is_generic then
-						a_file.put_character ('/')
-						a_file.put_character ('*')
-						a_file.put_character (' ')
-						a_file.put_string ("Struct for boxed version of type ")
-						a_file.put_string (l_type.static_type.base_type.to_text)
-						a_file.put_character (' ')
-						a_file.put_character ('*')
-						a_file.put_character ('/')
-						a_file.put_new_line
-						a_file.put_string (c_struct)
-						a_file.put_character (' ')
-						print_boxed_struct_name (l_type, a_file)
-						a_file.put_character (' ')
-						a_file.put_character ('{')
-						a_file.put_new_line
-						a_file.put_character ('%T')
-						a_file.put_string (c_int)
-						a_file.put_character (' ')
-						print_attribute_type_id_name (l_type, a_file)
-						a_file.put_character (';')
-						a_file.put_new_line
-						a_file.put_character ('%T')
-						print_type_declaration (l_type, a_file)
-						a_file.put_character (' ')
-						print_boxed_attribute_item_name (l_type, a_file)
-						a_file.put_character (';')
-						a_file.put_character (' ')
-						a_file.put_character ('/')
-						a_file.put_character ('*')
-						a_file.put_character (' ')
-						a_file.put_character ('i')
-						a_file.put_character ('t')
-						a_file.put_character ('e')
-						a_file.put_character ('m')
-						a_file.put_character (' ')
-						a_file.put_character ('*')
-						a_file.put_character ('/')
-						a_file.put_new_line
-						a_file.put_character ('}')
-						a_file.put_character (';')
-						a_file.put_new_line
-						a_file.put_new_line
-					end
-					if
-						not l_type.is_expanded or else
-						(l_type /= current_system.boolean_type and
-						l_type /= current_system.character_8_type and
-						l_type /= current_system.character_32_type and
-						l_type /= current_system.integer_8_type and
-						l_type /= current_system.integer_16_type and
-						l_type /= current_system.integer_32_type and
-						l_type /= current_system.integer_64_type and
-						l_type /= current_system.natural_8_type and
-						l_type /= current_system.natural_16_type and
-						l_type /= current_system.natural_32_type and
-						l_type /= current_system.natural_64_type and
-						l_type /= current_system.real_32_type and
-						l_type /= current_system.real_64_type and
-						l_type /= current_system.pointer_type)
-					then
-						a_file.put_character ('/')
-						a_file.put_character ('*')
-						a_file.put_character (' ')
-						a_file.put_string ("Struct for type ")
-						a_file.put_string (l_type.static_type.base_type.to_text)
-						a_file.put_character (' ')
-						a_file.put_character ('*')
-						a_file.put_character ('/')
-						a_file.put_new_line
-						a_file.put_string (c_struct)
-						a_file.put_character (' ')
-						print_struct_name (l_type, a_file)
-						a_file.put_character (' ')
-						a_file.put_character ('{')
-						a_file.put_new_line
-						if not l_type.is_expanded or else l_type.is_generic then
-							a_file.put_character ('%T')
-							a_file.put_string (c_int)
-							a_file.put_character (' ')
-							print_attribute_type_id_name (l_type, a_file)
-							a_file.put_character (';')
-							a_file.put_new_line
-						end
-						l_queries := l_type.queries
-						nb2 := l_queries.count
-						from j := 1 until j > nb2 loop
-							l_query := l_queries.item (j)
-							if l_query.is_attribute then
-								a_file.put_character ('%T')
-								print_type_declaration (l_query.result_type_set.static_type, a_file)
-								a_file.put_character (' ')
-								print_attribute_name (l_query, l_type, a_file)
-								a_file.put_character (';')
-								a_file.put_character (' ')
-								a_file.put_character ('/')
-								a_file.put_character ('*')
-								a_file.put_character (' ')
-								a_file.put_string (l_query.static_feature.name.name)
-								a_file.put_character (' ')
-								a_file.put_character ('*')
-								a_file.put_character ('/')
-								a_file.put_new_line
-							end
-							j := j + 1
-						end
-						l_special_type ?= l_type
-						if l_special_type /= Void then
-								-- We use the "struct hack" to represent SPECIAL
-								-- object header. The last member of the struct
-								-- is an array of size 1, but we malloc the needed
-								-- space when creating the SPECIAL object. We use
-								-- an array of size 1 because some compilers don't
-								-- like having an array of size 0 here. Note that
-								-- the "struct hack" is superseded by the concept
-								-- of "flexible array member" in ISO C 99.
-							a_file.put_character ('%T')
-							print_type_declaration (current_system.integer_type, a_file)
-							a_file.put_character (' ')
-							print_attribute_special_count_name (l_special_type, a_file)
-							a_file.put_character (';')
-							a_file.put_character (' ')
-							a_file.put_character ('/')
-							a_file.put_character ('*')
-							a_file.put_character (' ')
-							a_file.put_character ('c')
-							a_file.put_character ('o')
-							a_file.put_character ('u')
-							a_file.put_character ('n')
-							a_file.put_character ('t')
-							a_file.put_character (' ')
-							a_file.put_character ('*')
-							a_file.put_character ('/')
-							a_file.put_new_line
-							a_file.put_character ('%T')
-							l_item_type_set := l_special_type.item_type_set
-							print_type_declaration (l_item_type_set.static_type, a_file)
-							a_file.put_character (' ')
-							print_attribute_special_item_name (l_special_type, a_file)
-							a_file.put_character ('[')
-							a_file.put_character ('1')
-							a_file.put_character (']')
-							a_file.put_character (';')
-							a_file.put_character (' ')
-							a_file.put_character ('/')
-							a_file.put_character ('*')
-							a_file.put_character (' ')
-							a_file.put_character ('i')
-							a_file.put_character ('t')
-							a_file.put_character ('e')
-							a_file.put_character ('m')
-							a_file.put_character (' ')
-							a_file.put_character ('*')
-							a_file.put_character ('/')
-							a_file.put_new_line
-						else
-							l_tuple_type ?= l_type
-							if l_tuple_type /= Void then
-								l_item_type_sets := l_tuple_type.item_type_sets
-								nb2 := l_item_type_sets.count
-								from j := 1 until j > nb2 loop
-									a_file.put_character ('%T')
-									print_type_declaration (l_item_type_sets.item (j).static_type, a_file)
-									a_file.put_character (' ')
-									print_attribute_tuple_item_name (j, l_tuple_type, a_file)
-									a_file.put_character (';')
-									a_file.put_new_line
-									j := j + 1
-								end
-							else
-								l_function_type ?= l_type
-								if l_function_type /= Void then
-										-- Function pointer.
-									a_file.put_character ('%T')
-									print_type_declaration (l_function_type.result_type_set.static_type, a_file)
-									a_file.put_character (' ')
-									a_file.put_character ('(')
-									a_file.put_character ('*')
-									a_file.put_character ('f')
-									a_file.put_character (')')
-									a_file.put_character ('(')
-									print_type_declaration (l_type, a_file)
-									l_open_operand_type_sets := l_function_type.open_operand_type_sets
-									nb2 := l_open_operand_type_sets.count
-									from j := 1 until j > nb2 loop
-										a_file.put_character (',')
-										a_file.put_character (' ')
-										print_type_declaration (l_open_operand_type_sets.item (j).static_type, a_file)
-										j := j + 1
-									end
-									a_file.put_character (')')
-									a_file.put_character (';')
-									a_file.put_new_line
-								else
-									l_procedure_type ?= l_type
-									if l_procedure_type /= Void then
-											-- Function pointer.
-										a_file.put_character ('%T')
-										a_file.put_string (c_void)
-										a_file.put_character (' ')
-										a_file.put_character ('(')
-										a_file.put_character ('*')
-										a_file.put_character ('f')
-										a_file.put_character (')')
-										a_file.put_character ('(')
-										print_type_declaration (l_type, a_file)
-										l_open_operand_type_sets := l_procedure_type.open_operand_type_sets
-										nb2 := l_open_operand_type_sets.count
-										from j := 1 until j > nb2 loop
-											a_file.put_character (',')
-											a_file.put_character (' ')
-											print_type_declaration (l_open_operand_type_sets.item (j).static_type, a_file)
-											j := j + 1
-										end
-										a_file.put_character (')')
-										a_file.put_character (';')
-										a_file.put_new_line
-									end
-								end
-							end
-						end
-						a_file.put_character ('}')
-						a_file.put_character (';')
-						a_file.put_new_line
-						a_file.put_new_line
-					end
-				end
-				i := i + 1
-			end
-				-- Type EIF_TYPE representing Eiffel types.
+		end
+
+	print_boolean_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "BOOLEAN".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_boolean)
+		end
+
+	print_character_8_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "CHARACTER_8".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_character_8)
+		end
+
+	print_character_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "CHARACTER_32".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_character_32)
+		end
+
+	print_character_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "CHARACTER".
+			-- This should not be needed anymore if compliant to ECMA 367.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_character)
+		end
+
+	print_wide_character_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "WIDE_CHARACTER".
+			-- This should not be needed anymore if compliant to ECMA 367.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_wide_char)
+		end
+
+	print_integer_8_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "INTEGER_8".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_integer_8)
+		end
+
+	print_integer_16_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "INTEGER_16".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_integer_16)
+		end
+
+	print_integer_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "INTEGER_32".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_integer_32)
+		end
+
+	print_integer_64_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "INTEGER_64".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_integer_64)
+		end
+
+	print_integer_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "INTEGER".
+			-- This should not be needed anymore if compliant to ECMA 367.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_integer)
+		end
+
+	print_natural_8_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "NATURAL_8".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_natural_8)
+		end
+
+	print_natural_16_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "NATURAL_16".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_natural_16)
+		end
+
+	print_natural_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "NATURAL_32".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_natural_32)
+		end
+
+	print_natural_64_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "NATURAL_64".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_natural_64)
+		end
+
+	print_natural_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "NATURAL".
+			-- This should not be needed anymore if compliant to ECMA 367.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_natural)
+		end
+
+	print_real_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "REAL_32".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_real_32)
+		end
+
+	print_real_64_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "REAL_64".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_real_64)
+		end
+
+	print_real_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "REAL".
+			-- This should not be needed anymore if compliant to ECMA 367.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_real_32)
+		end
+
+	print_double_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "DOUBLE".
+			-- This should not be needed anymore if compliant to ECMA 367.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_real_64)
+		end
+
+	print_pointer_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "POINTER".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_pointer)
+		end
+
+	print_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
 			a_file.put_string (c_typedef)
 			a_file.put_character (' ')
 			a_file.put_string (c_struct)
 			a_file.put_character (' ')
-			a_file.put_character ('{')
-			a_file.put_new_line
-			a_file.put_character ('%T')
-			a_file.put_string (c_int)
+			print_struct_name (a_type, a_file)
 			a_file.put_character (' ')
-			print_attribute_type_id_name (current_system.any_type, a_file)
+			print_type_name (a_type, a_file)
 			a_file.put_character (';')
 			a_file.put_new_line
-			a_file.put_character ('%T')
-			a_file.put_string (c_eif_boolean)
+		end
+
+	print_boxed_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the type definition of the boxed version of `a_type'.
+			-- (The boxed version of a type makes sure that each object
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_typedef)
 			a_file.put_character (' ')
-			a_file.put_string (c_is_special)
+			a_file.put_string (c_struct)
+			a_file.put_character (' ')
+			print_boxed_struct_name (a_type, a_file)
+			a_file.put_character (' ')
+			print_boxed_type_name (a_type, a_file)
 			a_file.put_character (';')
 			a_file.put_new_line
-			a_file.put_character ('}')
-			a_file.put_character (' ')
-			a_file.put_string (c_eif_type)
-			a_file.put_character (';')
-			a_file.put_new_line
-			a_file.put_new_line
+		end
+
+	print_type_struct (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' declaration of C struct corresponding to `a_type', if_any.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_function_type: ET_DYNAMIC_FUNCTION_TYPE
+			l_procedure_type: ET_DYNAMIC_PROCEDURE_TYPE
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			i, nb: INTEGER
+		do
+			if
+				not a_type.is_expanded or else
+				(a_type /= current_system.boolean_type and
+				a_type /= current_system.character_8_type and
+				a_type /= current_system.character_32_type and
+				a_type /= current_system.integer_8_type and
+				a_type /= current_system.integer_16_type and
+				a_type /= current_system.integer_32_type and
+				a_type /= current_system.integer_64_type and
+				a_type /= current_system.natural_8_type and
+				a_type /= current_system.natural_16_type and
+				a_type /= current_system.natural_32_type and
+				a_type /= current_system.natural_64_type and
+				a_type /= current_system.real_32_type and
+				a_type /= current_system.real_64_type and
+				a_type /= current_system.pointer_type)
+			then
+				a_file.put_character ('/')
+				a_file.put_character ('*')
+				a_file.put_character (' ')
+				a_file.put_string ("Struct for type ")
+				a_file.put_string (a_type.static_type.base_type.to_text)
+				a_file.put_character (' ')
+				a_file.put_character ('*')
+				a_file.put_character ('/')
+				a_file.put_new_line
+				a_file.put_string (c_struct)
+				a_file.put_character (' ')
+				print_struct_name (a_type, a_file)
+				a_file.put_character (' ')
+				a_file.put_character ('{')
+				a_file.put_new_line
+				if not a_type.is_expanded or else a_type.is_generic then
+					a_file.put_character ('%T')
+					a_file.put_string (c_int)
+					a_file.put_character (' ')
+					print_attribute_type_id_name (a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_new_line
+				end
+				l_queries := a_type.queries
+				nb := l_queries.count
+				from i := 1 until i > nb loop
+					l_query := l_queries.item (i)
+					if l_query.is_attribute then
+						a_file.put_character ('%T')
+						print_type_declaration (l_query.result_type_set.static_type, a_file)
+						a_file.put_character (' ')
+						print_attribute_name (l_query, a_type, a_file)
+						a_file.put_character (';')
+						a_file.put_character (' ')
+						a_file.put_character ('/')
+						a_file.put_character ('*')
+						a_file.put_character (' ')
+						a_file.put_string (l_query.static_feature.name.name)
+						a_file.put_character (' ')
+						a_file.put_character ('*')
+						a_file.put_character ('/')
+						a_file.put_new_line
+					end
+					i := i + 1
+				end
+				l_special_type ?= a_type
+				if l_special_type /= Void then
+						-- We use the "struct hack" to represent SPECIAL
+						-- object header. The last member of the struct
+						-- is an array of size 1, but we malloc the needed
+						-- space when creating the SPECIAL object. We use
+						-- an array of size 1 because some compilers don't
+						-- like having an array of size 0 here. Note that
+						-- the "struct hack" is superseded by the concept
+						-- of "flexible array member" in ISO C 99.
+					a_file.put_character ('%T')
+					print_type_declaration (current_system.integer_type, a_file)
+					a_file.put_character (' ')
+					print_attribute_special_count_name (l_special_type, a_file)
+					a_file.put_character (';')
+					a_file.put_character (' ')
+					a_file.put_character ('/')
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					a_file.put_character ('c')
+					a_file.put_character ('o')
+					a_file.put_character ('u')
+					a_file.put_character ('n')
+					a_file.put_character ('t')
+					a_file.put_character (' ')
+					a_file.put_character ('*')
+					a_file.put_character ('/')
+					a_file.put_new_line
+					a_file.put_character ('%T')
+					l_item_type_set := l_special_type.item_type_set
+					print_type_declaration (l_item_type_set.static_type, a_file)
+					a_file.put_character (' ')
+					print_attribute_special_item_name (l_special_type, a_file)
+					a_file.put_character ('[')
+					a_file.put_character ('1')
+					a_file.put_character (']')
+					a_file.put_character (';')
+					a_file.put_character (' ')
+					a_file.put_character ('/')
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					a_file.put_character ('i')
+					a_file.put_character ('t')
+					a_file.put_character ('e')
+					a_file.put_character ('m')
+					a_file.put_character (' ')
+					a_file.put_character ('*')
+					a_file.put_character ('/')
+					a_file.put_new_line
+				else
+					l_tuple_type ?= a_type
+					if l_tuple_type /= Void then
+						l_item_type_sets := l_tuple_type.item_type_sets
+						nb := l_item_type_sets.count
+						from i := 1 until i > nb loop
+							a_file.put_character ('%T')
+							print_type_declaration (l_item_type_sets.item (i).static_type, a_file)
+							a_file.put_character (' ')
+							print_attribute_tuple_item_name (i, l_tuple_type, a_file)
+							a_file.put_character (';')
+							a_file.put_new_line
+							i := i + 1
+						end
+					else
+						l_function_type ?= a_type
+						if l_function_type /= Void then
+								-- Function pointer.
+							a_file.put_character ('%T')
+							print_type_declaration (l_function_type.result_type_set.static_type, a_file)
+							a_file.put_character (' ')
+							a_file.put_character ('(')
+							a_file.put_character ('*')
+							a_file.put_character ('f')
+							a_file.put_character (')')
+							a_file.put_character ('(')
+							print_type_declaration (a_type, a_file)
+							l_open_operand_type_sets := l_function_type.open_operand_type_sets
+							nb := l_open_operand_type_sets.count
+							from i := 1 until i > nb loop
+								a_file.put_character (',')
+								a_file.put_character (' ')
+								print_type_declaration (l_open_operand_type_sets.item (i).static_type, a_file)
+								i := i + 1
+							end
+							a_file.put_character (')')
+							a_file.put_character (';')
+							a_file.put_new_line
+						else
+							l_procedure_type ?= a_type
+							if l_procedure_type /= Void then
+									-- Function pointer.
+								a_file.put_character ('%T')
+								a_file.put_string (c_void)
+								a_file.put_character (' ')
+								a_file.put_character ('(')
+								a_file.put_character ('*')
+								a_file.put_character ('f')
+								a_file.put_character (')')
+								a_file.put_character ('(')
+								print_type_declaration (a_type, a_file)
+								l_open_operand_type_sets := l_procedure_type.open_operand_type_sets
+								nb := l_open_operand_type_sets.count
+								from i := 1 until i > nb loop
+									a_file.put_character (',')
+									a_file.put_character (' ')
+									print_type_declaration (l_open_operand_type_sets.item (i).static_type, a_file)
+									i := i + 1
+								end
+								a_file.put_character (')')
+								a_file.put_character (';')
+								a_file.put_new_line
+							end
+						end
+					end
+				end
+				a_file.put_character ('}')
+				a_file.put_character (';')
+				a_file.put_new_line
+				a_file.put_new_line
+			end
+		end
+
+	print_boxed_type_struct (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' declaration of C struct corresponding to boxed version of `a_type', if_any.
+			-- (The boxed version of a type makes sure that each object
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if a_type.is_expanded and not a_type.is_generic then
+				a_file.put_character ('/')
+				a_file.put_character ('*')
+				a_file.put_character (' ')
+				a_file.put_string ("Struct for boxed version of type ")
+				a_file.put_string (a_type.static_type.base_type.to_text)
+				a_file.put_character (' ')
+				a_file.put_character ('*')
+				a_file.put_character ('/')
+				a_file.put_new_line
+				a_file.put_string (c_struct)
+				a_file.put_character (' ')
+				print_boxed_struct_name (a_type, a_file)
+				a_file.put_character (' ')
+				a_file.put_character ('{')
+				a_file.put_new_line
+				a_file.put_character ('%T')
+				a_file.put_string (c_int)
+				a_file.put_character (' ')
+				print_attribute_type_id_name (a_type, a_file)
+				a_file.put_character (';')
+				a_file.put_new_line
+				a_file.put_character ('%T')
+				print_type_declaration (a_type, a_file)
+				a_file.put_character (' ')
+				print_boxed_attribute_item_name (a_type, a_file)
+				a_file.put_character (';')
+				a_file.put_character (' ')
+				a_file.put_character ('/')
+				a_file.put_character ('*')
+				a_file.put_character (' ')
+				a_file.put_character ('i')
+				a_file.put_character ('t')
+				a_file.put_character ('e')
+				a_file.put_character ('m')
+				a_file.put_character (' ')
+				a_file.put_character ('*')
+				a_file.put_character ('/')
+				a_file.put_new_line
+				a_file.put_character ('}')
+				a_file.put_character (';')
+				a_file.put_new_line
+				a_file.put_new_line
+			end
 		end
 
 	print_getypes_array is
@@ -16941,7 +17307,8 @@ feature {NONE} -- Type generation
 	print_boxed_type_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print name of boxed version of `a_type' to `a_file'.
 			-- (The boxed version of a type makes sure that each object
-			-- of that type contains its type-id.)
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
@@ -16983,7 +17350,8 @@ feature {NONE} -- Type generation
 	print_boxed_struct_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print name of C struct corresponding to the boxed version of `a_type' to `a_file'.
 			-- (The boxed version of a type makes sure that each object
-			-- of that type contains its type-id.)
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
@@ -17039,7 +17407,8 @@ feature {NONE} -- Type generation
 	print_boxed_type_declaration (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print declaration of boxed version of `a_type' to `a_file'.
 			-- (The boxed version of a type makes sure that each object
-			-- of that type contains its type-id.)
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
@@ -17067,7 +17436,8 @@ feature {NONE} -- Type generation
 	print_boxed_type_cast (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print type cast of boxed version of `a_type' to `a_file'.
 			-- (The boxed version of a type makes sure that each object
-			-- of that type contains its type-id.)
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
@@ -17253,6 +17623,9 @@ feature {NONE} -- Feature name generation
 
 	print_boxed_attribute_item_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print name of 'item' pseudo attribute of boxed version of `a_type' to `a_file'.
+			-- (The boxed version of a type makes sure that each object
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
