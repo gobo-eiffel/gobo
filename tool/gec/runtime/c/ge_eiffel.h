@@ -96,8 +96,6 @@ typedef uint64_t EIF_NATURAL_64;
 typedef void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
-#define EIF_PROCEDURE EIF_POINTER
-#define INTEGER EIF_INTEGER_32
 
 #define EIF_VOID ((EIF_REFERENCE)0)
 #define EIF_FALSE ((EIF_BOOLEAN)'\0')
@@ -124,9 +122,6 @@ typedef double EIF_REAL_64;
 #endif 
 #endif 
 
-/* Interoperability with ISE */
-#define RTI64C(x) geint64(x)
-
 /* Memory allocation, GC */
 #define gealloc(x) calloc((x),1)
 
@@ -134,6 +129,20 @@ typedef double EIF_REAL_64;
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
 #define snprintf(a,b,c,d) sprintf(a,c,d)
 #endif
+
+/*
+ * Interoperability with ISE.
+ */
+
+#define RTI64C(x) geint64(x)
+#define EIF_PROCEDURE EIF_POINTER
+#define INTEGER EIF_INTEGER_32
+#define EIF_OBJ EIF_OBJECT
+/* Function pointer call to make sure all arguments are correctly pushed onto stack. */
+/* FUNCTION_CAST is for standard C calls. */
+/* FUNCTION_CAST_TYPE is for non-standard C calls. */
+#define FUNCTION_CAST(r_type,arg_types) (r_type (*) arg_types)
+#define FUNCTION_CAST_TYPE(r_type,call_type,arg_types) (r_type (call_type *) arg_types)
 
 #ifdef __cplusplus
 }
