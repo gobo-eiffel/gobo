@@ -195,10 +195,23 @@ feature -- Element change
 			end
 		end
 
+feature -- Basic operations
+
+	suppress_late_open is
+			-- Suppress writing of XML declaration on close.
+		do
+			is_no_declaration_on_close := True
+		ensure
+			no_declaration_written_on_close: is_no_declaration_on_close
+		end
+
 feature {NONE} -- Implementation
 
 	transformer: XM_XSLT_TRANSFORMER
 			-- Transformer
+
+	is_no_declaration_on_close: BOOLEAN
+			-- Should writing of XML declaration be suppresed from `close'?
 
 invariant
 

@@ -325,10 +325,6 @@ feature -- Element change
 			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)
 		do
 			set_method ("xml", an_import_precedence)
-			set_default_indent (False)
-			set_default_version ("1.0")
-			set_default_media_type ("text/xml")
-			set_default_character_representation ("hex")
 		ensure
 			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
 			method_is_xml: STRING_.same_string (method, "xml")
@@ -344,10 +340,6 @@ feature -- Element change
 			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)		
 		do
 			set_method ("html", an_import_precedence)
-			set_default_indent (True)
-			set_default_version ("4.01")
-			set_default_media_type ("text/html")
-			set_default_character_representation ("entity;decimal")
 		ensure
 			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
 			method_is_html: STRING_.same_string (method, "html")
@@ -362,10 +354,7 @@ feature -- Element change
 		require
 			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)		
 		do
-			set_html_defaults (an_import_precedence)
 			set_method ("xhtml", an_import_precedence)
-			set_default_version ("1.0")
-			set_default_character_representation ("hex")
 		ensure
 			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
 			method_is_xhtml: STRING_.same_string (method, "xhtml")
@@ -381,7 +370,6 @@ feature -- Element change
 			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)		
 		do
 			set_method ("text", an_import_precedence)
-			set_default_media_type ("text/plain")
 		ensure
 			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
 			method_is_text: STRING_.same_string (method, "text")
@@ -396,6 +384,24 @@ feature -- Element change
 		do
 			precedence_property_map.force (an_import_precedence, Method_attribute)
 			method := an_expanded_name
+			if STRING_.same_string (method, "xml") then
+				set_default_indent (False)
+				set_default_version ("1.0")
+				set_default_media_type ("text/xml")
+				set_default_character_representation ("hex")
+			elseif STRING_.same_string (method, "xhtml") then
+				set_default_version ("1.0")
+				set_default_character_representation ("hex")
+				set_default_indent (True)
+				set_default_media_type ("text/html")
+			elseif STRING_.same_string (method, "html") then
+				set_default_indent (True)
+				set_default_version ("4.01")
+				set_default_media_type ("text/html")
+				set_default_character_representation ("entity;decimal")
+			elseif STRING_.same_string (method, "text") then
+				set_default_media_type ("text/plain")
+			end
 		ensure
 			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
 			method_set: STRING_.same_string (method, an_expanded_name)

@@ -20,6 +20,8 @@ inherit
 	XM_XSLT_EMITTER
 		rename
 			outputter as encoder
+		redefine
+			suppress_late_open
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
@@ -225,6 +227,17 @@ feature -- Events
 			committed: committed
 		end
 
+feature -- Basic operations
+
+	suppress_late_open is
+			-- Suppress writing of XML declaration on close.
+		do
+			is_no_declaration_on_close := True
+			if committed then
+				base_emitter.suppress_late_open
+			end
+		end
+	
 feature {NONE} -- Implementation
 
 	committed: BOOLEAN
@@ -232,6 +245,9 @@ feature {NONE} -- Implementation
 
 	base_receiver: XM_XPATH_RECEIVER
 			-- Emitter/indenter to which events are forwarded
+
+	base_emitter: XM_XSLT_EMITTER
+			-- Emitter to which events are ultimately forwarded
 
 	outputter: XM_OUTPUT
 			-- Writer of encoded strings
@@ -253,21 +269,15 @@ feature {NONE} -- Implementation
 			-- Switch to an XML emitter.
 		require
 			not_yet_committed: not committed
-		local
-			an_xml_emitter: XM_XSLT_XML_EMITTER
-			an_xml_indenter: XM_XSLT_XML_INDENTER
-			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
 			output_properties.set_xml_defaults (Platform.Maximum_integer)
-			create an_xml_emitter.make (transformer, outputter, output_properties, character_map_expander)
-			base_receiver := an_xml_emitter
+			create {XM_XSLT_XML_EMITTER} base_emitter.make (transformer, outputter, output_properties, character_map_expander)
+			base_receiver := base_emitter
 			if output_properties.indent then
-				create an_xml_indenter.make (transformer, an_xml_emitter, output_properties)
-				base_receiver := an_xml_indenter
+				create {XM_XSLT_XML_INDENTER} base_receiver.make (transformer, base_emitter, output_properties)
 			end
 			if output_properties.cdata_section_elements.count > 0 then
-				create a_cdata_filter.make (base_receiver, an_xml_emitter, output_properties)
-				base_receiver := a_cdata_filter
+				create {XM_XSLT_CDATA_FILTER} base_receiver.make (base_receiver, base_emitter, output_properties)
 			end
 			switch
 		ensure
@@ -278,16 +288,12 @@ feature {NONE} -- Implementation
 			-- Switch to an HTML emitter.
 		require
 			not_yet_committed: not committed
-		local
-			an_html_emitter: XM_XSLT_HTML_EMITTER
-			an_html_indenter: XM_XSLT_HTML_INDENTER
 		do
 			output_properties.set_html_defaults (Platform.Maximum_integer)
-			create an_html_emitter.make (transformer, outputter, output_properties, character_map_expander)
-			base_receiver := an_html_emitter
+			create {XM_XSLT_HTML_EMITTER} base_emitter.make (transformer, outputter, output_properties, character_map_expander)
+			base_receiver := base_emitter
 			if output_properties.indent then
-				create an_html_indenter.make (transformer, an_html_emitter, output_properties)
-				base_receiver := an_html_indenter
+				create {XM_XSLT_HTML_INDENTER} base_receiver.make (transformer, base_emitter, output_properties)
 			end
 			switch
 		ensure
@@ -298,21 +304,15 @@ feature {NONE} -- Implementation
 			-- Switch to an XHTML emitter.
 		require
 			not_yet_committed: not committed
-		local
-			an_xhtml_emitter: XM_XSLT_XHTML_EMITTER
-			an_html_indenter: XM_XSLT_XHTML_INDENTER
-			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
 			output_properties.set_xhtml_defaults (Platform.Maximum_integer)
-			create an_xhtml_emitter.make (transformer, outputter, output_properties, character_map_expander)
-			base_receiver := an_xhtml_emitter
+			create {XM_XSLT_XHTML_EMITTER} base_emitter.make (transformer, outputter, output_properties, character_map_expander)
+			base_receiver := base_emitter
 			if output_properties.indent then
-				create an_html_indenter.make (transformer, an_xhtml_emitter, output_properties)
-				base_receiver := an_html_indenter
+				create {XM_XSLT_XHTML_INDENTER} base_receiver.make (transformer, base_emitter, output_properties)
 			end
 			if output_properties.cdata_section_elements.count > 0 then
-				create a_cdata_filter.make (base_receiver, an_xhtml_emitter, output_properties)
-				base_receiver := a_cdata_filter
+				create {XM_XSLT_CDATA_FILTER} base_receiver.make (base_receiver, base_emitter, output_properties)
 			end
 			switch
 		ensure
@@ -329,6 +329,9 @@ feature {NONE} -- Implementation
 			an_event: XM_XSLT_PENDING_EVENT
 		do
 			committed := True
+			if is_no_declaration_on_close then
+				suppress_late_open
+			end
 			base_receiver.open
 			base_receiver.start_document
 			if pending_event_list /= Void then
@@ -359,7 +362,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	committed: committed implies base_receiver /= Void
+	base_receiver: committed implies base_receiver /= Void
+	base_emitter: committed implies base_emitter /= Void
 	outputter: outputter /= Void
 
 end

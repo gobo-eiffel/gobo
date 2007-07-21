@@ -129,9 +129,6 @@ feature -- Access
 	principal_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			-- Receiver for unnamed output definition
 
-	principal_emitter: XM_XSLT_EMITTER
-			-- Destination emitter
-
 	document_pool: XM_XPATH_DOCUMENT_POOL
 			-- Document pool
 
@@ -331,7 +328,7 @@ feature -- Creation
 			builder_not_void: Result /= Void
 		end
 
-feature -- Element change
+feature -- Basic operations
 
 	save_function_results (a_result_table: DS_HASH_TABLE [XM_XPATH_VALUE, STRING]; a_function: XM_XSLT_COMPILED_USER_FUNCTION) is
 			-- User data associated with `an_object'
@@ -535,20 +532,38 @@ feature -- Element change
 			encoding_cleared: last_unparsed_encoding = Void
 		end
 
-	set_principal_receiver_properties (a_properties: XM_XSLT_OUTPUT_PROPERTIES) is
-			-- Set `a_properties' on target emitter of `principal_receiver'.
+	discard_principal_emitter is
+			-- Close principal receiver and ensure no XML declaration is written.
 		require
 			principal_receiver_not_void: principal_receiver /= Void
-			a_properties_not_void: a_properties /= Void
+		local
+ 			l_complex: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
+ 			l_receiver: XM_XPATH_RECEIVER
+ 			l_proxy: XM_XPATH_PROXY_RECEIVER
+			l_emitter: XM_XSLT_EMITTER
 		do
-			find_principal_emitter
-			if principal_emitter /= Void then
-				principal_emitter.set_output_properties (a_properties)
+ 			l_complex ?= principal_receiver
+			if l_complex /= Void then
+				from
+ 					l_receiver := l_complex.next_receiver
+  					l_proxy ?= l_receiver
+  				until
+					l_proxy = Void
+				loop
+ 					l_receiver := l_proxy.base_receiver
+ 					l_proxy ?= l_receiver
+ 				end
+ 				l_emitter ?= l_receiver
+			else
+				l_emitter ?= principal_receiver
+ 			end
+			if l_emitter /= Void then
+				l_emitter.suppress_late_open
 			end
-		ensure
-			properties_set: principal_emitter /= Void implies principal_emitter.output_properties = a_properties
+			principal_receiver.end_document
+			principal_receiver.close
 		end
-
+		
 feature -- Transformation
 
 	transform (a_source: XM_XSLT_SOURCE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
@@ -733,6 +748,7 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 				if not is_error then
 					initial_context.change_output_destination (properties, a_transformation_result, True, Validation_preserve, Void)
 					principal_receiver := initial_context.current_receiver
+					principal_result.set_principal_receiver (principal_receiver)
 					check
 						opened: principal_receiver.is_open
 						-- change_output_destination ensures this
@@ -756,10 +772,14 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 					if is_tracing then
 						trace_listener.stop_tracing
 					end
-
-					principal_receiver.end_document
-					principal_receiver.close
-					principal_result.flush
+					if not principal_receiver.is_document_started and principal_receiver.is_written then
+						report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", principal_result_uri),
+							Xpath_errors_uri, "XTDE1490", Dynamic_error))
+					elseif principal_receiver.is_document_started then
+						principal_receiver.end_document
+						principal_receiver.close
+						principal_result.flush
+					end
 					if a_transformation_result.error_message /= Void then
 						report_warning (a_transformation_result.error_message, Void)
 					end
@@ -900,11 +920,9 @@ feature -- Implementation
 					-- compiler ensures this
 				end
 				Result := emitter_factory.new_receiver (l_method_uri, l_method_local_name, Current, a_result.stream, some_properties,  l_character_map_index)
-				a_result.set_principal_receiver (Result)
 			end
 		ensure
 			selected_receiver_not_void: Result /= Void or else is_error
-			principal_receiver_set: Result /= Void implies a_result.principal_receiver /= Void
 		end
 
 	initialize_transformer (a_start_node: XM_XPATH_NODE) is
@@ -1040,30 +1058,6 @@ feature -- Implementation
 			end
 		ensure
 			error_or_not_void: not is_error implies Result /= Void
-		end
-
-	find_principal_emitter is
-			-- Find emitter attached to `principal_receiver'.
-		require
-			principal_receiver_not_void: principal_receiver /= Void
-		local
-			l_complex: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
-			l_receiver: XM_XPATH_RECEIVER
-			l_proxy: XM_XPATH_PROXY_RECEIVER
-		do
-			l_complex ?= principal_receiver
-			if l_complex /= Void then
-				from
-					l_receiver := l_complex.next_receiver
-					l_proxy ?= l_receiver
-				until
-					l_proxy = Void
-				loop
-					l_receiver := l_proxy.base_receiver
-					l_proxy ?= l_receiver
-				end
-				principal_emitter ?= l_receiver
-			end
 		end
 
 invariant

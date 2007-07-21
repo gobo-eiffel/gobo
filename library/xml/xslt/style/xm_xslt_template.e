@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 					create a_splitter.make
 					mode_tokens := a_splitter.split (a_mode_attribute)
 					if mode_tokens.count = 0 then
-						create an_error.make_from_string ("The mode attribute must not be empty", Xpath_errors_uri, "XTSE0020", Static_error)
+						create an_error.make_from_string ("The mode attribute must not be empty", Xpath_errors_uri, "XTSE0550", Static_error)
 						report_compile_error (an_error)
 					else
 						create mode_name_codes.make (mode_tokens.count)

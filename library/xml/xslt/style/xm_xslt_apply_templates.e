@@ -53,48 +53,52 @@ feature -- Element change
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_name_code: INTEGER
-			an_expanded_name, a_select_attribute, a_mode_attribute: STRING
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_name_code: INTEGER
+			l_expanded_name, l_select_attribute, l_mode_attribute: STRING
 		do
 			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
+				l_cursor := attribute_collection.name_code_cursor
+				l_cursor.start
 			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				attribute_collection.number_of_attributes + 1 - l_cursor.index				
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Select_attribute) then
-					a_select_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_select_attribute)
-					STRING_.right_adjust (a_select_attribute)
-				elseif STRING_.same_string (an_expanded_name, Mode_attribute) then
-					a_mode_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_mode_attribute)
-					STRING_.right_adjust (a_mode_attribute)
+				l_name_code := l_cursor.item
+				l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
+				if STRING_.same_string (l_expanded_name, Select_attribute) then
+					l_select_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_select_attribute)
+					STRING_.right_adjust (l_select_attribute)
+				elseif STRING_.same_string (l_expanded_name, Mode_attribute) then
+					l_mode_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_mode_attribute)
+					STRING_.right_adjust (l_mode_attribute)
 				else
-					check_unknown_attribute (a_name_code)
+					check_unknown_attribute (l_name_code)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
-			if a_select_attribute /= Void then
-				generate_expression (a_select_attribute)
+			if l_select_attribute /= Void then
+				generate_expression (l_select_attribute)
 				select_expression := last_generated_expression
 			end
-			if a_mode_attribute /= Void then
-				if STRING_.same_string (a_mode_attribute, "#current") then
+			if l_mode_attribute /= Void then
+				if STRING_.same_string (l_mode_attribute, "#current") then
 					use_current_mode := True
-				elseif STRING_.same_string (a_mode_attribute, "#default") then
+				elseif STRING_.same_string (l_mode_attribute, "#default") then
 					-- do nothing
 				else
-					generate_name_code (a_mode_attribute)
-					if last_generated_name_code = -1 then
-						report_compile_error (name_code_error_value)
+					if is_qname (l_mode_attribute) then
+						generate_name_code (l_mode_attribute)
+						if last_generated_name_code = -1 then
+							report_compile_error (name_code_error_value)
+						end
+						mode_name_code := last_generated_name_code
+					else
+						report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (l_mode_attribute, " is not a valid lexical QName"), Xpath_errors_uri, "XTSE0020", Static_error))
 					end
-					mode_name_code := last_generated_name_code
 				end
 			end
 			attributes_prepared := True

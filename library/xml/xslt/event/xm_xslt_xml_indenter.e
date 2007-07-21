@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; a_receiver: XM_XSLT_XML_EMITTER; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	make (a_transformer: XM_XSLT_TRANSFORMER; a_receiver: XM_XSLT_EMITTER; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 	indent_spaces: INTEGER
 			-- Number of spaces to use when indenting
 
-	emitter: XM_XSLT_XML_EMITTER
+	emitter: XM_XSLT_EMITTER
 			-- Base receiver
 
 	is_same_line, is_after_tag, is_allwhite: BOOLEAN

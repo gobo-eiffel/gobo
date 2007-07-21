@@ -18,7 +18,8 @@ inherit
 		redefine
 			open, start_document, notify_characters, start_element,
 			notify_namespace, notify_attribute, end_element,
-			notify_processing_instruction, notify_comment
+			notify_processing_instruction, notify_comment,
+			write_declaration
 		end
 
 create
@@ -120,6 +121,14 @@ feature -- Events
 			-- Notify a comment.
 		do
 			mark_as_written
+		end
+
+feature {NONE} -- Implementation
+
+	write_declaration is
+			-- Write XML declaration
+		do
+			-- No declaration is ever written for text method.
 		end
 
 end

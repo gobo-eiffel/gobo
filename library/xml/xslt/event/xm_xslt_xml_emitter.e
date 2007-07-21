@@ -107,7 +107,7 @@ feature -- Events
 	close is
 			-- Notify end of event stream.
 		do
-			if not is_error and not is_output_open then
+			if not is_error and not is_output_open and not is_no_declaration_on_close then
 				open_document
 			end
 			if outputter /= Void then

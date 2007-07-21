@@ -305,7 +305,6 @@ feature -- Evaluation
 			an_iri_reference,	l_uri_to_use: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
-			l_default: BOOLEAN
 		do
 			l_transformer := a_context.transformer
 			l_new_context := a_context.new_minor_context
@@ -324,8 +323,8 @@ feature -- Evaluation
 						l_error.set_location (system_id, line_number)
 						l_transformer.report_fatal_error (l_error)
 					else
+						l_transformer.discard_principal_emitter
 						process_formatting_attributes (l_new_context, l_transformer)
-						l_default := True
 					end
 				else
 					href.evaluate_as_string (a_context)
@@ -343,7 +342,7 @@ feature -- Evaluation
 							Xpath_errors_uri, "XTRE1500", Dynamic_error)
 							l_error.set_location (system_id, line_number)
 							l_transformer.report_fatal_error (l_error)
-						elseif STRING_.same_string (l_transformer.principal_result_uri, l_uri_to_use) or l_output_resolver.output_destinations.has (l_uri_to_use) then
+						elseif (l_transformer.principal_result.is_document_started and STRING_.same_string (l_transformer.principal_result_uri, l_uri_to_use)) or l_output_resolver.output_destinations.has (l_uri_to_use) then
 							create l_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", l_uri_to_use),
 																		 Xpath_errors_uri, "XTDE1490", Dynamic_error)
 							l_error.set_location (system_id, line_number)
@@ -356,6 +355,9 @@ feature -- Evaluation
 								l_error.set_location (system_id, line_number)
 								l_transformer.report_fatal_error (l_error)
 							else
+								if STRING_.same_string (l_transformer.principal_result_uri, l_uri_to_use) then
+									l_transformer.discard_principal_emitter
+								end
 								process_formatting_attributes (l_new_context, l_transformer)
 							end
 						end
@@ -365,18 +367,11 @@ feature -- Evaluation
 			if not l_transformer.is_error then
 				-- TODO - next-in-chain processing
 				l_new_context.change_output_destination (computed_property_set, l_result, True, validation_action, schema_type)
-				if l_default then
-					l_transformer.set_principal_receiver_properties (computed_property_set)
-					l_new_context.set_current_receiver (l_transformer.principal_receiver)
-				else
-					l_receiver := l_new_context.current_receiver
-					l_receiver.start_document
-				end
+				l_receiver := l_new_context.current_receiver
+				l_receiver.start_document
 				content.generate_events (l_new_context)
-				if not l_default then
-					l_receiver.end_document
-					l_receiver.close
-				end
+				l_receiver.end_document
+				l_receiver.close
 				l_output_resolver.close (l_result, computed_property_set)
 				if l_result.error_message /= Void then
 					l_transformer.report_warning (l_result.error_message, Void)

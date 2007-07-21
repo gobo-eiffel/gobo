@@ -425,7 +425,7 @@ feature -- Evaluation
 				l_group_iterator.error_value.set_location (system_id, line_number)
 				l_evaluation_context.transformer.report_fatal_error (l_group_iterator.error_value)
 			else
-				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (l_group_iterator.as_node_iterator, Current, l_new_context)
+				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (l_group_iterator.as_node_iterator, Current, l_new_context)
 			end
 		end
 

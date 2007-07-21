@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
  		require
 			selected_nodes_not_void: a_value /= Void
-			mode_not_void: a_mode /= Void
 			major_context_not_void: a_context /= Void and then not a_context.is_minor
 			some_parameters_not_void: some_parameters /= Void
 			some_tunnel_parameters_not_void: some_tunnel_parameters /= Void
@@ -84,7 +83,6 @@ feature {NONE} -- Implementation
 invariant
 
 	selected_nodes_not_void: selected_nodes /= Void
-	mode_not_void: mode /= Void
 	saved_context_not_void: execution_context /= Void
 	parameters_not_void: actual_parameters /= Void
 	tunnel_parameters_not_void: tunnel_parameters /= Void
