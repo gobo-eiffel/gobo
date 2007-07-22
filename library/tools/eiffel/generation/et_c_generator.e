@@ -556,6 +556,9 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				print_types (header_file)
 				header_file.put_new_line
+				print_gedefault_declarations
+				header_file.put_new_line
+				l_c_file.put_new_line
 				print_gems_function
 				l_c_file.put_new_line
 					-- Print polymorphic calls.
@@ -901,6 +904,7 @@ feature {NONE} -- Feature generation
 			is_creation: a_creation implies current_feature.is_creation
 		local
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type: ET_DYNAMIC_TYPE
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_argument_type: ET_DYNAMIC_TYPE
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -938,8 +942,9 @@ feature {NONE} -- Feature generation
 			header_file.put_character (' ')
 			l_result_type_set := current_feature.result_type_set
 			if l_result_type_set /= Void then
-				print_type_declaration (l_result_type_set.static_type, header_file)
-				print_type_declaration (l_result_type_set.static_type, current_file)
+				l_result_type := l_result_type_set.static_type
+				print_type_declaration (l_result_type, header_file)
+				print_type_declaration (l_result_type, current_file)
 			elseif a_creation then
 				print_type_declaration (current_type, header_file)
 				print_type_declaration (current_type, current_file)
@@ -1036,15 +1041,15 @@ feature {NONE} -- Feature generation
 				l_is_inline := True
 				l_is_cpp := True
 			end
-			if not l_is_inline and l_result_type_set /= Void then
+			if not l_is_inline and l_result_type /= Void then
 				print_indentation
-				print_type_declaration (l_result_type_set.static_type, current_file)
+				print_type_declaration (l_result_type, current_file)
 				current_file.put_character (' ')
 				print_result_name (current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_character ('0')
+				print_gedefault_entity_value (l_result_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -1196,7 +1201,7 @@ feature {NONE} -- Feature generation
 			else
 print ("**** language not recognized: " + l_language_string + "%N")
 			end
-			if not l_is_inline and l_result_type_set /= Void then
+			if not l_is_inline and l_result_type /= Void then
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
@@ -2596,6 +2601,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_local_type_set: ET_DYNAMIC_TYPE_SET
+			l_local_type: ET_DYNAMIC_TYPE
 			l_once_feature: ET_FEATURE
 			i, nb, nb_args: INTEGER
 			l_compound: ET_COMPOUND
@@ -2759,7 +2765,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_character ('0')
+				print_gedefault_entity_value (l_result_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -2775,14 +2781,15 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
+						l_local_type := l_local_type_set.static_type
 						print_indentation
-						print_type_declaration (l_local_type_set.static_type, current_file)
+						print_type_declaration (l_local_type, current_file)
 						current_file.put_character (' ')
 						print_local_name (l_name, current_file)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
-						current_file.put_character ('0')
+						print_gedefault_entity_value (l_local_type, current_file)
 						current_file.put_character (';')
 						current_file.put_new_line
 					end
@@ -3027,6 +3034,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_buffer: STRING
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type: ET_DYNAMIC_TYPE
 			l_name: ET_FEATURE_NAME
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_old_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -3045,8 +3053,9 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				print_type_declaration (l_result_type_set.static_type, header_file)
-				print_type_declaration (l_result_type_set.static_type, current_file)
+				l_result_type := l_result_type_set.static_type
+				print_type_declaration (l_result_type, header_file)
+				print_type_declaration (l_result_type, current_file)
 			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
@@ -3082,15 +3091,15 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			if l_result_type_set /= Void then
+			if l_result_type /= Void then
 				print_indentation
-				print_type_declaration (l_result_type_set.static_type, current_file)
+				print_type_declaration (l_result_type, current_file)
 				current_file.put_character (' ')
 				print_result_name (current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_character ('0')
+				print_gedefault_entity_value (l_result_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -8889,7 +8898,7 @@ feature {NONE} -- Agent generation
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					current_file.put_character ('0')
+					print_gedefault_entity_value (l_result_type, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
 					current_file := current_function_body_buffer
@@ -8997,6 +9006,7 @@ feature {NONE} -- Agent generation
 			i, nb: INTEGER
 			l_name: ET_IDENTIFIER
 			l_local_type_set: ET_DYNAMIC_TYPE_SET
+			l_local_type: ET_DYNAMIC_TYPE
 			l_rescue: ET_COMPOUND
 			l_compound: ET_COMPOUND
 			l_result: ET_RESULT
@@ -9027,7 +9037,7 @@ feature {NONE} -- Agent generation
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_character ('0')
+				print_gedefault_entity_value (l_result_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -9043,14 +9053,15 @@ feature {NONE} -- Agent generation
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
+						l_local_type := l_local_type_set.static_type
 						print_indentation
-						print_type_declaration (l_local_type_set.static_type, current_file)
+						print_type_declaration (l_local_type, current_file)
 						current_file.put_character (' ')
 						print_local_name (l_name, current_file)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
-						current_file.put_character ('0')
+						print_gedefault_entity_value (l_local_type, current_file)
 						current_file.put_character (';')
 						current_file.put_new_line
 					end
@@ -9387,7 +9398,7 @@ feature {NONE} -- Polymorphic call generation
 							print_indentation
 							current_file.put_string (c_return)
 							current_file.put_character (' ')
-							current_file.put_character ('0')
+							print_gedefault_entity_value (l_result_type, current_file)
 							current_file.put_character (';')
 							current_file.put_new_line
 							dedent
@@ -16079,8 +16090,7 @@ feature {NONE} -- Malloc
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_type_cast (current_type, current_file)
-				current_file.put_character ('0')
+				print_gedefault_name (current_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			else
@@ -16121,30 +16131,33 @@ feature {NONE} -- Malloc
 						current_file.put_character ('(')
 						print_type_declaration (l_special_type.item_type_set.static_type, current_file)
 						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
-						print_indentation
-						print_attribute_special_count_access (tokens.current_keyword, l_special_type)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						print_argument_name (l_name, current_file)
--- TODO: initialize items when expanded.
 					end
-				else
-					current_file.put_character (')')
 				end
+				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
-				print_attribute_type_id_access (tokens.current_keyword, current_type)
+				current_file.put_character ('*')
+				print_type_cast (current_type, current_file)
+				print_current_name (current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_integer (current_type.id)
+				print_gedefault_name (current_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
+				if l_special_type /= Void then
+						-- Set 'count'.
+					print_indentation
+					print_attribute_special_count_access (tokens.current_keyword, l_special_type)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_argument_name (l_name, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+-- TODO: initialize items when expanded.
+				end
 			end
 		end
 
@@ -17447,6 +17460,257 @@ feature {NONE} -- Type generation
 			print_boxed_type_name (a_type, a_file)
 			a_file.put_character ('*')
 			a_file.put_character (')')
+		end
+
+feature {NONE} -- Default initialization values generation
+
+	print_gedefault_declarations is
+			-- Print default initialization declaration of each type
+			-- to `current_file' and their signature to `header_file'.
+		local
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			l_dynamic_types := current_system.dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				if l_type.is_alive then
+					print_gedefault_declaration (l_type)
+				end
+				i := i + 1
+			end
+		end
+
+	print_gedefault_declaration (a_type: ET_DYNAMIC_TYPE) is
+			-- Print default initialization declaration of `a_type'
+			-- to `current_file' and their signature to `header_file'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			print_type_name (a_type, header_file)
+			print_type_name (a_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			print_gedefault_name (a_type, header_file)
+			print_gedefault_name (a_type, current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			print_gedefault_object_value (a_type, current_file)
+			header_file.put_character (';')
+			current_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+		end
+
+	print_gedefault_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' name of default initialization for object of type `a_type'.
+			-- (In case of expanded types being involved, this default initialization
+			-- does not take into account possible calls to 'default_create' which need
+			-- to be applied subsequently.)
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_string (c_gedefault)
+				a_file.put_integer (a_type.id)
+			else
+-- TODO: long names
+				a_file.put_string (c_gedefault)
+				a_file.put_integer (a_type.id)
+			end
+		end
+
+	print_gedefault_object_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' default initialization value for objects of type `a_type'.
+			-- (In case of expanded types being involved, this default initialization
+			-- does not take into account possible calls to 'default_create' which need
+			-- to be applied subsequently.)
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_function_type: ET_DYNAMIC_FUNCTION_TYPE
+			l_procedure_type: ET_DYNAMIC_PROCEDURE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			l_comma_needed: BOOLEAN
+		do
+			if
+				not a_type.is_expanded or else
+				(a_type /= current_system.boolean_type and
+				a_type /= current_system.character_8_type and
+				a_type /= current_system.character_32_type and
+				a_type /= current_system.integer_8_type and
+				a_type /= current_system.integer_16_type and
+				a_type /= current_system.integer_32_type and
+				a_type /= current_system.integer_64_type and
+				a_type /= current_system.natural_8_type and
+				a_type /= current_system.natural_16_type and
+				a_type /= current_system.natural_32_type and
+				a_type /= current_system.natural_64_type and
+				a_type /= current_system.real_32_type and
+				a_type /= current_system.real_64_type and
+				a_type /= current_system.pointer_type)
+			then
+				a_file.put_character ('{')
+				if not a_type.is_expanded or else a_type.is_generic then
+						-- Type id.
+					a_file.put_integer (a_type.id)
+					l_comma_needed := True
+				end
+					-- Attributes.
+				l_queries := a_type.queries
+				nb := l_queries.count
+				from i := 1 until i > nb loop
+					l_query := l_queries.item (i)
+					if l_query.is_attribute then
+						if l_comma_needed then
+							a_file.put_character (',')
+						end
+						l_comma_needed := True
+						print_gedefault_attribute_value (l_query.result_type_set.static_type, a_file)
+					end
+					i := i + 1
+				end
+				l_special_type ?= a_type
+				if l_special_type /= Void then
+						-- Count.
+					if l_comma_needed then
+						a_file.put_character (',')
+					end
+					l_comma_needed := True
+					a_file.put_character ('0')
+						-- Items.
+					a_file.put_character (',')
+					a_file.put_character ('{')
+					print_gedefault_attribute_value (l_special_type.item_type_set.static_type, a_file)
+					a_file.put_character ('}')
+				else
+					l_tuple_type ?= a_type
+					if l_tuple_type /= Void then
+						l_item_type_sets := l_tuple_type.item_type_sets
+						nb := l_item_type_sets.count
+						from i := 1 until i > nb loop
+							if l_comma_needed then
+								a_file.put_character (',')
+							end
+							l_comma_needed := True
+							print_gedefault_attribute_value (l_item_type_sets.item (i).static_type, a_file)
+							i := i + 1
+						end
+					else
+						l_function_type ?= a_type
+						if l_function_type /= Void then
+								-- Function pointer.
+							if l_comma_needed then
+								a_file.put_character (',')
+							end
+							l_comma_needed := True
+							a_file.put_character ('0')
+						else
+							l_procedure_type ?= a_type
+							if l_procedure_type /= Void then
+									-- Function pointer.
+								if l_comma_needed then
+									a_file.put_character (',')
+								end
+								l_comma_needed := True
+								a_file.put_character ('0')
+							end
+						end
+					end
+				end
+				a_file.put_character ('}')
+			else
+				a_file.put_character ('0')
+			end
+		end
+
+	print_gedefault_entity_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' default initialization value for entities declared of type `a_type'.
+			-- Note that an entity can be a reference to an object, and in that case
+			-- its default initialization value is 'Void', and not a default initialized
+			-- object of the corresponding type.
+			-- This routine is mainly useful when declaring entities of non-basic expanded types.
+			-- (In case of expanded types being involved, this default initialization
+			-- does not take into account possible calls to 'default_create' which need
+			-- to be applied subsequently.)
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if
+				not a_type.is_expanded or else
+				(a_type = current_system.boolean_type or
+				a_type = current_system.character_8_type or
+				a_type = current_system.character_32_type or
+				a_type = current_system.integer_8_type or
+				a_type = current_system.integer_16_type or
+				a_type = current_system.integer_32_type or
+				a_type = current_system.integer_64_type or
+				a_type = current_system.natural_8_type or
+				a_type = current_system.natural_16_type or
+				a_type = current_system.natural_32_type or
+				a_type = current_system.natural_64_type or
+				a_type = current_system.real_32_type or
+				a_type = current_system.real_64_type or
+				a_type = current_system.pointer_type)
+			then
+				a_file.put_character ('0')
+			else
+				print_gedefault_name (a_type, a_file)
+			end
+		end
+
+	print_gedefault_attribute_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' default initialization value for attributes declared of type `a_type'.
+			-- Note that an attribute is a special kind of entity, and therefore
+			-- it can be a reference to an object, and in that case its default initialization
+			-- value is 'Void', and not a default initialized object of the corresponding type.
+			-- This routine is mainly useful for attributes of non-basic expanded types
+			-- when determining the default initialization value of their enclosing objects.
+			-- (In case of expanded types being involved, this default initialization
+			-- does not take into account possible calls to 'default_create' which need
+			-- to be applied subsequently.)
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if
+				not a_type.is_expanded or else
+				(a_type = current_system.boolean_type and
+				a_type = current_system.character_8_type and
+				a_type = current_system.character_32_type and
+				a_type = current_system.integer_8_type and
+				a_type = current_system.integer_16_type and
+				a_type = current_system.integer_32_type and
+				a_type = current_system.integer_64_type and
+				a_type = current_system.natural_8_type and
+				a_type = current_system.natural_16_type and
+				a_type = current_system.natural_32_type and
+				a_type = current_system.natural_64_type and
+				a_type = current_system.real_32_type and
+				a_type = current_system.real_64_type and
+				a_type = current_system.pointer_type)
+			then
+				a_file.put_character ('0')
+			else
+				print_gedefault_object_value (a_type, a_file)
+			end
 		end
 
 feature {NONE} -- Feature name generation
@@ -19240,6 +19504,7 @@ feature {NONE} -- Constants
 	c_geargv: STRING is "geargv"
 	c_geboxed: STRING is "geboxed"
 	c_geceiling: STRING is "geceiling"
+	c_gedefault: STRING is "gedefault"
 	c_gefloor: STRING is "gefloor"
 	c_geint8: STRING is "geint8"
 	c_geint16: STRING is "geint16"
