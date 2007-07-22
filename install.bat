@@ -60,6 +60,8 @@ if .%CC%. == .cl. goto msc
 if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .gcc. goto gcc
+if .%CC%. == .cc. goto cc
+if .%CC%. == .icc. goto icc
 if .%CC%. == .tcc. goto tcc
 if .%CC%. == .no_c. goto install
 echo Unknown C compiler: %CC%
@@ -70,6 +72,7 @@ goto exit
 	set CFLAGS=-O2 -nologo -wd4049
 	%CC% %CFLAGS% -o%BIN_DIR%\gec%EXE% gec.c
 	%RM% gec%OBJ%
+	echo msc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :bcc32
@@ -78,7 +81,7 @@ goto exit
 	%CC% %CFLAGS% -ogec%EXE% gec.c
 	%CP% gec%EXE% %BIN_DIR%
 	%RM% gec%EXE% gec.tds
-	set GOBO_CC=bcc
+	echo bcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :lcc
@@ -89,7 +92,7 @@ goto exit
 	%CC% %CFLAGS% gec.c
 	%LNK% %LNKFLAGS% -o %BIN_DIR%\gec%EXE% gec%OBJ%
 	%RM% gec%OBJ%
-	set GOBO_CC=lcc
+	echo lcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :gcc
@@ -97,6 +100,23 @@ goto exit
 	set CFLAGS=-O2
 	set OBJ=.o
 	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
+	echo gcc > %GOBO%\tool\gec\config\c\default.cfg
+	goto install
+
+:cc
+	set CC=cc
+	set CFLAGS=-fast
+	set OBJ=.o
+	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
+	echo cc > %GOBO%\tool\gec\config\c\default.cfg
+	goto install
+
+:icc
+	set CC=icc
+	set CFLAGS=-O2
+	set OBJ=.o
+	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
+	echo icc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :tcc
@@ -104,7 +124,7 @@ goto exit
 	set CFLAGS=-O2
 	set OBJ=.o
 	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
-	set GOBO_CC=tcc
+	echo tcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :install
@@ -141,7 +161,7 @@ goto exit
 
 :usage
 	echo "usage: install.bat [-v] <c_compiler>"
-	echo "   c_compiler:  msc | bcc | gcc | tcc | no_c"
+	echo "   c_compiler:  msc | bcc | gcc | cc | icc | tcc | no_c"
 	goto exit
 
 :exit

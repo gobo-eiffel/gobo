@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel package"
-rem copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+rem copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -84,6 +84,8 @@ if .%CC%. == .cl. goto msc
 if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .gcc. goto gcc
+if .%CC%. == .cc. goto cc
+if .%CC%. == .icc. goto icc
 if .%CC%. == .tcc. goto tcc
 if .%CC%. == .no_c. goto install
 echo Unknown C compiler: %CC%
@@ -104,6 +106,7 @@ goto exit
 	%RM% geyacc%OBJ%
 	%CC% %CFLAGS% -o%BIN_DIR%\gepp%EXE% gepp.c
 	%RM% gepp%OBJ%
+	echo msc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :bcc32
@@ -127,7 +130,7 @@ goto exit
 	%CC% %CFLAGS% -ogepp%EXE% gepp.c
 	%CP% gepp%EXE% %BIN_DIR%
 	%RM% gepp%EXE% gepp.tds
-	set GOBO_CC=bcc
+	echo bcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :lcc
@@ -153,7 +156,7 @@ goto exit
 	%CC% %CFLAGS% gepp.c
 	%LNK% %LNKFLAGS% -o %BIN_DIR%\gepp%EXE% gepp%OBJ%
 	%RM% gepp%OBJ%
-	set GOBO_CC=lcc
+	echo lcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :gcc
@@ -166,6 +169,34 @@ goto exit
 	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
 	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
 	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
+	echo gcc > %GOBO%\tool\gec\config\c\default.cfg
+	goto install
+
+:cc
+	set CC=cc
+#	set CFLAGS=-fast
+	set CFLAGS=
+	set OBJ=.o
+	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
+	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
+	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
+	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
+	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
+	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
+	echo cc > %GOBO%\tool\gec\config\c\default.cfg
+	goto install
+
+:icc
+	set CC=icc
+	set CFLAGS=-O2
+	set OBJ=.o
+	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
+	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
+	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
+	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
+	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
+	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
+	echo icc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :tcc
@@ -178,7 +209,7 @@ goto exit
 	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
 	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
 	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
-	set GOBO_CC=tcc
+	echo tcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :install
@@ -234,7 +265,7 @@ goto exit
 
 :usage
 	echo "usage: bootstrap.bat [-v][--delivery] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  msc | bcc | gcc | tcc | no_c"
+	echo "   c_compiler:  msc | bcc | gcc | cc | icc | tcc | no_c"
 	echo "   eiffel_compiler:  ge | ise | se"
 	goto exit
 

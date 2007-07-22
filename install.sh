@@ -12,7 +12,7 @@
 
 gobo_usage() {
 	echo "usage: install.sh [-v] <c_compiler>"
-	echo "   c_compiler:  msc | bcc | gcc | tcc | cc | icc | no_c"
+	echo "   c_compiler:  msc | bcc | gcc | cc | icc | tcc | no_c"
 }
 
 if [ "$1" = "-v" ]; then
@@ -65,14 +65,14 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	CFLAGS='-O2 -nologo -wd4049'
 	$CC $CFLAGS -o$BIN_DIR/gec$EXE gec.c
 	$RM gec$OBJ
+	echo msc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	CC=bcc32
 	CFLAGS='-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2'
 	$CC $CFLAGS -ogec$EXE gec.c
 	$CP gec$EXE $BIN_DIR
 	$RM gec$EXE gec.tds
-	GOBO_CC=bcc
-	export GOBO_CC
+	echo bcc > $GOBO/tool/gec/config/c/default.cfg
 #elif [ "$CC" = "lcc" ]; then
 #	CFLAGS='-O'
 #	LNK='lcclnk'
@@ -80,24 +80,25 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 #	$CC $CFLAGS gec.c
 #	$LNK $LNKFLAGS -o $BIN_DIR/gec$EXE gec$OBJ
 #	$RM gec$OBJ
-#	GOBO_CC=lcc
-#	export GOBO_CC
+#	echo lcc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "gcc" ]; then
 #	CFLAGS='-O2'
 	CFLAGS=''
 	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+	echo gcc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "cc" ]; then
-	CFLAGS='-fast'
+#	CFLAGS='-fast'
 	CFLAGS=''
 	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+	echo cc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "icc" ]; then
 	CFLAGS='-O2'
 	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+	echo icc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "tcc" ]; then
 	CFLAGS='-O2'
 	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
-	GOBO_CC=tcc
-	export GOBO_CC
+	echo tcc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "no_c" ]; then
 	echo "No C compilation"
 else

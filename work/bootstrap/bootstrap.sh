@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel package"
-# copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+# copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -12,7 +12,7 @@
 
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v][--delivery] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  msc | bcc | gcc | tcc | no_c"
+	echo "   c_compiler:  msc | bcc | gcc | cc | icc | tcc | no_c"
 	echo "   eiffel_compiler:  ge | ise | se"
 }
 
@@ -92,6 +92,7 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	$RM geyacc$OBJ
 	$CC $CFLAGS -o$BIN_DIR/gepp$EXE gepp.c
 	$RM gepp$OBJ
+	echo msc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	CC=bcc32
 	CFLAGS='-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2'
@@ -113,8 +114,7 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	$CC $CFLAGS -ogepp$EXE gepp.c
 	$CP gepp$EXE $BIN_DIR
 	$RM gepp$EXE gepp.tds
-	GOBO_CC=bcc
-	export GOBO_CC
+	echo bcc > $GOBO/tool/gec/config/c/default.cfg
 #elif [ "$CC" = "lcc" ]; then
 #	CFLAGS='-O'
 #	LNK='lcclnk'
@@ -137,8 +137,7 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 #	$CC $CFLAGS gepp.c
 #	$LNK $LNKFLAGS -o $BIN_DIR/gepp$EXE gepp$OBJ
 #	$RM gepp$OBJ
-#	GOBO_CC=lcc
-#	export GOBO_CC
+#	echo lcc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "gcc" ]; then
 #	CFLAGS='-O2'
 	CFLAGS=''
@@ -148,6 +147,26 @@ elif [ "$CC" = "gcc" ]; then
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
 	$CC $CFLAGS -o $BIN_DIR/geyacc$EXE geyacc.c
 	$CC $CFLAGS -o $BIN_DIR/gepp$EXE gepp.c
+	echo gcc > $GOBO/tool/gec/config/c/default.cfg
+elif [ "$CC" = "cc" ]; then
+#	CFLAGS='-fast'
+	CFLAGS=''
+	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
+	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
+	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
+	$CC $CFLAGS -o $BIN_DIR/geyacc$EXE geyacc.c
+	$CC $CFLAGS -o $BIN_DIR/gepp$EXE gepp.c
+	echo cc > $GOBO/tool/gec/config/c/default.cfg
+elif [ "$CC" = "icc" ]; then
+	CFLAGS='-O2'
+	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
+	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
+	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
+	$CC $CFLAGS -o $BIN_DIR/geyacc$EXE geyacc.c
+	$CC $CFLAGS -o $BIN_DIR/gepp$EXE gepp.c
+	echo icc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "tcc" ]; then
 	CFLAGS='-O2'
 	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
@@ -156,8 +175,7 @@ elif [ "$CC" = "tcc" ]; then
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
 	$CC $CFLAGS -o $BIN_DIR/geyacc$EXE geyacc.c
 	$CC $CFLAGS -o $BIN_DIR/gepp$EXE gepp.c
-	GOBO_CC=tcc
-	export GOBO_CC
+	echo tcc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "no_c" ]; then
 	echo "No C compilation"
 else
