@@ -2209,6 +2209,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 							current_file.put_character ('.')
 							current_file.put_character ('a')
 							current_file.put_character ('1')
+							current_file.put_character (')')
 						else
 							print_argument_name (l_name, current_file)
 						end
