@@ -2160,7 +2160,26 @@ print ("**** language not recognized: " + l_language_string + "%N")
 							l_cursor.forth
 						end
 						l_name := a_arguments.formal_argument (i).name
-						print_argument_name (l_name, current_file)
+						l_argument_type_set := current_feature.argument_type_set (i)
+						if l_argument_type_set = Void then
+								-- Internal error: the dynamic type set of the formal
+								-- arguments should have been computed at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+								-- The argument is declared of type 'TYPED_POINTER [XX]'.
+								-- In that case we use the corresponding pointer (i.e.
+								-- address of the first attribute of the object).
+							current_file.put_character ('&')
+							current_file.put_character ('(')
+							print_argument_name (l_name, current_file)
+							current_file.put_character ('.')
+							current_file.put_character ('a')
+							current_file.put_character ('1')
+							current_file.put_character (')')
+						else
+							print_argument_name (l_name, current_file)
+						end
 						i := i + 1
 					end
 				else
@@ -2169,7 +2188,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 							current_file.put_character (',')
 						end
 						l_name := a_arguments.formal_argument (i).name
-						l_argument_type_set := current_feature.dynamic_type_set (l_name)
+						l_argument_type_set := current_feature.argument_type_set (i)
 						if l_argument_type_set = Void then
 								-- Internal error: the dynamic type set of the formal arguments
 								-- should be known at this stage.
@@ -2179,8 +2198,20 @@ print ("**** language not recognized: " + l_language_string + "%N")
 								-- When compiling with C++, MSVC++ does not want to convert
 								-- 'void*' to non-'void*' implicitly.
 							current_file.put_string ("(char*)")
+							print_argument_name (l_name, current_file)
+						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+								-- The argument is declared of type 'TYPED_POINTER [XX]'.
+								-- In that case we use the corresponding pointer (i.e.
+								-- address of the first attribute of the object).
+							current_file.put_character ('&')
+							current_file.put_character ('(')
+							print_argument_name (l_name, current_file)
+							current_file.put_character ('.')
+							current_file.put_character ('a')
+							current_file.put_character ('1')
+						else
+							print_argument_name (l_name, current_file)
 						end
-						print_argument_name (l_name, current_file)
 						i := i + 1
 					end
 				end
@@ -2204,6 +2235,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_field_name: STRING
 			l_name: ET_IDENTIFIER
 			nb_args: INTEGER
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if a_result_type_set /= Void then
 				print_result_name (current_file)
@@ -2236,7 +2268,26 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				nb_args := a_arguments.count
 				if nb_args >= 1 then
 					l_name := a_arguments.formal_argument (1).name
-					print_argument_name (l_name, current_file)
+					l_argument_type_set := current_feature.dynamic_type_set (l_name)
+					if l_argument_type_set = Void then
+							-- Internal error: the dynamic type set of the formal
+							-- arguments should have been computed at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+							-- The argument is declared of type 'TYPED_POINTER [XX]'.
+							-- In that case we use the corresponding pointer (i.e.
+							-- address of the first attribute of the object).
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_argument_name (l_name, current_file)
+						current_file.put_character ('.')
+						current_file.put_character ('a')
+						current_file.put_character ('1')
+						current_file.put_character (')')
+					else
+						print_argument_name (l_name, current_file)
+					end
 				end
 			else
 -- TODO: error
@@ -2257,7 +2308,26 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				end
 				if nb_args >= 2 then
 					l_name := a_arguments.formal_argument (2).name
-					print_argument_name (l_name, current_file)
+					l_argument_type_set := current_feature.dynamic_type_set (l_name)
+					if l_argument_type_set = Void then
+							-- Internal error: the dynamic type set of the formal
+							-- arguments should have been computed at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+							-- The argument is declared of type 'TYPED_POINTER [XX]'.
+							-- In that case we use the corresponding pointer (i.e.
+							-- address of the first attribute of the object).
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_argument_name (l_name, current_file)
+						current_file.put_character ('.')
+						current_file.put_character ('a')
+						current_file.put_character ('1')
+						current_file.put_character (')')
+					else
+						print_argument_name (l_name, current_file)
+					end
 				else
 -- TODO: error
 				end
@@ -2367,10 +2437,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 									end
 									if l_max_index /= 0 then
 										l_argument_name := l_formal_arguments.formal_argument (l_max_index).name
-										print_argument_name (l_argument_name, current_file)
-											-- Check to see if the argument is declared of type
-											-- 'TYPED_POINTER [XX]'. In that case we use the
-											-- corresponding pointer (first attribute of the object).
 										l_argument_type_set := current_feature.argument_type_set (l_max_index)
 										if l_argument_type_set = Void then
 												-- Internal error: the dynamic type set of the formal
@@ -2378,9 +2444,19 @@ print ("**** language not recognized: " + l_language_string + "%N")
 											set_fatal_error
 											error_handler.report_giaaa_error
 										elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+												-- Check to see if the argument is declared of type
+												-- 'TYPED_POINTER [XX]'. In that case we use the
+												-- corresponding pointer (i.e. address of the first
+												-- attribute of the object).
+											current_file.put_character ('&')
+											current_file.put_character ('(')
+											print_argument_name (l_argument_name, current_file)
 											current_file.put_character ('.')
 											current_file.put_character ('a')
 											current_file.put_character ('1')
+											current_file.put_character (')')
+										else
+											print_argument_name (l_argument_name, current_file)
 										end
 										i := i + l_max
 									else
@@ -2483,7 +2559,26 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character ('*')
 				current_file.put_character (')')
 				l_name := a_arguments.formal_argument (1).name
-				print_argument_name (l_name, current_file)
+				l_argument_type_set := current_feature.dynamic_type_set (l_name)
+				if l_argument_type_set = Void then
+						-- Internal error: the dynamic type set of the formal
+						-- arguments should have been computed at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+						-- The argument is declared of type 'TYPED_POINTER [XX]'.
+						-- In that case we use the corresponding pointer (i.e.
+						-- address of the first attribute of the object).
+					current_file.put_character ('&')
+					current_file.put_character ('(')
+					print_argument_name (l_name, current_file)
+					current_file.put_character ('.')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+					current_file.put_character (')')
+				else
+					print_argument_name (l_name, current_file)
+				end
 				current_file.put_character (')')
 				current_file.put_string (c_arrow)
 				if a_alias /= Void then
@@ -2512,7 +2607,26 @@ print ("**** language not recognized: " + l_language_string + "%N")
 							l_cursor.forth
 						end
 						l_name := a_arguments.formal_argument (i).name
-						print_argument_name (l_name, current_file)
+						l_argument_type_set := current_feature.dynamic_type_set (l_name)
+						if l_argument_type_set = Void then
+								-- Internal error: the dynamic type set of the formal
+								-- arguments should have been computed at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+								-- The argument is declared of type 'TYPED_POINTER [XX]'.
+								-- In that case we use the corresponding pointer (i.e.
+								-- address of the first attribute of the object).
+							current_file.put_character ('&')
+							current_file.put_character ('(')
+							print_argument_name (l_name, current_file)
+							current_file.put_character ('.')
+							current_file.put_character ('a')
+							current_file.put_character ('1')
+							current_file.put_character (')')
+						else
+							print_argument_name (l_name, current_file)
+						end
 						i := i + 1
 					end
 				else
@@ -2531,8 +2645,21 @@ print ("**** language not recognized: " + l_language_string + "%N")
 								-- When compiling with C++, MSVC++ does not want to convert
 								-- 'void*' to non-'void*' implicitly.
 							current_file.put_string ("(char*)")
+							print_argument_name (l_name, current_file)
+						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+								-- The argument is declared of type 'TYPED_POINTER [XX]'.
+								-- In that case we use the corresponding pointer (i.e.
+								-- address of the first attribute of the object).
+							current_file.put_character ('&')
+							current_file.put_character ('(')
+							print_argument_name (l_name, current_file)
+							current_file.put_character ('.')
+							current_file.put_character ('a')
+							current_file.put_character ('1')
+							current_file.put_character (')')
+						else
+							print_argument_name (l_name, current_file)
 						end
-						print_argument_name (l_name, current_file)
 						i := i + 1
 					end
 				end
