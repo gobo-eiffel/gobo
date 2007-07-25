@@ -80,8 +80,8 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 /* Basic Eiffel types */
-typedef struct {int id;} EIF_OBJECT;
-#define EIF_REFERENCE EIF_OBJECT*
+typedef struct {int id;} EIF_ANY;
+#define EIF_REFERENCE EIF_ANY*
 typedef char EIF_BOOLEAN;
 typedef unsigned char EIF_CHARACTER_8;
 typedef uint32_t EIF_CHARACTER_32;
@@ -137,6 +137,7 @@ typedef double EIF_REAL_64;
 #define RTI64C(x) geint64(x)
 #define EIF_PROCEDURE EIF_POINTER
 #define INTEGER EIF_INTEGER_32
+#define EIF_OBJECT EIF_REFERENCE
 #define EIF_OBJ EIF_OBJECT
 /* Function pointer call to make sure all arguments are correctly pushed onto stack. */
 /* FUNCTION_CAST is for standard C calls. */

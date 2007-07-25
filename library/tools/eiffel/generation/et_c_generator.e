@@ -16310,9 +16310,9 @@ feature {NONE} -- Type generation
 				-- Type with just the type_id attribute 'id'.
 			a_file.put_string (c_define)
 			a_file.put_character (' ')
-			print_eif_object_type_name (a_file)
+			print_eif_any_type_name (a_file)
 			a_file.put_character (' ')
-			a_file.put_line (c_eif_object)
+			a_file.put_line (c_eif_any)
 			a_file.put_new_line
 				-- Aliased basic types.
 			print_aliased_character_type_definition (a_file)
@@ -17514,8 +17514,8 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_eif_object_type_name (a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print name of type 'EIF_OBJECT' to `a_file'.
+	print_eif_any_type_name (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of type 'EIF_ANY' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -17540,7 +17540,7 @@ feature {NONE} -- Type generation
 			if a_type.is_expanded then
 				print_type_name (a_type, a_file)
 			else
-				print_eif_object_type_name (a_file)
+				print_eif_any_type_name (a_file)
 				a_file.put_character ('*')
 			end
 		end
@@ -17555,7 +17555,7 @@ feature {NONE} -- Type generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			print_eif_object_type_name (a_file)
+			print_eif_any_type_name (a_file)
 			a_file.put_character ('*')
 		end
 
@@ -18067,7 +18067,7 @@ feature {NONE} -- Feature name generation
 							if l_argument_type.is_expanded then
 								print_type_name (l_argument_type, a_file)
 							else
-								print_eif_object_type_name (a_file)
+								print_eif_any_type_name (a_file)
 							end
 						end
 						i := i + 1
@@ -18094,7 +18094,7 @@ feature {NONE} -- Feature name generation
 							if l_argument_type.is_expanded then
 								print_type_name (l_argument_type, a_file)
 							else
-								print_eif_object_type_name (a_file)
+								print_eif_any_type_name (a_file)
 							end
 						end
 						i := i + 1
@@ -19595,6 +19595,7 @@ feature {NONE} -- Constants
 	c_default: STRING is "default"
 	c_define: STRING is "#define"
 	c_double: STRING is "double"
+	c_eif_any: STRING is "EIF_ANY"
 	c_eif_boolean: STRING is "EIF_BOOLEAN"
 	c_eif_character: STRING is "EIF_CHARACTER"
 	c_eif_character_8: STRING is "EIF_CHARACTER_8"
