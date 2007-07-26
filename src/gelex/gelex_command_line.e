@@ -75,7 +75,7 @@ feature -- Parsing
 			create a_list.make (a_version_flag)
 			a_parser.alternative_options_lists.force_last (a_list)
 
-			create a_size_option.make ('a', "array-size")
+			create a_size_option.make_with_short_form ('a')
 			a_size_option.set_description ("Split manifest arrays larger than 'size'.")
 			a_size_option.set_parameter_description ("size")
 			a_parser.options.force_last (a_size_option)
