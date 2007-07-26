@@ -94,7 +94,7 @@ feature -- Access
 feature -- Status report
 
 	is_error: BOOLEAN
-			-- has an error occured?
+			-- has an error occurred?
 
 feature -- Events
 

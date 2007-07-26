@@ -96,7 +96,7 @@ feature -- Status report
 			std.error.put_new_line
 			base_expression.display (a_level + 1)
 			a_string := STRING_.appended_string (indentation (a_level + 1), target_type.primary_type.conventional_name)
-			a_string := STRING_.appended_string (a_string, target_type.occurence_indicator)			
+			a_string := STRING_.appended_string (a_string, target_type.occurrence_indicator)
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end

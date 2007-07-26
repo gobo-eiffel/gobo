@@ -133,7 +133,7 @@
     <title>Checking for evaluation errors</title>
     <para>After calling <featurename>evaluate</featurename>, check 
      <featurename>is_error</featurename>
-     to see if an error occured. if it did, then feature
+     to see if an error occurred. if it did, then feature
      <featurename>error_value</featurename>
      contains the details of the error. See <classname flatshort="xm_xpath_error_value">XM_XPATH_ERROR_VALUE</classname>.
     </para>

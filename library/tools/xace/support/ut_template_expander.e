@@ -36,7 +36,7 @@ feature -- Access
 			-- expands special tokens with parameters in template string
 			--
 			-- returns a new string based on `a_tmpl'
-			-- where all occurences of "$N" or "${N}" (where N
+			-- where all occurrences of "$N" or "${N}" (where N
 			-- stands for [0-9]+) in `a_tmpl' are substituted by
 			-- the entry `N' in `a_params' or left as "$N" or "${N}" if
 			-- `N' is out of bounds. The character '$' is escaped

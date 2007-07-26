@@ -30,7 +30,7 @@
 	<classname>AP_OPTION</classname> is the common superclass of
 	all options. It defines the fact that options can have a short
 	and a long form and a descriptive text. It also can count the
-	occurrencies of an option and can mark the option as
+	occurrences of an option and can mark the option as
 	mandatory.
 </para>
 

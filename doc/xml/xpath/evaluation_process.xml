@@ -137,7 +137,7 @@
     <para><classname>XM_XPATH_EXPRESSION_FACTORY</classname> has a routine <featurename>make_expression</featurename>
     which takes a <classname>STRING</classname> (holding the text of the expression to be parsed) and an <classname>XM_XPATH_STATIC_CONTEXT</classname>.
     The result of calling <featurename>make_expression</featurename> is an optimized <classname>XM_XPATH_EXPRESSION</classname> in <featurename>parsed_expression</featurename>. If a parse error
-    has occured though, this will be Void. In this case <featurename>is_parse_error</featurename> will be set to True, 
+    has occurred though, this will be Void. In this case <featurename>is_parse_error</featurename> will be set to True, 
     and <featurename>parsed_error_value</featurename> will be set to an instance of <classname>XM_XPATH_ERROR_VALUE</classname>.
     <warning>A side-effect is that functions and variables may well be bound in the static context.</warning>
     </para>

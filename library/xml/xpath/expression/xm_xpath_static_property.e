@@ -673,8 +673,8 @@ feature -- Cardinality
 			Result := INTEGER_.bit_or (requested_cardinality, cardinality) = requested_cardinality
 		end
 
-	occurence_indicator: STRING is
-			-- Text of the occurence-indicator
+	occurrence_indicator: STRING is
+			-- Text of the occurrence-indicator
 		do
 			if cardinality_allows_zero_or_more then
 				Result := "*"

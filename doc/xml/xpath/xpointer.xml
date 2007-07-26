@@ -44,7 +44,7 @@
   </para>
   <para>
     Calling <featurename>evaluate</featurename> will set <featurename>value</featurename> to a non-Void <classname>XM_XPATH_VALUE</classname>. If an &xpointer; error
-    occured, then this object will have <featurename>value</featurename> set to an
+    occurred, then this object will have <featurename>value</featurename> set to an
     <classname>XM_XPATH_INVALID_VALUE</classname> in the case of an &framework; syntax error, or an <classname>XM_XPATH_EMPTY_SEQUENCE</classname> (marked in error) if 
     a <xpath>shorthand</xpath> pointer failed to locate any resources.
   </para>

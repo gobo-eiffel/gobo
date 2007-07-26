@@ -452,7 +452,7 @@ feature -- Evaluation
 			an_iterator := step.last_iterator
 			if an_iterator.is_error then
 								
-				-- Error occured
+				-- Error occurred
 
 				create an_invalid_item.make (an_iterator.error_value)
 				create last_mapped_item.make_item (an_invalid_item)

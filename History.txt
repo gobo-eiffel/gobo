@@ -293,7 +293,7 @@ Version 3.3 - 2 November 2003
 
 	geant:
 
-	* Fixed bug in task <gepp> occuring when a nested <fileset>
+	* Fixed bug in task <gepp> occurring when a nested <fileset>
 	  element defined in the new format was specified.
 
 	Gobo Eiffel XML Library:

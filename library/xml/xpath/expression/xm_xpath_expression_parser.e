@@ -357,14 +357,14 @@ feature {NONE} -- Implementation
 				if is_empty_sequence then
 					create internal_last_parsed_sequence.make_empty
 				else
-					set_occurence_flag (a_primary_type)
+					set_occurrence_flag (a_primary_type)
 				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_sequence /= Void
 		end
 
-	set_occurence_flag (a_primary_type: XM_XPATH_ITEM_TYPE) is
+	set_occurrence_flag (a_primary_type: XM_XPATH_ITEM_TYPE) is
 			-- Set occurrence flag
 		require
 			primary_type_not_void: a_primary_type /= Void
@@ -375,19 +375,19 @@ feature {NONE} -- Implementation
 				tokenizer.last_token
 			when Star_token, Multiply_token then
 				an_occurrence_flag := Required_cardinality_zero_or_more
-				next_token ("In set_occurence_flag/*: current token is ")
+				next_token ("In set_occurrence_flag/*: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 				end
 			when Plus_token then
 				an_occurrence_flag := Required_cardinality_one_or_more
-				next_token ("In set_occurence_flag/plus: current token is ")
+				next_token ("In set_occurrence_flag/plus: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 				end
 			when Question_mark_token then
 				an_occurrence_flag := Required_cardinality_optional
-				next_token ("In set_occurence_flag/?: current token is ")
+				next_token ("In set_occurrence_flag/?: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 				end

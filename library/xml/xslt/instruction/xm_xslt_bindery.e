@@ -62,7 +62,7 @@ feature -- Measurement
 feature -- Status report
 
 	is_circularity_error: BOOLEAN
-			-- Has a circular definition occured
+			-- Has a circular definition occurred
 
 	is_evaluated (a_slot_number: INTEGER): BOOLEAN is
 			-- Has global variable `a_slot_number' been evaluated yet?

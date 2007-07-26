@@ -132,7 +132,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 feature {NONE} -- Implementation
 
 	substring_before (s1, s2: STRING; a_collator: ST_COLLATOR): STRING is
-			-- Substring of s1 before first occurence of s2 according to the rules of `a_collator'?
+			-- Substring of s1 before first occurrence of s2 according to the rules of `a_collator'?
 		require
 			first_string_not_void: s1 /= Void
 			second_string_not_void: s2 /= Void

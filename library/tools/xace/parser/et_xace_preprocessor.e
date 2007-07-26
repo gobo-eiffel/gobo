@@ -125,13 +125,13 @@ feature {NONE} -- Implementation
 		require
 			a_string_not_void: a_string /= Void
 		local
-			an_equal_occurences: INTEGER
+			an_equal_occurrences: INTEGER
 		do
 			Result := True
-			an_equal_occurences := a_string.occurrences ('=')
-			if an_equal_occurences = 1 then
+			an_equal_occurrences := a_string.occurrences ('=')
+			if an_equal_occurrences = 1 then
 				-- expression is a comparsion of two constants or variables
-			elseif an_equal_occurences = 0 then
+			elseif an_equal_occurrences = 0 then
 				-- expression is a variable
 				if a_string.count > 1 and then a_string.item (1) = '$' then
 					if a_string.item (2) = '{' then
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			-- Replace all variables with their values in all
 			-- attributes of `a_composite'.
 			-- Use `variables' to look up the values of all variables
-			-- that occurre in the attributes.
+			-- that occur in the attributes.
 		require
 			a_composite_not_void: a_composite /= Void
 		local

@@ -200,7 +200,7 @@ feature -- Status report
 		end
 
 	is_error: BOOLEAN
-			-- Has an error occured
+			-- Has an error occurred
 
 	last_error: XM_XPATH_ERROR_VALUE
 			-- Last reported fatal error

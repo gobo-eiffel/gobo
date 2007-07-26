@@ -350,7 +350,7 @@ feature -- Element change
 						if not a_body.is_error then
 							std.error.put_string ("Static type: ")
 							std.error.put_string (a_body.item_type.conventional_name)
-							std.error.put_string (a_body.occurence_indicator)
+							std.error.put_string (a_body.occurrence_indicator)
 							std.error.put_new_line
 							std.error.put_string ("Optimized expression tree:%N")
 							a_body.display (10)

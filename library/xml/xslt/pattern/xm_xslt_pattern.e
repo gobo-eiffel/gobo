@@ -81,7 +81,7 @@ feature -- Access
 feature -- Status report
 	
 	system_id: STRING
-			-- SYSTEM id of entity where pattern occured
+			-- SYSTEM id of entity where pattern occurred
 
 	original_text: STRING is
 			-- Original text of the pattern, for use in diagnostics
@@ -91,7 +91,7 @@ feature -- Status report
 		end
 
 	line_number: INTEGER
-			-- Line number where pattern occured
+			-- Line number where pattern occurred
 
 	is_error: BOOLEAN
 			-- Is the pattern in error ?
@@ -114,7 +114,7 @@ feature -- Status report
 feature -- Status setting
 
 	set_system_id (a_system_id: STRING) is
-			-- Set SYSTEM id of entity where pattern occured to `a_system_id'
+			-- Set SYSTEM id of entity where pattern occurred to `a_system_id'
 		require
 			system_id_not_void: a_system_id /= Void
 		do
@@ -124,7 +124,7 @@ feature -- Status setting
 		end
 
 	set_line_number (a_number: INTEGER) is
-			-- Set line number where pattern occured
+			-- Set line number where pattern occurred
 		do
 			line_number := a_number
 		ensure

@@ -94,7 +94,7 @@ feature -- Status report
 			-- Error message from last call to `build_document'
 
 	is_process_error: BOOLEAN
-			-- Has a processing error occured?
+			-- Has a processing error occurred?
 
 feature -- Creation
 

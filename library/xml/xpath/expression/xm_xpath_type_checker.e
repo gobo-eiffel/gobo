@@ -67,7 +67,7 @@ feature -- Access
 feature -- Status_report
 
 	is_static_type_check_error: BOOLEAN
-			-- Has a static typing error occured?
+			-- Has a static typing error occurred?
 
 	static_type_check_error: XM_XPATH_ERROR_VALUE
 			-- Error value from `static_type_check'

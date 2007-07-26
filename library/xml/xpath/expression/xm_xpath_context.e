@@ -268,7 +268,7 @@ feature -- Status report
 		end
 
 	is_process_error: BOOLEAN is
-			-- Has a processing error occured?
+			-- Has a processing error occurred?
 		deferred
 		end
 

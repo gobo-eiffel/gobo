@@ -101,7 +101,7 @@
 			<varlistentry>
 				<term>variable_pattern</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Replace all occurencies of Geant variables</para>
+					<para><emphasis>Description: </emphasis>Replace all occurrences of Geant variables</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Domain: </emphasis>a string that contains a single underscore '_', which is replaced by the variable name</para>

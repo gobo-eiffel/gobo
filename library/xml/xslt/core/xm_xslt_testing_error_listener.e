@@ -59,7 +59,7 @@ feature -- Status report
 		end
 
 	count: INTEGER is
-			-- Number of different errors that occured (possibly recovered)
+			-- Number of different errors that occurred (possibly recovered)
 		do
 			Result := reported_errors.count
 		ensure
