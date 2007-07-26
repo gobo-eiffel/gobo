@@ -60,6 +60,69 @@ feature -- Status report
 			utf16_even_count: Result implies ((a_string.count \\ 2) = 0)
 		end
 
+	valid_utf16be (a_string: STRING): BOOLEAN is
+			-- Are the bytes in `a_string' valid UTF-16BE?
+			-- 'a_string' has one byte per character.
+		require
+			a_string_not_void: a_string /= Void
+			a_string_is_string: ANY_.same_types (a_string, "")
+		local
+			a_most: INTEGER
+			i, cnt: INTEGER
+		do
+			Result := (a_string.count \\ 2) = 0
+			if Result and a_string.count > 0 then
+				from
+					i := 1
+					cnt := a_string.count
+				until
+					(i > cnt) or (not Result)
+				loop
+					a_most := a_string.item (i).code
+					if is_surrogate (a_most) then
+						i := i + 2 -- Consume the next character.
+						Result := is_high_surrogate (a_most) and 
+							((i <= cnt) and then is_low_surrogate (a_string.item(i).code))
+					end
+					i := i + 2
+				end
+			end
+		ensure
+			empty_is_true: a_string.count = 0 implies Result
+			utf16_even_count: Result implies ((a_string.count \\ 2) = 0)
+		end
+
+	valid_utf16le (a_string: STRING): BOOLEAN is
+			-- Are the bytes in `a_string' valid UTF-16LE?
+			-- 'a_string' has one byte per character.
+		require
+			a_string_not_void: a_string /= Void
+			a_string_is_string: ANY_.same_types (a_string, "")
+		local
+			a_most: INTEGER
+			i, cnt: INTEGER
+		do
+			Result := (a_string.count \\ 2) = 0
+			if Result and a_string.count > 0 then
+				from
+					i := 2
+				until
+					(i > cnt) or (not Result)
+				loop
+					a_most := a_string.item (i).code
+					if is_surrogate (a_most) then
+						i := i + 2 -- Consume the next character.
+						Result := is_high_surrogate (a_most) and 
+							((i <= cnt) and then is_low_surrogate (a_string.item(i).code))
+					end
+					i := i + 2
+				end
+			end
+		ensure
+			empty_is_true: a_string.count = 0 implies Result
+			utf16_even_count: Result implies ((a_string.count \\ 2) = 0)
+		end
+
 feature -- Endian-ness detection
 
 	bom_be: STRING is

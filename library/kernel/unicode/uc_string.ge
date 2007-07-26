@@ -302,7 +302,8 @@ create
 
 	make, make_empty, make_from_string, make_from_utf8,
 	make_filled, make_filled_code, make_filled_unicode,
-	make_from_substring, make_from_utf16
+	make_from_substring, make_from_utf16, make_from_utf16le,
+	make_from_utf16be
 
 feature -- Initialization
 
@@ -477,6 +478,30 @@ feature {NONE} -- Initialization
 		do
 			make (s.count // 2)
 			append_utf16 (s)
+		end
+
+	make_from_utf16le (s: STRING) is
+			-- Initialize from the bytes sequence of `s' corresponding
+			-- to the UTF-16LE representation of a string.
+		require
+			s_not_void: s /= Void
+			s_is_string: ANY_.same_types (s, "")
+			valid_utf16le: utf16.valid_utf16le (s)
+		do
+			make (s.count // 2)
+			append_utf16le (s)
+		end
+
+	make_from_utf16be (s: STRING) is
+			-- Initialize from the bytes sequence of `s' corresponding
+			-- to the UTF-16BE representation of a string.
+		require
+			s_not_void: s /= Void
+			s_is_string: ANY_.same_types (s, "")
+			valid_utf16be: utf16.valid_utf16be (s)
+		do
+			make (s.count // 2)
+			append_utf16be (s)
 		end
 
 feature -- Access
@@ -1810,6 +1835,75 @@ feature -- Element change
 						a_low_least := s.item_code (i)
 						a_low_most := s.item_code (i + 1)
 					end
+
+					check valid_pre_implies_low: utf16.is_low_surrogate (a_low_most) end
+					append_item_code (utf16.surrogate_from_bytes (a_most, a_least, a_low_most, a_low_least))
+				else
+					append_item_code (a_most * 256 + a_least)
+				end
+				i := i + 2
+			end
+		end
+
+
+	append_utf16be (s: STRING) is
+			-- Append UTF-16BE encoded string `s' at end of current string.
+		require
+			s_not_void: s /= Void
+			s_is_string: ANY_.same_types (s, "")
+			valid_utf16be: utf16.valid_utf16be (s)
+		local
+			i, nb: INTEGER
+			a_most, a_least: INTEGER
+			a_low_most, a_low_least: INTEGER
+		do
+			i := 1
+			nb := s.count
+			from until i > nb loop
+				a_most := s.item_code (i)
+				a_least := s.item_code (i + 1)
+				if utf16.is_surrogate (a_most) then
+					check valid_pre_implies_high: utf16.is_high_surrogate (a_most) end
+
+					check valid_pre_implies_size: i + 2 < nb end
+					i := i + 2
+
+					a_low_most := s.item_code (i)
+					a_low_least := s.item_code (i + 1)
+
+					check valid_pre_implies_low: utf16.is_low_surrogate (a_low_most) end
+					append_item_code (utf16.surrogate_from_bytes (a_most, a_least, a_low_most, a_low_least))
+				else
+					append_item_code (a_most * 256 + a_least)
+				end
+				i := i + 2
+			end
+		end
+
+	append_utf16le (s: STRING) is
+			-- Append UTF-16LE encoded string `s' at end of current string.
+		require
+			s_not_void: s /= Void
+			s_is_string: ANY_.same_types (s, "")
+			valid_utf16le: utf16.valid_utf16le (s)
+		local
+			i, nb: INTEGER
+			a_most, a_least: INTEGER
+			a_low_most, a_low_least: INTEGER
+		do
+			i := 1
+			nb := s.count
+			from until i > nb loop
+				a_least := s.item_code (i)
+				a_most := s.item_code (i + 1)
+				if utf16.is_surrogate (a_most) then
+					check valid_pre_implies_high: utf16.is_high_surrogate (a_most) end
+
+					check valid_pre_implies_size: i + 2 < nb end
+					i := i + 2
+
+					a_low_least := s.item_code (i)
+					a_low_most := s.item_code (i + 1)
 
 					check valid_pre_implies_low: utf16.is_low_surrogate (a_low_most) end
 					append_item_code (utf16.surrogate_from_bytes (a_most, a_least, a_low_most, a_low_least))

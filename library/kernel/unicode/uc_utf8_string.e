@@ -28,6 +28,7 @@ create
 
 	make, make_empty, make_from_string, make_from_utf8,
 	make_filled, make_filled_code, make_filled_unicode,
-	make_from_substring, make_from_utf16
+	make_from_substring, make_from_utf16, make_from_utf16le,
+	make_from_utf16be
 
 end
