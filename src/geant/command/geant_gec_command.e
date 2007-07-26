@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_project)
 			c_compile := True
+			split_mode := True
 		end
 
 feature -- Status report
@@ -76,6 +77,12 @@ feature -- Access
 	cat_mode: BOOLEAN
 			-- Should CAT-calls be considered as fatal errors?
 
+	split_mode: BOOLEAN
+			-- Should C code be generated into several files?
+
+	split_size: INTEGER
+			-- Size (in bytes) of generated C files in bytes when in split mode
+
 	clean: STRING
 			-- Name of system to be cleaned
 
@@ -119,6 +126,24 @@ feature -- Setting
 			cat_mode_set: cat_mode = b
 		end
 
+	set_split_mode (b: BOOLEAN) is
+			-- Set `split_mode' to `b'.
+		do
+			split_mode := b
+		ensure
+			split_mode_set: split_mode = b
+		end
+
+	set_split_size (s: INTEGER) is
+			-- Set `split_size' to `s'.
+		require
+			s_positive: s > 0
+		do
+			split_size := s
+		ensure
+			split_size_set: split_size = s
+		end
+
 	set_clean (a_clean: like clean) is
 			-- Set `clean' to `a_clean'.
 		do
@@ -145,6 +170,8 @@ feature -- Execution
 		local
 			cmd: STRING
 			a_name: STRING
+			i: INTEGER
+			stop: BOOLEAN
 		do
 			exit_code := 0
 			if is_cleanable then
@@ -155,12 +182,37 @@ feature -- Execution
 						file_system.delete_file (a_name)
 					end
 				end
+				from i := 1 until stop loop
+					a_name := clean + i.out + ".c"
+					if file_system.file_exists (a_name) then
+						project.trace (<<"  [gec] delete ", a_name>>)
+						if not project.options.no_exec then
+							file_system.delete_file (a_name)
+						end
+					else
+						stop := True
+					end
+					i := i + 1
+				end
 				a_name := clean + ".cpp"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
+				end
+				stop := False
+				from i := 1 until stop loop
+					a_name := clean + i.out + ".cpp"
+					if file_system.file_exists (a_name) then
+						project.trace (<<"  [gec] delete ", a_name>>)
+						if not project.options.no_exec then
+							file_system.delete_file (a_name)
+						end
+					else
+						stop := True
+					end
+					i := i + 1
 				end
 				a_name := clean + ".h"
 				if file_system.file_exists (a_name) then
@@ -176,12 +228,38 @@ feature -- Execution
 						file_system.delete_file (a_name)
 					end
 				end
+				stop := False
+				from i := 1 until stop loop
+					a_name := clean + i.out + ".obj"
+					if file_system.file_exists (a_name) then
+						project.trace (<<"  [gec] delete ", a_name>>)
+						if not project.options.no_exec then
+							file_system.delete_file (a_name)
+						end
+					else
+						stop := True
+					end
+					i := i + 1
+				end
 				a_name := clean + ".o"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
+				end
+				stop := False
+				from i := 1 until stop loop
+					a_name := clean + i.out + ".o"
+					if file_system.file_exists (a_name) then
+						project.trace (<<"  [gec] delete ", a_name>>)
+						if not project.options.no_exec then
+							file_system.delete_file (a_name)
+						end
+					else
+						stop := True
+					end
+					i := i + 1
 				end
 				a_name := clean + ".tds"
 				if file_system.file_exists (a_name) then
@@ -237,6 +315,14 @@ feature -- Command-line
 			end
 			if cat_mode then
 				Result.append_string ("--cat ")
+			end
+			if not split_mode then
+				Result.append_string ("--nosplit ")
+			end
+			if split_size > 0 then
+				Result.append_string ("--splitsize=")
+				Result.append_integer (split_size)
+				Result.append_character (' ')
 			end
 			a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
 			Result := STRING_.appended_string (Result, a_filename)

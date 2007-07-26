@@ -140,6 +140,9 @@ feature {NONE} -- Initialization
 		do
 			make_processor (a_system.universe)
 			short_names := True
+			split_mode := True
+			split_threshold := default_split_threshold
+			system_name := "unknown"
 			create type_checker.make (universe)
 			current_system := a_system
 			current_file := null_output_stream
@@ -201,11 +204,23 @@ feature -- Status report
 	is_finalize: BOOLEAN
 			-- Compilation with optimizations turned on?
 
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred when generating `current_system'?
+	split_mode: BOOLEAN
+			-- Should generated C code be split over several C files
+			-- instead of being held if a single possibly large C file?
+			-- When in split mode, the next C construct will be generated
+			-- in a new C file if the current C file is already larger
+			-- than `split_threshold' bytes.
+
+	split_threshold: INTEGER
+			-- When in split mode, the next C construct will be generated
+			-- in a new C file if the current C file is already larger
+			-- than `split_threshold' bytes.
 
 	short_names: BOOLEAN
 			-- Should short names be generated for type and feature names?
+
+	has_fatal_error: BOOLEAN
+			-- Has a fatal error occurred when generating `current_system'?
 
 feature -- Status setting
 
@@ -215,6 +230,24 @@ feature -- Status setting
 			is_finalize := b
 		ensure
 			finalize_set: is_finalize = b
+		end
+
+	set_split_mode (b: BOOLEAN) is
+			-- Set `split_mode' to `b'.
+		do
+			split_mode := b
+		ensure
+			split_mode_set: split_mode = b
+		end
+
+	set_split_threshold (v: INTEGER) is
+			-- Set `split_threshold' to `v'.
+		require
+			v_positive: v > 0
+		do
+			split_threshold := v
+		ensure
+			split_threshold_set: split_threshold = v
 		end
 
 feature -- Generation
@@ -241,8 +274,6 @@ feature {NONE} -- Compilation script generation
 			a_system_name_not_void: a_system_name /= Void
 		local
 			l_c_config: DS_HASH_TABLE [STRING, STRING]
-			l_c_filenames: STRING
-			l_cpp_filenames: STRING
 			l_obj_filenames: STRING
 			l_variables: DS_HASH_TABLE [STRING, STRING]
 			l_file: KL_TEXT_OUTPUT_FILE
@@ -303,34 +334,22 @@ feature {NONE} -- Compilation script generation
 			end
 			l_variables.force (l_libs, "libs")
 			l_variables.force (l_base_name + l_c_config.item ("exe"), "exe")
-			create l_c_filenames.make (100)
-			create l_cpp_filenames.make (100)
 			create l_obj_filenames.make (100)
-			l_c := ".c"
-			l_cpp := ".cpp"
 			l_obj := l_c_config.item ("obj")
 			nb := c_filenames.count
 			from i := 1 until i > nb loop
 				if i /= 1 then
-					l_c_filenames.append_character (' ')
 					l_obj_filenames.append_character (' ')
 				end
 				l_filename := c_filenames.item (i)
-				l_c_filenames.append_string (l_filename)
-				l_c_filenames.append_string (l_c)
 				l_obj_filenames.append_string (l_filename)
 				l_obj_filenames.append_string (l_obj)
 				i := i + 1
 			end
 			nb := cpp_filenames.count
 			from i := 1 until i > nb loop
-				if i /= 1 then
-					l_cpp_filenames.append_character (' ')
-				end
 				l_obj_filenames.append_character (' ')
 				l_filename := cpp_filenames.item (i)
-				l_cpp_filenames.append_string (l_filename)
-				l_cpp_filenames.append_string (l_cpp)
 				l_obj_filenames.append_string (l_filename)
 				l_obj_filenames.append_string (l_obj)
 				i := i + 1
@@ -347,7 +366,6 @@ feature {NONE} -- Compilation script generation
 				l_obj_filenames.append_string (l_pathname)
 				i := i + 1
 			end
-			l_variables.force (l_c_filenames, "c")
 			l_variables.force (l_obj_filenames, "objs")
 			if is_finalize and then l_c_config.has ("cflags_finalize") then
 				l_variables.force (l_c_config.item ("cflags_finalize"), "cflags")
@@ -377,12 +395,23 @@ feature {NONE} -- Compilation script generation
 					l_file.put_line ("#!/bin/sh")
 				end
 				l_cc_template := l_c_config.item ("cc")
-				l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
-				l_file.put_line (l_command_name)
-				if not l_cpp_filenames.is_empty then
-					l_variables.replace (l_cpp_filenames, "c")
+				l_c := ".c"
+				nb := c_filenames.count
+				from i := 1 until i > nb loop
+					l_filename := c_filenames.item (i) + l_c
+					l_variables.force (l_filename, "c")
 					l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
 					l_file.put_line (l_command_name)
+					i := i + 1
+				end
+				l_cpp := ".cpp"
+				nb := cpp_filenames.count
+				from i := 1 until i > nb loop
+					l_filename := cpp_filenames.item (i) + l_cpp
+					l_variables.force (l_filename, "c")
+					l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
+					l_file.put_line (l_command_name)
+					i := i + 1
 				end
 				l_link_template := l_c_config.item ("link")
 				l_command_name := template_expander.expand_from_values (l_link_template, l_variables)
@@ -505,62 +534,46 @@ feature {NONE} -- C code Generation
 		require
 			a_system_name_not_void: a_system_name /= Void
 		local
+			old_system_name: STRING
 			old_file: KI_TEXT_OUTPUT_STREAM
 			old_header_file: KI_TEXT_OUTPUT_STREAM
 			l_header_filename: STRING
 			l_header_file: KL_TEXT_OUTPUT_FILE
 			l_root_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_c_filename: STRING
-			l_c_file: KL_TEXT_OUTPUT_FILE
-			l_base_name: STRING
 		do
-			l_base_name := a_system_name
-			l_c_filename := l_base_name + ".c"
-			l_header_filename := l_base_name + ".h"
-			create l_c_file.make (l_c_filename)
-			l_c_file.open_write
+			old_system_name := system_name
+			system_name := a_system_name
+			l_header_filename := a_system_name + ".h"
 			create l_header_file.make (l_header_filename)
 			l_header_file.open_write
-			if not l_c_file.is_open_write then
-				set_fatal_error
-				report_cannot_write_error (l_c_filename)
-			elseif not l_header_file.is_open_write then
+			if not l_header_file.is_open_write then
 				set_fatal_error
 				report_cannot_write_error (l_header_filename)
 			else
-				c_filenames.force_last (l_base_name)
+				open_c_file
+				open_cpp_file
 				old_header_file := header_file
 				header_file := l_header_file
-				old_file := current_file
-				current_file := l_c_file
+				current_file := current_function_body_buffer
 				generate_ids
 				include_runtime_header_file ("ge_eiffel.h", True, header_file)
 				header_file.put_new_line
-				l_c_file.put_string ("#include %"")
-				l_c_file.put_string (l_header_filename)
-				l_c_file.put_character ('%"')
-				l_c_file.put_new_line
-				l_c_file.put_new_line
 				include_runtime_header_file ("ge_arguments.h", True, header_file)
 				header_file.put_new_line
 				include_runtime_header_file ("ge_exception.h", True, header_file)
 				header_file.put_new_line
-				l_c_file.put_line ("#ifdef __cplusplus")
-				l_c_file.put_line ("extern %"C%" {")
-				l_c_file.put_line ("#endif")
-				l_c_file.put_new_line
-				header_file.put_line ("#ifdef __cplusplus")
-				header_file.put_line ("extern %"C%" {")
-				header_file.put_line ("#endif")
-				header_file.put_new_line
+				print_start_extern_c (header_file)
 				print_types (header_file)
+				flush_to_c_file
 				header_file.put_new_line
 				print_gedefault_declarations
+				current_file.put_new_line
+				flush_to_c_file
 				header_file.put_new_line
-				l_c_file.put_new_line
 				print_gems_function
-				l_c_file.put_new_line
+				current_file.put_new_line
+				flush_to_c_file
 					-- Print polymorphic calls.
 				print_polymorphic_query_calls
 				print_polymorphic_procedure_calls
@@ -578,42 +591,46 @@ feature {NONE} -- C code Generation
 					-- Print features which build manifest arrays.
 				from manifest_array_types.start until manifest_array_types.after loop
 					print_gema_function (manifest_array_types.item_for_iteration)
-					l_c_file.put_new_line
+					current_file.put_new_line
+					flush_to_c_file
 					manifest_array_types.forth
 				end
 				manifest_array_types.wipe_out
 					-- Print features which build manifest tuples.
 				from manifest_tuple_types.start until manifest_tuple_types.after loop
 					print_gemt_function (manifest_tuple_types.item_for_iteration)
-					l_c_file.put_new_line
+					current_file.put_new_line
+					flush_to_c_file
 					manifest_tuple_types.forth
 				end
 				manifest_tuple_types.wipe_out
 					-- Print call-on-void-target function.
 				print_gevoid_function
-				l_c_file.put_new_line
+				current_file.put_new_line
+				flush_to_c_file
 					-- Print constants declarations.
 				print_constants_declaration
-				l_c_file.put_new_line
+				current_file.put_new_line
+				flush_to_c_file
 				print_geconst_function
-				l_c_file.put_new_line
+				current_file.put_new_line
+				flush_to_c_file
 					-- Print 'getypes' array.
 				print_getypes_array
-				l_c_file.put_new_line
+				current_file.put_new_line
+				flush_to_c_file
 					-- Print 'main' function.
 				print_main_function
-				l_c_file.put_new_line
-				l_c_file.put_line ("#ifdef __cplusplus")
-				l_c_file.put_line ("}")
-				l_c_file.put_line ("#endif")
-				l_c_file.put_new_line
-				header_file.put_line ("#ifdef __cplusplus")
-				header_file.put_line ("}")
-				header_file.put_line ("#endif")
+				current_file.put_new_line
+				flush_to_c_file
+				print_end_extern_c (header_file)
 				header_file.put_new_line
 					-- Include runtime C files.
 				from included_runtime_c_files.start until included_runtime_c_files.after loop
-					include_runtime_c_file (included_runtime_c_files.item_for_iteration, l_c_file)
+					print_end_extern_c (current_file)
+					include_runtime_c_file (included_runtime_c_files.item_for_iteration, current_file)
+					print_start_extern_c (current_file)
+					flush_to_c_file
 					included_runtime_c_files.forth
 				end
 					-- Include runtime header files.
@@ -637,13 +654,15 @@ feature {NONE} -- C code Generation
 				included_runtime_c_files.wipe_out
 				once_features.wipe_out
 				constant_features.wipe_out
-				header_file := old_header_file
 				l_header_file.close
-				l_c_file.close
+				close_c_file
+				close_cpp_file
+				header_file := old_header_file
 				current_file := old_file
 				current_type := current_system.none_type
 				current_feature := dummy_feature
 			end
+			system_name := old_system_name
 		end
 
 	generate_ids is
@@ -924,14 +943,9 @@ feature {NONE} -- Feature generation
 			l_struct_field_type: STRING
 			l_struct_type: STRING
 			old_file: KI_TEXT_OUTPUT_STREAM
-			l_buffer: STRING
 			l_is_inline: BOOLEAN
 			l_is_cpp: BOOLEAN
 			l_cpp_class_type: STRING
-			l_cpp_file: KL_TEXT_OUTPUT_FILE
-			l_cpp_filename: STRING
-			l_base_name: STRING
-			l_header_filename: STRING
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -1222,59 +1236,9 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_new_line
 			current_file := old_file
 			if l_is_cpp then
-				if cpp_filenames.is_empty then
-					if not c_filenames.is_empty then
-						l_base_name := c_filenames.last
-					else
--- TODO:
-						l_base_name := "foo"
-					end
-					l_header_filename := l_base_name + ".h"
-					l_base_name := l_base_name + "_cpp"
-					cpp_filenames.force_last (l_base_name)
-					l_cpp_filename := l_base_name + ".cpp"
-					create l_cpp_file.make (l_cpp_filename)
-					l_cpp_file.open_write
-				else
-					l_cpp_filename := cpp_filenames.last + ".cpp"
-					create l_cpp_file.make (l_cpp_filename)
-					l_cpp_file.open_append
-				end
-				if not l_cpp_file.is_open_write then
-					set_fatal_error
-					report_cannot_write_error (l_cpp_filename)
-				else
-					if l_header_filename /= Void then
-						l_cpp_file.put_string ("#include %"")
-						l_cpp_file.put_string (l_header_filename)
-						l_cpp_file.put_character ('%"')
-						l_cpp_file.put_new_line
-					end
-					l_cpp_file.put_new_line
-					l_cpp_file.put_line ("#ifdef __cplusplus")
-					l_cpp_file.put_line ("extern %"C%" {")
-					l_cpp_file.put_line ("#endif")
-					l_cpp_file.put_new_line
-					l_buffer := current_function_header_buffer.string
-					l_cpp_file.put_string (l_buffer)
-					STRING_.wipe_out (l_buffer)
-					l_buffer := current_function_body_buffer.string
-					l_cpp_file.put_string (l_buffer)
-					STRING_.wipe_out (l_buffer)
-					l_cpp_file.put_new_line
-					l_cpp_file.put_line ("#ifdef __cplusplus")
-					l_cpp_file.put_line ("}")
-					l_cpp_file.put_line ("#endif")
-					l_cpp_file.put_new_line
-					l_cpp_file.close
-				end
+				flush_to_cpp_file
 			else
-				l_buffer := current_function_header_buffer.string
-				current_file.put_string (l_buffer)
-				STRING_.wipe_out (l_buffer)
-				l_buffer := current_function_body_buffer.string
-				current_file.put_string (l_buffer)
-				STRING_.wipe_out (l_buffer)
+				flush_to_c_file
 			end
 			free_temp_variables.wipe_out
 			used_temp_variables.wipe_out
@@ -2736,7 +2700,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_rescue: ET_COMPOUND
 			l_comma: BOOLEAN
 			old_file: KI_TEXT_OUTPUT_STREAM
-			l_buffer: STRING
 			l_name: ET_IDENTIFIER
 		do
 			old_file := current_file
@@ -3069,12 +3032,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_new_line
 			current_file.put_new_line
 			current_file := old_file
-			l_buffer := current_function_header_buffer.string
-			current_file.put_string (l_buffer)
-			STRING_.wipe_out (l_buffer)
-			l_buffer := current_function_body_buffer.string
-			current_file.put_string (l_buffer)
-			STRING_.wipe_out (l_buffer)
+			flush_to_c_file
 			free_temp_variables.wipe_out
 			used_temp_variables.wipe_out
 		end
@@ -3160,7 +3118,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			is_static: a_static implies current_feature.is_static
 		local
 			old_file: KI_TEXT_OUTPUT_STREAM
-			l_buffer: STRING
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_result_type: ET_DYNAMIC_TYPE
 			l_name: ET_FEATURE_NAME
@@ -3274,12 +3231,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_new_line
 			current_file.put_new_line
 			current_file := old_file
-			l_buffer := current_function_header_buffer.string
-			current_file.put_string (l_buffer)
-			STRING_.wipe_out (l_buffer)
-			l_buffer := current_function_body_buffer.string
-			current_file.put_string (l_buffer)
-			STRING_.wipe_out (l_buffer)
+			flush_to_c_file
 			free_temp_variables.wipe_out
 			used_temp_variables.wipe_out
 		end
@@ -8497,7 +8449,6 @@ feature {NONE} -- Agent generation
 			l_result_type: ET_DYNAMIC_TYPE
 			l_type: ET_DYNAMIC_TYPE
 			old_file: KI_TEXT_OUTPUT_STREAM
-			l_buffer: STRING
 		do
 				--
 				-- Determine agent type.
@@ -8821,12 +8772,7 @@ feature {NONE} -- Agent generation
 				current_file.put_new_line
 				current_file.put_new_line
 				current_file := old_file
-				l_buffer := current_function_header_buffer.string
-				current_file.put_string (l_buffer)
-				STRING_.wipe_out (l_buffer)
-				l_buffer := current_function_body_buffer.string
-				current_file.put_string (l_buffer)
-				STRING_.wipe_out (l_buffer)
+				flush_to_c_file
 				free_temp_variables.wipe_out
 				used_temp_variables.wipe_out
 					--
@@ -8979,6 +8925,7 @@ feature {NONE} -- Agent generation
 				current_file.put_character ('}')
 				current_file.put_new_line
 				current_file.put_new_line
+				flush_to_c_file
 			end
 		end
 
@@ -9533,6 +9480,7 @@ feature {NONE} -- Polymorphic call generation
 							current_file.put_character ('}')
 							current_file.put_new_line
 							current_file.put_new_line
+							flush_to_c_file
 							call_operands.wipe_out
 						end
 						polymorphic_type_ids.wipe_out
@@ -9774,6 +9722,7 @@ feature {NONE} -- Polymorphic call generation
 							current_file.put_character ('}')
 							current_file.put_new_line
 							current_file.put_new_line
+							flush_to_c_file
 							call_operands.wipe_out
 						end
 						polymorphic_type_ids.wipe_out
@@ -18519,6 +18468,30 @@ feature {NONE} -- Convenience
 			current_file.put_new_line
 		end
 
+	print_start_extern_c (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the beginning of 'extern "C"' section.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_line ("#ifdef __cplusplus")
+			a_file.put_line ("extern %"C%" {")
+			a_file.put_line ("#endif")
+			a_file.put_new_line
+		end
+
+	print_end_extern_c (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the end of 'extern "C"' section.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_new_line
+			a_file.put_line ("#ifdef __cplusplus")
+			a_file.put_line ("}")
+			a_file.put_line ("#endif")
+		end
+
 feature {NONE} -- Include files
 
 	include_file (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -18659,6 +18632,188 @@ feature {NONE} -- Include files
 
 	included_runtime_c_files: DS_HASH_SET [STRING]
 			-- Name of runtime C files already included
+
+feature {NONE} -- Output files/buffers
+
+	header_file: KI_TEXT_OUTPUT_STREAM
+			-- Header file
+
+	c_file: KL_TEXT_OUTPUT_FILE
+			-- C file
+			-- (May be Void if not open yet.)
+
+	c_file_size: INTEGER
+			-- Number of bytes already written to `c_file'
+
+	c_filenames: DS_ARRAYED_LIST [STRING]
+			-- List of C filenames generated,
+			-- without the file extensions
+
+	open_c_file is
+			-- Open C file if necessary.
+		do
+		end
+
+	flush_to_c_file is
+			-- Open C file if not already done, and then
+			-- flush to C file the code written in buffers.
+			-- Take into account where we are in `split_mode' or not.
+		local
+			l_buffer: STRING
+			l_filename: STRING
+			l_header_filename: STRING
+		do
+			if c_file = Void then
+				c_file_size := 0
+				l_header_filename := system_name + ".h"
+				l_filename := system_name + (c_filenames.count + cpp_filenames.count + 1).out
+				c_filenames.force_last (l_filename)
+				create c_file.make (l_filename + ".c")
+				c_file.open_write
+			elseif not c_file.is_open_write then
+				c_file.open_append
+			end
+			if not c_file.is_open_write then
+				set_fatal_error
+				report_cannot_write_error (c_file.name)
+				c_file := Void
+			else
+				if l_header_filename /= Void then
+					c_file.put_string ("#include %"")
+					c_file.put_string (l_header_filename)
+					c_file.put_character ('%"')
+					c_file.put_new_line
+					c_file.put_new_line
+					c_file_size := c_file_size + l_header_filename.count + 13
+					print_start_extern_c (c_file)
+					c_file_size := c_file_size + 40
+				end
+				l_buffer := current_function_header_buffer.string
+				c_file.put_string (l_buffer)
+				c_file_size := c_file_size + l_buffer.count
+				STRING_.wipe_out (l_buffer)
+				l_buffer := current_function_body_buffer.string
+				c_file.put_string (l_buffer)
+				c_file_size := c_file_size + l_buffer.count
+				STRING_.wipe_out (l_buffer)
+				if split_mode and then c_file_size >= split_threshold then
+					close_c_file
+				end
+			end
+		ensure
+			flushed1: not has_fatal_error implies current_function_header_buffer.string.is_empty
+			flushed2: not has_fatal_error implies current_function_body_buffer.string.is_empty
+		end
+
+	close_c_file is
+			-- Close C file if not already done.
+		do
+			if c_file /= Void and then not c_file.is_closed then
+				print_end_extern_c (c_file)
+				c_file.close
+			end
+			c_file := Void
+			c_file_size := 0
+		ensure
+			c_file_reset: c_file = Void
+			c_file_size_reset: c_file_size = 0
+		end
+
+	cpp_file: KL_TEXT_OUTPUT_FILE
+			-- C++ file
+			-- (May be Void if not open yet.)
+
+	cpp_file_size: INTEGER
+			-- Number of bytes already written to `cpp_file'
+
+	cpp_filenames: DS_ARRAYED_LIST [STRING]
+			-- List of C++ filenames generated,
+			-- without the file extensions
+
+	open_cpp_file is
+			-- Open C++ file if necessary.
+		do
+		end
+
+	flush_to_cpp_file is
+			-- Open C++ file if not already done, and then
+			-- flush to C++ file the code written in buffers.
+			-- Take into account where we are in `split_mode' or not.
+		local
+			l_buffer: STRING
+			l_filename: STRING
+			l_header_filename: STRING
+		do
+			if cpp_file = Void then
+				cpp_file_size := 0
+				l_header_filename := system_name + ".h"
+				l_filename := system_name + (c_filenames.count + cpp_filenames.count + 1).out
+				cpp_filenames.force_last (l_filename)
+				create cpp_file.make (l_filename + ".cpp")
+				cpp_file.open_write
+			elseif not cpp_file.is_open_write then
+				cpp_file.open_append
+			end
+			if not cpp_file.is_open_write then
+				set_fatal_error
+				report_cannot_write_error (cpp_file.name)
+				cpp_file := Void
+			else
+				if l_header_filename /= Void then
+					cpp_file.put_string ("#include %"")
+					cpp_file.put_string (l_header_filename)
+					cpp_file.put_character ('%"')
+					cpp_file.put_new_line
+					cpp_file.put_new_line
+					cpp_file_size := cpp_file_size + l_header_filename.count + 13
+					print_start_extern_c (cpp_file)
+					cpp_file_size := cpp_file_size + 40
+				end
+				l_buffer := current_function_header_buffer.string
+				cpp_file.put_string (l_buffer)
+				cpp_file_size := cpp_file_size + l_buffer.count
+				STRING_.wipe_out (l_buffer)
+				l_buffer := current_function_body_buffer.string
+				cpp_file.put_string (l_buffer)
+				cpp_file_size := cpp_file_size + l_buffer.count
+				STRING_.wipe_out (l_buffer)
+				if split_mode and then cpp_file_size >= split_threshold then
+					close_cpp_file
+				end
+			end
+		ensure
+			flushed1: not has_fatal_error implies current_function_header_buffer.string.is_empty
+			flushed2: not has_fatal_error implies current_function_body_buffer.string.is_empty
+		end
+
+	close_cpp_file is
+			-- Close C++ file if not already done.
+		do
+			if cpp_file /= Void and then not cpp_file.is_closed then
+				print_end_extern_c (cpp_file)
+				cpp_file.close
+			end
+			cpp_file := Void
+			cpp_file_size := 0
+		ensure
+			cpp_file_reset: cpp_file = Void
+			cpp_file_size_reset: cpp_file_size = 0
+		end
+
+	current_file: KI_TEXT_OUTPUT_STREAM
+			-- Output file;
+			-- In fact, it's not a file but a buffer (either `current_function_header_buffer'
+			-- or `current_function_body_buffer'), which is then flushed to either a C or
+			-- C++ file.
+
+	current_function_header_buffer: KL_STRING_OUTPUT_STREAM
+			-- Buffer to write the C header of the current function;
+			-- This is useful when we need to declare local variables
+			-- on the fly while generating the code for the body of
+			-- the C function.
+
+	current_function_body_buffer: KL_STRING_OUTPUT_STREAM
+			-- Buffer to write the C body of the current function
 
 feature {ET_AST_NODE} -- Processing
 
@@ -19200,6 +19355,9 @@ feature {NONE} -- Type resolving
 
 feature {NONE} -- Access
 
+	system_name: STRING
+			-- Name of the system being compiled
+
 	current_feature: ET_DYNAMIC_FEATURE
 			-- Feature being processed
 
@@ -19211,24 +19369,6 @@ feature {NONE} -- Access
 
 	current_agents: DS_ARRAYED_LIST [ET_AGENT]
 			-- Agents already processed in `current_feature'
-
-	current_file: KI_TEXT_OUTPUT_STREAM
-			-- Output file
-
-	current_function_header_buffer: KL_STRING_OUTPUT_STREAM
-			-- Buffer to write the C header of the current function
-
-	current_function_body_buffer: KL_STRING_OUTPUT_STREAM
-			-- Buffer to write the C body of the current function
-
-	header_file: KI_TEXT_OUTPUT_STREAM
-			-- Header file
-
-	c_filenames: DS_ARRAYED_LIST [STRING]
-			-- List of C filenames generated
-
-	cpp_filenames: DS_ARRAYED_LIST [STRING]
-			-- List of C++ filenames generated
 
 	called_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
 			-- Features being called
@@ -19675,6 +19815,9 @@ feature {NONE} -- Constants
 	c_while: STRING is "while"
 			-- String constants
 
+	default_split_threshold: INTEGER is 1000000
+			-- Default value for `split_threshold'
+
 invariant
 
 	current_system_not_void: current_system /= Void
@@ -19755,5 +19898,7 @@ invariant
 	external_cpp_regexp_compiled: external_cpp_regexp.is_compiled
 	external_cpp_inline_regexp_not_void: external_cpp_inline_regexp /= Void
 	external_cpp_inline_regexp_compiled: external_cpp_inline_regexp.is_compiled
+	split_threshold_positive: split_threshold > 0
+	system_name_not_void: system_name /= Void
 
 end

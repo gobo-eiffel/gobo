@@ -81,7 +81,9 @@
 		<delete file="${system}${exe}"/>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
-		<gec ace="compile_ge.ace" finalize="${finalize}" c_compile="false" cat="true"/>
+		<set name="split" value="true"/>
+		<set name="split" value="false" if="${no_split}"/>
+		<gec ace="compile_ge.ace" finalize="${finalize}" c_compile="false" cat="true" split="${split}"/>
 		<exec executable=".\${system}.bat" if="${GOBO_OS}=windows"/>
 		<exec executable="./${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>
@@ -237,6 +239,7 @@
 
 		<set name="eiffel" value="ge"/>
 		<set name="bootstrap" value="true"/>
+		<set name="no_split" value="true"/>
 		<geant target="compile"/>
 	</target>
 

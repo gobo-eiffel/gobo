@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
+			a_integer_value: INTEGER
 		do
 			create command.make (a_project)
 			task_make (command, an_xml_element)
@@ -58,6 +59,20 @@ feature {NONE} -- Initialization
 				-- cat.
 			if has_attribute (Cat_attribute_name) then
 				command.set_cat_mode (boolean_value (Cat_attribute_name))
+			end
+				-- split.
+			if has_attribute (Split_attribute_name) then
+				command.set_split_mode (boolean_value (Split_attribute_name))
+			end
+				-- split_size.
+			if has_attribute (Split_size_attribute_name) then
+				a_value := attribute_value (Split_size_attribute_name)
+				if a_value.is_integer then
+					a_integer_value := a_value.to_integer
+					if a_integer_value > 0 then
+						command.set_split_size (a_integer_value)
+					end
+				end
 			end
 			if has_attribute (Exit_code_variable_attribute_name) then
 				a_value := attribute_value (Exit_code_variable_attribute_name)
@@ -123,6 +138,24 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "finalize"
 		once
 			Result := "finalize"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Split_attribute_name: STRING is
+			-- Name of xml attribute for "split"
+		once
+			Result := "split"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Split_size_attribute_name: STRING is
+			-- Name of xml attribute for "split_size"
+		once
+			Result := "split_size"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

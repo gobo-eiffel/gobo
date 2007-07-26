@@ -6,7 +6,7 @@
 		"Using gec"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,6 +64,22 @@ used with <projectname>gec</projectname>:
 		</term>
 		<listitem><para>
 			CAT-call errors should be considered as fatal errors.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--nosplit</filename>
+		</term>
+		<listitem><para>
+			C code should be generated into a single file.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--splitsize</filename>
+		</term>
+		<listitem><para>
+			Size (in bytes) of generated C files in bytes when in split mode
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

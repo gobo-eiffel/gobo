@@ -116,8 +116,7 @@
 		<geant file="../src/getest/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="clean" dir="bin"/>
-		<geant file="../src/gexslt/build.eant" target="compile" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
-		<geant file="../src/gexslt/build.eant" target="compile_debug" dir="bin" if="${GOBO_EIFFEL}=ge"/>
+		<geant file="../src/gexslt/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
 		<geant file="build.eant" target="install" dir="example"/>
 		<geant file="build.eant" target="install" dir="test"/>

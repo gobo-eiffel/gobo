@@ -79,6 +79,32 @@
 			</varlistentry>
 
 			<varlistentry>
+				<term>split</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Should C code be generated into several files?</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>true</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>split_size</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Size (in bytes) of generated C files in bytes when in split mode</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Positive integer</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>1,000,000 bytes</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
 				<term>c_compile</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>Launch C compilation</para>
@@ -133,6 +159,15 @@
           <attribute name="ace"/>
           <optional>
             <attribute name="finalize"/>
+          </optional>
+          <optional>
+            <attribute name="cat"/>
+          </optional>
+          <optional>
+            <attribute name="split"/>
+          </optional>
+          <optional>
+            <attribute name="split_size"/>
           </optional>
           <optional>
             <attribute name="c_compile"/>

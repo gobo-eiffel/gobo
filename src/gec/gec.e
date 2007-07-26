@@ -215,6 +215,10 @@ feature {NONE} -- Processing
 				end
 				create l_generator.make (l_system)
 				l_generator.set_finalize (is_finalize)
+				l_generator.set_split_mode (not no_split)
+				if split_size > 0 then
+					l_generator.set_split_threshold (split_size)
+				end
 				l_generator.generate (l_system_name)
 				if l_generator.has_fatal_error then
 					Exceptions.die (1)
@@ -276,6 +280,15 @@ feature -- Status report
 			Result := no_c_compile_flag.was_found
 		end
 
+	no_split: BOOLEAN is
+			-- Should C code be generated into a single file?
+		do
+			Result := no_split_flag.was_found
+		end
+
+	split_size: INTEGER
+			-- Size (in bytes) of generated C files in bytes when in split mode
+
 	is_silent: BOOLEAN is
 			-- Should gec run in silent mode?
 		do
@@ -302,6 +315,12 @@ feature -- Argument parsing
 	no_c_compile_flag: AP_FLAG
 			-- Flag for '--nocc'
 
+	no_split_flag: AP_FLAG
+			-- Flag for '--nosplit'
+
+	split_size_option: AP_INTEGER_OPTION
+			-- Option for '--splitsize=<size>'
+
 	silent_flag: AP_FLAG
 			-- Flag for '--silent'
 
@@ -316,6 +335,7 @@ feature -- Argument parsing
 		local
 			a_parser: AP_PARSER
 			a_list: AP_ALTERNATIVE_OPTIONS_LIST
+			an_error: AP_ERROR
 		do
 			create a_parser.make
 			a_parser.set_application_description ("Gobo Eiffel Compiler, translate Eiffel programs into C code.")
@@ -330,6 +350,13 @@ feature -- Argument parsing
 			create no_c_compile_flag.make_with_long_form ("nocc")
 			no_c_compile_flag.set_description ("Do not invoke the back-end C compiler on the generated C code.")
 			a_parser.options.force_last (no_c_compile_flag)
+			create no_split_flag.make_with_long_form ("nosplit")
+			no_split_flag.set_description ("C code generated into a single file.")
+			a_parser.options.force_last (no_split_flag)
+			create split_size_option.make_with_long_form ("splitsize")
+			split_size_option.set_description ("Size of generated C files in bytes when in split mode.")
+			split_size_option.set_parameter_description ("size")
+			a_parser.options.force_last (split_size_option)
 			create silent_flag.make_with_long_form ("silent")
 			silent_flag.set_description ("Run gec in silent mode.")
 			a_parser.options.force_last (silent_flag)
@@ -351,6 +378,15 @@ feature -- Argument parsing
 			else
 				ace_filename := a_parser.parameters.first
 			end
+			if split_size_option.was_found then
+				if split_size_option.parameter > 0 then
+					split_size := split_size_option.parameter
+				else
+					create an_error.make_invalid_parameter_error (split_size_option, split_size_option.parameter.out)
+					error_handler.report_error (an_error)
+					Exceptions.die (1)
+				end
+			end
 		ensure
 			ace_filename_not_void: ace_filename /= Void
 			cat_flag_not_void: cat_flag /= Void
@@ -369,5 +405,7 @@ invariant
 	silent_flag_not_void: silent_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
 	no_c_compile_flag_not_void: no_c_compile_flag /= Void
+	no_split_flag_not_void: no_split_flag /= Void
+	split_size_option_not_void: split_size_option /= Void
 
 end
