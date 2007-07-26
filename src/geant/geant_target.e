@@ -591,9 +591,6 @@ feature -- Processing
 			elseif STRING_.same_string (a_xml_element.name, Geant_task_name) then
 					-- geant
 				create {GEANT_GEANT_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Gexmlsplit_task_name) then
-					-- gexmlsplit
-				create {GEANT_GEXMLSPLIT_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Echo_task_name) then
 					-- echo
 				create {GEANT_ECHO_TASK} a_task.make (project, a_xml_element)

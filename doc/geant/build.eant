@@ -47,7 +47,6 @@
 		<geant target="xslt_and_shift" arguments="gepp_task"/>
 		<geant target="xslt_and_shift" arguments="getest_task"/>
 		<geant target="xslt_and_shift" arguments="gexace_task"/>
-		<geant target="xslt_and_shift" arguments="gexmlsplit_task"/>
 		<geant target="xslt_and_shift" arguments="input_task"/>
 		<geant target="xslt_and_shift" arguments="ise_task"/>
 		<geant target="xslt_and_shift" arguments="mkdir_task"/>
@@ -98,7 +97,6 @@
 		<delete file="gepp_task.html"/>
 		<delete file="getest_task.html"/>
 		<delete file="gexace_task.html"/>
-		<delete file="gexmlsplit_task.html"/>
 		<delete file="input_task.html"/>
 		<delete file="ise_task.html"/>
 		<delete file="mkdir_task.html"/>

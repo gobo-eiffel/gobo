@@ -160,15 +160,6 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Gexmlsplit_task_name: STRING is
-			-- "gexmlsplit" task name
-		once
-			Result := "gexmlsplit"
-		ensure
-			task_name_not_void: Result /= Void
-			task_name_not_empty: Result.count > 0
-		end
-
 	Echo_task_name: STRING is
 			-- "echo" task name
 		once
