@@ -25,6 +25,9 @@ feature -- Test
 			assert ("empty", utf16.valid_utf16 (""))
 			assert ("valid_big_endian", utf16.valid_utf16 (Big_endian + "%/0/a%/216/b%/223/c%/0/d"))
 			assert ("valid_little_endian", utf16.valid_utf16 (Little_endian + "a%/0/b%/217/c%/223/d%/0/"))
+			assert ("valid_little_endian_2", utf16.valid_utf16 (Little_endian + "2%U0%U1%U7%U3%U4%U2%U %U2%U0%U0%U7%U0%U7%U1%U8%U %UU%U"))
+			assert ("valid_little_endian_3", utf16.valid_utf16le ("a%/0/b%/217/c%/223/d%/0/"))
+			assert ("valid_little_endian_4", utf16.valid_utf16le ("2%U0%U1%U7%U3%U4%U2%U %U2%U0%U0%U7%U0%U7%U1%U8%U %UU%U"))
 			assert ("valid_no_byte_order_marker", utf16.valid_utf16 ("%/0/a%/216/b%/223/c%/0/d"))
 		end
 
@@ -32,6 +35,7 @@ feature -- Test
 			-- Test feature `valid_utf16' when invalid.
 		do
 			assert ("odd", not utf16.valid_utf16 (Big_endian + "a"))
+			assert ("little_endian_no_bom", not not utf16.valid_utf16 ("2%U0%U1%U7%U3%U4%U2%U %U2%U0%U0%U7%U0%U7%U1%U8%U %UU%U"))
 			assert ("surrogate_high_high", not utf16.valid_utf16 (Big_endian + "%/0/a%/216/b%/219/c%/0/d"))
 			assert ("surrogate_low_low", not utf16.valid_utf16 (Big_endian + "%/0/a%/220/b%/223/c%/0/d"))
 			assert ("surrogate_low_high", not utf16.valid_utf16 (Big_endian + "%/0/a%/222/b%/218/c%/0/d"))
@@ -74,6 +78,19 @@ feature -- Test
 			assert_integers_equal ("low_surrogate_0x10ffff", 57343, utf16.supplementary_to_low_surrogate (1114111))
 		end
 
+	test_utf16_bytes_to_utf8 is
+			-- Test creating UTF-8 strings from UTF-16 byte sequences.
+		local
+			l_utf8: UC_UTF8_STRING
+		do
+			create l_utf8.make_from_utf16 (Big_endian_test_string)
+			assert_equal ("Correct big-endian string", l_utf8.to_utf16_be, Big_endian_test_string)
+			create l_utf8.make_from_utf16be (Big_endian_test_string)
+			assert_equal ("Correct big-endian string 2", l_utf8.to_utf16_be, Big_endian_test_string)
+			create l_utf8.make_from_utf16le (Little_endian_test_string)
+			assert_equal ("Correct little-endian string", l_utf8.to_utf16_le, Little_endian_test_string)
+		end
+
 feature {NONE} -- Constants
 
 	Big_endian: STRING is "%/254/%/255/"
@@ -82,4 +99,11 @@ feature {NONE} -- Constants
 	Little_endian: STRING is "%/255/%/254/"
 			-- Little-endian BOM
 
+	Big_endian_test_string: STRING is "%/0/a%/216/b%/223/c%/0/d"
+			-- UTF-16BE string
+
+	Little_endian_test_string: STRING is "2%U0%U1%U7%U3%U4%U2%U %U2%U0%U0%U7%U0%U7%U1%U8%U %UU%U"
+			-- UTF-16LE string
+
+	
 end
