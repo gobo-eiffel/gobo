@@ -8772,7 +8772,11 @@ feature {NONE} -- Agent generation
 				current_file.put_new_line
 				current_file.put_new_line
 				current_file := old_file
-				flush_to_c_file
+					-- Do not flush code to C file here (no call to `flush_to_c_file')
+					-- because we want the function associated with this agent and the
+					-- creation of the agent (printed just below) to be in the same C file.
+					-- Indeed, the associated function is not declared in the C header file,
+					-- but it is used in the creation of the agent.
 				free_temp_variables.wipe_out
 				used_temp_variables.wipe_out
 					--
