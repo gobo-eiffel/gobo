@@ -178,6 +178,7 @@ feature {NONE} -- Initialization
 			create wrapper_dynamic_type_sets.make_with_capacity (1)
 			create manifest_array_types.make (100)
 			create manifest_tuple_types.make (100)
+			create gevoid_result_types.make (100)
 			create once_features.make (10000)
 			create constant_features.make_map (10000)
 			create called_features.make (1000)
@@ -541,6 +542,7 @@ feature {NONE} -- C code Generation
 			l_header_file: KL_TEXT_OUTPUT_FILE
 			l_root_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_type: ET_DYNAMIC_TYPE
 		do
 			old_system_name := system_name
 			system_name := a_system_name
@@ -604,10 +606,36 @@ feature {NONE} -- C code Generation
 					manifest_tuple_types.forth
 				end
 				manifest_tuple_types.wipe_out
-					-- Print call-on-void-target function.
-				print_gevoid_function
+					-- Print call-on-void-target functions.
+					-- Calls-on-void-target with no result (i.e. procedure calls).
+				print_gevoid_function (Void)
 				current_file.put_new_line
 				flush_to_c_file
+					-- Calls-on-void-target with result of reference type.
+				from gevoid_result_types.start until gevoid_result_types.after loop
+					l_type := gevoid_result_types.item_for_iteration
+					if not l_type.is_expanded then
+						print_gevoid_function (l_type)
+						current_file.put_new_line
+						flush_to_c_file
+							-- Note that all calls-on-void-target with a result of
+							-- reference type share the same 'gevoid' function.
+						gevoid_result_types.go_after
+					else
+						gevoid_result_types.forth
+					end
+				end
+					-- Calls-on-void-target with result of expanded type.
+				from gevoid_result_types.start until gevoid_result_types.after loop
+					l_type := gevoid_result_types.item_for_iteration
+					if l_type.is_expanded then
+						print_gevoid_function (l_type)
+						current_file.put_new_line
+						flush_to_c_file
+					end
+					gevoid_result_types.forth
+				end
+				gevoid_result_types.wipe_out
 					-- Print constants declarations.
 				print_constants_declaration
 				current_file.put_new_line
@@ -4485,7 +4513,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				if l_target_dynamic_type = Void then
 						-- Call on Void target.
 					print_indentation
-					current_file.put_string (c_gevoid)
+					print_gevoid_name (Void, current_file)
 					current_file.put_character ('(')
 					print_target_expression (call_operands.first, l_target_static_type)
 					from i := 2 until i > nb loop
@@ -6495,10 +6523,8 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					l_other_target_dynamic_types := l_target_type_set.other_types
 					if l_target_dynamic_type = Void then
 							-- Call on Void target.
-						current_file.put_character ('(')
-						print_type_declaration (l_call_type, current_file)
-						current_file.put_character (')')
-						current_file.put_string (c_gevoid)
+						gevoid_result_types.force_last (l_call_type)
+						print_gevoid_name (l_call_type, current_file)
 						current_file.put_character ('(')
 						print_target_expression (call_operands.first, l_target_static_type)
 						from i := 2 until i > nb loop
@@ -14205,6 +14231,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			l_tuple_type_set: ET_DYNAMIC_TYPE_SET
 			l_tuple_dynamic_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
+			l_call_type: ET_DYNAMIC_TYPE
 		do
 			l_procedure_type ?= a_target_type
 			if l_procedure_type = Void then
@@ -14269,10 +14296,9 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 						print_attribute_tuple_item_access (i, l_tuple, l_tuple_dynamic_type)
 					else
 							-- Call on Void target.
-						current_file.put_character ('(')
-						print_type_declaration (l_open_operand_type_sets.item (i).static_type, current_file)
-						current_file.put_character (')')
-						current_file.put_string (c_gevoid)
+						l_call_type := l_open_operand_type_sets.item (i).static_type
+						gevoid_result_types.force_last (l_call_type)
+						print_gevoid_name (l_call_type, current_file)
 						current_file.put_character ('(')
 						print_target_expression (l_tuple, l_tuple_type)
 						current_file.put_character (')')
@@ -14300,6 +14326,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			l_tuple_type_set: ET_DYNAMIC_TYPE_SET
 			l_tuple_dynamic_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
+			l_call_type: ET_DYNAMIC_TYPE
 		do
 			l_function_type ?= a_target_type
 			if l_function_type = Void then
@@ -14364,10 +14391,9 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 						print_attribute_tuple_item_access (i, l_tuple, l_tuple_dynamic_type)
 					else
 							-- Call on Void target.
-						current_file.put_character ('(')
-						print_type_declaration (l_open_operand_type_sets.item (i).static_type, current_file)
-						current_file.put_character (')')
-						current_file.put_string (c_gevoid)
+						l_call_type := l_open_operand_type_sets.item (i).static_type
+						gevoid_result_types.force_last (l_call_type)
+						print_gevoid_name (l_call_type, current_file)
 						current_file.put_character ('(')
 						print_target_expression (l_tuple, l_tuple_type)
 						current_file.put_character (')')
@@ -16058,18 +16084,28 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 		end
 
-	print_gevoid_function is
+	print_gevoid_function (a_result_type: ET_DYNAMIC_TYPE) is
 			-- Print 'gevoid' function to `current_file' and its signature to `header_file'.
-			-- 'gevoid' is called when a feature call will always result
-			-- in a call-on-void-target.
+			-- 'gevoid' is called when a feature call will always result in a call-on-void-target.
+			-- `a_result_type' is the expected result type if the corresponding call had
+			-- not been a call-on-void-target, or Void in case of a procedure call.
+			-- Note that all calls-on-void-target with a result of reference type share
+			-- the same 'gevoid' function.
 		do
 				-- Print signature to `header_file' and `current_file'.
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
-			header_file.put_string (c_int)
-			current_file.put_string (c_int)
-			header_file.put_string (" gevoid")
-			current_file.put_string (" gevoid")
+			if a_result_type = Void then
+				header_file.put_string (c_void)
+				current_file.put_string (c_void)
+			else
+				print_type_declaration (a_result_type, header_file)
+				print_type_declaration (a_result_type, current_file)
+			end
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			print_gevoid_name (a_result_type, header_file)
+			print_gevoid_name (a_result_type, current_file)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
 			print_type_declaration (current_system.any_type, header_file)
@@ -16087,11 +16123,27 @@ feature {NONE} -- C function generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
+			if a_result_type = Void then
 -- TODO: raise a "call on void target" exception.
-			print_indentation
-			current_file.put_line ("printf(%"Call on Void target!\n%");")
-			print_indentation
-			current_file.put_line ("exit(1);")
+				print_indentation
+				current_file.put_line ("printf(%"Call on Void target!\n%");")
+				print_indentation
+				current_file.put_line ("exit(1);")
+			else
+				print_indentation
+				print_gevoid_name (Void, current_file)
+				current_file.put_character ('(')
+				print_current_name (current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				print_gedefault_entity_value (a_result_type, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
 			dedent
 			current_file.put_character ('}')
 			current_file.put_new_line
@@ -18056,6 +18108,27 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
+	print_gevoid_name (a_result_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of call-on-void-target function to `a_file'.
+			-- `a_result_type' is the expected result type if the corresponding call had
+			-- not been a call-on-void-target, or Void in case of a procedure call.
+			-- Note that all calls-on-void-target with a result of reference type share
+			-- the same 'gevoid' function.
+		require
+			a_type_not_void: a_result_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_gevoid)
+			if a_result_type /= Void then
+				if a_result_type.is_expanded then
+					a_file.put_integer (a_result_type.id)
+				else
+					a_file.put_integer (0)
+				end
+			end
+		end
+
 	print_argument_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print name of argument `a_name' to `a_file'.
 		require
@@ -19383,6 +19456,9 @@ feature {NONE} -- Access
 	manifest_tuple_types: DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE]
 			-- Types of manifest tuples
 
+	gevoid_result_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
+			-- Result types of calls-on-void-target (if they had not been calls-on-void-target)
+
 	once_features: DS_HASH_SET [ET_FEATURE]
 			-- Once features already generated
 
@@ -19862,6 +19938,8 @@ invariant
 	no_void_manifest_array_type: not manifest_array_types.has (Void)
 	manifest_tuple_types_not_void: manifest_tuple_types /= Void
 	no_void_manifest_tuple_type: not manifest_tuple_types.has (Void)
+	gevoid_result_types_not_void: gevoid_result_types /= Void
+	no_void_gevoid_result_type: not gevoid_result_types.has (Void)
 	called_features_not_void: called_features /= Void
 	no_void_called_feature: not called_features.has (Void)
 	once_features_not_void: once_features /= Void
