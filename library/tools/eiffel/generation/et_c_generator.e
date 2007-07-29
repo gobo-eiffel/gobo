@@ -283,6 +283,7 @@ feature {NONE} -- Compilation script generation
 			l_cc_template: STRING
 			l_link_template: STRING
 			l_filename: STRING
+			l_script_filename: STRING
 			l_base_name: STRING
 			i, nb: INTEGER
 			l_c, l_cpp, l_obj: STRING
@@ -383,11 +384,11 @@ feature {NONE} -- Compilation script generation
 				l_variables.force ("", "lflags")
 			end
 			if operating_system.is_windows then
-				l_filename := l_base_name + ".bat"
+				l_script_filename := l_base_name + ".bat"
 			else
-				l_filename := l_base_name + ".sh"
+				l_script_filename := l_base_name + ".sh"
 			end
-			create l_file.make (l_filename)
+			create l_file.make (l_script_filename)
 			l_file.open_write
 			if l_file.is_open_write then
 				if operating_system.is_windows then
@@ -419,12 +420,12 @@ feature {NONE} -- Compilation script generation
 				l_file.put_line (l_command_name)
 				l_file.close
 				if not operating_system.is_windows then
-					create l_command.make ("chmod a+x " + l_filename)
+					create l_command.make ("chmod a+x " + l_script_filename)
 					l_command.execute
 				end
 			else
 				set_fatal_error
-				report_cannot_write_error (l_filename)
+				report_cannot_write_error (l_script_filename)
 			end
 		end
 
