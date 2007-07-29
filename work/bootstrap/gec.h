@@ -4598,33 +4598,34 @@ struct S59 {
 	T0* a38; /* wrapper_dynamic_type_sets */
 	T0* a39; /* manifest_array_types */
 	T0* a40; /* manifest_tuple_types */
-	T0* a41; /* once_features */
-	T0* a42; /* constant_features */
-	T0* a43; /* called_features */
-	T0* a44; /* included_header_filenames */
-	T0* a46; /* included_runtime_header_files */
-	T0* a47; /* included_runtime_c_files */
-	T0* a48; /* c_filenames */
-	T0* a49; /* cpp_filenames */
-	T1 a50; /* is_finalize */
-	T0* a51; /* external_c_regexp */
-	T0* a52; /* external_c_macro_regexp */
-	T0* a53; /* external_c_struct_regexp */
-	T0* a54; /* external_c_inline_regexp */
-	T0* a55; /* old_external_c_regexp */
-	T0* a56; /* old_external_c_macro_regexp */
-	T0* a57; /* old_external_c_struct_regexp */
-	T0* a58; /* external_cpp_regexp */
-	T0* a59; /* external_cpp_inline_regexp */
-	T0* a75; /* c_file */
-	T6 a76; /* c_file_size */
-	T0* a97; /* cpp_file */
-	T6 a98; /* cpp_file_size */
-	T6 a120; /* indentation */
-	T0* a238; /* assignment_target */
-	T1 a239; /* in_operand */
-	T0* a242; /* call_target_type */
-	T0* a258; /* current_agent */
+	T0* a41; /* gevoid_result_types */
+	T0* a42; /* once_features */
+	T0* a43; /* constant_features */
+	T0* a44; /* called_features */
+	T0* a45; /* included_header_filenames */
+	T0* a47; /* included_runtime_header_files */
+	T0* a48; /* included_runtime_c_files */
+	T0* a49; /* c_filenames */
+	T0* a50; /* cpp_filenames */
+	T1 a51; /* is_finalize */
+	T0* a52; /* external_c_regexp */
+	T0* a53; /* external_c_macro_regexp */
+	T0* a54; /* external_c_struct_regexp */
+	T0* a55; /* external_c_inline_regexp */
+	T0* a56; /* old_external_c_regexp */
+	T0* a57; /* old_external_c_macro_regexp */
+	T0* a58; /* old_external_c_struct_regexp */
+	T0* a59; /* external_cpp_regexp */
+	T0* a60; /* external_cpp_inline_regexp */
+	T0* a76; /* c_file */
+	T6 a77; /* c_file_size */
+	T0* a98; /* cpp_file */
+	T6 a99; /* cpp_file_size */
+	T6 a121; /* indentation */
+	T0* a240; /* assignment_target */
+	T1 a241; /* in_operand */
+	T0* a244; /* call_target_type */
+	T0* a259; /* current_agent */
 };
 
 /* Struct for type KL_SHELL_COMMAND */
@@ -6353,11 +6354,11 @@ struct S192 {
 	T6 a13; /* free_slot */
 	T6 a15; /* position */
 	T6 a17; /* count */
-	T0* a18; /* special_item_routines */
-	T0* a19; /* clashes */
-	T0* a21; /* slots */
-	T6 a22; /* found_position */
-	T6 a30; /* slots_position */
+	T6 a20; /* slots_position */
+	T0* a22; /* special_item_routines */
+	T0* a23; /* clashes */
+	T0* a25; /* slots */
+	T6 a26; /* found_position */
 	T6 a32; /* clashes_previous_position */
 	T0* a35; /* equality_tester */
 };
@@ -15654,47 +15655,47 @@ extern T1 T36x3567(T0* C);
 /* Call to UT_ERROR.default_message */
 extern T0* T40x3841(T0* C);
 /* Call to ET_DYNAMIC_TYPE.seeded_dynamic_procedure */
-extern T0* T149x11564T6T0(T0* C, T6 a1, T0* a2);
+extern T0* T149x11570T6T0(T0* C, T6 a1, T0* a2);
 /* Call to ET_DYNAMIC_TYPE.base_type */
-extern T0* T149x11550(T0* C);
+extern T0* T149x11556(T0* C);
 /* Call to ET_DYNAMIC_TYPE.conforms_to_type */
-extern T1 T149x11546T0T0(T0* C, T0* a1, T0* a2);
+extern T1 T149x11552T0T0(T0* C, T0* a1, T0* a2);
 /* Call to ET_DYNAMIC_TYPE.is_agent_type */
-extern T1 T149x11543(T0* C);
+extern T1 T149x11549(T0* C);
 /* Call to ET_DYNAMIC_TYPE.seeded_dynamic_query */
-extern T0* T149x11563T6T0(T0* C, T6 a1, T0* a2);
+extern T0* T149x11569T6T0(T0* C, T6 a1, T0* a2);
+/* Call to ET_DYNAMIC_TYPE.dynamic_query */
+extern T0* T149x11567T0T0(T0* C, T0* a1, T0* a2);
+/* Call to ET_DYNAMIC_TYPE.dynamic_procedure */
+extern T0* T149x11568T0T0(T0* C, T0* a1, T0* a2);
+/* Call to ET_DYNAMIC_TYPE.queries */
+extern T0* T149x11558(T0* C);
+/* Call to ET_DYNAMIC_TYPE.base_class */
+extern T0* T149x11557(T0* C);
+/* Call to ET_DYNAMIC_TYPE.is_expanded */
+extern T1 T149x11586(T0* C);
+/* Call to ET_DYNAMIC_TYPE.id */
+extern T6 T149x11565(T0* C);
+/* Call to ET_DYNAMIC_TYPE.is_special */
+extern T1 T149x11550(T0* C);
+/* Call to ET_DYNAMIC_TYPE.is_generic */
+extern T1 T149x11548(T0* C);
 /* Call to ET_DYNAMIC_TYPE.hash_code */
 extern T6 T149x23(T0* C);
-/* Call to ET_DYNAMIC_TYPE.dynamic_query */
-extern T0* T149x11561T0T0(T0* C, T0* a1, T0* a2);
-/* Call to ET_DYNAMIC_TYPE.dynamic_procedure */
-extern T0* T149x11562T0T0(T0* C, T0* a1, T0* a2);
-/* Call to ET_DYNAMIC_TYPE.queries */
-extern T0* T149x11552(T0* C);
-/* Call to ET_DYNAMIC_TYPE.base_class */
-extern T0* T149x11551(T0* C);
-/* Call to ET_DYNAMIC_TYPE.is_expanded */
-extern T1 T149x11580(T0* C);
-/* Call to ET_DYNAMIC_TYPE.id */
-extern T6 T149x11559(T0* C);
-/* Call to ET_DYNAMIC_TYPE.is_special */
-extern T1 T149x11544(T0* C);
-/* Call to ET_DYNAMIC_TYPE.is_generic */
-extern T1 T149x11542(T0* C);
 /* Call to ET_DYNAMIC_TYPE.next_type */
-extern T0* T149x11573(T0* C);
+extern T0* T149x11579(T0* C);
 /* Call to ET_DYNAMIC_TYPE.procedure_calls */
-extern T0* T149x11566(T0* C);
+extern T0* T149x11572(T0* C);
 /* Call to ET_DYNAMIC_TYPE.query_calls */
-extern T0* T149x11565(T0* C);
+extern T0* T149x11571(T0* C);
 /* Call to ET_DYNAMIC_TYPE.procedures */
-extern T0* T149x11553(T0* C);
+extern T0* T149x11559(T0* C);
 /* Call to ET_DYNAMIC_TYPE.is_alive */
-extern T1 T149x11539(T0* C);
-/* Call to ET_DYNAMIC_TYPE.static_type */
-extern T0* T149x11583(T0* C);
-/* Call to ET_DYNAMIC_TYPE.has_static */
 extern T1 T149x11545(T0* C);
+/* Call to ET_DYNAMIC_TYPE.static_type */
+extern T0* T149x11589(T0* C);
+/* Call to ET_DYNAMIC_TYPE.has_static */
+extern T1 T149x11551(T0* C);
 /* Call to ET_BASE_TYPE.to_text */
 extern T0* T150x6047(T0* C);
 /* Call to ET_BASE_TYPE.direct_base_class */
@@ -15770,83 +15771,83 @@ extern T1 T150x5937(T0* C);
 /* Call to ET_BASE_TYPE.same_base_type */
 extern T1 T150x6018T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* Call to ET_QUERY.first_seed */
-extern T6 T152x11688(T0* C);
+extern T6 T152x11694(T0* C);
 /* Call to ET_QUERY.lower_name */
-extern T0* T152x11607(T0* C);
+extern T0* T152x11613(T0* C);
 /* Call to ET_QUERY.name */
-extern T0* T152x11685(T0* C);
+extern T0* T152x11691(T0* C);
 /* Call to ET_QUERY.type */
-extern T0* T152x11686(T0* C);
+extern T0* T152x11692(T0* C);
 /* Call to ET_QUERY.overloaded_alias_name */
-extern T0* T152x11612(T0* C);
+extern T0* T152x11618(T0* C);
 /* Call to ET_QUERY.alias_name */
-extern T0* T152x11608(T0* C);
+extern T0* T152x11614(T0* C);
 /* Call to ET_QUERY.overloaded_name */
-extern T0* T152x11611(T0* C);
+extern T0* T152x11617(T0* C);
 /* Call to ET_QUERY.hash_code */
 extern T6 T152x23(T0* C);
 /* Call to ET_QUERY.arguments */
-extern T0* T152x11687(T0* C);
+extern T0* T152x11693(T0* C);
 /* Call to ET_QUERY.is_exported_to */
-extern T1 T152x11648T0T0(T0* C, T0* a1, T0* a2);
+extern T1 T152x11654T0T0(T0* C, T0* a1, T0* a2);
 /* Call to ET_QUERY.arguments_count */
-extern T6 T152x11647(T0* C);
+extern T6 T152x11653(T0* C);
 /* Call to ET_QUERY.is_attribute */
-extern T1 T152x11637(T0* C);
-/* Call to ET_QUERY.assigner */
-extern T0* T152x11766(T0* C);
-/* Call to ET_QUERY.has_seed */
-extern T1 T152x11683T6(T0* C, T6 a1);
-/* Call to ET_QUERY.implementation_feature */
-extern T0* T152x11699(T0* C);
-/* Call to ET_QUERY.is_unique_attribute */
-extern T1 T152x11639(T0* C);
-/* Call to ET_QUERY.is_constant_attribute */
-extern T1 T152x11638(T0* C);
-/* Call to ET_QUERY.implementation_class */
-extern T0* T152x11698(T0* C);
-/* Call to ET_QUERY.is_once */
-extern T1 T152x11641(T0* C);
-/* Call to ET_QUERY.is_infixable */
-extern T1 T152x11642(T0* C);
-/* Call to ET_QUERY.is_prefixable */
 extern T1 T152x11643(T0* C);
-/* Call to ET_QUERY.is_bracketable */
+/* Call to ET_QUERY.assigner */
+extern T0* T152x11772(T0* C);
+/* Call to ET_QUERY.has_seed */
+extern T1 T152x11689T6(T0* C, T6 a1);
+/* Call to ET_QUERY.implementation_feature */
+extern T0* T152x11705(T0* C);
+/* Call to ET_QUERY.is_unique_attribute */
+extern T1 T152x11645(T0* C);
+/* Call to ET_QUERY.is_constant_attribute */
 extern T1 T152x11644(T0* C);
+/* Call to ET_QUERY.implementation_class */
+extern T0* T152x11704(T0* C);
+/* Call to ET_QUERY.is_once */
+extern T1 T152x11647(T0* C);
+/* Call to ET_QUERY.is_infixable */
+extern T1 T152x11648(T0* C);
+/* Call to ET_QUERY.is_prefixable */
+extern T1 T152x11649(T0* C);
+/* Call to ET_QUERY.is_bracketable */
+extern T1 T152x11650(T0* C);
 /* Call to ET_QUERY.is_frozen */
-extern T1 T152x11634(T0* C);
+extern T1 T152x11640(T0* C);
 /* Call to ET_QUERY.is_deferred */
-extern T1 T152x11635(T0* C);
+extern T1 T152x11641(T0* C);
 /* Call to ET_QUERY.new_synonym */
-extern T0* T152x11670T0(T0* C, T0* a1);
+extern T0* T152x11676T0(T0* C, T0* a1);
 /* Call to ET_PROCEDURE.is_exported_to */
-extern T1 T154x11648T0T0(T0* C, T0* a1, T0* a2);
+extern T1 T154x11654T0T0(T0* C, T0* a1, T0* a2);
 /* Call to ET_PROCEDURE.first_seed */
-extern T6 T154x11688(T0* C);
+extern T6 T154x11694(T0* C);
 /* Call to ET_PROCEDURE.arguments_count */
-extern T6 T154x11647(T0* C);
+extern T6 T154x11653(T0* C);
 /* Call to ET_PROCEDURE.name */
-extern T0* T154x11685(T0* C);
+extern T0* T154x11691(T0* C);
 /* Call to ET_PROCEDURE.overloaded_alias_name */
-extern T0* T154x11612(T0* C);
+extern T0* T154x11618(T0* C);
 /* Call to ET_PROCEDURE.alias_name */
-extern T0* T154x11608(T0* C);
+extern T0* T154x11614(T0* C);
 /* Call to ET_PROCEDURE.overloaded_name */
-extern T0* T154x11611(T0* C);
+extern T0* T154x11617(T0* C);
 /* Call to ET_PROCEDURE.hash_code */
 extern T6 T154x23(T0* C);
 /* Call to ET_PROCEDURE.arguments */
-extern T0* T154x11687(T0* C);
+extern T0* T154x11693(T0* C);
 /* Call to ET_PROCEDURE.is_creation_exported_to */
-extern T1 T154x11650T0T0T0(T0* C, T0* a1, T0* a2, T0* a3);
+extern T1 T154x11656T0T0T0(T0* C, T0* a1, T0* a2, T0* a3);
 /* Call to ET_PROCEDURE.has_seed */
-extern T1 T154x11683T6(T0* C, T6 a1);
+extern T1 T154x11689T6(T0* C, T6 a1);
 /* Call to ET_PROCEDURE.is_frozen */
-extern T1 T154x11634(T0* C);
+extern T1 T154x11640(T0* C);
 /* Call to ET_PROCEDURE.is_deferred */
-extern T1 T154x11635(T0* C);
+extern T1 T154x11641(T0* C);
 /* Call to ET_PROCEDURE.new_synonym */
-extern T0* T154x11670T0(T0* C, T0* a1);
+extern T0* T154x11676T0(T0* C, T0* a1);
 /* Call to ET_TYPE.same_named_type */
 extern T1 T159x6017T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* Call to ET_TYPE.position */
@@ -15990,35 +15991,35 @@ extern T1 T160x6103T0T0T0(T0* C, T0* a1, T0* a2, T0* a3);
 /* Call to ET_TYPE_CONTEXT.base_type */
 extern T0* T160x6088T0(T0* C, T0* a1);
 /* Call to ET_FEATURE_NAME.name */
-extern T0* T161x11098(T0* C);
+extern T0* T161x11104(T0* C);
 /* Call to ET_FEATURE_NAME.first_leaf */
 extern T0* T161x6054(T0* C);
 /* Call to ET_FEATURE_NAME.last_leaf */
 extern T0* T161x6055(T0* C);
 /* Call to ET_FEATURE_NAME.same_feature_name */
-extern T1 T161x11096T0(T0* C, T0* a1);
+extern T1 T161x11102T0(T0* C, T0* a1);
 /* Call to ET_FEATURE_NAME.seed */
-extern T6 T161x11100(T0* C);
+extern T6 T161x11106(T0* C);
 /* Call to ET_FEATURE_NAME.lower_name */
-extern T0* T161x11099(T0* C);
+extern T0* T161x11105(T0* C);
 /* Call to ET_FEATURE_NAME.position */
 extern T0* T161x6051(T0* C);
 /* Call to ET_FEATURE_NAME.is_tuple_label */
-extern T1 T161x11105(T0* C);
+extern T1 T161x11111(T0* C);
 /* Call to ET_FEATURE_NAME.is_local */
-extern T1 T161x11103(T0* C);
+extern T1 T161x11109(T0* C);
 /* Call to ET_FEATURE_NAME.is_argument */
-extern T1 T161x11104(T0* C);
+extern T1 T161x11110(T0* C);
 /* Call to ET_FEATURE_NAME.hash_code */
 extern T6 T161x23(T0* C);
 /* Call to ET_FEATURE_NAME.local_name */
-extern T0* T161x11136(T0* C);
+extern T0* T161x11142(T0* C);
 /* Call to ET_FEATURE_NAME.argument_name */
-extern T0* T161x11137(T0* C);
+extern T0* T161x11143(T0* C);
 /* Call to ET_FEATURE_NAME.is_prefix */
-extern T1 T161x11126(T0* C);
+extern T1 T161x11132(T0* C);
 /* Call to ET_FEATURE_NAME.is_infix */
-extern T1 T161x11106(T0* C);
+extern T1 T161x11112(T0* C);
 /* Call to ET_CLASS_TYPE.actual_parameters */
 extern T0* T164x5926(T0* C);
 /* Call to ET_CLASS_TYPE.is_generic */
@@ -16040,23 +16041,23 @@ extern T1 T164x5905(T0* C);
 /* Call to ET_CLASS_TYPE.position */
 extern T0* T164x6051(T0* C);
 /* Call to ET_DYNAMIC_TYPE_SET.static_type */
-extern T0* T167x11583(T0* C);
+extern T0* T167x11589(T0* C);
 /* Call to ET_DYNAMIC_TYPE_SET.other_types */
-extern T0* T167x11585(T0* C);
+extern T0* T167x11591(T0* C);
 /* Call to ET_DYNAMIC_TYPE_SET.first_type */
-extern T0* T167x11584(T0* C);
+extern T0* T167x11590(T0* C);
 /* Call to ET_DYNAMIC_TYPE_SET.count */
-extern T6 T167x11588(T0* C);
+extern T6 T167x11594(T0* C);
 /* Call to ET_DYNAMIC_TYPE_SET.has_expanded */
-extern T1 T167x11581(T0* C);
+extern T1 T167x11587(T0* C);
 /* Call to ET_DYNAMIC_TYPE_SET.is_expanded */
-extern T1 T167x11580(T0* C);
+extern T1 T167x11586(T0* C);
 /* Call to ET_DYNAMIC_TYPE_SET.special_type */
-extern T0* T167x11587(T0* C);
+extern T0* T167x11593(T0* C);
 /* Call to ET_DYNAMIC_TYPE_SET.has_type */
-extern T1 T167x11578T0(T0* C, T0* a1);
+extern T1 T167x11584T0(T0* C, T0* a1);
 /* Call to ET_DYNAMIC_TYPE_SET.is_subset */
-extern T1 T167x11582T0(T0* C, T0* a1);
+extern T1 T167x11588T0(T0* C, T0* a1);
 /* Call to ET_ACTUAL_PARAMETER_ITEM.label */
 extern T0* T169x6070(T0* C);
 /* Call to ET_ACTUAL_PARAMETER_ITEM.type */
@@ -16066,77 +16067,77 @@ extern T0* T169x6072T0(T0* C, T0* a1);
 /* Call to ET_ACTUAL_PARAMETER_ITEM.actual_parameter */
 extern T0* T169x6068(T0* C);
 /* Call to ET_AST_PROCESSOR.universe */
-extern T0* T172x6974(T0* C);
+extern T0* T172x6976(T0* C);
 /* Call to ET_FEATURE.lower_name */
-extern T0* T184x11607(T0* C);
+extern T0* T184x11613(T0* C);
 /* Call to ET_FEATURE.name */
-extern T0* T184x11685(T0* C);
+extern T0* T184x11691(T0* C);
 /* Call to ET_FEATURE.has_seed */
-extern T1 T184x11683T6(T0* C, T6 a1);
+extern T1 T184x11689T6(T0* C, T6 a1);
 /* Call to ET_FEATURE.extended_name */
-extern T0* T184x11609(T0* C);
-/* Call to ET_FEATURE.clients */
-extern T0* T184x11700(T0* C);
-/* Call to ET_FEATURE.version */
-extern T6 T184x11619(T0* C);
-/* Call to ET_FEATURE.first_seed */
-extern T6 T184x11688(T0* C);
-/* Call to ET_FEATURE.is_deferred */
-extern T1 T184x11635(T0* C);
-/* Call to ET_FEATURE.alias_name */
-extern T0* T184x11608(T0* C);
-/* Call to ET_FEATURE.implementation_class */
-extern T0* T184x11698(T0* C);
-/* Call to ET_FEATURE.is_procedure */
-extern T1 T184x11640(T0* C);
-/* Call to ET_FEATURE.arguments */
-extern T0* T184x11687(T0* C);
-/* Call to ET_FEATURE.is_exported_to */
-extern T1 T184x11648T0T0(T0* C, T0* a1, T0* a2);
-/* Call to ET_FEATURE.other_seeds */
-extern T0* T184x11689(T0* C);
-/* Call to ET_FEATURE.is_unique_attribute */
-extern T1 T184x11639(T0* C);
-/* Call to ET_FEATURE.is_constant_attribute */
-extern T1 T184x11638(T0* C);
-/* Call to ET_FEATURE.type */
-extern T0* T184x11686(T0* C);
-/* Call to ET_FEATURE.is_attribute */
-extern T1 T184x11637(T0* C);
-/* Call to ET_FEATURE.id */
-extern T6 T184x11618(T0* C);
-/* Call to ET_FEATURE.has_implementation_error */
-extern T1 T184x11702(T0* C);
-/* Call to ET_FEATURE.implementation_checked */
-extern T1 T184x11701(T0* C);
-/* Call to ET_FEATURE.implementation_feature */
-extern T0* T184x11699(T0* C);
-/* Call to ET_FEATURE.other_precursors */
-extern T0* T184x11621(T0* C);
-/* Call to ET_FEATURE.first_precursor */
-extern T0* T184x11697(T0* C);
-/* Call to ET_FEATURE.postconditions */
 extern T0* T184x11615(T0* C);
-/* Call to ET_FEATURE.preconditions */
-extern T0* T184x11614(T0* C);
-/* Call to ET_FEATURE.is_frozen */
-extern T1 T184x11634(T0* C);
-/* Call to ET_FEATURE.is_infixable */
-extern T1 T184x11642(T0* C);
-/* Call to ET_FEATURE.is_prefixable */
-extern T1 T184x11643(T0* C);
-/* Call to ET_FEATURE.is_bracketable */
-extern T1 T184x11644(T0* C);
-/* Call to ET_FEATURE.renamed_feature */
-extern T0* T184x11671T0(T0* C, T0* a1);
-/* Call to ET_FEATURE.undefined_feature */
-extern T0* T184x11672T0(T0* C, T0* a1);
-/* Call to ET_FEATURE.same_version */
-extern T1 T184x11654T0(T0* C, T0* a1);
-/* Call to ET_FEATURE.is_dotnet */
-extern T1 T184x11682(T0* C);
-/* Call to ET_FEATURE.is_once */
+/* Call to ET_FEATURE.clients */
+extern T0* T184x11706(T0* C);
+/* Call to ET_FEATURE.version */
+extern T6 T184x11625(T0* C);
+/* Call to ET_FEATURE.first_seed */
+extern T6 T184x11694(T0* C);
+/* Call to ET_FEATURE.is_deferred */
 extern T1 T184x11641(T0* C);
+/* Call to ET_FEATURE.alias_name */
+extern T0* T184x11614(T0* C);
+/* Call to ET_FEATURE.implementation_class */
+extern T0* T184x11704(T0* C);
+/* Call to ET_FEATURE.is_procedure */
+extern T1 T184x11646(T0* C);
+/* Call to ET_FEATURE.arguments */
+extern T0* T184x11693(T0* C);
+/* Call to ET_FEATURE.is_exported_to */
+extern T1 T184x11654T0T0(T0* C, T0* a1, T0* a2);
+/* Call to ET_FEATURE.other_seeds */
+extern T0* T184x11695(T0* C);
+/* Call to ET_FEATURE.is_unique_attribute */
+extern T1 T184x11645(T0* C);
+/* Call to ET_FEATURE.is_constant_attribute */
+extern T1 T184x11644(T0* C);
+/* Call to ET_FEATURE.type */
+extern T0* T184x11692(T0* C);
+/* Call to ET_FEATURE.is_attribute */
+extern T1 T184x11643(T0* C);
+/* Call to ET_FEATURE.id */
+extern T6 T184x11624(T0* C);
+/* Call to ET_FEATURE.has_implementation_error */
+extern T1 T184x11708(T0* C);
+/* Call to ET_FEATURE.implementation_checked */
+extern T1 T184x11707(T0* C);
+/* Call to ET_FEATURE.implementation_feature */
+extern T0* T184x11705(T0* C);
+/* Call to ET_FEATURE.other_precursors */
+extern T0* T184x11627(T0* C);
+/* Call to ET_FEATURE.first_precursor */
+extern T0* T184x11703(T0* C);
+/* Call to ET_FEATURE.postconditions */
+extern T0* T184x11621(T0* C);
+/* Call to ET_FEATURE.preconditions */
+extern T0* T184x11620(T0* C);
+/* Call to ET_FEATURE.is_frozen */
+extern T1 T184x11640(T0* C);
+/* Call to ET_FEATURE.is_infixable */
+extern T1 T184x11648(T0* C);
+/* Call to ET_FEATURE.is_prefixable */
+extern T1 T184x11649(T0* C);
+/* Call to ET_FEATURE.is_bracketable */
+extern T1 T184x11650(T0* C);
+/* Call to ET_FEATURE.renamed_feature */
+extern T0* T184x11677T0(T0* C, T0* a1);
+/* Call to ET_FEATURE.undefined_feature */
+extern T0* T184x11678T0(T0* C, T0* a1);
+/* Call to ET_FEATURE.same_version */
+extern T1 T184x11660T0(T0* C, T0* a1);
+/* Call to ET_FEATURE.is_dotnet */
+extern T1 T184x11688(T0* C);
+/* Call to ET_FEATURE.is_once */
+extern T1 T184x11647(T0* C);
 /* Call to ET_FEATURE.hash_code */
 extern T6 T184x23(T0* C);
 /* Call to ET_EXPRESSION.last_leaf */
@@ -16144,215 +16145,215 @@ extern T0* T186x6055(T0* C);
 /* Call to ET_EXPRESSION.position */
 extern T0* T186x6051(T0* C);
 /* Call to ET_EXPRESSION.is_current */
-extern T1 T186x11159(T0* C);
+extern T1 T186x11165(T0* C);
 /* Call to ET_EXPRESSION.index */
-extern T6 T186x11176(T0* C);
+extern T6 T186x11182(T0* C);
 /* Call to ET_QUALIFIED_FEATURE_NAME.last_leaf */
 extern T0* T190x6055(T0* C);
 /* Call to ET_QUALIFIED_FEATURE_NAME.position */
 extern T0* T190x6051(T0* C);
 /* Call to ET_QUALIFIED_FEATURE_NAME.feature_name */
-extern T0* T190x11143(T0* C);
+extern T0* T190x11149(T0* C);
 /* Call to ET_ARGUMENT_OPERANDS.actual_argument */
-extern T0* T211x11170T6(T0* C, T6 a1);
+extern T0* T211x11176T6(T0* C, T6 a1);
 /* Call to ET_ARGUMENT_OPERANDS.count */
-extern T6 T211x11171(T0* C);
+extern T6 T211x11177(T0* C);
 /* Call to ET_ARGUMENT_OPERANDS.is_empty */
-extern T1 T211x11169(T0* C);
+extern T1 T211x11175(T0* C);
 /* Call to ET_CALL_COMPONENT.arguments */
-extern T0* T213x11228(T0* C);
+extern T0* T213x11234(T0* C);
 /* Call to ET_CALL_COMPONENT.name */
-extern T0* T213x11227(T0* C);
+extern T0* T213x11233(T0* C);
 /* Call to ET_CALL_COMPONENT.position */
 extern T0* T213x6051(T0* C);
 /* Call to ET_CALL_NAME.seed */
-extern T6 T214x11100(T0* C);
+extern T6 T214x11106(T0* C);
 /* Call to ET_CALL_NAME.lower_name */
-extern T0* T214x11099(T0* C);
+extern T0* T214x11105(T0* C);
 /* Call to ET_CALL_NAME.position */
 extern T0* T214x6051(T0* C);
 /* Call to ET_CALL_NAME.is_tuple_label */
-extern T1 T214x11105(T0* C);
+extern T1 T214x11111(T0* C);
 /* Call to ET_CALL_NAME.precursor_keyword */
-extern T0* T214x11135(T0* C);
+extern T0* T214x11141(T0* C);
 /* Call to ET_CALL_NAME.is_precursor */
-extern T1 T214x11133(T0* C);
+extern T1 T214x11139(T0* C);
 /* Call to ET_CALL_NAME.is_infix_implies */
-extern T1 T214x11114(T0* C);
-/* Call to ET_CALL_NAME.is_infix_or */
-extern T1 T214x11119(T0* C);
-/* Call to ET_CALL_NAME.is_infix_or_else */
 extern T1 T214x11120(T0* C);
-/* Call to ET_CALL_NAME.is_infix_and */
-extern T1 T214x11107(T0* C);
-/* Call to ET_CALL_NAME.is_infix_and_then */
-extern T1 T214x11108(T0* C);
-/* Call to ET_CALL_NAME.is_prefix_not */
-extern T1 T214x11130(T0* C);
-/* Call to ET_CALL_NAME.is_prefix_plus */
-extern T1 T214x11128(T0* C);
-/* Call to ET_CALL_NAME.is_prefix_minus */
-extern T1 T214x11127(T0* C);
-/* Call to ET_CALL_NAME.is_infix_dotdot */
+/* Call to ET_CALL_NAME.is_infix_or */
 extern T1 T214x11125(T0* C);
-/* Call to ET_CALL_NAME.is_infix_xor */
-extern T1 T214x11124(T0* C);
-/* Call to ET_CALL_NAME.is_infix_times */
-extern T1 T214x11123(T0* C);
-/* Call to ET_CALL_NAME.is_infix_power */
-extern T1 T214x11122(T0* C);
-/* Call to ET_CALL_NAME.is_infix_plus */
-extern T1 T214x11121(T0* C);
-/* Call to ET_CALL_NAME.is_infix_mod */
-extern T1 T214x11118(T0* C);
-/* Call to ET_CALL_NAME.is_infix_minus */
-extern T1 T214x11117(T0* C);
-/* Call to ET_CALL_NAME.is_infix_lt */
-extern T1 T214x11116(T0* C);
-/* Call to ET_CALL_NAME.is_infix_le */
-extern T1 T214x11115(T0* C);
-/* Call to ET_CALL_NAME.is_infix_gt */
+/* Call to ET_CALL_NAME.is_infix_or_else */
+extern T1 T214x11126(T0* C);
+/* Call to ET_CALL_NAME.is_infix_and */
 extern T1 T214x11113(T0* C);
-/* Call to ET_CALL_NAME.is_infix_ge */
-extern T1 T214x11112(T0* C);
-/* Call to ET_CALL_NAME.is_infix_divide */
-extern T1 T214x11110(T0* C);
-/* Call to ET_CALL_NAME.is_infix_div */
-extern T1 T214x11109(T0* C);
-/* Call to ET_CALL_NAME.is_bracket */
+/* Call to ET_CALL_NAME.is_infix_and_then */
+extern T1 T214x11114(T0* C);
+/* Call to ET_CALL_NAME.is_prefix_not */
+extern T1 T214x11136(T0* C);
+/* Call to ET_CALL_NAME.is_prefix_plus */
+extern T1 T214x11134(T0* C);
+/* Call to ET_CALL_NAME.is_prefix_minus */
+extern T1 T214x11133(T0* C);
+/* Call to ET_CALL_NAME.is_infix_dotdot */
 extern T1 T214x11131(T0* C);
+/* Call to ET_CALL_NAME.is_infix_xor */
+extern T1 T214x11130(T0* C);
+/* Call to ET_CALL_NAME.is_infix_times */
+extern T1 T214x11129(T0* C);
+/* Call to ET_CALL_NAME.is_infix_power */
+extern T1 T214x11128(T0* C);
+/* Call to ET_CALL_NAME.is_infix_plus */
+extern T1 T214x11127(T0* C);
+/* Call to ET_CALL_NAME.is_infix_mod */
+extern T1 T214x11124(T0* C);
+/* Call to ET_CALL_NAME.is_infix_minus */
+extern T1 T214x11123(T0* C);
+/* Call to ET_CALL_NAME.is_infix_lt */
+extern T1 T214x11122(T0* C);
+/* Call to ET_CALL_NAME.is_infix_le */
+extern T1 T214x11121(T0* C);
+/* Call to ET_CALL_NAME.is_infix_gt */
+extern T1 T214x11119(T0* C);
+/* Call to ET_CALL_NAME.is_infix_ge */
+extern T1 T214x11118(T0* C);
+/* Call to ET_CALL_NAME.is_infix_divide */
+extern T1 T214x11116(T0* C);
+/* Call to ET_CALL_NAME.is_infix_div */
+extern T1 T214x11115(T0* C);
+/* Call to ET_CALL_NAME.is_bracket */
+extern T1 T214x11137(T0* C);
 /* Call to ET_AGENT.implicit_target_position */
-extern T0* T221x16810(T0* C);
+extern T0* T221x16816(T0* C);
 /* Call to ET_AGENT.is_inline_agent */
-extern T1 T221x16807(T0* C);
+extern T1 T221x16813(T0* C);
 /* Call to ET_AGENT.arguments */
-extern T0* T221x16802(T0* C);
+extern T0* T221x16808(T0* C);
 /* Call to ET_AGENT.index */
-extern T6 T221x11176(T0* C);
+extern T6 T221x11182(T0* C);
 /* Call to ET_AGENT.target */
-extern T0* T221x16801(T0* C);
+extern T0* T221x16807(T0* C);
 /* Call to ET_AGENT.is_qualified_call */
-extern T1 T221x16804(T0* C);
+extern T1 T221x16810(T0* C);
 /* Call to ET_AGENT.implicit_result */
-extern T0* T221x16803(T0* C);
+extern T0* T221x16809(T0* C);
 /* Call to ET_CONSTANT.is_bit_constant */
-extern T1 T223x16824(T0* C);
+extern T1 T223x16830(T0* C);
 /* Call to ET_CONSTANT.is_string_constant */
-extern T1 T223x16823(T0* C);
+extern T1 T223x16829(T0* C);
 /* Call to ET_CONSTANT.is_real_constant */
-extern T1 T223x16822(T0* C);
+extern T1 T223x16828(T0* C);
 /* Call to ET_CONSTANT.is_integer_constant */
-extern T1 T223x16821(T0* C);
+extern T1 T223x16827(T0* C);
 /* Call to ET_CONSTANT.is_character_constant */
-extern T1 T223x16820(T0* C);
+extern T1 T223x16826(T0* C);
 /* Call to ET_CONSTANT.is_boolean_constant */
-extern T1 T223x16819(T0* C);
+extern T1 T223x16825(T0* C);
 /* Call to ET_ACTUAL_ARGUMENTS.count */
-extern T6 T224x11171(T0* C);
+extern T6 T224x11177(T0* C);
 /* Call to ET_ACTUAL_ARGUMENTS.actual_argument */
-extern T0* T224x11170T6(T0* C, T6 a1);
+extern T0* T224x11176T6(T0* C, T6 a1);
 /* Call to ET_ACTUAL_ARGUMENTS.is_empty */
-extern T1 T224x11169(T0* C);
+extern T1 T224x11175(T0* C);
 /* Call to ET_MANIFEST_STRING.position */
 extern T0* T229x6051(T0* C);
 /* Call to ET_MANIFEST_STRING.index */
-extern T6 T229x11176(T0* C);
+extern T6 T229x11182(T0* C);
 /* Call to ET_MANIFEST_STRING.value */
-extern T0* T229x16866(T0* C);
+extern T0* T229x16872(T0* C);
 /* Call to ET_OPERAND.index */
-extern T6 T232x11176(T0* C);
+extern T6 T232x11182(T0* C);
 /* Call to ET_AGENT_TARGET.position */
 extern T0* T233x6051(T0* C);
 /* Call to ET_AGENT_TARGET.index */
-extern T6 T233x11176(T0* C);
+extern T6 T233x11182(T0* C);
 /* Call to ET_AGENT_TARGET.is_open_operand */
-extern T1 T233x11175(T0* C);
+extern T1 T233x11181(T0* C);
 /* Call to ET_AGENT_ARGUMENT_OPERAND.is_open_operand */
-extern T1 T235x11175(T0* C);
+extern T1 T235x11181(T0* C);
 /* Call to ET_AGENT_ARGUMENT_OPERAND.index */
-extern T6 T235x11176(T0* C);
+extern T6 T235x11182(T0* C);
 /* Call to ET_EXPRESSION_ITEM.position */
 extern T0* T236x6051(T0* C);
 /* Call to ET_EXPRESSION_ITEM.expression */
-extern T0* T236x11161(T0* C);
+extern T0* T236x11167(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.has_implementation_error */
-extern T1 T241x11702(T0* C);
+extern T1 T241x11708(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.implementation_feature */
-extern T0* T241x11699(T0* C);
+extern T0* T241x11705(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.has_assertions_error */
-extern T1 T241x11704(T0* C);
+extern T1 T241x11710(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.implementation_class */
-extern T0* T241x11698(T0* C);
+extern T0* T241x11704(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.locals */
-extern T0* T241x11715(T0* C);
+extern T0* T241x11721(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.arguments */
-extern T0* T241x11714(T0* C);
+extern T0* T241x11720(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.as_feature */
-extern T0* T241x11711(T0* C);
+extern T0* T241x11717(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.is_feature */
-extern T1 T241x11695(T0* C);
+extern T1 T241x11701(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.type */
-extern T0* T241x11713(T0* C);
+extern T0* T241x11719(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.first_precursor */
-extern T0* T241x11697(T0* C);
+extern T0* T241x11703(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.clients */
-extern T0* T241x11700(T0* C);
+extern T0* T241x11706(T0* C);
 /* Call to ET_STANDALONE_CLOSURE.assertions_checked */
-extern T1 T241x11703(T0* C);
+extern T1 T241x11709(T0* C);
 /* Call to ET_POSITION.column */
-extern T6 T250x11212(T0* C);
+extern T6 T250x11218(T0* C);
 /* Call to ET_POSITION.line */
-extern T6 T250x11211(T0* C);
+extern T6 T250x11217(T0* C);
 /* Call to ET_POSITION.is_null */
-extern T1 T250x11213(T0* C);
+extern T1 T250x11219(T0* C);
 /* Call to ET_POSITION.to_text */
-extern T0* T250x11217(T0* C);
+extern T0* T250x11223(T0* C);
 /* Call to XM_NODE.parent */
-extern T0* T265x9690(T0* C);
+extern T0* T265x9696(T0* C);
 /* Call to ET_EXTENDED_FEATURE_NAME.alias_name */
-extern T0* T303x11141(T0* C);
+extern T0* T303x11147(T0* C);
 /* Call to ET_EXTENDED_FEATURE_NAME.feature_name */
-extern T0* T303x11140(T0* C);
+extern T0* T303x11146(T0* C);
 /* Call to ET_EXTENDED_FEATURE_NAME.position */
 extern T0* T303x6051(T0* C);
 /* Call to ET_EXTENDED_FEATURE_NAME.same_extended_feature_name */
-extern T1 T303x11142T0(T0* C, T0* a1);
+extern T1 T303x11148T0(T0* C, T0* a1);
 /* Call to XM_EIFFEL_SCANNER.start_condition */
 extern T6 T330x5195(T0* C);
 /* Call to XM_EIFFEL_SCANNER.is_applicable_encoding */
-extern T1 T330x18759T0(T0* C, T0* a1);
+extern T1 T330x18765T0(T0* C, T0* a1);
 /* Call to XM_EIFFEL_SCANNER.end_of_file */
 extern T1 T330x5200(T0* C);
 /* Call to XM_EIFFEL_SCANNER.last_value */
-extern T0* T330x18770(T0* C);
+extern T0* T330x18776(T0* C);
 /* Call to XM_EIFFEL_SCANNER.last_token */
 extern T6 T330x5191(T0* C);
 /* Call to XM_EIFFEL_SCANNER.error_position */
-extern T0* T330x18768(T0* C);
+extern T0* T330x18774(T0* C);
 /* Call to ET_CHARACTER_CONSTANT.index */
-extern T6 T446x11176(T0* C);
+extern T6 T446x11182(T0* C);
 /* Call to ET_CHARACTER_CONSTANT.value */
-extern T2 T446x19990(T0* C);
+extern T2 T446x19996(T0* C);
 /* Call to ET_INTEGER_CONSTANT.is_negative */
-extern T1 T454x20294(T0* C);
+extern T1 T454x20300(T0* C);
 /* Call to ET_INTEGER_CONSTANT.index */
-extern T6 T454x11176(T0* C);
+extern T6 T454x11182(T0* C);
 /* Call to ET_INTEGER_CONSTANT.value */
-extern T6 T454x20286(T0* C);
+extern T6 T454x20292(T0* C);
 /* Call to ET_INTEGER_CONSTANT.has_value_error */
-extern T1 T454x20296(T0* C);
+extern T1 T454x20302(T0* C);
 /* Call to ET_INTEGER_CONSTANT.literal */
-extern T0* T454x20285(T0* C);
+extern T0* T454x20291(T0* C);
 /* Call to ET_INTEGER_CONSTANT.position */
 extern T0* T454x6051(T0* C);
 /* Call to ET_INTEGER_CONSTANT.sign */
-extern T0* T454x20287(T0* C);
+extern T0* T454x20293(T0* C);
 /* Call to ET_CONSTRAINT_TYPE.resolved_syntactical_constraint */
 extern T0* T540x6080T0T0(T0* C, T0* a1, T0* a2);
 /* Call to ET_FEATURE_NAME_ITEM.position */
 extern T0* T547x6051(T0* C);
 /* Call to ET_FEATURE_NAME_ITEM.feature_name */
-extern T0* T547x11140(T0* C);
+extern T0* T547x11146(T0* C);
 /* Call to ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM.resolved_syntactical_constraint_with_type */
 extern T0* T558x6078T0T0(T0* C, T0* a1, T0* a2);
 /* Call to ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM.type */
@@ -16360,11 +16361,11 @@ extern T0* T558x6076(T0* C);
 /* Call to ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM.position */
 extern T0* T558x6077(T0* C);
 /* Call to ET_CONVERT_FEATURE.name */
-extern T0* T602x18413(T0* C);
+extern T0* T602x18419(T0* C);
 /* Call to ET_CONVERT_FEATURE.is_convert_from */
-extern T1 T602x18411(T0* C);
+extern T1 T602x18417(T0* C);
 /* Call to ET_CONVERT_FEATURE.is_convert_to */
-extern T1 T602x18412(T0* C);
+extern T1 T602x18418(T0* C);
 /* Call to ET_TYPE_ITEM.type */
 extern T0* T614x6050(T0* C);
 /* Call to ET_DECLARED_TYPE.resolved_formal_parameters */
@@ -16372,59 +16373,59 @@ extern T0* T622x6083T0(T0* C, T0* a1);
 /* Call to ET_DECLARED_TYPE.type */
 extern T0* T622x6082(T0* C);
 /* Call to ET_ASSIGNER.feature_name */
-extern T0* T623x11145(T0* C);
+extern T0* T623x11151(T0* C);
 /* Call to ET_AST_LEAF.last_position */
 extern T0* T627x6053(T0* C);
 /* Call to ET_AST_LEAF.position */
 extern T0* T627x6051(T0* C);
 /* Call to ET_EXTERNAL_LANGUAGE.manifest_string */
-extern T0* T640x16877(T0* C);
+extern T0* T640x16883(T0* C);
 /* Call to ET_EXTERNAL_ALIAS.manifest_string */
-extern T0* T641x16878(T0* C);
+extern T0* T641x16884(T0* C);
 /* Call to ET_ALIAS_NAME.same_alias_name */
-extern T1 T654x21382T0(T0* C, T0* a1);
+extern T1 T654x21388T0(T0* C, T0* a1);
 /* Call to ET_ALIAS_NAME.is_infix_minus */
-extern T1 T654x11117(T0* C);
+extern T1 T654x11123(T0* C);
 /* Call to ET_ALIAS_NAME.is_infix_plus */
-extern T1 T654x11121(T0* C);
-/* Call to ET_ALIAS_NAME.is_prefix_minus */
 extern T1 T654x11127(T0* C);
+/* Call to ET_ALIAS_NAME.is_prefix_minus */
+extern T1 T654x11133(T0* C);
 /* Call to ET_ALIAS_NAME.is_prefix_plus */
-extern T1 T654x11128(T0* C);
+extern T1 T654x11134(T0* C);
 /* Call to ET_ALIAS_NAME.lower_name */
-extern T0* T654x11099(T0* C);
+extern T0* T654x11105(T0* C);
 /* Call to ET_ALIAS_NAME.position */
 extern T0* T654x6051(T0* C);
 /* Call to ET_ALIAS_NAME.same_call_name */
-extern T1 T654x11134T0(T0* C, T0* a1);
+extern T1 T654x11140T0(T0* C, T0* a1);
 /* Call to ET_ALIAS_NAME.hash_code */
 extern T6 T654x23(T0* C);
 /* Call to ET_ALIAS_NAME.is_infix */
-extern T1 T654x11106(T0* C);
+extern T1 T654x11112(T0* C);
 /* Call to ET_ALIAS_NAME.is_infixable */
-extern T1 T654x21368(T0* C);
+extern T1 T654x21374(T0* C);
 /* Call to ET_ALIAS_NAME.is_prefixable */
-extern T1 T654x21367(T0* C);
+extern T1 T654x21373(T0* C);
 /* Call to ET_ALIAS_NAME.is_bracket */
-extern T1 T654x11131(T0* C);
+extern T1 T654x11137(T0* C);
 /* Call to ET_ALIAS_NAME.is_prefix */
-extern T1 T654x11126(T0* C);
+extern T1 T654x11132(T0* C);
 /* Call to ET_ACTUAL_PARAMETER.named_parameter_with_type */
 extern T0* T688x6064T0(T0* C, T0* a1);
 /* Call to ET_ACTUAL_PARAMETER.type */
 extern T0* T688x6069(T0* C);
 /* Call to ET_FEATURE_CALL_EXPRESSION.name */
-extern T0* T699x11227(T0* C);
+extern T0* T699x11233(T0* C);
 /* Call to ET_FEATURE_CALL_EXPRESSION.target */
-extern T0* T699x11226(T0* C);
+extern T0* T699x11232(T0* C);
 /* Call to ET_FEATURE_CALL_EXPRESSION.arguments_count */
-extern T6 T699x11225(T0* C);
+extern T6 T699x11231(T0* C);
 /* Call to ET_FEATURE_CALL_EXPRESSION.arguments */
-extern T0* T699x11228(T0* C);
+extern T0* T699x11234(T0* C);
 /* Call to ET_FEATURE_CALL_EXPRESSION.index */
-extern T6 T699x11176(T0* C);
+extern T6 T699x11182(T0* C);
 /* Call to ET_CONDITIONAL.expression */
-extern T0* T710x11162(T0* C);
+extern T0* T710x11168(T0* C);
 /* Call to ET_TARGET_TYPE.position */
 extern T0* T719x6051(T0* C);
 /* Call to ET_TARGET_TYPE.last_leaf */
@@ -16432,61 +16433,61 @@ extern T0* T719x6055(T0* C);
 /* Call to ET_TARGET_TYPE.type */
 extern T0* T719x6084(T0* C);
 /* Call to ET_CHOICE.upper */
-extern T0* T739x11188(T0* C);
+extern T0* T739x11194(T0* C);
 /* Call to ET_CHOICE.is_range */
-extern T1 T739x11186(T0* C);
+extern T1 T739x11192(T0* C);
 /* Call to ET_CHOICE.lower */
-extern T0* T739x11187(T0* C);
+extern T0* T739x11193(T0* C);
 /* Call to ET_CHOICE_ITEM.choice */
-extern T0* T741x11190(T0* C);
+extern T0* T741x11196(T0* C);
 /* Call to ET_CHOICE_CONSTANT.position */
 extern T0* T744x6051(T0* C);
 /* Call to ET_OPERATOR.position */
 extern T0* T776x6051(T0* C);
 /* Call to ET_INLINE_AGENT.implicit_result */
-extern T0* T784x16803(T0* C);
+extern T0* T784x16809(T0* C);
 /* Call to ET_INLINE_AGENT.formal_arguments */
-extern T0* T784x11714(T0* C);
+extern T0* T784x11720(T0* C);
 /* Call to ET_INLINE_AGENT.actual_arguments */
-extern T0* T784x16802(T0* C);
+extern T0* T784x16808(T0* C);
 /* Call to ET_INLINE_AGENT.target */
-extern T0* T784x16801(T0* C);
+extern T0* T784x16807(T0* C);
 /* Call to ET_INLINE_AGENT.locals */
-extern T0* T784x11715(T0* C);
+extern T0* T784x11721(T0* C);
 /* Call to ET_INLINE_AGENT.type */
-extern T0* T784x11713(T0* C);
+extern T0* T784x11719(T0* C);
 /* Call to ET_AGENT_ARGUMENT_OPERAND_ITEM.agent_actual_argument */
-extern T0* T816x11179(T0* C);
+extern T0* T816x11185(T0* C);
 /* Call to ET_ASSERTION_ITEM.position */
 extern T0* T821x6051(T0* C);
 /* Call to ET_ASSERTION_ITEM.assertion */
-extern T0* T821x11166(T0* C);
+extern T0* T821x11172(T0* C);
 /* Call to ET_ASSERTION.expression */
-extern T0* T823x11164(T0* C);
+extern T0* T823x11170(T0* C);
 /* Call to ET_CLOSURE.locals */
-extern T0* T827x11715(T0* C);
+extern T0* T827x11721(T0* C);
 /* Call to ET_CLOSURE.arguments */
-extern T0* T827x11714(T0* C);
+extern T0* T827x11720(T0* C);
 /* Call to ET_CLOSURE.type */
-extern T0* T827x11713(T0* C);
+extern T0* T827x11719(T0* C);
 /* Call to ET_GROUP.is_override */
-extern T1 T920x11318(T0* C);
+extern T1 T920x11324(T0* C);
 /* Call to ET_GROUP.dotnet_assembly */
-extern T0* T920x11330(T0* C);
+extern T0* T920x11336(T0* C);
 /* Call to ET_GROUP.full_lower_name */
-extern T0* T920x11326T2(T0* C, T2 a1);
+extern T0* T920x11332T2(T0* C, T2 a1);
 /* Call to ET_GROUP.full_pathname */
-extern T0* T920x11327(T0* C);
+extern T0* T920x11333(T0* C);
 /* Call to ET_GROUP.cluster */
-extern T0* T920x11329(T0* C);
+extern T0* T920x11335(T0* C);
 /* Call to ET_GROUP.is_none */
-extern T1 T920x11317(T0* C);
+extern T1 T920x11323(T0* C);
 /* Call to ET_GROUP.is_cluster */
-extern T1 T920x11315(T0* C);
+extern T1 T920x11321(T0* C);
 /* Call to ET_GROUP.is_dotnet_assembly */
-extern T1 T920x11316(T0* C);
+extern T1 T920x11322(T0* C);
 /* Call to ET_FORMAL_PARAMETER_TYPE.index */
-extern T6 T923x20909(T0* C);
+extern T6 T923x20915(T0* C);
 /* Call to ET_FORMAL_PARAMETER_TYPE.is_type_reference */
 extern T1 T923x6008T0T0(T0* C, T0* a1, T0* a2);
 /* Call to ET_NAMED_TYPE.reference_conforms_from_tuple_type */
@@ -16558,67 +16559,67 @@ extern T1 T927x6017T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* Call to ET_NAMED_TYPE.same_syntactical_type */
 extern T1 T927x6016T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* Call to ET_FLATTENED_FEATURE.adapted_feature */
-extern T0* T1191x11694(T0* C);
+extern T0* T1191x11700(T0* C);
 /* Call to ET_FLATTENED_FEATURE.is_adapted */
-extern T1 T1191x11681(T0* C);
+extern T1 T1191x11687(T0* C);
 /* Call to ET_FLATTENED_FEATURE.flattened_feature */
-extern T0* T1191x11690(T0* C);
+extern T0* T1191x11696(T0* C);
 /* Call to ET_FLATTENED_FEATURE.inherited_feature */
-extern T0* T1191x11692(T0* C);
+extern T0* T1191x11698(T0* C);
 /* Call to ET_FLATTENED_FEATURE.is_inherited */
-extern T1 T1191x11679(T0* C);
+extern T1 T1191x11685(T0* C);
 /* Call to ET_FLATTENED_FEATURE.redeclared_feature */
-extern T0* T1191x11693(T0* C);
+extern T0* T1191x11699(T0* C);
 /* Call to ET_FLATTENED_FEATURE.is_redeclared */
-extern T1 T1191x11680(T0* C);
+extern T1 T1191x11686(T0* C);
 /* Call to ET_FLATTENED_FEATURE.is_immediate */
-extern T1 T1191x11678(T0* C);
+extern T1 T1191x11684(T0* C);
 /* Call to ET_FLATTENED_FEATURE.immediate_feature */
-extern T0* T1191x11691(T0* C);
+extern T0* T1191x11697(T0* C);
 /* Call to ET_ROUTINE.implementation_feature */
-extern T0* T1255x11699(T0* C);
+extern T0* T1255x11705(T0* C);
 /* Call to ET_FREE_NAME.free_operator_name */
-extern T0* T1259x20017(T0* C);
+extern T0* T1259x20023(T0* C);
 /* Call to ET_FREE_NAME.hash_code */
 extern T6 T1259x23(T0* C);
 /* Call to ET_FREE_NAME.is_infix_freeop */
-extern T1 T1259x11111(T0* C);
+extern T1 T1259x11117(T0* C);
 /* Call to ET_REPLICABLE_FEATURE.first_feature */
-extern T0* T1266x24725(T0* C);
+extern T0* T1266x24733(T0* C);
 /* Call to ET_REPLICABLE_FEATURE.replicated_feature */
-extern T0* T1266x24724(T0* C);
+extern T0* T1266x24732(T0* C);
 /* Call to ET_REPLICABLE_FEATURE.has_replication */
-extern T1 T1266x24723(T0* C);
+extern T1 T1266x24731(T0* C);
 /* Call to ET_REPLICABLE_FEATURE.selected_count */
-extern T6 T1266x24726(T0* C);
+extern T6 T1266x24734(T0* C);
 /* Call to ET_INTERNAL_ROUTINE_INLINE_AGENT.compound */
-extern T0* T1330x22550(T0* C);
+extern T0* T1330x22556(T0* C);
 /* Call to ET_INTERNAL_ROUTINE_INLINE_AGENT.rescue_clause */
-extern T0* T1330x22552(T0* C);
+extern T0* T1330x22558(T0* C);
 /* Call to ET_INTERNAL_ROUTINE_INLINE_AGENT.locals */
-extern T0* T1330x11715(T0* C);
+extern T0* T1330x11721(T0* C);
 /* Call to ET_INTERNAL_ROUTINE_INLINE_AGENT.implicit_result */
-extern T0* T1330x16803(T0* C);
+extern T0* T1330x16809(T0* C);
 /* Call to ET_INTERNAL_ROUTINE.compound */
-extern T0* T1331x18564(T0* C);
+extern T0* T1331x18570(T0* C);
 /* Call to ET_INTERNAL_ROUTINE.rescue_clause */
-extern T0* T1331x18566(T0* C);
+extern T0* T1331x18572(T0* C);
 /* Call to ET_INTERNAL_ROUTINE.locals */
-extern T0* T1331x11715(T0* C);
+extern T0* T1331x11721(T0* C);
 /* Call to ET_INTERNAL_ROUTINE.arguments */
-extern T0* T1331x11687(T0* C);
+extern T0* T1331x11693(T0* C);
 /* Call to ET_INTERNAL_ROUTINE.implementation_feature */
-extern T0* T1331x11699(T0* C);
+extern T0* T1331x11705(T0* C);
 /* Call to ET_INTERNAL_ROUTINE.is_once */
-extern T1 T1331x11641(T0* C);
+extern T1 T1331x11647(T0* C);
 /* Call to ET_ADDRESS_EXPRESSION.index */
-extern T6 T1360x11176(T0* C);
+extern T6 T1360x11182(T0* C);
 /* Call to ET_QUERY_INLINE_AGENT.type */
-extern T0* T1361x11713(T0* C);
+extern T0* T1361x11719(T0* C);
 /* Call to ET_QUERY_INLINE_AGENT.formal_arguments */
-extern T0* T1361x11714(T0* C);
+extern T0* T1361x11720(T0* C);
 /* Call to ET_PROCEDURE_INLINE_AGENT.formal_arguments */
-extern T0* T1362x11714(T0* C);
+extern T0* T1362x11720(T0* C);
 /* Call to ET_AST_NODE.position */
 extern T0* T1409x6051(T0* C);
 /* Call to KI_CHARACTER_INPUT_STREAM.read_character */
@@ -16628,75 +16629,75 @@ extern void T36x3579T0(T0* C, T0* a1);
 /* Call to AP_OPTION.reset */
 extern void T36x3580(T0* C);
 /* Call to KI_TEXT_OUTPUT_STREAM.put_new_line */
-extern void T72x8781(T0* C);
+extern void T72x8783(T0* C);
 /* Call to KI_TEXT_OUTPUT_STREAM.put_character */
-extern void T72x8774T2(T0* C, T2 a1);
+extern void T72x8776T2(T0* C, T2 a1);
 /* Call to KI_TEXT_OUTPUT_STREAM.put_string */
-extern void T72x8766T0(T0* C, T0* a1);
+extern void T72x8768T0(T0* C, T0* a1);
 /* Call to KI_TEXT_OUTPUT_STREAM.put_integer */
-extern void T72x8768T6(T0* C, T6 a1);
+extern void T72x8770T6(T0* C, T6 a1);
 /* Call to KI_TEXT_OUTPUT_STREAM.append */
-extern void T72x8775T0(T0* C, T0* a1);
+extern void T72x8777T0(T0* C, T0* a1);
 /* Call to KI_TEXT_OUTPUT_STREAM.put_line */
-extern void T72x8780T0(T0* C, T0* a1);
+extern void T72x8782T0(T0* C, T0* a1);
 /* Call to XM_CALLBACKS_FILTER.set_next */
-extern void T103x9974T0(T0* C, T0* a1);
+extern void T103x9980T0(T0* C, T0* a1);
 /* Call to XM_CALLBACKS.on_xml_declaration */
-extern void T104x10030T0T0T1(T0* C, T0* a1, T0* a2, T1 a3);
+extern void T104x10036T0T0T1(T0* C, T0* a1, T0* a2, T1 a3);
 /* Call to XM_CALLBACKS.on_error */
-extern void T104x10031T0(T0* C, T0* a1);
+extern void T104x10037T0(T0* C, T0* a1);
 /* Call to XM_CALLBACKS.on_start_tag_finish */
-extern void T104x10036(T0* C);
+extern void T104x10042(T0* C);
 /* Call to XM_CALLBACKS.on_finish */
-extern void T104x10029(T0* C);
+extern void T104x10035(T0* C);
 /* Call to XM_CALLBACKS.on_attribute */
-extern void T104x10035T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
+extern void T104x10041T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* Call to XM_CALLBACKS.on_end_tag */
-extern void T104x10037T0T0T0(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T104x10043T0T0T0(T0* C, T0* a1, T0* a2, T0* a3);
 /* Call to XM_CALLBACKS.on_start_tag */
-extern void T104x10034T0T0T0(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T104x10040T0T0T0(T0* C, T0* a1, T0* a2, T0* a3);
 /* Call to XM_CALLBACKS.on_content */
-extern void T104x10038T0(T0* C, T0* a1);
+extern void T104x10044T0(T0* C, T0* a1);
 /* Call to XM_CALLBACKS.on_processing_instruction */
-extern void T104x10032T0T0(T0* C, T0* a1, T0* a2);
+extern void T104x10038T0T0(T0* C, T0* a1, T0* a2);
 /* Call to XM_CALLBACKS.on_comment */
-extern void T104x10033T0(T0* C, T0* a1);
+extern void T104x10039T0(T0* C, T0* a1);
 /* Call to XM_CALLBACKS.on_start */
-extern void T104x10028(T0* C);
+extern void T104x10034(T0* C);
 /* Call to ET_DYNAMIC_TYPE.put_query_call */
-extern void T149x11567T0(T0* C, T0* a1);
+extern void T149x11573T0(T0* C, T0* a1);
 /* Call to ET_DYNAMIC_TYPE.put_procedure_call */
-extern void T149x11568T0(T0* C, T0* a1);
-/* Call to ET_DYNAMIC_TYPE.set_alive */
-extern void T149x11547(T0* C);
-/* Call to ET_DYNAMIC_TYPE.set_static */
-extern void T149x11549T1(T0* C, T1 a1);
-/* Call to ET_DYNAMIC_TYPE.put_target */
-extern void T149x11589T0T0(T0* C, T0* a1, T0* a2);
-/* Call to ET_DYNAMIC_TYPE.set_next_type */
 extern void T149x11574T0(T0* C, T0* a1);
+/* Call to ET_DYNAMIC_TYPE.set_alive */
+extern void T149x11553(T0* C);
+/* Call to ET_DYNAMIC_TYPE.set_static */
+extern void T149x11555T1(T0* C, T1 a1);
+/* Call to ET_DYNAMIC_TYPE.put_target */
+extern void T149x11595T0T0(T0* C, T0* a1, T0* a2);
+/* Call to ET_DYNAMIC_TYPE.set_next_type */
+extern void T149x11580T0(T0* C, T0* a1);
 /* Call to ET_DYNAMIC_TYPE.set_id */
-extern void T149x11560T6(T0* C, T6 a1);
+extern void T149x11566T6(T0* C, T6 a1);
 /* Call to ET_BASE_TYPE.reset */
 extern void T150x5990(T0* C);
 /* Call to ET_BASE_TYPE.process */
 extern void T150x6060T0(T0* C, T0* a1);
 /* Call to ET_QUERY.reset_assertions_checked */
-extern void T152x11710(T0* C);
+extern void T152x11716(T0* C);
 /* Call to ET_QUERY.reset_implementation_checked */
-extern void T152x11707(T0* C);
+extern void T152x11713(T0* C);
 /* Call to ET_QUERY.reset */
-extern void T152x11604(T0* C);
+extern void T152x11610(T0* C);
 /* Call to ET_QUERY.set_frozen_keyword */
-extern void T152x11665T0(T0* C, T0* a1);
+extern void T152x11671T0(T0* C, T0* a1);
 /* Call to ET_PROCEDURE.reset_assertions_checked */
-extern void T154x11710(T0* C);
+extern void T154x11716(T0* C);
 /* Call to ET_PROCEDURE.reset_implementation_checked */
-extern void T154x11707(T0* C);
+extern void T154x11713(T0* C);
 /* Call to ET_PROCEDURE.reset */
-extern void T154x11604(T0* C);
+extern void T154x11610(T0* C);
 /* Call to ET_PROCEDURE.set_frozen_keyword */
-extern void T154x11665T0(T0* C, T0* a1);
+extern void T154x11671T0(T0* C, T0* a1);
 /* Call to ET_TYPE.process */
 extern void T159x6060T0(T0* C, T0* a1);
 /* Call to ET_TYPE.reset */
@@ -16704,293 +16705,293 @@ extern void T159x5990(T0* C);
 /* Call to ET_TYPE.append_to_string */
 extern void T159x6048T0(T0* C, T0* a1);
 /* Call to ET_FEATURE_NAME.set_seed */
-extern void T161x11101T6(T0* C, T6 a1);
+extern void T161x11107T6(T0* C, T6 a1);
 /* Call to ET_FEATURE_NAME.reset */
-extern void T161x11097(T0* C);
+extern void T161x11103(T0* C);
 /* Call to ET_DYNAMIC_TYPE_SET.put_target */
-extern void T167x11589T0T0(T0* C, T0* a1, T0* a2);
+extern void T167x11595T0T0(T0* C, T0* a1, T0* a2);
 /* Call to ET_AST_PROCESSOR.process_convert_to_expression */
-extern void T172x7030T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_retry_instruction */
-extern void T172x7144T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_call_instruction */
-extern void T172x7011T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_infix_cast_expression */
-extern void T172x7087T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_convert_expression */
-extern void T172x7025T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_formal_parameter_type */
-extern void T172x7074T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_static_call_instruction */
-extern void T172x7148T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_precursor_instruction */
-extern void T172x7129T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_create_instruction */
 extern void T172x7032T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_bang_instruction */
-extern void T172x6996T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_check_instruction */
-extern void T172x7012T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_debug_instruction */
-extern void T172x7038T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_loop_instruction */
-extern void T172x7109T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_inspect_instruction */
-extern void T172x7093T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_if_instruction */
-extern void T172x7081T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_assignment_attempt */
-extern void T172x6994T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_assignment */
-extern void T172x6993T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_assigner_instruction */
-extern void T172x6992T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_like_current */
-extern void T172x7103T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_like_feature */
-extern void T172x7104T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_bit_feature */
-extern void T172x6998T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_bit_n */
-extern void T172x6999T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_constrained_formal_parameter */
-extern void T172x7023T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_formal_parameter */
-extern void T172x7071T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_tuple_type */
-extern void T172x7155T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_generic_class_type */
-extern void T172x7076T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_class_type */
-extern void T172x7018T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_external_procedure_inline_agent */
-extern void T172x7060T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_once_procedure_inline_agent */
-extern void T172x7121T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_do_procedure_inline_agent */
-extern void T172x7044T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_external_function_inline_agent */
-extern void T172x7058T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_once_function_inline_agent */
-extern void T172x7118T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_do_function_inline_agent */
-extern void T172x7042T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_manifest_type */
-extern void T172x7115T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_strip_expression */
-extern void T172x7149T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_manifest_array */
-extern void T172x7111T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_once_manifest_string */
-extern void T172x7119T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_call_agent */
-extern void T172x7009T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_old_expression */
-extern void T172x7116T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_prefix_expression */
-extern void T172x7131T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_equality_expression */
-extern void T172x7052T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_infix_expression */
-extern void T172x7089T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_expression_address */
-extern void T172x7054T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_result_address */
-extern void T172x7143T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_current_address */
-extern void T172x7036T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_feature_address */
-extern void T172x7062T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_parenthesized_expression */
-extern void T172x7124T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_precursor_expression */
-extern void T172x7128T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_static_call_expression */
-extern void T172x7147T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_bracket_expression */
-extern void T172x7004T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_external_procedure */
-extern void T172x7059T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_once_procedure */
-extern void T172x7120T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_deferred_function */
-extern void T172x7039T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_once_function */
-extern void T172x7117T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_do_function */
-extern void T172x7041T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_manifest_tuple */
-extern void T172x7114T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_create_expression */
-extern void T172x7031T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_c2_character_constant */
-extern void T172x7007T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_c1_character_constant */
-extern void T172x7006T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_false_constant */
-extern void T172x7061T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_true_constant */
-extern void T172x7154T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_underscored_real_constant */
-extern void T172x7158T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_regular_real_constant */
-extern void T172x7138T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_hexadecimal_integer_constant */
-extern void T172x7077T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_underscored_integer_constant */
-extern void T172x7157T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_regular_integer_constant */
-extern void T172x7136T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_special_manifest_string */
+/* Call to ET_AST_PROCESSOR.process_retry_instruction */
 extern void T172x7146T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_verbatim_string */
-extern void T172x7161T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_regular_manifest_string */
-extern void T172x7137T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_c3_character_constant */
-extern void T172x7008T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_void */
-extern void T172x7162T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_bit_constant */
-extern void T172x6997T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_deferred_procedure */
+/* Call to ET_AST_PROCESSOR.process_call_instruction */
+extern void T172x7013T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_infix_cast_expression */
+extern void T172x7089T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_convert_expression */
+extern void T172x7027T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_formal_parameter_type */
+extern void T172x7076T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_static_call_instruction */
+extern void T172x7150T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_precursor_instruction */
+extern void T172x7131T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_create_instruction */
+extern void T172x7034T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_bang_instruction */
+extern void T172x6998T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_check_instruction */
+extern void T172x7014T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_debug_instruction */
 extern void T172x7040T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_do_procedure */
-extern void T172x7043T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_attribute */
+/* Call to ET_AST_PROCESSOR.process_loop_instruction */
+extern void T172x7111T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_inspect_instruction */
+extern void T172x7095T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_if_instruction */
+extern void T172x7083T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_assignment_attempt */
+extern void T172x6996T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_assignment */
 extern void T172x6995T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_unique_attribute */
-extern void T172x7159T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_constant_attribute */
-extern void T172x7022T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_call_expression */
-extern void T172x7010T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_external_function */
-extern void T172x7057T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_class */
-extern void T172x7016T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_result */
-extern void T172x7142T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_current */
-extern void T172x7035T0(T0* C, T0* a1);
-/* Call to ET_AST_PROCESSOR.process_identifier */
+/* Call to ET_AST_PROCESSOR.process_assigner_instruction */
+extern void T172x6994T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_like_current */
+extern void T172x7105T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_like_feature */
+extern void T172x7106T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_bit_feature */
+extern void T172x7000T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_bit_n */
+extern void T172x7001T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_constrained_formal_parameter */
+extern void T172x7025T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_formal_parameter */
+extern void T172x7073T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_tuple_type */
+extern void T172x7157T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_generic_class_type */
 extern void T172x7078T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_class_type */
+extern void T172x7020T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_external_procedure_inline_agent */
+extern void T172x7062T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_once_procedure_inline_agent */
+extern void T172x7123T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_do_procedure_inline_agent */
+extern void T172x7046T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_external_function_inline_agent */
+extern void T172x7060T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_once_function_inline_agent */
+extern void T172x7120T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_do_function_inline_agent */
+extern void T172x7044T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_manifest_type */
+extern void T172x7117T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_strip_expression */
+extern void T172x7151T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_manifest_array */
+extern void T172x7113T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_once_manifest_string */
+extern void T172x7121T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_call_agent */
+extern void T172x7011T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_old_expression */
+extern void T172x7118T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_prefix_expression */
+extern void T172x7133T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_equality_expression */
+extern void T172x7054T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_infix_expression */
+extern void T172x7091T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_expression_address */
+extern void T172x7056T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_result_address */
+extern void T172x7145T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_current_address */
+extern void T172x7038T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_feature_address */
+extern void T172x7064T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_parenthesized_expression */
+extern void T172x7126T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_precursor_expression */
+extern void T172x7130T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_static_call_expression */
+extern void T172x7149T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_bracket_expression */
+extern void T172x7006T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_external_procedure */
+extern void T172x7061T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_once_procedure */
+extern void T172x7122T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_deferred_function */
+extern void T172x7041T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_once_function */
+extern void T172x7119T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_do_function */
+extern void T172x7043T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_manifest_tuple */
+extern void T172x7116T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_create_expression */
+extern void T172x7033T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_c2_character_constant */
+extern void T172x7009T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_c1_character_constant */
+extern void T172x7008T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_false_constant */
+extern void T172x7063T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_true_constant */
+extern void T172x7156T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_underscored_real_constant */
+extern void T172x7160T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_regular_real_constant */
+extern void T172x7140T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_hexadecimal_integer_constant */
+extern void T172x7079T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_underscored_integer_constant */
+extern void T172x7159T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_regular_integer_constant */
+extern void T172x7138T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_special_manifest_string */
+extern void T172x7148T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_verbatim_string */
+extern void T172x7163T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_regular_manifest_string */
+extern void T172x7139T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_c3_character_constant */
+extern void T172x7010T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_void */
+extern void T172x7164T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_bit_constant */
+extern void T172x6999T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_deferred_procedure */
+extern void T172x7042T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_do_procedure */
+extern void T172x7045T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_attribute */
+extern void T172x6997T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_unique_attribute */
+extern void T172x7161T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_constant_attribute */
+extern void T172x7024T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_call_expression */
+extern void T172x7012T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_external_function */
+extern void T172x7059T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_class */
+extern void T172x7018T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_result */
+extern void T172x7144T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_current */
+extern void T172x7037T0(T0* C, T0* a1);
+/* Call to ET_AST_PROCESSOR.process_identifier */
+extern void T172x7080T0(T0* C, T0* a1);
 /* Call to ET_FEATURE.set_implementation_error */
-extern void T184x11706(T0* C);
+extern void T184x11712(T0* C);
 /* Call to ET_FEATURE.set_implementation_checked */
-extern void T184x11705(T0* C);
+extern void T184x11711(T0* C);
 /* Call to ET_FEATURE.process */
 extern void T184x6060T0(T0* C, T0* a1);
 /* Call to ET_FEATURE.set_assertions_error */
-extern void T184x11709(T0* C);
+extern void T184x11715(T0* C);
 /* Call to ET_FEATURE.set_assertions_checked */
-extern void T184x11708(T0* C);
+extern void T184x11714(T0* C);
 /* Call to ET_FEATURE.set_other_seeds */
-extern void T184x11662T0(T0* C, T0* a1);
+extern void T184x11668T0(T0* C, T0* a1);
 /* Call to ET_FEATURE.set_first_seed */
-extern void T184x11661T6(T0* C, T6 a1);
+extern void T184x11667T6(T0* C, T6 a1);
 /* Call to ET_FEATURE.set_clients */
-extern void T184x11653T0(T0* C, T0* a1);
-/* Call to ET_FEATURE.resolve_inherited_signature */
-extern void T184x11673T0(T0* C, T0* a1);
-/* Call to ET_FEATURE.set_version */
-extern void T184x11658T6(T0* C, T6 a1);
-/* Call to ET_FEATURE.set_other_precursors */
-extern void T184x11664T0(T0* C, T0* a1);
-/* Call to ET_FEATURE.set_first_precursor */
-extern void T184x11663T0(T0* C, T0* a1);
-/* Call to ET_FEATURE.reset_postconditions */
-extern void T184x11669(T0* C);
-/* Call to ET_FEATURE.reset_preconditions */
-extern void T184x11668(T0* C);
-/* Call to ET_FEATURE.set_implementation_class */
 extern void T184x11659T0(T0* C, T0* a1);
+/* Call to ET_FEATURE.resolve_inherited_signature */
+extern void T184x11679T0(T0* C, T0* a1);
+/* Call to ET_FEATURE.set_version */
+extern void T184x11664T6(T0* C, T6 a1);
+/* Call to ET_FEATURE.set_other_precursors */
+extern void T184x11670T0(T0* C, T0* a1);
+/* Call to ET_FEATURE.set_first_precursor */
+extern void T184x11669T0(T0* C, T0* a1);
+/* Call to ET_FEATURE.reset_postconditions */
+extern void T184x11675(T0* C);
+/* Call to ET_FEATURE.reset_preconditions */
+extern void T184x11674(T0* C);
+/* Call to ET_FEATURE.set_implementation_class */
+extern void T184x11665T0(T0* C, T0* a1);
 /* Call to ET_FEATURE.set_implementation_feature */
-extern void T184x11660T0(T0* C, T0* a1);
+extern void T184x11666T0(T0* C, T0* a1);
 /* Call to ET_FEATURE.set_id */
-extern void T184x11655T6(T0* C, T6 a1);
+extern void T184x11661T6(T0* C, T6 a1);
 /* Call to ET_EXPRESSION.process */
 extern void T186x6060T0(T0* C, T0* a1);
 /* Call to ET_EXPRESSION.reset */
-extern void T186x11163(T0* C);
+extern void T186x11169(T0* C);
 /* Call to ET_CALL_NAME.set_seed */
-extern void T214x11101T6(T0* C, T6 a1);
+extern void T214x11107T6(T0* C, T6 a1);
 /* Call to ET_AGENT.set_arguments */
-extern void T221x16809T0(T0* C, T0* a1);
+extern void T221x16815T0(T0* C, T0* a1);
 /* Call to ET_AGENT.process */
 extern void T221x6060T0(T0* C, T0* a1);
 /* Call to ET_CONSTANT.process */
 extern void T223x6060T0(T0* C, T0* a1);
 /* Call to ET_MANIFEST_STRING.set_index */
-extern void T229x11177T6(T0* C, T6 a1);
+extern void T229x11183T6(T0* C, T6 a1);
 /* Call to ET_OPERAND.set_index */
-extern void T232x11177T6(T0* C, T6 a1);
+extern void T232x11183T6(T0* C, T6 a1);
 /* Call to ET_AGENT_TARGET.process */
 extern void T233x6060T0(T0* C, T0* a1);
 /* Call to ET_AGENT_TARGET.set_index */
-extern void T233x11177T6(T0* C, T6 a1);
+extern void T233x11183T6(T0* C, T6 a1);
 /* Call to ET_AGENT_TARGET.reset */
-extern void T233x11174(T0* C);
+extern void T233x11180(T0* C);
 /* Call to ET_AGENT_ARGUMENT_OPERAND.process */
 extern void T235x6060T0(T0* C, T0* a1);
 /* Call to ET_AGENT_ARGUMENT_OPERAND.reset */
-extern void T235x11174(T0* C);
+extern void T235x11180(T0* C);
 /* Call to XM_NODE.node_set_parent */
-extern void T265x9698T0(T0* C, T0* a1);
+extern void T265x9704T0(T0* C, T0* a1);
 /* Call to XM_NODE.process */
-extern void T265x9700T0(T0* C, T0* a1);
+extern void T265x9706T0(T0* C, T0* a1);
 /* Call to ET_EXTENDED_FEATURE_NAME.reset */
-extern void T303x11139(T0* C);
+extern void T303x11145(T0* C);
 /* Call to XM_EIFFEL_SCANNER.close_input */
-extern void T330x18755(T0* C);
+extern void T330x18761(T0* C);
 /* Call to XM_EIFFEL_SCANNER.set_input_from_resolver */
-extern void T330x18754T0(T0* C, T0* a1);
-/* Call to XM_EIFFEL_SCANNER.set_encoding */
 extern void T330x18760T0(T0* C, T0* a1);
+/* Call to XM_EIFFEL_SCANNER.set_encoding */
+extern void T330x18766T0(T0* C, T0* a1);
 /* Call to XM_EIFFEL_SCANNER.push_start_condition_dtd_ignore */
-extern void T330x18751(T0* C);
+extern void T330x18757(T0* C);
 /* Call to XM_EIFFEL_SCANNER.read_token */
 extern void T330x5206(T0* C);
 /* Call to XM_EIFFEL_SCANNER.set_input_stream */
-extern void T330x18753T0(T0* C, T0* a1);
+extern void T330x18759T0(T0* C, T0* a1);
 /* Call to ET_CHARACTER_CONSTANT.set_index */
-extern void T446x11177T6(T0* C, T6 a1);
+extern void T446x11183T6(T0* C, T6 a1);
 /* Call to ET_INTEGER_CONSTANT.set_index */
-extern void T454x11177T6(T0* C, T6 a1);
+extern void T454x11183T6(T0* C, T6 a1);
 /* Call to ET_INTEGER_CONSTANT.compute_value */
-extern void T454x20300(T0* C);
+extern void T454x20306(T0* C);
 /* Call to ET_INTEGER_CONSTANT.set_type */
-extern void T454x20299T0(T0* C, T0* a1);
+extern void T454x20305T0(T0* C, T0* a1);
 /* Call to ET_INTEGER_CONSTANT.set_sign */
-extern void T454x20297T0(T0* C, T0* a1);
+extern void T454x20303T0(T0* C, T0* a1);
 /* Call to ET_INTEGER_CONSTANT.set_cast_type */
-extern void T454x20298T0(T0* C, T0* a1);
+extern void T454x20304T0(T0* C, T0* a1);
 /* Call to ET_ASSIGNER.reset */
-extern void T623x11144(T0* C);
+extern void T623x11150(T0* C);
 /* Call to ET_ALIAS_NAME.reset */
-extern void T654x11097(T0* C);
+extern void T654x11103(T0* C);
 /* Call to ET_ALIAS_NAME.set_infix */
-extern void T654x21380(T0* C);
+extern void T654x21386(T0* C);
 /* Call to ET_ALIAS_NAME.set_prefix */
-extern void T654x21379(T0* C);
+extern void T654x21385(T0* C);
 /* Call to ET_INSTRUCTION.process */
 extern void T695x6060T0(T0* C, T0* a1);
 /* Call to ET_INSTRUCTION.reset */
-extern void T695x11230(T0* C);
+extern void T695x11236(T0* C);
 /* Call to ET_CHOICE.reset */
-extern void T739x11185(T0* C);
+extern void T739x11191(T0* C);
 /* Call to ET_CHOICE_CONSTANT.reset */
-extern void T744x11185(T0* C);
+extern void T744x11191(T0* C);
 /* Call to ET_OPERATOR.reset */
-extern void T776x11097(T0* C);
+extern void T776x11103(T0* C);
 /* Call to ET_ASSERTION.process */
 extern void T823x6060T0(T0* C, T0* a1);
 /* Call to ET_ASSERTION.reset */
-extern void T823x11163(T0* C);
+extern void T823x11169(T0* C);
 /* Call to ET_DYNAMIC_TARGET.put_type */
-extern void T1231x11592T0T0(T0* C, T0* a1, T0* a2);
+extern void T1231x11598T0T0(T0* C, T0* a1, T0* a2);
 /* Call to ET_ADDRESS_EXPRESSION.set_index */
-extern void T1360x11177T6(T0* C, T6 a1);
+extern void T1360x11183T6(T0* C, T6 a1);
 /* GEC.execute */
 extern T0* T21c30(void);
 /* GEC.report_cannot_read_error */
@@ -17022,8 +17023,8 @@ extern T1 T2f7(T2* C, T2 a1);
 /* CHARACTER_8.infix "<" */
 extern T1 T2f5(T2* C, T2 a1);
 /* UC_UTF8_STRING.utf8 */
-extern unsigned char ge333os9410;
-extern T0* ge333ov9410;
+extern unsigned char ge333os9416;
+extern T0* ge333ov9416;
 extern T0* T914f32(T0* C);
 /* UC_UTF8_ROUTINES.default_create */
 extern T0* T913c36(void);
@@ -17040,8 +17041,8 @@ extern T0* T144c6(void);
 /* INTEGER_32.infix "<=" */
 extern T1 T6f13(T6* C, T6 a1);
 /* KL_PLATFORM.maximum_character_code */
-extern unsigned char ge400os11423;
-extern T6 ge400ov11423;
+extern unsigned char ge400os11429;
+extern T6 ge400ov11429;
 extern T6 T143f1(T0* C);
 /* KL_PLATFORM.old_maximum_character_code */
 extern T6 T143f2(T0* C);
@@ -17250,8 +17251,8 @@ extern T6 T914f50(T0* C, T6 a1, T6 a2);
 /* UC_UTF8_STRING.byte_index */
 extern T6 T914f28(T0* C, T6 a1);
 /* UC_UTF8_ROUTINES.dummy_uc_string */
-extern unsigned char ge345os23821;
-extern T0* ge345ov23821;
+extern unsigned char ge345os23827;
+extern T0* ge345ov23827;
 extern T0* T913f27(T0* C);
 /* UC_STRING.make_empty */
 extern T0* T76c8(void);
@@ -17278,8 +17279,8 @@ extern T0* T913f25(T0* C);
 /* UC_UTF8_STRING.append_string */
 extern void T914f57(T0* C, T0* a1);
 /* UC_UTF8_STRING.dummy_uc_string */
-extern unsigned char ge414os9348;
-extern T0* ge414ov9348;
+extern unsigned char ge414os9354;
+extern T0* ge414ov9354;
 extern T0* T914f47(T0* C);
 /* UC_UTF8_STRING.append_substring */
 extern void T914f59(T0* C, T0* a1, T6 a2, T6 a3);
@@ -17338,8 +17339,8 @@ extern T0* T68f6(T0* C);
 /* EXECUTION_ENVIRONMENT.current_working_directory */
 extern T0* T115f2(T0* C);
 /* KL_UNIX_FILE_SYSTEM.execution_environment */
-extern unsigned char ge381os8597;
-extern T0* ge381ov8597;
+extern unsigned char ge381os8599;
+extern T0* ge381ov8599;
 extern T0* T68f12(T0* C);
 /* EXECUTION_ENVIRONMENT.default_create */
 extern T0* T115c4(void);
@@ -17374,14 +17375,14 @@ extern T0* T21f29(T0* C);
 /* KL_UNIX_FILE_SYSTEM.make */
 extern T0* T68c16(void);
 /* KL_OPERATING_SYSTEM.is_unix */
-extern unsigned char ge397os8565;
-extern T1 ge397ov8565;
+extern unsigned char ge397os8567;
+extern T1 ge397ov8567;
 extern T1 T63f2(T0* C);
 /* KL_OPERATING_SYSTEM.current_working_directory */
 extern T0* T63f4(T0* C);
 /* KL_OPERATING_SYSTEM.execution_environment */
-extern unsigned char ge397os8569;
-extern T0* ge397ov8569;
+extern unsigned char ge397os8571;
+extern T0* ge397ov8571;
 extern T0* T63f5(T0* C);
 /* STRING_8.is_equal */
 extern T1 T17f19(T0* C, T0* a1);
@@ -17406,15 +17407,15 @@ extern T0* T17f9(T0* C, T0* a1);
 /* STRING_8.new_string */
 extern T0* T17f13(T0* C, T6 a1);
 /* KL_OPERATING_SYSTEM.is_windows */
-extern unsigned char ge397os8564;
-extern T1 ge397ov8564;
+extern unsigned char ge397os8566;
+extern T1 ge397ov8566;
 extern T1 T63f1(T0* C);
 /* GEC.operating_system */
 extern T0* T21f25(T0* C);
 /* GEC.no_c_compile */
 extern T1 T21f24(T0* C);
 /* ET_C_GENERATOR.generate */
-extern void T59f303(T0* C, T0* a1);
+extern void T59f304(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [STRING].wipe_out */
 extern void T78f26(T0* C);
 /* DS_ARRAYED_LIST [STRING].clear_items */
@@ -17426,9 +17427,9 @@ extern void T290f9(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [STRING].set_position */
 extern void T290f8(T0* C, T6 a1);
 /* ET_C_GENERATOR.generate_compilation_script */
-extern void T59f307(T0* C, T0* a1);
+extern void T59f308(T0* C, T0* a1);
 /* ET_C_GENERATOR.report_cannot_write_error */
-extern void T59f309(T0* C, T0* a1);
+extern void T59f310(T0* C, T0* a1);
 /* ET_NULL_ERROR_HANDLER.report_error */
 extern void T55f163(T0* C, T0* a1);
 /* ET_NULL_ERROR_HANDLER.report_error_message */
@@ -17446,11 +17447,11 @@ extern void T28f192p1(T0* C, T0* a1);
 /* ET_ERROR_HANDLER.message */
 extern T0* T28f17(T0* C, T0* a1);
 /* ET_C_GENERATOR.error_handler */
-extern T0* T59f66(T0* C);
+extern T0* T59f67(T0* C);
 /* UT_CANNOT_WRITE_TO_FILE_ERROR.make */
 extern T0* T204c7(T0* a1);
 /* ET_C_GENERATOR.set_fatal_error */
-extern void T59f308(T0* C);
+extern void T59f309(T0* C);
 /* KL_TEXT_OUTPUT_FILE.close */
 extern void T201f25(T0* C);
 /* KL_TEXT_OUTPUT_FILE.old_close */
@@ -17470,9 +17471,9 @@ extern T0* T914f14(T0* C, T6 a1);
 /* UT_TEMPLATE_EXPANDER.string_ */
 extern T0* T203f2(T0* C);
 /* ET_C_GENERATOR.template_expander */
-extern unsigned char ge1038os7417;
-extern T0* ge1038ov7417;
-extern T0* T59f65(T0* C);
+extern unsigned char ge1038os7419;
+extern T0* ge1038ov7419;
+extern T0* T59f66(T0* C);
 /* UT_TEMPLATE_EXPANDER.make */
 extern T0* T203c3(void);
 /* KL_TEXT_OUTPUT_FILE.is_open_write */
@@ -17500,7 +17501,7 @@ extern void T201f30(T0* C, T0* a1);
 /* KL_TEXT_OUTPUT_FILE.string_ */
 extern T0* T201f12(T0* C);
 /* ET_C_GENERATOR.operating_system */
-extern T0* T59f64(T0* C);
+extern T0* T59f65(T0* C);
 /* DS_HASH_TABLE [STRING, STRING].has */
 extern T1 T43f32(T0* C, T0* a1);
 /* DS_HASH_TABLE [STRING, STRING].search_position */
@@ -17616,12 +17617,12 @@ extern T6 T200f292(T0* C, T6 a1, T6 a2, T6 a3, T1 a4);
 /* RX_PCRE_REGULAR_EXPRESSION.match_not_repeated_characters */
 extern T6 T200f291(T0* C, T6 a1, T6 a2, T6 a3, T1 a4);
 /* RX_PCRE_REGULAR_EXPRESSION.infinity */
-extern unsigned char ge1143os15731;
-extern T6 ge1143ov15731;
+extern unsigned char ge1143os15737;
+extern T6 ge1143ov15737;
 extern T6 T200f55(T0* C);
 /* KL_PLATFORM.maximum_integer */
-extern unsigned char ge400os11425;
-extern T6 ge400ov11425;
+extern unsigned char ge400os11431;
+extern T6 ge400ov11431;
 extern T6 T143f3(T0* C);
 /* KL_PLATFORM.old_maximum_integer */
 extern T6 T143f4(T0* C);
@@ -17640,8 +17641,8 @@ extern T6 T200f288(T0* C, T6 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.match_ref */
 extern T6 T200f294(T0* C, T6 a1, T6 a2, T6 a3);
 /* RX_PCRE_REGULAR_EXPRESSION.space_set */
-extern unsigned char ge1149os15898;
-extern T0* ge1149ov15898;
+extern unsigned char ge1149os15904;
+extern T0* ge1149ov15904;
 extern T0* T200f147(T0* C);
 /* RX_CHARACTER_SET.make */
 extern T0* T866c4(T0* a1);
@@ -17666,8 +17667,8 @@ extern T0* T866f3(T0* C);
 /* KL_SPECIAL_ROUTINES [BOOLEAN].default_create */
 extern T0* T352c3(void);
 /* RX_PCRE_REGULAR_EXPRESSION.digit_set */
-extern unsigned char ge1149os15890;
-extern T0* ge1149ov15890;
+extern unsigned char ge1149os15896;
+extern T0* ge1149ov15896;
 extern T0* T200f163(T0* C);
 /* RX_CHARACTER_SET.has */
 extern T1 T866f1(T0* C, T6 a1);
@@ -17714,7 +17715,7 @@ extern T0* T200f2(T0* C);
 /* ET_C_GENERATOR.execution_environment */
 extern unsigned char ge321os1580;
 extern T0* ge321ov1580;
-extern T0* T59f63(T0* C);
+extern T0* T59f64(T0* C);
 /* KL_EXECUTION_ENVIRONMENT.default_create */
 extern T0* T48c5(void);
 /* KL_STRING_ROUTINES.new_empty_string */
@@ -17728,7 +17729,7 @@ extern void T914f61p1(T0* C);
 /* STRING_8.wipe_out */
 extern void T17f51(T0* C);
 /* ET_C_GENERATOR.string_ */
-extern T0* T59f62(T0* C);
+extern T0* T59f63(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.match */
 extern void T200f300(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [STRING].item */
@@ -17768,12 +17769,12 @@ extern void T864f17(T0* C, T6 a1, T6 a2);
 /* RX_PCRE_REGULAR_EXPRESSION.compile_branch */
 extern void T200f326(T0* C, T1 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.meta_set */
-extern unsigned char ge1149os15899;
-extern T0* ge1149ov15899;
+extern unsigned char ge1149os15905;
+extern T0* ge1149ov15905;
 extern T0* T200f143(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.maxlit */
-extern unsigned char ge1143os15732;
-extern T6 ge1143ov15732;
+extern unsigned char ge1143os15738;
+extern T6 ge1143ov15738;
 extern T6 T200f142(T0* C);
 /* RX_BYTE_CODE.append_character */
 extern void T864f19(T0* C, T6 a1);
@@ -17788,8 +17789,8 @@ extern T6 T200f137(T0* C, T6 a1, T1 a2);
 /* RX_PCRE_REGULAR_EXPRESSION.scan_hex_number */
 extern T6 T200f218(T0* C, T6 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.xdigit_set */
-extern unsigned char ge1149os15892;
-extern T0* ge1149ov15892;
+extern unsigned char ge1149os15898;
+extern T0* ge1149ov15898;
 extern T0* T200f240(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.scan_octal_number */
 extern T6 T200f217(T0* C, T6 a1);
@@ -17844,48 +17845,48 @@ extern void T866f7(T0* C, T0* a1);
 /* ARRAY [RX_CHARACTER_SET].item */
 extern T0* T869f4(T0* C, T6 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.class_sets */
-extern unsigned char ge1149os15901;
-extern T0* ge1149ov15901;
+extern unsigned char ge1149os15907;
+extern T0* ge1149ov15907;
 extern T0* T200f155(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.default_word_set */
-extern unsigned char ge1149os15886;
-extern T0* ge1149ov15886;
+extern unsigned char ge1149os15892;
+extern T0* ge1149ov15892;
 extern T0* T200f21(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.punct_set */
-extern unsigned char ge1149os15896;
-extern T0* ge1149ov15896;
+extern unsigned char ge1149os15902;
+extern T0* ge1149ov15902;
 extern T0* T200f239(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.print_set */
-extern unsigned char ge1149os15895;
-extern T0* ge1149ov15895;
+extern unsigned char ge1149os15901;
+extern T0* ge1149ov15901;
 extern T0* T200f238(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.graph_set */
-extern unsigned char ge1149os15894;
-extern T0* ge1149ov15894;
+extern unsigned char ge1149os15900;
+extern T0* ge1149ov15900;
 extern T0* T200f237(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.cntrl_set */
-extern unsigned char ge1149os15893;
-extern T0* ge1149ov15893;
+extern unsigned char ge1149os15899;
+extern T0* ge1149ov15899;
 extern T0* T200f236(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.ascii_set */
-extern unsigned char ge1149os15897;
-extern T0* ge1149ov15897;
+extern unsigned char ge1149os15903;
+extern T0* ge1149ov15903;
 extern T0* T200f235(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.alnum_set */
-extern unsigned char ge1149os15891;
-extern T0* ge1149ov15891;
+extern unsigned char ge1149os15897;
+extern T0* ge1149ov15897;
 extern T0* T200f234(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.upper_set */
-extern unsigned char ge1149os15887;
-extern T0* ge1149ov15887;
+extern unsigned char ge1149os15893;
+extern T0* ge1149ov15893;
 extern T0* T200f233(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.lower_set */
-extern unsigned char ge1149os15888;
-extern T0* ge1149ov15888;
+extern unsigned char ge1149os15894;
+extern T0* ge1149ov15894;
 extern T0* T200f232(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.alpha_set */
-extern unsigned char ge1149os15889;
-extern T0* ge1149ov15889;
+extern unsigned char ge1149os15895;
+extern T0* ge1149ov15895;
 extern T0* T200f230(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.check_posix_name */
 extern T6 T200f153(T0* C, T6 a1, T6 a2);
@@ -17894,16 +17895,16 @@ extern T0* T84f5(T0* C, T6 a1);
 /* ARRAY [STRING].count */
 extern T6 T84f6(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.class_names */
-extern unsigned char ge1149os15900;
-extern T0* ge1149ov15900;
+extern unsigned char ge1149os15906;
+extern T0* ge1149ov15906;
 extern T0* T200f231(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.check_posix_syntax */
 extern T6 T200f151(T0* C, T6 a1);
 /* RX_CHARACTER_SET.wipe_out */
 extern void T866f6(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.actual_set */
-extern unsigned char ge1143os15730;
-extern T0* ge1143ov15730;
+extern unsigned char ge1143os15736;
+extern T0* ge1143ov15736;
 extern T0* T200f148(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.compile_counted_repeats */
 extern T1 T200f83(T0* C, T6 a1, T6 a2, T6 a3);
@@ -17966,8 +17967,8 @@ extern void T200f304(T0* C, T0* a1);
 /* RX_PCRE_REGULAR_EXPRESSION.set_character_case_mapping */
 extern void T200f303(T0* C, T0* a1);
 /* RX_PCRE_REGULAR_EXPRESSION.default_character_case_mapping */
-extern unsigned char ge1149os15885;
-extern T0* ge1149ov15885;
+extern unsigned char ge1149os15891;
+extern T0* ge1149ov15891;
 extern T0* T200f20(T0* C);
 /* RX_CASE_MAPPING.make */
 extern T0* T865c6(T0* a1, T0* a2);
@@ -17984,8 +17985,8 @@ extern void T200f302(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.reset */
 extern void T200f302p1(T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.empty_pattern */
-extern unsigned char ge1143os15729;
-extern T0* ge1143ov15729;
+extern unsigned char ge1143os15735;
+extern T0* ge1143ov15735;
 extern T0* T200f19(T0* C);
 /* STRING_8.put */
 extern void T17f53(T0* C, T2 a1, T6 a2);
@@ -17996,9 +17997,9 @@ extern void T43f38(T0* C, T0* a1);
 /* DS_SPARSE_TABLE_KEYS [STRING, STRING].internal_set_equality_tester */
 extern void T106f6(T0* C, T0* a1);
 /* ET_C_GENERATOR.string_equality_tester */
-extern unsigned char ge273os7418;
-extern T0* ge273ov7418;
-extern T0* T59f45(T0* C);
+extern unsigned char ge273os7420;
+extern T0* ge273ov7420;
+extern T0* T59f46(T0* C);
 /* KL_STRING_EQUALITY_TESTER.default_create */
 extern T0* T198c2(void);
 /* DS_HASH_TABLE [STRING, STRING].make_map */
@@ -18034,9 +18035,9 @@ extern T0* T111c3(void);
 /* DS_HASH_TABLE [STRING, STRING].make_item_storage */
 extern void T43f53(T0* C, T6 a1);
 /* ET_C_GENERATOR.c_config */
-extern T0* T59f61(T0* C);
+extern T0* T59f62(T0* C);
 /* ET_C_GENERATOR.report_cannot_read_error */
-extern void T59f525(T0* C, T0* a1);
+extern void T59f527(T0* C, T0* a1);
 /* UC_UTF8_STRING.index_of */
 extern T6 T914f18(T0* C, T2 a1, T6 a2);
 /* UC_UTF8_STRING.index_of_item_code */
@@ -18080,16 +18081,16 @@ extern T0* T68f3(T0* C, T0* a1, T0* a2);
 /* KL_WINDOWS_FILE_SYSTEM.nested_pathname */
 extern T0* T67f3(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.file_system */
-extern T0* T59f96(T0* C);
+extern T0* T59f97(T0* C);
 /* ET_C_GENERATOR.unix_file_system */
-extern T0* T59f262(T0* C);
+extern T0* T59f263(T0* C);
 /* ET_C_GENERATOR.windows_file_system */
-extern T0* T59f261(T0* C);
+extern T0* T59f262(T0* C);
 /* ET_C_GENERATOR.generate_c_code */
-extern void T59f306(T0* C, T0* a1);
+extern void T59f307(T0* C, T0* a1);
 /* ET_C_GENERATOR.dummy_feature */
-extern unsigned char ge945os6687;
-extern T0* ge945ov6687;
+extern unsigned char ge945os6689;
+extern T0* ge945ov6689;
 extern T0* T59f15(T0* C);
 /* ET_DYNAMIC_FEATURE.make */
 extern T0* T155c58(T0* a1, T0* a2, T0* a3);
@@ -18122,14 +18123,14 @@ extern T0* T1149c2(T6 a1);
 /* SPECIAL [ET_DYNAMIC_TYPE_SET].make */
 extern T0* T825c4(T6 a1);
 /* ET_DYNAMIC_TYPE_SET_LIST.fixed_array */
-extern unsigned char ge933os15244;
-extern T0* ge933ov15244;
+extern unsigned char ge933os15250;
+extern T0* ge933ov15250;
 extern T0* T173f5(T0* C);
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE_SET].default_create */
 extern T0* T826c3(void);
 /* ET_DYNAMIC_FEATURE.empty_dynamic_type_sets */
-extern unsigned char ge901os11854;
-extern T0* ge901ov11854;
+extern unsigned char ge901os11860;
+extern T0* ge901ov11860;
 extern T0* T155f10(T0* C);
 /* ET_DYNAMIC_TYPE_SET_LIST.make */
 extern T0* T173c12(void);
@@ -18172,8 +18173,8 @@ extern T0* T225c35(T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_DYNAMIC_FUNCTION_TYPE.make_type */
 extern void T225f38(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FUNCTION_TYPE.empty_features */
-extern unsigned char ge928os11577;
-extern T0* ge928ov11577;
+extern unsigned char ge928os11583;
+extern T0* ge928ov11583;
 extern T0* T225f16(T0* C);
 /* ET_DYNAMIC_FEATURE_LIST.make */
 extern T0* T205c11(void);
@@ -18216,14 +18217,14 @@ extern T0* T148f2(T0* C, T6 a1);
 /* ET_DO_PROCEDURE.make */
 extern T0* T302c68(T0* a1, T0* a2, T0* a3);
 /* ET_TOKEN_CONSTANTS.any_clients */
-extern unsigned char ge769os13095;
-extern T0* ge769ov13095;
+extern unsigned char ge769os13101;
+extern T0* ge769ov13101;
 extern T0* T162f614(T0* C);
 /* ET_CLASS_NAME_LIST.put_first */
 extern void T420f14(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.any_class_name */
-extern unsigned char ge769os12543;
-extern T0* ge769ov12543;
+extern unsigned char ge769os12549;
+extern T0* ge769ov12549;
 extern T0* T162f45(T0* C);
 /* ET_CLASS_NAME_LIST.make_with_capacity */
 extern T0* T420c13(T6 a1);
@@ -18240,8 +18241,8 @@ extern T0* T420f3(T0* C);
 /* KL_SPECIAL_ROUTINES [ET_CLASS_NAME_ITEM].default_create */
 extern T0* T594c3(void);
 /* ET_TOKEN_CONSTANTS.end_keyword */
-extern unsigned char ge769os12753;
-extern T0* ge769ov12753;
+extern unsigned char ge769os12759;
+extern T0* ge769ov12759;
 extern T0* T162f109(T0* C);
 /* ET_KEYWORD.make_end */
 extern T0* T171c23(void);
@@ -18298,9 +18299,9 @@ extern T0* T124f24(T0* C);
 /* KL_CHARACTER_ROUTINES.default_create */
 extern T0* T917c3(void);
 /* ET_C_GENERATOR.close_cpp_file */
-extern void T59f332(T0* C);
+extern void T59f333(T0* C);
 /* ET_C_GENERATOR.close_c_file */
-extern void T59f331(T0* C);
+extern void T59f332(T0* C);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].wipe_out */
 extern void T195f42(T0* C);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].slots_wipe_out */
@@ -18418,9 +18419,9 @@ extern void T197f61(T0* C, T0* a1);
 /* DS_HASH_SET [STRING].clashes_item */
 extern T6 T197f23(T0* C, T6 a1);
 /* ET_C_GENERATOR.include_runtime_c_file */
-extern void T59f330(T0* C, T0* a1, T0* a2);
+extern void T59f331(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.include_file */
-extern void T59f394(T0* C, T0* a1, T0* a2);
+extern void T59f396(T0* C, T0* a1, T0* a2);
 /* DS_HASH_SET [STRING].item_for_iteration */
 extern T0* T197f2(T0* C);
 /* DS_HASH_SET [STRING].cursor_item */
@@ -18440,13 +18441,13 @@ extern T1 T197f31(T0* C, T0* a1);
 /* DS_HASH_SET [STRING].is_empty */
 extern T1 T197f30(T0* C);
 /* ET_C_GENERATOR.print_end_extern_c */
-extern void T59f329(T0* C, T0* a1);
+extern void T59f330(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_main_function */
-extern void T59f328(T0* C);
+extern void T59f329(T0* C);
 /* ET_C_GENERATOR.dedent */
-extern void T59f378(T0* C);
+extern void T59f379(T0* C);
 /* ET_C_GENERATOR.print_creation_expression */
-extern void T59f393(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
+extern void T59f395(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].wipe_out */
 extern void T180f14(T0* C);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].clear_items */
@@ -18458,30 +18459,30 @@ extern void T830f6(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [ET_EXPRESSION].set_position */
 extern void T830f5(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_attachment_expression */
-extern void T59f496(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f498(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_boxed_expression */
-extern void T59f520(T0* C, T0* a1, T0* a2);
+extern void T59f522(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boxed_attribute_item_access */
-extern void T59f399(T0* C, T0* a1, T0* a2);
+extern void T59f401(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boxed_attribute_item_name */
-extern void T59f405(T0* C, T0* a1, T0* a2);
+extern void T59f407(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boxed_type_cast */
-extern void T59f517(T0* C, T0* a1, T0* a2);
+extern void T59f519(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boxed_type_name */
-extern void T59f397(T0* C, T0* a1, T0* a2);
+extern void T59f399(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_type_cast */
-extern void T59f377(T0* C, T0* a1, T0* a2);
+extern void T59f378(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_type_name */
-extern void T59f372(T0* C, T0* a1, T0* a2);
+extern void T59f373(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_expression */
-extern void T59f408(T0* C, T0* a1);
+extern void T59f410(T0* C, T0* a1);
 /* ET_NULL_ERROR_HANDLER.report_giaaa_error */
 extern void T55f158(T0* C);
 /* ET_NULL_ERROR_HANDLER.report_internal_error */
 extern void T55f190(T0* C, T0* a1);
 /* KL_STANDARD_FILES.error */
-extern unsigned char ge304os8849;
-extern T0* ge304ov8849;
+extern unsigned char ge304os8851;
+extern T0* ge304ov8851;
 extern T0* T73f1(T0* C);
 /* KL_STDERR_FILE.make */
 extern T0* T74c9(void);
@@ -18516,8 +18517,8 @@ extern T0* T155f8(T0* C, T6 a1);
 /* ET_DYNAMIC_PRECURSOR.dynamic_type_set */
 extern T0* T207f5(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.current_keyword */
-extern unsigned char ge769os12747;
-extern T0* ge769ov12747;
+extern unsigned char ge769os12753;
+extern T0* ge769ov12753;
 extern T0* T162f10(T0* C);
 /* ET_CURRENT.make */
 extern T0* T187c26(void);
@@ -18536,9 +18537,9 @@ extern T0* T155f9(T0* C);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].item */
 extern T0* T180f4(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_creation_procedure_name */
-extern void T59f516(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f518(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.new_temp_variable */
-extern T0* T59f240(T0* C, T0* a1);
+extern T0* T59f242(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_IDENTIFIER].force_last */
 extern void T177f11(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_IDENTIFIER].resize */
@@ -18572,29 +18573,29 @@ extern T0* T177f2(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_TYPE].replace */
 extern void T148f14(T0* C, T0* a1, T6 a2);
 /* ET_C_GENERATOR.same_declaration_types */
-extern T1 T59f263(T0* C, T0* a1, T0* a2);
+extern T1 T59f264(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_writable */
-extern void T59f515(T0* C, T0* a1);
+extern void T59f517(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_attribute_access */
-extern void T59f376(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f377(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_attribute_name */
-extern void T59f401(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f403(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.tokens */
 extern T0* T59f33(T0* C);
 /* ET_C_GENERATOR.print_local_variable */
-extern void T59f523(T0* C, T0* a1);
+extern void T59f525(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_local_name */
-extern void T59f524(T0* C, T0* a1, T0* a2);
+extern void T59f526(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.in_target */
-extern T1 T59f260(T0* C);
+extern T1 T59f261(T0* C);
 /* ET_C_GENERATOR.print_temporary_variable */
-extern void T59f522(T0* C, T0* a1);
+extern void T59f524(T0* C, T0* a1);
 /* ET_IDENTIFIER.is_temporary */
 extern T1 T124f18(T0* C);
 /* ET_C_GENERATOR.print_formal_argument */
-extern void T59f521(T0* C, T0* a1);
+extern void T59f523(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_argument_name */
-extern void T59f383(T0* C, T0* a1, T0* a2);
+extern void T59f384(T0* C, T0* a1, T0* a2);
 /* DS_ARRAYED_STACK [ET_EXPRESSION].force */
 extern void T179f9(T0* C, T0* a1);
 /* DS_ARRAYED_STACK [ET_EXPRESSION].resize */
@@ -18618,7 +18619,7 @@ extern T6 T179f7(T0* C, T6 a1);
 /* DS_ARRAYED_STACK [ET_EXPRESSION].extendible */
 extern T1 T179f6(T0* C, T6 a1);
 /* ET_C_GENERATOR.fill_call_operands */
-extern void T59f514(T0* C, T6 a1);
+extern void T59f516(T0* C, T6 a1);
 /* DS_ARRAYED_STACK [ET_EXPRESSION].prune */
 extern void T179f10(T0* C, T6 a1);
 /* DS_ARRAYED_STACK [ET_EXPRESSION].clear_items */
@@ -18630,25 +18631,25 @@ extern void T180f16(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].resize */
 extern void T180f15(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_operand */
-extern void T59f513(T0* C, T0* a1);
+extern void T59f515(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_temp_name */
-extern void T59f371(T0* C, T0* a1, T0* a2);
+extern void T59f372(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.temp_variable */
-extern unsigned char ge945os6683;
-extern T0* ge945ov6683;
-extern T0* T59f79(T0* C);
+extern unsigned char ge945os6685;
+extern T0* ge945ov6685;
+extern T0* T59f80(T0* C);
 /* ET_C_GENERATOR.print_type_declaration */
-extern void T59f367(T0* C, T0* a1, T0* a2);
+extern void T59f368(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_eif_any_type_name */
-extern void T59f333(T0* C, T0* a1);
+extern void T59f334(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_indentation */
-extern void T59f369(T0* C);
+extern void T59f370(T0* C);
 /* ET_C_GENERATOR.indent */
-extern void T59f368(T0* C);
+extern void T59f369(T0* C);
 /* ET_C_GENERATOR.print_getypes_array */
-extern void T59f327(T0* C);
+extern void T59f328(T0* C);
 /* ET_C_GENERATOR.print_geconst_function */
-extern void T59f326(T0* C);
+extern void T59f327(T0* C);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].forth */
 extern void T195f44(T0* C);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].cursor_forth */
@@ -18666,9 +18667,9 @@ extern T0* T195f7(T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].item_storage_item */
 extern T0* T195f10(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_once_value_name */
-extern void T59f391(T0* C, T0* a1, T0* a2);
+extern void T59f393(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_once_status_name */
-extern void T59f392(T0* C, T0* a1, T0* a2);
+extern void T59f394(T0* C, T0* a1, T0* a2);
 /* DS_HASH_SET [ET_FEATURE].has */
 extern T1 T194f1(T0* C, T0* a1);
 /* DS_HASH_SET [ET_FEATURE].search_position */
@@ -18704,11 +18705,29 @@ extern T1 T195f31(T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].is_empty */
 extern T1 T195f30(T0* C);
 /* ET_C_GENERATOR.print_constants_declaration */
-extern void T59f325(T0* C);
+extern void T59f326(T0* C);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].go_after */
+extern void T192f40(T0* C);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].cursor_go_after */
+extern void T192f54(T0* C, T0* a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].remove_traversing_cursor */
+extern void T192f60(T0* C, T0* a1);
+/* DS_HASH_SET_CURSOR [ET_DYNAMIC_TYPE].set_next_cursor */
+extern void T844f6(T0* C, T0* a1);
+/* DS_HASH_SET_CURSOR [ET_DYNAMIC_TYPE].set_position */
+extern void T844f5(T0* C, T6 a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].cursor_off */
+extern T1 T192f28(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_gevoid_function */
-extern void T59f324(T0* C);
+extern void T59f325(T0* C, T0* a1);
+/* ET_C_GENERATOR.print_gedefault_entity_value */
+extern void T59f388(T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_gedefault_name */
+extern void T59f408(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_current_name */
-extern void T59f381(T0* C, T0* a1);
+extern void T59f382(T0* C, T0* a1);
+/* ET_C_GENERATOR.print_gevoid_name */
+extern void T59f392(T0* C, T0* a1, T0* a2);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].wipe_out */
 extern void T193f39(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].slots_wipe_out */
@@ -18738,18 +18757,18 @@ extern void T193f52(T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].clashes_item */
 extern T6 T193f25(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_gemt_function */
-extern void T59f323(T0* C, T0* a1);
+extern void T59f324(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_attribute_tuple_item_access */
-extern void T59f390(T0* C, T6 a1, T0* a2, T0* a3);
+extern void T59f391(T0* C, T6 a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_attribute_tuple_item_name */
-extern void T59f404(T0* C, T6 a1, T0* a2, T0* a3);
+extern void T59f406(T0* C, T6 a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_attribute_type_id_access */
-extern void T59f373(T0* C, T0* a1, T0* a2);
+extern void T59f374(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_attribute_type_id_name */
-extern void T59f365(T0* C, T0* a1, T0* a2);
+extern void T59f366(T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.result_keyword */
-extern unsigned char ge769os12783;
-extern T0* ge769ov12783;
+extern unsigned char ge769os12789;
+extern T0* ge769ov12789;
 extern T0* T162f11(T0* C);
 /* ET_RESULT.make */
 extern T0* T209c24(void);
@@ -18760,7 +18779,7 @@ extern void T209f27(T0* C);
 /* ET_RESULT.tokens */
 extern T0* T209f2(T0* C);
 /* ET_C_GENERATOR.print_result_name */
-extern void T59f370(T0* C, T0* a1);
+extern void T59f371(T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].item_for_iteration */
 extern T0* T193f2(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].cursor_item */
@@ -18782,43 +18801,37 @@ extern T1 T193f23(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].wipe_out */
 extern void T192f39(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].slots_wipe_out */
-extern void T192f51(T0* C);
+extern void T192f53(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].clashes_wipe_out */
-extern void T192f50(T0* C);
+extern void T192f52(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].key_storage_wipe_out */
-extern void T192f49(T0* C);
+extern void T192f51(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].item_storage_wipe_out */
-extern void T192f48(T0* C);
+extern void T192f50(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].unset_found_item */
-extern void T192f44(T0* C);
+extern void T192f46(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].move_all_cursors_after */
-extern void T192f47(T0* C);
-/* DS_HASH_SET_CURSOR [ET_DYNAMIC_TYPE].set_next_cursor */
-extern void T844f6(T0* C, T0* a1);
-/* DS_HASH_SET_CURSOR [ET_DYNAMIC_TYPE].set_position */
-extern void T844f5(T0* C, T6 a1);
+extern void T192f49(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].forth */
 extern void T192f38(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].cursor_forth */
-extern void T192f46(T0* C, T0* a1);
+extern void T192f48(T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].add_traversing_cursor */
-extern void T192f53(T0* C, T0* a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].remove_traversing_cursor */
-extern void T192f52(T0* C, T0* a1);
+extern void T192f61(T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].clashes_item */
-extern T6 T192f25(T0* C, T6 a1);
+extern T6 T192f29(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_gema_function */
-extern void T59f322(T0* C, T0* a1);
+extern void T59f323(T0* C, T0* a1);
 /* ET_DYNAMIC_FEATURE_LIST.item */
 extern T0* T205f3(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_attribute_special_item_access */
-extern void T59f375(T0* C, T0* a1, T0* a2);
+extern void T59f376(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_attribute_special_item_name */
-extern void T59f403(T0* C, T0* a1, T0* a2);
+extern void T59f405(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_attribute_special_count_access */
-extern void T59f374(T0* C, T0* a1, T0* a2);
+extern void T59f375(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_attribute_special_count_name */
-extern void T59f402(T0* C, T0* a1, T0* a2);
+extern void T59f404(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FEATURE_LIST.first */
 extern T0* T205f2(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].item_for_iteration */
@@ -18834,13 +18847,11 @@ extern T1 T192f4(T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].start */
 extern void T192f37(T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].cursor_start */
-extern void T192f45(T0* C, T0* a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].cursor_off */
-extern T1 T192f24(T0* C, T0* a1);
+extern void T192f47(T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].is_empty */
-extern T1 T192f23(T0* C);
+extern T1 T192f27(T0* C);
 /* ET_C_GENERATOR.print_feature */
-extern void T59f321(T0* C, T0* a1);
+extern void T59f322(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_AGENT].wipe_out */
 extern void T185f12(T0* C);
 /* DS_ARRAYED_LIST [ET_AGENT].clear_items */
@@ -18852,13 +18863,13 @@ extern void T842f6(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [ET_AGENT].set_position */
 extern void T842f5(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_agent_declaration */
-extern void T59f389(T0* C, T6 a1, T0* a2);
+extern void T59f390(T0* C, T6 a1, T0* a2);
 /* ET_C_GENERATOR.print_agent_closed_operand_access */
-extern void T59f512(T0* C, T0* a1, T0* a2);
+extern void T59f514(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_agent_creation_name */
-extern void T59f511(T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T59f513(T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.print_routine_name */
-extern void T59f494(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f496(T0* C, T0* a1, T0* a2, T0* a3);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_TYPE].wipe_out */
 extern void T148f13(T0* C);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_TYPE].clear_items */
@@ -18870,7 +18881,7 @@ extern void T402f6(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [ET_DYNAMIC_TYPE].set_position */
 extern void T402f5(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_agent_body_declaration */
-extern void T59f510(T0* C, T0* a1);
+extern void T59f512(T0* C, T0* a1);
 /* ET_ACTUAL_ARGUMENT_LIST.put_first */
 extern void T188f15(T0* C, T0* a1);
 /* ET_ACTUAL_ARGUMENT_LIST.resize */
@@ -18904,13 +18915,13 @@ extern T6 T188f1(T0* C);
 /* ET_ACTUAL_ARGUMENT_LIST.wipe_out */
 extern void T188f13(T0* C);
 /* ET_C_GENERATOR.print_agent_open_operand_name */
-extern void T59f509(T0* C, T0* a1, T0* a2);
+extern void T59f511(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_agent_function_name */
-extern void T59f508(T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T59f510(T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.print_agent_type_name */
-extern void T59f507(T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T59f509(T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.print_agent_closed_operand_name */
-extern void T59f506(T0* C, T0* a1, T0* a2);
+extern void T59f508(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PRECURSOR.is_attribute */
 extern T1 T207f15(T0* C);
 /* ET_DYNAMIC_PRECURSOR.is_builtin */
@@ -18998,7 +19009,7 @@ extern void T207f61(T0* C, T1 a1);
 /* ET_DYNAMIC_FEATURE.set_generated */
 extern void T155f61(T0* C, T1 a1);
 /* ET_C_GENERATOR.print_polymorphic_procedure_calls */
-extern void T59f320(T0* C);
+extern void T59f321(T0* C);
 /* DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER].wipe_out */
 extern void T182f45(T0* C);
 /* DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER].slots_wipe_out */
@@ -19028,191 +19039,225 @@ extern void T831f6(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [INTEGER].set_position */
 extern void T831f5(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_binary_search_polymorphic_calls */
-extern void T59f386(T0* C, T0* a1, T0* a2, T0* a3, T6 a4, T6 a5);
+extern void T59f387(T0* C, T0* a1, T0* a2, T0* a3, T6 a4, T6 a5);
 /* ET_C_GENERATOR.print_query_call */
-extern void T59f385(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f386(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_target_expression */
-extern void T59f495(T0* C, T0* a1, T0* a2);
+extern void T59f497(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_item_call */
-extern void T59f493(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f495(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_builtin_sized_real_floor_real_64_call */
-extern void T59f492(T0* C, T0* a1, T0* a2);
+extern void T59f494(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_floor_real_32_call */
-extern void T59f491(T0* C, T0* a1, T0* a2);
+extern void T59f493(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_ceiling_real_64_call */
-extern void T59f490(T0* C, T0* a1, T0* a2);
+extern void T59f492(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_ceiling_real_32_call */
-extern void T59f489(T0* C, T0* a1, T0* a2);
+extern void T59f491(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_to_double_call */
-extern void T59f488(T0* C, T0* a1, T0* a2);
+extern void T59f490(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_truncated_to_real_call */
-extern void T59f487(T0* C, T0* a1, T0* a2);
+extern void T59f489(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_truncated_to_integer_64_call */
-extern void T59f486(T0* C, T0* a1, T0* a2);
+extern void T59f488(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_truncated_to_integer_call */
-extern void T59f485(T0* C, T0* a1, T0* a2);
+extern void T59f487(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_lt_call */
-extern void T59f484(T0* C, T0* a1, T0* a2);
+extern void T59f486(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_identity_call */
-extern void T59f483(T0* C, T0* a1, T0* a2);
+extern void T59f485(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_opposite_call */
-extern void T59f482(T0* C, T0* a1, T0* a2);
+extern void T59f484(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_power_call */
-extern void T59f481(T0* C, T0* a1, T0* a2);
+extern void T59f483(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_divide_call */
-extern void T59f480(T0* C, T0* a1, T0* a2);
+extern void T59f482(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_times_call */
-extern void T59f479(T0* C, T0* a1, T0* a2);
+extern void T59f481(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_minus_call */
-extern void T59f478(T0* C, T0* a1, T0* a2);
+extern void T59f480(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_plus_call */
-extern void T59f477(T0* C, T0* a1, T0* a2);
+extern void T59f479(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_character_item_call */
-extern void T59f476(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f478(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_builtin_sized_character_to_character_32_call */
-extern void T59f475(T0* C, T0* a1, T0* a2);
+extern void T59f477(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_character_to_character_8_call */
-extern void T59f474(T0* C, T0* a1, T0* a2);
+extern void T59f476(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_character_natural_32_code_call */
-extern void T59f473(T0* C, T0* a1, T0* a2);
+extern void T59f475(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_character_code_call */
-extern void T59f472(T0* C, T0* a1, T0* a2);
+extern void T59f474(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_item_call */
-extern void T59f471(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f473(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_builtin_sized_integer_bit_not_call */
-extern void T59f470(T0* C, T0* a1, T0* a2);
+extern void T59f472(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_bit_xor_call */
-extern void T59f469(T0* C, T0* a1, T0* a2);
+extern void T59f471(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_bit_shift_right_call */
-extern void T59f468(T0* C, T0* a1, T0* a2);
+extern void T59f470(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_bit_shift_left_call */
-extern void T59f467(T0* C, T0* a1, T0* a2);
+extern void T59f469(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_bit_and_call */
-extern void T59f466(T0* C, T0* a1, T0* a2);
+extern void T59f468(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_bit_or_call */
-extern void T59f465(T0* C, T0* a1, T0* a2);
+extern void T59f467(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_as_integer_64_call */
-extern void T59f464(T0* C, T0* a1, T0* a2);
+extern void T59f466(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_as_integer_32_call */
-extern void T59f463(T0* C, T0* a1, T0* a2);
+extern void T59f465(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_as_integer_16_call */
-extern void T59f462(T0* C, T0* a1, T0* a2);
+extern void T59f464(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_as_integer_8_call */
-extern void T59f461(T0* C, T0* a1, T0* a2);
+extern void T59f463(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_as_natural_64_call */
-extern void T59f460(T0* C, T0* a1, T0* a2);
+extern void T59f462(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_as_natural_32_call */
-extern void T59f459(T0* C, T0* a1, T0* a2);
+extern void T59f461(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_as_natural_16_call */
-extern void T59f458(T0* C, T0* a1, T0* a2);
+extern void T59f460(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_as_natural_8_call */
-extern void T59f457(T0* C, T0* a1, T0* a2);
+extern void T59f459(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_to_double_call */
-extern void T59f456(T0* C, T0* a1, T0* a2);
+extern void T59f458(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_to_real_64_call */
-extern void T59f455(T0* C, T0* a1, T0* a2);
+extern void T59f457(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_to_real_32_call */
-extern void T59f454(T0* C, T0* a1, T0* a2);
+extern void T59f456(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_to_real_call */
-extern void T59f453(T0* C, T0* a1, T0* a2);
+extern void T59f455(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_to_character_32_call */
-extern void T59f452(T0* C, T0* a1, T0* a2);
+extern void T59f454(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_to_character_8_call */
-extern void T59f451(T0* C, T0* a1, T0* a2);
+extern void T59f453(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_identity_call */
-extern void T59f450(T0* C, T0* a1, T0* a2);
+extern void T59f452(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_opposite_call */
-extern void T59f449(T0* C, T0* a1, T0* a2);
+extern void T59f451(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_lt_call */
-extern void T59f448(T0* C, T0* a1, T0* a2);
+extern void T59f450(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_power_call */
-extern void T59f447(T0* C, T0* a1, T0* a2);
+extern void T59f449(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_mod_call */
-extern void T59f446(T0* C, T0* a1, T0* a2);
+extern void T59f448(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_div_call */
-extern void T59f445(T0* C, T0* a1, T0* a2);
+extern void T59f447(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_divide_call */
-extern void T59f444(T0* C, T0* a1, T0* a2);
+extern void T59f446(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_times_call */
-extern void T59f443(T0* C, T0* a1, T0* a2);
+extern void T59f445(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_minus_call */
-extern void T59f442(T0* C, T0* a1, T0* a2);
+extern void T59f444(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_integer_plus_call */
-extern void T59f441(T0* C, T0* a1, T0* a2);
+extern void T59f443(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_function_item_call */
-extern void T59f440(T0* C, T0* a1);
+extern void T59f442(T0* C, T0* a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].force_last */
+extern void T192f41(T0* C, T0* a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].slots_put */
+extern void T192f59(T0* C, T6 a1, T6 a2);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].clashes_put */
+extern void T192f58(T0* C, T6 a1, T6 a2);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].slots_item */
+extern T6 T192f21(T0* C, T6 a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].hash_position */
+extern T6 T192f19(T0* C, T0* a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].resize */
+extern void T192f57(T0* C, T6 a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].clashes_resize */
+extern void T192f65(T0* C, T6 a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].special_integer_ */
+extern T0* T192f24(T0* C);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].key_storage_resize */
+extern void T192f64(T0* C, T6 a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].item_storage_resize */
+extern void T192f63(T0* C, T6 a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].key_storage_item */
+extern T0* T192f34(T0* C, T6 a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].slots_resize */
+extern void T192f62(T0* C, T6 a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].new_modulus */
+extern T6 T192f11(T0* C, T6 a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].new_capacity */
+extern T6 T192f18(T0* C, T6 a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].item_storage_put */
+extern void T192f56(T0* C, T0* a1, T6 a2);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].search_position */
+extern void T192f55(T0* C, T0* a1);
+/* DS_HASH_SET [ET_DYNAMIC_TYPE].key_equality_tester */
+extern T0* T192f33(T0* C);
 /* ET_C_GENERATOR.print_builtin_platform_wide_character_bytes_call */
-extern void T59f439(T0* C, T0* a1);
+extern void T59f441(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_platform_real_bytes_call */
-extern void T59f438(T0* C, T0* a1);
+extern void T59f440(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_platform_pointer_bytes_call */
-extern void T59f437(T0* C, T0* a1);
+extern void T59f439(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_platform_integer_bytes_call */
-extern void T59f436(T0* C, T0* a1);
+extern void T59f438(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_platform_character_bytes_call */
-extern void T59f435(T0* C, T0* a1);
+extern void T59f437(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_platform_boolean_bytes_call */
-extern void T59f434(T0* C, T0* a1);
+extern void T59f436(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_platform_is_windows_call */
-extern void T59f433(T0* C, T0* a1);
+extern void T59f435(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_platform_is_vms_call */
-extern void T59f432(T0* C, T0* a1);
+extern void T59f434(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_platform_is_unix_call */
-extern void T59f431(T0* C, T0* a1);
+extern void T59f433(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_platform_is_dotnet_call */
-extern void T59f430(T0* C, T0* a1);
+extern void T59f432(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_platform_is_thread_capable_call */
-extern void T59f429(T0* C, T0* a1);
+extern void T59f431(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_arguments_argument_count_call */
-extern void T59f428(T0* C, T0* a1);
+extern void T59f430(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_pointer_hash_code_call */
-extern void T59f427(T0* C, T0* a1);
+extern void T59f429(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_pointer_to_integer_32_call */
-extern void T59f426(T0* C, T0* a1);
+extern void T59f428(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_pointer_plus_call */
-extern void T59f425(T0* C, T0* a1);
+extern void T59f427(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_pointer_item_call */
-extern void T59f424(T0* C, T0* a1, T0* a2);
+extern void T59f426(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_boolean_item_call */
-extern void T59f423(T0* C, T0* a1, T0* a2);
+extern void T59f425(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_boolean_not_call */
-extern void T59f422(T0* C, T0* a1);
+extern void T59f424(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_boolean_implies_call */
-extern void T59f421(T0* C, T0* a1);
+extern void T59f423(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_boolean_xor_call */
-extern void T59f420(T0* C, T0* a1);
+extern void T59f422(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_boolean_or_else_call */
-extern void T59f419(T0* C, T0* a1);
+extern void T59f421(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_boolean_or_call */
-extern void T59f418(T0* C, T0* a1);
+extern void T59f420(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_boolean_and_then_call */
-extern void T59f417(T0* C, T0* a1);
+extern void T59f419(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_boolean_and_call */
-extern void T59f416(T0* C, T0* a1);
+extern void T59f418(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_special_element_size_call */
-extern void T59f415(T0* C, T0* a1);
+extern void T59f417(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_special_count_call */
-extern void T59f414(T0* C, T0* a1);
+extern void T59f416(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_special_item_call */
-extern void T59f413(T0* C, T0* a1);
+extern void T59f415(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_generating_type_call */
-extern void T59f412(T0* C, T0* a1);
+extern void T59f414(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_escaped_string */
-extern void T59f519(T0* C, T0* a1);
+extern void T59f521(T0* C, T0* a1);
 /* UT_INTEGER_FORMATTER.put_octal_integer */
 extern void T239f2(T0* C, T0* a1, T6 a2);
 /* ET_C_GENERATOR.integer_formatter_ */
-extern unsigned char ge236os7420;
-extern T0* ge236ov7420;
-extern T0* T59f259(T0* C);
+extern unsigned char ge236os7422;
+extern T0* ge236ov7422;
+extern T0* T59f260(T0* C);
 /* UT_INTEGER_FORMATTER.default_create */
 extern T0* T239c1(void);
 /* ET_C_GENERATOR.print_builtin_any_generator_call */
-extern void T59f411(T0* C, T0* a1);
+extern void T59f413(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_standard_is_equal_call */
-extern void T59f410(T0* C, T0* a1);
+extern void T59f412(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_same_type_call */
-extern void T59f409(T0* C, T0* a1);
+extern void T59f411(T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].force_last */
 extern void T195f45(T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].key_storage_put */
@@ -19336,7 +19381,7 @@ extern T1 T181f12(T0* C);
 /* ET_C_GENERATOR.polymorphic_type_id_sorter */
 extern unsigned char ge945os6361;
 extern T0* ge945ov6361;
-extern T0* T59f88(T0* C);
+extern T0* T59f89(T0* C);
 /* DS_QUICK_SORTER [INTEGER].make */
 extern T0* T218c2(T0* a1);
 /* KL_COMPARABLE_COMPARATOR [INTEGER].make */
@@ -19368,33 +19413,33 @@ extern T1 T183f16(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_STANDALONE_TYPE_SET].cursor_after */
 extern T1 T183f4(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_procedure_call */
-extern void T59f388(T0* C, T0* a1, T0* a2);
+extern void T59f389(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_sized_real_set_item_call */
-extern void T59f505(T0* C, T0* a1, T0* a2, T6 a3);
+extern void T59f507(T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_C_GENERATOR.builtin_feature */
-extern T6 T59f256(T0* C, T6 a1, T6 a2);
+extern T6 T59f257(T0* C, T6 a1, T6 a2);
 /* ET_C_GENERATOR.print_builtin_sized_character_set_item_call */
-extern void T59f504(T0* C, T0* a1, T0* a2, T6 a3);
+extern void T59f506(T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_C_GENERATOR.print_builtin_sized_integer_set_item_call */
-extern void T59f503(T0* C, T0* a1, T0* a2, T6 a3);
+extern void T59f505(T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_C_GENERATOR.print_builtin_procedure_call_call */
-extern void T59f502(T0* C, T0* a1);
+extern void T59f504(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_pointer_set_item_call */
-extern void T59f501(T0* C, T0* a1);
+extern void T59f503(T0* C, T0* a1);
 /* ET_C_GENERATOR.builtin_pointer_feature */
-extern T6 T59f255(T0* C, T6 a1);
+extern T6 T59f256(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_builtin_boolean_set_item_call */
-extern void T59f500(T0* C, T0* a1);
+extern void T59f502(T0* C, T0* a1);
 /* ET_C_GENERATOR.builtin_boolean_feature */
-extern T6 T59f254(T0* C, T6 a1);
+extern T6 T59f255(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_builtin_special_put_call */
-extern void T59f499(T0* C, T0* a1);
+extern void T59f501(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_copy_call */
-extern void T59f498(T0* C, T0* a1);
+extern void T59f500(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_standard_copy_call */
-extern void T59f497(T0* C, T0* a1);
+extern void T59f499(T0* C, T0* a1);
 /* ET_C_GENERATOR.set_polymorphic_call_dynamic_type_sets */
-extern void T59f384(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f385(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_DYNAMIC_STANDALONE_TYPE_SET.put_type_set */
 extern void T227f13(T0* C, T0* a1);
 /* ET_DYNAMIC_STANDALONE_TYPE_SET.put_standalone_type */
@@ -19406,8 +19451,8 @@ extern T0* T401f1(T0* C, T6 a1);
 /* TO_SPECIAL [ET_DYNAMIC_TYPE].make_area */
 extern T0* T1015c2(T6 a1);
 /* ET_DYNAMIC_TYPE_LIST.fixed_array */
-extern unsigned char ge930os15244;
-extern T0* ge930ov15244;
+extern unsigned char ge930os15250;
+extern T0* ge930ov15250;
 extern T0* T178f4(T0* C);
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE].default_create */
 extern T0* T401c3(void);
@@ -19506,7 +19551,7 @@ extern T1 T182f35(T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER].is_empty */
 extern T1 T182f34(T0* C);
 /* ET_C_GENERATOR.fill_call_formal_arguments */
-extern void T59f382(T0* C, T0* a1);
+extern void T59f383(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].force_last */
 extern void T180f17(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].new_capacity */
@@ -19514,9 +19559,9 @@ extern T6 T180f10(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].extendible */
 extern T1 T180f9(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_call_name */
-extern void T59f380(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
+extern void T59f381(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.print_call_name_comment */
-extern void T59f379(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
+extern void T59f380(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_CLASS.seeded_procedure */
 extern T0* T58f21(T0* C, T6 a1);
 /* ET_PROCEDURE_LIST.seeded_feature */
@@ -19524,7 +19569,7 @@ extern T0* T153f5(T0* C, T6 a1);
 /* ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL.set_next */
 extern void T220f10(T0* C, T0* a1);
 /* ET_C_GENERATOR.same_declared_signature */
-extern T1 T59f85(T0* C, T0* a1, T0* a2);
+extern T1 T59f86(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_TYPE_LIST.item */
 extern T0* T178f7(T0* C, T6 a1);
 /* DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER].force_last */
@@ -19564,11 +19609,7 @@ extern T1 T181f8(T0* C, T6 a1);
 /* DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER].has */
 extern T1 T182f1(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_polymorphic_query_calls */
-extern void T59f319(T0* C);
-/* ET_C_GENERATOR.print_gedefault_entity_value */
-extern void T59f387(T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_gedefault_name */
-extern void T59f406(T0* C, T0* a1, T0* a2);
+extern void T59f320(T0* C);
 /* ET_CLASS.seeded_query */
 extern T0* T58f17(T0* C, T6 a1);
 /* ET_QUERY_LIST.seeded_feature */
@@ -19576,17 +19617,17 @@ extern T0* T151f5(T0* C, T6 a1);
 /* ET_DYNAMIC_QUALIFIED_QUERY_CALL.set_next */
 extern void T210f11(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_gems_function */
-extern void T59f318(T0* C);
+extern void T59f319(T0* C);
 /* ET_C_GENERATOR.print_gedefault_declarations */
-extern void T59f317(T0* C);
+extern void T59f318(T0* C);
 /* ET_C_GENERATOR.print_gedefault_declaration */
-extern void T59f366(T0* C, T0* a1);
+extern void T59f367(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_gedefault_object_value */
-extern void T59f407(T0* C, T0* a1, T0* a2);
+extern void T59f409(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_gedefault_attribute_value */
-extern void T59f518(T0* C, T0* a1, T0* a2);
+extern void T59f520(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.flush_to_c_file */
-extern void T59f316(T0* C);
+extern void T59f317(T0* C);
 /* KL_TEXT_OUTPUT_FILE.open_append */
 extern void T201f27(T0* C);
 /* KL_TEXT_OUTPUT_FILE.old_open_append */
@@ -19602,15 +19643,15 @@ extern T6 T78f18(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [STRING].extendible */
 extern T1 T78f17(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_types */
-extern void T59f315(T0* C, T0* a1);
+extern void T59f316(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_boxed_type_struct */
-extern void T59f364(T0* C, T0* a1, T0* a2);
+extern void T59f365(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boxed_struct_name */
-extern void T59f400(T0* C, T0* a1, T0* a2);
+extern void T59f402(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_type_struct */
-extern void T59f363(T0* C, T0* a1, T0* a2);
+extern void T59f364(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_struct_name */
-extern void T59f395(T0* C, T0* a1, T0* a2);
+extern void T59f397(T0* C, T0* a1, T0* a2);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_TYPE].has_cycle */
 extern T1 T208f1(T0* C);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_TYPE].is_empty */
@@ -19674,13 +19715,13 @@ extern T1 T181f14(T0* C, T0* a1);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_TYPE].reset */
 extern void T208f18(T0* C);
 /* ET_C_GENERATOR.print_boxed_type_definition */
-extern void T59f362(T0* C, T0* a1, T0* a2);
+extern void T59f363(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_geboxed_function */
-extern void T59f361(T0* C, T0* a1);
+extern void T59f362(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_boxed_attribute_type_id_access */
-extern void T59f398(T0* C, T0* a1, T0* a2);
+extern void T59f400(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boxed_type_declaration */
-extern void T59f396(T0* C, T0* a1, T0* a2);
+extern void T59f398(T0* C, T0* a1, T0* a2);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_TYPE].force_relation */
 extern void T208f13(T0* C, T0* a1, T0* a2);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_TYPE].put_indexed_relation */
@@ -19712,47 +19753,47 @@ extern T0* T870f12(T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER, ET_DYNAMIC_TYPE].slots_item */
 extern T6 T870f14(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_type_definition */
-extern void T59f360(T0* C, T0* a1, T0* a2);
+extern void T59f361(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_pointer_type_definition */
-extern void T59f359(T0* C, T0* a1, T0* a2);
+extern void T59f360(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_double_type_definition */
-extern void T59f358(T0* C, T0* a1, T0* a2);
+extern void T59f359(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_real_type_definition */
-extern void T59f357(T0* C, T0* a1, T0* a2);
+extern void T59f358(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_real_64_type_definition */
-extern void T59f356(T0* C, T0* a1, T0* a2);
+extern void T59f357(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_real_32_type_definition */
-extern void T59f355(T0* C, T0* a1, T0* a2);
+extern void T59f356(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_natural_type_definition */
-extern void T59f354(T0* C, T0* a1, T0* a2);
+extern void T59f355(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_natural_64_type_definition */
-extern void T59f353(T0* C, T0* a1, T0* a2);
+extern void T59f354(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_natural_32_type_definition */
-extern void T59f352(T0* C, T0* a1, T0* a2);
+extern void T59f353(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_natural_16_type_definition */
-extern void T59f351(T0* C, T0* a1, T0* a2);
+extern void T59f352(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_natural_8_type_definition */
-extern void T59f350(T0* C, T0* a1, T0* a2);
+extern void T59f351(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_integer_type_definition */
-extern void T59f349(T0* C, T0* a1, T0* a2);
+extern void T59f350(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_integer_64_type_definition */
-extern void T59f348(T0* C, T0* a1, T0* a2);
+extern void T59f349(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_integer_32_type_definition */
-extern void T59f347(T0* C, T0* a1, T0* a2);
+extern void T59f348(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_integer_16_type_definition */
-extern void T59f346(T0* C, T0* a1, T0* a2);
+extern void T59f347(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_integer_8_type_definition */
-extern void T59f345(T0* C, T0* a1, T0* a2);
+extern void T59f346(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_wide_character_type_definition */
-extern void T59f344(T0* C, T0* a1, T0* a2);
+extern void T59f345(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_character_type_definition */
-extern void T59f343(T0* C, T0* a1, T0* a2);
+extern void T59f344(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_character_32_type_definition */
-extern void T59f342(T0* C, T0* a1, T0* a2);
+extern void T59f343(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_character_8_type_definition */
-extern void T59f341(T0* C, T0* a1, T0* a2);
+extern void T59f342(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boolean_type_definition */
-extern void T59f340(T0* C, T0* a1, T0* a2);
+extern void T59f341(T0* C, T0* a1, T0* a2);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_TYPE].force */
 extern void T208f12(T0* C, T0* a1);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_TYPE].put */
@@ -19844,7 +19885,7 @@ extern void T870f51(T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER, ET_DYNAMIC_TYPE].make_item_storage */
 extern void T870f50(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_aliased_double_type_definition */
-extern void T59f339(T0* C, T0* a1);
+extern void T59f340(T0* C, T0* a1);
 /* ET_IDENTIFIER.upper_name */
 extern T0* T124f16(T0* C);
 /* UC_UTF8_STRING.as_upper */
@@ -19856,16 +19897,16 @@ extern void T914f82(T0* C, T6 a1, T6 a2);
 /* UC_UNICODE_ROUTINES.upper_code */
 extern T6 T1168f3(T0* C, T6 a1);
 /* UC_UNICODE_ROUTINES.upper_codes */
-extern unsigned char ge350os24528;
-extern T0* ge350ov24528;
+extern unsigned char ge350os24534;
+extern T0* ge350ov24534;
 extern T0* T1168f9(T0* C);
 /* UC_UNICODE_ROUTINES.empty_upper_code_plane */
-extern unsigned char ge350os24527;
-extern T0* ge350ov24527;
+extern unsigned char ge350os24533;
+extern T0* ge350ov24533;
 extern T0* T1168f15(T0* C);
 /* UC_UNICODE_ROUTINES.empty_upper_code_segment */
-extern unsigned char ge350os24516;
-extern T0* ge350ov24516;
+extern unsigned char ge350os24522;
+extern T0* ge350ov24522;
 extern T0* T1168f37(T0* C);
 /* KL_INTEGER_ROUTINES.to_integer */
 extern T6 T144f5(T0* C, T6 a1);
@@ -19874,68 +19915,68 @@ extern T0* T1168f46(T0* C);
 /* SPECIAL [ARRAY [INTEGER]].make */
 extern T0* T1276c2(T6 a1);
 /* UC_UNICODE_ROUTINES.upper_code_plane_1 */
-extern unsigned char ge350os24526;
-extern T0* ge350ov24526;
+extern unsigned char ge350os24532;
+extern T0* ge350ov24532;
 extern T0* T1168f14(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_1_segment_4 */
-extern unsigned char ge350os24525;
-extern T0* ge350ov24525;
+extern unsigned char ge350os24531;
+extern T0* ge350ov24531;
 extern T0* T1168f45(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0 */
-extern unsigned char ge350os24524;
-extern T0* ge350ov24524;
+extern unsigned char ge350os24530;
+extern T0* ge350ov24530;
 extern T0* T1168f13(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_255 */
-extern unsigned char ge350os24523;
-extern T0* ge350ov24523;
+extern unsigned char ge350os24529;
+extern T0* ge350ov24529;
 extern T0* T1168f44(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_45 */
-extern unsigned char ge350os24522;
-extern T0* ge350ov24522;
+extern unsigned char ge350os24528;
+extern T0* ge350ov24528;
 extern T0* T1168f43(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_44 */
-extern unsigned char ge350os24521;
-extern T0* ge350ov24521;
+extern unsigned char ge350os24527;
+extern T0* ge350ov24527;
 extern T0* T1168f42(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_36 */
-extern unsigned char ge350os24520;
-extern T0* ge350ov24520;
+extern unsigned char ge350os24526;
+extern T0* ge350ov24526;
 extern T0* T1168f41(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_33 */
-extern unsigned char ge350os24519;
-extern T0* ge350ov24519;
+extern unsigned char ge350os24525;
+extern T0* ge350ov24525;
 extern T0* T1168f40(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_31 */
-extern unsigned char ge350os24518;
-extern T0* ge350ov24518;
+extern unsigned char ge350os24524;
+extern T0* ge350ov24524;
 extern T0* T1168f39(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_30 */
-extern unsigned char ge350os24517;
-extern T0* ge350ov24517;
+extern unsigned char ge350os24523;
+extern T0* ge350ov24523;
 extern T0* T1168f38(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_5 */
-extern unsigned char ge350os24515;
-extern T0* ge350ov24515;
+extern unsigned char ge350os24521;
+extern T0* ge350ov24521;
 extern T0* T1168f36(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_4 */
-extern unsigned char ge350os24514;
-extern T0* ge350ov24514;
+extern unsigned char ge350os24520;
+extern T0* ge350ov24520;
 extern T0* T1168f35(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_3 */
-extern unsigned char ge350os24513;
-extern T0* ge350ov24513;
+extern unsigned char ge350os24519;
+extern T0* ge350ov24519;
 extern T0* T1168f34(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_2 */
-extern unsigned char ge350os24512;
-extern T0* ge350ov24512;
+extern unsigned char ge350os24518;
+extern T0* ge350ov24518;
 extern T0* T1168f33(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_1 */
-extern unsigned char ge350os24511;
-extern T0* ge350ov24511;
+extern unsigned char ge350os24517;
+extern T0* ge350ov24517;
 extern T0* T1168f32(T0* C);
 /* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_0 */
-extern unsigned char ge350os24510;
-extern T0* ge350ov24510;
+extern unsigned char ge350os24516;
+extern T0* ge350ov24516;
 extern T0* T1168f31(T0* C);
 /* SPECIAL [SPECIAL [ARRAY [INTEGER]]].make */
 extern T0* T1277c2(T6 a1);
@@ -19952,43 +19993,43 @@ extern void T17f55(T0* C);
 /* CHARACTER_8.infix ">=" */
 extern T1 T2f4(T2* C, T2 a1);
 /* ET_TOKEN_CONSTANTS.double_class_name */
-extern unsigned char ge769os12551;
-extern T0* ge769ov12551;
+extern unsigned char ge769os12557;
+extern T0* ge769ov12557;
 extern T0* T162f17(T0* C);
 /* ET_C_GENERATOR.print_aliased_real_type_definition */
-extern void T59f338(T0* C, T0* a1);
+extern void T59f339(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.real_class_name */
-extern unsigned char ge769os12570;
-extern T0* ge769ov12570;
+extern unsigned char ge769os12576;
+extern T0* ge769ov12576;
 extern T0* T162f16(T0* C);
 /* ET_C_GENERATOR.print_aliased_natural_type_definition */
-extern void T59f337(T0* C, T0* a1);
+extern void T59f338(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.natural_class_name */
-extern unsigned char ge769os12560;
-extern T0* ge769ov12560;
+extern unsigned char ge769os12566;
+extern T0* ge769ov12566;
 extern T0* T162f15(T0* C);
 /* ET_C_GENERATOR.print_aliased_integer_type_definition */
-extern void T59f336(T0* C, T0* a1);
+extern void T59f337(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.integer_class_name */
-extern unsigned char ge769os12554;
-extern T0* ge769ov12554;
+extern unsigned char ge769os12560;
+extern T0* ge769ov12560;
 extern T0* T162f14(T0* C);
 /* ET_C_GENERATOR.print_aliased_wide_character_type_definition */
-extern void T59f335(T0* C, T0* a1);
+extern void T59f336(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.wide_character_class_name */
-extern unsigned char ge769os12583;
-extern T0* ge769ov12583;
+extern unsigned char ge769os12589;
+extern T0* ge769ov12589;
 extern T0* T162f13(T0* C);
 /* ET_C_GENERATOR.print_aliased_character_type_definition */
-extern void T59f334(T0* C, T0* a1);
+extern void T59f335(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.character_class_name */
-extern unsigned char ge769os12548;
-extern T0* ge769ov12548;
+extern unsigned char ge769os12554;
+extern T0* ge769ov12554;
 extern T0* T162f12(T0* C);
 /* ET_C_GENERATOR.print_start_extern_c */
-extern void T59f314(T0* C, T0* a1);
+extern void T59f315(T0* C, T0* a1);
 /* ET_C_GENERATOR.include_runtime_header_file */
-extern void T59f313(T0* C, T0* a1, T1 a2, T0* a3);
+extern void T59f314(T0* C, T0* a1, T1 a2, T0* a3);
 /* DS_HASH_TABLE [BOOLEAN, STRING].replace */
 extern void T199f50(T0* C, T1 a1, T0* a2);
 /* DS_HASH_TABLE [BOOLEAN, STRING].item_storage_put */
@@ -20066,7 +20107,7 @@ extern T1 T17f8(T0* C, T0* a1);
 /* DS_HASH_TABLE [BOOLEAN, STRING].has */
 extern T1 T199f4(T0* C, T0* a1);
 /* ET_C_GENERATOR.generate_ids */
-extern void T59f312(T0* C);
+extern void T59f313(T0* C);
 /* ET_DYNAMIC_PRECURSOR_LIST.item */
 extern T0* T206f2(T0* C, T6 a1);
 /* ET_DYNAMIC_PRECURSOR.set_id */
@@ -20074,23 +20115,23 @@ extern void T207f65(T0* C, T6 a1);
 /* ET_DYNAMIC_FEATURE.set_id */
 extern void T155f64(T0* C, T6 a1);
 /* ET_C_GENERATOR.open_cpp_file */
-extern void T59f311(T0* C);
+extern void T59f312(T0* C);
 /* ET_C_GENERATOR.open_c_file */
-extern void T59f310(T0* C);
+extern void T59f311(T0* C);
 /* ET_C_GENERATOR.set_split_threshold */
-extern void T59f302(T0* C, T6 a1);
+extern void T59f303(T0* C, T6 a1);
 /* ET_C_GENERATOR.set_split_mode */
-extern void T59f301(T0* C, T1 a1);
+extern void T59f302(T0* C, T1 a1);
 /* GEC.no_split */
 extern T1 T21f23(T0* C);
 /* ET_C_GENERATOR.set_finalize */
-extern void T59f300(T0* C, T1 a1);
+extern void T59f301(T0* C, T1 a1);
 /* GEC.is_finalize */
 extern T1 T21f22(T0* C);
 /* ET_C_GENERATOR.make */
-extern T0* T59c299(T0* a1);
+extern T0* T59c300(T0* a1);
 /* ET_C_GENERATOR.make_external_regexps */
-extern void T59f305(T0* C);
+extern void T59f306(T0* C);
 /* DS_ARRAYED_LIST [STRING].make */
 extern void T78f21(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [STRING].make */
@@ -20244,17 +20285,13 @@ extern T0* T192f16(T0* C);
 /* DS_HASH_SET_CURSOR [ET_DYNAMIC_TYPE].make */
 extern T0* T844c4(T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].make_slots */
-extern void T192f43(T0* C, T6 a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].special_integer_ */
-extern T0* T192f20(T0* C);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].new_modulus */
-extern T6 T192f11(T0* C, T6 a1);
+extern void T192f45(T0* C, T6 a1);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].make_clashes */
-extern void T192f42(T0* C, T6 a1);
+extern void T192f44(T0* C, T6 a1);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].make_key_storage */
-extern void T192f41(T0* C, T6 a1);
+extern void T192f43(T0* C, T6 a1);
 /* DS_HASH_SET [ET_DYNAMIC_TYPE].make_item_storage */
-extern void T192f40(T0* C, T6 a1);
+extern void T192f42(T0* C, T6 a1);
 /* ET_CALL_EXPRESSION.make */
 extern T0* T191c22(T0* a1, T0* a2, T0* a3);
 /* ET_CALL_EXPRESSION.make_qualified_call */
@@ -20268,8 +20305,8 @@ extern T0* T188c12(T6 a1);
 /* ET_ACTUAL_ARGUMENT_LIST.make_with_capacity */
 extern void T188f12p1(T0* C, T6 a1);
 /* ET_TOKEN_CONSTANTS.right_parenthesis_symbol */
-extern unsigned char ge769os12730;
-extern T0* ge769ov12730;
+extern unsigned char ge769os12736;
+extern T0* ge769ov12736;
 extern T0* T162f561(T0* C);
 /* ET_SYMBOL.make_right_parenthesis */
 extern T0* T432c60(void);
@@ -20278,8 +20315,8 @@ extern void T432f57(T0* C);
 /* ET_SYMBOL.tokens */
 extern T0* T432f2(T0* C);
 /* ET_TOKEN_CONSTANTS.left_parenthesis_symbol */
-extern unsigned char ge769os12725;
-extern T0* ge769ov12725;
+extern unsigned char ge769os12731;
+extern T0* ge769ov12731;
 extern T0* T162f560(T0* C);
 /* ET_SYMBOL.make_left_parenthesis */
 extern T0* T432c59(void);
@@ -20374,14 +20411,14 @@ extern T0* T175c3(T0* a1);
 /* ET_TYPE_CHECKER.make */
 extern T0* T174c13(T0* a1);
 /* ET_TYPE_CHECKER.dummy_feature */
-extern unsigned char ge890os15320;
-extern T0* ge890ov15320;
+extern unsigned char ge890os15326;
+extern T0* ge890ov15326;
 extern T0* T174f4(T0* C);
 /* ET_DEFERRED_PROCEDURE.make */
 extern T0* T307c67(T0* a1, T0* a2, T0* a3);
 /* ET_TOKEN_CONSTANTS.deferred_keyword */
-extern unsigned char ge769os12749;
-extern T0* ge769ov12749;
+extern unsigned char ge769os12755;
+extern T0* ge769ov12755;
 extern T0* T162f606(T0* C);
 /* ET_KEYWORD.make_deferred */
 extern T0* T171c69(void);
@@ -20394,7 +20431,7 @@ extern T0* T174f6(T0* C);
 /* ET_TYPE_CHECKER.make */
 extern void T174f13p1(T0* C, T0* a1);
 /* ET_C_GENERATOR.make_processor */
-extern void T59f304(T0* C, T0* a1);
+extern void T59f305(T0* C, T0* a1);
 /* ET_CLASS.lower_name */
 extern T0* T58f43(T0* C);
 /* ET_SYSTEM.compile */
@@ -20442,8 +20479,8 @@ extern T0* T220f7(T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.string_ */
 extern T0* T62f53(T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.shared_error_message */
-extern unsigned char ge929os7777;
-extern T0* ge929ov7777;
+extern unsigned char ge929os7779;
+extern T0* ge929ov7779;
 extern T0* T62f52(T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.error_handler */
 extern T0* T62f51(T0* C);
@@ -20454,8 +20491,8 @@ extern T0* T210f5(T0* C, T6 a1, T0* a2, T0* a3);
 /* ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL.seeded_dynamic_feature */
 extern T0* T220f5(T0* C, T6 a1, T0* a2, T0* a3);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.tilde_feature_name */
-extern unsigned char ge929os7994;
-extern T0* ge929ov7994;
+extern unsigned char ge929os7996;
+extern T0* ge929ov7996;
 extern T0* T62f50(T0* C);
 /* ET_IDENTIFIER.same_class_name */
 extern T1 T124f30(T0* C, T0* a1);
@@ -20468,88 +20505,88 @@ extern T1 T2f12(T2* C);
 /* UC_UNICODE_ROUTINES.lower_code */
 extern T6 T1168f1(T0* C, T6 a1);
 /* UC_UNICODE_ROUTINES.lower_codes */
-extern unsigned char ge348os24506;
-extern T0* ge348ov24506;
+extern unsigned char ge348os24512;
+extern T0* ge348ov24512;
 extern T0* T1168f4(T0* C);
 /* UC_UNICODE_ROUTINES.empty_lower_code_plane */
-extern unsigned char ge348os24505;
-extern T0* ge348ov24505;
+extern unsigned char ge348os24511;
+extern T0* ge348ov24511;
 extern T0* T1168f12(T0* C);
 /* UC_UNICODE_ROUTINES.empty_lower_code_segment */
-extern unsigned char ge348os24494;
-extern T0* ge348ov24494;
-extern T0* T1168f22(T0* C);
-/* UC_UNICODE_ROUTINES.lower_code_plane_1 */
-extern unsigned char ge348os24504;
-extern T0* ge348ov24504;
-extern T0* T1168f11(T0* C);
-/* UC_UNICODE_ROUTINES.lower_code_plane_1_segment_4 */
-extern unsigned char ge348os24503;
-extern T0* ge348ov24503;
-extern T0* T1168f30(T0* C);
-/* UC_UNICODE_ROUTINES.lower_code_plane_0 */
-extern unsigned char ge348os24502;
-extern T0* ge348ov24502;
-extern T0* T1168f10(T0* C);
-/* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_255 */
-extern unsigned char ge348os24501;
-extern T0* ge348ov24501;
-extern T0* T1168f29(T0* C);
-/* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_44 */
 extern unsigned char ge348os24500;
 extern T0* ge348ov24500;
+extern T0* T1168f22(T0* C);
+/* UC_UNICODE_ROUTINES.lower_code_plane_1 */
+extern unsigned char ge348os24510;
+extern T0* ge348ov24510;
+extern T0* T1168f11(T0* C);
+/* UC_UNICODE_ROUTINES.lower_code_plane_1_segment_4 */
+extern unsigned char ge348os24509;
+extern T0* ge348ov24509;
+extern T0* T1168f30(T0* C);
+/* UC_UNICODE_ROUTINES.lower_code_plane_0 */
+extern unsigned char ge348os24508;
+extern T0* ge348ov24508;
+extern T0* T1168f10(T0* C);
+/* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_255 */
+extern unsigned char ge348os24507;
+extern T0* ge348ov24507;
+extern T0* T1168f29(T0* C);
+/* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_44 */
+extern unsigned char ge348os24506;
+extern T0* ge348ov24506;
 extern T0* T1168f28(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_36 */
-extern unsigned char ge348os24499;
-extern T0* ge348ov24499;
+extern unsigned char ge348os24505;
+extern T0* ge348ov24505;
 extern T0* T1168f27(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_33 */
-extern unsigned char ge348os24498;
-extern T0* ge348ov24498;
+extern unsigned char ge348os24504;
+extern T0* ge348ov24504;
 extern T0* T1168f26(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_31 */
-extern unsigned char ge348os24497;
-extern T0* ge348ov24497;
+extern unsigned char ge348os24503;
+extern T0* ge348ov24503;
 extern T0* T1168f25(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_30 */
-extern unsigned char ge348os24496;
-extern T0* ge348ov24496;
+extern unsigned char ge348os24502;
+extern T0* ge348ov24502;
 extern T0* T1168f24(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_16 */
-extern unsigned char ge348os24495;
-extern T0* ge348ov24495;
+extern unsigned char ge348os24501;
+extern T0* ge348ov24501;
 extern T0* T1168f23(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_5 */
-extern unsigned char ge348os24493;
-extern T0* ge348ov24493;
+extern unsigned char ge348os24499;
+extern T0* ge348ov24499;
 extern T0* T1168f21(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_4 */
-extern unsigned char ge348os24492;
-extern T0* ge348ov24492;
+extern unsigned char ge348os24498;
+extern T0* ge348ov24498;
 extern T0* T1168f20(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_3 */
-extern unsigned char ge348os24491;
-extern T0* ge348ov24491;
+extern unsigned char ge348os24497;
+extern T0* ge348ov24497;
 extern T0* T1168f19(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_2 */
-extern unsigned char ge348os24490;
-extern T0* ge348ov24490;
+extern unsigned char ge348os24496;
+extern T0* ge348ov24496;
 extern T0* T1168f18(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_1 */
-extern unsigned char ge348os24489;
-extern T0* ge348ov24489;
+extern unsigned char ge348os24495;
+extern T0* ge348ov24495;
 extern T0* T1168f17(T0* C);
 /* UC_UNICODE_ROUTINES.lower_code_plane_0_segment_0 */
-extern unsigned char ge348os24488;
-extern T0* ge348ov24488;
+extern unsigned char ge348os24494;
+extern T0* ge348ov24494;
 extern T0* T1168f16(T0* C);
 /* KL_STRING_ROUTINES.unicode */
 extern T0* T26f15(T0* C);
 /* ET_IDENTIFIER.string_ */
 extern T0* T124f38(T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.tilde_class_name */
-extern unsigned char ge929os7993;
-extern T0* ge929ov7993;
+extern unsigned char ge929os7995;
+extern T0* ge929ov7995;
 extern T0* T62f49(T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.build_feature_dynamic_type_sets */
 extern void T62f203(T0* C, T0* a1, T0* a2);
@@ -20616,8 +20653,8 @@ extern void T55f157(T0* C, T0* a1, T0* a2);
 /* ET_NULL_ERROR_HANDLER.report_system_error */
 extern void T55f189(T0* C, T0* a1);
 /* KL_STANDARD_FILES.output */
-extern unsigned char ge304os8848;
-extern T0* ge304ov8848;
+extern unsigned char ge304os8850;
+extern T0* ge304ov8850;
 extern T0* T73f2(T0* C);
 /* KL_STDOUT_FILE.make */
 extern T0* T75c9(void);
@@ -20692,8 +20729,8 @@ extern void T163f910(T0* C);
 /* ET_EIFFEL_PARSER.yy_build_parser_tables */
 extern void T163f914(T0* C);
 /* ET_EIFFEL_PARSER.yycheck_template */
-extern unsigned char ge951os13877;
-extern T0* ge951ov13877;
+extern unsigned char ge951os13883;
+extern T0* ge951ov13883;
 extern T0* T163f68(T0* C);
 /* ET_EIFFEL_PARSER.yyfixed_array */
 extern T0* T163f867(T0* C, T0* a1);
@@ -20716,44 +20753,44 @@ extern T0* T925c2(void);
 /* ET_EIFFEL_PARSER.yycheck_template_1 */
 extern void T163f1741(T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template */
-extern unsigned char ge951os13874;
-extern T0* ge951ov13874;
+extern unsigned char ge951os13880;
+extern T0* ge951ov13880;
 extern T0* T163f66(T0* C);
 /* ET_EIFFEL_PARSER.yytable_template_2 */
 extern void T163f1740(T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_1 */
 extern void T163f1739(T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypgoto_template */
-extern unsigned char ge951os13873;
-extern T0* ge951ov13873;
+extern unsigned char ge951os13879;
+extern T0* ge951ov13879;
 extern T0* T163f64(T0* C);
 /* ET_EIFFEL_PARSER.yypact_template */
-extern unsigned char ge951os13872;
-extern T0* ge951ov13872;
+extern unsigned char ge951os13878;
+extern T0* ge951ov13878;
 extern T0* T163f62(T0* C);
 /* ET_EIFFEL_PARSER.yydefgoto_template */
-extern unsigned char ge951os13871;
-extern T0* ge951ov13871;
+extern unsigned char ge951os13877;
+extern T0* ge951ov13877;
 extern T0* T163f60(T0* C);
 /* ET_EIFFEL_PARSER.yydefact_template */
-extern unsigned char ge951os13870;
-extern T0* ge951ov13870;
+extern unsigned char ge951os13876;
+extern T0* ge951ov13876;
 extern T0* T163f58(T0* C);
 /* ET_EIFFEL_PARSER.yytypes2_template */
-extern unsigned char ge951os13869;
-extern T0* ge951ov13869;
+extern unsigned char ge951os13875;
+extern T0* ge951ov13875;
 extern T0* T163f56(T0* C);
 /* ET_EIFFEL_PARSER.yytypes1_template */
-extern unsigned char ge951os13868;
-extern T0* ge951ov13868;
+extern unsigned char ge951os13874;
+extern T0* ge951ov13874;
 extern T0* T163f54(T0* C);
 /* ET_EIFFEL_PARSER.yyr1_template */
-extern unsigned char ge951os13867;
-extern T0* ge951ov13867;
+extern unsigned char ge951os13873;
+extern T0* ge951ov13873;
 extern T0* T163f52(T0* C);
 /* ET_EIFFEL_PARSER.yytranslate_template */
-extern unsigned char ge951os13866;
-extern T0* ge951ov13866;
+extern unsigned char ge951os13872;
+extern T0* ge951ov13872;
 extern T0* T163f50(T0* C);
 /* ET_EIFFEL_PARSER.yy_create_value_stacks */
 extern void T163f913(T0* C);
@@ -20778,38 +20815,38 @@ extern void T163f918(T0* C);
 /* ET_EIFFEL_PARSER.yy_build_tables */
 extern void T163f922(T0* C);
 /* ET_EIFFEL_PARSER.yy_acclist_template */
-extern unsigned char ge955os14732;
-extern T0* ge955ov14732;
+extern unsigned char ge955os14738;
+extern T0* ge955ov14738;
 extern T0* T163f147(T0* C);
 /* ET_EIFFEL_PARSER.yy_fixed_array */
 extern T0* T163f870(T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_accept_template */
-extern unsigned char ge955os14731;
-extern T0* ge955ov14731;
+extern unsigned char ge955os14737;
+extern T0* ge955ov14737;
 extern T0* T163f145(T0* C);
 /* ET_EIFFEL_PARSER.yy_meta_template */
-extern unsigned char ge955os14730;
-extern T0* ge955ov14730;
+extern unsigned char ge955os14736;
+extern T0* ge955ov14736;
 extern T0* T163f143(T0* C);
 /* ET_EIFFEL_PARSER.yy_ec_template */
-extern unsigned char ge955os14729;
-extern T0* ge955ov14729;
+extern unsigned char ge955os14735;
+extern T0* ge955ov14735;
 extern T0* T163f141(T0* C);
 /* ET_EIFFEL_PARSER.yy_def_template */
-extern unsigned char ge955os14728;
-extern T0* ge955ov14728;
+extern unsigned char ge955os14734;
+extern T0* ge955ov14734;
 extern T0* T163f139(T0* C);
 /* ET_EIFFEL_PARSER.yy_base_template */
-extern unsigned char ge955os14727;
-extern T0* ge955ov14727;
+extern unsigned char ge955os14733;
+extern T0* ge955ov14733;
 extern T0* T163f137(T0* C);
 /* ET_EIFFEL_PARSER.yy_chk_template */
-extern unsigned char ge955os14726;
-extern T0* ge955ov14726;
+extern unsigned char ge955os14732;
+extern T0* ge955ov14732;
 extern T0* T163f135(T0* C);
 /* ET_EIFFEL_PARSER.yy_nxt_template */
-extern unsigned char ge955os14725;
-extern T0* ge955ov14725;
+extern unsigned char ge955os14731;
+extern T0* ge955ov14731;
 extern T0* T163f133(T0* C);
 /* ET_EIFFEL_PARSER.empty_buffer */
 extern unsigned char ge153os5221;
@@ -20832,8 +20869,8 @@ extern T0* T916c10(T6 a1);
 /* STRING_8.set_count */
 extern void T17f48(T0* C, T6 a1);
 /* KL_OPERATING_SYSTEM.is_dotnet */
-extern unsigned char ge397os8566;
-extern T1 ge397ov8566;
+extern unsigned char ge397os8568;
+extern T1 ge397ov8568;
 extern T1 T63f6(T0* C);
 /* PLATFORM.default_create */
 extern T0* T1333c2(void);
@@ -20990,8 +21027,8 @@ extern void T28f154(T0* C, T0* a1, T0* a2);
 /* ET_ERROR_HANDLER.reportable_gvsrc6_error */
 extern T1 T28f9(T0* C);
 /* ET_TOKEN_CONSTANTS.default_create_feature_name */
-extern unsigned char ge769os12637;
-extern T0* ge769ov12637;
+extern unsigned char ge769os12643;
+extern T0* ge769ov12643;
 extern T0* T162f1(T0* C);
 /* ET_SYSTEM.tokens */
 extern T0* T56f37(T0* C);
@@ -21010,12 +21047,12 @@ extern void T56f54(T0* C);
 /* ET_TOKEN_CONSTANTS.builtin_pointer_feature */
 extern T6 T162f9(T0* C, T6 a1);
 /* ET_TOKEN_CONSTANTS.to_pointer_feature_name */
-extern unsigned char ge769os12698;
-extern T0* ge769ov12698;
+extern unsigned char ge769os12704;
+extern T0* ge769ov12704;
 extern T0* T162f7(T0* C);
 /* ET_TOKEN_CONSTANTS.pointer_item_feature_name */
-extern unsigned char ge769os12677;
-extern T0* ge769ov12677;
+extern unsigned char ge769os12683;
+extern T0* ge769ov12683;
 extern T0* T162f6(T0* C);
 /* UT_VERSION.infix "<" */
 extern T1 T61f5(T0* C, T0* a1);
@@ -21046,16 +21083,16 @@ extern T1 T54f37(T0* C);
 /* ET_XACE_UNIVERSE.is_ise */
 extern T1 T51f37(T0* C);
 /* ET_TOKEN_CONSTANTS.upper_feature_name */
-extern unsigned char ge769os12705;
-extern T0* ge769ov12705;
+extern unsigned char ge769os12711;
+extern T0* ge769ov12711;
 extern T0* T162f5(T0* C);
 /* ET_TOKEN_CONSTANTS.lower_feature_name */
-extern unsigned char ge769os12672;
-extern T0* ge769ov12672;
+extern unsigned char ge769os12678;
+extern T0* ge769ov12678;
 extern T0* T162f4(T0* C);
 /* ET_TOKEN_CONSTANTS.count_feature_name */
-extern unsigned char ge769os12635;
-extern T0* ge769ov12635;
+extern unsigned char ge769os12641;
+extern T0* ge769ov12641;
 extern T0* T162f3(T0* C);
 /* ET_NULL_ERROR_HANDLER.report_gvkfe3a_error */
 extern void T55f162(T0* C, T0* a1, T0* a2, T0* a3);
@@ -21074,8 +21111,8 @@ extern T0* T894f21(T0* C, T0* a1);
 /* ET_VALIDITY_ERROR.template_code */
 extern T0* T894f17(T0* C, T0* a1);
 /* ET_VALIDITY_ERROR.null_position */
-extern unsigned char ge937os23674;
-extern T0* ge937ov23674;
+extern unsigned char ge937os23680;
+extern T0* ge937ov23680;
 extern T0* T894f14(T0* C);
 /* ET_COMPRESSED_POSITION.make_default */
 extern T0* T1264c8(void);
@@ -21108,8 +21145,8 @@ extern void T28f160(T0* C, T0* a1, T0* a2);
 /* ET_ERROR_HANDLER.reportable_gvkfe2_error */
 extern T1 T28f14(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.area_feature_name */
-extern unsigned char ge769os12610;
-extern T0* ge769ov12610;
+extern unsigned char ge769os12616;
+extern T0* ge769ov12616;
 extern T0* T162f2(T0* C);
 /* ET_GENERIC_CLASS_TYPE.make */
 extern T0* T166c94(T0* a1, T0* a2, T0* a3, T0* a4);
@@ -21132,14 +21169,14 @@ extern T0* T165f6(T0* C);
 /* KL_SPECIAL_ROUTINES [ET_ACTUAL_PARAMETER_ITEM].default_create */
 extern T0* T689c3(void);
 /* ET_TOKEN_CONSTANTS.right_bracket_symbol */
-extern unsigned char ge769os12729;
-extern T0* ge769ov12729;
+extern unsigned char ge769os12735;
+extern T0* ge769ov12735;
 extern T0* T162f558(T0* C);
 /* ET_SYMBOL.make_right_bracket */
 extern T0* T432c58(void);
 /* ET_TOKEN_CONSTANTS.left_bracket_symbol */
-extern unsigned char ge769os12724;
-extern T0* ge769ov12724;
+extern unsigned char ge769os12730;
+extern T0* ge769ov12730;
 extern T0* T162f557(T0* C);
 /* ET_BRACKET_SYMBOL.make */
 extern T0* T479c81(void);
@@ -21210,20 +21247,20 @@ extern void T157f65(T0* C, T6 a1, T6 a2, T6 a3);
 /* DT_DATE_TIME.set_from_epoch_days */
 extern void T157f67(T0* C, T6 a1);
 /* DT_DATE_TIME.epoch_to_y2k_days */
-extern unsigned char ge358os12227;
-extern T6 ge358ov12227;
+extern unsigned char ge358os12233;
+extern T6 ge358ov12233;
 extern T6 T157f47(T0* C);
 /* DT_DATE_TIME.epoch_days */
 extern T6 T157f11(T0* C, T6 a1, T6 a2, T6 a3);
 /* DT_DATE_TIME.epoch_days_at_month */
-extern unsigned char ge358os12226;
-extern T6 ge358ov12226;
+extern unsigned char ge358os12232;
+extern T6 ge358ov12232;
 extern T6 T157f24(T0* C);
 /* DT_DATE_TIME.days_at_month */
 extern T6 T157f23(T0* C, T6 a1, T6 a2);
 /* DT_DATE_TIME.epoch_leap_years */
-extern unsigned char ge358os12225;
-extern T6 ge358ov12225;
+extern unsigned char ge358os12231;
+extern T6 ge358ov12231;
 extern T6 T157f22(T0* C);
 /* KL_INTEGER_ROUTINES.div */
 extern T6 T144f4(T0* C, T6 a1, T6 a2);
@@ -21240,8 +21277,8 @@ extern void T157f61(T0* C, T0* a1);
 /* DT_DATE_TIME.set_date */
 extern void T157f60(T0* C, T0* a1);
 /* DT_DATE_TIME_DURATION.tmp_date_time */
-extern unsigned char ge1112os12421;
-extern T0* ge1112ov12421;
+extern unsigned char ge1112os12427;
+extern T0* ge1112ov12427;
 extern T0* T287f2(T0* C);
 /* DT_DATE_TIME.make */
 extern T0* T157c59(T6 a1, T6 a2, T6 a3, T6 a4, T6 a5, T6 a6);
@@ -21622,8 +21659,8 @@ extern T1 T416f11(T0* C);
 /* KL_DIRECTORY.eif_dir_exists */
 extern T1 T416f22(T0* C, T14 a1);
 /* KL_UNIX_FILE_SYSTEM.tmp_directory */
-extern unsigned char ge381os8595;
-extern T0* ge381ov8595;
+extern unsigned char ge381os8597;
+extern T0* ge381ov8597;
 extern T0* T68f14(T0* C);
 /* KL_DIRECTORY.make */
 extern void T416f24(T0* C, T0* a1);
@@ -21660,8 +21697,8 @@ extern T0* T258f27(T0* C);
 /* ET_XACE_OPTIONS.exclude */
 extern T0* T259f111(T0* C);
 /* ET_XACE_OPTIONS.default_exclude */
-extern unsigned char ge1000os17892;
-extern T0* ge1000ov17892;
+extern unsigned char ge1000os17898;
+extern T0* ge1000ov17898;
 extern T0* T259f112(T0* C);
 /* ET_XACE_OPTIONS.string_equality_tester */
 extern unsigned char ge335os1588;
@@ -21772,8 +21809,8 @@ extern void T151f11(T0* C);
 /* ET_CLASS.reset_ancestors_built */
 extern void T58f191(T0* C);
 /* ET_TOKEN_CONSTANTS.empty_ancestors */
-extern unsigned char ge769os13092;
-extern T0* ge769ov13092;
+extern unsigned char ge769os13098;
+extern T0* ge769ov13098;
 extern T0* T162f105(T0* C);
 /* ET_BASE_TYPE_LIST.make_with_capacity */
 extern T0* T301c7(T6 a1);
@@ -21784,8 +21821,8 @@ extern T0* T1217c2(T6 a1);
 /* SPECIAL [ET_BASE_TYPE].make */
 extern T0* T972c4(T6 a1);
 /* ET_BASE_TYPE_LIST.fixed_array */
-extern unsigned char ge824os15244;
-extern T0* ge824ov15244;
+extern unsigned char ge824os15250;
+extern T0* ge824ov15250;
 extern T0* T301f3(T0* C);
 /* KL_SPECIAL_ROUTINES [ET_BASE_TYPE].default_create */
 extern T0* T973c3(void);
@@ -21860,8 +21897,8 @@ extern void T58f193(T0* C);
 /* ET_CLASS.reset_parsed */
 extern void T58f192(T0* C);
 /* ET_TOKEN_CONSTANTS.empty_procedures */
-extern unsigned char ge769os13094;
-extern T0* ge769ov13094;
+extern unsigned char ge769os13100;
+extern T0* ge769ov13100;
 extern T0* T162f107(T0* C);
 /* ET_PROCEDURE_LIST.make_with_capacity */
 extern T0* T153c8(T6 a1);
@@ -21870,8 +21907,8 @@ extern unsigned char ge708os6202;
 extern T0* ge708ov6202;
 extern T0* T153f3(T0* C);
 /* ET_TOKEN_CONSTANTS.empty_queries */
-extern unsigned char ge769os13093;
-extern T0* ge769ov13093;
+extern unsigned char ge769os13099;
+extern T0* ge769ov13099;
 extern T0* T162f106(T0* C);
 /* ET_QUERY_LIST.make_with_capacity */
 extern T0* T151c8(T6 a1);
@@ -21880,8 +21917,8 @@ extern unsigned char ge710os6202;
 extern T0* ge710ov6202;
 extern T0* T151f3(T0* C);
 /* ET_TOKEN_CONSTANTS.class_keyword */
-extern unsigned char ge769os12743;
-extern T0* ge769ov12743;
+extern unsigned char ge769os12749;
+extern T0* ge769ov12749;
 extern T0* T162f108(T0* C);
 /* ET_KEYWORD.make_class */
 extern T0* T171c22(void);
@@ -21892,8 +21929,8 @@ extern void T58f185(T0* C, T0* a1);
 /* ET_CLASS.make_unknown */
 extern T0* T58c161(T0* a1);
 /* ET_TOKEN_CONSTANTS.unknown_class_name */
-extern unsigned char ge769os12584;
-extern T0* ge769ov12584;
+extern unsigned char ge769os12590;
+extern T0* ge769ov12590;
 extern T0* T162f80(T0* C);
 /* ET_LACE_UNIVERSE.eiffel_class */
 extern T0* T54f79(T0* C, T0* a1);
@@ -22058,8 +22095,8 @@ extern void T267f38(T0* C, T0* a1);
 /* DS_HASH_TABLE [INTEGER, STRING].search_position */
 extern void T267f43(T0* C, T0* a1);
 /* ET_EIFFEL_PREPARSER.strings */
-extern unsigned char ge956os14544;
-extern T0* ge956ov14544;
+extern unsigned char ge956os14550;
+extern T0* ge956ov14550;
 extern T0* T288f125(T0* C);
 /* ET_EIFFEL_PREPARSER.tokens */
 extern T0* T288f128(T0* C);
@@ -22102,8 +22139,8 @@ extern T0* T916f8(T0* C);
 /* ET_EIFFEL_PREPARSER.string_ */
 extern T0* T288f124(T0* C);
 /* ET_EIFFEL_PREPARSER.string_buffer */
-extern unsigned char ge956os14545;
-extern T0* ge956ov14545;
+extern unsigned char ge956os14551;
+extern T0* ge956ov14551;
 extern T0* T288f123(T0* C);
 /* ET_NULL_ERROR_HANDLER.report_sceq_error */
 extern void T55f173(T0* C, T0* a1, T0* a2);
@@ -22180,8 +22217,8 @@ extern void T118f24(T0* C);
 /* KL_CHARACTER_BUFFER.resize */
 extern void T916f13(T0* C, T6 a1);
 /* YY_FILE_BUFFER.default_capacity */
-extern unsigned char ge148os11027;
-extern T6 ge148ov11027;
+extern unsigned char ge148os11033;
+extern T6 ge148ov11033;
 extern T6 T118f10(T0* C);
 /* YY_BUFFER.fill */
 extern void T119f15(T0* C);
@@ -22204,8 +22241,8 @@ extern void T118f23(T0* C, T0* a1);
 /* YY_FILE_BUFFER.flush */
 extern void T118f25(T0* C);
 /* ET_EIFFEL_PREPARSER.eiffel_buffer */
-extern unsigned char ge958os14720;
-extern T0* ge958ov14720;
+extern unsigned char ge958os14726;
+extern T0* ge958ov14726;
 extern T0* T288f22(T0* C);
 /* YY_FILE_BUFFER.make */
 extern T0* T118c17(T0* a1);
@@ -22214,8 +22251,8 @@ extern void T118f21(T0* C, T0* a1, T6 a2);
 /* YY_FILE_BUFFER.new_default_buffer */
 extern T0* T118f15(T0* C, T6 a1);
 /* KL_STANDARD_FILES.input */
-extern unsigned char ge304os8847;
-extern T0* ge304ov8847;
+extern unsigned char ge304os8849;
+extern T0* ge304ov8849;
 extern T0* T73f3(T0* C);
 /* KL_STDIN_FILE.make */
 extern T0* T918c18(void);
@@ -22266,16 +22303,16 @@ extern T1 T22f13(T0* C);
 /* KL_TEXT_INPUT_FILE.file_exists */
 extern T1 T22f21(T0* C, T14 a1);
 /* KL_EIFFEL_COMPILER.is_se */
-extern unsigned char ge378os19544;
-extern T1 ge378ov19544;
+extern unsigned char ge378os19550;
+extern T1 ge378ov19550;
 extern T1 T417f1(T0* C);
 /* KL_EIFFEL_COMPILER.vendor */
-extern unsigned char ge378os19535;
-extern T0* ge378ov19535;
+extern unsigned char ge378os19541;
+extern T0* ge378ov19541;
 extern T0* T417f2(T0* C);
 /* ET_EIFFEL_PREPARSER.eiffel_compiler */
-extern unsigned char ge319os14714;
-extern T0* ge319ov14714;
+extern unsigned char ge319os14720;
+extern T0* ge319ov14720;
 extern T0* T288f20(T0* C);
 /* KL_EIFFEL_COMPILER.default_create */
 extern T0* T417c5(void);
@@ -22288,8 +22325,8 @@ extern T1 T22f15(T0* C);
 /* KL_TEXT_INPUT_FILE.old_is_closed */
 extern T1 T22f23(T0* C);
 /* ET_EIFFEL_PREPARSER.shared_file */
-extern unsigned char ge956os14575;
-extern T0* ge956ov14575;
+extern unsigned char ge956os14581;
+extern T0* ge956ov14581;
 extern T0* T288f118(T0* C);
 /* ET_EIFFEL_PREPARSER.file_system */
 extern T0* T288f18(T0* C);
@@ -22338,8 +22375,8 @@ extern void T416f25(T0* C, T0* a1);
 /* ET_EIFFEL_PREPARSER.tmp_directory */
 extern T0* T288f17(T0* C);
 /* ET_EIFFEL_PREPARSER.shared_directory */
-extern unsigned char ge954os18303;
-extern T0* ge954ov18303;
+extern unsigned char ge954os18309;
+extern T0* ge954ov18309;
 extern T0* T288f113(T0* C);
 /* ET_EIFFEL_PREPARSER.execution_environment */
 extern T0* T288f16(T0* C);
@@ -22378,38 +22415,38 @@ extern void T288f144(T0* C);
 /* ET_EIFFEL_PREPARSER.yy_build_tables */
 extern void T288f148(T0* C);
 /* ET_EIFFEL_PREPARSER.yy_acclist_template */
-extern unsigned char ge953os18259;
-extern T0* ge953ov18259;
+extern unsigned char ge953os18265;
+extern T0* ge953ov18265;
 extern T0* T288f87(T0* C);
 /* ET_EIFFEL_PREPARSER.yy_fixed_array */
 extern T0* T288f122(T0* C, T0* a1);
 /* ET_EIFFEL_PREPARSER.yy_accept_template */
-extern unsigned char ge953os18258;
-extern T0* ge953ov18258;
+extern unsigned char ge953os18264;
+extern T0* ge953ov18264;
 extern T0* T288f86(T0* C);
 /* ET_EIFFEL_PREPARSER.yy_meta_template */
-extern unsigned char ge953os18257;
-extern T0* ge953ov18257;
+extern unsigned char ge953os18263;
+extern T0* ge953ov18263;
 extern T0* T288f85(T0* C);
 /* ET_EIFFEL_PREPARSER.yy_ec_template */
-extern unsigned char ge953os18256;
-extern T0* ge953ov18256;
+extern unsigned char ge953os18262;
+extern T0* ge953ov18262;
 extern T0* T288f84(T0* C);
 /* ET_EIFFEL_PREPARSER.yy_def_template */
-extern unsigned char ge953os18255;
-extern T0* ge953ov18255;
+extern unsigned char ge953os18261;
+extern T0* ge953ov18261;
 extern T0* T288f83(T0* C);
 /* ET_EIFFEL_PREPARSER.yy_base_template */
-extern unsigned char ge953os18254;
-extern T0* ge953ov18254;
+extern unsigned char ge953os18260;
+extern T0* ge953ov18260;
 extern T0* T288f82(T0* C);
 /* ET_EIFFEL_PREPARSER.yy_chk_template */
-extern unsigned char ge953os18253;
-extern T0* ge953ov18253;
+extern unsigned char ge953os18259;
+extern T0* ge953ov18259;
 extern T0* T288f81(T0* C);
 /* ET_EIFFEL_PREPARSER.yy_nxt_template */
-extern unsigned char ge953os18252;
-extern T0* ge953ov18252;
+extern unsigned char ge953os18258;
+extern T0* ge953ov18258;
 extern T0* T288f80(T0* C);
 /* ET_EIFFEL_PREPARSER.empty_buffer */
 extern T0* T288f9(T0* C);
@@ -22488,8 +22525,8 @@ extern T6 T158f17(T0* C);
 /* DT_DATE_TIME.make_from_storage */
 extern T0* T157c56(T6 a1, T6 a2);
 /* DT_SHARED_SYSTEM_CLOCK.system_clock */
-extern unsigned char ge1104os12108;
-extern T0* ge1104ov12108;
+extern unsigned char ge1104os12114;
+extern T0* ge1104ov12114;
 extern T0* T156f1(T0* C);
 /* DT_SYSTEM_CLOCK.make */
 extern T0* T158c30(void);
@@ -22510,8 +22547,8 @@ extern void T963f7(T0* C, T0* a1, T0* a2);
 /* ET_SUPPLIER_BUILDER.make */
 extern T0* T963c6(T0* a1);
 /* ET_SUPPLIER_BUILDER.dummy_suppliers */
-extern unsigned char ge888os24341;
-extern T0* ge888ov24341;
+extern unsigned char ge888os24347;
+extern T0* ge888ov24347;
 extern T0* T963f4(T0* C);
 /* ET_FEATURE_CHECKER.make */
 extern T0* T962c33(T0* a1);
@@ -22566,8 +22603,8 @@ extern T0* T1107c2(T6 a1);
 /* SPECIAL [ET_TYPE].make */
 extern T0* T613c4(T6 a1);
 /* ET_NESTED_TYPE_CONTEXT.fixed_array */
-extern unsigned char ge853os15244;
-extern T0* ge853ov15244;
+extern unsigned char ge853os15250;
+extern T0* ge853ov15250;
 extern T0* T249f4(T0* C);
 /* KL_SPECIAL_ROUTINES [ET_TYPE].default_create */
 extern T0* T685c3(void);
@@ -22634,8 +22671,8 @@ extern T0* T785c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [ET_INLINE_AGENT].default_create */
 extern T0* T807c3(void);
 /* ET_FEATURE_CHECKER.dummy_feature */
-extern unsigned char ge872os8289;
-extern T0* ge872ov8289;
+extern unsigned char ge872os8291;
+extern T0* ge872ov8291;
 extern T0* T962f6(T0* C);
 /* ET_IMPLEMENTATION_CHECKER.make_class_processor */
 extern void T281f17(T0* C, T0* a1);
@@ -22662,8 +22699,8 @@ extern T0* T279c26(T0* a1);
 /* ET_PRECURSOR_CHECKER.make */
 extern T0* T960c7(T0* a1);
 /* ET_PRECURSOR_CHECKER.dummy_feature */
-extern unsigned char ge885os24254;
-extern T0* ge885ov24254;
+extern unsigned char ge885os24260;
+extern T0* ge885ov24260;
 extern T0* T960f4(T0* C);
 /* ET_REDECLARED_FEATURE.make */
 extern T0* T1209c27(T0* a1, T0* a2);
@@ -23020,8 +23057,8 @@ extern void T948f36(T0* C, T0* a1);
 /* DS_SPARSE_TABLE_KEYS [ET_FLATTENED_FEATURE, ET_ALIAS_NAME].internal_set_equality_tester */
 extern void T1193f6(T0* C, T0* a1);
 /* ET_FEATURE_FLATTENER.alias_name_tester */
-extern unsigned char ge813os18165;
-extern T0* ge813ov18165;
+extern unsigned char ge813os18171;
+extern T0* ge813ov18171;
 extern T0* T279f6(T0* C);
 /* ET_ALIAS_NAME_TESTER.default_create */
 extern T0* T949c2(void);
@@ -23528,8 +23565,8 @@ extern T0* T253f310(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_AGENT_TYPED_OPEN_ARGUMENT.make */
 extern T0* T820c9(T0* a1);
 /* ET_TOKEN_CONSTANTS.question_mark_symbol */
-extern unsigned char ge769os12726;
-extern T0* ge769ov12726;
+extern unsigned char ge769os12732;
+extern T0* ge769ov12732;
 extern T0* T162f742(T0* C);
 /* ET_QUESTION_MARK_SYMBOL.make */
 extern T0* T482c11(void);
@@ -23538,14 +23575,14 @@ extern void T482f13(T0* C);
 /* ET_QUESTION_MARK_SYMBOL.tokens */
 extern T0* T482f2(T0* C);
 /* ET_TOKEN_CONSTANTS.right_brace_symbol */
-extern unsigned char ge769os12728;
-extern T0* ge769ov12728;
+extern unsigned char ge769os12734;
+extern T0* ge769ov12734;
 extern T0* T162f569(T0* C);
 /* ET_SYMBOL.make_right_brace */
 extern T0* T432c66(void);
 /* ET_TOKEN_CONSTANTS.left_brace_symbol */
-extern unsigned char ge769os12723;
-extern T0* ge769ov12723;
+extern unsigned char ge769os12729;
+extern T0* ge769ov12729;
 extern T0* T162f568(T0* C);
 /* ET_SYMBOL.make_left_brace */
 extern T0* T432c65(void);
@@ -23776,8 +23813,8 @@ extern void T812f35(T0* C, T0* a1);
 /* ET_AGENT_IMPLICIT_CURRENT_TARGET.make */
 extern T0* T1134c5(T0* a1);
 /* ET_TOKEN_CONSTANTS.agent_keyword */
-extern unsigned char ge769os12734;
-extern T0* ge769ov12734;
+extern unsigned char ge769os12740;
+extern T0* ge769ov12740;
 extern T0* T162f739(T0* C);
 /* ET_AGENT_KEYWORD.make */
 extern T0* T426c13(void);
@@ -24038,8 +24075,8 @@ extern T0* T789f7(T0* C);
 /* KL_SPECIAL_ROUTINES [ET_FEATURE_NAME_ITEM].default_create */
 extern T0* T596c3(void);
 /* ET_TOKEN_CONSTANTS.strip_keyword */
-extern unsigned char ge769os12786;
-extern T0* ge769ov12786;
+extern unsigned char ge769os12792;
+extern T0* ge769ov12792;
 extern T0* T162f741(T0* C);
 /* ET_KEYWORD.make_strip */
 extern T0* T171c31(void);
@@ -24166,14 +24203,14 @@ extern void T787f21p1(T0* C, T6 a1);
 /* ET_MANIFEST_ARRAY.fixed_array */
 extern T0* T787f6(T0* C);
 /* ET_TOKEN_CONSTANTS.right_array_symbol */
-extern unsigned char ge769os12727;
-extern T0* ge769ov12727;
+extern unsigned char ge769os12733;
+extern T0* ge769ov12733;
 extern T0* T162f571(T0* C);
 /* ET_SYMBOL.make_right_array */
 extern T0* T432c68(void);
 /* ET_TOKEN_CONSTANTS.left_array_symbol */
-extern unsigned char ge769os12722;
-extern T0* ge769ov12722;
+extern unsigned char ge769os12728;
+extern T0* ge769ov12728;
 extern T0* T162f740(T0* C);
 /* ET_SYMBOL.make_left_array */
 extern T0* T432c56(void);
@@ -24310,8 +24347,8 @@ extern void T786f16(T0* C, T0* a1);
 /* ET_ONCE_MANIFEST_STRING.make */
 extern T0* T786c15(T0* a1);
 /* ET_TOKEN_CONSTANTS.once_keyword */
-extern unsigned char ge769os12773;
-extern T0* ge769ov12773;
+extern unsigned char ge769os12779;
+extern T0* ge769ov12779;
 extern T0* T162f615(T0* C);
 /* ET_KEYWORD.make_once */
 extern T0* T171c26(void);
@@ -24362,8 +24399,8 @@ extern void T781f16(T0* C, T0* a1);
 /* ET_OLD_EXPRESSION.make */
 extern T0* T781c15(T0* a1);
 /* ET_TOKEN_CONSTANTS.old_keyword */
-extern unsigned char ge769os12772;
-extern T0* ge769ov12772;
+extern unsigned char ge769os12778;
+extern T0* ge769ov12778;
 extern T0* T162f738(T0* C);
 /* ET_KEYWORD.make_old */
 extern T0* T171c29(void);
@@ -24434,14 +24471,14 @@ extern void T778f32(T0* C, T0* a1);
 /* ET_INFIX_OR_ELSE_OPERATOR.make */
 extern T0* T778c31(void);
 /* ET_TOKEN_CONSTANTS.else_keyword */
-extern unsigned char ge769os12751;
-extern T0* ge769ov12751;
+extern unsigned char ge769os12757;
+extern T0* ge769ov12757;
 extern T0* T162f580(T0* C);
 /* ET_KEYWORD.make_else */
 extern T0* T171c43(void);
 /* ET_TOKEN_CONSTANTS.or_keyword */
-extern unsigned char ge769os12774;
-extern T0* ge769ov12774;
+extern unsigned char ge769os12780;
+extern T0* ge769ov12780;
 extern T0* T162f737(T0* C);
 /* ET_KEYWORD_OPERATOR.make_or */
 extern T0* T457c46(void);
@@ -24462,14 +24499,14 @@ extern void T777f32(T0* C, T0* a1);
 /* ET_INFIX_AND_THEN_OPERATOR.make */
 extern T0* T777c31(void);
 /* ET_TOKEN_CONSTANTS.then_keyword */
-extern unsigned char ge769os12787;
-extern T0* ge769ov12787;
+extern unsigned char ge769os12793;
+extern T0* ge769ov12793;
 extern T0* T162f583(T0* C);
 /* ET_KEYWORD.make_then */
 extern T0* T171c46(void);
 /* ET_TOKEN_CONSTANTS.and_keyword */
-extern unsigned char ge769os12735;
-extern T0* ge769ov12735;
+extern unsigned char ge769os12741;
+extern T0* ge769ov12741;
 extern T0* T162f736(T0* C);
 /* ET_KEYWORD_OPERATOR.make_and */
 extern T0* T457c48(void);
@@ -24564,8 +24601,8 @@ extern void T773f16(T0* C, T0* a1);
 /* ET_EXPRESSION_ADDRESS.make */
 extern T0* T773c15(T0* a1);
 /* ET_TOKEN_CONSTANTS.dollar_symbol */
-extern unsigned char ge769os12719;
-extern T0* ge769ov12719;
+extern unsigned char ge769os12725;
+extern T0* ge769ov12725;
 extern T0* T162f735(T0* C);
 /* ET_SYMBOL.make_dollar */
 extern T0* T432c54(void);
@@ -24682,8 +24719,8 @@ extern void T764f19(T0* C, T1 a1);
 /* ET_PRECURSOR_EXPRESSION.make */
 extern T0* T764c18(T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.precursor_keyword */
-extern unsigned char ge769os12775;
-extern T0* ge769ov12775;
+extern unsigned char ge769os12781;
+extern T0* ge769ov12781;
 extern T0* T162f734(T0* C);
 /* ET_PRECURSOR_KEYWORD.make */
 extern T0* T429c18(void);
@@ -24914,8 +24951,8 @@ extern T0* T712f4(T0* C);
 /* ET_AST_FACTORY.new_debug_compound */
 extern T0* T253f265(T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.debug_keyword */
-extern unsigned char ge769os12748;
-extern T0* ge769ov12748;
+extern unsigned char ge769os12754;
+extern T0* ge769ov12754;
 extern T0* T162f587(T0* C);
 /* ET_KEYWORD.make_debug */
 extern T0* T171c50(void);
@@ -24928,8 +24965,8 @@ extern T0* T632c10(void);
 /* ET_COMPOUND.make */
 extern void T632f10p1(T0* C);
 /* ET_TOKEN_CONSTANTS.do_keyword */
-extern unsigned char ge769os12750;
-extern T0* ge769ov12750;
+extern unsigned char ge769os12756;
+extern T0* ge769ov12756;
 extern T0* T162f577(T0* C);
 /* ET_KEYWORD.make_do */
 extern T0* T171c40(void);
@@ -25004,8 +25041,8 @@ extern T0* T253f264(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_CHOICE_RANGE.make */
 extern T0* T747c7(T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.dotdot_symbol */
-extern unsigned char ge769os12721;
-extern T0* ge769ov12721;
+extern unsigned char ge769os12727;
+extern T0* ge769ov12727;
 extern T0* T162f573(T0* C);
 /* ET_SYMBOL.make_dotdot */
 extern T0* T432c70(void);
@@ -25076,8 +25113,8 @@ extern unsigned char ge729os6202;
 extern T0* ge729ov6202;
 extern T0* T735f5(T0* C);
 /* ET_TOKEN_CONSTANTS.when_keyword */
-extern unsigned char ge769os12795;
-extern T0* ge769ov12795;
+extern unsigned char ge769os12801;
+extern T0* ge769ov12801;
 extern T0* T162f584(T0* C);
 /* ET_KEYWORD.make_when */
 extern T0* T171c47(void);
@@ -25324,8 +25361,8 @@ extern void T527f19(T0* C, T0* a1);
 /* ET_CREATE_EXPRESSION.make */
 extern T0* T527c18(T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.create_keyword */
-extern unsigned char ge769os12745;
-extern T0* ge769ov12745;
+extern unsigned char ge769os12751;
+extern T0* ge769ov12751;
 extern T0* T162f592(T0* C);
 /* ET_KEYWORD.make_create */
 extern T0* T171c55(void);
@@ -25362,8 +25399,8 @@ extern void T716f12(T0* C, T0* a1);
 /* ET_BANG_INSTRUCTION.make */
 extern T0* T716c11(T0* a1, T0* a2, T0* a3);
 /* ET_TOKEN_CONSTANTS.bang_symbol */
-extern unsigned char ge769os12716;
-extern T0* ge769ov12716;
+extern unsigned char ge769os12722;
+extern T0* ge769ov12722;
 extern T0* T162f567(T0* C);
 /* ET_SYMBOL.make_bang */
 extern T0* T432c64(void);
@@ -25412,8 +25449,8 @@ extern unsigned char ge525os6202;
 extern T0* ge525ov6202;
 extern T0* T714f6(T0* C);
 /* ET_TOKEN_CONSTANTS.check_keyword */
-extern unsigned char ge769os12742;
-extern T0* ge769ov12742;
+extern unsigned char ge769os12748;
+extern T0* ge769ov12748;
 extern T0* T162f586(T0* C);
 /* ET_KEYWORD.make_check */
 extern T0* T171c49(void);
@@ -25446,8 +25483,8 @@ extern T0* T253f246(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ASSIGNMENT_ATTEMPT.make */
 extern T0* T705c5(T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.assign_attempt_symbol */
-extern unsigned char ge769os12715;
-extern T0* ge769ov12715;
+extern unsigned char ge769os12721;
+extern T0* ge769ov12721;
 extern T0* T162f575(T0* C);
 /* ET_SYMBOL.make_assign_attempt */
 extern T0* T432c72(void);
@@ -25460,8 +25497,8 @@ extern T0* T253f245(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ASSIGNMENT.make */
 extern T0* T704c5(T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.assign_symbol */
-extern unsigned char ge769os12714;
-extern T0* ge769ov12714;
+extern unsigned char ge769os12720;
+extern T0* ge769ov12720;
 extern T0* T162f574(T0* C);
 /* ET_SYMBOL.make_assign */
 extern T0* T432c71(void);
@@ -25474,8 +25511,8 @@ extern T0* T253f244(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ASSIGNER_INSTRUCTION.make */
 extern T0* T698c13(T0* a1, T0* a2);
 /* ET_ASSIGNER_INSTRUCTION.dummy_name */
-extern unsigned char ge719os21988;
-extern T0* ge719ov21988;
+extern unsigned char ge719os21994;
+extern T0* ge719ov21994;
 extern T0* T698f6(T0* C);
 /* ET_ASSIGNER_INSTRUCTION.tokens */
 extern T0* T698f4(T0* C);
@@ -25520,8 +25557,8 @@ extern void T163f1436(T0* C);
 /* ET_AST_FACTORY.new_loop_compound */
 extern T0* T253f243(T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.loop_keyword */
-extern unsigned char ge769os12770;
-extern T0* ge769ov12770;
+extern unsigned char ge769os12776;
+extern T0* ge769ov12776;
 extern T0* T162f582(T0* C);
 /* ET_KEYWORD.make_loop */
 extern T0* T171c45(void);
@@ -25532,8 +25569,8 @@ extern void T163f1434(T0* C);
 /* ET_AST_FACTORY.new_from_compound */
 extern T0* T253f242(T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.from_keyword */
-extern unsigned char ge769os12759;
-extern T0* ge769ov12759;
+extern unsigned char ge769os12765;
+extern T0* ge769ov12765;
 extern T0* T162f581(T0* C);
 /* ET_KEYWORD.make_from */
 extern T0* T171c44(void);
@@ -25544,8 +25581,8 @@ extern void T163f1432(T0* C);
 /* ET_AST_FACTORY.new_rescue_compound */
 extern T0* T253f241(T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.rescue_keyword */
-extern unsigned char ge769os12782;
-extern T0* ge769ov12782;
+extern unsigned char ge769os12788;
+extern T0* ge769ov12788;
 extern T0* T162f598(T0* C);
 /* ET_KEYWORD.make_rescue */
 extern T0* T171c61(void);
@@ -25604,8 +25641,8 @@ extern void T694f59(T0* C, T0* a1);
 /* ET_LIKE_CURRENT.make */
 extern T0* T694c58(void);
 /* ET_TOKEN_CONSTANTS.like_keyword */
-extern unsigned char ge769os12768;
-extern T0* ge769ov12768;
+extern unsigned char ge769os12774;
+extern T0* ge769ov12774;
 extern T0* T162f733(T0* C);
 /* ET_KEYWORD.make_like */
 extern T0* T171c30(void);
@@ -25716,8 +25753,8 @@ extern void T293f89(T0* C, T0* a1);
 /* ET_TUPLE_TYPE.make */
 extern T0* T293c88(T0* a1);
 /* ET_TOKEN_CONSTANTS.tuple_keyword */
-extern unsigned char ge769os12789;
-extern T0* ge769ov12789;
+extern unsigned char ge769os12795;
+extern T0* ge769ov12795;
 extern T0* T162f676(T0* C);
 /* ET_TUPLE_TYPE.tokens */
 extern T0* T293f2(T0* C);
@@ -25820,8 +25857,8 @@ extern void T556f97(T0* C, T0* a1);
 /* ET_BIT_FEATURE.make */
 extern T0* T556c96(T0* a1);
 /* ET_TOKEN_CONSTANTS.bit_keyword */
-extern unsigned char ge769os12741;
-extern T0* ge769ov12741;
+extern unsigned char ge769os12747;
+extern T0* ge769ov12747;
 extern T0* T162f721(T0* C);
 /* ET_BIT_FEATURE.tokens */
 extern T0* T556f2(T0* C);
@@ -25932,8 +25969,8 @@ extern void T681f6(T0* C, T0* a1);
 /* ET_VARIANT.make */
 extern T0* T681c5(T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.variant_keyword */
-extern unsigned char ge769os12793;
-extern T0* ge769ov12793;
+extern unsigned char ge769os12799;
+extern T0* ge769ov12799;
 extern T0* T162f604(T0* C);
 /* ET_KEYWORD.make_variant */
 extern T0* T171c67(void);
@@ -25984,8 +26021,8 @@ extern void T678f8p1(T0* C, T6 a1);
 /* ET_LOOP_INVARIANTS.fixed_array */
 extern T0* T678f5(T0* C);
 /* ET_TOKEN_CONSTANTS.invariant_keyword */
-extern unsigned char ge769os12766;
-extern T0* ge769ov12766;
+extern unsigned char ge769os12772;
+extern T0* ge769ov12772;
 extern T0* T162f613(T0* C);
 /* ET_KEYWORD.make_invariant */
 extern T0* T171c76(void);
@@ -26082,8 +26119,8 @@ extern void T634f13p1(T0* C, T6 a1);
 /* ET_POSTCONDITIONS.fixed_array */
 extern T0* T634f5(T0* C);
 /* ET_TOKEN_CONSTANTS.ensure_keyword */
-extern unsigned char ge769os12754;
-extern T0* ge769ov12754;
+extern unsigned char ge769os12760;
+extern T0* ge769ov12760;
 extern T0* T162f724(T0* C);
 /* ET_KEYWORD.make_ensure */
 extern T0* T171c32(void);
@@ -26136,8 +26173,8 @@ extern void T628f13p1(T0* C, T6 a1);
 /* ET_PRECONDITIONS.fixed_array */
 extern T0* T628f5(T0* C);
 /* ET_TOKEN_CONSTANTS.require_keyword */
-extern unsigned char ge769os12781;
-extern T0* ge769ov12781;
+extern unsigned char ge769os12787;
+extern T0* ge769ov12787;
 extern T0* T162f723(T0* C);
 /* ET_KEYWORD.make_require */
 extern T0* T171c35(void);
@@ -26266,8 +26303,8 @@ extern T0* T253f223(T0* C, T0* a1, T0* a2);
 /* ET_LOCAL_COMMA_VARIABLE.make */
 extern T0* T932c7(T0* a1, T0* a2);
 /* ET_EIFFEL_PARSER.dummy_type */
-extern unsigned char ge952os14497;
-extern T0* ge952ov14497;
+extern unsigned char ge952os14503;
+extern T0* ge952ov14503;
 extern T0* T163f711(T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_377 */
 extern void T163f1342(T0* C);
@@ -26330,8 +26367,8 @@ extern unsigned char ge701os6202;
 extern T0* ge701ov6202;
 extern T0* T630f5(T0* C);
 /* ET_TOKEN_CONSTANTS.local_keyword */
-extern unsigned char ge769os12769;
-extern T0* ge769ov12769;
+extern unsigned char ge769os12775;
+extern T0* ge769ov12775;
 extern T0* T162f589(T0* C);
 /* ET_KEYWORD.make_local */
 extern T0* T171c52(void);
@@ -26498,12 +26535,12 @@ extern T0* T658f7(T0* C);
 /* ET_ALIAS_FREE_NAME.tokens */
 extern T0* T658f5(T0* C);
 /* ET_ALIAS_FREE_NAME.default_keyword */
-extern unsigned char ge774os21384;
-extern T0* ge774ov21384;
+extern unsigned char ge774os21390;
+extern T0* ge774ov21390;
 extern T0* T658f2(T0* C);
 /* ET_TOKEN_CONSTANTS.alias_keyword */
-extern unsigned char ge769os12736;
-extern T0* ge769ov12736;
+extern unsigned char ge769os12742;
+extern T0* ge769ov12742;
 extern T0* T162f585(T0* C);
 /* ET_KEYWORD.make_alias */
 extern T0* T171c48(void);
@@ -26692,12 +26729,12 @@ extern T0* T652f7(T0* C);
 /* ET_INFIX_FREE_NAME.tokens */
 extern T0* T652f5(T0* C);
 /* ET_INFIX_FREE_NAME.default_keyword */
-extern unsigned char ge801os21384;
-extern T0* ge801ov21384;
+extern unsigned char ge801os21390;
+extern T0* ge801ov21390;
 extern T0* T652f2(T0* C);
 /* ET_TOKEN_CONSTANTS.infix_keyword */
-extern unsigned char ge769os12763;
-extern T0* ge769ov12763;
+extern unsigned char ge769os12769;
+extern T0* ge769ov12769;
 extern T0* T162f588(T0* C);
 /* ET_KEYWORD.make_infix */
 extern T0* T171c51(void);
@@ -26720,12 +26757,12 @@ extern T0* T650f7(T0* C);
 /* ET_PREFIX_FREE_NAME.tokens */
 extern T0* T650f5(T0* C);
 /* ET_PREFIX_FREE_NAME.default_keyword */
-extern unsigned char ge811os21384;
-extern T0* ge811ov21384;
+extern unsigned char ge811os21390;
+extern T0* ge811ov21390;
 extern T0* T650f2(T0* C);
 /* ET_TOKEN_CONSTANTS.prefix_keyword */
-extern unsigned char ge769os12776;
-extern T0* ge769ov12776;
+extern unsigned char ge769os12782;
+extern T0* ge769ov12782;
 extern T0* T162f595(T0* C);
 /* ET_KEYWORD.make_prefix */
 extern T0* T171c58(void);
@@ -27010,72 +27047,72 @@ extern void T645f71(T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.set_builtin_sized_real_procedure */
 extern void T163f1781(T0* C, T0* a1, T6 a2);
 /* ET_TOKEN_CONSTANTS.out_feature_name */
-extern unsigned char ge769os12675;
-extern T0* ge769ov12675;
+extern unsigned char ge769os12681;
+extern T0* ge769ov12681;
 extern T0* T162f438(T0* C);
 /* ET_TOKEN_CONSTANTS.floor_real_64_feature_name */
-extern unsigned char ge769os12640;
-extern T0* ge769ov12640;
+extern unsigned char ge769os12646;
+extern T0* ge769ov12646;
 extern T0* T162f554(T0* C);
 /* ET_TOKEN_CONSTANTS.floor_real_32_feature_name */
-extern unsigned char ge769os12639;
-extern T0* ge769ov12639;
+extern unsigned char ge769os12645;
+extern T0* ge769ov12645;
 extern T0* T162f552(T0* C);
 /* ET_TOKEN_CONSTANTS.ceiling_real_64_feature_name */
-extern unsigned char ge769os12630;
-extern T0* ge769ov12630;
+extern unsigned char ge769os12636;
+extern T0* ge769ov12636;
 extern T0* T162f550(T0* C);
 /* ET_TOKEN_CONSTANTS.ceiling_real_32_feature_name */
-extern unsigned char ge769os12629;
-extern T0* ge769ov12629;
+extern unsigned char ge769os12635;
+extern T0* ge769ov12635;
 extern T0* T162f548(T0* C);
 /* ET_TOKEN_CONSTANTS.to_double_feature_name */
-extern unsigned char ge769os12695;
-extern T0* ge769ov12695;
-extern T0* T162f499(T0* C);
-/* ET_TOKEN_CONSTANTS.truncated_to_real_feature_name */
-extern unsigned char ge769os12703;
-extern T0* ge769ov12703;
-extern T0* T162f545(T0* C);
-/* ET_TOKEN_CONSTANTS.truncated_to_integer_64_feature_name */
-extern unsigned char ge769os12702;
-extern T0* ge769ov12702;
-extern T0* T162f543(T0* C);
-/* ET_TOKEN_CONSTANTS.truncated_to_integer_feature_name */
 extern unsigned char ge769os12701;
 extern T0* ge769ov12701;
+extern T0* T162f499(T0* C);
+/* ET_TOKEN_CONSTANTS.truncated_to_real_feature_name */
+extern unsigned char ge769os12709;
+extern T0* ge769ov12709;
+extern T0* T162f545(T0* C);
+/* ET_TOKEN_CONSTANTS.truncated_to_integer_64_feature_name */
+extern unsigned char ge769os12708;
+extern T0* ge769ov12708;
+extern T0* T162f543(T0* C);
+/* ET_TOKEN_CONSTANTS.truncated_to_integer_feature_name */
+extern unsigned char ge769os12707;
+extern T0* ge769ov12707;
 extern T0* T162f541(T0* C);
 /* ET_TOKEN_CONSTANTS.infix_lt_feature_name */
-extern unsigned char ge769os12653;
-extern T0* ge769ov12653;
+extern unsigned char ge769os12659;
+extern T0* ge769ov12659;
 extern T0* T162f489(T0* C);
 /* ET_REGULAR_MANIFEST_STRING.make */
 extern T0* T486c31(T0* a1);
 /* ET_REGULAR_MANIFEST_STRING.make_leaf */
 extern void T486f33(T0* C);
 /* ET_TOKEN_CONSTANTS.prefix_plus_feature_name */
-extern unsigned char ge769os12680;
-extern T0* ge769ov12680;
+extern unsigned char ge769os12686;
+extern T0* ge769ov12686;
 extern T0* T162f529(T0* C);
 /* ET_TOKEN_CONSTANTS.prefix_minus_feature_name */
-extern unsigned char ge769os12678;
-extern T0* ge769ov12678;
+extern unsigned char ge769os12684;
+extern T0* ge769ov12684;
 extern T0* T162f487(T0* C);
 /* ET_TOKEN_CONSTANTS.infix_power_feature_name */
-extern unsigned char ge769os12659;
-extern T0* ge769ov12659;
+extern unsigned char ge769os12665;
+extern T0* ge769ov12665;
 extern T0* T162f485(T0* C);
 /* ET_TOKEN_CONSTANTS.infix_divide_feature_name */
-extern unsigned char ge769os12648;
-extern T0* ge769ov12648;
-extern T0* T162f479(T0* C);
-/* ET_TOKEN_CONSTANTS.infix_times_feature_name */
-extern unsigned char ge769os12660;
-extern T0* ge769ov12660;
-extern T0* T162f477(T0* C);
-/* ET_TOKEN_CONSTANTS.infix_minus_feature_name */
 extern unsigned char ge769os12654;
 extern T0* ge769ov12654;
+extern T0* T162f479(T0* C);
+/* ET_TOKEN_CONSTANTS.infix_times_feature_name */
+extern unsigned char ge769os12666;
+extern T0* ge769ov12666;
+extern T0* T162f477(T0* C);
+/* ET_TOKEN_CONSTANTS.infix_minus_feature_name */
+extern unsigned char ge769os12660;
+extern T0* ge769ov12660;
 extern T0* T162f475(T0* C);
 /* ET_NULL_ERROR_HANDLER.report_gvkbs0a_error */
 extern void T55f206(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
@@ -27090,110 +27127,110 @@ extern void T28f206(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_ERROR_HANDLER.reportable_gvkbs_error */
 extern T1 T28f32(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.like_current */
-extern unsigned char ge769os12708;
-extern T0* ge769ov12708;
+extern unsigned char ge769os12714;
+extern T0* ge769ov12714;
 extern T0* T162f368(T0* C);
 /* ET_TOKEN_CONSTANTS.builtin_feature */
 extern T6 T162f405(T0* C, T6 a1, T6 a2);
 /* ET_TOKEN_CONSTANTS.infix_plus_feature_name */
-extern unsigned char ge769os12658;
-extern T0* ge769ov12658;
+extern unsigned char ge769os12664;
+extern T0* ge769ov12664;
 extern T0* T162f434(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_sized_real_ref_procedure */
 extern void T163f1780(T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_TOKEN_CONSTANTS.item_feature_name */
-extern unsigned char ge769os12670;
-extern T0* ge769ov12670;
+extern unsigned char ge769os12676;
+extern T0* ge769ov12676;
 extern T0* T162f33(T0* C);
 /* ET_TOKEN_CONSTANTS.set_item_feature_name */
-extern unsigned char ge769os12686;
-extern T0* ge769ov12686;
+extern unsigned char ge769os12692;
+extern T0* ge769ov12692;
 extern T0* T162f406(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_sized_integer_procedure */
 extern void T163f1779(T0* C, T0* a1, T6 a2);
 /* ET_TOKEN_CONSTANTS.bit_not_feature_name */
-extern unsigned char ge769os12622;
-extern T0* ge769ov12622;
+extern unsigned char ge769os12628;
+extern T0* ge769ov12628;
 extern T0* T162f527(T0* C);
 /* ET_TOKEN_CONSTANTS.bit_xor_feature_name */
-extern unsigned char ge769os12626;
-extern T0* ge769ov12626;
+extern unsigned char ge769os12632;
+extern T0* ge769ov12632;
 extern T0* T162f525(T0* C);
 /* ET_TOKEN_CONSTANTS.bit_shift_right_feature_name */
-extern unsigned char ge769os12625;
-extern T0* ge769ov12625;
+extern unsigned char ge769os12631;
+extern T0* ge769ov12631;
 extern T0* T162f523(T0* C);
 /* ET_TOKEN_CONSTANTS.bit_shift_left_feature_name */
-extern unsigned char ge769os12624;
-extern T0* ge769ov12624;
+extern unsigned char ge769os12630;
+extern T0* ge769ov12630;
 extern T0* T162f521(T0* C);
 /* ET_TOKEN_CONSTANTS.bit_and_feature_name */
-extern unsigned char ge769os12621;
-extern T0* ge769ov12621;
+extern unsigned char ge769os12627;
+extern T0* ge769ov12627;
 extern T0* T162f519(T0* C);
 /* ET_TOKEN_CONSTANTS.bit_or_feature_name */
-extern unsigned char ge769os12623;
-extern T0* ge769ov12623;
+extern unsigned char ge769os12629;
+extern T0* ge769ov12629;
 extern T0* T162f517(T0* C);
 /* ET_TOKEN_CONSTANTS.as_integer_64_feature_name */
-extern unsigned char ge769os12620;
-extern T0* ge769ov12620;
+extern unsigned char ge769os12626;
+extern T0* ge769ov12626;
 extern T0* T162f515(T0* C);
 /* ET_TOKEN_CONSTANTS.as_integer_32_feature_name */
-extern unsigned char ge769os12619;
-extern T0* ge769ov12619;
+extern unsigned char ge769os12625;
+extern T0* ge769ov12625;
 extern T0* T162f513(T0* C);
 /* ET_TOKEN_CONSTANTS.as_integer_16_feature_name */
-extern unsigned char ge769os12618;
-extern T0* ge769ov12618;
+extern unsigned char ge769os12624;
+extern T0* ge769ov12624;
 extern T0* T162f511(T0* C);
 /* ET_TOKEN_CONSTANTS.as_integer_8_feature_name */
-extern unsigned char ge769os12617;
-extern T0* ge769ov12617;
+extern unsigned char ge769os12623;
+extern T0* ge769ov12623;
 extern T0* T162f509(T0* C);
 /* ET_TOKEN_CONSTANTS.as_natural_64_feature_name */
-extern unsigned char ge769os12616;
-extern T0* ge769ov12616;
+extern unsigned char ge769os12622;
+extern T0* ge769ov12622;
 extern T0* T162f507(T0* C);
 /* ET_TOKEN_CONSTANTS.as_natural_32_feature_name */
-extern unsigned char ge769os12615;
-extern T0* ge769ov12615;
+extern unsigned char ge769os12621;
+extern T0* ge769ov12621;
 extern T0* T162f505(T0* C);
 /* ET_TOKEN_CONSTANTS.as_natural_16_feature_name */
-extern unsigned char ge769os12614;
-extern T0* ge769ov12614;
+extern unsigned char ge769os12620;
+extern T0* ge769ov12620;
 extern T0* T162f503(T0* C);
 /* ET_TOKEN_CONSTANTS.as_natural_8_feature_name */
-extern unsigned char ge769os12613;
-extern T0* ge769ov12613;
+extern unsigned char ge769os12619;
+extern T0* ge769ov12619;
 extern T0* T162f501(T0* C);
 /* ET_TOKEN_CONSTANTS.to_real_64_feature_name */
-extern unsigned char ge769os12700;
-extern T0* ge769ov12700;
+extern unsigned char ge769os12706;
+extern T0* ge769ov12706;
 extern T0* T162f497(T0* C);
 /* ET_TOKEN_CONSTANTS.to_real_32_feature_name */
-extern unsigned char ge769os12699;
-extern T0* ge769ov12699;
+extern unsigned char ge769os12705;
+extern T0* ge769ov12705;
 extern T0* T162f495(T0* C);
 /* ET_TOKEN_CONSTANTS.to_real_feature_name */
-extern unsigned char ge769os12697;
-extern T0* ge769ov12697;
+extern unsigned char ge769os12703;
+extern T0* ge769ov12703;
 extern T0* T162f493(T0* C);
 /* ET_TOKEN_CONSTANTS.to_character_32_feature_name */
-extern unsigned char ge769os12694;
-extern T0* ge769ov12694;
+extern unsigned char ge769os12700;
+extern T0* ge769ov12700;
 extern T0* T162f414(T0* C);
 /* ET_TOKEN_CONSTANTS.to_character_8_feature_name */
-extern unsigned char ge769os12693;
-extern T0* ge769ov12693;
+extern unsigned char ge769os12699;
+extern T0* ge769ov12699;
 extern T0* T162f412(T0* C);
 /* ET_TOKEN_CONSTANTS.infix_mod_feature_name */
-extern unsigned char ge769os12655;
-extern T0* ge769ov12655;
+extern unsigned char ge769os12661;
+extern T0* ge769ov12661;
 extern T0* T162f483(T0* C);
 /* ET_TOKEN_CONSTANTS.infix_div_feature_name */
-extern unsigned char ge769os12647;
-extern T0* ge769ov12647;
+extern unsigned char ge769os12653;
+extern T0* ge769ov12653;
 extern T0* T162f481(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_sized_integer_ref_procedure */
 extern void T163f1778(T0* C, T0* a1, T0* a2, T6 a3);
@@ -27204,216 +27241,216 @@ extern T6 T162f39(T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.set_builtin_procedure_procedure */
 extern void T163f1776(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.formal_parameter_2 */
-extern unsigned char ge769os12710;
-extern T0* ge769ov12710;
+extern unsigned char ge769os12716;
+extern T0* ge769ov12716;
 extern T0* T162f470(T0* C);
 /* ET_TOKEN_CONSTANTS.builtin_procedure_feature */
 extern T6 T162f44(T0* C, T6 a1);
 /* ET_TOKEN_CONSTANTS.call_feature_name */
-extern unsigned char ge769os12628;
-extern T0* ge769ov12628;
+extern unsigned char ge769os12634;
+extern T0* ge769ov12634;
 extern T0* T162f41(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_platform_procedure */
 extern void T163f1775(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.wide_character_bytes_feature_name */
-extern unsigned char ge769os12707;
-extern T0* ge769ov12707;
+extern unsigned char ge769os12713;
+extern T0* ge769ov12713;
 extern T0* T162f468(T0* C);
 /* ET_TOKEN_CONSTANTS.is_thread_capable_feature_name */
-extern unsigned char ge769os12666;
-extern T0* ge769ov12666;
+extern unsigned char ge769os12672;
+extern T0* ge769ov12672;
 extern T0* T162f466(T0* C);
 /* ET_TOKEN_CONSTANTS.real_bytes_feature_name */
-extern unsigned char ge769os12683;
-extern T0* ge769ov12683;
+extern unsigned char ge769os12689;
+extern T0* ge769ov12689;
 extern T0* T162f464(T0* C);
 /* ET_TOKEN_CONSTANTS.pointer_bytes_feature_name */
-extern unsigned char ge769os12676;
-extern T0* ge769ov12676;
+extern unsigned char ge769os12682;
+extern T0* ge769ov12682;
 extern T0* T162f462(T0* C);
 /* ET_TOKEN_CONSTANTS.integer_bytes_feature_name */
-extern unsigned char ge769os12662;
-extern T0* ge769ov12662;
-extern T0* T162f460(T0* C);
-/* ET_TOKEN_CONSTANTS.character_bytes_feature_name */
-extern unsigned char ge769os12631;
-extern T0* ge769ov12631;
-extern T0* T162f458(T0* C);
-/* ET_TOKEN_CONSTANTS.boolean_bytes_feature_name */
-extern unsigned char ge769os12627;
-extern T0* ge769ov12627;
-extern T0* T162f456(T0* C);
-/* ET_TOKEN_CONSTANTS.is_windows_feature_name */
-extern unsigned char ge769os12669;
-extern T0* ge769ov12669;
-extern T0* T162f454(T0* C);
-/* ET_TOKEN_CONSTANTS.is_vms_feature_name */
 extern unsigned char ge769os12668;
 extern T0* ge769ov12668;
+extern T0* T162f460(T0* C);
+/* ET_TOKEN_CONSTANTS.character_bytes_feature_name */
+extern unsigned char ge769os12637;
+extern T0* ge769ov12637;
+extern T0* T162f458(T0* C);
+/* ET_TOKEN_CONSTANTS.boolean_bytes_feature_name */
+extern unsigned char ge769os12633;
+extern T0* ge769ov12633;
+extern T0* T162f456(T0* C);
+/* ET_TOKEN_CONSTANTS.is_windows_feature_name */
+extern unsigned char ge769os12675;
+extern T0* ge769ov12675;
+extern T0* T162f454(T0* C);
+/* ET_TOKEN_CONSTANTS.is_vms_feature_name */
+extern unsigned char ge769os12674;
+extern T0* ge769ov12674;
 extern T0* T162f452(T0* C);
 /* ET_TOKEN_CONSTANTS.is_unix_feature_name */
-extern unsigned char ge769os12667;
-extern T0* ge769ov12667;
+extern unsigned char ge769os12673;
+extern T0* ge769ov12673;
 extern T0* T162f450(T0* C);
 /* ET_TOKEN_CONSTANTS.builtin_platform_feature */
 extern T6 T162f449(T0* C, T6 a1);
 /* ET_TOKEN_CONSTANTS.is_dotnet_feature_name */
-extern unsigned char ge769os12665;
-extern T0* ge769ov12665;
+extern unsigned char ge769os12671;
+extern T0* ge769ov12671;
 extern T0* T162f447(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_arguments_procedure */
 extern void T163f1774(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.argument_count_feature_name */
-extern unsigned char ge769os12612;
-extern T0* ge769ov12612;
+extern unsigned char ge769os12618;
+extern T0* ge769ov12618;
 extern T0* T162f445(T0* C);
 /* ET_TOKEN_CONSTANTS.builtin_arguments_feature */
 extern T6 T162f444(T0* C, T6 a1);
 /* ET_TOKEN_CONSTANTS.argument_feature_name */
-extern unsigned char ge769os12611;
-extern T0* ge769ov12611;
+extern unsigned char ge769os12617;
+extern T0* ge769ov12617;
 extern T0* T162f442(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_pointer_procedure */
 extern void T163f1773(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.hash_code_feature_name */
-extern unsigned char ge769os12643;
-extern T0* ge769ov12643;
+extern unsigned char ge769os12649;
+extern T0* ge769ov12649;
 extern T0* T162f440(T0* C);
 /* ET_TOKEN_CONSTANTS.to_integer_32_feature_name */
-extern unsigned char ge769os12696;
-extern T0* ge769ov12696;
+extern unsigned char ge769os12702;
+extern T0* ge769ov12702;
 extern T0* T162f436(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_pointer_ref_procedure */
 extern void T163f1772(T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.set_builtin_boolean_procedure */
 extern void T163f1771(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.infix_xor_feature_name */
-extern unsigned char ge769os12661;
-extern T0* ge769ov12661;
+extern unsigned char ge769os12667;
+extern T0* ge769ov12667;
 extern T0* T162f431(T0* C);
 /* ET_TOKEN_CONSTANTS.prefix_not_feature_name */
-extern unsigned char ge769os12679;
-extern T0* ge769ov12679;
+extern unsigned char ge769os12685;
+extern T0* ge769ov12685;
 extern T0* T162f427(T0* C);
 /* ET_TOKEN_CONSTANTS.infix_implies_feature_name */
-extern unsigned char ge769os12651;
-extern T0* ge769ov12651;
-extern T0* T162f429(T0* C);
-/* ET_TOKEN_CONSTANTS.infix_or_else_feature_name */
 extern unsigned char ge769os12657;
 extern T0* ge769ov12657;
+extern T0* T162f429(T0* C);
+/* ET_TOKEN_CONSTANTS.infix_or_else_feature_name */
+extern unsigned char ge769os12663;
+extern T0* ge769ov12663;
 extern T0* T162f425(T0* C);
 /* ET_TOKEN_CONSTANTS.infix_or_feature_name */
-extern unsigned char ge769os12656;
-extern T0* ge769ov12656;
+extern unsigned char ge769os12662;
+extern T0* ge769ov12662;
 extern T0* T162f423(T0* C);
 /* ET_TOKEN_CONSTANTS.infix_and_then_feature_name */
-extern unsigned char ge769os12645;
-extern T0* ge769ov12645;
+extern unsigned char ge769os12651;
+extern T0* ge769ov12651;
 extern T0* T162f421(T0* C);
 /* ET_TOKEN_CONSTANTS.builtin_boolean_feature */
 extern T6 T162f417(T0* C, T6 a1);
 /* ET_TOKEN_CONSTANTS.infix_and_feature_name */
-extern unsigned char ge769os12644;
-extern T0* ge769ov12644;
+extern unsigned char ge769os12650;
+extern T0* ge769ov12650;
 extern T0* T162f419(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_boolean_ref_procedure */
 extern void T163f1770(T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.set_builtin_sized_character_procedure */
 extern void T163f1769(T0* C, T0* a1, T6 a2);
 /* ET_TOKEN_CONSTANTS.natural_32_code_feature_name */
-extern unsigned char ge769os12674;
-extern T0* ge769ov12674;
+extern unsigned char ge769os12680;
+extern T0* ge769ov12680;
 extern T0* T162f410(T0* C);
 /* ET_TOKEN_CONSTANTS.code_feature_name */
-extern unsigned char ge769os12632;
-extern T0* ge769ov12632;
+extern unsigned char ge769os12638;
+extern T0* ge769ov12638;
 extern T0* T162f408(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_sized_character_ref_procedure */
 extern void T163f1768(T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_EIFFEL_PARSER.set_builtin_special_procedure */
 extern void T163f1767(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.aliased_resized_area_feature_name */
-extern unsigned char ge769os12609;
-extern T0* ge769ov12609;
+extern unsigned char ge769os12615;
+extern T0* ge769ov12615;
 extern T0* T162f399(T0* C);
 /* ET_TOKEN_CONSTANTS.element_size_feature_name */
-extern unsigned char ge769os12638;
-extern T0* ge769ov12638;
+extern unsigned char ge769os12644;
+extern T0* ge769ov12644;
 extern T0* T162f397(T0* C);
 /* ET_TOKEN_CONSTANTS.formal_parameter_1 */
-extern unsigned char ge769os12709;
-extern T0* ge769ov12709;
+extern unsigned char ge769os12715;
+extern T0* ge769ov12715;
 extern T0* T162f395(T0* C);
 /* ET_TOKEN_CONSTANTS.put_feature_name */
-extern unsigned char ge769os12681;
-extern T0* ge769ov12681;
+extern unsigned char ge769os12687;
+extern T0* ge769ov12687;
 extern T0* T162f36(T0* C);
 /* ET_TOKEN_CONSTANTS.builtin_special_feature */
 extern T6 T162f394(T0* C, T6 a1);
 /* ET_TOKEN_CONSTANTS.make_feature_name */
-extern unsigned char ge769os12673;
-extern T0* ge769ov12673;
+extern unsigned char ge769os12679;
+extern T0* ge769ov12679;
 extern T0* T162f401(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_type_procedure */
 extern void T163f1766(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.type_class_name */
-extern unsigned char ge769os12581;
-extern T0* ge769ov12581;
+extern unsigned char ge769os12587;
+extern T0* ge769ov12587;
 extern T0* T162f71(T0* C);
 /* ET_TOKEN_CONSTANTS.builtin_type_feature */
 extern T6 T162f392(T0* C, T6 a1);
 /* ET_TOKEN_CONSTANTS.generating_type_feature_name */
-extern unsigned char ge769os12641;
-extern T0* ge769ov12641;
+extern unsigned char ge769os12647;
+extern T0* ge769ov12647;
 extern T0* T162f377(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_any_procedure */
 extern void T163f1765(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.deep_twin_feature_name */
-extern unsigned char ge769os12636;
-extern T0* ge769ov12636;
-extern T0* T162f386(T0* C);
-/* ET_TOKEN_CONSTANTS.is_deep_equal_feature_name */
-extern unsigned char ge769os12664;
-extern T0* ge769ov12664;
-extern T0* T162f384(T0* C);
-/* ET_TOKEN_CONSTANTS.standard_twin_feature_name */
-extern unsigned char ge769os12690;
-extern T0* ge769ov12690;
-extern T0* T162f382(T0* C);
-/* ET_TOKEN_CONSTANTS.tagged_out_feature_name */
-extern unsigned char ge769os12691;
-extern T0* ge769ov12691;
-extern T0* T162f380(T0* C);
-/* ET_TOKEN_CONSTANTS.generator_feature_name */
 extern unsigned char ge769os12642;
 extern T0* ge769ov12642;
+extern T0* T162f386(T0* C);
+/* ET_TOKEN_CONSTANTS.is_deep_equal_feature_name */
+extern unsigned char ge769os12670;
+extern T0* ge769ov12670;
+extern T0* T162f384(T0* C);
+/* ET_TOKEN_CONSTANTS.standard_twin_feature_name */
+extern unsigned char ge769os12696;
+extern T0* ge769ov12696;
+extern T0* T162f382(T0* C);
+/* ET_TOKEN_CONSTANTS.tagged_out_feature_name */
+extern unsigned char ge769os12697;
+extern T0* ge769ov12697;
+extern T0* T162f380(T0* C);
+/* ET_TOKEN_CONSTANTS.generator_feature_name */
+extern unsigned char ge769os12648;
+extern T0* ge769ov12648;
 extern T0* T162f375(T0* C);
 /* ET_TOKEN_CONSTANTS.conforms_to_feature_name */
-extern unsigned char ge769os12633;
-extern T0* ge769ov12633;
+extern unsigned char ge769os12639;
+extern T0* ge769ov12639;
 extern T0* T162f373(T0* C);
 /* ET_TOKEN_CONSTANTS.same_type_feature_name */
-extern unsigned char ge769os12685;
-extern T0* ge769ov12685;
+extern unsigned char ge769os12691;
+extern T0* ge769ov12691;
 extern T0* T162f371(T0* C);
 /* ET_TOKEN_CONSTANTS.standard_is_equal_feature_name */
-extern unsigned char ge769os12689;
-extern T0* ge769ov12689;
+extern unsigned char ge769os12695;
+extern T0* ge769ov12695;
 extern T0* T162f369(T0* C);
 /* ET_TOKEN_CONSTANTS.twin_feature_name */
-extern unsigned char ge769os12704;
-extern T0* ge769ov12704;
+extern unsigned char ge769os12710;
+extern T0* ge769ov12710;
 extern T0* T162f365(T0* C);
 /* ET_TOKEN_CONSTANTS.copy_feature_name */
-extern unsigned char ge769os12634;
-extern T0* ge769ov12634;
+extern unsigned char ge769os12640;
+extern T0* ge769ov12640;
 extern T0* T162f179(T0* C);
 /* ET_TOKEN_CONSTANTS.builtin_any_feature */
 extern T6 T162f367(T0* C, T6 a1);
 /* ET_TOKEN_CONSTANTS.standard_copy_feature_name */
-extern unsigned char ge769os12688;
-extern T0* ge769ov12688;
+extern unsigned char ge769os12694;
+extern T0* ge769ov12694;
 extern T0* T162f388(T0* C);
 /* ET_AST_FACTORY.new_external_procedure */
 extern T0* T253f321(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10, T0* a11, T0* a12, T0* a13, T0* a14);
@@ -27430,8 +27467,8 @@ extern void T645f73(T0* C, T0* a1);
 /* ET_EXTERNAL_PROCEDURE.set_is_keyword */
 extern void T645f72(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.is_keyword */
-extern unsigned char ge769os12767;
-extern T0* ge769ov12767;
+extern unsigned char ge769os12773;
+extern T0* ge769ov12773;
 extern T0* T162f579(T0* C);
 /* ET_KEYWORD.make_is */
 extern T0* T171c42(void);
@@ -27536,8 +27573,8 @@ extern void T163f1761(T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_EIFFEL_PARSER.set_builtin_function_function */
 extern void T163f1760(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.formal_parameter_3 */
-extern unsigned char ge769os12711;
-extern T0* ge769ov12711;
+extern unsigned char ge769os12717;
+extern T0* ge769ov12717;
 extern T0* T162f471(T0* C);
 /* ET_EIFFEL_PARSER.set_builtin_procedure_function */
 extern void T163f1759(T0* C, T0* a1);
@@ -27690,8 +27727,8 @@ extern void T230f68(T0* C, T0* a1);
 /* ET_UNIQUE_ATTRIBUTE.make */
 extern T0* T230c67(T0* a1, T0* a2, T0* a3);
 /* ET_TOKEN_CONSTANTS.unique_keyword */
-extern unsigned char ge769os12791;
-extern T0* ge769ov12791;
+extern unsigned char ge769os12797;
+extern T0* ge769ov12797;
 extern T0* T162f743(T0* C);
 /* ET_KEYWORD.make_unique */
 extern T0* T171c34(void);
@@ -27920,8 +27957,8 @@ extern T0* T253f159(T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CLAUSE.make */
 extern T0* T422c4(T0* a1);
 /* ET_TOKEN_CONSTANTS.feature_keyword */
-extern unsigned char ge769os12758;
-extern T0* ge769ov12758;
+extern unsigned char ge769os12764;
+extern T0* ge769ov12764;
 extern T0* T162f601(T0* C);
 /* ET_KEYWORD.make_feature */
 extern T0* T171c64(void);
@@ -28110,8 +28147,8 @@ extern T0* T253f154(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_CONVERT_FUNCTION.make */
 extern T0* T609c8(T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.colon_symbol */
-extern unsigned char ge769os12717;
-extern T0* ge769ov12717;
+extern unsigned char ge769os12723;
+extern T0* ge769ov12723;
 extern T0* T162f566(T0* C);
 /* ET_SYMBOL.make_colon */
 extern T0* T432c63(void);
@@ -28178,8 +28215,8 @@ extern unsigned char ge545os6202;
 extern T0* ge545ov6202;
 extern T0* T506f5(T0* C);
 /* ET_TOKEN_CONSTANTS.convert_keyword */
-extern unsigned char ge769os12744;
-extern T0* ge769ov12744;
+extern unsigned char ge769os12750;
+extern T0* ge769ov12750;
 extern T0* T162f600(T0* C);
 /* ET_KEYWORD.make_convert */
 extern T0* T171c63(void);
@@ -28246,8 +28283,8 @@ extern void T598f18(T0* C, T6 a1);
 /* ET_CREATOR.fixed_array */
 extern T0* T598f6(T0* C);
 /* ET_TOKEN_CONSTANTS.creation_keyword */
-extern unsigned char ge769os12746;
-extern T0* ge769ov12746;
+extern unsigned char ge769os12752;
+extern T0* ge769ov12752;
 extern T0* T162f605(T0* C);
 /* ET_KEYWORD.make_creation */
 extern T0* T171c68(void);
@@ -28360,8 +28397,8 @@ extern void T296f8p1(T0* C, T6 a1);
 /* ET_KEYWORD_FEATURE_NAME_LIST.fixed_array */
 extern T0* T296f5(T0* C);
 /* ET_TOKEN_CONSTANTS.redefine_keyword */
-extern unsigned char ge769os12778;
-extern T0* ge769ov12778;
+extern unsigned char ge769os12784;
+extern T0* ge769ov12784;
 extern T0* T162f610(T0* C);
 /* ET_KEYWORD.make_redefine */
 extern T0* T171c73(void);
@@ -28544,8 +28581,8 @@ extern T0* T253f141(T0* C, T0* a1, T0* a2);
 /* ET_ALL_EXPORT.make */
 extern T0* T585c7(T0* a1);
 /* ET_TOKEN_CONSTANTS.all_keyword */
-extern unsigned char ge769os12737;
-extern T0* ge769ov12737;
+extern unsigned char ge769os12743;
+extern T0* ge769ov12743;
 extern T0* T162f722(T0* C);
 /* ET_KEYWORD.make_all */
 extern T0* T171c28(void);
@@ -28590,8 +28627,8 @@ extern unsigned char ge552os6202;
 extern T0* ge552ov6202;
 extern T0* T295f5(T0* C);
 /* ET_TOKEN_CONSTANTS.export_keyword */
-extern unsigned char ge769os12756;
-extern T0* ge769ov12756;
+extern unsigned char ge769os12762;
+extern T0* ge769ov12762;
 extern T0* T162f594(T0* C);
 /* ET_KEYWORD.make_export */
 extern T0* T171c57(void);
@@ -28634,8 +28671,8 @@ extern T0* T253f139(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_RENAME.make */
 extern T0* T579c6(T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.as_keyword */
-extern unsigned char ge769os12738;
-extern T0* ge769ov12738;
+extern unsigned char ge769os12744;
+extern T0* ge769ov12744;
 extern T0* T162f576(T0* C);
 /* ET_KEYWORD.make_as */
 extern T0* T171c39(void);
@@ -28682,8 +28719,8 @@ extern unsigned char ge577os6202;
 extern T0* ge577ov6202;
 extern T0* T294f5(T0* C);
 /* ET_TOKEN_CONSTANTS.rename_keyword */
-extern unsigned char ge769os12780;
-extern T0* ge769ov12780;
+extern unsigned char ge769os12786;
+extern T0* ge769ov12786;
 extern T0* T162f597(T0* C);
 /* ET_KEYWORD.make_rename */
 extern T0* T171c60(void);
@@ -28764,8 +28801,8 @@ extern unsigned char ge572os6202;
 extern T0* ge572ov6202;
 extern T0* T297f5(T0* C);
 /* ET_TOKEN_CONSTANTS.inherit_keyword */
-extern unsigned char ge769os12764;
-extern T0* ge769ov12764;
+extern unsigned char ge769os12770;
+extern T0* ge769ov12770;
 extern T0* T162f602(T0* C);
 /* ET_KEYWORD.make_inherit */
 extern T0* T171c65(void);
@@ -29118,8 +29155,8 @@ extern T0* T543c65(T0* a1, T0* a2, T0* a3);
 /* ET_CONSTRAINED_FORMAL_PARAMETER.make_unconstrained */
 extern void T543f67(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.arrow_symbol */
-extern unsigned char ge769os12713;
-extern T0* ge769ov12713;
+extern unsigned char ge769os12719;
+extern T0* ge769ov12719;
 extern T0* T162f572(T0* C);
 /* ET_SYMBOL.make_arrow */
 extern T0* T432c69(void);
@@ -29536,8 +29573,8 @@ extern void T54f169(T0* C, T6 a1);
 /* ET_XACE_UNIVERSE.set_void_seed */
 extern void T51f189(T0* C, T6 a1);
 /* ET_TOKEN_CONSTANTS.void_feature_name */
-extern unsigned char ge769os12706;
-extern T0* ge769ov12706;
+extern unsigned char ge769os12712;
+extern T0* ge769ov12712;
 extern T0* T162f180(T0* C);
 /* ET_LACE_UNIVERSE.set_copy_seed */
 extern void T54f168(T0* C, T6 a1);
@@ -30174,16 +30211,16 @@ extern T0* T253f110(T0* C, T0* a1);
 /* ET_AST_FACTORY.new_attribute_keyword */
 extern T0* T253f109(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.attribute_keyword */
-extern unsigned char ge769os12740;
-extern T0* ge769ov12740;
+extern unsigned char ge769os12746;
+extern T0* ge769ov12746;
 extern T0* T162f612(T0* C);
 /* ET_KEYWORD.make_attribute */
 extern T0* T171c75(void);
 /* ET_AST_FACTORY.new_undefine_keyword */
 extern T0* T253f108(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.undefine_keyword */
-extern unsigned char ge769os12790;
-extern T0* ge769ov12790;
+extern unsigned char ge769os12796;
+extern T0* ge769ov12796;
 extern T0* T162f611(T0* C);
 /* ET_KEYWORD.make_undefine */
 extern T0* T171c74(void);
@@ -30196,24 +30233,24 @@ extern T0* T253f106(T0* C, T0* a1);
 /* ET_AST_FACTORY.new_obsolete_keyword */
 extern T0* T253f105(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.obsolete_keyword */
-extern unsigned char ge769os12771;
-extern T0* ge769ov12771;
+extern unsigned char ge769os12777;
+extern T0* ge769ov12777;
 extern T0* T162f609(T0* C);
 /* ET_KEYWORD.make_obsolete */
 extern T0* T171c72(void);
 /* ET_AST_FACTORY.new_indexing_keyword */
 extern T0* T253f104(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.indexing_keyword */
-extern unsigned char ge769os12762;
-extern T0* ge769ov12762;
+extern unsigned char ge769os12768;
+extern T0* ge769ov12768;
 extern T0* T162f608(T0* C);
 /* ET_KEYWORD.make_indexing */
 extern T0* T171c71(void);
 /* ET_AST_FACTORY.new_external_keyword */
 extern T0* T253f103(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.external_keyword */
-extern unsigned char ge769os12757;
-extern T0* ge769ov12757;
+extern unsigned char ge769os12763;
+extern T0* ge769ov12763;
 extern T0* T162f607(T0* C);
 /* ET_KEYWORD.make_external */
 extern T0* T171c70(void);
@@ -30232,8 +30269,8 @@ extern T0* T253f98(T0* C, T0* a1);
 /* ET_AST_FACTORY.new_inspect_keyword */
 extern T0* T253f97(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.inspect_keyword */
-extern unsigned char ge769os12765;
-extern T0* ge769ov12765;
+extern unsigned char ge769os12771;
+extern T0* ge769ov12771;
 extern T0* T162f603(T0* C);
 /* ET_KEYWORD.make_inspect */
 extern T0* T171c66(void);
@@ -30258,8 +30295,8 @@ extern T0* T253f91(T0* C, T0* a1);
 /* ET_AST_FACTORY.new_select_keyword */
 extern T0* T253f90(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.select_keyword */
-extern unsigned char ge769os12785;
-extern T0* ge769ov12785;
+extern unsigned char ge769os12791;
+extern T0* ge769ov12791;
 extern T0* T162f599(T0* C);
 /* ET_KEYWORD.make_select */
 extern T0* T171c62(void);
@@ -30274,8 +30311,8 @@ extern T0* T253f87(T0* C, T0* a1);
 /* ET_AST_FACTORY.new_recast_keyword */
 extern T0* T253f86(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.recast_keyword */
-extern unsigned char ge769os12777;
-extern T0* ge769ov12777;
+extern unsigned char ge769os12783;
+extern T0* ge769ov12783;
 extern T0* T162f596(T0* C);
 /* ET_KEYWORD.make_recast */
 extern T0* T171c59(void);
@@ -30292,8 +30329,8 @@ extern T0* T253f82(T0* C, T0* a1);
 /* ET_AST_FACTORY.new_elseif_keyword */
 extern T0* T253f81(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.elseif_keyword */
-extern unsigned char ge769os12752;
-extern T0* ge769ov12752;
+extern unsigned char ge769os12758;
+extern T0* ge769ov12758;
 extern T0* T162f593(T0* C);
 /* ET_KEYWORD.make_elseif */
 extern T0* T171c56(void);
@@ -30302,16 +30339,16 @@ extern T0* T253f80(T0* C, T0* a1);
 /* ET_AST_FACTORY.new_assign_keyword */
 extern T0* T253f79(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.assign_keyword */
-extern unsigned char ge769os12739;
-extern T0* ge769ov12739;
+extern unsigned char ge769os12745;
+extern T0* ge769ov12745;
 extern T0* T162f591(T0* C);
 /* ET_KEYWORD.make_assign */
 extern T0* T171c54(void);
 /* ET_AST_FACTORY.new_until_keyword */
 extern T0* T253f78(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.until_keyword */
-extern unsigned char ge769os12792;
-extern T0* ge769ov12792;
+extern unsigned char ge769os12798;
+extern T0* ge769ov12798;
 extern T0* T162f590(T0* C);
 /* ET_KEYWORD.make_until */
 extern T0* T171c53(void);
@@ -30416,8 +30453,8 @@ extern T0* T253f51(T0* C, T0* a1);
 /* ET_AST_FACTORY.new_if_keyword */
 extern T0* T253f50(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.if_keyword */
-extern unsigned char ge769os12761;
-extern T0* ge769ov12761;
+extern unsigned char ge769os12767;
+extern T0* ge769ov12767;
 extern T0* T162f578(T0* C);
 /* ET_KEYWORD.make_if */
 extern T0* T171c41(void);
@@ -30476,8 +30513,8 @@ extern void T163f956(T0* C, T2 a1);
 /* ET_AST_FACTORY.new_tilde_symbol */
 extern T0* T253f36(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.tilde_symbol */
-extern unsigned char ge769os12732;
-extern T0* ge769ov12732;
+extern unsigned char ge769os12738;
+extern T0* ge769ov12738;
 extern T0* T162f570(T0* C);
 /* ET_SYMBOL.make_tilde */
 extern T0* T432c67(void);
@@ -30508,8 +30545,8 @@ extern T0* T253f26(T0* C, T0* a1);
 /* ET_AST_FACTORY.new_comma_symbol */
 extern T0* T253f25(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.comma_symbol */
-extern unsigned char ge769os12718;
-extern T0* ge769ov12718;
+extern unsigned char ge769os12724;
+extern T0* ge769ov12724;
 extern T0* T162f565(T0* C);
 /* ET_SYMBOL.make_comma */
 extern T0* T432c62(void);
@@ -30526,8 +30563,8 @@ extern T0* T476f2(T0* C);
 /* ET_AST_FACTORY.new_dot_symbol */
 extern T0* T253f23(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.dot_symbol */
-extern unsigned char ge769os12720;
-extern T0* ge769ov12720;
+extern unsigned char ge769os12726;
+extern T0* ge769ov12726;
 extern T0* T162f563(T0* C);
 /* ET_SYMBOL.make_dot */
 extern T0* T432c61(void);
@@ -30862,8 +30899,8 @@ extern T0* T163f862(T0* C);
 /* ET_EIFFEL_PARSER.tmp_directory */
 extern T0* T163f44(T0* C);
 /* ET_EIFFEL_PARSER.shared_directory */
-extern unsigned char ge952os14499;
-extern T0* ge952ov14499;
+extern unsigned char ge952os14505;
+extern T0* ge952ov14505;
 extern T0* T163f860(T0* C);
 /* ET_EIFFEL_PARSER.execution_environment */
 extern T0* T163f43(T0* C);
@@ -30876,14 +30913,14 @@ extern T0* T62c197(T0* a1);
 /* DS_CELL [INTEGER].make */
 extern T0* T240c2(T6 a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.dummy_dynamic_feature */
-extern unsigned char ge929os7992;
-extern T0* ge929ov7992;
+extern unsigned char ge929os7994;
+extern T0* ge929ov7994;
 extern T0* T62f6(T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.dummy_feature */
 extern T0* T62f36(T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.dummy_dynamic_type */
-extern unsigned char ge929os7991;
-extern T0* ge929ov7991;
+extern unsigned char ge929os7993;
+extern T0* ge929ov7993;
 extern T0* T62f4(T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.make_feature_checker */
 extern void T62f202(T0* C, T0* a1);
@@ -30912,20 +30949,20 @@ extern void T54f182(T0* C, T0* a1);
 /* ET_LACE_UNIVERSE.set_default_aliased_sized_basic_classes */
 extern void T54f181(T0* C);
 /* ET_TOKEN_CONSTANTS.double_ref_class_name */
-extern unsigned char ge769os12590;
-extern T0* ge769ov12590;
+extern unsigned char ge769os12596;
+extern T0* ge769ov12596;
 extern T0* T162f99(T0* C);
 /* ET_TOKEN_CONSTANTS.real_ref_class_name */
-extern unsigned char ge769os12605;
-extern T0* ge769ov12605;
+extern unsigned char ge769os12611;
+extern T0* ge769ov12611;
 extern T0* T162f98(T0* C);
 /* ET_TOKEN_CONSTANTS.natural_ref_class_name */
-extern unsigned char ge769os12597;
-extern T0* ge769ov12597;
+extern unsigned char ge769os12603;
+extern T0* ge769ov12603;
 extern T0* T162f95(T0* C);
 /* ET_TOKEN_CONSTANTS.integer_ref_class_name */
-extern unsigned char ge769os12592;
-extern T0* ge769ov12592;
+extern unsigned char ge769os12598;
+extern T0* ge769ov12598;
 extern T0* T162f90(T0* C);
 /* ET_BUILTIN_CONVERT_FEATURE.make */
 extern T0* T299c6(T0* a1);
@@ -30934,12 +30971,12 @@ extern T0* T930c11(void);
 /* ET_BRACED_TYPE_LIST.make */
 extern void T930f11p1(T0* C);
 /* ET_TOKEN_CONSTANTS.wide_character_ref_class_name */
-extern unsigned char ge769os12608;
-extern T0* ge769ov12608;
+extern unsigned char ge769os12614;
+extern T0* ge769ov12614;
 extern T0* T162f85(T0* C);
 /* ET_TOKEN_CONSTANTS.character_ref_class_name */
-extern unsigned char ge769os12586;
-extern T0* ge769ov12586;
+extern unsigned char ge769os12592;
+extern T0* ge769ov12592;
 extern T0* T162f84(T0* C);
 /* DS_HASH_TABLE [ET_CLASS, ET_CLASS_NAME].remove */
 extern void T146f45(T0* C, T0* a1);
@@ -30956,8 +30993,8 @@ extern void T146f60(T0* C, T0* a1);
 /* DS_SPARSE_TABLE_KEYS [ET_CLASS, ET_CLASS_NAME].internal_set_equality_tester */
 extern void T394f6(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.string_class_name */
-extern unsigned char ge769os12575;
-extern T0* ge769ov12575;
+extern unsigned char ge769os12581;
+extern T0* ge769ov12581;
 extern T0* T162f52(T0* C);
 /* ET_LACE_UNIVERSE.tokens */
 extern T0* T54f82(T0* C);
@@ -31348,208 +31385,208 @@ extern T0* T278c2(T0* a1);
 /* ET_LACE_UNIVERSE.make_basic_classes */
 extern void T54f172(T0* C);
 /* ET_TOKEN_CONSTANTS.hashable_class_name */
-extern unsigned char ge769os12591;
-extern T0* ge769ov12591;
+extern unsigned char ge769os12597;
+extern T0* ge769ov12597;
 extern T0* T162f104(T0* C);
 /* ET_TOKEN_CONSTANTS.part_comparable_class_name */
-extern unsigned char ge769os12603;
-extern T0* ge769ov12603;
+extern unsigned char ge769os12609;
+extern T0* ge769ov12609;
 extern T0* T162f103(T0* C);
 /* ET_TOKEN_CONSTANTS.comparable_class_name */
-extern unsigned char ge769os12589;
-extern T0* ge769ov12589;
-extern T0* T162f102(T0* C);
-/* ET_TOKEN_CONSTANTS.numeric_class_name */
-extern unsigned char ge769os12602;
-extern T0* ge769ov12602;
-extern T0* T162f101(T0* C);
-/* ET_TOKEN_CONSTANTS.pointer_ref_class_name */
-extern unsigned char ge769os12604;
-extern T0* ge769ov12604;
-extern T0* T162f100(T0* C);
-/* ET_TOKEN_CONSTANTS.real_64_ref_class_name */
-extern unsigned char ge769os12607;
-extern T0* ge769ov12607;
-extern T0* T162f97(T0* C);
-/* ET_TOKEN_CONSTANTS.real_32_ref_class_name */
-extern unsigned char ge769os12606;
-extern T0* ge769ov12606;
-extern T0* T162f96(T0* C);
-/* ET_TOKEN_CONSTANTS.natural_64_ref_class_name */
-extern unsigned char ge769os12601;
-extern T0* ge769ov12601;
-extern T0* T162f94(T0* C);
-/* ET_TOKEN_CONSTANTS.natural_32_ref_class_name */
-extern unsigned char ge769os12600;
-extern T0* ge769ov12600;
-extern T0* T162f93(T0* C);
-/* ET_TOKEN_CONSTANTS.natural_16_ref_class_name */
-extern unsigned char ge769os12599;
-extern T0* ge769ov12599;
-extern T0* T162f92(T0* C);
-/* ET_TOKEN_CONSTANTS.natural_8_ref_class_name */
-extern unsigned char ge769os12598;
-extern T0* ge769ov12598;
-extern T0* T162f91(T0* C);
-/* ET_TOKEN_CONSTANTS.integer_64_ref_class_name */
-extern unsigned char ge769os12596;
-extern T0* ge769ov12596;
-extern T0* T162f89(T0* C);
-/* ET_TOKEN_CONSTANTS.integer_32_ref_class_name */
 extern unsigned char ge769os12595;
 extern T0* ge769ov12595;
+extern T0* T162f102(T0* C);
+/* ET_TOKEN_CONSTANTS.numeric_class_name */
+extern unsigned char ge769os12608;
+extern T0* ge769ov12608;
+extern T0* T162f101(T0* C);
+/* ET_TOKEN_CONSTANTS.pointer_ref_class_name */
+extern unsigned char ge769os12610;
+extern T0* ge769ov12610;
+extern T0* T162f100(T0* C);
+/* ET_TOKEN_CONSTANTS.real_64_ref_class_name */
+extern unsigned char ge769os12613;
+extern T0* ge769ov12613;
+extern T0* T162f97(T0* C);
+/* ET_TOKEN_CONSTANTS.real_32_ref_class_name */
+extern unsigned char ge769os12612;
+extern T0* ge769ov12612;
+extern T0* T162f96(T0* C);
+/* ET_TOKEN_CONSTANTS.natural_64_ref_class_name */
+extern unsigned char ge769os12607;
+extern T0* ge769ov12607;
+extern T0* T162f94(T0* C);
+/* ET_TOKEN_CONSTANTS.natural_32_ref_class_name */
+extern unsigned char ge769os12606;
+extern T0* ge769ov12606;
+extern T0* T162f93(T0* C);
+/* ET_TOKEN_CONSTANTS.natural_16_ref_class_name */
+extern unsigned char ge769os12605;
+extern T0* ge769ov12605;
+extern T0* T162f92(T0* C);
+/* ET_TOKEN_CONSTANTS.natural_8_ref_class_name */
+extern unsigned char ge769os12604;
+extern T0* ge769ov12604;
+extern T0* T162f91(T0* C);
+/* ET_TOKEN_CONSTANTS.integer_64_ref_class_name */
+extern unsigned char ge769os12602;
+extern T0* ge769ov12602;
+extern T0* T162f89(T0* C);
+/* ET_TOKEN_CONSTANTS.integer_32_ref_class_name */
+extern unsigned char ge769os12601;
+extern T0* ge769ov12601;
 extern T0* T162f88(T0* C);
 /* ET_TOKEN_CONSTANTS.integer_16_ref_class_name */
-extern unsigned char ge769os12594;
-extern T0* ge769ov12594;
+extern unsigned char ge769os12600;
+extern T0* ge769ov12600;
 extern T0* T162f87(T0* C);
 /* ET_TOKEN_CONSTANTS.integer_8_ref_class_name */
-extern unsigned char ge769os12593;
-extern T0* ge769ov12593;
+extern unsigned char ge769os12599;
+extern T0* ge769ov12599;
 extern T0* T162f86(T0* C);
 /* ET_TOKEN_CONSTANTS.character_32_ref_class_name */
-extern unsigned char ge769os12588;
-extern T0* ge769ov12588;
+extern unsigned char ge769os12594;
+extern T0* ge769ov12594;
 extern T0* T162f83(T0* C);
 /* ET_TOKEN_CONSTANTS.character_8_ref_class_name */
-extern unsigned char ge769os12587;
-extern T0* ge769ov12587;
+extern unsigned char ge769os12593;
+extern T0* ge769ov12593;
 extern T0* T162f82(T0* C);
 /* ET_TOKEN_CONSTANTS.boolean_ref_class_name */
-extern unsigned char ge769os12585;
-extern T0* ge769ov12585;
+extern unsigned char ge769os12591;
+extern T0* ge769ov12591;
 extern T0* T162f81(T0* C);
 /* ET_TOKEN_CONSTANTS.system_string_class_name */
-extern unsigned char ge769os12579;
-extern T0* ge769ov12579;
+extern unsigned char ge769os12585;
+extern T0* ge769ov12585;
 extern T0* T162f79(T0* C);
 /* ET_TOKEN_CONSTANTS.system_object_class_name */
-extern unsigned char ge769os12578;
-extern T0* ge769ov12578;
+extern unsigned char ge769os12584;
+extern T0* ge769ov12584;
 extern T0* T162f78(T0* C);
 /* ET_TOKEN_CONSTANTS.platform_class_name */
-extern unsigned char ge769os12566;
-extern T0* ge769ov12566;
-extern T0* T162f77(T0* C);
-/* ET_TOKEN_CONSTANTS.arguments_class_name */
-extern unsigned char ge769os12544;
-extern T0* ge769ov12544;
-extern T0* T162f76(T0* C);
-/* ET_TOKEN_CONSTANTS.function_class_name */
-extern unsigned char ge769os12552;
-extern T0* ge769ov12552;
-extern T0* T162f75(T0* C);
-/* ET_TOKEN_CONSTANTS.predicate_class_name */
-extern unsigned char ge769os12568;
-extern T0* ge769ov12568;
-extern T0* T162f74(T0* C);
-/* ET_TOKEN_CONSTANTS.procedure_class_name */
-extern unsigned char ge769os12569;
-extern T0* ge769ov12569;
-extern T0* T162f73(T0* C);
-/* ET_TOKEN_CONSTANTS.routine_class_name */
-extern unsigned char ge769os12573;
-extern T0* ge769ov12573;
-extern T0* T162f72(T0* C);
-/* ET_TOKEN_CONSTANTS.typed_pointer_class_name */
-extern unsigned char ge769os12582;
-extern T0* ge769ov12582;
-extern T0* T162f70(T0* C);
-/* ET_TOKEN_CONSTANTS.pointer_class_name */
-extern unsigned char ge769os12567;
-extern T0* ge769ov12567;
-extern T0* T162f69(T0* C);
-/* ET_TOKEN_CONSTANTS.real_64_class_name */
 extern unsigned char ge769os12572;
 extern T0* ge769ov12572;
-extern T0* T162f68(T0* C);
-/* ET_TOKEN_CONSTANTS.real_32_class_name */
-extern unsigned char ge769os12571;
-extern T0* ge769ov12571;
-extern T0* T162f67(T0* C);
-/* ET_TOKEN_CONSTANTS.natural_64_class_name */
-extern unsigned char ge769os12564;
-extern T0* ge769ov12564;
-extern T0* T162f66(T0* C);
-/* ET_TOKEN_CONSTANTS.natural_32_class_name */
-extern unsigned char ge769os12563;
-extern T0* ge769ov12563;
-extern T0* T162f65(T0* C);
-/* ET_TOKEN_CONSTANTS.natural_16_class_name */
-extern unsigned char ge769os12562;
-extern T0* ge769ov12562;
-extern T0* T162f64(T0* C);
-/* ET_TOKEN_CONSTANTS.natural_8_class_name */
-extern unsigned char ge769os12561;
-extern T0* ge769ov12561;
-extern T0* T162f63(T0* C);
-/* ET_TOKEN_CONSTANTS.integer_64_class_name */
-extern unsigned char ge769os12558;
-extern T0* ge769ov12558;
-extern T0* T162f62(T0* C);
-/* ET_TOKEN_CONSTANTS.integer_32_class_name */
-extern unsigned char ge769os12557;
-extern T0* ge769ov12557;
-extern T0* T162f61(T0* C);
-/* ET_TOKEN_CONSTANTS.integer_16_class_name */
-extern unsigned char ge769os12556;
-extern T0* ge769ov12556;
-extern T0* T162f60(T0* C);
-/* ET_TOKEN_CONSTANTS.integer_8_class_name */
-extern unsigned char ge769os12555;
-extern T0* ge769ov12555;
-extern T0* T162f59(T0* C);
-/* ET_TOKEN_CONSTANTS.character_32_class_name */
+extern T0* T162f77(T0* C);
+/* ET_TOKEN_CONSTANTS.arguments_class_name */
 extern unsigned char ge769os12550;
 extern T0* ge769ov12550;
-extern T0* T162f58(T0* C);
-/* ET_TOKEN_CONSTANTS.character_8_class_name */
-extern unsigned char ge769os12549;
-extern T0* ge769ov12549;
-extern T0* T162f57(T0* C);
-/* ET_TOKEN_CONSTANTS.boolean_class_name */
-extern unsigned char ge769os12547;
-extern T0* ge769ov12547;
-extern T0* T162f56(T0* C);
-/* ET_TOKEN_CONSTANTS.native_array_class_name */
-extern unsigned char ge769os12559;
-extern T0* ge769ov12559;
-extern T0* T162f55(T0* C);
-/* ET_TOKEN_CONSTANTS.special_class_name */
+extern T0* T162f76(T0* C);
+/* ET_TOKEN_CONSTANTS.function_class_name */
+extern unsigned char ge769os12558;
+extern T0* ge769ov12558;
+extern T0* T162f75(T0* C);
+/* ET_TOKEN_CONSTANTS.predicate_class_name */
 extern unsigned char ge769os12574;
 extern T0* ge769ov12574;
-extern T0* T162f54(T0* C);
-/* ET_TOKEN_CONSTANTS.array_class_name */
-extern unsigned char ge769os12545;
-extern T0* ge769ov12545;
-extern T0* T162f53(T0* C);
-/* ET_TOKEN_CONSTANTS.string_32_class_name */
+extern T0* T162f74(T0* C);
+/* ET_TOKEN_CONSTANTS.procedure_class_name */
+extern unsigned char ge769os12575;
+extern T0* ge769ov12575;
+extern T0* T162f73(T0* C);
+/* ET_TOKEN_CONSTANTS.routine_class_name */
+extern unsigned char ge769os12579;
+extern T0* ge769ov12579;
+extern T0* T162f72(T0* C);
+/* ET_TOKEN_CONSTANTS.typed_pointer_class_name */
+extern unsigned char ge769os12588;
+extern T0* ge769ov12588;
+extern T0* T162f70(T0* C);
+/* ET_TOKEN_CONSTANTS.pointer_class_name */
+extern unsigned char ge769os12573;
+extern T0* ge769ov12573;
+extern T0* T162f69(T0* C);
+/* ET_TOKEN_CONSTANTS.real_64_class_name */
+extern unsigned char ge769os12578;
+extern T0* ge769ov12578;
+extern T0* T162f68(T0* C);
+/* ET_TOKEN_CONSTANTS.real_32_class_name */
 extern unsigned char ge769os12577;
 extern T0* ge769ov12577;
-extern T0* T162f51(T0* C);
-/* ET_TOKEN_CONSTANTS.string_8_class_name */
-extern unsigned char ge769os12576;
-extern T0* ge769ov12576;
-extern T0* T162f50(T0* C);
-/* ET_TOKEN_CONSTANTS.bit_class_name */
-extern unsigned char ge769os12546;
-extern T0* ge769ov12546;
-extern T0* T162f49(T0* C);
-/* ET_TOKEN_CONSTANTS.tuple_class_name */
+extern T0* T162f67(T0* C);
+/* ET_TOKEN_CONSTANTS.natural_64_class_name */
+extern unsigned char ge769os12570;
+extern T0* ge769ov12570;
+extern T0* T162f66(T0* C);
+/* ET_TOKEN_CONSTANTS.natural_32_class_name */
+extern unsigned char ge769os12569;
+extern T0* ge769ov12569;
+extern T0* T162f65(T0* C);
+/* ET_TOKEN_CONSTANTS.natural_16_class_name */
+extern unsigned char ge769os12568;
+extern T0* ge769ov12568;
+extern T0* T162f64(T0* C);
+/* ET_TOKEN_CONSTANTS.natural_8_class_name */
+extern unsigned char ge769os12567;
+extern T0* ge769ov12567;
+extern T0* T162f63(T0* C);
+/* ET_TOKEN_CONSTANTS.integer_64_class_name */
+extern unsigned char ge769os12564;
+extern T0* ge769ov12564;
+extern T0* T162f62(T0* C);
+/* ET_TOKEN_CONSTANTS.integer_32_class_name */
+extern unsigned char ge769os12563;
+extern T0* ge769ov12563;
+extern T0* T162f61(T0* C);
+/* ET_TOKEN_CONSTANTS.integer_16_class_name */
+extern unsigned char ge769os12562;
+extern T0* ge769ov12562;
+extern T0* T162f60(T0* C);
+/* ET_TOKEN_CONSTANTS.integer_8_class_name */
+extern unsigned char ge769os12561;
+extern T0* ge769ov12561;
+extern T0* T162f59(T0* C);
+/* ET_TOKEN_CONSTANTS.character_32_class_name */
+extern unsigned char ge769os12556;
+extern T0* ge769ov12556;
+extern T0* T162f58(T0* C);
+/* ET_TOKEN_CONSTANTS.character_8_class_name */
+extern unsigned char ge769os12555;
+extern T0* ge769ov12555;
+extern T0* T162f57(T0* C);
+/* ET_TOKEN_CONSTANTS.boolean_class_name */
+extern unsigned char ge769os12553;
+extern T0* ge769ov12553;
+extern T0* T162f56(T0* C);
+/* ET_TOKEN_CONSTANTS.native_array_class_name */
+extern unsigned char ge769os12565;
+extern T0* ge769ov12565;
+extern T0* T162f55(T0* C);
+/* ET_TOKEN_CONSTANTS.special_class_name */
 extern unsigned char ge769os12580;
 extern T0* ge769ov12580;
+extern T0* T162f54(T0* C);
+/* ET_TOKEN_CONSTANTS.array_class_name */
+extern unsigned char ge769os12551;
+extern T0* ge769ov12551;
+extern T0* T162f53(T0* C);
+/* ET_TOKEN_CONSTANTS.string_32_class_name */
+extern unsigned char ge769os12583;
+extern T0* ge769ov12583;
+extern T0* T162f51(T0* C);
+/* ET_TOKEN_CONSTANTS.string_8_class_name */
+extern unsigned char ge769os12582;
+extern T0* ge769ov12582;
+extern T0* T162f50(T0* C);
+/* ET_TOKEN_CONSTANTS.bit_class_name */
+extern unsigned char ge769os12552;
+extern T0* ge769ov12552;
+extern T0* T162f49(T0* C);
+/* ET_TOKEN_CONSTANTS.tuple_class_name */
+extern unsigned char ge769os12586;
+extern T0* ge769ov12586;
 extern T0* T162f48(T0* C);
 /* ET_NONE_GROUP.make */
 extern T0* T291c12(void);
 /* ET_NONE_GROUP.make_builtin */
 extern void T291f13(T0* C, T0* a1);
 /* ET_TOKEN_CONSTANTS.none_class_name */
-extern unsigned char ge769os12565;
-extern T0* ge769ov12565;
+extern unsigned char ge769os12571;
+extern T0* ge769ov12571;
 extern T0* T162f47(T0* C);
 /* ET_TOKEN_CONSTANTS.general_class_name */
-extern unsigned char ge769os12553;
-extern T0* ge769ov12553;
+extern unsigned char ge769os12559;
+extern T0* ge769ov12559;
 extern T0* T162f46(T0* C);
 /* DS_HASH_TABLE [ET_CLASS, ET_CLASS_NAME].set_key_equality_tester */
 extern void T146f41(T0* C, T0* a1);
@@ -31646,8 +31683,8 @@ extern T1 T11f4(T11* C, T11 a1);
 /* ARRAY [NATURAL_64].item */
 extern T11 T1279f4(T0* C, T6 a1);
 /* STRING_TO_INTEGER_CONVERTOR.overflow_checker */
-extern unsigned char ge2060os22672;
-extern T0* ge2060ov22672;
+extern unsigned char ge2060os22678;
+extern T0* ge2060ov22678;
 extern T0* T888f14(T0* C);
 /* INTEGER_OVERFLOW_CHECKER.make */
 extern T0* T1175c13(void);
@@ -32166,8 +32203,8 @@ extern void T267f40(T0* C, T6 a1, T0* a2);
 /* ET_XACE_OPTION_NAMES.string_equality_tester */
 extern T0* T322f29(T0* C);
 /* ET_XACE_VALIDATOR.options */
-extern unsigned char ge988os10109;
-extern T0* ge988ov10109;
+extern unsigned char ge988os10115;
+extern T0* ge988ov10115;
 extern T0* T97f15(T0* C);
 /* ET_XACE_OPTION_NAMES.default_create */
 extern T0* T322c192(void);
@@ -32366,8 +32403,8 @@ extern T1 T78f13(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.link */
 extern T0* T259f12(T0* C);
 /* ET_XACE_OPTIONS.default_link */
-extern unsigned char ge1000os17912;
-extern T0* ge1000ov17912;
+extern unsigned char ge1000os17918;
+extern T0* ge1000ov17918;
 extern T0* T259f29(T0* C);
 /* DS_ARRAYED_LIST [STRING].set_equality_tester */
 extern void T78f39(T0* C, T0* a1);
@@ -32378,8 +32415,8 @@ extern void T254f6(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.header */
 extern T0* T259f11(T0* C);
 /* ET_XACE_OPTIONS.default_header */
-extern unsigned char ge1000os17901;
-extern T0* ge1000ov17901;
+extern unsigned char ge1000os17907;
+extern T0* ge1000ov17907;
 extern T0* T259f26(T0* C);
 /* ET_XACE_OPTIONS.is_header_declared */
 extern T1 T259f24(T0* C);
@@ -32388,8 +32425,8 @@ extern void T254f5(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.c_compiler_options */
 extern T0* T259f10(T0* C);
 /* ET_XACE_OPTIONS.default_c_compiler_options */
-extern unsigned char ge1000os17883;
-extern T0* ge1000ov17883;
+extern unsigned char ge1000os17889;
+extern T0* ge1000ov17889;
 extern T0* T259f23(T0* C);
 /* ET_XACE_OPTIONS.is_c_compiler_options_declared */
 extern T1 T259f21(T0* C);
@@ -32560,8 +32597,8 @@ extern void T937f8(T0* C);
 /* ET_XACE_OPTIONS.set_warning */
 extern void T259f192(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.valid_warning */
-extern unsigned char ge1000os17786;
-extern T0* ge1000ov17786;
+extern unsigned char ge1000os17792;
+extern T0* ge1000ov17792;
 extern T0* T259f9(T0* C);
 /* DS_HASH_SET [STRING].put_last */
 extern void T197f67(T0* C, T0* a1);
@@ -32588,8 +32625,8 @@ extern void T259f186(T0* C, T1 a1);
 /* ET_XACE_OPTIONS.set_target */
 extern void T259f185(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.valid_target */
-extern unsigned char ge1000os17784;
-extern T0* ge1000ov17784;
+extern unsigned char ge1000os17790;
+extern T0* ge1000ov17790;
 extern T0* T259f8(T0* C);
 /* ET_XACE_OPTIONS.set_strip_option */
 extern void T259f184(T0* C, T1 a1);
@@ -32644,8 +32681,8 @@ extern void T259f160(T0* C, T1 a1);
 /* ET_XACE_OPTIONS.set_linker */
 extern void T259f159(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.valid_linker */
-extern unsigned char ge1000os17783;
-extern T0* ge1000ov17783;
+extern unsigned char ge1000os17789;
+extern T0* ge1000ov17789;
 extern T0* T259f7(T0* C);
 /* ET_XACE_OPTIONS.set_line_generation */
 extern void T259f157(T0* C, T1 a1);
@@ -32656,8 +32693,8 @@ extern void T259f155(T0* C, T1 a1);
 /* ET_XACE_OPTIONS.set_layout */
 extern void T259f154(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.valid_layout */
-extern unsigned char ge1000os17782;
-extern T0* ge1000ov17782;
+extern unsigned char ge1000os17788;
+extern T0* ge1000ov17788;
 extern T0* T259f6(T0* C);
 /* ET_XACE_OPTIONS.set_jumps_optimization */
 extern void T259f153(T0* C, T1 a1);
@@ -32666,8 +32703,8 @@ extern void T259f152(T0* C, T6 a1);
 /* ET_XACE_OPTIONS.set_inlining */
 extern void T259f151(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.valid_inlining */
-extern unsigned char ge1000os17781;
-extern T0* ge1000ov17781;
+extern unsigned char ge1000os17787;
+extern T0* ge1000ov17787;
 extern T0* T259f5(T0* C);
 /* ET_XACE_OPTIONS.set_include */
 extern void T259f150(T0* C, T0* a1);
@@ -32682,8 +32719,8 @@ extern void T259f145(T0* C, T1 a1);
 /* ET_XACE_OPTIONS.set_garbage_collector */
 extern void T259f144(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.valid_garbage_collector */
-extern unsigned char ge1000os17780;
-extern T0* ge1000ov17780;
+extern unsigned char ge1000os17786;
+extern T0* ge1000ov17786;
 extern T0* T259f4(T0* C);
 /* ET_XACE_OPTIONS.set_fst_optimization */
 extern void T259f143(T0* C, T1 a1);
@@ -32730,8 +32767,8 @@ extern void T259f131(T0* C, T1 a1);
 /* ET_XACE_OPTIONS.set_dead_code_removal */
 extern void T259f130(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.valid_dead_code_removal */
-extern unsigned char ge1000os17779;
-extern T0* ge1000ov17779;
+extern unsigned char ge1000os17785;
+extern T0* ge1000ov17785;
 extern T0* T259f3(T0* C);
 /* ET_XACE_OPTIONS.set_c_compiler_options */
 extern void T259f129(T0* C, T0* a1);
@@ -32754,8 +32791,8 @@ extern void T259f121(T0* C, T1 a1);
 /* ET_XACE_OPTIONS.set_callback */
 extern void T259f120(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.valid_callback */
-extern unsigned char ge1000os17778;
-extern T0* ge1000ov17778;
+extern unsigned char ge1000os17784;
+extern T0* ge1000ov17784;
 extern T0* T259f2(T0* C);
 /* ET_XACE_DEFAULT_ERROR_HANDLER.report_wrong_attribute_value_error */
 extern void T42f14(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
@@ -32766,8 +32803,8 @@ extern T0* T273f4(T0* C);
 /* ET_XACE_OPTIONS.set_assertion */
 extern void T259f119(T0* C, T0* a1);
 /* ET_XACE_OPTIONS.valid_assertion */
-extern unsigned char ge1000os17777;
-extern T0* ge1000ov17777;
+extern unsigned char ge1000os17783;
+extern T0* ge1000ov17783;
 extern T0* T259f1(T0* C);
 /* ET_XACE_OPTIONS.set_assembly */
 extern void T259f118(T0* C, T0* a1);
@@ -33310,30 +33347,30 @@ extern void T371f214(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_build_tables */
 extern void T371f217(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_accept_template */
-extern unsigned char ge1269os18718;
-extern T0* ge1269ov18718;
+extern unsigned char ge1269os18724;
+extern T0* ge1269ov18724;
 extern T0* T371f50(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_fixed_array */
 extern T0* T371f53(T0* C, T0* a1);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_meta_template */
-extern unsigned char ge1269os18717;
-extern T0* ge1269ov18717;
+extern unsigned char ge1269os18723;
+extern T0* ge1269ov18723;
 extern T0* T371f48(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_ec_template */
-extern unsigned char ge1269os18716;
-extern T0* ge1269ov18716;
+extern unsigned char ge1269os18722;
+extern T0* ge1269ov18722;
 extern T0* T371f46(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_def_template */
-extern unsigned char ge1269os18715;
-extern T0* ge1269ov18715;
+extern unsigned char ge1269os18721;
+extern T0* ge1269ov18721;
 extern T0* T371f44(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_base_template */
-extern unsigned char ge1269os18714;
-extern T0* ge1269ov18714;
+extern unsigned char ge1269os18720;
+extern T0* ge1269ov18720;
 extern T0* T371f42(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_chk_template */
-extern unsigned char ge1269os18711;
-extern T0* ge1269ov18711;
+extern unsigned char ge1269os18717;
+extern T0* ge1269ov18717;
 extern T0* T371f40(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_chk_template_2 */
 extern void T371f222(T0* C, T0* a1);
@@ -33344,8 +33381,8 @@ extern T0* T371f55(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_chk_template_1 */
 extern void T371f221(T0* C, T0* a1);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_nxt_template */
-extern unsigned char ge1269os18708;
-extern T0* ge1269ov18708;
+extern unsigned char ge1269os18714;
+extern T0* ge1269ov18714;
 extern T0* T371f38(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_nxt_template_2 */
 extern void T371f220(T0* C, T0* a1);
@@ -33478,8 +33515,8 @@ extern void T344f22(T0* C, T0* a1);
 /* XM_DTD_ATTRIBUTE_CONTENT.set_enumeration */
 extern void T344f27(T0* C);
 /* XM_DTD_ATTRIBUTE_CONTENT.default_enumeration_list */
-extern unsigned char ge1181os19189;
-extern T0* ge1181ov19189;
+extern unsigned char ge1181os19195;
+extern T0* ge1181ov19195;
 extern T0* T344f7(T0* C);
 /* XM_DTD_ATTRIBUTE_CONTENT.set_notation */
 extern void T344f21(T0* C);
@@ -33816,8 +33853,8 @@ extern void T102f241(T0* C, T0* a1);
 /* XM_NULL_EXTERNAL_RESOLVER.last_error */
 extern T0* T337f2(T0* C);
 /* XM_EIFFEL_PARSER.null_resolver */
-extern unsigned char ge1267os10264;
-extern T0* ge1267ov10264;
+extern unsigned char ge1267os10270;
+extern T0* ge1267ov10270;
 extern T0* T102f23(T0* C);
 /* XM_EIFFEL_SCANNER_DTD.make_scanner */
 extern T0* T369c198(void);
@@ -34012,12 +34049,12 @@ extern T1 T102f183(T0* C);
 /* XM_EIFFEL_PARSER.shared_empty_string */
 extern T0* T102f115(T0* C);
 /* XM_EIFFEL_PARSER.shared_empty_string_string */
-extern unsigned char ge1267os10332;
-extern T0* ge1267ov10332;
+extern unsigned char ge1267os10338;
+extern T0* ge1267ov10338;
 extern T0* T102f193(T0* C);
 /* XM_EIFFEL_PARSER.shared_empty_string_uc */
-extern unsigned char ge1267os10333;
-extern T0* ge1267ov10333;
+extern unsigned char ge1267os10339;
+extern T0* ge1267ov10339;
 extern T0* T102f192(T0* C);
 /* XM_EIFFEL_PARSER.new_unicode_string_empty */
 extern T0* T102f199(T0* C);
@@ -34290,46 +34327,46 @@ extern void T102f207(T0* C);
 /* XM_EIFFEL_PARSER.yy_build_parser_tables */
 extern void T102f211(T0* C);
 /* XM_EIFFEL_PARSER.yycheck_template */
-extern unsigned char ge1263os10211;
-extern T0* ge1263ov10211;
+extern unsigned char ge1263os10217;
+extern T0* ge1263ov10217;
 extern T0* T102f50(T0* C);
 /* XM_EIFFEL_PARSER.yyfixed_array */
 extern T0* T102f182(T0* C, T0* a1);
 /* XM_EIFFEL_PARSER.yytable_template */
-extern unsigned char ge1263os10210;
-extern T0* ge1263ov10210;
+extern unsigned char ge1263os10216;
+extern T0* ge1263ov10216;
 extern T0* T102f48(T0* C);
 /* XM_EIFFEL_PARSER.yypgoto_template */
-extern unsigned char ge1263os10209;
-extern T0* ge1263ov10209;
+extern unsigned char ge1263os10215;
+extern T0* ge1263ov10215;
 extern T0* T102f46(T0* C);
 /* XM_EIFFEL_PARSER.yypact_template */
-extern unsigned char ge1263os10208;
-extern T0* ge1263ov10208;
+extern unsigned char ge1263os10214;
+extern T0* ge1263ov10214;
 extern T0* T102f44(T0* C);
 /* XM_EIFFEL_PARSER.yydefgoto_template */
-extern unsigned char ge1263os10207;
-extern T0* ge1263ov10207;
+extern unsigned char ge1263os10213;
+extern T0* ge1263ov10213;
 extern T0* T102f42(T0* C);
 /* XM_EIFFEL_PARSER.yydefact_template */
-extern unsigned char ge1263os10206;
-extern T0* ge1263ov10206;
+extern unsigned char ge1263os10212;
+extern T0* ge1263ov10212;
 extern T0* T102f40(T0* C);
 /* XM_EIFFEL_PARSER.yytypes2_template */
-extern unsigned char ge1263os10205;
-extern T0* ge1263ov10205;
+extern unsigned char ge1263os10211;
+extern T0* ge1263ov10211;
 extern T0* T102f38(T0* C);
 /* XM_EIFFEL_PARSER.yytypes1_template */
-extern unsigned char ge1263os10204;
-extern T0* ge1263ov10204;
+extern unsigned char ge1263os10210;
+extern T0* ge1263ov10210;
 extern T0* T102f36(T0* C);
 /* XM_EIFFEL_PARSER.yyr1_template */
-extern unsigned char ge1263os10203;
-extern T0* ge1263ov10203;
+extern unsigned char ge1263os10209;
+extern T0* ge1263ov10209;
 extern T0* T102f34(T0* C);
 /* XM_EIFFEL_PARSER.yytranslate_template */
-extern unsigned char ge1263os10202;
-extern T0* ge1263ov10202;
+extern unsigned char ge1263os10208;
+extern T0* ge1263ov10208;
 extern T0* T102f32(T0* C);
 /* XM_EIFFEL_PARSER.yy_create_value_stacks */
 extern void T102f210(T0* C);
@@ -34496,16 +34533,16 @@ extern void T15f10(T0* C, T2 a1, T6 a2, T6 a3);
 /* KL_UNIX_FILE_SYSTEM.basename */
 extern T0* T68f2(T0* C, T0* a1);
 /* KL_UNIX_FILE_SYSTEM.root_directory */
-extern unsigned char ge307os8636;
-extern T0* ge307ov8636;
+extern unsigned char ge307os8638;
+extern T0* ge307ov8638;
 extern T0* T68f9(T0* C);
 /* KL_UNIX_FILE_SYSTEM.is_root_directory */
 extern T1 T68f8(T0* C, T0* a1);
 /* KL_WINDOWS_FILE_SYSTEM.basename */
 extern T0* T67f2(T0* C, T0* a1);
 /* KL_WINDOWS_FILE_SYSTEM.root_directory */
-extern unsigned char ge309os8636;
-extern T0* ge309ov8636;
+extern unsigned char ge309os8638;
+extern T0* ge309ov8638;
 extern T0* T67f12(T0* C);
 /* KL_WINDOWS_FILE_SYSTEM.is_root_directory */
 extern T1 T67f11(T0* C, T0* a1);
@@ -35118,8 +35155,8 @@ extern T2 T371f207(T0* C, T6 a1);
 /* XM_EIFFEL_PE_ENTITY_DEF.normalized_newline */
 extern T0* T371f121(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.normalized_newline */
-extern unsigned char ge1271os18777;
-extern T0* ge1271ov18777;
+extern unsigned char ge1271os18783;
+extern T0* ge1271ov18783;
 extern T0* T371f121p1(T0* C);
 /* XM_EIFFEL_PE_ENTITY_DEF.yy_set_line_column */
 extern void T371f241(T0* C);
@@ -36466,9 +36503,9 @@ extern void T62f370(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_formal_argument */
 extern void T62f386(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_identifier */
-extern void T59f526(T0* C, T0* a1);
+extern void T59f528(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_unqualified_identifier_call_expression */
-extern void T59f532(T0* C, T0* a1);
+extern void T59f534(T0* C, T0* a1);
 /* ET_DYNAMIC_PRECURSOR.is_constant_attribute */
 extern T1 T207f16(T0* C);
 /* ET_DYNAMIC_FEATURE.is_constant_attribute */
@@ -36478,13 +36515,13 @@ extern void T180f20(T0* C, T0* a1, T6 a2);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].is_empty */
 extern T1 T180f12(T0* C);
 /* ET_C_GENERATOR.print_unqualified_identifier_call_instruction */
-extern void T59f531(T0* C, T0* a1);
+extern void T59f533(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_agent_closed_operand */
-extern void T59f530(T0* C, T0* a1);
+extern void T59f532(T0* C, T0* a1);
 /* ET_IDENTIFIER.is_agent_closed_operand */
 extern T1 T124f21(T0* C);
 /* ET_C_GENERATOR.print_agent_open_operand */
-extern void T59f529(T0* C, T0* a1);
+extern void T59f531(T0* C, T0* a1);
 /* ET_IDENTIFIER.is_agent_open_operand */
 extern T1 T124f20(T0* C);
 /* ET_FEATURE_CHECKER.process_current */
@@ -36502,9 +36539,9 @@ extern void T62f463(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_current */
 extern void T62f507(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_current */
-extern void T59f527(T0* C, T0* a1);
+extern void T59f529(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_current */
-extern void T59f533(T0* C, T0* a1);
+extern void T59f535(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_result */
 extern void T962f75(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_result_validity */
@@ -36550,9 +36587,9 @@ extern void T62f464(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_result */
 extern void T62f508(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_result */
-extern void T59f528(T0* C, T0* a1);
+extern void T59f530(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_result */
-extern void T59f534(T0* C, T0* a1);
+extern void T59f536(T0* C, T0* a1);
 /* ET_FORMAL_PARAMETER_CHECKER1.process_class */
 extern void T967f27(T0* C, T0* a1);
 /* ET_PARENT_CHECKER1.process_class */
@@ -37832,8 +37869,8 @@ extern void T243f41(T0* C, T0* a1, T6 a2);
 /* ET_SEEDED_PROCEDURE_COMPARATOR.less_than */
 extern T1 T1347f1(T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_FLATTENER.procedure_sorter */
-extern unsigned char ge873os18164;
-extern T0* ge873ov18164;
+extern unsigned char ge873os18170;
+extern T0* ge873ov18170;
 extern T0* T279f24(T0* C);
 /* DS_QUICK_SORTER [ET_PROCEDURE].make */
 extern T0* T1249c2(T0* a1);
@@ -37850,8 +37887,8 @@ extern void T245f41(T0* C, T0* a1, T6 a2);
 /* ET_SEEDED_QUERY_COMPARATOR.less_than */
 extern T1 T1344f1(T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_FLATTENER.query_sorter */
-extern unsigned char ge873os18163;
-extern T0* ge873ov18163;
+extern unsigned char ge873os18169;
+extern T0* ge873ov18169;
 extern T0* T279f23(T0* C);
 /* DS_QUICK_SORTER [ET_QUERY].make */
 extern T0* T1248c2(T0* a1);
@@ -39642,15 +39679,15 @@ extern void T62f335(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_formal_argument_declaration */
 extern void T62f353(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_external_function */
-extern void T59f535(T0* C, T0* a1);
+extern void T59f537(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_function */
-extern void T59f587(T0* C, T0* a1);
+extern void T59f589(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_routine */
-extern void T59f644(T0* C, T0* a1, T1 a2, T1 a3);
+extern void T59f646(T0* C, T0* a1, T1 a2, T1 a3);
 /* ET_C_GENERATOR.flush_to_cpp_file */
-extern void T59f665(T0* C);
+extern void T59f667(T0* C);
 /* ET_C_GENERATOR.print */
-extern void T59f649(T0* C, T0* a1);
+extern void T59f651(T0* C, T0* a1);
 /* STD_FILES.put_string */
 extern void T1332f5(T0* C, T0* a1);
 /* CONSOLE.put_string */
@@ -39660,8 +39697,8 @@ extern void T1424f11(T0* C, T14 a1, T14 a2, T6 a3);
 /* STD_FILES.standard_default */
 extern T0* T1332f1(T0* C);
 /* STD_FILES.output */
-extern unsigned char ge2054os24916;
-extern T0* ge2054ov24916;
+extern unsigned char ge2054os24924;
+extern T0* ge2054ov24924;
 extern T0* T1332f3(T0* C);
 /* CONSOLE.make_open_stdout */
 extern T0* T1424c7(T0* a1);
@@ -39676,77 +39713,77 @@ extern T0* T17f33(T0* C);
 /* ET_C_GENERATOR.io */
 extern unsigned char ge1os45;
 extern T0* ge1ov45;
-extern T0* T59f273(T0* C);
+extern T0* T59f274(T0* C);
 /* STD_FILES.set_output_default */
 extern void T1332f6(T0* C);
 /* STD_FILES.default_create */
 extern T0* T1332c4(void);
 /* ET_C_GENERATOR.print_external_cpp_body */
-extern void T59f664(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7);
+extern void T59f666(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7);
 /* DS_LINKED_LIST [STRING].item */
 extern T0* T112f8(T0* C, T6 a1);
 /* ST_SPLITTER.make_with_separators */
 extern T0* T44c11(T0* a1);
 /* ET_C_GENERATOR.print_external_c_struct_body */
-extern void T59f663(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
+extern void T59f665(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
 /* ET_C_GENERATOR.print_external_c_body */
-extern void T59f662(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T1 a7);
+extern void T59f664(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T1 a7);
 /* ET_C_GENERATOR.print_external_builtin_body */
-extern void T59f661(T0* C, T0* a1);
+extern void T59f663(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_sized_real_out_body */
-extern void T59f684(T0* C, T0* a1, T0* a2);
+extern void T59f686(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_arguments_argument_body */
-extern void T59f683(T0* C, T0* a1);
+extern void T59f685(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_pointer_out_body */
-extern void T59f682(T0* C, T0* a1);
+extern void T59f684(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_special_aliased_resized_area_body */
-extern void T59f681(T0* C, T0* a1);
+extern void T59f683(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_type_generating_type_body */
-extern void T59f680(T0* C, T0* a1);
+extern void T59f682(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_deep_twin_body */
-extern void T59f679(T0* C, T0* a1);
+extern void T59f681(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_is_deep_equal_body */
-extern void T59f678(T0* C, T0* a1);
+extern void T59f680(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_tagged_out_body */
-extern void T59f677(T0* C, T0* a1);
+extern void T59f679(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_standard_twin_body */
-extern void T59f676(T0* C, T0* a1);
+extern void T59f678(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_generating_type2_body */
-extern void T59f675(T0* C, T0* a1);
+extern void T59f677(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_conforms_to_body */
-extern void T59f674(T0* C, T0* a1);
+extern void T59f676(T0* C, T0* a1);
 /* ET_DYNAMIC_TYPE_LIST.is_empty */
 extern T1 T178f8(T0* C);
 /* ET_DYNAMIC_TYPE_LIST.resize */
 extern void T178f15(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_semicolon_newline */
-extern void T59f673(T0* C);
+extern void T59f675(T0* C);
 /* ET_C_GENERATOR.print_indentation_assign_to_result */
-extern void T59f672(T0* C);
+extern void T59f674(T0* C);
 /* ET_C_GENERATOR.print_builtin_any_twin_body */
-extern void T59f671(T0* C, T0* a1);
+extern void T59f673(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_c_inline_body */
-extern void T59f660(T0* C, T0* a1);
+extern void T59f662(T0* C, T0* a1);
 /* KL_CHARACTER_ROUTINES.as_lower */
 extern T2 T917f2(T0* C, T2 a1);
 /* ET_C_GENERATOR.character_ */
-extern T0* T59f278(T0* C);
+extern T0* T59f279(T0* C);
 /* ET_C_GENERATOR.print_external_c_includes */
-extern void T59f659(T0* C, T0* a1);
+extern void T59f661(T0* C, T0* a1);
 /* ET_C_GENERATOR.include_header_filename */
-extern void T59f670(T0* C, T0* a1, T0* a2);
+extern void T59f672(T0* C, T0* a1, T0* a2);
 /* RX_PCRE_REGULAR_EXPRESSION.captured_substring */
 extern T0* T200f297(T0* C, T6 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.captured_substring_count */
 extern T6 T200f296(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_malloc_current */
-extern void T59f658(T0* C, T0* a1);
+extern void T59f660(T0* C, T0* a1);
 /* RX_PCRE_REGULAR_EXPRESSION.recognizes */
 extern T1 T200f295(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_static_routine_name */
-extern void T59f652(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f654(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_feature_name_comment */
-extern void T59f657(T0* C, T0* a1, T0* a2, T0* a3);
+extern void T59f659(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_FEATURE_CHECKER.process_call_expression */
 extern void T962f76(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_call_expression_validity */
@@ -39958,17 +39995,17 @@ extern T1 T173f7(T0* C, T6 a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.keep_best_overloaded_features */
 extern void T62f393(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_call_expression */
-extern void T59f536(T0* C, T0* a1);
+extern void T59f538(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_call_expression */
-extern void T59f588(T0* C, T0* a1);
+extern void T59f590(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_unqualified_call_expression */
-extern void T59f646(T0* C, T0* a1);
+extern void T59f648(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_qualified_call_expression */
-extern void T59f645(T0* C, T0* a1);
+extern void T59f647(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_target_operand */
-extern void T59f667(T0* C, T0* a1, T0* a2);
+extern void T59f669(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.mark_temp_variable_used */
-extern void T59f666(T0* C, T0* a1);
+extern void T59f668(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_constant_attribute */
 extern void T962f41(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_constant_attribute_validity */
@@ -40044,11 +40081,11 @@ extern void T62f216(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_constant_attribute_validity */
 extern void T62f227(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_constant_attribute */
-extern void T59f537(T0* C, T0* a1);
+extern void T59f539(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_constant_attribute */
-extern void T59f589(T0* C, T0* a1);
+extern void T59f591(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_attribute_wrapper */
-extern void T59f647(T0* C, T0* a1, T1 a2);
+extern void T59f649(T0* C, T0* a1, T1 a2);
 /* ET_CALL_EXPRESSION.set_name */
 extern void T191f27(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_unique_attribute */
@@ -40072,9 +40109,9 @@ extern void T62f217(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_unique_attribute_validity */
 extern void T62f228(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_unique_attribute */
-extern void T59f538(T0* C, T0* a1);
+extern void T59f540(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_unique_attribute */
-extern void T59f590(T0* C, T0* a1);
+extern void T59f592(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_attribute */
 extern void T962f40(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_attribute_validity */
@@ -40086,9 +40123,9 @@ extern void T62f218(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_attribute_validity */
 extern void T62f229(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_attribute */
-extern void T59f539(T0* C, T0* a1);
+extern void T59f541(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_attribute */
-extern void T59f591(T0* C, T0* a1);
+extern void T59f593(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_do_procedure */
 extern void T962f47(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_do_procedure_validity */
@@ -40156,17 +40193,17 @@ extern void T62f355(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_local_type_validity */
 extern void T62f354(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_do_procedure */
-extern void T59f540(T0* C, T0* a1);
+extern void T59f542(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_procedure */
-extern void T59f592(T0* C, T0* a1);
+extern void T59f594(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_internal_procedure */
-extern void T59f648(T0* C, T0* a1);
+extern void T59f650(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_internal_routine */
-extern void T59f668(T0* C, T0* a1, T1 a2, T1 a3);
+extern void T59f670(T0* C, T0* a1, T1 a2, T1 a3);
 /* ET_C_GENERATOR.print_compound */
-extern void T59f669(T0* C, T0* a1);
+extern void T59f671(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_instruction */
-extern void T59f685(T0* C, T0* a1);
+extern void T59f687(T0* C, T0* a1);
 /* DS_HASH_SET [ET_FEATURE].force_last */
 extern void T194f44(T0* C, T0* a1);
 /* DS_HASH_SET [ET_FEATURE].slots_put */
@@ -40198,9 +40235,9 @@ extern void T62f220(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_deferred_procedure_validity */
 extern void T62f231(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_deferred_procedure */
-extern void T59f541(T0* C, T0* a1);
+extern void T59f543(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_deferred_procedure */
-extern void T59f593(T0* C, T0* a1);
+extern void T59f595(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_bit_constant */
 extern void T962f91(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_bit_constant_validity */
@@ -40216,9 +40253,9 @@ extern void T62f491(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_bit_constant */
 extern void T62f536(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_bit_constant */
-extern void T59f542(T0* C, T0* a1);
+extern void T59f544(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_bit_constant */
-extern void T59f594(T0* C, T0* a1);
+extern void T59f596(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_void */
 extern void T962f84(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_void_validity */
@@ -40234,9 +40271,9 @@ extern void T62f483(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_void_constant */
 extern void T62f533(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_void */
-extern void T59f543(T0* C, T0* a1);
+extern void T59f545(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_void */
-extern void T59f595(T0* C, T0* a1);
+extern void T59f597(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_c3_character_constant */
 extern void T962f87(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_c3_character_constant_validity */
@@ -40252,11 +40289,11 @@ extern void T62f486(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_character_constant */
 extern void T62f534(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_c3_character_constant */
-extern void T59f544(T0* C, T0* a1);
+extern void T59f546(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_character_constant */
-extern void T59f596(T0* C, T0* a1);
+extern void T59f598(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_escaped_character */
-extern void T59f650(T0* C, T2 a1);
+extern void T59f652(T0* C, T2 a1);
 /* ET_FEATURE_CHECKER.process_regular_manifest_string */
 extern void T962f88(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_regular_manifest_string_validity */
@@ -40274,9 +40311,9 @@ extern void T62f535(T0* C, T0* a1);
 /* ET_DYNAMIC_FEATURE_LIST.is_empty */
 extern T1 T205f7(T0* C);
 /* ET_C_GENERATOR.process_regular_manifest_string */
-extern void T59f545(T0* C, T0* a1);
+extern void T59f547(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_regular_manifest_string */
-extern void T59f597(T0* C, T0* a1);
+extern void T59f599(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_verbatim_string */
 extern void T962f89(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_verbatim_string_validity */
@@ -40288,9 +40325,9 @@ extern void T62f437(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_verbatim_string_validity */
 extern void T62f488(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_verbatim_string */
-extern void T59f546(T0* C, T0* a1);
+extern void T59f548(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_verbatim_string */
-extern void T59f598(T0* C, T0* a1);
+extern void T59f600(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_special_manifest_string */
 extern void T962f90(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_special_manifest_string_validity */
@@ -40302,9 +40339,9 @@ extern void T62f438(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_special_manifest_string_validity */
 extern void T62f489(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_special_manifest_string */
-extern void T59f547(T0* C, T0* a1);
+extern void T59f549(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_special_manifest_string */
-extern void T59f599(T0* C, T0* a1);
+extern void T59f601(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_regular_integer_constant */
 extern void T962f79(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_regular_integer_constant_validity */
@@ -40356,9 +40393,9 @@ extern void T62f522(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_integer_constant */
 extern void T62f521(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_regular_integer_constant */
-extern void T59f548(T0* C, T0* a1);
+extern void T59f550(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_regular_integer_constant */
-extern void T59f600(T0* C, T0* a1);
+extern void T59f602(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_underscored_integer_constant */
 extern void T962f80(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_underscored_integer_constant_validity */
@@ -40370,9 +40407,9 @@ extern void T62f428(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_underscored_integer_constant_validity */
 extern void T62f479(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_underscored_integer_constant */
-extern void T59f549(T0* C, T0* a1);
+extern void T59f551(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_underscored_integer_constant */
-extern void T59f601(T0* C, T0* a1);
+extern void T59f603(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_hexadecimal_integer_constant */
 extern void T962f81(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_hexadecimal_integer_constant_validity */
@@ -40384,9 +40421,9 @@ extern void T62f429(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_hexadecimal_integer_constant_validity */
 extern void T62f480(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_hexadecimal_integer_constant */
-extern void T59f550(T0* C, T0* a1);
+extern void T59f552(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_hexadecimal_integer_constant */
-extern void T59f602(T0* C, T0* a1);
+extern void T59f604(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_regular_real_constant */
 extern void T962f82(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_regular_real_constant_validity */
@@ -40406,9 +40443,9 @@ extern void T62f532(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_real_constant */
 extern void T62f531(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_regular_real_constant */
-extern void T59f551(T0* C, T0* a1);
+extern void T59f553(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_regular_real_constant */
-extern void T59f603(T0* C, T0* a1);
+extern void T59f605(T0* C, T0* a1);
 /* ET_REGULAR_REAL_CONSTANT.is_negative */
 extern T1 T492f20(T0* C);
 /* ET_SYMBOL_OPERATOR.is_minus */
@@ -40424,9 +40461,9 @@ extern void T62f431(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_underscored_real_constant_validity */
 extern void T62f482(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_underscored_real_constant */
-extern void T59f552(T0* C, T0* a1);
+extern void T59f554(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_underscored_real_constant */
-extern void T59f604(T0* C, T0* a1);
+extern void T59f606(T0* C, T0* a1);
 /* ET_UNDERSCORED_REAL_CONSTANT.is_negative */
 extern T1 T493f20(T0* C);
 /* ET_FEATURE_CHECKER.process_true_constant */
@@ -40444,9 +40481,9 @@ extern void T62f476(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_boolean_constant */
 extern void T62f520(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_true_constant */
-extern void T59f553(T0* C, T0* a1);
+extern void T59f555(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_true_constant */
-extern void T59f605(T0* C, T0* a1);
+extern void T59f607(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_false_constant */
 extern void T962f78(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_false_constant_validity */
@@ -40458,9 +40495,9 @@ extern void T62f426(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_false_constant_validity */
 extern void T62f477(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_false_constant */
-extern void T59f554(T0* C, T0* a1);
+extern void T59f556(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_false_constant */
-extern void T59f606(T0* C, T0* a1);
+extern void T59f608(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_c1_character_constant */
 extern void T962f85(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_c1_character_constant_validity */
@@ -40472,7 +40509,7 @@ extern void T62f433(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_c1_character_constant_validity */
 extern void T62f484(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_c1_character_constant */
-extern void T59f555(T0* C, T0* a1);
+extern void T59f557(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_c2_character_constant */
 extern void T962f86(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_c2_character_constant_validity */
@@ -40484,7 +40521,7 @@ extern void T62f434(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_c2_character_constant_validity */
 extern void T62f485(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_c2_character_constant */
-extern void T59f556(T0* C, T0* a1);
+extern void T59f558(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_create_expression */
 extern void T962f92(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_create_expression_validity */
@@ -40560,9 +40597,9 @@ extern T0* T62f193(T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_type_validity */
 extern void T62f407(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_create_expression */
-extern void T59f557(T0* C, T0* a1);
+extern void T59f559(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_create_expression */
-extern void T59f607(T0* C, T0* a1);
+extern void T59f609(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_manifest_tuple */
 extern void T962f93(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_manifest_tuple_validity */
@@ -40578,9 +40615,9 @@ extern void T62f497(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_manifest_tuple */
 extern void T62f540(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_manifest_tuple */
-extern void T59f558(T0* C, T0* a1);
+extern void T59f560(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_manifest_tuple */
-extern void T59f608(T0* C, T0* a1);
+extern void T59f610(T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].force_last */
 extern void T193f54(T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].slots_put */
@@ -40634,11 +40671,11 @@ extern void T62f221(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_do_function_validity */
 extern void T62f232(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_do_function */
-extern void T59f559(T0* C, T0* a1);
+extern void T59f561(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_function */
-extern void T59f609(T0* C, T0* a1);
+extern void T59f611(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_internal_function */
-extern void T59f651(T0* C, T0* a1);
+extern void T59f653(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_once_function */
 extern void T962f44(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_once_function_validity */
@@ -40650,9 +40687,9 @@ extern void T62f222(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_once_function_validity */
 extern void T62f233(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_once_function */
-extern void T59f560(T0* C, T0* a1);
+extern void T59f562(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_function */
-extern void T59f610(T0* C, T0* a1);
+extern void T59f612(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_deferred_function */
 extern void T962f45(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_deferred_function_validity */
@@ -40664,9 +40701,9 @@ extern void T62f223(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_deferred_function_validity */
 extern void T62f234(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_deferred_function */
-extern void T59f561(T0* C, T0* a1);
+extern void T59f563(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_deferred_function */
-extern void T59f611(T0* C, T0* a1);
+extern void T59f613(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_once_procedure */
 extern void T962f48(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_once_procedure_validity */
@@ -40678,9 +40715,9 @@ extern void T62f224(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_once_procedure_validity */
 extern void T62f235(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_once_procedure */
-extern void T59f562(T0* C, T0* a1);
+extern void T59f564(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_procedure */
-extern void T59f612(T0* C, T0* a1);
+extern void T59f614(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_external_procedure */
 extern void T962f50(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_external_procedure_validity */
@@ -40714,9 +40751,9 @@ extern void T62f342(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_external_procedure_validity */
 extern void T62f236p1(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_external_procedure */
-extern void T59f563(T0* C, T0* a1);
+extern void T59f565(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_procedure */
-extern void T59f613(T0* C, T0* a1);
+extern void T59f615(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_bracket_expression */
 extern void T962f95(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_bracket_expression_validity */
@@ -40732,9 +40769,9 @@ extern void T62f443(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_bracket_expression_validity */
 extern void T62f494(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_bracket_expression */
-extern void T59f564(T0* C, T0* a1);
+extern void T59f566(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_bracket_expression */
-extern void T59f614(T0* C, T0* a1);
+extern void T59f616(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_static_call_expression */
 extern void T962f105(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_static_call_expression_validity */
@@ -40762,11 +40799,11 @@ extern void T207f69(T0* C, T1 a1);
 /* ET_DYNAMIC_FEATURE.set_static */
 extern void T155f68(T0* C, T1 a1);
 /* ET_C_GENERATOR.process_static_call_expression */
-extern void T59f565(T0* C, T0* a1);
+extern void T59f567(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_static_call_expression */
-extern void T59f615(T0* C, T0* a1);
+extern void T59f617(T0* C, T0* a1);
 /* ET_C_GENERATOR.resolved_formal_parameters */
-extern T0* T59f272(T0* C, T0* a1);
+extern T0* T59f273(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_precursor_expression */
 extern void T962f108(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_precursor_expression_validity */
@@ -40874,8 +40911,8 @@ extern T0* T1343f1(T0* C, T6 a1);
 /* TO_SPECIAL [ET_DYNAMIC_PRECURSOR].make_area */
 extern T0* T1410c2(T6 a1);
 /* ET_DYNAMIC_PRECURSOR_LIST.fixed_array */
-extern unsigned char ge911os15244;
-extern T0* ge911ov15244;
+extern unsigned char ge911os15250;
+extern T0* ge911ov15250;
 extern T0* T206f4(T0* C);
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_PRECURSOR].default_create */
 extern T0* T1343c3(void);
@@ -40892,9 +40929,9 @@ extern void T207f70(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_DYNAMIC_PRECURSOR.empty_dynamic_type_sets */
 extern T0* T207f50(T0* C);
 /* ET_C_GENERATOR.process_precursor_expression */
-extern void T59f566(T0* C, T0* a1);
+extern void T59f568(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_precursor_expression */
-extern void T59f616(T0* C, T0* a1);
+extern void T59f618(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_parenthesized_expression */
 extern void T962f109(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_parenthesized_expression_validity */
@@ -40906,9 +40943,9 @@ extern void T62f444(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_parenthesized_expression_validity */
 extern void T62f495(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_parenthesized_expression */
-extern void T59f567(T0* C, T0* a1);
+extern void T59f569(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_parenthesized_expression */
-extern void T59f617(T0* C, T0* a1);
+extern void T59f619(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_feature_address */
 extern void T962f110(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_feature_address_validity */
@@ -40950,11 +40987,11 @@ extern void T62f512(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_typed_pointer_expression */
 extern void T62f511(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_feature_address */
-extern void T59f568(T0* C, T0* a1);
+extern void T59f570(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_feature_address */
-extern void T59f618(T0* C, T0* a1);
+extern void T59f620(T0* C, T0* a1);
 /* ET_C_GENERATOR.mark_temp_variable_free */
-extern void T59f653(T0* C, T0* a1);
+extern void T59f655(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_current_address */
 extern void T962f111(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_current_address_validity */
@@ -40966,9 +41003,9 @@ extern void T62f417(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_current_address_validity */
 extern void T62f468(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_current_address */
-extern void T59f569(T0* C, T0* a1);
+extern void T59f571(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_current_address */
-extern void T59f619(T0* C, T0* a1);
+extern void T59f621(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_result_address */
 extern void T962f112(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_result_address_validity */
@@ -40980,9 +41017,9 @@ extern void T62f418(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_result_address_validity */
 extern void T62f469(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_result_address */
-extern void T59f570(T0* C, T0* a1);
+extern void T59f572(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_result_address */
-extern void T59f620(T0* C, T0* a1);
+extern void T59f622(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_expression_address */
 extern void T962f113(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_expression_address_validity */
@@ -41000,9 +41037,9 @@ extern void T62f419(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_expression_address_validity */
 extern void T62f470(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_expression_address */
-extern void T59f571(T0* C, T0* a1);
+extern void T59f573(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_expression_address */
-extern void T59f621(T0* C, T0* a1);
+extern void T59f623(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_infix_expression */
 extern void T962f114(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_infix_expression_validity */
@@ -41024,9 +41061,9 @@ extern void T62f420(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_infix_expression_validity */
 extern void T62f471(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_infix_expression */
-extern void T59f572(T0* C, T0* a1);
+extern void T59f574(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_infix_expression */
-extern void T59f622(T0* C, T0* a1);
+extern void T59f624(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_equality_expression */
 extern void T962f115(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_equality_expression_validity */
@@ -41056,9 +41093,9 @@ extern void T62f472(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_equality_expression */
 extern void T62f518(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_equality_expression */
-extern void T59f573(T0* C, T0* a1);
+extern void T59f575(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_equality_expression */
-extern void T59f623(T0* C, T0* a1);
+extern void T59f625(T0* C, T0* a1);
 /* ET_BRACKET_SYMBOL.is_not_equal */
 extern T1 T479f11(T0* C);
 /* ET_SYMBOL.is_not_equal */
@@ -41074,9 +41111,9 @@ extern void T62f423(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_prefix_expression_validity */
 extern void T62f474(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_prefix_expression */
-extern void T59f574(T0* C, T0* a1);
+extern void T59f576(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_prefix_expression */
-extern void T59f624(T0* C, T0* a1);
+extern void T59f626(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_old_expression */
 extern void T962f117(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_old_expression_validity */
@@ -41098,9 +41135,9 @@ extern void T62f424(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_old_expression_validity */
 extern void T62f475(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_old_expression */
-extern void T59f575(T0* C, T0* a1);
+extern void T59f577(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_old_expression */
-extern void T59f625(T0* C, T0* a1);
+extern void T59f627(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_call_agent */
 extern void T962f118(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_call_agent_validity */
@@ -41200,8 +41237,8 @@ extern T0* T1425c2(T6 a1);
 /* SPECIAL [ET_AGENT_IMPLICIT_OPEN_ARGUMENT].make */
 extern T0* T1411c2(T6 a1);
 /* ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST.fixed_array */
-extern unsigned char ge504os15244;
-extern T0* ge504ov15244;
+extern unsigned char ge504os15250;
+extern T0* ge504ov15250;
 extern T0* T1363f5(T0* C);
 /* KL_SPECIAL_ROUTINES [ET_AGENT_IMPLICIT_OPEN_ARGUMENT].default_create */
 extern T0* T1412c2(void);
@@ -41302,11 +41339,11 @@ extern void T62f553(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_unqualified_procedure_call_agent */
 extern void T62f567(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.process_call_agent */
-extern void T59f576(T0* C, T0* a1);
+extern void T59f578(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_call_agent */
-extern void T59f627(T0* C, T0* a1);
+extern void T59f629(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_agent */
-extern void T59f655(T0* C, T0* a1);
+extern void T59f657(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_AGENT].force_last */
 extern void T185f15(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_AGENT].resize */
@@ -41328,9 +41365,9 @@ extern T6 T185f10(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_AGENT].extendible */
 extern T1 T185f9(T0* C, T6 a1);
 /* ET_C_GENERATOR.print_call_agent_body_declaration */
-extern void T59f626(T0* C, T0* a1);
+extern void T59f628(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_qualified_call_instruction */
-extern void T59f654(T0* C, T0* a1);
+extern void T59f656(T0* C, T0* a1);
 /* ET_ASSIGNER_INSTRUCTION.target */
 extern T0* T698f7(T0* C);
 /* ET_CALL_INSTRUCTION.set_arguments */
@@ -41354,9 +41391,9 @@ extern void T62f439(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_once_manifest_string_validity */
 extern void T62f490(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_once_manifest_string */
-extern void T59f577(T0* C, T0* a1);
+extern void T59f579(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_manifest_string */
-extern void T59f628(T0* C, T0* a1);
+extern void T59f630(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_manifest_array */
 extern void T962f120(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_manifest_array_validity */
@@ -41378,39 +41415,9 @@ extern void T62f496(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_manifest_array */
 extern void T62f539(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_manifest_array */
-extern void T59f578(T0* C, T0* a1);
+extern void T59f580(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_manifest_array */
-extern void T59f629(T0* C, T0* a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].force_last */
-extern void T192f54(T0* C, T0* a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].slots_put */
-extern void T192f59(T0* C, T6 a1, T6 a2);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].clashes_put */
-extern void T192f58(T0* C, T6 a1, T6 a2);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].slots_item */
-extern T6 T192f31(T0* C, T6 a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].hash_position */
-extern T6 T192f29(T0* C, T0* a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].resize */
-extern void T192f57(T0* C, T6 a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].clashes_resize */
-extern void T192f63(T0* C, T6 a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].key_storage_resize */
-extern void T192f62(T0* C, T6 a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].item_storage_resize */
-extern void T192f61(T0* C, T6 a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].key_storage_item */
-extern T0* T192f34(T0* C, T6 a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].slots_resize */
-extern void T192f60(T0* C, T6 a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].new_capacity */
-extern T6 T192f28(T0* C, T6 a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].item_storage_put */
-extern void T192f56(T0* C, T0* a1, T6 a2);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].search_position */
-extern void T192f55(T0* C, T0* a1);
-/* DS_HASH_SET [ET_DYNAMIC_TYPE].key_equality_tester */
-extern T0* T192f33(T0* C);
+extern void T59f631(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_strip_expression */
 extern void T962f121(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_strip_expression_validity */
@@ -41456,9 +41463,9 @@ extern void T62f498(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_strip_expression */
 extern void T62f541(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_strip_expression */
-extern void T59f579(T0* C, T0* a1);
+extern void T59f581(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_strip_expression */
-extern void T59f630(T0* C, T0* a1);
+extern void T59f632(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_manifest_type */
 extern void T962f122(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_manifest_type_validity */
@@ -41474,9 +41481,9 @@ extern void T62f492(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_manifest_type */
 extern void T62f537(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_manifest_type */
-extern void T59f580(T0* C, T0* a1);
+extern void T59f582(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_manifest_type */
-extern void T59f631(T0* C, T0* a1);
+extern void T59f633(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_do_function_inline_agent */
 extern void T962f123(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_do_function_inline_agent_validity */
@@ -41626,13 +41633,13 @@ extern void T62f545(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_inline_agent_formal_argument_declaration */
 extern void T62f561(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_do_function_inline_agent */
-extern void T59f581(T0* C, T0* a1);
+extern void T59f583(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_function_inline_agent */
-extern void T59f633(T0* C, T0* a1);
+extern void T59f635(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_function_inline_agent_body_declaration */
-extern void T59f632(T0* C, T0* a1);
+extern void T59f634(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_internal_routine_inline_agent_body_declaration */
-extern void T59f656(T0* C, T0* a1);
+extern void T59f658(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_once_function_inline_agent */
 extern void T962f124(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_once_function_inline_agent_validity */
@@ -41644,11 +41651,11 @@ extern void T62f450(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_once_function_inline_agent_validity */
 extern void T62f501(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_once_function_inline_agent */
-extern void T59f582(T0* C, T0* a1);
+extern void T59f584(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_function_inline_agent */
-extern void T59f635(T0* C, T0* a1);
+extern void T59f637(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_function_inline_agent_body_declaration */
-extern void T59f634(T0* C, T0* a1);
+extern void T59f636(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_external_function_inline_agent */
 extern void T962f125(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_external_function_inline_agent_validity */
@@ -41660,11 +41667,11 @@ extern void T62f451(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_external_function_inline_agent_validity */
 extern void T62f502(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_external_function_inline_agent */
-extern void T59f583(T0* C, T0* a1);
+extern void T59f585(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_function_inline_agent */
-extern void T59f637(T0* C, T0* a1);
+extern void T59f639(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_function_inline_agent_body_declaration */
-extern void T59f636(T0* C, T0* a1);
+extern void T59f638(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_do_procedure_inline_agent */
 extern void T962f126(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_do_procedure_inline_agent_validity */
@@ -41684,11 +41691,11 @@ extern void T62f549(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_procedure_inline_agent */
 extern void T62f566(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_do_procedure_inline_agent */
-extern void T59f584(T0* C, T0* a1);
+extern void T59f586(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_procedure_inline_agent */
-extern void T59f639(T0* C, T0* a1);
+extern void T59f641(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_procedure_inline_agent_body_declaration */
-extern void T59f638(T0* C, T0* a1);
+extern void T59f640(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_once_procedure_inline_agent */
 extern void T962f127(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_once_procedure_inline_agent_validity */
@@ -41700,11 +41707,11 @@ extern void T62f453(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_once_procedure_inline_agent_validity */
 extern void T62f504(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_once_procedure_inline_agent */
-extern void T59f585(T0* C, T0* a1);
+extern void T59f587(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_procedure_inline_agent */
-extern void T59f641(T0* C, T0* a1);
+extern void T59f643(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_procedure_inline_agent_body_declaration */
-extern void T59f640(T0* C, T0* a1);
+extern void T59f642(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_external_procedure_inline_agent */
 extern void T962f128(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_external_procedure_inline_agent_validity */
@@ -41716,11 +41723,11 @@ extern void T62f454(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_external_procedure_inline_agent_validity */
 extern void T62f505(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_external_procedure_inline_agent */
-extern void T59f586(T0* C, T0* a1);
+extern void T59f588(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_procedure_inline_agent */
-extern void T59f643(T0* C, T0* a1);
+extern void T59f645(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_procedure_inline_agent_body_declaration */
-extern void T59f642(T0* C, T0* a1);
+extern void T59f644(T0* C, T0* a1);
 /* ET_FORMAL_PARAMETER_CHECKER1.process_class_type */
 extern void T967f13(T0* C, T0* a1);
 /* ET_FORMAL_PARAMETER_CHECKER1.check_class_type_constraint */
@@ -42258,9 +42265,9 @@ extern void T62f455(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_expressions_validity */
 extern void T62f394(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_assigner_instruction */
-extern void T59f686(T0* C, T0* a1);
+extern void T59f688(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_assigner_instruction */
-extern void T59f698(T0* C, T0* a1);
+extern void T59f700(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_assignment */
 extern void T962f96(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_assignment_validity */
@@ -42344,9 +42351,9 @@ extern void T62f457(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_result_assignment_target */
 extern void T62f456(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_assignment */
-extern void T59f687(T0* C, T0* a1);
+extern void T59f689(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_assignment */
-extern void T59f699(T0* C, T0* a1);
+extern void T59f701(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_assignment_attempt */
 extern void T962f97(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_assignment_attempt_validity */
@@ -42384,9 +42391,9 @@ extern void T62f460(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.ise_5_7_0 */
 extern T0* T62f192(T0* C);
 /* ET_C_GENERATOR.process_assignment_attempt */
-extern void T59f688(T0* C, T0* a1);
+extern void T59f690(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_assignment_attempt */
-extern void T59f700(T0* C, T0* a1);
+extern void T59f702(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_if_instruction */
 extern void T962f98(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_if_instruction_validity */
@@ -42406,9 +42413,9 @@ extern void T62f361(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_if_instruction_validity */
 extern void T62f377(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_if_instruction */
-extern void T59f689(T0* C, T0* a1);
+extern void T59f691(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_if_instruction */
-extern void T59f701(T0* C, T0* a1);
+extern void T59f703(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_inspect_instruction */
 extern void T962f99(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_inspect_instruction_validity */
@@ -42450,11 +42457,11 @@ extern void T62f362(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_inspect_instruction_validity */
 extern void T62f378(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_inspect_instruction */
-extern void T59f690(T0* C, T0* a1);
+extern void T59f692(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_inspect_instruction */
-extern void T59f702(T0* C, T0* a1);
+extern void T59f704(T0* C, T0* a1);
 /* ET_C_GENERATOR.integer_ */
-extern T0* T59f296(T0* C);
+extern T0* T59f297(T0* C);
 /* ET_FEATURE_CHECKER.process_loop_instruction */
 extern void T962f100(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_loop_instruction_validity */
@@ -42494,9 +42501,9 @@ extern void T62f403(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_loop_invariant_validity */
 extern void T62f403p1(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_loop_instruction */
-extern void T59f691(T0* C, T0* a1);
+extern void T59f693(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_loop_instruction */
-extern void T59f703(T0* C, T0* a1);
+extern void T59f705(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_debug_instruction */
 extern void T962f101(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_debug_instruction_validity */
@@ -42510,9 +42517,9 @@ extern void T62f380(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_debug_instruction_validity */
 extern void T62f380p1(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_debug_instruction */
-extern void T59f692(T0* C, T0* a1);
+extern void T59f694(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_debug_instruction */
-extern void T59f704(T0* C, T0* a1);
+extern void T59f706(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_check_instruction */
 extern void T962f102(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_check_instruction_validity */
@@ -42530,9 +42537,9 @@ extern void T62f381(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_check_instruction_validity */
 extern void T62f381p1(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_check_instruction */
-extern void T59f693(T0* C, T0* a1);
+extern void T59f695(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_check_instruction */
-extern void T59f705(T0* C, T0* a1);
+extern void T59f707(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_bang_instruction */
 extern void T962f103(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_bang_instruction_validity */
@@ -42610,11 +42617,11 @@ extern T0* T720f8(T0* C);
 /* ET_BANG_INSTRUCTION.arguments */
 extern T0* T716f8(T0* C);
 /* ET_C_GENERATOR.process_bang_instruction */
-extern void T59f694(T0* C, T0* a1);
+extern void T59f696(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_bang_instruction */
-extern void T59f706(T0* C, T0* a1);
+extern void T59f708(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_creation_instruction */
-extern void T59f710(T0* C, T0* a1);
+extern void T59f712(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_create_instruction */
 extern void T962f104(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_create_instruction_validity */
@@ -42626,9 +42633,9 @@ extern void T62f367(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_create_instruction_validity */
 extern void T62f383(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_create_instruction */
-extern void T59f695(T0* C, T0* a1);
+extern void T59f697(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_create_instruction */
-extern void T59f707(T0* C, T0* a1);
+extern void T59f709(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_precursor_instruction */
 extern void T962f106(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_precursor_instruction_validity */
@@ -42650,9 +42657,9 @@ extern void T62f384(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_precursor_instruction */
 extern void T62f406(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_precursor_instruction */
-extern void T59f696(T0* C, T0* a1);
+extern void T59f698(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_precursor_instruction */
-extern void T59f708(T0* C, T0* a1);
+extern void T59f710(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_static_call_instruction */
 extern void T962f107(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_static_call_instruction_validity */
@@ -42676,9 +42683,9 @@ extern void T62f385(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_static_call_instruction */
 extern void T62f409(T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_static_call_instruction */
-extern void T59f697(T0* C, T0* a1);
+extern void T59f699(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_static_call_instruction */
-extern void T59f709(T0* C, T0* a1);
+extern void T59f711(T0* C, T0* a1);
 /* ET_FORMAL_PARAMETER_CHECKER1.process_formal_parameter_type */
 extern void T967f20(T0* C, T0* a1);
 /* ET_FORMAL_PARAMETER_CHECKER1.check_formal_parameter_type_constraint */
@@ -42796,11 +42803,11 @@ extern void T62f516(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_convert_expression_validity */
 extern void T62f551(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_convert_expression */
-extern void T59f714(T0* C, T0* a1);
+extern void T59f716(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_convert_expression */
-extern void T59f719(T0* C, T0* a1);
+extern void T59f721(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_convert_to_expression */
-extern void T59f720(T0* C, T0* a1);
+extern void T59f722(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_infix_cast_expression */
 extern void T962f278(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_infix_cast_expression_validity */
@@ -42812,9 +42819,9 @@ extern void T62f517(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_infix_cast_expression_validity */
 extern void T62f552(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_infix_cast_expression */
-extern void T59f713(T0* C, T0* a1);
+extern void T59f715(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_infix_cast_expression */
-extern void T59f718(T0* C, T0* a1);
+extern void T59f720(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_call_instruction */
 extern void T962f279(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_call_instruction_validity */
@@ -42834,11 +42841,11 @@ extern void T62f581(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_qualified_call_instruction_validity */
 extern void T62f584(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_call_instruction */
-extern void T59f711(T0* C, T0* a1);
+extern void T59f713(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_call_instruction */
-extern void T59f716(T0* C, T0* a1);
+extern void T59f718(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_unqualified_call_instruction */
-extern void T59f721(T0* C, T0* a1);
+extern void T59f723(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_retry_instruction */
 extern void T962f280(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_retry_instruction_validity */
@@ -42862,9 +42869,9 @@ extern void T62f579(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_retry_instruction_validity */
 extern void T62f582(T0* C, T0* a1);
 /* ET_C_GENERATOR.process_retry_instruction */
-extern void T59f712(T0* C, T0* a1);
+extern void T59f714(T0* C, T0* a1);
 /* ET_C_GENERATOR.print_retry_instruction */
-extern void T59f717(T0* C, T0* a1);
+extern void T59f719(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_convert_to_expression */
 extern void T962f286(T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_convert_to_expression_validity */
@@ -42876,7 +42883,7 @@ extern void T62f580(T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_convert_to_expression_validity */
 extern void T62f583(T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_convert_to_expression */
-extern void T59f715(T0* C, T0* a1);
+extern void T59f717(T0* C, T0* a1);
 /* ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET.put_target */
 extern void T908f12(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET.put_target */
@@ -42902,8 +42909,8 @@ extern T0* T1372f1(T0* C, T6 a1);
 /* TO_SPECIAL [ET_DYNAMIC_TARGET].make_area */
 extern T0* T1414c2(T6 a1);
 /* ET_DYNAMIC_TARGET_LIST.fixed_array */
-extern unsigned char ge925os15244;
-extern T0* ge925ov15244;
+extern unsigned char ge925os15250;
+extern T0* ge925ov15250;
 extern T0* T1256f5(T0* C);
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_TARGET].default_create */
 extern T0* T1372c3(void);
@@ -43310,8 +43317,8 @@ extern T0* T91c29(T0* a1, T0* a2, T0* a3);
 /* XM_ELEMENT.list_make */
 extern void T91f33(T0* C);
 /* XM_DOCUMENT.default_ns */
-extern unsigned char ge1223os9699;
-extern T0* ge1223ov9699;
+extern unsigned char ge1223os9705;
+extern T0* ge1223ov9705;
 extern T0* T90f3(T0* C);
 /* XM_NAMESPACE.make_default */
 extern T0* T1244c8(void);
@@ -43514,8 +43521,8 @@ extern void T1219f15(T0* C);
 /* XM_NAMESPACE_RESOLVER_CONTEXT.resolve_default */
 extern T0* T976f3(T0* C);
 /* XM_NAMESPACE_RESOLVER_CONTEXT.default_pseudo_prefix */
-extern unsigned char ge1197os24408;
-extern T0* ge1197ov24408;
+extern unsigned char ge1197os24414;
+extern T0* ge1197ov24414;
 extern T0* T976f7(T0* C);
 /* XM_NAMESPACE_RESOLVER.on_end_tag */
 extern void T318f32p1(T0* C, T0* a1, T0* a2, T0* a3);
@@ -43546,8 +43553,8 @@ extern void T1220f8(T0* C);
 /* DS_BILINKED_LIST [DS_HASH_TABLE [STRING, STRING]].cursor_finish */
 extern void T1219f16(T0* C, T0* a1);
 /* XM_NAMESPACE_RESOLVER_CONTEXT.default_namespace */
-extern unsigned char ge1197os24409;
-extern T0* ge1197ov24409;
+extern unsigned char ge1197os24415;
+extern T0* ge1197ov24415;
 extern T0* T976f6(T0* C);
 /* XM_NAMESPACE_RESOLVER.has_prefix */
 extern T1 T318f4(T0* C, T0* a1);
@@ -43594,8 +43601,8 @@ extern T1 T318f21(T0* C, T0* a1, T0* a2);
 /* XM_NAMESPACE_RESOLVER.string_equality_tester */
 extern T0* T318f24(T0* C);
 /* XM_NAMESPACE_RESOLVER.xmlns */
-extern unsigned char ge1164os18007;
-extern T0* ge1164ov18007;
+extern unsigned char ge1164os18013;
+extern T0* ge1164ov18013;
 extern T0* T318f20(T0* C);
 /* XM_CALLBACKS_TO_TREE_FILTER.on_attribute */
 extern void T96f21(T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
@@ -43634,22 +43641,22 @@ extern void T978f9(T0* C);
 /* XM_NAMESPACE_RESOLVER.unprefixed_attribute_namespace */
 extern T0* T318f19(T0* C);
 /* XM_NAMESPACE_RESOLVER.default_namespace */
-extern unsigned char ge1164os18006;
-extern T0* ge1164ov18006;
+extern unsigned char ge1164os18012;
+extern T0* ge1164ov18012;
 extern T0* T318f23(T0* C);
 /* XM_NAMESPACE_RESOLVER.xmlns_namespace */
-extern unsigned char ge1164os18014;
-extern T0* ge1164ov18014;
+extern unsigned char ge1164os18020;
+extern T0* ge1164ov18020;
 extern T0* T318f18(T0* C);
 /* XM_NAMESPACE_RESOLVER.xml_prefix_namespace */
-extern unsigned char ge1164os18013;
-extern T0* ge1164ov18013;
+extern unsigned char ge1164os18019;
+extern T0* ge1164ov18019;
 extern T0* T318f17(T0* C);
 /* XM_NAMESPACE_RESOLVER.is_xml */
 extern T1 T318f16(T0* C, T0* a1);
 /* XM_NAMESPACE_RESOLVER.xml_prefix */
-extern unsigned char ge1164os18008;
-extern T0* ge1164ov18008;
+extern unsigned char ge1164os18014;
+extern T0* ge1164ov18014;
 extern T0* T318f22(T0* C);
 /* DS_LINKED_QUEUE [STRING].item */
 extern T0* T978f1(T0* C);
@@ -43824,8 +43831,8 @@ extern T0* T1280c3(T2 a1);
 /* XM_EIFFEL_INPUT_STREAM.utf8 */
 extern T0* T915f23(T0* C);
 /* XM_EIFFEL_INPUT_STREAM.utf8_buffer */
-extern unsigned char ge1262os23857;
-extern T0* ge1262ov23857;
+extern unsigned char ge1262os23863;
+extern T0* ge1262ov23863;
 extern T0* T915f26(T0* C);
 /* UC_UTF16_ROUTINES.surrogate */
 extern T6 T1181f7(T0* C, T6 a1, T6 a2);
@@ -44972,8 +44979,8 @@ extern T6 T171f17(T0* C);
 /* ET_IDENTIFIER.column */
 extern T6 T124f36(T0* C);
 /* ET_INVARIANTS.clients */
-extern unsigned char ge528os11700;
-extern T0* ge528ov11700;
+extern unsigned char ge528os11706;
+extern T0* ge528ov11706;
 extern T0* T510f20(T0* C);
 /* ET_INVARIANTS.first_precursor */
 extern T0* T510f18(T0* C);
@@ -49085,6 +49092,16 @@ extern T0* T222f11(T0* C);
 extern T0* T202f11(T0* C);
 /* ET_DYNAMIC_TYPE.static_type */
 extern T0* T149f18(T0* C);
+/* ET_DYNAMIC_PROCEDURE_TYPE.hash_code */
+extern T6 T226f26(T0* C);
+/* ET_DYNAMIC_FUNCTION_TYPE.hash_code */
+extern T6 T225f27(T0* C);
+/* ET_DYNAMIC_SPECIAL_TYPE.hash_code */
+extern T6 T222f26(T0* C);
+/* ET_DYNAMIC_TUPLE_TYPE.hash_code */
+extern T6 T202f26(T0* C);
+/* ET_DYNAMIC_TYPE.hash_code */
+extern T6 T149f24(T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.is_generic */
 extern T1 T226f5(T0* C);
 /* ET_DYNAMIC_FUNCTION_TYPE.is_generic */
@@ -49118,8 +49135,8 @@ extern T0* T226f2(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FEATURE_LIST.force_last */
 extern void T205f10(T0* C, T0* a1);
 /* ET_DYNAMIC_FEATURE_LIST.fixed_array */
-extern unsigned char ge902os15244;
-extern T0* ge902ov15244;
+extern unsigned char ge902os15250;
+extern T0* ge902ov15250;
 extern T0* T205f5(T0* C);
 /* ET_DYNAMIC_FEATURE_LIST.capacity */
 extern T6 T205f6(T0* C);
@@ -49164,8 +49181,8 @@ extern void T147f14(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.build_tuple_put */
 extern void T62f213(T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.put_reference_feature_name */
-extern unsigned char ge769os12682;
-extern T0* ge769ov12682;
+extern unsigned char ge769os12688;
+extern T0* ge769ov12688;
 extern T0* T162f37(T0* C);
 /* ET_DYNAMIC_TUPLE_TYPE.tokens */
 extern T0* T202f21(T0* C);
@@ -49184,8 +49201,8 @@ extern T0* T225f1(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FUNCTION_TYPE.new_dynamic_query */
 extern T0* T225f17(T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.last_result_feature_name */
-extern unsigned char ge769os12671;
-extern T0* ge769ov12671;
+extern unsigned char ge769os12677;
+extern T0* ge769ov12677;
 extern T0* T162f40(T0* C);
 /* ET_DYNAMIC_FEATURE.set_result_type_set */
 extern void T155f62(T0* C, T0* a1);
@@ -49196,8 +49213,8 @@ extern T0* T222f1(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_SPECIAL_TYPE.new_dynamic_query */
 extern T0* T222f17(T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.infix_at_feature_name */
-extern unsigned char ge769os12646;
-extern T0* ge769ov12646;
+extern unsigned char ge769os12652;
+extern T0* ge769ov12652;
 extern T0* T162f34(T0* C);
 /* ET_DYNAMIC_SPECIAL_TYPE.new_dynamic_query */
 extern T0* T222f17p1(T0* C, T0* a1, T0* a2);
@@ -49210,8 +49227,8 @@ extern void T147f13(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.build_tuple_item */
 extern void T62f212(T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.reference_item_feature_name */
-extern unsigned char ge769os12684;
-extern T0* ge769ov12684;
+extern unsigned char ge769os12690;
+extern T0* ge769ov12690;
 extern T0* T162f35(T0* C);
 /* ET_DYNAMIC_TUPLE_TYPE.new_dynamic_query */
 extern T0* T202f17p1(T0* C, T0* a1, T0* a2);
@@ -49219,16 +49236,6 @@ extern T0* T202f17p1(T0* C, T0* a1, T0* a2);
 extern T0* T149f1(T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_TYPE.new_dynamic_query */
 extern T0* T149f12(T0* C, T0* a1, T0* a2);
-/* ET_DYNAMIC_PROCEDURE_TYPE.hash_code */
-extern T6 T226f26(T0* C);
-/* ET_DYNAMIC_FUNCTION_TYPE.hash_code */
-extern T6 T225f27(T0* C);
-/* ET_DYNAMIC_SPECIAL_TYPE.hash_code */
-extern T6 T222f26(T0* C);
-/* ET_DYNAMIC_TUPLE_TYPE.hash_code */
-extern T6 T202f26(T0* C);
-/* ET_DYNAMIC_TYPE.hash_code */
-extern T6 T149f24(T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.seeded_dynamic_query */
 extern T0* T226f9(T0* C, T6 a1, T0* a2);
 /* ET_DYNAMIC_FUNCTION_TYPE.seeded_dynamic_query */
@@ -49554,186 +49561,184 @@ extern T0* gema84(T6 c, ...);
 extern T0* gema300(T6 c, ...);
 extern T0* gema926(T6 c, ...);
 extern T0* gema320(T6 c, ...);
-extern int gevoid(T0* C, ...);
-extern T0* ge403ov8782;
+extern void gevoid(T0* C, ...);
+extern T0* gevoid0(T0* C, ...);
+extern T1 gevoid1(T0* C, ...);
+extern T6 gevoid6(T0* C, ...);
+extern T2 gevoid2(T0* C, ...);
+extern T0* ge403ov8784;
 extern T0* ge407ov2768;
-extern T0* ge345ov23820;
-extern T0* ge414ov9347;
+extern T0* ge345ov23826;
+extern T0* ge414ov9353;
 extern T0* ge380ov1702;
-extern T0* ge1144ov15844;
-extern T0* ge1144ov15829;
-extern T0* ge1144ov15822;
-extern T0* ge1144ov15807;
-extern T0* ge1144ov15832;
-extern T0* ge1144ov15825;
-extern T0* ge1144ov15833;
-extern T0* ge1144ov15842;
+extern T0* ge1144ov15850;
 extern T0* ge1144ov15835;
-extern T0* ge1144ov15831;
-extern T0* ge1144ov15819;
-extern T0* ge1144ov15820;
-extern T0* ge1144ov15834;
-extern T0* ge1144ov15821;
-extern T0* ge1144ov15808;
-extern T0* ge1144ov15809;
-extern T0* ge1144ov15810;
-extern T0* ge1144ov15816;
-extern T0* ge1144ov15818;
+extern T0* ge1144ov15828;
 extern T0* ge1144ov15813;
 extern T0* ge1144ov15838;
+extern T0* ge1144ov15831;
+extern T0* ge1144ov15839;
+extern T0* ge1144ov15848;
+extern T0* ge1144ov15841;
 extern T0* ge1144ov15837;
+extern T0* ge1144ov15825;
+extern T0* ge1144ov15826;
+extern T0* ge1144ov15840;
+extern T0* ge1144ov15827;
 extern T0* ge1144ov15814;
 extern T0* ge1144ov15815;
-extern T0* ge1144ov15812;
-extern T0* ge1144ov15811;
-extern T0* ge1140ov15602;
-extern T0* ge945ov6766;
-extern T0* ge769ov12796;
-extern T0* ge769ov12940;
-extern T0* ge945ov6775;
-extern T0* ge945ov6741;
-extern T0* ge945ov6698;
-extern T0* ge940ov22774;
-extern T0* ge940ov22773;
-extern T0* ge940ov22772;
-extern T0* ge769ov12914;
-extern T0* ge945ov6736;
-extern T0* ge945ov6732;
-extern T0* ge945ov6761;
-extern T0* ge945ov6711;
-extern T0* ge945ov6731;
-extern T0* ge945ov6767;
-extern T0* ge945ov6751;
-extern T0* ge945ov6738;
-extern T0* ge945ov6776;
-extern T0* ge945ov6764;
-extern T0* ge769ov12917;
-extern T0* ge945ov6749;
-extern T0* ge945ov6779;
+extern T0* ge1144ov15816;
+extern T0* ge1144ov15822;
+extern T0* ge1144ov15824;
+extern T0* ge1144ov15819;
+extern T0* ge1144ov15844;
+extern T0* ge1144ov15843;
+extern T0* ge1144ov15820;
+extern T0* ge1144ov15821;
+extern T0* ge1144ov15818;
+extern T0* ge1144ov15817;
+extern T0* ge1140ov15608;
+extern T0* ge945ov6768;
+extern T0* ge769ov12802;
+extern T0* ge769ov12946;
 extern T0* ge945ov6777;
-extern T0* ge945ov6781;
-extern T0* ge945ov6778;
-extern T0* ge945ov6700;
-extern T0* ge945ov6699;
-extern T0* ge945ov6765;
-extern T0* ge945ov6735;
-extern T0* ge945ov6744;
-extern T0* ge945ov6704;
-extern T0* ge945ov6742;
-extern T0* ge945ov6756;
-extern T0* ge945ov6762;
-extern T0* ge945ov6734;
-extern T0* ge945ov6727;
-extern T0* ge945ov6726;
-extern T0* ge945ov6712;
-extern T0* ge945ov6707;
-extern T0* ge945ov6706;
-extern T0* ge945ov6719;
-extern T0* ge945ov6718;
-extern T0* ge945ov6717;
-extern T0* ge945ov6739;
-extern T0* ge945ov6701;
-extern T0* ge945ov6750;
-extern T0* ge945ov6773;
-extern T0* ge945ov6774;
 extern T0* ge945ov6743;
+extern T0* ge945ov6700;
+extern T0* ge940ov22780;
+extern T0* ge940ov22779;
+extern T0* ge940ov22778;
+extern T0* ge769ov12920;
+extern T0* ge945ov6738;
+extern T0* ge945ov6734;
+extern T0* ge945ov6763;
+extern T0* ge945ov6713;
 extern T0* ge945ov6733;
-extern T0* ge945ov6703;
-extern T0* ge945ov6705;
-extern T0* ge945ov6772;
+extern T0* ge945ov6783;
+extern T0* ge945ov6745;
+extern T0* ge945ov6764;
+extern T0* ge945ov6753;
+extern T0* ge945ov6740;
+extern T0* ge945ov6778;
+extern T0* ge945ov6766;
+extern T0* ge769ov12923;
+extern T0* ge945ov6751;
+extern T0* ge945ov6781;
+extern T0* ge945ov6779;
+extern T0* ge945ov6769;
+extern T0* ge945ov6780;
+extern T0* ge945ov6702;
+extern T0* ge945ov6701;
+extern T0* ge945ov6767;
+extern T0* ge945ov6737;
+extern T0* ge945ov6746;
+extern T0* ge945ov6706;
+extern T0* ge945ov6744;
+extern T0* ge945ov6758;
+extern T0* ge945ov6736;
 extern T0* ge945ov6729;
 extern T0* ge945ov6728;
-extern T0* ge945ov6720;
-extern T0* ge945ov6724;
-extern T0* ge945ov6723;
-extern T0* ge945ov6722;
-extern T0* ge945ov6721;
-extern T0* ge945ov6716;
-extern T0* ge945ov6715;
 extern T0* ge945ov6714;
-extern T0* ge945ov6713;
 extern T0* ge945ov6709;
 extern T0* ge945ov6708;
+extern T0* ge945ov6721;
+extern T0* ge945ov6720;
+extern T0* ge945ov6719;
+extern T0* ge945ov6741;
+extern T0* ge945ov6703;
+extern T0* ge945ov6752;
+extern T0* ge945ov6775;
+extern T0* ge945ov6776;
+extern T0* ge945ov6735;
+extern T0* ge945ov6705;
+extern T0* ge945ov6707;
+extern T0* ge945ov6774;
+extern T0* ge945ov6731;
+extern T0* ge945ov6730;
+extern T0* ge945ov6722;
+extern T0* ge945ov6726;
+extern T0* ge945ov6725;
+extern T0* ge945ov6724;
+extern T0* ge945ov6723;
+extern T0* ge945ov6718;
+extern T0* ge945ov6717;
+extern T0* ge945ov6716;
+extern T0* ge945ov6715;
+extern T0* ge945ov6711;
 extern T0* ge945ov6710;
-extern T0* ge769ov12804;
-extern T0* ge769ov12823;
+extern T0* ge945ov6712;
+extern T0* ge769ov12810;
+extern T0* ge769ov12829;
+extern T0* ge769ov12819;
 extern T0* ge769ov12813;
+extern T0* ge769ov12842;
 extern T0* ge769ov12807;
-extern T0* ge769ov12836;
-extern T0* ge769ov12801;
-extern T0* ge769ov12936;
-extern T0* ge405ov8782;
+extern T0* ge769ov12942;
+extern T0* ge405ov8784;
+extern T0* ge943ov22768;
 extern T0* ge943ov22762;
 extern T0* ge943ov22756;
-extern T0* ge943ov22750;
+extern T0* ge943ov22764;
 extern T0* ge943ov22758;
 extern T0* ge943ov22752;
-extern T0* ge943ov22746;
+extern T0* ge943ov22767;
 extern T0* ge943ov22761;
 extern T0* ge943ov22755;
-extern T0* ge943ov22749;
+extern T0* ge943ov22769;
 extern T0* ge943ov22763;
 extern T0* ge943ov22757;
-extern T0* ge943ov22751;
-extern T0* ge769ov12866;
+extern T0* ge769ov12872;
+extern T0* ge943ov22766;
 extern T0* ge943ov22760;
 extern T0* ge943ov22754;
-extern T0* ge943ov22748;
-extern T0* ge769ov12904;
-extern T0* ge769ov12887;
-extern T0* ge769ov12912;
-extern T0* ge769ov12882;
-extern T0* ge769ov12864;
-extern T0* ge944ov23636;
-extern T0* ge944ov23394;
-extern T0* ge944ov23258;
-extern T0* ge944ov23634;
-extern T0* ge944ov23392;
-extern T0* ge944ov23256;
-extern T0* ge944ov23635;
-extern T0* ge944ov23393;
-extern T0* ge944ov23257;
-extern T0* ge769ov12839;
+extern T0* ge769ov12910;
+extern T0* ge769ov12893;
+extern T0* ge769ov12918;
+extern T0* ge769ov12888;
+extern T0* ge769ov12870;
+extern T0* ge944ov23642;
+extern T0* ge944ov23400;
+extern T0* ge944ov23264;
+extern T0* ge944ov23640;
+extern T0* ge944ov23398;
+extern T0* ge944ov23262;
+extern T0* ge944ov23641;
+extern T0* ge944ov23399;
+extern T0* ge944ov23263;
+extern T0* ge769ov12845;
+extern T0* ge943ov22765;
 extern T0* ge943ov22759;
 extern T0* ge943ov22753;
-extern T0* ge943ov22747;
-extern T0* ge936ov24908;
-extern T0* ge936ov24906;
-extern T0* ge936ov24904;
+extern T0* ge936ov24916;
+extern T0* ge936ov24914;
+extern T0* ge936ov24912;
 extern T0* ge1068ov4732;
-extern T0* ge935ov23689;
-extern T0* ge935ov23685;
-extern T0* ge935ov23681;
-extern T0* ge991ov17435;
-extern T0* ge381ov8596;
-extern T0* ge580ov11313;
-extern T0* ge580ov11314;
-extern T0* ge935ov23690;
-extern T0* ge935ov23686;
-extern T0* ge935ov23682;
-extern T0* ge942ov23698;
-extern T0* ge942ov23697;
+extern T0* ge935ov23695;
+extern T0* ge935ov23691;
+extern T0* ge935ov23687;
+extern T0* ge991ov17441;
+extern T0* ge381ov8598;
+extern T0* ge580ov11319;
+extern T0* ge580ov11320;
+extern T0* ge935ov23696;
+extern T0* ge935ov23692;
+extern T0* ge935ov23688;
+extern T0* ge942ov23704;
+extern T0* ge942ov23703;
+extern T0* ge944ov23597;
+extern T0* ge944ov23371;
+extern T0* ge944ov23219;
+extern T0* ge944ov23599;
+extern T0* ge944ov23221;
+extern T0* ge944ov23592;
+extern T0* ge944ov23214;
+extern T0* ge944ov23595;
+extern T0* ge944ov23217;
 extern T0* ge944ov23591;
-extern T0* ge944ov23365;
 extern T0* ge944ov23213;
-extern T0* ge944ov23593;
-extern T0* ge944ov23215;
-extern T0* ge944ov23586;
-extern T0* ge944ov23208;
-extern T0* ge944ov23589;
-extern T0* ge944ov23211;
-extern T0* ge944ov23585;
-extern T0* ge944ov23207;
-extern T0* ge944ov23584;
-extern T0* ge944ov23206;
-extern T0* ge769ov12930;
-extern T0* ge769ov12837;
-extern T0* ge769ov13023;
-extern T0* ge769ov13024;
-extern T0* ge769ov13025;
-extern T0* ge769ov13026;
-extern T0* ge769ov13027;
-extern T0* ge769ov13028;
+extern T0* ge944ov23590;
+extern T0* ge944ov23212;
+extern T0* ge769ov12936;
+extern T0* ge769ov12843;
 extern T0* ge769ov13029;
 extern T0* ge769ov13030;
 extern T0* ge769ov13031;
@@ -49752,20 +49757,21 @@ extern T0* ge769ov13043;
 extern T0* ge769ov13044;
 extern T0* ge769ov13045;
 extern T0* ge769ov13046;
-extern T0* ge769ov13088;
-extern T0* ge769ov13089;
-extern T0* ge769ov13090;
-extern T0* ge769ov12797;
-extern T0* ge769ov12798;
-extern T0* ge769ov12799;
-extern T0* ge769ov12800;
-extern T0* ge769ov12802;
+extern T0* ge769ov13047;
+extern T0* ge769ov13048;
+extern T0* ge769ov13049;
+extern T0* ge769ov13050;
+extern T0* ge769ov13051;
+extern T0* ge769ov13052;
+extern T0* ge769ov13094;
+extern T0* ge769ov13095;
+extern T0* ge769ov13096;
 extern T0* ge769ov12803;
+extern T0* ge769ov12804;
 extern T0* ge769ov12805;
 extern T0* ge769ov12806;
 extern T0* ge769ov12808;
 extern T0* ge769ov12809;
-extern T0* ge769ov12810;
 extern T0* ge769ov12811;
 extern T0* ge769ov12812;
 extern T0* ge769ov12814;
@@ -49773,39 +49779,38 @@ extern T0* ge769ov12815;
 extern T0* ge769ov12816;
 extern T0* ge769ov12817;
 extern T0* ge769ov12818;
-extern T0* ge769ov12819;
 extern T0* ge769ov12820;
 extern T0* ge769ov12821;
 extern T0* ge769ov12822;
+extern T0* ge769ov12823;
 extern T0* ge769ov12824;
 extern T0* ge769ov12825;
 extern T0* ge769ov12826;
 extern T0* ge769ov12827;
 extern T0* ge769ov12828;
-extern T0* ge769ov12829;
 extern T0* ge769ov12830;
 extern T0* ge769ov12831;
 extern T0* ge769ov12832;
 extern T0* ge769ov12833;
 extern T0* ge769ov12834;
 extern T0* ge769ov12835;
+extern T0* ge769ov12836;
+extern T0* ge769ov12837;
 extern T0* ge769ov12838;
+extern T0* ge769ov12839;
 extern T0* ge769ov12840;
 extern T0* ge769ov12841;
+extern T0* ge769ov12844;
 extern T0* ge769ov12846;
 extern T0* ge769ov12847;
-extern T0* ge769ov12848;
-extern T0* ge769ov12849;
-extern T0* ge769ov12842;
-extern T0* ge769ov12843;
-extern T0* ge769ov12844;
-extern T0* ge769ov12845;
-extern T0* ge769ov12850;
-extern T0* ge769ov12851;
 extern T0* ge769ov12852;
 extern T0* ge769ov12853;
 extern T0* ge769ov12854;
 extern T0* ge769ov12855;
+extern T0* ge769ov12848;
+extern T0* ge769ov12849;
+extern T0* ge769ov12850;
+extern T0* ge769ov12851;
 extern T0* ge769ov12856;
 extern T0* ge769ov12857;
 extern T0* ge769ov12858;
@@ -49814,13 +49819,13 @@ extern T0* ge769ov12860;
 extern T0* ge769ov12861;
 extern T0* ge769ov12862;
 extern T0* ge769ov12863;
+extern T0* ge769ov12864;
 extern T0* ge769ov12865;
+extern T0* ge769ov12866;
 extern T0* ge769ov12867;
 extern T0* ge769ov12868;
 extern T0* ge769ov12869;
-extern T0* ge769ov12870;
 extern T0* ge769ov12871;
-extern T0* ge769ov12872;
 extern T0* ge769ov12873;
 extern T0* ge769ov12874;
 extern T0* ge769ov12875;
@@ -49830,16 +49835,16 @@ extern T0* ge769ov12878;
 extern T0* ge769ov12879;
 extern T0* ge769ov12880;
 extern T0* ge769ov12881;
+extern T0* ge769ov12882;
 extern T0* ge769ov12883;
 extern T0* ge769ov12884;
 extern T0* ge769ov12885;
 extern T0* ge769ov12886;
-extern T0* ge769ov12888;
+extern T0* ge769ov12887;
 extern T0* ge769ov12889;
 extern T0* ge769ov12890;
 extern T0* ge769ov12891;
 extern T0* ge769ov12892;
-extern T0* ge769ov12893;
 extern T0* ge769ov12894;
 extern T0* ge769ov12895;
 extern T0* ge769ov12896;
@@ -49850,28 +49855,29 @@ extern T0* ge769ov12900;
 extern T0* ge769ov12901;
 extern T0* ge769ov12902;
 extern T0* ge769ov12903;
+extern T0* ge769ov12904;
 extern T0* ge769ov12905;
 extern T0* ge769ov12906;
 extern T0* ge769ov12907;
 extern T0* ge769ov12908;
 extern T0* ge769ov12909;
-extern T0* ge769ov12910;
 extern T0* ge769ov12911;
+extern T0* ge769ov12912;
 extern T0* ge769ov12913;
+extern T0* ge769ov12914;
 extern T0* ge769ov12915;
 extern T0* ge769ov12916;
-extern T0* ge769ov12918;
+extern T0* ge769ov12917;
 extern T0* ge769ov12919;
-extern T0* ge769ov12920;
 extern T0* ge769ov12921;
 extern T0* ge769ov12922;
-extern T0* ge769ov12923;
 extern T0* ge769ov12924;
+extern T0* ge769ov12925;
 extern T0* ge769ov12926;
 extern T0* ge769ov12927;
 extern T0* ge769ov12928;
 extern T0* ge769ov12929;
-extern T0* ge769ov12931;
+extern T0* ge769ov12930;
 extern T0* ge769ov12932;
 extern T0* ge769ov12933;
 extern T0* ge769ov12934;
@@ -49879,12 +49885,11 @@ extern T0* ge769ov12935;
 extern T0* ge769ov12937;
 extern T0* ge769ov12938;
 extern T0* ge769ov12939;
+extern T0* ge769ov12940;
 extern T0* ge769ov12941;
-extern T0* ge769ov12942;
 extern T0* ge769ov12943;
 extern T0* ge769ov12944;
 extern T0* ge769ov12945;
-extern T0* ge769ov12946;
 extern T0* ge769ov12947;
 extern T0* ge769ov12948;
 extern T0* ge769ov12949;
@@ -49903,12 +49908,12 @@ extern T0* ge769ov12961;
 extern T0* ge769ov12962;
 extern T0* ge769ov12963;
 extern T0* ge769ov12964;
+extern T0* ge769ov12965;
 extern T0* ge769ov12966;
 extern T0* ge769ov12967;
 extern T0* ge769ov12968;
 extern T0* ge769ov12969;
 extern T0* ge769ov12970;
-extern T0* ge769ov12971;
 extern T0* ge769ov12972;
 extern T0* ge769ov12973;
 extern T0* ge769ov12974;
@@ -49959,32 +49964,38 @@ extern T0* ge769ov13018;
 extern T0* ge769ov13019;
 extern T0* ge769ov13020;
 extern T0* ge769ov13021;
-extern T0* ge281ov11039;
-extern T0* ge378ov19539;
-extern T0* ge378ov19536;
-extern T0* ge956ov14576;
-extern T0* ge376ov19403;
-extern T0* ge944ov23602;
-extern T0* ge944ov23368;
-extern T0* ge944ov23224;
-extern T0* ge944ov23601;
-extern T0* ge944ov23223;
-extern T0* ge944ov23633;
-extern T0* ge944ov23391;
-extern T0* ge944ov23255;
-extern T0* ge944ov23632;
-extern T0* ge944ov23390;
-extern T0* ge944ov23254;
-extern T0* ge769ov12965;
-extern T0* ge769ov12925;
+extern T0* ge769ov13022;
+extern T0* ge769ov13023;
+extern T0* ge769ov13024;
+extern T0* ge769ov13025;
+extern T0* ge769ov13026;
+extern T0* ge769ov13027;
+extern T0* ge281ov11045;
+extern T0* ge378ov19545;
+extern T0* ge378ov19542;
+extern T0* ge956ov14582;
+extern T0* ge376ov19409;
+extern T0* ge944ov23608;
+extern T0* ge944ov23374;
+extern T0* ge944ov23230;
+extern T0* ge944ov23607;
+extern T0* ge944ov23229;
+extern T0* ge944ov23639;
+extern T0* ge944ov23397;
+extern T0* ge944ov23261;
 extern T0* ge944ov23638;
 extern T0* ge944ov23396;
 extern T0* ge944ov23260;
-extern T0* ge944ov23637;
-extern T0* ge944ov23395;
-extern T0* ge944ov23259;
-extern T0* ge1257ov9955;
-extern T0* ge1257ov9954;
+extern T0* ge769ov12971;
+extern T0* ge769ov12931;
+extern T0* ge944ov23644;
+extern T0* ge944ov23402;
+extern T0* ge944ov23266;
+extern T0* ge944ov23643;
+extern T0* ge944ov23401;
+extern T0* ge944ov23265;
+extern T0* ge1257ov9961;
+extern T0* ge1257ov9960;
 extern T0* ge1001ov4028;
 extern T0* ge1001ov4029;
 extern T0* ge1001ov4030;
@@ -50096,44 +50107,44 @@ extern T0* ge1001ov4218;
 extern T0* ge1001ov4204;
 extern T0* ge1034ov3994;
 extern T0* ge1034ov3993;
-extern T0* ge997ov17451;
-extern T0* ge1264ov10492;
-extern T0* ge1264ov10454;
-extern T0* ge1264ov10452;
-extern T0* ge1264ov10493;
-extern T0* ge1264ov10465;
-extern T0* ge1264ov10464;
-extern T0* ge1264ov10475;
-extern T0* ge1264ov10469;
-extern T0* ge1264ov10468;
-extern T0* ge1264ov10467;
-extern T0* ge1264ov10473;
-extern T0* ge1264ov10472;
-extern T0* ge1264ov10474;
-extern T0* ge1264ov10451;
-extern T0* ge1264ov10477;
-extern T0* ge1264ov10486;
-extern T0* ge1267ov10307;
-extern T0* ge1267ov10305;
-extern T0* ge1267ov10306;
-extern T0* ge1264ov10487;
-extern T0* ge1264ov10488;
-extern T0* ge1264ov10491;
-extern T0* ge1264ov10489;
-extern T0* ge1264ov10490;
-extern T0* ge1264ov10484;
-extern T0* ge1260ov19069;
-extern T0* ge1260ov19070;
-extern T0* ge1264ov10457;
-extern T0* ge1264ov10480;
-extern T0* ge1264ov10500;
-extern T0* ge1264ov10501;
-extern T0* ge1264ov10502;
-extern T0* ge1264ov10495;
-extern T0* ge1264ov10478;
-extern T0* ge1264ov10479;
+extern T0* ge997ov17457;
+extern T0* ge1264ov10498;
+extern T0* ge1264ov10460;
+extern T0* ge1264ov10458;
+extern T0* ge1264ov10499;
+extern T0* ge1264ov10471;
+extern T0* ge1264ov10470;
 extern T0* ge1264ov10481;
+extern T0* ge1264ov10475;
+extern T0* ge1264ov10474;
+extern T0* ge1264ov10473;
+extern T0* ge1264ov10479;
+extern T0* ge1264ov10478;
+extern T0* ge1264ov10480;
+extern T0* ge1264ov10457;
+extern T0* ge1264ov10483;
+extern T0* ge1264ov10492;
+extern T0* ge1267ov10313;
+extern T0* ge1267ov10311;
+extern T0* ge1267ov10312;
+extern T0* ge1264ov10493;
+extern T0* ge1264ov10494;
+extern T0* ge1264ov10497;
+extern T0* ge1264ov10495;
+extern T0* ge1264ov10496;
+extern T0* ge1264ov10490;
+extern T0* ge1260ov19075;
+extern T0* ge1260ov19076;
+extern T0* ge1264ov10463;
+extern T0* ge1264ov10486;
+extern T0* ge1264ov10506;
+extern T0* ge1264ov10507;
+extern T0* ge1264ov10508;
+extern T0* ge1264ov10501;
+extern T0* ge1264ov10484;
 extern T0* ge1264ov10485;
+extern T0* ge1264ov10487;
+extern T0* ge1264ov10491;
 extern T0* ge60ov3828;
 extern T0* ge60ov3834;
 extern T0* ge58ov3930;
@@ -50151,638 +50162,638 @@ extern T0* ge57ov3311;
 extern T0* ge57ov3310;
 extern T0* ge57ov3318;
 extern T0* ge57ov3317;
-extern T0* ge1271ov18779;
-extern T0* ge1271ov18780;
-extern T0* ge1262ov23828;
-extern T0* ge1262ov23830;
-extern T0* ge944ov23616;
-extern T0* ge944ov23376;
-extern T0* ge944ov23238;
-extern T0* ge944ov23615;
-extern T0* ge944ov23237;
-extern T0* ge944ov23439;
-extern T0* ge944ov23288;
-extern T0* ge944ov23061;
-extern T0* ge944ov23613;
-extern T0* ge944ov23375;
-extern T0* ge944ov23235;
-extern T0* ge944ov23612;
-extern T0* ge944ov23234;
-extern T0* ge944ov23438;
-extern T0* ge944ov23287;
-extern T0* ge944ov23060;
-extern T0* ge944ov23406;
-extern T0* ge944ov23273;
-extern T0* ge944ov23028;
-extern T0* ge944ov23405;
-extern T0* ge944ov23027;
+extern T0* ge1271ov18785;
+extern T0* ge1271ov18786;
+extern T0* ge1262ov23834;
+extern T0* ge1262ov23836;
+extern T0* ge944ov23622;
+extern T0* ge944ov23382;
+extern T0* ge944ov23244;
+extern T0* ge944ov23621;
+extern T0* ge944ov23243;
+extern T0* ge944ov23445;
+extern T0* ge944ov23294;
+extern T0* ge944ov23067;
+extern T0* ge944ov23619;
+extern T0* ge944ov23381;
+extern T0* ge944ov23241;
 extern T0* ge944ov23618;
-extern T0* ge944ov23378;
 extern T0* ge944ov23240;
-extern T0* ge944ov23643;
-extern T0* ge944ov23399;
-extern T0* ge944ov23265;
-extern T0* ge944ov23644;
-extern T0* ge944ov23266;
-extern T0* ge944ov23641;
-extern T0* ge944ov23398;
-extern T0* ge944ov23263;
-extern T0* ge944ov23642;
-extern T0* ge944ov23264;
-extern T0* ge944ov23534;
-extern T0* ge944ov23333;
-extern T0* ge944ov23156;
+extern T0* ge944ov23444;
+extern T0* ge944ov23293;
+extern T0* ge944ov23066;
+extern T0* ge944ov23412;
+extern T0* ge944ov23279;
+extern T0* ge944ov23034;
+extern T0* ge944ov23411;
+extern T0* ge944ov23033;
+extern T0* ge944ov23624;
+extern T0* ge944ov23384;
+extern T0* ge944ov23246;
+extern T0* ge944ov23649;
+extern T0* ge944ov23405;
+extern T0* ge944ov23271;
+extern T0* ge944ov23650;
+extern T0* ge944ov23272;
 extern T0* ge944ov23647;
-extern T0* ge944ov23401;
+extern T0* ge944ov23404;
 extern T0* ge944ov23269;
 extern T0* ge944ov23648;
 extern T0* ge944ov23270;
-extern T0* ge944ov23645;
-extern T0* ge944ov23400;
-extern T0* ge944ov23267;
-extern T0* ge944ov23646;
-extern T0* ge944ov23268;
-extern T0* ge944ov23532;
-extern T0* ge944ov23332;
-extern T0* ge944ov23154;
-extern T0* ge944ov23470;
-extern T0* ge944ov23304;
-extern T0* ge944ov23092;
-extern T0* ge944ov23472;
-extern T0* ge944ov23094;
-extern T0* ge944ov23468;
-extern T0* ge944ov23090;
+extern T0* ge944ov23540;
+extern T0* ge944ov23339;
+extern T0* ge944ov23162;
+extern T0* ge944ov23653;
+extern T0* ge944ov23407;
+extern T0* ge944ov23275;
+extern T0* ge944ov23654;
+extern T0* ge944ov23276;
+extern T0* ge944ov23651;
+extern T0* ge944ov23406;
+extern T0* ge944ov23273;
+extern T0* ge944ov23652;
+extern T0* ge944ov23274;
+extern T0* ge944ov23538;
+extern T0* ge944ov23338;
+extern T0* ge944ov23160;
+extern T0* ge944ov23476;
+extern T0* ge944ov23310;
+extern T0* ge944ov23098;
+extern T0* ge944ov23478;
+extern T0* ge944ov23100;
 extern T0* ge944ov23474;
 extern T0* ge944ov23096;
-extern T0* ge944ov23471;
-extern T0* ge944ov23093;
-extern T0* ge944ov23469;
-extern T0* ge944ov23091;
-extern T0* ge944ov23514;
-extern T0* ge944ov23315;
-extern T0* ge944ov23136;
-extern T0* ge944ov23424;
-extern T0* ge944ov23281;
-extern T0* ge944ov23046;
-extern T0* ge944ov23422;
-extern T0* ge944ov23044;
-extern T0* ge944ov23416;
-extern T0* ge944ov23280;
-extern T0* ge944ov23038;
-extern T0* ge944ov23415;
-extern T0* ge944ov23279;
-extern T0* ge944ov23037;
-extern T0* ge944ov23627;
-extern T0* ge944ov23385;
-extern T0* ge944ov23249;
-extern T0* ge944ov23631;
-extern T0* ge944ov23389;
-extern T0* ge944ov23253;
-extern T0* ge944ov23606;
-extern T0* ge944ov23371;
-extern T0* ge944ov23228;
-extern T0* ge944ov23630;
-extern T0* ge944ov23388;
-extern T0* ge944ov23252;
-extern T0* ge944ov23513;
-extern T0* ge944ov23323;
-extern T0* ge944ov23135;
-extern T0* ge944ov23515;
-extern T0* ge944ov23137;
-extern T0* ge944ov23621;
-extern T0* ge944ov23380;
-extern T0* ge944ov23243;
-extern T0* ge944ov23608;
-extern T0* ge944ov23372;
-extern T0* ge944ov23230;
-extern T0* ge944ov23609;
-extern T0* ge944ov23231;
-extern T0* ge944ov23512;
-extern T0* ge944ov23322;
-extern T0* ge944ov23134;
-extern T0* ge944ov23508;
-extern T0* ge944ov23321;
-extern T0* ge944ov23130;
-extern T0* ge944ov23509;
-extern T0* ge944ov23131;
-extern T0* ge944ov23500;
-extern T0* ge944ov23318;
-extern T0* ge944ov23122;
-extern T0* ge944ov23511;
-extern T0* ge944ov23133;
-extern T0* ge944ov23510;
-extern T0* ge944ov23132;
-extern T0* ge944ov23507;
-extern T0* ge944ov23320;
-extern T0* ge944ov23129;
-extern T0* ge944ov23479;
-extern T0* ge944ov23308;
-extern T0* ge944ov23101;
-extern T0* ge944ov23478;
-extern T0* ge944ov23307;
-extern T0* ge944ov23100;
-extern T0* ge944ov23477;
-extern T0* ge944ov23306;
-extern T0* ge944ov23099;
-extern T0* ge944ov23476;
-extern T0* ge944ov23305;
-extern T0* ge944ov23098;
-extern T0* ge944ov23475;
-extern T0* ge944ov23097;
-extern T0* ge944ov23414;
-extern T0* ge944ov23278;
-extern T0* ge944ov23036;
-extern T0* ge944ov23412;
-extern T0* ge944ov23277;
-extern T0* ge944ov23034;
-extern T0* ge944ov23442;
-extern T0* ge944ov23289;
-extern T0* ge944ov23064;
-extern T0* ge944ov23443;
-extern T0* ge944ov23065;
-extern T0* ge944ov23426;
-extern T0* ge944ov23282;
-extern T0* ge944ov23048;
-extern T0* ge944ov23425;
-extern T0* ge944ov23047;
-extern T0* ge944ov23427;
-extern T0* ge944ov23049;
-extern T0* ge944ov23451;
-extern T0* ge944ov23293;
-extern T0* ge944ov23073;
-extern T0* ge944ov23440;
-extern T0* ge944ov23062;
-extern T0* ge944ov23441;
-extern T0* ge944ov23063;
-extern T0* ge944ov23485;
-extern T0* ge944ov23309;
-extern T0* ge944ov23107;
-extern T0* ge944ov23482;
-extern T0* ge944ov23104;
-extern T0* ge944ov23489;
-extern T0* ge944ov23310;
-extern T0* ge944ov23111;
-extern T0* ge944ov23486;
-extern T0* ge944ov23108;
-extern T0* ge944ov23483;
-extern T0* ge944ov23105;
-extern T0* ge944ov23490;
-extern T0* ge944ov23112;
-extern T0* ge944ov23487;
-extern T0* ge944ov23109;
-extern T0* ge944ov23484;
-extern T0* ge944ov23106;
-extern T0* ge944ov23491;
-extern T0* ge944ov23113;
-extern T0* ge944ov23598;
-extern T0* ge944ov23367;
-extern T0* ge944ov23220;
-extern T0* ge944ov23496;
-extern T0* ge944ov23314;
-extern T0* ge944ov23118;
-extern T0* ge944ov23495;
-extern T0* ge944ov23117;
-extern T0* ge944ov23481;
-extern T0* ge944ov23103;
 extern T0* ge944ov23480;
 extern T0* ge944ov23102;
-extern T0* ge944ov23488;
-extern T0* ge944ov23110;
-extern T0* ge944ov23494;
-extern T0* ge944ov23313;
-extern T0* ge944ov23116;
-extern T0* ge944ov23493;
-extern T0* ge944ov23312;
-extern T0* ge944ov23115;
-extern T0* ge944ov23492;
-extern T0* ge944ov23311;
-extern T0* ge944ov23114;
-extern T0* ge944ov23576;
-extern T0* ge944ov23360;
-extern T0* ge944ov23198;
-extern T0* ge944ov23574;
-extern T0* ge944ov23359;
-extern T0* ge944ov23196;
-extern T0* ge944ov23429;
-extern T0* ge944ov23283;
-extern T0* ge944ov23051;
-extern T0* ge944ov23542;
-extern T0* ge944ov23338;
-extern T0* ge944ov23164;
+extern T0* ge944ov23477;
+extern T0* ge944ov23099;
+extern T0* ge944ov23475;
+extern T0* ge944ov23097;
+extern T0* ge944ov23520;
+extern T0* ge944ov23321;
+extern T0* ge944ov23142;
+extern T0* ge944ov23430;
+extern T0* ge944ov23287;
+extern T0* ge944ov23052;
 extern T0* ge944ov23428;
 extern T0* ge944ov23050;
-extern T0* ge944ov23541;
-extern T0* ge944ov23163;
-extern T0* ge944ov23540;
-extern T0* ge944ov23337;
-extern T0* ge944ov23162;
-extern T0* ge944ov23459;
-extern T0* ge944ov23298;
-extern T0* ge944ov23081;
+extern T0* ge944ov23422;
+extern T0* ge944ov23286;
+extern T0* ge944ov23044;
+extern T0* ge944ov23421;
+extern T0* ge944ov23285;
+extern T0* ge944ov23043;
+extern T0* ge944ov23633;
+extern T0* ge944ov23391;
+extern T0* ge944ov23255;
+extern T0* ge944ov23637;
+extern T0* ge944ov23395;
+extern T0* ge944ov23259;
+extern T0* ge944ov23612;
+extern T0* ge944ov23377;
+extern T0* ge944ov23234;
+extern T0* ge944ov23636;
+extern T0* ge944ov23394;
+extern T0* ge944ov23258;
+extern T0* ge944ov23519;
+extern T0* ge944ov23329;
+extern T0* ge944ov23141;
+extern T0* ge944ov23521;
+extern T0* ge944ov23143;
+extern T0* ge944ov23627;
+extern T0* ge944ov23386;
+extern T0* ge944ov23249;
+extern T0* ge944ov23614;
+extern T0* ge944ov23378;
+extern T0* ge944ov23236;
+extern T0* ge944ov23615;
+extern T0* ge944ov23237;
+extern T0* ge944ov23518;
+extern T0* ge944ov23328;
+extern T0* ge944ov23140;
+extern T0* ge944ov23514;
+extern T0* ge944ov23327;
+extern T0* ge944ov23136;
+extern T0* ge944ov23515;
+extern T0* ge944ov23137;
+extern T0* ge944ov23506;
+extern T0* ge944ov23324;
+extern T0* ge944ov23128;
+extern T0* ge944ov23517;
+extern T0* ge944ov23139;
+extern T0* ge944ov23516;
+extern T0* ge944ov23138;
+extern T0* ge944ov23513;
+extern T0* ge944ov23326;
+extern T0* ge944ov23135;
+extern T0* ge944ov23485;
+extern T0* ge944ov23314;
+extern T0* ge944ov23107;
+extern T0* ge944ov23484;
+extern T0* ge944ov23313;
+extern T0* ge944ov23106;
+extern T0* ge944ov23483;
+extern T0* ge944ov23312;
+extern T0* ge944ov23105;
+extern T0* ge944ov23482;
+extern T0* ge944ov23311;
+extern T0* ge944ov23104;
+extern T0* ge944ov23481;
+extern T0* ge944ov23103;
+extern T0* ge944ov23420;
+extern T0* ge944ov23284;
+extern T0* ge944ov23042;
+extern T0* ge944ov23418;
+extern T0* ge944ov23283;
+extern T0* ge944ov23040;
+extern T0* ge944ov23448;
+extern T0* ge944ov23295;
+extern T0* ge944ov23070;
+extern T0* ge944ov23449;
+extern T0* ge944ov23071;
+extern T0* ge944ov23432;
+extern T0* ge944ov23288;
+extern T0* ge944ov23054;
+extern T0* ge944ov23431;
+extern T0* ge944ov23053;
+extern T0* ge944ov23433;
+extern T0* ge944ov23055;
 extern T0* ge944ov23457;
-extern T0* ge944ov23296;
+extern T0* ge944ov23299;
 extern T0* ge944ov23079;
-extern T0* ge944ov23456;
-extern T0* ge944ov23078;
+extern T0* ge944ov23446;
+extern T0* ge944ov23068;
+extern T0* ge944ov23447;
+extern T0* ge944ov23069;
+extern T0* ge944ov23491;
+extern T0* ge944ov23315;
+extern T0* ge944ov23113;
+extern T0* ge944ov23488;
+extern T0* ge944ov23110;
+extern T0* ge944ov23495;
+extern T0* ge944ov23316;
+extern T0* ge944ov23117;
+extern T0* ge944ov23492;
+extern T0* ge944ov23114;
+extern T0* ge944ov23489;
+extern T0* ge944ov23111;
+extern T0* ge944ov23496;
+extern T0* ge944ov23118;
+extern T0* ge944ov23493;
+extern T0* ge944ov23115;
+extern T0* ge944ov23490;
+extern T0* ge944ov23112;
+extern T0* ge944ov23497;
+extern T0* ge944ov23119;
+extern T0* ge944ov23604;
+extern T0* ge944ov23373;
+extern T0* ge944ov23226;
+extern T0* ge944ov23502;
+extern T0* ge944ov23320;
+extern T0* ge944ov23124;
+extern T0* ge944ov23501;
+extern T0* ge944ov23123;
+extern T0* ge944ov23487;
+extern T0* ge944ov23109;
+extern T0* ge944ov23486;
+extern T0* ge944ov23108;
+extern T0* ge944ov23494;
+extern T0* ge944ov23116;
+extern T0* ge944ov23500;
+extern T0* ge944ov23319;
+extern T0* ge944ov23122;
+extern T0* ge944ov23499;
+extern T0* ge944ov23318;
+extern T0* ge944ov23121;
+extern T0* ge944ov23498;
+extern T0* ge944ov23317;
+extern T0* ge944ov23120;
+extern T0* ge944ov23582;
+extern T0* ge944ov23366;
+extern T0* ge944ov23204;
+extern T0* ge944ov23580;
+extern T0* ge944ov23365;
+extern T0* ge944ov23202;
+extern T0* ge944ov23435;
+extern T0* ge944ov23289;
+extern T0* ge944ov23057;
+extern T0* ge944ov23548;
+extern T0* ge944ov23344;
+extern T0* ge944ov23170;
+extern T0* ge944ov23434;
+extern T0* ge944ov23056;
+extern T0* ge944ov23547;
+extern T0* ge944ov23169;
+extern T0* ge944ov23546;
+extern T0* ge944ov23343;
+extern T0* ge944ov23168;
+extern T0* ge944ov23465;
+extern T0* ge944ov23304;
+extern T0* ge944ov23087;
 extern T0* ge944ov23463;
-extern T0* ge944ov23300;
+extern T0* ge944ov23302;
 extern T0* ge944ov23085;
 extern T0* ge944ov23462;
 extern T0* ge944ov23084;
-extern T0* ge944ov23464;
-extern T0* ge944ov23301;
-extern T0* ge944ov23086;
-extern T0* ge944ov23524;
-extern T0* ge944ov23327;
-extern T0* ge944ov23146;
-extern T0* ge944ov23523;
-extern T0* ge944ov23145;
-extern T0* ge944ov23522;
-extern T0* ge944ov23144;
-extern T0* ge944ov23521;
-extern T0* ge944ov23143;
-extern T0* ge944ov23525;
-extern T0* ge944ov23328;
-extern T0* ge944ov23147;
-extern T0* ge944ov23445;
-extern T0* ge944ov23290;
-extern T0* ge944ov23067;
-extern T0* ge944ov23444;
-extern T0* ge944ov23066;
+extern T0* ge944ov23469;
+extern T0* ge944ov23306;
+extern T0* ge944ov23091;
+extern T0* ge944ov23468;
+extern T0* ge944ov23090;
+extern T0* ge944ov23470;
+extern T0* ge944ov23307;
+extern T0* ge944ov23092;
+extern T0* ge944ov23530;
+extern T0* ge944ov23333;
+extern T0* ge944ov23152;
+extern T0* ge944ov23529;
+extern T0* ge944ov23151;
+extern T0* ge944ov23528;
+extern T0* ge944ov23150;
+extern T0* ge944ov23527;
+extern T0* ge944ov23149;
+extern T0* ge944ov23531;
+extern T0* ge944ov23334;
+extern T0* ge944ov23153;
+extern T0* ge944ov23451;
+extern T0* ge944ov23296;
+extern T0* ge944ov23073;
 extern T0* ge944ov23450;
 extern T0* ge944ov23072;
-extern T0* ge944ov23447;
-extern T0* ge944ov23291;
-extern T0* ge944ov23069;
-extern T0* ge944ov23448;
-extern T0* ge944ov23070;
-extern T0* ge944ov23539;
-extern T0* ge944ov23161;
-extern T0* ge944ov23446;
-extern T0* ge944ov23068;
-extern T0* ge944ov23460;
-extern T0* ge944ov23082;
-extern T0* ge944ov23449;
-extern T0* ge944ov23292;
-extern T0* ge944ov23071;
+extern T0* ge944ov23456;
+extern T0* ge944ov23078;
+extern T0* ge944ov23453;
+extern T0* ge944ov23297;
+extern T0* ge944ov23075;
 extern T0* ge944ov23454;
-extern T0* ge944ov23294;
 extern T0* ge944ov23076;
+extern T0* ge944ov23545;
+extern T0* ge944ov23167;
 extern T0* ge944ov23452;
 extern T0* ge944ov23074;
-extern T0* ge944ov23453;
-extern T0* ge944ov23075;
-extern T0* ge944ov23547;
-extern T0* ge944ov23342;
-extern T0* ge944ov23169;
-extern T0* ge944ov23543;
-extern T0* ge944ov23339;
-extern T0* ge944ov23165;
-extern T0* ge944ov23545;
-extern T0* ge944ov23340;
-extern T0* ge944ov23167;
+extern T0* ge944ov23466;
+extern T0* ge944ov23088;
 extern T0* ge944ov23455;
-extern T0* ge944ov23295;
+extern T0* ge944ov23298;
 extern T0* ge944ov23077;
-extern T0* ge944ov23461;
-extern T0* ge944ov23299;
-extern T0* ge944ov23083;
-extern T0* ge944ov23536;
-extern T0* ge944ov23335;
-extern T0* ge944ov23158;
-extern T0* ge944ov23519;
-extern T0* ge944ov23325;
-extern T0* ge944ov23141;
-extern T0* ge944ov23546;
-extern T0* ge944ov23341;
-extern T0* ge944ov23168;
+extern T0* ge944ov23460;
+extern T0* ge944ov23300;
+extern T0* ge944ov23082;
 extern T0* ge944ov23458;
-extern T0* ge944ov23297;
 extern T0* ge944ov23080;
-extern T0* ge944ov23465;
-extern T0* ge944ov23302;
-extern T0* ge944ov23087;
-extern T0* ge944ov23537;
-extern T0* ge944ov23336;
-extern T0* ge944ov23159;
-extern T0* ge944ov23535;
-extern T0* ge944ov23334;
-extern T0* ge944ov23157;
-extern T0* ge944ov23520;
-extern T0* ge944ov23326;
-extern T0* ge944ov23142;
-extern T0* ge944ov23538;
-extern T0* ge944ov23160;
-extern T0* ge944ov23604;
-extern T0* ge944ov23370;
-extern T0* ge944ov23226;
-extern T0* ge944ov23605;
-extern T0* ge944ov23227;
-extern T0* ge945ov6740;
-extern T0* ge945ov6702;
-extern T0* ge944ov23408;
-extern T0* ge944ov23030;
-extern T0* ge944ov23407;
-extern T0* ge944ov23029;
+extern T0* ge944ov23459;
+extern T0* ge944ov23081;
+extern T0* ge944ov23553;
+extern T0* ge944ov23348;
+extern T0* ge944ov23175;
+extern T0* ge944ov23549;
+extern T0* ge944ov23345;
+extern T0* ge944ov23171;
+extern T0* ge944ov23551;
+extern T0* ge944ov23346;
+extern T0* ge944ov23173;
+extern T0* ge944ov23461;
+extern T0* ge944ov23301;
+extern T0* ge944ov23083;
+extern T0* ge944ov23467;
+extern T0* ge944ov23305;
+extern T0* ge944ov23089;
+extern T0* ge944ov23542;
+extern T0* ge944ov23341;
+extern T0* ge944ov23164;
+extern T0* ge944ov23525;
+extern T0* ge944ov23331;
+extern T0* ge944ov23147;
+extern T0* ge944ov23552;
+extern T0* ge944ov23347;
+extern T0* ge944ov23174;
+extern T0* ge944ov23464;
+extern T0* ge944ov23303;
+extern T0* ge944ov23086;
+extern T0* ge944ov23471;
+extern T0* ge944ov23308;
+extern T0* ge944ov23093;
+extern T0* ge944ov23543;
+extern T0* ge944ov23342;
+extern T0* ge944ov23165;
+extern T0* ge944ov23541;
+extern T0* ge944ov23340;
+extern T0* ge944ov23163;
+extern T0* ge944ov23526;
+extern T0* ge944ov23332;
+extern T0* ge944ov23148;
+extern T0* ge944ov23544;
+extern T0* ge944ov23166;
+extern T0* ge944ov23610;
+extern T0* ge944ov23376;
+extern T0* ge944ov23232;
+extern T0* ge944ov23611;
+extern T0* ge944ov23233;
+extern T0* ge945ov6742;
+extern T0* ge945ov6704;
+extern T0* ge944ov23414;
+extern T0* ge944ov23036;
+extern T0* ge944ov23413;
+extern T0* ge944ov23035;
+extern T0* ge944ov23626;
+extern T0* ge944ov23385;
+extern T0* ge944ov23248;
 extern T0* ge944ov23620;
-extern T0* ge944ov23379;
 extern T0* ge944ov23242;
-extern T0* ge944ov23614;
-extern T0* ge944ov23236;
-extern T0* ge944ov23619;
-extern T0* ge944ov23241;
-extern T0* ge944ov23533;
-extern T0* ge944ov23155;
+extern T0* ge944ov23625;
+extern T0* ge944ov23247;
+extern T0* ge944ov23539;
+extern T0* ge944ov23161;
+extern T0* ge944ov23574;
+extern T0* ge944ov23362;
+extern T0* ge944ov23196;
+extern T0* ge944ov23573;
+extern T0* ge944ov23361;
+extern T0* ge944ov23195;
+extern T0* ge944ov23572;
+extern T0* ge944ov23360;
+extern T0* ge944ov23194;
+extern T0* ge944ov23571;
+extern T0* ge944ov23359;
+extern T0* ge944ov23193;
+extern T0* ge944ov23570;
+extern T0* ge944ov23358;
+extern T0* ge944ov23192;
+extern T0* ge944ov23569;
+extern T0* ge944ov23357;
+extern T0* ge944ov23191;
+extern T0* ge944ov23575;
+extern T0* ge944ov23363;
+extern T0* ge944ov23197;
+extern T0* ge944ov23584;
+extern T0* ge944ov23367;
+extern T0* ge944ov23206;
+extern T0* ge944ov23585;
+extern T0* ge944ov23368;
+extern T0* ge944ov23207;
+extern T0* ge944ov23581;
+extern T0* ge944ov23203;
+extern T0* ge945ov6782;
+extern T0* ge945ov6760;
+extern T0* ge945ov6762;
+extern T0* ge945ov6759;
+extern T0* ge945ov6761;
+extern T0* ge945ov6747;
+extern T0* ge945ov6748;
+extern T0* ge945ov6749;
+extern T0* ge945ov6750;
+extern T0* ge945ov6754;
+extern T0* ge945ov6755;
+extern T0* ge945ov6756;
+extern T0* ge945ov6757;
+extern T0* ge944ov23508;
+extern T0* ge944ov23130;
+extern T0* ge944ov23511;
+extern T0* ge944ov23325;
+extern T0* ge944ov23133;
+extern T0* ge944ov23504;
+extern T0* ge944ov23323;
+extern T0* ge944ov23126;
+extern T0* ge944ov23507;
+extern T0* ge944ov23129;
+extern T0* ge944ov23442;
+extern T0* ge944ov23292;
+extern T0* ge944ov23064;
+extern T0* ge944ov23437;
+extern T0* ge944ov23290;
+extern T0* ge944ov23059;
+extern T0* ge944ov23440;
+extern T0* ge944ov23062;
+extern T0* ge944ov23439;
+extern T0* ge944ov23061;
+extern T0* ge944ov23438;
+extern T0* ge944ov23291;
+extern T0* ge944ov23060;
+extern T0* ge944ov23623;
+extern T0* ge944ov23383;
+extern T0* ge944ov23245;
+extern T0* ge944ov23628;
+extern T0* ge944ov23387;
+extern T0* ge944ov23250;
+extern T0* ge769ov13028;
+extern T0* ge944ov23410;
+extern T0* ge944ov23278;
+extern T0* ge944ov23032;
+extern T0* ge944ov23557;
+extern T0* ge944ov23351;
+extern T0* ge944ov23179;
+extern T0* ge944ov23564;
+extern T0* ge944ov23355;
+extern T0* ge944ov23186;
+extern T0* ge944ov23563;
+extern T0* ge944ov23185;
+extern T0* ge944ov23562;
+extern T0* ge944ov23354;
+extern T0* ge944ov23184;
+extern T0* ge944ov23561;
+extern T0* ge944ov23183;
+extern T0* ge944ov23560;
+extern T0* ge944ov23353;
+extern T0* ge944ov23182;
+extern T0* ge944ov23559;
+extern T0* ge944ov23181;
+extern T0* ge944ov23558;
+extern T0* ge944ov23352;
+extern T0* ge944ov23180;
+extern T0* ge944ov23556;
+extern T0* ge944ov23178;
+extern T0* ge944ov23631;
+extern T0* ge944ov23389;
+extern T0* ge944ov23253;
+extern T0* ge944ov23629;
+extern T0* ge944ov23388;
+extern T0* ge944ov23251;
 extern T0* ge944ov23568;
 extern T0* ge944ov23356;
 extern T0* ge944ov23190;
 extern T0* ge944ov23567;
-extern T0* ge944ov23355;
 extern T0* ge944ov23189;
+extern T0* ge944ov23587;
+extern T0* ge944ov23369;
+extern T0* ge944ov23209;
+extern T0* ge944ov23589;
+extern T0* ge944ov23370;
+extern T0* ge944ov23211;
+extern T0* ge944ov23579;
+extern T0* ge944ov23364;
+extern T0* ge944ov23201;
 extern T0* ge944ov23566;
-extern T0* ge944ov23354;
 extern T0* ge944ov23188;
 extern T0* ge944ov23565;
-extern T0* ge944ov23353;
 extern T0* ge944ov23187;
-extern T0* ge944ov23564;
-extern T0* ge944ov23352;
-extern T0* ge944ov23186;
-extern T0* ge944ov23563;
-extern T0* ge944ov23351;
-extern T0* ge944ov23185;
-extern T0* ge944ov23569;
-extern T0* ge944ov23357;
-extern T0* ge944ov23191;
-extern T0* ge944ov23578;
-extern T0* ge944ov23361;
-extern T0* ge944ov23200;
-extern T0* ge944ov23579;
-extern T0* ge944ov23362;
-extern T0* ge944ov23201;
-extern T0* ge944ov23575;
-extern T0* ge944ov23197;
-extern T0* ge945ov6780;
-extern T0* ge945ov6758;
-extern T0* ge945ov6760;
-extern T0* ge945ov6757;
-extern T0* ge945ov6759;
-extern T0* ge945ov6745;
-extern T0* ge945ov6746;
-extern T0* ge945ov6747;
-extern T0* ge945ov6748;
-extern T0* ge945ov6752;
-extern T0* ge945ov6753;
-extern T0* ge945ov6754;
-extern T0* ge945ov6755;
-extern T0* ge944ov23502;
-extern T0* ge944ov23124;
-extern T0* ge944ov23505;
-extern T0* ge944ov23319;
-extern T0* ge944ov23127;
-extern T0* ge944ov23498;
-extern T0* ge944ov23317;
-extern T0* ge944ov23120;
-extern T0* ge944ov23501;
-extern T0* ge944ov23123;
-extern T0* ge944ov23436;
-extern T0* ge944ov23286;
-extern T0* ge944ov23058;
-extern T0* ge944ov23431;
-extern T0* ge944ov23284;
-extern T0* ge944ov23053;
-extern T0* ge944ov23434;
-extern T0* ge944ov23056;
-extern T0* ge944ov23433;
-extern T0* ge944ov23055;
-extern T0* ge944ov23432;
-extern T0* ge944ov23285;
-extern T0* ge944ov23054;
-extern T0* ge944ov23617;
-extern T0* ge944ov23377;
-extern T0* ge944ov23239;
-extern T0* ge944ov23622;
-extern T0* ge944ov23381;
-extern T0* ge944ov23244;
-extern T0* ge769ov13022;
-extern T0* ge944ov23404;
-extern T0* ge944ov23272;
-extern T0* ge944ov23026;
-extern T0* ge944ov23551;
-extern T0* ge944ov23345;
-extern T0* ge944ov23173;
-extern T0* ge944ov23558;
-extern T0* ge944ov23349;
-extern T0* ge944ov23180;
-extern T0* ge944ov23557;
-extern T0* ge944ov23179;
-extern T0* ge944ov23556;
-extern T0* ge944ov23348;
-extern T0* ge944ov23178;
-extern T0* ge944ov23555;
-extern T0* ge944ov23177;
-extern T0* ge944ov23554;
-extern T0* ge944ov23347;
-extern T0* ge944ov23176;
-extern T0* ge944ov23553;
-extern T0* ge944ov23175;
-extern T0* ge944ov23552;
-extern T0* ge944ov23346;
-extern T0* ge944ov23174;
-extern T0* ge944ov23550;
-extern T0* ge944ov23172;
-extern T0* ge944ov23625;
-extern T0* ge944ov23383;
-extern T0* ge944ov23247;
-extern T0* ge944ov23623;
-extern T0* ge944ov23382;
-extern T0* ge944ov23245;
-extern T0* ge944ov23562;
-extern T0* ge944ov23350;
-extern T0* ge944ov23184;
-extern T0* ge944ov23561;
-extern T0* ge944ov23183;
-extern T0* ge944ov23581;
-extern T0* ge944ov23363;
-extern T0* ge944ov23203;
 extern T0* ge944ov23583;
-extern T0* ge944ov23364;
 extern T0* ge944ov23205;
-extern T0* ge944ov23573;
-extern T0* ge944ov23358;
-extern T0* ge944ov23195;
-extern T0* ge944ov23560;
-extern T0* ge944ov23182;
-extern T0* ge944ov23559;
-extern T0* ge944ov23181;
-extern T0* ge944ov23577;
-extern T0* ge944ov23199;
-extern T0* ge944ov23572;
-extern T0* ge944ov23194;
-extern T0* ge944ov23639;
-extern T0* ge944ov23397;
-extern T0* ge944ov23261;
-extern T0* ge944ov23640;
-extern T0* ge944ov23262;
-extern T0* ge944ov23611;
-extern T0* ge944ov23374;
-extern T0* ge944ov23233;
-extern T0* ge944ov23610;
-extern T0* ge944ov23373;
-extern T0* ge944ov23232;
-extern T0* ge944ov23603;
-extern T0* ge944ov23369;
-extern T0* ge944ov23225;
-extern T0* ge944ov23629;
-extern T0* ge944ov23387;
-extern T0* ge944ov23251;
-extern T0* ge944ov23418;
-extern T0* ge944ov23040;
-extern T0* ge944ov23517;
-extern T0* ge944ov23324;
-extern T0* ge944ov23139;
-extern T0* ge944ov23628;
-extern T0* ge944ov23386;
-extern T0* ge944ov23250;
-extern T0* ge944ov23417;
-extern T0* ge944ov23039;
-extern T0* ge944ov23516;
-extern T0* ge944ov23138;
-extern T0* ge944ov23600;
-extern T0* ge944ov23222;
-extern T0* ge944ov23599;
-extern T0* ge944ov23221;
-extern T0* ge944ov23419;
-extern T0* ge944ov23041;
-extern T0* ge944ov23518;
-extern T0* ge944ov23140;
-extern T0* ge944ov23596;
-extern T0* ge944ov23366;
-extern T0* ge944ov23218;
-extern T0* ge944ov23597;
-extern T0* ge944ov23219;
-extern T0* ge944ov23411;
-extern T0* ge944ov23276;
-extern T0* ge944ov23033;
-extern T0* ge944ov23410;
-extern T0* ge944ov23275;
-extern T0* ge944ov23032;
-extern T0* ge944ov23526;
-extern T0* ge944ov23329;
-extern T0* ge944ov23148;
-extern T0* ge944ov23466;
-extern T0* ge944ov23303;
-extern T0* ge944ov23088;
-extern T0* ge944ov23467;
-extern T0* ge944ov23089;
-extern T0* ge944ov23528;
+extern T0* ge944ov23578;
+extern T0* ge944ov23200;
+extern T0* ge944ov23645;
+extern T0* ge944ov23403;
+extern T0* ge944ov23267;
+extern T0* ge944ov23646;
+extern T0* ge944ov23268;
+extern T0* ge944ov23617;
+extern T0* ge944ov23380;
+extern T0* ge944ov23239;
+extern T0* ge944ov23616;
+extern T0* ge944ov23379;
+extern T0* ge944ov23238;
+extern T0* ge944ov23609;
+extern T0* ge944ov23375;
+extern T0* ge944ov23231;
+extern T0* ge944ov23635;
+extern T0* ge944ov23393;
+extern T0* ge944ov23257;
+extern T0* ge944ov23424;
+extern T0* ge944ov23046;
+extern T0* ge944ov23523;
 extern T0* ge944ov23330;
-extern T0* ge944ov23150;
-extern T0* ge944ov23529;
-extern T0* ge944ov23151;
-extern T0* ge944ov23527;
-extern T0* ge944ov23149;
-extern T0* ge944ov23530;
-extern T0* ge944ov23331;
-extern T0* ge944ov23152;
-extern T0* ge944ov23549;
-extern T0* ge944ov23344;
-extern T0* ge944ov23171;
-extern T0* ge944ov23548;
-extern T0* ge944ov23343;
-extern T0* ge944ov23170;
-extern T0* ge944ov23409;
-extern T0* ge944ov23274;
-extern T0* ge944ov23031;
-extern T0* ge945ov6782;
-extern T0* ge944ov23504;
-extern T0* ge944ov23126;
-extern T0* ge944ov23506;
-extern T0* ge944ov23128;
-extern T0* ge944ov23499;
-extern T0* ge944ov23121;
-extern T0* ge944ov23497;
-extern T0* ge944ov23316;
-extern T0* ge944ov23119;
-extern T0* ge944ov23503;
-extern T0* ge944ov23125;
-extern T0* ge944ov23430;
-extern T0* ge944ov23052;
-extern T0* ge944ov23531;
-extern T0* ge944ov23153;
-extern T0* ge944ov23607;
-extern T0* ge944ov23229;
+extern T0* ge944ov23145;
+extern T0* ge944ov23634;
+extern T0* ge944ov23392;
+extern T0* ge944ov23256;
 extern T0* ge944ov23423;
 extern T0* ge944ov23045;
-extern T0* ge944ov23421;
-extern T0* ge944ov23043;
-extern T0* ge944ov23420;
-extern T0* ge944ov23042;
-extern T0* ge944ov23626;
-extern T0* ge944ov23384;
-extern T0* ge944ov23248;
-extern T0* ge945ov6763;
-extern T0* ge848ov21969;
-extern T0* ge851ov21041;
-extern T0* ge827ov21073;
-extern T0* ge855ov18377;
-extern T0* ge1215ov9665;
-extern T0* ge1196ov18635;
-extern T0* ge1196ov18634;
-extern T0* ge410ov8782;
-extern T0* ge306ov8782;
-extern T0* ge297ov8782;
+extern T0* ge944ov23522;
+extern T0* ge944ov23144;
+extern T0* ge944ov23606;
+extern T0* ge944ov23228;
+extern T0* ge944ov23605;
+extern T0* ge944ov23227;
+extern T0* ge944ov23425;
+extern T0* ge944ov23047;
+extern T0* ge944ov23524;
+extern T0* ge944ov23146;
+extern T0* ge944ov23602;
+extern T0* ge944ov23372;
+extern T0* ge944ov23224;
+extern T0* ge944ov23603;
+extern T0* ge944ov23225;
+extern T0* ge944ov23417;
+extern T0* ge944ov23282;
+extern T0* ge944ov23039;
+extern T0* ge944ov23416;
+extern T0* ge944ov23281;
+extern T0* ge944ov23038;
+extern T0* ge944ov23532;
+extern T0* ge944ov23335;
+extern T0* ge944ov23154;
+extern T0* ge944ov23472;
+extern T0* ge944ov23309;
+extern T0* ge944ov23094;
+extern T0* ge944ov23473;
+extern T0* ge944ov23095;
+extern T0* ge944ov23534;
+extern T0* ge944ov23336;
+extern T0* ge944ov23156;
+extern T0* ge944ov23535;
+extern T0* ge944ov23157;
+extern T0* ge944ov23533;
+extern T0* ge944ov23155;
+extern T0* ge944ov23536;
+extern T0* ge944ov23337;
+extern T0* ge944ov23158;
+extern T0* ge944ov23555;
+extern T0* ge944ov23350;
+extern T0* ge944ov23177;
+extern T0* ge944ov23554;
+extern T0* ge944ov23349;
+extern T0* ge944ov23176;
+extern T0* ge944ov23415;
+extern T0* ge944ov23280;
+extern T0* ge944ov23037;
+extern T0* ge945ov6784;
+extern T0* ge944ov23510;
+extern T0* ge944ov23132;
+extern T0* ge944ov23512;
+extern T0* ge944ov23134;
+extern T0* ge944ov23505;
+extern T0* ge944ov23127;
+extern T0* ge944ov23503;
+extern T0* ge944ov23322;
+extern T0* ge944ov23125;
+extern T0* ge944ov23509;
+extern T0* ge944ov23131;
+extern T0* ge944ov23436;
+extern T0* ge944ov23058;
+extern T0* ge944ov23537;
+extern T0* ge944ov23159;
+extern T0* ge944ov23613;
+extern T0* ge944ov23235;
+extern T0* ge944ov23429;
+extern T0* ge944ov23051;
+extern T0* ge944ov23427;
+extern T0* ge944ov23049;
+extern T0* ge944ov23426;
+extern T0* ge944ov23048;
+extern T0* ge944ov23632;
+extern T0* ge944ov23390;
+extern T0* ge944ov23254;
+extern T0* ge945ov6765;
+extern T0* ge848ov21975;
+extern T0* ge851ov21047;
+extern T0* ge827ov21079;
+extern T0* ge855ov18383;
+extern T0* ge1215ov9671;
+extern T0* ge1196ov18641;
+extern T0* ge1196ov18640;
+extern T0* ge410ov8784;
+extern T0* ge306ov8784;
+extern T0* ge297ov8784;
 extern T0* ge58ov3931;
 extern T0* ge58ov3932;
 extern T0* ge58ov3933;
-extern T0* ge773ov21691;
-extern T0* ge769ov13087;
-extern T0* ge769ov13068;
-extern T0* ge769ov13084;
-extern T0* ge769ov13072;
-extern T0* ge769ov13073;
+extern T0* ge773ov21697;
+extern T0* ge769ov13093;
 extern T0* ge769ov13074;
-extern T0* ge769ov13075;
-extern T0* ge769ov13069;
-extern T0* ge769ov13076;
-extern T0* ge769ov13077;
+extern T0* ge769ov13090;
 extern T0* ge769ov13078;
 extern T0* ge769ov13079;
-extern T0* ge769ov13070;
-extern T0* ge769ov13085;
 extern T0* ge769ov13080;
 extern T0* ge769ov13081;
+extern T0* ge769ov13075;
 extern T0* ge769ov13082;
-extern T0* ge769ov13071;
 extern T0* ge769ov13083;
+extern T0* ge769ov13084;
+extern T0* ge769ov13085;
+extern T0* ge769ov13076;
+extern T0* ge769ov13091;
 extern T0* ge769ov13086;
-extern T0* ge1262ov23827;
-extern T0* ge1262ov23829;
-extern T0* ge769ov13064;
-extern T0* ge769ov13063;
-extern T0* ge769ov13051;
-extern T0* ge769ov13052;
-extern T0* ge769ov13053;
-extern T0* ge769ov13054;
-extern T0* ge769ov13055;
-extern T0* ge769ov13056;
+extern T0* ge769ov13087;
+extern T0* ge769ov13088;
+extern T0* ge769ov13077;
+extern T0* ge769ov13089;
+extern T0* ge769ov13092;
+extern T0* ge1262ov23833;
+extern T0* ge1262ov23835;
+extern T0* ge769ov13070;
+extern T0* ge769ov13069;
 extern T0* ge769ov13057;
 extern T0* ge769ov13058;
 extern T0* ge769ov13059;
 extern T0* ge769ov13060;
 extern T0* ge769ov13061;
 extern T0* ge769ov13062;
+extern T0* ge769ov13063;
+extern T0* ge769ov13064;
+extern T0* ge769ov13065;
 extern T0* ge769ov13066;
 extern T0* ge769ov13067;
-extern T0* ge769ov13047;
-extern T0* ge769ov13048;
-extern T0* ge769ov13049;
-extern T0* ge769ov13050;
-extern T0* ge769ov13065;
-extern T0* ge795ov20014;
-extern T0* ge795ov20013;
-extern T0* ge800ov21784;
-extern T0* ge810ov21676;
+extern T0* ge769ov13068;
+extern T0* ge769ov13072;
+extern T0* ge769ov13073;
+extern T0* ge769ov13053;
+extern T0* ge769ov13054;
+extern T0* ge769ov13055;
+extern T0* ge769ov13056;
+extern T0* ge769ov13071;
+extern T0* ge795ov20020;
+extern T0* ge795ov20019;
+extern T0* ge800ov21790;
+extern T0* ge810ov21682;
 extern T0* ge1012ov3842;
 extern T0* ge1009ov3842;
 extern T0* ge1003ov3842;
@@ -50802,7 +50813,7 @@ extern T0* ge223ov3842;
 extern T0* ge226ov3842;
 extern T0* ge232ov3842;
 extern T0* ge222ov3842;
-extern T0* ge404ov23895;
+extern T0* ge404ov23901;
 extern T0* ge391ov1682;
 extern EIF_TYPE getypes[];
 
