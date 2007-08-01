@@ -141,11 +141,11 @@ feature -- Parsing
 			a_parser.parse_arguments
 
 			if a_version_flag.was_found then
-				report_version_number		
+				report_version_number
 			end
 
 			if a_pragma_option.was_found then
-				options.set_line_pragma (a_pragma_option.parameter.is_equal ("line"))
+				options.set_line_pragma (STRING_.same_string (a_pragma_option.parameter, "line"))
 			end
 
 			if an_output_option.was_found then
