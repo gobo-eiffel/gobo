@@ -52,7 +52,7 @@ feature -- Tests
 			p.parse_array (<< "--foo", "x" >>)
 			assert ("foo_was_found", o1.was_found)
 			assert_integers_equal ("one parameter", 1, p.parameters.count)
-			assert ("x_is_parameter", p.parameters.first.is_equal ("x"))
+			assert_strings_equal ("x_is_parameter", "x", p.parameters.first)
 		end
 
 	test_parse_list is
