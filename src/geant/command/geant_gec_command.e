@@ -83,6 +83,9 @@ feature -- Access
 	split_size: INTEGER
 			-- Size (in bytes) of generated C files in bytes when in split mode
 
+	garbage_collector: STRING
+			-- Name of GC being used
+
 	clean: STRING
 			-- Name of system to be cleaned
 
@@ -142,6 +145,17 @@ feature -- Setting
 			split_size := s
 		ensure
 			split_size_set: split_size = s
+		end
+
+	set_garbage_collector (s: STRING) is
+			-- Set `garbage_collector' to `s'.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
+		do
+			garbage_collector := s
+		ensure
+			garbage_collector_set: garbage_collector = s
 		end
 
 	set_clean (a_clean: like clean) is
@@ -311,17 +325,22 @@ feature -- Command-line
 				Result.append_string ("--finalize ")
 			end
 			if not c_compile then
-				Result.append_string ("--nocc ")
+				Result.append_string ("--cc=no ")
 			end
 			if cat_mode then
 				Result.append_string ("--cat ")
 			end
 			if not split_mode then
-				Result.append_string ("--nosplit ")
+				Result.append_string ("--split=no ")
 			end
 			if split_size > 0 then
-				Result.append_string ("--splitsize=")
+				Result.append_string ("--split-size=")
 				Result.append_integer (split_size)
+				Result.append_character (' ')
+			end
+			if garbage_collector /= Void and then not garbage_collector.is_empty then
+				Result.append_string ("--gc=")
+				Result.append_string (garbage_collector)
 				Result.append_character (' ')
 			end
 			a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)

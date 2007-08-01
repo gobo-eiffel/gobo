@@ -207,7 +207,7 @@ feature -- Status report
 
 	split_mode: BOOLEAN
 			-- Should generated C code be split over several C files
-			-- instead of being held if a single possibly large C file?
+			-- instead of being held in a single possibly large C file?
 			-- When in split mode, the next C construct will be generated
 			-- in a new C file if the current C file is already larger
 			-- than `split_threshold' bytes.
@@ -216,6 +216,9 @@ feature -- Status report
 			-- When in split mode, the next C construct will be generated
 			-- in a new C file if the current C file is already larger
 			-- than `split_threshold' bytes.
+
+	use_boehm_gc: BOOLEAN
+			-- Should the application be compiled with the Boehm GC?
 
 	short_names: BOOLEAN
 			-- Should short names be generated for type and feature names?
@@ -249,6 +252,14 @@ feature -- Status setting
 			split_threshold := v
 		ensure
 			split_threshold_set: split_threshold = v
+		end
+
+	set_use_boehm_gc (b: BOOLEAN) is
+			-- Set `use_boehm_gc' to `b'.
+		do
+			use_boehm_gc := b
+		ensure
+			use_boehm_gc_set: use_boehm_gc = b
 		end
 
 feature -- Generation
@@ -566,6 +577,13 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_exception.h", True, header_file)
 				header_file.put_new_line
+				if use_boehm_gc then
+					include_runtime_header_file ("ge_boehm_gc.h", True, header_file)
+					header_file.put_new_line
+				else
+					include_runtime_header_file ("ge_no_gc.h", True, header_file)
+					header_file.put_new_line
+				end
 				print_start_extern_c (header_file)
 				print_types (header_file)
 				flush_to_c_file
@@ -15420,6 +15438,8 @@ feature {NONE} -- C function generation
 				print_indentation
 				current_file.put_line ("gerescue = 0;")
 				print_indentation
+				current_file.put_line ("geinit_gc();")
+				print_indentation
 				current_file.put_line ("geconst();")
 				print_indentation
 				print_temp_name (l_temp, current_file)
@@ -18665,6 +18685,10 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("ge_arguments.c")
 				elseif a_filename.same_string ("ge_exception.h") then
 					included_runtime_c_files.force ("ge_exception.c")
+				elseif a_filename.same_string ("ge_no_gc.h") then
+					included_runtime_c_files.force ("ge_no_gc.c")
+				elseif a_filename.same_string ("ge_no_boehm.h") then
+					included_runtime_c_files.force ("ge_boehm_gc.c")
 				elseif a_filename.same_string ("eif_console.h") then
 					included_runtime_c_files.force ("eif_console.c")
 				elseif a_filename.same_string ("eif_dir.h") then

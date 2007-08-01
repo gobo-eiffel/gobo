@@ -122,9 +122,6 @@ typedef double EIF_REAL_64;
 #endif 
 #endif 
 
-/* Memory allocation, GC */
-#define gealloc(x) calloc((x),1)
-
 #ifdef _MSC_VER /* MSVC */
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
 #define snprintf(a,b,c,d) sprintf(a,c,d)

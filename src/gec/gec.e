@@ -214,6 +214,7 @@ feature {NONE} -- Processing
 					l_system_name := l_class.lower_name
 				end
 				create l_generator.make (l_system)
+				l_generator.set_use_boehm_gc (use_boehm_gc)
 				l_generator.set_finalize (is_finalize)
 				l_generator.set_split_mode (not no_split)
 				if split_size > 0 then
@@ -277,17 +278,23 @@ feature -- Status report
 	no_c_compile: BOOLEAN is
 			-- Should the back-end C compiler not be invoked on the generated C code?
 		do
-			Result := no_c_compile_flag.was_found
+			Result := c_compile_option.was_found and then not c_compile_option.parameter
 		end
 
 	no_split: BOOLEAN is
 			-- Should C code be generated into a single file?
 		do
-			Result := no_split_flag.was_found
+			Result := split_option.was_found and then not split_option.parameter
 		end
 
 	split_size: INTEGER
 			-- Size (in bytes) of generated C files in bytes when in split mode
+
+	use_boehm_gc: BOOLEAN is
+			-- Should the application be compiled with the Boehm GC?
+		do
+			Result := gc_option.was_found and then STRING_.same_string (gc_option.parameter, "boehm")
+		end
 
 	is_silent: BOOLEAN is
 			-- Should gec run in silent mode?
@@ -312,14 +319,17 @@ feature -- Argument parsing
 	finalize_flag: AP_FLAG
 			-- Flag for '--finalize'
 
-	no_c_compile_flag: AP_FLAG
-			-- Flag for '--nocc'
+	c_compile_option: AP_BOOLEAN_OPTION
+			-- Option for '--cc=<no|yes>'
 
-	no_split_flag: AP_FLAG
-			-- Flag for '--nosplit'
+	split_option: AP_BOOLEAN_OPTION
+			-- Option for '--split=<no|yes>'
 
 	split_size_option: AP_INTEGER_OPTION
-			-- Option for '--splitsize=<size>'
+			-- Option for '--split-size=<size>'
+
+	gc_option: AP_ENUMERATION_OPTION
+			-- Option for '--gc=<no|bohem>'
 
 	silent_flag: AP_FLAG
 			-- Flag for '--silent'
@@ -344,25 +354,41 @@ feature -- Argument parsing
 			create finalize_flag.make_with_long_form ("finalize")
 			finalize_flag.set_description ("Compile with optimizations turned on.")
 			a_parser.options.force_last (finalize_flag)
+				-- cat
 			create cat_flag.make_with_long_form ("cat")
 			cat_flag.set_description ("CAT-call errors should be considered as fatal errors.")
 			a_parser.options.force_last (cat_flag)
-			create no_c_compile_flag.make_with_long_form ("nocc")
-			no_c_compile_flag.set_description ("Do not invoke the back-end C compiler on the generated C code.")
-			a_parser.options.force_last (no_c_compile_flag)
-			create no_split_flag.make_with_long_form ("nosplit")
-			no_split_flag.set_description ("C code generated into a single file.")
-			a_parser.options.force_last (no_split_flag)
-			create split_size_option.make_with_long_form ("splitsize")
+				-- cc
+			create c_compile_option.make_with_long_form ("cc")
+			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code? (default: yes)")
+			c_compile_option.set_parameter_description ("no|yes")
+			a_parser.options.force_last (c_compile_option)
+				-- split
+			create split_option.make_with_long_form ("split")
+			split_option.set_description ("Should generated C code be split over several C files instead of being held in a single possibly large C file? (default: yes)")
+			split_option.set_parameter_description ("no|yes")
+			a_parser.options.force_last (split_option)
+				-- split-size
+			create split_size_option.make_with_long_form ("split-size")
 			split_size_option.set_description ("Size of generated C files in bytes when in split mode.")
 			split_size_option.set_parameter_description ("size")
 			a_parser.options.force_last (split_size_option)
+				-- gc
+			create gc_option.make_with_long_form ("gc")
+			gc_option.set_description ("Which garbage collector should the application be compiled with? (default: no)")
+			gc_option.extend ("no")
+			gc_option.extend ("boehm")
+			gc_option.set_parameter_description ("no|boehm")
+			a_parser.options.force_last (gc_option)
+				-- silent
 			create silent_flag.make_with_long_form ("silent")
 			silent_flag.set_description ("Run gec in silent mode.")
 			a_parser.options.force_last (silent_flag)
+				-- verbose
 			create verbose_flag.make_with_long_form ("verbose")
 			verbose_flag.set_description ("Run gec in verbose mode.")
 			a_parser.options.force_last (verbose_flag)
+				-- version
 			create version_flag.make ('V', "version")
 			version_flag.set_description ("Print the version number of gec and exit.")
 			create a_list.make (version_flag)
@@ -393,7 +419,10 @@ feature -- Argument parsing
 			finalize_flag_not_void: finalize_flag /= Void
 			silent_flag_not_void: silent_flag /= Void
 			verbose_flag_not_void: verbose_flag /= Void
-			no_c_compile_flag_not_void: no_c_compile_flag /= Void
+			c_compile_option_not_void: c_compile_option /= Void
+			split_option_not_void: split_option /= Void
+			split_size_option_not_void: split_size_option /= Void
+			gc_option_not_void: gc_option /= Void
 		end
 
 invariant
@@ -404,8 +433,9 @@ invariant
 	finalize_flag_not_void: finalize_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
-	no_c_compile_flag_not_void: no_c_compile_flag /= Void
-	no_split_flag_not_void: no_split_flag /= Void
+	c_compile_option_not_void: c_compile_option /= Void
+	split_option_not_void: split_option /= Void
 	split_size_option_not_void: split_size_option /= Void
+	gc_option_not_void: gc_option /= Void
 
 end

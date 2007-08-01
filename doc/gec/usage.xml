@@ -68,15 +68,15 @@ used with <projectname>gec</projectname>:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--nosplit</filename>
+			<filename>--split=&lt;no|yes&gt;</filename>
 		</term>
 		<listitem><para>
-			C code should be generated into a single file.
+			Should generated C code be split over several C files instead of being held in a single possibly large C file? (default: yes)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--splitsize</filename>
+			<filename>--split-size=&lt;size&gt;</filename>
 		</term>
 		<listitem><para>
 			Size (in bytes) of generated C files in bytes when in split mode
@@ -84,10 +84,18 @@ used with <projectname>gec</projectname>:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--nocc</filename>
+			<filename>--cc=&lt;no|yes&gt;</filename>
 		</term>
 		<listitem><para>
-			Do not invoke the back-end C compiler on the generated C code.
+			Should the back-end C compiler be invoked on the generated C code? (default: yes)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--gc=&lt;no|boehm&gt;</filename>
+		</term>
+		<listitem><para>
+			Which garbage collector should the application be compiled with? (default: no)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

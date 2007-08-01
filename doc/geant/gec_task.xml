@@ -118,6 +118,19 @@
 			</varlistentry>
 
 			<varlistentry>
+				<term>gc</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Which garbage collector should the application be compiled with?</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>(no|boehm)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>no</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
 				<term>clean</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>clean</para>

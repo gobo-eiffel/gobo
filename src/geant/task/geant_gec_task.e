@@ -74,6 +74,12 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
+			if has_attribute (Gc_attribute_name) then
+				a_value := attribute_value (Gc_attribute_name)
+				if a_value /= Void and then not a_value.is_empty then
+					command.set_garbage_collector (a_value)
+				end
+			end
 			if has_attribute (Exit_code_variable_attribute_name) then
 				a_value := attribute_value (Exit_code_variable_attribute_name)
 				if a_value.count > 0 then
@@ -138,6 +144,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "finalize"
 		once
 			Result := "finalize"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Gc_attribute_name: STRING is
+			-- Name of xml attribute for "gc"
+		once
+			Result := "gc"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
