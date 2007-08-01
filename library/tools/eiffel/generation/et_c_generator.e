@@ -2127,6 +2127,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_cursor: DS_LIST_CURSOR [STRING]
 			l_name: ET_IDENTIFIER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameter: ET_DYNAMIC_TYPE
 		do
 			print_indentation
 			if a_result_type_set /= Void then
@@ -2180,14 +2182,28 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 								-- The argument is declared of type 'TYPED_POINTER [XX]'.
 								-- In that case we use the corresponding pointer (i.e.
-								-- address of the first attribute of the object).
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_argument_name (l_name, current_file)
-							current_file.put_character ('.')
-							current_file.put_character ('a')
-							current_file.put_character ('1')
-							current_file.put_character (')')
+								-- the first attribute of the object).
+							l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+							if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+									-- This should have been checked already.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+								current_file.put_character ('(')
+								print_type_declaration (l_actual_parameter, current_file)
+								if l_actual_parameter.is_expanded then
+									current_file.put_character ('*')
+								end
+								current_file.put_character (')')
+								current_file.put_character ('(')
+								print_argument_name (l_name, current_file)
+								current_file.put_character ('.')
+								current_file.put_character ('a')
+								current_file.put_character ('1')
+								current_file.put_character (')')
+							end
 						else
 							print_argument_name (l_name, current_file)
 						end
@@ -2213,14 +2229,28 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 								-- The argument is declared of type 'TYPED_POINTER [XX]'.
 								-- In that case we use the corresponding pointer (i.e.
-								-- address of the first attribute of the object).
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_argument_name (l_name, current_file)
-							current_file.put_character ('.')
-							current_file.put_character ('a')
-							current_file.put_character ('1')
-							current_file.put_character (')')
+								-- the first attribute of the object).
+							l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+							if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+									-- This should have been checked already.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+								current_file.put_character ('(')
+								print_type_declaration (l_actual_parameter, current_file)
+								if l_actual_parameter.is_expanded then
+									current_file.put_character ('*')
+								end
+								current_file.put_character (')')
+								current_file.put_character ('(')
+								print_argument_name (l_name, current_file)
+								current_file.put_character ('.')
+								current_file.put_character ('a')
+								current_file.put_character ('1')
+								current_file.put_character (')')
+							end
 						else
 							print_argument_name (l_name, current_file)
 						end
@@ -2248,6 +2278,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_name: ET_IDENTIFIER
 			nb_args: INTEGER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameter: ET_DYNAMIC_TYPE
 		do
 			if a_result_type_set /= Void then
 				print_result_name (current_file)
@@ -2289,14 +2321,28 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 							-- The argument is declared of type 'TYPED_POINTER [XX]'.
 							-- In that case we use the corresponding pointer (i.e.
-							-- address of the first attribute of the object).
-						current_file.put_character ('&')
-						current_file.put_character ('(')
-						print_argument_name (l_name, current_file)
-						current_file.put_character ('.')
-						current_file.put_character ('a')
-						current_file.put_character ('1')
-						current_file.put_character (')')
+							-- the first attribute of the object).
+						l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+						if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+								-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+								-- This should have been checked already.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+							current_file.put_character ('(')
+							print_type_declaration (l_actual_parameter, current_file)
+							if l_actual_parameter.is_expanded then
+								current_file.put_character ('*')
+							end
+							current_file.put_character (')')
+							current_file.put_character ('(')
+							print_argument_name (l_name, current_file)
+							current_file.put_character ('.')
+							current_file.put_character ('a')
+							current_file.put_character ('1')
+							current_file.put_character (')')
+						end
 					else
 						print_argument_name (l_name, current_file)
 					end
@@ -2329,14 +2375,28 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 							-- The argument is declared of type 'TYPED_POINTER [XX]'.
 							-- In that case we use the corresponding pointer (i.e.
-							-- address of the first attribute of the object).
-						current_file.put_character ('&')
-						current_file.put_character ('(')
-						print_argument_name (l_name, current_file)
-						current_file.put_character ('.')
-						current_file.put_character ('a')
-						current_file.put_character ('1')
-						current_file.put_character (')')
+							-- the first attribute of the object).
+						l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+						if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+								-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+								-- This should have been checked already.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+							current_file.put_character ('(')
+							print_type_declaration (l_actual_parameter, current_file)
+							if l_actual_parameter.is_expanded then
+								current_file.put_character ('*')
+							end
+							current_file.put_character (')')
+							current_file.put_character ('(')
+							print_argument_name (l_name, current_file)
+							current_file.put_character ('.')
+							current_file.put_character ('a')
+							current_file.put_character ('1')
+							current_file.put_character (')')
+						end
 					else
 						print_argument_name (l_name, current_file)
 					end
@@ -2363,6 +2423,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_argument_name: ET_IDENTIFIER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameter: ET_DYNAMIC_TYPE
 			l_name: STRING
 			i, j, nb: INTEGER
 			i2, nb2: INTEGER
@@ -2456,17 +2518,30 @@ print ("**** language not recognized: " + l_language_string + "%N")
 											set_fatal_error
 											error_handler.report_giaaa_error
 										elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
-												-- Check to see if the argument is declared of type
-												-- 'TYPED_POINTER [XX]'. In that case we use the
-												-- corresponding pointer (i.e. address of the first
-												-- attribute of the object).
-											current_file.put_character ('&')
-											current_file.put_character ('(')
-											print_argument_name (l_argument_name, current_file)
-											current_file.put_character ('.')
-											current_file.put_character ('a')
-											current_file.put_character ('1')
-											current_file.put_character (')')
+												-- The argument is declared of type 'TYPED_POINTER [XX]'.
+												-- In that case we use the corresponding pointer (i.e.
+												-- the first attribute of the object).
+											l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+											if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+													-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+													-- This should have been checked already.
+												set_fatal_error
+												error_handler.report_giaaa_error
+											else
+												l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+												current_file.put_character ('(')
+												print_type_declaration (l_actual_parameter, current_file)
+												if l_actual_parameter.is_expanded then
+													current_file.put_character ('*')
+												end
+												current_file.put_character (')')
+												current_file.put_character ('(')
+												print_argument_name (l_argument_name, current_file)
+												current_file.put_character ('.')
+												current_file.put_character ('a')
+												current_file.put_character ('1')
+												current_file.put_character (')')
+											end
 										else
 											print_argument_name (l_argument_name, current_file)
 										end
@@ -2544,6 +2619,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_cursor: DS_LIST_CURSOR [STRING]
 			l_name: ET_IDENTIFIER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameter: ET_DYNAMIC_TYPE
 		do
 			print_indentation
 			if a_result_type_set /= Void then
@@ -2580,14 +2657,28 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 						-- The argument is declared of type 'TYPED_POINTER [XX]'.
 						-- In that case we use the corresponding pointer (i.e.
-						-- address of the first attribute of the object).
-					current_file.put_character ('&')
-					current_file.put_character ('(')
-					print_argument_name (l_name, current_file)
-					current_file.put_character ('.')
-					current_file.put_character ('a')
-					current_file.put_character ('1')
-					current_file.put_character (')')
+						-- the first attribute of the object).
+					l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+					if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+							-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+							-- This should have been checked already.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+						current_file.put_character ('(')
+						print_type_declaration (l_actual_parameter, current_file)
+						if l_actual_parameter.is_expanded then
+							current_file.put_character ('*')
+						end
+						current_file.put_character (')')
+						current_file.put_character ('(')
+						print_argument_name (l_name, current_file)
+						current_file.put_character ('.')
+						current_file.put_character ('a')
+						current_file.put_character ('1')
+						current_file.put_character (')')
+					end
 				else
 					print_argument_name (l_name, current_file)
 				end
@@ -2628,14 +2719,28 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 								-- The argument is declared of type 'TYPED_POINTER [XX]'.
 								-- In that case we use the corresponding pointer (i.e.
-								-- address of the first attribute of the object).
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_argument_name (l_name, current_file)
-							current_file.put_character ('.')
-							current_file.put_character ('a')
-							current_file.put_character ('1')
-							current_file.put_character (')')
+								-- the first attribute of the object).
+							l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+							if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+									-- This should have been checked already.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+								current_file.put_character ('(')
+								print_type_declaration (l_actual_parameter, current_file)
+								if l_actual_parameter.is_expanded then
+									current_file.put_character ('*')
+								end
+								current_file.put_character (')')
+								current_file.put_character ('(')
+								print_argument_name (l_name, current_file)
+								current_file.put_character ('.')
+								current_file.put_character ('a')
+								current_file.put_character ('1')
+								current_file.put_character (')')
+							end
 						else
 							print_argument_name (l_name, current_file)
 						end
@@ -2661,14 +2766,28 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 								-- The argument is declared of type 'TYPED_POINTER [XX]'.
 								-- In that case we use the corresponding pointer (i.e.
-								-- address of the first attribute of the object).
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_argument_name (l_name, current_file)
-							current_file.put_character ('.')
-							current_file.put_character ('a')
-							current_file.put_character ('1')
-							current_file.put_character (')')
+								-- the first attribute of the object).
+							l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+							if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+									-- This should have been checked already.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+								current_file.put_character ('(')
+								print_type_declaration (l_actual_parameter, current_file)
+								if l_actual_parameter.is_expanded then
+									current_file.put_character ('*')
+								end
+								current_file.put_character (')')
+								current_file.put_character ('(')
+								print_argument_name (l_name, current_file)
+								current_file.put_character ('.')
+								current_file.put_character ('a')
+								current_file.put_character ('1')
+								current_file.put_character (')')
+							end
 						else
 							print_argument_name (l_name, current_file)
 						end
