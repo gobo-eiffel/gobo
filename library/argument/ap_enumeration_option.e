@@ -20,6 +20,9 @@ inherit
 			record_occurrence
 		end
 
+	KL_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 create
 
 	make,
@@ -30,13 +33,10 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Perform the common initialization steps.
-		local
-			tester: KL_EQUALITY_TESTER [STRING]
 		do
 			Precursor
 			create {DS_LINKED_LIST [STRING]} possible_values.make
-			create tester
-			possible_values.set_equality_tester (tester)
+			possible_values.set_equality_tester (string_equality_tester)
 		end
 	
 feature -- Access

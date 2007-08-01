@@ -20,6 +20,7 @@ inherit
 		end
 
 	KL_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 create
 

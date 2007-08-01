@@ -18,6 +18,7 @@ inherit
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_EXCEPTIONS
 	KL_IMPORTED_ARRAY_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 	AP_CONSTANTS
 
 create
@@ -418,7 +419,7 @@ feature {NONE} -- Implementation
 					option /= Void or alternative_options_lists.after
 				loop
 					o := alternative_options_lists.item_for_iteration.introduction_option
-					if o.has_long_form and then o.long_form.is_equal (option_string) then
+					if o.has_long_form and then STRING_.same_string (o.long_form, option_string) then
 						option := o
 						current_options := alternative_options_lists.item_for_iteration
 					end
@@ -433,7 +434,7 @@ feature {NONE} -- Implementation
 					option /= Void or current_options.after
 				loop
 					o := current_options.item_for_iteration
-					if o.has_long_form and then o.long_form.is_equal (option_string) then
+					if o.has_long_form and then STRING_.same_string (o.long_form, option_string) then
 						option := o
 					end
 					current_options.forth
