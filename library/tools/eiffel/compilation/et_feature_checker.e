@@ -5637,19 +5637,31 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						had_error := True
 					else
-						if not l_expression_context.conforms_to_type (l_array_parameter, current_type, universe) then
+						if not had_error then
+							if l_item_type = Void then
+								l_item_type := l_expression_context.named_type (universe)
+							elseif not hybrid_type then
+								hybrid_type := not l_expression_context.same_named_type (l_item_type, current_type, universe)
+							end
+						end
+						if l_array_type /= Void and then not l_expression_context.conforms_to_type (l_array_parameter, current_type, universe) then
 								-- The type of this item does not conform to the type of
 								-- the parameter of the expected array type. Try to see
 								-- if it converts to it.
 							if type_checker.convert_feature (l_expression_context, l_parameter_context) = Void then
 									-- It does not conform nor convert. We are out of luck
-									-- and revise our position: the manifest array will be
-									-- created of type 'ARRAY [ANY]' and a validity error
-									-- will be reported when we try to pass this array as
-									-- argument or in an assignment will a type that does
+									-- and revise our position: We will have to find another
+									-- way to determine the type of the array, and a validity
+									-- error will be reported when we try to pass this array as
+									-- argument or in an assignment with a type that does
 									-- not conform nor convert to the expected type.
--- TODO: insert the conversion in the AST.
-								l_array_type := universe.array_any_type
+									-- To determine the type of the array, we will now
+									-- try to see if all items have the same type. If so then the
+									-- type of the manifest array will be an array of that type.
+									-- Otherwise we are out of luck and will consider that it is
+									-- an 'ARRAY [ANY]'.
+-- TODO: remove convert features from AST.
+								l_array_type := Void
 							else
 -- TODO: insert convert feature in AST.
 							end
@@ -5660,17 +5672,12 @@ feature {NONE} -- Expression validity
 				end
 				free_context (l_expression_context)
 				free_context (l_parameter_context)
-				if had_error then
-					set_fatal_error
-				else
-					report_manifest_array (an_expression, l_array_type)
-					a_context.force_last (l_array_type)
-				end
 			else
 					-- Try to see if all items have the same type. If so then the
 					-- type of the manifest array will be an array of that type.
 					-- Otherwise we are out of luck and will consider that it is
 					-- an 'ARRAY [ANY]'.
+				l_array_type := Void
 				any_type := universe.any_type
 				l_expression_context := new_context (current_type)
 				from i := 1 until i > nb loop
@@ -5688,32 +5695,35 @@ feature {NONE} -- Expression validity
 					i := i + 1
 				end
 				free_context (l_expression_context)
-				if had_error then
-					set_fatal_error
-				elseif l_item_type = Void then
-						-- This is an empty manifest array: '<< >>'. We have no way to
-						-- find out the type of the parameter, so we use 'ARRAY [ANY]'.
-					l_array_type := universe.array_any_type
-					report_manifest_array (an_expression, l_array_type)
-					a_context.force_last (l_array_type)
-				elseif hybrid_type then
-						-- There are at least two items which don't have the same type.
-						-- Use 'ARRAY [ANY]' in that type.
+			end
+			if had_error then
+				set_fatal_error
+			elseif l_array_type /= Void then
+				report_manifest_array (an_expression, l_array_type)
+				a_context.force_last (l_array_type)
+			elseif l_item_type = Void then
+					-- This is an empty manifest array: '<< >>'. We have no way to
+					-- find out the type of the parameter, so we use 'ARRAY [ANY]'.
+				l_array_type := universe.array_any_type
+				report_manifest_array (an_expression, l_array_type)
+				a_context.force_last (l_array_type)
+			elseif hybrid_type then
+					-- There are at least two items which don't have the same type.
+					-- Use 'ARRAY [ANY]' in that type.
 -- TODO: we could do better that 'ARRAY [ANY]', for example choosing one of the
 -- common ancestors of these two types. But which one to choose? ETL2 does not say.
-					l_array_type := universe.array_any_type
-					report_manifest_array (an_expression, l_array_type)
-					a_context.force_last (l_array_type)
-				else
-						-- All items of the same type. So the manifest array will be
-						-- an array of that type.
-					create l_actuals.make_with_capacity (1)
-					l_actuals.put_first (l_item_type)
-					create l_generic_class_type.make (Void, array_class.name, l_actuals, array_class)
-					l_generic_class_type.set_unresolved_type (universe.array_any_type)
-					report_manifest_array (an_expression, l_generic_class_type)
-					a_context.force_last (l_generic_class_type)
-				end
+				l_array_type := universe.array_any_type
+				report_manifest_array (an_expression, l_array_type)
+				a_context.force_last (l_array_type)
+			else
+					-- All items of the same type. So the manifest array will be
+					-- an array of that type.
+				create l_actuals.make_with_capacity (1)
+				l_actuals.put_first (l_item_type)
+				create l_generic_class_type.make (Void, array_class.name, l_actuals, array_class)
+				l_generic_class_type.set_unresolved_type (universe.array_any_type)
+				report_manifest_array (an_expression, l_generic_class_type)
+				a_context.force_last (l_generic_class_type)
 			end
 		end
 
