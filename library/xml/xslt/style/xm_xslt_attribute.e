@@ -49,7 +49,7 @@ feature -- Element change
 			variant
 				attribute_collection.number_of_attributes + 1 - a_cursor.index				
 			until
-				a_cursor.after
+				a_cursor.after or any_compile_errors
 			loop
 				a_name_code := a_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)

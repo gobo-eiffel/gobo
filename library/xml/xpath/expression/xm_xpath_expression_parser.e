@@ -63,12 +63,17 @@ feature {NONE} -- Initialization
 	make is
 			-- Nothing to do.
 		do
+		ensure
+			not_xslt_pattern_parser: not is_pattern_parser
 		end
 
 feature -- Access
 
 	tokenizer: XM_XPATH_TOKENIZER
 			-- Lexical scanner
+
+	is_pattern_parser: BOOLEAN
+			-- Is `Current' being used for parsing XSLT patterns?
 
 feature -- Status report
 
@@ -2269,21 +2274,25 @@ feature {NONE} -- Implementation
 			if is_empty then
 				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_processing_instruction_test
 			elseif tokenizer.last_token = String_literal_token or else tokenizer.last_token = Name_token then
+				a_local_name := ""
 				create a_parser.make (an_original_text)
 				if a_parser.is_valid then
 					if a_parser.is_prefix_present then
-						report_parse_warning ("No processing instruction name will ever contain a colon")
-						if not shared_name_pool.is_name_code_allocated ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name") then
-							shared_name_pool.allocate_name ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name")
-							a_name_code := shared_name_pool.last_name_code
+						if tokenizer.last_token = String_literal_token then
+							report_parse_warning ("No processing instruction name will ever contain a colon")
+							if not shared_name_pool.is_name_code_allocated ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name") then
+								shared_name_pool.allocate_name ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name")
+								a_name_code := shared_name_pool.last_name_code
+							else
+								a_name_code := shared_name_pool.name_code ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name")
+							end
 						else
-							a_name_code := shared_name_pool.name_code ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name")
+							report_parse_error ("Processing instruction name must not contain a colon", "XPST0003")							
 						end
 					end
 					a_local_name := a_parser.local_name
 				else
 					if not a_parser.too_many_colons then
-						a_local_name := ""
 						report_parse_warning ("No processing instruction name will ever be named by the empty string")
 					else
 						check
@@ -2298,6 +2307,8 @@ feature {NONE} -- Implementation
 				else
 					a_name_code := -1
 				end
+			else
+				report_parse_error ("Processing instruction name must be a QName or a string literal", "XPST0003")
 			end
 			if not is_empty then
 				next_token ("In create_processing_instruction_node_kind_test")
@@ -2542,22 +2553,27 @@ feature {NONE} -- Implementation
 			message_not_void: a_message /= Void
 			code_not_void: a_code /= Void
 		local
-			s, line_info, a_language: STRING
+			s, l_line_info, l_language, l_code: STRING
 			l: INTEGER
 		do
+			if is_pattern_parser then
+				l_code := "XTSE0340"
+			else
+				l_code := a_code
+			end
 			if not is_parse_error then
 				internal_last_parse_error := Void
 				is_parse_error := True
 				l := tokenizer.line_number
 				if l = 1 then
-					line_info := ""
+					l_line_info := ""
 				else
-					line_info := STRING_.appended_string ("on line ", l.out)
-					line_info := STRING_.appended_string (line_info, " ")
+					l_line_info := STRING_.appended_string ("on line ", l.out)
+					l_line_info := STRING_.appended_string (l_line_info, " ")
 				end
-				a_language := STRING_.cloned_string (language)
-				s := STRING_.appended_string (a_language, " syntax error ")
-				s := STRING_.appended_string (s, line_info)
+				l_language := STRING_.cloned_string (language)
+				s := STRING_.appended_string (l_language, " syntax error ")
+				s := STRING_.appended_string (s, l_line_info)
 				if a_message.count > 2 and then STRING_.same_string (a_message.substring (1, 3), "...") then
 					s := STRING_.appended_string (s, "near")
 				else
@@ -2567,7 +2583,7 @@ feature {NONE} -- Implementation
 				s := STRING_.appended_string (s, tokenizer.recent_text)
 				s := STRING_.appended_string (s, "»:%N    ")
 				internal_last_parse_error := STRING_.appended_string (s, a_message)
-				first_parse_error_code := a_code
+				first_parse_error_code := l_code
 				first_parse_error_line_number := l
 			end
 		ensure

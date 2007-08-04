@@ -103,6 +103,7 @@ feature -- Element change
 		require
 			is_a_default_format: a_default_format /= Void and then a_default_format.fingerprint = -1
 			default_format_not_set: not is_default_format_set
+			no_higher_precedence_format: True -- TODO
 		do
 			default_format := a_default_format
 			using_original_default := False
@@ -113,9 +114,11 @@ feature -- Element change
 
 	set_named_format (a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY) is
 			-- Add a named decimal format.
+			-- Duplicates are not allowed unless the values are all equal,
+			-- or there is another of higher precedence.
 		require
 			format_not_void: a_format /= Void
-			not_a_duplicate: not has_named_format (a_format.fingerprint)
+			no_higher_precedence_format: True -- TODO
 		local
 			an_entry: XM_XSLT_DECIMAL_FORMAT_MANAGER_ENTRY
 			a_list: DS_ARRAYED_LIST [XM_XSLT_FORMAT_NUMBER]
@@ -162,31 +165,30 @@ feature -- Element change
 			nearly_positive_fingerprint: a_fingerprint > -2
 			call_not_void: a_callback /= Void
 		local
-			a_list: DS_ARRAYED_LIST [XM_XSLT_FORMAT_NUMBER]
-			an_entry: XM_XSLT_DECIMAL_FORMAT_MANAGER_ENTRY
+			l_list: DS_ARRAYED_LIST [XM_XSLT_FORMAT_NUMBER]
+			l_entry: XM_XSLT_DECIMAL_FORMAT_MANAGER_ENTRY
 		do
 			if format_map.has (a_fingerprint) then
-				an_entry := format_map.item (a_fingerprint)
-				if an_entry.is_list then
+				l_entry := format_map.item (a_fingerprint)
+				if l_entry.is_list then
 
 					-- it's another forward reference
 
-					create a_list.make_default
-					a_list.force_last (a_callback)
+					l_entry.list.force_last (a_callback)
 				else
 
 					-- it's a backwards reference
 
-					a_callback.fixup (an_entry.decimal_format)
+					a_callback.fixup (l_entry.decimal_format)
 				end
 			else
 
 				-- it's a forward reference
 
-				create a_list.make_default
-				a_list.put_last (a_callback)
-				create an_entry.make_list (a_list)
-				format_map.put (an_entry, a_fingerprint)
+				create l_list.make_default
+				l_list.put_last (a_callback)
+				create l_entry.make_list (l_list)
+				format_map.put (l_entry, a_fingerprint)
 			end
 		end
 
@@ -204,7 +206,7 @@ feature {NONE} -- Implementation
 	all_defaults: XM_XSLT_DECIMAL_FORMAT_ENTRY is
 			-- Default default format
 		once
-			create Result.make (-1)
+			create Result.make (-1, -1000000)
 		ensure
 			default_default_decimal_format_not_void: Result /= Void			
 		end

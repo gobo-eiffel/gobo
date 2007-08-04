@@ -159,24 +159,12 @@ feature -- Creation
 		require
 			expression_not_void: a_expression /= Void
 			context_not_void: a_context /= Void
-		local
-			l_tail_expression: XM_XPATH_TAIL_EXPRESSION
-			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
 			last_created_closure := Void
-
-			-- Treat tail recursion as a special case.
-
-			if a_expression.is_tail_expression then
-				create l_result.make (Void)
-				l_tail_expression.evaluate_lazy_tail_expression (l_result, a_context, a_reference_count)
-				last_created_closure := l_result.item
+			if a_reference_count /= 1 then
+				create {XM_XPATH_MEMO_CLOSURE} last_created_closure.make (a_expression, a_context)
 			else
-				if a_reference_count /= 1 then
-					create {XM_XPATH_MEMO_CLOSURE} last_created_closure.make (a_expression, a_context)
-				else
-					create {XM_XPATH_CLOSURE} last_created_closure.make (a_expression, a_context)
-				end
+				create {XM_XPATH_CLOSURE} last_created_closure.make (a_expression, a_context)
 			end
 		ensure
 			last_created_closure_not_void: last_created_closure /= Void

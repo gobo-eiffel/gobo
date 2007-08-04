@@ -104,7 +104,7 @@ feature -- Access
 				Result := STRING_.appended_string (Result, suffix_string)
 			elseif a_value.is_infinite then
 				Result := STRING_.concat (prefix_string, a_possible_minus)
-				Result := STRING_.appended_string (Result, a_decimal_format.nan)
+				Result := STRING_.appended_string (Result, a_decimal_format.infinity)
 				Result := STRING_.appended_string (Result, suffix_string)
 			else
 				a_multiplier := 1
@@ -159,12 +159,12 @@ feature -- Status report
 			-- Error value
 
 	phase: INTEGER
-			-- `a_phase' = 0 -> passive characters at start
-			-- `a_phase' = 1 -> digit signs in integral part
-			-- `a_phase' = 2 -> zero-digit signs in integral part
-			-- `a_phase' = 3 -> zero-digit signs in fractional part
-			-- `a_phase' = 4 -> digit signs in fractional part
-			-- `a_phase' = 5 -> passive characters at end
+			-- `phase' = 0 -> passive characters at start;
+			-- `phase' = 1 -> digit signs in integral part;
+			-- `phase' = 2 -> zero-digit signs in integral part;
+			-- `phase' = 3 -> zero-digit signs in fractional part;
+			-- `phase' = 4 -> digit signs in fractional part;
+			-- `phase' = 5 -> passive characters at end;
 	
 feature -- Status setting
 
@@ -206,36 +206,36 @@ feature {NONE} -- Implementation
 			picture_string_not_void: a_picture /= Void
 			decimal_format_not_void: a_format /= Void
 		local
-			an_index: INTEGER
-			a_per_mille, a_percent, a_decimal_separator, a_grouping_separator, a_digit_sign, a_zero_digit_sign: INTEGER
+			l_index: INTEGER
+			l_per_mille, l_percent, l_decimal_separator, l_grouping_separator, l_digit_sign, l_zero_digit_sign: INTEGER
 			a_character: INTEGER
 		do
-			a_per_mille := a_format.per_mille.item_code (1); a_percent := a_format.percent.item_code (1)
-			a_decimal_separator := a_format.decimal_separator.item_code (1);  a_grouping_separator := a_format.grouping_separator.item_code (1)
-			a_digit_sign := a_format.digit_sign.item_code (1); a_zero_digit_sign := a_format.zero_digit.item_code (1)
+			l_per_mille := a_format.per_mille.item_code (1); l_percent := a_format.percent.item_code (1)
+			l_decimal_separator := a_format.decimal_separator.item_code (1);  l_grouping_separator := a_format.grouping_separator.item_code (1)
+			l_digit_sign := a_format.digit_sign.item_code (1); l_zero_digit_sign := a_format.zero_digit.item_code (1)
 			from
-				an_index := 1
+				l_index := 1
 			variant
-				a_picture.count + 1 - an_index
+				a_picture.count + 1 - l_index
 			until
-				is_error or else an_index > a_picture.count
+				is_error or l_index > a_picture.count
 			loop
-				a_character := a_picture.item_code (an_index)
-				if a_character = a_per_mille or else a_character = a_percent then
+				a_character := a_picture.item_code (l_index)
+				if a_character = l_per_mille or else a_character = l_percent then
 					if is_percent or else is_per_mille then
 						set_last_error_from_string ("Cannot have more than one percent or per-mille character in a sub-picture",
 															 Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					end
-					is_percent := a_character = a_percent
-					is_per_mille := a_character = a_per_mille
+					is_percent := a_character = l_percent
+					is_per_mille := a_character = l_per_mille
 					inspect
 						phase
 					when 0 then
-						prefix_string := STRING_.appended_string (prefix_string, a_picture.substring (an_index, an_index))
+						prefix_string := STRING_.appended_string (prefix_string, a_picture.substring (l_index, l_index))
 					when 1, 2, 3, 4, 5 then
-						phase := 5; suffix_string := STRING_.appended_string (suffix_string, a_picture.substring (an_index, an_index))
+						phase := 5; suffix_string := STRING_.appended_string (suffix_string, a_picture.substring (l_index, l_index))
 					end
-				elseif a_character = a_digit_sign then
+				elseif a_character = l_digit_sign then
 					is_digit := True
 					inspect
 						phase
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 						set_last_error_from_string  ("Passive character must not appear between active characters in a sub-picture",
 															  Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					end
-				elseif a_character = a_zero_digit_sign then
+				elseif a_character = l_zero_digit_sign then
 					is_digit := True
 					inspect
 						phase
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 						set_last_error_from_string  ("Passive character must not appear between active characters in a sub-picture",
 															  Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					end
-				elseif a_character = a_decimal_separator then
+				elseif a_character = l_decimal_separator then
 					inspect
 						phase
 					when 0, 1, 2 then
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 						set_last_error_from_string  ("There must only be one decimal separator in a sub-picture",
 															  Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					end
-				elseif a_character = a_grouping_separator then
+				elseif a_character = l_grouping_separator then
 					inspect
 						phase
 					when 0, 1, 2 then
@@ -294,12 +294,12 @@ feature {NONE} -- Implementation
 					inspect
 						phase
 					when 0 then
-						prefix_string := STRING_.appended_string (prefix_string, a_picture.substring (an_index, an_index))						
+						prefix_string := STRING_.appended_string (prefix_string, a_picture.substring (l_index, l_index))						
 					when 1, 2, 3, 4, 5 then
-						phase := 5; suffix_string := STRING_.appended_string (suffix_string, a_picture.substring (an_index, an_index))
+						phase := 5; suffix_string := STRING_.appended_string (suffix_string, a_picture.substring (l_index, l_index))
 					end
 				end
-				an_index := an_index + 1
+				l_index := l_index + 1
 			end
 			if not is_digit then
 				set_last_error_from_string ("Sub-picture must contain at least one digit sign or zero digit sign?",
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 	calculate_grouping_positions is
 			-- Sort out the grouping positions.
 		local
-			a_count, an_index, a_first_value: INTEGER
+			a_count, l_index, a_first_value: INTEGER
 			is_regular: BOOLEAN
 		do
 			a_count := integral_part_positions.count
@@ -320,48 +320,52 @@ feature {NONE} -- Implementation
 
 				from
 					create integral_grouping_separator_positions.make (1, a_count)
-					an_index := 1
+					l_index := 1
 				variant
-					a_count + 1 - an_index
+					a_count + 1 - l_index
 				until
-					an_index > a_count
+					l_index > a_count
 				loop
-					integral_grouping_separator_positions.put (maximum_integral_part_size - integral_part_positions.item (a_count - an_index + 1), an_index)
-					an_index := an_index + 1
+					integral_grouping_separator_positions.put (maximum_integral_part_size - integral_part_positions.item (a_count - l_index + 1), l_index)
+					l_index := l_index + 1
 				end
 				if a_count > 1 then
 					is_regular := True
 					a_first_value := integral_grouping_separator_positions.item (1)
 					from
-						an_index := 2
+						l_index := 2
 					variant
-						a_count + 1 - an_index
+						a_count + 1 - l_index
 					until
-						not is_regular or else an_index > a_count
+						not is_regular or else l_index > a_count
 					loop
-						if integral_grouping_separator_positions.item (an_index) /= a_first_value * an_index then
+						if integral_grouping_separator_positions.item (l_index) /= a_first_value * l_index then
 							is_regular := False
 						end
-						an_index := an_index + 1
+						l_index := l_index + 1
 					end
 					if is_regular then
 						create integral_grouping_separator_positions.make (1, 1)
 						integral_grouping_separator_positions.put (a_first_value, 1)
 					end
 				end
+				if integral_grouping_separator_positions.item (1) = 0 then
+					set_last_error_from_string  ("Grouping separator cannot be adjacent to decimal separator",
+						Xpath_errors_uri, "XTDE1310", Dynamic_error)
+				end
 			end
 			a_count := fractional_part_positions.count
 			if a_count > 0 then
 				from
 					create fractional_grouping_separator_positions.make (1, a_count)
-					an_index := 1
+					l_index := 1
 				variant
-					fractional_grouping_separator_positions.count + 1 - an_index
+					fractional_grouping_separator_positions.count + 1 - l_index
 				until
-					an_index > fractional_grouping_separator_positions.count
+					l_index > fractional_grouping_separator_positions.count
 				loop
-					fractional_grouping_separator_positions.put (fractional_part_positions.item (an_index), an_index)
-					an_index := an_index + 1
+					fractional_grouping_separator_positions.put (fractional_part_positions.item (l_index), l_index)
+					l_index := l_index + 1
 				end
 			end
 		end
@@ -378,13 +382,14 @@ feature {NONE} -- Implementation
 			a_decimal_value := a_value.rounded_half_even (maximum_fractional_part_size)
 			Result := a_decimal_value.string_value
 			a_point := Result.index_of ('.', 1)
-			a_zero_count := minimum_integral_part_size - Result.count - a_point
+			a_zero_count := minimum_integral_part_size - a_point + 1
 			if a_zero_count > 0 then
 				create zeros.make_filled ('0', a_zero_count)
-				Result := Result + zeros
+				Result := zeros + Result
+				a_point := Result.index_of ('.', 1)
 			end
 			if a_point > 0 then
-				a_zero_count := minimum_fractional_part_size - Result.count + a_point
+				a_zero_count := minimum_fractional_part_size - (Result.count - a_point)
 			else
 				Result := Result + "."
 				a_zero_count := minimum_fractional_part_size
@@ -455,7 +460,7 @@ feature {NONE} -- Implementation
 			decimal_point_present: a_value.index_of ('.', 1) > 0
 			decimal_format_not_void: a_decimal_format /= Void
 		local
-			a_point, an_index, a_code, a_zero_code: INTEGER
+			a_point, l_index, a_code, a_zero_code: INTEGER
 			a_string: STRING
 			a_digit: CHARACTER
 		do
@@ -466,25 +471,27 @@ feature {NONE} -- Implementation
 				Result := a_value
 			end
 			if not STRING_.same_string (a_decimal_format.decimal_separator, ".") then
-				Result := STRING_.replaced_substring (Result, a_decimal_format.decimal_separator, a_point, a_point)
+				if a_point <= Result.count then
+					Result := STRING_.replaced_substring (Result, a_decimal_format.decimal_separator, a_point, a_point)
+				end
 			end
 			if not STRING_.same_string (a_decimal_format.zero_digit, "0") then
 				from
-					an_index := 1
+					l_index := 1
 					a_string := ""
 					a_zero_code := a_decimal_format.zero_digit.item_code (1)
 				until
-					an_index > Result.count
+					l_index > Result.count
 				loop
-					a_digit := Result.item (an_index)
+					a_digit := Result.item (l_index)
 					a_code := a_digit.code
 					if a_code >= 48 and then a_code <= 57 then -- 0-9
 						a_code := a_zero_code + (a_code - 48)
 						a_string := STRING_.appended_string (a_string, unicode.code_to_string (a_code))
 					else
-						a_string := STRING_.appended_string (a_string, Result.substring (an_index, an_index))
+						a_string := STRING_.appended_string (a_string, Result.substring (l_index, l_index))
 					end
-					an_index := an_index + 1
+					l_index := l_index + 1
 				end
 				Result := a_string
 			end
@@ -495,56 +502,112 @@ feature {NONE} -- Implementation
 	grouped_formatted_number (a_value: STRING; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING is
 			-- Number with grouping separators added
 		require
-			value_not_void: a_value /= Void
-			decimal_format_not_void: a_decimal_format /= Void
+			a_value_not_void: a_value /= Void
+			a_decimal_format_not_void: a_decimal_format /= Void
 		local
-			an_index, a_point, a_grouping_index, a_grouping_position: INTEGER
-			a_string: STRING
+			l_index, l_point, l_grouping_index, l_grouping_position, l_whole_characters: INTEGER
+			l_string: STRING
 		do
-			a_point := a_value.index_of (a_decimal_format.decimal_separator.item (1), 1)
+			l_point := a_value.index_of (a_decimal_format.decimal_separator.item (1), 1)
+			if l_point = 0 then
+				l_point := a_value.count + 1
+			end
 			if integral_grouping_separator_positions /= Void then
 				if integral_grouping_separator_positions.count = 1 then
 					
 					-- regular positions
 					
 					from
-						an_index := 1; a_grouping_index := integral_grouping_separator_positions.item (1)
-						a_string := ""
+						l_index := 1; l_grouping_index := integral_grouping_separator_positions.item (1)
+						l_string := ""
 					until
-						an_index > a_value.count
+						l_index > a_value.count
 					loop
-						if an_index < a_point and then INTEGER_.mod (an_index , a_grouping_index) = 0 then
-							a_string := STRING_.appended_string (a_string, a_decimal_format.grouping_separator)
+						if l_index > 1 and l_index < l_point and l_grouping_index > 0 and INTEGER_.mod (l_point - l_index, l_grouping_index) = 0 then
+							l_string := STRING_.appended_string (l_string, a_decimal_format.grouping_separator)
 						end
-						a_string := STRING_.appended_string (a_string, a_value.substring (an_index, an_index))
-						an_index := an_index + 1
+						l_string := STRING_.appended_string (l_string, a_value.substring (l_index, l_index))
+						if l_index < l_point then
+							l_whole_characters := l_whole_characters + 1
+						end
+						l_index := l_index + 1
 					end
-					Result := a_string
+					Result := l_string
 				else
 					
 					-- tabulated positions
 					
 					from
-						an_index := 1; a_grouping_index := 1
-						a_string := ""
+						l_index := 1
+						l_grouping_index := integral_grouping_separator_positions.count
+						l_string := ""
 					until
-						an_index > a_value.count
+						l_index > a_value.count
 					loop
-						a_grouping_position := integral_grouping_separator_positions.item (a_grouping_index)
-						if an_index < a_point and then an_index = a_grouping_position then
-							a_string := STRING_.appended_string (a_string, a_decimal_format.grouping_separator)
-							a_grouping_position := a_grouping_position + 1
+						if l_grouping_index > 0 then
+							l_grouping_position := integral_grouping_separator_positions.item (l_grouping_index)
+						else
+							l_grouping_position := 0
 						end
-						a_string := STRING_.appended_string (a_string, a_value.substring (an_index, an_index))
-						an_index := an_index + 1
+						if l_index < l_point and l_point - l_index = l_grouping_position then
+							l_string := STRING_.appended_string (l_string, a_decimal_format.grouping_separator)
+							l_grouping_position := l_grouping_position + 1
+							if l_grouping_index > 0 then
+								l_grouping_index := l_grouping_index - 1
+							end
+						end
+						if l_index < l_point then
+							l_whole_characters := l_whole_characters + 1
+						end
+						l_string := STRING_.appended_string (l_string, a_value.substring (l_index, l_index))
+						l_index := l_index + 1
 					end
-					Result := a_string
+					Result := l_string
 				end
 			else
+				l_whole_characters := a_value.count - l_point
 				Result := a_value
+			end
+			if l_whole_characters > maximum_integral_part_size then
+				Result := truncated_leading_zeros (Result, l_whole_characters, a_decimal_format)
 			end
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	truncated_leading_zeros (a_value: STRING; a_whole_characters: INTEGER; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING is
+			-- `a_value' without leading zeros
+		require
+			a_value_not_void: a_value /= Void
+			strictly_positive_a_whole_characters: a_whole_characters > 0
+			a_whole_characters_small_enough: a_whole_characters /= a_value.count
+			a_decimal_format_not_void: a_decimal_format /= Void
+		local
+			l_index, l_max_truncation, l_zero_code: INTEGER
+		do
+			l_zero_code := a_decimal_format.zero_digit.item_code (1)
+			create Result.make (a_value.count)
+			l_max_truncation := a_whole_characters - maximum_integral_part_size
+			from
+				l_index := 1
+			until
+				l_index > a_value.count
+			loop
+				if l_index = l_max_truncation + 1 and a_value.item_code (l_index) = a_decimal_format.grouping_separator.item_code (1) then
+					-- skip it
+				elseif l_index > l_max_truncation then
+					Result := STRING_.appended_string (Result, a_value.substring (l_index, l_index))
+				elseif a_value.item_code (l_index) = l_zero_code then
+					-- skip it
+				elseif a_value.item_code (l_index) = a_decimal_format.grouping_separator.item_code (1) then
+					l_max_truncation := l_max_truncation + 1
+				else
+					Result := STRING_.appended_string (Result, a_value.substring (l_index, l_index))
+				end
+				l_index := l_index + 1
+			end
+		ensure
+			truncated_leading_zeros_not_void: Result /= Void
 		end
 
 	fractional_grouped_formatted_number (a_value: STRING; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING is
@@ -553,24 +616,24 @@ feature {NONE} -- Implementation
 			value_not_void: a_value /= Void
 			decimal_format_not_void: a_decimal_format /= Void
 		local
-			an_index, a_point, a_grouping_index, a_grouping_position: INTEGER
+			l_index, a_point, a_grouping_index, a_grouping_position: INTEGER
 			a_string: STRING
 		do
 			a_point := a_value.index_of (a_decimal_format.decimal_separator.item (1), 1)
 			if fractional_grouping_separator_positions /= Void then
 				from
-					an_index := 1; a_grouping_index := 1
+					l_index := 1; a_grouping_index := 1
 					a_string := ""
 				until
-					an_index > a_value.count
+					l_index > a_value.count
 				loop
 					a_grouping_position := fractional_grouping_separator_positions.item (a_grouping_index) + a_point
-					if an_index = a_grouping_position then
+					if l_index = a_grouping_position then
 						a_string := STRING_.appended_string (a_string, a_decimal_format.grouping_separator)
 						a_grouping_position := a_grouping_position + 1
 					end
-					a_string := STRING_.appended_string (a_string, Result.substring (an_index, an_index))
-					an_index := an_index + 1
+					a_string := STRING_.appended_string (a_string, Result.substring (l_index, l_index))
+					l_index := l_index + 1
 				end
 				Result := a_string
 			else

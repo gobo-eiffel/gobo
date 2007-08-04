@@ -150,7 +150,11 @@ feature -- Evaluation
 						l_error.set_location (system_id, line_number)
 						a_context.transformer.report_fatal_error (l_error)
 					elseif l_uri.count = 0 then
-						create l_error.make_from_string ("Namespace prefix is the empty string", Xpath_errors_uri, "XTDE0930", Dynamic_error)
+						create l_error.make_from_string ("Namespace URI is the empty string", Xpath_errors_uri, "XTDE0930", Dynamic_error)
+						l_error.set_location (system_id, line_number)
+						a_context.transformer.report_fatal_error (l_error)
+					elseif l_uri.occurrences ('#') > 1 then
+						create l_error.make_from_string ("Namespace URI is not a valid xs:anyURI", Xpath_errors_uri, "XTDE0905", Dynamic_error)
 						l_error.set_location (system_id, line_number)
 						a_context.transformer.report_fatal_error (l_error)
 					else

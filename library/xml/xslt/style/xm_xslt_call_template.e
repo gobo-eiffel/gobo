@@ -48,7 +48,7 @@ feature -- Element change
 			variant
 				attribute_collection.number_of_attributes + 1 - a_cursor.index				
 			until
-				a_cursor.after
+				a_cursor.after or any_compile_errors
 			loop
 				a_name_code := a_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
@@ -61,20 +61,22 @@ feature -- Element change
 				end
 				a_cursor.forth
 			end
-			if a_name_attribute = Void then
-				report_absence ("name")
-			else
-				called_template_name := a_name_attribute
-				if is_qname (a_name_attribute) then
-					generate_name_code (a_name_attribute)
-					if last_generated_name_code = -1 then
-						report_compile_error (name_code_error_value)
-					end
-					called_template_fingerprint := fingerprint_from_name_code (last_generated_name_code)
+			if not any_compile_errors then
+				if a_name_attribute = Void then
+					report_absence ("name")
 				else
-					create an_error.make_from_string (STRING_.concat ("Name attribute of xsl:call-template must be a QName. Found: ", a_name_attribute),
-																 Xpath_errors_uri, "XTDE0290", Static_error)
-					report_compile_error (an_error)
+					called_template_name := a_name_attribute
+					if is_qname (a_name_attribute) then
+						generate_name_code (a_name_attribute)
+						if last_generated_name_code = -1 then
+							report_compile_error (name_code_error_value)
+						end
+						called_template_fingerprint := fingerprint_from_name_code (last_generated_name_code)
+					else
+						create an_error.make_from_string (STRING_.concat ("Name attribute of xsl:call-template must be a QName. Found: ", a_name_attribute),
+							Xpath_errors_uri, "XTDE0020", Static_error)
+						report_compile_error (an_error)
+					end
 				end
 			end
 			attributes_prepared := True
@@ -220,36 +222,45 @@ feature {NONE} -- Implementation
 		require
 			attributes_prepared: attributes_prepared
 		local
-			a_stylesheet: XM_XSLT_STYLESHEET
-			an_element_list: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
-			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
-			an_error: XM_XPATH_ERROR_VALUE
+			l_stylesheet: XM_XSLT_STYLESHEET
+			l_element_list: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+			l_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			l_template: XM_XSLT_TEMPLATE
 		do
-			a_stylesheet := principal_stylesheet
-			an_element_list := a_stylesheet.top_level_elements
+			l_stylesheet := principal_stylesheet
+			l_element_list := l_stylesheet.top_level_elements
 
 			-- Search for a matching template name, starting at the end in case of duplicates.
 			-- This also ensures we get the one with highest import precedence.
 
 			from
-				a_cursor := an_element_list.new_cursor
-				a_cursor.finish
+				l_cursor := l_element_list.new_cursor
+				l_cursor.finish
 			variant
-				a_cursor.index
+				l_cursor.index
 			until
-				a_cursor.before
+				l_cursor.before
 			loop
-				if a_cursor.item.is_template and then a_cursor.item.as_template.template_fingerprint = called_template_fingerprint then
-					template := a_cursor.item.as_template
-					a_cursor.go_before
+				if l_cursor.item.is_template then
+					l_template := l_cursor.item.as_template
+					l_template.ensure_template_fingerprint
+					if any_compile_errors then
+						l_cursor.go_before
+					else
+						if l_template.template_fingerprint = called_template_fingerprint then
+							template := l_template
+							l_cursor.go_before
+						else
+							l_cursor.back
+						end
+					end
 				else
-					a_cursor.back
+					l_cursor.back
 				end
 			end
-			if template = Void then
-				create an_error.make_from_string (STRING_.concat ("No template exists named ", called_template_name),
-															 Xpath_errors_uri, "XTSE0650", Static_error)
-				report_compile_error (an_error)
+			if template = Void and not any_compile_errors then
+				report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("No template exists named ", called_template_name),
+					Xpath_errors_uri, "XTSE0650", Static_error))
 			end
 		end
 

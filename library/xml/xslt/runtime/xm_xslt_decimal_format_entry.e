@@ -28,21 +28,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_fingerprint: INTEGER) is
+	make (a_fingerprint, a_precedence: INTEGER) is
 			-- Establish default settings.
 		require
 			nearly_positive_fingerprint : a_fingerprint > -2
 		do
 			fingerprint := a_fingerprint
+			precedence := a_precedence
 			set_defaults
 		ensure
 			fingerprint_set: fingerprint = a_fingerprint
+			precedence_set: precedence = a_precedence
 		end
 
 feature -- Access
 
 	fingerprint: INTEGER
 			-- Fingerprint of name
+
+	precedence: INTEGER
+			-- Import precedence of containing stylesheet module
 
 	decimal_separator: STRING
 			-- Decimal separator sign

@@ -59,22 +59,8 @@ feature -- Access
 
 	template_fingerprint: INTEGER is
 			-- Fingerprint of named template;
-			-- This can be called before attributes are proceseed.
-			-- WARNING: This is NOT a pure function - it is implemented 
-			--  as a memo function, and also has a side effect
-			--  of generating a name code in the name pool.
-		local
-			a_name: STRING
+			-- If called before `prepare_attributes', then call `ensure_template_fingerprint' first.
 		do
-			if internal_fingerprint = -1 then
-				a_name := attribute_value_by_name ("", Name_attribute)
-				if a_name /= Void then
-					STRING_.left_adjust (a_name)
-					STRING_.right_adjust (a_name)
-					generate_name_code (a_name)
-					internal_fingerprint := fingerprint_from_name_code (last_generated_name_code)
-				end
-			end
 			Result := internal_fingerprint
 		end
 
@@ -136,7 +122,7 @@ feature -- Element change
 			variant
 				attribute_collection.number_of_attributes + 1 - a_cursor.index				
 			until
-				a_cursor.after
+				a_cursor.after or any_compile_errors
 			loop a_name_code := a_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
@@ -186,6 +172,30 @@ feature -- Element change
 				end
 			end
 			attributes_prepared := True
+		end
+
+		ensure_template_fingerprint is
+			-- Ensure `template_fingerprint' returns correct result.
+		local
+			l_name: STRING
+		do
+			if internal_fingerprint = -1 then
+				l_name := attribute_value_by_name ("", Name_attribute)
+				if l_name /= Void then
+					STRING_.left_adjust (l_name)
+					STRING_.right_adjust (l_name)
+					if is_qname (l_name) then
+						generate_name_code (l_name)
+						internal_fingerprint := fingerprint_from_name_code (last_generated_name_code)
+						if internal_fingerprint = -1 then
+							report_compile_error (name_code_error_value)
+						end
+					else
+						report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
+							STRING_.concat (l_name, " is not a valid lexical QName"), Xpath_errors_uri, "XTSE0280", Static_error))
+					end
+				end
+			end
 		end
 
 	set_redundant_named_template is
@@ -470,7 +480,7 @@ feature {NONE} -- Implementation
 					end
 					role_identifier := a_name_attribute
 				else
-					create an_error.make_from_string ("Template 'name' attribute must be a QName", Xpath_errors_uri, "XTSE0020", Static_error)
+					create an_error.make_from_string ("Template 'name' attribute must be a QName", Xpath_errors_uri, "XTSE0280", Static_error)
 					report_compile_error (an_error)
 				end
 			end

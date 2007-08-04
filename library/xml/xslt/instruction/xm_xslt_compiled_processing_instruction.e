@@ -146,6 +146,8 @@ feature -- Evaluation
 					check_content (last_string_value, a_context)
 					a_context.current_receiver.notify_processing_instruction (evaluated_name, last_string_value, 0)
 				end
+			else
+				a_context.report_fatal_error (error_value)
 			end
 		end
 
@@ -182,6 +184,8 @@ feature {NONE} -- Implementation
 				else
 					last_name_code := shared_name_pool.name_code ("", "", evaluated_name)
 				end
+			else
+				a_context.report_fatal_error (error_value)
 			end
 		end
 

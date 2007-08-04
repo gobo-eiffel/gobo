@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 		require
 			declaration_not_void: a_declaration /= Void
 		do
+			display_name := "" -- to preserve the invariant
 			a_declaration.register_reference (Current)
 			display_name := a_declaration.variable_name
 			if not are_static_properties_computed then compute_static_properties end
@@ -94,15 +95,14 @@ feature -- Comparison
 			-- Are `Current' and `other' the same expression?
 			-- (Note, we only compare expressions that
 			--  have the same static and dynamic context).
-			-- I'm not entirely happy with the routine logic,
-			--  since if binding is `Void', then we cannot know
-			--  if the two references are to the same
-			--  binding or not.
-			-- But it is necessary to return `True' to avoid
-			--  {DS_ARRAYED_LIST}.put from failing it's post-condition.
 		do
-			if other.is_variable_reference then 
-				Result := binding = other.as_variable_reference.binding
+			if other.is_variable_reference then
+				if binding = Void then
+					-- We err on the side of caution:
+					Result := STRING_.same_string (display_name, other.as_variable_reference.display_name)
+				else
+					Result := binding = other.as_variable_reference.binding
+				end
 			end
 		end
 
@@ -287,6 +287,11 @@ feature -- Element change
 			if are_static_properties_computed then reset_static_properties end
 		end
 
+feature {XM_XPATH_VARIABLE_REFERENCE} -- Access
+
+	display_name: STRING
+			-- Name of variable
+
 feature {NONE} -- Implementation
 
 	static_type: XM_XPATH_SEQUENCE_TYPE
@@ -294,9 +299,6 @@ feature {NONE} -- Implementation
 
 	constant_value: XM_XPATH_VALUE
 			-- Optional constant value
-
-	display_name: STRING
-			-- For diagnostics
 
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
@@ -339,5 +341,9 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+invariant
+
+	display_name_not_void: display_name /= Void
 
 end

@@ -34,9 +34,9 @@ feature {NONE} -- Initialization
 	make (a_sequence: XM_XPATH_EXPRESSION; an_item_type: XM_XPATH_ITEM_TYPE; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
 			-- Establish invariant.
 		require
-				underlying_expression_not_void: a_sequence /= Void
-				role_locator_not_void: a_role_locator /= Void
-				item_type_not_void: an_item_type /= Void
+			underlying_expression_not_void: a_sequence /= Void
+			role_locator_not_void: a_role_locator /= Void
+			item_type_not_void: an_item_type /= Void
 		do
 			error_code := a_role_locator.error_code
 			make_unary (a_sequence)
@@ -185,10 +185,10 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
 		local
-			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			base_expression.create_node_iterator (a_context)
-			l_iterator := base_expression.last_node_iterator
+			base_expression.create_iterator (a_context)
+			l_iterator := base_expression.last_iterator
 			if l_iterator.is_error then
 				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_iterator.error_value)
 			else

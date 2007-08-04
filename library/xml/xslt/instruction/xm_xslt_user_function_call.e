@@ -517,7 +517,7 @@ feature {NONE} -- Implementation
 			l_reference_count := function.parameter_definitions.item (a_index).reference_count 
 			a_argument.evaluate (a_return_value, argument_evaluation_modes.item (a_index),
 				l_reference_count, a_context)
-			if a_return_value = Void then
+			if a_return_value.item = Void then
 				a_actual_arguments.put (create {XM_XPATH_EMPTY_SEQUENCE}.make, a_index)
 			elseif not a_return_value.item.is_error then
 				if l_reference_count > 1 and a_return_value.item.is_closure 

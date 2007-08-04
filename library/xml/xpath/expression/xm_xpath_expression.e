@@ -2089,6 +2089,9 @@ feature {XM_XPATH_EXPRESSION_FACTORY} -- Implementation
 						l_finished := True
 						a_result.put (create {XM_XPATH_INVALID_VALUE}.make (l_iterator.error_value))
 					else
+						if l_value.as_memo_closure.state = l_value.as_memo_closure.Maybe_more_state then
+							l_value.as_memo_closure.mark_as_all_read
+						end
 						l_value := l_value.as_memo_closure.materialized
 					end
 				end

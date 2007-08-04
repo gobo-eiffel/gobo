@@ -59,7 +59,7 @@ feature -- Element change
 			variant
 				attribute_collection.number_of_attributes + 1 - a_cursor.index				
 			until
-				a_cursor.after
+				a_cursor.after or any_compile_errors
 			loop
 				a_name_code := a_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
@@ -132,23 +132,21 @@ feature -- Element change
 			a_sorted_sequence: XM_XPATH_EXPRESSION
 			a_content: XM_XPATH_EXPRESSION
 		do
-			a_sorted_sequence := select_expression
 			a_sort_key_list := sort_keys
-			create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
-			a_sorted_sequence.check_static_type (static_context, any_item)
-			if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
-			a_sorted_sequence.optimize (static_context, any_item)
-			if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
-			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-			a_content := last_generated_expression
-			if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end 
-			a_content.simplify
-			if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
-			create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (a_content, a_sort_key_list)
-			last_generated_expression.check_static_type (static_context, any_item)
-			if last_generated_expression.was_expression_replaced then last_generated_expression := last_generated_expression.replacement_expression end
-			last_generated_expression.optimize (static_context, any_item)
-			if last_generated_expression.was_expression_replaced then last_generated_expression := last_generated_expression.replacement_expression end
+			if select_expression /= Void then
+				create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (select_expression, a_sort_key_list)
+			else
+				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+				a_content := last_generated_expression
+				if a_content = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+				end 
+				a_content.simplify
+				if a_content.was_expression_replaced then
+					a_content := a_content.replacement_expression
+				end
+				create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (a_content, a_sort_key_list)
+			end
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted

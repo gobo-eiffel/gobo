@@ -220,60 +220,63 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 			a_fingerprint: INTEGER
 			a_parser: XM_XPATH_QNAME_PARSER
 		do
-			Precursor (a_context)
-			if arguments.item (2).is_string_value then
-
-				-- picture is known statically - optimize for this common case
-
-				picture := arguments.item (2).as_string_value.string_value
-			end
-			an_expression_context ?= a_context
-			check
-				expression_context: an_expression_context /= Void
-			end
-			if arguments.count = 3 then
-				if arguments.item (3).is_string_value then
-
-					-- common case, decimal format name is supplied as a string literal
+			if not are_arguments_checked then
+				are_arguments_checked := True
+				Precursor (a_context)
+				if arguments.item (2).is_string_value then
 					
-					create a_parser.make (arguments.item (3).as_string_value.string_value)
-					if a_parser.is_valid then
-						a_dfm := an_expression_context.style_sheet.decimal_format_manager
-						is_fixup_required := True
-
-						if a_parser.is_prefix_present then
-							if a_context.is_prefix_declared (a_parser.optional_prefix) then
-								a_uri := a_context.uri_for_prefix (a_parser.optional_prefix)
+					-- picture is known statically - optimize for this common case
+					
+					picture := arguments.item (2).as_string_value.string_value
+				end
+				an_expression_context ?= a_context
+				check
+					expression_context: an_expression_context /= Void
+				end
+				if arguments.count = 3 then
+					if arguments.item (3).is_string_value then
+						
+						-- common case, decimal format name is supplied as a string literal
+						
+						create a_parser.make (arguments.item (3).as_string_value.string_value)
+						if a_parser.is_valid then
+							a_dfm := an_expression_context.style_sheet.decimal_format_manager
+							is_fixup_required := True
+							
+							if a_parser.is_prefix_present then
+								if a_context.is_prefix_declared (a_parser.optional_prefix) then
+									a_uri := a_context.uri_for_prefix (a_parser.optional_prefix)
+								else
+									set_last_error_from_string ("Prefix of decimal-format-name has not been declared",
+										Xpath_errors_uri, "XTDE1280", Static_error)
+								end
 							else
-								set_last_error_from_string ("Prefix of decimal-format-name has not been declared",
-																	 Xpath_errors_uri, "XTDE1280", Static_error)
+								a_uri := Null_uri
 							end
-						else
-							a_uri := Null_uri
-						end
-						if not is_error then
-							if not shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
-								shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
-							end
+							if not is_error then
+								if not shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
+									shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
+								end
 								a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
 								a_dfm.register_usage (a_fingerprint, Current)
-							else
-								set_last_error_from_string (STRING_.appended_string (arguments.item (3).as_string_value.string_value, " is not a lexical QName"),
-																	 Xpath_errors_uri, "XTDE1280", Static_error)
 							end
+						else
+							set_last_error_from_string (STRING_.appended_string (arguments.item (3).as_string_value.string_value, " is not a lexical QName"),
+								Xpath_errors_uri, "XTDE1280", Static_error)
 						end
+					else
+						
+						-- we need to save the namespace context
+						
+						namespace_resolver := a_context.namespace_resolver
+					end
 				else
 					
-					-- we need to save the namespace context
-
-					namespace_resolver := a_context.namespace_resolver
+					-- two arguments only: it uses the default decimal format
+					
+					a_dfm := an_expression_context.style_sheet.decimal_format_manager
+					a_dfm.register_usage (-1, Current)
 				end
-			else
-
-				-- two arguments only: it uses the default decimal format
-
-				a_dfm := an_expression_context.style_sheet.decimal_format_manager
-				a_dfm.register_usage (-1, Current)
 			end
 		end
 
@@ -286,6 +289,10 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 feature {NONE} -- Implementation
+
+	are_arguments_checked: BOOLEAN
+			-- Has `check_arguments' already been called?
+			-- If so, then it is a global check, and so the static context is wrong. Prefixes may appear not declared, etc.
 
 	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
 			-- Namespace resolver, for when the decimal format name is not known statically
@@ -334,9 +341,17 @@ feature {NONE} -- Implementation
 						set_last_error_from_string ("first subpicture is zero-length", Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					else
 						create a_sub_picture.make (a_picture.substring (1, a_separator_index - 1), a_format)
-						sub_pictures.put (a_sub_picture, 1)
-						create a_sub_picture.make (a_picture.substring (a_separator_index + 1, a_picture.count), a_format)
-						sub_pictures.put (a_sub_picture, 2)
+						if a_sub_picture.is_error then
+							set_last_error (a_sub_picture.error_value)
+						else
+							sub_pictures.put (a_sub_picture, 1)
+							create a_sub_picture.make (a_picture.substring (a_separator_index + 1, a_picture.count), a_format)
+							if a_sub_picture.is_error then
+								set_last_error (a_sub_picture.error_value)
+							else
+								sub_pictures.put (a_sub_picture, 2)
+							end
+						end
 					end
 				end
 			end

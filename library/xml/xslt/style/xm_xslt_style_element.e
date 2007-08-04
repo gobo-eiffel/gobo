@@ -814,6 +814,12 @@ feature -- Status_report
 			Result := False
 		end
 	
+	is_decimal_format: BOOLEAN is
+			-- Is `Current' an xsl:decimal_format?
+		do
+			Result := False
+		end
+	
 	is_gexslt_document: BOOLEAN is
 			-- Is `Current' a gexslt:document?
 		do
@@ -1420,7 +1426,7 @@ feature -- Creation
 			l_error: XM_XPATH_ERROR_VALUE
 			l_code: STRING
 		do
-			create l_pattern_parser.make
+			create l_pattern_parser.make_pattern
 			l_pattern_parser.parse_pattern (a_pattern, static_context, line_number)
 			if not l_pattern_parser.is_parse_error then
 				last_generated_pattern := l_pattern_parser.last_parsed_pattern.simplified_pattern
@@ -1449,7 +1455,7 @@ feature -- Creation
 			if static_context = Void then
 				create static_context.make (Current, configuration)
 			end
-			create a_pattern_parser.make
+			create a_pattern_parser.make_pattern
 			a_pattern_parser.parse_sequence_type (a_sequence_type, static_context, line_number)
 			if a_pattern_parser.is_parse_error then
 				create an_error.make_from_string (a_pattern_parser.first_parse_error, Xpath_errors_uri, "XTSE0340", Static_error)
@@ -2351,6 +2357,15 @@ feature -- Conversion
 			-- `Current' seen as an xsl:non-matching-substring
 		require
 			non_matching_substring: is_non_matching_substring
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	as_decimal_format: XM_XSLT_DECIMAL_FORMAT is
+			-- `Current' seen as an xsl:decimal_format
+		require
+			decimal_format: is_decimal_format
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)

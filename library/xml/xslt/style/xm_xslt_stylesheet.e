@@ -508,7 +508,7 @@ feature -- Element change
 				a_cursor := attribute_collection.name_code_cursor
 				a_cursor.start
 			until
-				a_cursor.after
+				a_cursor.after or any_compile_errors
 			loop
 				a_name_code := a_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
@@ -1058,6 +1058,8 @@ feature {NONE} -- Implementation
 						namespace_alias_list.resize (2 * namespace_alias_list.count)
 					end
 					namespace_alias_list.put_last (a_cursor.item.as_namespace_alias)
+				elseif a_cursor.item.is_decimal_format then
+					a_cursor.item.as_decimal_format.register
 				end
 				a_cursor.back
 			end
@@ -1072,42 +1074,43 @@ feature {NONE} -- Implementation
 			indices_not_built: not indices_built
 			template_not_void: a_template /= Void
 		local
-			a_fingerprint: INTEGER
-			another_template: XM_XSLT_TEMPLATE
-			a_message: STRING
-			an_error: XM_XPATH_ERROR_VALUE
+			l_fingerprint: INTEGER
+			l_template: XM_XSLT_TEMPLATE
+			l_message: STRING
 		do
-			a_fingerprint := a_template.template_fingerprint
-			if a_fingerprint /= -1 then
-
-				-- Named template
-
-				if named_templates_index.has (a_fingerprint) then
-
-					-- Check the precedence.
-
-					another_template := named_templates_index.item (a_fingerprint)
-					if a_template.precedence = another_template.precedence then
-						a_message := STRING_.concat ("Duplicate named template (see line ", another_template.line_number.out)
-						a_message := STRING_.appended_string (a_message, " of ")
-						a_message := STRING_.appended_string (a_message, another_template.system_id)
-						a_message := STRING_.appended_string (a_message, ")")
-						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0660", Static_error)
-						a_template.report_compile_error (an_error)
-					elseif a_template.precedence < another_template.precedence then
-						a_template.set_redundant_named_template
+			a_template.ensure_template_fingerprint
+			if not any_compile_errors then
+				l_fingerprint := a_template.template_fingerprint
+				if l_fingerprint /= -1 then
+					
+					-- Named template
+					
+					if named_templates_index.has (l_fingerprint) then
+						
+						-- Check the precedence.
+						
+						l_template := named_templates_index.item (l_fingerprint)
+						if a_template.precedence = l_template.precedence then
+							l_message := STRING_.concat ("Duplicate named template (see line ", l_template.line_number.out)
+							l_message := STRING_.appended_string (l_message, " of ")
+							l_message := STRING_.appended_string (l_message, l_template.system_id)
+							l_message := STRING_.appended_string (l_message, ")")
+							a_template.report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (l_message, Xpath_errors_uri, "XTSE0660", Static_error))
+						elseif a_template.precedence < l_template.precedence then
+							a_template.set_redundant_named_template
+						else
+							
+							-- This is not supposed to happen
+							
+							l_template.set_redundant_named_template
+							named_templates_index.replace (a_template, l_fingerprint)
+						end
 					else
-
-						-- This is not supposed to happen
-
-						another_template.set_redundant_named_template
-						named_templates_index.replace (a_template, a_fingerprint)
+						if named_templates_index.is_full then
+							named_templates_index.resize (2 * named_templates_index.count)
+						end
+						named_templates_index.put (a_template, l_fingerprint)
 					end
-				else
-					if named_templates_index.is_full then
-						named_templates_index.resize (2 * named_templates_index.count)
-					end
-					named_templates_index.put (a_template, a_fingerprint)
 				end
 			end
 		end

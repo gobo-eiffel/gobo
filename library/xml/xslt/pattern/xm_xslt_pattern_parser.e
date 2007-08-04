@@ -21,10 +21,19 @@ inherit
 
 	XM_XSLT_PATTERN_ROUTINES
 
-	-- TODO: Add XSLT Pattern as host language
 create
 
-	make
+	make_pattern
+
+feature {NONE} -- Initialization
+
+	make_pattern is
+			-- Initialize `Current' as an XSLT pattern parser.
+		do
+			is_pattern_parser := True
+		ensure
+			xslt_pattern_parser: is_pattern_parser
+		end
 
 feature -- Status report
 

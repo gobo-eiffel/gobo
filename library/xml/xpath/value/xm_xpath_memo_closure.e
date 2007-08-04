@@ -326,7 +326,7 @@ feature -- Evaluation
 			end
 		end
 
-feature {XM_XPATH_MEMO_CLOSURE, XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR} -- Restricted
+feature {XM_XPATH_MEMO_CLOSURE, XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR, XM_XPATH_EXPRESSION} -- Restricted
 
 	state: INTEGER
 			-- Information on items read
@@ -345,7 +345,7 @@ feature {XM_XPATH_MEMO_CLOSURE} -- Local
 	node_reservoir: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			-- List of nodes already read
 
-feature {XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR} -- restricted
+feature {XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR, XM_XPATH_EXPRESSION} -- Restricted
 
 	mark_as_all_read is
 			-- Set `Current' to `All_read_state'.
