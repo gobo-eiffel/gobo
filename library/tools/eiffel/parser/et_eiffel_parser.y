@@ -3216,7 +3216,7 @@ Bracket_target: Call_expression
 --         do_nothing
 --      end
 -- Hence the use of 'E_ONCE_STRING' instead of 'E_ONCE'.
-		{ $$ := ast_factory.new_once_manifest_string ($1, $2) }
+		{ $$ := new_once_manifest_string ($1, $2) }
 	| E_BIT
 		{ $$ := $1 }
 	| Manifest_array

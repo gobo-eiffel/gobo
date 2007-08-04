@@ -1410,6 +1410,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_once_manifest_string (a_once: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ONCE_MANIFEST_STRING is
+			-- New once manifest string
+		do
+			Result := ast_factory.new_once_manifest_string (a_once, a_string)
+			if Result /= Void then
+				universe.register_inline_constant (Result)
+			end
+		end
+
 	new_postconditions (an_ensure: ET_KEYWORD; a_then: ET_KEYWORD): ET_POSTCONDITIONS is
 			-- New postconditions
 		local

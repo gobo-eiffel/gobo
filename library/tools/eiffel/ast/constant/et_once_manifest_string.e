@@ -14,7 +14,7 @@ class ET_ONCE_MANIFEST_STRING
 
 inherit
 
-	ET_EXPRESSION
+	ET_INLINE_CONSTANT
 
 create
 
@@ -40,6 +40,14 @@ feature -- Access
 
 	manifest_string: ET_MANIFEST_STRING
 			-- Manifest string
+
+	constant: ET_CONSTANT is
+			-- Constant value
+		do
+			Result := manifest_string
+		ensure then
+			definition: Result = manifest_string
+		end
 
 	position: ET_POSITION is
 			-- Position of first character of

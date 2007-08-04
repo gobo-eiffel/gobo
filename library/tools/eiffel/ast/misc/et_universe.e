@@ -1211,6 +1211,20 @@ feature -- Feature registration
 	feature_count: INTEGER
 			-- Number of features already registered
 
+feature -- Inline constant registration
+
+	register_inline_constant (a_constant: ET_INLINE_CONSTANT) is
+			-- Register `a_constant'.
+		require
+			a_constant_not_void: a_constant /= Void
+		do
+			inline_constant_count := inline_constant_count + 1
+			a_constant.set_id (inline_constant_count)
+		end
+
+	inline_constant_count: INTEGER
+			-- Number of inline constants already registered
+
 feature -- Measurement
 
 	parsed_classes_count: INTEGER is
