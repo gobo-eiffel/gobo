@@ -167,7 +167,6 @@ feature {NONE} -- Initialization
 			create polymorphic_call_feature.make (dummy_feature.static_feature, dummy_feature.target_type, current_system)
 			create l_dynamic_type_sets.make_with_capacity (50)
 			polymorphic_call_feature.set_dynamic_type_sets (l_dynamic_type_sets)
-			create current_inline_constants.make (20)
 			create current_agents.make (20)
 			create agent_open_operands.make (20)
 			create agent_closed_operands.make (20)
@@ -182,7 +181,7 @@ feature {NONE} -- Initialization
 			create gevoid_result_types.make (100)
 			create once_features.make (10000)
 			create constant_features.make_map (10000)
-			create features_with_inline_constants.make (10000)
+			create inline_constants.make (10000)
 			create called_features.make (1000)
 			create included_header_filenames.make (100)
 			included_header_filenames.set_equality_tester (string_equality_tester)
@@ -703,7 +702,7 @@ feature {NONE} -- C code Generation
 				included_runtime_c_files.wipe_out
 				once_features.wipe_out
 				constant_features.wipe_out
-				features_with_inline_constants.wipe_out
+				inline_constants.wipe_out
 				l_header_file.close
 				close_c_file
 				close_cpp_file
@@ -820,7 +819,6 @@ feature {NONE} -- Feature generation
 		local
 			old_type: ET_DYNAMIC_TYPE
 			old_feature: ET_DYNAMIC_FEATURE
-			l_implementation_feature: ET_FEATURE
 			i: INTEGER
 		do
 			if not a_feature.is_semistrict then
@@ -838,119 +836,8 @@ feature {NONE} -- Feature generation
 					i := i + 1
 				end
 				current_agents.wipe_out
-					-- Print declaration of inline constants (such as once manifest strings)
-					-- used in `a_feature', if not already done.
-				if not current_inline_constants.is_empty then
-					l_implementation_feature := a_feature.static_feature.implementation_feature
-					if not features_with_inline_constants.has (l_implementation_feature) then
-						features_with_inline_constants.force_last (l_implementation_feature)
-						print_inline_constants_declaration (l_implementation_feature)
-						print_inline_geconst_function (l_implementation_feature)
-					end
-				end
-				current_inline_constants.wipe_out
 				current_feature := old_feature
 				current_type := old_type
-			end
-		end
-
-	print_inline_geconst_function (a_feature: ET_FEATURE) is
-			-- Print 'geconst' function for `a_feature' to `current_file', and its signature to `header_file'.
-			-- This 'geconst' is called to initialize the value of inline constants (such as once manifest
-			-- strings) appearing in `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
-			implementation_feature: a_feature = a_feature.implementation_feature
-		local
-			i, nb: INTEGER
-		do
-				-- Comment.
-			header_file.put_string ("/* Initialization of inline constants for feature ")
-			header_file.put_string (a_feature.implementation_class.upper_name)
-			header_file.put_character ('.')
-			header_file.put_string (STRING_.replaced_all_substrings (a_feature.name.lower_name, "*/", "star/"))
-			header_file.put_line (" */")
-			current_file.put_string ("/* Initialization of inline constants for feature ")
-			current_file.put_string (a_feature.implementation_class.upper_name)
-			current_file.put_character ('.')
-			current_file.put_string (STRING_.replaced_all_substrings (a_feature.name.lower_name, "*/", "star/"))
-			current_file.put_line (" */")
-				-- Declaration.
-			header_file.put_string (c_void)
-			current_file.put_string (c_void)
-			header_file.put_character (' ')
-			current_file.put_character (' ')
-			print_geconst_name (a_feature, header_file)
-			print_geconst_name (a_feature, current_file)
-			header_file.put_character ('(')
-			current_file.put_character ('(')
-			header_file.put_string (c_void)
-			header_file.put_character (')')
-			current_file.put_character (')')
-			header_file.put_character (';')
-			header_file.put_new_line
-			current_file.put_new_line
-			current_file.put_character ('{')
-			current_file.put_new_line
-			indent
-			nb := current_inline_constants.count
-			from i := 1 until i > nb loop
-				print_indentation
-				print_inline_constant_name (i, a_feature, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				current_inline_constants.item (i).constant.process (Current)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-				i := i + 1
-			end
-			dedent
-			current_file.put_character ('}')
-			current_file.put_new_line
-			current_file.put_new_line
-			flush_to_c_file
-		end
-
-	print_inline_constants_declaration (a_feature: ET_FEATURE) is
-			-- Print declarations of inline constants (such as once manifest strings)
-			-- appearing in `a_feature' to `header_file' and `current_file'.
-		require
-			a_feature_not_void: a_feature /= Void
-			implementation_feature: a_feature = a_feature.implementation_feature
-		local
-			i, nb: INTEGER
-		do
-				-- Comment.
-			header_file.put_string ("/* Inline constants for feature ")
-			header_file.put_string (a_feature.implementation_class.upper_name)
-			header_file.put_character ('.')
-			header_file.put_string (STRING_.replaced_all_substrings (a_feature.name.lower_name, "*/", "star/"))
-			header_file.put_line (" */")
-			current_file.put_string ("/* Inline constants for feature ")
-			current_file.put_string (a_feature.implementation_class.upper_name)
-			current_file.put_character ('.')
-			current_file.put_string (STRING_.replaced_all_substrings (a_feature.name.lower_name, "*/", "star/"))
-			current_file.put_line (" */")
-				-- Declaration.
-			nb := current_inline_constants.count
-			from i := 1 until i > nb loop
-				header_file.put_string (c_extern)
-				header_file.put_character (' ')
-				print_type_declaration (current_system.string_type, header_file)
-				print_type_declaration (current_system.string_type, current_file)
-				header_file.put_character (' ')
-				current_file.put_character (' ')
-				print_inline_constant_name (i, a_feature, header_file)
-				print_inline_constant_name (i, a_feature, current_file)
-				header_file.put_character (';')
-				current_file.put_character (';')
-				header_file.put_new_line
-				current_file.put_new_line
-				flush_to_c_file
-				i := i + 1
 			end
 		end
 
@@ -962,6 +849,7 @@ feature {NONE} -- Feature generation
 			l_type: ET_TYPE
 			l_context: ET_TYPE_CONTEXT
 			l_result_type: ET_DYNAMIC_TYPE
+			l_constant: ET_INLINE_CONSTANT
 		do
 			from constant_features.start until constant_features.after loop
 				l_feature := constant_features.key_for_iteration
@@ -996,6 +884,26 @@ feature {NONE} -- Feature generation
 					end
 				end
 				constant_features.forth
+			end
+			from inline_constants.start until inline_constants.after loop
+				l_constant := inline_constants.item_for_iteration
+				header_file.put_string (c_extern)
+				header_file.put_character (' ')
+					-- Here we assume that all inline constants are
+					-- in fact once manifest strings of type "STRING".
+					-- This would need to be changed when introducing
+					-- other kinds of inline constants with different types.
+				print_type_declaration (current_system.string_type, header_file)
+				print_type_declaration (current_system.string_type, current_file)
+				header_file.put_character (' ')
+				current_file.put_character (' ')
+				print_inline_constant_name (l_constant, header_file)
+				print_inline_constant_name (l_constant, current_file)
+				header_file.put_character (';')
+				current_file.put_character (';')
+				header_file.put_new_line
+				current_file.put_new_line
+				inline_constants.forth
 			end
 		end
 
@@ -6403,8 +6311,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			if in_operand then
 				operand_stack.force (an_expression)
 			else
-				current_inline_constants.force_last (an_expression)
-				print_inline_constant_name (current_inline_constants.count, current_feature.static_feature.implementation_feature, current_file)
+				inline_constants.force_last (an_expression)
+				print_inline_constant_name (an_expression, current_file)
 			end
 		end
 
@@ -16406,9 +16314,10 @@ feature {NONE} -- C function generation
 	print_geconst_function is
 			-- Print 'geconst' function to `current_file', and its signature to `header_file'.
 			-- 'geconst' is called to initialize the value of the non-expanded constant attributes
-			-- and once manifest strings.
+			-- and inline constants (such as once manifest strings).
 		local
 			l_feature: ET_FEATURE
+			l_constant: ET_INLINE_CONSTANT
 		do
 			header_file.put_string (c_void)
 			current_file.put_string (c_void)
@@ -16454,15 +16363,19 @@ feature {NONE} -- C function generation
 				current_file.put_new_line
 				constant_features.forth
 			end
-			from features_with_inline_constants.start until features_with_inline_constants.after loop
-				l_feature := features_with_inline_constants.item_for_iteration
+			from inline_constants.start until inline_constants.after loop
+				l_constant := inline_constants.item_for_iteration
 				print_indentation
-				print_geconst_name (l_feature, current_file)
+				print_inline_constant_name (l_constant, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
 				current_file.put_character ('(')
+				l_constant.constant.process (Current)
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
-				features_with_inline_constants.forth
+				inline_constants.forth
 			end
 			dedent
 			current_file.put_character ('}')
@@ -18600,41 +18513,19 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (i)
 		end
 
-	print_geconst_name (a_feature: ET_FEATURE; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print to `a_file' the name of the function that will 
-			-- initialize the value of once manifest strings appearing
-			-- in `a_feature'.
+	print_inline_constant_name (a_constant: ET_INLINE_CONSTANT; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of variable holding the value of inline constant
+			-- `a_constant' (such as a once manifest string) to `a_file'.
 		require
-			a_feature_not_void: a_feature /= Void
-			implementation_feature: a_feature = a_feature.implementation_feature
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		do
-			a_file.put_string (c_geconst)
-			a_file.put_integer (a_feature.implementation_class.id)
-			a_file.put_character ('o')
-			a_file.put_character ('v')
-			a_file.put_integer (a_feature.first_seed)
-		end
-
-	print_inline_constant_name (i: INTEGER; a_feature: ET_FEATURE; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print name of variable holding the value of `i'-th inline constant
-			-- (such as a once manifest string) appearing in `a_feature' to `a_file'.
-		require
-			a_feature_not_void: a_feature /= Void
-			implementation_feature: a_feature = a_feature.implementation_feature
+			a_constant_not_void: a_constant /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_character ('g')
 			a_file.put_character ('e')
-			a_file.put_integer (a_feature.implementation_class.id)
-			a_file.put_character ('o')
-			a_file.put_character ('v')
-			a_file.put_integer (a_feature.first_seed)
 			a_file.put_character ('i')
 			a_file.put_character ('c')
-			a_file.put_integer (i)
+			a_file.put_integer (a_constant.id)
 		end
 
 	print_feature_name_comment (a_feature: ET_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -19765,9 +19656,6 @@ feature {NONE} -- Access
 	current_agents: DS_ARRAYED_LIST [ET_AGENT]
 			-- Agents already processed in `current_feature'
 
-	current_inline_constants: DS_ARRAYED_LIST [ET_INLINE_CONSTANT]
-			-- Inline constants (such as once manifest strings) processed in `current_feature'
-
 	called_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
 			-- Features being called
 
@@ -19786,8 +19674,8 @@ feature {NONE} -- Access
 	constant_features: DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE]
 			-- Features returning a constant
 
-	features_with_inline_constants: DS_HASH_SET [ET_FEATURE]
-			-- Features containing inline constants (such as once manifest strings)
+	inline_constants: DS_HASH_SET [ET_INLINE_CONSTANT]
+			-- Inline constants (such as once manifest strings)
 
 	operand_stack: DS_ARRAYED_STACK [ET_EXPRESSION]
 			-- Operand stack
@@ -20249,8 +20137,6 @@ invariant
 	no_void_standalone_type_set: standalone_type_sets.has (Void)
 	current_agents_not_void: current_agents /= Void
 	no_void_agent: not current_agents.has (Void)
-	current_inline_consntants_not_void: current_inline_constants /= Void
-	no_void_inline_constant: not current_inline_constants.has (Void)
 	agent_instruction_not_void: agent_instruction /= Void
 	agent_expression_not_void: agent_expression /= Void
 	agent_target_not_void: agent_target /= Void
@@ -20275,9 +20161,8 @@ invariant
 	constant_features_not_void: constant_features /= Void
 	no_void_constant_feature: not constant_features.has (Void)
 	-- constant_feature_constraint: forall f in constant_features, f = f.implementation_feature
-	features_with_inline_constants_not_void: features_with_inline_constants /= Void
-	no_void_feature_with_inline_constants: not features_with_inline_constants.has (Void)
-	-- feature_with_inline_constants_constraint: forall f in features_with_inline_constants, f = f.implementation_feature
+	inline_constants_not_void: inline_constants /= Void
+	no_void_inline_constant: not inline_constants.has (Void)
 	temp_variables_not_void: temp_variables /= Void
 	no_void_temp_variable: not temp_variables.has (Void)
 	used_temp_variables_not_void: used_temp_variables /= Void

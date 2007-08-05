@@ -31,7 +31,7 @@ feature -- Access
 	id: INTEGER
 			-- Constant id in surrounding universe
 
-	hash_code: INTEGER
+	hash_code: INTEGER is
 			-- Hash code
 		do
 			Result := id
