@@ -57,7 +57,7 @@ feature -- Element change
 				a_cursor := attribute_collection.name_code_cursor
 				a_cursor.start
 			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				attribute_collection.number_of_attributes + 1 - a_cursor.index
 			until
 				a_cursor.after or any_compile_errors
 			loop
@@ -129,7 +129,6 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		local
 			a_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
-			a_sorted_sequence: XM_XPATH_EXPRESSION
 			a_content: XM_XPATH_EXPRESSION
 		do
 			a_sort_key_list := sort_keys
@@ -140,7 +139,7 @@ feature -- Element change
 				a_content := last_generated_expression
 				if a_content = Void then
 					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
-				end 
+				end
 				a_content.simplify
 				if a_content.was_expression_replaced then
 					a_content := a_content.replacement_expression
