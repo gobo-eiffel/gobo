@@ -823,6 +823,8 @@ feature {NONE} -- Feature validity
 						inspect l_builtin_code \\ builtin_capacity
 						when builtin_type_generating_type then
 							report_builtin_type_generating_type (a_feature)
+						when builtin_type_name then
+							report_builtin_type_name (a_feature)
 						else
 								-- Internal error: invalid built-in feature.
 								-- Error already reported during parsing.
@@ -3212,6 +3214,19 @@ feature {NONE} -- Built-in features
 					l_result_type.set_alive
 					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 				end
+			end
+		end
+
+	report_builtin_type_name (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TYPE.name' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (a_feature.builtin_code)
+				current_system.set_string_type_alive
+				propagate_builtin_result_dynamic_types (current_system.string_type, current_dynamic_feature)
 			end
 		end
 

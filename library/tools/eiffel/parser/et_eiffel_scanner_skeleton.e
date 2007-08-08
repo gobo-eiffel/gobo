@@ -827,6 +827,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.last_result_name)
 			Result.force_new (-1, tokens.lower_name)
 			Result.force_new (-1, tokens.make_name)
+			Result.force_new (-1, tokens.name_name)
 			Result.force_new (-1, tokens.natural_32_code_name)
 			Result.force_new (-1, tokens.out_name)
 			Result.force_new (-1, tokens.pointer_bytes_name)

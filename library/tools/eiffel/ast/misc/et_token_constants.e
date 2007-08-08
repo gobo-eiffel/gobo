@@ -1124,6 +1124,14 @@ feature -- Feature names
 			make_feature_name_not_void: Result /= Void
 		end
 
+	name_feature_name: ET_FEATURE_NAME is
+			-- 'name' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (name_name)
+		ensure
+			name_feature_name_not_void: Result /= Void
+		end
+
 	natural_32_code_feature_name: ET_FEATURE_NAME is
 			-- 'natural_32_code' feature name
 		once
@@ -2306,6 +2314,9 @@ feature -- Keyword and symbol names
 
 	make_name: STRING is "make"
 		-- Name of Eiffel feature 'make'
+
+	name_name: STRING is "name"
+		-- Name of Eiffel feature 'name'
 
 	natural_32_code_name: STRING is "natural_32_code"
 		-- Name of Eiffel feature 'natural_32_code'

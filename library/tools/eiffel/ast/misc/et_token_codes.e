@@ -350,6 +350,7 @@ feature -- Built-in codes
 
 	builtin_type_class: INTEGER is 21
 	builtin_type_generating_type: INTEGER is 1
+	builtin_type_name: INTEGER is 2
 			-- Codes for built-in features from class TYPE
 
 end

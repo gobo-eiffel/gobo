@@ -1383,6 +1383,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					inspect l_builtin_code \\ builtin_capacity
 					when builtin_type_generating_type then
 						print_builtin_type_generating_type_body (a_feature)
+					when builtin_type_name then
+						fill_call_formal_arguments (a_feature)
+						print_indentation_assign_to_result
+						print_builtin_type_name_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
 					else
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
@@ -6909,6 +6915,13 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 								else
 									l_printed := False
 								end
+							when builtin_type_class then
+								inspect l_builtin_code \\ builtin_capacity
+								when builtin_type_name then
+									print_builtin_type_name_call (a_target_type)
+								else
+									l_printed := False
+								end
 							when builtin_special_class then
 								inspect l_builtin_code \\ builtin_capacity
 								when builtin_special_item then
@@ -11113,6 +11126,35 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			valid_feature: current_feature.static_feature = a_feature
 		do
 -- TODO
+		end
+
+	print_builtin_type_name_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'TYPE.name' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_string: STRING
+		do
+			l_parameters := a_target_type.base_type.actual_parameters
+			if l_parameters = Void or else l_parameters.count < 1 then
+					-- Internal error: we should have already checked by now
+					-- that class TYPE has a generic parameter.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_string := l_parameters.type (1).to_text
+				current_file.put_string (c_gems)
+				current_file.put_character ('(')
+				print_escaped_string (l_string)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_integer (l_string.count)
+				current_file.put_character (')')
+			end
 		end
 
 	print_builtin_special_item_call (a_target_type: ET_DYNAMIC_TYPE) is
