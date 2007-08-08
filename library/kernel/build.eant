@@ -131,6 +131,8 @@
 			<argument name="gepp_dir" value="basic"/>
 			<argument name="gepp_file" value="special"/>
 		</geant>
+		<delete file="spec/ise/special.e"/>
+		<delete file="spec/ge/special.e"/>
 	</target>
 
 	<target name="install_io">
@@ -247,6 +249,8 @@
 			<argument name="gepp_dir" value="misc"/>
 			<argument name="gepp_file" value="debug_output"/>
 		</geant>
+		<delete file="spec/ise/debug_output.e"/>
+		<delete file="spec/ge/debug_output.e"/>
 		<geant target="ge2e">
 			<argument name="spec_dir" value="spec"/>
 			<argument name="gepp_dir" value="misc"/>
