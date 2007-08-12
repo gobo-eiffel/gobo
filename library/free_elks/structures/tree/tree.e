@@ -134,9 +134,9 @@ feature -- Comparison
 			other_not_void: other /= Void
 		do
 			if object_comparison then
-				Result := equal (Current.item, other.item)
+				Result := equal (item, other.item)
 			else
-				Result := Current.item = other.item
+				Result := item = other.item
 			end
 		end
 
