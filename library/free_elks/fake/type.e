@@ -58,7 +58,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := name.hash_code
+			Result := type_id
 		end
 
 feature -- Comparison
@@ -117,6 +117,8 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- Eiffel type represented by `Current', then return the Result.
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
+		obsolete
+			"[070813] Use 'name + other' instead (or 'out + other' during the transition period)."
 		require
 			argument_not_void: other /= Void
 		do
@@ -131,6 +133,8 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- and `other' have same character sequence?
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
+		obsolete
+			"[070813] Use 'name.same_string (other)' instead (or 'out.same_string (other)' during the transition period)."
 		require
 			other_not_void: other /= Void
 		do
@@ -145,6 +149,8 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- of casing (possibly with a different capacity)?
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
+		obsolete
+			"[070813] Use 'name.is_case_insensitive_equal (other)' instead (or 'out.is_case_insensitive_equal (other)' during the transition period)."
 		require
 			other_not_void: other /= Void
 		do
@@ -155,7 +161,11 @@ feature -- Features from STRING needed here for the transition period (see conve
 
 	as_lower: STRING is
 			-- New object with all letters of the name of the Eiffel type
-			-- represented by `Current' in lower case
+			-- represented by `Current' in lower case.
+			-- This feature from STRING is needed here for the
+			-- transition period (see convert clause).
+		obsolete
+			"[070813] Use 'name.as_lower' instead (or 'out.as_lower' during the transition period)."
 		do
 			Result := name.as_lower
 		ensure
@@ -165,7 +175,11 @@ feature -- Features from STRING needed here for the transition period (see conve
 
 	as_upper: STRING is
 			-- New object with all letters of the name of the Eiffel type
-			-- represented by `Current' in upper case
+			-- represented by `Current' in upper case.
+			-- This feature from STRING is needed here for the
+			-- transition period (see convert clause).
+		obsolete
+			"[070813] Use 'name.as_upper' instead (or 'out.as_upper' during the transition period)."
 		do
 			Result := name.as_upper
 		ensure
