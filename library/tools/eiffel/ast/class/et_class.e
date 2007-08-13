@@ -29,7 +29,8 @@ inherit
 			first_leaf, last_leaf,
 			position, break, append_to_string,
 			is_named_type, is_valid_context,
-			debug_output, copy, is_equal
+			debug_output, copy, is_equal,
+			append_unaliased_to_string
 		end
 
 	HASHABLE
@@ -1632,6 +1633,22 @@ feature -- Output
 			if a_parameters /= Void and then not a_parameters.is_empty then
 				a_string.append_character (' ')
 				a_parameters.append_to_string (a_string)
+			end
+		end
+
+	append_unaliased_to_string (a_string: STRING) is
+			-- Append textual representation of unaliased
+			-- version of current type to `a_string'.
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		local
+			a_parameters: like formal_parameters
+		do
+			a_string.append_string (upper_name)
+			a_parameters := formal_parameters
+			if a_parameters /= Void and then not a_parameters.is_empty then
+				a_string.append_character (' ')
+				a_parameters.append_unaliased_to_string (a_string)
 			end
 		end
 

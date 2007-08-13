@@ -926,6 +926,29 @@ feature -- Output
 		deferred
 		end
 
+	unaliased_to_text: STRING is
+			-- Textual representation of unaliased version of current type
+			-- (Create a new string at each call.)
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		do
+			create Result.make (15)
+			append_unaliased_to_string (Result)
+		ensure
+			unaliased_to_text_not_void: Result /= Void
+		end
+
+	append_unaliased_to_string (a_string: STRING) is
+			-- Append textual representation of unaliased
+			-- version of current type to `a_string'.
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			append_to_string (a_string)
+		end
+
 	debug_output: STRING is
 			-- String that should be displayed in debugger to represent `Current'
 		do

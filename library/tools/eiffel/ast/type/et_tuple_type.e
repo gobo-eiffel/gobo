@@ -26,7 +26,8 @@ inherit
 			reference_conforms_from_class_type,
 			reference_conforms_from_tuple_type,
 			tuple_keyword, actual_parameters,
-			resolved_formal_parameters
+			resolved_formal_parameters,
+			append_unaliased_to_string
 		end
 
 create
@@ -444,6 +445,22 @@ feature -- Output
 			if a_parameters /= Void and then not a_parameters.is_empty then
 				a_string.append_character (' ')
 				a_parameters.append_to_string (a_string)
+			end
+		end
+
+	append_unaliased_to_string (a_string: STRING) is
+			-- Append textual representation of unaliased
+			-- version of current type to `a_string'.
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		local
+			a_parameters: like actual_parameters
+		do
+			a_string.append_string (tuple_string)
+			a_parameters := actual_parameters
+			if a_parameters /= Void and then not a_parameters.is_empty then
+				a_string.append_character (' ')
+				a_parameters.append_unaliased_to_string (a_string)
 			end
 		end
 

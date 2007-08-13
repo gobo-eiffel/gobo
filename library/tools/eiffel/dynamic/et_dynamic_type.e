@@ -90,6 +90,16 @@ feature -- Status report
 	has_static: BOOLEAN
 			-- Does current type contain features that are used as static features?
 
+	is_used: BOOLEAN is
+			-- Should current type used in the system?
+		do
+			Result := is_alive or has_static or (meta_type /= Void and then meta_type.is_used)
+		ensure
+			is_alive: is_alive implies Result
+			has_static: has_static implies Result
+			has_meta_type: (meta_type /= Void and then meta_type.is_used) implies Result
+		end
+
 feature -- Conformance
 
 	conforms_to_type (other: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): BOOLEAN is
@@ -161,6 +171,11 @@ feature -- Access
 	procedures: ET_DYNAMIC_FEATURE_LIST
 			-- Procedures executed at run-time, if any
 
+	meta_type: ET_DYNAMIC_TYPE
+			-- Type representing current type, if any.
+			-- If current type is of the form 'T', then
+			-- the meta type will be 'TYPE [T]'.
+
 	static_type: ET_DYNAMIC_TYPE is
 			-- Type at compilation time
 		do
@@ -194,6 +209,14 @@ feature -- Access
 			-- ID
 
 feature -- Setting
+
+	set_meta_type (a_type: like meta_type) is
+			-- Set `meta_type' to `a_type'.
+		do
+			meta_type := a_type
+		ensure
+			meta_type_set: meta_type = a_type
+		end
 
 	set_id (i: INTEGER) is
 			-- Set `id' to `i'.

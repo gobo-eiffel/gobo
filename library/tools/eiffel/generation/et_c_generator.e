@@ -1389,6 +1389,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						print_builtin_type_name_call (current_type)
 						print_semicolon_newline
 						call_operands.wipe_out
+					when builtin_type_type_id then
+						fill_call_formal_arguments (a_feature)
+						print_indentation_assign_to_result
+						print_builtin_type_type_id_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
 					else
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
@@ -6294,9 +6300,36 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
+		local
+			l_type: ET_DYNAMIC_TYPE
+			l_meta_type: ET_DYNAMIC_TYPE
 		do
--- TODO.
-print ("ET_C_GENERATOR.print_manifest_type%N")
+			if in_operand then
+				operand_stack.force (an_expression)
+			else
+				l_type := current_system.dynamic_type (an_expression.type, current_type.base_type)
+				l_meta_type := l_type.meta_type
+				if l_meta_type = Void then
+						-- Internal error: the meta type of this type should have been
+						-- computed. It is nothing else than the type of this manifest
+						-- type expression.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_type_declaration (l_meta_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character ('&')
+					current_file.put_character ('(')
+					current_file.put_string (c_getypes)
+					current_file.put_character ('[')
+					current_file.put_integer (l_type.id)
+					current_file.put_character (']')
+					current_file.put_character (')')
+					current_file.put_character (')')
+				end
+			end
 		end
 
 	print_old_expression (an_expression: ET_OLD_EXPRESSION) is
@@ -6919,6 +6952,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 								inspect l_builtin_code \\ builtin_capacity
 								when builtin_type_name then
 									print_builtin_type_name_call (a_target_type)
+								when builtin_type_type_id then
+									print_builtin_type_type_id_call (a_target_type)
 								else
 									l_printed := False
 								end
@@ -8745,7 +8780,7 @@ feature {NONE} -- Agent generation
 				header_file.put_string ("Agent #")
 				header_file.put_integer (i)
 				header_file.put_string (" in feature ")
-				header_file.put_string (current_type.base_type.to_text)
+				header_file.put_string (current_type.base_type.unaliased_to_text)
 				header_file.put_character ('.')
 				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
 				header_file.put_character (' ')
@@ -8877,7 +8912,7 @@ feature {NONE} -- Agent generation
 				current_file.put_string ("Function for agent #")
 				current_file.put_integer (i)
 				current_file.put_string (" in feature ")
-				current_file.put_string (current_type.base_type.to_text)
+				current_file.put_string (current_type.base_type.unaliased_to_text)
 				current_file.put_character ('.')
 				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
 				current_file.put_character (' ')
@@ -8988,7 +9023,7 @@ feature {NONE} -- Agent generation
 				header_file.put_string ("Creation of agent #")
 				header_file.put_integer (i)
 				header_file.put_string (" in feature ")
-				header_file.put_string (current_type.base_type.to_text)
+				header_file.put_string (current_type.base_type.unaliased_to_text)
 				header_file.put_character ('.')
 				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
 				header_file.put_character (' ')
@@ -9001,7 +9036,7 @@ feature {NONE} -- Agent generation
 				current_file.put_string ("Creation of agent #")
 				current_file.put_integer (i)
 				current_file.put_string (" in feature ")
-				current_file.put_string (current_type.base_type.to_text)
+				current_file.put_string (current_type.base_type.unaliased_to_text)
 				current_file.put_character ('.')
 				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
 				current_file.put_character (' ')
@@ -10301,6 +10336,17 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
+			elseif current_type.base_class = universe.type_class then
+-- TODO: this built-in routine could be inlined.
+					-- Cannot have two instances of class TYPE representing the same Eiffel type.
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_current_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
 			elseif current_type.is_expanded then
 -- TODO: call 'copy' if redefined.
 				print_indentation
@@ -10445,6 +10491,17 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
+			elseif current_type.base_class = universe.type_class then
+-- TODO: this built-in routine could be inlined.
+					-- Cannot have two instances of class TYPE representing the same Eiffel type.
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_current_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
 			elseif current_type.is_expanded then
 				print_indentation
 				print_result_name (current_file)
@@ -10507,7 +10564,7 @@ feature {NONE} -- Built-in feature generation
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
-			l_string := current_type.base_type.to_text
+			l_string := current_type.base_type.unaliased_to_text
 			current_file.put_string (c_gems)
 			current_file.put_character ('(')
 			print_escaped_string (l_string)
@@ -10827,7 +10884,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 		local
 			l_string: STRING
 		do
-			l_string := a_target_type.base_type.to_text
+			l_string := a_target_type.base_type.unaliased_to_text
 			current_file.put_string (c_gems)
 			current_file.put_character ('(')
 			print_escaped_string (l_string)
@@ -10842,8 +10899,35 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 		require
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_meta_type: ET_DYNAMIC_TYPE
 		do
--- TODO
+-- TODO: this built-in routine could be inlined.
+			l_meta_type := current_type.meta_type
+			if l_meta_type = Void then
+					-- Internal error: the meta type of current type should have been
+					-- computed when analyzing the dynamic type sets of `a_feature'.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_type_declaration (l_meta_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('&')
+				current_file.put_character ('(')
+				current_file.put_string (c_getypes)
+				current_file.put_character ('[')
+				current_file.put_integer (current_type.id)
+				current_file.put_character (']')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
 		end
 
 	print_builtin_any_standard_is_equal_call (a_target_type: ET_DYNAMIC_TYPE) is
@@ -11125,7 +11209,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
 		do
--- TODO
+-- TODO: what to do to avoid having a infinite number of types?
 		end
 
 	print_builtin_type_name_call (a_target_type: ET_DYNAMIC_TYPE) is
@@ -11146,7 +11230,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_string := l_parameters.type (1).to_text
+				l_string := l_parameters.type (1).unaliased_to_text
 				current_file.put_string (c_gems)
 				current_file.put_character ('(')
 				print_escaped_string (l_string)
@@ -11155,6 +11239,27 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				current_file.put_integer (l_string.count)
 				current_file.put_character (')')
 			end
+		end
+
+	print_builtin_type_type_id_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'TYPE.type_id' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			current_file.put_string (c_eif_type)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_type_id)
 		end
 
 	print_builtin_special_item_call (a_target_type: ET_DYNAMIC_TYPE) is
@@ -16568,7 +16673,7 @@ feature {NONE} -- Type generation
 					a_file.put_character ('/')
 					a_file.put_character ('*')
 					a_file.put_character (' ')
-					a_file.put_string (l_type.static_type.base_type.to_text)
+					a_file.put_string (l_type.static_type.base_type.unaliased_to_text)
 					a_file.put_character (' ')
 					a_file.put_character ('*')
 					a_file.put_character ('/')
@@ -16650,7 +16755,11 @@ feature {NONE} -- Type generation
 							print_geboxed_function (l_type)
 						end
 					end
-					print_boxed_type_definition (l_type, a_file)
+					if l_type.base_class = universe.type_class then
+						print_type_type_definition (l_type, a_file)
+					else
+						print_boxed_type_definition (l_type, a_file)
+					end
 					a_file.put_new_line
 				end
 				i := i + 1
@@ -16682,30 +16791,7 @@ feature {NONE} -- Type generation
 				i := i + 1
 			end
 				-- Type EIF_TYPE representing Eiffel types.
-			a_file.put_string (c_typedef)
-			a_file.put_character (' ')
-			a_file.put_string (c_struct)
-			a_file.put_character (' ')
-			a_file.put_character ('{')
-			a_file.put_new_line
-			a_file.put_character ('%T')
-			a_file.put_string (c_int)
-			a_file.put_character (' ')
-			print_attribute_type_id_name (current_system.any_type, a_file)
-			a_file.put_character (';')
-			a_file.put_new_line
-			a_file.put_character ('%T')
-			a_file.put_string (c_eif_boolean)
-			a_file.put_character (' ')
-			a_file.put_string (c_is_special)
-			a_file.put_character (';')
-			a_file.put_new_line
-			a_file.put_character ('}')
-			a_file.put_character (' ')
-			a_file.put_string (c_eif_type)
-			a_file.put_character (';')
-			a_file.put_new_line
-			a_file.put_new_line
+			print_eif_type_struct (a_file)
 		end
 
 	print_aliased_character_type_definition (a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -17306,6 +17392,20 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_pointer)
 		end
 
+	print_type_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the definition of type "TYPE [X]".
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_define)
+			a_file.put_character (' ')
+			print_type_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_line (c_eif_type)
+		end
+
 	print_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print to `a_file' the definition of type `a_type'.
 		require
@@ -17364,7 +17464,8 @@ feature {NONE} -- Type generation
 			i, nb: INTEGER
 		do
 			if
-				not a_type.is_expanded or else
+				a_type.base_class /= universe.type_class and
+				(not a_type.is_expanded or else
 				(a_type /= current_system.boolean_type and
 				a_type /= current_system.character_8_type and
 				a_type /= current_system.character_32_type and
@@ -17378,13 +17479,13 @@ feature {NONE} -- Type generation
 				a_type /= current_system.natural_64_type and
 				a_type /= current_system.real_32_type and
 				a_type /= current_system.real_64_type and
-				a_type /= current_system.pointer_type)
+				a_type /= current_system.pointer_type))
 			then
 				a_file.put_character ('/')
 				a_file.put_character ('*')
 				a_file.put_character (' ')
 				a_file.put_string ("Struct for type ")
-				a_file.put_string (a_type.static_type.base_type.to_text)
+				a_file.put_string (a_type.static_type.base_type.unaliased_to_text)
 				a_file.put_character (' ')
 				a_file.put_character ('*')
 				a_file.put_character ('/')
@@ -17562,7 +17663,7 @@ feature {NONE} -- Type generation
 				a_file.put_character ('*')
 				a_file.put_character (' ')
 				a_file.put_string ("Struct for boxed version of type ")
-				a_file.put_string (a_type.static_type.base_type.to_text)
+				a_file.put_string (a_type.static_type.base_type.unaliased_to_text)
 				a_file.put_character (' ')
 				a_file.put_character ('*')
 				a_file.put_character ('/')
@@ -17603,11 +17704,51 @@ feature {NONE} -- Type generation
 			end
 		end
 
+	print_eif_type_struct (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' declaration of C struct corresponding to 'EIF_TYPE', if_any.
+			-- Type EIF_TYPE represents Eiffel types.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_typedef)
+			a_file.put_character (' ')
+			a_file.put_string (c_struct)
+			a_file.put_character (' ')
+			a_file.put_character ('{')
+			a_file.put_new_line
+			a_file.put_character ('%T')
+			a_file.put_string (c_int)
+			a_file.put_character (' ')
+			print_attribute_type_id_name (current_system.any_type, a_file)
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_character ('%T')
+			a_file.put_string (c_eif_integer)
+			a_file.put_character (' ')
+			a_file.put_string (c_type_id)
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_character ('%T')
+			a_file.put_string (c_eif_boolean)
+			a_file.put_character (' ')
+			a_file.put_string (c_is_special)
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_character ('}')
+			a_file.put_character (' ')
+			a_file.put_string (c_eif_type)
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_new_line
+		end
+
 	print_getypes_array is
 			-- Print 'getypes' array to `current_file' and its declaration to `header_file'.
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_type: ET_DYNAMIC_TYPE
+			l_meta_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 		do
 			l_dynamic_types := current_system.dynamic_types
@@ -17642,12 +17783,24 @@ feature {NONE} -- Type generation
 			current_file.put_character ('}')
 			current_file.put_character (',')
 			current_file.put_new_line
+-- TODO: here we might include types that are used in our system!
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
 				current_file.put_character ('{')
-				current_file.put_integer (0)
+					-- id.
+				l_meta_type := l_type.meta_type
+				if l_meta_type /= Void then
+					current_file.put_integer (l_meta_type.id)
+				else
+					current_file.put_integer (0)
+				end
 				current_file.put_character (',')
 				current_file.put_character (' ')
+					-- type_id.
+				current_file.put_integer (l_type.id)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- is_special.
 				if l_type.is_special then
 					current_file.put_string (c_eif_true)
 				else
@@ -17842,7 +17995,9 @@ feature {NONE} -- Default initialization values generation
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
 				if l_type.is_alive then
-					print_gedefault_declaration (l_type)
+					if l_type.base_class /= universe.type_class then
+						print_gedefault_declaration (l_type)
+					end
 				end
 				i := i + 1
 			end
@@ -18581,7 +18736,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_character ('/')
 			a_file.put_character ('*')
 			a_file.put_character (' ')
-			a_file.put_string (a_type.base_type.to_text)
+			a_file.put_string (a_type.base_type.unaliased_to_text)
 			a_file.put_character ('.')
 			a_file.put_string (STRING_.replaced_all_substrings (a_feature.name.lower_name, "*/", "star/"))
 			a_file.put_character (' ')
@@ -18610,7 +18765,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_character ('t')
 			a_file.put_character ('o')
 			a_file.put_character (' ')
-			a_file.put_string (a_target_type.base_type.to_text)
+			a_file.put_string (a_target_type.base_type.unaliased_to_text)
 			a_file.put_character ('.')
 			a_file.put_string (STRING_.replaced_all_substrings (a_call.name.lower_name, "*/", "star/"))
 			a_file.put_character (' ')
@@ -20144,6 +20299,7 @@ feature {NONE} -- Constants
 	c_sizeof: STRING is "sizeof"
 	c_struct: STRING is "struct"
 	c_switch: STRING is "switch"
+	c_type_id: STRING is "type_id"
 	c_typedef: STRING is "typedef"
 	c_unsigned: STRING is "unsigned"
 	c_void: STRING is "void"

@@ -856,6 +856,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.truncated_to_integer_64_name)
 			Result.force_new (-1, tokens.truncated_to_real_name)
 			Result.force_new (-1, tokens.twin_name)
+			Result.force_new (-1, tokens.type_id_name)
 			Result.force_new (-1, tokens.upper_name)
 			Result.force_new (-1, tokens.wide_character_bytes_name)
 				-- Keywords.

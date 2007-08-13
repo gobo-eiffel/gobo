@@ -577,7 +577,7 @@ feature -- Output
 
 	append_to_string (a_string: STRING) is
 			-- Append textual representation of
-			-- current type to `a_string'.
+			-- current actual parameters to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -593,6 +593,32 @@ feature -- Output
 					a_string.append_string (", ")
 					a_type := type (i)
 					a_type.append_to_string (a_string)
+					i := i + 1
+				end
+			end
+			a_string.append_character (']')
+		end
+
+	append_unaliased_to_string (a_string: STRING) is
+			-- Append textual representation of unaliased
+			-- version of current actual parameters to `a_string'.
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+			a_type: ET_TYPE
+		do
+			a_string.append_character ('[')
+			nb := count
+			if nb >= 1 then
+				a_type := type (1)
+				a_type.append_unaliased_to_string (a_string)
+				from i := 2 until i > nb loop
+					a_string.append_string (", ")
+					a_type := type (i)
+					a_type.append_unaliased_to_string (a_string)
 					i := i + 1
 				end
 			end

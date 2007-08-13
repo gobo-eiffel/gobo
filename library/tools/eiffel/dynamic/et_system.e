@@ -340,6 +340,14 @@ feature -- Types
 								if typed_pointer_to_pointer_feature /= Void then
 									l_dynamic_feature := Result.dynamic_query (typed_pointer_to_pointer_feature, Current)
 								end
+							elseif l_base_class = universe.type_class then
+								create Result.make (l_base_type, l_base_class)
+									-- Make sure that the meta type of the corresponding type is set.
+								l_actual_parameters := l_base_type.actual_parameters
+								if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
+										-- Class TYPE should have exactly one generic parameter.
+									dynamic_type (l_actual_parameters.type (1), l_any).set_meta_type (Result)
+								end
 							elseif l_base_class = universe.procedure_class then
 								l_actual_parameters := l_base_type.actual_parameters
 								if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
@@ -492,6 +500,14 @@ feature -- Types
 						-- in the feature list of the TYPED_POINTER type.
 					if typed_pointer_to_pointer_feature /= Void then
 						l_dynamic_feature := Result.dynamic_query (typed_pointer_to_pointer_feature, Current)
+					end
+				elseif l_base_class = universe.type_class then
+					create Result.make (l_base_type, l_base_class)
+						-- Make sure that the meta type of the corresponding type is set.
+					l_actual_parameters := l_base_type.actual_parameters
+					if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
+							-- Class TYPE should have exactly one generic parameter.
+						dynamic_type (l_actual_parameters.type (1), l_any).set_meta_type (Result)
 					end
 				elseif l_base_class = universe.procedure_class then
 					l_any := universe.any_class

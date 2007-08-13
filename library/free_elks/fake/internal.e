@@ -7,7 +7,7 @@ feature
 		require
 			object_not_void: object /= Void
 		do
-			print ("TODO: INTERNAL.dynamic_type%N")
+			Result := object.generating_type.type_id
 		ensure
 			dynamic_type_nonnegative: Result >= 0
 		end

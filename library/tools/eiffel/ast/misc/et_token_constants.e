@@ -1388,6 +1388,14 @@ feature -- Feature names
 			twin_feature_name_not_void: Result /= Void
 		end
 
+	type_id_feature_name: ET_FEATURE_NAME is
+			-- 'type_id' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (type_id_name)
+		ensure
+			type_id_feature_name_not_void: Result /= Void
+		end
+
 	upper_feature_name: ET_FEATURE_NAME is
 			-- 'upper' feature name
 		once
@@ -2401,6 +2409,9 @@ feature -- Keyword and symbol names
 
 	twin_name: STRING is "twin"
 		-- Name of Eiffel feature 'twin'
+
+	type_id_name: STRING is "type_id"
+		-- Name of Eiffel feature 'type_id'
 
 	upper_name: STRING is "upper"
 		-- Name of Eiffel feature 'upper'

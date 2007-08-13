@@ -2066,6 +2066,18 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.string_type)
 				end
+			elseif a_feature.name.same_feature_name (tokens.type_id_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_type_id))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'type_id: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'type_id: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+				end
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -3747,9 +3759,14 @@ feature {NONE} -- Built-in
 				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, l_type_type_any)
 			elseif a_feature.name.same_feature_name (tokens.name_feature_name) then
 					-- 'TYPE.name' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_type_name))
+				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_name))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.string_type)
+			elseif a_feature.name.same_feature_name (tokens.type_id_feature_name) then
+					-- 'TYPE.type_id' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_type_id))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
