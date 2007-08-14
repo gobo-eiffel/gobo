@@ -9519,6 +9519,13 @@ feature {NONE} -- Polymorphic call generation
 				loop
 					l_target_type_set := l_first_call.target_type_set
 					if l_target_type_set.count <= 2 then
+							-- Polymorphic calls with one or two target dynamic types
+							-- are handled differently.
+							-- (See `print_qualified_call_expression'.)
+						l_first_call := l_first_call.next
+					elseif l_first_call.static_call.name.is_tuple_label then
+							-- Polymorphic calls to Tuple labels are handled differently.
+							-- (See `print_qualified_call_expression'.)
 						l_first_call := l_first_call.next
 					else
 						l_dynamic_type := l_target_type_set.first_type
@@ -9770,6 +9777,9 @@ feature {NONE} -- Polymorphic call generation
 				loop
 					l_target_type_set := l_first_call.target_type_set
 					if l_target_type_set.count <= 2 then
+							-- Polymorphic calls with one or two target dynamic types
+							-- are handled differently.
+							-- (See `print_qualified_call_instruction'.)
 						l_first_call := l_first_call.next
 					else
 						l_dynamic_type := l_target_type_set.first_type
@@ -10102,6 +10112,7 @@ feature {NONE} -- Polymorphic call generation
 			a_call2_not_void: a_call2 /= Void
 			same_target_type: a_call1.target_type_set.static_type = a_call2.target_type_set.static_type
 			same_seed: a_call1.static_call.name.seed = a_call2.static_call.name.seed
+			same_kind: a_call1.static_call.name.is_tuple_label = a_call2.static_call.name.is_tuple_label
 		local
 			l_args1, l_args2: ET_ARGUMENT_OPERANDS
 			l_feature1, l_feature2: ET_DYNAMIC_FEATURE
@@ -18442,6 +18453,9 @@ feature {NONE} -- Feature name generation
 			if short_names then
 				print_type_name (a_target_type, a_file)
 				a_file.put_character ('x')
+				if a_call.name.is_tuple_label then
+					a_file.put_character ('t')
+				end
 				a_file.put_integer (a_call.name.seed)
 				l_arguments := a_call.arguments
 				if l_arguments /= Void then
@@ -18469,6 +18483,9 @@ feature {NONE} -- Feature name generation
 -- TODO: long names
 				print_type_name (a_target_type, a_file)
 				a_file.put_character ('x')
+				if a_call.name.is_tuple_label then
+					a_file.put_character ('t')
+				end
 				a_file.put_integer (a_call.name.seed)
 				l_arguments := a_call.arguments
 				if l_arguments /= Void then
