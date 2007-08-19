@@ -460,7 +460,7 @@ feature {MA_DECIMAL} -- Access
 			definition: Result = (exponent + count - 1)
 		end
 
-feature {MA_DECIMAL, MA_DECIMAL_PARSER} -- Access
+feature {MA_DECIMAL, MA_DECIMAL_PARSER, MA_DECIMAL_HANDLER} -- Access
 
 	coefficient: MA_DECIMAL_COEFFICIENT
 			-- Storage for digits
