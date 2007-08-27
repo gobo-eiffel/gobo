@@ -17,6 +17,7 @@
 #ifdef WIN32
 #include <windows.h>
 #include <string.h>
+#include <direct.h> /* for 'getcwd' */
 #endif
 
 #ifndef PATH_MAX

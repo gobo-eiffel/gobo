@@ -59,13 +59,9 @@ feature {NONE} -- Implementation
 	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time procedure associated with `a_procedure';
 			-- Create a new object at each call.
-		local
-			l_name: ET_FEATURE_NAME
 		do
 			Result := precursor (a_procedure, a_system)
-			l_name := a_procedure.name
-			if l_name.same_feature_name (tokens.call_feature_name) then
-				Result.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
+			if Result.builtin_code = tokens.builtin_procedure_feature (tokens.builtin_procedure_call) then
 				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 			end
 		end

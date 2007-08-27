@@ -44,6 +44,8 @@ feature {NONE} -- Initialization
 			args: ET_FORMAL_ARGUMENT_LIST
 			arg: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
+			l_external_routine: ET_EXTERNAL_ROUTINE
+			l_name: ET_FEATURE_NAME
 		do
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
 			static_feature := a_feature
@@ -75,7 +77,36 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
-			builtin_code := builtin_not_builtin
+			l_external_routine ?= a_feature
+			if l_external_routine /= Void then
+				builtin_code := l_external_routine.builtin_code
+			elseif a_target_type.base_class = a_system.universe.procedure_class then
+				if a_feature.name.same_feature_name (tokens.call_feature_name) then
+						-- Make sure that PROCEDURE.call is considered as
+						-- a built-in feature when computing dynamic type sets.
+						-- ISE still consider it as a regular routine.
+					builtin_code := tokens.builtin_procedure_feature (tokens.builtin_procedure_call)
+				else
+					builtin_code := builtin_not_builtin
+				end
+			elseif a_target_type.base_class = a_system.universe.function_class then
+				l_name := a_feature.name
+				if l_name.same_feature_name (tokens.item_feature_name) then
+						-- Make sure that FUNCTION.iteml is considered as
+						-- a built-in feature when computing dynamic type sets.
+						-- ISE still consider it as a regular routine.
+					builtin_code := tokens.builtin_function_feature (tokens.builtin_function_item)
+				elseif l_name.same_feature_name (tokens.call_feature_name) then
+						-- Make sure that FUNCTION.call is considered as
+						-- a built-in feature when computing dynamic type sets.
+						-- ISE still consider it as a regular routine.
+					builtin_code := tokens.builtin_function_feature (tokens.builtin_function_call)
+				else
+					builtin_code := builtin_not_builtin
+				end
+			else
+				builtin_code := builtin_not_builtin
+			end
 		ensure
 			static_feature_set: static_feature = a_feature
 			target_type_set: target_type = a_target_type
@@ -230,7 +261,14 @@ feature -- Status report
 	is_function: BOOLEAN is
 			-- Is feature a function?
 		do
-			Result := static_feature.is_function
+			if static_feature.is_function then
+				if is_builtin then
+						-- The function should not be a built-in attribute.
+					Result := not is_attribute
+				else
+					Result := True
+				end
+			end
 		ensure
 			query: Result implies result_type_set /= Void
 		end
@@ -243,33 +281,61 @@ feature -- Status report
 			else
 				inspect builtin_code // builtin_capacity
 				when builtin_boolean_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_boolean_item
+					if (builtin_code \\ builtin_capacity) = builtin_boolean_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_character_8_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_character_item
+					if (builtin_code \\ builtin_capacity) = builtin_character_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_character_32_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_character_item
+					 if (builtin_code \\ builtin_capacity) = builtin_character_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_pointer_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_pointer_item
+					if (builtin_code \\ builtin_capacity) = builtin_pointer_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_integer_8_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_integer_16_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_integer_32_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_integer_64_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_natural_8_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_natural_16_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_natural_32_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_natural_64_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_integer_item
+					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_real_32_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_real_item
+					if (builtin_code \\ builtin_capacity) = builtin_real_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				when builtin_real_64_class then
-					Result := (builtin_code \\ builtin_capacity) = builtin_real_item
+					if (builtin_code \\ builtin_capacity) = builtin_real_item then
+						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
+					end
 				else
 					Result := False
 				end
@@ -451,14 +517,6 @@ feature -- Status setting
 			is_current_type_needed := b
 		ensure
 			current_type_needed_set: is_current_type_needed = b
-		end
-
-	set_builtin_code (a_code: INTEGER) is
-			-- Set `builtin_code' to `a_code'.
-		do
-			builtin_code := a_code
-		ensure
-			builtin_code_set: builtin_code = a_code
 		end
 
 feature -- Output

@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_type
 		redefine
-			is_special,
+			is_special, has_nested_reference_attributes,
 			new_dynamic_query, new_dynamic_procedure
 		end
 
@@ -38,9 +38,17 @@ feature {NONE} -- Initialization
 			a_type_base_type: a_type.is_base_type
 			a_class_not_void: a_class /= Void
 			an_item_type_set_not_void: an_item_type_set /= Void
+		local
+			l_item_type: ET_DYNAMIC_TYPE
 		do
 			item_type_set := an_item_type_set
 			make_type (a_type, a_class)
+			l_item_type := an_item_type_set.static_type
+			if not l_item_type.is_expanded then
+				has_reference_attributes := True
+			elseif l_item_type.is_generic then
+				has_generic_expanded_attributes := True
+			end
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
@@ -56,6 +64,41 @@ feature -- Status report
 
 	is_special: BOOLEAN is True
 			-- Is current type a SPECIAL type?
+
+feature -- Features
+
+	has_nested_reference_attributes: BOOLEAN is
+			-- Does current type contain attributes whose types are declared of reference type,
+			-- or recursively does it contain expanded attributes whose type contains attributes
+			-- of reference type?
+		do
+			if has_reference_attributes then
+				Result := True
+			else
+					-- Look at the attributes of the types of expanded items.
+					--
+					-- We should not have cyclic recursive enclosed expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we temporarily
+					-- set `has_reference_attributes' to True to break that cycle.
+				has_reference_attributes := True
+				if item_type_set.static_type.has_nested_reference_attributes then
+						-- Note that for non-generic expanded types, there is no type other
+						-- than itself that conforms to it. However for generic expanded types,
+						-- other generic derivations of the same generic class may conform to
+						-- it. But it is OK to take only the static type of the expanded attribute
+						-- into account even in that case, and we won't miss any sub-attribute
+						-- of reference types in conforming expanded generic derivations.
+						-- Indeed, if that static type has expanded attributes, then conforming
+						-- generic derivations cannot have these attributes of reference
+						-- type (because no reference type conforms to an expanded type).
+					Result := True
+				end
+				has_reference_attributes := False
+			end
+		end
 
 feature {NONE} -- Implementation
 

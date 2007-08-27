@@ -167,6 +167,9 @@ feature {NONE} -- Initialization
 			create polymorphic_call_feature.make (dummy_feature.static_feature, dummy_feature.target_type, current_system)
 			create l_dynamic_type_sets.make_with_capacity (50)
 			polymorphic_call_feature.set_dynamic_type_sets (l_dynamic_type_sets)
+			create deep_twin_types.make (100)
+			create deep_equal_types.make (100)
+			create deep_feature_target_type_sets.make_map (100)
 			create current_agents.make (20)
 			create agent_open_operands.make (20)
 			create agent_closed_operands.make (20)
@@ -626,6 +629,8 @@ feature {NONE} -- C code Generation
 					manifest_tuple_types.forth
 				end
 				manifest_tuple_types.wipe_out
+					-- Print all functions necessary to implement 'deep_twin'.
+				print_gedeep_twin_functions
 					-- Print call-on-void-target functions.
 					-- Calls-on-void-target with no result (i.e. procedure calls).
 				print_gevoid_function (Void)
@@ -1372,7 +1377,11 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					when builtin_any_is_deep_equal then
 						print_builtin_any_is_deep_equal_body (a_feature)
 					when builtin_any_deep_twin then
-						print_builtin_any_deep_twin_body (a_feature)
+						fill_call_formal_arguments (a_feature)
+						print_indentation_assign_to_result
+						print_builtin_any_deep_twin_call (current_type)
+						print_semicolon_newline
+						call_operands.wipe_out
 					else
 							-- Internal error: unknown built-in feature.
 							-- This error should already have been reported during parsing.
@@ -4972,7 +4981,7 @@ feature {NONE} -- Expression generation
 		end
 
 	print_attribute_access (an_attribute: ET_DYNAMIC_FEATURE; a_target: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
-			-- Print access to `an_attribute' applied to `a_target' of type `a_type'.
+			-- Print access to `an_attribute' applied to object `a_target' of type `a_type'.
 		require
 			an_attribute_not_void: an_attribute /= Void
 			a_target_not_void: a_target /= Void
@@ -4996,7 +5005,7 @@ feature {NONE} -- Expression generation
 		end
 
 	print_attribute_special_count_access (a_target: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
-			-- Print access to 'count' pseudo attribute of class SPECIAL applied to `a_target' of type `a_type'.
+			-- Print access to 'count' pseudo attribute of class SPECIAL applied to object `a_target' of type `a_type'.
 		require
 			a_target_not_void: a_target /= Void
 			a_type_not_void: a_type /= Void
@@ -5016,7 +5025,7 @@ feature {NONE} -- Expression generation
 		end
 
 	print_attribute_special_item_access (a_target: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
-			-- Print access to 'item' pseudo attribute of class SPECIAL applied to `a_target' of type `a_type'.
+			-- Print access to 'item' pseudo attribute of class SPECIAL applied to object `a_target' of type `a_type'.
 		require
 			a_target_not_void: a_target /= Void
 			a_type_not_void: a_type /= Void
@@ -5035,9 +5044,26 @@ feature {NONE} -- Expression generation
 			print_attribute_special_item_name (a_type, current_file)
 		end
 
+	print_attribute_special_indexed_item_access (an_index: ET_EXPRESSION; a_target: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
+			-- Print to `current_file' access to item at indexed `an_index'
+			-- in the 'item' pseudo attribute of class SPECIAL applied to
+			-- object `a_target' of type `a_type'. `an_index' must be declared of
+			-- (i.e. its static type must be) one of the possibly sized
+			-- integer types.
+		require
+			an_index_not_void: an_index /= Void
+			a_target_not_void: a_target /= Void
+			a_type_not_void: a_type /= Void
+		do
+			print_attribute_special_item_access (a_target, a_type)
+			current_file.put_character ('[')
+			print_expression (an_index)
+			current_file.put_character (']')
+		end
+
 	print_attribute_tuple_item_access (i: INTEGER; a_target: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
 			-- Print access to `i'-th 'item' pseudo attribute of class TUPLE
-			-- applied to `a_target' of type `a_type'.
+			-- applied to Tuple object `a_target' of type `a_type'.
 		require
 			a_target_not_void: a_target /= Void
 			a_type_not_void: a_type /= Void
@@ -5057,7 +5083,7 @@ feature {NONE} -- Expression generation
 		end
 
 	print_attribute_type_id_access (a_target: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
-			-- Print access to 'type_id' pseudo attribute applied to `a_target' of type `a_type'.
+			-- Print access to 'type_id' pseudo attribute applied to object `a_target' of type `a_type'.
 		require
 			a_target_not_void: a_target /= Void
 			a_type_not_void: a_type /= Void
@@ -6945,6 +6971,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 									print_builtin_any_generator_call (a_target_type)
 								when builtin_any_generating_type then
 									print_builtin_any_generating_type_call (a_target_type)
+								when builtin_any_deep_twin then
+									print_builtin_any_deep_twin_call (a_target_type)
 								else
 									l_printed := False
 								end
@@ -8048,7 +8076,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				if l_dynamic_feature.is_attribute then
 					if in_operand then
 						operand_stack.force (a_call)
-					elseif not l_dynamic_feature.static_feature.is_attribute then
+					elseif l_dynamic_feature.is_builtin then
 							-- This is a built-in attribute (such as feature 'item' in 'INTEGER_REF').
 							-- The call might be the operand (target or argument) of another call.
 							-- Therefore we need to take some care when dealing with `call_operands'.
@@ -8208,7 +8236,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				if l_dynamic_feature.is_attribute then
 					if in_operand then
 						operand_stack.force (an_identifier)
-					elseif not l_dynamic_feature.static_feature.is_attribute then
+					elseif l_dynamic_feature.is_builtin then
 							-- This is a built-in attribute (such as feature 'item' in 'INTEGER_REF').
 							-- The call might be the operand (target or argument) of another call.
 							-- Therefore we need to take some care when dealing with `call_operands'.
@@ -8802,25 +8830,23 @@ feature {NONE} -- Agent generation
 				header_file.put_new_line
 					-- Attributes.
 				l_queries := l_agent_type.queries
-				nb := l_queries.count
+				nb := l_agent_type.attribute_count
 				from j := 1 until j > nb loop
 					l_query := l_queries.item (j)
-					if l_query.is_attribute then
-						header_file.put_character ('%T')
-						print_type_declaration (l_query.result_type_set.static_type, header_file)
-						header_file.put_character (' ')
-						print_attribute_name (l_query, l_agent_type, header_file)
-						header_file.put_character (';')
-						header_file.put_character (' ')
-						header_file.put_character ('/')
-						header_file.put_character ('*')
-						header_file.put_character (' ')
-						header_file.put_string (l_query.static_feature.name.name)
-						header_file.put_character (' ')
-						header_file.put_character ('*')
-						header_file.put_character ('/')
-						header_file.put_new_line
-					end
+					header_file.put_character ('%T')
+					print_type_declaration (l_query.result_type_set.static_type, header_file)
+					header_file.put_character (' ')
+					print_attribute_name (l_query, l_agent_type, header_file)
+					header_file.put_character (';')
+					header_file.put_character (' ')
+					header_file.put_character ('/')
+					header_file.put_character ('*')
+					header_file.put_character (' ')
+					header_file.put_string (l_query.static_feature.name.name)
+					header_file.put_character (' ')
+					header_file.put_character ('*')
+					header_file.put_character ('/')
+					header_file.put_new_line
 					j := j + 1
 				end
 					-- Function pointer.
@@ -9984,8 +10010,9 @@ feature {NONE} -- Polymorphic call generation
 		end
 
 	print_binary_search_polymorphic_calls (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_result_type: ET_DYNAMIC_TYPE; l, u: INTEGER) is
-			-- Print to `a_file' dynamic binding code for the calls between `a_first_call'
-			-- and `a_last_call' with target types whose type-id is between `l' and `u'.
+			-- Print to `current_file' dynamic binding code for the calls between `a_first_call'
+			-- and `a_last_call' whose target dynamic types are those stored in `polymorphic_types'
+			-- whose type-id is itself stored between indexes `l' and `u' in `polymorphic_type_ids'.
 			-- The generated code uses binary search to find out which feature to execute.
 		require
 			a_first_call_not_void: a_first_call /= Void
@@ -10269,8 +10296,966 @@ feature {NONE} -- Polymorphic call generation
 		end
 
 	standalone_type_sets: DS_ARRAYED_LIST [ET_DYNAMIC_STANDALONE_TYPE_SET]
-			-- Pool of standalone type sets to be used in `polymorphic_call_feature.dynamic_type_sets'.
+			-- Pool of standalone type sets to be used in `polymorphic_call_feature.dynamic_type_sets'
+			-- or in `deep_feature_target_type_sets'.
 			-- Its cursor points to the last type set used.
+
+feature {NONE} -- Deep features generation
+
+	print_gedeep_twin_functions is
+			-- Print all functions necessary to implement 'deep_twin'.
+		do
+			if not deep_twin_types.is_empty then
+				include_runtime_header_file ("ge_deep.h", True, header_file)
+					-- Be aware that `print_gedeep_twin_function' can added
+					-- new types at the end of `deep_twin_types'.
+				from deep_twin_types.start until deep_twin_types.after loop
+					print_gedeep_twin_function (deep_twin_types.item_for_iteration)
+					deep_twin_types.forth
+				end
+				from deep_feature_target_type_sets.start until deep_feature_target_type_sets.after loop
+					print_gedeep_twin_polymorphic_call_function (deep_feature_target_type_sets.item_for_iteration)
+					deep_feature_target_type_sets.forth
+				end
+				deep_twin_types.wipe_out
+				deep_feature_target_type_sets.wipe_out
+				standalone_type_sets.go_before
+			end
+		end
+
+	print_gedeep_twin_function (a_type: ET_DYNAMIC_TYPE) is
+			-- Print 'gedeep_twin' function for type `a_type' to `current_file'
+			-- and its signature to `header_file'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_has_nested_references: BOOLEAN
+			i, nb: INTEGER
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_attribute: ET_DYNAMIC_FEATURE
+			l_attribute_type_set: ET_DYNAMIC_TYPE_SET
+			l_attribute_type: ET_DYNAMIC_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			old_type: ET_DYNAMIC_TYPE
+			old_file: KI_TEXT_OUTPUT_STREAM
+			l_temp: ET_IDENTIFIER
+		do
+			old_type := current_type
+			current_type := a_type
+				-- Print signature to `header_file' and `current_file'.
+			old_file := current_file
+			current_file := current_function_header_buffer
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			print_type_declaration (a_type, header_file)
+			print_type_declaration (a_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			header_file.put_string (c_gedeep_twin)
+			current_file.put_string (c_gedeep_twin)
+			header_file.put_integer (a_type.id)
+			current_file.put_integer (a_type.id)
+			header_file.put_character ('(')
+			current_file.put_character ('(')
+			print_type_declaration (current_type, header_file)
+			print_type_declaration (current_type, current_file)
+			if current_type.is_expanded then
+				header_file.put_character ('*')
+				current_file.put_character ('*')
+			end
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			print_current_name (header_file)
+			print_current_name (current_file)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			header_file.put_string (c_gedeep)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_character ('d')
+			current_file.put_string (c_gedeep)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_character ('d')
+			header_file.put_character (')')
+			current_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+				-- Print body to `current_file'.
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+				-- Declare the Result entity.
+			print_indentation
+			print_type_declaration (a_type, current_file)
+			current_file.put_character (' ')
+			print_result_name (current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+			current_file := current_function_body_buffer
+			if a_type.base_class = universe.type_class then
+-- TODO: this built-in routine could be inlined.
+					-- Cannot have two instances of class TYPE representing the same Eiffel type.
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_current_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+			else
+				l_has_nested_references := a_type.has_nested_reference_attributes
+				if l_has_nested_references then
+					print_indentation
+					current_file.put_string (c_gedeep)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					current_file.put_character ('t')
+					current_file.put_character ('0')
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('d')
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				l_special_type ?= a_type
+				if l_special_type /= Void then
+					l_attribute_type_set := l_special_type.item_type_set
+					l_attribute_type := l_attribute_type_set.static_type
+					print_indentation
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_type_declaration (l_special_type, current_file)
+					current_file.put_character (')')
+					current_file.put_string (c_gealloc)
+					current_file.put_character ('(')
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_name (l_special_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character ('+')
+					print_attribute_special_count_access (tokens.current_keyword, l_special_type)
+					current_file.put_character ('*')
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_declaration (l_attribute_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					if not l_special_type.is_expanded then
+						current_file.put_character ('*')
+					end
+					print_type_cast (l_special_type, current_file)
+					current_file.put_character ('(')
+					print_result_name (current_file)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					if not l_special_type.is_expanded then
+						current_file.put_character ('*')
+					end
+					print_type_cast (l_special_type, current_file)
+					current_file.put_character ('(')
+					print_current_name (current_file)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					if not l_has_nested_references then
+							-- Copy items if they are not reference objects or expanded
+							-- objects containing (recursively) reference attributes.
+						print_indentation
+						current_file.put_string (c_memcpy)
+						current_file.put_character ('(')
+						print_attribute_special_item_access (tokens.result_keyword, l_special_type)
+						current_file.put_character (',')
+						print_attribute_special_item_access (tokens.current_keyword, l_special_type)
+						current_file.put_character (',')
+						print_attribute_special_count_access (tokens.current_keyword, l_special_type)
+						current_file.put_character ('*')
+						current_file.put_string (c_sizeof)
+						current_file.put_character ('(')
+						print_type_declaration (l_attribute_type, current_file)
+						current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+				elseif a_type.is_expanded then
+					print_indentation
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('*')
+					print_current_name (current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+				else
+					print_indentation
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_type_declaration (a_type, current_file)
+					current_file.put_character (')')
+					current_file.put_string (c_gealloc)
+					current_file.put_character ('(')
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_name (a_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_character ('*')
+					print_type_cast (a_type, current_file)
+					current_file.put_character ('(')
+					print_result_name (current_file)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('*')
+					print_type_cast (a_type, current_file)
+					current_file.put_character ('(')
+					print_current_name (current_file)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				if l_has_nested_references then
+						-- Allocate a 'gedeep' struct to keep track of already twined
+						-- reference objects, or use 'd' if not a null pointer (which
+						-- means that the current object is not the root of the deep twin).
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('!')
+					current_file.put_character ('t')
+					current_file.put_character ('0')
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string ("t0 = gedeep_new();")
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+					if not a_type.is_expanded then
+							-- Keep track of reference objects already twined.
+						print_indentation
+						current_file.put_string ("gedeep_put")
+						current_file.put_character ('(')
+						print_current_name (current_file)
+						current_file.put_character (',')
+						current_file.put_character (' ')
+						print_result_name (current_file)
+						current_file.put_character (',')
+						current_file.put_character (' ')
+						current_file.put_character ('t')
+						current_file.put_character ('0')
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+						-- Twin reference attributes or expanded attributes that
+						-- contain themselves (recursively) reference attributes
+					if l_special_type /= Void then
+							-- Twin items.
+						if l_attribute_type_set.first_type = Void then
+								-- If the dynamic type set of the items is empty,
+								-- then the items is always Void. No need to twin
+								-- it in that case.
+						elseif l_attribute_type.is_expanded then
+								-- If the items are expanded.
+								-- We need to deep twin them only if they themselves contain
+								-- (recursively) reference attributes. Otherwise we can copy
+								-- their contents without further ado.
+							if l_attribute_type.has_nested_reference_attributes then
+								l_temp := new_temp_variable (current_system.integer_type)
+								print_indentation
+								current_file.put_string (c_for)
+								current_file.put_character (' ')
+								current_file.put_character ('(')
+								print_temp_name (l_temp, current_file)
+								current_file.put_character (' ')
+								current_file.put_character ('=')
+								current_file.put_character (' ')
+								print_attribute_special_count_access (tokens.current_keyword, l_special_type)
+								current_file.put_character (';')
+								current_file.put_character (' ')
+								print_temp_name (l_temp, current_file)
+								current_file.put_character (' ')
+								current_file.put_character ('>')
+								current_file.put_character ('=')
+								current_file.put_character (' ')
+								current_file.put_character ('0')
+								current_file.put_character (';')
+								current_file.put_character (' ')
+								print_temp_name (l_temp, current_file)
+								current_file.put_character ('-')
+								current_file.put_character ('-')
+								current_file.put_character (')')
+								current_file.put_character (' ')
+								current_file.put_character ('{')
+								current_file.put_new_line
+								indent
+								print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_special_indexed_item_access (l_temp,  tokens.result_keyword, a_type))
+								dedent
+								print_indentation
+								current_file.put_character ('}')
+								current_file.put_new_line
+								mark_temp_variable_free (l_temp)
+							end
+						else
+								-- We are in the case of reference items.
+							l_temp := new_temp_variable (current_system.integer_type)
+							print_indentation
+							current_file.put_string (c_for)
+							current_file.put_character (' ')
+							current_file.put_character ('(')
+							print_temp_name (l_temp, current_file)
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							print_attribute_special_count_access (tokens.current_keyword, l_special_type)
+							current_file.put_character (';')
+							current_file.put_character (' ')
+							print_temp_name (l_temp, current_file)
+							current_file.put_character (' ')
+							current_file.put_character ('>')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							current_file.put_character ('0')
+							current_file.put_character (';')
+							current_file.put_character (' ')
+							print_temp_name (l_temp, current_file)
+							current_file.put_character ('-')
+							current_file.put_character ('-')
+							current_file.put_character (')')
+							current_file.put_character (' ')
+							current_file.put_character ('{')
+							current_file.put_new_line
+							indent
+							print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_special_indexed_item_access (l_temp,  tokens.result_keyword, a_type))
+							dedent
+							print_indentation
+							current_file.put_character ('}')
+							current_file.put_new_line
+							mark_temp_variable_free (l_temp)
+						end
+					else
+						l_queries := a_type.queries
+						nb := a_type.attribute_count
+						from i := 1 until i > nb loop
+							l_attribute := l_queries.item (i)
+							l_attribute_type_set := l_attribute.result_type_set
+							l_attribute_type := l_attribute_type_set.static_type
+							if l_attribute_type_set.first_type = Void then
+									-- If the dynamic type set of the attribute is empty,
+									-- then this attribute is always Void. No need to twin
+									-- it in that case.
+							elseif l_attribute_type.is_expanded then
+									-- If the attribute is expanded, then its contents has
+									-- already been copied. We need to deep twin it only if
+									-- it itself contains (recursively) reference attributes.
+								if l_attribute_type.has_nested_reference_attributes then
+									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type))
+								end
+							else
+								print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type))
+							end
+							i := i + 1
+						end
+						l_tuple_type ?= a_type
+						if l_tuple_type /= Void then
+							l_item_type_sets := l_tuple_type.item_type_sets
+							nb := l_item_type_sets.count
+							from i := 1 until i > nb loop
+								l_attribute_type_set := l_item_type_sets.item (i)
+								l_attribute_type := l_attribute_type_set.static_type
+								if l_attribute_type_set.first_type = Void then
+										-- If the dynamic type set of the item is empty,
+										-- then this item is always Void. No need to twin
+										-- it in that case.
+								elseif l_attribute_type.is_expanded then
+										-- If the item is expanded, then its contents has
+										-- already been copied. We need to deep twin it only if
+										-- it itself contains (recursively) reference attributes.
+									if l_attribute_type.has_nested_reference_attributes then
+										print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type))
+									end
+								else
+									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type))
+								end
+								i := i + 1
+							end
+						end
+					end
+						-- Free previously allocated 'gedeep' struct, if any (i.e. if
+						-- the current object was the root object of the deep twin).
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('t')
+					current_file.put_character ('0')
+					current_file.put_character (' ')
+					current_file.put_character ('!')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('d')
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string ("gedeep_free(t0);")
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				elseif not a_type.is_expanded then
+						-- Keep track of reference objects already twined.
+						-- If 'd' is a null pointer, then there is no need
+						-- to keep track of this object because it is the
+						-- only object to be twined: it is the root object
+						-- of the deep twin ('d' being a null pointer) and
+						-- it has not reference attributes.
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('d')
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string ("gedeep_put")
+					current_file.put_character ('(')
+					print_current_name (current_file)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					print_result_name (current_file)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_character ('d')
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
+			end
+				-- Return the deep twined object.
+			print_indentation
+			current_file.put_string (c_return)
+			current_file.put_character (' ')
+			print_result_name (current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+			current_file := old_file
+			flush_to_c_file
+			free_temp_variables.wipe_out
+			used_temp_variables.wipe_out
+			current_type := old_type
+		end
+
+	print_gedeep_twin_polymorphic_call_function (a_target_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Print 'gedeep_twin<type-id>x' function to `current_file' and its signature to `header_file'.
+			-- 'gedeep_twin<type-id>x' corresponds to a polymorphic call to 'deep_twin'
+			-- whose target has `a_target_type_set' as dynamic type set.
+			-- 'type-id' is the type-id of the static type of the target.
+		require
+			a_target_type_set_not_void: a_target_type_set /= Void
+		local
+			l_static_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
+			l_type_id: INTEGER
+			l_temp: ET_IDENTIFIER
+			i, nb: INTEGER
+			l_switch: BOOLEAN
+			old_type: ET_DYNAMIC_TYPE
+		do
+			l_static_type := a_target_type_set.static_type
+			l_dynamic_type := a_target_type_set.first_type
+			l_other_dynamic_types := a_target_type_set.other_types
+			old_type := current_type
+			current_type := l_static_type
+				-- Print signature to `header_file' and `current_file'.
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			print_type_declaration (l_static_type, header_file)
+			print_type_declaration (l_static_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			header_file.put_string (c_gedeep_twin)
+			current_file.put_string (c_gedeep_twin)
+			header_file.put_integer (l_static_type.id)
+			current_file.put_integer (l_static_type.id)
+			header_file.put_character ('x')
+			current_file.put_character ('x')
+			header_file.put_character ('(')
+			current_file.put_character ('(')
+			print_type_declaration (current_type, header_file)
+			print_type_declaration (current_type, current_file)
+			if current_type.is_expanded then
+				header_file.put_character ('*')
+				current_file.put_character ('*')
+			end
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			print_current_name (header_file)
+			print_current_name (current_file)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			header_file.put_string (c_gedeep)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_character ('t')
+			header_file.put_character ('0')
+			current_file.put_string (c_gedeep)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_character ('t')
+			current_file.put_character ('0')
+			header_file.put_character (')')
+			current_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+				-- Print body to `current_file'.
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			if l_dynamic_type /= Void then
+				l_type_id := l_dynamic_type.id
+				polymorphic_type_ids.force_last (l_type_id)
+				polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
+				if l_other_dynamic_types /= Void then
+					nb := l_other_dynamic_types.count
+					from i := 1 until i > nb loop
+						l_dynamic_type := l_other_dynamic_types.item (i)
+						l_type_id := l_dynamic_type.id
+						polymorphic_type_ids.force_last (l_type_id)
+						polymorphic_types.force_last (l_dynamic_type, l_type_id)
+						i := i + 1
+					end
+				end
+			end
+			polymorphic_type_ids.sort (polymorphic_type_id_sorter)
+			if l_switch then
+					-- Use switch statement.
+				print_indentation
+				current_file.put_string (c_switch)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_attribute_type_id_access (tokens.current_keyword, l_static_type)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				nb := polymorphic_type_ids.count
+				from i := 1 until i > nb loop
+					l_type_id := polymorphic_type_ids.item (i)
+					l_dynamic_type := polymorphic_types.item (l_type_id)
+					print_indentation
+					current_file.put_string (c_case)
+					current_file.put_character (' ')
+					current_file.put_integer (l_type_id)
+					current_file.put_character (':')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_gedeep_twin_call (tokens.current_keyword, l_static_type, l_dynamic_type)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					i := i + 1
+				end
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+			else
+				print_indentation
+				current_file.put_string (c_int)
+				current_file.put_character (' ')
+				l_temp := temp_variable
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attribute_type_id_access (tokens.current_keyword, l_static_type)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Use binary search.
+				print_gedeep_twin_binary_search_polymorphic_call (l_static_type, 1, polymorphic_type_ids.count)
+			end
+			polymorphic_type_ids.wipe_out
+			polymorphic_types.wipe_out
+			print_indentation
+			current_file.put_string (c_return)
+			current_file.put_character (' ')
+			print_gedefault_entity_value (l_static_type, current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+			flush_to_c_file
+			current_type := old_type
+		end
+
+	print_gedeep_twin_binary_search_polymorphic_call (a_target_static_type: ET_DYNAMIC_TYPE; l, u: INTEGER) is
+			-- Print to `current_file' dynamic binding code for the call to 'gedeep_twin'
+			-- whose target's static type is `a_target_static_type' and whose target's
+			-- dynamic types are those stored in `polymorphic_types' whose type-id is
+			-- itself stored between indexes `l' and `u' in `polymorphic_type_ids'.
+			-- The generated code uses binary search to find out which feature to execute.
+		require
+			a_target_static_type_not_void: a_target_static_type /= Void
+			l_large_enough: l >= 1
+			l_small_enough: l <= u
+			u_small_enough: u <= polymorphic_type_ids.count
+		local
+			t: INTEGER
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_type_id: INTEGER
+			l_temp: ET_IDENTIFIER
+		do
+			l_temp := temp_variable
+			if l = u then
+				l_type_id := polymorphic_type_ids.item (l)
+				l_dynamic_type := polymorphic_types.item (l_type_id)
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_gedeep_twin_call (tokens.current_keyword, a_target_static_type, l_dynamic_type)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			elseif l + 1 = u then
+				l_type_id := polymorphic_type_ids.item (l)
+				l_dynamic_type := polymorphic_types.item (l_type_id)
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character ('=')
+				current_file.put_character ('=')
+				current_file.put_integer (l_type_id)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_gedeep_twin_call (tokens.current_keyword, a_target_static_type, l_dynamic_type)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_file.put_character ('}')
+				current_file.put_character (' ')
+				current_file.put_string (c_else)
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				l_type_id := polymorphic_type_ids.item (u)
+				l_dynamic_type := polymorphic_types.item (l_type_id)
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_gedeep_twin_call (tokens.current_keyword, a_target_static_type, l_dynamic_type)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_file.put_character ('}')
+				current_file.put_new_line
+			else
+				t := l + (u - l) // 2
+				l_type_id := polymorphic_type_ids.item (t)
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character ('<')
+				current_file.put_character ('=')
+				current_file.put_integer (l_type_id)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				print_gedeep_twin_binary_search_polymorphic_call (a_target_static_type, l, t)
+				current_file.put_character ('}')
+				current_file.put_character (' ')
+				current_file.put_string (c_else)
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				print_gedeep_twin_binary_search_polymorphic_call (a_target_static_type, t + 1, u)
+				current_file.put_character ('}')
+				current_file.put_new_line
+			end
+		end
+
+	print_set_deep_twined_attribute (an_attribute_type_set: ET_DYNAMIC_TYPE_SET; a_print_attribute_access: PROCEDURE [ANY, TUPLE]) is
+			-- Print to `current_file' the instructions needed to deep twin an attribute
+			-- of `current_type' whose dynamic type set is `an_attribute_type_set'.
+			-- `a_print_attribute_access' is used to print to `current_file'
+			-- the code to access this attribute. Indeed, it can be a "regular"
+			-- attribute, but it can also be items of a SPECIAL object, fields
+			-- of a TUPLE object, closed operands of an Agent object, ...
+		require
+			an_attribute_type_set_not_void: an_attribute_type_set /= Void
+			an_attribute_type_set_not_empty: an_attribute_type_set.first_type /= Void
+			a_print_attribute_access_not_void: a_print_attribute_access /= Void
+		local
+			l_attribute_type: ET_DYNAMIC_TYPE
+			l_temp1, l_temp2: ET_IDENTIFIER
+		do
+			l_attribute_type := an_attribute_type_set.static_type
+			l_temp1 := new_temp_variable (l_attribute_type)
+			print_indentation
+			print_temp_name (l_temp1, current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			a_print_attribute_access.call ([])
+			current_file.put_character (';')
+			current_file.put_new_line
+			if l_attribute_type.is_expanded then
+					-- No need to test whether the attribute is Void or not:
+					-- expanded attributes are never Void.
+				print_indentation
+				a_print_attribute_access.call ([])
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_deep_twined_attribute (l_temp1, an_attribute_type_set)
+				current_file.put_character (';')
+				current_file.put_new_line
+			else
+					-- If the attribute is Void, then there is no need to twin it.
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_temp_name (l_temp1, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				l_temp2 := new_temp_variable (l_attribute_type)
+				print_indentation
+				print_temp_name (l_temp2, current_file)
+				current_file.put_string (" = gedeep_item(")
+				print_temp_name (l_temp1, current_file)
+				current_file.put_string (", t0);")
+				current_file.put_new_line
+				print_indentation
+				a_print_attribute_access.call ([])
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_temp_name (l_temp2, current_file)
+				current_file.put_character ('?')
+					-- The object has not been twined yet.
+				print_temp_name (l_temp2, current_file)
+				current_file.put_character (':')
+				current_file.put_character ('(')
+				print_deep_twined_attribute (l_temp1, an_attribute_type_set)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				mark_temp_variable_free (l_temp2)
+			end
+			mark_temp_variable_free (l_temp1)
+		end
+
+	print_deep_twined_attribute (an_attribute: ET_EXPRESSION; an_attribute_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Print to `current_file' deep twined version of the attribute `an_attribute'
+			-- belonging to `current_type', with dynamic type set `an_attribute_type_set'.
+			-- The test for Void-ness of the attribute is assumed to have 
+			-- been generated elsewhere. And the attribute is assumed not to
+			-- have been deep twined already.
+		require
+			an_attribute_not_void: an_attribute /= Void
+			an_attribute_type_set_not_void: an_attribute_type_set /= Void
+			an_attribute_type_set_not_empty: an_attribute_type_set.first_type /= Void
+		local
+			i, nb: INTEGER
+			l_attribute_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
+			l_standalone_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
+		do
+			l_attribute_type := an_attribute_type_set.static_type
+			l_dynamic_type := an_attribute_type_set.first_type
+			l_other_dynamic_types := an_attribute_type_set.other_types
+			if l_other_dynamic_types = Void or else l_other_dynamic_types.is_empty then
+					-- Monomorphic call.
+				deep_twin_types.force_last (l_dynamic_type)
+				print_gedeep_twin_call (an_attribute, l_attribute_type, l_dynamic_type)
+			elseif l_other_dynamic_types.count = 1 then
+					-- Polymorphic with only two possible types at run-time.
+				deep_twin_types.force_last (l_dynamic_type)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_attribute_type_id_access (an_attribute, l_attribute_type)
+				current_file.put_character ('=')
+				current_file.put_character ('=')
+				current_file.put_integer (l_dynamic_type.id)
+				current_file.put_character (')')
+				current_file.put_character ('?')
+				print_gedeep_twin_call (an_attribute, l_attribute_type, l_dynamic_type)
+				current_file.put_character (':')
+				l_dynamic_type := l_other_dynamic_types.first
+				deep_twin_types.force_last (l_dynamic_type)
+				print_gedeep_twin_call (an_attribute, l_attribute_type, l_dynamic_type)
+				current_file.put_character (')')
+			else
+					-- Polymorphic with more than two possible types at run-time.
+					-- Wrap this polymorphic call into a funtion that will be
+					-- shared by other polymorphic calls having the same target
+					-- static type.
+					--
+					-- First, register all what is needed so that this shared
+					-- function will be generated correctly.
+				deep_feature_target_type_sets.search (l_attribute_type)
+				if deep_feature_target_type_sets.found then
+					l_standalone_type_set := deep_feature_target_type_sets.found_item
+					l_standalone_type_set.put_type_set (an_attribute_type_set)
+				else
+					standalone_type_sets.forth
+					if standalone_type_sets.after then
+						create l_standalone_type_set.make (l_attribute_type)
+						standalone_type_sets.force_last (l_standalone_type_set)
+						standalone_type_sets.finish
+					else
+						l_standalone_type_set := standalone_type_sets.item_for_iteration
+					end
+					deep_feature_target_type_sets.force_last (l_standalone_type_set, l_attribute_type)
+					l_standalone_type_set.reset (an_attribute_type_set)
+				end
+				deep_twin_types.force_last (l_dynamic_type)
+				nb := l_other_dynamic_types.count
+				from i := 1 until i > nb loop
+					deep_twin_types.force_last (l_other_dynamic_types.item (i))
+					i := i + 1
+				end
+					-- Now call the shared function that will trigger the
+					-- polymorphic call.
+				current_file.put_string (c_gedeep_twin)
+				current_file.put_integer (l_attribute_type.id)
+				current_file.put_character ('x')
+				current_file.put_character ('(')
+				print_target_expression (an_attribute, l_attribute_type)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_character ('t')
+				current_file.put_character ('0')
+				current_file.put_character (')')
+			end
+		end
+
+	print_gedeep_twin_call (an_attribute: ET_EXPRESSION; a_static_type, a_dynamic_type: ET_DYNAMIC_TYPE) is
+			-- Print to `current_file' a call to the 'gedeep_twin' function that
+			-- will deep twin the attribute `an_attribute' belonging to `current_type'.
+			-- The static type of the attribute is `a_static_type', and its
+			-- dynamic type is `a_dynamic_type'.
+		require
+			an_attribute_not_void: an_attribute /= Void
+			a_static_type_not_void: a_static_type /= Void
+			a_dynamic_type_not_void: a_dynamic_type /= Void
+		do
+			if not a_static_type.is_expanded and a_dynamic_type.is_expanded then
+				if a_dynamic_type.is_generic then
+						-- Return the address of the twined expanded object,
+						-- it is already equiped with a type-id.
+-- TODO: we should not return the address but freshly malloced object (but without calling 'copy')
+					current_file.put_character ('&')
+					current_file.put_character ('(')
+				else
+						-- We need to box the twined expanded object, but without triggering
+						-- a call to 'copy'.
+-- TODO: 'geboxed' will trigger a call to 'copy'. We should avoid that.
+					current_file.put_string (c_geboxed)
+					current_file.put_integer (a_dynamic_type.id)
+					current_file.put_character ('(')
+				end
+			end
+			current_file.put_string (c_gedeep_twin)
+			current_file.put_integer (a_dynamic_type.id)
+			current_file.put_character ('(')
+			print_target_expression (an_attribute, a_dynamic_type)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			current_file.put_character ('t')
+			current_file.put_character ('0')
+			current_file.put_character (')')
+			if not a_static_type.is_expanded and a_dynamic_type.is_expanded then
+				current_file.put_character (')')
+			end
+		end
+
+	deep_twin_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
+			-- Types of object that need to be deep twined
+
+	deep_equal_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
+			-- Types of object that need deep equality
+
+	deep_feature_target_type_sets: DS_HASH_TABLE [ET_DYNAMIC_STANDALONE_TYPE_SET, ET_DYNAMIC_TYPE]
+			-- Dynamic type sets of target of deep feature (deep twin or deep equal),
+			-- indexed by target static type
 
 feature {NONE} -- Built-in feature generation
 
@@ -10616,16 +11601,23 @@ feature {NONE} -- Built-in feature generation
 print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 		end
 
-	print_builtin_any_deep_twin_body (a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Print body of built-in feature 'ANY.deep_twin' to `current_file'.
+	print_builtin_any_deep_twin_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'ANY.deep_twin' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
 		require
-			a_feature_not_void: a_feature /= Void
-			valid_feature: current_feature.static_feature = a_feature
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
 		do
--- TODO
-print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
-			current_file.put_line ("printf(%"deep_twin not implemented!\n%");")
-			print_builtin_any_standard_twin_body (a_feature)
+			deep_twin_types.force_last (a_target_type)
+			current_file.put_string (c_gedeep_twin)
+			current_file.put_integer (a_target_type.id)
+			current_file.put_character ('(')
+			print_target_expression (call_operands.first, a_target_type)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			current_file.put_character ('0')
+			current_file.put_character (')')
 		end
 
 	print_builtin_any_same_type_call (a_target_type: ET_DYNAMIC_TYPE) is
@@ -11800,7 +12792,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				else
 					l_builtin_item_code := builtin_feature (a_builtin_class_code, builtin_character_item)
 					l_queries := a_target_type.queries
-					nb := l_queries.count
+					nb := a_target_type.attribute_count
 					from i := 1 until i > nb loop
 						l_query := l_queries.item (i)
 						if l_query.builtin_code = l_builtin_item_code then
@@ -13454,7 +14446,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				else
 					l_builtin_item_code := builtin_feature (a_builtin_class_code, builtin_integer_item)
 					l_queries := a_target_type.queries
-					nb := l_queries.count
+					nb := a_target_type.attribute_count
 					from i := 1 until i > nb loop
 						l_query := l_queries.item (i)
 						if l_query.builtin_code = l_builtin_item_code then
@@ -13987,7 +14979,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				else
 					l_builtin_item_code := builtin_boolean_feature (builtin_boolean_item)
 					l_queries := a_target_type.queries
-					nb := l_queries.count
+					nb := a_target_type.attribute_count
 					from i := 1 until i > nb loop
 						l_query := l_queries.item (i)
 						if l_query.builtin_code = l_builtin_item_code then
@@ -14291,7 +15283,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				else
 					l_builtin_item_code := builtin_pointer_feature (builtin_pointer_item)
 					l_queries := a_target_type.queries
-					nb := l_queries.count
+					nb := a_target_type.attribute_count
 					from i := 1 until i > nb loop
 						l_query := l_queries.item (i)
 						if l_query.builtin_code = l_builtin_item_code then
@@ -15679,7 +16671,7 @@ print ("ET_C_GENERATOR.print_builtin_any_deep_twin_body%N")
 				else
 					l_builtin_item_code := builtin_feature (a_builtin_class_code, builtin_real_item)
 					l_queries := a_target_type.queries
-					nb := l_queries.count
+					nb := a_target_type.attribute_count
 					from i := 1 until i > nb loop
 						l_query := l_queries.item (i)
 						if l_query.builtin_code = l_builtin_item_code then
@@ -15897,7 +16889,7 @@ feature {NONE} -- C function generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				l_queries := l_string_type.queries
-				if l_queries.count < 2 then
+				if l_string_type.attribute_count < 2 then
 						-- Internal error: the STRING type should have at least
 						-- the attributes 'area' and 'count' as first features.
 					set_fatal_error
@@ -15958,7 +16950,7 @@ feature {NONE} -- C function generation
 			l_temp: ET_IDENTIFIER
 		do
 			l_queries := an_array_type.queries
-			if l_queries.count < 3 then
+			if an_array_type.attribute_count < 3 then
 					-- Internal error: class ARRAY should have at least the
 					-- features 'area', 'lower' and 'upper' as first features.
 					-- Already reported in ET_SYSTEM.compile_kernel.
@@ -16751,14 +17743,12 @@ feature {NONE} -- Type generation
 								print_type_definition (l_type, a_file)
 									-- Keep track of dependencies between expanded types.
 								l_queries := l_type.queries
-								nb2 := l_queries.count
+								nb2 := l_type.attribute_count
 								from j := 1 until j > nb2 loop
 									l_query := l_queries.item (j)
-									if l_query.is_attribute then
-										l_attribute_type := l_query.result_type_set.static_type
-										if l_attribute_type.is_expanded then
-											l_expanded_sorter.force_relation (l_attribute_type, l_type)
-										end
+									l_attribute_type := l_query.result_type_set.static_type
+									if l_attribute_type.is_expanded then
+										l_expanded_sorter.force_relation (l_attribute_type, l_type)
 									end
 									j := j + 1
 								end
@@ -17516,25 +18506,23 @@ feature {NONE} -- Type generation
 					a_file.put_new_line
 				end
 				l_queries := a_type.queries
-				nb := l_queries.count
+				nb := a_type.attribute_count
 				from i := 1 until i > nb loop
 					l_query := l_queries.item (i)
-					if l_query.is_attribute then
-						a_file.put_character ('%T')
-						print_type_declaration (l_query.result_type_set.static_type, a_file)
-						a_file.put_character (' ')
-						print_attribute_name (l_query, a_type, a_file)
-						a_file.put_character (';')
-						a_file.put_character (' ')
-						a_file.put_character ('/')
-						a_file.put_character ('*')
-						a_file.put_character (' ')
-						a_file.put_string (l_query.static_feature.name.name)
-						a_file.put_character (' ')
-						a_file.put_character ('*')
-						a_file.put_character ('/')
-						a_file.put_new_line
-					end
+					a_file.put_character ('%T')
+					print_type_declaration (l_query.result_type_set.static_type, a_file)
+					a_file.put_character (' ')
+					print_attribute_name (l_query, a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_character (' ')
+					a_file.put_character ('/')
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					a_file.put_string (l_query.static_feature.name.name)
+					a_file.put_character (' ')
+					a_file.put_character ('*')
+					a_file.put_character ('/')
+					a_file.put_new_line
 					i := i + 1
 				end
 				l_special_type ?= a_type
@@ -18103,16 +19091,14 @@ feature {NONE} -- Default initialization values generation
 				end
 					-- Attributes.
 				l_queries := a_type.queries
-				nb := l_queries.count
+				nb := a_type.attribute_count
 				from i := 1 until i > nb loop
 					l_query := l_queries.item (i)
-					if l_query.is_attribute then
-						if l_comma_needed then
-							a_file.put_character (',')
-						end
-						l_comma_needed := True
-						print_gedefault_attribute_value (l_query.result_type_set.static_type, a_file)
+					if l_comma_needed then
+						a_file.put_character (',')
 					end
+					l_comma_needed := True
+					print_gedefault_attribute_value (l_query.result_type_set.static_type, a_file)
 					i := i + 1
 				end
 				l_special_type ?= a_type
@@ -19083,6 +20069,8 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("ge_arguments.c")
 				elseif a_filename.same_string ("ge_exception.h") then
 					included_runtime_c_files.force ("ge_exception.c")
+				elseif a_filename.same_string ("ge_deep.h") then
+					included_runtime_c_files.force ("ge_deep.c")
 				elseif a_filename.same_string ("ge_no_gc.h") then
 					included_runtime_c_files.force ("ge_no_gc.c")
 				elseif a_filename.same_string ("ge_no_boehm.h") then
@@ -20011,7 +20999,7 @@ feature {NONE} -- Implementation
 
 	temp_variable: ET_IDENTIFIER is
 			-- Shared temporary variable, to be used in non-Eiffel features
-			-- such as 'gems' or 'gema*'.
+			-- such as 'gems', 'gema*' or 'main'.
 		once
 			if short_names then
 				create Result.make ("t1")
@@ -20046,7 +21034,6 @@ feature {NONE} -- Implementation
 			i, j: INTEGER
 			l_operand: ET_EXPRESSION
 			l_temp: ET_IDENTIFIER
-			l_seed: INTEGER
 		do
 			call_operands.wipe_out
 			if call_operands.capacity < nb then
@@ -20067,9 +21054,7 @@ feature {NONE} -- Implementation
 					l_operand := operand_stack.i_th (j)
 					l_temp ?= l_operand
 					if l_temp /= Void and then l_temp.is_temporary then
-						l_seed := l_temp.seed
-						free_temp_variables.replace (used_temp_variables.item (l_seed), l_seed)
-						used_temp_variables.replace (Void, l_seed)
+						mark_temp_variable_free (l_temp)
 					end
 					call_operands.put_last (l_operand)
 					j := j + 1
@@ -20274,12 +21259,15 @@ feature {NONE} -- Constants
 	c_else: STRING is "else"
 	c_extern: STRING is "extern"
 	c_float: STRING is "float"
+	c_for: STRING is "for"
 	c_gealloc: STRING is "gealloc"
 	c_geargc: STRING is "geargc"
 	c_geargv: STRING is "geargv"
 	c_geboxed: STRING is "geboxed"
 	c_geceiling: STRING is "geceiling"
 	c_geconst: STRING is "geconst"
+	c_gedeep: STRING is "gedeep"
+	c_gedeep_twin: STRING is "gedeep_twin"
 	c_gedefault: STRING is "gedefault"
 	c_gefloor: STRING is "gefloor"
 	c_geint8: STRING is "geint8"
@@ -20350,6 +21338,13 @@ invariant
 	no_void_polymorphic_type: not polymorphic_types.has_item (Void)
 	standalone_type_sets_not_void: standalone_type_sets /= Void
 	no_void_standalone_type_set: standalone_type_sets.has (Void)
+	deep_twin_types_not_void: deep_twin_types /= Void
+	no_void_deep_twin_type: not deep_twin_types.has (Void)
+	deep_equal_types_not_void: deep_equal_types /= Void
+	no_void_deep_equal_type: not deep_equal_types.has (Void)
+	deep_feature_target_type_sets_not_void: deep_feature_target_type_sets /= Void
+	no_void_deep_feature_target_type_set: not deep_feature_target_type_sets.has_item (Void)
+	no_void_deep_feature_static_target_type: not deep_feature_target_type_sets.has (Void)
 	current_agents_not_void: current_agents /= Void
 	no_void_agent: not current_agents.has (Void)
 	agent_instruction_not_void: agent_instruction /= Void

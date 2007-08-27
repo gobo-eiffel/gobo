@@ -60,19 +60,16 @@ feature {NONE} -- Implementation
 			-- Run-time query associated with `a_query';
 			-- Create a new object at each call.
 		local
-			l_name: ET_FEATURE_NAME
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			Result := precursor (a_query, a_system)
-			l_name := a_query.name
-			if l_name.same_feature_name (tokens.item_feature_name) then
-				Result.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
+			if Result.builtin_code = tokens.builtin_function_feature (tokens.builtin_function_item) then
 				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 				l_result_type_set := Result.result_type_set
 				if l_result_type_set /= Void and then l_result_type_set.static_type = result_type_set.static_type then
 					Result.set_result_type_set (result_type_set)
 				end
-			elseif l_name.same_feature_name (tokens.last_result_feature_name) then
+			elseif a_query.name.same_feature_name (tokens.last_result_feature_name) then
 				l_result_type_set := Result.result_type_set
 				if l_result_type_set /= Void and then l_result_type_set.static_type = result_type_set.static_type then
 					Result.set_result_type_set (result_type_set)
@@ -83,13 +80,9 @@ feature {NONE} -- Implementation
 	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time procedure associated with `a_procedure';
 			-- Create a new object at each call.
-		local
-			l_name: ET_FEATURE_NAME
 		do
 			Result := precursor (a_procedure, a_system)
-			l_name := a_procedure.name
-			if l_name.same_feature_name (tokens.call_feature_name) then
-				Result.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_call))
+			if Result.builtin_code = tokens.builtin_function_feature (tokens.builtin_function_call) then
 				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 			end
 		end

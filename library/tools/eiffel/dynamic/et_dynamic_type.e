@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -165,12 +165,6 @@ feature -- Access
 	base_class: ET_CLASS
 			-- Base class
 
-	queries: ET_DYNAMIC_FEATURE_LIST
-			-- Queries executed at run-time, if any
-
-	procedures: ET_DYNAMIC_FEATURE_LIST
-			-- Procedures executed at run-time, if any
-
 	meta_type: ET_DYNAMIC_TYPE
 			-- Type representing current type, if any.
 			-- If current type is of the form 'T', then
@@ -228,6 +222,71 @@ feature -- Setting
 
 feature -- Features
 
+	attribute_count: INTEGER
+			-- Number of attributes
+
+	has_reference_attributes: BOOLEAN
+			-- Does current type contain attributes whose types are declared of reference type?
+
+	has_nested_reference_attributes: BOOLEAN is
+			-- Does current type contain attributes whose types are declared of reference type,
+			-- or recursively does it contain expanded attributes whose type contains attributes
+			-- of reference type?
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if has_reference_attributes then
+				Result := True
+			else
+					-- Look at the attributes of the types of expanded attributes, if any.
+					--
+					-- We should not have cyclic recursive enclosed expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we temporarily
+					-- set `has_reference_attributes' to True to break that cycle.
+				has_reference_attributes := True
+				nb := attribute_count
+				from i := 1 until i > nb loop
+					l_type := queries.item (i).result_type_set.static_type
+					if l_type.is_expanded and then l_type.has_nested_reference_attributes then
+							-- Note that for non-generic expanded types, there is no type other
+							-- than itself that conforms to it. However for generic expanded types,
+							-- other generic derivations of the same generic class may conform to
+							-- it. But it is OK to take only the static type of the expanded attribute
+							-- into account even in that case, and we won't miss any sub-attribute
+							-- of reference types in conforming expanded generic derivations.
+							-- Indeed, if that static type has expanded attributes, then conforming
+							-- generic derivations cannot have these attributes of reference
+							-- type (because no reference type conforms to an expanded type).
+						Result := True
+						i := nb + 1
+					else
+						i := i + 1
+					end
+				end
+				has_reference_attributes := False
+			end
+		end
+
+	has_generic_expanded_attributes: BOOLEAN
+			-- Does current type contain attributes whose types are declared of generic expanded type?
+			-- Note that for non-generic expanded types, there is no type other than itself
+			-- that conforms to it. Therefore we don't need to keep the type-id in its instances.
+			-- However for generic expanded types, other generic derivations of the same generic
+			-- class may conform to it. So as for reference types, we need to keep the type-id
+			-- in its instances. That's why we need to know whether the current type has such
+			-- kind of attributes.
+
+	queries: ET_DYNAMIC_FEATURE_LIST
+			-- Queries executed at run-time, if any
+			-- (Note that attributes are stored first, from 1 to `attribute_count'.)
+
+	procedures: ET_DYNAMIC_FEATURE_LIST
+			-- Procedures executed at run-time, if any
+
 	dynamic_query (a_query: ET_QUERY; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time query associated with `a_query'
 		require
@@ -241,7 +300,11 @@ feature -- Features
 			if queries = empty_features then
 				create queries.make_with_capacity (base_class.queries.count)
 				Result := new_dynamic_query (a_query, a_system)
-				queries.put_last (Result)
+				if Result.is_attribute then
+					put_attribute (Result)
+				else
+					queries.put_last (Result)
+				end
 			else
 				nb := queries.count
 				from i := 1 until i > nb loop
@@ -255,7 +318,11 @@ feature -- Features
 				end
 				if Result = Void then
 					Result := new_dynamic_query (a_query, a_system)
-					queries.force_last (Result)
+					if Result.is_attribute then
+						put_attribute (Result)
+					else
+						queries.force_last (Result)
+					end
 				end
 			end
 		ensure
@@ -311,7 +378,11 @@ feature -- Features
 				if l_query /= Void then
 					create queries.make_with_capacity (base_class.queries.count)
 					Result := new_dynamic_query (l_query, a_system)
-					queries.put_last (Result)
+					if Result.is_attribute then
+						put_attribute (Result)
+					else
+						queries.put_last (Result)
+					end
 				end
 			else
 				nb := queries.count
@@ -328,7 +399,11 @@ feature -- Features
 					l_query := base_class.seeded_query (a_seed)
 					if l_query /= Void then
 						Result := new_dynamic_query (l_query, a_system)
-						queries.force_last (Result)
+						if Result.is_attribute then
+							put_attribute (Result)
+						else
+							queries.force_last (Result)
+						end
 					end
 				end
 			end
@@ -372,6 +447,36 @@ feature -- Features
 			end
 		end
 
+feature {NONE} -- Fetaures
+
+	put_attribute (an_attribute: ET_DYNAMIC_FEATURE) is
+			-- Add `an_attribute' to `queries'.
+		require
+			an_attribute_not_void: an_attribute /= Void
+			is_attribute: an_attribute.is_attribute
+			is_query: not an_attribute.is_procedure
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			attribute_count := attribute_count + 1
+			if queries.count < attribute_count then
+				queries.force_last (an_attribute)
+			else
+				queries.force_last (queries.item (attribute_count))
+				queries.put (an_attribute, attribute_count)
+			end
+			l_type := an_attribute.result_type_set.static_type
+			if not l_type.is_expanded then
+				has_reference_attributes := True
+			elseif l_type.is_generic then
+				has_generic_expanded_attributes := True
+			end
+		ensure
+			one_more: attribute_count = attribute_count + 1
+			reference_attribute: not an_attribute.result_type_set.is_expanded implies has_reference_attributes
+			generic_expanded_attribute: (an_attribute.result_type_set.is_expanded and then an_attribute.result_type_set.static_type.is_generic) implies has_generic_expanded_attributes
+		end
+
 feature -- Calls
 
 	query_calls: ET_DYNAMIC_QUALIFIED_QUERY_CALL
@@ -381,8 +486,6 @@ feature -- Calls
 	procedure_calls: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 			-- First qualified procedure call with current type as target static type
 			-- (Other calls are accessed with 'procedure_calls.next'.)
-
-feature -- Element change
 
 	put_query_call (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL) is
 			-- Add `a_call' to the list of qualified query calls.
@@ -401,6 +504,8 @@ feature -- Element change
 			a_call.set_next (procedure_calls)
 			procedure_calls := a_call
 		end
+
+feature -- Element change
 
 	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
 			-- Add `a_type' to current set.
@@ -472,6 +577,7 @@ feature {NONE} -- Implementation
 			create Result.make (a_query, Current, a_system)
 		ensure
 			new_dynamic_query_not_void: Result /= Void
+			is_query: not Result.is_procedure
 		end
 
 	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
@@ -485,6 +591,7 @@ feature {NONE} -- Implementation
 			create Result.make (a_procedure, Current, a_system)
 		ensure
 			new_dynamic_procedure_not_void: Result /= Void
+			is_procedure: Result.is_procedure
 		end
 
 	empty_features: ET_DYNAMIC_FEATURE_LIST is
@@ -503,5 +610,7 @@ invariant
 	base_class_not_void: base_class /= Void
 	queries_not_void: queries /= Void
 	procedures_not_void: procedures /= Void
+	attribute_count_not_negative: attribute_count >= 0
+	attribute_count_constraint: attribute_count <= queries.count
 
 end
