@@ -670,6 +670,22 @@
 	</listitem>
       </varlistentry>
       <varlistentry>
+	<term>--user</term>
+	<listitem>
+	  <para>
+	   User name for HTTP basic authentication.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--password</term>
+	<listitem>
+	  <para>
+	   Password for HTTP basic authentication.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
 	<term>--no-network-protocols</term>
 	<listitem>
 	  <para>
