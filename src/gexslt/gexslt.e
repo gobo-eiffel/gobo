@@ -659,6 +659,14 @@ feature {NONE} -- Implementation
 				if an_option.count > 13 then
 					set_error_script (an_option.substring (14, an_option.count))
 				end
+			elseif an_option.substring_index ("user=", 1) = 1 then
+				if an_option.count > 5 then
+					set_user_name (an_option.substring (6, an_option.count))
+				end
+			elseif an_option.substring_index ("password=", 1) = 1 then
+				if an_option.count > 9 then
+					set_password (an_option.substring (10, an_option.count))
+				end
 			elseif an_option.substring_index ("warnings=", 1) = 1 then
 				if an_option.count = 9 then
 					error_handler.set_warning_null
@@ -930,7 +938,7 @@ feature {NONE} -- Implementation
 			report_general_message ("Error-listener scripts are not supported in " + program_name)
 			Exceptions.die (1)
 		end
-
+	
 	set_warning_file (a_filename: STRING) is
 			-- Set warning output to `a_filename'.
 		require
@@ -1054,6 +1062,44 @@ feature {NONE} -- Implementation
 			network_protocols_not_suppressed: not suppress_network_protocols
 		do
 			-- Descendants are encouraged to redefine this routine.
+		end
+
+feature {NONE} -- HTTP basic authentication
+
+	user_name: STRING
+			-- User name for HTTP basic authentication
+
+	password: STRING
+			-- Password for HTTP basic authentication
+
+	is_authentication_requested: BOOLEAN is
+			-- Is Basic HTTP authentication requested?
+		do
+			Result := user_name /= Void and password /= Void
+		ensure
+			definition: Result implies ((user_name /= Void and then not user_name.is_empty) and (password /= Void and then not password.is_empty))
+		end
+
+	set_user_name (a_name: STRING) is
+			-- Set `user_name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			user_name := a_name
+		ensure
+			user_name_set: user_name = a_name
+		end
+
+	set_password (a_password: STRING) is
+			-- Set `password' to `a_password'.
+		require
+			a_password_not_void: a_password /= Void
+			a_password_not_empty: not a_password.is_empty
+		do
+			password := a_password
+		ensure
+			password_set: password = a_password
 		end
 
 invariant
