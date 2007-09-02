@@ -259,18 +259,10 @@ feature -- Types
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_type: ET_DYNAMIC_TYPE
-			l_item_type: ET_DYNAMIC_TYPE
-			l_item_type_set: ET_DYNAMIC_TYPE_SET
-			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_return_type: ET_DYNAMIC_TYPE
-			l_return_type_set: ET_DYNAMIC_TYPE_SET
-			l_base_type: ET_BASE_TYPE
 			l_base_class: ET_CLASS
-			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_any: ET_CLASS
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			l_base_class := a_type.base_class (a_context, universe)
 			i := l_base_class.index
@@ -290,150 +282,12 @@ feature -- Types
 						if l_type.base_type.same_base_type (a_type, a_context, l_any, universe) then
 							Result := l_type
 						elseif l_type.next_type = Void then
-							l_base_type := a_type.base_type (a_context, universe)
-							if l_base_class = universe.special_class then
-								l_actual_parameters := l_base_type.actual_parameters
-								if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
-										-- Class SPECIAL should have exactly one generic parameter.
-									l_item_type := dynamic_type (l_actual_parameters.type (1), l_any)
-									l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-									create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (l_base_type, l_base_class, l_item_type_set)
-								else
-									create Result.make (l_base_type, l_base_class)
-								end
-							elseif l_base_class = universe.tuple_class then
-								l_actual_parameters := l_base_type.actual_parameters
-								if l_actual_parameters /= Void then
-									nb := l_actual_parameters.count
-									if nb > 0 then
-										create l_item_type_sets.make_with_capacity (nb)
-										from i := 1 until i > nb loop
-											l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
-											l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-											l_item_type_sets.put_last (l_item_type_set)
-											i := i + 1
-										end
-									else
-										l_item_type_sets := empty_dynamic_type_sets
-									end
-								else
-									l_item_type_sets := empty_dynamic_type_sets
-								end
-								create {ET_DYNAMIC_TUPLE_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets)
-							elseif l_base_class = universe.array_class then
-								create Result.make (l_base_type, l_base_class)
-									-- Make features 'area', and 'lower' and 'upper' alive at the
-									-- first three positions in the feature list of the ARRAY type.
-								if array_area_feature /= Void then
-									l_dynamic_feature := Result.dynamic_query (array_area_feature, Current)
-								end
-								if array_lower_feature /= Void then
-									l_dynamic_feature := Result.dynamic_query (array_lower_feature, Current)
-								end
-								if array_upper_feature /= Void then
-									l_dynamic_feature := Result.dynamic_query (array_upper_feature, Current)
-								end
-							elseif l_base_class = universe.typed_pointer_class then
-								create Result.make (l_base_type, l_base_class)
-									-- Make feature 'to_pointer' alive at the first position
-									-- in the feature list of the TYPED_POINTER type.
-								if typed_pointer_to_pointer_feature /= Void then
-									l_dynamic_feature := Result.dynamic_query (typed_pointer_to_pointer_feature, Current)
-								end
-							elseif l_base_class = universe.type_class then
-								create Result.make (l_base_type, l_base_class)
-									-- Make sure that the meta type of the corresponding type is set.
-								l_actual_parameters := l_base_type.actual_parameters
-								if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
-										-- Class TYPE should have exactly one generic parameter.
-									dynamic_type (l_actual_parameters.type (1), l_any).set_meta_type (Result)
-								end
-							elseif l_base_class = universe.procedure_class then
-								l_actual_parameters := l_base_type.actual_parameters
-								if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
-									l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
-									l_actual_parameters := l_item_type.base_type.actual_parameters
-									if l_actual_parameters /= Void then
-										nb := l_actual_parameters.count
-										if nb > 0 then
-											create l_item_type_sets.make_with_capacity (nb)
-											from i := 1 until i > nb loop
-												l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
-												l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-												l_item_type_sets.put_last (l_item_type_set)
-												i := i + 1
-											end
-										else
-											l_item_type_sets := empty_dynamic_type_sets
-										end
-									else
-										l_item_type_sets := empty_dynamic_type_sets
-									end
-									create {ET_DYNAMIC_PROCEDURE_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets)
-								else
-									create Result.make (l_base_type, l_base_class)
-								end
-							elseif l_base_class = universe.function_class then
-								l_actual_parameters := l_base_type.actual_parameters
-								if l_actual_parameters /= Void and then l_actual_parameters.count = 3 then
-									l_return_type := dynamic_type (l_actual_parameters.type (3), l_any)
-									l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
-									l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
-									l_actual_parameters := l_item_type.base_type.actual_parameters
-									if l_actual_parameters /= Void then
-										nb := l_actual_parameters.count
-										if nb > 0 then
-											create l_item_type_sets.make_with_capacity (nb)
-											from i := 1 until i > nb loop
-												l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
-												l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-												l_item_type_sets.put_last (l_item_type_set)
-												i := i + 1
-											end
-										else
-											l_item_type_sets := empty_dynamic_type_sets
-										end
-									else
-										l_item_type_sets := empty_dynamic_type_sets
-									end
-									create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets, l_return_type_set)
-								else
-									create Result.make (l_base_type, l_base_class)
-								end
-							elseif l_base_class = universe.predicate_class then
-								l_actual_parameters := l_base_type.actual_parameters
-								if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
-									l_return_type := boolean_type
-									l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
-									l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
-									l_actual_parameters := l_item_type.base_type.actual_parameters
-									if l_actual_parameters /= Void then
-										nb := l_actual_parameters.count
-										if nb > 0 then
-											create l_item_type_sets.make_with_capacity (nb)
-											from i := 1 until i > nb loop
-												l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
-												l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-												l_item_type_sets.put_last (l_item_type_set)
-												i := i + 1
-											end
-										else
-											l_item_type_sets := empty_dynamic_type_sets
-										end
-									else
-										l_item_type_sets := empty_dynamic_type_sets
-									end
-									create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets, l_return_type_set)
-								else
-									create Result.make (l_base_type, l_base_class)
-								end
-							else
-								create Result.make (l_base_type, l_base_class)
-							end
+							Result := new_dynamic_type (a_type, a_context)
 							dynamic_types.force_last (Result)
-								-- `dynamic_type' is re-entrant. So at this stage
-								-- 'l_type.next_type' is not necessarily Void anymore.
-								-- We have to take that possibility into account.
+								-- `dynamic_type' is re-entrant (`new_dynamic_type' is
+								-- calling it). So at this stage 'l_type.next_type' is
+								-- not necessarily Void anymore. We have to take that
+								-- possibility into account.
 							Result.set_next_type (l_type.next_type)
 							l_type.set_next_type (Result)
 						else
@@ -450,154 +304,12 @@ feature -- Types
 				if not l_base_class.interface_checked or else l_base_class.has_interface_error then
 					set_fatal_error
 				end
-				l_base_type := a_type.base_type (a_context, universe)
-				if l_base_class = universe.special_class then
-					l_actual_parameters := l_base_type.actual_parameters
-					if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
-							-- Class SPECIAL should have exactly one generic parameter.
-						l_item_type := dynamic_type (l_actual_parameters.type (1), universe.any_class)
-						l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-						create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (l_base_type, l_base_class, l_item_type_set)
-					else
-						create Result.make (l_base_type, l_base_class)
-					end
-				elseif l_base_class = universe.tuple_class then
-					l_any := universe.any_class
-					l_actual_parameters := l_base_type.actual_parameters
-					if l_actual_parameters /= Void then
-						nb := l_actual_parameters.count
-						if nb > 0 then
-							create l_item_type_sets.make_with_capacity (nb)
-							from i := 1 until i > nb loop
-								l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
-								l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-								l_item_type_sets.put_last (l_item_type_set)
-								i := i + 1
-							end
-						else
-							l_item_type_sets := empty_dynamic_type_sets
-						end
-					else
-						l_item_type_sets := empty_dynamic_type_sets
-					end
-					create {ET_DYNAMIC_TUPLE_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets)
-				elseif l_base_class = universe.array_class then
-					create Result.make (l_base_type, l_base_class)
-						-- Make features 'area', and 'lower' and 'upper' alive at the
-						-- first three positions in the feature list of the ARRAY type.
-					if array_area_feature /= Void then
-						l_dynamic_feature := Result.dynamic_query (array_area_feature, Current)
-					end
-					if array_lower_feature /= Void then
-						l_dynamic_feature := Result.dynamic_query (array_lower_feature, Current)
-					end
-					if array_upper_feature /= Void then
-						l_dynamic_feature := Result.dynamic_query (array_upper_feature, Current)
-					end
-				elseif l_base_class = universe.typed_pointer_class then
-					create Result.make (l_base_type, l_base_class)
-						-- Make feature 'to_pointer' alive at the first position
-						-- in the feature list of the TYPED_POINTER type.
-					if typed_pointer_to_pointer_feature /= Void then
-						l_dynamic_feature := Result.dynamic_query (typed_pointer_to_pointer_feature, Current)
-					end
-				elseif l_base_class = universe.type_class then
-					create Result.make (l_base_type, l_base_class)
-						-- Make sure that the meta type of the corresponding type is set.
-					l_actual_parameters := l_base_type.actual_parameters
-					if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
-							-- Class TYPE should have exactly one generic parameter.
-						dynamic_type (l_actual_parameters.type (1), l_any).set_meta_type (Result)
-					end
-				elseif l_base_class = universe.procedure_class then
-					l_any := universe.any_class
-					l_actual_parameters := l_base_type.actual_parameters
-					if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
-						l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
-						l_actual_parameters := l_item_type.base_type.actual_parameters
-						if l_actual_parameters /= Void then
-							nb := l_actual_parameters.count
-							if nb > 0 then
-								create l_item_type_sets.make_with_capacity (nb)
-								from i := 1 until i > nb loop
-									l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
-									l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-									l_item_type_sets.put_last (l_item_type_set)
-									i := i + 1
-								end
-							else
-								l_item_type_sets := empty_dynamic_type_sets
-							end
-						else
-							l_item_type_sets := empty_dynamic_type_sets
-						end
-						create {ET_DYNAMIC_PROCEDURE_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets)
-					else
-						create Result.make (l_base_type, l_base_class)
-					end
-				elseif l_base_class = universe.function_class then
-					l_any := universe.any_class
-					l_actual_parameters := l_base_type.actual_parameters
-					if l_actual_parameters /= Void and then l_actual_parameters.count = 3 then
-						l_return_type := dynamic_type (l_actual_parameters.type (3), l_any)
-						l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
-						l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
-						l_actual_parameters := l_item_type.base_type.actual_parameters
-						if l_actual_parameters /= Void then
-							nb := l_actual_parameters.count
-							if nb > 0 then
-								create l_item_type_sets.make_with_capacity (nb)
-								from i := 1 until i > nb loop
-									l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
-									l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-									l_item_type_sets.put_last (l_item_type_set)
-									i := i + 1
-								end
-							else
-								l_item_type_sets := empty_dynamic_type_sets
-							end
-						else
-							l_item_type_sets := empty_dynamic_type_sets
-						end
-						create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets, l_return_type_set)
-					else
-						create Result.make (l_base_type, l_base_class)
-					end
-				elseif l_base_class = universe.predicate_class then
-					l_any := universe.any_class
-					l_actual_parameters := l_base_type.actual_parameters
-					if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
-						l_return_type := boolean_type
-						l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
-						l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
-						l_actual_parameters := l_item_type.base_type.actual_parameters
-						if l_actual_parameters /= Void then
-							nb := l_actual_parameters.count
-							if nb > 0 then
-								create l_item_type_sets.make_with_capacity (nb)
-								from i := 1 until i > nb loop
-									l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
-									l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-									l_item_type_sets.put_last (l_item_type_set)
-									i := i + 1
-								end
-							else
-								l_item_type_sets := empty_dynamic_type_sets
-							end
-						else
-							l_item_type_sets := empty_dynamic_type_sets
-						end
-						create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets, l_return_type_set)
-					else
-						create Result.make (l_base_type, l_base_class)
-					end
-				else
-					create Result.make (l_base_type, l_base_class)
-				end
+				Result := new_dynamic_type (a_type, a_context)
 				dynamic_types.force_last (Result)
-					-- `dynamic_type' is re-entrant. So at this stage another type with
-					-- the same base class may have been inserted into `dynamic_types'.
-					-- We have to take that possibility into account.
+					-- `dynamic_type' is re-entrant (`new_dynamic_type' is calling it).
+					-- So at this stage another type with the same base class may have
+					-- been inserted into `dynamic_types'. We have to take that possibility
+					-- into account.
 				i := l_base_class.index
 				if i >= 1 and i <= dynamic_types.count then
 					l_type := dynamic_types.item (i)
@@ -620,6 +332,325 @@ feature -- Types
 
 	dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			-- Dynamic types in the system
+
+feature {NONE} -- Types
+
+	new_dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE is
+			-- New dynamic type corresponding to `a_type' in `a_context'
+		require
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+		local
+			l_base_type: ET_BASE_TYPE
+			l_base_class: ET_CLASS
+		do
+			l_base_class := a_type.base_class (a_context, universe)
+			l_base_type := a_type.base_type (a_context, universe)
+			if l_base_class = universe.special_class then
+				Result := new_special_type (l_base_type)
+			elseif l_base_class = universe.tuple_class then
+				Result := new_tuple_type (l_base_type)
+			elseif l_base_class = universe.array_class then
+				Result := new_array_type (l_base_type)
+			elseif l_base_class = universe.typed_pointer_class then
+				Result := new_typed_pointer_type (l_base_type)
+			elseif l_base_class = universe.type_class then
+				Result := new_type_type (l_base_type)
+			elseif l_base_class = universe.procedure_class then
+				Result := new_procedure_type (l_base_type)
+			elseif l_base_class = universe.function_class then
+				Result := new_function_type (l_base_type)
+			elseif l_base_class = universe.predicate_class then
+				Result := new_predicate_type (l_base_type)
+			else
+				create Result.make (l_base_type, l_base_class)
+			end
+		ensure
+			new_dynamic_type_not_void: Result /= Void
+		end
+
+	new_special_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+			-- New dynamic "SPECIAL" type corresponding to `a_base_type'
+		require
+			a_base_type_not_void: a_base_type /= Void
+			is_base_type: a_base_type.is_base_type
+			is_special: a_base_type.direct_base_class (universe) = universe.special_class
+		local
+			l_base_class: ET_CLASS
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_item_type: ET_DYNAMIC_TYPE
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_any: ET_CLASS
+		do
+			l_any := universe.any_class
+			l_base_class := universe.special_class
+			l_actual_parameters := a_base_type.actual_parameters
+			if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
+					-- Class SPECIAL should have exactly one generic parameter.
+				l_item_type := dynamic_type (l_actual_parameters.type (1), l_any)
+				l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+				create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (a_base_type, l_base_class, l_item_type_set)
+			else
+				create Result.make (a_base_type, l_base_class)
+			end
+		ensure
+			new_special_type_not_void: Result /= Void
+		end
+
+	new_tuple_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+			-- New dynamic "TUPLE" type corresponding to `a_base_type'
+		require
+			a_base_type_not_void: a_base_type /= Void
+			is_base_type: a_base_type.is_base_type
+			is_tuple: a_base_type.direct_base_class (universe) = universe.tuple_class
+		local
+			l_base_class: ET_CLASS
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_item_type: ET_DYNAMIC_TYPE
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			i, nb: INTEGER
+			l_any: ET_CLASS
+		do
+			l_any := universe.any_class
+			l_base_class := universe.tuple_class
+			l_actual_parameters := a_base_type.actual_parameters
+			if l_actual_parameters /= Void then
+				nb := l_actual_parameters.count
+				if nb > 0 then
+					create l_item_type_sets.make_with_capacity (nb)
+					from i := 1 until i > nb loop
+						l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
+						l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+						l_item_type_sets.put_last (l_item_type_set)
+						i := i + 1
+					end
+				else
+					l_item_type_sets := empty_dynamic_type_sets
+				end
+			else
+				l_item_type_sets := empty_dynamic_type_sets
+			end
+			create {ET_DYNAMIC_TUPLE_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets)
+		ensure
+			new_tuple_type_not_void: Result /= Void
+		end
+
+	new_array_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+			-- New dynamic "ARRAY" type corresponding to `a_base_type'
+		require
+			a_base_type_not_void: a_base_type /= Void
+			is_base_type: a_base_type.is_base_type
+			is_array: a_base_type.direct_base_class (universe) = universe.array_class
+		local
+			l_base_class: ET_CLASS
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+		do
+			l_base_class := universe.array_class
+			create Result.make (a_base_type, l_base_class)
+				-- Make features 'area', and 'lower' and 'upper' alive at the
+				-- first three positions in the feature list of the ARRAY type.
+			if array_area_feature /= Void then
+				l_dynamic_feature := Result.dynamic_query (array_area_feature, Current)
+			end
+			if array_lower_feature /= Void then
+				l_dynamic_feature := Result.dynamic_query (array_lower_feature, Current)
+			end
+			if array_upper_feature /= Void then
+				l_dynamic_feature := Result.dynamic_query (array_upper_feature, Current)
+			end
+		ensure
+			new_array_type_not_void: Result /= Void
+		end
+
+	new_typed_pointer_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+			-- New dynamic "TYPED_POINTER" type corresponding to `a_base_type'
+		require
+			a_base_type_not_void: a_base_type /= Void
+			is_base_type: a_base_type.is_base_type
+			is_typed_pointer: a_base_type.direct_base_class (universe) = universe.typed_pointer_class
+		local
+			l_base_class: ET_CLASS
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+		do
+			l_base_class := universe.typed_pointer_class
+			create Result.make (a_base_type, l_base_class)
+				-- Make feature 'to_pointer' alive at the first position
+				-- in the feature list of the TYPED_POINTER type.
+			if typed_pointer_to_pointer_feature /= Void then
+				l_dynamic_feature := Result.dynamic_query (typed_pointer_to_pointer_feature, Current)
+			end
+		ensure
+			new_typed_pointer_type_not_void: Result /= Void
+		end
+
+	new_type_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+			-- New dynamic "TYPE" type corresponding to `a_base_type'
+		require
+			a_base_type_not_void: a_base_type /= Void
+			is_base_type: a_base_type.is_base_type
+			is_type: a_base_type.direct_base_class (universe) = universe.type_class
+		local
+			l_base_class: ET_CLASS
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_any: ET_CLASS
+		do
+			l_any := universe.any_class
+			l_base_class := universe.type_class
+			create Result.make (a_base_type, l_base_class)
+				-- Make sure that the meta type of the corresponding type is set.
+			l_actual_parameters := a_base_type.actual_parameters
+			if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
+					-- Class TYPE should have exactly one generic parameter.
+				dynamic_type (l_actual_parameters.type (1), l_any).set_meta_type (Result)
+			end
+		ensure
+			new_type_type_not_void: Result /= Void
+		end
+
+	new_procedure_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+			-- New dynamic "PROCEDURE" type corresponding to `a_base_type'
+		require
+			a_base_type_not_void: a_base_type /= Void
+			is_base_type: a_base_type.is_base_type
+			is_procedure: a_base_type.direct_base_class (universe) = universe.procedure_class
+		local
+			l_base_class: ET_CLASS
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_item_type: ET_DYNAMIC_TYPE
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			i, nb: INTEGER
+			l_any: ET_CLASS
+		do
+			l_any := universe.any_class
+			l_base_class := universe.procedure_class
+			l_actual_parameters := a_base_type.actual_parameters
+			if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
+				l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
+				l_actual_parameters := l_item_type.base_type.actual_parameters
+				if l_actual_parameters /= Void then
+					nb := l_actual_parameters.count
+					if nb > 0 then
+						create l_item_type_sets.make_with_capacity (nb)
+						from i := 1 until i > nb loop
+							l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
+							l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+							l_item_type_sets.put_last (l_item_type_set)
+							i := i + 1
+						end
+					else
+						l_item_type_sets := empty_dynamic_type_sets
+					end
+				else
+					l_item_type_sets := empty_dynamic_type_sets
+				end
+				create {ET_DYNAMIC_PROCEDURE_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets)
+			else
+				create Result.make (a_base_type, l_base_class)
+			end
+		ensure
+			new_procedure_type_not_void: Result /= Void
+		end
+
+	new_function_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+			-- New dynamic "FUNCTION" type corresponding to `a_base_type'
+		require
+			a_base_type_not_void: a_base_type /= Void
+			is_base_type: a_base_type.is_base_type
+			is_function: a_base_type.direct_base_class (universe) = universe.function_class
+		local
+			l_base_class: ET_CLASS
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_item_type: ET_DYNAMIC_TYPE
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_return_type: ET_DYNAMIC_TYPE
+			l_return_type_set: ET_DYNAMIC_TYPE_SET
+			i, nb: INTEGER
+			l_any: ET_CLASS
+		do
+			l_any := universe.any_class
+			l_base_class := universe.function_class
+			l_actual_parameters := a_base_type.actual_parameters
+			if l_actual_parameters /= Void and then l_actual_parameters.count = 3 then
+				l_return_type := dynamic_type (l_actual_parameters.type (3), l_any)
+				l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
+				l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
+				l_actual_parameters := l_item_type.base_type.actual_parameters
+				if l_actual_parameters /= Void then
+					nb := l_actual_parameters.count
+					if nb > 0 then
+						create l_item_type_sets.make_with_capacity (nb)
+						from i := 1 until i > nb loop
+							l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
+							l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+							l_item_type_sets.put_last (l_item_type_set)
+							i := i + 1
+						end
+					else
+						l_item_type_sets := empty_dynamic_type_sets
+					end
+				else
+					l_item_type_sets := empty_dynamic_type_sets
+				end
+				create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets, l_return_type_set)
+			else
+				create Result.make (a_base_type, l_base_class)
+			end
+		ensure
+			new_function_type_not_void: Result /= Void
+		end
+
+	new_predicate_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+			-- New dynamic "PREDICATE" type corresponding to `a_base_type'
+		require
+			a_base_type_not_void: a_base_type /= Void
+			is_base_type: a_base_type.is_base_type
+			is_predicate: a_base_type.direct_base_class (universe) = universe.predicate_class
+		local
+			l_base_class: ET_CLASS
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_item_type: ET_DYNAMIC_TYPE
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_return_type: ET_DYNAMIC_TYPE
+			l_return_type_set: ET_DYNAMIC_TYPE_SET
+			i, nb: INTEGER
+			l_any: ET_CLASS
+		do
+			l_any := universe.any_class
+			l_base_class := universe.predicate_class
+			l_actual_parameters := a_base_type.actual_parameters
+			if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
+				l_return_type := boolean_type
+				l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
+				l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
+				l_actual_parameters := l_item_type.base_type.actual_parameters
+				if l_actual_parameters /= Void then
+					nb := l_actual_parameters.count
+					if nb > 0 then
+						create l_item_type_sets.make_with_capacity (nb)
+						from i := 1 until i > nb loop
+							l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
+							l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+							l_item_type_sets.put_last (l_item_type_set)
+							i := i + 1
+						end
+					else
+						l_item_type_sets := empty_dynamic_type_sets
+					end
+				else
+					l_item_type_sets := empty_dynamic_type_sets
+				end
+				create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets, l_return_type_set)
+			else
+				create Result.make (a_base_type, l_base_class)
+			end
+		ensure
+			new_predicate_type_not_void: Result /= Void
+		end
 
 feature -- Compilation
 

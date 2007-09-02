@@ -327,6 +327,7 @@ feature -- Features
 			end
 		ensure
 			dynamic_query_not_void: Result /= Void
+			is_query: not Result.is_procedure
 		end
 
 	dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
@@ -361,6 +362,7 @@ feature -- Features
 			end
 		ensure
 			dynamic_procedure_not_void: Result /= Void
+			is_procedure: Result.is_procedure
 		end
 
 	seeded_dynamic_query (a_seed: INTEGER; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
@@ -407,6 +409,8 @@ feature -- Features
 					end
 				end
 			end
+		ensure
+			is_query: Result /= Void implies not Result.is_procedure
 		end
 
 	seeded_dynamic_procedure (a_seed: INTEGER; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
@@ -445,6 +449,8 @@ feature -- Features
 					end
 				end
 			end
+		ensure
+			is_procedure: Result /= Void implies Result.is_procedure
 		end
 
 feature {NONE} -- Fetaures
