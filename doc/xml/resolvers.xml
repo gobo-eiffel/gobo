@@ -106,9 +106,10 @@ of increasing power. If none of these meets your needs, then you may write your 
 			whose purpose is to open URIs for that particular scheme.
 		</para>
 		<para>
-			The library provides <classname>XM_FILE_URI_RESOLVER</classname> and <classname>XM_DATA_URI_RESOLVER</classname>
-			to handle the file and data protocols. If you need to handle other protocols, such as http or ftp,
-			then you may be able to find them in other libraries (such as ePOSIX for http and ftp), or
+			The library provides <classname>XM_FILE_URI_RESOLVER</classname>, <classname>XM_DATA_URI_RESOLVER</classname>
+			to handle the file and data protocols, and <classname>XM_STDIN_URI_RESOLVER</classname> to resolve <uri>stdin:</uri> to the standard input stream.
+			If you need to handle other protocols, such as http or ftp,
+			then you may be able to find them in other libraries (such as ePOSIX for http, https and ftp), or
 			you can write one yourself. After creating such a resolver, you need to register it
 			by calling <featurename>register_scheme</featurename> on the <classname>XM_URI_EXTERNAL_RESOLVER</classname>. 
 			You can inherit from <classname>XM_RESOLVER_FACTORY</classname>, and use the <featurename>new_resolver*</featurename>

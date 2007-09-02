@@ -109,12 +109,13 @@
 	<itemizedlist>
 	 <listitem><para>file</para></listitem>
 	 <listitem><para>data</para></listitem>
+	 <listitem><para>stdin</para></listitem>
 	 <listitem><para>string</para></listitem>
 	</itemizedlist>
        </para>
        <para>
-	The last scheme is used for reading text from Eiffel <classname>STRING</classname>s. It is documented
-	in <ulink url="../resolvers.html">Resolvers</ulink>, which also documents how to add additional URI schemes.
+	The last two schemes are used for reading from the standard input stream and text from Eiffel <classname>STRING</classname>s respectively. 
+	They are documented in <ulink url="../resolvers.html">Resolvers</ulink>, which also documents how to add additional URI schemes.
        </para>
        <para>
 	The following additional URI schemes are supported by <ulink url="http://gestalt.sourceforge.net">Gestalt</ulink>:
