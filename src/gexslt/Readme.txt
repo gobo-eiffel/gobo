@@ -1,5 +1,3 @@
-WARNING: THIS TOOL IS STILL UNDER DEVELOPMENT!
-
 This directory contains the source code of 
 the Gobo Eiffel XSLT 2.0 command-line processor (gexslt). 
 The code of gexslt is mainly based on the Gobo Eiffel

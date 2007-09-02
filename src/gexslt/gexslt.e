@@ -780,7 +780,7 @@ feature {NONE} -- Implementation
 			-- Read `uris' and perform transform(s).
 		require
 			uri_list_valid: uris /= Void
-				and then uris.count = 2 or else  uris.count = 1
+				and then (uris.count = 2 or else  uris.count = 1)
 		local
 			l_source: XM_XSLT_URI_SOURCE
 			l_stylesheet_source: XM_XSLT_SOURCE
@@ -1052,16 +1052,26 @@ feature {NONE} -- Implementation
 
 	register_non_network_protocols is
 			-- Register additional URI schemes which do not access the network.
-		do
 			-- Descendants are encouraged to redefine this routine.
+		require
+			uri_list_valid: uris /= Void
+				and then (uris.count = 2 or else uris.count = 1)
+		local
+			l_stdin_resolver: XM_STDIN_URI_RESOLVER
+		do
+			-- TODO: add an option to override default content type
+			create l_stdin_resolver.make
+			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (l_stdin_resolver)
 		end
 			
 	register_network_protocols is
 			-- Register additional URI schemes which may access the network.
+			-- Descendants are encouraged to redefine this routine.
 		require
 			network_protocols_not_suppressed: not suppress_network_protocols
+			uri_list_valid: uris /= Void
+				and then (uris.count = 2 or else uris.count = 1)
 		do
-			-- Descendants are encouraged to redefine this routine.
 		end
 
 feature {NONE} -- HTTP basic authentication
