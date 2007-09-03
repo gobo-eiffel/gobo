@@ -6552,7 +6552,9 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_area_type_set: ET_DYNAMIC_TYPE_SET
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
-			l_item_type: ET_DYNAMIC_TYPE
+			l_static_item_type: ET_DYNAMIC_TYPE
+			l_dynamic_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item: ET_EXPRESSION
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -6583,12 +6585,12 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 							set_fatal_error
 							error_handler.report_giaaa_error
 						else
-							l_item_type := l_special_type.item_type_set.static_type
+							l_static_item_type := l_special_type.item_type_set.static_type
 						end
 					end
 				end
 			end
-			if l_item_type /= Void then
+			if l_static_item_type /= Void then
 				nb := an_expression.count
 				from i := 1 until i > nb loop
 					print_operand (an_expression.expression (i))
@@ -6596,12 +6598,12 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				end
 				fill_call_operands (nb)
 				if
-					l_item_type = current_system.boolean_type or
-					l_item_type = current_system.character_8_type or
-					l_item_type = current_system.integer_8_type or
-					l_item_type = current_system.natural_8_type or
-					l_item_type = current_system.integer_16_type or
-					l_item_type = current_system.natural_16_type
+					l_static_item_type = current_system.boolean_type or
+					l_static_item_type = current_system.character_8_type or
+					l_static_item_type = current_system.integer_8_type or
+					l_static_item_type = current_system.natural_8_type or
+					l_static_item_type = current_system.integer_16_type or
+					l_static_item_type = current_system.natural_16_type
 				then
 						-- ISO C 99 says that through "..." the types are promoted to
 						-- 'int', and that promotion to 'int' leaves the type unchanged
@@ -6609,7 +6611,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						-- 'unsigned int'.
 					l_int_promoted := True
 				elseif
-					l_item_type = current_system.real_type
+					l_static_item_type = current_system.real_type
 				then
 						-- ISO C 99 says that 'float' is promoted to 'double' when
 						-- passed as argument of a function.
@@ -6642,22 +6644,29 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						-- Print one item per line for better readability,
 						-- avoidind too long lines for big arrays.
 					current_file.put_new_line
-					if l_int_promoted then
+					l_item := call_operands.item (i)
+					l_dynamic_item_type_set := current_feature.dynamic_type_set (l_item)
+					if l_dynamic_item_type_set = Void then
+							-- Internal error: the dynamic type set of each item
+							-- should be known at this statge.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_int_promoted then
 						current_file.put_character ('(')
 						current_file.put_string (c_int)
 						current_file.put_character (')')
 						current_file.put_character ('(')
-						print_expression (call_operands.item (i))
+						print_attachment_expression (l_item, l_dynamic_item_type_set, l_static_item_type)
 						current_file.put_character (')')
 					elseif l_double_promoted then
 						current_file.put_character ('(')
 						current_file.put_string (c_double)
 						current_file.put_character (')')
 						current_file.put_character ('(')
-						print_expression (call_operands.item (i))
+						print_attachment_expression (l_item, l_dynamic_item_type_set, l_static_item_type)
 						current_file.put_character (')')
 					else
-						print_expression (call_operands.item (i))
+						print_attachment_expression (l_item, l_dynamic_item_type_set, l_static_item_type)
 					end
 					i := i + 1
 				end
@@ -6680,6 +6689,8 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_assignment_target: ET_WRITABLE
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item: ET_EXPRESSION
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -6729,7 +6740,16 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					if i /= 1 then
 						current_file.put_character (',')
 					end
-					print_expression (call_operands.item (i))
+					l_item := call_operands.item (i)
+					l_item_type_set := current_feature.dynamic_type_set (l_item)
+					if l_item_type_set = Void then
+							-- Internal error: the dynamic type set of each item
+							-- should be known at this statge.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						print_attachment_expression (l_item, l_item_type_set, l_item_type_set.static_type)
+					end
 					i := i + 1
 				end
 				current_file.put_character (')')

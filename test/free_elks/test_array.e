@@ -186,4 +186,19 @@ feature -- Test
 			assert ("item2", l_array.item (2) = r2)
 		end
 
+	test_manifest_any is
+			-- Test manifest arrays of ANY.
+		local
+			l_array: ARRAY [ANY]
+			s1: STRING
+			i2: INTEGER
+		do
+			s1 := "gobo"
+			i2 := 5
+			l_array := <<s1, i2>>
+			assert ("item1", l_array.item (1) = s1)
+			assert_strings_equal ("item2a", i2.generating_type, l_array.item (2).generating_type)
+			assert_strings_equal ("item2b", i2.out, l_array.item (2).out)
+		end
+
 end
