@@ -826,7 +826,7 @@ feature {NONE} -- Feature generation
 			old_feature: ET_DYNAMIC_FEATURE
 			i: INTEGER
 		do
-			if not a_feature.is_semistrict then
+			if not a_feature.is_semistrict (current_system) then
 				old_type := current_type
 				current_type := a_feature.target_type
 				old_feature := current_feature
@@ -6267,7 +6267,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					else
 						l_query := current_type.seeded_dynamic_query (l_name.seed, current_system)
 						if l_query /= Void then
-							if l_query.is_attribute then
+							if l_query.is_attribute (current_system) then
 								l_value_type_set := l_query.result_type_set
 								if l_value_type_set = Void then
 										-- Internal error: we know that `l_query' is an attribute.
@@ -8083,7 +8083,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				error_handler.report_giaaa_error
 			else
 				l_call_type := l_call_type_set.static_type
-				if l_dynamic_feature.is_attribute then
+				if l_dynamic_feature.is_attribute (current_system) then
 					if in_operand then
 						operand_stack.force (a_call)
 					elseif l_dynamic_feature.is_builtin then
@@ -8255,7 +8255,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				error_handler.report_giaaa_error
 			else
 				l_call_type := l_call_type_set.static_type
-				if l_dynamic_feature.is_attribute then
+				if l_dynamic_feature.is_attribute (current_system) then
 					if in_operand then
 						operand_stack.force (an_identifier)
 					elseif l_dynamic_feature.is_builtin then
@@ -11889,7 +11889,7 @@ feature {NONE} -- Deep features generation
 	print_deep_twined_attribute (an_attribute: ET_EXPRESSION; an_attribute_type_set: ET_DYNAMIC_TYPE_SET) is
 			-- Print to `current_file' deep twined version of the attribute `an_attribute'
 			-- belonging to `current_type', with dynamic type set `an_attribute_type_set'.
-			-- The test for Void-ness of the attribute is assumed to have 
+			-- The test for Void-ness of the attribute is assumed to have
 			-- been generated elsewhere. And the attribute is assumed not to
 			-- have been deep twined already.
 		require

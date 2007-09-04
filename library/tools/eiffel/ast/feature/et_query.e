@@ -100,5 +100,6 @@ feature -- Type processing
 invariant
 
 	declared_type_not_void: declared_type /= Void
+	is_query: is_query
 
 end

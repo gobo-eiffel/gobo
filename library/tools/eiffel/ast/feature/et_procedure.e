@@ -95,5 +95,6 @@ feature -- Type processing
 invariant
 
 	procedure: type = Void
+	is_procedure: is_procedure
 
 end

@@ -11204,7 +11204,7 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_not_procedure: not a_feature.is_procedure
+			a_feature_not_query: not a_feature.is_query
 		do
 			current_class := a_class
 			class_impl := a_class

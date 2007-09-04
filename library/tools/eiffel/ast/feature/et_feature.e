@@ -287,7 +287,7 @@ feature -- Status report
 		do
 			-- Result := False
 		ensure
-			query: Result implies type /= Void
+			query: Result implies is_query
 		end
 
 	is_attribute: BOOLEAN is
@@ -295,7 +295,7 @@ feature -- Status report
 		do
 			-- Result := False
 		ensure
-			query: Result implies type /= Void
+			query: Result implies is_query
 		end
 
 	is_constant_attribute: BOOLEAN is
@@ -303,7 +303,7 @@ feature -- Status report
 		do
 			-- Result := False
 		ensure
-			query: Result implies type /= Void
+			query: Result implies is_query
 		end
 
 	is_unique_attribute: BOOLEAN is
@@ -311,7 +311,15 @@ feature -- Status report
 		do
 			-- Result := False
 		ensure
-			query: Result implies type /= Void
+			query: Result implies is_query
+		end
+
+	is_query: BOOLEAN is
+			-- Is current feature a query?
+		do
+			Result := (type /= Void)
+		ensure
+			definition: Result = (type /= Void)
 		end
 
 	is_procedure: BOOLEAN is

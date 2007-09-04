@@ -258,90 +258,35 @@ feature -- Status report
 	is_static: BOOLEAN
 			-- Is current feature used as a static feature?
 
-	is_function: BOOLEAN is
+	is_function (a_system: ET_SYSTEM): BOOLEAN is
 			-- Is feature a function?
+		require
+			a_system_not_void: a_system /= Void
 		do
 			if static_feature.is_function then
 				if is_builtin then
 						-- The function should not be a built-in attribute.
-					Result := not is_attribute
+					Result := not target_type.is_builtin_attribute (static_feature, builtin_code, a_system)
 				else
 					Result := True
 				end
 			end
 		ensure
-			query: Result implies result_type_set /= Void
+			query: Result implies is_query
 		end
 
-	is_attribute: BOOLEAN is
+	is_attribute (a_system: ET_SYSTEM): BOOLEAN is
 			-- Is feature an attribute?
+		require
+			a_system_not_void: a_system /= Void
 		do
 			if not is_builtin then
 				Result := static_feature.is_attribute
 			else
-				inspect builtin_code // builtin_capacity
-				when builtin_boolean_class then
-					if (builtin_code \\ builtin_capacity) = builtin_boolean_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_character_8_class then
-					if (builtin_code \\ builtin_capacity) = builtin_character_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_character_32_class then
-					 if (builtin_code \\ builtin_capacity) = builtin_character_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_pointer_class then
-					if (builtin_code \\ builtin_capacity) = builtin_pointer_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_integer_8_class then
-					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_integer_16_class then
-					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_integer_32_class then
-					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_integer_64_class then
-					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_natural_8_class then
-					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_natural_16_class then
-					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_natural_32_class then
-					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_natural_64_class then
-					if (builtin_code \\ builtin_capacity) = builtin_integer_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_real_32_class then
-					if (builtin_code \\ builtin_capacity) = builtin_real_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				when builtin_real_64_class then
-					if (builtin_code \\ builtin_capacity) = builtin_real_item then
-						Result := result_type_set /= Void and then target_type /= result_type_set.static_type
-					end
-				else
-					Result := False
-				end
+				Result := target_type.is_builtin_attribute (static_feature, builtin_code, a_system)
 			end
 		ensure
-			query: Result implies result_type_set /= Void
+			query: Result implies is_query
 		end
 
 	is_constant_attribute: BOOLEAN is
@@ -349,7 +294,7 @@ feature -- Status report
 		do
 			Result := static_feature.is_constant_attribute
 		ensure
-			query: Result implies result_type_set /= Void
+			query: Result implies is_query
 		end
 
 	is_unique_attribute: BOOLEAN is
@@ -357,13 +302,21 @@ feature -- Status report
 		do
 			Result := static_feature.is_unique_attribute
 		ensure
-			query: Result implies result_type_set /= Void
+			query: Result implies is_query
+		end
+
+	is_query: BOOLEAN is
+			-- Is current feature a query?
+		do
+			Result := (result_type_set /= Void)
+		ensure
+			definition: Result = (result_type_set /= Void)
 		end
 
 	is_procedure: BOOLEAN is
 			-- Is current feature a procedure?
 		do
-			Result := static_feature.is_procedure
+			Result := (result_type_set = Void)
 		ensure
 			definition: Result = (result_type_set = Void)
 		end
@@ -374,17 +327,24 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_semistrict: BOOLEAN is
+	is_semistrict (a_system: ET_SYSTEM): BOOLEAN is
 			-- Is current feature semistrict?
+		require
+			a_system_not_void: a_system /= Void
 		do
 			if not is_builtin then
 				-- Result := False
-			elseif builtin_code = builtin_boolean_and_then then
-				Result := True
-			elseif builtin_code = builtin_boolean_or_else then
-				Result := True
-			elseif builtin_code = builtin_boolean_implies then
-				Result := True
+			elseif (builtin_code // builtin_capacity) = builtin_boolean_class then
+				inspect builtin_code \\ builtin_capacity
+				when builtin_boolean_and_then then
+					Result := target_type = a_system.boolean_type
+				when builtin_boolean_or_else then
+					Result := target_type = a_system.boolean_type
+				when builtin_boolean_implies then
+					Result := target_type = a_system.boolean_type
+				else
+					Result := False
+				end
 			end
 		end
 
