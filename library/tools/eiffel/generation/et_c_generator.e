@@ -20294,7 +20294,6 @@ feature {NONE} -- Feature name generation
 			-- Note that all calls-on-void-target with a result of reference type share
 			-- the same 'gevoid' function.
 		require
-			a_type_not_void: a_result_type /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
