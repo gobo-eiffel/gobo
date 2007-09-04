@@ -38,6 +38,7 @@ inherit
 			propagate_call_agent_result_dynamic_types,
 			propagate_creation_dynamic_type,
 			propagate_inline_agent_result_dynamic_types,
+			propagate_like_argument_dynamic_types,
 			propagate_tuple_label_setter_dynamic_types
 		end
 
@@ -1177,6 +1178,21 @@ feature {NONE} -- Implementation
 					create l_result_attachment.make (l_dynamic_type_set, an_agent, current_dynamic_feature, current_dynamic_type)
 					a_result_type_set.put_source (l_result_attachment, current_system)
 				end
+			end
+		end
+
+	propagate_like_argument_dynamic_types (a_call: ET_FEATURE_CALL_EXPRESSION; a_formal_type_set, an_actual_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- When `a_call' is a call to a query whose type is of the form "like argument",
+			-- propagate dynamic types `a_formal_type_set' of the result of that query
+			-- to the dynamic type set `an_actual_type_set' of the call.
+			-- `a_formal_type_set' has a static type which corresponds to the formal type of the argument.
+			-- `an_actual_type_set' has a static type which corresponds to the actual type of the argument.
+		local
+			l_attachment: ET_DYNAMIC_LIKE_ARGUMENT_CALL_ATTACHMENT
+		do
+			if not an_actual_type_set.is_expanded then
+				create l_attachment.make (a_formal_type_set, a_call, current_dynamic_feature, current_dynamic_type)
+				an_actual_type_set.put_source (l_attachment, current_system)
 			end
 		end
 

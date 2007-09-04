@@ -38,6 +38,7 @@ inherit
 			propagate_call_agent_result_dynamic_types,
 			propagate_creation_dynamic_type,
 			propagate_inline_agent_result_dynamic_types,
+			propagate_like_argument_dynamic_types,
 			propagate_tuple_label_setter_dynamic_types
 		end
 
@@ -411,6 +412,9 @@ feature {NONE} -- Event handling
 			l_dynamic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_target: ET_EXPRESSION
 			l_type: ET_TYPE
+			l_like: ET_LIKE_FEATURE
+			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -423,7 +427,27 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					l_type := a_query.type
-					l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
+-- TODO: like argument (the following is just a workaround
+-- which works only in a limited number of cases, in particular
+-- for ANY.clone).
+					l_like ?= l_type
+					if l_like /= Void and then l_like.is_like_argument then
+						l_actuals := an_expression.arguments
+						if l_actuals /= Void and then l_actuals.count = 1 then
+							l_actual_type_set := dynamic_type_set (l_actuals.actual_argument (1))
+							if l_actual_type_set = Void then
+									-- Internal error: the dynamic type sets of the
+									-- arguments should be known at this stage.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_dynamic_type := l_actual_type_set.static_type
+							end
+						end
+					end
+					if l_dynamic_type = Void then
+						l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
+					end
 					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
 					set_dynamic_type_set (l_result_type_set, an_expression)
 					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
@@ -686,6 +710,16 @@ feature {NONE} -- Implementation
 					l_dynamic_type_set.put_target (a_result_type_set, current_system)
 				end
 			end
+		end
+
+	propagate_like_argument_dynamic_types (a_call: ET_FEATURE_CALL_EXPRESSION; a_formal_type_set, an_actual_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- When `a_call' is a call to a query whose type is of the form "like argument",
+			-- propagate dynamic types `a_formal_type_set' of the result of that query
+			-- to the dynamic type set `an_actual_type_set' of the call.
+			-- `a_formal_type_set' has a static type which corresponds to the formal type of the argument.
+			-- `an_actual_type_set' has a static type which corresponds to the actual type of the argument.
+		do
+			a_formal_type_set.put_target (an_actual_type_set, current_system)
 		end
 
 	propagate_tuple_label_setter_dynamic_types (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type_set: ET_DYNAMIC_TYPE_SET) is

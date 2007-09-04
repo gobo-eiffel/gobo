@@ -2071,6 +2071,9 @@ feature {NONE} -- Event handling
 			l_dynamic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_target: ET_EXPRESSION
 			l_type: ET_TYPE
+			l_like: ET_LIKE_FEATURE
+			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -2083,7 +2086,27 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					l_type := a_query.type
-					l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
+-- TODO: like argument (the following is just a workaround
+-- which works only in a limited number of cases, in particular
+-- for ANY.clone).
+					l_like ?= l_type
+					if l_like /= Void and then l_like.is_like_argument then
+						l_actuals := an_expression.arguments
+						if l_actuals /= Void and then l_actuals.count = 1 then
+							l_actual_type_set := dynamic_type_set (l_actuals.actual_argument (1))
+							if l_actual_type_set = Void then
+									-- Internal error: the dynamic type sets of the
+									-- arguments should be known at this stage.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_dynamic_type := l_actual_type_set.static_type
+							end
+						end
+					end
+					if l_dynamic_type = Void then
+						l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
+					end
 					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
 					set_dynamic_type_set (l_result_type_set, an_expression)
 					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
@@ -2697,6 +2720,9 @@ feature {NONE} -- Event handling
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_open_operand_type_set: ET_DYNAMIC_TYPE_SET
 			l_manifest_tuple: ET_MANIFEST_TUPLE
+			l_like: ET_LIKE_FEATURE
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_query := current_dynamic_type.dynamic_query (a_query, current_system)
@@ -2749,7 +2775,28 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
-				l_dynamic_type_set := l_dynamic_query.result_type_set
+				l_result_type_set := l_dynamic_query.result_type_set
+				l_dynamic_type_set := l_result_type_set
+-- TODO: like argument (the following is just a workaround
+-- which works only in a limited number of cases, in particular
+-- for ANY.clone).
+				l_like ?= a_query.type
+				if l_like /= Void and then l_like.is_like_argument then
+					if l_actuals /= Void and then l_actuals.count = 1 then
+						l_actual_type_set := dynamic_type_set (l_actuals.actual_argument (1))
+						if l_actual_type_set = Void then
+								-- Internal error: the dynamic type sets of the
+								-- arguments should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_dynamic_type_set := new_dynamic_type_set (l_actual_type_set.static_type)
+							if l_result_type_set /= Void then
+								propagate_like_argument_dynamic_types (an_expression, l_result_type_set, l_dynamic_type_set)
+							end
+						end
+					end
+				end
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
@@ -4712,6 +4759,20 @@ feature {NONE} -- Implementation
 		require
 			an_agent_not_void: an_agent /= Void
 			a_result_type_set_not_void: a_result_type_set /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_like_argument_dynamic_types (a_call: ET_FEATURE_CALL_EXPRESSION; a_formal_type_set, an_actual_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- When `a_call' is a call to a query whose type is of the form "like argument",
+			-- propagate dynamic types `a_formal_type_set' of the result of that query
+			-- to the dynamic type set `an_actual_type_set' of the call.
+			-- `a_formal_type_set' has a static type which corresponds to the formal type of the argument.
+			-- `an_actual_type_set' has a static type which corresponds to the actual type of the argument.
+		require
+			a_call_not_void: a_call /= Void
+			a_formal_type_set_not_void: a_formal_type_set /= Void
+			an_actual_type_set_not_void: an_actual_type_set /= Void
 		do
 			-- Do nothing.
 		end
