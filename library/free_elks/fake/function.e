@@ -49,4 +49,14 @@ feature -- Obsolete
 			Result := item (args)
 		end
 
+feature -- Removal
+
+	clear_last_result is
+			-- Reset content of `last_result' to its default value.
+		local
+			l_result: RESULT_TYPE
+		do
+			last_result := l_result
+		end
+
 end

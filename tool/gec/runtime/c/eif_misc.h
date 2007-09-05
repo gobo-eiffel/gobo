@@ -20,6 +20,11 @@ extern "C" {
 extern EIF_INTEGER eif_system(char* s);
 extern void eif_system_asynchronous(char* cmd);
 
+#ifdef EIF_WINDOWS
+/* DLL declarations */
+#define eif_load_dll(name) LoadLibrary((LPCSTR)name)
+#endif
+
 #ifdef __cplusplus
 }
 #endif

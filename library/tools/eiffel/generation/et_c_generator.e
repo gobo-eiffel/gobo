@@ -17521,6 +17521,13 @@ feature {NONE} -- C function generation
 				current_file.put_line ("geinit_gc();")
 				print_indentation
 				current_file.put_line ("geconst();")
+					-- Initialize variable used in WEL.
+				include_runtime_header_file ("eif_main.h", False, header_file)
+				current_file.put_line ("#ifdef EIF_WINDOWS")
+				print_indentation
+				current_file.put_line ("eif_hInstance = GetModuleHandle(NULL);")
+				current_file.put_line ("#endif")
+					-- Create root object.
 				print_indentation
 				print_temp_name (l_temp, current_file)
 				current_file.put_character (' ')
@@ -20809,6 +20816,9 @@ feature {NONE} -- Include files
 				if a_filename.same_string ("%"eif_console.h%"") then
 					include_runtime_header_file ("eif_file.h", False, a_file)
 					include_runtime_header_file ("eif_console.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_constants.h%"") then
+					-- Ignore this file. It is part of ISE's runtime
+					-- but not needed with gec.
 				elseif a_filename.same_string ("%"eif_dir.h%"") then
 					include_runtime_header_file ("eif_dir.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_eiffel.h%"") then
@@ -20817,30 +20827,37 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_except.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_file.h%"") then
 					include_runtime_header_file ("eif_file.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_main.h%"") then
+					include_runtime_header_file ("eif_main.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_memory.h%"") then
 					include_runtime_header_file ("eif_memory.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_misc.h%"") then
 					include_runtime_header_file ("eif_misc.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_object_id.h%"") then
+					include_runtime_header_file ("eif_object_id.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_path_name.h%"") then
 					include_runtime_header_file ("eif_path_name.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_portable.h%"") then
+					-- Ignore this file. It is part of ISE's runtime
+					-- but not needed with gec.
 				elseif a_filename.same_string ("%"eif_retrieve.h%"") then
 					include_runtime_header_file ("eif_retrieve.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_sig.h%"") then
 					include_runtime_header_file ("eif_sig.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_store.h%"") then
 					include_runtime_header_file ("eif_store.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_threads.h%"") then
+					include_runtime_header_file ("eif_threads.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_traverse.h%"") then
 					include_runtime_header_file ("eif_traverse.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_types.h%"") then
+					-- Ignore this file. It is part of ISE's runtime
+					-- but not needed with gec.
 				elseif a_filename.same_string ("%"ge_time.h%"") then
 					include_runtime_header_file ("ge_time.h", False, a_file)
 				else
 					included_header_filenames.force (a_filename)
---					a_file.put_string (c_include)
---					a_file.put_character (' ')
---					a_file.put_string (a_filename)
---					a_file.put_new_line
 				end
---				included_header_filenames.force (a_filename)
 			end
 		end
 
@@ -20872,10 +20889,14 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("eif_except.c")
 				elseif a_filename.same_string ("eif_file.h") then
 					included_runtime_c_files.force ("eif_file.c")
+				elseif a_filename.same_string ("eif_main.h") then
+					included_runtime_c_files.force ("eif_main.c")
 				elseif a_filename.same_string ("eif_memory.h") then
 					included_runtime_c_files.force ("eif_memory.c")
 				elseif a_filename.same_string ("eif_misc.h") then
 					included_runtime_c_files.force ("eif_misc.c")
+				elseif a_filename.same_string ("eif_object_id.h") then
+					included_runtime_c_files.force ("eif_object_id.c")
 				elseif a_filename.same_string ("eif_path_name.h") then
 					included_runtime_c_files.force ("eif_path_name.c")
 				elseif a_filename.same_string ("eif_retrieve.h") then

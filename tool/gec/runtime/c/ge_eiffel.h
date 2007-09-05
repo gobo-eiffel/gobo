@@ -133,7 +133,6 @@ typedef double EIF_REAL_64;
 
 #define RTI64C(x) geint64(x)
 #define EIF_PROCEDURE EIF_POINTER
-#define INTEGER EIF_INTEGER_32
 #define EIF_OBJECT EIF_REFERENCE
 #define EIF_OBJ EIF_OBJECT
 /* Function pointer call to make sure all arguments are correctly pushed onto stack. */
