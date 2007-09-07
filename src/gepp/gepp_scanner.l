@@ -5,7 +5,7 @@ indexing
 
 		"Scanners for 'gepp' preprocessors"
 
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,20 +29,18 @@ inherit
 
 %}
 
-%x S_PREPROC S_READLINE
+%x S_PREPROC S_READLINE S_SKIP_EOL
 
 %option ecs meta-ecs case-insensitive nodefault outfile="gepp_scanner.e"
 
 WS					[ \t\r]+
-NAME				[a-z0-9_]+
-ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 
 %%
 
 <INITIAL>{
 	^"##".*			{
 						-- Comment.
-						set_start_condition (S_PREPROC)
+						set_start_condition (S_SKIP_EOL)
 						if empty_lines then
 							output_file.put_new_line
 						end
@@ -122,6 +120,16 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					}
 }
 
+<S_SKIP_EOL>{
+	.*\n			{
+						line_nb := line_nb + 1
+						set_start_condition (INITIAL)
+					}
+	.*				{
+						set_start_condition (INITIAL)
+					}
+}
+
 <S_PREPROC>{
 	{WS}				-- Separator.
 	\"[^"\n]+\"		{
@@ -137,6 +145,10 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	\n				{
 						last_token := P_EOL
 						line_nb := line_nb + 1
+						set_start_condition (INITIAL)
+					}
+	<<EOF>>			{
+						last_token := P_EOL
 						set_start_condition (INITIAL)
 					}
 	.					last_token := text_item (1).code
@@ -178,6 +190,14 @@ feature -- Access
 			no_void_buffer: not Result.has (Void)
 		end
 
+	line_nb_stack: DS_STACK [INTEGER] is
+			-- Line numbers in the corresponding input buffers in `include_stack'
+		deferred
+		ensure
+			line_nb_stack_not_void: Result /= Void
+			same_count: Result.count = include_stack.count
+		end
+
 feature -- Status report
 
 	ignored: BOOLEAN is
@@ -211,6 +231,8 @@ feature -- Element change
 			if not include_stack.is_empty then
 				old_buffer ?= input_buffer
 				set_input_buffer (include_stack.item)
+				line_nb := line_nb_stack.item
+				line_nb_stack.remove
 				include_stack.remove
 				if old_buffer /= Void then
 					a_file := old_buffer.file

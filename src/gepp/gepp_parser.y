@@ -5,7 +5,7 @@ indexing
 
 		"Parsers for 'gepp' preprocessors"
 
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,11 +26,10 @@ inherit
 			make as make_gepp_scanner,
 			reset as reset_gepp_scanner
 		redefine
-			echo
+			echo, fatal_error
 		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
-	KL_IMPORTED_STRING_ROUTINES
 
 create
 
@@ -39,7 +38,7 @@ create
 %}
 
 %token P_IFDEF P_IFNDEF P_INCLUDE P_DEFINE P_UNDEF
-%token P_DEF_VALUE P_ELSE P_ENDIF P_EOL
+%token P_ELSE P_ENDIF P_EOL
 
 %token <STRING> P_NAME P_STRING
 %type <BOOLEAN> Condition
@@ -154,6 +153,7 @@ feature {NONE} -- Initialization
 			make_parser_skeleton
 			error_handler := a_handler
 			create defined_values.make (10)
+			create line_nb_stack.make (Max_include_depth)
 			create include_stack.make (Max_include_depth)
 		ensure
 			error_handler_set: error_handler = a_handler
@@ -168,13 +168,14 @@ feature -- Initialization
 			if_level := 0
 			ignored_level := 0
 			defined_values.wipe_out
+			line_nb_stack.wipe_out
 			include_stack.wipe_out
 		end
 
 feature -- Parsing
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
-			-- Parse scanner description from `a_file'.
+			-- Parse preprocessing instructions from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -187,7 +188,7 @@ feature -- Parsing
 		end
 
 	parse_string (a_string: STRING) is
-			-- Parse scanner description from `a_string'.
+			-- Parse preprocessing instructions from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -216,8 +217,10 @@ feature -- Processing
 				create a_file.make (Execution_environment.interpreted_string (a_filename))
 				a_file.open_read
 				if a_file.is_open_read then
+					line_nb_stack.put (line_nb)
 					include_stack.put (input_buffer)
 					set_input_buffer (new_file_buffer (a_file))
+					line_nb := 1
 				else
 					create cannot_read.make (a_filename)
 					error_handler.report_error (cannot_read)
@@ -250,6 +253,16 @@ feature -- Error handling
 			end
 			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
+		end
+
+	fatal_error (a_message: STRING) is
+			-- A fatal error occurred.
+			-- Print `a_message'.
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make (a_message)
+			error_handler.report_error (l_error)
 		end
 
 feature -- Status report
@@ -330,6 +343,9 @@ feature {NONE} -- Implementation
 
 	include_stack: DS_ARRAYED_STACK [YY_BUFFER]
 			-- Input buffers not completely parsed yet
+
+	line_nb_stack: DS_ARRAYED_STACK [INTEGER]
+			-- Line numbers in the corresponding input buffers in `include_stack'
 
 	Max_include_depth: INTEGER is 10
 			-- Maximum number of nested include files
