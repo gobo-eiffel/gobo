@@ -313,8 +313,7 @@ feature {NONE} -- Compilation script generation
 		do
 			l_base_name := a_system_name
 			l_c_config := c_config
-			create l_variables.make_map (10)
-			l_variables.set_key_equality_tester (string_equality_tester)
+			l_variables := l_c_config.twin
 			create l_regexp.make
 			l_regexp.compile ("\$\(([^)]+)\)")
 			create l_includes.make (256)
@@ -384,20 +383,6 @@ feature {NONE} -- Compilation script generation
 				i := i + 1
 			end
 			l_variables.force (l_obj_filenames, "objs")
-			if is_finalize and then l_c_config.has ("cflags_finalize") then
-				l_variables.force (l_c_config.item ("cflags_finalize"), "cflags")
-			elseif l_c_config.has ("cflags") then
-				l_variables.force (l_c_config.item ("cflags"), "cflags")
-			else
-				l_variables.force ("", "cflags")
-			end
-			if is_finalize and then l_c_config.has ("lflags_finalize") then
-				l_variables.force (l_c_config.item ("lflags_finalize"), "lflags")
-			elseif l_c_config.has ("lflags") then
-				l_variables.force (l_c_config.item ("lflags"), "lflags")
-			else
-				l_variables.force ("", "lflags")
-			end
 			if operating_system.is_windows then
 				l_script_filename := l_base_name + ".bat"
 			else
@@ -451,9 +436,8 @@ feature {NONE} -- Compilation script generation
 			l_filename: STRING
 			l_file: KL_TEXT_INPUT_FILE
 			l_default: BOOLEAN
-			l_line: STRING
-			i: INTEGER
-			l_value, l_variable: STRING
+			l_c_config_parser: UT_CONFIG_PARSER
+			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			l_name := Execution_environment.variable_value ("GOBO_CC")
 			if l_name = Void then
@@ -484,7 +468,7 @@ feature {NONE} -- Compilation script generation
 				-- Put some platform-dependent default values.
 			if operating_system.is_windows then
 				Result.put ("cl -nologo $cflags $includes -c $c", "cc")
-				Result.put ("link -nologo $lflags -out:$exe $objs $libs", "link")
+				Result.put ("link -nologo $lflags -subsystem:console -out:$exe $objs $libs", "link")
 				Result.put (".obj", "obj")
 				Result.put (".exe", "exe")
 				Result.put ("", "cflags")
@@ -505,31 +489,24 @@ feature {NONE} -- Compilation script generation
 			create l_file.make (l_filename)
 			l_file.open_read
 			if l_file.is_open_read then
-				from
-					l_file.read_line
-				until
-					l_file.end_of_file
-				loop
-					l_line := STRING_.cloned_string (l_file.last_string)
-					STRING_.left_adjust (l_line)
-					STRING_.right_adjust (l_line)
-					if l_line.count >= 2 then
-						if l_line.item (1) = '-' and l_line.item (2) = '-' then
-							-- Ignore comments.
-						else
-							i := l_line.index_of (':', 2)
-							if i /= 0 then
-								l_variable := l_line.substring (1, i - 1)
-								STRING_.right_adjust (l_variable)
-								l_value := l_line.substring (i + 1, l_line.count)
-								STRING_.left_adjust (l_value)
-								Result.force (l_value, l_variable)
-							end
-						end
-					end
-					l_file.read_line
+				create l_c_config_parser.make (error_handler)
+				if not is_finalize then
+					l_c_config_parser.define_value ("True", "EIF_WORKBENCH")
 				end
+				if universe.console_application then
+					l_c_config_parser.define_value ("True", "EIF_CONSOLE")
+				end
+				l_c_config_parser.parse_file (l_file)
 				l_file.close
+				if l_c_config_parser.has_error then
+					set_fatal_error
+				else
+					l_cursor := l_c_config_parser.config_values.new_cursor
+					from l_cursor.start until l_cursor.after loop
+						Result.force (l_cursor.item, l_cursor.key)
+						l_cursor.forth
+					end
+				end
 			elseif not l_default then
 				set_fatal_error
 				report_cannot_read_error (l_filename)
@@ -674,6 +651,10 @@ feature {NONE} -- C code Generation
 				flush_to_c_file
 					-- Print 'main' function.
 				print_main_function
+				current_file.put_new_line
+				flush_to_c_file
+					-- Print 'WinMain' function.
+				print_winmain_function
 				current_file.put_new_line
 				flush_to_c_file
 				print_end_extern_c (header_file)
@@ -17546,6 +17527,41 @@ feature {NONE} -- C function generation
 			end
 			current_file.put_character ('}')
 			current_file.put_new_line
+		end
+
+	print_winmain_function is
+			-- Print 'WinMain' function to `current_file'.
+		do
+			current_file.put_line ("#ifdef EIF_WINDOWS")
+			include_runtime_header_file ("eif_main.h", False, header_file)
+			current_file.put_line ("int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)")
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_line ("int code;")
+			print_indentation
+			current_file.put_line ("int argc;")
+			print_indentation
+			current_file.put_line ("char** argv;")
+			print_indentation
+			current_file.put_line ("char* cmd;")
+			print_indentation
+			current_file.put_line ("cmd = strdup(GetCommandLine());")
+			print_indentation
+			current_file.put_line ("get_argcargv(cmd, &argc, &argv);")
+			print_indentation
+			current_file.put_line ("code = main(argc, argv);")
+			print_indentation
+			current_file.put_line ("free(cmd);")
+			print_indentation
+			current_file.put_line ("free(argv);")
+			print_indentation
+			current_file.put_line ("return code;")
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_line ("#endif")
 		end
 
 	print_gems_function is

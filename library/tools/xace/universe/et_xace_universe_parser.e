@@ -90,6 +90,7 @@ feature {NONE} -- Xace AST factory
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
 			l_pathname: STRING
 			l_cursor: DS_LINKED_LIST_CURSOR [STRING]
+			l_options: ET_XACE_OPTIONS
 		do
 			an_error_handler := new_eiffel_error_handler
 			a_factory := new_eiffel_ast_factory
@@ -120,6 +121,12 @@ feature {NONE} -- Xace AST factory
 				l_pathname := replace_all_characters (l_pathname, '}', ')')
 				l_external_library_pathnames.force_last (l_pathname)
 				l_cursor.forth
+			end
+			l_options := Result.options
+			if l_options /= Void then
+				Result.set_console_application (l_options.console_application)
+			else
+				Result.set_console_application (True)
 			end
 		end
 

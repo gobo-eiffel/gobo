@@ -4,7 +4,7 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Utility Library"
 		library: "Gobo Eiffel Utility Library"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -15,6 +15,7 @@
 		<cluster name="error"/>
 		<cluster name="formatter"/>
 		<cluster name="command"/>
+		<cluster name="config"/>
 		<cluster name="support"/>
 		<cluster name="transcoder"/>
 		<cluster name="uri"/>

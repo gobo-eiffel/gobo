@@ -10,6 +10,9 @@ Clusters:
 command
     Executable commands. Useful to encapsulate actions or to build
     history (undo-redo) mechanism.
+config
+    Parser of config files made up of name/value pairs and preprocessor
+    instructions.
 error
     Error messages and error handling cluster.
 formatter
@@ -25,4 +28,4 @@ A more detailed documentation for this library will be provided in
 future releases.
 
 --
-Copyright (c) 1997-2001, Eric Bezault and others
+Copyright (c) 1997-2007, Eric Bezault and others

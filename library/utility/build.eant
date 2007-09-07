@@ -22,7 +22,9 @@
 		<description>
 			Install the Gobo Eiffel Utility Library.
 		</description>
-		<!-- do nothing -->
+
+		<geant target="config_scanner"/>
+		<geant target="config_parser"/>
 	</target>
 
 	<target name="clean">
@@ -39,6 +41,19 @@
 		</description>
 
 		<geant target="clean"/>
+		<delete file="config/ut_config_scanner.e"/>
+		<delete file="config/ut_config_parser.e"/>
+		<delete file="config/ut_config_tokens.e"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="config_scanner" dir="config">
+		<gelex input="ut_config_scanner.l"/>
+	</target>
+
+	<target name="config_parser" dir="config">
+		<geyacc new_typing="true" input="ut_config_parser.y" tokens="UT_CONFIG_TOKENS" output="ut_config_parser.e"/>
 	</target>
 
 </project>

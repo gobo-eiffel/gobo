@@ -89,6 +89,9 @@ feature -- Parsing
 			named_clusters.wipe_out
 			external_include_pathnames.wipe_out
 			external_object_pathnames.wipe_out
+			metadata_cache_path_value := Void
+			msil_clr_version_value := Void
+			console_application_value := True
 			yyparse
 		end
 
@@ -112,6 +115,10 @@ feature -- Access
 			-- Abstract Syntax Tree factory
 
 feature -- Default options
+
+	console_application_value: BOOLEAN
+			-- Value of 'console_application' default option, if any;
+			-- True by default
 
 	metadata_cache_path_value: ET_IDENTIFIER
 			-- Value of 'metadata_cache_path' default option, if any
@@ -180,6 +187,15 @@ feature {NONE} -- AST factory
 		do
 			if a_name.same_identifier (override_cluster_option) then
 				override_cluster_names.force_last (a_value)
+			elseif a_name.same_identifier (console_application_option) then
+				if a_value.same_identifier (yes_value) then
+					console_application_value := True
+				elseif a_value.same_identifier (no_value) then
+					console_application_value := False
+				else
+						-- TODO: better error handling
+					report_error ("Option 'console_application' should be set to either 'yes' or 'no'.")
+				end
 			elseif a_name.same_identifier (msil_clr_version_option) then
 				if msil_clr_version_value /= Void then
 						-- TODO: better error handling
@@ -295,6 +311,7 @@ feature {NONE} -- AST factory
 			create external_include_pathnames.make (20)
 			Result.set_external_object_pathnames (external_object_pathnames)
 			create external_object_pathnames.make (20)
+			Result.set_console_application (console_application_value)
 		ensure
 			universe_not_void: Result /= Void
 		end
@@ -344,6 +361,14 @@ feature -- Error handling
 
 feature {NONE} -- Constants
 
+	console_application_option: ET_IDENTIFIER is
+			-- 'console_application' external option name
+		once
+			Result := new_identifier ("console_application")
+		ensure
+			console_application_option_not_void: Result /= Void
+		end
+
 	include_path_option: ET_IDENTIFIER is
 			-- 'include_path' external option name
 		once
@@ -382,6 +407,22 @@ feature {NONE} -- Constants
 			Result := new_identifier ("override_cluster")
 		ensure
 			override_cluster_option_not_void: Result /= Void
+		end
+
+	no_value: ET_IDENTIFIER is
+			-- 'no' value
+		once
+			Result := new_identifier ("no")
+		ensure
+			no_value_not_void: Result /= Void
+		end
+
+	yes_value: ET_IDENTIFIER is
+			-- 'yes' value
+		once
+			Result := new_identifier ("yes")
+		ensure
+			yes_value_not_void: Result /= Void
 		end
 
 invariant

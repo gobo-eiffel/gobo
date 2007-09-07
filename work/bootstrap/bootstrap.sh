@@ -80,17 +80,18 @@ elif [ "$EIF" = "" ]; then
 elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	CC=cl
 	CFLAGS='-O2 -nologo -wd4049'
-	$CC $CFLAGS -o$BIN_DIR/gec$EXE gec.c
+	LFLAGS='-link -subsystem:console'
+	$CC $CFLAGS -o$BIN_DIR/gec$EXE gec.c $LFLAGS
 	$RM gec$OBJ
-	$CC $CFLAGS -o$BIN_DIR/gexace$EXE gexace.c
+	$CC $CFLAGS -o$BIN_DIR/gexace$EXE gexace.c $LFLAGS
 	$RM gexace$OBJ
-	$CC $CFLAGS -o$BIN_DIR/geant$EXE geant.c
+	$CC $CFLAGS -o$BIN_DIR/geant$EXE geant.c $LFLAGS
 	$RM geant$OBJ
-	$CC $CFLAGS% -o$BIN_DIR/gelex$EXE gelex.c
+	$CC $CFLAGS% -o$BIN_DIR/gelex$EXE gelex.c $LFLAGS
 	$RM gelex$OBJ
-	$CC $CFLAGS -o$BIN_DIR/geyacc$EXE geyacc.c
+	$CC $CFLAGS -o$BIN_DIR/geyacc$EXE geyacc.c $LFLAGS
 	$RM geyacc$OBJ
-	$CC $CFLAGS -o$BIN_DIR/gepp$EXE gepp.c
+	$CC $CFLAGS -o$BIN_DIR/gepp$EXE gepp.c $LFLAGS
 	$RM gepp$OBJ
 	echo msc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then

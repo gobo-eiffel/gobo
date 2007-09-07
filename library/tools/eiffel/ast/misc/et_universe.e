@@ -84,6 +84,7 @@ feature {NONE} -- Initialization
 			create external_include_pathnames.make (20)
 			create external_object_pathnames.make (20)
 			create external_library_pathnames.make (20)
+			console_application := True
 			make_basic_classes
 			create null_processor.make (Current)
 			provider_checker := null_processor
@@ -656,18 +657,6 @@ feature -- Access
 
 	root_creation: ET_FEATURE_NAME
 			-- Root creation procedure
-
-	system_name: STRING
-			-- Name of system
-
-	external_include_pathnames: DS_ARRAYED_LIST [STRING]
-			-- External include pathnames
-
-	external_object_pathnames: DS_ARRAYED_LIST [STRING]
-			-- External object pathnames
-
-	external_library_pathnames: DS_ARRAYED_LIST [STRING]
-			-- External library pathnames
 
 	classes: DS_HASH_TABLE [ET_CLASS, ET_CLASS_NAME]
 			-- Classes in universe
@@ -1549,14 +1538,6 @@ feature -- Setting
 			root_creation_set: root_creation = a_name
 		end
 
-	set_system_name (a_name: like system_name) is
-			-- Set `system_name' to `a_name'.
-		do
-			system_name := a_name
-		ensure
-			system_name_set: system_name = a_name
-		end
-
 	set_clusters (a_clusters: like clusters) is
 			-- Set `a_clusters' to `clusters'.
 		do
@@ -1591,6 +1572,42 @@ feature -- Setting
 			ast_factory := a_factory
 		ensure
 			ast_factory_set: ast_factory = a_factory
+		end
+
+feature -- Compilation options
+
+	console_application: BOOLEAN
+			-- Should the generated application be a console application
+			-- (or a Windows GUI application)?
+
+	system_name: STRING
+			-- Name of system
+
+	external_include_pathnames: DS_ARRAYED_LIST [STRING]
+			-- External include pathnames
+
+	external_object_pathnames: DS_ARRAYED_LIST [STRING]
+			-- External object pathnames
+
+	external_library_pathnames: DS_ARRAYED_LIST [STRING]
+			-- External library pathnames
+
+feature -- Compilation options setting
+
+	set_console_application (b: BOOLEAN) is
+			-- Set `console_application' to `b'.
+		do
+			console_application := b
+		ensure
+			console_application_set: console_application = b
+		end
+
+	set_system_name (a_name: like system_name) is
+			-- Set `system_name' to `a_name'.
+		do
+			system_name := a_name
+		ensure
+			system_name_set: system_name = a_name
 		end
 
 	set_external_include_pathnames (a_pathnames: like external_include_pathnames) is

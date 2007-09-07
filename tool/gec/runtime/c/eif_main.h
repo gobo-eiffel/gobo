@@ -21,6 +21,13 @@ extern "C" {
 #include <windows.h>
 /* Used in WEL */
 extern HINSTANCE eif_hInstance;
+
+/* Break the shell command held in 'cmd', putting each shell
+ * word in a separate array entry, hence building an argument
+ * suitable for the 'main'. Note that 'cmd' will be altered
+ * and 'argvp' will point to some chunks of it.
+ */
+extern void get_argcargv(char* cmd, int* argc, char*** argvp);
 #endif
 
 /* Used by the ISE runtime to figure out whether the application
