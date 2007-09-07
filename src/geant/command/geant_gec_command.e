@@ -19,6 +19,9 @@ inherit
 			make
 		end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -335,7 +338,7 @@ feature -- Command-line
 			end
 			if split_size > 0 then
 				Result.append_string ("--split-size=")
-				Result.append_integer (split_size)
+				INTEGER_.append_decimal_integer (split_size, Result)
 				Result.append_character (' ')
 			end
 			if garbage_collector /= Void and then not garbage_collector.is_empty then
