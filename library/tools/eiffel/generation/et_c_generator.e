@@ -1101,11 +1101,6 @@ feature {NONE} -- Feature generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			if l_result_type_set /= Void and then l_result_type_set.is_empty then
--- TODO: build full dynamic type sets, recursively.
-				print_indentation
-				current_file.put_line ("printf(%"Dynamic type set not built for external feature " + current_type.base_type.to_text + "." + a_feature.lower_name + "\n%");")
-			end
 				-- Determine the kind of external.
 			l_language := a_feature.language
 			l_language_value := l_language.manifest_string
@@ -1129,6 +1124,11 @@ feature {NONE} -- Feature generation
 				current_file.put_new_line
 			end
 			current_file := current_function_body_buffer
+			if l_result_type_set /= Void and then l_result_type_set.is_empty then
+-- TODO: build full dynamic type sets, recursively.
+				print_indentation
+				current_file.put_line ("printf(%"Dynamic type set not built for external feature " + current_type.base_type.to_text + "." + a_feature.lower_name + "\n%");")
+			end
 			if a_creation then
 				print_malloc_current (a_feature)
 			end
