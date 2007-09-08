@@ -623,6 +623,7 @@ feature {NONE} -- Implementation
 			l_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			l_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			if is_special_filter then
 				l_is_result_determined := True
@@ -644,8 +645,9 @@ feature {NONE} -- Implementation
 				if filters = Void then
 					internal_last_match_result := True
 				else
+					l_new_context := a_context.new_minor_context
 					create l_singleton_iterator.make (a_node)
-					a_context.set_current_iterator (l_singleton_iterator)
+					l_new_context.set_current_iterator (l_singleton_iterator)
 					
 					-- as it's a non-positional filter, we can handle each node separately
 					
@@ -656,7 +658,7 @@ feature {NONE} -- Implementation
 					until
 						internal_last_match_result = False or l_cursor.after
 					loop
-						l_cursor.item.calculate_effective_boolean_value (a_context)
+						l_cursor.item.calculate_effective_boolean_value (l_new_context)
 						if l_cursor.item.is_error then
 							set_error_value (l_cursor.item.error_value)
 						else

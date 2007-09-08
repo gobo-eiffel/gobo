@@ -31,54 +31,54 @@ feature {NONE} -- Initialization
 		require
 			format_string_not_void: a_format /= Void
 		local
-			a_format_string, a_token: STRING
-			a_length, an_index, a_start_index: INTEGER
-			first: BOOLEAN
+			l_format_string, l_token: STRING
+			l_length, l_index, l_start_index: INTEGER
+			l_first: BOOLEAN
 		do
 			starts_with_separator := True
-			first := True
+			l_first := True
 			if a_format.count = 0 then
-				a_format_string := "1"
+				l_format_string := "1"
 			else
-				a_format_string := a_format
+				l_format_string := a_format
 			end
 			create formatting_tokens.make_default
 			formatting_tokens.set_equality_tester (string_equality_tester)
 			create formatting_separators.make_default
 			formatting_separators.set_equality_tester (string_equality_tester)
 			from
-				a_length := a_format_string.count
-				an_index := 1
+				l_length := l_format_string.count
+				l_index := 1
 			until
-				an_index > a_length
+				l_index > l_length
 			loop
 				from
-					a_start_index := an_index
+					l_start_index := l_index
 				until
-					an_index > a_length or else not is_alphanumeric (a_format_string.item_code (an_index))
+					l_index > l_length or else not is_alphanumeric (l_format_string.item_code (l_index))
 				loop
-					an_index := an_index + 1
+					l_index := l_index + 1
 				end
-				if a_start_index <= an_index - 1 then
-					a_token := a_format_string.substring (a_start_index, an_index - 1)
-					formatting_tokens.force_last (a_token)
-					if first then
+				if l_start_index <= l_index - 1 then
+					l_token := l_format_string.substring (l_start_index, l_index - 1)
+					formatting_tokens.force_last (l_token)
+					if l_first then
 						formatting_separators.force_last (".")
-						first := False
+						l_first := False
 						starts_with_separator := False
 					end
 				end
 				from
-					a_start_index := an_index
+					l_start_index := l_index
 				until
-					an_index > a_length or else is_alphanumeric (a_format_string.item_code (an_index))
+					l_index > l_length or else is_alphanumeric (l_format_string.item_code (l_index))
 				loop
-					first := False
-					an_index := an_index + 1
+					l_first := False
+					l_index := l_index + 1
 				end
-				if a_start_index <= an_index - 1 then
-					a_token := a_format_string.substring (a_start_index, an_index - 1)
-					formatting_separators.force_last (a_token)
+				if l_start_index <= l_index - 1 then
+					l_token := l_format_string.substring (l_start_index, l_index - 1)
+					formatting_separators.force_last (l_token)
 				end
 			end
 			if formatting_tokens.count = 0 then
@@ -128,13 +128,24 @@ feature -- Access
 				l_cursor.after
 			loop
 				if l_cursor.index > 1 then
-					Result := STRING_.appended_string (Result, formatting_separators.item (l_token_index))
+					if l_token_index = 1 and starts_with_separator then
+						-- the first separator is actually punctuation, so it is used only once
+						Result := STRING_.appended_string (Result, ".")
+					else
+						Result := STRING_.appended_string (Result, formatting_separators.item (l_token_index))
+					end
 				end
 				l_atomic := l_cursor.item
 				if l_atomic.is_machine_integer_value then
 					l_value := l_atomic.as_machine_integer_value.value
 					l_string := a_numberer.formatted_string (create {MA_DECIMAL}.make_from_string (l_value.out), formatting_tokens.item (l_token_index),
-					a_group_size, a_group_separator, a_letter, an_ordinal)
+						a_group_size, a_group_separator, a_letter, an_ordinal)
+				elseif l_atomic.is_integer_value then
+					l_string := a_numberer.formatted_string (l_atomic.as_integer_value.value, formatting_tokens.item (l_token_index),
+						a_group_size, a_group_separator, a_letter, an_ordinal)					
+				elseif l_atomic.is_decimal_value then
+					l_string := a_numberer.formatted_string (l_atomic.as_decimal_value.value, formatting_tokens.item (l_token_index),
+						a_group_size, a_group_separator, a_letter, an_ordinal)					
 				else
 					l_string := l_atomic.string_value
 				end

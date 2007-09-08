@@ -76,6 +76,7 @@ feature -- Evaluation
 			l_iterator, l_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			l_comparer := atomic_comparer (3, a_context)
+			l_comparer.set_dynamic_context (a_context)
 			if l_comparer = Void then
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error))
 			else

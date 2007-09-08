@@ -125,26 +125,26 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
-			a_content: XM_XPATH_EXPRESSION
+			l_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
+			l_content: XM_XPATH_EXPRESSION
 		do
-			a_sort_key_list := sort_keys
+			l_sort_key_list := sort_keys
 			if select_expression /= Void then
-				create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (select_expression, a_sort_key_list)
+				create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (select_expression, l_sort_key_list)
 			else
-				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-				a_content := last_generated_expression
-				if a_content = Void then
-					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+				compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
+				l_content := last_generated_expression
+				if l_content = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
 				end
-				a_content.simplify
-				if a_content.was_expression_replaced then
-					a_content := a_content.replacement_expression
+				l_content.simplify
+				if l_content.was_expression_replaced then
+					l_content := l_content.replacement_expression
 				end
-				create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (a_content, a_sort_key_list)
+				create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (l_content, l_sort_key_list)
 			end
 		end
 

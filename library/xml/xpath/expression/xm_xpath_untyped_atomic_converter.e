@@ -21,7 +21,7 @@ inherit
 			compute_special_properties, is_untyped_atomic_converter
 		end
 
-	XM_XPATH_MAPPING_FUNCTION
+	XM_XPATH_ITEM_MAPPING_FUNCTION
 
 create
 
@@ -144,28 +144,28 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
+				create {XM_XPATH_ITEM_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current)
 			end
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
-			-- Map `an_item' to a sequence
+	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
+			-- Converted version of `a_item'
 		local
-			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
-			an_invalid_item: XM_XPATH_INVALID_ITEM
-			a_message: STRING
+			l_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
+			l_message: STRING
 		do
-			if an_item.is_untyped_atomic then
-				an_untyped_atomic_value := an_item.as_untyped_atomic
-				if an_untyped_atomic_value.is_convertible (target_type) then
-					create last_mapped_item.make_item (an_untyped_atomic_value.convert_to_type (target_type))
+			if a_item = Void then
+				-- nothing to do
+			elseif a_item.is_untyped_atomic then
+				l_untyped_atomic_value := a_item.as_untyped_atomic
+				if l_untyped_atomic_value.is_convertible (target_type) then
+					Result := l_untyped_atomic_value.convert_to_type (target_type)
 				else
-					a_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
-					create an_invalid_item.make_from_string (a_message, Xpath_errors_uri, error_code, Type_error)
-					create last_mapped_item.make_item (an_invalid_item)
+					l_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
+					create {XM_XPATH_INVALID_ITEM} Result.make_from_string (l_message, Xpath_errors_uri, error_code, Type_error)
 				end
 			else
-				create last_mapped_item.make_item (an_item)
+				Result := a_item
 			end
 		end
 

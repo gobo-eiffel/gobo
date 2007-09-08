@@ -65,10 +65,7 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations.
 		local
-			an_append_expression, another_append_expression, a_third_append_expression: XM_XPATH_APPEND_EXPRESSION
-			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
-			an_expression: XM_XPATH_EXPRESSION
-			an_invalid_value: XM_XPATH_INVALID_VALUE
+			l_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			first_operand.simplify
 			if first_operand.is_error then
@@ -77,7 +74,7 @@ feature -- Optimization
 				set_first_operand (first_operand.replacement_expression)
 			end
 
-			if is_error then
+			if not is_error then
 				second_operand.simplify
 				if second_operand.is_error then
 					set_last_error (second_operand.error_value)
@@ -89,51 +86,22 @@ feature -- Optimization
 			if not is_error then
 				if first_operand.is_empty_sequence then
 					 set_replacement (second_operand)
+				elseif second_operand.is_empty_sequence then
+					set_replacement (first_operand)
 				else
-					if second_operand.is_empty_sequence then
-						set_replacement (first_operand)
-					else
-
-						-- For lists consisting entirely of constant atomic values, build a sequence extent at compile time
-
-						if is_atomic_sequence then
-							create_iterator (Void)
-							if last_iterator.is_error then
-								create an_invalid_value.make (last_iterator.error_value)
-								set_replacement (an_invalid_value)
-							else
-								create a_sequence_extent.make (last_iterator)
-								set_replacement (a_sequence_extent)
-							end
+					
+					-- For lists consisting entirely of constant atomic values, build a sequence extent at compile time
+					
+					if is_atomic_sequence then
+						create_iterator (Void)
+						if last_iterator.is_error then
+							set_replacement (create {XM_XPATH_INVALID_VALUE}.make (last_iterator.error_value))
 						else
-
-							-- An expression such as (1,2,$x) will be parsed as (1, (2, $x)). This can be
-							--  simplified to ((1,2), $x), reducing the number of iterators needed to evaluate it
-
-							if first_operand.is_value and then second_operand.is_append_expression then
-								another_append_expression := second_operand.as_append_expression
-								if another_append_expression.first_operand.is_value then
-									an_expression := another_append_expression.first_operand; an_expression.simplify
-									if an_expression.is_error then
-										set_replacement (an_expression)
-									elseif an_expression.was_expression_replaced then
-										an_expression := an_expression.replacement_expression
-									else
-										create a_third_append_expression.make (first_operand, operator, an_expression)
-										an_expression := another_append_expression.second_operand; an_expression.simplify
-										if an_expression.is_error then
-											set_replacement (an_expression)
-										elseif an_expression.was_expression_replaced then
-											an_expression := an_expression.replacement_expression											
-										end
-										if not was_expression_replaced then
-											create {XM_XPATH_APPEND_EXPRESSION} an_append_expression.make (a_third_append_expression, operator, an_expression)
-											set_replacement (an_append_expression)
-										end
-									end
-								end
-							end
+							create l_sequence_extent.make (last_iterator)
+							set_replacement (l_sequence_extent)
 						end
+					else
+						simplify_value_sequence
 					end
 				end
 			end
@@ -211,6 +179,41 @@ feature {NONE} -- Implementation
 				Result := True
 			elseif an_expression.is_sequence_extent then
 					Result := True
+			end
+		end
+
+	simplify_value_sequence is
+			-- An expression such as (1,2,$x) will be parsed as (1, (2, $x)). This can be
+			--  simplified to ((1,2), $x), reducing the number of iterators needed to evaluate it
+		local
+			l_append_expression, l_other_append_expression, l_third_append_expression: XM_XPATH_APPEND_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
+		do
+			if first_operand.is_value and then second_operand.is_append_expression then
+				l_other_append_expression := second_operand.as_append_expression
+				if l_other_append_expression.first_operand.is_value then
+					l_expression := l_other_append_expression.first_operand
+					l_expression.simplify
+					if l_expression.is_error then
+						set_replacement (l_expression)
+					else
+						if l_expression.was_expression_replaced then
+							l_expression := l_expression.replacement_expression
+						end
+						create l_third_append_expression.make (first_operand, operator, l_expression)
+						l_expression := l_other_append_expression.second_operand
+						l_expression.simplify
+						if l_expression.is_error then
+							set_replacement (l_expression)
+						else
+							if l_expression.was_expression_replaced then
+								l_expression := l_expression.replacement_expression											
+							end
+							create {XM_XPATH_APPEND_EXPRESSION} l_append_expression.make (l_third_append_expression, operator, l_expression)
+							set_replacement (l_expression)
+						end
+					end
+				end
 			end
 		end
 

@@ -34,7 +34,7 @@ inherit
 	XM_XPATH_SHARED_ATOMIZING_FUNCTION
 		export {NONE} all end
 
-	XM_XPATH_MAPPING_FUNCTION
+	XM_XPATH_ITEM_MAPPING_FUNCTION
 
 	XM_XPATH_NUMERIC_ROUTINES
 		export {NONE} all end
@@ -167,6 +167,7 @@ feature -- Evaluation
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			last_boolean_value := Void
+			atomic_comparer.set_dynamic_context (a_context)
 			if	maybe_first_operand_boolean then
 				first_operand.create_iterator (a_context)
 				an_iterator := first_operand.last_iterator
@@ -248,10 +249,10 @@ feature -- Evaluation
 		end
 
 		
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
-			-- Map `an_item' to a sequence
+	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
+			-- Map `a_item' to another item
 		do
-			create last_mapped_item.make_item (item_to_double (an_item))
+			Result := item_to_double (a_item)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -378,6 +379,7 @@ feature {NONE} -- Implementation
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			last_boolean_value := Void
+			atomic_comparer.set_dynamic_context (a_context)
 			if an_iterator.is_error then
 				create last_boolean_value.make (False); last_boolean_value.set_last_error (an_iterator.error_value); set_last_error (last_boolean_value.error_value)
 			end
@@ -401,8 +403,8 @@ feature {NONE} -- Implementation
 
 				if operator = Less_than_token or else operator = Less_equal_token or else
 					operator = Greater_than_token or else operator = Greater_equal_token then
-					create {XM_XPATH_MAPPING_ITERATOR} a_sequence.make (a_sequence, Current, Void)
-					create {XM_XPATH_MAPPING_ITERATOR} another_sequence.make (another_sequence, Current, Void)
+					create {XM_XPATH_ITEM_MAPPING_ITERATOR} a_sequence.make (a_sequence, Current)
+					create {XM_XPATH_ITEM_MAPPING_ITERATOR} another_sequence.make (another_sequence, Current)
 				end
 
 				-- Compare all pairs of atomic values in the two atomized sequences

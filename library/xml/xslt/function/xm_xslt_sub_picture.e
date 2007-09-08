@@ -600,9 +600,12 @@ feature {NONE} -- Implementation
 				elseif a_value.item_code (l_index) = l_zero_code then
 					-- skip it
 				elseif a_value.item_code (l_index) = a_decimal_format.grouping_separator.item_code (1) then
+					-- skip surplus grouping separators
 					l_max_truncation := l_max_truncation + 1
 				else
 					Result := STRING_.appended_string (Result, a_value.substring (l_index, l_index))
+					-- once we have seen a good character, skip no more
+					l_max_truncation := 0
 				end
 				l_index := l_index + 1
 			end

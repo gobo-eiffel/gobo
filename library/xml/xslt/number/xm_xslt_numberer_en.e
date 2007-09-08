@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 				until
 					an_index > another_string.count
 				loop
-					if an_index > 0 and then (another_string.count  + 1 - an_index) \\ a_group_size = 0 then
+					if an_index > 1 and then (another_string.count  + 1 - an_index) \\ a_group_size = 0 then
 						Result := STRING_.appended_string (Result, a_group_separator)
 					end
 					Result := STRING_.appended_string (Result, another_string.substring (an_index, an_index))

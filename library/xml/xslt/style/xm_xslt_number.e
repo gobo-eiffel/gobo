@@ -160,9 +160,15 @@ feature -- Element change
 
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
+		local
+			l_compiler: XM_XSLT_STYLESHEET_COMPILER
+			l_hash_code: INTEGER
 		do
+			l_compiler := stylesheet_compiler
+			l_compiler.increment_counter
+			l_hash_code := l_compiler.counter
 			create {XM_XSLT_COMPILED_NUMBER} last_generated_expression.make (an_executable, select_expression,
-																								  level, count_pattern,
+																								  level, l_hash_code, count_pattern,
 																								  from_pattern,
 																								  value_expression, format,
 																								  grouping_size,

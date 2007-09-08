@@ -70,6 +70,7 @@ feature -- Evaluation
 			l_result: DS_CELL [XM_XPATH_ITEM]
 			l_item: XM_XPATH_ITEM
 		do
+			atomic_comparer.set_dynamic_context (a_context)
 			create l_result.make (Void)
 			first_operand.evaluate_item (l_result, a_context)
 			if l_result.item = Void then

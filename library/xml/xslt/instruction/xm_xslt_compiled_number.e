@@ -18,6 +18,8 @@ inherit
 			compute_cardinality, promote
 		end
 
+	HASHABLE
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_AXIS
@@ -34,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; a_level: INTEGER; a_count_pattern, a_from_pattern: XM_XSLT_PATTERN;
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; a_level, a_hash_code: INTEGER; a_count_pattern, a_from_pattern: XM_XSLT_PATTERN;
 		a_value_expression, a_format, a_grouping_size, a_grouping_separator, a_letter_value, an_ordinal, a_language: XM_XPATH_EXPRESSION;
 		a_formatter: XM_XSLT_NUMBER_FORMATTER;	a_numberer: XM_XSLT_NUMBERER; a_variables_in_patterns, a_backwards: BOOLEAN) is
 			-- Establish invariant.
@@ -42,6 +44,7 @@ feature {NONE} -- Initialization
 			executable_not_void: an_executable /= Void
 			language: a_language = Void implies a_numberer /= Void
 			formatter: a_formatter = Void implies a_format /= Void
+			strictly_positive_hash_code: a_hash_code > 0
 		do
 			executable := an_executable
 			select_expression := a_select_expression;	if select_expression /= Void then adopt_child_expression (select_expression) end
@@ -62,7 +65,7 @@ feature {NONE} -- Initialization
 			if value_expression /= Void and then not is_sub_type (value_expression.item_type, type_factory.any_atomic_type) then
 				create {XM_XPATH_ATOMIZER_EXPRESSION} value_expression.make (value_expression, False)
 			end
-			
+			hash_code := a_hash_code
 			compute_static_properties
 			initialized := True
 		ensure
@@ -82,9 +85,13 @@ feature {NONE} -- Initialization
 			numberer_set: numberer = a_numberer
 			has_variables_in_patterns_set: has_variables_in_patterns = a_variables_in_patterns
 			backwards_compatible: is_backwards_compatible = a_backwards
+			hash_code_set: hash_code = a_hash_code
 		end
 
 feature -- Access
+
+	hash_code: INTEGER
+			-- Hash code value
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
@@ -467,7 +474,7 @@ feature {NONE} -- Implementation
 			-- Nodes which are to be counted
 
 	from_pattern: XM_XSLT_PATTERN
-			-- Node from which counted is to be started
+			-- Node from which counting is to be started
 
 	value_expression: XM_XPATH_EXPRESSION
 			-- Supplied value
@@ -642,6 +649,9 @@ feature {NONE} -- Implementation
 						calculate_any_number (l_source, count_pattern, a_context)
 						if not transformer.is_error then
 							value := last_single_number
+							if value = 0 then
+								create atomic_vector.make (0)
+							end
 						end
 					elseif level = Multiple_levels then
 						calculate_multi_level_number (l_source, a_context)
@@ -661,9 +671,9 @@ feature {NONE} -- Implementation
 		local
 			l_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_finished: BOOLEAN
+			l_double_value: XM_XPATH_DOUBLE_VALUE
 			l_atomic_value: XM_XPATH_ATOMIC_VALUE
 			l_string_value: XM_XPATH_STRING_VALUE
-			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			l_numeric_value: XM_XPATH_NUMERIC_VALUE
 			l_error: XM_XPATH_ERROR_VALUE
 		do
@@ -684,31 +694,34 @@ feature {NONE} -- Implementation
 				if l_atomic_value = Void then
 					l_finished := True
 				else
-					l_integer_value ?= l_atomic_value
-					if l_integer_value = Void then
-						l_numeric_value ?= l_atomic_value
-						if l_numeric_value = Void then
-							l_numeric_value := item_to_double (l_atomic_value)
-							if l_numeric_value.is_nan then
-								if is_backwards_compatible then
-									l_finished := True
-									create l_string_value.make ("NaN")
-									atomic_vector.force_last (l_string_value)
-								else
-									create l_error.make_from_string ("Numbers to be formatted must be positive integers",
-									Xpath_errors_uri, "XTDE0980", Dynamic_error)
-									l_error.set_location (system_id, line_number)
-									transformer.report_fatal_error (l_error)
-									l_finished := True
-								end
-							end
+					if not l_atomic_value.is_numeric_value then
+						l_double_value := item_to_double (l_atomic_value)
+						if l_double_value.is_error then
+							create l_double_value.make_nan
 						end
+						l_numeric_value := l_double_value
+					else
+						l_numeric_value := l_atomic_value.as_numeric_value
+					end
+					if l_numeric_value.is_nan then
+						if is_backwards_compatible then
+							l_finished := True
+							create l_string_value.make ("NaN")
+							atomic_vector.force_last (l_string_value)
+						else
+							create l_error.make_from_string ("Numbers to be formatted must be positive integers",
+								Xpath_errors_uri, "XTDE0980", Dynamic_error)
+							l_error.set_location (system_id, line_number)
+							transformer.report_fatal_error (l_error)
+							l_finished := True
+						end
+					else
 						if not l_finished then
 							l_numeric_value := l_numeric_value.rounded_value
-							l_integer_value ?= l_numeric_value.convert_to_type (type_factory.integer_type)
+							l_atomic_value ?= l_numeric_value.convert_to_type (type_factory.integer_type)
 						end
 					end
-					if not l_finished and then l_integer_value.value < 0 then
+					if not l_finished and then l_atomic_value.as_numeric_value.is_negative then
 						if is_backwards_compatible then
 							l_finished := True
 							create l_string_value.make ("NaN")
@@ -721,7 +734,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if not l_finished then
-						atomic_vector.force_last (l_integer_value)
+						atomic_vector.force_last (l_atomic_value)
 					end
 				end
 				l_sequence_iterator.forth
@@ -729,6 +742,9 @@ feature {NONE} -- Implementation
 			if l_sequence_iterator.is_error then
 				l_sequence_iterator.error_value.set_location (system_id, line_number)
 				a_context.transformer.report_fatal_error (l_sequence_iterator.error_value)
+			end
+			if atomic_vector.is_empty and is_backwards_compatible then
+				atomic_vector.put_last (create {XM_XPATH_STRING_VALUE}.make ("NaN"))
 			end
 		end
 
@@ -761,17 +777,17 @@ feature {NONE} -- Implementation
 				finished or else an_iterator.after
 			loop
 				a_previous_node := an_iterator.item
-				a_memo := transformer.remembered_number (a_previous_node)
+				a_memo := transformer.remembered_number (a_previous_node, Current)
 				if a_memo /= Void then
 					Result := Result + a_memo.item
-					transformer.set_remembered_number (Result, a_node)
+					transformer.set_remembered_number (Result, a_node, Current)
 					finished := True
 				else
 					an_iterator.forth
 					Result := Result + 1
 				end
 				if not finished then
-					transformer.set_remembered_number (Result, a_node)
+					transformer.set_remembered_number (Result, a_node, Current)
 				end
 			end
 		ensure
@@ -906,7 +922,7 @@ feature {NONE} -- Implementation
 				l_count_pattern.match (l_node, a_context)
 				if not transformer.is_error and l_count_pattern.last_match_result then
 					if l_memoize and l_count = 1 then
-						l_memo := transformer.remembered_number (l_iterator.item)
+						l_memo := transformer.remembered_number (l_node, Current)
 						if l_memo /= Void then
 							last_single_number := l_memo.item + 1
 							l_finished := True
@@ -934,8 +950,8 @@ feature {NONE} -- Implementation
 					last_single_number := l_count
 				end
 			end
-			if l_memoize then
-				transformer.set_remembered_number (last_single_number, a_node)
+			if l_memoize and last_single_number /= 0 then
+				transformer.set_remembered_number (last_single_number, a_node, Current)
 			end
 		ensure
 			positive_integer: not transformer.is_error implies last_single_number >= 0

@@ -208,12 +208,18 @@ feature -- Comparison
 			a_date := other.as_date_value
 			if zoned = a_date.zoned then
 				create a_time.make (0,0,0)
-				create dt1.make_from_date_time (zoned_date.date, a_time)
-				zoned_date.time_zone.convert_to_utc (dt1)
-				create a_time.make (0,0,0)
-				create dt2.make_from_date_time (a_date.zoned_date.date, a_time)
-				a_date.zoned_date.time_zone.convert_to_utc (dt2)
-				Result := dt1.three_way_comparison (dt2)
+				if zoned then
+					create dt1.make_from_date_time (zoned_date.date, a_time)
+					zoned_date.time_zone.convert_to_utc (dt1)
+					create a_time.make (0,0,0)
+					create dt2.make_from_date_time (a_date.zoned_date.date, a_time)
+					a_date.zoned_date.time_zone.convert_to_utc (dt2)
+					Result := dt1.three_way_comparison (dt2)
+				else
+					create dt2.make_from_date_time (a_date.local_date, a_time)
+					create dt1.make_from_date_time (local_date, a_time)
+					Result := dt1.three_way_comparison (dt2)
+				end					
  			elseif zoned then
 				create a_time.make (0,0,0)
 				create dt2.make_from_date_time (a_date.local_date, a_time)

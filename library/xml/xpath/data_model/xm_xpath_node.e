@@ -520,6 +520,27 @@ feature -- Access
         item_set: Result.item = Current
     end
 
+	 is_ancestor_or_self (a_node: XM_XPATH_NODE): BOOLEAN is
+		 -- Is `Current' an ancestor of `a_node', or the same node?
+		require
+			a_node_not_void: a_node /= Void
+		local
+			l_node: XM_XPATH_NODE
+		do
+			from
+				l_node := a_node
+			until
+				l_node = Void
+			loop
+				if is_same_node (l_node) then
+					Result := True
+					l_node := Void
+				else
+					l_node := l_node.parent
+				end
+			end
+		end
+	 
 feature -- Comparison
 
 	is_same_node (other: XM_XPATH_NODE): BOOLEAN is

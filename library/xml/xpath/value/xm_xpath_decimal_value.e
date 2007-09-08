@@ -19,6 +19,8 @@ inherit
 			three_way_comparison, hash_code, is_decimal_value, as_decimal_value
 		end
 
+	MA_DECIMAL_HANDLER
+
 	XM_XPATH_SHARED_DECIMAL_CONTEXTS
 		export {NONE} all end
 
@@ -121,11 +123,43 @@ feature -- Access
 
 	string_value: STRING is
 			--Value of the item as a string
+		local
+			l_value: MA_DECIMAL
+			l_coefficient, l_pad: STRING
+			l_index, l_count: INTEGER
 		do
-			Result := value.normalize.to_scientific_string
-			-- should be OK, providing this NEVER goes into exponential form.
-			-- but this doesn't look to be guarenteed to me.
-			-- TODO: it isn't. Add to Berend's string formatter as suggested on gobo-devel list.
+			l_value := value.normalize
+			create Result.make (0)
+			if is_negative then
+				Result.append_string ("-")
+			end
+			create l_coefficient.make (l_value.count)
+			from
+				l_index := l_value.count - 1
+			until
+				l_index < 0
+			loop
+				l_coefficient.append_character (INTEGER_.to_character (('0').code + l_value.coefficient.item (l_index)))
+				l_index := l_index - 1
+			end
+			if l_value.exponent < 0 then
+				l_count := l_value.exponent.abs
+				if l_count > l_coefficient.count then
+					create l_pad.make_filled ('0', l_count - l_coefficient.count)
+					Result.append_string ("0.")
+					Result.append_string (l_pad)
+					Result.append_string (l_coefficient)
+				elseif l_count = l_coefficient.count then
+					Result.append_string ("0.")
+					Result.append_string (l_coefficient)
+				else
+					Result.append_string (l_coefficient.substring (1, l_coefficient.count - l_count))
+					Result.append_string (".")
+					Result.append_string (l_coefficient.substring (l_coefficient.count - l_count + 1, l_coefficient.count))
+				end
+			else
+				Result.append_string (l_coefficient)
+			end
 		end
 
 feature -- Comparison

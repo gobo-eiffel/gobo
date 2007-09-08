@@ -158,6 +158,7 @@ feature -- Evaluation
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			last_boolean_value := Void
+			atomic_comparer.set_dynamic_context (a_context)
 			first_operand.create_iterator (a_context)
 			an_iterator := first_operand.last_iterator
 			if an_iterator.is_error then

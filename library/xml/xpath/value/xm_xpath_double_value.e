@@ -148,7 +148,7 @@ feature -- Status report
 				a_required_type = type_factory.double_type then
 					Result := True
 			elseif a_required_type = type_factory.integer_type then
-				Result := is_platform_integer
+				Result := is_whole_number
 			elseif a_required_type = type_factory.decimal_type then
 				Result := not is_nan
 			elseif a_required_type = type_factory.float_type then
@@ -160,10 +160,11 @@ feature -- Status report
 
 	is_whole_number: BOOLEAN is
 			-- Is value integral?
+		local
+			l_decimal: MA_DECIMAL
 		do
-			if value >= Platform.Minimum_integer and value <= Platform.Maximum_integer then
-				Result := value = DOUBLE_.truncated_to_integer (value)
-			end
+			create l_decimal.make_from_string (value.out)
+			Result := l_decimal.is_integer
 		end
 
 	is_platform_integer: BOOLEAN is
@@ -220,6 +221,8 @@ feature -- Conversion
 			-- Convert `Current' to `a_required_type'
 			-- TODO - need to virtualize the pre-condition so that
 			-- only sub-types of Integer_type are valid
+		local
+			l_decimal: MA_DECIMAL
 		do
 			if a_required_type = type_factory.boolean_type  then
 				create {XM_XPATH_BOOLEAN_VALUE} Result.make (value /= 0.0)
@@ -228,10 +231,11 @@ feature -- Conversion
 			elseif a_required_type = any_item  then
 				Result := Current
 			elseif  a_required_type = type_factory.integer_type then
-				if is_platform_integer then
+				if value >= Platform.Minimum_integer and value <= Platform.Maximum_integer and then value = DOUBLE_.truncated_to_integer (value) then
 					create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (DOUBLE_.truncated_to_integer (value).to_integer_64)
 				else
-					create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value))
+					create l_decimal.make_from_string (value.out)
+					create {XM_XPATH_INTEGER_VALUE} Result.make (l_decimal)
 				end
 			elseif  a_required_type = type_factory.double_type then
 				Result := Current

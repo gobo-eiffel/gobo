@@ -179,7 +179,7 @@ feature -- Conversion
 			-- Convert `Current' to `required_type'
 		require
 			required_type_not_void: a_required_type /= Void
-			convertiable: is_convertible (a_required_type)
+			convertible: is_convertible (a_required_type)
 		deferred
 		end
 

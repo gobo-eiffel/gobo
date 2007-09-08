@@ -151,10 +151,10 @@ feature {NONE} -- Implementation
 				end
 				l_pattern_string := a_result.item.as_atomic_value.string_value
 				l_pattern_string := utf8.to_utf8 (l_pattern_string)
+				a_result.put (Void)
 				if arguments.count = 2 then
 					l_flags_string := ""
 				else
-					a_result.put (Void)
 					arguments.item (3).evaluate_item (a_result, a_context)
 					if not a_result.item.is_error then
 						check
@@ -165,10 +165,11 @@ feature {NONE} -- Implementation
 						l_flags_string := normalized_flags_string (a_result.item.as_atomic_value.string_value)
 					end
 				end
-				if not a_result.item.is_error then
+				if a_result.item = Void or else not a_result.item.is_error then
 					if l_flags_string = Void then
 						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error))
 					else
+						a_result.put (Void)
 						l_key := composed_key (l_pattern_string, l_flags_string)
 						l_regexp_cache_entry := shared_regexp_cache.item (l_key)
 						if l_regexp_cache_entry = Void then

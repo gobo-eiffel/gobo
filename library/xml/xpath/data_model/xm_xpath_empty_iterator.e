@@ -162,7 +162,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			Result := Current
+			create Result.make
 		end
 
 feature {NONE} -- Implementation

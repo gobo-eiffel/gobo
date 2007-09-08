@@ -192,10 +192,15 @@ feature -- Evaluation
 							create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (l_values_iterator, l_local_order_comparer)
 						end
 					end
+					if not l_node.is_same_node (l_context_document) then
+						create {XM_XPATH_SINGLETON_NODE_MAPPING_ITERATOR} last_iterator.make (last_iterator.as_node_iterator, create {XM_XSLT_SUBTREE_FILTER}.make (l_node))
+					end
 				else
 					create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
 				end
 			end
+		ensure then
+			node_iterator: last_iterator.is_node_iterator
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is

@@ -20,7 +20,7 @@ inherit
 			compute_special_properties, is_node_sequence, create_node_iterator
 		end
 
-	XM_XPATH_MAPPING_FUNCTION
+	XM_XPATH_ITEM_MAPPING_FUNCTION
 
 create
 
@@ -135,7 +135,7 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
+				create {XM_XPATH_ITEM_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current)
 			end
 		end
 
@@ -145,13 +145,15 @@ feature -- Evaluation
 			-- pre-condition is never met
 		end
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
-			-- Map `an_item' to a base_expression
+	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
+			-- `a_item' mapped to base_expression
 		do
-			check
-				atomic_value: an_item.is_atomic_value
+			if a_item /= Void then
+				check
+					atomic_value: a_item.is_atomic_value
+				end
+				Result := a_item.as_atomic_value.convert_to_type (required_type)
 			end
-			create last_mapped_item.make_item (an_item.as_atomic_value.convert_to_type (required_type))
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

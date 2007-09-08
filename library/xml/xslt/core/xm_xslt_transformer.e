@@ -84,6 +84,7 @@ feature {NONE} -- Initialization
 			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
 			create l_time_zone.make (implicit_timezone.fixed_offset)
 			create current_date_time.make (l_date_time, l_time_zone)
+			create remembered_numbers.make_default
 		ensure
 			configuration_set: configuration = a_configuration
 			executable_set: executable = a_executable
@@ -147,22 +148,22 @@ feature -- Access
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
 
-	last_remembered_number: DS_CELL [INTEGER_64]
-			--	Last remembered number
-
-	last_remembered_node: XM_XPATH_NODE
-			-- Last remembered nod
-
 	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
 			-- Implicit time zone for comparing unzoned times and dates
 
-	remembered_number (a_node: XM_XPATH_NODE): like last_remembered_number is
-			-- Number of a node if it is the last remembered one
+	remembered_number (a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER): DS_CELL [INTEGER_64] is
+			-- Number of a node if it is the last remembered one for `a_instruction'
 		require
-			node_not_void: a_node /= Void
+			a_node_not_void: a_node /= Void
+			a_instruction_not_void: a_instruction /= Void
+		local
+			l_pair: DS_PAIR [XM_XPATH_NODE, INTEGER_64]
 		do
-			if last_remembered_node /= Void and then a_node.is_same_node (last_remembered_node) then
-				Result := last_remembered_number
+			if remembered_numbers.has (a_instruction) then
+				l_pair := remembered_numbers.item (a_instruction)
+				if a_node.is_same_node (l_pair.first) then
+					create Result.make (l_pair.second)
+				end
 			end
 		end
 
@@ -247,16 +248,20 @@ feature -- Status setting
 			end
 		end
 
-	set_remembered_number (a_number: INTEGER_64; a_node: XM_XPATH_NODE) is
+	set_remembered_number (a_number: INTEGER_64; a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER) is
 			-- Set remembered number.
 		require
 			node_not_void: a_node /= Void
+			a_instruction_not_void: a_instruction /= Void
+		local
+			l_pair: DS_PAIR [XM_XPATH_NODE, INTEGER_64]
 		do
-			create last_remembered_number.make (a_number)
-			last_remembered_node := a_node
+			create l_pair.make (a_node, a_number)
+			remembered_numbers.force (l_pair, a_instruction)
 		ensure
-			last_remembered_node_set: last_remembered_node = a_node
-			last_remembered_number_set: last_remembered_number.item = a_number
+			a_instruction_has_remembered_number: remembered_numbers.has (a_instruction)
+			correct_node: remembered_numbers.item (a_instruction).first = a_node
+			correct_number: remembered_numbers.item (a_instruction).second = a_number
 		end
 
 feature -- Creation
@@ -863,6 +868,9 @@ feature -- Implementation
 	cached_static_context: XM_XSLT_EXPRESSION_CONTEXT
 			-- Cached static context from `executable'
 
+	remembered_numbers: DS_HASH_TABLE [DS_PAIR [XM_XPATH_NODE, INTEGER_64], XM_XSLT_COMPILED_NUMBER]
+			-- Cache of last numbers for a node by xsl:number instructon
+
 	static_context: XM_XSLT_EXPRESSION_CONTEXT is
 			-- Static context from `executable'
 		do
@@ -1076,6 +1084,7 @@ invariant
 	current_date_time_not_void: current_date_time /= Void
 	output_resolver_not_void: output_resolver /= Void
 	initial_context_expression_not_empty: initial_context_expression /= Void implies not initial_context_expression.is_empty
+	remembered_numbers_not_void: remembered_numbers /= Void
 
 end
 

@@ -52,6 +52,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	counter: INTEGER
+			-- Counter available for hash code values (for instance)
+
 	configuration: XM_XSLT_CONFIGURATION
 			-- User configuration options
 
@@ -103,6 +106,16 @@ feature -- Status setting
 		ensure
 			error_raised: load_stylesheet_module_failed
 			message_set: load_stylesheet_module_error = l_message
+		end
+
+feature -- Element change
+
+	increment_counter is
+			-- Add one to `counter'.
+		do
+			counter := counter + 1
+		ensure
+			counter_incremented: counter = old counter + 1
 		end
 
 feature -- Compilation
