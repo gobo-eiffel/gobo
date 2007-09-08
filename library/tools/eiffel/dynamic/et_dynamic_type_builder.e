@@ -1014,6 +1014,9 @@ feature {NONE} -- Feature validity
 						current_system.set_string_type_alive
 						propagate_builtin_result_dynamic_types (current_system.string_type, current_dynamic_feature)
 					end
+				elseif not a_feature.type.is_type_expanded (current_type, universe) then
+-- TODO: build full dynamic type sets, recursively.
+print ("Dynamic type set not built for external feature " + current_type.to_text + "." + a_feature.lower_name + "%N")
 				end
 			end
 		end

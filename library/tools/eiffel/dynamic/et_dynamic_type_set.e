@@ -18,6 +18,14 @@ inherit
 
 feature -- Status report
 
+	is_empty: BOOLEAN is
+			-- Does current type set contain no type?
+		do
+			Result := first_type = Void
+		ensure
+			first_type: not Result implies first_type /= Void
+		end
+
 	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN is
 			-- Does current type set contain `a_type'?
 		require
