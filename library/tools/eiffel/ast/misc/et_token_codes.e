@@ -147,7 +147,7 @@ feature -- Built-in codes
 		end
 
 	builtin_any_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class ANY
+			-- Full code for built-in feature from class "ANY"
 		do
 			Result := builtin_any_class * builtin_capacity + a_feature_code
 		end
@@ -166,10 +166,10 @@ feature -- Built-in codes
 	builtin_any_deep_twin: INTEGER is 11
 	builtin_any_copy: INTEGER is 12
 	builtin_any_generating_type2: INTEGER is 13
-			-- Codes for built-in features from class ANY
+			-- Codes for built-in features from class "ANY"
 
 	builtin_special_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class SPECIAL
+			-- Full code for built-in feature from class "SPECIAL"
 		do
 			Result := builtin_special_class * builtin_capacity + a_feature_code
 		end
@@ -181,7 +181,7 @@ feature -- Built-in codes
 	builtin_special_count: INTEGER is 4
 	builtin_special_element_size: INTEGER is 5
 	builtin_special_aliased_resized_area: INTEGER is 6
-			-- Codes for built-in features from class SPECIAL
+			-- Codes for built-in features from class "SPECIAL"
 
 	builtin_character_8_class: INTEGER is 3
 	builtin_character_32_class: INTEGER is 4
@@ -191,10 +191,10 @@ feature -- Built-in codes
 	builtin_character_natural_32_code: INTEGER is 4
 	builtin_character_to_character_8: INTEGER is 5
 	builtin_character_to_character_32: INTEGER is 6
-			-- Codes for built-in features from class CHARACTER
+			-- Codes for built-in features from class "CHARACTER" and related classes
 
 	builtin_boolean_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class BOOLEAN
+			-- Full code for built-in feature from class "BOOLEAN" and related classes
 		do
 			Result := builtin_boolean_class * builtin_capacity + a_feature_code
 		end
@@ -209,7 +209,7 @@ feature -- Built-in codes
 	builtin_boolean_and_then: INTEGER is 7
 	builtin_boolean_or_else: INTEGER is 8
 	builtin_boolean_implies: INTEGER is 9
-			-- Codes for built-in features from class BOOLEAN
+			-- Codes for built-in features from class "BOOLEAN" and related classes
 
 	builtin_integer_8_class: INTEGER is 6
 	builtin_integer_16_class: INTEGER is 7
@@ -251,7 +251,7 @@ feature -- Built-in codes
 	builtin_integer_to_double: INTEGER is 30
 	builtin_integer_to_character_8: INTEGER is 31
 	builtin_integer_to_character_32: INTEGER is 32
-			-- Codes for built-in features from class INTEGER
+			-- Codes for built-in features from class "INTEGER" and related classes
 
 	builtin_real_32_class: INTEGER is 14
 	builtin_real_64_class: INTEGER is 15
@@ -274,10 +274,10 @@ feature -- Built-in codes
 	builtin_real_opposite: INTEGER is 17
 	builtin_real_identity: INTEGER is 18
 	builtin_real_out: INTEGER is 19
-			-- Codes for built-in features from class REAL
+			-- Codes for built-in features from class "REAL" and related classes
 
 	builtin_pointer_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class POINTER
+			-- Full code for built-in feature from class "POINTER" and related classes
 		do
 			Result := builtin_pointer_class * builtin_capacity + a_feature_code
 		end
@@ -289,10 +289,10 @@ feature -- Built-in codes
 	builtin_pointer_to_integer_32: INTEGER is 4
 	builtin_pointer_out: INTEGER is 5
 	builtin_pointer_hash_code: INTEGER is 6
-			-- Codes for built-in features from class POINTER
+			-- Codes for built-in features from class "POINTER" and related classes
 
 	builtin_arguments_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class ARGUMENTS
+			-- Full code for built-in feature from class "ARGUMENTS"
 		do
 			Result := builtin_arguments_class * builtin_capacity + a_feature_code
 		end
@@ -302,7 +302,7 @@ feature -- Built-in codes
 	builtin_arguments_argument_count: INTEGER is 2
 
 	builtin_platform_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class PLATFORM
+			-- Full code for built-in feature from class "PLATFORM"
 		do
 			Result := builtin_platform_class * builtin_capacity + a_feature_code
 		end
@@ -319,20 +319,20 @@ feature -- Built-in codes
 	builtin_platform_pointer_bytes: INTEGER is 9
 	builtin_platform_is_thread_capable: INTEGER is 10
 	builtin_platform_wide_character_bytes: INTEGER is 11
-			-- Codes for built-in features from class PLATFORM
+			-- Codes for built-in features from class "PLATFORM"
 
 	builtin_procedure_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class PROCEDURE
+			-- Full code for built-in feature from class "PROCEDURE"
 		do
 			Result := builtin_procedure_class * builtin_capacity + a_feature_code
 		end
 
 	builtin_procedure_class: INTEGER is 19
 	builtin_procedure_call: INTEGER is 1
-			-- Codes for built-in features from class PROCEDURE
+			-- Codes for built-in features from class "PROCEDURE"
 
 	builtin_function_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class FUNCTION
+			-- Full code for built-in feature from class "FUNCTION"
 		do
 			Result := builtin_function_class * builtin_capacity + a_feature_code
 		end
@@ -340,10 +340,10 @@ feature -- Built-in codes
 	builtin_function_class: INTEGER is 20
 	builtin_function_item: INTEGER is 1
 	builtin_function_call: INTEGER is 2
-			-- Codes for built-in features from class FUNCTION
+			-- Codes for built-in features from class "FUNCTION"
 
 	builtin_type_feature (a_feature_code: INTEGER): INTEGER is
-			-- Full code for built-in feature from class TYPE
+			-- Full code for built-in feature from class "TYPE"
 		do
 			Result := builtin_type_class * builtin_capacity + a_feature_code
 		end
@@ -352,6 +352,18 @@ feature -- Built-in codes
 	builtin_type_generating_type: INTEGER is 1
 	builtin_type_name: INTEGER is 2
 	builtin_type_type_id: INTEGER is 3
-			-- Codes for built-in features from class TYPE
+			-- Codes for built-in features from class "TYPE"
+
+	builtin_identified_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class "IDENTIFIED" and related classes
+		do
+			Result := builtin_identified_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_identified_class: INTEGER is 22
+	builtin_identified_eif_id_object: INTEGER is 1
+	builtin_identified_eif_object_id: INTEGER is 2
+	builtin_identified_eif_object_id_free: INTEGER is 3
+			-- Codes for built-in features from class "IDENTIFIED" and related classes
 
 end

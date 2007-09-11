@@ -93,29 +93,58 @@ goto exit
 
 :msc
 	set CC=cl
+	set LD=link
 	set CFLAGS=-O2 -nologo -wd4049
-	set LFLAGS=-link -subsystem:console
-	%CC% %CFLAGS% -o%BIN_DIR%\gec%EXE% gec.c %LFLAGS%
-	%RM% gec%OBJ%
-	%CC% %CFLAGS% -o%BIN_DIR%\gexace%EXE% gexace.c %LFLAGS%
+	set LFLAGS=-nologo -subsystem:console
+	%CC% %CFLAGS% -c gec1.c
+	%CC% %CFLAGS% -c gec2.c
+	%CC% %CFLAGS% -c gec3.c
+	%CC% %CFLAGS% -c gec4.c
+	%CC% %CFLAGS% -c gec5.c
+	%CC% %CFLAGS% -c gec6.c
+	%CC% %CFLAGS% -c gec7.c
+	%CC% %CFLAGS% -c gec8.c
+	%CC% %CFLAGS% -c gec9.c
+	%CC% %CFLAGS% -c gec10.c
+	%CC% %CFLAGS% -c gec11.c
+	%CC% %CFLAGS% -c gec12.c
+	%LD% %LFLAGS% -out:%BIN_DIR%\gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
+	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
+	rem set LFLAGS=-subsystem:console
+	%CC% %CFLAGS% -o%BIN_DIR%\gexace%EXE% gexace.c -link %LFLAGS%
 	%RM% gexace%OBJ%
-	%CC% %CFLAGS% -o%BIN_DIR%\geant%EXE% geant.c %LFLAGS%
+	%CC% %CFLAGS% -o%BIN_DIR%\geant%EXE% geant.c -link %LFLAGS%
 	%RM% geant%OBJ%
-	%CC% %CFLAGS% -o%BIN_DIR%\gelex%EXE% gelex.c %LFLAGS%
+	%CC% %CFLAGS% -o%BIN_DIR%\gelex%EXE% gelex.c -link %LFLAGS%
 	%RM% gelex%OBJ%
-	%CC% %CFLAGS% -o%BIN_DIR%\geyacc%EXE% geyacc.c %LFLAGS%
+	%CC% %CFLAGS% -o%BIN_DIR%\geyacc%EXE% geyacc.c -link %LFLAGS%
 	%RM% geyacc%OBJ%
-	%CC% %CFLAGS% -o%BIN_DIR%\gepp%EXE% gepp.c %LFLAGS%
+	%CC% %CFLAGS% -o%BIN_DIR%\gepp%EXE% gepp.c -link %LFLAGS%
 	%RM% gepp%OBJ%
 	echo msc > %GOBO%\tool\gec\config\c\default.cfg
 	goto install
 
 :bcc32
 	set CC=bcc32
+	set LD=bcc32
 	set CFLAGS=-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2
-	%CC% %CFLAGS% -ogec%EXE% gec.c
+	set LFLAGS=-5 -q 
+	%CC% %CFLAGS% -c gec1.c
+	%CC% %CFLAGS% -c gec2.c
+	%CC% %CFLAGS% -c gec3.c
+	%CC% %CFLAGS% -c gec4.c
+	%CC% %CFLAGS% -c gec5.c
+	%CC% %CFLAGS% -c gec6.c
+	%CC% %CFLAGS% -c gec7.c
+	%CC% %CFLAGS% -c gec8.c
+	%CC% %CFLAGS% -c gec9.c
+	%CC% %CFLAGS% -c gec10.c
+	%CC% %CFLAGS% -c gec11.c
+	%CC% %CFLAGS% -c gec12.c
+	%LD% %LFLAGS% -egec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
 	%CP% gec%EXE% %BIN_DIR%
 	%RM% gec%EXE% gec.tds
+	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
 	%CC% %CFLAGS% -ogexace%EXE% gexace.c
 	%CP% gexace%EXE% %BIN_DIR%
 	%RM% gexace%EXE% gexace.tds
@@ -162,9 +191,24 @@ goto exit
 
 :gcc
 	set CC=gcc
+	set LD=gcc
 	set CFLAGS=-O2
+	set LFLAGS=-lm
 	set OBJ=.o
-	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
+	%CC% %CFLAGS% -c gec1.c
+	%CC% %CFLAGS% -c gec2.c
+	%CC% %CFLAGS% -c gec3.c
+	%CC% %CFLAGS% -c gec4.c
+	%CC% %CFLAGS% -c gec5.c
+	%CC% %CFLAGS% -c gec6.c
+	%CC% %CFLAGS% -c gec7.c
+	%CC% %CFLAGS% -c gec8.c
+	%CC% %CFLAGS% -c gec9.c
+	%CC% %CFLAGS% -c gec10.c
+	%CC% %CFLAGS% -c gec11.c
+	%CC% %CFLAGS% -c gec12.c
+	%LD% %LFLAGS% -o %BIN_DIR%\gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
+	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
 	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
 	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
 	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
@@ -175,10 +219,24 @@ goto exit
 
 :cc
 	set CC=cc
-#	set CFLAGS=-fast
-	set CFLAGS=
+	set LD=cc
+	set CFLAGS='-fast'
+	set LFLAGS='-lm'
 	set OBJ=.o
-	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
+	%CC% %CFLAGS% -c gec1.c
+	%CC% %CFLAGS% -c gec2.c
+	%CC% %CFLAGS% -c gec3.c
+	%CC% %CFLAGS% -c gec4.c
+	%CC% %CFLAGS% -c gec5.c
+	%CC% %CFLAGS% -c gec6.c
+	%CC% %CFLAGS% -c gec7.c
+	%CC% %CFLAGS% -c gec8.c
+	%CC% %CFLAGS% -c gec9.c
+	%CC% %CFLAGS% -c gec10.c
+	%CC% %CFLAGS% -c gec11.c
+	%CC% %CFLAGS% -c gec12.c
+	%LD% %LFLAGS% -o %BIN_DIR%\gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
+	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
 	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
 	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
 	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
@@ -189,9 +247,24 @@ goto exit
 
 :icc
 	set CC=icc
+	set LD=icc
 	set CFLAGS=-O2
+	set LFLAGS=
 	set OBJ=.o
-	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
+	%CC% %CFLAGS% -c gec1.c
+	%CC% %CFLAGS% -c gec2.c
+	%CC% %CFLAGS% -c gec3.c
+	%CC% %CFLAGS% -c gec4.c
+	%CC% %CFLAGS% -c gec5.c
+	%CC% %CFLAGS% -c gec6.c
+	%CC% %CFLAGS% -c gec7.c
+	%CC% %CFLAGS% -c gec8.c
+	%CC% %CFLAGS% -c gec9.c
+	%CC% %CFLAGS% -c gec10.c
+	%CC% %CFLAGS% -c gec11.c
+	%CC% %CFLAGS% -c gec12.c
+	%LD% %LFLAGS% -o %BIN_DIR%\gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
+	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
 	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
 	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
 	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
@@ -202,9 +275,24 @@ goto exit
 
 :tcc
 	set CC=tcc
+	set LD=tcc
 	set CFLAGS=-O2
+	set LFLAGS=-lm
 	set OBJ=.o
-	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
+	%CC% %CFLAGS% -c gec1.c
+	%CC% %CFLAGS% -c gec2.c
+	%CC% %CFLAGS% -c gec3.c
+	%CC% %CFLAGS% -c gec4.c
+	%CC% %CFLAGS% -c gec5.c
+	%CC% %CFLAGS% -c gec6.c
+	%CC% %CFLAGS% -c gec7.c
+	%CC% %CFLAGS% -c gec8.c
+	%CC% %CFLAGS% -c gec9.c
+	%CC% %CFLAGS% -c gec10.c
+	%CC% %CFLAGS% -c gec11.c
+	%CC% %CFLAGS% -c gec12.c
+	%LD% %LFLAGS% -o %BIN_DIR%\gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
+	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ%
 	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
 	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
 	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c

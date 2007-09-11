@@ -1797,6 +1797,8 @@ feature {NONE} -- Built-in
 				set_builtin_pointer_function (a_feature)
 			elseif a_class = universe.arguments_class then
 				set_builtin_arguments_function (a_feature)
+			elseif a_class = universe.identified_routines_class then
+				set_builtin_identified_routines_function (a_feature)
 			elseif a_class = universe.platform_class then
 				set_builtin_platform_function (a_feature)
 			elseif a_class = universe.procedure_class then
@@ -2578,6 +2580,61 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
 				end
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_identified_routines_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class IDENTIFIED_ROUTINES.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.eif_id_object_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_identified_feature (tokens.builtin_identified_eif_id_object))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'eif_id_object (an_id: INTEGER): ANY'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'eif_id_object (an_id: INTEGER): ANY'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_type)
+				elseif not a_feature.type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
+						-- The signature should be 'eif_id_object (an_id: INTEGER): ANY'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.eif_object_id_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_identified_feature (tokens.builtin_identified_eif_object_id))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'eif_object_id (an_object: ANY): INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_type.type>>, universe.integer_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
+						-- The signature should be 'eif_object_id (an_object: ANY): INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_type.type>>, universe.integer_type)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'eif_object_id (an_object: ANY): INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_type.type>>, universe.integer_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.eif_object_id_free_feature_name) then
+					-- 'IDENTIFIED_ROUTINES.eif_object_id_free' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_identified_feature (tokens.builtin_identified_eif_object_id_free))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, Void)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -3588,6 +3645,8 @@ feature {NONE} -- Built-in
 				set_builtin_pointer_procedure (a_feature)
 			elseif a_class = universe.arguments_class then
 				set_builtin_arguments_procedure (a_feature)
+			elseif a_class = universe.identified_routines_class then
+				set_builtin_identified_routines_procedure (a_feature)
 			elseif a_class = universe.platform_class then
 				set_builtin_platform_procedure (a_feature)
 			elseif a_class = universe.procedure_class then
@@ -4094,6 +4153,47 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_arguments_feature (tokens.builtin_arguments_argument_count))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_identified_routines_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class IDENTIFIED_ROUTINES.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.eif_object_id_free_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_identified_feature (tokens.builtin_identified_eif_object_id_free))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'eif_object_id_free (an_id: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'eif_object_id_free (an_id: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, Void)
+				end
+
+			elseif a_feature.name.same_feature_name (tokens.eif_id_object_feature_name) then
+					-- 'IDENTIFIED_ROUTINES.eif_id_object' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_identified_feature (tokens.builtin_identified_eif_id_object))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_type)
+			elseif a_feature.name.same_feature_name (tokens.eif_object_id_feature_name) then
+					-- 'IDENTIFIED_ROUTINES.eif_object_id' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_identified_feature (tokens.builtin_identified_eif_object_id))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_type.type>>, universe.integer_type)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

@@ -79,27 +79,55 @@ elif [ "$EIF" = "" ]; then
 	exit 1
 elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	CC=cl
+	LD=link
 	CFLAGS='-O2 -nologo -wd4049'
-	LFLAGS='-link -subsystem:console'
-	$CC $CFLAGS -o$BIN_DIR/gec$EXE gec.c $LFLAGS
-	$RM gec$OBJ
-	$CC $CFLAGS -o$BIN_DIR/gexace$EXE gexace.c $LFLAGS
+	LFLAGS='-nologo -subsystem:console'
+	$CC $CFLAGS -c gec1.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec12.c
+	$LD $LFLAGS -out:$BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$CC $CFLAGS -o$BIN_DIR/gexace$EXE gexace.c -link $LFLAGS
 	$RM gexace$OBJ
-	$CC $CFLAGS -o$BIN_DIR/geant$EXE geant.c $LFLAGS
+	$CC $CFLAGS -o$BIN_DIR/geant$EXE geant.c -link $LFLAGS
 	$RM geant$OBJ
-	$CC $CFLAGS% -o$BIN_DIR/gelex$EXE gelex.c $LFLAGS
+	$CC $CFLAGS% -o$BIN_DIR/gelex$EXE gelex.c -link $LFLAGS
 	$RM gelex$OBJ
-	$CC $CFLAGS -o$BIN_DIR/geyacc$EXE geyacc.c $LFLAGS
+	$CC $CFLAGS -o$BIN_DIR/geyacc$EXE geyacc.c -link $LFLAGS
 	$RM geyacc$OBJ
-	$CC $CFLAGS -o$BIN_DIR/gepp$EXE gepp.c $LFLAGS
+	$CC $CFLAGS -o$BIN_DIR/gepp$EXE gepp.c -link $LFLAGS
 	$RM gepp$OBJ
 	echo msc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	CC=bcc32
+	LD=bcc32
 	CFLAGS='-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2'
-	$CC $CFLAGS -ogec$EXE gec.c
+	LFLAGS='-5 -q'
+	$CC $CFLAGS -c gec1.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec12.c
+	$LD $LFLAGS -egec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
 	$CP gec$EXE $BIN_DIR
 	$RM gec$EXE gec.tds
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
 	$CC $CFLAGS -ogexace$EXE gexace.c
 	$CP gexace$EXE $BIN_DIR
 	$RM gexace$EXE gexace.tds
@@ -140,9 +168,24 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 #	$RM gepp$OBJ
 #	echo lcc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "gcc" ]; then
+	LD=gcc
 #	CFLAGS='-O2'
 	CFLAGS=''
-	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+	LFLAGS='-lm'
+	$CC $CFLAGS -c gec1.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec12.c
+	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
 	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
 	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
@@ -150,9 +193,23 @@ elif [ "$CC" = "gcc" ]; then
 	$CC $CFLAGS -o $BIN_DIR/gepp$EXE gepp.c
 	echo gcc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "cc" ]; then
-#	CFLAGS='-fast'
-	CFLAGS=''
-	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+	LD=cc
+	CFLAGS='-fast'
+	LDFLAGS='-lm'
+	$CC $CFLAGS -c gec1.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec12.c
+	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
 	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
 	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
@@ -160,8 +217,23 @@ elif [ "$CC" = "cc" ]; then
 	$CC $CFLAGS -o $BIN_DIR/gepp$EXE gepp.c
 	echo cc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "icc" ]; then
+	LD=cc
 	CFLAGS='-O2'
-	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+	LFLAGS=''
+	$CC $CFLAGS -c gec1.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec12.c
+	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
 	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
 	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
@@ -169,8 +241,23 @@ elif [ "$CC" = "icc" ]; then
 	$CC $CFLAGS -o $BIN_DIR/gepp$EXE gepp.c
 	echo icc > $GOBO/tool/gec/config/c/default.cfg
 elif [ "$CC" = "tcc" ]; then
+	LD=tcc
 	CFLAGS='-O2'
-	$CC $CFLAGS -o $BIN_DIR/gec$EXE gec.c
+	LDFLAGS='-lm'
+	$CC $CFLAGS -c gec1.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec12.c
+	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
 	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
 	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c

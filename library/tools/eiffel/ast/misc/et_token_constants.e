@@ -106,6 +106,14 @@ feature -- Class names
 			general_class_name_not_void: Result /= Void
 		end
 
+	identified_routines_class_name: ET_CLASS_NAME is
+			-- "IDENTIFIED_ROUTINES" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_identified_routines_name)
+		ensure
+			identified_routines_class_name_not_void: Result /= Void
+		end
+
 	integer_class_name: ET_CLASS_NAME is
 			-- "INTEGER" class name
 		once
@@ -780,6 +788,30 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (default_create_name)
 		ensure
 			default_create_feature_name_not_void: Result /= Void
+		end
+
+	eif_id_object_feature_name: ET_FEATURE_NAME is
+			-- 'eif_id_object' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (eif_id_object_name)
+		ensure
+			eif_id_object_feature_name_not_void: Result /= Void
+		end
+
+	eif_object_id_feature_name: ET_FEATURE_NAME is
+			-- 'eif_object_id' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (eif_object_id_name)
+		ensure
+			eif_object_id_feature_name_not_void: Result /= Void
+		end
+
+	eif_object_id_free_feature_name: ET_FEATURE_NAME is
+			-- 'eif_object_id_free' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (eif_object_id_free_name)
+		ensure
+			eif_object_id_free_feature_name_not_void: Result /= Void
 		end
 
 	element_size_feature_name: ET_FEATURE_NAME is
@@ -2152,6 +2184,7 @@ feature -- Keyword and symbol names
 	capitalized_double_name: STRING is "DOUBLE"
 	capitalized_function_name: STRING is "FUNCTION"
 	capitalized_general_name: STRING is "GENERAL"
+	capitalized_identified_routines_name: STRING is "IDENTIFIED_ROUTINES"
 	capitalized_integer_name: STRING is "INTEGER"
 	capitalized_integer_8_name: STRING is "INTEGER_8"
 	capitalized_integer_16_name: STRING is "INTEGER_16"
@@ -2271,6 +2304,15 @@ feature -- Keyword and symbol names
 
 	default_create_name: STRING is "default_create"
 		-- Name of Eiffel feature 'default_create'
+
+	eif_id_object_name: STRING is "eif_id_object"
+		-- Name of Eiffel feature 'eif_id_object'
+
+	eif_object_id_name: STRING is "eif_object_id"
+		-- Name of Eiffel feature 'eif_object_id'
+
+	eif_object_id_free_name: STRING is "eif_object_id_free"
+		-- Name of Eiffel feature 'eif_object_id_free'
 
 	element_size_name: STRING is "element_size"
 		-- Name of Eiffel feature 'element_size'

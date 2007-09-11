@@ -75,4 +75,12 @@ feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
 		do
 		end
 
+feature {ET_DYNAMIC_FEATURE} -- Generation
+
+	object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET is
+			-- Dynamic type set of objects that have been registered through
+			-- the object_id mechanism of class "IDENTIFIED" and related classes
+		do
+			Result := current_system.any_type
+		end
 end

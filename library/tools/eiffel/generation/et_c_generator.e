@@ -1340,6 +1340,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_boolean_function_body (a_feature)
 			when builtin_function_class then
 				print_external_builtin_function_function_body (a_feature)
+			when builtin_identified_class then
+				print_external_builtin_identified_function_body (a_feature)
 			when builtin_platform_class then
 				print_external_builtin_platform_function_body (a_feature)
 			when builtin_pointer_class then
@@ -1470,7 +1472,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_boolean_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in function introduced in class "BOOLEAN".
+			-- `a_feature' is a built-in function introduced in class "BOOLEAN" and related classes.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_function: a_feature.is_function
@@ -1532,6 +1534,37 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_indentation
 				print_builtin_function_item_call (current_type)
+				current_file.put_new_line
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_identified_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "IDENTIFIED" and relates classes.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_identified: (a_feature.builtin_code // builtin_capacity) = builtin_identified_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_identified_eif_id_object then
+				fill_call_formal_arguments (a_feature)
+				print_indentation
+				print_builtin_identified_eif_id_object_call (current_type)
+				current_file.put_new_line
+				call_operands.wipe_out
+			when builtin_identified_eif_object_id then
+				fill_call_formal_arguments (a_feature)
+				print_indentation
+				print_builtin_identified_eif_object_id_call (current_type)
 				current_file.put_new_line
 				call_operands.wipe_out
 			else
@@ -1629,7 +1662,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_pointer_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in function introduced in class "POINTER".
+			-- `a_feature' is a built-in function introduced in class "POINTER" and related classes.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_function: a_feature.is_function
@@ -1674,7 +1707,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_sized_character_function_body (a_feature: ET_EXTERNAL_ROUTINE; a_character_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in function introduced in sized character type `a_character_type'.
+			-- `a_feature' is a built-in function introduced in sized character type `a_character_type' and related classes.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_function: a_feature.is_function
@@ -1723,7 +1756,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_sized_integer_function_body (a_feature: ET_EXTERNAL_ROUTINE; an_integer_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in function introduced in sized integer type `an_integer_type'.
+			-- `a_feature' is a built-in function introduced in sized integer type `an_integer_type' and related classes.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_function: a_feature.is_function
@@ -1928,7 +1961,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_sized_real_function_body (a_feature: ET_EXTERNAL_ROUTINE; a_real_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in function introduced in sized real type `a_real_type'.
+			-- `a_feature' is a built-in function introduced in sized real type `a_real_type' and related classes.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_function: a_feature.is_function
@@ -2138,6 +2171,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_any_procedure_body (a_feature)
 			when builtin_boolean_class then
 				print_external_builtin_boolean_procedure_body (a_feature)
+			when builtin_identified_class then
+				print_external_builtin_identified_procedure_body (a_feature)
 			when builtin_pointer_class then
 				print_external_builtin_pointer_procedure_body (a_feature)
 			when builtin_procedure_class then
@@ -2206,7 +2241,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_boolean_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in procedure introduced in class "BOOLEAN".
+			-- `a_feature' is a built-in procedure introduced in class "BOOLEAN" and related classes.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_procedure: a_feature.is_procedure
@@ -2227,9 +2262,32 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
+	print_external_builtin_identified_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "IDENTIFIED" and related classes.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_identified: (a_feature.builtin_code // builtin_capacity) = builtin_identified_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_identified_eif_object_id_free then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_identified_eif_object_id_free_call (current_type)
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
 	print_external_builtin_pointer_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in procedure introduced in class "POINTER".
+			-- `a_feature' is a built-in procedure introduced in class "POINTER" and related classes.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_procedure: a_feature.is_procedure
@@ -2275,7 +2333,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_sized_character_procedure_body (a_feature: ET_EXTERNAL_ROUTINE; a_character_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in procedure introduced in sized character type `a_character_type'.
+			-- `a_feature' is a built-in procedure introduced in sized character type `a_character_type' and related classes.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_procedure: a_feature.is_procedure
@@ -2301,7 +2359,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_sized_integer_procedure_body (a_feature: ET_EXTERNAL_ROUTINE; an_integer_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in procedure introduced in sized integer type `an_integer_type'.
+			-- `a_feature' is a built-in procedure introduced in sized integer type `an_integer_type' and related classes.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_procedure: a_feature.is_procedure
@@ -2327,7 +2385,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_sized_real_procedure_body (a_feature: ET_EXTERNAL_ROUTINE; a_real_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in procedure introduced in sized real type `a_real_type'.
+			-- `a_feature' is a built-in procedure introduced in sized real type `a_real_type' and related classes.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_procedure: a_feature.is_procedure
@@ -5101,6 +5159,8 @@ feature {NONE} -- Procedure call generation
 				print_builtin_sized_character_procedure_call (a_feature, a_target_type, current_system.character_8_type)
 			when builtin_character_32_class then
 				print_builtin_sized_character_procedure_call (a_feature, a_target_type, current_system.character_32_type)
+			when builtin_identified_class then
+				print_builtin_identified_procedure_call (a_feature, a_target_type)
 			when builtin_integer_8_class then
 				print_builtin_sized_integer_procedure_call (a_feature, a_target_type, current_system.integer_8_type)
 			when builtin_integer_16_class then
@@ -5156,7 +5216,7 @@ feature {NONE} -- Procedure call generation
 
 	print_builtin_boolean_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in class "BOOLEAN".
+			-- `a_feature' is a built-in feature introduced in class "BOOLEAN" and related classes.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
@@ -5174,9 +5234,29 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
+	print_builtin_identified_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print to `current_file' a call to procedure `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "IDENTIFIED" and related classes.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_identified: (a_feature.builtin_code // builtin_capacity) = builtin_identified_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_identified_eif_object_id_free then
+				print_builtin_identified_eif_object_id_free_call (a_target_type)
+			else
+				print_non_inlined_procedure_call (a_feature, a_target_type)
+			end
+		end
+
 	print_builtin_pointer_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in class "POINTER".
+			-- `a_feature' is a built-in feature introduced in class "POINTER" and related classes.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
@@ -5216,7 +5296,7 @@ feature {NONE} -- Procedure call generation
 
 	print_builtin_sized_character_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type, a_character_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in sized character type `a_character_type'.
+			-- `a_feature' is a built-in feature introduced in sized character type `a_character_type' and related classes.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
@@ -5239,7 +5319,7 @@ feature {NONE} -- Procedure call generation
 
 	print_builtin_sized_integer_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in sized integer type `an_integer_type'.
+			-- `a_feature' is a built-in feature introduced in sized integer type `an_integer_type' and related classes.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
@@ -5262,7 +5342,7 @@ feature {NONE} -- Procedure call generation
 
 	print_builtin_sized_real_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type, a_real_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in sized real type `a_real_type'.
+			-- `a_feature' is a built-in feature introduced in sized real type `a_real_type' and related classes.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
@@ -8648,6 +8728,8 @@ feature {NONE} -- Query call generation
 				print_builtin_sized_character_query_call (a_feature, a_target_type, current_system.character_32_type)
 			when builtin_function_class then
 				print_builtin_function_query_call (a_feature, a_target_type)
+			when builtin_identified_class then
+				print_builtin_identified_query_call (a_feature, a_target_type)
 			when builtin_integer_8_class then
 				print_builtin_sized_integer_query_call (a_feature, a_target_type, current_system.integer_8_type)
 			when builtin_integer_16_class then
@@ -8739,7 +8821,7 @@ feature {NONE} -- Query call generation
 
 	print_builtin_boolean_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to query `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in class "BOOLEAN".
+			-- `a_feature' is a built-in feature introduced in class "BOOLEAN" and related classes.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 			-- Note that the result of the query is not adapted to match the kind
@@ -8799,6 +8881,32 @@ feature {NONE} -- Query call generation
 			end
 		end
 
+	print_builtin_identified_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print to `current_file' a call to query `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "IDENTIFIED" and related classes.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+			-- Note that the result of the query is not adapted to match the kind
+			-- of result type expected by the caller. It is recommended to use
+			-- `print_adapted_query_call' whenever possible.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.result_type_set /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_identified: (a_feature.builtin_code // builtin_capacity) = builtin_identified_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_identified_eif_id_object then
+				print_builtin_identified_eif_id_object_call (a_target_type)
+			when builtin_identified_eif_object_id then
+				print_builtin_identified_eif_object_id_call (a_target_type)
+			else
+				print_non_inlined_query_call (a_feature, a_target_type)
+			end
+		end
+
 	print_builtin_platform_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "PLATFORM".
@@ -8845,7 +8953,7 @@ feature {NONE} -- Query call generation
 
 	print_builtin_pointer_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to query `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in class "POINTER".
+			-- `a_feature' is a built-in feature introduced in class "POINTER" and related classes.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 			-- Note that the result of the query is not adapted to match the kind
@@ -8875,7 +8983,7 @@ feature {NONE} -- Query call generation
 
 	print_builtin_sized_character_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type, a_character_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to query `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in sized character type `a_character_type'.
+			-- `a_feature' is a built-in feature introduced in sized character type `a_character_type' and related classes.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 			-- Note that the result of the query is not adapted to match the kind
@@ -8907,7 +9015,7 @@ feature {NONE} -- Query call generation
 
 	print_builtin_sized_integer_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type, an_integer_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to query `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in sized integer type `an_integer_type'.
+			-- `a_feature' is a built-in feature introduced in sized integer type `an_integer_type' and related classes.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 			-- Note that the result of the query is not adapted to match the kind
@@ -8991,7 +9099,7 @@ feature {NONE} -- Query call generation
 
 	print_builtin_sized_real_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type, a_real_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call to query `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in sized real type `a_real_type'.
+			-- `a_feature' is a built-in feature introduced in sized real type `a_real_type' and related classes.
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 			-- Note that the result of the query is not adapted to match the kind
@@ -13645,6 +13753,107 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
+	print_builtin_identified_eif_id_object_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'IDENTIFIED.eif_id_object' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_argument := call_operands.item (2)
+				l_argument_type_set := current_feature.dynamic_type_set (l_argument)
+				if l_argument_type_set = Void then
+						-- Internal error: the dynamic type set of the argument
+						-- of the call should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					include_runtime_header_file ("ge_identified.h", False, header_file)
+					current_file.put_string (c_ge_id_object)
+					current_file.put_character ('(')
+					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
+					current_file.put_character (')')
+				end
+			end
+		end
+
+	print_builtin_identified_eif_object_id_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'IDENTIFIED.eif_object_id' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_argument := call_operands.item (2)
+				l_argument_type_set := current_feature.dynamic_type_set (l_argument)
+				if l_argument_type_set = Void then
+						-- Internal error: the dynamic type set of the argument
+						-- of the call should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					include_runtime_header_file ("ge_identified.h", False, header_file)
+					current_file.put_string (c_ge_object_id)
+					current_file.put_character ('(')
+					print_attachment_expression (l_argument, l_argument_type_set, current_system.any_type)
+					current_file.put_character (')')
+				end
+			end
+		end
+
+	print_builtin_identified_eif_object_id_free_call (a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'IDENTIFIED.eif_object_id_free' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_argument := call_operands.item (2)
+				l_argument_type_set := current_feature.dynamic_type_set (l_argument)
+				if l_argument_type_set = Void then
+						-- Internal error: the dynamic type set of the argument
+						-- of the call should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					include_runtime_header_file ("ge_identified.h", False, header_file)
+					print_indentation
+					current_file.put_string (c_ge_object_id_free)
+					current_file.put_character ('(')
+					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
+					current_file.put_character (')')
+					current_file.put_character (';')
+				end
+			end
+		end
+
 	print_builtin_platform_boolean_bytes_call (a_target_type: ET_DYNAMIC_TYPE) is
 			-- Print call to built-in feature 'PLATFORM.boolean_bytes' (static binding) to `current_file'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -13975,7 +14184,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (')')
 					current_file.put_character ('+')
 					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
 					current_file.put_character (')')
 					current_file.put_character (')')
 				end
@@ -20901,6 +21110,8 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("ge_no_gc.c")
 				elseif a_filename.same_string ("ge_no_boehm.h") then
 					included_runtime_c_files.force ("ge_boehm_gc.c")
+				elseif a_filename.same_string ("ge_identified.h") then
+					included_runtime_c_files.force ("ge_identified.c")
 				elseif a_filename.same_string ("eif_console.h") then
 					included_runtime_c_files.force ("eif_console.c")
 				elseif a_filename.same_string ("eif_dir.h") then
@@ -22090,6 +22301,9 @@ feature {NONE} -- Constants
 	c_extern: STRING is "extern"
 	c_float: STRING is "float"
 	c_for: STRING is "for"
+	c_ge_id_object: STRING is "ge_id_object"
+	c_ge_object_id: STRING is "ge_object_id"
+	c_ge_object_id_free: STRING is "ge_object_id_free"
 	c_gealloc: STRING is "gealloc"
 	c_geargc: STRING is "geargc"
 	c_geargv: STRING is "geargv"

@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -134,6 +134,16 @@ feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
 			an_agent_type_not_void: an_agent_type /= Void
 			a_call_feature_not_void: a_call_feature /= Void
 		deferred
+		end
+
+feature {ET_DYNAMIC_FEATURE} -- Generation
+
+	object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET is
+			-- Dynamic type set of objects that have been registered through
+			-- the object_id mechanism of class "IDENTIFIED" and related classes
+		deferred
+		ensure
+			object_id_dynamic_type_set_not_void: Result /= Void
 		end
 
 invariant

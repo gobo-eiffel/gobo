@@ -49,6 +49,36 @@ feature {NONE} -- Initialization
 		do
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
 			static_feature := a_feature
+			l_external_routine ?= a_feature
+			if l_external_routine /= Void then
+				builtin_code := l_external_routine.builtin_code
+			elseif a_target_type.base_class = a_system.universe.procedure_class then
+				if a_feature.name.same_feature_name (tokens.call_feature_name) then
+						-- Make sure that PROCEDURE.call is considered as
+						-- a built-in feature when computing dynamic type sets.
+						-- ISE still consider it as a regular routine.
+					builtin_code := tokens.builtin_procedure_feature (builtin_procedure_call)
+				else
+					builtin_code := builtin_not_builtin
+				end
+			elseif a_target_type.base_class = a_system.universe.function_class then
+				l_name := a_feature.name
+				if l_name.same_feature_name (tokens.item_feature_name) then
+						-- Make sure that FUNCTION.iteml is considered as
+						-- a built-in feature when computing dynamic type sets.
+						-- ISE still consider it as a regular routine.
+					builtin_code := tokens.builtin_function_feature (builtin_function_item)
+				elseif l_name.same_feature_name (tokens.call_feature_name) then
+						-- Make sure that FUNCTION.call is considered as
+						-- a built-in feature when computing dynamic type sets.
+						-- ISE still consider it as a regular routine.
+					builtin_code := tokens.builtin_function_feature (builtin_function_call)
+				else
+					builtin_code := builtin_not_builtin
+				end
+			else
+				builtin_code := builtin_not_builtin
+			end
 			target_type := a_target_type
 			l_type := a_feature.type
 			if l_type /= Void then
@@ -56,6 +86,8 @@ feature {NONE} -- Initialization
 				if a_feature.is_constant_attribute or a_feature.is_unique_attribute then
 					result_type_set := l_dynamic_type
 					l_dynamic_type.set_alive
+				elseif builtin_code = builtin_identified_feature (builtin_identified_eif_id_object) then
+					result_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
 				else
 					result_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
 				end
@@ -68,44 +100,18 @@ feature {NONE} -- Initialization
 					create dynamic_type_sets.make_with_capacity (nb)
 					from i := 1 until i > nb loop
 						arg := args.formal_argument (i)
-						l_type := arg.type
-						l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
-						l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
+						if i = 1 and then builtin_code = builtin_identified_feature (builtin_identified_eif_object_id) then
+							l_dynamic_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
+						else
+							l_type := arg.type
+							l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
+							l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
+						end
 						dynamic_type_sets.put_last (l_dynamic_type_set)
 						arg.name.set_index (i)
 						i := i + 1
 					end
 				end
-			end
-			l_external_routine ?= a_feature
-			if l_external_routine /= Void then
-				builtin_code := l_external_routine.builtin_code
-			elseif a_target_type.base_class = a_system.universe.procedure_class then
-				if a_feature.name.same_feature_name (tokens.call_feature_name) then
-						-- Make sure that PROCEDURE.call is considered as
-						-- a built-in feature when computing dynamic type sets.
-						-- ISE still consider it as a regular routine.
-					builtin_code := tokens.builtin_procedure_feature (tokens.builtin_procedure_call)
-				else
-					builtin_code := builtin_not_builtin
-				end
-			elseif a_target_type.base_class = a_system.universe.function_class then
-				l_name := a_feature.name
-				if l_name.same_feature_name (tokens.item_feature_name) then
-						-- Make sure that FUNCTION.iteml is considered as
-						-- a built-in feature when computing dynamic type sets.
-						-- ISE still consider it as a regular routine.
-					builtin_code := tokens.builtin_function_feature (tokens.builtin_function_item)
-				elseif l_name.same_feature_name (tokens.call_feature_name) then
-						-- Make sure that FUNCTION.call is considered as
-						-- a built-in feature when computing dynamic type sets.
-						-- ISE still consider it as a regular routine.
-					builtin_code := tokens.builtin_function_feature (tokens.builtin_function_call)
-				else
-					builtin_code := builtin_not_builtin
-				end
-			else
-				builtin_code := builtin_not_builtin
 			end
 		ensure
 			static_feature_set: static_feature = a_feature

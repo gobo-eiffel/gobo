@@ -183,6 +183,7 @@ feature {NONE} -- Initialization
 			function_class := eiffel_class (tokens.function_class_name)
 			function_class.set_in_system (True)
 			arguments_class := eiffel_class (tokens.arguments_class_name)
+			identified_routines_class := eiffel_class (tokens.identified_routines_class_name)
 			platform_class := eiffel_class (tokens.platform_class_name)
 			system_object_class := eiffel_class (tokens.system_object_class_name)
 			system_string_class := eiffel_class (tokens.system_string_class_name)
@@ -311,6 +312,7 @@ feature {NONE} -- Initialization
 			predicate_class_not_void: predicate_class /= Void
 			function_class_not_void: function_class /= Void
 			arguments_class_not_void: arguments_class /= Void
+			identified_routines_class_not_void: identified_routines_class /= Void
 			platform_class_not_void: platform_class /= Void
 			system_object_class_not_void: system_object_class /= Void
 			system_string_class_not_void: system_string_class /= Void
@@ -935,6 +937,9 @@ feature -- Basic classes
 
 	arguments_class: ET_CLASS
 			-- Class "ARGUMENTS"
+
+	identified_routines_class: ET_CLASS
+			-- Class "IDENTIFIED_ROUTINES"
 
 	platform_class: ET_CLASS
 			-- Class "PLATFORM"
@@ -3163,6 +3168,7 @@ invariant
 	predicate_class_not_void: predicate_class /= Void
 	function_class_not_void: function_class /= Void
 	arguments_class_not_void: arguments_class /= Void
+	identified_routines_class_not_void: identified_routines_class /= Void
 	platform_class_not_void: platform_class /= Void
 	system_object_class_not_void: system_object_class /= Void
 	system_string_class_not_void: system_string_class /= Void
