@@ -79,8 +79,11 @@ feature -- Generation
 			l_query_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_target: ET_DYNAMIC_TYPE_SET
 			l_count: INTEGER
+			old_object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			has_fatal_error := False
+			old_object_id_dynamic_type_set := object_id_dynamic_type_set
+			object_id_dynamic_type_set := new_dynamic_type_set (current_system.any_type)
 			l_dynamic_types := current_system.dynamic_types
 			is_built := False
 			from until is_built loop
@@ -223,6 +226,7 @@ feature -- Generation
 				end
 			end
 			check_catcall_validity
+			object_id_dynamic_type_set := old_object_id_dynamic_type_set
 		end
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation

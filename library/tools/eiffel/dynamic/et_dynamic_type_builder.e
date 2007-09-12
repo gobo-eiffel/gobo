@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			current_dynamic_type := dummy_dynamic_type
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
-			object_id_dynamic_type_set := new_dynamic_type_set (a_system.any_type)
+			object_id_dynamic_type_set := dummy_dynamic_type
 			create current_index.make (0)
 			create result_index.make (0)
 			create character_index.make (0)
@@ -179,8 +179,11 @@ feature -- Generation
 			l_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_count: INTEGER
 			old_nb: INTEGER
+			old_object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			has_fatal_error := False
+			old_object_id_dynamic_type_set := object_id_dynamic_type_set
+			object_id_dynamic_type_set := new_dynamic_type_set (current_system.any_type)
 			l_dynamic_types := current_system.dynamic_types
 			is_built := False
 			from until is_built loop
@@ -344,6 +347,7 @@ feature -- Generation
 				old_nb := nb
 			end
 			check_catcall_validity
+			object_id_dynamic_type_set := old_object_id_dynamic_type_set
 		end
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation

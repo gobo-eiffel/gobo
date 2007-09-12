@@ -82,13 +82,14 @@ feature {NONE} -- Initialization
 			target_type := a_target_type
 			l_type := a_feature.type
 			if l_type /= Void then
-				l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 				if a_feature.is_constant_attribute or a_feature.is_unique_attribute then
+					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type
 					l_dynamic_type.set_alive
 				elseif builtin_code = builtin_identified_feature (builtin_identified_eif_id_object) then
 					result_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
 				else
+					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
 				end
 			end

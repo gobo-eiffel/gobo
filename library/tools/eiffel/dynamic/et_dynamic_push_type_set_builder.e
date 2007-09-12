@@ -73,8 +73,11 @@ feature -- Generation
 			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
 			k, nb3: INTEGER
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			old_object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			has_fatal_error := False
+			old_object_id_dynamic_type_set := object_id_dynamic_type_set
+			object_id_dynamic_type_set := new_dynamic_type_set (current_system.any_type)
 			l_dynamic_types := current_system.dynamic_types
 			is_built := False
 			from until is_built loop
@@ -170,6 +173,7 @@ feature -- Generation
 				end
 			end
 			check_catcall_validity
+			object_id_dynamic_type_set := old_object_id_dynamic_type_set
 		end
 
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
