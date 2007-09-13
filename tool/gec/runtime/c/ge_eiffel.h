@@ -130,7 +130,7 @@ typedef double EIF_REAL_64;
 /*
 	Interoperability with ISE.
 */
-#define RTI64C(x) geint64(x)
+#define RTI64C(x) GE_int64(x)
 #define EIF_PROCEDURE EIF_POINTER
 #define EIF_OBJECT EIF_REFERENCE
 #define EIF_OBJ EIF_OBJECT
