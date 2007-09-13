@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 void eraise(char* name, long code) {
-	geraise((int)code);
+	GE_raise((int)code);
 }
 
 void esdie(int code) {

@@ -15,10 +15,10 @@
 
 #include <math.h>
 
-#ifndef gepower
-#define gepower(x,y) pow((x),(y))
+#ifndef GE_power
+#define GE_power(x,y) pow((x),(y))
 #endif
-#define geceiling(x) ceil(x)
-#define gefloor(x) floor(x)
+#define GE_ceiling(x) ceil(x)
+#define GE_floor(x) floor(x)
 
 #endif

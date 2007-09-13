@@ -17,8 +17,16 @@
 extern "C" {
 #endif
 
-extern int geargc;
-extern char** geargv;
+extern int GE_argc;
+extern char** GE_argv;
+
+/*
+	Break the shell command held in 'cmd', putting each shell
+	word in a separate array entry, hence building an argument
+	suitable for the 'main'. Note that 'cmd' will be altered
+	and 'argvp' will point to some chunks of it.
+*/
+extern void GE_get_argcargv(char* cmd, int* argc, char*** argvp);
 
 #ifdef __cplusplus
 }

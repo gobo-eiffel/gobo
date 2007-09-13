@@ -152,7 +152,7 @@ EIF_BOOLEAN eif_case_sensitive_path_names(void) {
 }
 
 EIF_REFERENCE eif_current_dir_representation(void) {
-	return gems(".", 1);
+	return GE_ms(".", 1);
 }
 
 EIF_REFERENCE eif_home_directory_name(void) {
@@ -160,15 +160,15 @@ EIF_REFERENCE eif_home_directory_name(void) {
 	return EIF_VOID;
 #else
 	char* s = getenv("HOME");
-	return gems(s, strlen(s));
+	return GE_ms(s, strlen(s));
 #endif
 }
 
 EIF_REFERENCE eif_root_directory_name(void) {
 #ifdef EIF_WINDOWS
-	return gems("\\", 1);
+	return GE_ms("\\", 1);
 #else
-	return gems("/", 1);
+	return GE_ms("/", 1);
 #endif
 }
 

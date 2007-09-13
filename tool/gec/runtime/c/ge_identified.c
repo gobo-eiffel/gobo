@@ -17,18 +17,24 @@
 extern "C" {
 #endif
 
-/* Get a new id for `object', assuming it is NOT in the stack */
-EIF_INTEGER ge_object_id(EIF_OBJECT object) {
+/*
+	Get a new id for `object', assuming it is NOT in the stack.
+*/
+EIF_INTEGER GE_object_id(EIF_OBJECT object) {
 	return (EIF_INTEGER)object;
 }
 
-/* Return the object associated with `id' */
-EIF_REFERENCE ge_id_object(EIF_INTEGER id) {
+/*
+	Return the object associated with `id'.
+*/
+EIF_REFERENCE GE_id_object(EIF_INTEGER id) {
 	return (EIF_REFERENCE)id;
 }
 
-/* Remove the object associated with `id' from the stack */
-void ge_object_id_free(EIF_INTEGER id) {
+/*
+	Remove the object associated with `id' from the stack.
+*/
+void GE_object_id_free(EIF_INTEGER id) {
 	/* Do nothing */
 }
 

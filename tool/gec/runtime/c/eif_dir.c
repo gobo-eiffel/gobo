@@ -21,7 +21,7 @@ typedef struct {
 	HANDLE handle;
 	WIN32_FIND_DATA data;
 	char *pattern;
-} ge_directory;
+} GE_directory;
 #ifdef __cplusplus
 }
 #endif
@@ -100,7 +100,7 @@ void* dir_open(char* dirname) {
 #ifdef WIN32
 	int len = strlen((char*)dirname);
 	char* pattern = (char*)malloc(len + 5);
-	ge_directory* result = (ge_directory*)malloc(sizeof(ge_directory));
+	GE_directory* result = (GE_directory*)malloc(sizeof(GE_directory));
 
 	pattern = strncpy(pattern, (char*)dirname, len);
 	if (pattern[len - 1] != '\\')
@@ -119,31 +119,31 @@ void* dir_open(char* dirname) {
 
 EIF_REFERENCE dir_next(void* dir) {
 #ifdef WIN32
-	ge_directory* ge_dir = (ge_directory*)dir;
-	HANDLE h = ge_dir->handle;
+	GE_directory* GE_dir = (GE_directory*)dir;
+	HANDLE h = GE_dir->handle;
 
 	if (h) {
-		if (FindNextFile(h, &(ge_dir->data))) {
-			char* s = ge_dir->data.cFileName;
-			return gems(s,strlen(s));
+		if (FindNextFile(h, &(GE_dir->data))) {
+			char* s = GE_dir->data.cFileName;
+			return GE_ms(s,strlen(s));
 		} else {
 			return EIF_VOID;
 		}
 	} else {
-		h = FindFirstFile(ge_dir->pattern, &(ge_dir->data));
+		h = FindFirstFile(GE_dir->pattern, &(GE_dir->data));
 		if (h == INVALID_HANDLE_VALUE) {
 			return EIF_VOID;
 		} else {
-			char* s = ge_dir->data.cFileName;
-			ge_dir->handle = h;
-			return gems(s,strlen(s));
+			char* s = GE_dir->data.cFileName;
+			GE_dir->handle = h;
+			return GE_ms(s,strlen(s));
 		}
 	}
 #else
 	struct dirent* p = readdir((DIR*)dir);
 	if (p) {
 		char* s = p->d_name;
-		return gems(s,strlen(s));
+		return GE_ms(s,strlen(s));
 	} else {
 		return EIF_VOID;
 	}
@@ -152,29 +152,29 @@ EIF_REFERENCE dir_next(void* dir) {
 
 void dir_rewind(void* dir) {
 #ifdef WIN32
-	ge_directory* ge_dir = (ge_directory*)dir;
-	HANDLE h = ge_dir->handle;
+	GE_directory* GE_dir = (GE_directory*)dir;
+	HANDLE h = GE_dir->handle;
 
 	if (h) {
 		FindClose(h);
 	}
-	ge_dir->handle = 0;
+	GE_dir->handle = 0;
 #else
-	DIR* ge_dir = (DIR*)dir;
-	rewinddir(ge_dir);
+	DIR* GE_dir = (DIR*)dir;
+	rewinddir(GE_dir);
 #endif
 }
 
 void dir_close(void* dir) {
 #ifdef WIN32
-	ge_directory* ge_dir = (ge_directory*)dir;
-	HANDLE h = ge_dir->handle;
+	GE_directory* GE_dir = (GE_directory*)dir;
+	HANDLE h = GE_dir->handle;
 
 	if (h) {
 		FindClose(h);
 	}
-	free(ge_dir->pattern);
-	free(ge_dir);
+	free(GE_dir->pattern);
+	free(GE_dir);
 #else
 	closedir((DIR*)dir);
 #endif
@@ -285,7 +285,7 @@ EIF_REFERENCE dir_current(void) {
 	EIF_REFERENCE result;
 
 	s = (char*)getcwd(NULL, PATH_MAX);
-	result = gems(s, strlen(s));
+	result = GE_ms(s, strlen(s));
 	free(s);
 	return result;
 }

@@ -22,7 +22,7 @@ typedef struct {
 	WIN32_FIND_DATA data;
 	int entry_used;
 	char *pattern;
-} ge_directory;
+} GE_directory;
 #ifdef __cplusplus
 }
 #endif
@@ -35,12 +35,12 @@ typedef struct {
 extern "C" {
 #endif
 
-void* ge_directory_open_read(char* dirname)
+void* GE_directory_open_read(char* dirname)
 {
 #ifdef WIN32
 	int len = strlen((char*)dirname);
 	char* pattern = malloc(len + 5);
-	ge_directory* result = malloc(sizeof(ge_directory));
+	GE_directory* result = malloc(sizeof(GE_directory));
 
 	pattern = strncpy(pattern, (char*)dirname, len);
 	if (pattern[len - 1] != '\\')
@@ -64,42 +64,42 @@ void* ge_directory_open_read(char* dirname)
 #endif
 }
 
-void* ge_directory_read_entry(void* dir)
+void* GE_directory_read_entry(void* dir)
 {
 #ifdef WIN32
-	ge_directory* ge_dir = (ge_directory*)dir;
+	GE_directory* GE_dir = (GE_directory*)dir;
 
-	if (ge_dir->entry_used) {
-		if (FindNextFile(ge_dir->handle, &(ge_dir->data))) {
-			return ge_dir;
+	if (GE_dir->entry_used) {
+		if (FindNextFile(GE_dir->handle, &(GE_dir->data))) {
+			return GE_dir;
 		} else {
 			return NULL;
 		}
 	} else {
-		ge_dir->entry_used = 1;
-		return ge_dir;
+		GE_dir->entry_used = 1;
+		return GE_dir;
 	}
 #else
 	return readdir((DIR*)dir);
 #endif
 }
 
-char* ge_directory_last_entry (void* dir)
+char* GE_directory_last_entry (void* dir)
 {
 #ifdef WIN32
-	return ((ge_directory*)dir)->data.cFileName;
+	return ((GE_directory*)dir)->data.cFileName;
 #else
 	return ((struct dirent*)dir)->d_name;
 #endif
 }
 
-int ge_directory_close (void* dir)
+int GE_directory_close (void* dir)
 {
 #ifdef WIN32
-	ge_directory* ge_dir = (ge_directory*)dir;
-	FindClose(ge_dir->handle);
-	free(ge_dir->pattern);
-	free(ge_dir);
+	GE_directory* GE_dir = (GE_directory*)dir;
+	FindClose(GE_dir->handle);
+	free(GE_dir->pattern);
+	free(GE_dir);
 	return 0;
 #else
 	return closedir((DIR*)dir);

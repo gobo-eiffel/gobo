@@ -15,8 +15,8 @@
 
 #include <math.h>
 
-#ifndef gepower
-#define gepower(x,y) pow((x),(y))
+#ifndef GE_power
+#define GE_power(x,y) pow((x),(y))
 #endif
 
 #endif

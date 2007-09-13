@@ -17,22 +17,28 @@
 extern "C" {
 #endif
 
-/* Number of reference to Eiffel objects that can be held in a chunk in 'gedeep'. */
-#define GEDEEP_CAPACITY 512
+/*
+	Number of reference to Eiffel objects that can be held in a chunk in 'gedeep'.
+*/
+#define GE_DEEP_CAPACITY 512
 
-/* Allocated memory for a new 'gedeep' struct. */
-gedeep* gedeep_new(void)
+/*
+	Allocated memory for a new 'GE_deep' struct.
+*/
+GE_deep* GE_deep_new(void)
 {
-	gedeep* d;
-	d = (gedeep*)malloc(sizeof(gedeep));
-	d->from = (void**)calloc(GEDEEP_CAPACITY + 1, sizeof(void*));
-	d->to = (void**)calloc(GEDEEP_CAPACITY + 1, sizeof(void*));
+	GE_deep* d;
+	d = (GE_deep*)malloc(sizeof(GE_deep));
+	d->from = (void**)calloc(GE_DEEP_CAPACITY + 1, sizeof(void*));
+	d->to = (void**)calloc(GE_DEEP_CAPACITY + 1, sizeof(void*));
 	d->top = 0;
 	return d;
 }
 
-/* Free memory for 'gedeep' struct `d'. */
-void gedeep_free(gedeep* d)
+/*
+	Free memory for 'GE_deep' struct 'd'.
+*/
+void GE_deep_free(GE_deep* d)
 {
 	void** p1;
 	void** p2;
@@ -51,8 +57,10 @@ void gedeep_free(gedeep* d)
 	free(d);
 }
 
-/* Eiffel object associated with `obj' in `d', if any. */
-T0* gedeep_item(T0* obj, gedeep* d)
+/*
+	Eiffel object associated with 'obj' in 'd', if any.
+*/
+T0* GE_deep_item(T0* obj, GE_deep* d)
 {
 	int i = d->top;
 	void** p1 = d->from;
@@ -66,21 +74,23 @@ T0* gedeep_item(T0* obj, gedeep* d)
 		}
 		p1 = p1[0];
 		p2 = p2[0];
-		i = GEDEEP_CAPACITY;
+		i = GE_DEEP_CAPACITY;
 	}
 	return 0;
 }
 
-/* Associated `obj1' with `obj2' in `d'. */
-void gedeep_put(T0* obj1, T0* obj2, gedeep* d)
+/*
+	Associated 'obj1' with 'obj2' in 'd'.
+*/
+void GE_deep_put(T0* obj1, T0* obj2, GE_deep* d)
 {
 	int t = d->top + 1;
-	if (t > GEDEEP_CAPACITY) {
+	if (t > GE_DEEP_CAPACITY) {
 		void** p;
-		p = (void**)calloc(GEDEEP_CAPACITY + 1, sizeof(void*));
+		p = (void**)calloc(GE_DEEP_CAPACITY + 1, sizeof(void*));
 		p[0] = d->from;
 		d->from = p;
-		p = (void**)calloc(GEDEEP_CAPACITY + 1, sizeof(void*));
+		p = (void**)calloc(GE_DEEP_CAPACITY + 1, sizeof(void*));
 		p[0] = d->to;
 		d->to = p;
 		t = 1;

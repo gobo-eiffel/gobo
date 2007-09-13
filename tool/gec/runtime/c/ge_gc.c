@@ -1,7 +1,7 @@
 /*
 	description:
 
-		"C functions used when there is no garbage collector"
+		"C functions used to access garbage collector facilities"
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2007, Eric Bezault and others"
@@ -10,8 +10,7 @@
 	revision: "$Revision$"
 */
 
-#ifndef GE_NO_GC_C
-#define GE_NO_GC_C
-
+#ifndef GE_GC_C
+#define GE_GC_C
 
 #endif

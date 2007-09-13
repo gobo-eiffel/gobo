@@ -21,14 +21,14 @@ extern "C" {
 	Context of last feature entered containing a rescue clause.
 	Warning: this is not thread-safe.
 */
-struct gerescue *gerescue;
+struct GE_rescue *GE_rescue;
 
 /* Raise an exception with code `code'. */
-void geraise(int code) {
-	struct gerescue *r = gerescue;
+void GE_raise(int code) {
+	struct GE_rescue *r = GE_rescue;
 	if (r != 0) {
-		gerescue = r->previous;
-		gelongjmp(r->jb, code);
+		GE_rescue = r->previous;
+		GE_longjmp(r->jb, code);
 	}
 	fprintf(stderr, "Unhandled exception\n");
 	exit(1);

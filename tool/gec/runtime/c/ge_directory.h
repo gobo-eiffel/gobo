@@ -17,10 +17,10 @@
 extern "C" {
 #endif
 
-extern void* ge_directory_open_read(char* dirname);
-extern void* ge_directory_read_entry(void* dir);
-extern char* ge_directory_last_entry (void* dir);
-extern int ge_directory_close (void* dir);
+extern void* GE_directory_open_read(char* dirname);
+extern void* GE_directory_read_entry(void* dir);
+extern char* GE_directory_last_entry (void* dir);
+extern int GE_directory_close (void* dir);
 
 #ifdef __cplusplus
 }

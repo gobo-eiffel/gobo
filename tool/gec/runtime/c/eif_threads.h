@@ -19,8 +19,9 @@ extern "C" {
 
 #ifndef EIF_THREADS
 
-/* Empty stubs for EiffelThread library so that it may be compiled against a non-multithreaded run-time */
-
+/*
+	Empty stubs for EiffelThread library so that it may be compiled against a non-multithreaded run-time.
+*/
 #define eif_thr_mutex_create() NULL
 #define eif_thr_mutex_lock(a_mutex_pointer)
 #define eif_thr_mutex_unlock(a_mutex_pointer)

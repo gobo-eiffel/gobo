@@ -133,7 +133,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"ge_time.h%""
 		alias
-			"geftime($p);"
+			"GE_ftime($p);"
 		end
 
 feature {NONE} -- `struct timeb' encapsulation
@@ -143,7 +143,7 @@ feature {NONE} -- `struct timeb' encapsulation
 		external
 			"C inline use %"ge_time.h%""
 		alias
-			"return getimebsz;"
+			"return GE_timebsz;"
 		end	
 
 	get_millitm (p: POINTER): INTEGER is
@@ -151,7 +151,7 @@ feature {NONE} -- `struct timeb' encapsulation
 		external
 			"C inline use %"ge_time.h%""
 		alias
-			"return getimebmillitm($p);"
+			"return GE_timebmillitm($p);"
 		end
 
 	get_time (p, t: POINTER) is
@@ -159,7 +159,7 @@ feature {NONE} -- `struct timeb' encapsulation
 		external
 			"C inline use %"ge_time.h%", <time.h>"
 		alias
-			"*(time_t *) $t = getimebtime($p);"
+			"*(time_t *) $t = GE_timebtime($p);"
 		end
 		
 feature {NONE} -- `struct tm' encapsulation
@@ -188,7 +188,7 @@ feature {NONE} -- `struct tm' encapsulation
 		external
 			"C inline use <time.h>"
 		alias
-			"return localtime ((time_t *) $t);"
+			"return localtime((time_t *) $t);"
 		end
 		
 	gmtime (t: POINTER): POINTER is
@@ -196,7 +196,7 @@ feature {NONE} -- `struct tm' encapsulation
 		external
 			"C inline use <time.h>"
 		alias
-			"return gmtime ((time_t *) $t);"
+			"return gmtime((time_t *) $t);"
 		end
 		
 	get_tm_year (p: POINTER): INTEGER is

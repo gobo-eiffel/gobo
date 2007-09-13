@@ -23,13 +23,13 @@
 	NOTE: ANSI only recognizes the non-sig versions.
 */
 #if (defined(_SIGSET_H_types) && !defined(__STRICT_ANSI__))
-#define gejmp_buf sigjmp_buf
-#define gesetjmp(x) sigsetjmp((x),1)
-#define gelongjmp(x,y) siglongjmp((x),(y))
+#define GE_jmp_buf sigjmp_buf
+#define GE_setjmp(x) sigsetjmp((x),1)
+#define GE_longjmp(x,y) siglongjmp((x),(y))
 #else
-#define gejmp_buf jmp_buf
-#define gesetjmp(x) setjmp((x))
-#define gelongjmp(x,y) longjmp((x),(y))
+#define GE_jmp_buf jmp_buf
+#define GE_setjmp(x) setjmp((x))
+#define GE_longjmp(x,y) longjmp((x),(y))
 #endif
 
 #ifdef __cplusplus
@@ -39,18 +39,18 @@ extern "C" {
 /*
 	Context of features containing a rescue clause.
 */
-struct gerescue {
-	gejmp_buf jb;
-	struct gerescue *previous; /* previous context in the call chain */
+struct GE_rescue {
+	GE_jmp_buf jb;
+	struct GE_rescue *previous; /* previous context in the call chain */
 };
 
 /*
 	Context of last feature entered containing a rescue clause.
 	Warning: this is not thread-safe.
 */
-extern struct gerescue *gerescue;
+extern struct GE_rescue *GE_rescue;
 
-extern void geraise(int code);
+extern void GE_raise(int code);
 
 #ifdef __cplusplus
 }

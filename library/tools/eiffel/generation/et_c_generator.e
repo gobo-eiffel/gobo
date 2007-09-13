@@ -181,7 +181,7 @@ feature {NONE} -- Initialization
 			create wrapper_dynamic_type_sets.make_with_capacity (1)
 			create manifest_array_types.make (100)
 			create manifest_tuple_types.make (100)
-			create gevoid_result_types.make (100)
+			create call_on_void_target_result_types.make (100)
 			create once_features.make (10000)
 			create constant_features.make_map (10000)
 			create inline_constants.make (10000)
@@ -493,6 +493,9 @@ feature {NONE} -- Compilation script generation
 				if not is_finalize then
 					l_c_config_parser.define_value ("True", "EIF_WORKBENCH")
 				end
+				if use_boehm_gc then
+					l_c_config_parser.define_value ("True", "EIF_BOEHM_GC")
+				end
 				if universe.console_application then
 					l_c_config_parser.define_value ("True", "EIF_CONSOLE")
 				end
@@ -558,22 +561,23 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_exception.h", True, header_file)
 				header_file.put_new_line
+				include_runtime_header_file ("ge_main.h", True, header_file)
+				header_file.put_new_line
 				if use_boehm_gc then
-					include_runtime_header_file ("ge_boehm_gc.h", True, header_file)
-					header_file.put_new_line
-				else
-					include_runtime_header_file ("ge_no_gc.h", True, header_file)
+					header_file.put_line ("#define EIF_BOEHM_GC")
 					header_file.put_new_line
 				end
+				include_runtime_header_file ("ge_gc.h", True, header_file)
+				header_file.put_new_line
 				print_start_extern_c (header_file)
 				print_types (header_file)
 				flush_to_c_file
 				header_file.put_new_line
-				print_gedefault_declarations
+				print_default_declarations
 				current_file.put_new_line
 				flush_to_c_file
 				header_file.put_new_line
-				print_gems_function
+				print_manifest_string_function
 				current_file.put_new_line
 				flush_to_c_file
 					-- Print polymorphic calls.
@@ -592,7 +596,7 @@ feature {NONE} -- C code Generation
 				end
 					-- Print features which build manifest arrays.
 				from manifest_array_types.start until manifest_array_types.after loop
-					print_gema_function (manifest_array_types.item_for_iteration)
+					print_manifest_array_function (manifest_array_types.item_for_iteration)
 					current_file.put_new_line
 					flush_to_c_file
 					manifest_array_types.forth
@@ -600,61 +604,57 @@ feature {NONE} -- C code Generation
 				manifest_array_types.wipe_out
 					-- Print features which build manifest tuples.
 				from manifest_tuple_types.start until manifest_tuple_types.after loop
-					print_gemt_function (manifest_tuple_types.item_for_iteration)
+					print_manifest_tuple_function (manifest_tuple_types.item_for_iteration)
 					current_file.put_new_line
 					flush_to_c_file
 					manifest_tuple_types.forth
 				end
 				manifest_tuple_types.wipe_out
 					-- Print all functions necessary to implement 'deep_twin'.
-				print_gedeep_twin_functions
+				print_deep_twin_functions
 					-- Print call-on-void-target functions.
 					-- Calls-on-void-target with no result (i.e. procedure calls).
-				print_gevoid_function (Void)
+				print_call_on_void_target_function (Void)
 				current_file.put_new_line
 				flush_to_c_file
 					-- Calls-on-void-target with result of reference type.
-				from gevoid_result_types.start until gevoid_result_types.after loop
-					l_type := gevoid_result_types.item_for_iteration
+				from call_on_void_target_result_types.start until call_on_void_target_result_types.after loop
+					l_type := call_on_void_target_result_types.item_for_iteration
 					if not l_type.is_expanded then
-						print_gevoid_function (l_type)
+						print_call_on_void_target_function (l_type)
 						current_file.put_new_line
 						flush_to_c_file
 							-- Note that all calls-on-void-target with a result of
-							-- reference type share the same 'gevoid' function.
-						gevoid_result_types.go_after
+							-- reference type share the same 'GE_void' function.
+						call_on_void_target_result_types.go_after
 					else
-						gevoid_result_types.forth
+						call_on_void_target_result_types.forth
 					end
 				end
 					-- Calls-on-void-target with result of expanded type.
-				from gevoid_result_types.start until gevoid_result_types.after loop
-					l_type := gevoid_result_types.item_for_iteration
+				from call_on_void_target_result_types.start until call_on_void_target_result_types.after loop
+					l_type := call_on_void_target_result_types.item_for_iteration
 					if l_type.is_expanded then
-						print_gevoid_function (l_type)
+						print_call_on_void_target_function (l_type)
 						current_file.put_new_line
 						flush_to_c_file
 					end
-					gevoid_result_types.forth
+					call_on_void_target_result_types.forth
 				end
-				gevoid_result_types.wipe_out
+				call_on_void_target_result_types.wipe_out
 					-- Print constants declarations.
 				print_constants_declaration
 				current_file.put_new_line
 				flush_to_c_file
-				print_geconst_function
+				print_const_init_function
 				current_file.put_new_line
 				flush_to_c_file
-					-- Print 'getypes' array.
-				print_getypes_array
+					-- Print 'GE_types' array.
+				print_types_array
 				current_file.put_new_line
 				flush_to_c_file
 					-- Print 'main' function.
 				print_main_function
-				current_file.put_new_line
-				flush_to_c_file
-					-- Print 'WinMain' function.
-				print_winmain_function
 				current_file.put_new_line
 				flush_to_c_file
 				print_end_extern_c (header_file)
@@ -1119,7 +1119,7 @@ feature {NONE} -- Feature generation
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_gedefault_entity_value (l_result_type, current_file)
+				print_default_entity_value (l_result_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -3348,7 +3348,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_gedefault_entity_value (l_result_type, current_file)
+				print_default_entity_value (l_result_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -3372,7 +3372,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
-						print_gedefault_entity_value (l_local_type, current_file)
+						print_default_entity_value (l_local_type, current_file)
 						current_file.put_character (';')
 						current_file.put_new_line
 					end
@@ -3384,7 +3384,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_indentation
 				current_file.put_string (c_struct)
 				current_file.put_character (' ')
-				current_file.put_string (c_gerescue)
+				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
 				current_file.put_character ('r')
 				current_file.put_character (';')
@@ -3443,7 +3443,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				current_file.put_string (c_gesetjmp)
+				current_file.put_string (c_ge_setjmp)
 				current_file.put_character ('(')
 				current_file.put_character ('r')
 				current_file.put_character ('.')
@@ -3462,7 +3462,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				indent
 				print_compound (l_rescue)
 				print_indentation
-				current_file.put_string (c_geraise)
+				current_file.put_string (c_ge_raise)
 				current_file.put_character ('(')
 				current_file.put_character ('8')
 				current_file.put_character (')')
@@ -3472,14 +3472,14 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
-				current_file.put_string (c_geretry)
+				current_file.put_string (c_ge_retry)
 				current_file.put_character (':')
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("r.previous = gerescue;")
+				current_file.put_string ("r.previous = GE_rescue;")
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("gerescue = &r;")
+				current_file.put_string ("GE_rescue = &r;")
 				current_file.put_new_line
 			end
 			l_compound := a_feature.compound
@@ -3488,7 +3488,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 			if l_rescue /= Void then
 				print_indentation
-				current_file.put_string ("gerescue = r.previous;")
+				current_file.put_string ("GE_rescue = r.previous;")
 				current_file.put_new_line
 			end
 			if l_result_type /= Void then
@@ -3676,7 +3676,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_gedefault_entity_value (l_result_type, current_file)
+				print_default_entity_value (l_result_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -4816,7 +4816,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				if l_target_dynamic_type = Void then
 						-- Call on Void target.
 					print_indentation
-					print_gevoid_name (Void, current_file)
+					print_call_on_void_target_name (Void, current_file)
 					current_file.put_character ('(')
 					print_target_expression (call_operands.first, l_target_static_type)
 					from i := 2 until i > nb loop
@@ -4929,7 +4929,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			print_indentation
 			current_file.put_string (c_goto)
 			current_file.put_character (' ')
-			current_file.put_string (c_geretry)
+			current_file.put_string (c_ge_retry)
 			current_file.put_character (';')
 			current_file.put_new_line
 		end
@@ -5678,7 +5678,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			an_expression_not_void: an_expression /= Void
 			a_type_not_void: a_type /= Void
 		do
-			current_file.put_string (c_geboxed)
+			current_file.put_string (c_ge_boxed)
 			current_file.put_integer (a_type.id)
 			current_file.put_character ('(')
 			print_expression (an_expression)
@@ -6266,7 +6266,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 								current_file.put_character ('?')
 								print_type_cast (current_system.pointer_type, current_file)
 								current_file.put_character ('(')
-								current_file.put_string (c_getypes)
+								current_file.put_string (c_ge_types)
 								current_file.put_character ('[')
 								print_attribute_type_id_access (l_name_expression, l_value_type_set.static_type)
 								current_file.put_character (']')
@@ -6308,7 +6308,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 								current_file.put_character ('?')
 								print_type_cast (current_system.pointer_type, current_file)
 								current_file.put_character ('(')
-								current_file.put_string (c_getypes)
+								current_file.put_string (c_ge_types)
 								current_file.put_character ('[')
 								print_attribute_type_id_access (l_name_expression, l_value_type_set.static_type)
 								current_file.put_character (']')
@@ -6360,7 +6360,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 										current_file.put_character ('?')
 										print_type_cast (current_system.pointer_type, current_file)
 										current_file.put_character ('(')
-										current_file.put_string (c_getypes)
+										current_file.put_string (c_ge_types)
 										current_file.put_character ('[')
 										print_attribute_type_id_access (l_temp, l_value_type_set.static_type)
 										current_file.put_character (']')
@@ -6518,26 +6518,26 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						-- 0[xX][a-fA-F0-9]{2}
 					print_type_cast (current_system.integer_8_type, current_file)
 					current_file.put_character ('(')
-					current_file.put_string (c_geint8)
+					current_file.put_string (c_ge_int8)
 				when 6 then
 						-- 0[xX][a-fA-F0-9]{4}
 					print_type_cast (current_system.integer_16_type, current_file)
 					current_file.put_character ('(')
-					current_file.put_string (c_geint16)
+					current_file.put_string (c_ge_int16)
 				when 10 then
 						-- 0[xX][a-fA-F0-9]{8}
 					print_type_cast (current_system.integer_32_type, current_file)
 					current_file.put_character ('(')
-					current_file.put_string (c_geint32)
+					current_file.put_string (c_ge_int32)
 				when 18 then
 						-- 0[xX][a-fA-F0-9]{16}
 					print_type_cast (current_system.integer_64_type, current_file)
 					current_file.put_character ('(')
-					current_file.put_string (c_geint64)
+					current_file.put_string (c_ge_int64)
 				else
 					print_type_cast (current_system.integer_type, current_file)
 					current_file.put_character ('(')
-					current_file.put_string (c_geint32)
+					current_file.put_string (c_ge_int32)
 				end
 				current_file.put_character ('(')
 				current_file.put_string (l_literal)
@@ -6700,7 +6700,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					current_file.put_character ('=')
 					current_file.put_character (' ')
 				end
-				current_file.put_string (c_gema)
+				current_file.put_string (c_ge_ma)
 				current_file.put_integer (l_dynamic_type.id)
 				current_file.put_character ('(')
 				print_type_cast (current_system.integer_type, current_file)
@@ -6799,7 +6799,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					current_file.put_character ('=')
 					current_file.put_character (' ')
 				end
-				current_file.put_string (c_gemt)
+				current_file.put_string (c_ge_mt)
 				current_file.put_integer (l_tuple_type.id)
 				current_file.put_character ('(')
 				from i := 1 until i > nb loop
@@ -6853,7 +6853,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					current_file.put_character (')')
 					current_file.put_character ('&')
 					current_file.put_character ('(')
-					current_file.put_string (c_getypes)
+					current_file.put_string (c_ge_types)
 					current_file.put_character ('[')
 					current_file.put_integer (l_type.id)
 					current_file.put_character (']')
@@ -7253,8 +7253,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					l_other_target_dynamic_types := l_target_type_set.other_types
 					if l_target_dynamic_type = Void then
 							-- Call on Void target.
-						gevoid_result_types.force_last (l_call_type)
-						print_gevoid_name (l_call_type, current_file)
+						call_on_void_target_result_types.force_last (l_call_type)
+						print_call_on_void_target_name (l_call_type, current_file)
 						current_file.put_character ('(')
 						print_target_expression (call_operands.first, l_target_static_type)
 						from i := 2 until i > nb loop
@@ -7382,25 +7382,25 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				print_type_cast (l_dynamic_type, current_file)
 				current_file.put_character ('(')
 				if l_dynamic_type = current_system.integer_8_type then
-					current_file.put_string (c_geint8)
+					current_file.put_string (c_ge_int8)
 				elseif l_dynamic_type = current_system.integer_16_type then
-					current_file.put_string (c_geint16)
+					current_file.put_string (c_ge_int16)
 				elseif l_dynamic_type = current_system.integer_32_type then
-					current_file.put_string (c_geint32)
+					current_file.put_string (c_ge_int32)
 				elseif l_dynamic_type = current_system.integer_64_type then
-					current_file.put_string (c_geint64)
+					current_file.put_string (c_ge_int64)
 				elseif l_dynamic_type = current_system.natural_8_type then
-					current_file.put_string (c_genat8)
+					current_file.put_string (c_ge_nat8)
 				elseif l_dynamic_type = current_system.natural_16_type then
-					current_file.put_string (c_genat16)
+					current_file.put_string (c_ge_nat16)
 				elseif l_dynamic_type = current_system.natural_32_type then
-					current_file.put_string (c_genat32)
+					current_file.put_string (c_ge_nat32)
 				elseif l_dynamic_type = current_system.natural_64_type then
-					current_file.put_string (c_genat64)
+					current_file.put_string (c_ge_nat64)
 				elseif l_dynamic_type = current_system.natural_type then
-					current_file.put_string (c_genat32)
+					current_file.put_string (c_ge_nat32)
 				else
-					current_file.put_string (c_geint32)
+					current_file.put_string (c_ge_int32)
 				end
 				current_file.put_character ('(')
 				if a_constant.is_negative then
@@ -7460,7 +7460,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				operand_stack.force (a_string)
 			else
 				l_string := a_string.value
-				current_file.put_string (c_gems)
+				current_file.put_string (c_ge_ms)
 				current_file.put_character ('(')
 				print_escaped_string (l_string)
 				current_file.put_character (',')
@@ -7632,7 +7632,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 							current_file.put_character ('?')
 							print_type_cast (current_system.pointer_type, current_file)
 							current_file.put_character ('(')
-							current_file.put_string (c_getypes)
+							current_file.put_string (c_ge_types)
 							current_file.put_character ('[')
 							print_attribute_type_id_access (tokens.result_keyword, l_result_type_set.static_type)
 							current_file.put_character (']')
@@ -7674,7 +7674,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				operand_stack.force (a_string)
 			else
 				l_string := a_string.value
-				current_file.put_string (c_gems)
+				current_file.put_string (c_ge_ms)
 				current_file.put_character ('(')
 				print_escaped_string (l_string)
 				current_file.put_character (',')
@@ -7987,25 +7987,25 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				print_type_cast (l_dynamic_type, current_file)
 				current_file.put_character ('(')
 				if l_dynamic_type = current_system.integer_8_type then
-					current_file.put_string (c_geint8)
+					current_file.put_string (c_ge_int8)
 				elseif l_dynamic_type = current_system.integer_16_type then
-					current_file.put_string (c_geint16)
+					current_file.put_string (c_ge_int16)
 				elseif l_dynamic_type = current_system.integer_32_type then
-					current_file.put_string (c_geint32)
+					current_file.put_string (c_ge_int32)
 				elseif l_dynamic_type = current_system.integer_64_type then
-					current_file.put_string (c_geint64)
+					current_file.put_string (c_ge_int64)
 				elseif l_dynamic_type = current_system.natural_8_type then
-					current_file.put_string (c_genat8)
+					current_file.put_string (c_ge_nat8)
 				elseif l_dynamic_type = current_system.natural_16_type then
-					current_file.put_string (c_genat16)
+					current_file.put_string (c_ge_nat16)
 				elseif l_dynamic_type = current_system.natural_32_type then
-					current_file.put_string (c_genat32)
+					current_file.put_string (c_ge_nat32)
 				elseif l_dynamic_type = current_system.natural_64_type then
-					current_file.put_string (c_genat64)
+					current_file.put_string (c_ge_nat64)
 				elseif l_dynamic_type = current_system.natural_type then
-					current_file.put_string (c_genat32)
+					current_file.put_string (c_ge_nat32)
 				else
-					current_file.put_string (c_geint32)
+					current_file.put_string (c_ge_int32)
 				end
 				current_file.put_character ('(')
 				if a_constant.is_negative then
@@ -8461,7 +8461,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				operand_stack.force (a_string)
 			else
 				l_string := a_string.value
-				current_file.put_string (c_gems)
+				current_file.put_string (c_ge_ms)
 				current_file.put_character ('(')
 				print_escaped_string (l_string)
 				current_file.put_character (',')
@@ -9269,7 +9269,7 @@ feature {NONE} -- Query call generation
 							-- We need to box the object, but without triggering a call to
 							-- 'copy' (it will be called during subsequent attachment).
 -- TODO: 'geboxed' will trigger a call to 'copy'. We should avoid that.
-						current_file.put_string (c_geboxed)
+						current_file.put_string (c_ge_boxed)
 						current_file.put_integer (l_source_type.id)
 						current_file.put_character ('(')
 						a_print_expression.call ([])
@@ -9990,7 +9990,7 @@ feature {NONE} -- Agent generation
 				print_agent_type_name (i, current_feature, current_type, current_file)
 				current_file.put_character ('*')
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -10096,7 +10096,7 @@ feature {NONE} -- Agent generation
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					print_gedefault_entity_value (l_result_type, current_file)
+					print_default_entity_value (l_result_type, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
 					current_file := current_function_body_buffer
@@ -10235,7 +10235,7 @@ feature {NONE} -- Agent generation
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_gedefault_entity_value (l_result_type, current_file)
+				print_default_entity_value (l_result_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -10259,7 +10259,7 @@ feature {NONE} -- Agent generation
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
-						print_gedefault_entity_value (l_local_type, current_file)
+						print_default_entity_value (l_local_type, current_file)
 						current_file.put_character (';')
 						current_file.put_new_line
 					end
@@ -10271,7 +10271,7 @@ feature {NONE} -- Agent generation
 				print_indentation
 				current_file.put_string (c_struct)
 				current_file.put_character (' ')
-				current_file.put_string (c_gerescue)
+				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
 				current_file.put_character ('r')
 				current_file.put_character (';')
@@ -10283,7 +10283,7 @@ feature {NONE} -- Agent generation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				current_file.put_string (c_gesetjmp)
+				current_file.put_string (c_ge_setjmp)
 				current_file.put_character ('(')
 				current_file.put_character ('r')
 				current_file.put_character ('.')
@@ -10302,7 +10302,7 @@ feature {NONE} -- Agent generation
 				indent
 				print_compound (l_rescue)
 				print_indentation
-				current_file.put_string (c_geraise)
+				current_file.put_string (c_ge_raise)
 				current_file.put_character ('(')
 				current_file.put_character ('8')
 				current_file.put_character (')')
@@ -10312,14 +10312,14 @@ feature {NONE} -- Agent generation
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
-				current_file.put_string (c_geretry)
+				current_file.put_string (c_ge_retry)
 				current_file.put_character (':')
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("r.previous = gerescue;")
+				current_file.put_string ("r.previous = GE_rescue;")
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("gerescue = &r;")
+				current_file.put_string ("GE_rescue = &r;")
 				current_file.put_new_line
 			end
 			l_compound := an_agent.compound
@@ -10328,7 +10328,7 @@ feature {NONE} -- Agent generation
 			end
 			if l_rescue /= Void then
 				print_indentation
-				current_file.put_string ("gerescue = r.previous;")
+				current_file.put_string ("GE_rescue = r.previous;")
 				current_file.put_new_line
 			end
 			if l_result_type /= Void then
@@ -10603,7 +10603,7 @@ feature {NONE} -- Polymorphic call generation
 							print_indentation
 							current_file.put_string (c_return)
 							current_file.put_character (' ')
-							print_gedefault_entity_value (l_result_type, current_file)
+							print_default_entity_value (l_result_type, current_file)
 							current_file.put_character (';')
 							current_file.put_new_line
 							dedent
@@ -11161,19 +11161,19 @@ feature {NONE} -- Polymorphic call generation
 
 feature {NONE} -- Deep features generation
 
-	print_gedeep_twin_functions is
+	print_deep_twin_functions is
 			-- Print all functions necessary to implement 'deep_twin'.
 		do
 			if not deep_twin_types.is_empty then
 				include_runtime_header_file ("ge_deep.h", True, header_file)
-					-- Be aware that `print_gedeep_twin_function' can added
+					-- Be aware that `print_deep_twin_function' can added
 					-- new types at the end of `deep_twin_types'.
 				from deep_twin_types.start until deep_twin_types.after loop
-					print_gedeep_twin_function (deep_twin_types.item_for_iteration)
+					print_deep_twin_function (deep_twin_types.item_for_iteration)
 					deep_twin_types.forth
 				end
 				from deep_feature_target_type_sets.start until deep_feature_target_type_sets.after loop
-					print_gedeep_twin_polymorphic_call_function (deep_feature_target_type_sets.item_for_iteration)
+					print_deep_twin_polymorphic_call_function (deep_feature_target_type_sets.item_for_iteration)
 					deep_feature_target_type_sets.forth
 				end
 				deep_twin_types.wipe_out
@@ -11182,8 +11182,8 @@ feature {NONE} -- Deep features generation
 			end
 		end
 
-	print_gedeep_twin_function (a_type: ET_DYNAMIC_TYPE) is
-			-- Print 'gedeep_twin' function for type `a_type' to `current_file'
+	print_deep_twin_function (a_type: ET_DYNAMIC_TYPE) is
+			-- Print 'GE_deep_twin' function for type `a_type' to `current_file'
 			-- and its signature to `header_file'.
 		require
 			a_type_not_void: a_type /= Void
@@ -11212,8 +11212,8 @@ feature {NONE} -- Deep features generation
 			print_type_declaration (a_type, current_file)
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			header_file.put_string (c_gedeep_twin)
-			current_file.put_string (c_gedeep_twin)
+			header_file.put_string (c_ge_deep_twin)
+			current_file.put_string (c_ge_deep_twin)
 			header_file.put_integer (a_type.id)
 			current_file.put_integer (a_type.id)
 			header_file.put_character ('(')
@@ -11232,11 +11232,11 @@ feature {NONE} -- Deep features generation
 			header_file.put_character (' ')
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			header_file.put_string (c_gedeep)
+			header_file.put_string (c_ge_deep)
 			header_file.put_character ('*')
 			header_file.put_character (' ')
 			header_file.put_character ('d')
-			current_file.put_string (c_gedeep)
+			current_file.put_string (c_ge_deep)
 			current_file.put_character ('*')
 			current_file.put_character (' ')
 			current_file.put_character ('d')
@@ -11272,7 +11272,7 @@ feature {NONE} -- Deep features generation
 				l_has_nested_references := a_type.has_nested_reference_attributes
 				if l_has_nested_references then
 					print_indentation
-					current_file.put_string (c_gedeep)
+					current_file.put_string (c_ge_deep)
 					current_file.put_character ('*')
 					current_file.put_character (' ')
 					current_file.put_character ('t')
@@ -11296,7 +11296,7 @@ feature {NONE} -- Deep features generation
 					current_file.put_character ('(')
 					print_type_declaration (l_special_type, current_file)
 					current_file.put_character (')')
-					current_file.put_string (c_gealloc)
+					current_file.put_string (c_ge_alloc)
 					current_file.put_character ('(')
 					current_file.put_string (c_sizeof)
 					current_file.put_character ('(')
@@ -11371,7 +11371,7 @@ feature {NONE} -- Deep features generation
 					current_file.put_character ('(')
 					print_type_declaration (a_type, current_file)
 					current_file.put_character (')')
-					current_file.put_string (c_gealloc)
+					current_file.put_string (c_ge_alloc)
 					current_file.put_character ('(')
 					current_file.put_string (c_sizeof)
 					current_file.put_character ('(')
@@ -11398,7 +11398,7 @@ feature {NONE} -- Deep features generation
 					current_file.put_new_line
 				end
 				if l_has_nested_references then
-						-- Allocate a 'gedeep' struct to keep track of already twined
+						-- Allocate a 'GE_deep' struct to keep track of already twined
 						-- reference objects, or use 'd' if not a null pointer (which
 						-- means that the current object is not the root of the deep twin).
 					print_indentation
@@ -11414,7 +11414,7 @@ feature {NONE} -- Deep features generation
 					current_file.put_new_line
 					indent
 					print_indentation
-					current_file.put_string ("t0 = gedeep_new();")
+					current_file.put_string ("t0 = GE_deep_new();")
 					current_file.put_new_line
 					dedent
 					print_indentation
@@ -11423,7 +11423,7 @@ feature {NONE} -- Deep features generation
 					if not a_type.is_expanded then
 							-- Keep track of reference objects already twined.
 						print_indentation
-						current_file.put_string ("gedeep_put")
+						current_file.put_string ("GE_deep_put")
 						current_file.put_character ('(')
 						print_current_name (current_file)
 						current_file.put_character (',')
@@ -11571,7 +11571,7 @@ feature {NONE} -- Deep features generation
 							end
 						end
 					end
-						-- Free previously allocated 'gedeep' struct, if any (i.e. if
+						-- Free previously allocated 'GE_deep' struct, if any (i.e. if
 						-- the current object was the root object of the deep twin).
 					print_indentation
 					current_file.put_string (c_if)
@@ -11590,7 +11590,7 @@ feature {NONE} -- Deep features generation
 					current_file.put_new_line
 					indent
 					print_indentation
-					current_file.put_string ("gedeep_free(t0);")
+					current_file.put_string ("GE_deep_free(t0);")
 					current_file.put_new_line
 					dedent
 					print_indentation
@@ -11614,7 +11614,7 @@ feature {NONE} -- Deep features generation
 					current_file.put_new_line
 					indent
 					print_indentation
-					current_file.put_string ("gedeep_put")
+					current_file.put_string ("GE_deep_put")
 					current_file.put_character ('(')
 					print_current_name (current_file)
 					current_file.put_character (',')
@@ -11650,9 +11650,9 @@ feature {NONE} -- Deep features generation
 			current_type := old_type
 		end
 
-	print_gedeep_twin_polymorphic_call_function (a_target_type_set: ET_DYNAMIC_TYPE_SET) is
-			-- Print 'gedeep_twin<type-id>x' function to `current_file' and its signature to `header_file'.
-			-- 'gedeep_twin<type-id>x' corresponds to a polymorphic call to 'deep_twin'
+	print_deep_twin_polymorphic_call_function (a_target_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Print 'GE_deep_twin<type-id>x' function to `current_file' and its signature to `header_file'.
+			-- 'GE_deep_twin<type-id>x' corresponds to a polymorphic call to 'deep_twin'
 			-- whose target has `a_target_type_set' as dynamic type set.
 			-- 'type-id' is the type-id of the static type of the target.
 		require
@@ -11679,8 +11679,8 @@ feature {NONE} -- Deep features generation
 			print_type_declaration (l_static_type, current_file)
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			header_file.put_string (c_gedeep_twin)
-			current_file.put_string (c_gedeep_twin)
+			header_file.put_string (c_ge_deep_twin)
+			current_file.put_string (c_ge_deep_twin)
 			header_file.put_integer (l_static_type.id)
 			current_file.put_integer (l_static_type.id)
 			header_file.put_character ('x')
@@ -11701,12 +11701,12 @@ feature {NONE} -- Deep features generation
 			header_file.put_character (' ')
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			header_file.put_string (c_gedeep)
+			header_file.put_string (c_ge_deep)
 			header_file.put_character ('*')
 			header_file.put_character (' ')
 			header_file.put_character ('t')
 			header_file.put_character ('0')
-			current_file.put_string (c_gedeep)
+			current_file.put_string (c_ge_deep)
 			current_file.put_character ('*')
 			current_file.put_character (' ')
 			current_file.put_character ('t')
@@ -11762,7 +11762,7 @@ feature {NONE} -- Deep features generation
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
-					print_adapted_gedeep_twin_call (tokens.current_keyword, l_dynamic_type, l_static_type)
+					print_adapted_deep_twin_call (tokens.current_keyword, l_dynamic_type, l_static_type)
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
@@ -11785,14 +11785,14 @@ feature {NONE} -- Deep features generation
 				current_file.put_character (';')
 				current_file.put_new_line
 					-- Use binary search.
-				print_gedeep_twin_binary_search_polymorphic_call (l_static_type, 1, polymorphic_type_ids.count)
+				print_deep_twin_binary_search_polymorphic_call (l_static_type, 1, polymorphic_type_ids.count)
 			end
 			polymorphic_type_ids.wipe_out
 			polymorphic_types.wipe_out
 			print_indentation
 			current_file.put_string (c_return)
 			current_file.put_character (' ')
-			print_gedefault_entity_value (l_static_type, current_file)
+			print_default_entity_value (l_static_type, current_file)
 			current_file.put_character (';')
 			current_file.put_new_line
 			dedent
@@ -11803,8 +11803,8 @@ feature {NONE} -- Deep features generation
 			current_type := old_type
 		end
 
-	print_gedeep_twin_binary_search_polymorphic_call (a_target_static_type: ET_DYNAMIC_TYPE; l, u: INTEGER) is
-			-- Print to `current_file' dynamic binding code for the call to 'gedeep_twin'
+	print_deep_twin_binary_search_polymorphic_call (a_target_static_type: ET_DYNAMIC_TYPE; l, u: INTEGER) is
+			-- Print to `current_file' dynamic binding code for the call to 'GE_deep_twin'
 			-- whose target's static type is `a_target_static_type' and whose target's
 			-- dynamic types are those stored in `polymorphic_types' whose type-id is
 			-- itself stored between indexes `l' and `u' in `polymorphic_type_ids'.
@@ -11828,7 +11828,7 @@ feature {NONE} -- Deep features generation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				print_adapted_gedeep_twin_call (tokens.current_keyword, l_dynamic_type, a_target_static_type)
+				print_adapted_deep_twin_call (tokens.current_keyword, l_dynamic_type, a_target_static_type)
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -11850,7 +11850,7 @@ feature {NONE} -- Deep features generation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				print_adapted_gedeep_twin_call (tokens.current_keyword, l_dynamic_type, a_target_static_type)
+				print_adapted_deep_twin_call (tokens.current_keyword, l_dynamic_type, a_target_static_type)
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -11866,7 +11866,7 @@ feature {NONE} -- Deep features generation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				print_adapted_gedeep_twin_call (tokens.current_keyword, l_dynamic_type, a_target_static_type)
+				print_adapted_deep_twin_call (tokens.current_keyword, l_dynamic_type, a_target_static_type)
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -11886,14 +11886,14 @@ feature {NONE} -- Deep features generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				print_gedeep_twin_binary_search_polymorphic_call (a_target_static_type, l, t)
+				print_deep_twin_binary_search_polymorphic_call (a_target_static_type, l, t)
 				current_file.put_character ('}')
 				current_file.put_character (' ')
 				current_file.put_string (c_else)
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				print_gedeep_twin_binary_search_polymorphic_call (a_target_static_type, t + 1, u)
+				print_deep_twin_binary_search_polymorphic_call (a_target_static_type, t + 1, u)
 				current_file.put_character ('}')
 				current_file.put_new_line
 			end
@@ -11950,7 +11950,7 @@ feature {NONE} -- Deep features generation
 				l_temp2 := new_temp_variable (l_attribute_type)
 				print_indentation
 				print_temp_name (l_temp2, current_file)
-				current_file.put_string (" = gedeep_item(")
+				current_file.put_string (" = GE_deep_item(")
 				print_temp_name (l_temp1, current_file)
 				current_file.put_string (", t0);")
 				current_file.put_new_line
@@ -12003,7 +12003,7 @@ feature {NONE} -- Deep features generation
 			if l_other_dynamic_types = Void or else l_other_dynamic_types.is_empty then
 					-- Monomorphic call.
 				deep_twin_types.force_last (l_dynamic_type)
-				print_adapted_gedeep_twin_call (an_attribute, l_dynamic_type, l_attribute_type)
+				print_adapted_deep_twin_call (an_attribute, l_dynamic_type, l_attribute_type)
 			elseif l_other_dynamic_types.count = 1 then
 					-- Polymorphic with only two possible types at run-time.
 				deep_twin_types.force_last (l_dynamic_type)
@@ -12015,11 +12015,11 @@ feature {NONE} -- Deep features generation
 				current_file.put_integer (l_dynamic_type.id)
 				current_file.put_character (')')
 				current_file.put_character ('?')
-				print_adapted_gedeep_twin_call (an_attribute, l_dynamic_type, l_attribute_type)
+				print_adapted_deep_twin_call (an_attribute, l_dynamic_type, l_attribute_type)
 				current_file.put_character (':')
 				l_dynamic_type := l_other_dynamic_types.first
 				deep_twin_types.force_last (l_dynamic_type)
-				print_adapted_gedeep_twin_call (an_attribute, l_dynamic_type, l_attribute_type)
+				print_adapted_deep_twin_call (an_attribute, l_dynamic_type, l_attribute_type)
 				current_file.put_character (')')
 			else
 					-- Polymorphic with more than two possible types at run-time.
@@ -12053,7 +12053,7 @@ feature {NONE} -- Deep features generation
 				end
 					-- Now call the shared function that will trigger the
 					-- polymorphic call.
-				current_file.put_string (c_gedeep_twin)
+				current_file.put_string (c_ge_deep_twin)
 				current_file.put_integer (l_attribute_type.id)
 				current_file.put_character ('x')
 				current_file.put_character ('(')
@@ -12066,31 +12066,31 @@ feature {NONE} -- Deep features generation
 			end
 		end
 
-	print_adapted_gedeep_twin_call (a_target: ET_EXPRESSION; a_target_type, a_result_type: ET_DYNAMIC_TYPE) is
-			-- Print to `current_file' a call to the 'gedeep_twin' function that
+	print_adapted_deep_twin_call (a_target: ET_EXPRESSION; a_target_type, a_result_type: ET_DYNAMIC_TYPE) is
+			-- Print to `current_file' a call to the 'GE_deep_twin' function that
 			-- will deep twin `a_target' of type `a_target_type'.
 			-- `a_result_type' is the static type of the result expected by the caller,
-			-- used to adapt the result of 'gedeep_twin' if needed (see header comment
+			-- used to adapt the result of 'GE_deep_twin' if needed (see header comment
 			-- of `print_adapted_expression' for details).
 		require
 			a_target_not_void: a_target /= Void
 			a_target_type_not_void: a_target_type /= Void
 			a_result_type_not_void: a_result_type /= Void
 		do
-			print_adapted_expression (agent print_gedeep_twin_call (a_target, a_target_type), a_target_type, a_result_type)
+			print_adapted_expression (agent print_deep_twin_call (a_target, a_target_type), a_target_type, a_result_type)
 		end
 
-	print_gedeep_twin_call (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print to `current_file' a call to the 'gedeep_twin' function that
+	print_deep_twin_call (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print to `current_file' a call to the 'GE_deep_twin' function that
 			-- will deep twin `a_target' of type `a_target_type'.
-			-- Note that the result of 'gedeep_twin' is not adapted to match the
+			-- Note that the result of 'GE_deep_twin' is not adapted to match the
 			-- kind of result type expected by the caller. It is recommended to
-			-- use `print_adapted_gedeep_twin_call' whenever possible.
+			-- use `print_adapted_deep_twin_call' whenever possible.
 		require
 			a_target_not_void: a_target /= Void
 			a_target_type_not_void: a_target_type /= Void
 		do
-			current_file.put_string (c_gedeep_twin)
+			current_file.put_string (c_ge_deep_twin)
 			current_file.put_integer (a_target_type.id)
 			current_file.put_character ('(')
 			print_target_expression (a_target, a_target_type)
@@ -12313,7 +12313,7 @@ feature {NONE} -- Built-in feature generation
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			deep_twin_types.force_last (a_target_type)
-			current_file.put_string (c_gedeep_twin)
+			current_file.put_string (c_ge_deep_twin)
 			current_file.put_integer (a_target_type.id)
 			current_file.put_character ('(')
 			print_target_expression (call_operands.first, a_target_type)
@@ -12334,7 +12334,7 @@ feature {NONE} -- Built-in feature generation
 			l_string: STRING
 		do
 			l_string := a_target_type.base_type.unaliased_to_text
-			current_file.put_string (c_gems)
+			current_file.put_string (c_ge_ms)
 			current_file.put_character ('(')
 			print_escaped_string (l_string)
 			current_file.put_character (',')
@@ -12369,7 +12369,7 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character (')')
 				current_file.put_character ('&')
 				current_file.put_character ('(')
-				current_file.put_string (c_getypes)
+				current_file.put_string (c_ge_types)
 				current_file.put_character ('[')
 				current_file.put_integer (current_type.id)
 				current_file.put_character (']')
@@ -12390,7 +12390,7 @@ feature {NONE} -- Built-in feature generation
 			l_string: STRING
 		do
 			l_string := a_target_type.base_class.upper_name
-			current_file.put_string (c_gems)
+			current_file.put_string (c_ge_ms)
 			current_file.put_character ('(')
 			print_escaped_string (l_string)
 			current_file.put_character (',')
@@ -12751,7 +12751,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character ('(')
 				print_type_declaration (l_special_type, current_file)
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -12834,7 +12834,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character ('(')
 				print_type_declaration (current_type, current_file)
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -12878,7 +12878,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_character ('=')
 			current_file.put_character (' ')
 			l_string := current_type.base_type.unaliased_to_text
-			current_file.put_string (c_gems)
+			current_file.put_string (c_ge_ms)
 			current_file.put_character ('(')
 			print_escaped_string (l_string)
 			current_file.put_character (',')
@@ -12927,7 +12927,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character ('(')
 				print_type_declaration (current_type, current_file)
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -13012,7 +13012,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character ('(')
 				print_type_declaration (current_type, current_file)
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -13075,7 +13075,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 		do
 			print_type_cast (current_system.integer_type, current_file)
 			current_file.put_character ('(')
-			current_file.put_string (c_geargc)
+			current_file.put_string (c_ge_argc)
 			current_file.put_character (' ')
 			current_file.put_character ('-')
 			current_file.put_character (' ')
@@ -13105,7 +13105,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_string (c_geargv)
+				current_file.put_string (c_ge_argv)
 				current_file.put_character ('[')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (']')
@@ -13116,7 +13116,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_string ("gems(s,strlen(s))")
+				current_file.put_string ("GE_ms(s,strlen(s))")
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -13741,8 +13741,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					else
 							-- Call on Void target.
 						l_call_type := l_open_operand_type_sets.item (i).static_type
-						gevoid_result_types.force_last (l_call_type)
-						print_gevoid_name (l_call_type, current_file)
+						call_on_void_target_result_types.force_last (l_call_type)
+						print_call_on_void_target_name (l_call_type, current_file)
 						current_file.put_character ('(')
 						print_target_expression (l_tuple, l_tuple_type)
 						current_file.put_character (')')
@@ -14120,7 +14120,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
-			current_file.put_string ("gems(s,l)")
+			current_file.put_string ("GE_ms(s,l)")
 			current_file.put_character (';')
 			current_file.put_new_line
 		end
@@ -14402,8 +14402,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					else
 							-- Call on Void target.
 						l_call_type := l_open_operand_type_sets.item (i).static_type
-						gevoid_result_types.force_last (l_call_type)
-						print_gevoid_name (l_call_type, current_file)
+						call_on_void_target_result_types.force_last (l_call_type)
+						print_call_on_void_target_name (l_call_type, current_file)
 						current_file.put_character ('(')
 						print_target_expression (l_tuple, l_tuple_type)
 						current_file.put_character (')')
@@ -15941,7 +15941,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				else
 					include_runtime_header_file ("ge_integer.h", False, header_file)
 					print_type_cast (current_system.double_type, current_file)
-					current_file.put_string (c_gepower)
+					current_file.put_string (c_ge_power)
 					current_file.put_character ('(')
 					current_file.put_character ('(')
 					current_file.put_string (c_double)
@@ -16399,7 +16399,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_32_type, current_file)
-				current_file.put_string (c_geceiling)
+				current_file.put_string (c_ge_ceiling)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				current_file.put_string (c_double)
@@ -16447,7 +16447,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_64_type, current_file)
-				current_file.put_string (c_geceiling)
+				current_file.put_string (c_ge_ceiling)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				current_file.put_string (c_double)
@@ -16557,7 +16557,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_32_type, current_file)
-				current_file.put_string (c_gefloor)
+				current_file.put_string (c_ge_floor)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				current_file.put_string (c_double)
@@ -16605,7 +16605,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_64_type, current_file)
-				current_file.put_string (c_gefloor)
+				current_file.put_string (c_ge_floor)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				current_file.put_string (c_double)
@@ -16902,7 +16902,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
-			current_file.put_string ("gems(s,l)")
+			current_file.put_string ("GE_ms(s,l)")
 			current_file.put_character (';')
 			current_file.put_new_line
 		end
@@ -17012,7 +17012,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				else
 					include_runtime_header_file ("ge_real.h", False, header_file)
 					print_type_cast (current_system.double_type, current_file)
-					current_file.put_string (c_gepower)
+					current_file.put_string (c_ge_power)
 					current_file.put_character ('(')
 					current_file.put_character ('(')
 					current_file.put_string (c_double)
@@ -17413,7 +17413,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character ('(')
 				print_type_declaration (l_special_type, current_file)
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -17652,7 +17652,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_string := l_parameters.type (1).unaliased_to_text
-				current_file.put_string (c_gems)
+				current_file.put_string (c_ge_ms)
 				current_file.put_character ('(')
 				print_escaped_string (l_string)
 				current_file.put_character (',')
@@ -17707,15 +17707,15 @@ feature {NONE} -- C function generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
-				current_file.put_line ("geargc = argc;")
+				current_file.put_line ("GE_argc = argc;")
 				print_indentation
-				current_file.put_line ("geargv = argv;")
+				current_file.put_line ("GE_argv = argv;")
 				print_indentation
-				current_file.put_line ("gerescue = 0;")
+				current_file.put_line ("GE_rescue = 0;")
 				print_indentation
-				current_file.put_line ("geinit_gc();")
+				current_file.put_line ("GE_init_gc();")
 				print_indentation
-				current_file.put_line ("geconst();")
+				current_file.put_line ("GE_const_init();")
 					-- Initialize variable used in WEL.
 				include_runtime_header_file ("eif_main.h", False, header_file)
 				current_file.put_line ("#ifdef EIF_WINDOWS")
@@ -17743,44 +17743,9 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 		end
 
-	print_winmain_function is
-			-- Print 'WinMain' function to `current_file'.
-		do
-			current_file.put_line ("#ifdef EIF_WINDOWS")
-			include_runtime_header_file ("eif_main.h", False, header_file)
-			current_file.put_line ("int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)")
-			current_file.put_character ('{')
-			current_file.put_new_line
-			indent
-			print_indentation
-			current_file.put_line ("int code;")
-			print_indentation
-			current_file.put_line ("int argc;")
-			print_indentation
-			current_file.put_line ("char** argv;")
-			print_indentation
-			current_file.put_line ("char* cmd;")
-			print_indentation
-			current_file.put_line ("cmd = strdup(GetCommandLine());")
-			print_indentation
-			current_file.put_line ("get_argcargv(cmd, &argc, &argv);")
-			print_indentation
-			current_file.put_line ("code = main(argc, argv);")
-			print_indentation
-			current_file.put_line ("free(cmd);")
-			print_indentation
-			current_file.put_line ("free(argv);")
-			print_indentation
-			current_file.put_line ("return code;")
-			dedent
-			current_file.put_character ('}')
-			current_file.put_new_line
-			current_file.put_line ("#endif")
-		end
-
-	print_gems_function is
-			-- Print 'gems' function to `current_file' and its signature to `header_file'.
-			-- 'gems' is used to create manifest strings.
+	print_manifest_string_function is
+			-- Print 'GE_ms' function to `current_file' and its signature to `header_file'.
+			-- 'GE_ms' is used to create manifest strings.
 		local
 			l_string_type: ET_DYNAMIC_TYPE
 			l_area_type: ET_DYNAMIC_TYPE
@@ -17798,8 +17763,8 @@ feature {NONE} -- C function generation
 			print_type_declaration (l_string_type, current_file)
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			header_file.put_string (c_gems)
-			current_file.put_string (c_gems)
+			header_file.put_string (c_ge_ms)
+			current_file.put_string (c_ge_ms)
 			header_file.put_string ("(char* s, ")
 			current_file.put_string ("(char* s, ")
 			print_type_declaration (l_count_type, header_file)
@@ -17840,7 +17805,7 @@ feature {NONE} -- C function generation
 				current_file.put_character ('(')
 				print_type_declaration (l_area_type, current_file)
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -17896,7 +17861,7 @@ feature {NONE} -- C function generation
 				current_file.put_character ('(')
 				print_type_declaration (l_string_type, current_file)
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -17963,9 +17928,9 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 		end
 
-	print_gema_function (an_array_type: ET_DYNAMIC_TYPE) is
-			-- Print 'gema' function to `current_file' and its signature to `header_file'.
-			-- 'gema<type-id>' is used to create manifest arrays of type 'type-id'.
+	print_manifest_array_function (an_array_type: ET_DYNAMIC_TYPE) is
+			-- Print 'GE_ma' function to `current_file' and its signature to `header_file'.
+			-- 'GE_ma<type-id>' is used to create manifest arrays of type 'type-id'.
 		require
 			an_array_type_not_void: an_array_type /= Void
 		local
@@ -18007,8 +17972,8 @@ feature {NONE} -- C function generation
 				print_type_declaration (an_array_type, current_file)
 				header_file.put_character (' ')
 				current_file.put_character (' ')
-				header_file.put_string (c_gema)
-				current_file.put_string (c_gema)
+				header_file.put_string (c_ge_ma)
+				current_file.put_string (c_ge_ma)
 				header_file.put_integer (an_array_type.id)
 				current_file.put_integer (an_array_type.id)
 					-- Use varargs rather than inlining the code, this
@@ -18049,7 +18014,7 @@ feature {NONE} -- C function generation
 				current_file.put_character ('(')
 				print_type_declaration (l_special_type, current_file)
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -18158,7 +18123,7 @@ feature {NONE} -- C function generation
 				current_file.put_character ('(')
 				print_type_declaration (an_array_type, current_file)
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -18217,9 +18182,9 @@ feature {NONE} -- C function generation
 			end
 		end
 
-	print_gemt_function (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE) is
-			-- Print 'gemt' function to `current_file' and its signature to `header_file'.
-			-- 'gemt<type-id>' is used to create manifest tuples of type 'type-id'.
+	print_manifest_tuple_function (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE) is
+			-- Print 'GE_mt' function to `current_file' and its signature to `header_file'.
+			-- 'GE_mt<type-id>' is used to create manifest tuples of type 'type-id'.
 		require
 			a_tuple_type_not_void: a_tuple_type /= Void
 		local
@@ -18235,8 +18200,8 @@ feature {NONE} -- C function generation
 			print_type_declaration (a_tuple_type, current_file)
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			header_file.put_string (c_gemt)
-			current_file.put_string (c_gemt)
+			header_file.put_string (c_ge_mt)
+			current_file.put_string (c_ge_mt)
 			header_file.put_integer (a_tuple_type.id)
 			current_file.put_integer (a_tuple_type.id)
 			header_file.put_character ('(')
@@ -18284,7 +18249,7 @@ feature {NONE} -- C function generation
 			current_file.put_character ('(')
 			print_type_declaration (a_tuple_type, current_file)
 			current_file.put_character (')')
-			current_file.put_string (c_gealloc)
+			current_file.put_string (c_ge_alloc)
 			current_file.put_character ('(')
 			current_file.put_string (c_sizeof)
 			current_file.put_character ('(')
@@ -18327,9 +18292,9 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 		end
 
-	print_geboxed_function (a_type: ET_DYNAMIC_TYPE) is
-			-- Print 'geboxed' function to `current_file' and its signature to `header_file'.
-			-- 'geboxed<type-id>' is used to create boxed objects of type `a_type' (with id <type_id>).
+	print_boxed_function (a_type: ET_DYNAMIC_TYPE) is
+			-- Print 'GE_boxed' function to `current_file' and its signature to `header_file'.
+			-- 'GE_boxed<type-id>' is used to create boxed objects of type `a_type' (with id <type_id>).
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
 			-- if it already contains its type-id, or a wrapper otherwise.)
@@ -18343,8 +18308,8 @@ feature {NONE} -- C function generation
 			print_boxed_type_declaration (a_type, current_file)
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			header_file.put_string (c_geboxed)
-			current_file.put_string (c_geboxed)
+			header_file.put_string (c_ge_boxed)
+			current_file.put_string (c_ge_boxed)
 			header_file.put_integer (a_type.id)
 			current_file.put_integer (a_type.id)
 			header_file.put_character ('(')
@@ -18381,7 +18346,7 @@ feature {NONE} -- C function generation
 			current_file.put_character ('(')
 			print_boxed_type_declaration (a_type, current_file)
 			current_file.put_character (')')
-			current_file.put_string (c_gealloc)
+			current_file.put_string (c_ge_alloc)
 			current_file.put_character ('(')
 			current_file.put_string (c_sizeof)
 			current_file.put_character ('(')
@@ -18422,13 +18387,13 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 		end
 
-	print_gevoid_function (a_result_type: ET_DYNAMIC_TYPE) is
-			-- Print 'gevoid' function to `current_file' and its signature to `header_file'.
-			-- 'gevoid' is called when a feature call will always result in a call-on-void-target.
+	print_call_on_void_target_function (a_result_type: ET_DYNAMIC_TYPE) is
+			-- Print 'GE_void' function to `current_file' and its signature to `header_file'.
+			-- 'GE_void' is called when a feature call will always result in a call-on-void-target.
 			-- `a_result_type' is the expected result type if the corresponding call had
 			-- not been a call-on-void-target, or Void in case of a procedure call.
 			-- Note that all calls-on-void-target with a result of reference type share
-			-- the same 'gevoid' function.
+			-- the same 'GE_void' function.
 		do
 				-- Print signature to `header_file' and `current_file'.
 			header_file.put_string (c_extern)
@@ -18442,8 +18407,8 @@ feature {NONE} -- C function generation
 			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			print_gevoid_name (a_result_type, header_file)
-			print_gevoid_name (a_result_type, current_file)
+			print_call_on_void_target_name (a_result_type, header_file)
+			print_call_on_void_target_name (a_result_type, current_file)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
 			print_type_declaration (current_system.any_type, header_file)
@@ -18469,7 +18434,7 @@ feature {NONE} -- C function generation
 				current_file.put_line ("exit(1);")
 			else
 				print_indentation
-				print_gevoid_name (Void, current_file)
+				print_call_on_void_target_name (Void, current_file)
 				current_file.put_character ('(')
 				print_current_name (current_file)
 				current_file.put_character (')')
@@ -18478,7 +18443,7 @@ feature {NONE} -- C function generation
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
-				print_gedefault_entity_value (a_result_type, current_file)
+				print_default_entity_value (a_result_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -18487,9 +18452,9 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 		end
 
-	print_geconst_function is
-			-- Print 'geconst' function to `current_file', and its signature to `header_file'.
-			-- 'geconst' is called to initialize the value of the non-expanded constant attributes
+	print_const_init_function is
+			-- Print 'GE_const_init' function to `current_file', and its signature to `header_file'.
+			-- 'GE_const_init' is called to initialize the value of the non-expanded constant attributes
 			-- and inline constants (such as once manifest strings).
 		local
 			l_feature: ET_FEATURE
@@ -18499,8 +18464,8 @@ feature {NONE} -- C function generation
 			current_file.put_string (c_void)
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			header_file.put_string (c_geconst)
-			current_file.put_string (c_geconst)
+			header_file.put_string (c_ge_const_init)
+			current_file.put_string (c_ge_const_init)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
 			header_file.put_string (c_void)
@@ -18589,7 +18554,7 @@ feature {NONE} -- Malloc
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_gedefault_name (current_type, current_file)
+				print_default_name (current_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			else
@@ -18607,7 +18572,7 @@ feature {NONE} -- Malloc
 				current_file.put_character ('(')
 				print_type_declaration (current_type, current_file)
 				current_file.put_character (')')
-				current_file.put_string (c_gealloc)
+				current_file.put_string (c_ge_alloc)
 				current_file.put_character ('(')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -18642,7 +18607,7 @@ feature {NONE} -- Malloc
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_gedefault_name (current_type, current_file)
+				print_default_name (current_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 				if l_special_type /= Void then
@@ -18779,7 +18744,7 @@ feature {NONE} -- Type generation
 									j := j + 1
 								end
 							end
-							print_geboxed_function (l_type)
+							print_boxed_function (l_type)
 						end
 					end
 					if l_type.base_class = universe.type_class then
@@ -19768,8 +19733,8 @@ feature {NONE} -- Type generation
 			a_file.put_new_line
 		end
 
-	print_getypes_array is
-			-- Print 'getypes' array to `current_file' and its declaration to `header_file'.
+	print_types_array is
+			-- Print 'GE_types' array to `current_file' and its declaration to `header_file'.
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_type: ET_DYNAMIC_TYPE
@@ -19778,19 +19743,19 @@ feature {NONE} -- Type generation
 		do
 			l_dynamic_types := current_system.dynamic_types
 			nb := l_dynamic_types.count
-				-- Print declaration of 'getypes' in `header_file'.
+				-- Print declaration of 'GE_types' in `header_file'.
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
 			header_file.put_string (c_eif_type)
 			header_file.put_character (' ')
-			header_file.put_string (c_getypes)
+			header_file.put_string (c_ge_types)
 			header_file.put_character ('[')
 			header_file.put_character (']')
 			header_file.put_character (';')
 			header_file.put_new_line
 			current_file.put_string (c_eif_type)
 			current_file.put_character (' ')
-			current_file.put_string (c_getypes)
+			current_file.put_string (c_ge_types)
 			current_file.put_character ('[')
 			current_file.put_integer (nb + 1)
 			current_file.put_character (']')
@@ -20007,7 +19972,7 @@ feature {NONE} -- Type generation
 
 feature {NONE} -- Default initialization values generation
 
-	print_gedefault_declarations is
+	print_default_declarations is
 			-- Print default initialization declaration of each type
 			-- to `current_file' and their signature to `header_file'.
 		local
@@ -20021,14 +19986,14 @@ feature {NONE} -- Default initialization values generation
 				l_type := l_dynamic_types.item (i)
 				if l_type.is_alive then
 					if l_type.base_class /= universe.type_class then
-						print_gedefault_declaration (l_type)
+						print_default_declaration (l_type)
 					end
 				end
 				i := i + 1
 			end
 		end
 
-	print_gedefault_declaration (a_type: ET_DYNAMIC_TYPE) is
+	print_default_declaration (a_type: ET_DYNAMIC_TYPE) is
 			-- Print default initialization declaration of `a_type'
 			-- to `current_file' and their signature to `header_file'.
 		require
@@ -20040,19 +20005,19 @@ feature {NONE} -- Default initialization values generation
 			print_type_name (a_type, current_file)
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			print_gedefault_name (a_type, header_file)
-			print_gedefault_name (a_type, current_file)
+			print_default_name (a_type, header_file)
+			print_default_name (a_type, current_file)
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
-			print_gedefault_object_value (a_type, current_file)
+			print_default_object_value (a_type, current_file)
 			header_file.put_character (';')
 			current_file.put_character (';')
 			header_file.put_new_line
 			current_file.put_new_line
 		end
 
-	print_gedefault_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_default_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print to `a_file' name of default initialization for object of type `a_type'.
 			-- (In case of expanded types being involved, this default initialization
 			-- does not take into account possible calls to 'default_create' which need
@@ -20063,16 +20028,16 @@ feature {NONE} -- Default initialization values generation
 			a_file_open_write: a_file.is_open_write
 		do
 			if short_names then
-				a_file.put_string (c_gedefault)
+				a_file.put_string (c_ge_default)
 				a_file.put_integer (a_type.id)
 			else
 -- TODO: long names
-				a_file.put_string (c_gedefault)
+				a_file.put_string (c_ge_default)
 				a_file.put_integer (a_type.id)
 			end
 		end
 
-	print_gedefault_object_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_default_object_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print to `a_file' default initialization value for objects of type `a_type'.
 			-- (In case of expanded types being involved, this default initialization
 			-- does not take into account possible calls to 'default_create' which need
@@ -20124,7 +20089,7 @@ feature {NONE} -- Default initialization values generation
 						a_file.put_character (',')
 					end
 					l_comma_needed := True
-					print_gedefault_attribute_value (l_query.result_type_set.static_type, a_file)
+					print_default_attribute_value (l_query.result_type_set.static_type, a_file)
 					i := i + 1
 				end
 				l_special_type ?= a_type
@@ -20138,7 +20103,7 @@ feature {NONE} -- Default initialization values generation
 						-- Items.
 					a_file.put_character (',')
 					a_file.put_character ('{')
-					print_gedefault_attribute_value (l_special_type.item_type_set.static_type, a_file)
+					print_default_attribute_value (l_special_type.item_type_set.static_type, a_file)
 					a_file.put_character ('}')
 				else
 					l_tuple_type ?= a_type
@@ -20150,7 +20115,7 @@ feature {NONE} -- Default initialization values generation
 								a_file.put_character (',')
 							end
 							l_comma_needed := True
-							print_gedefault_attribute_value (l_item_type_sets.item (i).static_type, a_file)
+							print_default_attribute_value (l_item_type_sets.item (i).static_type, a_file)
 							i := i + 1
 						end
 					else
@@ -20181,7 +20146,7 @@ feature {NONE} -- Default initialization values generation
 			end
 		end
 
-	print_gedefault_entity_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_default_entity_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print to `a_file' default initialization value for entities declared of type `a_type'.
 			-- Note that an entity can be a reference to an object, and in that case
 			-- its default initialization value is 'Void', and not a default initialized
@@ -20214,11 +20179,11 @@ feature {NONE} -- Default initialization values generation
 			then
 				a_file.put_character ('0')
 			else
-				print_gedefault_name (a_type, a_file)
+				print_default_name (a_type, a_file)
 			end
 		end
 
-	print_gedefault_attribute_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_default_attribute_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print to `a_file' default initialization value for attributes declared of type `a_type'.
 			-- Note that an attribute is a special kind of entity, and therefore
 			-- it can be a reference to an object, and in that case its default initialization
@@ -20252,7 +20217,7 @@ feature {NONE} -- Default initialization values generation
 			then
 				a_file.put_character ('0')
 			else
-				print_gedefault_object_value (a_type, a_file)
+				print_default_object_value (a_type, a_file)
 			end
 		end
 
@@ -20524,17 +20489,17 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_gevoid_name (a_result_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_call_on_void_target_name (a_result_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print name of call-on-void-target function to `a_file'.
 			-- `a_result_type' is the expected result type if the corresponding call had
 			-- not been a call-on-void-target, or Void in case of a procedure call.
 			-- Note that all calls-on-void-target with a result of reference type share
-			-- the same 'gevoid' function.
+			-- the same 'GE_void' function.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_string (c_gevoid)
+			a_file.put_string (c_ge_void)
 			if a_result_type /= Void then
 				if a_result_type.is_expanded then
 					a_file.put_integer (a_result_type.id)
@@ -21106,12 +21071,12 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("ge_exception.c")
 				elseif a_filename.same_string ("ge_deep.h") then
 					included_runtime_c_files.force ("ge_deep.c")
-				elseif a_filename.same_string ("ge_no_gc.h") then
-					included_runtime_c_files.force ("ge_no_gc.c")
-				elseif a_filename.same_string ("ge_no_boehm.h") then
-					included_runtime_c_files.force ("ge_boehm_gc.c")
+				elseif a_filename.same_string ("ge_gc.h") then
+					included_runtime_c_files.force ("ge_gc.c")
 				elseif a_filename.same_string ("ge_identified.h") then
 					included_runtime_c_files.force ("ge_identified.c")
+				elseif a_filename.same_string ("ge_main.h") then
+					included_runtime_c_files.force ("ge_main.c")
 				elseif a_filename.same_string ("eif_console.h") then
 					included_runtime_c_files.force ("eif_console.c")
 				elseif a_filename.same_string ("eif_dir.h") then
@@ -21908,7 +21873,7 @@ feature {NONE} -- Access
 	manifest_tuple_types: DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE]
 			-- Types of manifest tuples
 
-	gevoid_result_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
+	call_on_void_target_result_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
 			-- Result types of calls-on-void-target (if they had not been calls-on-void-target)
 
 	once_features: DS_HASH_SET [ET_FEATURE]
@@ -22040,7 +22005,7 @@ feature {NONE} -- Implementation
 
 	temp_variable: ET_IDENTIFIER is
 			-- Shared temporary variable, to be used in non-Eiffel features
-			-- such as 'gems', 'gema*' or 'main'.
+			-- such as 'GE_ms', 'GE_ma*' or 'main'.
 		once
 			if short_names then
 				create Result.make ("t1")
@@ -22301,37 +22266,37 @@ feature {NONE} -- Constants
 	c_extern: STRING is "extern"
 	c_float: STRING is "float"
 	c_for: STRING is "for"
-	c_ge_id_object: STRING is "ge_id_object"
-	c_ge_object_id: STRING is "ge_object_id"
-	c_ge_object_id_free: STRING is "ge_object_id_free"
-	c_gealloc: STRING is "gealloc"
-	c_geargc: STRING is "geargc"
-	c_geargv: STRING is "geargv"
-	c_geboxed: STRING is "geboxed"
-	c_geceiling: STRING is "geceiling"
-	c_geconst: STRING is "geconst"
-	c_gedeep: STRING is "gedeep"
-	c_gedeep_twin: STRING is "gedeep_twin"
-	c_gedefault: STRING is "gedefault"
-	c_gefloor: STRING is "gefloor"
-	c_geint8: STRING is "geint8"
-	c_geint16: STRING is "geint16"
-	c_geint32: STRING is "geint32"
-	c_geint64: STRING is "geint64"
-	c_gema: STRING is "gema"
-	c_gems: STRING is "gems"
-	c_gemt: STRING is "gemt"
-	c_genat8: STRING is "genat8"
-	c_genat16: STRING is "genat16"
-	c_genat32: STRING is "genat32"
-	c_genat64: STRING is "genat64"
-	c_gepower: STRING is "gepower"
-	c_geraise: STRING is "geraise"
-	c_gerescue: STRING is "gerescue"
-	c_geretry: STRING is "geretry"
-	c_gesetjmp: STRING is "gesetjmp"
-	c_getypes: STRING is "getypes"
-	c_gevoid: STRING is "gevoid"
+	c_ge_alloc: STRING is "GE_alloc"
+	c_ge_argc: STRING is "GE_argc"
+	c_ge_argv: STRING is "GE_argv"
+	c_ge_boxed: STRING is "GE_boxed"
+	c_ge_ceiling: STRING is "GE_ceiling"
+	c_ge_const_init: STRING is "GE_const_init"
+	c_ge_deep: STRING is "GE_deep"
+	c_ge_deep_twin: STRING is "GE_deep_twin"
+	c_ge_default: STRING is "GE_default"
+	c_ge_floor: STRING is "GE_floor"
+	c_ge_id_object: STRING is "GE_id_object"
+	c_ge_int8: STRING is "GE_int8"
+	c_ge_int16: STRING is "GE_int16"
+	c_ge_int32: STRING is "GE_int32"
+	c_ge_int64: STRING is "GE_int64"
+	c_ge_ma: STRING is "GE_ma"
+	c_ge_ms: STRING is "GE_ms"
+	c_ge_mt: STRING is "GE_mt"
+	c_ge_nat8: STRING is "GE_nat8"
+	c_ge_nat16: STRING is "GE_nat16"
+	c_ge_nat32: STRING is "GE_nat32"
+	c_ge_nat64: STRING is "GE_nat64"
+	c_ge_object_id: STRING is "GE_object_id"
+	c_ge_object_id_free: STRING is "GE_object_id_free"
+	c_ge_power: STRING is "GE_power"
+	c_ge_raise: STRING is "GE_raise"
+	c_ge_rescue: STRING is "GE_rescue"
+	c_ge_retry: STRING is "GE_retry"
+	c_ge_setjmp: STRING is "GE_setjmp"
+	c_ge_types: STRING is "GE_types"
+	c_ge_void: STRING is "GE_void"
 	c_goto: STRING is "goto"
 	c_id: STRING is "id"
 	c_if: STRING is "if"
@@ -22405,8 +22370,8 @@ invariant
 	no_void_manifest_array_type: not manifest_array_types.has (Void)
 	manifest_tuple_types_not_void: manifest_tuple_types /= Void
 	no_void_manifest_tuple_type: not manifest_tuple_types.has (Void)
-	gevoid_result_types_not_void: gevoid_result_types /= Void
-	no_void_gevoid_result_type: not gevoid_result_types.has (Void)
+	call_on_void_target_result_types_not_void: call_on_void_target_result_types /= Void
+	no_void_call_on_void_target_result_type: not call_on_void_target_result_types.has (Void)
 	called_features_not_void: called_features /= Void
 	no_void_called_feature: not called_features.has (Void)
 	once_features_not_void: once_features /= Void

@@ -17,13 +17,19 @@
 extern "C" {
 #endif
 
-/* Get a new id for `object', assuming it is NOT in the stack */
+/*
+	Get a new id for 'object', assuming it is NOT in the stack.
+*/
 extern EIF_INTEGER eif_object_id(EIF_OBJECT object);
 
-/* Return the object associated with `id' */
+/*
+	Return the object associated with 'id'.
+*/
 extern EIF_REFERENCE eif_id_object(EIF_INTEGER id);
 
-/* Remove the object associated with `id' from the stack */
+/*
+	Remove the object associated with 'id' from the stack.
+*/
 extern void eif_object_id_free(EIF_INTEGER id);
 
 #ifdef __cplusplus

@@ -17,14 +17,20 @@
 extern "C" {
 #endif
 
-/* Get a new id for `object', assuming it is NOT in the stack */
-extern EIF_INTEGER ge_object_id(EIF_OBJECT object);
+/*
+	Get a new id for `object', assuming it is NOT in the stack.
+*/
+extern EIF_INTEGER GE_object_id(EIF_OBJECT object);
 
-/* Return the object associated with `id' */
-extern EIF_REFERENCE ge_id_object(EIF_INTEGER id);
+/*
+	Return the object associated with `id'.
+*/
+extern EIF_REFERENCE GE_id_object(EIF_INTEGER id);
 
-/* Remove the object associated with `id' from the stack */
-extern void ge_object_id_free(EIF_INTEGER id);
+/*
+	Remove the object associated with `id' from the stack.
+*/
+extern void GE_object_id_free(EIF_INTEGER id);
 
 #ifdef __cplusplus
 }

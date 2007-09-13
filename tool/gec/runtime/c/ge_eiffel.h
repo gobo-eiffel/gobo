@@ -103,22 +103,22 @@ typedef double EIF_REAL_64;
 #define EIF_TEST(x) ((x) ? EIF_TRUE : EIF_FALSE)
 
 /* For INTEGER and NATURAL manifest constants */
-#define geint8(x) x
-#define genat8(x) x
-#define geint16(x) x
-#define genat16(x) x
-#define geint32(x) x##L
-#define genat32(x) x##U
+#define GE_int8(x) x
+#define GE_nat8(x) x
+#define GE_int16(x) x
+#define GE_nat16(x) x
+#define GE_int32(x) x##L
+#define GE_nat32(x) x##U
 #if defined (_MSC_VER) && (_MSC_VER < 1400) /* MSC older than v8 */
-#define geint64(x) x##i64
-#define genat64(x) x##ui64
+#define GE_int64(x) x##i64
+#define GE_nat64(x) x##ui64
 #else
 #if defined (__BORLANDC__) && (__BORLANDC__ < 0x600) /* Borland before 6.0 */
-#define geint64(x) x##i64
-#define genat64(x) x##ui64
+#define GE_int64(x) x##i64
+#define GE_nat64(x) x##ui64
 #else /* ISO C 99 */
-#define geint64(x) x##LL
-#define genat64(x) x##ULL
+#define GE_int64(x) x##LL
+#define GE_nat64(x) x##ULL
 #endif 
 #endif 
 
@@ -128,9 +128,8 @@ typedef double EIF_REAL_64;
 #endif
 
 /*
- * Interoperability with ISE.
- */
-
+	Interoperability with ISE.
+*/
 #define RTI64C(x) geint64(x)
 #define EIF_PROCEDURE EIF_POINTER
 #define EIF_OBJECT EIF_REFERENCE

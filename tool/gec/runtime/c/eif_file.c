@@ -820,7 +820,7 @@ EIF_REFERENCE file_owner(int uid) {
 	snprintf(buf, NAME_MAX, "%d", uid);
 	str = buf;
 #endif
-	return gems(str, strlen(str));
+	return GE_ms(str, strlen(str));
 }
 
 EIF_REFERENCE file_group(int gid) {
@@ -840,7 +840,7 @@ EIF_REFERENCE file_group(int gid) {
 	snprintf(buf, NAME_MAX, "%d", gid);
 	str = buf;
 #endif
-	return gems(str, strlen(str));
+	return GE_ms(str, strlen(str));
 }
 
 EIF_INTEGER file_gib(FILE* f) {
