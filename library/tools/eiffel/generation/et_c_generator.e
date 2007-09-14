@@ -1277,7 +1277,7 @@ feature {NONE} -- Feature generation
 				end
 				print_external_cpp_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_cpp_class_type, l_signature_arguments, l_signature_result, a_feature.alias_clause)
 			elseif external_dllwin_regexp.recognizes (l_language_string) then
-					-- Regexp: dllwin [blocking] <dll_file> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+					-- Regexp: [blocking] dllwin <dll_file> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
 					-- \2: dll file
 					-- \5: has signature arguments
 					-- \6: signature arguments
@@ -22509,7 +22509,7 @@ feature {NONE} -- External regexp
 			-- \3: include files
 
 	external_dllwin_regexp: RX_PCRE_REGULAR_EXPRESSION
-			-- Regexp: dllwin [blocking] <dll_file> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+			-- Regexp: [blocking] dllwin <dll_file> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
 			-- \2: dll file
 			-- \5: has signature arguments
 			-- \6: signature arguments
@@ -22546,9 +22546,9 @@ feature {NONE} -- External regexp
 				-- Regexp: C++ [blocking] inline [use {<include> "," ...}+]
 			create external_cpp_inline_regexp.make
 			external_cpp_inline_regexp.compile ("[ \t\r\n]*[Cc]\+\+[ \t\r\n]+(blocking[ \t\r\n]+)?inline([ \t\r\n]+use[ \t\r\n]*((.|\n)+))?")
-				-- Regexp: dllwin [blocking] <dll_file> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+				-- Regexp: [blocking] dllwin <dll_file> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
 			create external_dllwin_regexp.make
-			external_dllwin_regexp.compile ("[ \t\r\n]*[Dd][Ll][Ll][Ww][Ii][Nn][ \t\r\n]+(blocking[ \t\r\rn]+)?([^ \t\r\n]+)([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))?")
+			external_dllwin_regexp.compile ("[ \t\r\n]*(blocking[ \t\r\n]+)?[Dd][Ll][Ll][Ww][Ii][Nn][ \t\r\n]+([^ \t\r\n]+)([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))?")
 		ensure
 			external_c_regexp_not_void: external_c_regexp /= Void
 			external_c_regexp_compiled: external_c_regexp.is_compiled
