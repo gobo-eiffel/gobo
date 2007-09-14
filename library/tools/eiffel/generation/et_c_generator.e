@@ -21370,8 +21370,6 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("%"eif_misc.h%"") then
 					include_runtime_header_file ("ge_dll.h", False, a_file)
 					include_runtime_header_file ("eif_misc.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_object_id.h%"") then
-					include_runtime_header_file ("eif_object_id.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_path_name.h%"") then
 					include_runtime_header_file ("eif_path_name.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_portable.h%"") then
@@ -21436,8 +21434,6 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("eif_memory.c")
 				elseif a_filename.same_string ("eif_misc.h") then
 					included_runtime_c_files.force ("eif_misc.c")
-				elseif a_filename.same_string ("eif_object_id.h") then
-					included_runtime_c_files.force ("eif_object_id.c")
 				elseif a_filename.same_string ("eif_path_name.h") then
 					included_runtime_c_files.force ("eif_path_name.c")
 				elseif a_filename.same_string ("eif_retrieve.h") then
