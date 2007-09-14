@@ -3271,10 +3271,10 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_string (" (__stdcall *) ")
 			current_file.put_character ('(')
 			if a_arguments /= Void and then not a_arguments.is_empty then
+				nb_args := a_arguments.count
 				if a_signature_arguments /= Void then
 					current_file.put_string (a_signature_arguments)
 				else
-					nb_args := a_arguments.count
 					from i := 1 until i > nb_args loop
 						if i /= 1 then
 							current_file.put_character (',')
