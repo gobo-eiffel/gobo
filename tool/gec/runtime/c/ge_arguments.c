@@ -24,7 +24,10 @@ char** GE_argv;
 typedef void (* EIF_CLEANUP)(EIF_BOOLEAN);
 void eif_register_cleanup(EIF_CLEANUP f){
 	/* TODO: Needed to compile some code at AXAR */
-	printf("'eif_register_cleanup' in 'ge_arguments.h' not implemented\n");
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eif_register_cleanup' in 'ge_arguments.h' not implemented\n");
 }
 
 #ifdef __cplusplus

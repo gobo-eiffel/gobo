@@ -561,6 +561,8 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_exception.h", True, header_file)
 				header_file.put_new_line
+				include_runtime_header_file ("ge_console.h", True, header_file)
+				header_file.put_new_line
 				include_runtime_header_file ("ge_main.h", True, header_file)
 				header_file.put_new_line
 				if use_boehm_gc then
@@ -21350,11 +21352,7 @@ feature {NONE} -- Include files
 		do
 			if not included_header_filenames.has (a_filename) then
 				if a_filename.same_string ("%"eif_console.h%"") then
-					include_runtime_header_file ("eif_file.h", False, a_file)
 					include_runtime_header_file ("eif_console.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_constants.h%"") then
-					-- Ignore this file. It is part of ISE's runtime
-					-- but not needed with gec.
 				elseif a_filename.same_string ("%"eif_dir.h%"") then
 					include_runtime_header_file ("eif_dir.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_eiffel.h%"") then
@@ -21368,13 +21366,9 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("%"eif_memory.h%"") then
 					include_runtime_header_file ("eif_memory.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_misc.h%"") then
-					include_runtime_header_file ("ge_dll.h", False, a_file)
 					include_runtime_header_file ("eif_misc.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_path_name.h%"") then
 					include_runtime_header_file ("eif_path_name.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_portable.h%"") then
-					-- Ignore this file. It is part of ISE's runtime
-					-- but not needed with gec.
 				elseif a_filename.same_string ("%"eif_retrieve.h%"") then
 					include_runtime_header_file ("eif_retrieve.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_sig.h%"") then
@@ -21385,9 +21379,6 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_threads.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_traverse.h%"") then
 					include_runtime_header_file ("eif_traverse.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_types.h%"") then
-					-- Ignore this file. It is part of ISE's runtime
-					-- but not needed with gec.
 				elseif a_filename.same_string ("%"ge_time.h%"") then
 					include_runtime_header_file ("ge_time.h", False, a_file)
 				else
@@ -21407,6 +21398,8 @@ feature {NONE} -- Include files
 			if not included_runtime_header_files.has (a_filename) then
 				if a_filename.same_string ("ge_arguments.h") then
 					included_runtime_c_files.force ("ge_arguments.c")
+				elseif a_filename.same_string ("ge_console.h") then
+					included_runtime_c_files.force ("ge_console.c")
 				elseif a_filename.same_string ("ge_dll.h") then
 					included_runtime_c_files.force ("ge_dll.c")
 				elseif a_filename.same_string ("ge_exception.h") then
@@ -21420,6 +21413,8 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("ge_main.h") then
 					included_runtime_c_files.force ("ge_main.c")
 				elseif a_filename.same_string ("eif_console.h") then
+					include_runtime_header_file ("ge_console.h", False, a_file)
+					include_runtime_header_file ("eif_file.h", False, a_file)
 					included_runtime_c_files.force ("eif_console.c")
 				elseif a_filename.same_string ("eif_dir.h") then
 					included_runtime_c_files.force ("eif_dir.c")
@@ -21433,6 +21428,7 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_memory.h") then
 					included_runtime_c_files.force ("eif_memory.c")
 				elseif a_filename.same_string ("eif_misc.h") then
+					include_runtime_header_file ("ge_dll.h", False, a_file)
 					included_runtime_c_files.force ("eif_misc.c")
 				elseif a_filename.same_string ("eif_path_name.h") then
 					included_runtime_c_files.force ("eif_path_name.c")

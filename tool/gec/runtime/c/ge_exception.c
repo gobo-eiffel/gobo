@@ -30,6 +30,9 @@ void GE_raise(int code) {
 		GE_rescue = r->previous;
 		GE_longjmp(r->jb, code);
 	}
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
 	fprintf(stderr, "Unhandled exception\n");
 	exit(1);
 }
