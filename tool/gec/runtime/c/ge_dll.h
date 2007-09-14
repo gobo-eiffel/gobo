@@ -1,7 +1,7 @@
 /*
 	description:
 
-		"C functions used to implement class ARGUMENTS"
+		"C functions used to access DLLs"
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2007, Eric Bezault and others"
@@ -10,15 +10,21 @@
 	revision: "$Revision$"
 */
 
-#ifndef GE_ARGUMENTS_H
-#define GE_ARGUMENTS_H
+#ifndef GE_DLL_H
+#define GE_DLL_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int GE_argc;
-extern char** GE_argv;
+#ifdef EIF_WINDOWS
+
+#include <windows.h>
+
+/* DLL declarations */
+#define GE_load_dll(name) LoadLibrary((LPCSTR)name)
+
+#endif
 
 #ifdef __cplusplus
 }

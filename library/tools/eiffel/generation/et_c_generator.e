@@ -1002,6 +1002,7 @@ feature {NONE} -- Feature generation
 			l_is_inline: BOOLEAN
 			l_is_cpp: BOOLEAN
 			l_cpp_class_type: STRING
+			l_dll_file: STRING
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -1273,6 +1274,24 @@ feature {NONE} -- Feature generation
 					l_signature_result := external_cpp_regexp.captured_substring (11)
 				end
 				print_external_cpp_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_cpp_class_type, l_signature_arguments, l_signature_result, a_feature.alias_clause)
+			elseif external_dllwin_regexp.recognizes (l_language_string) then
+					-- Regexp: dllwin [blocking] <dll_file> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+					-- \2: dll file
+					-- \5: has signature arguments
+					-- \6: signature arguments
+					-- \11: signature result
+					-- \18: include files
+				if external_dllwin_regexp.match_count > 18 and then external_dllwin_regexp.captured_substring_count (18) > 0 then
+					print_external_c_includes (external_dllwin_regexp.captured_substring (18))
+				end
+				l_dll_file := external_dllwin_regexp.captured_substring (2)
+				if external_dllwin_regexp.match_count > 5 and then external_dllwin_regexp.captured_substring_count (5) > 0 then
+					l_signature_arguments := external_dllwin_regexp.captured_substring (6)
+				end
+				if external_dllwin_regexp.match_count > 11 and then external_dllwin_regexp.captured_substring_count (11) > 0 then
+					l_signature_result := external_dllwin_regexp.captured_substring (11)
+				end
+				print_external_dllwin_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_dll_file, l_signature_arguments, l_signature_result, a_feature.alias_clause)
 			else
 print ("**** language not recognized: " + l_language_string + "%N")
 			end
@@ -3123,6 +3142,290 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (')')
 			end
 			if a_result_type_set /= Void and then a_signature_result /= Void then
+				current_file.put_character (')')
+			end
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_external_dllwin_body (a_feature_name: ET_FEATURE_NAME;
+		a_arguments: ET_FORMAL_ARGUMENT_LIST; a_result_type_set: ET_DYNAMIC_TYPE_SET;
+		a_dll_file: STRING; a_signature_arguments, a_signature_result: STRING;
+		a_alias: ET_EXTERNAL_ALIAS) is
+			-- Print body of external dllwin function to `current_file'.
+			-- If `a_feature_name' is Void then the name of the C function in the DLL will be found in the alias.
+			-- `a_dll_file' is the name of the DLL file.
+			-- `a_signature_arguments' and `a_signature_result', if not Void,
+			-- are the signature types declared in the Language part.
+			-- `a_result_type_set' is not Void if the external feature is a query.
+		require
+			name_not_void: a_feature_name /= Void or else a_alias /= Void
+			a_dll_file_not_void: a_dll_file /= Void
+		local
+			l_alias_value: ET_MANIFEST_STRING
+			i, nb_args: INTEGER
+			l_splitter: ST_SPLITTER
+			l_list: DS_LIST [STRING]
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_name: ET_IDENTIFIER
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameter: ET_DYNAMIC_TYPE
+			l_function_name: STRING
+		do
+			include_runtime_header_file ("ge_exception.h", False, header_file)
+			include_runtime_header_file ("ge_dll.h", False, header_file)
+			print_indentation
+			current_file.put_line ("static char done = 0;")
+			print_indentation
+			current_file.put_line ("static EIF_POINTER fp = NULL;")
+			print_indentation
+			current_file.put_line ("if (!done) {")
+			indent
+			print_indentation
+			current_file.put_line ("HMODULE a_result;")
+			print_indentation
+			current_file.put_string ("a_result = GE_load_dll(")
+			if a_dll_file.is_empty or else a_dll_file.item (1) /= '%"' then
+				current_file.put_character ('%"')
+				current_file.put_string (a_dll_file)
+				current_file.put_character ('%"')
+			else
+				current_file.put_string (a_dll_file)
+			end
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_line ("if (a_result == NULL) {")
+			indent
+			indent
+			print_indentation
+			current_file.put_string ("/* Cannot load library ")
+			current_file.put_string (a_dll_file)
+			current_file.put_line (" */")
+			dedent
+			print_indentation
+			current_file.put_line ("GE_raise(24);")
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_string ("fp = (EIF_POINTER)GetProcAddress(a_result,%"")
+			if a_alias /= Void then
+				l_alias_value := a_alias.manifest_string
+				l_function_name := l_alias_value.value
+			else
+				l_function_name := a_feature_name.lower_name
+			end
+			current_file.put_string (l_function_name)
+			current_file.put_line ("%");")
+			print_indentation
+			current_file.put_line ("if (fp == NULL) {")
+			indent
+			indent
+			print_indentation
+			current_file.put_string ("/* Cannot find entry point of ")
+			current_file.put_string (l_function_name)
+			current_file.put_line (" */")
+			dedent
+			print_indentation
+			current_file.put_line ("GE_raise(24);")
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_line ("done = (char) 1;")
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			print_indentation
+			if a_result_type_set /= Void then
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_type_declaration (a_result_type_set.static_type, current_file)
+				current_file.put_character (')')
+				if a_signature_result /= Void then
+					current_file.put_character ('(')
+					current_file.put_string (a_signature_result)
+					current_file.put_character (')')
+				end
+			end
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			if a_result_type_set /= Void then
+				if a_signature_result /= Void then
+					current_file.put_string (a_signature_result)
+				else
+					print_type_declaration (a_result_type_set.static_type, current_file)
+				end
+			else
+				current_file.put_string (c_void)
+			end
+			current_file.put_string (" (__stdcall *) ")
+			current_file.put_character ('(')
+			if a_arguments /= Void and then not a_arguments.is_empty then
+				if a_signature_arguments /= Void then
+					current_file.put_string (a_signature_arguments)
+				else
+					nb_args := a_arguments.count
+					from i := 1 until i > nb_args loop
+						if i /= 1 then
+							current_file.put_character (',')
+						end
+						l_name := a_arguments.formal_argument (i).name
+						l_argument_type_set := current_feature.argument_type_set (i)
+						if l_argument_type_set = Void then
+								-- Internal error: the dynamic type set of the formal arguments
+								-- should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif l_argument_type_set.static_type = current_system.pointer_type then
+								-- When compiling with C++, MSVC++ does not want to convert
+								-- 'void*' to non-'void*' implicitly.
+							current_file.put_string ("char*")
+						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+								-- The argument is declared of type 'TYPED_POINTER [XX]'.
+								-- In that case we use the corresponding pointer (i.e.
+								-- the first attribute of the object).
+							l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+							if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+									-- This should have been checked already.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+								print_type_declaration (l_actual_parameter, current_file)
+								if l_actual_parameter.is_expanded then
+									current_file.put_character ('*')
+								end
+							end
+						else
+							print_type_declaration (l_argument_type_set.static_type, current_file)
+						end
+						i := i + 1
+					end
+				end
+			end
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_string ("fp")
+			current_file.put_character (')')
+			if nb_args > 0 then
+				current_file.put_character ('(')
+				if a_signature_arguments /= Void then
+					create l_splitter.make_with_separators (",")
+					l_list := l_splitter.split (a_signature_arguments)
+					if l_list.count /= nb_args then
+-- TODO: error
+					end
+					l_cursor := l_list.new_cursor
+					l_cursor.start
+					from i := 1 until i > nb_args loop
+						if i /= 1 then
+							current_file.put_character (',')
+						end
+						if not l_cursor.after then
+							current_file.put_character ('(')
+							current_file.put_string (l_cursor.item)
+							current_file.put_character (')')
+							l_cursor.forth
+						end
+						l_name := a_arguments.formal_argument (i).name
+						l_argument_type_set := current_feature.argument_type_set (i)
+						if l_argument_type_set = Void then
+								-- Internal error: the dynamic type set of the formal
+								-- arguments should have been computed at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+								-- The argument is declared of type 'TYPED_POINTER [XX]'.
+								-- In that case we use the corresponding pointer (i.e.
+								-- the first attribute of the object).
+							l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+							if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+									-- This should have been checked already.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+								current_file.put_character ('(')
+								print_type_declaration (l_actual_parameter, current_file)
+								if l_actual_parameter.is_expanded then
+									current_file.put_character ('*')
+								end
+								current_file.put_character (')')
+								current_file.put_character ('(')
+								print_argument_name (l_name, current_file)
+								current_file.put_character ('.')
+								current_file.put_character ('a')
+								current_file.put_character ('1')
+								current_file.put_character (')')
+							end
+						else
+							print_argument_name (l_name, current_file)
+						end
+						i := i + 1
+					end
+				else
+					from i := 1 until i > nb_args loop
+						if i /= 1 then
+							current_file.put_character (',')
+						end
+						l_name := a_arguments.formal_argument (i).name
+						l_argument_type_set := current_feature.argument_type_set (i)
+						if l_argument_type_set = Void then
+								-- Internal error: the dynamic type set of the formal arguments
+								-- should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif l_argument_type_set.static_type = current_system.pointer_type then
+								-- When compiling with C++, MSVC++ does not want to convert
+								-- 'void*' to non-'void*' implicitly.
+							current_file.put_string ("(char*)")
+							print_argument_name (l_name, current_file)
+						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+								-- The argument is declared of type 'TYPED_POINTER [XX]'.
+								-- In that case we use the corresponding pointer (i.e.
+								-- the first attribute of the object).
+							l_actual_parameters := l_argument_type_set.static_type.base_type.actual_parameters
+							if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+									-- This should have been checked already.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_actual_parameter := current_system.dynamic_type (l_actual_parameters.type (1), universe.any_type)
+								current_file.put_character ('(')
+								print_type_declaration (l_actual_parameter, current_file)
+								if l_actual_parameter.is_expanded then
+									current_file.put_character ('*')
+								end
+								current_file.put_character (')')
+								current_file.put_character ('(')
+								print_argument_name (l_name, current_file)
+								current_file.put_character ('.')
+								current_file.put_character ('a')
+								current_file.put_character ('1')
+								current_file.put_character (')')
+							end
+						else
+							print_argument_name (l_name, current_file)
+						end
+						i := i + 1
+					end
+				end
+				current_file.put_character (')')
+			else
+				current_file.put_character ('(')
 				current_file.put_character (')')
 			end
 			current_file.put_character (';')
@@ -21027,6 +21330,7 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("%"eif_memory.h%"") then
 					include_runtime_header_file ("eif_memory.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_misc.h%"") then
+					include_runtime_header_file ("ge_dll.h", False, a_file)
 					include_runtime_header_file ("eif_misc.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_object_id.h%"") then
 					include_runtime_header_file ("eif_object_id.h", False, a_file)
@@ -21067,6 +21371,8 @@ feature {NONE} -- Include files
 			if not included_runtime_header_files.has (a_filename) then
 				if a_filename.same_string ("ge_arguments.h") then
 					included_runtime_c_files.force ("ge_arguments.c")
+				elseif a_filename.same_string ("ge_dll.h") then
+					included_runtime_c_files.force ("ge_dll.c")
 				elseif a_filename.same_string ("ge_exception.h") then
 					included_runtime_c_files.force ("ge_exception.c")
 				elseif a_filename.same_string ("ge_deep.h") then
@@ -22172,6 +22478,14 @@ feature {NONE} -- External regexp
 			-- Regexp: C++ [blocking] inline [use {<include> "," ...}+]
 			-- \3: include files
 
+	external_dllwin_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: dllwin [blocking] <dll_file> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+			-- \2: dll file
+			-- \5: has signature arguments
+			-- \6: signature arguments
+			-- \11: signature result
+			-- \18: include files
+
 	make_external_regexps is
 			-- Create external regular expressions.
 		do
@@ -22202,6 +22516,9 @@ feature {NONE} -- External regexp
 				-- Regexp: C++ [blocking] inline [use {<include> "," ...}+]
 			create external_cpp_inline_regexp.make
 			external_cpp_inline_regexp.compile ("[ \t\r\n]*[Cc]\+\+[ \t\r\n]+(blocking[ \t\r\n]+)?inline([ \t\r\n]+use[ \t\r\n]*((.|\n)+))?")
+				-- Regexp: dllwin [blocking] <dll_file> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+			create external_dllwin_regexp.make
+			external_dllwin_regexp.compile ("[ \t\r\n]*[Dd][Ll][Ll][Ww][Ii][Nn][ \t\r\n]+(blocking[ \t\r\rn]+)?([^ \t\r\n]+)([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))?")
 		ensure
 			external_c_regexp_not_void: external_c_regexp /= Void
 			external_c_regexp_compiled: external_c_regexp.is_compiled
@@ -22221,6 +22538,8 @@ feature {NONE} -- External regexp
 			external_cpp_regexp_compiled: external_cpp_regexp.is_compiled
 			external_cpp_inline_regexp_not_void: external_cpp_inline_regexp /= Void
 			external_cpp_inline_regexp_compiled: external_cpp_inline_regexp.is_compiled
+			external_dllwin_regexp_not_void: external_dllwin_regexp /= Void
+			external_dllwin_regexp_compiled: external_dllwin_regexp.is_compiled
 		end
 
 feature {NONE} -- Constants
@@ -22414,6 +22733,8 @@ invariant
 	external_cpp_regexp_compiled: external_cpp_regexp.is_compiled
 	external_cpp_inline_regexp_not_void: external_cpp_inline_regexp /= Void
 	external_cpp_inline_regexp_compiled: external_cpp_inline_regexp.is_compiled
+	external_dllwin_regexp_not_void: external_dllwin_regexp /= Void
+	external_dllwin_regexp_compiled: external_dllwin_regexp.is_compiled
 	split_threshold_positive: split_threshold > 0
 	system_name_not_void: system_name /= Void
 

@@ -4,7 +4,7 @@
 		"C functions used to implement class EXECUTION_ENVIRONMENT"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ extern void eif_system_asynchronous(char* cmd);
 
 #ifdef EIF_WINDOWS
 /* DLL declarations */
-#define eif_load_dll(name) LoadLibrary((LPCSTR)name)
+#define eif_load_dll(name) GE_load_dll(name)
 #endif
 
 #ifdef __cplusplus
