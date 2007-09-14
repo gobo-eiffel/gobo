@@ -2465,6 +2465,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 		require
 			name_not_void: a_feature_name /= Void or else a_alias /= Void
 		local
+			l_result_type: ET_DYNAMIC_TYPE
+			l_boolean_result: BOOLEAN
 			l_alias_value: ET_MANIFEST_STRING
 			i, nb_args: INTEGER
 			l_splitter: ST_SPLITTER
@@ -2477,13 +2479,20 @@ print ("**** language not recognized: " + l_language_string + "%N")
 		do
 			print_indentation
 			if a_result_type_set /= Void then
+				l_result_type := a_result_type_set.static_type
 				print_result_name (current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				print_type_declaration (a_result_type_set.static_type, current_file)
+				print_type_declaration (l_result_type, current_file)
 				current_file.put_character (')')
+				if l_result_type = current_system.boolean_type then
+						-- Convert C boolean value to Eiffel boolean value.
+					l_boolean_result := True
+					current_file.put_string (c_eif_test)
+					current_file.put_character ('(')
+				end
 				if a_signature_result /= Void then
 					current_file.put_character ('(')
 					current_file.put_string (a_signature_result)
@@ -2607,6 +2616,9 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character ('(')
 				current_file.put_character (')')
 			end
+			if l_boolean_result then
+				current_file.put_character (')')
+			end
 			current_file.put_character (';')
 			current_file.put_new_line
 		end
@@ -2619,6 +2631,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			a_struct_type_not_void: a_struct_type /= Void
 			a_field_name_not_void: a_field_name /= Void
 		local
+			l_result_type: ET_DYNAMIC_TYPE
 			l_field_name: STRING
 			l_name: ET_IDENTIFIER
 			nb_args: INTEGER
@@ -2627,11 +2640,16 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_actual_parameter: ET_DYNAMIC_TYPE
 		do
 			if a_result_type_set /= Void then
+				l_result_type := a_result_type_set.static_type
 				print_result_name (current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_type_cast (a_result_type_set.static_type, current_file)
+				print_type_cast (l_result_type, current_file)
+				if l_result_type = current_system.boolean_type then
+						-- Convert C boolean value to Eiffel boolean value.
+					current_file.put_string (c_eif_test)
+				end
 				current_file.put_character ('(')
 			end
 			l_field_name := a_field_name
@@ -2700,7 +2718,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_character ('>')
 			current_file.put_string (l_field_name)
 			current_file.put_character (')')
-			if a_result_type_set = Void then
+			if l_result_type = Void then
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
@@ -2749,7 +2767,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 -- TODO: error
 				end
 			end
-			if a_result_type_set /= Void then
+			if l_result_type /= Void then
 				current_file.put_character (')')
 			end
 			current_file.put_character (';')
@@ -2957,6 +2975,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			name_not_void: a_feature_name /= Void or else a_alias /= Void
 			a_cpp_class_type_not_void: a_cpp_class_type /= Void
 		local
+			l_result_type: ET_DYNAMIC_TYPE
+			l_boolean_result: BOOLEAN
 			l_alias_value: ET_MANIFEST_STRING
 			i, nb_args: INTEGER
 			l_splitter: ST_SPLITTER
@@ -2969,18 +2989,24 @@ print ("**** language not recognized: " + l_language_string + "%N")
 		do
 			print_indentation
 			if a_result_type_set /= Void then
+				l_result_type := a_result_type_set.static_type
 				print_result_name (current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				print_type_declaration (a_result_type_set.static_type, current_file)
+				print_type_declaration (l_result_type, current_file)
 				current_file.put_character (')')
+				if l_result_type = current_system.boolean_type then
+						-- Convert C boolean value to Eiffel boolean value.
+					l_boolean_result := True
+					current_file.put_string (c_eif_test)
+					current_file.put_character ('(')
+				end
 				if a_signature_result /= Void then
 					current_file.put_character ('(')
 					current_file.put_string (a_signature_result)
 					current_file.put_character (')')
-					current_file.put_character ('(')
 				end
 			end
 			if a_arguments = Void or else a_arguments.is_empty then
@@ -3141,7 +3167,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				end
 				current_file.put_character (')')
 			end
-			if a_result_type_set /= Void and then a_signature_result /= Void then
+			if l_boolean_result then
 				current_file.put_character (')')
 			end
 			current_file.put_character (';')
@@ -3162,6 +3188,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			name_not_void: a_feature_name /= Void or else a_alias /= Void
 			a_dll_file_not_void: a_dll_file /= Void
 		local
+			l_result_type: ET_DYNAMIC_TYPE
+			l_boolean_result: BOOLEAN
 			l_alias_value: ET_MANIFEST_STRING
 			i, nb_args: INTEGER
 			l_splitter: ST_SPLITTER
@@ -3244,13 +3272,20 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_new_line
 			print_indentation
 			if a_result_type_set /= Void then
+				l_result_type := a_result_type_set.static_type
 				print_result_name (current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				print_type_declaration (a_result_type_set.static_type, current_file)
+				print_type_declaration (l_result_type, current_file)
 				current_file.put_character (')')
+				if l_result_type = current_system.boolean_type then
+						-- Convert C boolean value to Eiffel boolean value.
+					l_boolean_result := True
+					current_file.put_string (c_eif_test)
+					current_file.put_character ('(')
+				end
 				if a_signature_result /= Void then
 					current_file.put_character ('(')
 					current_file.put_string (a_signature_result)
@@ -3259,11 +3294,11 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 			current_file.put_character ('(')
 			current_file.put_character ('(')
-			if a_result_type_set /= Void then
+			if l_result_type /= Void then
 				if a_signature_result /= Void then
 					current_file.put_string (a_signature_result)
 				else
-					print_type_declaration (a_result_type_set.static_type, current_file)
+					print_type_declaration (l_result_type, current_file)
 				end
 			else
 				current_file.put_string (c_void)
@@ -3426,6 +3461,9 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (')')
 			else
 				current_file.put_character ('(')
+				current_file.put_character (')')
+			end
+			if l_boolean_result then
 				current_file.put_character (')')
 			end
 			current_file.put_character (';')
@@ -22577,6 +22615,7 @@ feature {NONE} -- Constants
 	c_eif_real_32: STRING is "EIF_REAL_32"
 	c_eif_real_64: STRING is "EIF_REAL_64"
 	c_eif_reference: STRING is "EIF_REFERENCE"
+	c_eif_test: STRING is "EIF_TEST"
 	c_eif_true: STRING is "EIF_TRUE"
 	c_eif_type: STRING is "EIF_TYPE"
 	c_eif_void: STRING is "EIF_VOID"
