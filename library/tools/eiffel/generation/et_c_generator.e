@@ -9908,11 +9908,9 @@ feature {NONE} -- Agent generation
 				print_agent_closed_operand_name (a_name, current_file)
 			else
 -- TODO: long names
-				current_file.put_character ('(')
-				print_expression (a_target)
-				current_file.put_character (')')
-				current_file.put_string (c_arrow)
-				print_agent_closed_operand_name (a_name, current_file)
+				short_names := True
+				print_agent_closed_operand_access (a_name, a_target)
+				short_names := False
 			end
 		end
 
@@ -20301,8 +20299,9 @@ feature {NONE} -- Type generation
 				a_file.put_integer (a_type.id)
 			else
 -- TODO: long names
-				a_file.put_character ('T')
-				a_file.put_integer (a_type.id)
+				short_names := True
+				print_type_name (a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20324,11 +20323,9 @@ feature {NONE} -- Type generation
 				a_file.put_integer (a_type.id)
 			else
 -- TODO: long names
-				a_file.put_character ('T')
-				if a_type.is_expanded and then not a_type.is_generic then
-					a_file.put_character ('b')
-				end
-				a_file.put_integer (a_type.id)
+				short_names := True
+				print_boxed_type_name (a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20344,8 +20341,9 @@ feature {NONE} -- Type generation
 				a_file.put_integer (a_type.id)
 			else
 -- TODO: long names
-				a_file.put_character ('S')
-				a_file.put_integer (a_type.id)
+				short_names := True
+				print_struct_name (a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20367,11 +20365,9 @@ feature {NONE} -- Type generation
 				a_file.put_integer (a_type.id)
 			else
 -- TODO: long names
-				a_file.put_character ('S')
-				if a_type.is_expanded and then not a_type.is_generic then
-					a_file.put_character ('b')
-				end
-				a_file.put_integer (a_type.id)
+				short_names := True
+				print_boxed_struct_name (a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20386,8 +20382,9 @@ feature {NONE} -- Type generation
 				a_file.put_character ('0')
 			else
 -- TODO: long names
-				a_file.put_character ('T')
-				a_file.put_character ('0')
+				short_names := True
+				print_eif_any_type_name (a_file)
+				short_names := False
 			end
 		end
 
@@ -20513,8 +20510,9 @@ feature {NONE} -- Default initialization values generation
 				a_file.put_integer (a_type.id)
 			else
 -- TODO: long names
-				a_file.put_string (c_ge_default)
-				a_file.put_integer (a_type.id)
+				short_names := True
+				print_default_name (a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20725,14 +20723,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_integer (a_routine.id)
 			else
 -- TODO: long names
-				print_type_name (a_type, a_file)
-				a_file.put_character ('f')
-				l_precursor ?= a_routine
-				if l_precursor /= Void then
-					a_file.put_integer (l_precursor.current_feature.id)
-					a_file.put_character ('p')
-				end
-				a_file.put_integer (a_routine.id)
+				short_names := True
+				print_routine_name (a_routine, a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20758,14 +20751,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_integer (a_routine.id)
 			else
 -- TODO: long names
-				print_type_name (a_type, a_file)
-				a_file.put_character ('s')
-				l_precursor ?= a_routine
-				if l_precursor /= Void then
-					a_file.put_integer (l_precursor.current_feature.id)
-					a_file.put_character ('p')
-				end
-				a_file.put_integer (a_routine.id)
+				short_names := True
+				print_static_routine_name (a_routine, a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20784,9 +20772,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_integer (a_procedure.id)
 			else
 -- TODO: long names
-				print_type_name (a_type, a_file)
-				a_file.put_character ('c')
-				a_file.put_integer (a_procedure.id)
+				short_names := True
+				print_creation_procedure_name (a_procedure, a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20803,8 +20791,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_integer (an_attribute.id)
 			else
 -- TODO: long names
-				a_file.put_character ('a')
-				a_file.put_integer (an_attribute.id)
+				short_names := True
+				print_attribute_name (an_attribute, a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20819,7 +20808,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_string (c_id)
 			else
 -- TODO: long names
-				a_file.put_string (c_id)
+				short_names := True
+				print_attribute_type_id_name (a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20835,8 +20826,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_character ('2')
 			else
 -- TODO: long names
-				a_file.put_character ('z')
-				a_file.put_character ('2')
+				short_names := True
+				print_attribute_special_item_name (a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20852,8 +20844,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_character ('1')
 			else
 -- TODO: long names
-				a_file.put_character ('z')
-				a_file.put_character ('1')
+				short_names := True
+				print_attribute_special_count_name (a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20869,8 +20862,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_integer (i)
 			else
 -- TODO: long names
-				a_file.put_character ('z')
-				a_file.put_integer (i)
+				short_names := True
+				print_attribute_tuple_item_name (i, a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20889,8 +20883,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_character ('1')
 			else
 -- TODO: long names
-				a_file.put_character ('z')
-				a_file.put_character ('1')
+				short_names := True
+				print_boxed_attribute_item_name (a_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -20939,34 +20934,9 @@ feature {NONE} -- Feature name generation
 				end
 			else
 -- TODO: long names
-				print_type_name (a_target_type, a_file)
-				a_file.put_character ('x')
-				if a_call.name.is_tuple_label then
-					a_file.put_character ('t')
-				end
-				a_file.put_integer (a_call.name.seed)
-				l_arguments := a_call.arguments
-				if l_arguments /= Void then
-					nb := l_arguments.count
-					from i := 1 until i > nb loop
-						l_argument_type_set := a_caller.dynamic_type_set (l_arguments.actual_argument (i))
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the
-								-- actual arguments of the call should be known
-								-- at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_argument_type := l_argument_type_set.static_type
-							if l_argument_type.is_expanded then
-								print_type_name (l_argument_type, a_file)
-							else
-								print_eif_any_type_name (a_file)
-							end
-						end
-						i := i + 1
-					end
-				end
+				short_names := True
+				print_call_name (a_call, a_caller, a_target_type, a_file)
+				short_names := False
 			end
 		end
 
@@ -21003,8 +20973,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_integer (a_name.seed)
 			else
 -- TODO: long names
-				a_file.put_character ('a')
-				a_file.put_integer (a_name.seed)
+				short_names := True
+				print_argument_name (a_name, a_file)
+				short_names := False
 			end
 		end
 
@@ -21021,8 +20992,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_integer (a_name.seed)
 			else
 -- TODO: long names
-				a_file.put_character ('l')
-				a_file.put_integer (a_name.seed)
+				short_names := True
+				print_local_name (a_name, a_file)
+				short_names := False
 			end
 		end
 
@@ -21039,8 +21011,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_integer (a_name.seed)
 			else
 -- TODO: long names
-				a_file.put_character ('t')
-				a_file.put_integer (a_name.seed)
+				short_names := True
+				print_temp_name (a_name, a_file)
+				short_names := False
 			end
 		end
 
@@ -21057,8 +21030,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_integer (a_name.seed)
 			else
 -- TODO: long names
-				a_file.put_character ('a')
-				a_file.put_integer (a_name.seed)
+				short_names := True
+				print_agent_open_operand_name (a_name, a_file)
+				short_names := False
 			end
 		end
 
@@ -21075,8 +21049,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_integer (a_name.seed)
 			else
 -- TODO: long names
-				a_file.put_character ('z')
-				a_file.put_integer (a_name.seed)
+				short_names := True
+				print_agent_closed_operand_name (a_name, a_file)
+				short_names := False
 			end
 		end
 
@@ -21090,7 +21065,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_character ('C')
 			else
 -- TODO: long names
-				a_file.put_character ('C')
+				short_names := True
+				print_current_name (a_file)
+				short_names := False
 			end
 		end
 
@@ -21104,7 +21081,9 @@ feature {NONE} -- Feature name generation
 				a_file.put_character ('R')
 			else
 -- TODO: long names
-				a_file.put_character ('R')
+				short_names := True
+				print_result_name (a_file)
+				short_names := False
 			end
 		end
 
