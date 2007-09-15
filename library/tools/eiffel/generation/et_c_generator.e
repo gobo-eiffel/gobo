@@ -206,7 +206,22 @@ feature -- Access
 
 feature -- Status report
 
-	is_finalize: BOOLEAN
+	short_names: BOOLEAN
+			-- Should short names be generated for type and feature names?
+
+	has_fatal_error: BOOLEAN
+			-- Has a fatal error occurred when generating `current_system'?
+
+feature -- Compilation options
+
+	console_application_mode: BOOLEAN is
+			-- Should the generated application be a console application
+			-- (or a Windows GUI application)?
+		do
+			Result := universe.console_application_mode
+		end
+
+	finalize_mode: BOOLEAN
 			-- Compilation with optimizations turned on?
 
 	split_mode: BOOLEAN
@@ -221,23 +236,23 @@ feature -- Status report
 			-- in a new C file if the current C file is already larger
 			-- than `split_threshold' bytes.
 
+	trace_mode: BOOLEAN is
+			-- Should the generated application be compiled with trace turned on?
+		do
+			Result := universe.trace_mode
+		end
+
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 
-	short_names: BOOLEAN
-			-- Should short names be generated for type and feature names?
+feature -- Compilation options setting
 
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred when generating `current_system'?
-
-feature -- Status setting
-
-	set_finalize (b: BOOLEAN) is
-			-- Set `is_finalize' to `b'.
+	set_finalize_mode (b: BOOLEAN) is
+			-- Set `finalize_mode' to `b'.
 		do
-			is_finalize := b
+			finalize_mode := b
 		ensure
-			finalize_set: is_finalize = b
+			finalize_mode_set: finalize_mode = b
 		end
 
 	set_split_mode (b: BOOLEAN) is
@@ -490,13 +505,13 @@ feature {NONE} -- Compilation script generation
 			l_file.open_read
 			if l_file.is_open_read then
 				create l_c_config_parser.make (error_handler)
-				if not is_finalize then
+				if not finalize_mode then
 					l_c_config_parser.define_value ("True", "EIF_WORKBENCH")
 				end
 				if use_boehm_gc then
 					l_c_config_parser.define_value ("True", "EIF_BOEHM_GC")
 				end
-				if universe.console_application then
+				if console_application_mode then
 					l_c_config_parser.define_value ("True", "EIF_CONSOLE")
 				end
 				l_c_config_parser.parse_file (l_file)
@@ -555,6 +570,18 @@ feature {NONE} -- C code Generation
 				header_file := l_header_file
 				current_file := current_function_body_buffer
 				generate_ids
+				if trace_mode then
+					header_file.put_string (c_define)
+					header_file.put_character (' ')
+					header_file.put_line (c_eif_trace)
+					header_file.put_new_line
+				end
+				if use_boehm_gc then
+					header_file.put_string (c_define)
+					header_file.put_character (' ')
+					header_file.put_line (c_eif_boehm_gc)
+					header_file.put_new_line
+				end
 				include_runtime_header_file ("ge_eiffel.h", True, header_file)
 				header_file.put_new_line
 				include_runtime_header_file ("ge_arguments.h", True, header_file)
@@ -565,10 +592,6 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_main.h", True, header_file)
 				header_file.put_new_line
-				if use_boehm_gc then
-					header_file.put_line ("#define EIF_BOEHM_GC")
-					header_file.put_new_line
-				end
 				include_runtime_header_file ("ge_gc.h", True, header_file)
 				header_file.put_new_line
 				print_start_extern_c (header_file)
@@ -1127,14 +1150,14 @@ feature {NONE} -- Feature generation
 				current_file.put_new_line
 			end
 			current_file := current_function_body_buffer
-			if l_result_type_set /= Void and then l_result_type_set.is_empty then
--- TODO: build full dynamic type sets, recursively.
-				print_indentation
-				current_file.put_line ("printf(%"Dynamic type set not built for external feature " + current_type.base_type.to_text + "." + a_feature.lower_name + "\n%");")
-			end
 			if a_creation then
 				print_malloc_current (a_feature)
 			end
+			if l_result_type_set /= Void and then l_result_type_set.is_empty then
+-- TODO: build full dynamic type sets, recursively.
+				print_feature_info_message_call ("Dynamic type set not built for external feature ")
+			end
+			print_feature_trace_message_call (True)
 			if l_is_inline then
 				if l_is_cpp then
 						-- Regexp: C++ [blocking] inline [use {<include> "," ...}+]
@@ -1241,7 +1264,7 @@ feature {NONE} -- Feature generation
 					l_alias_value := l_alias.manifest_string
 					l_struct_field_name := l_alias_value.value
 				else
-					l_struct_field_name := a_feature.implementation_feature.name.lower_name
+					l_struct_field_name := a_feature.implementation_feature.lower_name
 				end
 				create l_splitter.make_with_separators (",")
 				l_list := l_splitter.split (l_signature_arguments)
@@ -1297,6 +1320,8 @@ feature {NONE} -- Feature generation
 			else
 print ("**** language not recognized: " + l_language_string + "%N")
 			end
+				-- Note that the trace message will not be called when the inline C function calls 'return' in its body.
+			print_feature_trace_message_call (False)
 			if not l_is_inline and l_result_type /= Void then
 				print_indentation
 				current_file.put_string (c_return)
@@ -3737,6 +3762,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			if a_creation then
 				print_malloc_current (a_feature)
 			end
+			print_feature_trace_message_call (True)
 			if l_once_feature /= Void then
 				print_indentation
 				current_file.put_string (c_if)
@@ -3834,6 +3860,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_string ("GE_rescue = r.previous;")
 				current_file.put_new_line
 			end
+			print_feature_trace_message_call (False)
 			if l_result_type /= Void then
 				if l_once_feature /= Void then
 					print_indentation
@@ -10012,7 +10039,7 @@ feature {NONE} -- Agent generation
 				header_file.put_string (" in feature ")
 				header_file.put_string (current_type.base_type.unaliased_to_text)
 				header_file.put_character ('.')
-				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
+				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
 				header_file.put_character (' ')
 				header_file.put_character ('*')
 				header_file.put_character ('/')
@@ -10142,7 +10169,7 @@ feature {NONE} -- Agent generation
 				current_file.put_string (" in feature ")
 				current_file.put_string (current_type.base_type.unaliased_to_text)
 				current_file.put_character ('.')
-				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
+				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('/')
@@ -10253,7 +10280,7 @@ feature {NONE} -- Agent generation
 				header_file.put_string (" in feature ")
 				header_file.put_string (current_type.base_type.unaliased_to_text)
 				header_file.put_character ('.')
-				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
+				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
 				header_file.put_character (' ')
 				header_file.put_character ('*')
 				header_file.put_character ('/')
@@ -10266,7 +10293,7 @@ feature {NONE} -- Agent generation
 				current_file.put_string (" in feature ")
 				current_file.put_string (current_type.base_type.unaliased_to_text)
 				current_file.put_character ('.')
-				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.name.lower_name, "*/", "star/"))
+				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('/')
@@ -10621,6 +10648,7 @@ feature {NONE} -- Agent generation
 				current_file.put_new_line
 			end
 			current_file := current_function_body_buffer
+			print_agent_trace_message_call (an_agent, True)
 			if l_rescue /= Void then
 				print_indentation
 				current_file.put_string (c_if)
@@ -10674,6 +10702,7 @@ feature {NONE} -- Agent generation
 				current_file.put_string ("GE_rescue = r.previous;")
 				current_file.put_new_line
 			end
+			print_agent_trace_message_call (an_agent, False)
 			if l_result_type /= Void then
 				print_indentation
 				current_file.put_string (c_return)
@@ -13031,8 +13060,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_new_line
 					indent
 -- TODO: what to do if Current is not large enough?
-					current_file.put_string ("printf(%"Exception in SPECIAL.standard_copy: target not big enough\n%");")
-					current_file.put_new_line
+					print_info_message_call ("Exception in SPECIAL.standard_copy: target not big enough")
 					dedent
 					print_indentation
 					current_file.put_character ('}')
@@ -18771,8 +18799,7 @@ feature {NONE} -- C function generation
 			indent
 			if a_result_type = Void then
 -- TODO: raise a "call on void target" exception.
-				print_indentation
-				current_file.put_line ("printf(%"Call on Void target!\n%");")
+				print_info_message_call ("Call on Void target!")
 				print_indentation
 				current_file.put_line ("exit(1);")
 			else
@@ -18966,6 +18993,117 @@ feature {NONE} -- Malloc
 -- TODO: initialize items when expanded.
 				end
 			end
+		end
+
+feature {NONE} -- Trace generation
+
+	print_feature_trace_message_call (in: BOOLEAN) is
+			-- Print to `current_file' a call that will display to 'stderr' information
+			-- about the fact that we just entered (if `in' is True) or just exited
+			-- (if `in' is False) the current feature.
+		do
+			if trace_mode then
+				current_file.put_string (c_ifdef)
+				current_file.put_character (' ')
+				current_file.put_line (c_eif_trace)
+				if in then
+					print_feature_info_message_call ("-> ")
+				else
+					print_feature_info_message_call ("<- ")
+				end
+				current_file.put_line (c_endif)
+			end
+		end
+
+	print_agent_trace_message_call (an_agent: ET_AGENT; in: BOOLEAN) is
+			-- Print to `current_file' a call that will display to 'stderr' information
+			-- about the fact that we just entered (if `in' is True) or just exited
+			-- (if `in' is False) the agent `an_agent' appearing in current feature.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			if trace_mode then
+				current_file.put_string (c_ifdef)
+				current_file.put_character (' ')
+				current_file.put_line (c_eif_trace)
+				if in then
+					if an_agent.is_inline_agent then
+						print_feature_info_message_call ("-> inline agent at line " + an_agent.position.line.out + " in ")
+					else
+						print_feature_info_message_call ("-> agent at line " + an_agent.position.line.out + " in ")
+					end
+				else
+					if an_agent.is_inline_agent then
+						print_feature_info_message_call ("<- inline agent at line " + an_agent.position.line.out + " in ")
+					else
+						print_feature_info_message_call ("<- agent at line " + an_agent.position.line.out + " in ")
+					end
+				end
+				current_file.put_line (c_endif)
+			end
+		end
+
+	print_feature_info_message_call (a_message: STRING) is
+			-- Print to `current_file' a call that will display to 'stderr' information
+			-- about the current feature of form: `a_message' TYPE.feature
+		require
+			a_message_not_void: a_message /= Void
+		do
+			print_show_console_call
+			current_file.put_string (c_fprintf)
+			current_file.put_character ('(')
+			current_file.put_string (c_stderr)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			current_file.put_character ('%"')
+			current_file.put_string (a_message)
+			current_file.put_string (current_type.base_type.unaliased_to_text)
+			current_file.put_character ('.')
+			current_file.put_string (STRING_.replaced_all_substrings (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "\", "\\"), "%"", "\%""))
+			current_file.put_character ('\')
+			current_file.put_character ('n')
+			current_file.put_character ('%"')
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_info_message_call (a_message: STRING) is
+			-- Print to `current_file' a call that will display to 'stderr'
+			-- information form: `a_message'
+		require
+			a_message_not_void: a_message /= Void
+		do
+			print_show_console_call
+			current_file.put_string (c_fprintf)
+			current_file.put_character ('(')
+			current_file.put_string (c_stderr)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			current_file.put_character ('%"')
+			current_file.put_string (a_message)
+			current_file.put_character ('\')
+			current_file.put_character ('n')
+			current_file.put_character ('%"')
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_show_console_call is
+			-- Print to `current_file' a call to 'GE_show_console' to make sure
+			-- that a DOS console is available for Windows applications.
+		do
+			current_file.put_string (c_ifdef)
+			current_file.put_character (' ')
+			current_file.put_line (c_eif_windows)
+			print_indentation
+			current_file.put_string (c_ge_show_console)
+			current_file.put_character ('(')
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+			current_file.put_line (c_endif)
 		end
 
 feature {NONE} -- Type generation
@@ -21074,7 +21212,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_character (' ')
 			a_file.put_string (a_type.base_type.unaliased_to_text)
 			a_file.put_character ('.')
-			a_file.put_string (STRING_.replaced_all_substrings (a_feature.name.lower_name, "*/", "star/"))
+			a_file.put_string (STRING_.replaced_all_substrings (a_feature.lower_name, "*/", "star/"))
 			a_file.put_character (' ')
 			a_file.put_character ('*')
 			a_file.put_character ('/')
@@ -22583,6 +22721,7 @@ feature {NONE} -- Constants
 	c_double: STRING is "double"
 	c_eif_any: STRING is "EIF_ANY"
 	c_eif_boolean: STRING is "EIF_BOOLEAN"
+	c_eif_boehm_gc: STRING is "EIF_BOEHM_GC"
 	c_eif_character: STRING is "EIF_CHARACTER"
 	c_eif_character_8: STRING is "EIF_CHARACTER_8"
 	c_eif_character_32: STRING is "EIF_CHARACTER_32"
@@ -22608,14 +22747,18 @@ feature {NONE} -- Constants
 	c_eif_real_64: STRING is "EIF_REAL_64"
 	c_eif_reference: STRING is "EIF_REFERENCE"
 	c_eif_test: STRING is "EIF_TEST"
+	c_eif_trace: STRING is "EIF_TRACE"
 	c_eif_true: STRING is "EIF_TRUE"
 	c_eif_type: STRING is "EIF_TYPE"
 	c_eif_void: STRING is "EIF_VOID"
 	c_eif_wide_char: STRING is "EIF_WIDE_CHAR"
+	c_eif_windows: STRING is "EIF_WINDOWS"
 	c_else: STRING is "else"
+	c_endif: STRING is "#endif"
 	c_extern: STRING is "extern"
 	c_float: STRING is "float"
 	c_for: STRING is "for"
+	c_fprintf: STRING is "fprintf"
 	c_ge_alloc: STRING is "GE_alloc"
 	c_ge_argc: STRING is "GE_argc"
 	c_ge_argv: STRING is "GE_argv"
@@ -22645,11 +22788,13 @@ feature {NONE} -- Constants
 	c_ge_rescue: STRING is "GE_rescue"
 	c_ge_retry: STRING is "GE_retry"
 	c_ge_setjmp: STRING is "GE_setjmp"
+	c_ge_show_console: STRING is "GE_show_console"
 	c_ge_types: STRING is "GE_types"
 	c_ge_void: STRING is "GE_void"
 	c_goto: STRING is "goto"
 	c_id: STRING is "id"
 	c_if: STRING is "if"
+	c_ifdef: STRING is "#ifdef"
 	c_include: STRING is "#include"
 	c_int: STRING is "int"
 	c_int8_t: STRING is "int8_t"
@@ -22661,6 +22806,7 @@ feature {NONE} -- Constants
 	c_memcpy: STRING is "memcpy"
 	c_return: STRING is "return"
 	c_sizeof: STRING is "sizeof"
+	c_stderr: STRING is "stderr"
 	c_struct: STRING is "struct"
 	c_switch: STRING is "switch"
 	c_type_id: STRING is "type_id"

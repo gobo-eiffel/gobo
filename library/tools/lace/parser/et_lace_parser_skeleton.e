@@ -92,6 +92,7 @@ feature -- Parsing
 			metadata_cache_path_value := Void
 			msil_clr_version_value := Void
 			console_application_value := True
+			trace_value := False
 			yyparse
 		end
 
@@ -128,6 +129,10 @@ feature -- Default options
 
 	override_cluster_names: DS_HASH_SET [ET_IDENTIFIER]
 			-- Override cluster names, if any
+
+	trace_value: BOOLEAN
+			-- Value of 'trace' default option, if any;
+			-- False by default
 
 	external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			-- External include pathnames
@@ -209,6 +214,15 @@ feature {NONE} -- AST factory
 					report_error ("Option 'metadata_cache_path' already set to '" + metadata_cache_path_value.name + "'.")
 				else
 					metadata_cache_path_value := a_value
+				end
+			elseif a_name.same_identifier (trace_option) then
+				if a_value.same_identifier (yes_value) then
+					trace_value := True
+				elseif a_value.same_identifier (no_value) then
+					trace_value := False
+				else
+						-- TODO: better error handling
+					report_error ("Option 'trace' should be set to either 'yes' or 'no'.")
 				end
 			end
 		end
@@ -311,7 +325,8 @@ feature {NONE} -- AST factory
 			create external_include_pathnames.make (20)
 			Result.set_external_object_pathnames (external_object_pathnames)
 			create external_object_pathnames.make (20)
-			Result.set_console_application (console_application_value)
+			Result.set_console_application_mode (console_application_value)
+			Result.set_trace_mode (trace_value)
 		ensure
 			universe_not_void: Result /= Void
 		end
@@ -407,6 +422,14 @@ feature {NONE} -- Constants
 			Result := new_identifier ("override_cluster")
 		ensure
 			override_cluster_option_not_void: Result /= Void
+		end
+
+	trace_option: ET_IDENTIFIER is
+			-- 'trace' external option name
+		once
+			Result := new_identifier ("trace")
+		ensure
+			trace_option_not_void: Result /= Void
 		end
 
 	no_value: ET_IDENTIFIER is

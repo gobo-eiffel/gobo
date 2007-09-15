@@ -124,9 +124,11 @@ feature {NONE} -- Xace AST factory
 			end
 			l_options := Result.options
 			if l_options /= Void then
-				Result.set_console_application (l_options.console_application)
+				Result.set_console_application_mode (l_options.console_application)
+				Result.set_trace_mode (l_options.trace)
 			else
-				Result.set_console_application (True)
+				Result.set_console_application_mode (True)
+				Result.set_trace_mode (False)
 			end
 		end
 

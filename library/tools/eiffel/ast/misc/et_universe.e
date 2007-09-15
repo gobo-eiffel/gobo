@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			create external_include_pathnames.make (20)
 			create external_object_pathnames.make (20)
 			create external_library_pathnames.make (20)
-			console_application := True
+			console_application_mode := True
 			make_basic_classes
 			create null_processor.make (Current)
 			provider_checker := null_processor
@@ -1581,9 +1581,12 @@ feature -- Setting
 
 feature -- Compilation options
 
-	console_application: BOOLEAN
+	console_application_mode: BOOLEAN
 			-- Should the generated application be a console application
 			-- (or a Windows GUI application)?
+
+	trace_mode: BOOLEAN
+			-- Should the generated application be compiled with trace turned on?
 
 	system_name: STRING
 			-- Name of system
@@ -1599,12 +1602,20 @@ feature -- Compilation options
 
 feature -- Compilation options setting
 
-	set_console_application (b: BOOLEAN) is
-			-- Set `console_application' to `b'.
+	set_console_application_mode (b: BOOLEAN) is
+			-- Set `console_application_mode' to `b'.
 		do
-			console_application := b
+			console_application_mode := b
 		ensure
-			console_application_set: console_application = b
+			console_application_mode_set: console_application_mode = b
+		end
+
+	set_trace_mode (b: BOOLEAN) is
+			-- Set `trace_mode' to `b'.
+		do
+			trace_mode := b
+		ensure
+			trace_mode_set: trace_mode = b
 		end
 
 	set_system_name (a_name: like system_name) is
