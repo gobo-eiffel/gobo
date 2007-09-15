@@ -215,7 +215,7 @@ feature {NONE} -- Processing
 				end
 				create l_generator.make (l_system)
 				l_generator.set_use_boehm_gc (use_boehm_gc)
-				l_generator.set_finalize (is_finalize)
+				l_generator.set_finalize_mode (is_finalize)
 				l_generator.set_split_mode (not no_split)
 				if split_size > 0 then
 					l_generator.set_split_threshold (split_size)
