@@ -19015,18 +19015,20 @@ feature {NONE} -- Trace generation
 				current_file.put_character (' ')
 				current_file.put_line (c_eif_trace)
 				if in then
-						-- This is a trick to make sure that the exit trace
-						-- message will be displayed, even when there is a 
-						-- call to return before the end of the feature
-						-- (this can happen in external inline C functions
-						-- for example).
-					current_file.put_string (c_define)
-					current_file.put_character (' ')
-					current_file.put_string (c_return)
-					current_file.put_character (' ')
-					print_unindented_feature_info_message_call ("<- ")
-					current_file.put_character (' ')
-					current_file.put_line (c_return)
+					if current_feature.is_query then
+							-- This is a trick to make sure that the exit trace
+							-- message will be displayed, even when there is a 
+							-- call to return before the end of the feature
+							-- (this can happen in external inline C functions
+							-- for example).
+						current_file.put_string (c_define)
+						current_file.put_character (' ')
+						current_file.put_string (c_return)
+						current_file.put_character (' ')
+						print_unindented_feature_info_message_call ("<- ")
+						current_file.put_character (' ')
+						current_file.put_line (c_return)
+					end
 						-- Instruction to print the trace message.
 					print_feature_info_message_call ("-> ")
 						-- Put the body of the feature in a block so that there
@@ -19040,13 +19042,16 @@ feature {NONE} -- Trace generation
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
-						-- Instruction to print the trace message.
-					print_feature_info_message_call ("<- ")
-						-- Undefine 'return' (see the description of the trick
-						-- in the 'in' section above).
-					current_file.put_string (c_undefine)
-					current_file.put_character (' ')
-					current_file.put_line (c_return)
+					if current_feature.is_procedure then
+							-- Instruction to print the trace message.
+						print_feature_info_message_call ("<- ")
+					else
+							-- Undefine 'return' (see the description of the trick
+							-- in the 'in' section above).
+						current_file.put_string (c_undef)
+						current_file.put_character (' ')
+						current_file.put_line (c_return)
+					end
 				end
 				current_file.put_line (c_endif)
 			end
@@ -19071,18 +19076,20 @@ feature {NONE} -- Trace generation
 				current_file.put_character (' ')
 				current_file.put_line (c_eif_trace)
 				if in then
-						-- This is a trick to make sure that the exit trace
-						-- message will be displayed, even when there is a 
-						-- call to return before the end of the feature
-						-- (this can happen in external inline C functions
-						-- for example).
-					current_file.put_string (c_define)
-					current_file.put_character (' ')
-					current_file.put_string (c_return)
-					current_file.put_character (' ')
-					print_unindented_feature_info_message_call ("<- " + l_agent_message)
-					current_file.put_character (' ')
-					current_file.put_line (c_return)
+					if not an_agent.is_procedure then
+							-- This is a trick to make sure that the exit trace
+							-- message will be displayed, even when there is a 
+							-- call to return before the end of the feature
+							-- (this can happen in external inline C functions
+							-- for example).
+						current_file.put_string (c_define)
+						current_file.put_character (' ')
+						current_file.put_string (c_return)
+						current_file.put_character (' ')
+						print_unindented_feature_info_message_call ("<- " + l_agent_message)
+						current_file.put_character (' ')
+						current_file.put_line (c_return)
+					end
 						-- Instruction to print the trace message.
 					print_feature_info_message_call ("-> " + l_agent_message)
 						-- Put the body of the feature in a block so that there
@@ -19096,13 +19103,16 @@ feature {NONE} -- Trace generation
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
-						-- Instruction to print the trace message.
-					print_feature_info_message_call ("<- " + l_agent_message)
-						-- Undefine 'return' (see the description of the trick
-						-- in the 'in' section above).
-					current_file.put_string (c_undefine)
-					current_file.put_character (' ')
-					current_file.put_line (c_return)
+					if an_agent.is_procedure then
+							-- Instruction to print the trace message.
+						print_feature_info_message_call ("<- " + l_agent_message)
+					else
+							-- Undefine 'return' (see the description of the trick
+							-- in the 'in' section above).
+						current_file.put_string (c_undef)
+						current_file.put_character (' ')
+						current_file.put_line (c_return)
+					end
 				end
 				current_file.put_line (c_endif)
 			end
@@ -22856,7 +22866,7 @@ feature {NONE} -- Constants
 	c_switch: STRING is "switch"
 	c_type_id: STRING is "type_id"
 	c_typedef: STRING is "typedef"
-	c_undefine: STRING is "#undefine"
+	c_undef: STRING is "#undef"
 	c_unsigned: STRING is "unsigned"
 	c_void: STRING is "void"
 	c_while: STRING is "while"
