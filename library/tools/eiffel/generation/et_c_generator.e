@@ -192,8 +192,8 @@ feature {NONE} -- Initialization
 			included_runtime_header_files.set_key_equality_tester (string_equality_tester)
 			create included_runtime_c_files.make (100)
 			included_runtime_c_files.set_equality_tester (string_equality_tester)
-			create c_filenames.make (100)
-			create cpp_filenames.make (10)
+			create c_filenames.make_map (100)
+			c_filenames.set_key_equality_tester (string_equality_tester)
 			make_external_regexps
 		end
 
@@ -293,7 +293,6 @@ feature -- Generation
 			generate_c_code (a_system_name)
 			generate_compilation_script (a_system_name)
 			c_filenames.wipe_out
-			cpp_filenames.wipe_out
 		end
 
 feature {NONE} -- Compilation script generation
@@ -316,7 +315,7 @@ feature {NONE} -- Compilation script generation
 			l_script_filename: STRING
 			l_base_name: STRING
 			i, nb: INTEGER
-			l_c, l_cpp, l_obj: STRING
+			l_obj: STRING
 			l_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_replacement: STRING
 			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
@@ -325,6 +324,7 @@ feature {NONE} -- Compilation script generation
 			l_includes: STRING
 			l_libs: STRING
 			l_pathname: STRING
+			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			l_base_name := a_system_name
 			l_c_config := c_config
@@ -367,23 +367,15 @@ feature {NONE} -- Compilation script generation
 			l_variables.force (l_base_name + l_c_config.item ("exe"), "exe")
 			create l_obj_filenames.make (100)
 			l_obj := l_c_config.item ("obj")
-			nb := c_filenames.count
-			from i := 1 until i > nb loop
-				if i /= 1 then
+			l_cursor := c_filenames.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				if not l_cursor.is_first then
 					l_obj_filenames.append_character (' ')
 				end
-				l_filename := c_filenames.item (i)
+				l_filename := l_cursor.key
 				l_obj_filenames.append_string (l_filename)
 				l_obj_filenames.append_string (l_obj)
-				i := i + 1
-			end
-			nb := cpp_filenames.count
-			from i := 1 until i > nb loop
-				l_obj_filenames.append_character (' ')
-				l_filename := cpp_filenames.item (i)
-				l_obj_filenames.append_string (l_filename)
-				l_obj_filenames.append_string (l_obj)
-				i := i + 1
+				l_cursor.forth
 			end
 			l_external_object_pathnames := universe.external_object_pathnames
 			nb := l_external_object_pathnames.count
@@ -399,9 +391,9 @@ feature {NONE} -- Compilation script generation
 			end
 			l_variables.force (l_obj_filenames, "objs")
 			if operating_system.is_windows then
-				l_script_filename := l_base_name + ".bat"
+				l_script_filename := l_base_name + bat_file_extension
 			else
-				l_script_filename := l_base_name + ".sh"
+				l_script_filename := l_base_name + sh_file_extension
 			end
 			create l_file.make (l_script_filename)
 			l_file.open_write
@@ -411,24 +403,15 @@ feature {NONE} -- Compilation script generation
 				else
 					l_file.put_line ("#!/bin/sh")
 				end
+					-- Compile files in reverse order so that it looks like
+					-- a countdown since the filenames are numbered.
 				l_cc_template := l_c_config.item ("cc")
-				l_c := ".c"
-				nb := c_filenames.count
-				from i := 1 until i > nb loop
-					l_filename := c_filenames.item (i) + l_c
+				from l_cursor.finish until l_cursor.before loop
+					l_filename := l_cursor.key + l_cursor.item
 					l_variables.force (l_filename, "c")
 					l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
 					l_file.put_line (l_command_name)
-					i := i + 1
-				end
-				l_cpp := ".cpp"
-				nb := cpp_filenames.count
-				from i := 1 until i > nb loop
-					l_filename := cpp_filenames.item (i) + l_cpp
-					l_variables.force (l_filename, "c")
-					l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
-					l_file.put_line (l_command_name)
-					i := i + 1
+					l_cursor.back
 				end
 				l_link_template := l_c_config.item ("link")
 				l_command_name := template_expander.expand_from_values (l_link_template, l_variables)
@@ -498,8 +481,8 @@ feature {NONE} -- Compilation script generation
 			end
 			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", l_name>>)
 			l_filename := Execution_environment.interpreted_string (l_filename)
-			if not file_system.has_extension (l_filename, ".cfg") then
-				l_filename := l_filename + ".cfg"
+			if not file_system.has_extension (l_filename, cfg_file_extension) then
+				l_filename := l_filename + cfg_file_extension
 			end
 			create l_file.make (l_filename)
 			l_file.open_read
@@ -557,7 +540,7 @@ feature {NONE} -- C code Generation
 		do
 			old_system_name := system_name
 			system_name := a_system_name
-			l_header_filename := a_system_name + ".h"
+			l_header_filename := a_system_name + h_file_extension
 			create l_header_file.make (l_header_filename)
 			l_header_file.open_write
 			if not l_header_file.is_open_write then
@@ -1150,14 +1133,20 @@ feature {NONE} -- Feature generation
 				current_file.put_new_line
 			end
 			current_file := current_function_body_buffer
-			if a_creation then
-				print_malloc_current (a_feature)
-			end
+			print_feature_trace_message_call (True)
 			if l_result_type_set /= Void and then l_result_type_set.is_empty then
 -- TODO: build full dynamic type sets, recursively.
 				print_feature_info_message_call ("Dynamic type set not built for external feature ")
+					-- Put the body of the feature in a block so that there
+					-- is no C compilation error if some variables are
+					-- declared after this instruction above.
+				print_indentation
+				current_file.put_character ('{')
+				current_file.put_new_line
 			end
-			print_feature_trace_message_call (True)
+			if a_creation then
+				print_malloc_current (a_feature)
+			end
 			if l_is_inline then
 				if l_is_cpp then
 						-- Regexp: C++ [blocking] inline [use {<include> "," ...}+]
@@ -1320,8 +1309,6 @@ feature {NONE} -- Feature generation
 			else
 print ("**** language not recognized: " + l_language_string + "%N")
 			end
-				-- Note that the trace message will not be called when the inline C function calls 'return' in its body.
-			print_feature_trace_message_call (False)
 			if not l_is_inline and l_result_type /= Void then
 				print_indentation
 				current_file.put_string (c_return)
@@ -1337,6 +1324,14 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
+			if l_result_type_set /= Void and then l_result_type_set.is_empty then
+-- TODO: build full dynamic type sets, recursively.
+					-- Close the block containing the body of the feature.
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+			end
+			print_feature_trace_message_call (False)
 			dedent
 			current_file.put_character ('}')
 			current_file.put_new_line
@@ -3759,10 +3754,10 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_new_line
 			end
 			current_file := current_function_body_buffer
+			print_feature_trace_message_call (True)
 			if a_creation then
 				print_malloc_current (a_feature)
 			end
-			print_feature_trace_message_call (True)
 			if l_once_feature /= Void then
 				print_indentation
 				current_file.put_string (c_if)
@@ -3860,7 +3855,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_string ("GE_rescue = r.previous;")
 				current_file.put_new_line
 			end
-			print_feature_trace_message_call (False)
 			if l_result_type /= Void then
 				if l_once_feature /= Void then
 					print_indentation
@@ -3889,6 +3883,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
+			print_feature_trace_message_call (False)
 			dedent
 			current_file.put_character ('}')
 			current_file.put_new_line
@@ -10700,7 +10695,6 @@ feature {NONE} -- Agent generation
 				current_file.put_string ("GE_rescue = r.previous;")
 				current_file.put_new_line
 			end
-			print_agent_trace_message_call (an_agent, False)
 			if l_result_type /= Void then
 				print_indentation
 				current_file.put_string (c_return)
@@ -10709,6 +10703,7 @@ feature {NONE} -- Agent generation
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
+			print_agent_trace_message_call (an_agent, False)
 			current_file := old_file
 		end
 
@@ -18902,8 +18897,13 @@ feature {NONE} -- Malloc
 			l_temp: ET_IDENTIFIER
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_name: ET_IDENTIFIER
+			old_file: KI_TEXT_OUTPUT_STREAM
 		do
 			if current_type.is_expanded then
+					-- Variable declarations.
+					-- They go to the beginning of the generated C function.
+				old_file := current_file
+				current_file := current_function_header_buffer
 				l_temp := new_temp_variable (current_type)
 				print_indentation
 				print_type_declaration (current_type, current_file)
@@ -18917,6 +18917,9 @@ feature {NONE} -- Malloc
 				print_temp_name (l_temp, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
+					-- Instructions.
+					-- They go to the current location in the generated C function.
+				current_file := old_file
 				print_indentation
 				print_temp_name (l_temp, current_file)
 				current_file.put_character (' ')
@@ -18926,12 +18929,19 @@ feature {NONE} -- Malloc
 				current_file.put_character (';')
 				current_file.put_new_line
 			else
+					-- Variable declarations.
+					-- They go to the beginning of the generated C function.
+				old_file := current_file
+				current_file := current_function_header_buffer
 				print_indentation
 				print_type_declaration (current_type, current_file)
 				current_file.put_character (' ')
 				print_current_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
+					-- Instructions.
+					-- They go to the current location in the generated C function.
+				current_file := old_file
 				print_indentation
 				print_current_name (current_file)
 				current_file.put_character (' ')
@@ -19005,9 +19015,38 @@ feature {NONE} -- Trace generation
 				current_file.put_character (' ')
 				current_file.put_line (c_eif_trace)
 				if in then
+						-- This is a trick to make sure that the exit trace
+						-- message will be displayed, even when there is a 
+						-- call to return before the end of the feature
+						-- (this can happen in external inline C functions
+						-- for example).
+					current_file.put_string (c_define)
+					current_file.put_character (' ')
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					print_unindented_feature_info_message_call ("<- ")
+					current_file.put_character (' ')
+					current_file.put_line (c_return)
+						-- Instruction to print the trace message.
 					print_feature_info_message_call ("-> ")
+						-- Put the body of the feature in a block so that there
+						-- is no C compilation error if some variables are
+						-- declared after the instruction to print the trace message.
+					print_indentation
+					current_file.put_character ('{')
+					current_file.put_new_line
 				else
+						-- Close the block containing the body of the feature.
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+						-- Instruction to print the trace message.
 					print_feature_info_message_call ("<- ")
+						-- Undefine 'return' (see the description of the trick
+						-- in the 'in' section above).
+					current_file.put_string (c_undefine)
+					current_file.put_character (' ')
+					current_file.put_line (c_return)
 				end
 				current_file.put_line (c_endif)
 			end
@@ -19019,23 +19058,51 @@ feature {NONE} -- Trace generation
 			-- (if `in' is False) the agent `an_agent' appearing in current feature.
 		require
 			an_agent_not_void: an_agent /= Void
+		local
+			l_agent_message: STRING
 		do
 			if trace_mode then
+				if an_agent.is_inline_agent then
+					l_agent_message := "inline agent at line " + an_agent.position.line.out + " in "
+				else
+					l_agent_message := "agent at line " + an_agent.position.line.out + " in "
+				end
 				current_file.put_string (c_ifdef)
 				current_file.put_character (' ')
 				current_file.put_line (c_eif_trace)
 				if in then
-					if an_agent.is_inline_agent then
-						print_feature_info_message_call ("-> inline agent at line " + an_agent.position.line.out + " in ")
-					else
-						print_feature_info_message_call ("-> agent at line " + an_agent.position.line.out + " in ")
-					end
+						-- This is a trick to make sure that the exit trace
+						-- message will be displayed, even when there is a 
+						-- call to return before the end of the feature
+						-- (this can happen in external inline C functions
+						-- for example).
+					current_file.put_string (c_define)
+					current_file.put_character (' ')
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					print_unindented_feature_info_message_call ("<- " + l_agent_message)
+					current_file.put_character (' ')
+					current_file.put_line (c_return)
+						-- Instruction to print the trace message.
+					print_feature_info_message_call ("-> " + l_agent_message)
+						-- Put the body of the feature in a block so that there
+						-- is no C compilation error if some variables are
+						-- declared after the instruction to print the trace message.
+					print_indentation
+					current_file.put_character ('{')
+					current_file.put_new_line
 				else
-					if an_agent.is_inline_agent then
-						print_feature_info_message_call ("<- inline agent at line " + an_agent.position.line.out + " in ")
-					else
-						print_feature_info_message_call ("<- agent at line " + an_agent.position.line.out + " in ")
-					end
+						-- Close the block containing the body of the feature.
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+						-- Instruction to print the trace message.
+					print_feature_info_message_call ("<- " + l_agent_message)
+						-- Undefine 'return' (see the description of the trick
+						-- in the 'in' section above).
+					current_file.put_string (c_undefine)
+					current_file.put_character (' ')
+					current_file.put_line (c_return)
 				end
 				current_file.put_line (c_endif)
 			end
@@ -19048,22 +19115,27 @@ feature {NONE} -- Trace generation
 			a_message_not_void: a_message /= Void
 		do
 			print_show_console_call
+			print_indentation
+			print_unindented_feature_info_message_call (a_message)
+			current_file.put_new_line
+		end
+
+	print_unindented_feature_info_message_call (a_message: STRING) is
+			-- Print to `current_file' a call that will display to 'stderr' information
+			-- about the current feature of form: `a_message' TYPE.feature
+			-- This call is not indented nor finished by a new-line.
+			-- Useful to define a macro.
+		require
+			a_message_not_void: a_message /= Void
+		do
 			current_file.put_string (c_fprintf)
 			current_file.put_character ('(')
 			current_file.put_string (c_stderr)
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			current_file.put_character ('%"')
-			current_file.put_string (a_message)
-			current_file.put_string (current_type.base_type.unaliased_to_text)
-			current_file.put_character ('.')
-			current_file.put_string (STRING_.replaced_all_substrings (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "\", "\\"), "%"", "\%""))
-			current_file.put_character ('\')
-			current_file.put_character ('n')
-			current_file.put_character ('%"')
+			print_escaped_string (a_message + current_type.base_type.unaliased_to_text + "." + current_feature.static_feature.lower_name + "%N")
 			current_file.put_character (')')
 			current_file.put_character (';')
-			current_file.put_new_line
 		end
 
 	print_info_message_call (a_message: STRING) is
@@ -19073,16 +19145,13 @@ feature {NONE} -- Trace generation
 			a_message_not_void: a_message /= Void
 		do
 			print_show_console_call
+			print_indentation
 			current_file.put_string (c_fprintf)
 			current_file.put_character ('(')
 			current_file.put_string (c_stderr)
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			current_file.put_character ('%"')
-			current_file.put_string (a_message)
-			current_file.put_character ('\')
-			current_file.put_character ('n')
-			current_file.put_character ('%"')
+			print_escaped_string (a_message + "%N")
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
@@ -21592,9 +21661,10 @@ feature {NONE} -- Output files/buffers
 	c_file_size: INTEGER
 			-- Number of bytes already written to `c_file'
 
-	c_filenames: DS_ARRAYED_LIST [STRING]
-			-- List of C filenames generated,
-			-- without the file extensions
+	c_filenames: DS_HASH_TABLE [STRING, STRING]
+			-- List of C (or C++) filenames generated;
+			-- The key is the filename without the extension,
+			-- the item is the file extension
 
 	open_c_file is
 			-- Open C file if necessary.
@@ -21612,10 +21682,10 @@ feature {NONE} -- Output files/buffers
 		do
 			if c_file = Void then
 				c_file_size := 0
-				l_header_filename := system_name + ".h"
-				l_filename := system_name + (c_filenames.count + cpp_filenames.count + 1).out
-				c_filenames.force_last (l_filename)
-				create c_file.make (l_filename + ".c")
+				l_header_filename := system_name + h_file_extension
+				l_filename := system_name + (c_filenames.count + 1).out
+				c_filenames.force_last (c_file_extension, l_filename)
+				create c_file.make (l_filename + c_file_extension)
 				c_file.open_write
 			elseif not c_file.is_open_write then
 				c_file.open_append
@@ -21673,10 +21743,6 @@ feature {NONE} -- Output files/buffers
 	cpp_file_size: INTEGER
 			-- Number of bytes already written to `cpp_file'
 
-	cpp_filenames: DS_ARRAYED_LIST [STRING]
-			-- List of C++ filenames generated,
-			-- without the file extensions
-
 	open_cpp_file is
 			-- Open C++ file if necessary.
 		do
@@ -21693,10 +21759,10 @@ feature {NONE} -- Output files/buffers
 		do
 			if cpp_file = Void then
 				cpp_file_size := 0
-				l_header_filename := system_name + ".h"
-				l_filename := system_name + (c_filenames.count + cpp_filenames.count + 1).out
-				cpp_filenames.force_last (l_filename)
-				create cpp_file.make (l_filename + ".cpp")
+				l_header_filename := system_name + h_file_extension
+				l_filename := system_name + (c_filenames.count + 1).out
+				c_filenames.force_last (cpp_file_extension, l_filename)
+				create cpp_file.make (l_filename + cpp_file_extension)
 				cpp_file.open_write
 			elseif not cpp_file.is_open_write then
 				cpp_file.open_append
@@ -22790,6 +22856,7 @@ feature {NONE} -- Constants
 	c_switch: STRING is "switch"
 	c_type_id: STRING is "type_id"
 	c_typedef: STRING is "typedef"
+	c_undefine: STRING is "#undefine"
 	c_unsigned: STRING is "unsigned"
 	c_void: STRING is "void"
 	c_while: STRING is "while"
@@ -22797,6 +22864,14 @@ feature {NONE} -- Constants
 
 	default_split_threshold: INTEGER is 1000000
 			-- Default value for `split_threshold'
+
+	bat_file_extension: STRING is ".bat"
+	c_file_extension: STRING is ".c"
+	cfg_file_extension: STRING is ".cfg"
+	cpp_file_extension: STRING is ".cpp"
+	h_file_extension: STRING is ".h"
+	sh_file_extension: STRING is ".sh"
+			-- File extensions
 
 invariant
 
@@ -22869,8 +22944,7 @@ invariant
 	no_void_included_runtime_c_file: not included_runtime_c_files.has (Void)
 	c_filenames_not_void: c_filenames /= Void
 	no_void_c_filename: not c_filenames.has (Void)
-	cpp_filenames_not_void: cpp_filenames /= Void
-	no_void_cpp_filename: not cpp_filenames.has (Void)
+	no_void_c_file_extension: not c_filenames.has_item (Void)
 	external_c_regexp_not_void: external_c_regexp /= Void
 	external_c_regexp_compiled: external_c_regexp.is_compiled
 	external_c_macro_regexp_not_void: external_c_macro_regexp /= Void
