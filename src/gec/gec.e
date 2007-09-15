@@ -42,11 +42,6 @@ feature -- Execution
 			a_file: KL_TEXT_INPUT_FILE
 			nb: INTEGER
 		do
---(create {TOTO [INTEGER]}.make).do_nothing
---print ((create {DS_LINKED_LIST [STRING]}.make).deep_twin)
---print (deep_twin)
---print ((create {DS_LINKED_LIST [STRING]}.make).is_deep_equal (create {DS_LINKED_LIST [STRING]}.make).out)
---(agent foo (?, 2, 3)).call ([1])
 			Arguments.set_program_name ("gec")
 			create error_handler.make_standard
 			parse_arguments
@@ -82,11 +77,6 @@ feature -- Execution
 			end
 		rescue
 			Exceptions.die (4)
-		end
-
-	foo (a, b, c: INTEGER) is
-		do
-			print (a + b + c)
 		end
 
 feature -- Access
