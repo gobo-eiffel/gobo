@@ -18082,10 +18082,22 @@ feature {NONE} -- C function generation
 				current_file.put_line ("GE_const_init();")
 					-- Initialize variable used in WEL.
 				include_runtime_header_file ("eif_main.h", False, header_file)
-				current_file.put_line ("#ifdef EIF_WINDOWS")
+				current_file.put_string (c_ifdef)
+				current_file.put_character (' ')
+				current_file.put_line (c_eif_windows)
 				print_indentation
 				current_file.put_line ("eif_hInstance = GetModuleHandle(NULL);")
-				current_file.put_line ("#endif")
+				current_file.put_line (c_endif)
+				if trace_mode then
+						-- We need to make sure that a DOS console is available (for
+						-- Windows application) when in trace mode, because information
+						-- will be displayed to the console.
+					current_file.put_string (c_ifdef)
+					current_file.put_character (' ')
+					current_file.put_line (c_eif_trace)
+					print_show_console_call
+					current_file.put_line (c_endif)
+				end
 					-- Create root object.
 				print_indentation
 				print_temp_name (l_temp, current_file)
@@ -19009,28 +19021,30 @@ feature {NONE} -- Trace generation
 			-- Print to `current_file' a call that will display to 'stderr' information
 			-- about the fact that we just entered (if `in' is True) or just exited
 			-- (if `in' is False) the current feature.
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if trace_mode then
 				current_file.put_string (c_ifdef)
 				current_file.put_character (' ')
 				current_file.put_line (c_eif_trace)
 				if in then
-					if current_feature.is_query then
-							-- This is a trick to make sure that the exit trace
-							-- message will be displayed, even when there is a 
-							-- call to return before the end of the feature
-							-- (this can happen in external inline C functions
-							-- for example).
-						current_file.put_string (c_define)
-						current_file.put_character (' ')
-						current_file.put_string (c_return)
-						current_file.put_character (' ')
-						print_unindented_feature_info_message_call ("<- ")
-						current_file.put_character (' ')
-						current_file.put_line (c_return)
-					end
 						-- Instruction to print the trace message.
-					print_feature_info_message_call ("-> ")
+					print_indentation
+					print_unindented_feature_info_message_call ("->")
+					current_file.put_new_line
+						-- This is a trick to make sure that the exit trace
+						-- message will be displayed, even when there is a 
+						-- call to return before the end of the feature
+						-- (this can happen in external inline C functions
+						-- for example).
+					current_file.put_string (c_define)
+					current_file.put_character (' ')
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					print_unindented_feature_info_message_call ("<-")
+					current_file.put_character (' ')
+					current_file.put_line (c_return)
 						-- Put the body of the feature in a block so that there
 						-- is no C compilation error if some variables are
 						-- declared after the instruction to print the trace message.
@@ -19042,16 +19056,29 @@ feature {NONE} -- Trace generation
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
-					if current_feature.is_procedure then
-							-- Instruction to print the trace message.
-						print_feature_info_message_call ("<- ")
-					else
-							-- Undefine 'return' (see the description of the trick
-							-- in the 'in' section above).
-						current_file.put_string (c_undef)
+						-- 'return' will be preceded by the instruction
+						-- to print the trace message thanks to the #define
+						-- clause (see the description of the trick in the
+						-- 'in' section above).
+					print_indentation
+					current_file.put_string (c_return)
+					if current_feature.is_query then
 						current_file.put_character (' ')
-						current_file.put_line (c_return)
+						l_result_type := current_feature.result_type_set.static_type
+						current_file.put_character ('(')
+						print_type_declaration (l_result_type, current_file)
+						current_file.put_character (')')
+						current_file.put_character ('(')
+						print_default_entity_value (l_result_type, current_file)
+						current_file.put_character (')')
 					end
+					current_file.put_character (';')
+					current_file.put_new_line
+						-- Undefine 'return' (see the description of
+						-- the trick in the 'in' section above).
+					current_file.put_string (c_undef)
+					current_file.put_character (' ')
+					current_file.put_line (c_return)
 				end
 				current_file.put_line (c_endif)
 			end
@@ -19065,33 +19092,36 @@ feature {NONE} -- Trace generation
 			an_agent_not_void: an_agent /= Void
 		local
 			l_agent_message: STRING
+			l_result: ET_RESULT
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if trace_mode then
 				if an_agent.is_inline_agent then
-					l_agent_message := "inline agent at line " + an_agent.position.line.out + " in "
+					l_agent_message := " inline agent at line " + an_agent.position.line.out + " in"
 				else
-					l_agent_message := "agent at line " + an_agent.position.line.out + " in "
+					l_agent_message := " agent at line " + an_agent.position.line.out + " in"
 				end
 				current_file.put_string (c_ifdef)
 				current_file.put_character (' ')
 				current_file.put_line (c_eif_trace)
 				if in then
-					if not an_agent.is_procedure then
-							-- This is a trick to make sure that the exit trace
-							-- message will be displayed, even when there is a 
-							-- call to return before the end of the feature
-							-- (this can happen in external inline C functions
-							-- for example).
-						current_file.put_string (c_define)
-						current_file.put_character (' ')
-						current_file.put_string (c_return)
-						current_file.put_character (' ')
-						print_unindented_feature_info_message_call ("<- " + l_agent_message)
-						current_file.put_character (' ')
-						current_file.put_line (c_return)
-					end
 						-- Instruction to print the trace message.
-					print_feature_info_message_call ("-> " + l_agent_message)
+					print_indentation
+					print_unindented_feature_info_message_call ("->" + l_agent_message)
+					current_file.put_new_line
+						-- This is a trick to make sure that the exit trace
+						-- message will be displayed, even when there is a 
+						-- call to return before the end of the feature
+						-- (this can happen in external inline C functions
+						-- for example).
+					current_file.put_string (c_define)
+					current_file.put_character (' ')
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					print_unindented_feature_info_message_call ("<-" + l_agent_message)
+					current_file.put_character (' ')
+					current_file.put_line (c_return)
 						-- Put the body of the feature in a block so that there
 						-- is no C compilation error if some variables are
 						-- declared after the instruction to print the trace message.
@@ -19103,16 +19133,38 @@ feature {NONE} -- Trace generation
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
-					if an_agent.is_procedure then
-							-- Instruction to print the trace message.
-						print_feature_info_message_call ("<- " + l_agent_message)
-					else
-							-- Undefine 'return' (see the description of the trick
-							-- in the 'in' section above).
-						current_file.put_string (c_undef)
-						current_file.put_character (' ')
-						current_file.put_line (c_return)
+						-- 'return' will be preceded by the instruction
+						-- to print the trace message thanks to the #define
+						-- clause (see the description of the trick in the
+						-- 'in' section above).
+					print_indentation
+					current_file.put_string (c_return)
+					if not an_agent.is_procedure then
+						l_result := an_agent.implicit_result
+						l_result_type_set := current_feature.dynamic_type_set (l_result)
+						if l_result_type_set = Void then
+								-- Internal error: if the associated feature is a query,
+								-- then the dynamic type set should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_result_type := l_result_type_set.static_type
+							current_file.put_character (' ')
+							current_file.put_character ('(')
+							print_type_declaration (l_result_type, current_file)
+							current_file.put_character (')')
+							current_file.put_character ('(')
+							print_default_entity_value (l_result_type, current_file)
+							current_file.put_character (')')
+						end
 					end
+					current_file.put_character (';')
+					current_file.put_new_line
+						-- Undefine 'return' (see the description of
+						-- the trick in the 'in' section above).
+					current_file.put_string (c_undef)
+					current_file.put_character (' ')
+					current_file.put_line (c_return)
 				end
 				current_file.put_line (c_endif)
 			end
@@ -19143,7 +19195,16 @@ feature {NONE} -- Trace generation
 			current_file.put_string (c_stderr)
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			print_escaped_string (a_message + current_type.base_type.unaliased_to_text + "." + current_feature.static_feature.lower_name + "%N")
+			current_file.put_string ("%"%%s %%s.%%s\n%"")
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			print_escaped_string (a_message)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			print_escaped_string (current_type.base_type.unaliased_to_text)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			print_escaped_string (current_feature.static_feature.lower_name)
 			current_file.put_character (')')
 			current_file.put_character (';')
 		end
@@ -19161,7 +19222,10 @@ feature {NONE} -- Trace generation
 			current_file.put_string (c_stderr)
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			print_escaped_string (a_message + "%N")
+			current_file.put_string ("%"%%s\n%"")
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			print_escaped_string (a_message)
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
