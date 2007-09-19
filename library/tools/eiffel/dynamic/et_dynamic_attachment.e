@@ -61,7 +61,7 @@ feature -- Access
 		ensure
 			attachment_not_void: Result /= Void
 		end
-		
+
 	position: ET_POSITION is
 			-- Position of attachment
 		deferred
@@ -91,8 +91,6 @@ feature -- Element change
 			a_system_not_void: a_system /= Void
 		local
 			l_count: INTEGER
-			l_type: ET_DYNAMIC_TYPE
-			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
 			j, nb2: INTEGER
 		do
@@ -100,24 +98,15 @@ feature -- Element change
 			if l_count /= count then
 				nb := l_count - count
 				count := l_count
-				l_other_types := source_type_set.other_types
-				if l_other_types /= Void then
-					nb2 := l_other_types.count
-					from j := nb2 until j < 1 loop
-						a_target.put_type_from_attachment (l_other_types.item (j), Current, a_system)
-						i := i + 1
-						if i < nb then
-							j := j - 1
-						else
-								-- Jump out of the loop.
-							j := 0
-						end
-					end
-				end
-				if i < nb then
-					l_type := source_type_set.first_type
-					if l_type /= Void then
-						a_target.put_type_from_attachment (l_type, Current, a_system)
+				nb2 := source_type_set.count
+				from j := nb2 until j < 1 loop
+					a_target.put_type_from_attachment (source_type_set.dynamic_type (j), Current, a_system)
+					i := i + 1
+					if i < nb then
+						j := j - 1
+					else
+							-- Jump out of the loop.
+						j := 0
 					end
 				end
 			end

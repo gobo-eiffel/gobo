@@ -51,7 +51,7 @@ feature -- Factory
 	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET is
 			-- New dynamic type set
 		do
-			if a_type.is_expanded then
+			if a_type.is_expanded and then not a_type.is_generic then
 				Result := a_type
 			else
 				create {ET_DYNAMIC_PULL_TYPE_SET} Result.make (a_type)
@@ -408,7 +408,6 @@ feature {NONE} -- CAT-calls
 			i, nb: INTEGER
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_other_types: ET_DYNAMIC_TYPE_LIST
 			j, nb2: INTEGER
 			l_source_type: ET_DYNAMIC_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
@@ -447,8 +446,9 @@ feature {NONE} -- CAT-calls
 									set_fatal_error
 									error_handler.report_giaaa_error
 								else
-									l_source_type := l_source_type_set.first_type
-									if l_source_type /= Void then
+									nb2 := l_source_type_set.count
+									from j := 1 until j > nb2 loop
+										l_source_type := l_source_type_set.dynamic_type (j)
 										if not l_source_type.conforms_to_type (l_target_type, current_system) then
 											from
 												l_source := l_target_type_set.sources
@@ -461,26 +461,7 @@ feature {NONE} -- CAT-calls
 												l_source := l_source.next_attachment
 											end
 										end
-										l_other_types := l_source_type_set.other_types
-										if l_other_types /= Void then
-											nb2 := l_other_types.count
-											from j := 1 until j > nb2 loop
-												l_source_type := l_other_types.item (j)
-												if not l_source_type.conforms_to_type (l_target_type, current_system) then
-													from
-														l_source := l_target_type_set.sources
-													until
-														l_source = Void
-													loop
-														if l_source.source_type_set = l_source_type_set then
-															report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source, a_call)
-														end
-														l_source := l_source.next_attachment
-													end
-												end
-												j := j + 1
-											end
-										end
+										j := j + 1
 									end
 								end
 								i := i + 1

@@ -51,7 +51,7 @@ feature -- Factory
 	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET is
 			-- New dynamic type set
 		do
-			if a_type.is_expanded then
+			if a_type.is_expanded and then not a_type.is_generic then
 				Result := a_type
 			else
 				create {ET_DYNAMIC_PUSH_TYPE_SET} Result.make (a_type)

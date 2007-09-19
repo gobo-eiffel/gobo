@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type sets pushing types to supersets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class ET_DYNAMIC_PUSH_TYPE_SET
 inherit
 
 	ET_DYNAMIC_TYPE_SET
+		redefine
+			put_type_from_type_set
+		end
 
 create
 
@@ -30,25 +33,17 @@ feature {NONE} -- Initialization
 		do
 			static_type := a_type
 			if a_type.is_expanded then
-				first_type := a_type
+				put_type (a_type)
 			end
 		ensure
 			static_type_set: static_type = a_type
-			first_expanded_type: a_type.is_expanded implies first_type = a_type
+			first_expanded_type: a_type.is_expanded implies (count = 1 and then dynamic_type (1) = a_type)
 		end
 
 feature -- Access
 
 	static_type: ET_DYNAMIC_TYPE
 			-- Type at compilation time
-
-	first_type: ET_DYNAMIC_TYPE
-			-- First type in current set;
-			-- Void if no type in the set
-
-	other_types: ET_DYNAMIC_TYPE_LIST
-			-- Other types in current set;
-			-- Void if zero or one type in the set
 
 	targets: ET_DYNAMIC_TARGET_LIST
 			-- Supersets of the current set
@@ -62,32 +57,20 @@ feature -- Access
 
 feature -- Element change
 
-	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
-			-- Add `a_type' to current set.
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+			-- Add `a_type' coming from `a_type_set' to current target.
 		local
-			found: BOOLEAN
+			old_count: INTEGER
 			i, nb: INTEGER
 		do
-			if a_type.conforms_to_type (static_type, a_system) then
-				if first_type = Void then
-					first_type := a_type
-				elseif a_type = first_type then
-					found := True
-				elseif other_types = Void then
-					create other_types.make_with_capacity (15)
-					other_types.put_last (a_type)
-				elseif other_types.has (a_type) then
-					found := True
-				else
-					other_types.force_last (a_type)
-				end
-				if not found then
-					if targets /= Void then
-						nb := targets.count
-						from i := 1 until i > nb loop
-							targets.item (i).put_type (a_type, a_system)
-							i := i + 1
-						end
+			old_count := count
+			precursor (a_type, a_type_set, a_system)
+			if old_count < count then
+				if targets /= Void then
+					nb := targets.count
+					from i := 1 until i > nb loop
+						targets.item (i).put_type_from_type_set (a_type, Current, a_system)
+						i := i + 1
 					end
 				end
 			end
@@ -109,15 +92,10 @@ feature -- Element change
 				targets.force_last (a_target)
 			end
 			if not found then
-				if first_type /= Void then
-					a_target.put_type (first_type, a_system)
-					if other_types /= Void then
-						nb := other_types.count
-						from i := 1 until i > nb loop
-							a_target.put_type (other_types.item (i), a_system)
-							i := i + 1
-						end
-					end
+				nb := count
+				from i := 1 until i > nb loop
+					a_target.put_type_from_type_set (dynamic_type (i), Current, a_system)
+					i := i + 1
 				end
 			end
 		end

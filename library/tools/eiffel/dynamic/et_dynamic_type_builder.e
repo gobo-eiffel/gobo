@@ -324,23 +324,23 @@ feature -- Generation
 					-- Process dynamic types.
 				from i := 1 until i > nb loop
 					l_type := l_dynamic_types.item (i)
-					if l_type.was_alive then
-						from j := old_nb + 1 until j > nb loop
-							l_other_type := l_dynamic_types.item (j)
-							if not l_type.is_expanded or else l_other_type.is_expanded then
-								l_other_type.put_type (l_type, current_system)
-							end
-							j := j + 1
+					from
+						if l_type.was_alive then
+							j := old_nb + 1
+						elseif l_type.is_alive then
+							j := 1
+							l_type.set_was_alive
+						else
+							j := nb + 1
 						end
-					elseif l_type.is_alive then
-						from j := 1 until j > nb loop
-							l_other_type := l_dynamic_types.item (j)
-							if not l_type.is_expanded or else l_other_type.is_expanded then
-								l_other_type.put_type (l_type, current_system)
-							end
-							j := j + 1
+					until
+						j > nb
+					loop
+						l_other_type := l_dynamic_types.item (j)
+						if l_type.conforms_to_type (l_other_type, current_system) then
+							l_other_type.put_type (l_type)
 						end
-						l_type.set_was_alive
+						j := j + 1
 					end
 					i := i + 1
 				end
@@ -519,8 +519,6 @@ feature {NONE} -- CAT-calls
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_feature: ET_FEATURE
-			l_type: ET_DYNAMIC_TYPE
-			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
 		do
 			l_feature := a_call.current_feature.static_feature.implementation_feature
@@ -532,17 +530,10 @@ feature {NONE} -- CAT-calls
 				-- '~' operator introduced in ECMA Eiffel 367.
 			else
 				l_target_type_set := a_call.target_type_set
-				l_type := l_target_type_set.first_type
-				if l_type /= Void then
-					check_catcall_target_validity (l_type, a_call)
-					l_other_types := l_target_type_set.other_types
-					if l_other_types /= Void then
-						nb := l_other_types.count
-						from i := 1 until i > nb loop
-							check_catcall_target_validity (l_other_types.item (i), a_call)
-							i := i + 1
-						end
-					end
+				nb := l_target_type_set.count
+				from i := 1 until i > nb loop
+					check_catcall_target_validity (l_target_type_set.dynamic_type (i), a_call)
+					i := i + 1
 				end
 			end
 		end
@@ -560,7 +551,6 @@ feature {NONE} -- CAT-calls
 			i, nb: INTEGER
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_other_types: ET_DYNAMIC_TYPE_LIST
 			j, nb2: INTEGER
 			l_source_type: ET_DYNAMIC_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
@@ -595,22 +585,13 @@ feature {NONE} -- CAT-calls
 									set_fatal_error
 									error_handler.report_giaaa_error
 								else
-									l_source_type := l_source_type_set.first_type
-									if l_source_type /= Void then
+									nb2 := l_source_type_set.count
+									from j := 1 until j > nb2 loop
+										l_source_type := l_source_type_set.dynamic_type (j)
 										if not l_source_type.conforms_to_type (l_target_type, current_system) then
 											report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
 										end
-										l_other_types := l_source_type_set.other_types
-										if l_other_types /= Void then
-											nb2 := l_other_types.count
-											from j := 1 until j > nb2 loop
-												l_source_type := l_other_types.item (j)
-												if not l_source_type.conforms_to_type (l_target_type, current_system) then
-													report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
-												end
-												j := j + 1
-											end
-										end
+										j := j + 1
 									end
 								end
 							end

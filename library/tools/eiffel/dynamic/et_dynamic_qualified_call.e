@@ -52,8 +52,8 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
-			-- Add `a_type' to current set.
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+			-- Add `a_type' coming from `a_type_set' to current target.
 		local
 			l_dynamic_feature: like seeded_dynamic_feature
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
@@ -80,8 +80,6 @@ feature -- Element change
 			a_builder_not_void: a_builder /= Void
 		local
 			l_count, old_count: INTEGER
-			l_type: ET_DYNAMIC_TYPE
-			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
 			j, nb2: INTEGER
 		do
@@ -90,28 +88,20 @@ feature -- Element change
 			if l_count /= old_count then
 				nb := l_count - old_count
 				count := l_count
-				l_other_types := target_type_set.other_types
-				if l_other_types /= Void then
-					nb2 := l_other_types.count
-					from j := nb2 until j < 1 loop
-						a_builder.propagate_call_type (l_other_types.item (j), Current)
-						i := i + 1
-						if i < nb then
-							j := j - 1
-						else
-							j := 0 -- Jump out of the loop.
-						end
+				nb2 := target_type_set.count
+				from j := nb2 until j < 1 loop
+					a_builder.propagate_call_type (target_type_set.dynamic_type (j), Current)
+					i := i + 1
+					if i < nb then
+						j := j - 1
+					else
+						j := 0 -- Jump out of the loop.
 					end
 				end
-				if i < nb then
-					l_type := target_type_set.first_type
-					if l_type /= Void then
-						a_builder.propagate_call_type (l_type, Current)
-					else
-							-- Internal error: the type counts are corrupted.
-						a_builder.set_fatal_error
-						a_builder.error_handler.report_giaaa_error
-					end
+				if i /= nb then
+						-- Internal error: the type counts are corrupted.
+					a_builder.set_fatal_error
+					a_builder.error_handler.report_giaaa_error
 				end
 			end
 		end

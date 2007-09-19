@@ -16,6 +16,7 @@ inherit
 
 	ET_DYNAMIC_TYPE_SET
 		redefine
+			dynamic_type,
 			is_expanded
 		end
 
@@ -128,18 +129,7 @@ feature -- Status setting
 			-- Set `is_alive' to True.
 		do
 			is_alive := True
-			if first_type = Void then
-				first_type := Current
-			elseif first_type = Current then
-				-- Do nothing.
-			elseif other_types = Void then
-				create other_types.make_with_capacity (15)
-				other_types.put_last (Current)
-			elseif other_types.has (Current) then
-				-- Do nothing.
-			else
-				other_types.force_last (Current)
-			end
+			put_type (Current)
 		ensure
 			alive_set: is_alive
 		end
@@ -181,13 +171,15 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	first_type: ET_DYNAMIC_TYPE
-			-- First type in current set;
-			-- Void if no type in the set
-
-	other_types: ET_DYNAMIC_TYPE_LIST
-			-- Other types in current set;
-			-- Void if zero or one type in the set
+	dynamic_type (i: INTEGER): ET_DYNAMIC_TYPE is
+			-- Dynamic type at index `i'
+		do
+			if dynamic_types = Current then
+				Result := Current
+			else
+				Result := dynamic_types.dynamic_type (i)
+			end
+		end
 
 	sources: ET_DYNAMIC_ATTACHMENT is
 			-- Sub-sets of current type set
@@ -617,31 +609,12 @@ feature -- Calls
 
 feature -- Element change
 
-	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
-			-- Add `a_type' to current set.
-		do
-			if a_type.conforms_to_type (static_type, a_system) then
-				if first_type = Void then
-					first_type := a_type
-				elseif a_type = first_type then
-					-- Do nothing.
-				elseif other_types = Void then
-					create other_types.make_with_capacity (15)
-					other_types.put_last (a_type)
-				elseif other_types.has (a_type) then
-					-- Do nothing.
-				else
-					other_types.force_last (a_type)
-				end
-			end
-		end
-
 	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
 			-- Add `a_target' to current set.
 			-- (Targets are supersets of current set.)
 		do
 			if is_alive then
-				a_target.put_type (Current, a_system)
+				a_target.put_type_from_type_set (Current, Current, a_system)
 			end
 		end
 

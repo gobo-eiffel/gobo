@@ -101,6 +101,8 @@ feature -- Status report
 	has (an_item: like item): BOOLEAN is
 			-- Does list contain `an_item'?
 			-- (Use `=' as comparison criterion.)
+		require
+			an_item_not_void: an_item /= Void
 		local
 			i, nb: INTEGER
 		do

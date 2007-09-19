@@ -15,6 +15,11 @@ class ET_DYNAMIC_STANDALONE_TYPE_SET
 inherit
 
 	ET_DYNAMIC_TYPE_SET
+		redefine
+			put_type,
+			put_type_from_type_set,
+			dynamic_types
+		end
 
 create
 
@@ -29,12 +34,28 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 		do
 			static_type := a_type
+			create dynamic_types.make_with_capacity (15)
 			if a_type.is_expanded then
-				first_type := a_type
+				put_type (a_type)
 			end
 		ensure
 			static_type_set: static_type = a_type
-			first_expanded_type: a_type.is_expanded implies first_type = a_type
+			first_expanded_type: a_type.is_expanded implies (count = 1 and then dynamic_type (1) = a_type)
+		end
+
+	make_with_types (a_static_type: like static_type; a_dynamic_types: like dynamic_types) is
+			-- Create a dynamic type set populated with `a_dynamic_types'.
+		require
+			a_static_type_not_void: a_static_type /= Void
+			a_dynamic_types_not_void: a_dynamic_types /= Void
+		do
+			static_type := a_static_type
+			dynamic_types := a_dynamic_types
+			count := a_dynamic_types.count
+		ensure
+			static_type_set: static_type = a_static_type
+			dynamic_types_set: dynamic_types = a_dynamic_types
+			count_set: count = a_dynamic_types.count
 		end
 
 feature -- Initialization
@@ -44,43 +65,37 @@ feature -- Initialization
 			-- and dynamic types.
 		require
 			other_not_void: other /= Void
-		local
-			l_other_types: ET_DYNAMIC_TYPE_LIST
-			nb: INTEGER
 		do
 			static_type := other.static_type
-			first_type := other.first_type
-			l_other_types := other.other_types
-			if l_other_types = Void then
-				other_types := Void
-				if internal_other_types /= Void then
-					internal_other_types.wipe_out
-				end
-			else
-				nb := l_other_types.count
-				if internal_other_types /= Void then
-					internal_other_types.wipe_out
-					other_types := internal_other_types
-				else
-					create other_types.make_with_capacity (nb.max (15))
-					internal_other_types := other_types
-				end
-				other_types.append_last (l_other_types)
-			end
+			count := other.count
+			dynamic_types.wipe_out
+			dynamic_types.resize (count)
+			dynamic_types.append_last (other)
+		ensure
+			static_type_set: static_type = other.static_type
+			count_set: count = other.count
+			same_dynamic_types: is_subset (other)
+		end
+
+	reset_with_types (a_static_type: like static_type; a_dynamic_types: like dynamic_types) is
+			-- Reset current type set using `a_dynamic_types'.
+		require
+			a_static_type_not_void: a_static_type /= Void
+			a_dynamic_types_not_void: a_dynamic_types /= Void
+		do
+			static_type := a_static_type
+			dynamic_types := a_dynamic_types
+			count := a_dynamic_types.count
+		ensure
+			static_type_set: static_type = a_static_type
+			dynamic_types_set: dynamic_types = a_dynamic_types
+			count_set: count = a_dynamic_types.count
 		end
 
 feature -- Access
 
 	static_type: ET_DYNAMIC_TYPE
 			-- Type at compilation time
-
-	first_type: ET_DYNAMIC_TYPE
-			-- First type in current set;
-			-- Void if no type in the set
-
-	other_types: ET_DYNAMIC_TYPE_LIST
-			-- Other types in current set;
-			-- Void if zero or one type in the set
 
 	sources: ET_DYNAMIC_ATTACHMENT is
 			-- Subsets of current set
@@ -91,57 +106,36 @@ feature -- Access
 
 feature -- Element change
 
-	put_standalone_type (a_type: ET_DYNAMIC_TYPE) is
+	put_type (a_type: ET_DYNAMIC_TYPE) is
 			-- Add `a_type' to current set.
-		require
-			a_type_not_void: a_type /= Void
+			-- Do not check for type conformance with `static_type' and do not propagate to targets.
 		do
-			if first_type = Void then
-				first_type := a_type
-			elseif a_type = first_type then
-				-- Done.
-			elseif other_types = Void then
-				if internal_other_types /= Void then
-					internal_other_types.wipe_out
-					other_types := internal_other_types
-				else
-					create other_types.make_with_capacity (15)
-					internal_other_types := other_types
-				end
-				other_types.put_last (a_type)
-			elseif other_types.has (a_type) then
-				-- Done.
-			else
-				other_types.force_last (a_type)
+			if not dynamic_types.has_type (a_type) then
+				dynamic_types.force_last (a_type)
+				count := count + 1
 			end
 		end
 
-	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
-			-- Add `a_type' to current set.
-		do
-			put_standalone_type (a_type)
-		end
-
-	put_type_set (other: ET_DYNAMIC_TYPE_SET) is
+	put_types (other: ET_DYNAMIC_TYPES) is
 			-- Add types of `other' to current set.
+			-- Do not check for type conformance with `static_type' and do not propagate to targets.
 		require
 			other_not_void: other /= Void
 		local
-			l_type: ET_DYNAMIC_TYPE
-			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
 		do
-			l_type := other.first_type
-			if l_type /= Void then
-				put_standalone_type (l_type)
-				l_other_types := other.other_types
-				if l_other_types /= Void then
-					nb := l_other_types.count
-					from i := 1 until i > nb loop
-						put_standalone_type (l_other_types.item (i))
-						i := i + 1
-					end
-				end
+			nb := other.count
+			from i := 1 until i > nb loop
+				put_type (other.dynamic_type (i))
+				i := i + 1
+			end
+		end
+
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+			-- Add `a_type' coming from `a_type_set' to current target.
+		do
+			if a_type.conforms_to_type (static_type, a_system) then
+				put_type (a_type)
 			end
 		end
 
@@ -161,10 +155,28 @@ feature -- Element change
 			-- types from sources but pushing them to targets.
 		end
 
-feature {NONE} -- Implementation
+feature -- Removal
 
-	internal_other_types: ET_DYNAMIC_TYPE_LIST
-			-- Internal storable of `other_types'
-			-- (Useful to recycle memory usage.)
+	wipe_out is
+			-- Get rid of dynamic types.
+		do
+			count := 0
+			dynamic_types.wipe_out
+		ensure
+			wiped_out: count = 0
+			keep_list: dynamic_types = old dynamic_types
+		end
+
+feature {ET_DYNAMIC_TYPE_SET} -- Implementation
+
+	dynamic_types: ET_DYNAMIC_TYPE_LIST
+			-- Dynamic types in current set;
+			-- Void if no type in the set
+
+invariant
+
+	dynamic_types_not_readonly: not is_dynamic_types_readonly
+	dynamic_types_not_void: dynamic_types /= Void
+	consistent_count: count = dynamic_types.count
 
 end

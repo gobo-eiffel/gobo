@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,42 +16,9 @@ inherit
 
 	ET_DYNAMIC_TARGET
 
+	ET_DYNAMIC_TYPES
+
 feature -- Status report
-
-	is_empty: BOOLEAN is
-			-- Does current type set contain no type?
-		do
-			Result := first_type = Void
-		ensure
-			first_type: not Result implies first_type /= Void
-		end
-
-	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN is
-			-- Does current type set contain `a_type'?
-		require
-			a_type_not_void: a_type /= Void
-		do
-			if first_type = a_type then
-				Result := True
-			elseif other_types /= Void then
-				Result := other_types.has (a_type)
-			end
-		end
-
-	has_special: BOOLEAN is
-			-- Does current type set contain at least one SPECIAL type?
-		local
-			l_type: ET_DYNAMIC_TYPE
-		do
-			l_type := first_type
-			if l_type /= Void then
-				if l_type.is_special then
-					Result := True
-				elseif other_types /= Void then
-					Result := other_types.has_special
-				end
-			end
-		end
 
 	is_expanded: BOOLEAN is
 			-- Is `static_type' expanded?
@@ -61,48 +28,26 @@ feature -- Status report
 			definition: Result = static_type.is_expanded
 		end
 
-	has_expanded: BOOLEAN is
-			-- Does current type set contain at least one expanded type?
-		local
-			l_type: ET_DYNAMIC_TYPE
-		do
-			l_type := first_type
-			if l_type /= Void then
-				if l_type.is_expanded then
-					Result := True
-				elseif other_types /= Void then
-					Result := other_types.has_expanded
-				end
-			end
-		end
-
 	is_subset (other: ET_DYNAMIC_TYPE_SET): BOOLEAN is
 			-- Is current dynamic type set at subset of `other'.
 		require
 			other_not_void: other /= Void
 		local
 			l_type: ET_DYNAMIC_TYPE
-			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
 		do
-			if count <= other.count then
-				l_type := first_type
-				if l_type = Void then
-					Result := True
-				elseif other.has_type (l_type) then
-					Result := True
-					l_other_types := other_types
-					if l_other_types /= Void then
-						nb := l_other_types.count
-						from i := 1 until i > nb loop
-							l_type := l_other_types.item (i)
-							if not other.has_type (l_type) then
-								Result := False
-								i := nb + 1 -- Jump out of the loop.
-							else
-								i := i + 1
-							end
-						end
+			if dynamic_types = Void then
+				Result := True
+			elseif count <= other.count then
+				Result := True
+				nb := count
+				from i := 1 until i > nb loop
+					l_type := dynamic_type (i)
+					if not other.has_type (l_type) then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
 					end
 				end
 			end
@@ -117,19 +62,10 @@ feature -- Access
 			static_type_not_void: Result /= Void
 		end
 
-	first_type: ET_DYNAMIC_TYPE is
-			-- First type in current set;
-			-- Void if no type in the set
-		deferred
-		end
-
-	other_types: ET_DYNAMIC_TYPE_LIST is
-			-- Other types in current set;
-			-- Void if zero or one type in the set
-		deferred
-		ensure
-			void_if_zero: first_type = Void implies Result = Void
-			void_if_one: Result /= Void implies not Result.is_empty
+	dynamic_type (i: INTEGER): ET_DYNAMIC_TYPE is
+			-- Dynamic type at index `i'
+		do
+			Result := dynamic_types.dynamic_type (i)
 		end
 
 	sources: ET_DYNAMIC_ATTACHMENT is
@@ -137,39 +73,121 @@ feature -- Access
 		deferred
 		end
 
-	special_type: ET_DYNAMIC_TYPE is
-			-- One of the SPECIAL types contained in current type
-			-- set if any, Void otherwise
-		local
-			l_type: ET_DYNAMIC_TYPE
-		do
-			l_type := first_type
-			if l_type /= Void then
-				if l_type.is_special then
-					Result := l_type
-				elseif other_types /= Void then
-					Result := other_types.special_type
-				end
-			end
-		end
-
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of types in current type set
-		do
-			if first_type /= Void then
-				if other_types /= Void then
-					Result := other_types.count + 1
-				else
-					Result := 1
-				end
-			end
-		ensure
-			count_non_negative: Result >= 0
-		end
 
 feature -- Element change
+
+	put_type (a_type: ET_DYNAMIC_TYPE) is
+			-- Add `a_type' to current set.
+			-- Do not check for type conformance with `static_type' and do not propagate to targets.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_dynamic_type_list: ET_DYNAMIC_TYPE_LIST
+		do
+			if dynamic_types = Void then
+					-- The current set is made up of only one type.
+				dynamic_types := a_type
+				is_dynamic_types_readonly := True
+				count := 1
+			elseif count < dynamic_types.count and then dynamic_types.dynamic_type (count + 1) = a_type then
+				count := count + 1
+			elseif has_type (a_type) then
+				-- This type was already in the current type set.
+			elseif is_dynamic_types_readonly then
+					-- We are not allowed to alter `dynamic_types'.
+					-- So we have to create a new one.
+				create l_dynamic_type_list.make_with_capacity ((count + 1).max (15))
+				l_dynamic_type_list.append_last (Current)
+				l_dynamic_type_list.put_last (a_type)
+				dynamic_types := l_dynamic_type_list
+				is_dynamic_types_readonly := False
+				count := count + 1
+			else
+				l_dynamic_type_list ?= dynamic_types
+				if l_dynamic_type_list = Void then
+					create l_dynamic_type_list.make_with_capacity ((count + 1).max (15))
+					l_dynamic_type_list.append_last (Current)
+					l_dynamic_type_list.put_last (a_type)
+					dynamic_types := l_dynamic_type_list
+				else
+					l_dynamic_type_list.force_last (a_type)
+				end
+				count := count + 1
+			end
+		ensure
+			has_type: has_type (a_type)
+		end
+
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+			-- Add `a_type' coming from `a_type_set' to current target.
+		local
+			l_dynamic_type_list: ET_DYNAMIC_TYPE_LIST
+			l_other_dynamic_types: ET_DYNAMIC_TYPES
+		do
+			if a_type.conforms_to_type (static_type, a_system) then
+				l_other_dynamic_types := a_type_set.dynamic_types
+				if dynamic_types = Void then
+						-- The current dynamic type set was empty.
+					if l_other_dynamic_types.dynamic_type (1) = a_type then
+							-- Share `dynamic_types' between the two dynamic type sets.
+						dynamic_types := l_other_dynamic_types
+						is_dynamic_types_readonly := True
+					else
+							-- The current set is made up of only one type.
+						dynamic_types := a_type
+						is_dynamic_types_readonly := True
+					end
+					count := 1
+				elseif dynamic_types = l_other_dynamic_types then
+						-- `dynamic_types' are shared between the two type sets.
+					if count >= a_type_set.count then
+						-- `a_type' is already in current type set.
+					elseif l_other_dynamic_types.dynamic_type (count + 1) = a_type then
+							-- `a_type' appears to be the next item in `l_other_dynamic_types'.
+						count := count + 1
+					elseif has_type (a_type) then
+						-- This type was already in the current type set.
+					else
+							-- We are not allowed to alter `dynamic_types' (it was shared with `a_type_set').
+							-- So we have to create a new one.
+						create l_dynamic_type_list.make_with_capacity ((count + 1).max (15))
+						l_dynamic_type_list.append_last (Current)
+						l_dynamic_type_list.put_last (a_type)
+						dynamic_types := l_dynamic_type_list
+						is_dynamic_types_readonly := False
+						count := count + 1
+					end
+				elseif count < dynamic_types.count and then dynamic_types.dynamic_type (count + 1) = a_type then
+					count := count + 1
+				elseif has_type (a_type) then
+					-- This type was already in the current type set.
+				elseif is_dynamic_types_readonly then
+						-- We are not allowed to alter `dynamic_types'.
+						-- So we have to create a new one.
+					create l_dynamic_type_list.make_with_capacity ((count + 1).max (15))
+					l_dynamic_type_list.append_last (Current)
+					l_dynamic_type_list.put_last (a_type)
+					dynamic_types := l_dynamic_type_list
+					is_dynamic_types_readonly := False
+					count := count + 1
+				else
+					l_dynamic_type_list ?= dynamic_types
+					if l_dynamic_type_list = Void then
+						create l_dynamic_type_list.make_with_capacity ((count + 1).max (15))
+						l_dynamic_type_list.append_last (Current)
+						l_dynamic_type_list.put_last (a_type)
+						dynamic_types := l_dynamic_type_list
+					else
+						l_dynamic_type_list.force_last (a_type)
+					end
+					count := count + 1
+				end
+			end
+		end
 
 	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
 			-- Add `a_target' to current set.
@@ -205,5 +223,18 @@ feature -- Element change
 				l_source := l_source.next_attachment
 			end
 		end
+
+feature {ET_DYNAMIC_TYPE_SET} -- Implementation
+
+	dynamic_types: ET_DYNAMIC_TYPES
+			-- Dynamic types in current set;
+			-- Void if no type in the set
+
+feature {NONE} -- Implementation
+
+	is_dynamic_types_readonly: BOOLEAN
+			-- Is it not allowed to alter `dynamic_types'?
+			-- This might be the case when `dynamic_types' actually belongs to
+			-- another dynamic type set and we are just sharing it.
 
 end

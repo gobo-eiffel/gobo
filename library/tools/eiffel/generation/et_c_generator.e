@@ -4242,7 +4242,6 @@ feature {NONE} -- Instruction generation
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
-			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_source: ET_EXPRESSION
@@ -4276,26 +4275,14 @@ feature {NONE} -- Instruction generation
 				l_non_conforming_types.resize (nb)
 				l_target_type := l_target_type_set.static_type
 				l_source_type := l_source_type_set.static_type
-				l_dynamic_type := l_source_type_set.first_type
-				if l_dynamic_type /= Void then
+				from i := 1 until i > nb loop
+					l_dynamic_type := l_source_type_set.dynamic_type (i)
 					if l_dynamic_type.conforms_to_type (l_target_type, current_system) then
 						l_conforming_types.put_last (l_dynamic_type)
 					else
 						l_non_conforming_types.put_last (l_dynamic_type)
 					end
-					l_other_types := l_source_type_set.other_types
-					if l_other_types /= Void then
-						nb := l_other_types.count
-						from i := 1 until i > nb loop
-							l_dynamic_type := l_other_types.item (i)
-							if l_dynamic_type.conforms_to_type (l_target_type, current_system) then
-								l_conforming_types.put_last (l_dynamic_type)
-							else
-								l_non_conforming_types.put_last (l_dynamic_type)
-							end
-							i := i + 1
-						end
-					end
+					i := i + 1
 				end
 				print_operand (l_source)
 				fill_call_operands (1)
@@ -4371,7 +4358,7 @@ feature {NONE} -- Instruction generation
 					current_file.put_new_line
 					nb := l_non_conforming_types.count
 					from i := 1 until i > nb loop
-						l_dynamic_type := l_non_conforming_types.item (i)
+						l_dynamic_type := l_non_conforming_types.dynamic_type (i)
 						print_indentation
 						current_file.put_string (c_case)
 						current_file.put_character (' ')
@@ -4470,7 +4457,7 @@ feature {NONE} -- Instruction generation
 					current_file.put_new_line
 					nb := l_conforming_types.count
 					from i := 1 until i > nb loop
-						l_dynamic_type := l_conforming_types.item (i)
+						l_dynamic_type := l_conforming_types.dynamic_type (i)
 						print_indentation
 						current_file.put_string (c_case)
 						current_file.put_character (' ')
@@ -5150,8 +5137,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			l_seed: INTEGER
 			i, nb: INTEGER
 			l_target_dynamic_type: ET_DYNAMIC_TYPE
-			l_other_target_dynamic_types: ET_DYNAMIC_TYPE_LIST
-			j, nb2: INTEGER
+			nb2: INTEGER
 			l_switch: BOOLEAN
 		do
 			l_target := a_call.target
@@ -5176,9 +5162,8 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				nb := nb + 1
 				fill_call_operands (nb)
 				l_seed := l_name.seed
-				l_target_dynamic_type := l_target_type_set.first_type
-				l_other_target_dynamic_types := l_target_type_set.other_types
-				if l_target_dynamic_type = Void then
+				nb2 := l_target_type_set.count
+				if nb2 = 0 then
 						-- Call on Void target.
 					print_indentation
 					print_call_on_void_target_name (Void, current_file)
@@ -5193,12 +5178,13 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
-				elseif l_other_target_dynamic_types = Void then
+				elseif nb2 = 1 then
 						-- Static binding.
+					l_target_dynamic_type := l_target_type_set.dynamic_type (1)
 					print_named_procedure_call (a_call.name, l_target_dynamic_type)
 				else
 						-- Dynamic binding.
-					if l_other_target_dynamic_types.count /= 1 then
+					if nb2 > 2 then
 						print_indentation
 						print_call_name (a_call, current_feature, l_target_static_type, current_file)
 						current_file.put_character ('(')
@@ -5213,45 +5199,51 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 						current_file.put_character (';')
 						current_file.put_new_line
 					elseif l_switch then
-						from
-							j := 1
-							nb2 := l_other_target_dynamic_types.count
-							print_indentation
-							current_file.put_string (c_switch)
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_attribute_type_id_access (call_operands.first, l_target_static_type)
-							current_file.put_character (')')
-							current_file.put_character (' ')
-							current_file.put_character ('{')
-							current_file.put_new_line
-						until
-							l_target_dynamic_type = Void
-						loop
-							print_indentation
-							current_file.put_string (c_case)
-							current_file.put_character (' ')
-							current_file.put_integer (l_target_dynamic_type.id)
-							current_file.put_character (':')
-							current_file.put_new_line
-							indent
-							print_named_procedure_call (a_call.name, l_target_dynamic_type)
-							print_indentation
-							current_file.put_string (c_break)
-							current_file.put_character (';')
-							current_file.put_new_line
-							dedent
-							if j > nb2 then
-								l_target_dynamic_type := Void
-							else
-								l_target_dynamic_type := l_other_target_dynamic_types.item (j)
-								j := j + 1
-							end
-						end
+						print_indentation
+						current_file.put_string (c_switch)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_attribute_type_id_access (call_operands.first, l_target_static_type)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+							-- First type.
+						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+						print_indentation
+						current_file.put_string (c_case)
+						current_file.put_character (' ')
+						current_file.put_integer (l_target_dynamic_type.id)
+						current_file.put_character (':')
+						current_file.put_new_line
+						indent
+						print_named_procedure_call (a_call.name, l_target_dynamic_type)
+						print_indentation
+						current_file.put_string (c_break)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+							-- Second type.
+						l_target_dynamic_type := l_target_type_set.dynamic_type (2)
+						print_indentation
+						current_file.put_string (c_case)
+						current_file.put_character (' ')
+						current_file.put_integer (l_target_dynamic_type.id)
+						current_file.put_character (':')
+						current_file.put_new_line
+						indent
+						print_named_procedure_call (a_call.name, l_target_dynamic_type)
+						print_indentation
+						current_file.put_string (c_break)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
 						print_indentation
 						current_file.put_character ('}')
 						current_file.put_new_line
 					else
+							-- First type.
+						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
 						print_indentation
 						current_file.put_string (c_if)
 						current_file.put_character (' ')
@@ -5270,12 +5262,14 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 						print_indentation
 						current_file.put_character ('}')
 						current_file.put_character (' ')
+							-- Second type.
+						l_target_dynamic_type := l_target_type_set.dynamic_type (2)
 						current_file.put_string (c_else)
 						current_file.put_character (' ')
 						current_file.put_character ('{')
 						current_file.put_new_line
 						indent
-						print_named_procedure_call (a_call.name, l_other_target_dynamic_types.item (1))
+						print_named_procedure_call (a_call.name, l_target_dynamic_type)
 						dedent
 						print_indentation
 						current_file.put_character ('}')
@@ -7452,8 +7446,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			i, nb: INTEGER
 			l_target_dynamic_type: ET_DYNAMIC_TYPE
 			l_target_static_type: ET_DYNAMIC_TYPE
-			l_other_target_dynamic_types: ET_DYNAMIC_TYPE_LIST
-			j, nb2: INTEGER
+			nb2: INTEGER
 			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			l_call_type_set: ET_DYNAMIC_TYPE_SET
 			l_call_type: ET_DYNAMIC_TYPE
@@ -7614,9 +7607,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						current_file.put_character ('(')
 					end
 					l_seed := l_name.seed
-					l_target_dynamic_type := l_target_type_set.first_type
-					l_other_target_dynamic_types := l_target_type_set.other_types
-					if l_target_dynamic_type = Void then
+					nb2 := l_target_type_set.count
+					if nb2 = 0 then
 							-- Call on Void target.
 						call_on_void_target_result_types.force_last (l_call_type)
 						print_call_on_void_target_name (l_call_type, current_file)
@@ -7629,12 +7621,14 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 							i := i + 1
 						end
 						current_file.put_character (')')
-					elseif l_other_target_dynamic_types = Void then
+					elseif nb2 = 1 then
 							-- Static binding.
+						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
 						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type)
 					else
 							-- Dynamic binding.
 						if l_name.is_tuple_label then
+							l_target_dynamic_type := l_target_type_set.dynamic_type (1)
 							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type)
 						else
 							l_query := l_target_static_type.base_class.seeded_query (l_seed)
@@ -7646,8 +7640,26 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 							else
 								l_constant_attribute ?= l_query
 								if l_constant_attribute /= Void then
+									l_target_dynamic_type := l_target_type_set.dynamic_type (1)
 									print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type)
-								elseif l_other_target_dynamic_types.count /= 1 then
+								elseif nb2 = 2 then
+										-- First type.
+									l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+									current_file.put_character ('(')
+									current_file.put_character ('(')
+									print_attribute_type_id_access (call_operands.first, l_target_static_type)
+									current_file.put_character ('=')
+									current_file.put_character ('=')
+									current_file.put_integer (l_target_dynamic_type.id)
+									current_file.put_character (')')
+									current_file.put_character ('?')
+									print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type)
+									current_file.put_character (':')
+										-- Second type.
+									l_target_dynamic_type := l_target_type_set.dynamic_type (2)
+									print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type)
+									current_file.put_character (')')
+								else
 									print_call_name (a_call, current_feature, l_target_static_type, current_file)
 									current_file.put_character ('(')
 									print_target_expression (call_operands.first, l_target_static_type)
@@ -7656,33 +7668,6 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 										current_file.put_character (' ')
 										print_expression (call_operands.item (i))
 										i := i + 1
-									end
-									current_file.put_character (')')
-								else
-									from
-										j := 1
-										nb2 := l_other_target_dynamic_types.count
-										current_file.put_character ('(')
-									until
-										l_target_dynamic_type = Void
-									loop
-										if j <= nb2 then
-											current_file.put_character ('(')
-											print_attribute_type_id_access (call_operands.first, l_target_static_type)
-											current_file.put_character ('=')
-											current_file.put_character ('=')
-											current_file.put_integer (l_target_dynamic_type.id)
-											current_file.put_character (')')
-											current_file.put_character ('?')
-										end
-										print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type)
-										if j > nb2 then
-											l_target_dynamic_type := Void
-										else
-											current_file.put_character (':')
-											l_target_dynamic_type := l_other_target_dynamic_types.item (j)
-											j := j + 1
-										end
 									end
 									current_file.put_character (')')
 								end
@@ -10738,7 +10723,6 @@ feature {NONE} -- Polymorphic call generation
 			i, nb: INTEGER
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
 			j, nb2: INTEGER
 			nb_args: INTEGER
 			l_query: ET_QUERY
@@ -10778,17 +10762,9 @@ feature {NONE} -- Polymorphic call generation
 							-- (See `print_qualified_call_expression'.)
 						l_first_call := l_first_call.next
 					else
-						l_dynamic_type := l_target_type_set.first_type
-						l_other_dynamic_types := l_target_type_set.other_types
-						if not polymorphic_types.has (l_dynamic_type.id) then
-							if not l_switch then
-								polymorphic_type_ids.force_last (l_dynamic_type.id)
-							end
-							polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
-						end
-						nb2 := l_other_dynamic_types.count
+						nb2 := l_target_type_set.count
 						from j := 1 until j > nb2 loop
-							l_dynamic_type := l_other_dynamic_types.item (j)
+							l_dynamic_type := l_target_type_set.dynamic_type (j)
 							if not polymorphic_types.has (l_dynamic_type.id) then
 								if not l_switch then
 									polymorphic_type_ids.force_last (l_dynamic_type.id)
@@ -10816,17 +10792,9 @@ feature {NONE} -- Polymorphic call generation
 									l_call := l_previous_call
 								end
 								l_last_call := l_last_call.next
-								l_dynamic_type := l_target_type_set.first_type
-								l_other_dynamic_types := l_target_type_set.other_types
-								if not polymorphic_types.has (l_dynamic_type.id) then
-									if not l_switch then
-										polymorphic_type_ids.force_last (l_dynamic_type.id)
-									end
-									polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
-								end
-								nb2 := l_other_dynamic_types.count
+								nb2 := l_target_type_set.count
 								from j := 1 until j > nb2 loop
-									l_dynamic_type := l_other_dynamic_types.item (j)
+									l_dynamic_type := l_target_type_set.dynamic_type (j)
 									if not polymorphic_types.has (l_dynamic_type.id) then
 										if not l_switch then
 											polymorphic_type_ids.force_last (l_dynamic_type.id)
@@ -10999,7 +10967,6 @@ feature {NONE} -- Polymorphic call generation
 			i, nb: INTEGER
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
 			j, nb2: INTEGER
 			nb_args: INTEGER
 			l_procedure: ET_PROCEDURE
@@ -11032,17 +10999,9 @@ feature {NONE} -- Polymorphic call generation
 							-- (See `print_qualified_call_instruction'.)
 						l_first_call := l_first_call.next
 					else
-						l_dynamic_type := l_target_type_set.first_type
-						l_other_dynamic_types := l_target_type_set.other_types
-						if not polymorphic_types.has (l_dynamic_type.id) then
-							if not l_switch then
-								polymorphic_type_ids.force_last (l_dynamic_type.id)
-							end
-							polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
-						end
-						nb2 := l_other_dynamic_types.count
+						nb2 := l_target_type_set.count
 						from j := 1 until j > nb2 loop
-							l_dynamic_type := l_other_dynamic_types.item (j)
+							l_dynamic_type := l_target_type_set.dynamic_type (j)
 							if not polymorphic_types.has (l_dynamic_type.id) then
 								if not l_switch then
 									polymorphic_type_ids.force_last (l_dynamic_type.id)
@@ -11070,17 +11029,9 @@ feature {NONE} -- Polymorphic call generation
 									l_call := l_previous_call
 								end
 								l_last_call := l_last_call.next
-								l_dynamic_type := l_target_type_set.first_type
-								l_other_dynamic_types := l_target_type_set.other_types
-								if not polymorphic_types.has (l_dynamic_type.id) then
-									if not l_switch then
-										polymorphic_type_ids.force_last (l_dynamic_type.id)
-									end
-									polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
-								end
-								nb2 := l_other_dynamic_types.count
+								nb2 := l_target_type_set.count
 								from j := 1 until j > nb2 loop
-									l_dynamic_type := l_other_dynamic_types.item (j)
+									l_dynamic_type := l_target_type_set.dynamic_type (j)
 									if not polymorphic_types.has (l_dynamic_type.id) then
 										if not l_switch then
 											polymorphic_type_ids.force_last (l_dynamic_type.id)
@@ -11488,7 +11439,7 @@ feature {NONE} -- Polymorphic call generation
 										l_standalone_type_set.reset (l_argument_type_set)
 										l_dynamic_type_sets.put (l_standalone_type_set, i)
 									end
-									l_standalone_type_set.put_type_set (l_argument_type_set)
+									l_standalone_type_set.put_types (l_argument_type_set)
 								end
 							end
 							i := i + 1
@@ -11806,7 +11757,7 @@ feature {NONE} -- Deep features generation
 						-- contain themselves (recursively) reference attributes
 					if l_special_type /= Void then
 							-- Twin items.
-						if l_attribute_type_set.first_type = Void then
+						if l_attribute_type_set.is_empty then
 								-- If the dynamic type set of the items is empty,
 								-- then the items is always Void. No need to twin
 								-- it in that case.
@@ -11895,7 +11846,7 @@ feature {NONE} -- Deep features generation
 							l_attribute := l_queries.item (i)
 							l_attribute_type_set := l_attribute.result_type_set
 							l_attribute_type := l_attribute_type_set.static_type
-							if l_attribute_type_set.first_type = Void then
+							if l_attribute_type_set.is_empty then
 									-- If the dynamic type set of the attribute is empty,
 									-- then this attribute is always Void. No need to twin
 									-- it in that case.
@@ -11918,7 +11869,7 @@ feature {NONE} -- Deep features generation
 							from i := 1 until i > nb loop
 								l_attribute_type_set := l_item_type_sets.item (i)
 								l_attribute_type := l_attribute_type_set.static_type
-								if l_attribute_type_set.first_type = Void then
+								if l_attribute_type_set.is_empty then
 										-- If the dynamic type set of the item is empty,
 										-- then this item is always Void. No need to twin
 										-- it in that case.
@@ -12025,7 +11976,6 @@ feature {NONE} -- Deep features generation
 		local
 			l_static_type: ET_DYNAMIC_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
 			l_type_id: INTEGER
 			l_temp: ET_IDENTIFIER
 			i, nb: INTEGER
@@ -12033,8 +11983,6 @@ feature {NONE} -- Deep features generation
 			old_type: ET_DYNAMIC_TYPE
 		do
 			l_static_type := a_target_type_set.static_type
-			l_dynamic_type := a_target_type_set.first_type
-			l_other_dynamic_types := a_target_type_set.other_types
 			old_type := current_type
 			current_type := l_static_type
 				-- Print signature to `header_file' and `current_file'.
@@ -12085,20 +12033,13 @@ feature {NONE} -- Deep features generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			if l_dynamic_type /= Void then
+			nb := a_target_type_set.count
+			from i := 1 until i > nb loop
+				l_dynamic_type := a_target_type_set.dynamic_type (i)
 				l_type_id := l_dynamic_type.id
 				polymorphic_type_ids.force_last (l_type_id)
-				polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
-				if l_other_dynamic_types /= Void then
-					nb := l_other_dynamic_types.count
-					from i := 1 until i > nb loop
-						l_dynamic_type := l_other_dynamic_types.item (i)
-						l_type_id := l_dynamic_type.id
-						polymorphic_type_ids.force_last (l_type_id)
-						polymorphic_types.force_last (l_dynamic_type, l_type_id)
-						i := i + 1
-					end
-				end
+				polymorphic_types.force_last (l_dynamic_type, l_type_id)
+				i := i + 1
 			end
 			polymorphic_type_ids.sort (polymorphic_type_id_sorter)
 			if l_switch then
@@ -12273,7 +12214,7 @@ feature {NONE} -- Deep features generation
 			-- of a TUPLE object, closed operands of an Agent object, ...
 		require
 			an_attribute_type_set_not_void: an_attribute_type_set /= Void
-			an_attribute_type_set_not_empty: an_attribute_type_set.first_type /= Void
+			an_attribute_type_set_not_empty: not an_attribute_type_set.is_empty
 			a_print_attribute_access_not_void: a_print_attribute_access /= Void
 		local
 			l_attribute_type: ET_DYNAMIC_TYPE
@@ -12354,23 +12295,23 @@ feature {NONE} -- Deep features generation
 		require
 			an_attribute_not_void: an_attribute /= Void
 			an_attribute_type_set_not_void: an_attribute_type_set /= Void
-			an_attribute_type_set_not_empty: an_attribute_type_set.first_type /= Void
+			an_attribute_type_set_not_empty: not an_attribute_type_set.is_empty
 		local
 			i, nb: INTEGER
 			l_attribute_type: ET_DYNAMIC_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
 			l_standalone_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 		do
 			l_attribute_type := an_attribute_type_set.static_type
-			l_dynamic_type := an_attribute_type_set.first_type
-			l_other_dynamic_types := an_attribute_type_set.other_types
-			if l_other_dynamic_types = Void or else l_other_dynamic_types.is_empty then
+			nb := an_attribute_type_set.count
+			if nb = 1 then
 					-- Monomorphic call.
+				l_dynamic_type := an_attribute_type_set.dynamic_type (1)
 				deep_twin_types.force_last (l_dynamic_type)
 				print_adapted_deep_twin_call (an_attribute, l_dynamic_type, l_attribute_type)
-			elseif l_other_dynamic_types.count = 1 then
+			elseif nb = 2 then
 					-- Polymorphic with only two possible types at run-time.
+				l_dynamic_type := an_attribute_type_set.dynamic_type (1)
 				deep_twin_types.force_last (l_dynamic_type)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
@@ -12382,7 +12323,7 @@ feature {NONE} -- Deep features generation
 				current_file.put_character ('?')
 				print_adapted_deep_twin_call (an_attribute, l_dynamic_type, l_attribute_type)
 				current_file.put_character (':')
-				l_dynamic_type := l_other_dynamic_types.first
+				l_dynamic_type := an_attribute_type_set.dynamic_type (2)
 				deep_twin_types.force_last (l_dynamic_type)
 				print_adapted_deep_twin_call (an_attribute, l_dynamic_type, l_attribute_type)
 				current_file.put_character (')')
@@ -12397,7 +12338,7 @@ feature {NONE} -- Deep features generation
 				deep_feature_target_type_sets.search (l_attribute_type)
 				if deep_feature_target_type_sets.found then
 					l_standalone_type_set := deep_feature_target_type_sets.found_item
-					l_standalone_type_set.put_type_set (an_attribute_type_set)
+					l_standalone_type_set.put_types (an_attribute_type_set)
 				else
 					standalone_type_sets.forth
 					if standalone_type_sets.after then
@@ -12410,10 +12351,8 @@ feature {NONE} -- Deep features generation
 					deep_feature_target_type_sets.force_last (l_standalone_type_set, l_attribute_type)
 					l_standalone_type_set.reset (an_attribute_type_set)
 				end
-				deep_twin_types.force_last (l_dynamic_type)
-				nb := l_other_dynamic_types.count
 				from i := 1 until i > nb loop
-					deep_twin_types.force_last (l_other_dynamic_types.item (i))
+					deep_twin_types.force_last (an_attribute_type_set.dynamic_type (i))
 					i := i + 1
 				end
 					-- Now call the shared function that will trigger the
@@ -12489,7 +12428,6 @@ feature {NONE} -- Built-in feature generation
 			l_conforming_types: ET_DYNAMIC_TYPE_LIST
 			l_non_conforming_types: ET_DYNAMIC_TYPE_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
 		do
 			l_arguments := a_feature.arguments
@@ -12509,26 +12447,14 @@ feature {NONE} -- Built-in feature generation
 				l_conforming_types.resize (nb)
 				l_non_conforming_types := non_conforming_types
 				l_non_conforming_types.resize (nb)
-				l_dynamic_type := l_argument_type_set.first_type
-				if l_dynamic_type /= Void then
+				from i := 1 until i > nb loop
+					l_dynamic_type := l_argument_type_set.dynamic_type (i)
 					if current_type.conforms_to_type (l_dynamic_type, current_system) then
 						l_conforming_types.put_last (l_dynamic_type)
 					else
 						l_non_conforming_types.put_last (l_dynamic_type)
 					end
-					l_other_types := l_argument_type_set.other_types
-					if l_other_types /= Void then
-						nb := l_other_types.count
-						from i := 1 until i > nb loop
-							l_dynamic_type := l_other_types.item (i)
-							if current_type.conforms_to_type (l_dynamic_type, current_system) then
-								l_conforming_types.put_last (l_dynamic_type)
-							else
-								l_non_conforming_types.put_last (l_dynamic_type)
-							end
-							i := i + 1
-						end
-					end
+					i := i + 1
 				end
 				if l_non_conforming_types.is_empty then
 						-- `current_type' conforms to all types of `l_argument_type_set'.
@@ -12562,7 +12488,7 @@ feature {NONE} -- Built-in feature generation
 					current_file.put_new_line
 					nb := l_non_conforming_types.count
 					from i := 1 until i > nb loop
-						l_dynamic_type := l_non_conforming_types.item (i)
+						l_dynamic_type := l_non_conforming_types.dynamic_type (i)
 						print_indentation
 						current_file.put_string (c_case)
 						current_file.put_character (' ')
@@ -12613,7 +12539,7 @@ feature {NONE} -- Built-in feature generation
 					current_file.put_new_line
 					nb := l_conforming_types.count
 					from i := 1 until i > nb loop
-						l_dynamic_type := l_conforming_types.item (i)
+						l_dynamic_type := l_conforming_types.dynamic_type (i)
 						print_indentation
 						current_file.put_string (c_case)
 						current_file.put_character (' ')
@@ -14071,7 +13997,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character ('(')
 				print_type_cast (a_target_type, current_file)
 				current_file.put_character ('(')
--- TODO: we need to check whether the target is from an expanded descendant of PROCEDURE.
+-- TODO: we need to check whether the target is from an expanded descendant of FUNCTION.
 -- In that case we need to use its address.
 				print_expression (call_operands.first)
 				current_file.put_character (')')
@@ -14089,8 +14015,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 							-- of the call should be known at this stage.
 						set_fatal_error
 						error_handler.report_giaaa_error
-					else
-						l_tuple_dynamic_type := l_tuple_type_set.first_type
+					elseif not l_tuple_type_set.is_empty then
+						l_tuple_dynamic_type := l_tuple_type_set.dynamic_type (1)
 					end
 				end
 				l_open_operand_type_sets := l_function_type.open_operand_type_sets
@@ -14750,8 +14676,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 							-- of the call should be known at this stage.
 						set_fatal_error
 						error_handler.report_giaaa_error
-					else
-						l_tuple_dynamic_type := l_tuple_type_set.first_type
+					elseif not l_tuple_type_set.is_empty then
+						l_tuple_dynamic_type := l_tuple_type_set.dynamic_type (1)
 					end
 				end
 				l_open_operand_type_sets := l_procedure_type.open_operand_type_sets
@@ -19034,7 +18960,7 @@ feature {NONE} -- Trace generation
 					print_unindented_feature_info_message_call ("->")
 					current_file.put_new_line
 						-- This is a trick to make sure that the exit trace
-						-- message will be displayed, even when there is a 
+						-- message will be displayed, even when there is a
 						-- call to return before the end of the feature
 						-- (this can happen in external inline C functions
 						-- for example).
@@ -19111,7 +19037,7 @@ feature {NONE} -- Trace generation
 					print_unindented_feature_info_message_call ("->" + l_agent_message)
 					current_file.put_new_line
 						-- This is a trick to make sure that the exit trace
-						-- message will be displayed, even when there is a 
+						-- message will be displayed, even when there is a
 						-- call to return before the end of the feature
 						-- (this can happen in external inline C functions
 						-- for example).

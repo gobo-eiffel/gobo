@@ -5,7 +5,7 @@ indexing
 		"Lists of Eiffel dynamic types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,65 +14,53 @@ class ET_DYNAMIC_TYPE_LIST
 
 inherit
 
+	ET_DYNAMIC_TYPES
+		undefine
+			has_type, is_empty
+		end
+
 	ET_TAIL_LIST [ET_DYNAMIC_TYPE]
+		rename
+			has as has_type,
+			item as dynamic_type,
+			append_last as append_list_last
+		end
 
 create
 
 	make, make_with_capacity
 
-feature -- Status report
+feature -- Element change
 
-	has_special: BOOLEAN is
-			-- Does current type list contain at least one SPECIAL type?
+	append_last (other: ET_DYNAMIC_TYPES) is
+			-- Add items of `other' to the end of list.
+			-- Keep items of `other' in the same order.
+			-- Resize list if necessary.
+		require
+			other_not_void: other /= Void
 		local
+			new_capacity: INTEGER
 			i, nb: INTEGER
+			j: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if storage.item (i).is_special then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
+			nb := other.count
+			if count + nb > capacity then
+				new_capacity := (capacity + nb) * 2
+				if storage = Void then
+					storage := fixed_array.make (new_capacity + 1)
 				else
-					i := i + 1
+					storage := fixed_array.resize (storage, new_capacity + 1)
 				end
 			end
-		end
-
-	has_expanded: BOOLEAN is
-			-- Does current type list contain at least one expanded type?
-		local
-			i, nb: INTEGER
-		do
-			nb := count
+			j := count
 			from i := 1 until i > nb loop
-				if storage.item (i).is_expanded then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
+				j := j + 1
+				storage.put (other.dynamic_type (i), j)
+				i := i + 1
 			end
-		end
-
-feature -- Access
-
-	special_type: ET_DYNAMIC_TYPE is
-			-- One of the SPECIAL types contained in current type
-			-- list if any, Void otherwise
-		local
-			i, nb: INTEGER
-			l_type: ET_DYNAMIC_TYPE
-		do
-			nb := count
-			from i := 1 until i > nb loop
-				l_type := storage.item (i)
-				if l_type.is_special then
-					Result := l_type
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
+			count := j
+		ensure
+			new_more: count = old (count + other.count)
 		end
 
 feature {NONE} -- Implementation
