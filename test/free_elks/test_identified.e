@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test features of class IDENTIFIED_ROUTINES"
+		"Test features of class IDENTIFIED"
 
 	library: "FreeELKS Library"
 	copyright: "Copyright (c) 2007, Eric Bezault and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TEST_IDENTIFIED_ROUTINES
+class TEST_IDENTIFIED
 
 inherit
 
@@ -21,20 +21,18 @@ feature -- Test
 	run_all is
 			-- Run all tests.
 		do
-			test_eif_id_object
+			test_id_object
 		end
 
 	test_id_object is
-			-- Test feature 'eif_id_object'.
+			-- Test feature 'id_object'.
 		local
-			ir: IDENTIFIED_ROUTINES
+			l_identified: IDENTIFIED
 			i: INTEGER
-			s: STRING
 		do
-			create ir
-			s := "gobo"
-			i := ir.eif_object_id (s)
-			assert_same ("object1", s, ir.eif_id_object (i))
+			create l_identified
+			i := l_identified.object_id
+			assert_same ("object1", l_identified, l_identified.id_object (i))
 		end
 
 end
