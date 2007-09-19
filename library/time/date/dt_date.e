@@ -196,7 +196,7 @@ feature -- Access
 		ensure
 			date_duration_not_void: Result /= Void
 			definite_duration: Result.is_definite
-			definition: (other &@ Result).is_equal (Current)
+			definition: (other &@ Result).same_date (Current)
 		end
 
 	day_count: INTEGER is

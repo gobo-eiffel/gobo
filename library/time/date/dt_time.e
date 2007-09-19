@@ -203,7 +203,7 @@ feature -- Access
 				second - other.second, millisecond - other.millisecond)
 		ensure
 			time_duration_not_void: Result /= Void
-			definition: (other &| Result).is_equal (Current)
+			definition: (other &| Result).same_time (Current)
 		end
 
 	infix "&|" (a_duration: like time_duration): like Current is
