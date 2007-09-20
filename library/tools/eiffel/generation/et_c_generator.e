@@ -157,6 +157,7 @@ feature {NONE} -- Initialization
 			create used_temp_variables.make (40)
 			create free_temp_variables.make (40)
 			create conforming_types.make_with_capacity (100)
+			create conforming_type_set.make (current_system.none_type)
 			create non_conforming_types.make_with_capacity (100)
 			create operand_stack.make (5000)
 			create call_operands.make (5000)
@@ -4391,7 +4392,9 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
+					conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+					print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
+					conforming_type_set.reset_with_types (current_system.none_type, Void)
 					current_file.put_character (';')
 					current_file.put_new_line
 					dedent
@@ -4472,7 +4475,9 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
+					conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+					print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
+					conforming_type_set.reset_with_types (current_system.none_type, Void)
 					current_file.put_character (';')
 					current_file.put_new_line
 					print_indentation
@@ -22412,6 +22417,10 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
+	conforming_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
+			-- Set of types conforming to the target of the current assignment attempt or
+			-- types to which the target of the current call to 'ANY.conforms_to' conform
+
 	conforming_types: ET_DYNAMIC_TYPE_LIST
 			-- Types conforming to the target of the current assignment attempt or
 			-- types to which the target of the current call to 'ANY.conforms_to' conform
@@ -22889,6 +22898,7 @@ invariant
 	no_void_operand: not operand_stack.has (Void)
 	call_operands_not_void: call_operands /= Void
 	no_void_call_operand: not call_operands.has (Void)
+	conforming_type_set_not_void: conforming_type_set /= Void
 	conforming_types_not_void: conforming_types /= Void
 	non_conforming_types_not_void: non_conforming_types /= Void
 	polymorphic_call_feature_not_void: polymorphic_call_feature /= Void

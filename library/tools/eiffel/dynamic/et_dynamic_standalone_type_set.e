@@ -34,28 +34,12 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 		do
 			static_type := a_type
-			create dynamic_types.make_with_capacity (15)
 			if a_type.is_expanded then
 				put_type (a_type)
 			end
 		ensure
 			static_type_set: static_type = a_type
 			first_expanded_type: a_type.is_expanded implies (count = 1 and then dynamic_type (1) = a_type)
-		end
-
-	make_with_types (a_static_type: like static_type; a_dynamic_types: like dynamic_types) is
-			-- Create a dynamic type set populated with `a_dynamic_types'.
-		require
-			a_static_type_not_void: a_static_type /= Void
-			a_dynamic_types_not_void: a_dynamic_types /= Void
-		do
-			static_type := a_static_type
-			dynamic_types := a_dynamic_types
-			count := a_dynamic_types.count
-		ensure
-			static_type_set: static_type = a_static_type
-			dynamic_types_set: dynamic_types = a_dynamic_types
-			count_set: count = a_dynamic_types.count
 		end
 
 feature -- Initialization
@@ -68,9 +52,14 @@ feature -- Initialization
 		do
 			static_type := other.static_type
 			count := other.count
-			dynamic_types.wipe_out
-			dynamic_types.resize (count)
-			dynamic_types.append_last (other)
+			if dynamic_types /= Void then
+				dynamic_types.wipe_out
+				dynamic_types.resize (count)
+				dynamic_types.append_last (other)
+			elseif count > 0 then
+				create dynamic_types.make_with_capacity (count.max (15))
+				dynamic_types.append_last (other)
+			end
 		ensure
 			static_type_set: static_type = other.static_type
 			count_set: count = other.count
@@ -81,15 +70,17 @@ feature -- Initialization
 			-- Reset current type set using `a_dynamic_types'.
 		require
 			a_static_type_not_void: a_static_type /= Void
-			a_dynamic_types_not_void: a_dynamic_types /= Void
 		do
 			static_type := a_static_type
 			dynamic_types := a_dynamic_types
-			count := a_dynamic_types.count
+			if a_dynamic_types /= Void then
+				count := a_dynamic_types.count
+			else
+				count := 0
+			end
 		ensure
 			static_type_set: static_type = a_static_type
 			dynamic_types_set: dynamic_types = a_dynamic_types
-			count_set: count = a_dynamic_types.count
 		end
 
 feature -- Access
@@ -110,7 +101,11 @@ feature -- Element change
 			-- Add `a_type' to current set.
 			-- Do not check for type conformance with `static_type' and do not propagate to targets.
 		do
-			if not dynamic_types.has_type (a_type) then
+			if dynamic_types = Void then
+				create dynamic_types.make_with_capacity (15)
+				dynamic_types.put_last (a_type)
+				count := 1
+			elseif not dynamic_types.has_type (a_type) then
 				dynamic_types.force_last (a_type)
 				count := count + 1
 			end
@@ -155,18 +150,6 @@ feature -- Element change
 			-- types from sources but pushing them to targets.
 		end
 
-feature -- Removal
-
-	wipe_out is
-			-- Get rid of dynamic types.
-		do
-			count := 0
-			dynamic_types.wipe_out
-		ensure
-			wiped_out: count = 0
-			keep_list: dynamic_types = old dynamic_types
-		end
-
 feature {ET_DYNAMIC_TYPE_SET} -- Implementation
 
 	dynamic_types: ET_DYNAMIC_TYPE_LIST
@@ -177,6 +160,7 @@ invariant
 
 	dynamic_types_not_readonly: not is_dynamic_types_readonly
 	dynamic_types_not_void: dynamic_types /= Void
-	consistent_count: count = dynamic_types.count
+	consistent_count: dynamic_types /= Void implies count = dynamic_types.count
+	empty: dynamic_types = Void implies count = 0
 
 end
