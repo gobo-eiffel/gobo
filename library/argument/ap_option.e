@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		ensure
 			short_form_set: has_short_form and short_form = a_short_form
 			long_form_set: has_long_form and long_form = a_long_form
-			no_optional_paramter: not parameter_is_optional
+			no_optional_parameter: not parameter_is_optional
 		end
 
 	make_with_short_form (a_short_form: CHARACTER) is
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		ensure
 			short_form_set: has_short_form and short_form = a_short_form
 			no_long_form: not has_long_form
-			no_optional_paramter: not parameter_is_optional
+			no_optional_parameter: not parameter_is_optional
 		end
 
 	make_with_long_form (a_long_form: STRING) is
