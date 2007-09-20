@@ -12724,10 +12724,12 @@ extern "C" {
 #ifndef GE_CONSOLE_C
 #define GE_CONSOLE_C
 
+#ifdef EIF_WINDOWS
 #include <stdio.h>
 #include <windows.h>
 #include <io.h>
 #include <fcntl.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
