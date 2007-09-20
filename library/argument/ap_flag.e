@@ -28,6 +28,12 @@ feature -- Access
 
 feature -- Status report
 
+	allows_parameter: BOOLEAN is
+			-- Does this option allow a parameter?
+		do
+			Result := False
+		end
+
 	needs_parameter: BOOLEAN is
 			-- Does this option need a parameter?
 		do
@@ -50,6 +56,6 @@ feature {AP_PARSER} -- Parser Interface
 
 invariant
 
-	flags_do_not_have_parameters: not needs_parameter
+	flags_do_not_have_parameters: not allows_parameter
 
 end

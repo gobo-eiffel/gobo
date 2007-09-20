@@ -39,6 +39,14 @@ feature -- Access
 	parameters: DS_LIST [INTEGER]
 			-- All parameters given to the option
 
+feature -- Status report
+
+	needs_parameter: BOOLEAN is
+			-- Does this option need a parameter ?
+		do
+			Result := True
+		end
+
 feature {AP_PARSER} -- Parser Interface
 
 	reset is

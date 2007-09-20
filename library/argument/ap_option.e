@@ -1,5 +1,5 @@
 indexing
-	
+
 	description:
 
 		"Abstract representations of an option, that might or might not require an extra argument"
@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 			-- Perform the common initialization steps.
 		do
 			description := ""
-			reset
 		end
 
 	make (a_short_form: CHARACTER; a_long_form: STRING) is
@@ -31,22 +30,26 @@ feature {NONE} -- Initialization
 		require
 			a_long_form_not_void: a_long_form /= Void
 		do
+			initialize
 			set_short_form (a_short_form)
 			set_long_form (a_long_form)
-			initialize
+			reset
 		ensure
 			short_form_set: has_short_form and short_form = a_short_form
 			long_form_set: has_long_form and long_form = a_long_form
+			no_optional_paramter: not parameter_is_optional
 		end
-	
+
 	make_with_short_form (a_short_form: CHARACTER) is
 			-- Make an option that has `a_short_form' as short form.
 		do
-			set_short_form (a_short_form)
 			initialize
+			set_short_form (a_short_form)
+			reset
 		ensure
 			short_form_set: has_short_form and short_form = a_short_form
 			no_long_form: not has_long_form
+			no_optional_paramter: not parameter_is_optional
 		end
 
 	make_with_long_form (a_long_form: STRING) is
@@ -54,8 +57,9 @@ feature {NONE} -- Initialization
 		require
 			a_long_form_not_void: a_long_form /= Void
 		do
-			set_long_form (a_long_form)
 			initialize
+			set_long_form (a_long_form)
+			reset
 		ensure
 			no_short_form: not has_short_form
 			long_form_set: has_long_form and long_form = a_long_form
@@ -133,6 +137,11 @@ feature -- Access
 
 feature -- Status report
 
+	allows_parameter: BOOLEAN is
+			-- Does this option allow a parameter?
+		deferred
+		end
+
 	has_long_form: BOOLEAN is
 			-- Does this option have a long form?
 		do
@@ -153,6 +162,14 @@ feature -- Status report
 	needs_parameter: BOOLEAN is
 			-- Does this option need a parameter?
 		deferred
+		end
+
+	parameter_is_optional: BOOLEAN
+			-- Is the parameter allowed, but optional?
+		do
+			Result := allows_parameter and not needs_parameter
+		ensure
+			definition: Result = (allows_parameter and not needs_parameter)
 		end
 
 	was_found: BOOLEAN is
@@ -188,6 +205,8 @@ feature -- Element change
 
 	set_short_form (a_short_form: CHARACTER) is
 			-- Make `a_short_form' the short form.
+		require
+			no_optional_parameter: not parameter_is_optional
 		do
 			short_form := a_short_form
 			has_short_form := True
@@ -256,6 +275,7 @@ feature {AP_PARSER} -- Parser Interface
 			-- This option was found during parsing by `a_parser'.
 		require
 			a_parser_not_void: a_parser /= Void
+			parameter_if_needed: needs_parameter implies (a_parser.last_option_parameter /= Void)
 		deferred
 		ensure
 			occurrences_increased: occurrences = old occurrences + 1
@@ -272,5 +292,7 @@ invariant
 
 	has_short_or_long: has_long_form or has_short_form
 	occurrences_not_negative: occurrences >= 0
+	needs_implies_allows_parameter: needs_parameter implies allows_parameter
+	no_optional_parameter_on_short: has_short_form and allows_parameter implies needs_parameter
 
 end

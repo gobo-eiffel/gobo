@@ -136,6 +136,27 @@ feature -- Tests
 			assert ("option_was_not_found", not o1.was_found)
 		end
 
+	test_parse_option_with_optional_parameter is
+			-- Can we parse an option that has an optional parameter?
+		local
+			p: AP_PARSER
+			o1: AP_STRING_OPTION
+		do
+			create p.make_empty
+			create o1.make_with_long_form ("option")
+			o1.set_parameter_as_optional
+			p.options.force_last (o1)
+			p.parse_array (<< "--option", "ccc" >>)
+			assert ("option_was_found",o1.was_found)
+			assert ("parameter_is_void",o1.parameter = Void)
+			assert_strings_equal ("ccc_was_passed", "ccc", p.parameters.first)
+			p.parse_array (<< "--option=ddd" >>)
+			assert ("option_was_found", o1.was_found)
+			assert_strings_equal ("ddd_was_passed", "ddd", o1.parameter)
+			p.parse_array (<< "xxx" >>)
+			assert ("option_was_not_found", not o1.was_found)
+		end
+
 	test_parse_integer_options is
 			-- Can we parse integer options?
 		local

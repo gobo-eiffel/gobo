@@ -43,6 +43,12 @@ feature {NONE} -- Initialization
 			create example_string_option.make_with_long_form ("string")
 			example_string_option.set_description ("An option that takes a string as argument.")
 			parser.options.force_last (example_string_option)
+				-- We create another string option, this time making the 
+				-- parameter optional.			
+			create example_ostring_option.make_with_long_form ("ostring")
+			example_ostring_option.set_description ("An option that might take a string as argument.")
+			example_ostring_option.set_parameter_as_optional
+			parser.options.force_last (example_ostring_option)
 				-- We create an option that takes an integer as argument.
 				-- This option only has a short form, 'i'.
 			create example_integer_option.make_with_short_form ('i')
@@ -97,6 +103,13 @@ feature {NONE} -- Initialization
 			if example_string_option.was_found then
 				std.output.put_line ("The example string option was passed the parameter %"" + example_string_option.parameter + "%"")
 			end
+			if example_ostring_option.was_found then
+				if example_ostring_option.parameter = Void then
+					std.output.put_line ("The example ostring option was passed, but without parameter.")
+				else
+					std.output.put_line ("The example string option was passed the parameter %"" + example_ostring_option.parameter + "%"")
+				end
+			end
 			if example_integer_option.was_found then
 				std.output.put_line ("The example integer option was passed the parameter " + example_integer_option.parameter.out)
 			end
@@ -119,6 +132,7 @@ feature -- Command Line Options
 
 	example_flag: AP_FLAG
 	example_string_option: AP_STRING_OPTION
+	example_ostring_option: AP_STRING_OPTION
 	example_integer_option: AP_INTEGER_OPTION
 	example_enumeration_option: AP_ENUMERATION_OPTION
 	example_boolean_option: AP_BOOLEAN_OPTION

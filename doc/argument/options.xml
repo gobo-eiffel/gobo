@@ -143,4 +143,30 @@
 
 </section>
 
+<section id="optional_parameters">
+
+	<title>Options with optional parameters</title>
+
+	<para>
+		Sometimes, mostly for backward compatibility, it is
+		necessary to make the parameter to an option
+		optional. This can be done by calling the
+		<featurename>set_parameter_as_optional</featurename>
+		feature in class
+		<classname>AP_STRING_OPTION</classname>. To prevent
+		the grammar from becoming ambiguous, this only works
+		for long options. Also, it is impossible to use the
+		space as a delimiter between option and parameter:
+		'--foo=X' will parse as option foo with parameter 'X',
+		'--foo X' will parse as foo without a parameter, and
+		then the global parameter 'X'.
+	</para>
+
+	<para>
+		The parameters list in the option will record usages
+		of the option without parameters as Void values.
+	</para>
+
+</section>
+
 </chapter>

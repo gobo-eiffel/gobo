@@ -46,8 +46,14 @@ feature -- Access
 			else
 				Result.append_character (long_option_introduction)
 				Result.append_string (long_form)
+				if not needs_parameter then
+					Result.append_character ('[')
+				end
 				Result.append_character (long_option_parameter_introduction)
 				Result.append_string (parameter_description)
+				if not needs_parameter then
+					Result.append_character (']')
+				end
 			end
 			if not is_mandatory then
 				Result.append_character (']')
@@ -59,11 +65,18 @@ feature -- Access
 		do
 			Result := Precursor
 			if has_long_form then
+				if not needs_parameter then
+					Result.append_character ('[')
+				end
 				Result.append_string (long_option_parameter_introduction.out)
+				Result.append_string (parameter_description)
+				if not needs_parameter then
+					Result.append_character (']')
+				end				
 			else
 				Result.append_character (' ')
+				Result.append_string (parameter_description)
 			end
-			Result.append_string (parameter_description)
 		end
 
 	parameter_description: STRING
@@ -90,8 +103,8 @@ feature -- Access
 
 feature -- Status report
 
-	needs_parameter: BOOLEAN is
-			-- Does this option need a parameter ?
+	allows_parameter: BOOLEAN is
+			-- Does this option allow a parameter ?
 		do
 			Result := True
 		end
@@ -110,7 +123,7 @@ feature -- Status setting
 
 invariant
 
-	options_needs_parameter: needs_parameter
+	options_allows_parameter: allows_parameter
 	parameters_not_void: parameters /= Void
 
 end

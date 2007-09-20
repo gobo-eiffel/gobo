@@ -459,7 +459,8 @@ feature {NONE} -- Implementation
 						option.record_occurrence (Current)
 					end
 				else
-					if parameter = Void then
+					if parameter = Void or option.allows_parameter then
+						last_option_parameter := parameter
 						option.record_occurrence (Current)
 					else
 						create error.make_unnecessary_parameter_error (option, parameter)
