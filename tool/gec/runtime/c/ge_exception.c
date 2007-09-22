@@ -23,7 +23,9 @@ extern "C" {
 */
 struct GE_rescue *GE_rescue;
 
-/* Raise an exception with code `code'. */
+/*
+	Raise an exception with code 'code'.
+*/
 void GE_raise(int code) {
 	struct GE_rescue *r = GE_rescue;
 	if (r != 0) {
@@ -35,6 +37,57 @@ void GE_raise(int code) {
 #endif
 	fprintf(stderr, "Unhandled exception\n");
 	exit(1);
+}
+
+/*
+	Check whether the type id of 'obj' is not in 'type_ids'.
+	If it is, then raise a CAT-call exception. Don't do anything if 'obj' is Void.
+	'nb' is the number of ids in 'type_ids' and is expected to be >0.
+	'type_ids' is sorted in increasing order.
+	Return 'obj'.
+*/
+EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb)
+{
+	if (obj) {
+		int type_id = obj->id;
+		if (type_id < type_ids[0]) {
+			/* Done */
+		} else if (type_id > type_ids[nb-1]) {
+			/* Done */
+		} else {
+			int i;
+			for (i = 0; i < nb; i++) {
+				if (type_id == type_ids[i]) {
+#ifdef EIF_WINDOWS
+					GE_show_console();
+#endif
+					fprintf(stderr, "CAT-call error!\n");
+					exit(2);
+					GE_raise(24);
+					break;
+				}
+			}
+		}
+	}
+	return (obj);
+}
+
+/*
+	Check whether 'obj' is Void.
+	If it is, then raise a call-on-void-target exception.
+	Return 'obj'
+*/
+EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
+{
+	if (!obj) {
+#ifdef EIF_WINDOWS
+		GE_show_console();
+#endif
+		fprintf(stderr, "Call on Void target!\n");
+		exit(2);
+		GE_raise(24);
+	}
+	return (obj);
 }
 
 #ifdef __cplusplus

@@ -419,6 +419,7 @@ feature {NONE} -- Generation
 		local
 			old_feature: ET_DYNAMIC_FEATURE
 			old_type: ET_DYNAMIC_TYPE
+			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
 			had_error: BOOLEAN
@@ -429,10 +430,10 @@ feature {NONE} -- Generation
 			current_dynamic_type := a_current_dynamic_type
 				-- Dynamic type sets for arguments are stored first
 				-- in `dynamic_type_sets'.
-			l_dynamic_type_sets := a_feature.dynamic_type_sets
-			nb := l_dynamic_type_sets.count
+			l_argument_type_sets := a_feature.dynamic_type_sets
+			nb := l_argument_type_sets.count
 			from i := 1 until i > nb loop
-				dynamic_type_sets.force_last (l_dynamic_type_sets.item (i))
+				dynamic_type_sets.force_last (l_argument_type_sets.item (i))
 				i := i + 1
 			end
 			a_feature.set_dynamic_type_sets (dynamic_type_sets)

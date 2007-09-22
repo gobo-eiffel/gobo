@@ -50,7 +50,26 @@ struct GE_rescue {
 */
 extern struct GE_rescue *GE_rescue;
 
+/*
+	Raise an exception with code 'code'.
+*/
 extern void GE_raise(int code);
+
+/*
+	Check whether the type id of 'obj' is not in 'type_ids'.
+	If it is, then raise a CAT-call exception. Don't do anything if 'obj' is Void.
+	'nb' is the number of ids in 'type_ids' and is expected to be >0.
+	'type_ids' is sorted in increasing order.
+	Return 'obj'.
+*/
+EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb);
+
+/*
+	Check whether 'obj' is Void.
+	If it is, then raise a call-on-void-target exception.
+	Return 'obj'
+*/
+extern EIF_REFERENCE GE_check_void(EIF_REFERENCE obj);
 
 #ifdef __cplusplus
 }

@@ -136,7 +136,6 @@ feature {NONE} -- Initialization
 			-- Create a new C code generator.
 		local
 			l_buffer: STRING
-			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 		do
 			make_processor (a_system.universe)
 			short_names := True
@@ -161,13 +160,10 @@ feature {NONE} -- Initialization
 			create non_conforming_types.make_with_capacity (100)
 			create operand_stack.make (5000)
 			create call_operands.make (5000)
-			create polymorphic_type_ids.make (100)
-			create polymorphic_types.make_map (100)
-			create standalone_type_sets.make (50)
-			standalone_type_sets.go_before
-			create polymorphic_call_feature.make (dummy_feature.static_feature, dummy_feature.target_type, current_system)
-			create l_dynamic_type_sets.make_with_capacity (50)
-			polymorphic_call_feature.set_dynamic_type_sets (l_dynamic_type_sets)
+			create attachment_dynamic_type_ids.make (100)
+			create target_dynamic_type_ids.make (100)
+			create target_dynamic_types.make_map (100)
+			create standalone_type_sets.make_with_capacity (50)
 			create deep_twin_types.make (100)
 			create deep_equal_types.make (100)
 			create deep_feature_target_type_sets.make_map (100)
@@ -186,6 +182,8 @@ feature {NONE} -- Initialization
 			create once_features.make (10000)
 			create constant_features.make_map (10000)
 			create inline_constants.make (10000)
+			create dynamic_type_id_set_names.make_map (10000)
+			dynamic_type_id_set_names.set_key_equality_tester (string_equality_tester)
 			create called_features.make (1000)
 			create included_header_filenames.make (100)
 			included_header_filenames.set_equality_tester (string_equality_tester)
@@ -658,6 +656,9 @@ feature {NONE} -- C code Generation
 				print_const_init_function
 				current_file.put_new_line
 				flush_to_c_file
+					-- Print 'GE_dts' dynamic type id set constants.
+				print_dynamic_type_id_set_constants
+				flush_to_c_file
 					-- Print 'GE_types' array.
 				print_types_array
 				current_file.put_new_line
@@ -698,6 +699,7 @@ feature {NONE} -- C code Generation
 				once_features.wipe_out
 				constant_features.wipe_out
 				inline_constants.wipe_out
+				dynamic_type_id_set_names.wipe_out
 				l_header_file.close
 				close_c_file
 				close_cpp_file
@@ -5750,7 +5752,7 @@ feature {NONE} -- Procedure call generation
 feature {NONE} -- Expression generation
 
 	print_attachment_expression (an_expression: ET_EXPRESSION; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_TYPE) is
-			-- Print `an_expression' of dynamic type set is `a_source_type_set'
+			-- Print `an_expression' of dynamic type set `a_source_type_set'
 			-- when it is to be attached to an entity of type `a_target_type'.
 			-- Make sure that the expression is boxed or unboxed when needed,
 			-- and that it is copied or cloned when its type is expanded.
@@ -5781,13 +5783,98 @@ feature {NONE} -- Expression generation
 			a_target_type_not_void: a_target_type /= Void
 		local
 			l_source_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_non_conforming_types: DS_ARRAYED_LIST [INTEGER]
+			l_has_non_conforming_types: BOOLEAN
+			l_dts_ids: STRING
+			l_dts_name: STRING
+			i, nb: INTEGER
 		do
 			l_source_type := a_source_type_set.static_type
+			if not l_source_type.conforms_to_type (a_target_type, current_system) then
+					-- Make sure that CAT-call errors will be reported at run-time.
+				nb := a_source_type_set.count
+				l_non_conforming_types := attachment_dynamic_type_ids
+				if nb > l_non_conforming_types.capacity then
+					l_non_conforming_types.resize (nb)
+				end
+				from i := 1 until i > nb loop
+					l_dynamic_type := a_source_type_set.dynamic_type (i)
+					if not l_dynamic_type.conforms_to_type (a_target_type, current_system) then
+						l_non_conforming_types.put_last (l_dynamic_type.id)
+					end
+					i := i + 1
+				end
+				if not l_non_conforming_types.is_empty then
+					l_has_non_conforming_types := True
+					l_non_conforming_types.sort (dynamic_type_id_sorter)
+					nb := l_non_conforming_types.count
+					create l_dts_ids.make (5 * nb)
+					from i := 1 until i > nb loop
+						if i /= 1 then
+							l_dts_ids.append_character (',')
+						end
+						l_dts_ids.append_string (l_non_conforming_types.item (i).out)
+						i := i + 1
+					end
+					dynamic_type_id_set_names.search (l_dts_ids)
+					if dynamic_type_id_set_names.found then
+						l_dts_name := dynamic_type_id_set_names.found_item
+					else
+						l_dts_name := c_ge_dts + (dynamic_type_id_set_names.count + 1).out
+						dynamic_type_id_set_names.force_last (l_dts_name, l_dts_ids)
+					end
+				end
+				l_non_conforming_types.wipe_out
+			end
 			if a_target_type.is_expanded then
 -- TODO: check whether 'copy' has been redefined in `l_source_type'.
 				if l_source_type.is_expanded then
+					if l_source_type.is_generic then
 -- TODO: there might be some problems if the expanded types are generic with different actual parameters.
-					print_expression (an_expression)
+						if l_has_non_conforming_types then
+							current_file.put_character ('*')
+							current_file.put_character ('(')
+							current_file.put_string (c_ge_check_catcall)
+							current_file.put_character ('(')
+								-- The object is already equiped with a type-id.
+								-- Just pass its address to 'GE_check_catcall'.
+							current_file.put_character ('&')
+							current_file.put_character ('(')
+						end
+						print_expression (an_expression)
+						if l_has_non_conforming_types then
+							current_file.put_character (')')
+							current_file.put_character (',')
+							current_file.put_string (l_dts_name)
+							current_file.put_character (',')
+							current_file.put_integer (nb)
+							current_file.put_character (')')
+							current_file.put_character (')')
+						end
+					else
+						if l_has_non_conforming_types then
+							current_file.put_character ('(')
+							print_boxed_type_cast (l_source_type, current_file)
+							current_file.put_character ('(')
+							current_file.put_string (c_ge_check_catcall)
+							current_file.put_character ('(')
+								-- We need to box the source object in order
+								-- to pass it to 'GE_check_catcall'.
+							print_boxed_expression (an_expression, l_source_type)
+							current_file.put_character (',')
+							current_file.put_string (l_dts_name)
+							current_file.put_character (',')
+							current_file.put_integer (nb)
+							current_file.put_character (')')
+							current_file.put_character (')')
+							current_file.put_character (')')
+							current_file.put_string (c_arrow)
+							print_boxed_attribute_item_name (l_source_type, current_file)
+						else
+							print_expression (an_expression)
+						end
+					end
 				else
 					if a_target_type.is_generic then
 -- TODO: there might be some problems if the expanded types are generic with different actual parameters.
@@ -5795,15 +5882,48 @@ feature {NONE} -- Expression generation
 						current_file.put_character ('(')
 						print_type_cast (a_target_type, current_file)
 						current_file.put_character ('(')
+						if l_has_non_conforming_types then
+							current_file.put_string (c_ge_check_catcall)
+							current_file.put_character ('(')
+						end
 						print_expression (an_expression)
+						if l_has_non_conforming_types then
+							current_file.put_character (',')
+							current_file.put_string (l_dts_name)
+							current_file.put_character (',')
+							current_file.put_integer (nb)
+							current_file.put_character (')')
+						end
 						current_file.put_character (')')
 						current_file.put_character (')')
 					else
 							-- The source object has been boxed.
-						print_boxed_attribute_item_access (an_expression, a_target_type)
+						if l_has_non_conforming_types then
+							current_file.put_character ('(')
+							print_boxed_type_cast (a_target_type, current_file)
+							current_file.put_character ('(')
+							current_file.put_string (c_ge_check_catcall)
+							current_file.put_character ('(')
+							print_expression (an_expression)
+							current_file.put_character (',')
+							current_file.put_string (l_dts_name)
+							current_file.put_character (',')
+							current_file.put_integer (nb)
+							current_file.put_character (')')
+							current_file.put_character (')')
+							current_file.put_character (')')
+							current_file.put_string (c_arrow)
+							print_boxed_attribute_item_name (l_source_type, current_file)
+						else
+							print_boxed_attribute_item_access (an_expression, a_target_type)
+						end
 					end
 				end
 			else
+				if l_has_non_conforming_types then
+					current_file.put_string (c_ge_check_catcall)
+					current_file.put_character ('(')
+				end
 				if l_source_type.is_expanded then
 					if l_source_type.is_generic then
 							-- The object is already equiped with a type-id.
@@ -5824,6 +5944,13 @@ feature {NONE} -- Expression generation
 					else
 						print_expression (an_expression)
 					end
+				end
+				if l_has_non_conforming_types then
+					current_file.put_character (',')
+					current_file.put_string (l_dts_name)
+					current_file.put_character (',')
+					current_file.put_integer (nb)
+					current_file.put_character (')')
 				end
 			end
 		end
@@ -6250,6 +6377,7 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 		local
 			i, nb: INTEGER
 			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
 			l_assignment_target: ET_WRITABLE
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
@@ -6271,7 +6399,9 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 					print_writable (l_assignment_target)
 				else
 					l_temp := new_temp_variable (a_type)
-					l_temp.set_index (an_expression.index)
+						-- We will set the index of `l_temp' latter because
+						-- it could still be used in `call_operands'.
+					l_temp_index := an_expression.index
 					operand_stack.force (l_temp)
 					print_indentation
 					print_temp_name (l_temp, current_file)
@@ -6311,6 +6441,12 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 				current_file.put_new_line
 			end
 			call_operands.wipe_out
+			if l_temp_index /= 0 then
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				check l_temp_not_void: l_temp /= Void end
+				l_temp.set_index (l_temp_index)
+			end
 		end
 
 	print_current (an_expression: ET_CURRENT) is
@@ -6425,6 +6561,7 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 			l_left_type_set: ET_DYNAMIC_TYPE_SET
 			l_right_type_set: ET_DYNAMIC_TYPE_SET
 			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
 			l_assignment_target: ET_WRITABLE
 		do
 			l_assignment_target := assignment_target
@@ -6439,7 +6576,9 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 					print_writable (l_assignment_target)
 				else
 					l_temp := new_temp_variable (current_system.boolean_type)
-					l_temp.set_index (an_expression.index)
+						-- We will set the index of `l_temp' latter because
+						-- it could still be used in `call_operands'.
+					l_temp_index := an_expression.index
 					operand_stack.force (l_temp)
 					print_indentation
 					print_temp_name (l_temp, current_file)
@@ -6489,6 +6628,12 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 				current_file.put_new_line
 			end
 			call_operands.wipe_out
+			if l_temp_index /= 0 then
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				check l_temp_not_void: l_temp /= Void end
+				l_temp.set_index (l_temp_index)
+			end
 		end
 
 	print_expression (an_expression: ET_EXPRESSION) is
@@ -6975,6 +7120,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
 			i, nb: INTEGER
 			l_assignment_target: ET_WRITABLE
 			l_int_promoted: BOOLEAN
@@ -7055,7 +7201,9 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						print_writable (l_assignment_target)
 					else
 						l_temp := new_temp_variable (l_dynamic_type)
-						l_temp.set_index (an_expression.index)
+							-- We will set the index of `l_temp' latter because
+							-- it could still be used in `call_operands'.
+						l_temp_index := an_expression.index
 						operand_stack.force (l_temp)
 						print_indentation
 						print_temp_name (l_temp, current_file)
@@ -7106,6 +7254,12 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					current_file.put_new_line
 				end
 				call_operands.wipe_out
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					check l_temp_not_void: l_temp /= Void end
+					l_temp.set_index (l_temp_index)
+				end
 			end
 		end
 
@@ -7115,6 +7269,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			an_expression_not_void: an_expression /= Void
 		local
 			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
 			i, nb: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
@@ -7154,7 +7309,9 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						print_writable (l_assignment_target)
 					else
 						l_temp := new_temp_variable (l_tuple_type)
-						l_temp.set_index (an_expression.index)
+							-- We will set the index of `l_temp' latter because
+							-- it could still be used in `call_operands'.
+						l_temp_index := an_expression.index
 						operand_stack.force (l_temp)
 						print_indentation
 						print_temp_name (l_temp, current_file)
@@ -7188,6 +7345,12 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					current_file.put_new_line
 				end
 				call_operands.wipe_out
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					check l_temp_not_void: l_temp /= Void end
+					l_temp.set_index (l_temp_index)
+				end
 			end
 		end
 
@@ -7292,6 +7455,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			i, nb: INTEGER
 			l_comma: BOOLEAN
 			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_assignment_target: ET_WRITABLE
@@ -7371,7 +7535,9 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 								else
 									l_dynamic_type := l_dynamic_type_set.static_type
 									l_temp := new_temp_variable (l_dynamic_type)
-									l_temp.set_index (an_expression.index)
+										-- We will set the index of `l_temp' latter because
+										-- it could still be used in `call_operands'.
+									l_temp_index := an_expression.index
 									operand_stack.force (l_temp)
 									print_indentation
 									print_temp_name (l_temp, current_file)
@@ -7426,6 +7592,12 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				end
 			end
 			call_operands.wipe_out
+			if l_temp_index /= 0 then
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				check l_temp_not_void: l_temp /= Void end
+				l_temp.set_index (l_temp_index)
+			end
 		end
 
 	print_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
@@ -7456,6 +7628,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_call_type_set: ET_DYNAMIC_TYPE_SET
 			l_call_type: ET_DYNAMIC_TYPE
 			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
 			l_temp_target: ET_IDENTIFIER
 			l_assignment_target: ET_WRITABLE
 			l_semistrict_target: ET_WRITABLE
@@ -7525,7 +7698,9 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 							if l_temp_target = Void or else not l_temp_target.is_temporary then
 								l_temp_target := Void
 								l_temp := new_temp_variable (l_target_static_type)
-								l_temp.set_index (call_operands.first.index)
+									-- We will set the index of `l_temp' latter because
+									-- it could still be used in `call_operands'.
+								l_temp_index := call_operands.first.index
 							else
 								l_temp := l_temp_target
 								mark_temp_variable_used (l_temp)
@@ -7601,7 +7776,9 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 							print_writable (l_assignment_target)
 						else
 							l_temp := new_temp_variable (l_call_type)
-							l_temp.set_index (a_call.index)
+								-- We will set the index of `l_temp' latter because
+								-- it ccould still be used in `call_operands'.
+							l_temp_index := a_call.index
 							operand_stack.force (l_temp)
 							print_indentation
 							print_temp_name (l_temp, current_file)
@@ -7687,6 +7864,12 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				end
 			end
 			call_operands.wipe_out
+			if l_temp_index /= 0 then
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				check l_temp_not_void: l_temp /= Void end
+				l_temp.set_index (l_temp_index)
+			end
 		end
 
 	print_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
@@ -8056,6 +8239,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
 			l_assignment_target: ET_WRITABLE
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
@@ -8092,7 +8276,9 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						else
 							l_dynamic_type := l_dynamic_type_set.static_type
 							l_temp := new_temp_variable (l_dynamic_type)
-							l_temp.set_index (an_expression.index)
+								-- We will set the index of `l_temp' latter because
+								-- it could still be used in `call_operands'.
+							l_temp_index := an_expression.index
 							operand_stack.force (l_temp)
 							print_indentation
 							print_temp_name (l_temp, current_file)
@@ -8169,6 +8355,12 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					current_file.put_new_line
 				end
 				call_operands.wipe_out
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					check l_temp_not_void: l_temp /= Void end
+					l_temp.set_index (l_temp_index)
+				end
 			end
 		end
 
@@ -8482,6 +8674,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			l_call_type_set: ET_DYNAMIC_TYPE_SET
 			l_call_type: ET_DYNAMIC_TYPE
 			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
 			l_assignment_target: ET_WRITABLE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
@@ -8615,7 +8808,9 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 							print_writable (l_assignment_target)
 						else
 							l_temp := new_temp_variable (l_call_type)
-							l_temp.set_index (a_call.index)
+								-- We will set the index of `l_temp' latter because
+								-- it could still be used in `call_operands'.
+							l_temp_index := a_call.index
 							operand_stack.force (l_temp)
 							print_indentation
 							print_temp_name (l_temp, current_file)
@@ -8638,6 +8833,12 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 						print_query_call (l_dynamic_feature, current_type)
 					end
 					call_operands.wipe_out
+					if l_temp_index /= 0 then
+							-- We had to wait until this stage to set the index of `l_temp'
+							-- because it could have still been used in `call_operands'.
+						check l_temp_not_void: l_temp /= Void end
+						l_temp.set_index (l_temp_index)
+					end
 				end
 			end
 		end
@@ -9647,6 +9848,7 @@ feature {NONE} -- Agent generation
 			an_agent_not_void: an_agent /= Void
 		local
 			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
 			i, nb: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_assignment_target: ET_WRITABLE
@@ -9696,7 +9898,9 @@ feature {NONE} -- Agent generation
 						print_writable (l_assignment_target)
 					else
 						l_temp := new_temp_variable (l_agent_type)
-						l_temp.set_index (an_agent.index)
+							-- We will set the index of `l_temp' latter because
+							-- it could still be used in `call_operands'.
+						l_temp_index := an_agent.index
 						operand_stack.force (l_temp)
 						print_indentation
 						print_temp_name (l_temp, current_file)
@@ -9721,6 +9925,12 @@ feature {NONE} -- Agent generation
 					current_file.put_new_line
 				end
 				call_operands.wipe_out
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					check l_temp_not_void: l_temp /= Void end
+					l_temp.set_index (l_temp_index)
+				end
 			end
 		end
 
@@ -10720,6 +10930,8 @@ feature {NONE} -- Polymorphic call generation
 	print_polymorphic_query_calls is
 			-- Print polymorphic query calls.
 		local
+			l_target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]
+			l_target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER]
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_type: ET_DYNAMIC_TYPE
 			l_first_call, l_last_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
@@ -10743,9 +10955,16 @@ feature {NONE} -- Polymorphic call generation
 			l_temp: ET_IDENTIFIER
 			l_caller: ET_DYNAMIC_FEATURE
 			old_feature: ET_DYNAMIC_FEATURE
+			old_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_sets: ET_DYNAMIC_STANDALONE_TYPE_SET_LIST
 		do
 			old_feature := current_feature
-			current_feature := polymorphic_call_feature
+			current_feature := dummy_feature
+			old_dynamic_type_sets := current_feature.dynamic_type_sets
+			l_argument_type_sets := standalone_type_sets
+			current_feature.set_dynamic_type_sets (l_argument_type_sets)
+			l_target_dynamic_type_ids := target_dynamic_type_ids
+			l_target_dynamic_types := target_dynamic_types
 			l_dynamic_types := current_system.dynamic_types
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
@@ -10770,11 +10989,11 @@ feature {NONE} -- Polymorphic call generation
 						nb2 := l_target_type_set.count
 						from j := 1 until j > nb2 loop
 							l_dynamic_type := l_target_type_set.dynamic_type (j)
-							if not polymorphic_types.has (l_dynamic_type.id) then
+							if not l_target_dynamic_types.has (l_dynamic_type.id) then
 								if not l_switch then
-									polymorphic_type_ids.force_last (l_dynamic_type.id)
+									l_target_dynamic_type_ids.force_last (l_dynamic_type.id)
 								end
-								polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
+								l_target_dynamic_types.force_last (l_dynamic_type, l_dynamic_type.id)
 							end
 							j := j + 1
 						end
@@ -10800,11 +11019,11 @@ feature {NONE} -- Polymorphic call generation
 								nb2 := l_target_type_set.count
 								from j := 1 until j > nb2 loop
 									l_dynamic_type := l_target_type_set.dynamic_type (j)
-									if not polymorphic_types.has (l_dynamic_type.id) then
+									if not l_target_dynamic_types.has (l_dynamic_type.id) then
 										if not l_switch then
-											polymorphic_type_ids.force_last (l_dynamic_type.id)
+											l_target_dynamic_type_ids.force_last (l_dynamic_type.id)
 										end
-										polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
+										l_target_dynamic_types.force_last (l_dynamic_type, l_dynamic_type.id)
 									end
 									j := j + 1
 								end
@@ -10897,8 +11116,8 @@ feature {NONE} -- Polymorphic call generation
 								current_file.put_character (' ')
 								current_file.put_character ('{')
 								current_file.put_new_line
-								from polymorphic_types.start until polymorphic_types.after loop
-									l_dynamic_type := polymorphic_types.item_for_iteration
+								from l_target_dynamic_types.start until l_target_dynamic_types.after loop
+									l_dynamic_type := l_target_dynamic_types.item_for_iteration
 									print_indentation
 									current_file.put_string (c_case)
 									current_file.put_character (' ')
@@ -10910,20 +11129,19 @@ feature {NONE} -- Polymorphic call generation
 									current_file.put_string (c_return)
 									current_file.put_character (' ')
 									current_file.put_character ('(')
-									set_polymorphic_call_dynamic_type_sets (l_first_call, l_last_call, l_dynamic_type)
+									set_polymorphic_call_argument_type_sets (l_argument_type_sets, l_first_call, l_last_call, l_dynamic_type)
 									print_adapted_named_query_call (l_static_call.name, l_dynamic_type, l_result_type)
-									standalone_type_sets.go_before
 									current_file.put_character (')')
 									current_file.put_character (';')
 									current_file.put_new_line
 									dedent
-									polymorphic_types.forth
+									l_target_dynamic_types.forth
 								end
 								print_indentation
 								current_file.put_character ('}')
 								current_file.put_new_line
 							else
-								polymorphic_type_ids.sort (polymorphic_type_id_sorter)
+								l_target_dynamic_type_ids.sort (dynamic_type_id_sorter)
 								print_indentation
 								current_file.put_string (c_int)
 								current_file.put_character (' ')
@@ -10936,7 +11154,7 @@ feature {NONE} -- Polymorphic call generation
 								current_file.put_character (';')
 								current_file.put_new_line
 									-- Use binary search.
-								print_binary_search_polymorphic_calls (l_first_call, l_last_call, l_result_type, 1, polymorphic_type_ids.count)
+								print_binary_search_polymorphic_calls (l_first_call, l_last_call, l_result_type, 1, l_target_dynamic_type_ids.count, l_target_dynamic_type_ids, l_target_dynamic_types)
 							end
 							print_indentation
 							current_file.put_string (c_return)
@@ -10951,19 +11169,22 @@ feature {NONE} -- Polymorphic call generation
 							flush_to_c_file
 							call_operands.wipe_out
 						end
-						polymorphic_type_ids.wipe_out
-						polymorphic_types.wipe_out
+						l_target_dynamic_type_ids.wipe_out
+						l_target_dynamic_types.wipe_out
 						l_first_call := l_last_call.next
 					end
 				end
 				i := i + 1
 			end
+			current_feature.set_dynamic_type_sets (old_dynamic_type_sets)
 			current_feature := old_feature
 		end
 
 	print_polymorphic_procedure_calls is
 			-- Print polymorphic procedure calls.
 		local
+			l_target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]
+			l_target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER]
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_type: ET_DYNAMIC_TYPE
 			l_first_call, l_last_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
@@ -10985,9 +11206,16 @@ feature {NONE} -- Polymorphic call generation
 			l_temp: ET_IDENTIFIER
 			l_caller: ET_DYNAMIC_FEATURE
 			old_feature: ET_DYNAMIC_FEATURE
+			old_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_sets: ET_DYNAMIC_STANDALONE_TYPE_SET_LIST
 		do
 			old_feature := current_feature
-			current_feature := polymorphic_call_feature
+			current_feature := dummy_feature
+			old_dynamic_type_sets := current_feature.dynamic_type_sets
+			l_argument_type_sets := standalone_type_sets
+			current_feature.set_dynamic_type_sets (l_argument_type_sets)
+			l_target_dynamic_type_ids := target_dynamic_type_ids
+			l_target_dynamic_types := target_dynamic_types
 			l_dynamic_types := current_system.dynamic_types
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
@@ -11007,11 +11235,11 @@ feature {NONE} -- Polymorphic call generation
 						nb2 := l_target_type_set.count
 						from j := 1 until j > nb2 loop
 							l_dynamic_type := l_target_type_set.dynamic_type (j)
-							if not polymorphic_types.has (l_dynamic_type.id) then
+							if not l_target_dynamic_types.has (l_dynamic_type.id) then
 								if not l_switch then
-									polymorphic_type_ids.force_last (l_dynamic_type.id)
+									l_target_dynamic_type_ids.force_last (l_dynamic_type.id)
 								end
-								polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
+								l_target_dynamic_types.force_last (l_dynamic_type, l_dynamic_type.id)
 							end
 							j := j + 1
 						end
@@ -11037,11 +11265,11 @@ feature {NONE} -- Polymorphic call generation
 								nb2 := l_target_type_set.count
 								from j := 1 until j > nb2 loop
 									l_dynamic_type := l_target_type_set.dynamic_type (j)
-									if not polymorphic_types.has (l_dynamic_type.id) then
+									if not l_target_dynamic_types.has (l_dynamic_type.id) then
 										if not l_switch then
-											polymorphic_type_ids.force_last (l_dynamic_type.id)
+											l_target_dynamic_type_ids.force_last (l_dynamic_type.id)
 										end
-										polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
+										l_target_dynamic_types.force_last (l_dynamic_type, l_dynamic_type.id)
 									end
 									j := j + 1
 								end
@@ -11132,8 +11360,8 @@ feature {NONE} -- Polymorphic call generation
 								current_file.put_character (' ')
 								current_file.put_character ('{')
 								current_file.put_new_line
-								from polymorphic_types.start until polymorphic_types.after loop
-									l_dynamic_type := polymorphic_types.item_for_iteration
+								from l_target_dynamic_types.start until l_target_dynamic_types.after loop
+									l_dynamic_type := l_target_dynamic_types.item_for_iteration
 									print_indentation
 									current_file.put_string (c_case)
 									current_file.put_character (' ')
@@ -11142,22 +11370,21 @@ feature {NONE} -- Polymorphic call generation
 									current_file.put_new_line
 									indent
 									print_indentation
-									set_polymorphic_call_dynamic_type_sets (l_first_call, l_last_call, l_dynamic_type)
+									set_polymorphic_call_argument_type_sets (l_argument_type_sets, l_first_call, l_last_call, l_dynamic_type)
 									print_named_procedure_call (l_static_call.name, l_dynamic_type)
-									standalone_type_sets.go_before
 									current_file.put_new_line
 									print_indentation
 									current_file.put_string (c_break)
 									current_file.put_character (';')
 									current_file.put_new_line
 									dedent
-									polymorphic_types.forth
+									l_target_dynamic_types.forth
 								end
 								print_indentation
 								current_file.put_character ('}')
 								current_file.put_new_line
 							else
-								polymorphic_type_ids.sort (polymorphic_type_id_sorter)
+								l_target_dynamic_type_ids.sort (dynamic_type_id_sorter)
 								print_indentation
 								current_file.put_string (c_int)
 								current_file.put_character (' ')
@@ -11170,7 +11397,7 @@ feature {NONE} -- Polymorphic call generation
 								current_file.put_character (';')
 								current_file.put_new_line
 									-- Use binary search.
-								print_binary_search_polymorphic_calls (l_first_call, l_last_call, Void, 1, polymorphic_type_ids.count)
+								print_binary_search_polymorphic_calls (l_first_call, l_last_call, Void, 1, l_target_dynamic_type_ids.count, l_target_dynamic_type_ids, l_target_dynamic_types)
 							end
 							dedent
 							current_file.put_character ('}')
@@ -11179,58 +11406,63 @@ feature {NONE} -- Polymorphic call generation
 							flush_to_c_file
 							call_operands.wipe_out
 						end
-						polymorphic_type_ids.wipe_out
-						polymorphic_types.wipe_out
+						l_target_dynamic_type_ids.wipe_out
+						l_target_dynamic_types.wipe_out
 						l_first_call := l_last_call.next
 					end
 				end
 				i := i + 1
 			end
+			current_feature.set_dynamic_type_sets (old_dynamic_type_sets)
 			current_feature := old_feature
 		end
 
-	print_binary_search_polymorphic_calls (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_result_type: ET_DYNAMIC_TYPE; l, u: INTEGER) is
+	print_binary_search_polymorphic_calls (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_result_type: ET_DYNAMIC_TYPE; l, u: INTEGER; a_target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]; a_target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER]) is
 			-- Print to `current_file' dynamic binding code for the calls between `a_first_call'
-			-- and `a_last_call' whose target dynamic types are those stored in `polymorphic_types'
-			-- whose type-id is itself stored between indexes `l' and `u' in `polymorphic_type_ids'.
+			-- and `a_last_call' whose target dynamic types are those stored in `a_target_dynamic_types'
+			-- whose type-id is itself stored between indexes `l' and `u' in `a_target_dynamic_type_ids'.
 			-- The generated code uses binary search to find out which feature to execute.
 		require
 			a_first_call_not_void: a_first_call /= Void
 			a_last_call_not_void: a_last_call /= Void
+			a_target_dynamic_type_ids_not_void: a_target_dynamic_type_ids /= Void
+			a_target_dynamic_types_not_void: a_target_dynamic_types /= Void
+			no_void_target_dynamic_type: not a_target_dynamic_types.has_item (Void)
+			consistent_count: a_target_dynamic_types.count = a_target_dynamic_type_ids.count
 			l_large_enough: l >= 1
 			l_small_enough: l <= u
-			u_small_enough: u <= polymorphic_type_ids.count
+			u_small_enough: u <= a_target_dynamic_type_ids.count
 		local
 			t: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_type_id: INTEGER
 			l_temp: ET_IDENTIFIER
 			l_static_call: ET_CALL_COMPONENT
+			l_argument_type_sets: ET_DYNAMIC_STANDALONE_TYPE_SET_LIST
 		do
+			l_argument_type_sets := standalone_type_sets
 			l_static_call := a_first_call.static_call
 			l_temp := temp_variable
 			if l = u then
-				l_type_id := polymorphic_type_ids.item (l)
-				l_dynamic_type := polymorphic_types.item (l_type_id)
+				l_type_id := a_target_dynamic_type_ids.item (l)
+				l_dynamic_type := a_target_dynamic_types.item (l_type_id)
 				print_indentation
 				if a_result_type /= Void then
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
-					set_polymorphic_call_dynamic_type_sets (a_first_call, a_last_call, l_dynamic_type)
+					set_polymorphic_call_argument_type_sets (l_argument_type_sets, a_first_call, a_last_call, l_dynamic_type)
 					print_adapted_named_query_call (l_static_call.name, l_dynamic_type, a_result_type)
-					standalone_type_sets.go_before
 					current_file.put_character (')')
 					current_file.put_character (';')
 				else
-					set_polymorphic_call_dynamic_type_sets (a_first_call, a_last_call, l_dynamic_type)
+					set_polymorphic_call_argument_type_sets (l_argument_type_sets, a_first_call, a_last_call, l_dynamic_type)
 					print_named_procedure_call (l_static_call.name, l_dynamic_type)
-					standalone_type_sets.go_before
 				end
 				current_file.put_new_line
 			elseif l + 1 = u then
-				l_type_id := polymorphic_type_ids.item (l)
-				l_dynamic_type := polymorphic_types.item (l_type_id)
+				l_type_id := a_target_dynamic_type_ids.item (l)
+				l_dynamic_type := a_target_dynamic_types.item (l_type_id)
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
@@ -11247,15 +11479,13 @@ feature {NONE} -- Polymorphic call generation
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
-					set_polymorphic_call_dynamic_type_sets (a_first_call, a_last_call, l_dynamic_type)
+					set_polymorphic_call_argument_type_sets (l_argument_type_sets, a_first_call, a_last_call, l_dynamic_type)
 					print_adapted_named_query_call (l_static_call.name, l_dynamic_type, a_result_type)
-					standalone_type_sets.go_before
 					current_file.put_character (')')
 					current_file.put_character (';')
 				else
-					set_polymorphic_call_dynamic_type_sets (a_first_call, a_last_call, l_dynamic_type)
+					set_polymorphic_call_argument_type_sets (l_argument_type_sets, a_first_call, a_last_call, l_dynamic_type)
 					print_named_procedure_call (l_static_call.name, l_dynamic_type)
-					standalone_type_sets.go_before
 				end
 				current_file.put_new_line
 				current_file.put_character ('}')
@@ -11264,29 +11494,27 @@ feature {NONE} -- Polymorphic call generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				l_type_id := polymorphic_type_ids.item (u)
-				l_dynamic_type := polymorphic_types.item (l_type_id)
+				l_type_id := a_target_dynamic_type_ids.item (u)
+				l_dynamic_type := a_target_dynamic_types.item (l_type_id)
 				print_indentation
 				if a_result_type /= Void then
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
-					set_polymorphic_call_dynamic_type_sets (a_first_call, a_last_call, l_dynamic_type)
+					set_polymorphic_call_argument_type_sets (l_argument_type_sets, a_first_call, a_last_call, l_dynamic_type)
 					print_adapted_named_query_call (l_static_call.name, l_dynamic_type, a_result_type)
-					standalone_type_sets.go_before
 					current_file.put_character (')')
 					current_file.put_character (';')
 				else
-					set_polymorphic_call_dynamic_type_sets (a_first_call, a_last_call, l_dynamic_type)
+					set_polymorphic_call_argument_type_sets (l_argument_type_sets, a_first_call, a_last_call, l_dynamic_type)
 					print_named_procedure_call (l_static_call.name, l_dynamic_type)
-					standalone_type_sets.go_before
 				end
 				current_file.put_new_line
 				current_file.put_character ('}')
 				current_file.put_new_line
 			else
 				t := l + (u - l) // 2
-				l_type_id := polymorphic_type_ids.item (t)
+				l_type_id := a_target_dynamic_type_ids.item (t)
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
@@ -11298,14 +11526,14 @@ feature {NONE} -- Polymorphic call generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				print_binary_search_polymorphic_calls (a_first_call, a_last_call, a_result_type, l, t)
+				print_binary_search_polymorphic_calls (a_first_call, a_last_call, a_result_type, l, t, a_target_dynamic_type_ids, a_target_dynamic_types)
 				current_file.put_character ('}')
 				current_file.put_character (' ')
 				current_file.put_string (c_else)
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				print_binary_search_polymorphic_calls (a_first_call, a_last_call, a_result_type, t + 1, u)
+				print_binary_search_polymorphic_calls (a_first_call, a_last_call, a_result_type, t + 1, u, a_target_dynamic_type_ids, a_target_dynamic_types)
 				current_file.put_character ('}')
 				current_file.put_new_line
 			end
@@ -11378,33 +11606,43 @@ feature {NONE} -- Polymorphic call generation
 			end
 		end
 
-	set_polymorphic_call_dynamic_type_sets (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_target_type: ET_DYNAMIC_TYPE) is
-			-- Set `polymorphic_call_feature.dynamic_type_sets' for the calls between
-			-- `a_first_call' and `a_last_call' with target type `a_target_type'.
+	set_polymorphic_call_argument_type_sets (an_argument_type_sets: ET_DYNAMIC_STANDALONE_TYPE_SET_LIST; a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Set `an_argument_type_sets' as the union of actual argument type
+			-- sets for the calls between `a_first_call' and `a_last_call' with
+			-- target type `a_target_type'.
 		require
+			an_argument_type_sets_not_void: an_argument_type_sets /= Void
 			a_first_call_not_void: a_first_call /= Void
 			a_last_call_not_void: a_last_call /= Void
 			a_target_type_not_void: a_target_type /= Void
 		local
 			l_actual_arguments: ET_ARGUMENT_OPERANDS
 			i, nb_args: INTEGER
-			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_caller: ET_DYNAMIC_FEATURE
 			l_is_first: BOOLEAN
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_other_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_standalone_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 			l_last_call_next: ET_DYNAMIC_QUALIFIED_CALL
 		do
 			l_actual_arguments := a_first_call.static_call.arguments
 			if l_actual_arguments /= Void and then l_actual_arguments.count > 0 then
 				nb_args := l_actual_arguments.count
-				l_dynamic_type_sets := polymorphic_call_feature.dynamic_type_sets
-				l_dynamic_type_sets.wipe_out
-				l_dynamic_type_sets.resize (nb_args)
+				if an_argument_type_sets.count < nb_args then
+					an_argument_type_sets.resize (nb_args)
+					from
+						i := an_argument_type_sets.count + 1
+					until
+						i > nb_args
+					loop
+						create l_standalone_type_set.make (current_system.any_type)
+						an_argument_type_sets.put_last (l_standalone_type_set)
+						i := i + 1
+					end
+				end
 				from
 					l_call := a_first_call
+					l_is_first := True
 					l_last_call_next := a_last_call.next
 				until
 					l_call = l_last_call_next
@@ -11412,7 +11650,6 @@ feature {NONE} -- Polymorphic call generation
 					if l_call.target_type_set.has_type (a_target_type) then
 						l_caller := l_call.current_feature
 						l_actual_arguments := l_call.static_call.arguments
-						l_is_first := l_dynamic_type_sets.is_empty
 						from i := 1 until i > nb_args loop
 							l_argument_type_set := l_caller.dynamic_type_set (l_actual_arguments.actual_argument (i))
 							if l_argument_type_set = Void then
@@ -11423,62 +11660,28 @@ feature {NONE} -- Polymorphic call generation
 								i := nb_args + 1
 								l_call := a_last_call
 							elseif l_is_first then
-								l_dynamic_type_sets.put_last (l_argument_type_set)
+								l_standalone_type_set := an_argument_type_sets.item (i)
+								l_standalone_type_set.reset (l_argument_type_set.static_type)
+								l_standalone_type_set.put_types (l_argument_type_set)
 							else
-								l_other_argument_type_set := l_dynamic_type_sets.item (i)
-								if l_argument_type_set.is_subset (l_other_argument_type_set) then
-									-- Do nothing.
-								elseif l_other_argument_type_set.is_subset (l_argument_type_set) then
-									l_dynamic_type_sets.put (l_argument_type_set, i)
+								l_standalone_type_set := an_argument_type_sets.item (i)
+								if l_argument_type_set.static_type.conforms_to_type (l_standalone_type_set.static_type, current_system) then
+									-- Nothing to be done.
+								elseif l_standalone_type_set.static_type.conforms_to_type (l_argument_type_set.static_type, current_system) then
+									l_standalone_type_set.set_static_type (l_argument_type_set.static_type, current_system)
 								else
-									l_standalone_type_set ?= l_other_argument_type_set
-									if l_standalone_type_set = Void then
-										standalone_type_sets.forth
-										if standalone_type_sets.after then
-											create l_standalone_type_set.make (l_argument_type_set.static_type)
-											standalone_type_sets.force_last (l_standalone_type_set)
-											standalone_type_sets.finish
-										else
-											l_standalone_type_set := standalone_type_sets.item_for_iteration
-										end
-										l_standalone_type_set.reset (l_argument_type_set)
-										l_dynamic_type_sets.put (l_standalone_type_set, i)
-									end
-									l_standalone_type_set.put_types (l_argument_type_set)
+									l_standalone_type_set.set_static_type (current_system.any_type, current_system)
 								end
+								l_standalone_type_set.put_types (l_argument_type_set)
 							end
 							i := i + 1
 						end
+						l_is_first := False
 					end
 					l_call := l_call.next
 				end
 			end
 		end
-
-	polymorphic_call_feature: ET_DYNAMIC_FEATURE
-			-- Feature corresponding to polymorphic calls
-
-	polymorphic_type_ids: DS_ARRAYED_LIST [INTEGER]
-			-- List of target type ids of current polymorphic call
-
-	polymorphic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER]
-			-- Target type current polymorphic call indexed by type ids.
-
-	polymorphic_type_id_sorter: DS_QUICK_SORTER [INTEGER] is
-			-- Type id sorter
-		local
-			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
-		once
-			create l_comparator.make
-			create Result.make (l_comparator)
-		ensure
-			sorter_not_void: Result /= Void
-		end
-
-	standalone_type_sets: DS_ARRAYED_LIST [ET_DYNAMIC_STANDALONE_TYPE_SET]
-			-- Pool of standalone type sets to be used in `polymorphic_call_feature.dynamic_type_sets'
-			-- or in `deep_feature_target_type_sets'.
-			-- Its cursor points to the last type set used.
 
 feature {NONE} -- Deep features generation
 
@@ -11499,7 +11702,6 @@ feature {NONE} -- Deep features generation
 				end
 				deep_twin_types.wipe_out
 				deep_feature_target_type_sets.wipe_out
-				standalone_type_sets.go_before
 			end
 		end
 
@@ -11979,6 +12181,8 @@ feature {NONE} -- Deep features generation
 		require
 			a_target_type_set_not_void: a_target_type_set /= Void
 		local
+			l_target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]
+			l_target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER]
 			l_static_type: ET_DYNAMIC_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_type_id: INTEGER
@@ -12038,15 +12242,17 @@ feature {NONE} -- Deep features generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
+			l_target_dynamic_type_ids := target_dynamic_type_ids
+			l_target_dynamic_types := target_dynamic_types
 			nb := a_target_type_set.count
 			from i := 1 until i > nb loop
 				l_dynamic_type := a_target_type_set.dynamic_type (i)
 				l_type_id := l_dynamic_type.id
-				polymorphic_type_ids.force_last (l_type_id)
-				polymorphic_types.force_last (l_dynamic_type, l_type_id)
+				l_target_dynamic_type_ids.force_last (l_type_id)
+				l_target_dynamic_types.force_last (l_dynamic_type, l_type_id)
 				i := i + 1
 			end
-			polymorphic_type_ids.sort (polymorphic_type_id_sorter)
+			l_target_dynamic_type_ids.sort (dynamic_type_id_sorter)
 			if l_switch then
 					-- Use switch statement.
 				print_indentation
@@ -12058,10 +12264,10 @@ feature {NONE} -- Deep features generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				nb := polymorphic_type_ids.count
+				nb := l_target_dynamic_type_ids.count
 				from i := 1 until i > nb loop
-					l_type_id := polymorphic_type_ids.item (i)
-					l_dynamic_type := polymorphic_types.item (l_type_id)
+					l_type_id := l_target_dynamic_type_ids.item (i)
+					l_dynamic_type := l_target_dynamic_types.item (l_type_id)
 					print_indentation
 					current_file.put_string (c_case)
 					current_file.put_character (' ')
@@ -12096,10 +12302,10 @@ feature {NONE} -- Deep features generation
 				current_file.put_character (';')
 				current_file.put_new_line
 					-- Use binary search.
-				print_deep_twin_binary_search_polymorphic_call (l_static_type, 1, polymorphic_type_ids.count)
+				print_deep_twin_binary_search_polymorphic_call (l_static_type, 1, l_target_dynamic_type_ids.count, l_target_dynamic_type_ids, l_target_dynamic_types)
 			end
-			polymorphic_type_ids.wipe_out
-			polymorphic_types.wipe_out
+			l_target_dynamic_type_ids.wipe_out
+			l_target_dynamic_types.wipe_out
 			print_indentation
 			current_file.put_string (c_return)
 			current_file.put_character (' ')
@@ -12114,17 +12320,21 @@ feature {NONE} -- Deep features generation
 			current_type := old_type
 		end
 
-	print_deep_twin_binary_search_polymorphic_call (a_target_static_type: ET_DYNAMIC_TYPE; l, u: INTEGER) is
+	print_deep_twin_binary_search_polymorphic_call (a_target_static_type: ET_DYNAMIC_TYPE; l, u: INTEGER; a_target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]; a_target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER]) is
 			-- Print to `current_file' dynamic binding code for the call to 'GE_deep_twin'
 			-- whose target's static type is `a_target_static_type' and whose target's
-			-- dynamic types are those stored in `polymorphic_types' whose type-id is
-			-- itself stored between indexes `l' and `u' in `polymorphic_type_ids'.
+			-- dynamic types are those stored in `a_target_dynamic_types' whose type-id is
+			-- itself stored between indexes `l' and `u' in `a_target_dynamic_type_ids'.
 			-- The generated code uses binary search to find out which feature to execute.
 		require
 			a_target_static_type_not_void: a_target_static_type /= Void
+			a_target_dynamic_type_ids_not_void: a_target_dynamic_type_ids /= Void
+			a_target_dynamic_types_not_void: a_target_dynamic_types /= Void
+			no_void_target_dynamic_type: not a_target_dynamic_types.has_item (Void)
+			consistent_count: a_target_dynamic_types.count = a_target_dynamic_type_ids.count
 			l_large_enough: l >= 1
 			l_small_enough: l <= u
-			u_small_enough: u <= polymorphic_type_ids.count
+			u_small_enough: u <= a_target_dynamic_type_ids.count
 		local
 			t: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -12133,8 +12343,8 @@ feature {NONE} -- Deep features generation
 		do
 			l_temp := temp_variable
 			if l = u then
-				l_type_id := polymorphic_type_ids.item (l)
-				l_dynamic_type := polymorphic_types.item (l_type_id)
+				l_type_id := a_target_dynamic_type_ids.item (l)
+				l_dynamic_type := a_target_dynamic_types.item (l_type_id)
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
@@ -12144,8 +12354,8 @@ feature {NONE} -- Deep features generation
 				current_file.put_character (';')
 				current_file.put_new_line
 			elseif l + 1 = u then
-				l_type_id := polymorphic_type_ids.item (l)
-				l_dynamic_type := polymorphic_types.item (l_type_id)
+				l_type_id := a_target_dynamic_type_ids.item (l)
+				l_dynamic_type := a_target_dynamic_types.item (l_type_id)
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
@@ -12171,8 +12381,8 @@ feature {NONE} -- Deep features generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				l_type_id := polymorphic_type_ids.item (u)
-				l_dynamic_type := polymorphic_types.item (l_type_id)
+				l_type_id := a_target_dynamic_type_ids.item (u)
+				l_dynamic_type := a_target_dynamic_types.item (l_type_id)
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
@@ -12185,7 +12395,7 @@ feature {NONE} -- Deep features generation
 				current_file.put_new_line
 			else
 				t := l + (u - l) // 2
-				l_type_id := polymorphic_type_ids.item (t)
+				l_type_id := a_target_dynamic_type_ids.item (t)
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
@@ -12197,14 +12407,14 @@ feature {NONE} -- Deep features generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				print_deep_twin_binary_search_polymorphic_call (a_target_static_type, l, t)
+				print_deep_twin_binary_search_polymorphic_call (a_target_static_type, l, t, a_target_dynamic_type_ids, a_target_dynamic_types)
 				current_file.put_character ('}')
 				current_file.put_character (' ')
 				current_file.put_string (c_else)
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				print_deep_twin_binary_search_polymorphic_call (a_target_static_type, t + 1, u)
+				print_deep_twin_binary_search_polymorphic_call (a_target_static_type, t + 1, u, a_target_dynamic_type_ids, a_target_dynamic_types)
 				current_file.put_character ('}')
 				current_file.put_new_line
 			end
@@ -12343,19 +12553,17 @@ feature {NONE} -- Deep features generation
 				deep_feature_target_type_sets.search (l_attribute_type)
 				if deep_feature_target_type_sets.found then
 					l_standalone_type_set := deep_feature_target_type_sets.found_item
-					l_standalone_type_set.put_types (an_attribute_type_set)
 				else
-					standalone_type_sets.forth
-					if standalone_type_sets.after then
+					if standalone_type_sets.count > deep_feature_target_type_sets.count then
+						l_standalone_type_set := standalone_type_sets.item (deep_feature_target_type_sets.count + 1)
+						l_standalone_type_set.reset (l_attribute_type)
+					else
 						create l_standalone_type_set.make (l_attribute_type)
 						standalone_type_sets.force_last (l_standalone_type_set)
-						standalone_type_sets.finish
-					else
-						l_standalone_type_set := standalone_type_sets.item_for_iteration
 					end
 					deep_feature_target_type_sets.force_last (l_standalone_type_set, l_attribute_type)
-					l_standalone_type_set.reset (an_attribute_type_set)
 				end
+				l_standalone_type_set.put_types (an_attribute_type_set)
 				from i := 1 until i > nb loop
 					deep_twin_types.force_last (an_attribute_type_set.dynamic_type (i))
 					i := i + 1
@@ -15559,7 +15767,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character ('<')
 					current_file.put_character ('<')
 					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
 					current_file.put_character (')')
 					current_file.put_character (')')
 				end
@@ -15622,7 +15830,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character ('>')
 					current_file.put_character ('>')
 					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
 					current_file.put_character (')')
 					current_file.put_character (')')
 				end
@@ -16257,7 +16465,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_string (c_double)
 					current_file.put_character (')')
 					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+					print_attachment_expression (l_argument, l_argument_type_set, current_system.double_type)
 					current_file.put_character (')')
 					current_file.put_character (')')
 				end
@@ -17328,7 +17536,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_string (c_double)
 					current_file.put_character (')')
 					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+					print_attachment_expression (l_argument, l_argument_type_set, current_system.double_type)
 					current_file.put_character (')')
 					current_file.put_character (')')
 				end
@@ -18829,6 +19037,44 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 		end
 
+	print_dynamic_type_id_set_constants is
+			-- Print 'GE_dtsN' constants to `current_file', and their signature to `header_file'.
+			-- 'GE_dtsN' are dymamic type id sets whose ids are sorted in increasing order.
+		local
+			l_dts_name: STRING
+			l_dts_ids: STRING
+		do
+			if not dynamic_type_id_set_names.is_empty then
+				from dynamic_type_id_set_names.start until dynamic_type_id_set_names.after loop
+					l_dts_name := dynamic_type_id_set_names.item_for_iteration
+					l_dts_ids := dynamic_type_id_set_names.key_for_iteration
+					header_file.put_string (c_int)
+					header_file.put_character (' ')
+					header_file.put_string (l_dts_name)
+					header_file.put_character ('[')
+					header_file.put_character (']')
+					header_file.put_character (';')
+					header_file.put_new_line
+					current_file.put_string (c_int)
+					current_file.put_character (' ')
+					current_file.put_string (l_dts_name)
+					current_file.put_character ('[')
+					current_file.put_character (']')
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_string (l_dts_ids)
+					current_file.put_character ('}')
+					current_file.put_character (';')
+					current_file.put_new_line
+					dynamic_type_id_set_names.forth
+				end
+				header_file.put_new_line
+				current_file.put_new_line
+			end
+		end
+
 feature {NONE} -- Malloc
 
 	print_malloc_current (a_feature: ET_FEATURE) is
@@ -20319,6 +20565,9 @@ feature {NONE} -- Type generation
 			current_file.put_new_line
 				-- Dummy type at index 0.
 			current_file.put_character ('{')
+			current_file.put_integer (0)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			current_file.put_integer (0)
 			current_file.put_character (',')
 			current_file.put_character (' ')
@@ -22409,6 +22658,11 @@ feature {NONE} -- Access
 	inline_constants: DS_HASH_SET [ET_INLINE_CONSTANT]
 			-- Inline constants (such as once manifest strings)
 
+	dynamic_type_id_set_names: DS_HASH_TABLE [STRING, STRING]
+			-- Names of C arrays made up of dynamic type ids, indexed by those dynamic type ids;
+			-- Those dynamic type ids which are used as keys are of the form
+			-- "<type-id1>,<type-id2>,...,<type-idN>" and are sorted in increasing order.
+
 	operand_stack: DS_ARRAYED_STACK [ET_EXPRESSION]
 			-- Operand stack
 
@@ -22428,6 +22682,30 @@ feature {NONE} -- Implementation
 	non_conforming_types: ET_DYNAMIC_TYPE_LIST
 			-- Types non-conforming to the target of the current assignment attempt or
 			-- types to which the target of the current call to 'ANY.conforms_to' do not conform
+
+	attachment_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]
+			-- List of dynamic type ids of the source of an attachment
+
+	target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]
+			-- List of dynamic type ids of the target of a  call
+
+	target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER]
+			-- Dynamic types of the target of a call indexed by type ids
+
+	dynamic_type_id_sorter: DS_QUICK_SORTER [INTEGER] is
+			-- Dynamic type id sorter
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
+		once
+			create l_comparator.make
+			create Result.make (l_comparator)
+		ensure
+			sorter_not_void: Result /= Void
+		end
+
+	standalone_type_sets: ET_DYNAMIC_STANDALONE_TYPE_SET_LIST
+			-- Standalone type sets to be used as argument type sets when processing
+			-- polymorphic calls, or as target type sets when attributes are deep twined
 
 	in_operand: BOOLEAN
 			-- Is an operand being processed?
@@ -22818,10 +23096,12 @@ feature {NONE} -- Constants
 	c_ge_argv: STRING is "GE_argv"
 	c_ge_boxed: STRING is "GE_boxed"
 	c_ge_ceiling: STRING is "GE_ceiling"
+	c_ge_check_catcall: STRING is "GE_check_catcall"
 	c_ge_const_init: STRING is "GE_const_init"
 	c_ge_deep: STRING is "GE_deep"
 	c_ge_deep_twin: STRING is "GE_deep_twin"
 	c_ge_default: STRING is "GE_default"
+	c_ge_dts: STRING is "GE_dts"
 	c_ge_floor: STRING is "GE_floor"
 	c_ge_id_object: STRING is "GE_id_object"
 	c_ge_int8: STRING is "GE_int8"
@@ -22901,10 +23181,10 @@ invariant
 	conforming_type_set_not_void: conforming_type_set /= Void
 	conforming_types_not_void: conforming_types /= Void
 	non_conforming_types_not_void: non_conforming_types /= Void
-	polymorphic_call_feature_not_void: polymorphic_call_feature /= Void
-	polymorphic_type_ids_not_void: polymorphic_type_ids /= Void
-	polymorphic_types_not_void: polymorphic_types /= Void
-	no_void_polymorphic_type: not polymorphic_types.has_item (Void)
+	attachment_dynamic_type_ids_not_void: attachment_dynamic_type_ids /= Void
+	target_dynamic_type_ids_not_void: target_dynamic_type_ids /= Void
+	target_dynamic_types_not_void: target_dynamic_types /= Void
+	no_void_target_dynamic_type: not target_dynamic_types.has_item (Void)
 	standalone_type_sets_not_void: standalone_type_sets /= Void
 	no_void_standalone_type_set: standalone_type_sets.has (Void)
 	deep_twin_types_not_void: deep_twin_types /= Void
@@ -22977,5 +23257,8 @@ invariant
 	external_dllwin_regexp_compiled: external_dllwin_regexp.is_compiled
 	split_threshold_positive: split_threshold > 0
 	system_name_not_void: system_name /= Void
+	dynamic_type_id_set_names_not_void: dynamic_type_id_set_names /= Void
+	no_void_dynamic_type_id_set_name: not dynamic_type_id_set_names.has_item (Void)
+	no_void_dynamic_type_id_set: not dynamic_type_id_set_names.has (Void)
 
 end

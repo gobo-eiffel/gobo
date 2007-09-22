@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			args: ET_FORMAL_ARGUMENT_LIST
 			arg: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
@@ -98,7 +99,8 @@ feature {NONE} -- Initialization
 			if args /= Void then
 				nb := args.count
 				if nb > 0 then
-					create dynamic_type_sets.make_with_capacity (nb)
+					create l_dynamic_type_sets.make_with_capacity (nb)
+					dynamic_type_sets := l_dynamic_type_sets
 					from i := 1 until i > nb loop
 						arg := args.formal_argument (i)
 						if i = 1 and then builtin_code = builtin_identified_feature (builtin_identified_eif_object_id) then
@@ -108,7 +110,7 @@ feature {NONE} -- Initialization
 							l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 							l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
 						end
-						dynamic_type_sets.put_last (l_dynamic_type_set)
+						l_dynamic_type_sets.put_last (l_dynamic_type_set)
 						arg.name.set_index (i)
 						i := i + 1
 					end

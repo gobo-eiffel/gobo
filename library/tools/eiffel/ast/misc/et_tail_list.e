@@ -163,7 +163,7 @@ feature -- Element change
 			last_set: last = an_item
 		end
 
-	append_last (other: ET_TAIL_LIST [G]) is
+	append_last (other: ET_TAIL_LIST [like item]) is
 			-- Add items of `other' to the end of list.
 			-- Keep items of `other' in the same order.
 			-- Resize list if necessary.

@@ -122,6 +122,21 @@ feature -- Element change
 			has_type: has_type (a_type)
 		end
 
+	put_types (other: ET_DYNAMIC_TYPES) is
+			-- Add types of `other' to current set.
+			-- Do not check for type conformance with `static_type' and do not propagate to targets.
+		require
+			other_not_void: other /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := other.count
+			from i := 1 until i > nb loop
+				put_type (other.dynamic_type (i))
+				i := i + 1
+			end
+		end
+
 	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local

@@ -44,26 +44,20 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset (other: ET_DYNAMIC_TYPE_SET) is
-			-- Reset current set with using `other''s static type
-			-- and dynamic types.
+	reset (a_static_type: ET_DYNAMIC_TYPE) is
+			-- Reset current set.
 		require
-			other_not_void: other /= Void
+			a_static_type_not_void: a_static_type /= Void
 		do
-			static_type := other.static_type
-			count := other.count
+			static_type := a_static_type
+			count := 0
 			if dynamic_types /= Void then
 				dynamic_types.wipe_out
-				dynamic_types.resize (count)
-				dynamic_types.append_last (other)
-			elseif count > 0 then
-				create dynamic_types.make_with_capacity (count.max (15))
-				dynamic_types.append_last (other)
 			end
 		ensure
-			static_type_set: static_type = other.static_type
-			count_set: count = other.count
-			same_dynamic_types: is_subset (other)
+			static_type_set: static_type = a_static_type
+			count_set: count = 0
+			same_dynamic_types: dynamic_types = old dynamic_types
 		end
 
 	reset_with_types (a_static_type: like static_type; a_dynamic_types: like dynamic_types) is
@@ -95,6 +89,20 @@ feature -- Access
 			no_source: Result = Void
 		end
 
+feature -- Setting
+
+	set_static_type (a_static_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
+			-- Set `static_type' to `a_static_type'.
+		require
+			a_static_type_not_void: a_static_type /= Void
+			a_system_not_void: a_system /= Void
+			conformance: static_type.conforms_to_type (a_static_type, a_system)
+		do
+			static_type := a_static_type
+		ensure
+			static_type_set: static_type = a_static_type
+		end
+
 feature -- Element change
 
 	put_type (a_type: ET_DYNAMIC_TYPE) is
@@ -108,21 +116,6 @@ feature -- Element change
 			elseif not dynamic_types.has_type (a_type) then
 				dynamic_types.force_last (a_type)
 				count := count + 1
-			end
-		end
-
-	put_types (other: ET_DYNAMIC_TYPES) is
-			-- Add types of `other' to current set.
-			-- Do not check for type conformance with `static_type' and do not propagate to targets.
-		require
-			other_not_void: other /= Void
-		local
-			i, nb: INTEGER
-		do
-			nb := other.count
-			from i := 1 until i > nb loop
-				put_type (other.dynamic_type (i))
-				i := i + 1
 			end
 		end
 

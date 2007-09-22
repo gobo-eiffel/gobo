@@ -124,15 +124,22 @@ feature {NONE} -- Implementation
 			-- Create a new object at each call.
 		local
 			l_name: ET_FEATURE_NAME
+			l_procedure_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			i, nb: INTEGER
 		do
 			Result := precursor (a_procedure, a_system)
 			l_name := a_procedure.name
 			if l_name.same_feature_name (tokens.put_feature_name) then
-				l_dynamic_type_sets := Result.dynamic_type_sets
-				if l_dynamic_type_sets.count > 1 and then l_dynamic_type_sets.item (1).static_type = item_type_set.static_type then
-					l_dynamic_type_sets.put (item_type_set, 1)
+				l_procedure_type_sets := Result.dynamic_type_sets
+				nb := l_procedure_type_sets.count
+				create l_dynamic_type_sets.make_with_capacity (nb)
+				l_dynamic_type_sets.put_last (item_type_set)
+				from i := 2 until i > nb loop
+					l_dynamic_type_sets.put_last (l_procedure_type_sets.item (i))
+					i := i + 1
 				end
+				Result.set_dynamic_type_sets (l_dynamic_type_sets)
 			end
 		end
 
