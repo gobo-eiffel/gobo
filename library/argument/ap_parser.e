@@ -17,6 +17,7 @@ inherit
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_EXCEPTIONS
+	KL_SHARED_STRING_EQUALITY_TESTER
 	KL_IMPORTED_ARRAY_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
 	AP_CONSTANTS
@@ -302,7 +303,7 @@ feature -- Validity checks
 		do
 			Result := True
 			create long_set.make
-			long_set.set_equality_tester (create {DS_EQUALITY_TESTER [STRING]})
+			long_set.set_equality_tester (string_equality_tester)
 			create short_set.make
 			nb := a_list.count
 			from i := 1 until (not Result) or (i > nb) loop
