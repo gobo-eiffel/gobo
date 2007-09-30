@@ -105,7 +105,7 @@ feature -- Templates
 	invalid_parameter_error_template: STRING is "The value '$2' is not valid for the option '$1'."
 	missing_option_error_template: STRING is "The mandatory option '$1' is missing."
 	missing_parameter_error_template: STRING is "The option '$1' is missing a parameter."
-	surplus_option_error_template: STRING is "Too many occurrencies of option '$1'."
+	surplus_option_error_template: STRING is "Too many occurrences of option '$1'."
 	unknown_option_error_template: STRING is "Unknown option '$1'."
 	unnecessary_parameter_error_template: STRING is "The flag '$1' was given the parameter '$2'."
 

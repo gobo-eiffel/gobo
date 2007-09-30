@@ -134,7 +134,7 @@ feature -- Access
 
 	maximum_occurrences: INTEGER
 			-- Maximal number of occurrences allowed for this option,
-			-- or `0' if there is no upper bound.
+			-- or `0' if there is no upper bound
 
 	short_form: CHARACTER
 			-- Short form
@@ -168,7 +168,7 @@ feature -- Status report
 		deferred
 		end
 
-	parameter_is_optional: BOOLEAN
+	parameter_is_optional: BOOLEAN is
 			-- Is the parameter allowed, but optional?
 		do
 			Result := allows_parameter and not needs_parameter
