@@ -220,7 +220,7 @@ feature -- Parser
 			from argument_list.start until argument_list.after loop
 				parse_argument
 			end
-			check_mandatory_options
+			check_options_after_parsing
 			if error_handler.has_error then
 				final_error_action
 			end
@@ -291,43 +291,62 @@ feature -- Validity checks
 
 	all_valid_short_and_long_form (a_list: DS_LIST [AP_OPTION]): BOOLEAN is
 			-- Do all options that are part of `a_list' have valid short
-			-- and long form?
+			-- and long form? Is a short or long form used twice?
 		require
 			a_list_not_void: a_list /= Void
 		local
 			i, nb: INTEGER
 			l_option: AP_OPTION
+			long_set: DS_LINKED_LIST [STRING]
+			short_set: DS_LINKED_LIST [CHARACTER]
 		do
 			Result := True
+			create long_set.make
+			long_set.set_equality_tester (create {DS_EQUALITY_TESTER [STRING]})
+			create short_set.make
 			nb := a_list.count
-			from i := 1 until i > nb loop
+			from i := 1 until (not Result) or (i > nb) loop
 				l_option := a_list.item (i)
-				if
-					(l_option /= Void) and then
-					(l_option.has_short_form implies valid_short_form (l_option.short_form)) and
-					(l_option.has_long_form implies valid_long_form (l_option.long_form))
-				then
-					i := i + 1
-				else
+				if l_option = Void then
 					Result := False
-					i := nb + 1 -- Jump out of the loop.
+				else
+					if l_option.has_short_form then
+						Result := valid_short_form (l_option.short_form) and
+							not short_set.has (l_option.short_form)
+						short_set.force_last (l_option.short_form)
+					end
+					if l_option.has_long_form then
+						Result := valid_long_form (l_option.long_form) and
+							not long_set.has (l_option.long_form)
+						long_set.force_last (l_option.long_form)
+					end
+					i := i + 1
 				end
 			end
 		end
 
 	valid_options: BOOLEAN is
 			-- Are all options correctly set up?
+		local
+			aol: AP_ALTERNATIVE_OPTIONS_LIST
 		do
 			if all_valid_short_and_long_form (options) then
 				Result := True
-				from alternative_options_lists.start until alternative_options_lists.after loop
-					if not all_valid_short_and_long_form (alternative_options_lists.item_for_iteration) then
+				from alternative_options_lists.start until (not Result) or alternative_options_lists.after loop
+					aol := alternative_options_lists.item_for_iteration	
+					if not all_valid_short_and_long_form (aol) then
 						Result := False
-						alternative_options_lists.go_after
 					else
-						alternative_options_lists.forth
+						if aol.introduction_option.has_short_form then
+							Result := not has_short_option (aol.introduction_option.short_form)
+						end
+						if aol.introduction_option.has_short_form and Result then
+							Result := not has_long_option (aol.introduction_option.long_form)
+						end						 
 					end
+					alternative_options_lists.forth
 				end
+				alternative_options_lists.go_after
 			end
 		end
 
@@ -344,8 +363,9 @@ feature {NONE} -- Implementation
 	is_first_option: BOOLEAN
 			-- Are we still looking for the first option?
 
-	check_mandatory_options is
-			-- Check if all mandatory options were passed to the program.
+	check_options_after_parsing is
+			-- Check if all mandatory options were passed to the program and
+			-- options were not given too often.
 		local
 			o: AP_OPTION
 			error: AP_ERROR
@@ -354,6 +374,10 @@ feature {NONE} -- Implementation
 				o := current_options.item_for_iteration
 				if o.is_mandatory and not o.was_found then
 					create error.make_missing_option_error (o)
+					error_handler.report_error (error)
+				end
+				if o.maximum_occurrences > 0 and o.occurrences > o.maximum_occurrences then
+					create error.make_surplus_option_error (o)
 					error_handler.report_error (error)
 				end
 				current_options.forth

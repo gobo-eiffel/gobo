@@ -132,6 +132,10 @@ feature -- Access
 		deferred
 		end
 
+	maximum_occurrences: INTEGER
+			-- Maximal number of occurrences allowed for this option,
+			-- or `0' if there is no upper bound.
+
 	short_form: CHARACTER
 			-- Short form
 
@@ -215,6 +219,17 @@ feature -- Element change
 			short_form_set: short_form = a_short_form
 		end
 
+	set_maximum_occurrences (a_value: INTEGER) is
+			-- Set the maximal allowed number of occurrences to `a_value',
+			-- or `0' to disable the upper bound.
+		require
+			positive: a_value >= 0
+		do
+			maximum_occurrences := a_value
+		ensure
+			maximum_occurrences_set: maximum_occurrences = a_value
+		end
+
 	enable_mandatory is
 			-- Make the option mandatory.
 		do
@@ -294,5 +309,6 @@ invariant
 	occurrences_not_negative: occurrences >= 0
 	needs_implies_allows_parameter: needs_parameter implies allows_parameter
 	no_optional_parameter_on_short: has_short_form and allows_parameter implies needs_parameter
+	maximum_occurrences_positive: maximum_occurrences >= 0
 
 end

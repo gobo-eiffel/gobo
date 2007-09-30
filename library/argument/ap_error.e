@@ -21,6 +21,7 @@ create
 	make_unknown_option_error,
 	make_missing_option_error,
 	make_missing_parameter_error,
+	make_surplus_option_error,
 	make_unnecessary_parameter_error,
 	make_invalid_parameter_error
 
@@ -61,6 +62,17 @@ feature {NONE} -- Initialization
 			code := missing_parameter_error_code
 		end
 
+	make_surplus_option_error (an_option: AP_OPTION) is
+			-- The option `an_option' was encountered too often.
+		require
+			an_option_not_void: an_option /= Void
+		do
+			create parameters.make (1, 1)
+			parameters.put (an_option.name, 1)
+			default_template := surplus_option_error_template
+			code := surplus_option_error_code
+		end
+
 	make_unknown_option_error (a_string: STRING) is
 			-- A non-existing option `a_string' was requested.
 		require
@@ -93,6 +105,7 @@ feature -- Templates
 	invalid_parameter_error_template: STRING is "The value '$2' is not valid for the option '$1'."
 	missing_option_error_template: STRING is "The mandatory option '$1' is missing."
 	missing_parameter_error_template: STRING is "The option '$1' is missing a parameter."
+	surplus_option_error_template: STRING is "Too many occurrencies of option '$1'."
 	unknown_option_error_template: STRING is "Unknown option '$1'."
 	unnecessary_parameter_error_template: STRING is "The flag '$1' was given the parameter '$2'."
 
@@ -104,6 +117,7 @@ feature -- Error Codes
 	invalid_parameter_error_code: STRING is "APIPAR"
 	missing_option_error_code: STRING is "APMOPT"
 	missing_parameter_error_code: STRING is "APMPAR"
+	surplus_option_error_code: STRING is "APSOPT"
 	unknown_option_error_code: STRING is "APUOPT"
 	unnecessary_parameter_error_code: STRING is "APUPAR"
 
