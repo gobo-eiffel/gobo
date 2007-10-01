@@ -22,6 +22,7 @@
 		<cluster name="xslt_event" location="event" relative="true"/>
 		<cluster name="runtime"/>
 		<cluster name="xslt_core" location="core" relative="true"/>
+		<cluster name="xslt_serializer" location="serializer" relative="true"/>
 	</cluster>
 
 	<mount location="${GOBO}/library/xml/library_core.xace"/>

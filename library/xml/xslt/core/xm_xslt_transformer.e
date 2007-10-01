@@ -19,6 +19,8 @@ inherit
 
 	XM_XPATH_TRANSFORMER
 
+	XM_XSLT_SERIALIZER
+	
 	XM_XPATH_NAME_UTILITIES
 
 	XM_XPATH_TYPE
@@ -192,6 +194,12 @@ feature -- Access
 			end
 		end
 
+	encoder_factory: XM_XSLT_ENCODER_FACTORY is
+			-- Factory for output encoders
+		do
+			Result := configuration.encoder_factory
+		end
+
 feature -- Status report
 
 	is_tracing: BOOLEAN is
@@ -200,53 +208,7 @@ feature -- Status report
 			Result := trace_listener /= Void
 		end
 
-	is_error: BOOLEAN
-			-- Has an error occurred
-
-	last_error: XM_XPATH_ERROR_VALUE
-			-- Last reported fatal error
-
 feature -- Status setting
-
-	report_warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
-			-- Report a warning.
-		require
-			message_not_void: a_message /= Void
-		do
-			error_listener.warning (a_message, a_locator)
-		end
-
-	report_recoverable_error (an_error: XM_XPATH_ERROR_VALUE) is
-			-- Report a recoverable error.
-		require
-			error_not_void: an_error /= Void
-		do
-			if an_error.type = Dynamic_error and then STRING_.same_string (an_error.namespace_uri, Xpath_errors_uri)
-				and then STRING_.same_string (an_error.code.substring (1, 4), "XTRE") then
-				error_listener.error (an_error)
-				if not error_listener.recovered then
-					is_error := True
-				end
-			else
-				report_fatal_error (an_error)
-			end
-		end
-
-	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
-			-- Report a recoverable error.
-		require
-			error_not_void: an_error /= Void
-		do
-			if not is_error then
-
-				-- We only report the first error;
-				-- Otherwise, an error can get reported twice.
-
-				error_listener.fatal_error (an_error)
-				is_error := True
-				last_error := an_error
-			end
-		end
 
 	set_remembered_number (a_number: INTEGER_64; a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER) is
 			-- Set remembered number.

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="serializer" default="help" >
+
+	<description>
+		system: "XSLT serializer - XSLT example program"
+		copyright: "Copyright (c) 2007, Colin Adams and others"
+		license: "MIT License"
+		date: "$Date: $"
+		revision: "$Revision: $"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="serializer"/>
+		<set name="library" value="xml"/>
+		<set name="system_dir" value="${GOBO}/example/${library}/xslt/${system}"/>
+	</target>
+
+</project>
