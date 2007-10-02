@@ -316,7 +316,7 @@ feature -- Validity checks
 							not short_set.has (l_option.short_form)
 						short_set.force_last (l_option.short_form)
 					end
-					if l_option.has_long_form then
+					if l_option.has_long_form and Result then
 						Result := valid_long_form (l_option.long_form) and
 							not long_set.has (l_option.long_form)
 						long_set.force_last (l_option.long_form)
