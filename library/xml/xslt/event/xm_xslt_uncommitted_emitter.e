@@ -40,21 +40,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
+	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
 			-- Establish invariant.
 		require
-			transformer_not_void: a_transformer /= Void
+			serializer_not_void: a_serializer /= Void
 			outputter_not_void: an_outputter /= Void
 			output_properties_not_void: some_output_properties /= Void
 		do
-			transformer := a_transformer
+			serializer := a_serializer
 			outputter := an_outputter
 			output_properties := some_output_properties
 			character_map_expander := a_character_map_expander
 			base_uri := "" -- TODO - set_base_uri
 		ensure
 			not_yet_committed: not committed
-			transformer_set: transformer = a_transformer
+			serializer_set: serializer = a_serializer
 			outputter_set: outputter = an_outputter
 			output_properties_set: output_properties = some_output_properties
 			character_map_expander_set: character_map_expander = a_character_map_expander
@@ -271,10 +271,10 @@ feature {NONE} -- Implementation
 			not_yet_committed: not committed
 		do
 			output_properties.set_xml_defaults (Platform.Maximum_integer)
-			create {XM_XSLT_XML_EMITTER} base_emitter.make (transformer, outputter, output_properties, character_map_expander)
+			create {XM_XSLT_XML_EMITTER} base_emitter.make (serializer, outputter, output_properties, character_map_expander)
 			base_receiver := base_emitter
 			if output_properties.indent then
-				create {XM_XSLT_XML_INDENTER} base_receiver.make (transformer, base_emitter, output_properties)
+				create {XM_XSLT_XML_INDENTER} base_receiver.make (serializer, base_emitter, output_properties)
 			end
 			if output_properties.cdata_section_elements.count > 0 then
 				create {XM_XSLT_CDATA_FILTER} base_receiver.make (base_receiver, base_emitter, output_properties)
@@ -290,10 +290,10 @@ feature {NONE} -- Implementation
 			not_yet_committed: not committed
 		do
 			output_properties.set_html_defaults (Platform.Maximum_integer)
-			create {XM_XSLT_HTML_EMITTER} base_emitter.make (transformer, outputter, output_properties, character_map_expander)
+			create {XM_XSLT_HTML_EMITTER} base_emitter.make (serializer, outputter, output_properties, character_map_expander)
 			base_receiver := base_emitter
 			if output_properties.indent then
-				create {XM_XSLT_HTML_INDENTER} base_receiver.make (transformer, base_emitter, output_properties)
+				create {XM_XSLT_HTML_INDENTER} base_receiver.make (serializer, base_emitter, output_properties)
 			end
 			switch
 		ensure
@@ -306,10 +306,10 @@ feature {NONE} -- Implementation
 			not_yet_committed: not committed
 		do
 			output_properties.set_xhtml_defaults (Platform.Maximum_integer)
-			create {XM_XSLT_XHTML_EMITTER} base_emitter.make (transformer, outputter, output_properties, character_map_expander)
+			create {XM_XSLT_XHTML_EMITTER} base_emitter.make (serializer, outputter, output_properties, character_map_expander)
 			base_receiver := base_emitter
 			if output_properties.indent then
-				create {XM_XSLT_XHTML_INDENTER} base_receiver.make (transformer, base_emitter, output_properties)
+				create {XM_XSLT_XHTML_INDENTER} base_receiver.make (serializer, base_emitter, output_properties)
 			end
 			if output_properties.cdata_section_elements.count > 0 then
 				create {XM_XSLT_CDATA_FILTER} base_receiver.make (base_receiver, base_emitter, output_properties)

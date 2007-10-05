@@ -95,9 +95,9 @@ feature -- Element change
 			extension_emitter_factories.item (a_method_uri).set_defaults (a_method_local_name, some_properties, an_import_precedence)
 		end
 
-feature {XM_XSLT_TRANSFORMER} -- Creation
+feature {XM_XSLT_SERIALIZER} -- Creation
 
-	new_receiver (a_method_uri, a_method_local_name: STRING; a_transformer: XM_XSLT_TRANSFORMER;
+	new_receiver (a_method_uri, a_method_local_name: STRING; a_serializer: XM_XSLT_SERIALIZER;
 		a_result_stream: XM_OUTPUT; some_properties: XM_XSLT_OUTPUT_PROPERTIES;
 		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
 			-- New receiver chain including an emitter
@@ -105,25 +105,25 @@ feature {XM_XSLT_TRANSFORMER} -- Creation
 			method_uri_not_void: a_method_uri /= Void
 			method_local_name_not_void: a_method_local_name /= Void
 			valid_output_method: is_valid_output_method (a_method_uri, a_method_local_name)
-			transformer_not_void: a_transformer /= Void
+			serializer_not_void: a_serializer /= Void
 			result_stream_not_void: a_result_stream /= Void
 			properties_not_void: some_properties /= Void
 			character_map_index: some_properties.used_character_maps.count > 0 implies a_character_map_index /= Void
 		do
 			if a_method_uri.count = 0 then
 				if a_method_local_name.count = 0 then
-					Result := new_uncommitted_emitter (a_transformer, a_result_stream, some_properties, a_character_map_index)
+					Result := new_uncommitted_emitter (a_serializer, a_result_stream, some_properties, a_character_map_index)
 				elseif STRING_.same_string (a_method_local_name, "xml") then
-					Result := new_xml_emitter (a_transformer, a_result_stream, some_properties, a_character_map_index)
+					Result := new_xml_emitter (a_serializer, a_result_stream, some_properties, a_character_map_index)
 				elseif STRING_.same_string (a_method_local_name, "xhtml") then
-					Result := new_xhtml_emitter (a_transformer, a_result_stream, some_properties, a_character_map_index)
+					Result := new_xhtml_emitter (a_serializer, a_result_stream, some_properties, a_character_map_index)
 				elseif STRING_.same_string (a_method_local_name, "html") then
-					Result := new_html_emitter (a_transformer, a_result_stream, some_properties, a_character_map_index)
+					Result := new_html_emitter (a_serializer, a_result_stream, some_properties, a_character_map_index)
 				elseif STRING_.same_string (a_method_local_name, "text") then
-					Result := new_text_emitter (a_transformer, a_result_stream, some_properties, a_character_map_index)
+					Result := new_text_emitter (a_serializer, a_result_stream, some_properties, a_character_map_index)
 				end
 			else
-				Result := extension_emitter_factories.item (a_method_uri).new_receiver (a_method_local_name, a_transformer, a_result_stream, some_properties, a_character_map_index)
+				Result := extension_emitter_factories.item (a_method_uri).new_receiver (a_method_local_name, a_serializer, a_result_stream, some_properties, a_character_map_index)
 			end
 		ensure
 			new_receiver_not_void: Result /= Void
@@ -135,12 +135,12 @@ feature {NONE} -- Implementation
 	extension_emitter_factories: DS_HASH_TABLE [XM_XSLT_EXTENSION_EMITTER_FACTORY, STRING]
 			-- Extension emitter factories keyed on namespace URI
 
-	new_xml_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_result_stream: XM_OUTPUT;
+	new_xml_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT;
 		some_properties: XM_XSLT_OUTPUT_PROPERTIES;
 		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
 			-- New receiver chain including an xml emitter
 		require
-			transformer_not_void: a_transformer /= Void
+			serialzer_not_void: a_serializer /= Void
 			result_stream_not_void: a_result_stream /= Void
 			properties_not_void: some_properties /= Void
 			character_map_index: some_properties.used_character_maps.count > 0 implies a_character_map_index /= Void
@@ -149,11 +149,11 @@ feature {NONE} -- Implementation
 			an_xml_indenter: XM_XSLT_XML_INDENTER
 			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
-			create an_xml_emitter.make (a_transformer, a_result_stream, some_properties,
+			create an_xml_emitter.make (a_serializer, a_result_stream, some_properties,
 												 character_map_expander (some_properties, a_character_map_index, True))
 			Result := an_xml_emitter
 			if some_properties.indent then
-				create an_xml_indenter.make (a_transformer, an_xml_emitter, some_properties)
+				create an_xml_indenter.make (a_serializer, an_xml_emitter, some_properties)
 				Result := an_xml_indenter
 			end
 			if some_properties.cdata_section_elements.count > 0 then
@@ -162,12 +162,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_xhtml_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_result_stream: XM_OUTPUT;
+	new_xhtml_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT;
 		some_properties: XM_XSLT_OUTPUT_PROPERTIES;
 		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
 			-- New receiver chain including an xhtml emitter
 		require
-			transformer_not_void: a_transformer /= Void
+			serialzer_not_void: a_serializer /= Void
 			result_stream_not_void: a_result_stream /= Void
 			properties_not_void: some_properties /= Void
 			character_map_index: some_properties.used_character_maps.count > 0 implies a_character_map_index /= Void
@@ -177,11 +177,11 @@ feature {NONE} -- Implementation
 			a_cdata_filter: XM_XSLT_CDATA_FILTER
 			a_meta_inserter: XM_XSLT_META_TAG_INSERTER
 		do
-			create an_xhtml_emitter.make (a_transformer, a_result_stream, some_properties,
+			create an_xhtml_emitter.make (a_serializer, a_result_stream, some_properties,
 												 character_map_expander (some_properties, a_character_map_index, True))
 			Result := an_xhtml_emitter
 			if some_properties.indent then
-				create an_html_indenter.make (a_transformer, an_xhtml_emitter, some_properties)
+				create an_html_indenter.make (a_serializer, an_xhtml_emitter, some_properties)
 				Result := an_html_indenter
 			end
 			if some_properties.include_content_type then
@@ -194,12 +194,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_html_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_result_stream: XM_OUTPUT;
+	new_html_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT;
 		some_properties: XM_XSLT_OUTPUT_PROPERTIES;
 		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
 			-- New receiver chain including an html emitter
 		require
-			transformer_not_void: a_transformer /= Void
+			serialzer_not_void: a_serializer /= Void
 			result_stream_not_void: a_result_stream /= Void
 			properties_not_void: some_properties /= Void
 			character_map_index: some_properties.used_character_maps.count > 0 implies a_character_map_index /= Void
@@ -208,11 +208,11 @@ feature {NONE} -- Implementation
 			an_html_indenter: XM_XSLT_HTML_INDENTER
 			a_meta_inserter: XM_XSLT_META_TAG_INSERTER
 		do
-			create an_html_emitter.make (a_transformer, a_result_stream, some_properties,
+			create an_html_emitter.make (a_serializer, a_result_stream, some_properties,
 												 character_map_expander (some_properties, a_character_map_index, True))
 			Result := an_html_emitter
 			if some_properties.indent then
-				create an_html_indenter.make (a_transformer, an_html_emitter, some_properties)
+				create an_html_indenter.make (a_serializer, an_html_emitter, some_properties)
 				Result := an_html_indenter
 			end
 			if some_properties.include_content_type then
@@ -221,32 +221,32 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_text_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_result_stream: XM_OUTPUT;
+	new_text_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT;
 		some_properties: XM_XSLT_OUTPUT_PROPERTIES;
 		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
 			-- New receiver chain including a text emitter
 		require
-			transformer_not_void: a_transformer /= Void
+			serialzer_not_void: a_serializer /= Void
 			result_stream_not_void: a_result_stream /= Void
 			properties_not_void: some_properties /= Void
 			character_map_index: some_properties.used_character_maps.count > 0 implies a_character_map_index /= Void
 		do
-			create {XM_XSLT_TEXT_EMITTER} Result.make (a_transformer, a_result_stream, some_properties,
+			create {XM_XSLT_TEXT_EMITTER} Result.make (a_serializer, a_result_stream, some_properties,
 												 character_map_expander (some_properties, a_character_map_index, False))
 		end
 
 
-	new_uncommitted_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_result_stream: XM_OUTPUT;
+	new_uncommitted_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT;
 		some_properties: XM_XSLT_OUTPUT_PROPERTIES;
 		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
 			-- New receiver chain including an uncommitted emitter
 		require
-			transformer_not_void: a_transformer /= Void
+			serialzer_not_void: a_serializer /= Void
 			result_stream_not_void: a_result_stream /= Void
 			properties_not_void: some_properties /= Void
 			character_map_index: some_properties.used_character_maps.count > 0 implies a_character_map_index /= Void
 		do
-			create {XM_XSLT_UNCOMMITTED_EMITTER} Result.make (a_transformer, a_result_stream, some_properties,
+			create {XM_XSLT_UNCOMMITTED_EMITTER} Result.make (a_serializer, a_result_stream, some_properties,
 												 character_map_expander (some_properties, a_character_map_index, False))
 		end
 

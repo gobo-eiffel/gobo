@@ -72,7 +72,7 @@ feature -- Events
 						a_message := STRING_.appended_string (a_message, ")")
 						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1190",Dynamic_error)
 						if not base_uri.is_empty then an_error.set_location (base_uri, 0) end
-						transformer.report_fatal_error (an_error)
+						serializer.report_fatal_error (an_error)
 						is_error := True
 					end
 				elseif character_map_expander /= Void then

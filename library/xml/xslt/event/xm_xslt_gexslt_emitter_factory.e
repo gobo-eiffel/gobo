@@ -41,7 +41,7 @@ feature -- Access
 			Result := STRING_.same_string (a_method_local_name, "null")
 		end
 
-	new_receiver (a_method_local_name: STRING; a_transformer: XM_XSLT_TRANSFORMER;
+	new_receiver (a_method_local_name: STRING; a_serializer: XM_XSLT_SERIALIZER;
 		a_result_stream: XM_OUTPUT; some_properties: XM_XSLT_OUTPUT_PROPERTIES;
 		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
 			-- New receiver chain including an emitter
@@ -49,7 +49,7 @@ feature -- Access
 			a_null_emitter: XM_XSLT_GEXSLT_NULL_EMITTER
 		do
 			if STRING_.same_string (a_method_local_name, "null") then
-				create a_null_emitter.make (a_transformer, some_properties)
+				create a_null_emitter.make (a_serializer, some_properties)
 				Result := a_null_emitter
 			end
 		end

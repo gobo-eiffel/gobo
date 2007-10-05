@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 						character_map_compiled_in: a_character_map_index.has (a_fingerprint)
 						-- These can only be justified with respect to code
 						--  elsewhwere in the XSLT library, but they hold
-						--  when `new_receiver' is called by {XM_XSLT_TRANSFORMER}.selected_receiver
+						--  when `new_receiver' is called by {XM_XSLT_SERIALIZER}.selected_receiver
 					end
 					a_character_map := a_character_map_index.item (a_fingerprint)
 					check

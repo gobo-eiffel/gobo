@@ -41,7 +41,7 @@ feature -- Access
 			Result := STRING_.same_string (a_method_local_name, "xml")
 		end
 
-	new_receiver (a_method_local_name: STRING; a_transformer: XM_XSLT_TRANSFORMER;
+	new_receiver (a_method_local_name: STRING; a_serializer: XM_XSLT_SERIALIZER;
 		a_result_stream: XM_OUTPUT; some_properties: XM_XSLT_OUTPUT_PROPERTIES;
 		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
 			-- New receiver chain including an emitter
@@ -51,11 +51,11 @@ feature -- Access
 			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
 			if STRING_.same_string (a_method_local_name, "xml") then
-				create an_xml_emitter.make (a_transformer, a_result_stream, some_properties,
+				create an_xml_emitter.make (a_serializer, a_result_stream, some_properties,
 													 character_map_expander (some_properties, a_character_map_index, True))
 				Result := an_xml_emitter
 				if some_properties.indent then
-					create an_xml_indenter.make (a_transformer, an_xml_emitter, some_properties)
+					create an_xml_indenter.make (a_serializer, an_xml_emitter, some_properties)
 					Result := an_xml_indenter
 				end
 				if some_properties.cdata_section_elements.count > 0 then

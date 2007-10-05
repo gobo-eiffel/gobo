@@ -31,10 +31,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; a_receiver: XM_XSLT_EMITTER; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	make (a_serializer: XM_XSLT_SERIALIZER; a_receiver: XM_XSLT_EMITTER; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
 			-- Establish invariant.
 		require
-			transformer_not_void: a_transformer /= Void
+			serializer_not_void: a_serializer /= Void
 			output_properties_not_void: some_output_properties /= Void
 		do
 			base_receiver := a_receiver

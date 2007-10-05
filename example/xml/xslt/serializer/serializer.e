@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			create error_listener.make (Do_not_recover, create {UT_ERROR_HANDLER}.make_standard)
 			create encoder_factory
 			create output_properties.make (0)
+			create emitter_factory.make
 			create_arguments_parser
 			arguments_parser.parse_arguments
 			if arguments_parser.parameters.count /= 1 then
@@ -61,6 +62,9 @@ feature -- Access
 	output_properties: XM_XSLT_OUTPUT_PROPERTIES
 			-- XSLT serialization options
 
+	emitter_factory: XM_XSLT_EMITTER_FACTORY
+			-- Factory for creating emitter/reciever chains
+
 feature {NONE} -- Basic operations
 
 	parse_xml_file (a_file_name: STRING) is
@@ -71,14 +75,32 @@ feature {NONE} -- Basic operations
 		local
 			l_parser: XM_EIFFEL_PARSER
 			l_uri: UT_URI
+			l_method, l_method_uri, l_method_local_name: STRING
+			l_output: XM_OUTPUT
+			l_receiver: XM_XPATH_RECEIVER
+			l_namespace_resolver: XM_NAMESPACE_RESOLVER
+			l_content: XM_CONTENT_CONCATENATOR
+			l_bridge: XM_XPATH_CONTENT_EMITTER
 		do
+			l_method := output_properties.method
+			if l_method.count = 0 then
+				l_method_uri := ""; l_method_local_name := ""
+			else
+				l_method_uri := namespace_uri_from_expanded_name (l_method)
+				l_method_local_name := local_name_from_expanded_name (l_method)
+			end
 			create l_parser.make
 			l_parser.set_resolver (new_catalog_resolver)
 			create l_uri.make_resolve_uri (current_directory_base, File_uri.filename_to_uri (a_file_name))
+			create l_output
+			l_receiver := emitter_factory.new_receiver (l_method_uri, l_method_local_name, Current,
+																	  l_output, output_properties, Void)
+			create l_bridge.make (l_receiver, l_parser.new_stop_on_error_filter)
+			create l_namespace_resolver.set_next (l_bridge)
+			l_namespace_resolver.set_forward_xmlns (True)
+			create l_content.set_next (l_namespace_resolver)
+			l_parser.set_callbacks (l_content)
 			l_parser.parse_from_system (l_uri.full_reference)
-			if not l_parser.is_correct then
-				print (l_parser.last_error_description)
-			end
 		end
 
 	current_directory_base: UT_URI is
@@ -422,6 +444,7 @@ invariant
 	error_listener_not_void: error_listener /= Void
 	encoder_factory_not_void: encoder_factory /= Void
 	output_properties_not_void: output_properties /= Void
+	emitter_factory_not_void: emitter_factory /= Void
 	arguments_parser_has_method_option: (arguments_parser /= Void and method_option /= Void) implies arguments_parser.options.has (method_option)
 	arguments_parser_has_bom_option: (arguments_parser /= Void and bom_option /= Void) implies arguments_parser.options.has (bom_option)
 	arguments_parser_has_doctype_public_option: (arguments_parser /= Void and doctype_public_option /= Void) implies arguments_parser.options.has (doctype_public_option)

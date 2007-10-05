@@ -38,18 +38,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
+	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
 			-- Establish invariant.
 		require
-			transformer_not_void: a_transformer /= Void
+			serializer_not_void: a_serializer /= Void
 			outputter_not_void: an_outputter /= Void
 			output_properties_not_void: some_output_properties /= Void
 		do
-			make_xml (a_transformer, an_outputter, some_output_properties, a_character_map_expander)
+			make_xml (a_serializer, an_outputter, some_output_properties, a_character_map_expander)
 			make_boolean_attributes
 			make_url_attributes
 		ensure
-			transformer_set: transformer = a_transformer
+			serializer_set: serializer = a_serializer
 			outputter_set: raw_outputter = an_outputter
 			output_properties_set: output_properties = some_output_properties
 		end
@@ -340,13 +340,13 @@ feature {NONE} -- Implementation
 			if outputter = Void then
 				create an_error.make_from_string (STRING_.concat ("Trying UTF-8 as unable to open output stream in encoding ", encoding),
 															 Xpath_errors_uri, "SESU0007", Dynamic_error)
-				transformer.report_recoverable_error (an_error)
-				if not transformer.is_error then
+				serializer.report_recoverable_error (an_error)
+				if not serializer.is_error then
 					outputter := encoder_factory.outputter (encoding, raw_outputter)
 					if outputter = Void then
 						create an_error.make_from_string ("Failed to recover",
 																	 Xpath_errors_uri, "SESU0007", Dynamic_error)
-						transformer.report_fatal_error (an_error)
+						serializer.report_fatal_error (an_error)
 					end
 				end
 			else

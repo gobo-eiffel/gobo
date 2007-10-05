@@ -42,14 +42,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
+	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
 			-- Establish invariant.
 		require
-			transformer_not_void: a_transformer /= Void
+			serializer_not_void: a_serializer /= Void
 			outputter_not_void: an_outputter /= Void
 			output_properties_not_void: some_output_properties /= Void
 		do
-			transformer := a_transformer
+			serializer := a_serializer
 			raw_outputter := an_outputter
 			output_properties := some_output_properties
 			character_map_expander := a_character_map_expander
@@ -59,10 +59,10 @@ feature {NONE} -- Initialization
 			create name_lookup_table.make (0, name_lookup_table_size - 1)
 			make_specials
 			base_uri := "" -- TODO - set `base_uri'
-			encoder_factory := transformer.configuration.encoder_factory
+			encoder_factory := serializer.encoder_factory
 			set_normalization_form
 		ensure
-			transformer_set: transformer = a_transformer
+			serializer_set: serializer = a_serializer
 			outputter_set: raw_outputter = an_outputter
 			output_properties_set: output_properties = some_output_properties
 			character_map_expander_set: character_map_expander = a_character_map_expander
@@ -143,7 +143,7 @@ feature -- Events
 					if a_bad_character_code /= 0 then
 						a_message := "Element name contains a character (decimal" + a_bad_character_code.out + ") not available in the selected encoding"
 						create an_error.make_from_string (a_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
-						transformer.report_fatal_error (an_error)
+						serializer.report_fatal_error (an_error)
 					end
 				end
 				if not is_error then
@@ -186,7 +186,7 @@ feature -- Events
 					if a_bad_character /= 0 then
 						a_message := "Namespace prefix contains a character (decimal + " + a_bad_character.out + ") not available in the selected encoding"
 						create an_error.make_from_string (a_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
-						transformer.report_fatal_error (an_error)
+						serializer.report_fatal_error (an_error)
 					else
 						if allow_undeclare_prefixes or else a_namespace_uri.count /= 0 then
 							output (" ")
@@ -222,7 +222,7 @@ feature -- Events
 					if a_bad_character /= 0 then
 						a_message := "Attribute name contains a character (decimal + " + a_bad_character.out + ") not available in the selected encoding"
 						create an_error.make_from_string (a_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
-						transformer.report_fatal_error (an_error)
+						serializer.report_fatal_error (an_error)
 					end
 				end
 				if not is_error then
@@ -322,14 +322,14 @@ feature -- Events
 				if l_bad_character_code > 0 then
 					l_message := "Processing instruction target contains a character (decimal" + l_bad_character_code.out + ") not available in the selected encoding"
 					create l_error.make_from_string (l_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
-					transformer.report_fatal_error (l_error)
+					serializer.report_fatal_error (l_error)
 				else
 					l_string := STRING_.concat ("<?", a_name)
 					l_bad_character_code := bad_character_code (a_data_string)
 					if l_bad_character_code > 0 then
 						l_message := "Processing instruction data contains a character (decimal" + l_bad_character_code.out + ") not available in the selected encoding"
 						create l_error.make_from_string (l_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
-						transformer.report_fatal_error (l_error)
+						serializer.report_fatal_error (l_error)
 					else
 						if a_data_string.count > 0 then
 							l_string := STRING_.appended_string (l_string, " ")
@@ -362,7 +362,7 @@ feature -- Events
 				if l_bad_character_code > 0 then
 					l_message := "Comment contains a character (decimal" + l_bad_character_code.out + ") not available in the selected encoding"
 					create l_error.make_from_string (l_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
-					transformer.report_fatal_error (l_error)
+					serializer.report_fatal_error (l_error)
 				else
 					if not is_error then
 						output (a_content_string)
@@ -744,17 +744,17 @@ feature {NONE} -- Implementation
 			if outputter = Void then
 				create an_error.make_from_string (STRING_.concat ("Trying UTF-8 as unable to open output stream in encoding ", encoding),
 															 Xpath_errors_uri, "SESU0007", Dynamic_error)
-				transformer.report_recoverable_error (an_error)
-				if not transformer.is_error then
+				serializer.report_recoverable_error (an_error)
+				if not serializer.is_error then
 					outputter := encoder_factory.outputter (encoding, raw_outputter)
 					if outputter = Void then
 						create an_error.make_from_string ("Failed to recover",
 																	 Xpath_errors_uri, "SESU0007", Dynamic_error)
-						transformer.report_fatal_error (an_error)
+						serializer.report_fatal_error (an_error)
 					end
 				end
 			end
-			if transformer.is_error then
+			if serializer.is_error then
 				is_error := True
 			else
 				is_output_open := True

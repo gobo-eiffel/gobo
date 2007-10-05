@@ -39,10 +39,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
+	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
 			-- Establish invariant.
 		do
-			Precursor (a_transformer, an_outputter, some_output_properties, a_character_map_expander)
+			Precursor (a_serializer, an_outputter, some_output_properties, a_character_map_expander)
 			if some_output_properties.extension_attributes.has (extension_attribute_expanded_name) then
 				dtd_internal_subset := some_output_properties.extension_attributes.item (extension_attribute_expanded_name)
 			end

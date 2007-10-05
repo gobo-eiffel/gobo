@@ -104,7 +104,7 @@ feature -- Access
 			-- Value of the SYSTEM identifier to be written on the DOCTYPE
 
 	indent: BOOLEAN is
-			-- Should the transformer add additional whitespace?
+			-- Should the serializer add additional whitespace?
 		do
 			if boolean_property_map.has (Indent_attribute) then
 				Result := boolean_property_map.item (Indent_attribute)
@@ -948,7 +948,7 @@ feature {NONE} -- Implementation
 	-- Defaults which differ according to `method':
 
 	default_indent: BOOLEAN
-			-- Should the transformer add additional whitespace?
+			-- Should the serializer add additional whitespace?
 
 	default_version: STRING
 			-- Text of version attribute on xml declaration

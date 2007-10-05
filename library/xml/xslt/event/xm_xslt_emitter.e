@@ -132,7 +132,7 @@ feature -- Events
 			elseif not base_uri.is_empty then
 				l_error.set_location (base_uri, 0)
 			end
-			transformer.report_fatal_error (l_error)
+			serializer.report_fatal_error (l_error)
 			is_error := True
 		end
 
@@ -162,7 +162,7 @@ feature -- Element change
 			an_encoding := output_properties.encoding
 			if outputter /= Void then
 				an_outputter := outputter.outputter
-				outputter := transformer.configuration.encoder_factory.outputter (an_encoding, an_outputter)
+				outputter := serializer.encoder_factory.outputter (an_encoding, an_outputter)
 			end
 		ensure
 			output_properties_set: output_properties = some_output_properties
@@ -191,7 +191,7 @@ feature -- Element change
 				a_message := STRING_.concat ("The value for the 'normalization-form' attribute is not supported by the serializser. Found: ", a_request)
 				a_message := STRING_.appended_string (a_message, "%N. Only 'NFC', 'NFKC', 'NFD', 'NFKD' and 'none' are supported")
 				create an_error.make_from_string (a_message, Xpath_errors_uri, "SESU0011", Dynamic_error)
-				transformer.report_fatal_error (an_error)
+				serializer.report_fatal_error (an_error)
 			end
 		end
 
@@ -207,8 +207,8 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	transformer: XM_XSLT_TRANSFORMER
-			-- Transformer
+	serializer: XM_XSLT_SERIALIZER
+			-- XML Serializer
 
 	is_no_declaration_on_close: BOOLEAN
 			-- Should writing of XML declaration be suppresed from `close'?
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 invariant
 
 	output_properties_not_void: output_properties /= Void
-	transformer_not_void: transformer /= Void
+	serializer_not_void: serializer /= Void
 	normalization_form: normalization_form >= No_normalization and normalization_form <= Nfkd
 
 end

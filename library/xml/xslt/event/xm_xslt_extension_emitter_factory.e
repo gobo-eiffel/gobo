@@ -40,14 +40,14 @@ feature -- Access
 		deferred
 		end
 
-	new_receiver (a_method_local_name: STRING; a_transformer: XM_XSLT_TRANSFORMER;
+	new_receiver (a_method_local_name: STRING; a_serializer: XM_XSLT_SERIALIZER;
 		a_result_stream: XM_OUTPUT; some_properties: XM_XSLT_OUTPUT_PROPERTIES;
 		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
 			-- New receiver chain including an emitter
 		require
 			method_local_name_not_void: a_method_local_name /= Void
 			valid_output_method: is_valid_output_method (a_method_local_name)
-			transformer_not_void: a_transformer /= Void
+			serializer_not_void: a_serializer /= Void
 			result_stream_not_void: a_result_stream /= Void
 			properties_not_void: some_properties /= Void
 			character_map_index: some_properties.used_character_maps.count > 0 implies a_character_map_index /= Void
