@@ -1797,7 +1797,7 @@ feature {NONE} -- Instruction validity
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_type := l_target_context.base_type_actual (l_seed, universe)
+					l_type := tokens.formal_parameter (l_seed)
 				end
 			else
 					-- It's either:
@@ -6238,7 +6238,7 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_type := a_context.base_type_actual (l_seed, universe)
+					l_type := tokens.formal_parameter (l_seed)
 					report_tuple_label_expression (a_call, a_context)
 					a_context.force_last (l_type)
 				end
@@ -8578,7 +8578,7 @@ feature {NONE} -- Agent validity
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_type := a_context.base_type_actual (l_index, universe)
+				l_type := tokens.formal_parameter (l_index)
 				l_target_type := tokens.like_current
 				if
 					universe.predicate_class.is_preparsed and then
@@ -8981,7 +8981,7 @@ feature {NONE} -- Agent validity
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_type := a_context.base_type_actual (l_index, universe)
+				l_type := tokens.formal_parameter (l_index)
 				l_target_type := a_target.type
 				create l_open_operands.make_with_capacity (1)
 				l_open_operands.put_first (l_target_type)

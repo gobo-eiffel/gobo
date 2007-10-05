@@ -154,6 +154,14 @@ feature -- Class names
 			integer_64_class_name_not_void: Result /= Void
 		end
 
+	kl_any_routines_class_name: ET_CLASS_NAME is
+			-- "KL_ANY_ROUTINES" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_kl_any_routines_name)
+		ensure
+			kl_any_routines_class_name_not_void: Result /= Void
+		end
+
 	native_array_class_name: ET_CLASS_NAME is
 			-- "NATIVE_ARRAY" class name
 		once
@@ -822,6 +830,14 @@ feature -- Feature names
 			element_size_feature_name_not_void: Result /= Void
 		end
 
+	equal_objects_feature_name: ET_FEATURE_NAME is
+			-- 'equal_objects' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (equal_objects_name)
+		ensure
+			equal_objects_feature_name_not_void: Result /= Void
+		end
+
 	floor_real_32_feature_name: ET_FEATURE_NAME is
 			-- 'floor_real_32' feature name
 		once
@@ -1090,6 +1106,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (is_dotnet_name)
 		ensure
 			is_dotnet_feature_name_not_void: Result /= Void
+		end
+
+	is_equal_feature_name: ET_FEATURE_NAME is
+			-- 'is_equal' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_equal_name)
+		ensure
+			is_equal_feature_name_not_void: Result /= Void
 		end
 
 	is_thread_capable_feature_name: ET_FEATURE_NAME is
@@ -1462,37 +1486,69 @@ feature -- Types
 			like_current_not_void: Result /= Void
 		end
 
+	formal_parameter (i: INTEGER): ET_FORMAL_PARAMETER_TYPE is
+			-- `i'-th formal parameter
+		require
+			i_large_enough: i >= 1
+		local
+			nb: INTEGER
+			l_name: ET_IDENTIFIER
+		do
+			nb := formal_parameters.count
+			if i > nb then
+				if i > formal_parameters.capacity then
+					formal_parameters.resize (i)
+				end
+				from until i = nb loop
+					formal_parameters.put_last (Void)
+					nb := nb + 1
+				end
+			end
+			Result := formal_parameters.item (i)
+			if Result = Void then
+				create l_name.make ("G" + i.out)
+				create Result.make (l_name, i)
+				formal_parameters.replace (Result, i)
+			end
+		ensure
+			formal_parameter_not_void: Result /= Void
+		end
+
 	formal_parameter_1: ET_FORMAL_PARAMETER_TYPE is
 			-- Type 'G#1'
-		local
-			l_name: ET_IDENTIFIER
 		once
-			create l_name.make ("G")
-			create Result.make (l_name, 1)
+			Result := formal_parameter (1)
 		ensure
 			formal_parameter_not_void: Result /= Void
 		end
 
 	formal_parameter_2: ET_FORMAL_PARAMETER_TYPE is
 			-- Type 'G#2'
-		local
-			l_name: ET_IDENTIFIER
 		once
-			create l_name.make ("H")
-			create Result.make (l_name, 2)
+			Result := formal_parameter (2)
 		ensure
 			formal_parameter_not_void: Result /= Void
 		end
 
 	formal_parameter_3: ET_FORMAL_PARAMETER_TYPE is
 			-- Type 'G#3'
-		local
-			l_name: ET_IDENTIFIER
 		once
-			create l_name.make ("I")
-			create Result.make (l_name, 3)
+			Result := formal_parameter (3)
 		ensure
 			formal_parameter_not_void: Result /= Void
+		end
+
+feature {NONE} -- Types (Implementation)
+
+	formal_parameters: DS_ARRAYED_LIST [ET_FORMAL_PARAMETER_TYPE] is
+			-- Shared formal parameter types, indexed by index.
+			-- Note that some entries in the list may be Void if
+			-- the corresponding formal parameter type has not
+			-- been requested yet.
+		once
+			create Result.make (10)
+		ensure
+			formal_parameters_not_void: Result /= Void
 		end
 
 feature -- Symbols
@@ -2190,6 +2246,7 @@ feature -- Keyword and symbol names
 	capitalized_integer_16_name: STRING is "INTEGER_16"
 	capitalized_integer_32_name: STRING is "INTEGER_32"
 	capitalized_integer_64_name: STRING is "INTEGER_64"
+	capitalized_kl_any_routines_name: STRING is "KL_ANY_ROUTINES"
 	capitalized_native_array_name: STRING is "NATIVE_ARRAY"
 	capitalized_natural_name: STRING is "NATURAL"
 	capitalized_natural_8_name: STRING is "NATURAL_8"
@@ -2317,6 +2374,9 @@ feature -- Keyword and symbol names
 	element_size_name: STRING is "element_size"
 		-- Name of Eiffel feature 'element_size'
 
+	equal_objects_name: STRING is "equal_objects"
+		-- Name of Eiffel feature 'equal_objects'
+
 	floor_real_32_name: STRING is "floor_real_32"
 		-- Name of Eiffel feature 'floor_real_32'
 
@@ -2340,6 +2400,9 @@ feature -- Keyword and symbol names
 
 	is_dotnet_name: STRING is "is_dotnet"
 		-- Name of Eiffel feature 'is_dotnet'
+
+	is_equal_name: STRING is "is_equal"
+		-- Name of Eiffel feature 'is_equal'
 
 	is_thread_capable_name: STRING is "is_thread_capable"
 		-- Name of Eiffel feature 'is_thread_capable'
