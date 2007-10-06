@@ -27,6 +27,16 @@ Version 3.7 - ?
 	  use `is_equal' directly, but a protected version of it which is preceded
 	  by a call to `same_type'.
 
+	Gobo Eiffel Argument Library:
+
+	* Added the possibility to specify a maximum number of options.
+
+	* Added the possibility to make option arguments optional for options
+	  that only have a long form.
+
+	* The contracts now certify that the setup of arguments are 
+	  unambiguous.
+
 Version 3.6 - 14 June 2007
 
 	gec:
