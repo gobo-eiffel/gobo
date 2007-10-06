@@ -51,8 +51,13 @@ feature -- Factory
 	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET is
 			-- New dynamic type set
 		do
-			if a_type.is_expanded and then not a_type.is_generic then
-				Result := a_type
+			if a_type.is_expanded then
+				if a_type.is_generic then
+					create {ET_DYNAMIC_PULL_TYPE_SET} Result.make (a_type)
+					Result.set_never_void
+				else
+					Result := a_type
+				end
 			else
 				create {ET_DYNAMIC_PULL_TYPE_SET} Result.make (a_type)
 			end
@@ -297,6 +302,7 @@ feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
 			l_call_dynamic_type_sets := a_call_feature.dynamic_type_sets
 			if not l_call_dynamic_type_sets.is_empty then
 				create l_agent_type_set.make (l_call_dynamic_type_sets.item (1).static_type, an_agent_type)
+				l_agent_type_set.set_never_void
 				create l_dynamic_type_sets.make_with_capacity (1)
 				l_dynamic_type_sets.put_last (l_agent_type_set)
 				a_call_feature.set_dynamic_type_sets (l_dynamic_type_sets)

@@ -18,7 +18,7 @@ inherit
 		undefine
 			first_position, last_position
 		redefine
-			is_current
+			is_current, is_never_void
 		end
 
 	ET_KEYWORD
@@ -38,6 +38,9 @@ feature -- Status report
 
 	is_current: BOOLEAN is True
 			-- Is current expression the 'Current' entity (possibly parenthesized)?
+
+	is_never_void: BOOLEAN is True
+			-- Can current expression never be void?
 
 feature -- Processing
 

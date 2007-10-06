@@ -15,6 +15,9 @@ deferred class ET_ADDRESS_EXPRESSION
 inherit
 
 	ET_EXPRESSION
+		redefine
+			is_never_void
+		end
 
 feature -- Access
 
@@ -33,6 +36,11 @@ feature -- Access
 		do
 			Result := dollar
 		end
+
+feature -- Status report
+
+	is_never_void: BOOLEAN is True
+			-- Can current expression never be void?
 
 feature -- Setting
 

@@ -87,6 +87,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_never_void: BOOLEAN is
+			-- Can current expression never be void?
+		do
+			-- Result := False
+		end
+
 	is_current: BOOLEAN is
 			-- Is current expression the 'Current' entity (possibly parenthesized)?
 		do

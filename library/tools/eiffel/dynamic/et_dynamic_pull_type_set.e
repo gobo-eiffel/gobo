@@ -14,7 +14,10 @@ class ET_DYNAMIC_PULL_TYPE_SET
 
 inherit
 
-	ET_DYNAMIC_TYPE_SET
+	ET_DYNAMIC_EXTENDIBLE_TYPE_SET
+		redefine
+			sources, put_source
+		end
 
 create
 
@@ -39,25 +42,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	static_type: ET_DYNAMIC_TYPE
-			-- Type at compilation time
-
 	sources: ET_DYNAMIC_ATTACHMENT
 			-- Sub-sets of current set
 
 feature -- Element change
 
-	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
-			-- Add `a_target' to current set.
-			-- (Targets are supersets of current set.)
-		do
-			-- Do nothing: the current kind of type set is not pushing
-			-- types to targets but pulling them from sources.
-		end
-
 	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
 			-- Add `a_source' to current set.
 			-- (Sources are subsets of current set.)
+		local
+			l_source_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if sources = Void then
 				sources := a_source
@@ -66,6 +60,10 @@ feature -- Element change
 				sources := a_source
 			end
 			a_source.propagate_types (Current, a_system)
+			l_source_type_set := a_source.source_type_set
+			if not l_source_type_set.is_never_void then
+				propagate_can_be_void (l_source_type_set)
+			end
 		end
 
 end

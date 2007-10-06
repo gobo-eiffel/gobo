@@ -35,4 +35,14 @@ feature -- Element change
 			put_type_from_type_set (a_type, an_attachment.source_type_set, a_system)
 		end
 
+	propagate_can_be_void (a_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Propagate the information that `a_type_set', from which types
+			-- are propagated, is the dynamic type set of an expression which
+			-- can be void at some point during execution.
+		require
+			a_type_set_not_void: a_type_set /= Void
+			a_type_set_can_be_void: not a_type_set.is_never_void
+		do
+		end
+
 end

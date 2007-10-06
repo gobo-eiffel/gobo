@@ -32,7 +32,7 @@ inherit
 	ET_CHOICE_CONSTANT
 		undefine
 			first_position, last_position,
-			reset
+			reset, is_never_void
 		end
 
 	ET_INDEXING_TERM

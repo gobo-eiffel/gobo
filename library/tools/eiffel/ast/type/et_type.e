@@ -952,7 +952,7 @@ feature -- Output
 	debug_output: STRING is
 			-- String that should be displayed in debugger to represent `Current'
 		do
-			Result := to_text
+			Result := unaliased_to_text
 		end
 
 end

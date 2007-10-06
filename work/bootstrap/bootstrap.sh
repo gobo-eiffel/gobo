@@ -82,20 +82,21 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	LD=link
 	CFLAGS='-O2 -nologo -wd4049'
 	LFLAGS='-nologo -subsystem:console'
-	$CC $CFLAGS -c gec1.c
-	$CC $CFLAGS -c gec2.c
-	$CC $CFLAGS -c gec3.c
-	$CC $CFLAGS -c gec4.c
-	$CC $CFLAGS -c gec5.c
-	$CC $CFLAGS -c gec6.c
-	$CC $CFLAGS -c gec7.c
-	$CC $CFLAGS -c gec8.c
-	$CC $CFLAGS -c gec9.c
-	$CC $CFLAGS -c gec10.c
-	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec13.c
 	$CC $CFLAGS -c gec12.c
-	$LD $LFLAGS -out:$BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
-	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec1.c
+	$LD $LFLAGS -out:$BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
 	$CC $CFLAGS -o$BIN_DIR/gexace$EXE gexace.c -link $LFLAGS
 	$RM gexace$OBJ
 	$CC $CFLAGS -o$BIN_DIR/geant$EXE geant.c -link $LFLAGS
@@ -112,22 +113,23 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	LD=bcc32
 	CFLAGS='-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2'
 	LFLAGS='-5 -q'
-	$CC $CFLAGS -c gec1.c
-	$CC $CFLAGS -c gec2.c
-	$CC $CFLAGS -c gec3.c
-	$CC $CFLAGS -c gec4.c
-	$CC $CFLAGS -c gec5.c
-	$CC $CFLAGS -c gec6.c
-	$CC $CFLAGS -c gec7.c
-	$CC $CFLAGS -c gec8.c
-	$CC $CFLAGS -c gec9.c
-	$CC $CFLAGS -c gec10.c
-	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec13.c
 	$CC $CFLAGS -c gec12.c
-	$LD $LFLAGS -egec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec1.c
+	$LD $LFLAGS -egec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
 	$CP gec$EXE $BIN_DIR
 	$RM gec$EXE gec.tds
-	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
 	$CC $CFLAGS -ogexace$EXE gexace.c
 	$CP gexace$EXE $BIN_DIR
 	$RM gexace$EXE gexace.tds
@@ -172,20 +174,21 @@ elif [ "$CC" = "gcc" ]; then
 #	CFLAGS='-O2'
 	CFLAGS=''
 	LFLAGS='-lm'
-	$CC $CFLAGS -c gec1.c
-	$CC $CFLAGS -c gec2.c
-	$CC $CFLAGS -c gec3.c
-	$CC $CFLAGS -c gec4.c
-	$CC $CFLAGS -c gec5.c
-	$CC $CFLAGS -c gec6.c
-	$CC $CFLAGS -c gec7.c
-	$CC $CFLAGS -c gec8.c
-	$CC $CFLAGS -c gec9.c
-	$CC $CFLAGS -c gec10.c
-	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec13.c
 	$CC $CFLAGS -c gec12.c
-	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
-	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec1.c
+	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
 	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
 	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
@@ -196,20 +199,21 @@ elif [ "$CC" = "cc" ]; then
 	LD=cc
 	CFLAGS='-fast'
 	LDFLAGS='-lm'
-	$CC $CFLAGS -c gec1.c
-	$CC $CFLAGS -c gec2.c
-	$CC $CFLAGS -c gec3.c
-	$CC $CFLAGS -c gec4.c
-	$CC $CFLAGS -c gec5.c
-	$CC $CFLAGS -c gec6.c
-	$CC $CFLAGS -c gec7.c
-	$CC $CFLAGS -c gec8.c
-	$CC $CFLAGS -c gec9.c
-	$CC $CFLAGS -c gec10.c
-	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec13.c
 	$CC $CFLAGS -c gec12.c
-	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
-	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec1.c
+	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
 	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
 	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
@@ -220,20 +224,21 @@ elif [ "$CC" = "icc" ]; then
 	LD=cc
 	CFLAGS='-O2'
 	LFLAGS=''
-	$CC $CFLAGS -c gec1.c
-	$CC $CFLAGS -c gec2.c
-	$CC $CFLAGS -c gec3.c
-	$CC $CFLAGS -c gec4.c
-	$CC $CFLAGS -c gec5.c
-	$CC $CFLAGS -c gec6.c
-	$CC $CFLAGS -c gec7.c
-	$CC $CFLAGS -c gec8.c
-	$CC $CFLAGS -c gec9.c
-	$CC $CFLAGS -c gec10.c
-	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec13.c
 	$CC $CFLAGS -c gec12.c
-	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
-	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec1.c
+	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
 	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
 	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c
@@ -244,20 +249,21 @@ elif [ "$CC" = "tcc" ]; then
 	LD=tcc
 	CFLAGS='-O2'
 	LDFLAGS='-lm'
-	$CC $CFLAGS -c gec1.c
-	$CC $CFLAGS -c gec2.c
-	$CC $CFLAGS -c gec3.c
-	$CC $CFLAGS -c gec4.c
-	$CC $CFLAGS -c gec5.c
-	$CC $CFLAGS -c gec6.c
-	$CC $CFLAGS -c gec7.c
-	$CC $CFLAGS -c gec8.c
-	$CC $CFLAGS -c gec9.c
-	$CC $CFLAGS -c gec10.c
-	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec13.c
 	$CC $CFLAGS -c gec12.c
-	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
-	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ
+	$CC $CFLAGS -c gec11.c
+	$CC $CFLAGS -c gec10.c
+	$CC $CFLAGS -c gec9.c
+	$CC $CFLAGS -c gec8.c
+	$CC $CFLAGS -c gec7.c
+	$CC $CFLAGS -c gec6.c
+	$CC $CFLAGS -c gec5.c
+	$CC $CFLAGS -c gec4.c
+	$CC $CFLAGS -c gec3.c
+	$CC $CFLAGS -c gec2.c
+	$CC $CFLAGS -c gec1.c
+	$LD $LFLAGS -o $BIN_DIR/gec$EXE gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
+	$RM gec1$OBJ gec2$OBJ gec3$OBJ gec4$OBJ gec5$OBJ gec6$OBJ gec7$OBJ gec8$OBJ gec9$OBJ gec10$OBJ gec11$OBJ gec12$OBJ gec13$OBJ
 	$CC $CFLAGS -o $BIN_DIR/gexace$EXE gexace.c
 	$CC $CFLAGS -o $BIN_DIR/geant$EXE geant.c
 	$CC $CFLAGS -o $BIN_DIR/gelex$EXE gelex.c

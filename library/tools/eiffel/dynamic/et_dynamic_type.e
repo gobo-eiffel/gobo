@@ -17,7 +17,8 @@ inherit
 	ET_DYNAMIC_TYPE_SET
 		redefine
 			dynamic_type,
-			is_expanded
+			is_expanded,
+			put_target
 		end
 
 	HASHABLE
@@ -44,8 +45,13 @@ feature {NONE} -- Initialization
 			base_class := a_class
 			queries := empty_features
 			procedures := empty_features
+			create conforming_dynamic_types.make (Current)
+			create all_conforming_dynamic_types.make (Current)
+			all_conforming_dynamic_types.put_type (Current)
 			if is_expanded then
 				set_alive
+				conforming_dynamic_types.set_never_void
+				all_conforming_dynamic_types.set_never_void
 			end
 		ensure
 			base_type_set: base_type = a_type
@@ -70,6 +76,11 @@ feature -- Status report
 		ensure then
 			definition: Result = base_type.is_expanded
 		end
+
+	is_never_void: BOOLEAN is True
+			-- Can the expression of current dynamic type set never be void?
+			-- (Note that is order to be truly true, the current dynamic type
+			-- set should also be non-empty.)
 
 	is_generic: BOOLEAN is
 			-- Is current type generic?
@@ -104,6 +115,14 @@ feature -- Status report
 			has_meta_type: (meta_type /= Void and then meta_type.is_used) implies Result
 		end
 
+feature -- Status setting
+
+	set_never_void is
+			-- Set `is_never_void' to True.
+		do
+			-- `is_never_void' is already True.
+		end
+
 feature -- Conformance
 
 	conforms_to_type (other: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): BOOLEAN is
@@ -129,7 +148,7 @@ feature -- Status setting
 			-- Set `is_alive' to True.
 		do
 			is_alive := True
-			put_type (Current)
+			conforming_dynamic_types.put_type (Current)
 		ensure
 			alive_set: is_alive
 		end
@@ -174,19 +193,17 @@ feature -- Access
 	dynamic_type (i: INTEGER): ET_DYNAMIC_TYPE is
 			-- Dynamic type at index `i'
 		do
-			if dynamic_types = Current then
-				Result := Current
-			else
-				Result := dynamic_types.dynamic_type (i)
-			end
+			Result := Current
 		end
 
-	sources: ET_DYNAMIC_ATTACHMENT is
-			-- Sub-sets of current type set
-		do
-		ensure then
-			no_source: Result = Void
-		end
+	conforming_dynamic_types: ET_DYNAMIC_STANDALONE_TYPE_SET
+			-- Types that conform to current type and that are considered alive
+			-- (e.g. instances of this type may be created)
+
+	all_conforming_dynamic_types: ET_DYNAMIC_STANDALONE_TYPE_SET
+			-- All types (both alive and dead) that conform to current type
+			-- (Might be useful when retrieving Storable files or getting from
+			-- an external routine any other objects created outside of Eiffel.)
 
 	hash_code: INTEGER is
 			-- Hash code
@@ -196,6 +213,16 @@ feature -- Access
 
 	id: INTEGER
 			-- ID
+
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of types in current type set
+		do
+			if not base_class.is_none then
+				Result := 1
+			end
+		end
 
 feature -- Setting
 
@@ -609,6 +636,11 @@ feature -- Calls
 
 feature -- Element change
 
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+			-- Add `a_type' coming from `a_type_set' to current target.
+		do
+		end
+
 	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
 			-- Add `a_target' to current set.
 			-- (Targets are supersets of current set.)
@@ -616,14 +648,6 @@ feature -- Element change
 			if is_alive then
 				a_target.put_type_from_type_set (Current, Current, a_system)
 			end
-		end
-
-	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
-			-- Add `a_source' to current set.
-			-- (Sources are subsets of current set.)
-		do
-			-- Do nothing: the current kind of type set is not pulling
-			-- types from sources.
 		end
 
 feature -- Output
@@ -645,6 +669,15 @@ feature -- Link
 			next_type := a_type
 		ensure
 			next_type_set: next_type = a_type
+		end
+
+feature {ET_DYNAMIC_TYPE_SET} -- Implementation
+
+	dynamic_types: ET_DYNAMIC_TYPES is
+			-- Dynamic types in current set;
+			-- Void if no type in the set
+		do
+			Result := Current
 		end
 
 feature {NONE} -- Implementation
@@ -691,6 +724,8 @@ invariant
 	base_type_not_void: base_type /= Void
 	base_type_base_type: base_type.is_base_type
 	base_class_not_void: base_class /= Void
+	conforming_dynamic_types_not_void: conforming_dynamic_types /= Void
+	all_conforming_dynamic_types_not_void: all_conforming_dynamic_types /= Void
 	queries_not_void: queries /= Void
 	procedures_not_void: procedures /= Void
 	attribute_count_not_negative: attribute_count >= 0

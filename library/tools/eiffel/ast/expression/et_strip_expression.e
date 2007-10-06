@@ -17,6 +17,8 @@ inherit
 	ET_EXPRESSION
 		undefine
 			reset
+		redefine
+			is_never_void
 		end
 
 	ET_FEATURE_NAME_LIST
@@ -89,6 +91,11 @@ feature -- Access
 		do
 			Result := right_parenthesis.break
 		end
+
+feature -- Status report
+
+	is_never_void: BOOLEAN is True
+			-- Can current expression never be void?
 
 feature -- Setting
 

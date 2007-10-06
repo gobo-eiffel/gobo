@@ -16,6 +16,9 @@ deferred class ET_INLINE_CONSTANT
 inherit
 
 	ET_EXPRESSION
+		redefine
+			is_never_void
+		end
 
 	HASHABLE
 
@@ -36,6 +39,11 @@ feature -- Access
 		do
 			Result := id
 		end
+
+feature -- Status report
+
+	is_never_void: BOOLEAN is True
+			-- Can current expression never be void?
 
 feature -- Setting
 

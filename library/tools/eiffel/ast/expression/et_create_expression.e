@@ -16,7 +16,7 @@ inherit
 
 	ET_EXPRESSION
 		redefine
-			reset
+			reset, is_never_void
 		end
 
 create
@@ -104,6 +104,11 @@ feature -- Access
 				Result := creation_type.break
 			end
 		end
+
+feature -- Status report
+
+	is_never_void: BOOLEAN is True
+			-- Can current expression never be void?
 
 feature -- Setting
 

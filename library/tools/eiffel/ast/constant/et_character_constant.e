@@ -23,7 +23,7 @@ inherit
 
 	ET_CHOICE_CONSTANT
 		undefine
-			reset, first_position, last_position
+			reset, first_position, last_position, is_never_void
 		end
 
 	ET_INDEXING_TERM

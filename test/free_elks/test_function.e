@@ -39,6 +39,8 @@ feature -- Test
 			test_call_unqualified1
 			test_call_labeled_tuple1
 			test_call_attribute1
+			test_boxed_operands
+			test_boxed_result
 		end
 
 	test_item_qualified1 is
@@ -919,6 +921,57 @@ feature -- Test
 			assert_integers_equal ("last_result3", 13, p3.last_result)
 		end
 
+	test_boxed_operands is
+			-- Test that the access to the items of the tuple argument
+			-- of 'item' is correctly done, with boxing of expanded
+			-- objects to reference when necessary.
+		local
+			p1: FUNCTION [ANY, TUPLE [ANY, INTEGER], BOOLEAN]
+			p2: FUNCTION [ANY, TUPLE [ANY, ANY], BOOLEAN]
+			t: TUPLE [ANY, INTEGER]
+		do
+			p1 := agent g
+				-- Here the call to 'item' will have to box the
+				-- character 'b' to a reference object when passing
+				-- it to 'g'.
+			assert_booleans_equal ("item1", False, p1.item (['b', 3]))
+				-- Now use a polymorphic tuple argument.
+			p1 := agent g
+			t := ["gobo", 6]
+			assert_booleans_equal ("item2", False, p1.item (t))
+			t := ['b', 8]
+			assert_booleans_equal ("item3", False, p1.item (t))
+				-- Now test unboxing.
+			p2 := agent g
+			assert_booleans_equal ("item4", False, p2.item (["gobo", 2]))
+			p2 := agent g
+			t := ["gobo", 6]
+			assert_booleans_equal ("item5", False, p2.item (t))
+			p2 := agent h
+			assert_booleans_equal ("item6", False, p2.item (["gobo", 2]))
+			assert_booleans_equal ("item7", False, p2.item (t))
+		end
+
+	test_boxed_result is
+			-- Test that the access to the items of the tuple argument
+			-- of 'item' is correctly done, with boxing of expanded
+			-- objects to reference when necessary.
+		local
+			p1: FUNCTION [ANY, TUPLE [ANY, INTEGER], ANY]
+			l_false: ANY
+			arr: ARRAY [ANY]
+			s: STRING
+		do
+			l_false := False
+			s := "gobo"
+			create arr.make (1, 1)
+			arr.put (s, 1)
+			p1 := agent g
+			assert_equal ("item1", l_false, p1.item ([arr, 6]))
+			p1 := agent {ARRAY [ANY]}.item
+			assert_same ("item2", s, p1.item ([arr, 1]))
+		end
+
 feature {NONE} -- Implementation
 
 	f (a: ARRAY [CHARACTER]; i: INTEGER): CHARACTER is
@@ -930,6 +983,23 @@ feature {NONE} -- Implementation
 			Result := a.item (i)
 		ensure
 			definition: Result = a.item (i)
+		end
+
+	g (a: ANY; i: INTEGER): BOOLEAN is
+			-- Do `a' and `i' have the same `out' object?
+		require
+			a_not_void: a /= Void
+		do
+			Result := a.out = i.out
+		end
+
+	h (a: ANY; i: ANY): BOOLEAN is
+			-- Do `a' and `i' have the same `out' object?
+		require
+			a_not_void: a /= Void
+			i_not_void: i /= Void
+		do
+			Result := a.out = i.out
 		end
 
 	attr: INTEGER

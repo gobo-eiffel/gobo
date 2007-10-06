@@ -5,7 +5,7 @@ indexing
 		"Test features of class PROCEDURE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,6 +28,7 @@ feature -- Test
 			test_call_typed2
 			test_call_typed3
 			test_call_unqualified1
+			test_boxed_operands
 		end
 
 	test_call_qualified1 is
@@ -390,6 +391,44 @@ feature -- Test
 			p4 := agent f (a, 'f', 1)
 			p4.call (['t', "gobo"])
 			assert_characters_equal ("call8", 'f', a.item (1))
+		end
+
+	test_boxed_operands is
+			-- Test that the access to the items of the tuple argument
+			-- of 'call' is correctly done, with boxing of expanded
+			-- objects to reference when necessary.
+		local
+			p1: PROCEDURE [ANY, TUPLE [ANY, INTEGER]]
+			p2: PROCEDURE [ANY, TUPLE [ANY, ANY]]
+			a: ARRAY [ANY]
+			t: TUPLE [ANY, INTEGER]
+			b: ANY
+			s: STRING
+		do
+			create a.make (1, 1)
+			p1 := agent a.put
+				-- Here the call to 'call' will have to box the
+				-- character 'b' to a reference object when passing
+				-- it to ARRAY.put
+			p1.call (['b', 1])
+			b := 'b'
+			assert_equal ("call1", b, a.item (1))
+				-- Now use a polymorphic tuple argument.
+			p1 := agent a.put
+			s := "gobo"
+			t := [s, 1]
+			p1.call (t)
+			assert_same ("call2", s, a.item (1))
+			t := ['b', 1]
+			p1.call (t)
+			assert_equal ("call3", b, a.item (1))
+				-- Now test unboxing.
+			p2 := agent a.put
+			p2.call ([s, 1])
+			assert_same ("call4", s, a.item (1))
+			t := [s, 1]
+			p2.call (t)
+			assert_same ("call5", s, a.item (1))
 		end
 
 feature {NONE} -- Implementation

@@ -109,6 +109,9 @@ feature {NONE} -- Initialization
 							l_type := arg.type
 							l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 							l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
+								-- Unless proven otherwise after possible attachments,
+								-- a formal actual argument is assumed to be never Void.
+							l_dynamic_type_set.set_never_void
 						end
 						l_dynamic_type_sets.put_last (l_dynamic_type_set)
 						arg.name.set_index (i)
@@ -150,13 +153,9 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			if an_operand = tokens.current_keyword then
-				Result := target_type
-			else
-				i := an_operand.index
-				if i >= 1 and i <= dynamic_type_sets.count then
-					Result := dynamic_type_sets.item (i)
-				end
+			i := an_operand.index
+			if i >= 1 and i <= dynamic_type_sets.count then
+				Result := dynamic_type_sets.item (i)
 			end
 		end
 
@@ -328,6 +327,19 @@ feature -- Status report
 			Result := (result_type_set = Void)
 		ensure
 			definition: Result = (result_type_set = Void)
+		end
+
+	is_tilde_feature (a_system: ET_SYSTEM): BOOLEAN is
+			-- Is current feature supposed to simulate the forthcoming
+			-- '~' operator introduced in ECMA Eiffel 367?
+			-- (This feature is KL_ANY_ROUTINES.equal_objects.)
+		require
+			a_system_not_void: a_system /= Void
+		local
+			l_feature: ET_FEATURE
+		do
+			l_feature := static_feature.implementation_feature
+			Result := l_feature.implementation_class.name.same_class_name (tokens.kl_any_routines_class_name) and then l_feature.name.same_feature_name (tokens.equal_objects_feature_name)
 		end
 
 	is_precursor: BOOLEAN is

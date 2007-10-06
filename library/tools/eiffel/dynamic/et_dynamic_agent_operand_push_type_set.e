@@ -14,7 +14,7 @@ class ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET
 
 inherit
 
-	ET_DYNAMIC_TYPE_SET
+	ET_DYNAMIC_EXTENDIBLE_TYPE_SET
 		redefine
 			put_type_from_type_set
 		end
@@ -47,16 +47,6 @@ feature -- Access
 
 	agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			-- Type of agent
-
-	static_type: ET_DYNAMIC_TYPE
-			-- Type at compilation time
-
-	sources: ET_DYNAMIC_ATTACHMENT is
-			-- Sub-sets of current type set
-		do
-		ensure then
-			no_source: Result = Void
-		end
 
 feature -- Element change
 
@@ -91,21 +81,6 @@ feature -- Element change
 					end
 				end
 			end
-		end
-
-	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
-			-- Add `a_target' to current set.
-			-- (Targets are supersets of current set.)
-		do
-			-- No targets.
-		end
-
-	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
-			-- Add `a_source' to current set.
-			-- (Sources are subsets of current set.)
-		do
-			-- Do nothing: the current kind of type set is not pulling
-			-- types from sources but pushing them to targets.
 		end
 
 invariant

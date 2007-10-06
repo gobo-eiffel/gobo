@@ -55,6 +55,7 @@ void GE_get_argcargv(char* cmd, int* argc, char*** argvp)
 	char *p = NULL, *pe = NULL; /* pointers in `cmd' */
 	char *qb = NULL, *q = NULL; /* pointers in arguments */
 
+	*argc = 0;
 	/* Remove leading and trailing white spaces */
 	for (p = cmd; *p == ' ' || *p == '\t'; p++)
 		; /* empty */

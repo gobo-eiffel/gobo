@@ -221,6 +221,14 @@ feature {NONE} -- Processing
 					l_generator.set_split_threshold (split_size)
 				end
 				l_generator.generate (l_system_name)
+				if is_verbose then
+					error_handler.info_file.put_string ("Never void targets: ")
+					error_handler.info_file.put_integer (l_generator.never_void_target_count)
+					error_handler.info_file.put_new_line
+					error_handler.info_file.put_string ("Can be void targets: ")
+					error_handler.info_file.put_integer (l_generator.can_be_void_target_count)
+					error_handler.info_file.put_new_line
+				end
 				if l_generator.has_fatal_error then
 					Exceptions.die (1)
 				elseif not no_c_compile then

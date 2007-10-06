@@ -5,7 +5,7 @@ indexing
 		"Eiffel qualified calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ deferred class ET_DYNAMIC_QUALIFIED_CALL
 inherit
 
 	ET_DYNAMIC_TARGET
+
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
 
 feature -- Access
 
@@ -44,6 +47,20 @@ feature -- Access
 			position_not_void: Result /= Void
 		end
 
+feature -- Static report
+
+	is_equal_in_tilde_feature (a_system: ET_SYSTEM): BOOLEAN is
+			-- Is current call a call to 'is_equal' in the feature that is supposed
+			-- to simulate the forthcoming '~' operator introduced in ECMA Eiffel 367?
+			-- (This feature is KL_ANY_ROUTINES.equal_objects.)
+		require
+			a_system_not_void: a_system /= Void
+		do
+			if current_feature.is_tilde_feature (a_system) then
+				Result := target_type_set.static_type = a_system.any_type and then static_call.name.same_call_name (tokens.is_equal_feature_name)
+			end
+		end
+
 feature -- Measurement
 
 	count: INTEGER
@@ -58,19 +75,21 @@ feature -- Element change
 			l_dynamic_feature: like seeded_dynamic_feature
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 		do
-			l_dynamic_feature := seeded_dynamic_feature (static_call.name.seed, a_type, a_system)
-			if l_dynamic_feature = Void then
-				if a_type.conforms_to_type (target_type_set.static_type, a_system) then
-						-- Internal error: there should be a feature with that seed
-						-- in all descendants of `target_type_set.static_type'.
-					l_builder := a_system.dynamic_type_set_builder
-					l_builder.set_fatal_error
-					l_builder.error_handler.report_giaaa_error
+			if not static_call.name.is_tuple_label then
+				l_dynamic_feature := seeded_dynamic_feature (static_call.name.seed, a_type, a_system)
+				if l_dynamic_feature = Void then
+					if a_type.conforms_to_type (target_type_set.static_type, a_system) then
+							-- Internal error: there should be a feature with that seed
+							-- in all descendants of `target_type_set.static_type'.
+						l_builder := a_system.dynamic_type_set_builder
+						l_builder.set_fatal_error
+						l_builder.error_handler.report_giaaa_error
+					else
+						-- The error has already been reported somewhere else.
+					end
 				else
-					-- The error has already been reported somewhere else.
+					put_type_with_feature (a_type, l_dynamic_feature, a_system)
 				end
-			else
-				put_type_with_feature (a_type, l_dynamic_feature, a_system)
 			end
 		end
 
@@ -115,19 +134,21 @@ feature -- Element change
 			l_dynamic_feature: like seeded_dynamic_feature
 			l_system: ET_SYSTEM
 		do
-			l_system := a_builder.current_system
-			l_dynamic_feature := seeded_dynamic_feature (static_call.name.seed, a_type, l_system)
-			if l_dynamic_feature = Void then
-				if a_type.conforms_to_type (target_type_set.static_type, l_system) then
-						-- Internal error: there should be a feature with that seed
-						-- in all descendants of `target_type_set.static_type'.
-					a_builder.set_fatal_error
-					a_builder.error_handler.report_giaaa_error
+			if not static_call.name.is_tuple_label then
+				l_system := a_builder.current_system
+				l_dynamic_feature := seeded_dynamic_feature (static_call.name.seed, a_type, l_system)
+				if l_dynamic_feature = Void then
+					if a_type.conforms_to_type (target_type_set.static_type, l_system) then
+							-- Internal error: there should be a feature with that seed
+							-- in all descendants of `target_type_set.static_type'.
+						a_builder.set_fatal_error
+						a_builder.error_handler.report_giaaa_error
+					else
+						-- The error has already been reported somewhere else.
+					end
 				else
-					-- The error has already been reported somewhere else.
+					propagate_type_with_feature (a_type, l_dynamic_feature, a_builder)
 				end
-			else
-				propagate_type_with_feature (a_type, l_dynamic_feature, a_builder)
 			end
 		end
 
@@ -157,10 +178,12 @@ feature {NONE} -- Implementation
 			l_actual: ET_ARGUMENT_OPERAND
 			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_open_operand_type_set: ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET
 			i, nb: INTEGER
 			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_manifest_tuple: ET_MANIFEST_TUPLE
+			l_manifest_tuple_type: ET_DYNAMIC_TYPE
 		do
 			a_feature.set_regular (True)
 			l_actuals := static_call.arguments
@@ -207,22 +230,29 @@ feature {NONE} -- Implementation
 										end
 										i := i + 1
 									end
+								end
+								l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
+								l_target_argument_type_set := a_feature.argument_type_set (1)
+								if l_source_argument_type_set = Void then
+										-- Internal error: the dynamic type sets of the actual
+										-- arguments should be known at this stage.
+									l_builder := a_system.dynamic_type_set_builder
+									l_builder.set_fatal_error
+									l_builder.error_handler.report_giaaa_error
+								elseif l_target_argument_type_set = Void then
+										-- Internal error: it has already been checked somewhere else
+										-- that there was the same number of formal arguments in
+										-- feature redeclaration.
+									l_builder := a_system.dynamic_type_set_builder
+									l_builder.set_fatal_error
+									l_builder.error_handler.report_giaaa_error
+								elseif l_manifest_tuple = Void then
+									l_source_argument_type_set.put_target (l_target_argument_type_set, a_system)
 								else
-									l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
-									l_target_argument_type_set := a_feature.argument_type_set (1)
-									if l_source_argument_type_set = Void then
-											-- Internal error: the dynamic type sets of the actual
-											-- arguments should be known at this stage.
-										l_builder := a_system.dynamic_type_set_builder
-										l_builder.set_fatal_error
-										l_builder.error_handler.report_giaaa_error
-									elseif l_target_argument_type_set = Void then
-											-- Internal error: it has already been checked somewhere else
-											-- that there was the same number of formal arguments in
-											-- feature redeclaration.
-										l_builder := a_system.dynamic_type_set_builder
-										l_builder.set_fatal_error
-										l_builder.error_handler.report_giaaa_error
+									l_open_operand_type_set ?= l_target_argument_type_set
+									l_manifest_tuple_type := l_source_argument_type_set.static_type
+									if l_open_operand_type_set /= Void and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type, a_system) then
+										l_open_operand_type_set.put_type (l_manifest_tuple_type)
 									else
 										l_source_argument_type_set.put_target (l_target_argument_type_set, a_system)
 									end
@@ -266,6 +296,7 @@ feature {NONE} -- Implementation
 		local
 			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_open_operand_type_set: ET_DYNAMIC_AGENT_OPERAND_PULL_TYPE_SET
 			l_actuals: ET_ARGUMENT_OPERANDS
 			l_actual: ET_ARGUMENT_OPERAND
 			i, nb: INTEGER
@@ -273,6 +304,7 @@ feature {NONE} -- Implementation
 			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_manifest_tuple: ET_MANIFEST_TUPLE
+			l_manifest_tuple_type: ET_DYNAMIC_TYPE
 			l_system: ET_SYSTEM
 		do
 			l_system := a_builder.current_system
@@ -323,21 +355,29 @@ feature {NONE} -- Implementation
 										end
 										i := i + 1
 									end
-								else
-									l_target_argument_type_set := a_feature.argument_type_set (1)
-									if l_target_argument_type_set = Void then
-											-- Internal error: it has already been checked somewhere else
-											-- that there was the same number of formal arguments in
-											-- feature redeclaration.
+								end
+								l_target_argument_type_set := a_feature.argument_type_set (1)
+								if l_target_argument_type_set = Void then
+										-- Internal error: it has already been checked somewhere else
+										-- that there was the same number of formal arguments in
+										-- feature redeclaration.
+									a_builder.set_fatal_error
+									a_builder.error_handler.report_giaaa_error
+								elseif not l_target_argument_type_set.is_expanded then
+									l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
+									if l_source_argument_type_set = Void then
+											-- Internal error: the dynamic type sets of the actual
+											-- arguments should be known at this stage.
 										a_builder.set_fatal_error
 										a_builder.error_handler.report_giaaa_error
-									elseif not l_target_argument_type_set.is_expanded then
-										l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
-										if l_source_argument_type_set = Void then
-												-- Internal error: the dynamic type sets of the actual
-												-- arguments should be known at this stage.
-											a_builder.set_fatal_error
-											a_builder.error_handler.report_giaaa_error
+									elseif l_manifest_tuple = Void then
+										create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)
+										l_target_argument_type_set.put_source (l_attachment, l_system)
+									else
+										l_open_operand_type_set ?= l_target_argument_type_set
+										l_manifest_tuple_type := l_source_argument_type_set.static_type
+										if l_open_operand_type_set /= Void and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type, l_system) then
+											l_open_operand_type_set.put_type (l_manifest_tuple_type)
 										else
 											create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)
 											l_target_argument_type_set.put_source (l_attachment, l_system)

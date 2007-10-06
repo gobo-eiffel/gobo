@@ -26,7 +26,8 @@ struct GE_rescue *GE_rescue;
 /*
 	Raise an exception with code 'code'.
 */
-void GE_raise(int code) {
+void GE_raise(int code)
+{
 	struct GE_rescue *r = GE_rescue;
 	if (r != 0) {
 		GE_rescue = r->previous;
@@ -62,8 +63,17 @@ EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb)
 					GE_show_console();
 #endif
 					fprintf(stderr, "CAT-call error!\n");
-					exit(2);
+#ifdef EIF_DEBUG
+					{
+						char c;
+						fprintf(stderr, "Press Enter...\n");
+						scanf("%c", &c);
+					}
+#endif
 					GE_raise(24);
+					break;
+				} else if (type_id < type_ids[i]) {
+						/* type-ids are sorted in increasing order. */
 					break;
 				}
 			}
@@ -84,8 +94,14 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 		GE_show_console();
 #endif
 		fprintf(stderr, "Call on Void target!\n");
-		exit(2);
-		GE_raise(24);
+#ifdef EIF_DEBUG
+		{
+			char c;
+			fprintf(stderr, "Press Enter...\n");
+			scanf("%c", &c);
+		}
+#endif
+		GE_raise(1);
 	}
 	return (obj);
 }

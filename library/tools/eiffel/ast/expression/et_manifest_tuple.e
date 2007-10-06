@@ -17,6 +17,8 @@ inherit
 	ET_EXPRESSION
 		undefine
 			reset
+		redefine
+			is_never_void
 		end
 
 	ET_EXPRESSION_LIST
@@ -45,6 +47,11 @@ feature {NONE} -- Initialization
 			right_symbol := tokens.right_bracket_symbol
 			precursor (nb)
 		end
+
+feature -- Status report
+
+	is_never_void: BOOLEAN is True
+			-- Can current expression never be void?
 
 feature -- Processing
 

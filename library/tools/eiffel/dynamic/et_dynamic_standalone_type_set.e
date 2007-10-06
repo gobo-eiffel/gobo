@@ -14,7 +14,7 @@ class ET_DYNAMIC_STANDALONE_TYPE_SET
 
 inherit
 
-	ET_DYNAMIC_TYPE_SET
+	ET_DYNAMIC_EXTENDIBLE_TYPE_SET
 		redefine
 			put_type,
 			put_type_from_type_set,
@@ -49,6 +49,7 @@ feature -- Initialization
 		require
 			a_static_type_not_void: a_static_type /= Void
 		do
+			is_never_void := False
 			static_type := a_static_type
 			count := 0
 			if dynamic_types /= Void then
@@ -58,6 +59,7 @@ feature -- Initialization
 			static_type_set: static_type = a_static_type
 			count_set: count = 0
 			same_dynamic_types: dynamic_types = old dynamic_types
+			not_never_void: not is_never_void
 		end
 
 	reset_with_types (a_static_type: like static_type; a_dynamic_types: like dynamic_types) is
@@ -65,6 +67,7 @@ feature -- Initialization
 		require
 			a_static_type_not_void: a_static_type /= Void
 		do
+			is_never_void := False
 			static_type := a_static_type
 			dynamic_types := a_dynamic_types
 			if a_dynamic_types /= Void then
@@ -75,18 +78,7 @@ feature -- Initialization
 		ensure
 			static_type_set: static_type = a_static_type
 			dynamic_types_set: dynamic_types = a_dynamic_types
-		end
-
-feature -- Access
-
-	static_type: ET_DYNAMIC_TYPE
-			-- Type at compilation time
-
-	sources: ET_DYNAMIC_ATTACHMENT is
-			-- Subsets of current set
-		do
-		ensure then
-			no_source: Result = Void
+			not_never_void: not is_never_void
 		end
 
 feature -- Setting
@@ -125,22 +117,6 @@ feature -- Element change
 			if a_type.conforms_to_type (static_type, a_system) then
 				put_type (a_type)
 			end
-		end
-
-	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
-			-- Add `a_target' to current set.
-			-- (Targets are supersets of current set.)
-		do
-			-- Do nothing: the current kind of type set is not pushing
-			-- types to targets but pulling them from sources.
-		end
-
-	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
-			-- Add `a_source' to current set.
-			-- (Sources are subsets of current set.)
-		do
-			-- Do nothing: the current kind of type set is not pulling
-			-- types from sources but pushing them to targets.
 		end
 
 feature {ET_DYNAMIC_TYPE_SET} -- Implementation

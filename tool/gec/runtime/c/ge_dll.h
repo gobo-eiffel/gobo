@@ -22,7 +22,7 @@ extern "C" {
 #include <windows.h>
 
 /* DLL declarations */
-#define GE_load_dll(name) LoadLibrary((LPCSTR)name)
+#define GE_load_dll(name) LoadLibraryA((LPCSTR)name)
 
 #endif
 

@@ -1655,7 +1655,7 @@ feature -- Output
 	debug_output: STRING is
 			-- String that should be displayed in debugger to represent `Current'
 		do
-			Result := name.name
+			Result := upper_name
 		end
 
 feature -- Processing

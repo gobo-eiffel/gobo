@@ -62,6 +62,7 @@ extern void GE_raise(int code);
 	'type_ids' is sorted in increasing order.
 	Return 'obj'.
 */
+#define GE_catcall(obj,type_ids,nb) GE_check_catcall((obj),(type_ids),(nb))
 EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb);
 
 /*
@@ -69,6 +70,7 @@ EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb);
 	If it is, then raise a call-on-void-target exception.
 	Return 'obj'
 */
+#define GE_void(obj) (!(obj)?GE_check_void(obj):(obj))
 extern EIF_REFERENCE GE_check_void(EIF_REFERENCE obj);
 
 #ifdef __cplusplus

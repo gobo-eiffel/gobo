@@ -151,7 +151,7 @@ feature -- Factory
 	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET is
 			-- New dynamic type set
 		do
-			Result := a_type
+			Result := a_type.conforming_dynamic_types
 		end
 
 feature -- Status report
@@ -338,7 +338,7 @@ feature -- Generation
 					loop
 						l_other_type := l_dynamic_types.item (j)
 						if l_type.conforms_to_type (l_other_type, current_system) then
-							l_other_type.put_type (l_type)
+							l_other_type.conforming_dynamic_types.put_type (l_type)
 						end
 						j := j + 1
 					end
@@ -360,21 +360,23 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			l_seed: INTEGER
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			l_target_type_set := a_call.target_type_set
 			l_static_call := a_call.static_call
-			l_seed := l_static_call.name.seed
-			l_dynamic_feature := a_call.seeded_dynamic_feature (l_seed, a_type, current_system)
-			if l_dynamic_feature = Void then
-				if a_type.conforms_to_type (l_target_type_set.static_type, current_system) then
-						-- Internal error: there should be a feature with seed
-						-- `l_seed' in all descendants of `l_target_type_set.static_type'.
-					set_fatal_error
-					error_handler.report_giaaa_error
+			if not l_static_call.name.is_tuple_label then
+				l_seed := l_static_call.name.seed
+				l_dynamic_feature := a_call.seeded_dynamic_feature (l_seed, a_type, current_system)
+				if l_dynamic_feature = Void then
+					l_target_type_set := a_call.target_type_set
+					if a_type.conforms_to_type (l_target_type_set.static_type, current_system) then
+							-- Internal error: there should be a feature with seed
+							-- `l_seed' in all descendants of `l_target_type_set.static_type'.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						-- The error has already been reported somewhere else.
+					end
 				else
-					-- The error has already been reported somewhere else.
+					l_dynamic_feature.set_regular (True)
 				end
-			else
-				l_dynamic_feature.set_regular (True)
 			end
 		end
 
@@ -519,14 +521,9 @@ feature {NONE} -- CAT-calls
 			a_call_not_void: a_call /= Void
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_feature: ET_FEATURE
 			i, nb: INTEGER
 		do
-			l_feature := a_call.current_feature.static_feature.implementation_feature
-			if
-				l_feature.implementation_class.name.same_class_name (tilde_class_name) and then
-				l_feature.name.same_feature_name (tilde_feature_name)
-			then
+			if a_call.current_feature.is_tilde_feature (current_system) then
 				-- This feature is supposed to simulate the forthcoming
 				-- '~' operator introduced in ECMA Eiffel 367.
 			else
@@ -1889,6 +1886,9 @@ feature {NONE} -- Event handling
 				if not has_fatal_error then
 					l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type)
 					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+						-- Unless proven otherwise after possible attachments,
+						-- a formal actual argument is assumed to be never Void.
+					l_dynamic_type_set.set_never_void
 					set_dynamic_type_set (l_dynamic_type_set, a_formal.name)
 				end
 			end
@@ -5126,7 +5126,7 @@ feature {NONE} -- Implementation
 			-- Dynamic type sets of expressions within current feature
 
 	dummy_dynamic_type: ET_DYNAMIC_TYPE is
-			-- Dummy_dynamic type
+			-- Dummy dynamic type
 		once
 			create Result.make (current_type, current_class)
 		ensure
@@ -5139,25 +5139,6 @@ feature {NONE} -- Implementation
 			create Result.make (dummy_feature, dummy_dynamic_type, current_system)
 		ensure
 			dummy_dynamic_feature_not_void: Result /= Void
-		end
-
-feature {NONE} -- Constants
-
-	tilde_class_name: ET_IDENTIFIER is
-			-- Name of class containing `tilde_feature_name'
-		once
-			create Result.make ("KL_ANY_ROUTINES")
-		ensure
-			tilde_class_name_not_void: Result /= Void
-		end
-
-	tilde_feature_name: ET_IDENTIFIER is
-			-- Name of  feature supposed to simulate the forthcoming
-			-- '~' operator introduced in ECMA Eiffel 367
-		once
-			create Result.make ("equal_objects")
-		ensure
-			tilde_feature_name_not_void: Result /= Void
 		end
 
 invariant

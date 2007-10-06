@@ -14,9 +14,11 @@ class ET_DYNAMIC_PUSH_TYPE_SET
 
 inherit
 
-	ET_DYNAMIC_TYPE_SET
+	ET_DYNAMIC_EXTENDIBLE_TYPE_SET
 		redefine
-			put_type_from_type_set
+			put_target,
+			put_type_from_type_set,
+			propagate_can_be_void
 		end
 
 create
@@ -42,18 +44,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	static_type: ET_DYNAMIC_TYPE
-			-- Type at compilation time
-
 	targets: ET_DYNAMIC_TARGET_LIST
 			-- Supersets of the current set
-
-	sources: ET_DYNAMIC_ATTACHMENT is
-			-- Subsets of current type set
-		do
-		ensure then
-			no_source: Result = Void
-		end
 
 feature -- Element change
 
@@ -95,17 +87,31 @@ feature -- Element change
 				nb := count
 				from i := 1 until i > nb loop
 					a_target.put_type_from_type_set (dynamic_type (i), Current, a_system)
+					if not is_never_void then
+						a_target.propagate_can_be_void (Current)
+					end
 					i := i + 1
 				end
 			end
 		end
 
-	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
-			-- Add `a_source' to current set.
-			-- (Sources are subsets of current set.)
+	propagate_can_be_void (a_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Propagate the information that `a_type_set', from which types
+			-- are propagated, is the dynamic type set of an expression which
+			-- can be void at some point during execution.
+		local
+			i, nb: INTEGER
 		do
-			-- Do nothing: the current kind of type set is not pulling
-			-- types from sources but pushing them to targets.
+			if is_never_void then
+				is_never_void := False
+				if targets /= Void then
+					nb := targets.count
+					from i := 1 until i > nb loop
+						targets.item (i).propagate_can_be_void (Current)
+						i := i + 1
+					end
+				end
+			end
 		end
 
 end

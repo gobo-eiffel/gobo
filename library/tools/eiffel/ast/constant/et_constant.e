@@ -15,6 +15,9 @@ deferred class ET_CONSTANT
 inherit
 
 	ET_EXPRESSION
+		redefine
+			is_never_void
+		end
 
 feature -- Status report
 
@@ -59,5 +62,8 @@ feature -- Status report
 		do
 			-- Result := False
 		end
+
+	is_never_void: BOOLEAN is True
+			-- Can current expression never be void?
 
 end

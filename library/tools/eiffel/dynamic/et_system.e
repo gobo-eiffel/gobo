@@ -537,6 +537,9 @@ feature {NONE} -- Types
 						from i := 1 until i > nb loop
 							l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
 							l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+								-- Unless proven otherwise after possible attachments,
+								-- an open operand is assumed to be never Void.
+							l_item_type_set.set_never_void
 							l_item_type_sets.put_last (l_item_type_set)
 							i := i + 1
 						end
@@ -586,6 +589,9 @@ feature {NONE} -- Types
 						from i := 1 until i > nb loop
 							l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
 							l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+								-- Unless proven otherwise after possible attachments,
+								-- an open operand is assumed to be never Void.
+							l_item_type_set.set_never_void
 							l_item_type_sets.put_last (l_item_type_set)
 							i := i + 1
 						end
