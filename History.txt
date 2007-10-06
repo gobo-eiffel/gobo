@@ -1,3 +1,32 @@
+Version 3.7 - ?
+
+	gec:
+
+	* Can generate console and Windows applications.
+
+	* Implemented once manifest strings.
+
+	* Report CAT-call errors and call-on-void-target errors at run-time.
+
+	* Support the Ace/Xace/ECF 'trace' option.
+
+	* The Boehm GC can be plugged using the --gc command-line option.
+
+	* Improved the back-end C compiler config file.
+
+	* Improved interoperability with ISE's compiler.
+
+	gelint:
+
+	* Fixed bug when determining the type of a call to a Tuple label 
+	  when appearing in a generic class.
+
+	Gobo Eiffel Kernel Library:
+
+	* Removed possible CAT-call when using KL_EQUALITY_TESTER. It does not
+	  use `is_equal' directly, but a protected version of it which is preceded
+	  by a call to `same_type'.
+
 Version 3.6 - 14 June 2007
 
 	gec:
