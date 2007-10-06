@@ -55,6 +55,7 @@
 		<argument name="target"/>
 
 		<geant file="build.eant" target="${target}" dir="schematron"/>
+		<geant file="build.eant" target="${target}" dir="serializer"/>
 	</target>
 
 </project>
