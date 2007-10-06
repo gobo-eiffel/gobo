@@ -3,10 +3,10 @@ indexing
 	description:
 
 		"[
- 			Objects that can be passed to an XM_XPATH_ITEM_MAPPING_ITERATOR.
+			Objects that can be passed to an XM_XPATH_ITEM_MAPPING_ITERATOR.
 			Such objects, when given an XM_XPATH_ITEM, generate
 			zero or one items.
-      ]"
+		]"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"

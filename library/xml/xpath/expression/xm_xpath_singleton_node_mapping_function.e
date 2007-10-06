@@ -3,10 +3,10 @@ indexing
 	description:
 
 		"[
-        Objects that can be passed to an XM_XPATH_SINGLETON_NODE_MAPPING_ITERATOR.
-	     Such objects, when given an XM_XPATH_NODE, generate
-	     zero or one nodes.
-      ]"
+			Objects that can be passed to an XM_XPATH_SINGLETON_NODE_MAPPING_ITERATOR.
+			Such objects, when given an XM_XPATH_NODE, generate
+			zero or one nodes.
+		]"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
