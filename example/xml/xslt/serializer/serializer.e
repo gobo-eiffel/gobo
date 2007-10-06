@@ -123,25 +123,25 @@ feature {NONE} -- Argument processing
 				output_properties.set_method (method_option.parameter, 0)
 			end
 			if bom_option.was_found then
-				output_properties.set_byte_order_mark_required (bom_option.parameter.is_equal (Yes_value), 0)
+				output_properties.set_byte_order_mark_required (STRING_.same_string (bom_option.parameter, Yes_value), 0)
 			end
-			if	doctype_public_option.was_found then
+			if doctype_public_option.was_found then
 				output_properties.set_doctype_public (doctype_public_option.parameter, 0)
 			end
-			if	doctype_system_option.was_found then
+			if doctype_system_option.was_found then
 				output_properties.set_doctype_system (doctype_system_option.parameter, 0)
 			end
 			if encoding_option.was_found then
 				output_properties.set_encoding (encoding_option.parameter, 0)
 			end
 			if escape_uri_attributes_option.was_found then
-				output_properties.set_escape_uri_attributes (escape_uri_attributes_option.parameter.is_equal (Yes_value), 0)
+				output_properties.set_escape_uri_attributes (STRING_.same_string (escape_uri_attributes_option.parameter, Yes_value), 0)
 			end
 			if include_content_type_option.was_found then
-				output_properties.set_include_content_type (include_content_type_option.parameter.is_equal (Yes_value), 0)
+				output_properties.set_include_content_type (STRING_.same_string (include_content_type_option.parameter, Yes_value), 0)
 			end
 			if indent_option.was_found then
-				output_properties.set_indent (indent_option.parameter.is_equal (Yes_value), 0)
+				output_properties.set_indent (STRING_.same_string (indent_option.parameter, Yes_value), 0)
 			end
 			if media_type_option.was_found then
 				output_properties.set_media_type (media_type_option.parameter, 0)
@@ -150,13 +150,13 @@ feature {NONE} -- Argument processing
 				output_properties.set_normalization_form (normalization_form_option.parameter, 0)
 			end
 			if omit_xml_declaration_option.was_found then
-				output_properties.set_omit_xml_declaration (omit_xml_declaration_option.parameter.is_equal (Yes_value), 0)
+				output_properties.set_omit_xml_declaration (STRING_.same_string (omit_xml_declaration_option.parameter, Yes_value), 0)
 			end
 			if standalone_option.was_found then
 				output_properties.set_standalone (standalone_option.parameter, 0)
 			end
 			if undeclare_prefixes_option.was_found then
-				output_properties.set_undeclare_prefixes (undeclare_prefixes_option.parameter.is_equal (Yes_value), 0)
+				output_properties.set_undeclare_prefixes (STRING_.same_string (undeclare_prefixes_option.parameter,Yes_value), 0)
 			end
 			if version_option.was_found then
 				output_properties.set_version (version_option.parameter, 0)

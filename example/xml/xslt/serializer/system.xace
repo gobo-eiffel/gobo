@@ -5,8 +5,8 @@
 		system: "XSLT serializer - example"
 		copyright: "Copyright (c) 2007, Colin Adams and others"
 		license: "MIT License"
-		date: "$Date:  $"
-		revision: "$Revision: $"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 	<root class="SERIALIZER" creation="make"/>

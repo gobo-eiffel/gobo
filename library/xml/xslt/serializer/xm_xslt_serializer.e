@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: $"
-	revision: "$Revision:  $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class XM_XSLT_SERIALIZER
 
