@@ -5,7 +5,7 @@ indexing
 		"Equality testers"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class KL_EQUALITY_TESTER [G]
 inherit
 
 	ANY -- Needed for SE 2.1b1.
+
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
 
 feature -- Status report
 
@@ -29,7 +32,7 @@ feature -- Status report
 			elseif u = Void then
 				Result := False
 			else
-				Result := v.is_equal (u)
+				Result := ANY_.equal_objects (v, u)
 			end
 		end
 
