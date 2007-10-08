@@ -174,10 +174,14 @@ feature -- Access
 			post_validated: post_validated
 			output_properties_defined_somewhere: a_fingerprint > -1 implies is_named_output_property_defined (a_fingerprint)
 		local
-			found: BOOLEAN
-			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			l_found: BOOLEAN
+			l_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			l_message: STRING
+			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if a_fingerprint = -1 then found := True end
+			if a_fingerprint = -1 then
+				l_found := True
+			end
 			create Result.make (Platform.Minimum_integer)
 
 			-- Note that we process backwards, so as to find highest
@@ -185,19 +189,29 @@ feature -- Access
 			-- This makes error reporting easier.
 
 			from
-				a_cursor := top_level_elements.new_cursor; a_cursor.finish
+				l_cursor := top_level_elements.new_cursor; l_cursor.finish
 			variant
-				a_cursor.index
+				l_cursor.index
 			until
-				Result.is_error or else a_cursor.before
+				Result.is_error or l_cursor.before
 			loop
-				if a_cursor.item.is_output and then not a_cursor.item.as_output.is_excluded and then a_cursor.item.as_output.output_fingerprint = a_fingerprint then
-					found := True
-					a_cursor.item.as_output.gather_output_properties (Result)
+				if l_cursor.item.is_output and then not l_cursor.item.as_output.is_excluded and then l_cursor.item.as_output.output_fingerprint = a_fingerprint then
+					l_found := True
+					l_cursor.item.as_output.gather_output_properties (Result)
 				end
-				a_cursor.back
+				l_cursor.back
 			end
-			if not found and then a_fingerprint > -1 then
+			if Result.is_error then
+				if Result.is_duplication_error then
+					l_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", Result.duplicate_attribute_name)
+					l_message := STRING_.appended_string (l_message, "', in output definition named ")
+					l_message := STRING_.appended_string (l_message, shared_name_pool.display_name_from_name_code (a_fingerprint))
+					create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1560", Static_error)
+				else
+					create l_error.make_from_string (Result.error_message, Gexslt_eiffel_type_uri, "OUTPUT+PROPERTY", Static_error)
+				end
+				report_compile_error (l_error)
+			elseif not l_found and then a_fingerprint > -1 then
 				Result := Void -- triggers an exception
 			end
 		ensure
@@ -887,9 +901,7 @@ feature -- Element change
 					report_compile_error (an_error)
 				else
 					executable.set_default_output_properties (a_property_set)
-					if needs_dynamic_output_properties then
-						save_output_definitions
-					end
+					save_output_definitions
 					create a_compiled_templates_index.make_map (named_templates_index.count)
 					from
 						another_cursor := named_templates_index.new_cursor; another_cursor.start
@@ -1314,10 +1326,12 @@ feature {NONE} -- Implementation
 				a_cursor.back
 			end
 			if a_set.is_empty then
-				a_message := "The stylesheet contains xsl:result-document instructions that calculate the output " +
-					"format name at run-time, but there are no named xsl:output declarations"
-				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1460", Static_error)
-				report_compile_error (an_error)
+				if needs_dynamic_output_properties then
+					a_message := "The stylesheet contains xsl:result-document instructions that calculate the output " +
+						"format name at run-time, but there are no named xsl:output declarations"
+					create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1460", Static_error)
+					report_compile_error (an_error)
+				end
 			else
 				from a_set_cursor := a_set.new_cursor; a_set_cursor.start until a_set_cursor.after loop
 					a_property_set := gathered_output_properties (a_set_cursor.item)

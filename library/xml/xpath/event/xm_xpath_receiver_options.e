@@ -36,7 +36,6 @@ feature -- Access
 	Reject_duplicates: INTEGER is 8
 			-- Duplicate values should be rejected
 
-
 	No_special_characters: INTEGER is 16
 			-- No special charaters needing escaping are present
 

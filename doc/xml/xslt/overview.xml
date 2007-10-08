@@ -172,11 +172,19 @@
     <title>Compiling programs which use the XSLT library</title>
     <para>
       To see which libraries need to be mounted in your system.xace file,
-      take a look at the example progam in $GOBO/example/xml/xslt/schematron.
+      take a look at the example program in <filename>${GOBO}/example/xml/xslt/schematron</filename>.
     </para>
   </section>
   <section>
    <title>Conformance</title>
    <para>See <link linkend="conformance">Conformance to standards</link></para>
   </section>
+  <section>
+    <title>Serializer</title>
+    <para>
+     For documentation on the serializer (which is a separate component for general XML serialization - that is, you do
+     not have to use the XSLT engine to use it), see <link linkend="xslt_serializer">XSLT 2.0 serialization</link>.
+    </para>
+  </section>
+
 </chapter>

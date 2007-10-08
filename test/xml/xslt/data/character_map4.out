@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+   <body><img src="./a-url-that-needs-escaping-because-of-%EE%90%85-is-in-the-path-although-the-following-should-remain-as-an-entity-&amp;nbsp;" /><p>
+   &nbsp;fred&iexcl;jim&t-and-c;harry&chap1;jill&chap2;tab-to-three-spaces   CRLF
+
+      </p>
+   </body>
+</html>

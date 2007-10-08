@@ -286,7 +286,7 @@ feature {XM_XSLT_CHARACTER_MAP} -- Implementation
 				create an_error.make_from_string ("xsl:character-map definition is circular", Xpath_errors_uri, "XTSE1600", Static_error)
 				report_compile_error (an_error)
 			else
-				if validated then
+				if validated and character_maps_used /= Void then
 					from
 						a_cursor := character_maps_used.new_cursor; a_cursor.start
 					variant

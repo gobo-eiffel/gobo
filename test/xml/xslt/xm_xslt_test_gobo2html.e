@@ -14,19 +14,15 @@ deferred class XM_XSLT_TEST_GOBO2HTML
 
 inherit
 
-	TS_TEST_CASE
-
-	KL_IMPORTED_STRING_ROUTINES
+	XM_XSLT_TEST_ROUTINES
 
 	KL_IMPORTED_INTEGER_ROUTINES
 
 	XM_XPATH_SHARED_CONFORMANCE
 
 	XM_XPATH_SHARED_NAME_POOL
-
-	XM_RESOLVER_FACTORY
 	
-feature
+feature -- Test
 
 	test_transform2html is
 			-- Transform structure-index.xml with gobo2html.xsl.
@@ -37,9 +33,7 @@ feature
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
-			l_test_string: STRING
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
-			l_test_file: KL_TEXT_INPUT_FILE
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -59,23 +53,8 @@ feature
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
-			create l_test_file.make (from_saxon_html_filename)
-			assert ("Test file exists", l_test_file /= Void)
-			l_test_file.open_read
-			assert ("Test file readable", l_test_file.is_open_read)
-			from
-				l_test_file.read_string (8000)
-				l_test_string := STRING_.cloned_string (l_test_file.last_string)
-			until
-				l_test_file.end_of_input
-			loop
-				l_test_file.read_string (8000)
-				l_test_string := STRING_.appended_string (l_test_string, l_test_file.last_string)
-			end
-			l_test_file.close
---			print (l_output.last_output)
---			print (l_test_string)
-			assert ("Results same as test file", STRING_.same_string (l_test_string, l_output.last_output))
+			read_results_file (from_saxon_html_filename)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, last_latin1_string))
 		end
 
 	test_transform2xml is
@@ -87,9 +66,7 @@ feature
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
-			l_test_string: STRING
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
-			l_test_file: KL_TEXT_INPUT_FILE
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -109,23 +86,8 @@ feature
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
-			create l_test_file.make (from_saxon_xml_filename)
-			assert ("Test file exists", l_test_file /= Void)
-			l_test_file.open_read
-			assert ("Test file readable", l_test_file.is_open_read)
-			from
-				l_test_file.read_string (8000)
-				l_test_string := STRING_.cloned_string (l_test_file.last_string)
-			until
-				l_test_file.end_of_input
-			loop
-				l_test_file.read_string (8000)
-				l_test_string := STRING_.appended_string (l_test_string, l_test_file.last_string)
-			end
-			l_test_file.close
-			--print (l_test_string)
-			--print (l_output.last_output)
-			assert ("Results same as test file", STRING_.same_string (l_test_string, l_output.last_output))
+			read_results_file (from_saxon_xml_filename)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, last_latin1_string))
 		end
 
 	test_transform2xhtml is
@@ -137,9 +99,7 @@ feature
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
-			l_test_string: STRING
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
-			l_test_file: KL_TEXT_INPUT_FILE
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -159,25 +119,8 @@ feature
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
-			create l_test_file.make (structure_index_xhtml_filename)
-			assert ("Test file exists", l_test_file /= Void)
-			l_test_file.open_read
-			assert ("Test file readable", l_test_file.is_open_read)
-			from
-				l_test_file.read_string (8000)
-				l_test_string := STRING_.cloned_string (l_test_file.last_string)
-			until
-				l_test_file.end_of_input
-			loop
-				l_test_file.read_string (8000)
-				l_test_string := STRING_.appended_string (l_test_string, l_test_file.last_string)
-			end
-			l_test_file.close
-			--print ("Test file is:%N")
-			--print (hexadecimal_string (l_test_string))
-			--print ("%NResults are:%N")
-			--print (hexadecimal_string (l_output.last_output))
-			assert ("Results same as test file", STRING_.same_string (l_test_string, l_output.last_output))
+			read_results_file (structure_index_xhtml_filename)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, last_latin1_string))
 		end
 
 feature {NONE} -- Debug
@@ -203,17 +146,6 @@ feature {NONE} -- Debug
 			end
 		ensure
 			result_not_void: Result /= Void
-		end
-
-	data_dirname: STRING is
-			-- Name of directory containing schematron data files
-		once
-			Result := file_system.nested_pathname ("${GOBO}",
-																<<"test", "xml", "xslt", "data">>)
-			Result := Execution_environment.interpreted_string (Result)
-		ensure
-			data_dirname_not_void: Result /= Void
-			data_dirname_not_empty: not Result.is_empty
 		end
 
 	dummy_uri: UT_URI is
@@ -249,7 +181,7 @@ feature {NONE} -- Debug
 	from_saxon_html_filename: STRING is
 			-- Filename 'from-saxon.html'
 		once
-			Result := file_system.pathname (data_dirname, "from-saxon.html")
+			Result := "from-saxon.html"
 		ensure
 			from_saxon_html_filename_not_void: Result /= Void
 			from_saxon_html_filename_not_empty: not Result.is_empty
@@ -269,7 +201,7 @@ feature {NONE} -- Debug
 	from_saxon_xml_filename: STRING is
 			-- Filename 'from-saxon.xml'
 		once
-			Result := file_system.pathname (data_dirname, "from-saxon.xml")
+			Result := "from-saxon.xml"
 		ensure
 			from_saxon_xml_filename_not_void: Result /= Void
 			from_saxon_xml_filename_not_empty: not Result.is_empty
@@ -278,7 +210,7 @@ feature {NONE} -- Debug
 	structure_index_xhtml_filename: STRING is
 			-- Filename 'structure-index.xhtml'
 		once
-			Result := file_system.pathname (data_dirname, "structure-index.xhtml")
+			Result := "structure-index.xhtml"
 		ensure
 			structure_index_xhtml_filename_not_void: Result /= Void
 			structure_index_xhtml_filename_not_empty: not Result.is_empty

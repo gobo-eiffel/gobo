@@ -21,50 +21,49 @@ inherit
 
 feature {NONE} -- Implementation
 
-	character_map_expander (some_properties: XM_XSLT_OUTPUT_PROPERTIES;
+	character_map_expander (a_receiver: XM_XPATH_RECEIVER; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
 									a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER];
-									null_characters_used: BOOLEAN): XM_XSLT_CHARACTER_MAP_EXPANDER is
-			-- Optional character map expander
+									a_null_characters_used: BOOLEAN): XM_XSLT_CHARACTER_MAP_EXPANDER is
+			-- Character mapping filter
 		require
-			properties_not_void: some_properties /= Void
-			character_map_index: some_properties.used_character_maps.count > 0 implies a_character_map_index /= Void
+			a_receiver_not_void: a_receiver /= Void
+			a_properties_not_void: a_properties /= Void
+			a_character_map_index: a_character_map_index /= Void
 		local
-			some_character_maps: DS_ARRAYED_LIST [STRING]
-			a_character_map_list: DS_ARRAYED_LIST [DS_HASH_TABLE [STRING, INTEGER]]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
-			a_fingerprint: INTEGER
-			a_character_map: DS_HASH_TABLE [STRING, INTEGER]
+			l_character_maps: DS_ARRAYED_LIST [STRING]
+			l_character_map_list: DS_ARRAYED_LIST [DS_HASH_TABLE [STRING, INTEGER]]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
+			l_fingerprint: INTEGER
+			l_character_map: DS_HASH_TABLE [STRING, INTEGER]
 		do
-			some_character_maps := some_properties.used_character_maps
-			if some_character_maps.count > 0 then
-				create a_character_map_list.make (some_character_maps.count)
-				from
-					a_cursor := some_character_maps.new_cursor; a_cursor.start
-				variant
-					some_character_maps.count + 1 - a_cursor.index
-				until
-					a_cursor.after
-				loop
-					a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_cursor.item)
-					check
-						valid_character_map_fingerprint: a_fingerprint > -1
-						character_map_compiled_in: a_character_map_index.has (a_fingerprint)
-						-- These can only be justified with respect to code
-						--  elsewhwere in the XSLT library, but they hold
-						--  when `new_receiver' is called by {XM_XSLT_SERIALIZER}.selected_receiver
-					end
-					a_character_map := a_character_map_index.item (a_fingerprint)
-					check
-						valid_character_map: a_character_map /= Void
-						-- ditto
-					end
-					a_character_map_list.put_last (a_character_map)
-					a_cursor.forth
+			l_character_maps := a_properties.used_character_maps
+			create l_character_map_list.make (l_character_maps.count)
+			from
+				l_cursor := l_character_maps.new_cursor; l_cursor.start
+			variant
+				l_character_maps.count + 1 - l_cursor.index
+			until
+				l_cursor.after
+			loop
+				l_fingerprint := shared_name_pool.fingerprint_from_expanded_name (l_cursor.item)
+				check
+					valid_character_map_fingerprint: l_fingerprint > -1
+					character_map_compiled_in: a_character_map_index.has (l_fingerprint)
+					-- These can only be justified with respect to code
+					--  elsewhwere in the XSLT library, but they hold
+					--  when `new_receiver' is called by {XM_XSLT_SERIALIZER}.selected_receiver
 				end
-				create Result.make (a_character_map_list, null_characters_used)
+				l_character_map := a_character_map_index.item (l_fingerprint)
+				check
+					valid_character_map: l_character_map /= Void
+					-- ditto
+				end
+				l_character_map_list.put_last (l_character_map)
+				l_cursor.forth
 			end
+			create Result.make (a_receiver, l_character_map_list, a_null_characters_used)
 		ensure
-			maybe_void: True
+			character_map_expander_not_void: Result /= Void
 		end
 
 end

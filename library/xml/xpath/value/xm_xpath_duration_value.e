@@ -223,7 +223,7 @@ feature -- Status report
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
 		do
-			-- Result := False
+			Result := is_duration_value
 		end
 
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is

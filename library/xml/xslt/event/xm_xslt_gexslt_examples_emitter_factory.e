@@ -42,53 +42,58 @@ feature -- Access
 		end
 
 	new_receiver (a_method_local_name: STRING; a_serializer: XM_XSLT_SERIALIZER;
-		a_result_stream: XM_OUTPUT; some_properties: XM_XSLT_OUTPUT_PROPERTIES;
+		a_result_stream: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
 		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
 			-- New receiver chain including an emitter
 		local
-			an_xml_emitter: XM_XSLT_GEXSLT_EXAMPLES_XML_EMITTER
-			an_xml_indenter: XM_XSLT_XML_INDENTER
-			a_cdata_filter: XM_XSLT_CDATA_FILTER
+			l_receiver: XM_XPATH_RECEIVER
+			l_xml_emitter: XM_XSLT_XML_EMITTER			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
 			if STRING_.same_string (a_method_local_name, "xml") then
-				create an_xml_emitter.make (a_serializer, a_result_stream, some_properties,
-													 character_map_expander (some_properties, a_character_map_index, True))
-				Result := an_xml_emitter
-				if some_properties.indent then
-					create an_xml_indenter.make (a_serializer, an_xml_emitter, some_properties)
-					Result := an_xml_indenter
+				create l_xml_emitter.make (a_serializer, a_result_stream, a_properties)
+				l_receiver := l_xml_emitter
+				-- Phase four of serialization
+				if a_properties.indent then
+					create {XM_XSLT_XML_INDENTER} l_receiver.make (a_serializer, l_xml_emitter, a_properties)
 				end
-				if some_properties.cdata_section_elements.count > 0 then
-					create a_cdata_filter.make (Result, an_xml_emitter, some_properties)
-					Result := a_cdata_filter
+				-- Phase three (d) of serialization
+				create {XM_XSLT_NORMALIZING_FILTER} l_receiver.make (l_receiver, a_serializer, a_properties)
+				-- Phase three (c) of serialization
+				if not a_properties.used_character_maps.is_empty then
+					l_receiver := character_map_expander (l_receiver, a_properties, a_character_map_index, True)
 				end
+				-- Phase three (b) of serialization
+				if a_properties.cdata_section_elements.count > 0 then
+					create {XM_XSLT_CDATA_FILTER} l_receiver.make (l_receiver, l_xml_emitter, a_serializer, a_properties)
+				end
+				Result := l_receiver
 			end
 		end
 
 feature -- Element change
 
-	set_defaults (a_method_local_name: STRING; some_properties: XM_XSLT_OUTPUT_PROPERTIES; an_import_precedence: INTEGER) is
+	set_defaults (a_method_local_name: STRING; a_properties: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
 			-- Set defaults for `a_method_local_name'.
 		do
 
 			-- Setting ALL of the defaults is shown here as an example of what can be set.
 			-- Most of these are the default defaults anyway, so you do not need to set them.
 
-			some_properties.set_method (expanded_name_from_components (namespace_uri, a_method_local_name), an_import_precedence)
-			some_properties.set_default_indent_spaces (3)
-			some_properties.set_default_encoding ("UTF-8")
-			some_properties.set_default_byte_order_mark (False)
-			some_properties.set_default_escape_uri_attributes (True)
-			some_properties.set_default_include_content_type (True)
-			some_properties.set_default_indent (False)
-			some_properties.set_default_version ("1.0")
-			some_properties.set_default_media_type ("text/xml")
-			some_properties.set_default_character_representation ("hex")
+			a_properties.set_method (expanded_name_from_components (namespace_uri, a_method_local_name), a_import_precedence)
+			a_properties.set_default_indent_spaces (3)
+			a_properties.set_default_encoding ("UTF-8")
+			a_properties.set_default_byte_order_mark (False)
+			a_properties.set_default_escape_uri_attributes (True)
+			a_properties.set_default_include_content_type (True)
+			a_properties.set_default_indent (False)
+			a_properties.set_default_version ("1.0")
+			a_properties.set_default_media_type ("text/xml")
+			a_properties.set_default_character_representation ("hex")
 
 			-- You could also set defaults for extension attributes. Note that these
 			--  do not honour the import precedence rules.
 
-			-- E.g. some_properties.extension_attributes.force ("BUG - invalid dtd internal subset", "{http://www.gobosoft.com/eiffel/gobo/gexslt/extension/examples}internal-subset")
+			-- E.g. a_properties.extension_attributes.force ("BUG - invalid dtd internal subset", "{http://www.gobosoft.com/eiffel/gobo/gexslt/extension/examples}internal-subset")
 		end
 
 invariant

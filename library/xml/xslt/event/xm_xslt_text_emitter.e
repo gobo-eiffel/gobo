@@ -58,15 +58,15 @@ feature -- Events
 			-- Special characters are not escaped
 		local
 			a_bad_character: INTEGER
-			a_message, a_mapped_string: STRING
+			a_message: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if not is_error then
 				if not is_output_open then open_document end
-				if not are_no_special_characters (properties) and then character_map_expander = Void then
+				if not are_no_special_characters (properties) then
 					a_bad_character := bad_character_code (chars)
 					if a_bad_character = 0 then
-						output (normalized_string (chars))
+						output (chars)
 					else
 						a_message := STRING_.concat ("Output character not available in this encoding (decimal ", a_bad_character.out)
 						a_message := STRING_.appended_string (a_message, ")")
@@ -75,11 +75,8 @@ feature -- Events
 						serializer.report_fatal_error (an_error)
 						is_error := True
 					end
-				elseif character_map_expander /= Void then
-					a_mapped_string := character_map_expander.mapped_string (chars)
-					output (normalized_string (a_mapped_string))
 				else
-					output (normalized_string (chars))
+					output (chars)
 				end
 			end
 			mark_as_written

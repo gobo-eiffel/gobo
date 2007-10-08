@@ -93,50 +93,50 @@ feature -- Events
 			same_line := False
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (a_chars: STRING; a_properties: INTEGER) is
 			-- Notify character data.
 		local
 			a_last_newline, an_index: INTEGER
 		do
-			if in_formatted_tag then
-				Precursor (chars, properties)
+			if in_formatted_tag or are_null_markers_used (a_properties) then
+				Precursor (a_chars, a_properties)
 			else
 				from
 					a_last_newline := 1
 					an_index := 1
 				variant
-					chars.count + 1 - an_index
+					a_chars.count + 1 - an_index
 				until
-					an_index > chars.count
+					an_index > a_chars.count
 				loop
-					if chars.item_code (an_index) = 10 or else
-						(an_index - a_last_newline > 120 and then chars.item_code (an_index) = 32) then
+					if a_chars.item_code (an_index) = 10 or else
+						(an_index - a_last_newline > 120 and then a_chars.item_code (an_index) = 32) then
 						same_line := False
-						Precursor (chars.substring (a_last_newline, an_index - 1), properties)
+						Precursor (a_chars.substring (a_last_newline, an_index - 1), a_properties)
 						indent
 						a_last_newline := an_index + 1
 						from
 						until
-							a_last_newline > chars.count or else chars.item_code (a_last_newline) /= 32
+							a_last_newline > a_chars.count or else a_chars.item_code (a_last_newline) /= 32
 						loop
 							a_last_newline := a_last_newline + 1
 						end
 					end
 					an_index := an_index + 1
 				end
-				if a_last_newline <= chars.count then
-					Precursor (chars.substring (a_last_newline, chars.count), properties)
+				if a_last_newline <= a_chars.count then
+					Precursor (a_chars.substring (a_last_newline, a_chars.count), a_properties)
 				end
 			end
 			mark_as_written
 			is_after_inline := False
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; a_properties: INTEGER) is
 			-- Notify a comment.
 		do
 			indent
-			Precursor (a_content_string, properties)
+			Precursor (a_content_string, a_properties)
 		end
 
 feature {NONE} -- Implementation

@@ -47,6 +47,15 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
+			<link linkend="serializers">Serialization</link>
+		</term>
+		<listitem><para>
+			Serializing XML event streams or trees.
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
 			<link linkend="resolvers">Resolvers</link>
 		</term>
 		<listitem><para>

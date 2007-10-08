@@ -50,69 +50,69 @@ feature -- Element change
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_name_attribute, a_uri: STRING
 		do
 			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
+				l_cursor := attribute_collection.name_code_cursor
+				l_cursor.start
 			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				attribute_collection.number_of_attributes + 1 - l_cursor.index				
 			until
-				a_cursor.after or any_compile_errors
+				l_cursor.after or any_compile_errors
 			loop
-				a_name_code := a_cursor.item
+				a_name_code := l_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
-					a_name_attribute := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (a_name_attribute); STRING_.right_adjust (a_name_attribute)
+					a_name_attribute := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (a_name_attribute); STRING_.right_adjust (a_name_attribute)
 				elseif STRING_.same_string (an_expanded_name, Method_attribute) then
-					method := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (method); STRING_.right_adjust (method)
+					method := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (method); STRING_.right_adjust (method)
 				elseif STRING_.same_string (an_expanded_name, Version_attribute) then
-					output_version := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (output_version); STRING_.right_adjust (output_version)					
+					output_version := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (output_version); STRING_.right_adjust (output_version)					
 				elseif STRING_.same_string (an_expanded_name, Encoding_attribute) then
-					encoding := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (encoding); STRING_.right_adjust (encoding)
+					encoding := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (encoding); STRING_.right_adjust (encoding)
 				elseif STRING_.same_string (an_expanded_name, Omit_xml_declaration_attribute) then
-					omit_xml_declaration := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (omit_xml_declaration); STRING_.right_adjust (omit_xml_declaration)
+					omit_xml_declaration := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (omit_xml_declaration); STRING_.right_adjust (omit_xml_declaration)
 				elseif STRING_.same_string (an_expanded_name, Standalone_attribute) then
-					standalone := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (standalone); STRING_.right_adjust (standalone)					
+					standalone := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (standalone); STRING_.right_adjust (standalone)					
 				elseif STRING_.same_string (an_expanded_name, Doctype_public_attribute) then
-					doctype_public := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (doctype_public); STRING_.right_adjust (doctype_public)
+					doctype_public := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (doctype_public); STRING_.right_adjust (doctype_public)
 				elseif STRING_.same_string (an_expanded_name, Doctype_system_attribute) then
-					doctype_system := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (doctype_system); STRING_.right_adjust (doctype_system)					
+					doctype_system := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (doctype_system); STRING_.right_adjust (doctype_system)					
 				elseif STRING_.same_string (an_expanded_name, Cdata_section_elements_attribute) then
-					cdata_section_elements := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (cdata_section_elements); STRING_.right_adjust (cdata_section_elements)
+					cdata_section_elements := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (cdata_section_elements); STRING_.right_adjust (cdata_section_elements)
 				elseif STRING_.same_string (an_expanded_name, Indent_attribute) then
-					indent := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (indent); STRING_.right_adjust (indent)
+					indent := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (indent); STRING_.right_adjust (indent)
 				elseif STRING_.same_string (an_expanded_name, Include_content_type_attribute) then
-					include_content_type := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (include_content_type); STRING_.right_adjust (include_content_type)
+					include_content_type := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (include_content_type); STRING_.right_adjust (include_content_type)
 				elseif STRING_.same_string (an_expanded_name, Media_type_attribute) then
-					media_type := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (media_type); STRING_.right_adjust (media_type)
+					media_type := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (media_type); STRING_.right_adjust (media_type)
 				elseif STRING_.same_string (an_expanded_name, Escape_uri_attributes_attribute) then
-					escape_uri_attributes := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (escape_uri_attributes); STRING_.right_adjust (escape_uri_attributes)
+					escape_uri_attributes := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (escape_uri_attributes); STRING_.right_adjust (escape_uri_attributes)
 				elseif STRING_.same_string (an_expanded_name, Use_character_maps_attribute) then
-					use_character_maps := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (use_character_maps); STRING_.right_adjust (use_character_maps)
+					use_character_maps := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (use_character_maps); STRING_.right_adjust (use_character_maps)
 				elseif STRING_.same_string (an_expanded_name, Undeclare_prefixes_attribute) then
-					undeclare_prefixes := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
+					undeclare_prefixes := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
 				elseif STRING_.same_string (an_expanded_name, Normalization_form_attribute) then
-					normalization_form := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
+					normalization_form := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_character_representation_attribute) then
-					character_representation := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (character_representation); STRING_.right_adjust (character_representation)
+					character_representation := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (character_representation); STRING_.right_adjust (character_representation)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_indent_spaces_attribute) then
-					indent_spaces := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (indent_spaces); STRING_.right_adjust (indent_spaces)
+					indent_spaces := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (indent_spaces); STRING_.right_adjust (indent_spaces)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_next_in_chain_attribute) then
-					next_in_chain := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (next_in_chain); STRING_.right_adjust (next_in_chain)
+					next_in_chain := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (next_in_chain); STRING_.right_adjust (next_in_chain)
 				elseif STRING_.same_string (an_expanded_name, Byte_order_mark_attribute) then
-					byte_order_mark := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (byte_order_mark); STRING_.right_adjust (byte_order_mark)
+					byte_order_mark := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (byte_order_mark); STRING_.right_adjust (byte_order_mark)
 				else
 					a_uri := shared_name_pool.namespace_uri_from_name_code (a_name_code)
 					if a_uri.count = 0 or STRING_.same_string (a_uri, Xslt_uri) or STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
 						check_unknown_attribute (a_name_code)
 					else
-						extension_attributes.force (attribute_value_by_index (a_cursor.index), an_expanded_name)
+						extension_attributes.force (attribute_value_by_index (l_cursor.index), an_expanded_name)
 					end
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 			if a_name_attribute /= Void then
 				generate_name_code (a_name_attribute)
@@ -127,7 +127,7 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
-			a_message: STRING
+			l_message: STRING
 		do
 			check_top_level (Void)
 			check_empty
@@ -152,8 +152,8 @@ feature -- Element change
 				else
 					create method_qname_parser.make (method)
 					if not method_qname_parser.is_valid then
-						a_message := STRING_.concat (method, " is not a lexical QName.")
-						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1570", Static_error)
+						l_message := STRING_.concat (method, " is not a lexical QName.")
+						create an_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1570", Static_error)
 						report_compile_error (an_error)
 					else
 						if STRING_.same_string (uri_for_prefix (method_qname_parser.optional_prefix, False), Gexslt_eiffel_type_uri)
@@ -267,267 +267,65 @@ feature -- Element change
 			property_set_not_in_error: not a_property_set.is_error
 			validated: validated
 		local
-			a_stylesheet: XM_XSLT_STYLESHEET
-			some_used_character_maps: DS_ARRAYED_LIST [STRING]
-			an_import_precedence, a_fingerprint: INTEGER
-			a_splitter: ST_SPLITTER
-			some_character_maps: DS_LIST [STRING]
-			a_cursor: DS_LIST_CURSOR [STRING]
-			a_uri, a_message, an_expanded_name: STRING
-			a_character_map: XM_XSLT_CHARACTER_MAP
-			an_error: XM_XPATH_ERROR_VALUE
-			a_parser: XM_XPATH_QNAME_PARSER
+			l_import_precedence: INTEGER
 		do
-			an_import_precedence := precedence
+			l_import_precedence := precedence
 			if method /= Void then
-				if STRING_.same_string (method, "xml") then
-					if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
-						a_property_set.set_xml_defaults (an_import_precedence)
-					elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
-						not STRING_.same_string (method, a_property_set.method) then
-						a_property_set.set_duplication_error (Method_attribute)
-					end
-				elseif STRING_.same_string (method, "html") then
-					if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
-						a_property_set.set_html_defaults (an_import_precedence)
-					elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
-						not STRING_.same_string (method, a_property_set.method) then
-						a_property_set.set_duplication_error (Method_attribute)
-					end
-				elseif STRING_.same_string (method, "xhtml") then
-					if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
-						a_property_set.set_xhtml_defaults (an_import_precedence)
-					elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
-						not STRING_.same_string (method, a_property_set.method) then
-						a_property_set.set_duplication_error (Method_attribute)
-					end
-				elseif STRING_.same_string (method, "text") then
-					if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
-						a_property_set.set_text_defaults (an_import_precedence)
-					elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
-						not STRING_.same_string (method, a_property_set.method) then
-						a_property_set.set_duplication_error (Method_attribute)
-					end
-				elseif not is_chain then
-					a_uri := uri_for_prefix (method_qname_parser.optional_prefix, False)
-					if a_uri = Void then
-						create an_error.make_from_string (STRING_.concat (method_qname_parser.optional_prefix, " is not an in-scope namespace prefix."), Xpath_errors_uri, "XTSE1570", Static_error)
-						report_compile_error (an_error)
-					else
-						if emitter_factory.is_valid_output_method (a_uri, method_qname_parser.local_name) then
-							if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
-								emitter_factory.set_defaults (a_uri, method_qname_parser.local_name, a_property_set, an_import_precedence)
-							elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
-								not STRING_.same_string (method, a_property_set.method) then
-								a_property_set.set_duplication_error (Method_attribute)
-							end
-						else
-							create an_error.make_from_string (STRING_.concat (method, " is not supported by this XSLT configuration/processor."), Xpath_errors_uri, "XTSE1570", Static_error)
-							report_compile_error (an_error)
-						end
-					end
-				end
+				gather_method_property (a_property_set, l_import_precedence)
 			end
 			if output_version /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Version_attribute) then
-					a_property_set.set_version (output_version, an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Version_attribute) and then
-					not STRING_.same_string (output_version, a_property_set.version) then
-					a_property_set.set_duplication_error (Version_attribute)
-				end
+				gather_version_property (a_property_set, l_import_precedence)
 			end
 			if indent /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Indent_attribute) then
-					a_property_set.set_indent (STRING_.same_string (indent, "yes"), an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Indent_attribute) and then
-					((STRING_.same_string (indent, "yes") and then not a_property_set.indent) or
-					(STRING_.same_string (indent, "no") and then a_property_set.indent)) then
-					a_property_set.set_duplication_error (Indent_attribute)
-				end
+				gather_indent_property (a_property_set, l_import_precedence)
 			end
 			if indent_spaces /= Void and then not a_property_set.is_error and then indent_spaces.is_integer and then indent_spaces.to_integer > 0 then
-				if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_indent_spaces_attribute) then
-					a_property_set.set_indent_spaces (indent_spaces.to_integer, an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_indent_spaces_attribute) and then
-					indent_spaces.to_integer /= a_property_set.indent_spaces then
-					a_property_set.set_duplication_error (Gexslt_indent_spaces_attribute)
-				end	
+				gather_indent_spaces_property (a_property_set, l_import_precedence)
 			end
 			if next_in_chain /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_next_in_chain_attribute) then
-					a_property_set.set_next_in_chain (next_in_chain, an_import_precedence)
-					a_property_set.set_next_in_chain_base_uri (system_id)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_indent_spaces_attribute) then
-					a_property_set.set_duplication_error (Gexslt_next_in_chain_attribute)
-				end	
+				gather_next_in_chain_property (a_property_set, l_import_precedence)
 			end
 			if encoding /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Encoding_attribute) then
-					a_property_set.set_encoding (encoding, an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Encoding_attribute) and then
-					not STRING_.same_string (encoding, a_property_set.encoding) then
-					a_property_set.set_duplication_error (Encoding_attribute)
-				end	
+				gather_encoding_property (a_property_set, l_import_precedence)
 			end
 			if media_type /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Media_type_attribute) then
-					a_property_set.set_media_type (media_type, an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Media_type_attribute) and then
-					not STRING_.same_string (media_type, a_property_set.media_type) then
-					a_property_set.set_duplication_error (Media_type_attribute)
-				end	
+				gather_media_type_property (a_property_set, l_import_precedence)
 			end
 			if doctype_system /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Doctype_system_attribute) then
-					a_property_set.set_doctype_system (doctype_system, an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Doctype_system_attribute) and then
-					not STRING_.same_string (doctype_system, a_property_set.doctype_system) then
-					a_property_set.set_duplication_error (Doctype_system_attribute)
-				end	
+				gather_doctype_system_property (a_property_set, l_import_precedence)
 			end			
 			if doctype_public /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Doctype_public_attribute) then
-					a_property_set.set_doctype_public (doctype_public, an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Doctype_public_attribute) and then
-					not STRING_.same_string (doctype_public, a_property_set.doctype_public) then
-					a_property_set.set_duplication_error (Doctype_public_attribute)
-				end					
+				gather_doctype_public_property (a_property_set, l_import_precedence)
 			end
 			if omit_xml_declaration /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Omit_xml_declaration_attribute) then
-					a_property_set.set_omit_xml_declaration (STRING_.same_string (omit_xml_declaration, "yes"), an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Omit_xml_declaration_attribute) then
-					if STRING_.same_string (omit_xml_declaration, "yes") and then not a_property_set.omit_xml_declaration or
-						STRING_.same_string (omit_xml_declaration, "no") and then a_property_set.omit_xml_declaration then
-						a_property_set.set_duplication_error (Omit_xml_declaration_attribute)
-					end
-				end
+				gather_omit_xml_declaration_property (a_property_set, l_import_precedence)
 			end
 			if standalone /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Standalone_attribute) then
-					a_property_set.set_standalone (standalone, an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Standalone_attribute) and then
-					not STRING_.same_string (standalone, a_property_set.standalone) then
-					a_property_set.set_duplication_error (Standalone_attribute)
-				end	
+				gather_standalone_property (a_property_set, l_import_precedence)
 			end
 			if cdata_section_expanded_names /= Void and then not a_property_set.is_error then
 				a_property_set.set_cdata_sections (cdata_section_expanded_names)
 			end
 			if escape_uri_attributes /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Escape_uri_attributes_attribute) then
-					a_property_set.set_escape_uri_attributes (STRING_.same_string (escape_uri_attributes, "yes"), an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Escape_uri_attributes_attribute) then
-					if STRING_.same_string (escape_uri_attributes, "yes") and then not a_property_set.escape_uri_attributes or
-						STRING_.same_string (escape_uri_attributes, "no") and then a_property_set.escape_uri_attributes then
-						a_property_set.set_duplication_error (Escape_uri_attributes_attribute)
-					end
-				end					
+				gather_escape_uri_attributes_property (a_property_set, l_import_precedence)
 			end
 			if use_character_maps /= Void and then not a_property_set.is_error then
-				a_stylesheet := principal_stylesheet
-				some_used_character_maps := a_property_set.used_character_maps
-				create a_splitter.make
-				some_character_maps := a_splitter.split (use_character_maps)
-				from
-					a_cursor := some_character_maps.new_cursor; a_cursor.start
-					create a_splitter.make
-					a_splitter.set_separators (":")
-				variant
-					some_character_maps.count + 1 - a_cursor.index
-				until
-					a_cursor.after
-				loop
-					create a_parser.make (a_cursor.item)
-					if not a_parser.is_valid then
-						create an_error.make_from_string (STRING_.concat (a_cursor.item, " is not a lexical QName."), Xpath_errors_uri, "XTSE1590", Static_error)
-						report_compile_error (an_error)
-						a_cursor.go_after
-					else
-						if not a_parser.is_prefix_present then
-							a_uri := ""
-						else
-							a_uri := uri_for_prefix (a_parser.optional_prefix, False)
-						end
-						if shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
-							a_fingerprint := shared_name_pool.name_code (a_parser.optional_prefix, a_uri, a_parser.local_name)
-						else
-							shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
-							a_fingerprint := shared_name_pool.last_name_code
-						end
-						if a_fingerprint = -1 then
-							create an_error.make_from_string (STRING_.concat (a_cursor.item, " is not a lexical QName."), Xpath_errors_uri, "XTSE1590", Static_error)
-							report_compile_error (an_error)
-							a_cursor.go_after
-						else
-							a_fingerprint := shared_name_pool.fingerprint_from_name_code (a_fingerprint)
-							a_character_map := a_stylesheet.character_map (a_fingerprint)
-							if a_character_map = Void then
-								a_message := STRING_.concat ("No character-map named ", a_cursor.item)
-								a_message := STRING_.appended_string (a_message, " has been defined.")
-								create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1590", Static_error)
-								report_compile_error (an_error)
-								a_cursor.go_after
-							else
-								an_expanded_name := expanded_name_from_components (a_uri, a_parser.local_name)
-								if not some_used_character_maps.has (an_expanded_name) then
-									some_used_character_maps.force_last (an_expanded_name)
-								end
-								a_cursor.forth
-							end
-						end
-					end
-				end
+				gather_used_character_maps_property (a_property_set, l_import_precedence)
 			end
 			if character_representation /= Void and then not a_property_set.is_error then
-				if a_property_set.is_valid_character_representation (character_representation) then
-					if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_character_representation_attribute) then
-						a_property_set.set_character_representation (character_representation, an_import_precedence)
-					elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_character_representation_attribute) and then
-						not STRING_.same_string (character_representation, a_property_set.character_representation) then
-						a_property_set.set_duplication_error (Gexslt_character_representation_attribute)
-					end
-				else
-					report_compile_warning (STRING_.concat (character_representation, " is not a valid value for gexslt:character-representation"))
-				end
+				gather_character_representation_property (a_property_set, l_import_precedence)
 			end			
 			if include_content_type /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Include_content_type_attribute) then
-					a_property_set.set_include_content_type (STRING_.same_string (include_content_type, "yes"), an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Include_content_type_attribute) then
-					if STRING_.same_string (include_content_type, "yes") and then not a_property_set.include_content_type or
-						STRING_.same_string (include_content_type, "no") and then a_property_set.include_content_type then
-						a_property_set.set_duplication_error (Include_content_type_attribute)
-					end
-				end
+				gather_include_content_type_property (a_property_set, l_import_precedence)
 			end
 			if undeclare_prefixes /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Undeclare_prefixes_attribute) then
-					a_property_set.set_undeclare_prefixes (STRING_.same_string (undeclare_prefixes, "yes"), an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Undeclare_prefixes_attribute) then
-					if STRING_.same_string (undeclare_prefixes, "yes") and then not a_property_set.undeclare_prefixes or
-						STRING_.same_string (undeclare_prefixes, "no") and then a_property_set.undeclare_prefixes then
-						a_property_set.set_duplication_error (Undeclare_prefixes_attribute)
-					end
-				end					
+				gather_undeclare_prefixes_property (a_property_set, l_import_precedence)
 			end
 			if normalization_form /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Normalization_form_attribute) then
-					a_property_set.set_normalization_form (normalization_form, an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Normalization_form_attribute) 
-					and then not STRING_.same_string (normalization_form, a_property_set.normalization_form) then
-					a_property_set.set_duplication_error (Normalization_form_attribute)
-				end					
+				gather_normalization_form_property (a_property_set, l_import_precedence)
 			end			
 			if byte_order_mark /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Byte_order_mark_attribute) then
-					a_property_set.set_byte_order_mark_required (STRING_.same_string (byte_order_mark, "yes"), an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Byte_order_mark_attribute) then
-					if STRING_.same_string (byte_order_mark, "yes") and then not a_property_set.byte_order_mark_required or
-						STRING_.same_string (byte_order_mark, "no") and then a_property_set.byte_order_mark_required then
-						a_property_set.set_duplication_error (Byte_order_mark_attribute)
-					end
-				end
+				gather_byte_order_mark_property (a_property_set, l_import_precedence)
 			end
 			a_property_set.merge_extension_attributes (extension_attributes)
 		end
@@ -581,9 +379,6 @@ feature {NONE} -- Implementation
 	escape_uri_attributes: STRING
 			-- escape-uri-attribute value
 
-	use_character_maps: STRING
-			-- use-character-maps value
-
 	undeclare_prefixes: STRING
 			-- undeclare-prefixes value
 
@@ -610,6 +405,317 @@ feature {NONE} -- Implementation
 
 	method_qname_parser: XM_XPATH_QNAME_PARSER
 			-- Parser for method name
+
+	gather_method_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set method-related properties in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		local
+			l_uri: STRING
+		do
+			if STRING_.same_string (method, "xml") then
+				if a_property_set.is_higher_precedence (a_import_precedence, Method_attribute) then
+					a_property_set.set_xml_defaults (a_import_precedence)
+				elseif not a_property_set.is_lower_precedence (a_import_precedence, Method_attribute) and then
+					not STRING_.same_string (method, a_property_set.method) then
+					a_property_set.set_duplication_error (Method_attribute)
+				end
+			elseif STRING_.same_string (method, "html") then
+				if a_property_set.is_higher_precedence (a_import_precedence, Method_attribute) then
+					a_property_set.set_html_defaults (a_import_precedence)
+				elseif not a_property_set.is_lower_precedence (a_import_precedence, Method_attribute) and then
+					not STRING_.same_string (method, a_property_set.method) then
+					a_property_set.set_duplication_error (Method_attribute)
+				end
+			elseif STRING_.same_string (method, "xhtml") then
+				if a_property_set.is_higher_precedence (a_import_precedence, Method_attribute) then
+					a_property_set.set_xhtml_defaults (a_import_precedence)
+				elseif not a_property_set.is_lower_precedence (a_import_precedence, Method_attribute) and then
+					not STRING_.same_string (method, a_property_set.method) then
+					a_property_set.set_duplication_error (Method_attribute)
+				end
+			elseif STRING_.same_string (method, "text") then
+				if a_property_set.is_higher_precedence (a_import_precedence, Method_attribute) then
+					a_property_set.set_text_defaults (a_import_precedence)
+				elseif not a_property_set.is_lower_precedence (a_import_precedence, Method_attribute) and then
+					not STRING_.same_string (method, a_property_set.method) then
+					a_property_set.set_duplication_error (Method_attribute)
+				end
+			elseif not is_chain then
+				l_uri := uri_for_prefix (method_qname_parser.optional_prefix, False)
+				if l_uri = Void then
+					report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (method_qname_parser.optional_prefix, " is not an in-scope namespace prefix."), Xpath_errors_uri, "XTSE1570", Static_error))
+				else
+					if emitter_factory.is_valid_output_method (l_uri, method_qname_parser.local_name) then
+						if a_property_set.is_higher_precedence (a_import_precedence, Method_attribute) then
+							emitter_factory.set_defaults (l_uri, method_qname_parser.local_name, a_property_set, a_import_precedence)
+						elseif not a_property_set.is_lower_precedence (a_import_precedence, Method_attribute) and then
+							not STRING_.same_string (method, a_property_set.method) then
+							a_property_set.set_duplication_error (Method_attribute)
+						end
+					else
+						report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (method, " is not supported by this XSLT configuration/processor."), Xpath_errors_uri, "XTSE1570", Static_error))
+					end
+				end
+			end
+		end
+
+	gather_version_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set version property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Version_attribute) then
+				a_property_set.set_version (output_version, a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Version_attribute) and then
+				not STRING_.same_string (output_version, a_property_set.version) then
+				a_property_set.set_duplication_error (Version_attribute)
+			end
+		end
+
+	gather_indent_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set indent property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Indent_attribute) then
+				a_property_set.set_indent (STRING_.same_string (indent, "yes"), a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Indent_attribute) and then
+				((STRING_.same_string (indent, "yes") and then not a_property_set.indent) or
+					(STRING_.same_string (indent, "no") and then a_property_set.indent)) then
+				a_property_set.set_duplication_error (Indent_attribute)
+			end
+		end
+
+	gather_indent_spaces_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set indent-spaces property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Gexslt_indent_spaces_attribute) then
+				a_property_set.set_indent_spaces (indent_spaces.to_integer, a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Gexslt_indent_spaces_attribute) and then
+				indent_spaces.to_integer /= a_property_set.indent_spaces then
+				a_property_set.set_duplication_error (Gexslt_indent_spaces_attribute)
+			end	
+		end
+
+	gather_next_in_chain_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set next-in-chain property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Gexslt_next_in_chain_attribute) then
+				a_property_set.set_next_in_chain (next_in_chain, a_import_precedence)
+				a_property_set.set_next_in_chain_base_uri (system_id)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Gexslt_indent_spaces_attribute) then
+				a_property_set.set_duplication_error (Gexslt_next_in_chain_attribute)
+			end
+		end
+
+	gather_encoding_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set encoding property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Encoding_attribute) then
+				a_property_set.set_encoding (encoding, a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Encoding_attribute) and then
+				not STRING_.same_string (encoding, a_property_set.encoding) then
+				a_property_set.set_duplication_error (Encoding_attribute)
+			end
+		end
+
+	gather_media_type_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set media-type property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Media_type_attribute) then
+				a_property_set.set_media_type (media_type, a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Media_type_attribute) and then
+				not STRING_.same_string (media_type, a_property_set.media_type) then
+				a_property_set.set_duplication_error (Media_type_attribute)
+			end
+		end
+
+	gather_doctype_system_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set doctype-system property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Doctype_system_attribute) then
+				a_property_set.set_doctype_system (doctype_system, a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Doctype_system_attribute) and then
+				not STRING_.same_string (doctype_system, a_property_set.doctype_system) then
+				a_property_set.set_duplication_error (Doctype_system_attribute)
+			end
+		end
+
+	gather_doctype_public_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set doctype-public property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Doctype_public_attribute) then
+				a_property_set.set_doctype_public (doctype_public, a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Doctype_public_attribute) and then
+				not STRING_.same_string (doctype_public, a_property_set.doctype_public) then
+				a_property_set.set_duplication_error (Doctype_public_attribute)
+			end
+		end
+
+	gather_omit_xml_declaration_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set omit-xml-declaration property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Omit_xml_declaration_attribute) then
+				a_property_set.set_omit_xml_declaration (STRING_.same_string (omit_xml_declaration, "yes"), a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Omit_xml_declaration_attribute) then
+				if STRING_.same_string (omit_xml_declaration, "yes") and then not a_property_set.omit_xml_declaration or
+					STRING_.same_string (omit_xml_declaration, "no") and then a_property_set.omit_xml_declaration then
+					a_property_set.set_duplication_error (Omit_xml_declaration_attribute)
+				end
+			end
+		end
+
+	gather_standalone_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set standalone property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Standalone_attribute) then
+				a_property_set.set_standalone (standalone, a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Standalone_attribute) and then
+				not STRING_.same_string (standalone, a_property_set.standalone) then
+				a_property_set.set_duplication_error (Standalone_attribute)
+			end
+		end
+
+	gather_escape_uri_attributes_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set escape-uri-attributes property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Escape_uri_attributes_attribute) then
+				a_property_set.set_escape_uri_attributes (STRING_.same_string (escape_uri_attributes, "yes"), a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Escape_uri_attributes_attribute) then
+				if STRING_.same_string (escape_uri_attributes, "yes") and then not a_property_set.escape_uri_attributes or
+					STRING_.same_string (escape_uri_attributes, "no") and then a_property_set.escape_uri_attributes then
+					a_property_set.set_duplication_error (Escape_uri_attributes_attribute)
+				end
+			end
+		end
+
+	gather_character_representation_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set character-representation property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_valid_character_representation (character_representation) then
+				if a_property_set.is_higher_precedence (a_import_precedence, Gexslt_character_representation_attribute) then
+					a_property_set.set_character_representation (character_representation, a_import_precedence)
+				elseif not a_property_set.is_lower_precedence (a_import_precedence, Gexslt_character_representation_attribute) and then
+					not STRING_.same_string (character_representation, a_property_set.character_representation) then
+					a_property_set.set_duplication_error (Gexslt_character_representation_attribute)
+				end
+			else
+				report_compile_warning (STRING_.concat (character_representation, " is not a valid value for gexslt:character-representation"))
+			end
+		end
+
+	gather_include_content_type_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set include-content-type property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Include_content_type_attribute) then
+				a_property_set.set_include_content_type (STRING_.same_string (include_content_type, "yes"), a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Include_content_type_attribute) then
+				if STRING_.same_string (include_content_type, "yes") and then not a_property_set.include_content_type or
+					STRING_.same_string (include_content_type, "no") and then a_property_set.include_content_type then
+					a_property_set.set_duplication_error (Include_content_type_attribute)
+				end
+			end
+		end
+
+	gather_undeclare_prefixes_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set undeclare-prefixes property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Undeclare_prefixes_attribute) then
+				a_property_set.set_undeclare_prefixes (STRING_.same_string (undeclare_prefixes, "yes"), a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Undeclare_prefixes_attribute) then
+				if STRING_.same_string (undeclare_prefixes, "yes") and then not a_property_set.undeclare_prefixes or
+					STRING_.same_string (undeclare_prefixes, "no") and then a_property_set.undeclare_prefixes then
+					a_property_set.set_duplication_error (Undeclare_prefixes_attribute)
+				end
+			end
+		end
+
+	gather_normalization_form_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set normalization-form property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Normalization_form_attribute) then
+				a_property_set.set_normalization_form (normalization_form, a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Normalization_form_attribute) 
+				and then not STRING_.same_string (normalization_form, a_property_set.normalization_form) then
+				a_property_set.set_duplication_error (Normalization_form_attribute)
+			end
+		end
+
+	gather_byte_order_mark_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+			-- Set byte-order-form property in `a_property_set'.
+		require
+			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
+			validated: validated
+		do
+			if a_property_set.is_higher_precedence (a_import_precedence, Byte_order_mark_attribute) then
+				a_property_set.set_byte_order_mark_required (STRING_.same_string (byte_order_mark, "yes"), a_import_precedence)
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Byte_order_mark_attribute) then
+				if STRING_.same_string (byte_order_mark, "yes") and then not a_property_set.byte_order_mark_required or
+					STRING_.same_string (byte_order_mark, "no") and then a_property_set.byte_order_mark_required then
+					a_property_set.set_duplication_error (Byte_order_mark_attribute)
+				end
+			end
+		end
 
 invariant
 

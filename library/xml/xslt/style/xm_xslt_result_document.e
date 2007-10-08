@@ -19,6 +19,9 @@ inherit
 			validate, make_style_element, may_contain_sequence_constructor
 		end
 
+	XM_XSLT_OUTPUT_ROUTINES
+		export {NONE} all end
+
 	KL_SHARED_PLATFORM
 		export {NONE} all end
 
@@ -281,7 +284,10 @@ feature -- Element change
 				a_fingerprint := another_cursor.item
 				formatting_attributes.remove (a_fingerprint)
 				another_cursor.forth
-			end	
+			end
+			if use_character_maps /= Void and then not a_local_property_set.is_error then
+				gather_used_character_maps_property (a_local_property_set, precedence)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -297,9 +303,6 @@ feature {NONE} -- Implementation
 
 	format_expression: XM_XPATH_EXPRESSION
 			-- Format attribute, when supplied as an AVT
-
-	use_character_maps: STRING
-			-- Character maps to be used
 
 	validation_action: INTEGER
 			-- Validation action

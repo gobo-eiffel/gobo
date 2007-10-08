@@ -72,20 +72,20 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; a_properties: INTEGER) is
 			-- Notify the start of an element
 		local
-			finished: BOOLEAN
+			l_finished: BOOLEAN
 		do
 			if	dropping_meta_tags_level = level then
 				if	matches_name (a_name_code, "meta") then
-					in_meta_tag := True; finished := True
+					in_meta_tag := True; l_finished := True
 					create attributes.make
 				end
 			end
-			if not finished then
+			if not l_finished then
 				level := level + 1
-				Precursor (a_name_code, a_type_code, properties)
+				Precursor (a_name_code, a_type_code, a_properties)
 				if is_seeking_head then
 					if	matches_name (a_name_code, "head") then
 						found_head := True
@@ -95,13 +95,13 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
 			-- Notify an attribute.
 		do
 			if in_meta_tag then
 				attributes.add_attribute (a_name_code, a_type_code, a_value)
 			else
-				Precursor (a_name_code, a_type_code, a_value, properties)
+				Precursor (a_name_code, a_type_code, a_value, a_properties)
 			end
 			mark_as_written
 		end
@@ -109,17 +109,17 @@ feature -- Events
 	start_content is
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		local
-			a_content_type: STRING
+			l_content_type: STRING
 		do
 			if found_head then
 				found_head := False
 				Precursor
 				base_receiver.start_element (meta_name_code, Untyped_type_code, 0)
 				base_receiver.notify_attribute (http_equiv_name_code, Untyped_atomic_type_code, "Content-Type", 0)
-				a_content_type := STRING_.concat (media_type, "; charset=")
-				a_content_type := STRING_.appended_string (a_content_type, encoding)
-				base_receiver.notify_attribute (content_name_code, Untyped_atomic_type_code, a_content_type, 0)
-				base_receiver.start_content
+				l_content_type := STRING_.concat (media_type, "; charset=")
+				l_content_type := STRING_.appended_string (l_content_type, encoding)
+				base_receiver.notify_attribute (content_name_code, Untyped_atomic_type_code, l_content_type, 0)
+				Precursor
 				dropping_meta_tags_level := level
 				is_seeking_head := False
 				create attributes.make
@@ -134,40 +134,48 @@ feature -- Events
 	end_element is
 			-- Notify the end of an element.
 		local
-			found: BOOLEAN
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_value: STRING
-			an_index: INTEGER
+			l_found: BOOLEAN
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_value: STRING
+			l_index: INTEGER
 		do
 			if in_meta_tag then
 				in_meta_tag := False
 
 				--	if there was an http-equiv="ContentType" attribute, discard the meta element entirely
 
-				from a_cursor := attributes.name_code_cursor; a_cursor.start until found or else a_cursor.after loop
-					if matches_name (a_cursor.item, "http-equiv") then
-						a_value := STRING_.cloned_string (attributes.attribute_value_by_index (a_cursor.index))
-						STRING_.left_adjust (a_value)
-						STRING_.right_adjust (a_value)
-						if STRING_.same_case_insensitive ("Content-Type", a_value) then
-							found := True -- so the meta tag won't be emitted
+				from
+					l_cursor := attributes.name_code_cursor
+					l_cursor.start
+				until
+					l_found or l_cursor.after
+				loop
+					if matches_name (l_cursor.item, "http-equiv") then
+						l_value := STRING_.cloned_string (attributes.attribute_value_by_index (l_cursor.index))
+						STRING_.left_adjust (l_value)
+						STRING_.right_adjust (l_value)
+						if STRING_.same_case_insensitive ("Content-Type", l_value) then
+							l_found := True -- so the meta tag won't be emitted
 						end
 					end
-					a_cursor.forth
+					l_cursor.forth
 				end
-				if not found then
+				if not l_found then
 
 					-- this was a meta element, but not one of the kind that we discard
 
 					base_receiver.start_element (meta_name_code, Untyped_type_code, 0)
-					from a_cursor := attributes.name_code_cursor; a_cursor.start until a_cursor.after loop
-						an_index := a_cursor.index
-						base_receiver.notify_attribute (a_cursor.item, attributes.attribute_type_code (an_index),
-																  attributes.attribute_value_by_index (an_index), 0)
-						a_cursor.forth
+					from
+						l_cursor := attributes.name_code_cursor
+						l_cursor.start
+					until l_cursor.after loop
+						l_index := l_cursor.index
+						base_receiver.notify_attribute (l_cursor.item, attributes.attribute_type_code (l_index),
+																  attributes.attribute_value_by_index (l_index), 0)
+						l_cursor.forth
 					end
 					base_receiver.start_content
-					base_receiver.end_element
+					Precursor
 				end
 			else
 				if dropping_meta_tags_level = level then

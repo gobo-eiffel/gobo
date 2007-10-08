@@ -42,6 +42,7 @@
 		<geant target="xslt_and_shift" arguments="extension_functions"/>
 		<geant target="xslt_and_shift" arguments="examples"/>
 		<geant target="xslt_and_shift" arguments="conformance"/>
+		<geant target="xslt_and_shift" arguments="xslt_serializer"/>
 		<geant target="xslt_and_shift" arguments="overview"/>
 	</target>
 
@@ -73,6 +74,7 @@
 		<delete file="extension_functions.html"/>
 		<delete file="examples.html"/>
 		<delete file="conformance.html"/>
+		<delete file="xslt_serializer.html"/>
 	</target>
 
 <!-- Implementation -->

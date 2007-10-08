@@ -29,6 +29,7 @@
 		<set name="previous" value="index"/>
 		<set name="current" value="index"/>
 		<geant target="xslt_and_shift" arguments="using"/>
+		<geant target="xslt_and_shift" arguments="serializers"/>
 		<geant target="xslt_and_shift" arguments="resolvers"/>
 		<geant target="xslt_and_shift" arguments="catalogs"/>
 		<geant target="xslt_and_shift" arguments="index"/>
@@ -52,6 +53,7 @@
 		<delete file="index.html"/>
 		<delete file="catalogs.html"/>
 		<delete file="resolvers.html"/>
+		<delete file="serializers.html"/>
 		<delete file="using.html"/>
 		<geant target="do_all" arguments="clobber"/>
 	</target>

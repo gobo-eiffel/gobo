@@ -14,17 +14,13 @@ deferred class XM_XSLT_TEST_CHARACTER_MAP
 
 inherit
 
-	TS_TEST_CASE
-
-	KL_IMPORTED_STRING_ROUTINES
+	XM_XSLT_TEST_ROUTINES
 
 	XM_XPATH_SHARED_CONFORMANCE
 
 	XM_XPATH_SHARED_NAME_POOL
 
 	XM_XPATH_STANDARD_NAMESPACES
-
-	XM_RESOLVER_FACTORY
 
 	XM_XSLT_SHARED_EMITTER_FACTORY
 
@@ -96,7 +92,8 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
-			assert ("Correct result", l_output.last_output.count = 299)
+			read_utf8_results_file (character_map2_results_filename)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
 
 	test_xhtml_character_map is
@@ -125,7 +122,8 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
-			assert ("Correct result", l_output.last_output.count = 400)
+			read_utf8_results_file (character_map4_results_filename)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
 
 	test_text_character_map is
@@ -154,7 +152,8 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
-			assert ("Correct result", l_output.last_output.count = 93)
+			read_utf8_results_file (character_map5_results_filename)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
 
 	test_xhtml_character_map_with_cdata is
@@ -166,6 +165,8 @@ feature -- Test
 			l_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_test_file: KL_TEXT_INPUT_FILE
+			l_test_string: STRING
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -183,7 +184,8 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
-			assert ("Correct result", l_output.last_output.count = 700)
+			read_utf8_results_file (character_map6_results_filename)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
 
 	test_qname_method is
@@ -215,20 +217,55 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
-			assert ("Correct result", l_output.last_output.count = 272)
+			read_utf8_results_file (qname_output_results_filename)
+			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
-			-- Name of directory containing schematron data files
+	character_map6_results_filename: STRING is
+			-- Name of file containing expected results for `test_xhtml_character_map_with_cdata'
 		once
-			Result := file_system.nested_pathname ("${GOBO}",
-																<<"test", "xml", "xslt", "data">>)
-			Result := Execution_environment.interpreted_string (Result)
+			Result := "character_map6.out"
 		ensure
-			data_dirname_not_void: Result /= Void
-			data_dirname_not_empty: not Result.is_empty
+			character_map6_results_filename_not_void: Result /= Void
+			character_map6_results_filename_not_empty: not Result.is_empty
+		end
+
+	character_map2_results_filename: STRING is
+			-- Name of file containing expected results for `test_html_character_map'
+		once
+			Result := "character_map2.out"
+		ensure
+			character_map2_results_filename_not_void: Result /= Void
+			character_map2_results_filename_not_empty: not Result.is_empty
+		end
+
+	character_map5_results_filename: STRING is
+			-- Name of file containing expected results for `test_test_character_map'
+		once
+			Result := "character_map5.out"
+		ensure
+			character_map5_results_filename_not_void: Result /= Void
+			character_map5_results_filename_not_empty: not Result.is_empty
+		end
+
+	character_map4_results_filename: STRING is
+			-- Name of file containing expected results for `test_xhtml_character_map'
+		once
+			Result := "character_map4.out"
+		ensure
+			character_map4_results_filename_not_void: Result /= Void
+			character_map4_results_filename_not_empty: not Result.is_empty
+		end
+
+	qname_output_results_filename: STRING is
+			-- Name of file containing expected results for `test_qname_method'
+		once
+			Result := "qname_output.out"
+		ensure
+			qname_output_results_filename_not_void: Result /= Void
+			qname_output_results_filename_not_empty: not Result.is_empty
 		end
 
 	dummy_uri: UT_URI is

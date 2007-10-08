@@ -42,8 +42,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
-			-- Establish invariant.
+	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+			-- Initialize `Current'.
 		require
 			serializer_not_void: a_serializer /= Void
 			outputter_not_void: an_outputter /= Void
@@ -52,7 +52,6 @@ feature {NONE} -- Initialization
 			serializer := a_serializer
 			raw_outputter := an_outputter
 			output_properties := some_output_properties
-			character_map_expander := a_character_map_expander
 			is_empty := True
 			create element_qname_stack.make_default
 			element_qname_stack.set_equality_tester (string_equality_tester)
@@ -60,12 +59,10 @@ feature {NONE} -- Initialization
 			make_specials
 			base_uri := "" -- TODO - set `base_uri'
 			encoder_factory := serializer.encoder_factory
-			set_normalization_form
 		ensure
 			serializer_set: serializer = a_serializer
 			outputter_set: raw_outputter = an_outputter
 			output_properties_set: output_properties = some_output_properties
-			character_map_expander_set: character_map_expander = a_character_map_expander
 		end
 
 feature -- Conversion
@@ -264,7 +261,6 @@ feature -- Events
 			-- Notify character data.
 		local
 			a_bad_character: INTEGER
-			a_mapped_string: STRING
 		do
 			debug ("XSLT stripper")
 				std.error.put_string ("Is start tag open? " + is_open_start_tag.out)
@@ -277,7 +273,11 @@ feature -- Events
 				if is_open_start_tag then
 					close_start_tag ("", False)
 				end
-				if is_output_escaping_disabled (properties) then
+				if are_no_special_characters (properties) then
+					output (chars)
+				elseif not is_output_escaping_disabled (properties) then
+					output_escape (chars, False)
+				else
 					a_bad_character := bad_character_code (chars)
 					if a_bad_character = 0 then
 						output (chars)
@@ -288,17 +288,6 @@ feature -- Events
 
 						output_escape (chars, False)
 					end
-				elseif character_map_expander /= Void then
-					a_mapped_string := character_map_expander.mapped_string (chars)
-					output_escape (normalized_string (a_mapped_string), False)
-				elseif are_no_special_characters (properties) then
-					output (chars)
-				else
-					debug ("XSLT stripper")
-						std.error.put_string ("Emitting " + normalized_string (chars) + "###")
-						std.error.put_new_line
-					end
-					output_escape (normalized_string (chars), False)
 				end
 			end
 			mark_as_written
@@ -450,31 +439,6 @@ feature {NONE} -- Implementation
 			Result := empty_tags_set.has (a_tag.as_lower)
 		end
 
-	url_attributes_set: DS_HASH_SET [STRING] is
-			-- Names of attributes that are sometimes URL valued
-		once
-			create Result.make (15)
-			Result.set_equality_tester (string_equality_tester)
-		end
-
-	url_combinations_set: DS_HASH_SET [STRING] is
-		-- Names of elements-attribute pairs that are URL valued
-		once
-			create Result.make (37)
-			Result.set_equality_tester (string_equality_tester)
-		end
-
-	is_url_attribute (an_element, an_attribute: STRING): BOOLEAN is
-			-- Is `an_attribute' url-valued when used with `an_element'.?
-		require
-			element_name_not_void: an_element /= Void
-			attribute_name_not_void: an_attribute /= Void
-		do
-			if url_attributes_set.has (an_attribute) then
-				Result := url_combinations_set.has (an_element + "+" + an_attribute)
-			end
-		end
-
 	specials_in_text: ARRAY [BOOLEAN] is
 			-- Lookup table for ASCII characters that need escaping in text
 		once
@@ -489,19 +453,27 @@ feature {NONE} -- Implementation
 
 	make_specials is
 			-- Initialize `specials_in_text' and `specials_in_attributes'.
+		local
+			i: INTEGER
 		once
-			specials_in_text.put (True, 0)
-			specials_in_text.put (True, 13) -- CR
+			from
+				i := 0
+			until
+				i = 32
+			loop
+				-- All are allowed in XML 1.1 as character references
+				specials_in_text.put (True, i)
+				specials_in_attributes.put (True, i)
+				i := i + 1
+			end
+			specials_in_text.put (False, 9) -- TAB
+			specials_in_text.put (False, 10) -- LF
 			specials_in_text.put (True, 60) -- '<'
 			specials_in_text.put (True, 62) -- '>'
 			specials_in_text.put (True, 38) -- '&'
-			specials_in_attributes.put (True, 0)
-			specials_in_attributes.put (True, 13) -- CR
 			specials_in_attributes.put (True, 60) -- '<'
 			specials_in_attributes.put (True, 62) -- '>'
 			specials_in_attributes.put (True, 38) -- '&'
-			specials_in_attributes.put (True, 10) -- 'LF'
-			specials_in_attributes.put (True, 9) -- 'TAB'
 			specials_in_attributes.put (True, 34) -- '"'
 		end
 
@@ -567,101 +539,86 @@ feature {NONE} -- Implementation
 			outputter.output_ignoring_error (a_character_string)
 		end
 
-	output_attribute (an_element_name_code: INTEGER; an_attribute_qname: STRING; a_value: STRING; properties: INTEGER) is
+	output_attribute (a_element_name_code: INTEGER; a_attribute_qname: STRING; a_value: STRING; a_properties: INTEGER) is
 			-- Output attribute.
 		require
-			attribute_name_is_qname: an_attribute_qname /= Void and then is_qname (an_attribute_qname)
+			attribute_name_is_qname: a_attribute_qname /= Void and then is_qname (a_attribute_qname)
 			value_not_void: a_value /= Void
 			document_opened: is_output_open
 		local
-			a_delimiter, a_mapped_string: STRING
+			l_delimiter: STRING
 		do
 			if not is_error then
-				output (an_attribute_qname)
+				output (a_attribute_qname)
 				if not is_error then
-					if character_map_expander = Void then
-						a_mapped_string := a_value
+					if are_no_special_characters (a_properties) then
+						output ("=")
+						if not is_error then output ("%"") end
+						if not is_error then output (a_value) end
+						if not is_error then output ("%"") end
 					else
-						a_mapped_string := character_map_expander.mapped_string (a_value)
-					end
-					if a_mapped_string = a_value and then are_no_special_characters (properties) then
-						output ("=")
-						if not is_error then output ("%"") end
-						if not is_error then output (normalized_string (a_value)) end
-						if not is_error then output ("%"") end
-					elseif a_mapped_string /= a_value then
-
-						-- Null (0) characters will be used before and after any section of
-						--  the value where escaping is to be disabled
-
-						output ("=")
-						if not is_error then
-							if a_mapped_string.index_of ('%"', 1) = 0 then
-								a_delimiter := "%""
-							else
-								a_delimiter := "'"
-							end
-							output (a_delimiter)
-							if not is_error then output_escape (a_mapped_string, True) end
-							if not is_error then output (a_delimiter) end
+						if a_value.index_of ('%"', 1) > 0 then
+							l_delimiter := "'"
+						else
+							l_delimiter := "%""
 						end
-					else
-						output ("=%"")
+						output ("=")
+						output (l_delimiter)
 						if not is_error then output_escape (a_value, True) end
-						if not is_error then output ("%"") end
+						if not is_error then output (l_delimiter) end
 					end
 				end
 			end
 		end
 
-	output_escape (a_character_string: STRING; is_attribute: BOOLEAN) is
+	output_escape (a_character_string: STRING; a_is_attribute: BOOLEAN) is
 			-- Output `a_character_string', escaping special characters.
 		require
 			string_not_void: a_character_string /= Void
 			document_opened: is_output_open
 		local
-			disabled: BOOLEAN
-			a_start_index, a_beyond_index, a_code: INTEGER
-			special_characters: ARRAY [BOOLEAN]
+			l_disabled: BOOLEAN
+			l_start_index, l_beyond_index, l_code: INTEGER
+			l_special_characters: ARRAY [BOOLEAN]
 		do
-			if is_attribute then
-				special_characters := specials_in_attributes
+			if a_is_attribute then
+				l_special_characters := specials_in_attributes
 			else
-				special_characters := specials_in_text
+				l_special_characters := specials_in_text
 			end
 			from
-				a_start_index := 1;
+				l_start_index := 1;
 			variant
-				a_character_string.count + 2 - a_start_index
+				a_character_string.count + 2 - l_start_index
 			until
-				a_start_index > a_character_string.count
+				l_start_index > a_character_string.count
 			loop
-				a_beyond_index := maximal_ordinary_string (a_character_string, a_start_index, special_characters)
-				if a_beyond_index > a_start_index then
-					output (a_character_string.substring (a_start_index, a_beyond_index - 1))
+				l_beyond_index := maximal_ordinary_string (a_character_string, l_start_index, l_special_characters)
+				if l_beyond_index > l_start_index then
+					output (a_character_string.substring (l_start_index, l_beyond_index - 1))
 				end
-				if a_beyond_index <= a_character_string.count then
-					a_code := a_character_string.item_code (a_beyond_index)
-					if a_code = 0 then -- enable/disable escaping toggle
-						disabled := not disabled
-					elseif disabled then
-						output (a_character_string.substring (a_beyond_index, a_beyond_index))
-					elseif a_code > 127 then -- non-ASCII
-						output_character_reference (a_code)
+				if l_beyond_index <= a_character_string.count then
+					l_code := a_character_string.item_code (l_beyond_index)
+					if l_code = 0 then -- enable/disable escaping toggle
+						l_disabled := not l_disabled
+					elseif l_disabled then
+						output (a_character_string.substring (l_beyond_index, l_beyond_index))
+					elseif l_code > 127 then -- non-ASCII
+						output_character_reference (l_code)
 					else -- ASCII character needs escaping
-						if a_code = 60 then
+						if l_code = 60 then
 							output ("&lt;")
-						elseif a_code = 62 then
+						elseif l_code = 62 then
 							output ("&gt;")
-						elseif a_code = 38 then
+						elseif l_code = 38 then
 							output ("&amp;")
-						elseif a_code = 34 then
+						elseif l_code = 34 then
 							output ("&#34;")
-						elseif a_code = 10 then
+						elseif l_code = 10 then
 							output ("&#xA;")
-						elseif a_code = 13 then
+						elseif l_code = 13 then
 							output ("&#xD;")
-						elseif a_code = 9 then
+						elseif l_code = 9 then
 							output ("&#9;")
 						else
 							check
@@ -670,42 +627,44 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				a_start_index := a_beyond_index + 1
+				l_start_index := l_beyond_index + 1
 			end
 		end
 
-	maximal_ordinary_string (a_character_string: STRING; a_start_index: INTEGER; special_characters: ARRAY [BOOLEAN]): INTEGER is
+	maximal_ordinary_string (a_character_string: STRING; a_start_index: INTEGER; a_special_characters: ARRAY [BOOLEAN]): INTEGER is
 			-- Maximal sequence of ordinary characters
 		require
 			string_not_void: a_character_string /= Void
-			special_characters_not_void: special_characters /= Void
+			a_special_characters_not_void: a_special_characters /= Void
 			strictly_positive_start_index: a_start_index > 0
 			document_opened: is_output_open
 		local
-			an_index, a_code: INTEGER
-			finished: BOOLEAN
+			l_index, l_code: INTEGER
+			l_finished: BOOLEAN
 		do
 			from
-				an_index := a_start_index
+				l_index := a_start_index
 			until
-				finished or else an_index > a_character_string.count
+				l_finished or l_index > a_character_string.count
 			loop
-				a_code := a_character_string.item_code (an_index)
-				if a_code < 128 then -- ASCII
-					if special_characters.item (a_code) then
-						finished := True
+				l_code := a_character_string.item_code (l_index)
+				if l_code < 127 then -- ASCII
+					if a_special_characters.item (l_code) then
+						l_finished := True
 					else
-						an_index := an_index + 1
+						l_index := l_index + 1
 					end
-				-- TODO: (high) surrogates - I don't think so.
-				elseif outputter.is_bad_character_code (a_code) then
-					--todo ("maximal_ordinary_string (surrogate characters)", True)
-					finished := True
+				elseif l_code < 160 then -- required as character references
+					l_finished := True
+				elseif l_code = 8232  then -- Line Separator
+					l_finished := True
+				elseif outputter.is_bad_character_code (l_code) then
+					l_finished := True
 				else
-					an_index := an_index + 1
+					l_index := l_index + 1
 				end
 			end
-			Result := an_index
+			Result := l_index
 		end
 
 	output_character_reference (a_code: INTEGER) is
@@ -810,24 +769,24 @@ feature {NONE} -- Implementation
 		require
 			string_not_void: a_character_string /= Void
 		local
-			an_index, a_code: INTEGER
-			finished: BOOLEAN
+			l_index, a_code: INTEGER
+			l_finished: BOOLEAN
 		do
 			from
-				an_index := 1
+				l_index := 1
 			variant
-				a_character_string.count + 1 - an_index
+				a_character_string.count + 1 - l_index
 			until
-				finished or else an_index > a_character_string.count
+				l_finished or else l_index > a_character_string.count
 			loop
-				a_code := a_character_string.item_code (an_index)
+				a_code := a_character_string.item_code (l_index)
 				if a_code > 127 then
 					if outputter.is_bad_character_code (a_code) then
 						Result := a_code
-						finished := True
+						l_finished := True
 					end
 				end
-				an_index := an_index + 1
+				l_index := l_index + 1
 			end
 		end
 
@@ -838,7 +797,7 @@ feature {NONE} -- Implementation
 			start_tag_open: is_open_start_tag
 		do
 			if empty_tag then
-				output (empty_element_tag_closer (a_name))
+				output (empty_element_tag_closer (a_name, current_element_name_code))
 			else
 				output (">")
 			end
@@ -847,92 +806,15 @@ feature {NONE} -- Implementation
 			start_tag_not_open: not is_open_start_tag
 		end
 
-	empty_element_tag_closer (a_name: STRING): STRING is
+	empty_element_tag_closer (a_name: STRING; a_name_code: INTEGER): STRING is
 			-- String to close an empty tag
 		require
 			name_not_void: a_name /= Void
+			strictly_positive_name_code: a_name_code > 0
 		do
 			Result := "/>"
 		ensure
 			empty_element_tag_closer_not_void: Result /= Void
-		end
-
-	make_url_attributes is
-			-- Build sets for determining URL-valued attributes
-		once
-			set_url_attribute ("form", "action")
-			set_url_attribute ("body", "background")
-			set_url_attribute ("q", "cite")
-			set_url_attribute ("blockquote", "cite")
-			set_url_attribute ("del", "cite")
-			set_url_attribute ("ins", "cite")
-			set_url_attribute ("object", "classid")
-			set_url_attribute ("object", "codebase")
-			set_url_attribute ("applet", "codebase")
-			set_url_attribute ("object", "data")
-			set_url_attribute ("object", "datasrc")
-			set_url_attribute ("button", "datasrc")
-			set_url_attribute ("div", "datasrc")
-			set_url_attribute ("input", "datasrc")
-			set_url_attribute ("select", "datasrc")
-			set_url_attribute ("span", "datasrc")
-			set_url_attribute ("table", "datasrc")
-			set_url_attribute ("textarea", "datasrc")
-			set_url_attribute ("a", "href")
-			set_url_attribute ("a", "name")
-			set_url_attribute ("area", "href")
-			set_url_attribute ("link", "href")
-			set_url_attribute ("base", "href")
-			set_url_attribute ("img", "longdesc")
-			set_url_attribute ("frame", "longdesc")
-			set_url_attribute ("iframe", "longdesc")
-			set_url_attribute ("head", "profile")
-			set_url_attribute ("script", "src")
-			set_url_attribute ("script", "for")
-			set_url_attribute ("input", "src")
-			set_url_attribute ("frame", "src")
-			set_url_attribute ("iframe", "src")
-			set_url_attribute ("img", "src")
-			set_url_attribute ("img", "usemap")
-			set_url_attribute ("input", "usemap")
-			set_url_attribute ("object", "usemap")
-			set_url_attribute ("object", "archive")
-		end
-
-	set_url_attribute (an_element, an_attribute: STRING) is
-			-- Mark `an_attribute' as url-valued when used with `an_element'.
-		require
-			element_name_not_void: an_element /= Void
-			attribute_name_not_void: an_attribute /= Void
-		do
-			if not url_attributes_set.has (an_attribute.as_lower) then
-				url_attributes_set.put (an_attribute.as_lower)
-			end
-			url_combinations_set.put ((an_element + "+" + an_attribute).as_lower)
-		end
-
-	unescaped_html_characters: DS_HASH_SET [CHARACTER] is
-			-- Characters to escape for fn:iri-to-uri()
-		local
-			an_index: INTEGER
-		once
-			create Result.make (95)
-			from an_index := 32 until an_index > 126 loop
-				Result.force (INTEGER_.to_character (an_index))
-				an_index := an_index + 1
-			end
-		end
-
-	escaped_url (a_url: STRING): STRING is
-			-- Escaped version of `a_url'.
-		require
-			url_not_void: a_url /= Void
-		do
-
-			-- NULs are added to prevent further escaping
-
-			Result := STRING_.concat ("%U", escape_custom (utf8.to_utf8 (a_url), unescaped_html_characters, False))
-			Result := STRING_.appended_string (Result, "%U")
 		end
 
 invariant

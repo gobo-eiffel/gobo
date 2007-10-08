@@ -40,24 +40,29 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
-			-- Establish invariant.
+	make (a_serializer: XM_XSLT_SERIALIZER; a_outputter: XM_OUTPUT; a_output_properties: XM_XSLT_OUTPUT_PROPERTIES;
+		a_character_map_index: like character_map_index; a_factory: like emitter_factory) is
+			-- Initialize `Current'.
 		require
 			serializer_not_void: a_serializer /= Void
-			outputter_not_void: an_outputter /= Void
-			output_properties_not_void: some_output_properties /= Void
+			a_outputter_not_void: a_outputter /= Void
+			a_output_properties_not_void: a_output_properties /= Void
+			a_character_map_index: not a_output_properties.used_character_maps.is_empty implies a_character_map_index /= Void
+			a_factory_not_void: a_factory /= Void
 		do
 			serializer := a_serializer
-			outputter := an_outputter
-			output_properties := some_output_properties
-			character_map_expander := a_character_map_expander
+			outputter := a_outputter
+			output_properties := a_output_properties
+			character_map_index := a_character_map_index
+			emitter_factory := a_factory
 			base_uri := "" -- TODO - set_base_uri
 		ensure
 			not_yet_committed: not committed
 			serializer_set: serializer = a_serializer
-			outputter_set: outputter = an_outputter
-			output_properties_set: output_properties = some_output_properties
-			character_map_expander_set: character_map_expander = a_character_map_expander
+			outputter_set: outputter = a_outputter
+			output_properties_set: output_properties = a_output_properties
+			character_map_index_set: character_map_index = a_character_map_index
+			emitter_factory_set: emitter_factory = a_factory
 		end
 
 feature -- Events
@@ -243,6 +248,9 @@ feature {NONE} -- Implementation
 	committed: BOOLEAN
 			-- Have we committed yet?
 
+	emitter_factory: XM_XSLT_EMITTER_FACTORY
+			-- Factory for producing `base_emitter' and `base_receiver'
+
 	base_receiver: XM_XPATH_RECEIVER
 			-- Emitter/indenter to which events are forwarded
 
@@ -251,6 +259,9 @@ feature {NONE} -- Implementation
 
 	outputter: XM_OUTPUT
 			-- Writer of encoded strings
+
+	character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
+			-- Table of character maps
 
 	pending_event_list: DS_ARRAYED_LIST [XM_XSLT_PENDING_EVENT]
 			-- Pending events
@@ -269,16 +280,13 @@ feature {NONE} -- Implementation
 			-- Switch to an XML emitter.
 		require
 			not_yet_committed: not committed
+		local
+			l_pair: DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
 		do
 			output_properties.set_xml_defaults (Platform.Maximum_integer)
-			create {XM_XSLT_XML_EMITTER} base_emitter.make (serializer, outputter, output_properties, character_map_expander)
-			base_receiver := base_emitter
-			if output_properties.indent then
-				create {XM_XSLT_XML_INDENTER} base_receiver.make (serializer, base_emitter, output_properties)
-			end
-			if output_properties.cdata_section_elements.count > 0 then
-				create {XM_XSLT_CDATA_FILTER} base_receiver.make (base_receiver, base_emitter, output_properties)
-			end
+			l_pair := emitter_factory.new_xml_emitter (serializer, outputter, output_properties, character_map_index)
+			base_receiver := l_pair.first
+			base_emitter := l_pair.second
 			switch
 		ensure
 			committed: committed
@@ -288,13 +296,13 @@ feature {NONE} -- Implementation
 			-- Switch to an HTML emitter.
 		require
 			not_yet_committed: not committed
+		local
+			l_pair: DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
 		do
 			output_properties.set_html_defaults (Platform.Maximum_integer)
-			create {XM_XSLT_HTML_EMITTER} base_emitter.make (serializer, outputter, output_properties, character_map_expander)
-			base_receiver := base_emitter
-			if output_properties.indent then
-				create {XM_XSLT_HTML_INDENTER} base_receiver.make (serializer, base_emitter, output_properties)
-			end
+			l_pair := emitter_factory.new_html_emitter (serializer, outputter, output_properties, character_map_index)
+			base_receiver := l_pair.first
+			base_emitter := l_pair.second
 			switch
 		ensure
 			committed: committed
@@ -304,16 +312,13 @@ feature {NONE} -- Implementation
 			-- Switch to an XHTML emitter.
 		require
 			not_yet_committed: not committed
+		local
+			l_pair: DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
 		do
 			output_properties.set_xhtml_defaults (Platform.Maximum_integer)
-			create {XM_XSLT_XHTML_EMITTER} base_emitter.make (serializer, outputter, output_properties, character_map_expander)
-			base_receiver := base_emitter
-			if output_properties.indent then
-				create {XM_XSLT_XHTML_INDENTER} base_receiver.make (serializer, base_emitter, output_properties)
-			end
-			if output_properties.cdata_section_elements.count > 0 then
-				create {XM_XSLT_CDATA_FILTER} base_receiver.make (base_receiver, base_emitter, output_properties)
-			end
+			l_pair := emitter_factory.new_xhtml_emitter (serializer, outputter, output_properties, character_map_index)
+			base_receiver := l_pair.first
+			base_emitter := l_pair.second
 			switch
 		ensure
 			committed: committed
@@ -325,8 +330,8 @@ feature {NONE} -- Implementation
 			base_receiver_not_void: base_receiver /= Void
 			not_yet_committed: not committed
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_PENDING_EVENT]
-			an_event: XM_XSLT_PENDING_EVENT
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_PENDING_EVENT]
+			l_event: XM_XSLT_PENDING_EVENT
 		do
 			committed := True
 			if is_no_declaration_on_close then
@@ -336,23 +341,23 @@ feature {NONE} -- Implementation
 			base_receiver.start_document
 			if pending_event_list /= Void then
 				from
-					a_cursor := pending_event_list.new_cursor a_cursor.start
+					l_cursor := pending_event_list.new_cursor l_cursor.start
 				variant
-					pending_event_list.count + 1 - a_cursor.index
+					pending_event_list.count + 1 - l_cursor.index
 				until
-					a_cursor.after
+					l_cursor.after
 				loop
-					an_event := a_cursor.item
+					l_event := l_cursor.item
 					inspect
-						an_event.node_type
+						l_event.node_type
 					when Comment_node then
-						base_receiver.notify_comment (an_event.content, an_event.properties)
+						base_receiver.notify_comment (l_event.content, l_event.properties)
 					when Processing_instruction_node then
-						base_receiver.notify_processing_instruction (an_event.name, an_event.content, an_event.properties)
+						base_receiver.notify_processing_instruction (l_event.name, l_event.content, l_event.properties)
 					when Text_node then
-						base_receiver.notify_characters (an_event.content, an_event.properties)
+						base_receiver.notify_characters (l_event.content, l_event.properties)
 					end
-					a_cursor.forth	
+					l_cursor.forth	
 				end
 				pending_event_list := Void
 			end
@@ -365,6 +370,8 @@ invariant
 	base_receiver: committed implies base_receiver /= Void
 	base_emitter: committed implies base_emitter /= Void
 	outputter: outputter /= Void
+	character_map_index: not output_properties.used_character_maps.is_empty implies character_map_index /= Void
+	emitter_factory_not_void: emitter_factory /= Void
 
 end
 

@@ -39,12 +39,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
-			-- Establish invariant.
+	make (a_serializer: XM_XSLT_SERIALIZER; a_outputter: XM_OUTPUT; a_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+			-- Initialize `Current'.
 		do
-			Precursor (a_serializer, an_outputter, some_output_properties, a_character_map_expander)
-			if some_output_properties.extension_attributes.has (extension_attribute_expanded_name) then
-				dtd_internal_subset := some_output_properties.extension_attributes.item (extension_attribute_expanded_name)
+			Precursor (a_serializer, a_outputter, a_output_properties)
+			if a_output_properties.extension_attributes.has (extension_attribute_expanded_name) then
+				dtd_internal_subset := a_output_properties.extension_attributes.item (extension_attribute_expanded_name)
 			end
 		end
 

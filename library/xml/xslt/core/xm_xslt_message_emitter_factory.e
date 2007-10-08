@@ -18,7 +18,6 @@ feature -- Access
 			-- Destination for xsl:message output
 
 feature -- Element change
-
 	
 	set_outputter (a_outputter: like outputter) is
 			-- Set `outputter' to `a_outputter'.
@@ -42,7 +41,7 @@ feature -- Creation
 				create outputter
 				outputter.set_output_standard_error
 			end
-			create {XM_XSLT_MESSAGE_EMITTER} Result.make (a_transformer, outputter, a_properties, Void)
+			create {XM_XSLT_MESSAGE_EMITTER} Result.make (a_transformer, outputter, a_properties)
 		ensure
 			new_message_emitter_not_void: Result /= Void
 		end

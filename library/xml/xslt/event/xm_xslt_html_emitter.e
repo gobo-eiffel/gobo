@@ -38,20 +38,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
-			-- Establish invariant.
+	make (a_serializer: XM_XSLT_SERIALIZER; a_outputter: XM_OUTPUT; a_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+			-- Initialize `Current'.
 		require
 			serializer_not_void: a_serializer /= Void
-			outputter_not_void: an_outputter /= Void
-			output_properties_not_void: some_output_properties /= Void
+			a_outputter_not_void: a_outputter /= Void
+			a_output_properties_not_void: a_output_properties /= Void
 		do
-			make_xml (a_serializer, an_outputter, some_output_properties, a_character_map_expander)
+			make_xml (a_serializer, a_outputter, a_output_properties)
 			make_boolean_attributes
-			make_url_attributes
 		ensure
 			serializer_set: serializer = a_serializer
-			outputter_set: raw_outputter = an_outputter
-			output_properties_set: output_properties = some_output_properties
+			outputter_set: raw_outputter = a_outputter
+			output_properties_set: output_properties = a_output_properties
 		end
 
 feature -- Events
@@ -414,10 +413,6 @@ feature {NONE} -- Implementation
 			if element_uri_code = Default_uri_code then
 				if is_boolean_attribute (element_name, an_attribute_qname, a_value) then
 					output (an_attribute_qname)
-				elseif escape_uri_attributes and then
-					is_url_attribute (element_name, an_attribute_qname) and then
-					not is_output_escaping_disabled (properties) then
-					Precursor (an_element_name_code, an_attribute_qname, escaped_url (a_value), 0)
 				else
 					Precursor (an_element_name_code, an_attribute_qname, a_value, properties)
 				end
@@ -587,8 +582,6 @@ invariant
 	empty_tags_set_not_void: empty_tags_set /= Void
 	boolean_combinations_set_not_void: boolean_combinations_set /= Void
 	boolean_attributes_set_not_void: boolean_attributes_set /= Void
-	url_combinations_set_not_void: url_combinations_set /= Void
-	url_attributes_set_not_void: url_attributes_set /= Void
 
 end
 

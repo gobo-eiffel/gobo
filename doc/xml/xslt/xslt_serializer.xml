@@ -1,0 +1,177 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"XSLT 2.0 serializer"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_serializer">
+ 
+  <chapterinfo>
+   <copyright>
+    <year>2007</year>
+    <holder>Colin Adams and others</holder>
+   </copyright>
+   <author>
+    <firstname>Colin</firstname>
+    <surname>Adams</surname>
+   </author>
+   <email>colin@colina.demon.co.uk</email>
+   <date>Sunday, October 7th, 2007</date>
+  </chapterinfo>
+  
+  <title>XSLT 2.0 serializer</title>
+  
+  <section>
+   <title>About the XSLT 2.0 serializer</title>
+   
+   <para>
+    The XSLT serializer is a component designed for the purpose of providing the XSLT engine with a serialization facility,
+    but it can also be used by any other XML-processing program.
+   </para>
+   
+  </section>
+
+  <section>
+   <title>Invoking the serializer without using XSLT</title>
+   
+   <para>
+    To invoke the serializer from a non-XSLT program you must follow the following steps:
+   </para>
+
+   <orderedlist>
+   
+   <listitem>
+    <para>
+     Create a descedent of <classname>XM_XSLT_SERIALIZER</classname>. You will need to provide
+     implementations for the two deferred routines <featurename>error_listener</featurename>
+     and <featurename>encoder_factory</featurename>. See <link linkend="overview">Overview for more details</link>.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Create an <classname>XM_XSLT_OUTPUT_PROPERTIES</classname> object. The sole argument for the creation routine is designed for the
+     use of XSLT's <xslt>xsl:import</xslt> declaration, to establish import precedence. It seems to me highly unlikely that you will
+     want to use it if you are not using XSLT. Simply pass zero.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Call command from the Element change paragraph to set the serialization options that you want. These are explained in more detail below.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Set up an event stream and feed it to the serializer. This is explained in more detail below.
+    </para>
+   </listitem>
+
+   </orderedlist>
+
+  </section>
+  
+  <section>
+   <title>Setting serialization options</title>
+   
+   <para>
+    I suggest you point your web browser at <ulink url="http://www.w3.org/TR/xslt20/#element-output">Serialization</ulink> whilst reading this section.
+   </para>
+
+   <para>
+    When you create an <classname>XM_XSLT_OUTPUT_PROPERTIES</classname> object, the serialization options are identical to those
+    you obtain by default from XSLT - that is, if you do not code an <xsl>xsl:output</xsl> declaration in an XSLT transformation. The following
+    features are documented in terms of the attributes on <xsl>xsl:output</xsl> to which they correspond. In all cases it is recommended
+    that you pass zero for the import precedence.
+   </para>
+
+   <section>
+    <title>Choosing the output method</title>
+
+    <itemizedlist>
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_xml_defaults</featurename> is equivalent to <xsl>xsl:output method="xml"</xsl>.
+      </para>
+     </listitem>
+
+     <listitem>
+      <para>
+       Calling <featurename>set_html_defaults</featurename> is equivalent to <xsl>xsl:output method="html"</xsl>.
+      </para>
+     </listitem>
+
+     <listitem>
+      <para>
+       Calling <featurename>set_xhtml_defaults</featurename> is equivalent to <xsl>xsl:output method="xhtml"</xsl>.
+      </para>
+     </listitem>
+
+     <listitem>
+      <para>
+       Calling <featurename>set_text_defaults</featurename> is equivalent to <xsl>xsl:output method="text"</xsl>.
+      </para>
+     </listitem>
+
+     <listitem>
+      <para>
+       Calling <featurename>set_method</featurename> is equivalent to <xsl>xsl:output method=qname-but-not-ncname</xsl>. In order to
+       do this, you have to first write your own custom serializer. See <link likend="output_extensions">Output extensions</link> for details.
+      </para>
+     </listitem>
+
+    </itemizedlist>
+
+   </section>
+
+   <section>
+    <title>Generating the XML declaration</title>
+
+    <itemizedlist>
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_omit_xml_declaration</featurename> is equivalent to <xsl>xsl:output omit-xml-declaration="?"</xsl>.
+      </para>
+     </listitem>
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_version</featurename> is equivalent to <xsl>xsl:output version="?"</xsl>.
+      </para>
+     </listitem>
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_standalone</featurename> is equivalent to <xsl>xsl:output standalone="?"</xsl>.
+      </para>
+     </listitem>
+
+    </itemizedlist>
+
+   </section>
+
+  </section>
+
+  <section>
+   <title>Invoking the serializer from the XSLT engine</title>
+   
+   <para>
+    In order to have the <classname>XM_XSLT_TRANSFORMER</classname> invoke the serializer, you need to pass an
+    <classname>XM_XSLT_TRANSFORMATION_RESULT</classname> to the <featurename>transform</featurename> command which is created 
+    with the creation procedure named <featurename>make</featurename>. Almost all examples within Gobo use this feature.
+   </para>
+
+  </section>
+
+</chapter>

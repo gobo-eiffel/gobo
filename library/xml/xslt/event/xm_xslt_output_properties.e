@@ -192,42 +192,42 @@ feature -- Access
 		require
 			character_representation_not_void: a_character_representation /= Void
 		local
-			a_splitter: ST_SPLITTER
-			representations: DS_LIST [STRING]
-			a_non_ascii_representation, an_excluded_representation: STRING
+			l_splitter: ST_SPLITTER
+			l_representations: DS_LIST [STRING]
+			l_non_ascii_representation, l_excluded_representation: STRING
 		do
-			create a_splitter.make
-			a_splitter.set_separators (";")
-			representations := a_splitter.split (a_character_representation)
-			if representations.count = 0 then
+			create l_splitter.make
+			l_splitter.set_separators (";")
+			l_representations := l_splitter.split (a_character_representation)
+			if l_representations.count = 0 then
 				Result := False
-			elseif representations.count > 2 then
+			elseif l_representations.count > 2 then
 				Result := False
 			else
-				if representations.count = 1 then
-					a_non_ascii_representation := representations.item (1)
-					an_excluded_representation := representations.item (1)
-				elseif representations.count = 2 then
-					a_non_ascii_representation := representations.item (1)
-					an_excluded_representation := representations.item (2)
+				if l_representations.count = 1 then
+					l_non_ascii_representation := l_representations.item (1)
+					l_excluded_representation := l_representations.item (1)
+				elseif l_representations.count = 2 then
+					l_non_ascii_representation := l_representations.item (1)
+					l_excluded_representation := l_representations.item (2)
 				end
-				STRING_.left_adjust (a_non_ascii_representation)
-				STRING_.right_adjust (a_non_ascii_representation)
-				STRING_.left_adjust (an_excluded_representation)
-				STRING_.right_adjust (an_excluded_representation)
+				STRING_.left_adjust (l_non_ascii_representation)
+				STRING_.right_adjust (l_non_ascii_representation)
+				STRING_.left_adjust (l_excluded_representation)
+				STRING_.right_adjust (l_excluded_representation)
 				if STRING_.same_string (method, "xml") then
-					Result := STRING_.same_string (a_non_ascii_representation, "hex")
-						or else STRING_.same_string (a_non_ascii_representation, "decimal")
+					Result := STRING_.same_string (l_non_ascii_representation, "hex")
+						or else STRING_.same_string (l_non_ascii_representation, "decimal")
 				elseif STRING_.same_string (method, "text") then
 					Result := True
 				else
-					Result := (STRING_.same_string (a_non_ascii_representation, "hex")
-								  or else STRING_.same_string (a_non_ascii_representation, "decimal")
-								  or else STRING_.same_string (a_non_ascii_representation, "native")
-								  or else STRING_.same_string (a_non_ascii_representation, "entity"))
-						and then (STRING_.same_string (an_excluded_representation, "hex")
-									 or else STRING_.same_string (a_non_ascii_representation, "decimal")
-									 or else STRING_.same_string (a_non_ascii_representation, "entity"))
+					Result := (STRING_.same_string (l_non_ascii_representation, "hex")
+								  or else STRING_.same_string (l_non_ascii_representation, "decimal")
+								  or else STRING_.same_string (l_non_ascii_representation, "native")
+								  or else STRING_.same_string (l_non_ascii_representation, "entity"))
+						and then (STRING_.same_string (l_excluded_representation, "hex")
+									 or else STRING_.same_string (l_non_ascii_representation, "decimal")
+									 or else STRING_.same_string (l_non_ascii_representation, "entity"))
 				end
 			end
 		end
@@ -290,43 +290,43 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_duplication_error (an_attribute_name: STRING) is
-			-- Indicate `an_attribute_name' is invalidly specified twice.
+	set_duplication_error (a_attribute_name: STRING) is
+			-- Indicate `a_attribute_name' is invalidly specified twice.
 		require
-			attribute_name_not_void: an_attribute_name /= Void and then an_attribute_name.count > 0
+			attribute_name_not_void: a_attribute_name /= Void and then a_attribute_name.count > 0
 			no_previous_error: not is_error
 		do
-			duplicate_attribute_name := an_attribute_name
+			duplicate_attribute_name := a_attribute_name
 			is_error := True
 			is_duplication_error := True
 		ensure
 			in_error: is_error and then is_duplication_error
-			name_set: STRING_.same_string (duplicate_attribute_name, an_attribute_name)
+			name_set: STRING_.same_string (duplicate_attribute_name, a_attribute_name)
 		end
 
-	set_general_error (an_error_message: STRING) is
+	set_general_error (a_error_message: STRING) is
 			-- Set a general error, other than a duplication error.
 		require
-			error_message_not_void: an_error_message /= Void
+			error_message_not_void: a_error_message /= Void
 			no_previous_error: not is_error
 		do
-			error_message := an_error_message
+			error_message := a_error_message
 			is_error := True
 		ensure
 			in_error: is_error and then not is_duplication_error
-			error_text_set: STRING_.same_string (error_message, an_error_message)
+			error_text_set: STRING_.same_string (error_message, a_error_message)
 		end
 
 feature -- Element change
 
-	set_xml_defaults (an_import_precedence: INTEGER) is
+	set_xml_defaults (a_import_precedence: INTEGER) is
 			-- Set defaults suitable for xml method.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)
 		do
-			set_method ("xml", an_import_precedence)
+			set_method ("xml", a_import_precedence)
 		ensure
-			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = a_import_precedence
 			method_is_xml: STRING_.same_string (method, "xml")
 			no_indentation: default_indent = False
 			version_1_0: STRING_.same_string (default_version, "1.0")
@@ -334,14 +334,14 @@ feature -- Element change
 			hex_character_representation: STRING_.same_string (default_character_representation, "hex")
 		end
 
-	set_html_defaults (an_import_precedence: INTEGER) is
+	set_html_defaults (a_import_precedence: INTEGER) is
 			-- Set defaults suitable for html method.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)		
+			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)		
 		do
-			set_method ("html", an_import_precedence)
+			set_method ("html", a_import_precedence)
 		ensure
-			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = a_import_precedence
 			method_is_html: STRING_.same_string (method, "html")
 			indentation: default_indent = True
 			version_4_01: STRING_.same_string (default_version, "4.01")
@@ -349,14 +349,14 @@ feature -- Element change
 			character_representation: STRING_.same_string (default_character_representation, "entity;decimal")			
 		end
 
-	set_xhtml_defaults (an_import_precedence: INTEGER) is
+	set_xhtml_defaults (a_import_precedence: INTEGER) is
 			-- Set defaults suitable for xhtml method.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)		
+			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)		
 		do
-			set_method ("xhtml", an_import_precedence)
+			set_method ("xhtml", a_import_precedence)
 		ensure
-			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = a_import_precedence
 			method_is_xhtml: STRING_.same_string (method, "xhtml")
 			indentation: default_indent = True
 			version_1_0: STRING_.same_string (default_version, "1.0")
@@ -364,26 +364,26 @@ feature -- Element change
 			hex_character_representation: STRING_.same_string (default_character_representation, "hex")
 		end
 
-	set_text_defaults (an_import_precedence: INTEGER) is
+	set_text_defaults (a_import_precedence: INTEGER) is
 			-- Set defaults suitable for text method.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)		
+			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)		
 		do
-			set_method ("text", an_import_precedence)
+			set_method ("text", a_import_precedence)
 		ensure
-			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = a_import_precedence
 			method_is_text: STRING_.same_string (method, "text")
 			text_plain: STRING_.same_string (default_media_type, "text/plain")
 		end
 
-	set_method (an_expanded_name: STRING ; an_import_precedence: INTEGER) is
+	set_method (a_expanded_name: STRING ; a_import_precedence: INTEGER) is
 			-- Set `method'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Version_attribute)
-			name_not_void: an_expanded_name /= Void
+			higher_precedence: is_higher_precedence (a_import_precedence, Version_attribute)
+			name_not_void: a_expanded_name /= Void
 		do
-			precedence_property_map.force (an_import_precedence, Method_attribute)
-			method := an_expanded_name
+			precedence_property_map.force (a_import_precedence, Method_attribute)
+			method := a_expanded_name
 			if STRING_.same_string (method, "xml") then
 				set_default_indent (False)
 				set_default_version ("1.0")
@@ -403,55 +403,55 @@ feature -- Element change
 				set_default_media_type ("text/plain")
 			end
 		ensure
-			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
-			method_set: STRING_.same_string (method, an_expanded_name)
+			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = a_import_precedence
+			method_set: STRING_.same_string (method, a_expanded_name)
 		end
 
-	set_version (a_version: STRING; an_import_precedence: INTEGER) is
+	set_version (a_version: STRING; a_import_precedence: INTEGER) is
 			--	Set `version'.
 		require
 			version_not_void: a_version /= Void -- and then
-			higher_precedence: is_higher_precedence (an_import_precedence, Version_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Version_attribute)
 		do
-			precedence_property_map.force (an_import_precedence, Version_attribute)
+			precedence_property_map.force (a_import_precedence, Version_attribute)
 			string_property_map.force (a_version, Version_attribute)
 		ensure
-			import_precedence_set: precedence_property_map.has (Version_attribute) and then precedence_property_map.item (Version_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Version_attribute) and then precedence_property_map.item (Version_attribute) = a_import_precedence
 			version_set: string_property_map.has (Version_attribute) and then STRING_.same_string (string_property_map.item (Version_attribute), a_version)
 		end
 
-	set_indent (an_indent_value: BOOLEAN; an_import_precedence: INTEGER) is
+	set_indent (a_indent_value: BOOLEAN; a_import_precedence: INTEGER) is
 			-- Set `indent'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Indent_attribute)		
+			higher_precedence: is_higher_precedence (a_import_precedence, Indent_attribute)		
 		do
-			precedence_property_map.force (an_import_precedence, Indent_attribute)
-			boolean_property_map.force (an_indent_value, Indent_attribute)
+			precedence_property_map.force (a_import_precedence, Indent_attribute)
+			boolean_property_map.force (a_indent_value, Indent_attribute)
 		ensure
-			import_precedence_set: precedence_property_map.has (Indent_attribute) and then precedence_property_map.item (Indent_attribute) = an_import_precedence
-			indent_set: boolean_property_map.has (Indent_attribute) and then boolean_property_map.item (Indent_attribute) = an_indent_value
+			import_precedence_set: precedence_property_map.has (Indent_attribute) and then precedence_property_map.item (Indent_attribute) = a_import_precedence
+			indent_set: boolean_property_map.has (Indent_attribute) and then boolean_property_map.item (Indent_attribute) = a_indent_value
 		end
 
-	set_omit_xml_declaration (an_omit_xml_declaration_value: BOOLEAN; an_import_precedence: INTEGER) is
+	set_omit_xml_declaration (a_omit_xml_declaration_value: BOOLEAN; a_import_precedence: INTEGER) is
 			-- Set `omit_xml_declaration'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Omit_xml_declaration_attribute)	
+			higher_precedence: is_higher_precedence (a_import_precedence, Omit_xml_declaration_attribute)	
 		do
-			precedence_property_map.force (an_import_precedence, Omit_xml_declaration_attribute)
-			omit_xml_declaration := an_omit_xml_declaration_value
+			precedence_property_map.force (a_import_precedence, Omit_xml_declaration_attribute)
+			omit_xml_declaration := a_omit_xml_declaration_value
 			is_omit_xml_declaration_set := True
 		ensure
-			import_precedence_set: precedence_property_map.has (Omit_xml_declaration_attribute) and then precedence_property_map.item (Omit_xml_declaration_attribute) = an_import_precedence
-			omit_xml_declaration_set: omit_xml_declaration = an_omit_xml_declaration_value and is_omit_xml_declaration_set
+			import_precedence_set: precedence_property_map.has (Omit_xml_declaration_attribute) and then precedence_property_map.item (Omit_xml_declaration_attribute) = a_import_precedence
+			omit_xml_declaration_set: omit_xml_declaration = a_omit_xml_declaration_value and is_omit_xml_declaration_set
 		end
 
-	set_standalone (a_standalone_value: STRING; an_import_precedence: INTEGER) is
+	set_standalone (a_standalone_value: STRING; a_import_precedence: INTEGER) is
 			-- Set `standalone'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Standalone_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Standalone_attribute)
 			valid_value: STRING_.same_string (a_standalone_value, "yes") or STRING_.same_string (a_standalone_value, "no") or STRING_.same_string (a_standalone_value, "omit")
 		do
-			precedence_property_map.force (an_import_precedence, Standalone_attribute)
+			precedence_property_map.force (a_import_precedence, Standalone_attribute)
 			if STRING_.same_string (a_standalone_value, "omit") then
 				standalone := Void
 			else
@@ -459,33 +459,33 @@ feature -- Element change
 			end
 			is_standalone_set := True
 		ensure
-			import_precedence_set: precedence_property_map.has (Standalone_attribute) and then precedence_property_map.item (Standalone_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Standalone_attribute) and then precedence_property_map.item (Standalone_attribute) = a_import_precedence
 			flagged: is_standalone_set
 		end
 
-	set_indent_spaces (a_number: INTEGER; an_import_precedence: INTEGER) is
+	set_indent_spaces (a_number: INTEGER; a_import_precedence: INTEGER) is
 			-- Set `indent_spaces'
 		require
 			strictly_positive: a_number > 0
-			higher_precedence: is_higher_precedence (an_import_precedence, Gexslt_indent_spaces_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Gexslt_indent_spaces_attribute)
 		do
-			precedence_property_map.force (an_import_precedence, Gexslt_indent_spaces_attribute)
+			precedence_property_map.force (a_import_precedence, Gexslt_indent_spaces_attribute)
 			indent_spaces := a_number
 		ensure
-			import_precedence_set: precedence_property_map.has (Gexslt_indent_spaces_attribute) and then precedence_property_map.item (Gexslt_indent_spaces_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Gexslt_indent_spaces_attribute) and then precedence_property_map.item (Gexslt_indent_spaces_attribute) = a_import_precedence
 			indent_spaces_set: indent_spaces = a_number
 		end
 
-	set_next_in_chain (a_uri: STRING; an_import_precedence: INTEGER) is
+	set_next_in_chain (a_uri: STRING; a_import_precedence: INTEGER) is
 			-- Set `next_in_chain'
 		require
 			next_in_chain_not_void: a_uri /= Void
-			higher_precedence: is_higher_precedence (an_import_precedence, Gexslt_next_in_chain_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Gexslt_next_in_chain_attribute)
 		do
-			precedence_property_map.force (an_import_precedence, Gexslt_next_in_chain_attribute)
+			precedence_property_map.force (a_import_precedence, Gexslt_next_in_chain_attribute)
 			next_in_chain := a_uri
 		ensure
-			import_precedence_set: precedence_property_map.has (Gexslt_next_in_chain_attribute) and then precedence_property_map.item (Gexslt_next_in_chain_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Gexslt_next_in_chain_attribute) and then precedence_property_map.item (Gexslt_next_in_chain_attribute) = a_import_precedence
 			next_in_chain_set: 	next_in_chain = a_uri
 		end
 
@@ -499,100 +499,100 @@ feature -- Element change
 			next_in_chain_set: 	next_in_chain_base_uri = a_uri
 		end
 
-	set_encoding (an_encoding: STRING; an_import_precedence: INTEGER) is
+	set_encoding (a_encoding: STRING; a_import_precedence: INTEGER) is
 			-- Set `encoding'.
 		require
-			encoding_not_void: an_encoding /= Void
-			higher_precedence: is_higher_precedence (an_import_precedence, Encoding_attribute)
+			encoding_not_void: a_encoding /= Void
+			higher_precedence: is_higher_precedence (a_import_precedence, Encoding_attribute)
 		do
-			precedence_property_map.force (an_import_precedence, Encoding_attribute)
-			encoding := an_encoding.as_upper
+			precedence_property_map.force (a_import_precedence, Encoding_attribute)
+			encoding := a_encoding.as_upper
 			if STRING_.same_string (encoding, "UTF-16") and then not precedence_property_map.has (Byte_order_mark_attribute) then
 				byte_order_mark_required := True
 			end
 			is_encoding_set := True
 		ensure
-			import_precedence_set: precedence_property_map.has (Encoding_attribute) and then precedence_property_map.item (Encoding_attribute) = an_import_precedence
-			encoding_set: STRING_.same_string (encoding, an_encoding.as_upper) and is_encoding_set = True
+			import_precedence_set: precedence_property_map.has (Encoding_attribute) and then precedence_property_map.item (Encoding_attribute) = a_import_precedence
+			encoding_set: STRING_.same_string (encoding, a_encoding.as_upper) and is_encoding_set = True
 		end
 
-	set_media_type (a_media_type: STRING; an_import_precedence: INTEGER) is
+	set_media_type (a_media_type: STRING; a_import_precedence: INTEGER) is
 			-- Set `media_type'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Media_type_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Media_type_attribute)
 			media_type_not_void: a_media_type /= Void --and then a_media_type.count > 0
 		do
-			precedence_property_map.force (an_import_precedence, Media_type_attribute)
+			precedence_property_map.force (a_import_precedence, Media_type_attribute)
 			if not string_property_map.has (Media_type_attribute) then
 				string_property_map.force_new (a_media_type, Media_type_attribute)
 			end
 		ensure
-			import_precedence_set: precedence_property_map.has (Media_type_attribute) and then precedence_property_map.item (Media_type_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Media_type_attribute) and then precedence_property_map.item (Media_type_attribute) = a_import_precedence
 			media_type_set: STRING_.same_string (media_type , a_media_type)
 		end
 
-	set_normalization_form (a_form: STRING; an_import_precedence: INTEGER) is
+	set_normalization_form (a_form: STRING; a_import_precedence: INTEGER) is
 			-- Set `normalization_form'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Normalization_form_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Normalization_form_attribute)
 			normalization_form_not_void: a_form /= Void
 		do
-			precedence_property_map.force (an_import_precedence, Normalization_form_attribute)
+			precedence_property_map.force (a_import_precedence, Normalization_form_attribute)
 			normalization_form := a_form
 		ensure
-			import_precedence_set: precedence_property_map.has (Normalization_form_attribute) and then precedence_property_map.item (Normalization_form_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Normalization_form_attribute) and then precedence_property_map.item (Normalization_form_attribute) = a_import_precedence
 			normalization_form_set: STRING_.same_string (a_form, normalization_form)
 		end
 
-	set_doctype_system (a_system_id: STRING; an_import_precedence: INTEGER) is
+	set_doctype_system (a_system_id: STRING; a_import_precedence: INTEGER) is
 			-- Set `doctype_system'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Doctype_system_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Doctype_system_attribute)
 			doctype_system_not_void: a_system_id /= Void
 		do
-			precedence_property_map.force (an_import_precedence, Doctype_system_attribute)
+			precedence_property_map.force (a_import_precedence, Doctype_system_attribute)
 			doctype_system := a_system_id
 		ensure
-			import_precedence_set: precedence_property_map.has (Doctype_system_attribute) and then precedence_property_map.item (Doctype_system_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Doctype_system_attribute) and then precedence_property_map.item (Doctype_system_attribute) = a_import_precedence
 			doctype_system_set: STRING_.same_string (a_system_id, doctype_system)
 		end
 
-	set_doctype_public (a_public_id: STRING; an_import_precedence: INTEGER) is
+	set_doctype_public (a_public_id: STRING; a_import_precedence: INTEGER) is
 			-- Set `doctype_public'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Doctype_public_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Doctype_public_attribute)
 			doctype_public_not_void: a_public_id /= Void
 		do
-			precedence_property_map.force (an_import_precedence, Doctype_public_attribute)
+			precedence_property_map.force (a_import_precedence, Doctype_public_attribute)
 			doctype_public := a_public_id
 		ensure
-			import_precedence_set: precedence_property_map.has (Doctype_public_attribute) and then precedence_property_map.item (Doctype_public_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Doctype_public_attribute) and then precedence_property_map.item (Doctype_public_attribute) = a_import_precedence
 			doctype_public_set: STRING_.same_string (a_public_id, doctype_public)
 		end
 
-	set_cdata_sections (some_cdata_section_expanded_names:  DS_ARRAYED_LIST [STRING]) is
-			-- Set `cdata_section_elements' by merger form `some_cdata_section_expanded_names'.
+	set_cdata_sections (a_cdata_section_expanded_names:  DS_ARRAYED_LIST [STRING]) is
+			-- Set `cdata_section_elements' by merger form `a_cdata_section_expanded_names'.
 		require
-			cdata_section_expanded_names_not_void: some_cdata_section_expanded_names /= Void
+			cdata_section_expanded_names_not_void: a_cdata_section_expanded_names /= Void
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
-			an_expanded_name: STRING
+			l_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
+			l_expanded_name: STRING
 		do
 			from
-				a_cursor := some_cdata_section_expanded_names.new_cursor; a_cursor.start
+				l_cursor := a_cdata_section_expanded_names.new_cursor; l_cursor.start
 			variant
-				some_cdata_section_expanded_names.count + 1 - a_cursor.index
+				a_cdata_section_expanded_names.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				an_expanded_name := a_cursor.item
-				if not cdata_section_elements.has (an_expanded_name) then
-					if not shared_name_pool.is_expanded_name_allocated (an_expanded_name) then
-						shared_name_pool.allocate_expanded_name (an_expanded_name)
+				l_expanded_name := l_cursor.item
+				if not cdata_section_elements.has (l_expanded_name) then
+					if not shared_name_pool.is_expanded_name_allocated (l_expanded_name) then
+						shared_name_pool.allocate_expanded_name (l_expanded_name)
 					end
-					cdata_section_elements.force (an_expanded_name)
+					cdata_section_elements.force (l_expanded_name)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 		end
 
@@ -601,83 +601,83 @@ feature -- Element change
 		require
 			cdata_sections_not_void: some_cdata_sections /= Void
 		local
-			a_cursor: DS_HASH_SET_CURSOR [STRING]
+			l_cursor: DS_HASH_SET_CURSOR [STRING]
 		do
-			a_cursor := some_cdata_sections.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				if not cdata_section_elements.has (a_cursor.item) then
-					cdata_section_elements.force (a_cursor.item)
+			l_cursor := some_cdata_sections.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				if not cdata_section_elements.has (l_cursor.item) then
+					cdata_section_elements.force (l_cursor.item)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 		end
 
-	set_undeclare_prefixes (an_undeclare_prefixes_value: BOOLEAN; an_import_precedence: INTEGER) is
+	set_undeclare_prefixes (a_undeclare_prefixes_value: BOOLEAN; a_import_precedence: INTEGER) is
 			-- Set `undeclare_prefixes'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Undeclare_prefixes_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Undeclare_prefixes_attribute)
 		do
-			precedence_property_map.force (an_import_precedence, Undeclare_prefixes_attribute)
-			undeclare_prefixes := an_undeclare_prefixes_value
+			precedence_property_map.force (a_import_precedence, Undeclare_prefixes_attribute)
+			undeclare_prefixes := a_undeclare_prefixes_value
 			is_undeclare_prefixes_set := True
 		ensure
-			import_precedence_set: precedence_property_map.has (Undeclare_prefixes_attribute) and then precedence_property_map.item (Undeclare_prefixes_attribute) = an_import_precedence
-			undeclare_prefixes_set: undeclare_prefixes = an_undeclare_prefixes_value and is_undeclare_prefixes_set
+			import_precedence_set: precedence_property_map.has (Undeclare_prefixes_attribute) and then precedence_property_map.item (Undeclare_prefixes_attribute) = a_import_precedence
+			undeclare_prefixes_set: undeclare_prefixes = a_undeclare_prefixes_value and is_undeclare_prefixes_set
 		end
 
-	set_character_representation (a_character_representation: STRING; an_import_precedence: INTEGER) is
+	set_character_representation (a_character_representation: STRING; a_import_precedence: INTEGER) is
 			-- Set `character_representation'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Gexslt_character_representation_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Gexslt_character_representation_attribute)
 			character_representation_not_void: a_character_representation /= Void
 			valid_character_representation: is_valid_character_representation (a_character_representation)
 		do
-			precedence_property_map.force (an_import_precedence, Gexslt_character_representation_attribute)
+			precedence_property_map.force (a_import_precedence, Gexslt_character_representation_attribute)
 			if not string_property_map.has (Gexslt_character_representation_attribute) then
 				string_property_map.force_new (a_character_representation, Gexslt_character_representation_attribute)
 			end
 		ensure
-			import_precedence_set: precedence_property_map.has (Gexslt_character_representation_attribute) and then precedence_property_map.item (Gexslt_character_representation_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Gexslt_character_representation_attribute) and then precedence_property_map.item (Gexslt_character_representation_attribute) = a_import_precedence
 			character_representation_set: STRING_.same_string (character_representation , a_character_representation)			
 		end
 
-	set_include_content_type (an_include_content_type_value: BOOLEAN; an_import_precedence: INTEGER) is
+	set_include_content_type (a_include_content_type_value: BOOLEAN; a_import_precedence: INTEGER) is
 			-- Set `include_content_type'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Include_content_type_attribute)		
+			higher_precedence: is_higher_precedence (a_import_precedence, Include_content_type_attribute)		
 		do
-			precedence_property_map.force (an_import_precedence, Include_content_type_attribute)
-			include_content_type := an_include_content_type_value
+			precedence_property_map.force (a_import_precedence, Include_content_type_attribute)
+			include_content_type := a_include_content_type_value
 			is_include_content_type_set := True
 		ensure
-			import_precedence_set: precedence_property_map.has (Include_content_type_attribute) and then precedence_property_map.item (Include_content_type_attribute) = an_import_precedence
-			include_content_type_set: include_content_type = an_include_content_type_value and is_include_content_type_set
+			import_precedence_set: precedence_property_map.has (Include_content_type_attribute) and then precedence_property_map.item (Include_content_type_attribute) = a_import_precedence
+			include_content_type_set: include_content_type = a_include_content_type_value and is_include_content_type_set
 		end
 
-	set_escape_uri_attributes (an_escape_uri_attributes_value: BOOLEAN; an_import_precedence: INTEGER) is
+	set_escape_uri_attributes (a_escape_uri_attributes_value: BOOLEAN; a_import_precedence: INTEGER) is
 			-- Set `escape_uri_attributes'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Escape_uri_attributes_attribute)
+			higher_precedence: is_higher_precedence (a_import_precedence, Escape_uri_attributes_attribute)
 		do
-			precedence_property_map.force (an_import_precedence, Escape_uri_attributes_attribute)
-			escape_uri_attributes := an_escape_uri_attributes_value
+			precedence_property_map.force (a_import_precedence, Escape_uri_attributes_attribute)
+			escape_uri_attributes := a_escape_uri_attributes_value
 			is_escape_uri_attributes_set := True
 		ensure
-			import_precedence_set: precedence_property_map.has (Escape_uri_attributes_attribute) and then precedence_property_map.item (Escape_uri_attributes_attribute) = an_import_precedence
-			escape_uri_attributes_set: escape_uri_attributes = an_escape_uri_attributes_value and is_escape_uri_attributes_set
+			import_precedence_set: precedence_property_map.has (Escape_uri_attributes_attribute) and then precedence_property_map.item (Escape_uri_attributes_attribute) = a_import_precedence
+			escape_uri_attributes_set: escape_uri_attributes = a_escape_uri_attributes_value and is_escape_uri_attributes_set
 		end
 										
-	set_byte_order_mark_required (an_byte_order_mark_required_value: BOOLEAN; an_import_precedence: INTEGER) is
+	set_byte_order_mark_required (a_byte_order_mark_required_value: BOOLEAN; a_import_precedence: INTEGER) is
 			-- Set `byte_order_mark_required'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Byte_order_mark_attribute)			
+			higher_precedence: is_higher_precedence (a_import_precedence, Byte_order_mark_attribute)			
 		do
-			precedence_property_map.force (an_import_precedence, Byte_order_mark_attribute)
-			byte_order_mark_required := an_byte_order_mark_required_value
+			precedence_property_map.force (a_import_precedence, Byte_order_mark_attribute)
+			byte_order_mark_required := a_byte_order_mark_required_value
 			is_byte_order_mark_set := True
 		ensure
-			import_precedence_set: precedence_property_map.has (Byte_order_mark_attribute) and then precedence_property_map.item (Byte_order_mark_attribute) = an_import_precedence
-			byte_order_mark_required_set: byte_order_mark_required = an_byte_order_mark_required_value and is_byte_order_mark_set
+			import_precedence_set: precedence_property_map.has (Byte_order_mark_attribute) and then precedence_property_map.item (Byte_order_mark_attribute) = a_import_precedence
+			byte_order_mark_required_set: byte_order_mark_required = a_byte_order_mark_required_value and is_byte_order_mark_set
 		end
 
 	merge_extension_attributes (some_extension_attributes: like extension_attributes) is
@@ -685,15 +685,15 @@ feature -- Element change
 		require
 			extension_attributes_not_void: some_extension_attributes /= Void
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			from
-				a_cursor := some_extension_attributes.new_cursor; a_cursor.start
+				l_cursor := some_extension_attributes.new_cursor; l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				extension_attributes.force (a_cursor.item, a_cursor.key)
-				a_cursor.forth	
+				extension_attributes.force (l_cursor.item, l_cursor.key)
+				l_cursor.forth	
 			end
 		end
 
@@ -706,16 +706,16 @@ feature -- Element change
 			namespace_resolver_not_void: a_namespace_resolver /= Void
 			no_previous_error: not is_error
 		local
-			a_uri, a_local_name: STRING
+			l_uri, l_local_name: STRING
 		do
-			a_uri := shared_name_pool.namespace_uri_from_name_code (a_fingerprint)
-			a_local_name := shared_name_pool.local_name_from_name_code (a_fingerprint)
-			if a_uri.count = 0 then
-				set_standard_property (a_local_name, a_value, a_namespace_resolver)
-			elseif STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
-				set_gexslt_property (a_local_name, a_value)
+			l_uri := shared_name_pool.namespace_uri_from_name_code (a_fingerprint)
+			l_local_name := shared_name_pool.local_name_from_name_code (a_fingerprint)
+			if l_uri.count = 0 then
+				set_standard_property (l_local_name, a_value, a_namespace_resolver)
+			elseif STRING_.same_string (l_uri, Gexslt_eiffel_type_uri) then
+				set_gexslt_property (l_local_name, a_value)
 			else
-				set_extension_property (a_uri, a_local_name, a_value)
+				set_extension_property (l_uri, l_local_name, a_value)
 			end
 		ensure
 			error_message_set: is_error implies error_message /= Void
@@ -726,14 +726,14 @@ feature -- Element change
 		require
 			character_maps_not_void: some_maps /= Void
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 		do
-			a_cursor := some_maps.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				if not used_character_maps.has (a_cursor.item) then
-					used_character_maps.force_last (STRING_.cloned_string (a_cursor.item))
+			l_cursor := some_maps.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				if not used_character_maps.has (l_cursor.item) then
+					used_character_maps.force_last (STRING_.cloned_string (l_cursor.item))
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 		end
 
@@ -760,14 +760,14 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			cdata_section_elements_not_empty: some_cdata_section_elements /= Void
 			no_void_elements: not some_cdata_section_elements.has (Void)
 		local
-			a_cursor: DS_HASH_SET_CURSOR [STRING]
+			l_cursor: DS_HASH_SET_CURSOR [STRING]
 		do
 			create cdata_section_elements.make (some_cdata_section_elements.count)
 			cdata_section_elements.set_equality_tester (string_equality_tester)
-			a_cursor := some_cdata_section_elements.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				cdata_section_elements.put (STRING_.cloned_string (a_cursor.item))
-				a_cursor.forth
+			l_cursor := some_cdata_section_elements.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				cdata_section_elements.put (STRING_.cloned_string (l_cursor.item))
+				l_cursor.forth
 			end
 		end
 
@@ -777,14 +777,14 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			used_character_maps_not_empty: some_used_character_maps /= Void
 			no_void_elements: not some_used_character_maps.has (Void)
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 		do
 			create used_character_maps.make (some_used_character_maps.count)
 			used_character_maps.set_equality_tester (string_equality_tester)
-			a_cursor := some_used_character_maps.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				used_character_maps.put_last (STRING_.cloned_string (a_cursor.item))
-				a_cursor.forth
+			l_cursor := some_used_character_maps.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				used_character_maps.put_last (STRING_.cloned_string (l_cursor.item))
+				l_cursor.forth
 			end
 		end
 
@@ -795,13 +795,13 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			no_void_elements: not a_string_property_map.has_item (Void)
 			no_void_keys: not a_string_property_map.has (Void)
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			create string_property_map.make_with_equality_testers (a_string_property_map.count, string_equality_tester, string_equality_tester)
-			a_cursor := a_string_property_map.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				string_property_map.put (STRING_.cloned_string (a_cursor.item), STRING_.cloned_string (a_cursor.key))
-				a_cursor.forth
+			l_cursor := a_string_property_map.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				string_property_map.put (STRING_.cloned_string (l_cursor.item), STRING_.cloned_string (l_cursor.key))
+				l_cursor.forth
 			end
 		end
 
@@ -811,13 +811,13 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			boolean_property_map_not_empty: a_boolean_property_map /= Void
 			no_void_keys: not a_boolean_property_map.has (Void)
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [BOOLEAN, STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [BOOLEAN, STRING]
 		do
 			create boolean_property_map.make_with_equality_testers (a_boolean_property_map.count, Void, string_equality_tester)
-			a_cursor := a_boolean_property_map.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				boolean_property_map.put (a_cursor.item, STRING_.cloned_string (a_cursor.key))
-				a_cursor.forth
+			l_cursor := a_boolean_property_map.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				boolean_property_map.put (l_cursor.item, STRING_.cloned_string (l_cursor.key))
+				l_cursor.forth
 			end
 		end
 	
@@ -827,13 +827,13 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			precedence_property_map_not_empty: a_precedence_property_map /= Void
 			no_void_keys: not a_precedence_property_map.has (Void)
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [INTEGER, STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [INTEGER, STRING]
 		do
 			create precedence_property_map.make_with_equality_testers (a_precedence_property_map.count, Void, string_equality_tester)
-			a_cursor := a_precedence_property_map.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				precedence_property_map.put (a_cursor.item, STRING_.cloned_string (a_cursor.key))
-				a_cursor.forth
+			l_cursor := a_precedence_property_map.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				precedence_property_map.put (l_cursor.item, STRING_.cloned_string (l_cursor.key))
+				l_cursor.forth
 			end
 		end
 	
@@ -851,12 +851,12 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 
 feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 
-	set_default_indent (an_indent_value: BOOLEAN) is
+	set_default_indent (a_indent_value: BOOLEAN) is
 			-- Set `default_indent'.
 		do
-			default_indent := an_indent_value
+			default_indent := a_indent_value
 		ensure
-			default_indent_set: default_indent = an_indent_value
+			default_indent_set: default_indent = a_indent_value
 		end
 
 	set_default_version (a_version: STRING) is
@@ -900,38 +900,38 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 			indent_spaces_set: indent_spaces = a_number
 		end
 
-	set_default_encoding (an_encoding: STRING) is
+	set_default_encoding (a_encoding: STRING) is
 			-- Set `encoding'.
 		require
-			encoding_not_void: an_encoding /= Void
+			encoding_not_void: a_encoding /= Void
 		do
-			encoding := an_encoding.as_upper
+			encoding := a_encoding.as_upper
 		ensure
-			encoding_set: STRING_.same_string (encoding, an_encoding.as_upper)
+			encoding_set: STRING_.same_string (encoding, a_encoding.as_upper)
 		end
 
-	set_default_byte_order_mark (an_byte_order_mark_required_value: BOOLEAN) is
+	set_default_byte_order_mark (a_byte_order_mark_required_value: BOOLEAN) is
 			-- Set `byte_order_mark_required'.
 		do
-			byte_order_mark_required := an_byte_order_mark_required_value
+			byte_order_mark_required := a_byte_order_mark_required_value
 		ensure
-			byte_order_mark_required_set: byte_order_mark_required = an_byte_order_mark_required_value
+			byte_order_mark_required_set: byte_order_mark_required = a_byte_order_mark_required_value
 		end
 
-	set_default_escape_uri_attributes (an_escape_uri_attributes_value: BOOLEAN) is
+	set_default_escape_uri_attributes (a_escape_uri_attributes_value: BOOLEAN) is
 			-- Set `escape_uri_attributes'.
 		do
-			escape_uri_attributes := an_escape_uri_attributes_value
+			escape_uri_attributes := a_escape_uri_attributes_value
 		ensure
-			escape_uri_attributes_set: escape_uri_attributes = an_escape_uri_attributes_value
+			escape_uri_attributes_set: escape_uri_attributes = a_escape_uri_attributes_value
 		end
 
-	set_default_include_content_type (an_include_content_type_value: BOOLEAN) is
+	set_default_include_content_type (a_include_content_type_value: BOOLEAN) is
 			-- Set `include_content_type'.
 		do
-			include_content_type := an_include_content_type_value
+			include_content_type := a_include_content_type_value
 		ensure
-			include_content_type_set: include_content_type = an_include_content_type_value
+			include_content_type_set: include_content_type = a_include_content_type_value
 		end
 
 feature {NONE} -- Implementation
@@ -1049,21 +1049,42 @@ feature {NONE} -- Implementation
 			value_not_void: a_value /= Void
 			no_previous_error: not is_error
 		local
-			a_message: STRING
+			l_message: STRING
 		do
 			if STRING_.same_string (a_value, "yes") then
 				last_yes_no_value	 := True
 			elseif STRING_.same_string (a_value, "no") then
 				last_yes_no_value	:= False
 			else
-				a_message := STRING_.concat ("Value for ", a_name)
-				a_message := STRING_.appended_string (a_message, " must be 'yes' or 'no'. Found: ")
-				set_general_error (STRING_.appended_string (a_message, a_value))
+				l_message := STRING_.concat ("Value for ", a_name)
+				l_message := STRING_.appended_string (l_message, " must be 'yes' or 'no'. Found: ")
+				set_general_error (STRING_.appended_string (l_message, a_value))
 			end
 		ensure
 			value_set_or_error: not is_error implies True -- `last_yes_no_value' correctly set
 		end
-			
+
+feature {NONE} -- Satisfying interface only
+
+	report_compile_error (a_error: XM_XPATH_ERROR_VALUE) is
+			-- Report a compile error.
+		do
+			any_compile_errors := True
+		end
+	
+	any_compile_errors: BOOLEAN
+			-- Have any compile errors been reported?
+
+	uri_for_prefix (a_xml_prefix: STRING; a_use_default_namespace: BOOLEAN): STRING is
+			-- URI for `a_xml_prefix' using the in-scope namespaces
+		do
+		end
+
+	principal_stylesheet: XM_XSLT_STYLESHEET is
+			-- Top-level stylesheet
+		do
+		end
+	
 invariant
 
 	extension_attributes_not_void: extension_attributes /= Void
@@ -1080,7 +1101,7 @@ invariant
 	precedence_property_map_not_void: precedence_property_map /= Void
 	unique_property_names: True -- forall (a) string_property_map.has (a) implies not boolean_property_map.has (a) and vice-versa
 	duplication_error: is_duplication_error implies is_error and  duplicate_attribute_name /= Void and  error_message = Void
-	other_error: is_error and is_duplication_error implies duplicate_attribute_name = Void and error_message /= Void
+	other_error: is_error and not is_duplication_error implies duplicate_attribute_name = Void and error_message /= Void
 	no_error: not is_error implies duplicate_attribute_name = Void and error_message = Void
 
 end
