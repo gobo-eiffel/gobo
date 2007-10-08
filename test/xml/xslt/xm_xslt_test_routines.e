@@ -34,7 +34,7 @@ feature {NONE} -- Test support routines
 	read_utf8_results_file (a_filename: STRING) is
 			-- Read `a_filename' within `data_dirname' as UTF-8 bytes and set `last_utf8_string' to contents.
 		local
-			l_test_file: KL_TEXT_INPUT_FILE
+			l_test_file: KL_BINARY_INPUT_FILE
 			l_test_string: STRING
 		do
 			create l_test_file.make (file_system.pathname (data_dirname, a_filename))
