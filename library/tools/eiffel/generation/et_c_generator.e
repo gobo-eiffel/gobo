@@ -5941,7 +5941,11 @@ feature {NONE} -- Expression generation
 			i, nb: INTEGER
 		do
 			l_source_type := a_source_type_set.static_type
-			if not l_source_type.conforms_to_type (a_target_type, current_system) then
+			if current_feature.is_tilde_feature (current_system) then
+					-- No CAT-call in the feature that is supposed to simulate
+					-- the forthcoming '~' operator introduced in ECMA Eiffel 367.
+				l_has_non_conforming_types := False
+			elseif not l_source_type.conforms_to_type (a_target_type, current_system) then
 					-- Make sure that CAT-call errors will be reported at run-time.
 				nb := a_source_type_set.count
 				l_non_conforming_types := attachment_dynamic_type_ids
@@ -20202,15 +20206,18 @@ feature {NONE} -- C function generation
 		local
 			l_dts_name: STRING
 			l_dts_ids: STRING
+			l_size: INTEGER
 		do
 			if not dynamic_type_id_set_names.is_empty then
 				from dynamic_type_id_set_names.start until dynamic_type_id_set_names.after loop
 					l_dts_name := dynamic_type_id_set_names.item_for_iteration
 					l_dts_ids := dynamic_type_id_set_names.key_for_iteration
+					l_size := l_dts_ids.occurrences (',') + 1
 					header_file.put_string (c_int)
 					header_file.put_character (' ')
 					header_file.put_string (l_dts_name)
 					header_file.put_character ('[')
+					header_file.put_integer (l_size)
 					header_file.put_character (']')
 					header_file.put_character (';')
 					header_file.put_new_line
@@ -20218,6 +20225,7 @@ feature {NONE} -- C function generation
 					current_file.put_character (' ')
 					current_file.put_string (l_dts_name)
 					current_file.put_character ('[')
+					current_file.put_integer (l_size)
 					current_file.put_character (']')
 					current_file.put_character (' ')
 					current_file.put_character ('=')
