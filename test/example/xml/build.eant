@@ -29,6 +29,7 @@
 		<delete directory="Tformatter"/>
 		<delete directory="Tnamespaces"/>
 		<delete directory="Tschematron"/>
+		<delete directory="Tserializer"/>
 		<delete directory="Ttagcount"/>
 	</target>
 
