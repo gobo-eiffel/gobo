@@ -366,4 +366,47 @@ feature -- Built-in codes
 	builtin_identified_eif_object_id_free: INTEGER is 3
 			-- Codes for built-in features from class "IDENTIFIED" and related classes
 
+	builtin_tuple_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class "TUPLE"
+		do
+			Result := builtin_tuple_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_tuple_class: INTEGER is 23
+	builtin_tuple_boolean_item: INTEGER is 1
+	builtin_tuple_character_8_item: INTEGER is 2
+	builtin_tuple_character_32_item: INTEGER is 3
+	builtin_tuple_count: INTEGER is 4
+	builtin_tuple_integer_8_item: INTEGER is 5
+	builtin_tuple_integer_16_item: INTEGER is 6
+	builtin_tuple_integer_32_item: INTEGER is 7
+	builtin_tuple_integer_64_item: INTEGER is 8
+	builtin_tuple_item_code: INTEGER is 9
+	builtin_tuple_natural_8_item: INTEGER is 10
+	builtin_tuple_natural_16_item: INTEGER is 11
+	builtin_tuple_natural_32_item: INTEGER is 12
+	builtin_tuple_natural_64_item: INTEGER is 13
+	builtin_tuple_object_comparison: INTEGER is 14
+	builtin_tuple_pointer_item: INTEGER is 15
+	builtin_tuple_put_boolean: INTEGER is 16
+	builtin_tuple_put_character_8: INTEGER is 17
+	builtin_tuple_put_character_32: INTEGER is 18
+	builtin_tuple_put_integer_8: INTEGER is 19
+	builtin_tuple_put_integer_16: INTEGER is 20
+	builtin_tuple_put_integer_32: INTEGER is 21
+	builtin_tuple_put_integer_64: INTEGER is 22
+	builtin_tuple_put_natural_8: INTEGER is 23
+	builtin_tuple_put_natural_16: INTEGER is 24
+	builtin_tuple_put_natural_32: INTEGER is 25
+	builtin_tuple_put_natural_64: INTEGER is 26
+	builtin_tuple_put_pointer: INTEGER is 27
+	builtin_tuple_put_real_32: INTEGER is 28
+	builtin_tuple_put_real_64: INTEGER is 29
+	builtin_tuple_put_reference: INTEGER is 30
+	builtin_tuple_real_32_item: INTEGER is 31
+	builtin_tuple_real_64_item: INTEGER is 32
+	builtin_tuple_reference_item: INTEGER is 33
+	builtin_tuple_set_object_comparison: INTEGER is 34
+			-- Codes for built-in features from class "TUPLE"
+
 end

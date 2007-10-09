@@ -568,6 +568,10 @@ feature -- Features
 				if (a_builtin_code \\ builtin_capacity) = builtin_real_item then
 					Result := (Current /= a_system.real_64_type)
 				end
+			when builtin_tuple_class then
+				if (a_builtin_code \\ builtin_capacity) = builtin_tuple_object_comparison then
+					Result := True
+				end
 			else
 				Result := False
 			end

@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type set builders where types are pushed to supersets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,8 @@ inherit
 			propagate_argument_operand_dynamic_types,
 			propagate_assignment_dynamic_types,
 			propagate_assignment_attempt_dynamic_types,
-			propagate_builtin_argument_dynamic_types,
+			propagate_builtin_actual_argument_dynamic_types,
+			propagate_builtin_formal_argument_dynamic_types,
 			propagate_builtin_result_dynamic_types,
 			propagate_call_agent_result_dynamic_types,
 			propagate_creation_dynamic_type,
@@ -630,7 +631,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_builtin_argument_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE) is
+	propagate_builtin_actual_argument_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE) is
 			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
 			-- of the formal argument at index `a_formal' in `a_callee' when involved
 			-- in built-in feature `current_dynamic_feature'.
@@ -645,6 +646,24 @@ feature {NONE} -- Implementation
 				error_handler.report_giaaa_error
 			else
 				a_source_type_set.put_target (l_formal_type_set, current_system)
+			end
+		end
+
+	propagate_builtin_formal_argument_dynamic_types (a_formal: INTEGER; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Propagate dynamic types of the dynamic type set of the formal argument
+			-- at index `a_formal' in built-in feature `current_dynamic_feature'
+			-- to `a_target_type_set'.
+		local
+			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			l_formal_type_set := current_dynamic_feature.argument_type_set (a_formal)
+			if l_formal_type_set = Void then
+					-- Internal error: it has already been checked somewhere else
+					-- that the number of formal arguments was as expected.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_formal_type_set.put_target (a_target_type_set, current_system)
 			end
 		end
 

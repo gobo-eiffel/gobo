@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 		do
 			Result := precursor (a_query, a_system)
 			l_name := a_query.name
-			if l_name.same_feature_name (tokens.item_feature_name) or l_name.same_feature_name (tokens.infix_at_feature_name) or l_name.same_feature_name (tokens.reference_item_feature_name) then
+			if not Result.is_builtin and then (l_name.same_feature_name (tokens.item_feature_name) or l_name.same_feature_name (tokens.infix_at_feature_name) or l_name.same_feature_name (tokens.reference_item_feature_name)) then
 				a_system.dynamic_type_set_builder.build_tuple_item (Current, Result)
 			end
 		end
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 		do
 			Result := precursor (a_procedure, a_system)
 			l_name := a_procedure.name
-			if l_name.same_feature_name (tokens.put_feature_name) or l_name.same_feature_name (tokens.put_reference_feature_name) then
+			if not Result.is_builtin and then (l_name.same_feature_name (tokens.put_feature_name) or l_name.same_feature_name (tokens.put_reference_feature_name)) then
 				a_system.dynamic_type_set_builder.build_tuple_put (Current, Result)
 			end
 		end

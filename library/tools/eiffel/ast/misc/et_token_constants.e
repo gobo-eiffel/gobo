@@ -718,6 +718,14 @@ feature -- Feature names
 			boolean_bytes_feature_name_not_void: Result /= Void
 		end
 
+	boolean_item_feature_name: ET_FEATURE_NAME is
+			-- 'boolean_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (boolean_item_name)
+		ensure
+			boolean_item_feature_name_not_void: Result /= Void
+		end
+
 	call_feature_name: ET_FEATURE_NAME is
 			-- 'call' feature name
 		once
@@ -740,6 +748,22 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (ceiling_real_64_name)
 		ensure
 			ceiling_real_64_feature_name_not_void: Result /= Void
+		end
+
+	character_8_item_feature_name: ET_FEATURE_NAME is
+			-- 'character_8_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (character_8_item_name)
+		ensure
+			character_8_item_feature_name_not_void: Result /= Void
+		end
+
+	character_32_item_feature_name: ET_FEATURE_NAME is
+			-- 'character_32_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (character_32_item_name)
+		ensure
+			character_32_item_feature_name_not_void: Result /= Void
 		end
 
 	character_bytes_feature_name: ET_FEATURE_NAME is
@@ -1076,6 +1100,38 @@ feature -- Feature names
 			infix_xor_feature_name_not_void: Result /= Void
 		end
 
+	integer_8_item_feature_name: ET_FEATURE_NAME is
+			-- 'integer_8_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (integer_8_item_name)
+		ensure
+			integer_8_item_feature_name_not_void: Result /= Void
+		end
+
+	integer_16_item_feature_name: ET_FEATURE_NAME is
+			-- 'integer_16_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (integer_16_item_name)
+		ensure
+			integer_16_item_feature_name_not_void: Result /= Void
+		end
+
+	integer_32_item_feature_name: ET_FEATURE_NAME is
+			-- 'integer_32_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (integer_32_item_name)
+		ensure
+			integer_32_item_feature_name_not_void: Result /= Void
+		end
+
+	integer_64_item_feature_name: ET_FEATURE_NAME is
+			-- 'integer_64_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (integer_64_item_name)
+		ensure
+			integer_64_item_feature_name_not_void: Result /= Void
+		end
+
 	integer_bytes_feature_name: ET_FEATURE_NAME is
 			-- 'integer_bytes' feature name
 		once
@@ -1156,6 +1212,14 @@ feature -- Feature names
 			item_feature_name_not_void: Result /= Void
 		end
 
+	item_code_feature_name: ET_FEATURE_NAME is
+			-- 'item_code' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (item_code_name)
+		ensure
+			item_code_feature_name_not_void: Result /= Void
+		end
+
 	last_result_feature_name: ET_FEATURE_NAME is
 			-- 'last_result' feature name
 		once
@@ -1188,12 +1252,52 @@ feature -- Feature names
 			name_feature_name_not_void: Result /= Void
 		end
 
+	natural_8_item_feature_name: ET_FEATURE_NAME is
+			-- 'natural_8_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (natural_8_item_name)
+		ensure
+			natural_8_item_feature_name_not_void: Result /= Void
+		end
+
+	natural_16_item_feature_name: ET_FEATURE_NAME is
+			-- 'natural_16_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (natural_16_item_name)
+		ensure
+			natural_16_item_feature_name_not_void: Result /= Void
+		end
+
 	natural_32_code_feature_name: ET_FEATURE_NAME is
 			-- 'natural_32_code' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (natural_32_code_name)
 		ensure
 			natural_32_code_feature_name_not_void: Result /= Void
+		end
+
+	natural_32_item_feature_name: ET_FEATURE_NAME is
+			-- 'natural_32_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (natural_32_item_name)
+		ensure
+			natural_32_item_feature_name_not_void: Result /= Void
+		end
+
+	natural_64_item_feature_name: ET_FEATURE_NAME is
+			-- 'natural_64_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (natural_64_item_name)
+		ensure
+			natural_64_item_feature_name_not_void: Result /= Void
+		end
+
+	object_comparison_feature_name: ET_FEATURE_NAME is
+			-- 'object_comparison' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (object_comparison_name)
+		ensure
+			object_comparison_feature_name_not_void: Result /= Void
 		end
 
 	out_feature_name: ET_FEATURE_NAME is
@@ -1211,6 +1315,7 @@ feature -- Feature names
 		ensure
 			pointer_bytes_feature_name_not_void: Result /= Void
 		end
+
 	pointer_item_feature_name: ET_FEATURE_NAME is
 			-- 'pointer_item' feature name
 		once
@@ -1260,12 +1365,140 @@ feature -- Feature names
 			put_feature_name_not_void: Result /= Void
 		end
 
+	put_boolean_feature_name: ET_FEATURE_NAME is
+			-- 'put_boolean' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_boolean_name)
+		ensure
+			put_boolean_feature_name_not_void: Result /= Void
+		end
+
+	put_character_8_feature_name: ET_FEATURE_NAME is
+			-- 'put_character_8' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_character_8_name)
+		ensure
+			put_character_8_feature_name_not_void: Result /= Void
+		end
+
+	put_character_32_feature_name: ET_FEATURE_NAME is
+			-- 'put_character_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_character_32_name)
+		ensure
+			put_character_32_feature_name_not_void: Result /= Void
+		end
+
+	put_integer_8_feature_name: ET_FEATURE_NAME is
+			-- 'put_integer_8' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_integer_8_name)
+		ensure
+			put_integer_8_feature_name_not_void: Result /= Void
+		end
+
+	put_integer_16_feature_name: ET_FEATURE_NAME is
+			-- 'put_integer_16' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_integer_16_name)
+		ensure
+			put_integer_16_feature_name_not_void: Result /= Void
+		end
+
+	put_integer_32_feature_name: ET_FEATURE_NAME is
+			-- 'put_integer_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_integer_32_name)
+		ensure
+			put_integer_32_feature_name_not_void: Result /= Void
+		end
+
+	put_integer_64_feature_name: ET_FEATURE_NAME is
+			-- 'put_integer_64' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_integer_64_name)
+		ensure
+			put_integer_64_feature_name_not_void: Result /= Void
+		end
+
+	put_natural_8_feature_name: ET_FEATURE_NAME is
+			-- 'put_natural_8' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_natural_8_name)
+		ensure
+			put_natural_8_feature_name_not_void: Result /= Void
+		end
+
+	put_natural_16_feature_name: ET_FEATURE_NAME is
+			-- 'put_natural_16' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_natural_16_name)
+		ensure
+			put_natural_16_feature_name_not_void: Result /= Void
+		end
+
+	put_natural_32_feature_name: ET_FEATURE_NAME is
+			-- 'put_natural_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_natural_32_name)
+		ensure
+			put_natural_32_feature_name_not_void: Result /= Void
+		end
+
+	put_natural_64_feature_name: ET_FEATURE_NAME is
+			-- 'put_natural_64' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_natural_64_name)
+		ensure
+			put_natural_64_feature_name_not_void: Result /= Void
+		end
+
+	put_pointer_feature_name: ET_FEATURE_NAME is
+			-- 'put_pointer' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_pointer_name)
+		ensure
+			put_pointer_feature_name_not_void: Result /= Void
+		end
+
+	put_real_32_feature_name: ET_FEATURE_NAME is
+			-- 'put_real_32' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_real_32_name)
+		ensure
+			put_real_32_feature_name_not_void: Result /= Void
+		end
+
+	put_real_64_feature_name: ET_FEATURE_NAME is
+			-- 'put_real_64' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_real_64_name)
+		ensure
+			put_real_64_feature_name_not_void: Result /= Void
+		end
+
 	put_reference_feature_name: ET_FEATURE_NAME is
 			-- 'put_reference' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (put_reference_name)
 		ensure
 			put_reference_feature_name_not_void: Result /= Void
+		end
+
+	real_32_item_feature_name: ET_FEATURE_NAME is
+			-- 'real_32_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (real_32_item_name)
+		ensure
+			real_32_item_feature_name_not_void: Result /= Void
+		end
+
+	real_64_item_feature_name: ET_FEATURE_NAME is
+			-- 'real_64_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (real_64_item_name)
+		ensure
+			real_64_item_feature_name_not_void: Result /= Void
 		end
 
 	real_bytes_feature_name: ET_FEATURE_NAME is
@@ -1298,6 +1531,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (set_item_name)
 		ensure
 			set_item_feature_name_not_void: Result /= Void
+		end
+
+	set_object_comparison_feature_name: ET_FEATURE_NAME is
+			-- 'set_object_comparison' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_object_comparison_name)
+		ensure
+			set_object_comparison_feature_name_not_void: Result /= Void
 		end
 
 	set_operands_feature_name: ET_FEATURE_NAME is
@@ -2332,6 +2573,9 @@ feature -- Keyword and symbol names
 	boolean_bytes_name: STRING is "boolean_bytes"
 		-- Name of Eiffel feature 'boolean_bytes'
 
+	boolean_item_name: STRING is "boolean_item"
+		-- Name of Eiffel feature 'boolean_item'
+
 	call_name: STRING is "call"
 		-- Name of Eiffel feature 'call'
 
@@ -2340,6 +2584,12 @@ feature -- Keyword and symbol names
 
 	ceiling_real_64_name: STRING is "ceiling_real_64"
 		-- Name of Eiffel feature 'ceiling_real_64'
+
+	character_8_item_name: STRING is "character_8_item"
+		-- Name of Eiffel feature 'character_8_item'
+
+	character_32_item_name: STRING is "character_32_item"
+		-- Name of Eiffel feature 'character_32_item'
 
 	character_bytes_name: STRING is "character_bytes"
 		-- Name of Eiffel feature 'character_bytes'
@@ -2392,6 +2642,18 @@ feature -- Keyword and symbol names
 	hash_code_name: STRING is "hash_code"
 		-- Name of Eiffel feature 'hash_code'
 
+	integer_8_item_name: STRING is "integer_8_item"
+		-- Name of Eiffel feature 'integer_8_item'
+
+	integer_16_item_name: STRING is "integer_16_item"
+		-- Name of Eiffel feature 'integer_16_item'
+
+	integer_32_item_name: STRING is "integer_32_item"
+		-- Name of Eiffel feature 'integer_32_item'
+
+	integer_64_item_name: STRING is "integer_64_item"
+		-- Name of Eiffel feature 'integer_64_item'
+
 	integer_bytes_name: STRING is "integer_bytes"
 		-- Name of Eiffel feature 'integer_bytes'
 
@@ -2419,6 +2681,9 @@ feature -- Keyword and symbol names
 	item_name: STRING is "item"
 		-- Name of Eiffel feature 'item'
 
+	item_code_name: STRING is "item_code"
+		-- Name of Eiffel feature 'item_code'
+
 	last_result_name: STRING is "last_result"
 		-- Name of Eiffel feature 'last_result'
 
@@ -2431,8 +2696,23 @@ feature -- Keyword and symbol names
 	name_name: STRING is "name"
 		-- Name of Eiffel feature 'name'
 
+	natural_8_item_name: STRING is "natural_8_item"
+		-- Name of Eiffel feature 'natural_8_item'
+
+	natural_16_item_name: STRING is "natural_16_item"
+		-- Name of Eiffel feature 'natural_16_item'
+
 	natural_32_code_name: STRING is "natural_32_code"
 		-- Name of Eiffel feature 'natural_32_code'
+
+	natural_32_item_name: STRING is "natural_32_item"
+		-- Name of Eiffel feature 'natural_32_item'
+
+	natural_64_item_name: STRING is "natural_64_item"
+		-- Name of Eiffel feature 'natural_64_item'
+
+	object_comparison_name: STRING is "object_comparison"
+		-- Name of Eiffel feature 'object_comparison'
 
 	out_name: STRING is "out"
 		-- Name of Eiffel feature 'out'
@@ -2446,8 +2726,56 @@ feature -- Keyword and symbol names
 	put_name: STRING is "put"
 		-- Name of Eiffel feature 'put'
 
+	put_boolean_name: STRING is "put_boolean"
+		-- Name of Eiffel feature 'put_boolean'
+
+	put_character_8_name: STRING is "put_character_8"
+		-- Name of Eiffel feature 'put_character_8'
+
+	put_character_32_name: STRING is "put_character_32"
+		-- Name of Eiffel feature 'put_character_32'
+
+	put_integer_8_name: STRING is "put_integer_8"
+		-- Name of Eiffel feature 'put_integer_8'
+
+	put_integer_16_name: STRING is "put_integer_16"
+		-- Name of Eiffel feature 'put_integer_16'
+
+	put_integer_32_name: STRING is "put_integer_32"
+		-- Name of Eiffel feature 'put_integer_32'
+
+	put_integer_64_name: STRING is "put_integer_64"
+		-- Name of Eiffel feature 'put_integer_64'
+
+	put_natural_8_name: STRING is "put_natural_8"
+		-- Name of Eiffel feature 'put_natural_8'
+
+	put_natural_16_name: STRING is "put_natural_16"
+		-- Name of Eiffel feature 'put_natural_16'
+
+	put_natural_32_name: STRING is "put_natural_32"
+		-- Name of Eiffel feature 'put_natural_32'
+
+	put_natural_64_name: STRING is "put_natural_64"
+		-- Name of Eiffel feature 'put_natural_64'
+
+	put_pointer_name: STRING is "put_pointer"
+		-- Name of Eiffel feature 'put_pointer'
+
+	put_real_32_name: STRING is "put_real_32"
+		-- Name of Eiffel feature 'put_real_32'
+
+	put_real_64_name: STRING is "put_real_64"
+		-- Name of Eiffel feature 'put_real_64'
+
 	put_reference_name: STRING is "put_reference"
 		-- Name of Eiffel feature 'put_reference'
+
+	real_32_item_name: STRING is "real_32_item"
+		-- Name of Eiffel feature 'real_32_item'
+
+	real_64_item_name: STRING is "real_64_item"
+		-- Name of Eiffel feature 'real_64_item'
 
 	real_bytes_name: STRING is "real_bytes"
 		-- Name of Eiffel feature 'real_bytes'
@@ -2460,6 +2788,9 @@ feature -- Keyword and symbol names
 
 	set_item_name: STRING is "set_item"
 		-- Name of Eiffel feature 'set_item'
+
+	set_object_comparison_name: STRING is "set_object_comparison"
+		-- Name of Eiffel feature 'set_object_comparison'
 
 	set_operands_name: STRING is "set_operands"
 		-- Name of Eiffel feature 'set_operands'

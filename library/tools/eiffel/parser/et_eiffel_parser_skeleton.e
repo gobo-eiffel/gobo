@@ -1805,6 +1805,8 @@ feature {NONE} -- Built-in
 				set_builtin_procedure_function (a_feature)
 			elseif a_class = universe.function_class then
 				set_builtin_function_function (a_feature)
+			elseif a_class = universe.tuple_class then
+				set_builtin_tuple_function (a_feature)
 			elseif a_class = universe.integer_8_ref_class then
 				set_builtin_sized_integer_ref_function (a_feature, universe.integer_8_class, tokens.builtin_integer_8_class)
 			elseif a_class = universe.integer_8_class then
@@ -2604,15 +2606,15 @@ feature {NONE} -- Built-in
 				if l_formals = Void or else l_formals.count /= 1 then
 						-- The signature should be 'eif_id_object (an_id: INTEGER): ANY'.
 					set_fatal_error (a_class)
-					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_type)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_class)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
 						-- The signature should be 'eif_id_object (an_id: INTEGER): ANY'.
 					set_fatal_error (a_class)
-					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_type)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_class)
 				elseif not a_feature.type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
 						-- The signature should be 'eif_id_object (an_id: INTEGER): ANY'.
 					set_fatal_error (a_class)
-					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_type)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_class)
 				end
 			elseif a_feature.name.same_feature_name (tokens.eif_object_id_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_identified_feature (tokens.builtin_identified_eif_object_id))
@@ -2620,15 +2622,15 @@ feature {NONE} -- Built-in
 				if l_formals = Void or else l_formals.count /= 1 then
 						-- The signature should be 'eif_object_id (an_object: ANY): INTEGER'.
 					set_fatal_error (a_class)
-					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_type.type>>, universe.integer_type)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_class.type>>, universe.integer_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
 						-- The signature should be 'eif_object_id (an_object: ANY): INTEGER'.
 					set_fatal_error (a_class)
-					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_type.type>>, universe.integer_type)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_class.type>>, universe.integer_type)
 				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
 						-- The signature should be 'eif_object_id (an_object: ANY): INTEGER'.
 					set_fatal_error (a_class)
-					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_type.type>>, universe.integer_type)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_class.type>>, universe.integer_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.eif_object_id_free_feature_name) then
 					-- 'IDENTIFIED_ROUTINES.eif_object_id_free' should be a procedure.
@@ -2852,6 +2854,384 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs0a_error (a_class, a_feature, <<l_open_args.type>>, l_result_type)
 				end
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_tuple_function (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Set built-in code of `a_feature' from class TUPLE.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.boolean_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_boolean_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'boolean_item (i: INTEGER): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.boolean_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'boolean_item (i: INTEGER): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.boolean_class)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'boolean_item (i: INTEGER): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.boolean_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.character_8_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_character_8_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'character_8_item (i: INTEGER): CHARACTER_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.character_8_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'character_8_item (i: INTEGER): CHARACTER_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.character_8_class)
+				elseif not a_feature.type.same_syntactical_type (universe.character_8_class, a_class, a_class, universe) then
+						-- The signature should be 'character_8_item (i: INTEGER): CHARACTER_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.character_8_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.character_32_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_character_32_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'character_32_item (i: INTEGER): CHARACTER_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.character_32_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'character_32_item (i: INTEGER): CHARACTER_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.character_32_class)
+				elseif not a_feature.type.same_syntactical_type (universe.character_32_class, a_class, a_class, universe) then
+						-- The signature should be 'character_32_item (i: INTEGER): CHARACTER_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.character_32_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.count_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_count))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'count: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'count: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.integer_8_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_integer_8_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'integer_8_item (i: INTEGER): INTEGER_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_8_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'integer_8_item (i: INTEGER): INTEGER_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_8_class)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_8_class, a_class, a_class, universe) then
+						-- The signature should be 'integer_8_item (i: INTEGER): INTEGER_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_8_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.integer_16_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_integer_16_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'integer_16_item (i: INTEGER): INTEGER_16'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_16_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'integer_16_item (i: INTEGER): INTEGER_16'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_16_class)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_16_class, a_class, a_class, universe) then
+						-- The signature should be 'integer_16_item (i: INTEGER): INTEGER_16'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_16_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.integer_32_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_integer_32_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'integer_32_item (i: INTEGER): INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'integer_32_item (i: INTEGER): INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_type)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'integer_32_item (i: INTEGER): INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.integer_64_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_integer_64_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'integer_64_item (i: INTEGER): INTEGER_64'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_64_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'integer_64_item (i: INTEGER): INTEGER_64'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_64_class)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_64_class, a_class, a_class, universe) then
+						-- The signature should be 'integer_64_item (i: INTEGER): INTEGER_64'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_64_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.item_code_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_item_code))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'item_code (i: INTEGER): NATURAL_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_8_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'item_code (i: INTEGER): NATURAL_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_8_class)
+				elseif not a_feature.type.same_syntactical_type (universe.natural_8_class, a_class, a_class, universe) then
+						-- The signature should be 'item_code (i: INTEGER): NATURAL_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_8_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.natural_8_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_natural_8_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'natural_8_item (i: INTEGER): NATURAL_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_8_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'natural_8_item (i: INTEGER): NATURAL_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_8_class)
+				elseif not a_feature.type.same_syntactical_type (universe.natural_8_class, a_class, a_class, universe) then
+						-- The signature should be 'natural_8_item (i: INTEGER): NATURAL_8'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_8_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.natural_16_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_natural_16_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'natural_16_item (i: INTEGER): NATURAL_16'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_16_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'natural_16_item (i: INTEGER): NATURAL_16'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_16_class)
+				elseif not a_feature.type.same_syntactical_type (universe.natural_16_class, a_class, a_class, universe) then
+						-- The signature should be 'natural_16_item (i: INTEGER): NATURAL_16'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_16_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.natural_32_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_natural_32_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'natural_32_item (i: INTEGER): NATURAL_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_32_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'natural_32_item (i: INTEGER): NATURAL_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_32_class)
+				elseif not a_feature.type.same_syntactical_type (universe.natural_32_class, a_class, a_class, universe) then
+						-- The signature should be 'natural_32_item (i: INTEGER): NATURAL_32'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_32_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.natural_64_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_natural_64_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'natural_64_item (i: INTEGER): NATURAL_64'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_64_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'natural_64_item (i: INTEGER): NATURAL_64'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_64_class)
+				elseif not a_feature.type.same_syntactical_type (universe.natural_64_class, a_class, a_class, universe) then
+						-- The signature should be 'natural_64_item (i: INTEGER): NATURAL_64'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_64_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.object_comparison_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_object_comparison))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'object_comparison: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.boolean_class)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'object_comparison: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.boolean_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.pointer_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_pointer_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'pointer_item (i: INTEGER): POINTER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.pointer_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'pointer_item (i: INTEGER): POINTER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.pointer_class)
+				elseif not a_feature.type.same_syntactical_type (universe.pointer_class, a_class, a_class, universe) then
+						-- The signature should be 'pointer_item (i: INTEGER): POINTER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.pointer_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.real_32_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_real_32_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'real_32_item (i: INTEGER): REAL'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.real_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'real_32_item (i: INTEGER): REAL'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.real_type)
+				elseif not a_feature.type.same_syntactical_type (universe.real_class, a_class, a_class, universe) then
+						-- The signature should be 'real_32_item (i: INTEGER): REAL'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.real_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.real_64_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_real_64_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'real_64_item (i: INTEGER): DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.double_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'real_64_item (i: INTEGER): DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.double_type)
+				elseif not a_feature.type.same_syntactical_type (universe.double_class, a_class, a_class, universe) then
+						-- The signature should be 'real_64_item (i: INTEGER): DOUBLE'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.double_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.reference_item_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_reference_item))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'reference_item (i: INTEGER): ANY'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'reference_item (i: INTEGER): ANY'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_class)
+				elseif not a_feature.type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
+						-- The signature should be 'reference_item (i: INTEGER): ANY'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_boolean_feature_name) then
+					-- 'TUPLE.put_boolean' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_boolean))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.boolean_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_character_8_feature_name) then
+					-- 'TUPLE.put_character_8' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_character_8))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.character_8_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_character_32_feature_name) then
+					-- 'TUPLE.put_character_32' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_character_32))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.character_32_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_integer_8_feature_name) then
+					-- 'TUPLE.put_integer_8' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_integer_8))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_8_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_integer_16_feature_name) then
+					-- 'TUPLE.put_integer_16' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_integer_16))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_16_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_integer_32_feature_name) then
+					-- 'TUPLE.put_integer_32' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_integer_32))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_integer_64_feature_name) then
+					-- 'TUPLE.put_integer_64' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_integer_64))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_64_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_natural_8_feature_name) then
+					-- 'TUPLE.put_natural_8' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_natural_8))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_8_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_natural_16_feature_name) then
+					-- 'TUPLE.put_natural_16' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_natural_16))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_16_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_natural_32_feature_name) then
+					-- 'TUPLE.put_natural_32' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_natural_32))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_32_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_natural_64_feature_name) then
+					-- 'TUPLE.put_natural_64' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_natural_64))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_64_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_pointer_feature_name) then
+					-- 'TUPLE.put_pointer' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_pointer))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.pointer_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_real_32_feature_name) then
+					-- 'TUPLE.put_real_32' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_real_32))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.real_type.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_real_64_feature_name) then
+					-- 'TUPLE.put_real_64' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_real_64))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.double_type.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.put_reference_feature_name) then
+					-- 'TUPLE.put_reference' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_reference))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_class.type, universe.integer_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.set_object_comparison_feature_name) then
+					-- 'TUPLE.set_object_comparison' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_set_object_comparison))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.boolean_class.type>>, Void)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -3653,6 +4033,8 @@ feature {NONE} -- Built-in
 				set_builtin_procedure_procedure (a_feature)
 			elseif a_class = universe.function_class then
 				set_builtin_function_procedure (a_feature)
+			elseif a_class = universe.tuple_class then
+				set_builtin_tuple_procedure (a_feature)
 			elseif a_class = universe.integer_8_ref_class then
 				set_builtin_sized_integer_ref_procedure (a_feature, universe.integer_8_class, tokens.builtin_integer_8_class)
 			elseif a_class = universe.integer_8_class then
@@ -4188,12 +4570,12 @@ feature {NONE} -- Built-in
 					-- 'IDENTIFIED_ROUTINES.eif_id_object' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_identified_feature (tokens.builtin_identified_eif_id_object))
 				set_fatal_error (a_class)
-				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_type)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_class)
 			elseif a_feature.name.same_feature_name (tokens.eif_object_id_feature_name) then
 					-- 'IDENTIFIED_ROUTINES.eif_object_id' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_identified_feature (tokens.builtin_identified_eif_object_id))
 				set_fatal_error (a_class)
-				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_type.type>>, universe.integer_type)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_class.type>>, universe.integer_type)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -4329,6 +4711,366 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, <<l_open_args.type>>, l_result_type)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbu1a_error (a_class, a_feature)
+			end
+		end
+
+	set_builtin_tuple_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Set built-in code of `a_feature' from class TUPLE.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_feature.name.same_feature_name (tokens.put_boolean_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_boolean))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_boolean (v: BOOLEAN; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.boolean_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'put_boolean (v: BOOLEAN; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.boolean_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_boolean (v: BOOLEAN; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.boolean_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_character_8_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_character_8))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_character_8 (v: CHARACTER_8; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.character_8_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.character_8_class, a_class, a_class, universe) then
+						-- The signature should be 'put_character_8 (v: CHARACTER_8; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.character_8_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_character_8 (v: CHARACTER_8; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.character_8_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_character_32_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_character_32))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_character_32 (v: CHARACTER_32; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.character_32_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.character_32_class, a_class, a_class, universe) then
+						-- The signature should be 'put_character_32 (v: CHARACTER_32; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.character_32_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_character_32 (v: CHARACTER_32; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.character_32_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_integer_8_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_integer_8))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_integer_8 (v: INTEGER_8; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_8_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_8_class, a_class, a_class, universe) then
+						-- The signature should be 'put_integer_8 (v: INTEGER_8; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_8_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_integer_8 (v: INTEGER_8; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_8_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_integer_16_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_integer_16))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_integer_16 (v: INTEGER_16; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_16_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_16_class, a_class, a_class, universe) then
+						-- The signature should be 'put_integer_16 (v: INTEGER_16; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_16_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_integer_16 (v: INTEGER_16; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_16_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_integer_32_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_integer_32))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_integer_32 (v: INTEGER; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_integer_32 (v: INTEGER; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_integer_32 (v: INTEGER; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_integer_64_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_integer_64))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_integer_64 (v: INTEGER_64; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_64_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.integer_64_class, a_class, a_class, universe) then
+						-- The signature should be 'put_integer_64 (v: INTEGER_64; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_64_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_integer_64 (v: INTEGER_64; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_64_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_natural_8_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_natural_8))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_natural_8 (v: NATURAL_8; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_8_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.natural_8_class, a_class, a_class, universe) then
+						-- The signature should be 'put_natural_8 (v: NATURAL_8; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_8_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_natural_8 (v: NATURAL_8; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_8_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_natural_16_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_natural_16))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_natural_16 (v: NATURAL_16; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_16_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.natural_16_class, a_class, a_class, universe) then
+						-- The signature should be 'put_natural_16 (v: NATURAL_16; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_16_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_natural_16 (v: NATURAL_16; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_16_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_natural_32_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_natural_32))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_natural_32 (v: NATURAL_32; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_32_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.natural_32_class, a_class, a_class, universe) then
+						-- The signature should be 'put_natural_32 (v: NATURAL_32; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_32_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_natural_32 (v: NATURAL_32; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_32_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_natural_64_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_natural_64))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_natural_64 (v: NATURAL_64; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_64_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.natural_64_class, a_class, a_class, universe) then
+						-- The signature should be 'put_natural_64 (v: NATURAL_64; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_64_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_natural_64 (v: NATURAL_64; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.natural_64_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_pointer_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_pointer))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_pointer (v: POINTER; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.pointer_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.pointer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_pointer (v: POINTER; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.pointer_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_pointer (v: POINTER; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.pointer_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_real_32_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_real_32))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_real_32 (v: REAL; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.real_type.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.real_class, a_class, a_class, universe) then
+						-- The signature should be 'put_real_32 (v: REAL; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.real_type.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_real_32 (v: REAL; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.real_type.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_real_64_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_real_64))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_real_64 (v: DOUBLE; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.double_type.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.double_class, a_class, a_class, universe) then
+						-- The signature should be 'put_real_64 (v: DOUBLE; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.double_type.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_real_64 (v: DOUBLE; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.double_type.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.put_reference_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_put_reference))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'put_reference (v: ANY; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.any_class, a_class, a_class, universe) then
+						-- The signature should be 'put_reference (v: ANY; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_class.type, universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'put_reference (v: ANY; i: INTEGER)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.any_class.type, universe.integer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.set_object_comparison_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_set_object_comparison))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'set_object_comparison (b: BOOLEAN)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.boolean_class.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'set_object_comparison (b: BOOLEAN)'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.boolean_class.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.boolean_item_feature_name) then
+					-- 'TUPLE.boolean_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_boolean_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.boolean_class)
+			elseif a_feature.name.same_feature_name (tokens.character_8_item_feature_name) then
+					-- 'TUPLE.character_8_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_character_8_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.character_8_class)
+			elseif a_feature.name.same_feature_name (tokens.character_32_item_feature_name) then
+					-- 'TUPLE.character_32_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_character_32_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.character_32_class)
+			elseif a_feature.name.same_feature_name (tokens.count_feature_name) then
+					-- 'TUPLE.count' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_count))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+			elseif a_feature.name.same_feature_name (tokens.integer_8_item_feature_name) then
+					-- 'TUPLE.integer_8_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_integer_8_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_8_class)
+			elseif a_feature.name.same_feature_name (tokens.integer_16_item_feature_name) then
+					-- 'TUPLE.integer_16_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_integer_16_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_16_class)
+			elseif a_feature.name.same_feature_name (tokens.integer_32_item_feature_name) then
+					-- 'TUPLE.integer_32_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_integer_32_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_type)
+			elseif a_feature.name.same_feature_name (tokens.integer_64_item_feature_name) then
+					-- 'TUPLE.integer_64_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_integer_64_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.integer_64_class)
+			elseif a_feature.name.same_feature_name (tokens.item_code_feature_name) then
+					-- 'TUPLE.item_code' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_item_code))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_8_class)
+			elseif a_feature.name.same_feature_name (tokens.natural_8_item_feature_name) then
+					-- 'TUPLE.natural_8_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_natural_8_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_8_class)
+			elseif a_feature.name.same_feature_name (tokens.natural_16_item_feature_name) then
+					-- 'TUPLE.natural_16_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_natural_16_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_16_class)
+			elseif a_feature.name.same_feature_name (tokens.natural_32_item_feature_name) then
+					-- 'TUPLE.natural_32_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_natural_32_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_32_class)
+			elseif a_feature.name.same_feature_name (tokens.natural_64_item_feature_name) then
+					-- 'TUPLE.natural_64_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_natural_64_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.natural_64_class)
+			elseif a_feature.name.same_feature_name (tokens.object_comparison_feature_name) then
+					-- 'TUPLE.object_comparison' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_object_comparison))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.boolean_class)
+			elseif a_feature.name.same_feature_name (tokens.pointer_item_feature_name) then
+					-- 'TUPLE.pointer_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_pointer_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.pointer_class)
+			elseif a_feature.name.same_feature_name (tokens.real_32_item_feature_name) then
+					-- 'TUPLE.real_32_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_real_32_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.real_type)
+			elseif a_feature.name.same_feature_name (tokens.real_64_item_feature_name) then
+					-- 'TUPLE.real_64_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_real_64_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.double_type)
+			elseif a_feature.name.same_feature_name (tokens.reference_item_feature_name) then
+					-- 'TUPLE.reference_item' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_reference_item))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, universe.any_class)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

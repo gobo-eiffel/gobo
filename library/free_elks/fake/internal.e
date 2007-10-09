@@ -120,6 +120,11 @@ feature
 			print ("TODO: INTERNAL.generic_dynamic_type_of_type%N")
 		end
 
+	generic_dynamic_type (object: ANY; i: INTEGER): INTEGER is
+		do
+			print ("TODO: INTERNAL.generic_dynamic_type%N")
+		end
+
 	none_type: INTEGER is -2
 			-- Type ID representation for NONE.
 

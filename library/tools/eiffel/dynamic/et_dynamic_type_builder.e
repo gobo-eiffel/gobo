@@ -735,6 +735,8 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 				check_external_builtin_sized_real_function_validity (a_feature, current_system.real_64_type)
 			when builtin_special_class then
 				check_external_builtin_special_function_validity (a_feature)
+			when builtin_tuple_class then
+				check_external_builtin_tuple_function_validity (a_feature)
 			when builtin_type_class then
 				check_external_builtin_type_function_validity (a_feature)
 			else
@@ -1163,6 +1165,60 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 			end
 		end
 
+	check_external_builtin_tuple_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Check validity of `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "TUPLE".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_tuple: (a_feature.builtin_code // builtin_capacity) = builtin_tuple_class
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_tuple_boolean_item then
+				report_builtin_tuple_boolean_item (a_feature)
+			when builtin_tuple_character_8_item then
+				report_builtin_tuple_character_8_item (a_feature)
+			when builtin_tuple_character_32_item then
+				report_builtin_tuple_character_32_item (a_feature)
+			when builtin_tuple_count then
+				report_builtin_tuple_count (a_feature)
+			when builtin_tuple_integer_8_item then
+				report_builtin_tuple_integer_8_item (a_feature)
+			when builtin_tuple_integer_16_item then
+				report_builtin_tuple_integer_16_item (a_feature)
+			when builtin_tuple_integer_32_item then
+				report_builtin_tuple_integer_32_item (a_feature)
+			when builtin_tuple_integer_64_item then
+				report_builtin_tuple_integer_64_item (a_feature)
+			when builtin_tuple_item_code then
+				report_builtin_tuple_item_code (a_feature)
+			when builtin_tuple_natural_8_item then
+				report_builtin_tuple_natural_8_item (a_feature)
+			when builtin_tuple_natural_16_item then
+				report_builtin_tuple_natural_16_item (a_feature)
+			when builtin_tuple_natural_32_item then
+				report_builtin_tuple_natural_32_item (a_feature)
+			when builtin_tuple_natural_64_item then
+				report_builtin_tuple_natural_64_item (a_feature)
+			when builtin_tuple_object_comparison then
+				report_builtin_tuple_object_comparison (a_feature)
+			when builtin_tuple_pointer_item then
+				report_builtin_tuple_pointer_item (a_feature)
+			when builtin_tuple_real_32_item then
+				report_builtin_tuple_real_32_item (a_feature)
+			when builtin_tuple_real_64_item then
+				report_builtin_tuple_real_64_item (a_feature)
+			when builtin_tuple_reference_item then
+				report_builtin_tuple_reference_item (a_feature)
+			else
+					-- Internal error: invalid built-in feature.
+					-- Error already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
 	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1223,6 +1279,8 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 				check_external_builtin_sized_real_procedure_validity (a_feature, current_system.real_64_type)
 			when builtin_special_class then
 				check_external_builtin_special_procedure_validity (a_feature)
+			when builtin_tuple_class then
+				check_external_builtin_tuple_procedure_validity (a_feature)
 			else
 					-- Internal error: invalid built-in feature.
 					-- Error already reported during parsing.
@@ -1407,6 +1465,56 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 				report_builtin_special_make (a_feature)
 			when builtin_special_put then
 				report_builtin_special_put (a_feature)
+			else
+					-- Internal error: invalid built-in feature.
+					-- Error already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	check_external_builtin_tuple_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Check validity of `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "TUPLE".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_tuple: (a_feature.builtin_code // builtin_capacity) = builtin_tuple_class
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_tuple_put_boolean then
+				report_builtin_tuple_put_boolean (a_feature)
+			when builtin_tuple_put_character_8 then
+				report_builtin_tuple_put_character_8 (a_feature)
+			when builtin_tuple_put_character_32 then
+				report_builtin_tuple_put_character_32 (a_feature)
+			when builtin_tuple_put_integer_8 then
+				report_builtin_tuple_put_integer_8 (a_feature)
+			when builtin_tuple_put_integer_16 then
+				report_builtin_tuple_put_integer_16 (a_feature)
+			when builtin_tuple_put_integer_32 then
+				report_builtin_tuple_put_integer_32 (a_feature)
+			when builtin_tuple_put_integer_64 then
+				report_builtin_tuple_put_integer_64 (a_feature)
+			when builtin_tuple_put_natural_8 then
+				report_builtin_tuple_put_natural_8 (a_feature)
+			when builtin_tuple_put_natural_16 then
+				report_builtin_tuple_put_natural_16 (a_feature)
+			when builtin_tuple_put_natural_32 then
+				report_builtin_tuple_put_natural_32 (a_feature)
+			when builtin_tuple_put_natural_64 then
+				report_builtin_tuple_put_natural_64 (a_feature)
+			when builtin_tuple_put_pointer then
+				report_builtin_tuple_put_pointer (a_feature)
+			when builtin_tuple_put_real_32 then
+				report_builtin_tuple_put_real_32 (a_feature)
+			when builtin_tuple_put_real_64 then
+				report_builtin_tuple_put_real_64 (a_feature)
+			when builtin_tuple_put_reference then
+				report_builtin_tuple_put_reference (a_feature)
+			when builtin_tuple_set_object_comparison then
+				report_builtin_tuple_set_object_comparison (a_feature)
 			else
 					-- Internal error: invalid built-in feature.
 					-- Error already reported during parsing.
@@ -3483,7 +3591,7 @@ feature {NONE} -- Built-in features
 					error_handler.report_giaaa_error
 				else
 					l_copy_feature.set_regular (True)
-					propagate_builtin_argument_dynamic_types (current_dynamic_type, 1, l_copy_feature)
+					propagate_builtin_actual_argument_dynamic_types (current_dynamic_type, 1, l_copy_feature)
 				end
 			end
 		end
@@ -4840,6 +4948,454 @@ feature {NONE} -- Built-in features
 			-- Do nothing.
 		end
 
+	report_builtin_tuple_boolean_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.boolean_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_character_8_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.character_8_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.character_8_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_character_32_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.character_32_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.character_32_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_count (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.count' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_integer_8_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.integer_8_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.integer_8_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_integer_16_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.integer_16_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.integer_16_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_integer_32_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.integer_32_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_integer_64_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.integer_64_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.integer_64_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_item_code (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.item_code' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.natural_8_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_natural_8_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.natural_8_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.natural_8_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_natural_16_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.natural_16_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.natural_16_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_natural_32_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.natural_32_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.natural_32_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_natural_64_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.natural_64_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.natural_64_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_object_comparison (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.object_comparison' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.boolean_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_pointer_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.pointer_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.pointer_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_put_boolean (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_boolean' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_character_8 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_character_8' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_character_32 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_character_32' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_integer_8 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_integer_8' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_integer_16 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_integer_16' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_integer_32 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_integer_32' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_integer_64 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_integer_64' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_natural_8 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_natural_8' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_natural_16 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_natural_16' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_natural_32 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_natural_32' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_natural_64 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_natural_64' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_pointer (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_pointer' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_real_32 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_real_32' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_real_64 (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_real_64' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_tuple_put_reference (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.put_reference' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			i, nb: INTEGER
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_tuple_type ?= current_dynamic_type
+				if l_tuple_type = Void then
+						-- Internal error: this was already reported during parsing.
+						-- This built-in feature can only be in class TUPLE (and
+						-- its descendants).
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_item_type_sets := l_tuple_type.item_type_sets
+					nb := l_item_type_sets.count
+					from i := 1 until i > nb loop
+						propagate_builtin_formal_argument_dynamic_types (1, l_item_type_sets.item (i))
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	report_builtin_tuple_real_32_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.real_32_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.real_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_real_64_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.real_64_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.double_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_tuple_reference_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TUPLE.reference_item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			i, nb: INTEGER
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_tuple_type ?= current_dynamic_type
+				if l_tuple_type = Void then
+						-- Internal error: this was already reported during parsing.
+						-- This built-in feature can only be in class TUPLE (and
+						-- its descendants).
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_item_type_sets := l_tuple_type.item_type_sets
+					nb := l_item_type_sets.count
+					from i := 1 until i > nb loop
+						propagate_builtin_result_dynamic_types (l_item_type_sets.item (i), current_dynamic_feature)
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	report_builtin_tuple_set_object_comparison (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TUPLE.set_object_comparison' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
 	report_builtin_type_generating_type (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'TYPE.generating_type' is being analyzed.
 		require
@@ -4998,13 +5554,23 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_builtin_argument_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE) is
+	propagate_builtin_actual_argument_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE) is
 			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
 			-- of the formal argument at index `a_formal' in `a_callee' when involved
 			-- in built-in feature `current_dynamic_feature'.
 		require
 			a_source_type_set_not_void: a_source_type_set /= Void
 			a_callee_not_void: a_callee /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_builtin_formal_argument_dynamic_types (a_formal: INTEGER; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Propagate dynamic types of the dynamic type set of the formal argument
+			-- at index `a_formal' in built-in feature `current_dynamic_feature'
+			-- to `a_target_type_set'.
+		require
+			a_target_type_set_not_void: a_target_type_set /= Void
 		do
 			-- Do nothing.
 		end

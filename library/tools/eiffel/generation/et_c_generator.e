@@ -1403,6 +1403,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_sized_real_function_body (a_feature, current_system.real_64_type)
 			when builtin_special_class then
 				print_external_builtin_special_function_body (a_feature)
+			when builtin_tuple_class then
+				print_external_builtin_tuple_function_body (a_feature)
 			when builtin_type_class then
 				print_external_builtin_type_function_body (a_feature)
 			else
@@ -2152,6 +2154,69 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
+	print_external_builtin_tuple_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "TUPLE".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_tuple: (a_feature.builtin_code // builtin_capacity) = builtin_tuple_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_tuple_boolean_item then
+				print_builtin_tuple_boolean_item_body (a_feature)
+			when builtin_tuple_character_8_item then
+				print_builtin_tuple_character_8_item_body (a_feature)
+			when builtin_tuple_character_32_item then
+				print_builtin_tuple_character_32_item_body (a_feature)
+			when builtin_tuple_count then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_tuple_count_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_tuple_integer_8_item then
+				print_builtin_tuple_integer_8_item_body (a_feature)
+			when builtin_tuple_integer_16_item then
+				print_builtin_tuple_integer_16_item_body (a_feature)
+			when builtin_tuple_integer_32_item then
+				print_builtin_tuple_integer_32_item_body (a_feature)
+			when builtin_tuple_integer_64_item then
+				print_builtin_tuple_integer_64_item_body (a_feature)
+			when builtin_tuple_item_code then
+				print_builtin_tuple_item_code_body (a_feature)
+			when builtin_tuple_natural_8_item then
+				print_builtin_tuple_natural_8_item_body (a_feature)
+			when builtin_tuple_natural_16_item then
+				print_builtin_tuple_natural_16_item_body (a_feature)
+			when builtin_tuple_natural_32_item then
+				print_builtin_tuple_natural_32_item_body (a_feature)
+			when builtin_tuple_natural_64_item then
+				print_builtin_tuple_natural_64_item_body (a_feature)
+			when builtin_tuple_object_comparison then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_tuple_object_comparison_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_tuple_pointer_item then
+				print_builtin_tuple_pointer_item_body (a_feature)
+			when builtin_tuple_real_32_item then
+				print_builtin_tuple_real_32_item_body (a_feature)
+			when builtin_tuple_real_64_item then
+				print_builtin_tuple_real_64_item_body (a_feature)
+			when builtin_tuple_reference_item then
+				print_builtin_tuple_reference_item_body (a_feature)
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
 	print_external_builtin_type_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "TYPE".
@@ -2234,6 +2299,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_sized_real_procedure_body (a_feature, current_system.real_64_type)
 			when builtin_special_class then
 				print_external_builtin_special_procedure_body (a_feature)
+			when builtin_tuple_class then
+				print_external_builtin_tuple_procedure_body (a_feature)
 			else
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported during parsing.
@@ -2456,6 +2523,59 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			when builtin_special_put then
 				fill_call_formal_arguments (a_feature)
 				print_builtin_special_put_call (current_type, False)
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_tuple_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "TUPLE".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_tuple: (a_feature.builtin_code // builtin_capacity) = builtin_tuple_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_tuple_put_boolean then
+				print_builtin_tuple_put_boolean_body (a_feature)
+			when builtin_tuple_put_character_8 then
+				print_builtin_tuple_put_character_8_body (a_feature)
+			when builtin_tuple_put_character_32 then
+				print_builtin_tuple_put_character_32_body (a_feature)
+			when builtin_tuple_put_integer_8 then
+				print_builtin_tuple_put_integer_8_body (a_feature)
+			when builtin_tuple_put_integer_16 then
+				print_builtin_tuple_put_integer_16_body (a_feature)
+			when builtin_tuple_put_integer_32 then
+				print_builtin_tuple_put_integer_32_body (a_feature)
+			when builtin_tuple_put_integer_64 then
+				print_builtin_tuple_put_integer_64_body (a_feature)
+			when builtin_tuple_put_natural_8 then
+				print_builtin_tuple_put_natural_8_body (a_feature)
+			when builtin_tuple_put_natural_16 then
+				print_builtin_tuple_put_natural_16_body (a_feature)
+			when builtin_tuple_put_natural_32 then
+				print_builtin_tuple_put_natural_32_body (a_feature)
+			when builtin_tuple_put_natural_64 then
+				print_builtin_tuple_put_natural_64_body (a_feature)
+			when builtin_tuple_put_pointer then
+				print_builtin_tuple_put_pointer_body (a_feature)
+			when builtin_tuple_put_real_32 then
+				print_builtin_tuple_put_real_32_body (a_feature)
+			when builtin_tuple_put_real_64 then
+				print_builtin_tuple_put_real_64_body (a_feature)
+			when builtin_tuple_put_reference then
+				print_builtin_tuple_put_reference_body (a_feature)
+			when builtin_tuple_set_object_comparison then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_tuple_set_object_comparison_call (current_type, False)
 				call_operands.wipe_out
 			else
 					-- Internal error: unknown built-in feature.
@@ -5550,6 +5670,8 @@ feature {NONE} -- Procedure call generation
 				print_builtin_sized_real_procedure_call (a_feature, a_target_type, a_check_void_target, current_system.real_64_type)
 			when builtin_special_class then
 				print_builtin_special_procedure_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_tuple_class then
+				print_builtin_tuple_procedure_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -5751,6 +5873,27 @@ feature {NONE} -- Procedure call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_special_put then
 				print_builtin_special_put_call (a_target_type, a_check_void_target)
+			else
+				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_tuple_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call to procedure `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "TUPLE".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_tuple: (a_feature.builtin_code // builtin_capacity) = builtin_tuple_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_tuple_set_object_comparison then
+				print_builtin_tuple_set_object_comparison_call (a_target_type, a_check_void_target)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -9436,6 +9579,8 @@ feature {NONE} -- Query call generation
 				print_builtin_sized_real_query_call (a_feature, a_target_type, a_check_void_target, current_system.real_64_type)
 			when builtin_special_class then
 				print_builtin_special_query_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_tuple_class then
+				print_builtin_tuple_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_class then
 				print_builtin_type_query_call (a_feature, a_target_type, a_check_void_target)
 			else
@@ -9872,6 +10017,33 @@ feature {NONE} -- Query call generation
 			end
 		end
 
+	print_builtin_tuple_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call to query `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "TUPLE".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+			-- Note that the result of the query is not adapted to match the kind
+			-- of result type expected by the caller. It is recommended to use
+			-- `print_adapted_query_call' whenever possible.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.result_type_set /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_tuple: (a_feature.builtin_code // builtin_capacity) = builtin_tuple_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_tuple_count then
+				print_builtin_tuple_count_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_tuple_object_comparison then
+				print_builtin_tuple_object_comparison_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
 	print_builtin_type_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "TYPE".
@@ -9905,7 +10077,7 @@ feature {NONE} -- Query call generation
 			-- by the caller is `a_target_type'. This is useful for example when the
 			-- expression is a call to a query and this call is one of the alternatives
 			-- of a polymorphic call whose static type expected by the caller is
-			-- `an_expected_type'. In that case the result of the query needs to be
+			-- `a_target_type'. In that case the result of the query needs to be
 			-- adapted to match the kind of result type expected by the caller.
 			-- For example, if we have:
 			--
@@ -13684,7 +13856,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 		do
 			l_arguments := a_feature.arguments
 			if l_arguments = Void or else l_arguments.count /= 1 then
-					-- Internal error: this error should have been reported by the parse.
+					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
@@ -18389,6 +18561,790 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
+			end
+		end
+
+	print_builtin_tuple_boolean_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.boolean_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.boolean_type)
+		end
+
+	print_builtin_tuple_character_8_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.character_8_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.character_8_type)
+		end
+
+	print_builtin_tuple_character_32_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.character_32_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.character_32_type)
+		end
+
+	print_builtin_tuple_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to built-in
+			-- feature `a_feature' corresponding to 'TUPLE.count'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+		do
+			l_tuple_type ?= a_target_type
+			if l_tuple_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in feature can only be in class TUPLE (and
+					-- its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_type_cast (current_system.integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_integer (l_tuple_type.item_type_sets.count)
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_tuple_integer_8_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.integer_8_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.integer_8_type)
+		end
+
+	print_builtin_tuple_integer_16_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.integer_16_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.integer_16_type)
+		end
+
+	print_builtin_tuple_integer_32_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.integer_32_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.integer_type)
+		end
+
+	print_builtin_tuple_integer_64_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.integer_64_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.integer_64_type)
+		end
+
+	print_builtin_tuple_item_code_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.item_code' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type: ET_DYNAMIC_TYPE
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+		do
+			l_arguments := a_feature.arguments
+			l_tuple_type ?= current_type
+			if l_tuple_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in feature can only be in class TUPLE (and
+					-- its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				current_file.put_string (c_switch)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				l_item_type_sets := l_tuple_type.item_type_sets
+				nb := l_item_type_sets.count
+				from i := 1 until i > nb loop
+					print_indentation
+					current_file.put_string (c_case)
+					current_file.put_character (' ')
+					current_file.put_integer (i)
+					current_file.put_character (':')
+					current_file.put_new_line
+					indent
+					print_indentation
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_type_cast (current_system.natural_8_type, current_file)
+					l_item_type := l_item_type_sets.item (i).static_type
+					if l_item_type = current_system.boolean_type then
+						current_file.put_integer (0x01)
+					elseif l_item_type = current_system.character_8_type then
+						current_file.put_integer (0x02)
+					elseif l_item_type = current_system.character_32_type then
+						current_file.put_integer (0x0E)
+					elseif l_item_type = current_system.integer_8_type then
+						current_file.put_integer (0x06)
+					elseif l_item_type = current_system.integer_16_type then
+						current_file.put_integer (0x07)
+					elseif l_item_type = current_system.integer_32_type then
+						current_file.put_integer (0x08)
+					elseif l_item_type = current_system.integer_64_type then
+						current_file.put_integer (0x09)
+					elseif l_item_type = current_system.natural_8_type then
+						current_file.put_integer (0x0A)
+					elseif l_item_type = current_system.natural_16_type then
+						current_file.put_integer (0x0B)
+					elseif l_item_type = current_system.natural_32_type then
+						current_file.put_integer (0x0C)
+					elseif l_item_type = current_system.natural_64_type then
+						current_file.put_integer (0x0D)
+					elseif l_item_type = current_system.pointer_type then
+						current_file.put_integer (0x05)
+					elseif l_item_type = current_system.real_32_type then
+						current_file.put_integer (0x04)
+					elseif l_item_type = current_system.real_64_type then
+						current_file.put_integer (0x03)
+					else
+						current_file.put_integer (0x00)
+					end
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_string (c_break)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					i := i + 1
+				end
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_tuple_natural_8_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.natural_8_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.natural_8_type)
+		end
+
+	print_builtin_tuple_natural_16_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.natural_16_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.natural_16_type)
+		end
+
+	print_builtin_tuple_natural_32_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.natural_32_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.natural_32_type)
+		end
+
+	print_builtin_tuple_natural_64_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.natural_64_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.natural_64_type)
+		end
+
+	print_builtin_tuple_object_comparison_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to built-in
+			-- feature `a_feature' corresponding to 'TUPLE.object_comparison'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+				-- Internal attribute.
+			print_attribute_access (a_feature, call_operands.first, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_tuple_pointer_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.pointer_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.pointer_type)
+		end
+
+	print_builtin_tuple_put_boolean_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_boolean' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.boolean_type)
+		end
+
+	print_builtin_tuple_put_character_8_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_character_8' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.character_8_type)
+		end
+
+	print_builtin_tuple_put_character_32_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_character_32' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.character_32_type)
+		end
+
+	print_builtin_tuple_put_integer_8_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_integer_8' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.integer_8_type)
+		end
+
+	print_builtin_tuple_put_integer_16_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_integer_16' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.integer_16_type)
+		end
+
+	print_builtin_tuple_put_integer_32_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_integer_32' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.integer_type)
+		end
+
+	print_builtin_tuple_put_integer_64_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_integer_64' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.integer_64_type)
+		end
+
+	print_builtin_tuple_put_natural_8_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_natural_8' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.natural_8_type)
+		end
+
+	print_builtin_tuple_put_natural_16_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_natural_16' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.natural_16_type)
+		end
+
+	print_builtin_tuple_put_natural_32_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_natural_32' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.natural_32_type)
+		end
+
+	print_builtin_tuple_put_natural_64_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_natural_64' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.natural_64_type)
+		end
+
+	print_builtin_tuple_put_pointer_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_pointer' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.pointer_type)
+		end
+
+	print_builtin_tuple_put_real_32_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_real_32' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.real_type)
+		end
+
+	print_builtin_tuple_put_real_64_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_real_64' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_put_typed_item_body (a_feature, current_system.double_type)
+		end
+
+	print_builtin_tuple_put_reference_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.put_reference' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type: ET_DYNAMIC_TYPE
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_argument: ET_IDENTIFIER
+			i, nb: INTEGER
+		do
+			l_arguments := a_feature.arguments
+			l_tuple_type ?= current_type
+			if l_tuple_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in feature can only be in class TUPLE (and
+					-- its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 2 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_argument := l_arguments.formal_argument (1).name
+				l_argument_type_set := current_feature.dynamic_type_set (l_argument)
+				if l_argument_type_set = Void then
+						-- Internal error: the dynamic type set of the formal
+						-- argument should be know at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					print_indentation
+					current_file.put_string (c_switch)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_argument_name (l_arguments.formal_argument (2).name, current_file)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					l_item_type_sets := l_tuple_type.item_type_sets
+					nb := l_item_type_sets.count
+					from i := 1 until i > nb loop
+						l_item_type := l_item_type_sets.item (i).static_type
+						if
+							not l_item_type.is_expanded or else
+							(l_item_type /= current_system.boolean_type and
+							l_item_type /= current_system.character_8_type and
+							l_item_type /= current_system.character_32_type and
+							l_item_type /= current_system.integer_8_type and
+							l_item_type /= current_system.integer_16_type and
+							l_item_type /= current_system.integer_type and
+							l_item_type /= current_system.integer_32_type and
+							l_item_type /= current_system.natural_8_type and
+							l_item_type /= current_system.natural_16_type and
+							l_item_type /= current_system.natural_32_type and
+							l_item_type /= current_system.natural_64_type and
+							l_item_type /= current_system.pointer_type and
+							l_item_type /= current_system.real_type and
+							l_item_type /= current_system.double_type)
+						then
+							print_indentation
+							current_file.put_string (c_case)
+							current_file.put_character (' ')
+							current_file.put_integer (i)
+							current_file.put_character (':')
+							current_file.put_new_line
+							indent
+							print_indentation
+							print_attribute_tuple_item_access (i, tokens.current_keyword, l_tuple_type, False)
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+-- TODO: Using `print_attachment_expression' may trigger a call to 'copy'. We should avoid that.
+-- Use `print_attachment_expression' anyway here so that there is no object of the wrong type
+-- assigned to the Tuple item (this is forbidden by the preconditions, but we should not let them
+-- go through when preconditions are turn off for example).
+							print_attachment_expression (l_argument, l_argument_type_set, l_item_type)
+							current_file.put_character (';')
+							current_file.put_new_line
+							print_indentation
+							current_file.put_string (c_break)
+							current_file.put_character (';')
+							current_file.put_new_line
+							dedent
+						end
+						i := i + 1
+					end
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
+			end
+		end
+
+	print_builtin_tuple_put_typed_item_body (a_feature: ET_EXTERNAL_ROUTINE; an_item_type: ET_DYNAMIC_TYPE) is
+			-- Print to `current_file' then body of a built-in feature of "TUPLE"
+			-- that sets the items of type `an_item_type'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+			an_item_type_not_void: an_item_type /= Void
+		local
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+		do
+			l_arguments := a_feature.arguments
+			l_tuple_type ?= current_type
+			if l_tuple_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in feature can only be in class TUPLE (and
+					-- its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 2 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				current_file.put_string (c_switch)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_argument_name (l_arguments.formal_argument (2).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				l_item_type_sets := l_tuple_type.item_type_sets
+				nb := l_item_type_sets.count
+				from i := 1 until i > nb loop
+					if l_item_type_sets.item (i).static_type = an_item_type then
+						print_indentation
+						current_file.put_string (c_case)
+						current_file.put_character (' ')
+						current_file.put_integer (i)
+						current_file.put_character (':')
+						current_file.put_new_line
+						indent
+						print_indentation
+						print_attribute_tuple_item_access (i, tokens.current_keyword, l_tuple_type, False)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						print_argument_name (l_arguments.formal_argument (1).name, current_file)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						current_file.put_string (c_break)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+					end
+					i := i + 1
+				end
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_tuple_real_32_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.real_32_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.real_type)
+		end
+
+	print_builtin_tuple_real_64_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.real_64_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_builtin_tuple_typed_item_body (a_feature, current_system.double_type)
+		end
+
+	print_builtin_tuple_reference_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print body of built-in feature 'TUPLE.reference_item' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_type: ET_DYNAMIC_TYPE
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+		do
+			l_arguments := a_feature.arguments
+			l_tuple_type ?= current_type
+			if l_tuple_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in feature can only be in class TUPLE (and
+					-- its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				current_file.put_string (c_switch)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				l_item_type_sets := l_tuple_type.item_type_sets
+				nb := l_item_type_sets.count
+				from i := 1 until i > nb loop
+					l_item_type_set := l_item_type_sets.item (i)
+					l_item_type := l_item_type_set.static_type
+					if
+						not l_item_type.is_expanded or else
+						(l_item_type /= current_system.boolean_type and
+						l_item_type /= current_system.character_8_type and
+						l_item_type /= current_system.character_32_type and
+						l_item_type /= current_system.integer_8_type and
+						l_item_type /= current_system.integer_16_type and
+						l_item_type /= current_system.integer_type and
+						l_item_type /= current_system.integer_32_type and
+						l_item_type /= current_system.natural_8_type and
+						l_item_type /= current_system.natural_16_type and
+						l_item_type /= current_system.natural_32_type and
+						l_item_type /= current_system.natural_64_type and
+						l_item_type /= current_system.pointer_type and
+						l_item_type /= current_system.real_type and
+						l_item_type /= current_system.double_type)
+					then
+						print_indentation
+						current_file.put_string (c_case)
+						current_file.put_character (' ')
+						current_file.put_integer (i)
+						current_file.put_character (':')
+						current_file.put_new_line
+						indent
+						print_indentation
+						print_result_name (current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						print_adapted_expression (agent print_attribute_tuple_item_access (i, tokens.current_keyword, l_tuple_type, False), l_item_type_set, current_system.any_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						current_file.put_string (c_break)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+					end
+					i := i + 1
+				end
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_tuple_set_object_comparison_call (a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print call to built-in feature 'TUPLE.set_object_comparison' (static binding) to `current_file'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_argument: ET_EXPRESSION
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			l_object_comparison_attribute: ET_DYNAMIC_FEATURE
+			i, nb: INTEGER
+			l_builtin_object_comparison_code: INTEGER
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target := call_operands.first
+				l_argument := call_operands.item (2)
+				l_target_type_set := dynamic_type_set (l_target)
+				l_argument_type_set := dynamic_type_set (l_argument)
+				if l_target_type_set = Void then
+						-- Internal error: the dynamic type set of the target
+						-- of the call should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif l_argument_type_set = Void then
+						-- Internal error: the dynamic type set of the argument
+						-- of the call should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_builtin_object_comparison_code := builtin_tuple_feature (builtin_tuple_object_comparison)
+					l_queries := a_target_type.queries
+					nb := a_target_type.attribute_count
+					from i := 1 until i > nb loop
+						l_query := l_queries.item (i)
+						if l_query.builtin_code = l_builtin_object_comparison_code then
+							l_object_comparison_attribute := l_query
+							i := nb + 1
+						else
+							i := i + 1
+						end
+					end
+					if l_object_comparison_attribute /= Void then
+							-- Set the built-in attribute 'object_comparison'.
+						print_indentation
+						print_attribute_access (l_object_comparison_attribute, l_target, a_target_type, a_check_void_target)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_attachment_expression (l_argument, l_argument_type_set, current_system.boolean_type)
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					else
+						-- If `l_object_comparison_attribute' is Void, it means that it is never used,
+						-- therefore there is no need to set it.
+					end
+				end
+			end
+		end
+
+	print_builtin_tuple_typed_item_body (a_feature: ET_EXTERNAL_ROUTINE; an_item_type: ET_DYNAMIC_TYPE) is
+			-- Print to `current_file' then body of a built-in feature of "TUPLE"
+			-- that returns the items of type `an_item_type'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+			an_item_type_not_void: an_item_type /= Void
+		local
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+		do
+			l_arguments := a_feature.arguments
+			l_tuple_type ?= current_type
+			if l_tuple_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in feature can only be in class TUPLE (and
+					-- its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				current_file.put_string (c_switch)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				l_item_type_sets := l_tuple_type.item_type_sets
+				nb := l_item_type_sets.count
+				from i := 1 until i > nb loop
+					if l_item_type_sets.item (i).static_type = an_item_type then
+						print_indentation
+						current_file.put_string (c_case)
+						current_file.put_character (' ')
+						current_file.put_integer (i)
+						current_file.put_character (':')
+						current_file.put_new_line
+						indent
+						print_indentation
+						print_result_name (current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						print_attribute_tuple_item_access (i, tokens.current_keyword, l_tuple_type, False)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						current_file.put_string (c_break)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+					end
+					i := i + 1
+				end
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
 			end
 		end
 
