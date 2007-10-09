@@ -59,7 +59,7 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
@@ -88,7 +88,7 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
@@ -118,7 +118,7 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
@@ -148,7 +148,7 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
@@ -165,8 +165,6 @@ feature -- Test
 			l_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
-			l_test_file: KL_TEXT_INPUT_FILE
-			l_test_string: STRING
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -180,7 +178,7 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
@@ -213,7 +211,7 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
@@ -275,7 +273,7 @@ feature {NONE} -- Implementation
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
+
 	character_map_xsl_uri: UT_URI is
 			-- URI of file 'character_map.xsl'
 		local
@@ -286,7 +284,7 @@ feature {NONE} -- Implementation
 		ensure
 			character_map_uri_not_void: Result /= Void
 		end
-		
+
 	character_map2_xsl_uri: UT_URI is
 			-- URI of file 'character_map2.xsl'
 		local
@@ -297,7 +295,7 @@ feature {NONE} -- Implementation
 		ensure
 			character_map2_uri_not_void: Result /= Void
 		end
-		
+
 	character_map4_xsl_uri: UT_URI is
 			-- URI of file 'character_map4.xsl'
 		local
@@ -308,7 +306,7 @@ feature {NONE} -- Implementation
 		ensure
 			character_map4_uri_not_void: Result /= Void
 		end
-		
+
 	character_map5_xsl_uri: UT_URI is
 			-- URI of file 'character_map5.xsl'
 		local
@@ -319,7 +317,7 @@ feature {NONE} -- Implementation
 		ensure
 			character_map5_uri_not_void: Result /= Void
 		end
-		
+
 	character_map6_xsl_uri: UT_URI is
 			-- URI of file 'character_map6.xsl'
 		local
@@ -330,7 +328,7 @@ feature {NONE} -- Implementation
 		ensure
 			character_map6_uri_not_void: Result /= Void
 		end
-		
+
 	qname_output_xsl_uri: UT_URI is
 			-- URI of file 'qname_output.xsl'
 		local

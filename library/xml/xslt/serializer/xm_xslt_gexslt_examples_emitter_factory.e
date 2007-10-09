@@ -47,7 +47,7 @@ feature -- Access
 			-- New receiver chain including an emitter
 		local
 			l_receiver: XM_XPATH_RECEIVER
-			l_xml_emitter: XM_XSLT_XML_EMITTER			a_cdata_filter: XM_XSLT_CDATA_FILTER
+			l_xml_emitter: XM_XSLT_XML_EMITTER
 		do
 			if STRING_.same_string (a_method_local_name, "xml") then
 				create l_xml_emitter.make (a_serializer, a_result_stream, a_properties)
@@ -101,4 +101,4 @@ invariant
 	correct_namespace: STRING_.same_string (namespace_uri, Gexslt_examples_uri)
 
 end
-	
+
