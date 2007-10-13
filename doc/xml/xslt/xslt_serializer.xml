@@ -85,6 +85,7 @@
    
    <para>
     I suggest you point your web browser at <ulink url="http://www.w3.org/TR/xslt20/#element-output">Serialization</ulink> whilst reading this section.
+    You might also look in <filename>${GOBO}/example/xml/xslt/serializer</filename>.
    </para>
 
    <para>
@@ -141,6 +142,12 @@
 	
      <listitem>
       <para>
+       Calling <featurename>set_byte_order_mark_required</featurename> is equivalent to <xsl>xsl:output byte-order-mark="?"</xsl>.
+      </para>
+     </listitem>
+	
+     <listitem>
+      <para>
        Calling <featurename>set_omit_xml_declaration</featurename> is equivalent to <xsl>xsl:output omit-xml-declaration="?"</xsl>.
       </para>
      </listitem>
@@ -157,6 +164,91 @@
       </para>
      </listitem>
 
+    </itemizedlist>
+
+   </section>
+
+   <section>
+    <title>Generating the Document Type Declaration</title>
+
+    <itemizedlist>
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_doctype_public</featurename> is equivalent to <xsl>xsl:output doctype-public="?"</xsl>.
+      </para>
+     </listitem>
+		
+     <listitem>
+      <para>
+       Calling <featurename>set_doctype_system</featurename> is equivalent to <xsl>xsl:output doctype-system="?"</xsl>.
+      </para>
+     </listitem>
+	
+    </itemizedlist>
+
+   </section>
+
+   <section>
+    <title>Generating (X)HTML meta tags</title>
+
+    <itemizedlist>
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_include_content_type</featurename> is equivalent to <xsl>xsl:output include-content-type="?"</xsl>.
+      </para>
+     </listitem>
+		
+     <listitem>
+      <para>
+       Calling <featurename>set_media_type</featurename> is equivalent to <xsl>xsl:output media-type="?"</xsl>.
+      </para>
+     </listitem>
+	
+    </itemizedlist>
+
+   </section>
+
+   <section>
+    <title>Miscellaneous</title>
+
+    <itemizedlist>
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_normalization_form</featurename> is equivalent to <xsl>xsl:output normalization-form="?"</xsl>.
+      </para>
+     </listitem>
+	
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_undeclare_prefixes</featurename> is equivalent to <xsl>xsl:output undeclare-prefixes="?"</xsl>.
+      </para>
+     </listitem>
+	
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_indent</featurename> is equivalent to <xsl>xsl:output indent="?"</xsl>.
+      </para>
+     </listitem>
+	
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_escape_uri_attributes</featurename> is equivalent to <xsl>xsl:output escape-uri-attributes="?"</xsl>.
+      </para>
+     </listitem>
+	
+	
+     <listitem>
+      <para>
+       Calling <featurename>set_cdata_sections</featurename> or <featurename>merge_cdata_sections</featurename> is equivalent to <xsl>xsl:output cdata-section-elements="?"</xsl>.
+      </para>
+     </listitem>
+	
     </itemizedlist>
 
    </section>
