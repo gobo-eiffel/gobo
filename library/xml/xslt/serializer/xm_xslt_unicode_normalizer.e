@@ -29,7 +29,7 @@ feature -- Access
 			normalization_form_not_empty: not Result.is_empty
 		end
 
-	normalized_string (a_string: STRING): STRING is
+	normalized_string (a_string: STRING): UC_UTF8_STRING is
 			-- Normalized version of `a_string' according to `normalization_form'
 		require
 			a_string_not_void: a_string /= Void

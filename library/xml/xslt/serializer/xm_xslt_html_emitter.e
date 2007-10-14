@@ -59,17 +59,19 @@ feature -- Events
 			-- Notify the start of an element
 		do
 			Precursor (a_name_code, a_type_code, properties)
-			element_name := element_qname_stack.item.as_lower
-			element_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
-			if element_uri_code = Default_uri_code and then
-				(STRING_.same_string (element_name, "script") or else
-				 STRING_.same_string (element_name, "style")) then
-				in_script := 0
+			if not is_error then
+				element_name := element_qname_stack.item.as_lower
+				element_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
+				if element_uri_code = Default_uri_code and then
+					(STRING_.same_string (element_name, "script") or else
+						STRING_.same_string (element_name, "style")) then
+					in_script := 0
+				end
+				check
+					huge_element_nesting_level: in_script /= -1
+				end
+				in_script := in_script + 1
 			end
-			check
-				huge_element_nesting_level: in_script /= -1
-			end
-			in_script := in_script + 1
 		end
 
 	start_content is
@@ -113,14 +115,19 @@ feature -- Events
 			a_string: STRING
 		do
 			if not is_error then
-				if not is_output_open then
-					open_document
+				if a_data_string.has ('>') then
+					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("HTML processing instructions may not conatina '>'", Xpath_errors_uri, "SERE0015", Dynamic_error))
+					is_error := True
+				else
+					if not is_output_open then
+						open_document
+					end
+					a_string := STRING_.concat ("<?", a_name)
+					a_string := STRING_.appended_string (a_string, " ")
+					a_string := STRING_.appended_string (a_string, a_data_string)
+					a_string := STRING_.appended_string (a_string, ">")
+					output (a_string)
 				end
-				a_string := STRING_.concat ("<?", a_name)
-				a_string := STRING_.appended_string (a_string, " ")
-				a_string := STRING_.appended_string (a_string, a_data_string)
-				a_string := STRING_.appended_string (a_string, ">")
-				output (a_string)
 			end
 			mark_as_written
 		end
@@ -333,6 +340,12 @@ feature {NONE} -- Implementation
 			an_index: INTEGER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			if STRING_.same_string (output_properties.version, "4.0") then
+				-- ok
+			elseif not STRING_.same_string (output_properties.version, "4.01") then
+				serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Only versions 4.0 and 4.01 of HTML are supported", Xpath_errors_uri, "SESU0013", Dynamic_error))
+				is_error := True
+			end
 			encoding := output_properties.encoding.as_upper
 
 			outputter := encoder_factory.outputter (encoding, raw_outputter)
@@ -384,6 +397,9 @@ feature {NONE} -- Implementation
 				end
 				non_ascii_representation := representation_code (a_non_ascii_representation, False)
 				excluded_representation := representation_code (an_excluded_representation, True)
+			end
+			if serializer.is_error then
+				is_error := True
 			end
 		end
 
@@ -441,7 +457,7 @@ feature {NONE} -- Implementation
 			variant
 				a_character_string.count + 2 - a_start_index
 			until
-				a_start_index > a_character_string.count
+				is_error or a_start_index > a_character_string.count
 			loop
 				a_beyond_index := maximal_ordinary_string (a_character_string, a_start_index, special_characters)
 
@@ -454,7 +470,7 @@ feature {NONE} -- Implementation
 						disabled := not disabled
 					elseif disabled then
 						output (a_character_string.substring (a_beyond_index, a_beyond_index))
-					elseif a_code <= 127 then -- special ASCII
+					elseif a_code < 127 then -- special ASCII
 						if a_beyond_index = a_character_string.count then
 							another_code := 0
 						else
@@ -463,6 +479,9 @@ feature {NONE} -- Implementation
 						output_special_ascii (a_code, another_code, in_attribute)
 					elseif a_code = 160 then
 						output ("&nbsp;")
+					elseif a_code >= 127 and a_code < 160 then
+						serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Characters between x7F and x9F inclusive are not allowed in HTML", Xpath_errors_uri, "SERE0014", Dynamic_error))
+						is_error := True
 					elseif a_code >= 55296 and then a_code <= 56319 then
 						todo ("output_escape (surrogates)", True)
 					else

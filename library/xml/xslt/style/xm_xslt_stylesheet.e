@@ -204,8 +204,12 @@ feature -- Access
 			if Result.is_error then
 				if Result.is_duplication_error then
 					l_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", Result.duplicate_attribute_name)
-					l_message := STRING_.appended_string (l_message, "', in output definition named ")
-					l_message := STRING_.appended_string (l_message, shared_name_pool.display_name_from_name_code (a_fingerprint))
+					if a_fingerprint = -1 then
+						l_message := STRING_.appended_string (l_message, "', in the unnamed output definition.")
+					else
+						l_message := STRING_.appended_string (l_message, "', in output definition named ")
+						l_message := STRING_.appended_string (l_message, shared_name_pool.display_name_from_name_code (a_fingerprint))
+					end
 					create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1560", Static_error)
 				else
 					create l_error.make_from_string (Result.error_message, Gexslt_eiffel_type_uri, "OUTPUT+PROPERTY", Static_error)

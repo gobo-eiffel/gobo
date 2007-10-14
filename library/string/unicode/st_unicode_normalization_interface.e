@@ -104,7 +104,7 @@ feature -- Access
 			end
 		end
 
-	as_nfd (a_source: STRING): STRING is
+	as_nfd (a_source: STRING): UC_UTF8_STRING is
 			-- Canonical decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -112,14 +112,11 @@ feature -- Access
 			changed: DS_CELL [BOOLEAN]
 			a_decomposition: DS_ARRAYED_LIST [INTEGER]
 		do
-			if a_source.is_empty then
-				Result := a_source
-			else
+			Result ?= a_source
+			if Result = Void or else not Result.is_empty then
 				create changed.make (False)
 				a_decomposition := decomposition (a_source, True, changed)
-				if not changed.item then
-					Result := a_source
-				else
+				if changed.item or Result = Void then
 					Result := string_from_codes (a_decomposition)
 				end
 			end
@@ -128,7 +125,7 @@ feature -- Access
 			is_nfd: is_nfd (Result)
 		end
 
-	to_nfd (a_source: STRING): STRING is
+	to_nfd (a_source: STRING): UC_UTF8_STRING is
 			-- Canonical decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -137,7 +134,7 @@ feature -- Access
 			changed: DS_CELL [BOOLEAN]
 		do
 			if a_source.is_empty then
-				Result := ""
+				create Result.make_empty
 			else
 				create changed.make (False)
 				Result := string_from_codes (decomposition (a_source, True, changed))
@@ -148,7 +145,7 @@ feature -- Access
 			new_object: Result /= a_source
 		end
 
-	as_nfkd (a_source: STRING): STRING is
+	as_nfkd (a_source: STRING): UC_UTF8_STRING is
 			-- Compatibility decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -156,14 +153,11 @@ feature -- Access
 			changed: DS_CELL [BOOLEAN]
 			a_decomposition: DS_ARRAYED_LIST [INTEGER]
 		do
-			if a_source.is_empty then
-				Result := a_source
-			else
+			Result ?= a_source
+			if Result = Void or else not Result.is_empty then
 				create changed.make (False)
 				a_decomposition := decomposition (a_source, False, changed)
-				if not changed.item then
-					Result := a_source
-				else
+				if changed.item or Result = Void then
 					Result := string_from_codes (a_decomposition)
 				end
 			end
@@ -172,7 +166,7 @@ feature -- Access
 			is_nfd: is_nfd (Result)
 		end
 
-	to_nfkd (a_source: STRING): STRING is
+	to_nfkd (a_source: STRING): UC_UTF8_STRING is
 			-- Compatibility decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -181,7 +175,7 @@ feature -- Access
 			changed: DS_CELL [BOOLEAN]
 		do
 			if a_source.is_empty then
-				Result := ""
+				create Result.make_empty
 			else
 				create changed.make (False)
 				Result := string_from_codes (decomposition (a_source, False, changed))
@@ -192,7 +186,7 @@ feature -- Access
 			new_object: Result /= a_source
 		end
 
-	to_nfc (a_source: STRING): STRING is
+	to_nfc (a_source: STRING): UC_UTF8_STRING is
 			-- Canonical decomposition then canonical composition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -201,7 +195,7 @@ feature -- Access
 			a_decomposition: DS_ARRAYED_LIST [INTEGER]
 		do
 			if a_source.is_empty then
-				Result := ""
+				create Result.make_empty
 			else
 				create changed.make (False)
 				a_decomposition := decomposition (a_source, True, changed)
@@ -214,7 +208,7 @@ feature -- Access
 			new_object: Result /= a_source
 		end
 
-	to_nfkc (a_source: STRING): STRING is
+	to_nfkc (a_source: STRING): UC_UTF8_STRING is
 			-- Compatibility decomposition then canonical composition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -223,7 +217,7 @@ feature -- Access
 			a_decomposition: DS_ARRAYED_LIST [INTEGER]
 		do
 			if a_source.is_empty then
-				Result := ""
+				create Result.make_empty
 			else
 				create changed.make (False)
 				a_decomposition := decomposition (a_source, False, changed)
@@ -505,7 +499,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	string_from_codes (a_decomposition: DS_ARRAYED_LIST [INTEGER]): STRING is
+	string_from_codes (a_decomposition: DS_ARRAYED_LIST [INTEGER]): UC_UTF8_STRING is
 			-- String from code-point list
 		require
 			decomposition_not_void: a_decomposition /= Void
@@ -515,7 +509,7 @@ feature {NONE} -- Implementation
 			create Result.make (a_decomposition.count)
 			a_cursor := a_decomposition.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				Result := STRING_.appended_string (Result, unicode.code_to_string (a_cursor.item))
+				Result.append_item_code (a_cursor.item)
 				a_cursor.forth
 			end
 		ensure

@@ -691,66 +691,70 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 			destination_result_not_void: a_result /= Void
 			no_error_yet: not is_error
 		local
-			properties: XM_XSLT_OUTPUT_PROPERTIES
-			a_next_uri: STRING
-			a_transformation_result: XM_XSLT_TRANSFORMATION_RESULT
-			a_context: XM_XSLT_EVALUATION_CONTEXT
-			a_parameter_set: XM_XSLT_PARAMETER_SET
+			l_properties: XM_XSLT_OUTPUT_PROPERTIES
+			l_next_uri: STRING
+			l_transformation_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_context: XM_XSLT_EVALUATION_CONTEXT
+			l_parameter_set: XM_XSLT_PARAMETER_SET
 		do
 			principal_result := a_result
 			principal_result_uri := a_result.system_id
 			initialize_transformer (a_start_node)
 			if not is_error then
-				properties := executable.default_output_properties
-				a_transformation_result := a_result
+				l_properties := executable.default_output_properties
+				l_transformation_result := a_result
 				-- TODO: overlay properties defined by API
 
 				-- Stylesheet chaining
 
-				a_next_uri := properties.next_in_chain
-				if a_next_uri /= Void then
-					resolve_next_destination (a_next_uri, properties.next_in_chain_base_uri, a_result)
-					if not is_error then a_transformation_result := next_resolved_destination end
+				l_next_uri := l_properties.next_in_chain
+				if l_next_uri /= Void then
+					resolve_next_destination (l_next_uri, l_properties.next_in_chain_base_uri, a_result)
+					if not is_error then l_transformation_result := next_resolved_destination end
 				end
-				if not is_error then
-					initial_context.change_output_destination (properties, a_transformation_result, True, Validation_preserve, Void)
-					principal_receiver := initial_context.current_receiver
-					principal_result.set_principal_receiver (principal_receiver)
-					check
-						opened: principal_receiver.is_open
-						-- change_output_destination ensures this
-					end
-					principal_receiver.start_document
-
-					-- Process the source document using the handlers that have been set up.
-
-					if initial_template = Void then
-						perform_transformation (a_start_node)
-					else
-						a_context := initial_context.new_context
-						a_context.open_stack_frame (initial_template.slot_manager)
-						create a_parameter_set.make_empty
-						a_context.set_local_parameters (a_parameter_set)
-						create a_parameter_set.make_empty
-						a_context.set_tunnel_parameters (a_parameter_set)
-						initial_template.process (a_context)
-					end
-
-					if is_tracing then
-						trace_listener.stop_tracing
-					end
-					if not principal_receiver.is_document_started and principal_receiver.is_written then
-						report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", principal_result_uri),
-							Xpath_errors_uri, "XTDE1490", Dynamic_error))
-					elseif principal_receiver.is_document_started then
-						principal_receiver.end_document
-						principal_receiver.close
-						principal_result.flush
-					end
-					if a_transformation_result.error_message /= Void then
-						report_warning (a_transformation_result.error_message, Void)
-					end
+			end
+			if not is_error then
+				initial_context.change_output_destination (l_properties, l_transformation_result, True, Validation_preserve, Void)
+			end
+			if not is_error then
+				principal_receiver := initial_context.current_receiver
+				principal_result.set_principal_receiver (principal_receiver)
+				check
+					opened: principal_receiver.is_open
+					-- change_output_destination ensures this
 				end
+				principal_receiver.start_document
+			end				
+			if not is_error then
+				
+				-- Process the source document using the handlers that have been set up.
+				
+				if initial_template = Void then
+					perform_transformation (a_start_node)
+				else
+					l_context := initial_context.new_context
+					l_context.open_stack_frame (initial_template.slot_manager)
+					create l_parameter_set.make_empty
+					l_context.set_local_parameters (l_parameter_set)
+					create l_parameter_set.make_empty
+					l_context.set_tunnel_parameters (l_parameter_set)
+					initial_template.process (l_context)
+				end
+				
+				if is_tracing then
+					trace_listener.stop_tracing
+				end
+			end
+			if principal_receiver /= Void and then (not principal_receiver.is_document_started and principal_receiver.is_written) then
+				report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", principal_result_uri),
+					Xpath_errors_uri, "XTDE1490", Dynamic_error))
+			elseif principal_receiver /= Void and then principal_receiver.is_document_started then
+				principal_receiver.end_document
+				principal_receiver.close
+				principal_result.flush
+			end
+			if l_transformation_result.error_message /= Void then
+				report_warning (l_transformation_result.error_message, Void)
 			end
 		end
 

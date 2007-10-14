@@ -95,7 +95,7 @@ feature -- Element change
 				elseif STRING_.same_string (an_expanded_name, Undeclare_prefixes_attribute) then
 					undeclare_prefixes := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
 				elseif STRING_.same_string (an_expanded_name, Normalization_form_attribute) then
-					normalization_form := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
+					normalization_form := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (normalization_form); STRING_.right_adjust (normalization_form)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_character_representation_attribute) then
 					character_representation := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (character_representation); STRING_.right_adjust (character_representation)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_indent_spaces_attribute) then
@@ -174,7 +174,7 @@ feature -- Element change
 				if STRING_.same_string (indent, "yes") or STRING_.same_string (indent, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("indent must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+					create an_error.make_from_string ("indent must be 'yes' or 'no'", Xpath_errors_uri, "SEPM0016", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -189,7 +189,7 @@ feature -- Element change
 				if STRING_.same_string (omit_xml_declaration, "yes") or STRING_.same_string (omit_xml_declaration, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("omit_xml_declaration must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+					create an_error.make_from_string ("omit_xml_declaration must be 'yes' or 'no'", Xpath_errors_uri, "SEPM0016", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -197,7 +197,7 @@ feature -- Element change
 				if STRING_.same_string (standalone, "yes") or STRING_.same_string (standalone, "no") or STRING_.same_string (standalone, "omit") then
 					-- OK
 				else
-					create an_error.make_from_string ("standalone must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+					create an_error.make_from_string ("standalone must be 'yes' or 'no'", Xpath_errors_uri, "SEPM0016", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -211,7 +211,7 @@ feature -- Element change
 				if STRING_.same_string (undeclare_prefixes, "yes") or STRING_.same_string (undeclare_prefixes, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("undeclare-prefixes must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+					create an_error.make_from_string ("undeclare-prefixes must be 'yes' or 'no'", Xpath_errors_uri, "SEPM0016", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -223,7 +223,7 @@ feature -- Element change
 				 then
 					-- OK
 				else
-					create an_error.make_from_string ("normalization-form must be one of 'NFC', 'NFD', 'NFKC', 'NFKD', 'fully-normalized', 'none' or an NMTOKEN", Xpath_errors_uri, "XTSE0020", Static_error)
+					create an_error.make_from_string ("normalization-form must be one of 'NFC', 'NFD', 'NFKC', 'NFKD', 'fully-normalized', 'none' or an NMTOKEN", Xpath_errors_uri, "SEPM0016", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -231,7 +231,7 @@ feature -- Element change
 				if STRING_.same_string (include_content_type, "yes") or STRING_.same_string (include_content_type, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+					create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", Xpath_errors_uri, "SEPM0016", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -239,7 +239,7 @@ feature -- Element change
 				if STRING_.same_string (escape_uri_attributes, "yes") or STRING_.same_string (escape_uri_attributes, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("escape-uri-attribute must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+					create an_error.make_from_string ("escape-uri-attribute must be 'yes' or 'no'", Xpath_errors_uri, "SEPM0016", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -247,7 +247,7 @@ feature -- Element change
 				if STRING_.same_string (byte_order_mark, "yes") or STRING_.same_string (byte_order_mark, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("byte-order-mark must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+					create an_error.make_from_string ("byte-order-mark must be 'yes' or 'no'", Xpath_errors_uri, "SEPM0016", Static_error)
 					report_compile_error (an_error)
 				end
 			end			

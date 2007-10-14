@@ -21,6 +21,9 @@ inherit
 
 	XM_UNICODE_CHARACTERS_1_1
 
+	XM_XSLT_STRING_ROUTINES
+		export {NONE} all end
+
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
@@ -116,47 +119,52 @@ feature -- Events
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
 		local
-			a_display_name, a_system_id, a_public_id: STRING
-			a_bad_character_code: INTEGER
-			a_message: STRING
-			an_error: XM_XPATH_ERROR_VALUE
+			l_display_name, l_system_id, l_public_id: STRING
+			l_bad_character_code: INTEGER
+			l_message: STRING
 		do
 			if not is_error then
 				if not is_output_open then
 					open_document
 				end
 
+				if is_well_formed_document_required and not is_empty and element_qname_stack.is_empty then
+					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("More than one document element present", Xpath_errors_uri, "SEPM0004", Dynamic_error))
+				end
 				-- Have we've seen this name before?
 
 				if a_name_code < name_lookup_table_size then
-					a_display_name := name_lookup_table.item (a_name_code)
+					l_display_name := name_lookup_table.item (a_name_code)
 				end
-				if a_display_name = Void then
-					a_display_name := shared_name_pool.display_name_from_name_code (a_name_code)
+				if l_display_name = Void then
+					l_display_name := shared_name_pool.display_name_from_name_code (a_name_code)
 					if a_name_code < name_lookup_table_size then
-						name_lookup_table.put (a_display_name, a_name_code)
+						name_lookup_table.put (l_display_name, a_name_code)
 					end
-					a_bad_character_code := bad_character_code (a_display_name)
-					if a_bad_character_code /= 0 then
-						a_message := "Element name contains a character (decimal" + a_bad_character_code.out + ") not available in the selected encoding"
-						create an_error.make_from_string (a_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
-						serializer.report_fatal_error (an_error)
+					l_bad_character_code := bad_character_code (l_display_name)
+					if l_bad_character_code /= 0 then
+						l_message := "Element name contains a character (decimal" + l_bad_character_code.out + ") not available in the selected encoding"
+						serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (l_message, Xpath_errors_uri, "SERE0008", Dynamic_error))
 					end
 				end
 				if not is_error then
-					element_qname_stack.force (a_display_name)
+					element_qname_stack.force (l_display_name)
 					current_element_name_code := a_name_code
 					if is_empty then
-						a_system_id := output_properties.doctype_system
-						a_public_id := output_properties.doctype_public
-						if a_system_id /= Void then write_doctype (a_display_name, a_system_id, a_public_id) end
+						l_system_id := output_properties.doctype_system
+						l_public_id := output_properties.doctype_public
+						if l_system_id /= Void then
+							is_well_formed_document_required := True
+							
+							write_doctype (l_display_name, l_system_id, l_public_id)
+						end
 						is_empty := False
 					end
 					if is_open_start_tag then
-						close_start_tag (a_display_name, False)
+						close_start_tag (l_display_name, False)
 					end
 					output ("<")
-					output (a_display_name)
+					output (l_display_name)
 					is_open_start_tag := True
 				end
 			end
@@ -257,10 +265,10 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (a_chars: STRING; a_properties: INTEGER) is
 			-- Notify character data.
 		local
-			a_bad_character: INTEGER
+			l_bad_character: INTEGER
 		do
 			debug ("XSLT stripper")
 				std.error.put_string ("Is start tag open? " + is_open_start_tag.out)
@@ -269,24 +277,32 @@ feature -- Events
 			if not is_error then
 				if not is_output_open then
 					open_document
+					if not is_all_whitespace (a_chars) then
+						if is_well_formed_document_required or output_properties.doctype_system /= Void then
+							serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Topl-level text node present when well-formed document is required", Xpath_errors_uri, "SEPM0004", Dynamic_error))
+						end
+					end
+				end
+				if is_well_formed_document_required and element_qname_stack.is_empty and not is_all_whitespace (a_chars) then
+					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Topl-level text node present when well-formed document is required", Xpath_errors_uri, "SEPM0004", Dynamic_error))
 				end
 				if is_open_start_tag then
 					close_start_tag ("", False)
 				end
-				if are_no_special_characters (properties) then
-					output (chars)
-				elseif not is_output_escaping_disabled (properties) then
-					output_escape (chars, False)
+				if are_no_special_characters (a_properties) then
+					output (a_chars)
+				elseif not is_output_escaping_disabled (a_properties) then
+					output_escape (a_chars, False)
 				else
-					a_bad_character := bad_character_code (chars)
-					if a_bad_character = 0 then
-						output (chars)
+					l_bad_character := bad_character_code (a_chars)
+					if l_bad_character = 0 then
+						output (a_chars)
 					else
 
 						-- Ignore disable output escaping with characters
                   --  that are not available in the target encoding
 
-						output_escape (chars, False)
+						output_escape (a_chars, False)
 					end
 				end
 			end
@@ -371,6 +387,9 @@ feature {XM_XSLT_HTML_INDENTER} -- Restricted
 			-- QNames of open elements in scope
 
 feature {NONE} -- Implementation
+
+	is_well_formed_document_required: BOOLEAN
+			-- Do serialization parameters imply a well-formed document is required?
 
 	is_output_open: BOOLEAN
 			-- Has the output document been opened yet
@@ -482,7 +501,8 @@ feature {NONE} -- Implementation
 		require
 			not_yet_written: not is_declaration_written
 		local
-			omit: BOOLEAN
+			l_omit: BOOLEAN
+			l_version: STRING
 		do
 			if outputter.byte_order_mark_permitted then
 				if output_properties.byte_order_mark_required
@@ -490,26 +510,48 @@ feature {NONE} -- Implementation
 					output_ignoring_error (outputter.byte_order_mark)
 				end
 			end
-			omit := output_properties.omit_xml_declaration
-			if omit and then
+			l_omit := output_properties.omit_xml_declaration
+			if l_omit and then
 				not (STRING_.same_string (encoding, "UTF-8") or else
 				STRING_.same_string (encoding, "UTF-16") or else
 				STRING_.same_string (encoding, "US-ASCII") or else
 				STRING_.same_string (encoding, "ASCII"))
 			then
-				omit := False
+				l_omit := False
 			end
 
-			if not omit then
-				output ("<?xml version=%"" + output_properties.version + "%" " + "encoding=%"" + encoding + "%"")
-				if output_properties.standalone /= Void then
-					output (" standalone=%"" + output_properties.standalone + "%"")
+			l_version := output_properties.version
+			if l_version.same_string ("1.0") and output_properties.undeclare_prefixes then
+				serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML version 1.0 does not permit undeclaring namespaces",
+					Xpath_errors_uri, "SEPM0010", Dynamic_error))
+			elseif not l_omit then
+				if l_version.same_string ("1.0") or l_version.same_string ("1.1") then
+					-- ok
+				else
+					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML version must be 1.0 or 1.1", Xpath_errors_uri, "SEUS0006", Dynamic_error))
 				end
-				output ("?>")
-
-				-- Don't write a newline character: it's wrong if the output is an
-				--  external general parsed entity
-
+				if not serializer.is_error then
+					output ("<?xml version=%"" + l_version + "%" " + "encoding=%"" + encoding + "%"")
+					if output_properties.standalone /= Void then
+						is_well_formed_document_required := True
+						output (" standalone=%"" + output_properties.standalone + "%"")
+					end
+					output ("?>")
+					
+					-- Don't write a newline character: it's wrong if the output is an
+					--  external general parsed entity
+					
+				end
+			else
+				if not l_version.same_string ("1.0") and output_properties.doctype_system /= Void then
+					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML declaration may not be omitted when version is not 1.0 and a DOCTYPE has been requested",
+						Xpath_errors_uri, "SEPM0009", Dynamic_error))
+				else
+					if output_properties.standalone /= Void then
+						serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML declaration may not be omitted when standalone=yes",
+						Xpath_errors_uri, "SEPM0009", Dynamic_error))
+					end
+				end
 			end
 			is_declaration_written := True
 		ensure
@@ -694,22 +736,19 @@ feature {NONE} -- Implementation
 		require
 			document_not_yet_opened: not is_output_open
 		local
-			a_character_representation: STRING
-			an_error: XM_XPATH_ERROR_VALUE
+			l_character_representation: STRING
 		do
+			is_well_formed_document_required := False
 			encoding := output_properties.encoding.as_upper
 
 			outputter := encoder_factory.outputter (encoding, raw_outputter)
 			if outputter = Void then
-				create an_error.make_from_string (STRING_.concat ("Trying UTF-8 as unable to open output stream in encoding ", encoding),
-															 Xpath_errors_uri, "SESU0007", Dynamic_error)
-				serializer.report_recoverable_error (an_error)
+				serializer.report_recoverable_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("Trying UTF-8 as unable to open output stream in encoding ", encoding),
+					Xpath_errors_uri, "SESU0007", Dynamic_error))
 				if not serializer.is_error then
 					outputter := encoder_factory.outputter (encoding, raw_outputter)
 					if outputter = Void then
-						create an_error.make_from_string ("Failed to recover",
-																	 Xpath_errors_uri, "SESU0007", Dynamic_error)
-						serializer.report_fatal_error (an_error)
+						serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Failed to recover", Xpath_errors_uri, "SESU0007", Dynamic_error))
 					end
 				end
 			end
@@ -717,17 +756,24 @@ feature {NONE} -- Implementation
 				is_error := True
 			else
 				is_output_open := True
-				if not is_declaration_written then write_declaration end
-
-				a_character_representation := output_properties.character_representation
-				if STRING_.same_string (a_character_representation, "hex") then
-					is_hex_preferred := True
-				elseif STRING_.same_string (a_character_representation, "decimal") then
-					on_error ("Illegal value for gexslt:character-representation: " + a_character_representation)
-				end
-
+				
 				if STRING_.same_string (output_properties.version, "1.1") then
 					allow_undeclare_prefixes := output_properties.undeclare_prefixes
+				elseif not STRING_.same_string (output_properties.version, "1.0") then
+					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Only versions 1.0 and 1.1 of XML and XHTML are supported", Xpath_errors_uri, "SESU0013", Dynamic_error))
+					is_error := True
+				end
+			end
+			if not is_error then
+				if not is_declaration_written then
+					write_declaration
+				end
+
+				l_character_representation := output_properties.character_representation
+				if STRING_.same_string (l_character_representation, "hex") then
+					is_hex_preferred := True
+				elseif STRING_.same_string (l_character_representation, "decimal") then
+					on_error ("Illegal value for gexslt:character-representation: " + l_character_representation)
 				end
 			end
 		ensure
@@ -744,21 +790,20 @@ feature {NONE} -- Implementation
 			end
 			output ("<!DOCTYPE ")
 			output (a_type)
-			output ("%N")
 			if a_system_id /= Void then
 				if a_public_id = Void then
-					output ("  SYSTEM %"")
+					output (" SYSTEM %"")
 					output (a_system_id)
 					output ("%">%N")
 				else
-					output ("  PUBLIC %"")
+					output (" PUBLIC %"")
 					output (a_public_id)
 					output ("%" %"")
 					output (a_system_id)
 					output ("%">%N")
 				end
 			elseif a_public_id /= Void then -- for HTML
-				output ("  PUBLIC %"")
+				output (" PUBLIC %"")
 				output (a_public_id)
 				output ("%">%N")
 			end

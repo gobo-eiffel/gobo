@@ -34,7 +34,7 @@ feature -- Access
 	normalization_form: STRING is "NFC"
 			-- Name of normalization form provided by `Current'
 
-	normalized_string (a_string: STRING): STRING is
+	normalized_string (a_string: STRING): UC_UTF8_STRING is
 			-- Normalized version of `a_string' according to `normalization_form'
 		do
 			Result := normalization.to_nfc (a_string)

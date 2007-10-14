@@ -42,12 +42,15 @@ feature -- Events
 			is_declaration_written := True
 			open_document
 
-			-- Write a BOM if requested
-
-			if outputter.byte_order_mark_permitted then
-				if output_properties.byte_order_mark_required
-					or (not output_properties.is_byte_order_mark_set and outputter.is_byte_order_mark_default) then
+			if is_output_open then
+				
+				-- Write a BOM if requested
+				
+				if outputter.byte_order_mark_permitted then
+					if output_properties.byte_order_mark_required
+						or (not output_properties.is_byte_order_mark_set and outputter.is_byte_order_mark_default) then
 					output_ignoring_error (outputter.byte_order_mark)
+					end
 				end
 			end
 			is_open := True

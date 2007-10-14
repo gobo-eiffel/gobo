@@ -55,10 +55,10 @@ feature -- Test
 			create l_result.make (l_output, "string:/")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
-			assert ("Toc", l_configuration.output_resolver.output_destinations.item ("string:/toc.html").stream.last_output.count = 596)
-			assert ("Section 1", l_configuration.output_resolver.output_destinations.item ("string:/section1.html").stream.last_output.count = 416)
-			assert ("Section 2", l_configuration.output_resolver.output_destinations.item ("string:/section2.html").stream.last_output.count = 416)
-			assert ("Section 3", l_configuration.output_resolver.output_destinations.item ("string:/section3.html").stream.last_output.count = 422)
+			assert ("Toc", l_configuration.output_resolver.output_destinations.item ("string:/toc.html").stream.last_output.count = 594)
+			assert ("Section 1", l_configuration.output_resolver.output_destinations.item ("string:/section1.html").stream.last_output.count = 414)
+			assert ("Section 2", l_configuration.output_resolver.output_destinations.item ("string:/section2.html").stream.last_output.count = 414)
+			assert ("Section 3", l_configuration.output_resolver.output_destinations.item ("string:/section3.html").stream.last_output.count = 420)
 		end
 
 	test_implicit_duplicate_destination_error is

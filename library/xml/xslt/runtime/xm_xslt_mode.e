@@ -294,10 +294,9 @@ feature -- Access
 					end
 				end
 			end
-			check
-				current_template_matches_node: l_rule /= Void
+			if l_rule /= Void then
+				match_proper_next_rule (a_node, l_key, a_context, l_current_priority, l_current_precedence, l_current_sequence_number, l_handler)
 			end
-			match_proper_next_rule (a_node, l_key, a_context, l_current_priority, l_current_precedence, l_current_sequence_number, l_handler)
 		ensure
 			Maybe_no_rule_matches: True
 		end

@@ -76,10 +76,15 @@ feature -- Events
 			-- Notify the start of an element
 		local
 			l_finished: BOOLEAN
+			l_local_name: STRING
+			l_uri_code: INTEGER
 		do
+			l_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
+			l_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
 			if	dropping_meta_tags_level = level then
-				if	matches_name (a_name_code, "meta") then
-					in_meta_tag := True; l_finished := True
+				if	l_uri_code = matching_uri_code and matches_name (l_local_name, "meta") then
+					in_meta_tag := True;
+					l_finished := True
 					create attributes.make
 				end
 			end
@@ -87,7 +92,7 @@ feature -- Events
 				level := level + 1
 				Precursor (a_name_code, a_type_code, a_properties)
 				if is_seeking_head then
-					if	matches_name (a_name_code, "head") then
+					if	l_uri_code = matching_uri_code and matches_name (l_local_name, "head") then
 						found_head := True
 					end
 				end
@@ -150,10 +155,11 @@ feature -- Events
 				until
 					l_found or l_cursor.after
 				loop
-					if matches_name (l_cursor.item, "http-equiv") then
+					if matches_name (shared_name_pool.local_name_from_name_code (l_cursor.item), "http-equiv") then
 						l_value := STRING_.cloned_string (attributes.attribute_value_by_index (l_cursor.index))
 						STRING_.left_adjust (l_value)
 						STRING_.right_adjust (l_value)
+						-- even for XHTML we must do a case-insensitive comparison
 						if STRING_.same_case_insensitive ("Content-Type", l_value) then
 							l_found := True -- so the meta tag won't be emitted
 						end
@@ -178,10 +184,10 @@ feature -- Events
 					Precursor
 				end
 			else
-				if dropping_meta_tags_level = level then
+				level := level - 1
+				if dropping_meta_tags_level = level + 1 then
 					dropping_meta_tags_level := -1
 				end
-				level := level - 1
 				Precursor
 			end
 			mark_as_written
@@ -225,18 +231,16 @@ feature {NONE} -- Implementation
 	media_type: STRING
 			-- Content type
 
-	matches_name (a_name_code: INTEGER; a_local_name: STRING): BOOLEAN is
-			-- Does `a_name_code' match against `a_local_name'?
+	matches_name (a_name, a_standard_name: STRING): BOOLEAN is
+			-- Does `a_name' match against `a_standard_name'?
 		require
-			local_name_lower_case: a_local_name /= Void
+			a_name_not_void: a_name /= Void
+			a_standard_name_not_void: a_standard_name /= Void
 		do
-			Result := shared_name_pool.uri_code_from_name_code (a_name_code) = matching_uri_code
-			if Result then
-				if is_xhtml then
-					Result := STRING_.same_string (a_local_name, shared_name_pool.local_name_from_name_code (a_name_code))
-				else
-					Result := STRING_.same_case_insensitive (a_local_name, shared_name_pool.local_name_from_name_code (a_name_code))
-				end
+			if is_xhtml then
+				Result := STRING_.same_string (a_name, a_standard_name)
+			else
+				Result := STRING_.same_case_insensitive (a_name, a_standard_name)
 			end
 		end
 
