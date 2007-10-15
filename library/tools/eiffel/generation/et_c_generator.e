@@ -20776,6 +20776,8 @@ feature {NONE} -- C function generation
 			l_feature: ET_FEATURE
 			l_constant: ET_INLINE_CONSTANT
 		do
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
 			header_file.put_string (c_void)
 			current_file.put_string (c_void)
 			header_file.put_character (' ')
@@ -20852,6 +20854,8 @@ feature {NONE} -- C function generation
 					l_dts_name := dynamic_type_id_set_names.item_for_iteration
 					l_dts_ids := dynamic_type_id_set_names.key_for_iteration
 					l_size := l_dts_ids.occurrences (',') + 1
+					header_file.put_string (c_extern)
+					header_file.put_character (' ')
 					header_file.put_string (c_int)
 					header_file.put_character (' ')
 					header_file.put_string (l_dts_name)
