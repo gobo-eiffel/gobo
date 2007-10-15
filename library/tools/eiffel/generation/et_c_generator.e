@@ -21279,7 +21279,9 @@ feature {NONE} -- Type generation
 					a_file.put_new_line
 					if l_type.is_expanded then
 							-- Keep track of expanded types.
-						l_expanded_sorter.force (l_type)
+						if not l_expanded_sorter.has (l_type) then
+							l_expanded_sorter.force (l_type)
+						end
 						if not l_type.is_generic then
 								-- For expanded types with no generics, there is no type
 								-- other than themselves that conform to them. Therefore
