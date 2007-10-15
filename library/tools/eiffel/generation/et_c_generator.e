@@ -8754,7 +8754,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						-- should be known at this stage.
 					set_fatal_error
 					error_handler.report_giaaa_error
-				elseif l_dynamic_type_set.is_empty or not l_dynamic_type_set.is_never_void then
+				elseif not a_target_type.is_expanded and then (l_dynamic_type_set.is_empty or not l_dynamic_type_set.is_never_void) then
 					can_be_void_target_count := can_be_void_target_count + 1
 					current_file.put_string (c_ge_void)
 					current_file.put_character ('(')
