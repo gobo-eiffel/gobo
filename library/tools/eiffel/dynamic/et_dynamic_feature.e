@@ -402,6 +402,14 @@ feature -- Status report
 			builtin: Result implies is_builtin
 		end
 
+	is_builtin_procedure_call: BOOLEAN is
+			-- Is current feature the built-in feature 'PROCEDURE.call'?
+		do
+			Result := (builtin_code = builtin_procedure_feature (builtin_procedure_call))
+		ensure
+			builtin: Result implies is_builtin
+		end
+
 feature -- Status setting
 
 	set_built (b: BOOLEAN) is

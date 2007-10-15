@@ -86,7 +86,7 @@ inherit
 			name as identifier
 		undefine
 			first_position, last_position,
-			reset, is_equal
+			is_tuple_label, reset, is_equal
 		end
 
 	ET_FEATURE_CALL_INSTRUCTION
@@ -94,7 +94,7 @@ inherit
 			name as identifier
 		undefine
 			first_position, last_position,
-			reset, is_equal
+			is_tuple_label, reset, is_equal
 		end
 
 	KL_IMPORTED_STRING_ROUTINES

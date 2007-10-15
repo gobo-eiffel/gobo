@@ -836,6 +836,20 @@ feature {NONE} -- Basic operations
 							end
 						end
 					end
+				elseif a_class = universe.routine_class then
+					l_procedure := a_class.named_procedure (tokens.call_feature_name)
+					if l_procedure /= Void then
+						universe.set_routine_call_seed (l_procedure.first_seed)
+					else
+						universe.set_routine_call_seed (0)
+					end
+				elseif a_class = universe.function_class then
+					l_query := a_class.named_query (tokens.item_feature_name)
+					if l_query /= Void then
+						universe.set_function_item_seed (l_query.first_seed)
+					else
+						universe.set_function_item_seed (0)
+					end
 				end
 			end
 		end

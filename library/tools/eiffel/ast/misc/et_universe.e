@@ -1143,6 +1143,12 @@ feature -- Feature access
 	void_seed: INTEGER
 			-- Seed of feature 'Void' in class ANY
 
+	routine_call_seed: INTEGER
+			-- Seed of feature 'call' in class ROUTINE
+
+	function_item_seed: INTEGER
+			-- Seed of feature 'item' in class FUNCTION
+
 feature -- Feature access (for compatibility with 5.6.0610, to be removed later)
 
 	boolean_convert_feature: ET_BUILTIN_CONVERT_FEATURE
@@ -1162,7 +1168,7 @@ feature -- Feature setting
 	set_default_create_seed (a_seed: INTEGER) is
 			-- Set `default_create_seed' to `a_seed'.
 		require
-			a_seed_non_negative: a_seed >= 0
+			a_seed_not_negative: a_seed >= 0
 		do
 			default_create_seed := a_seed
 		ensure
@@ -1172,7 +1178,7 @@ feature -- Feature setting
 	set_copy_seed (a_seed: INTEGER) is
 			-- Set `copy_seed' to `a_seed'.
 		require
-			a_seed_non_negative: a_seed >= 0
+			a_seed_not_negative: a_seed >= 0
 		do
 			copy_seed := a_seed
 		ensure
@@ -1182,11 +1188,31 @@ feature -- Feature setting
 	set_void_seed (a_seed: INTEGER) is
 			-- Set `void_seed' to `a_seed'.
 		require
-			a_seed_non_negative: a_seed >= 0
+			a_seed_not_negative: a_seed >= 0
 		do
 			void_seed := a_seed
 		ensure
 			void_seed_set: void_seed = a_seed
+		end
+
+	set_routine_call_seed (a_seed: INTEGER) is
+			-- Set `routine_call_seed' to `a_seed'.
+		require
+			a_seed_not_negative: a_seed >= 0
+		do
+			routine_call_seed := a_seed
+		ensure
+			routine_call_seed_set: routine_call_seed = a_seed
+		end
+
+	set_function_item_seed (a_seed: INTEGER) is
+			-- Set `function_item_seed' to `a_seed'.
+		require
+			a_seed_not_negative: a_seed >= 0
+		do
+			function_item_seed := a_seed
+		ensure
+			function_item_seed_set: function_item_seed = a_seed
 		end
 
 feature -- Feature registration

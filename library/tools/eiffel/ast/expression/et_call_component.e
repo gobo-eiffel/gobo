@@ -45,4 +45,12 @@ feature -- Status report
 			definition: Result implies (target /= Void)
 		end
 
+	is_tuple_label: BOOLEAN is
+			-- Is current call a call to a Tuple label?
+		do
+			Result := name.is_tuple_label
+		ensure
+			definition: Result = name.is_tuple_label
+		end
+
 end
