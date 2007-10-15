@@ -199,18 +199,6 @@ feature -- Execution
 						file_system.delete_file (a_name)
 					end
 				end
-				from i := 1 until stop loop
-					a_name := clean + i.out + ".c"
-					if file_system.file_exists (a_name) then
-						project.trace (<<"  [gec] delete ", a_name>>)
-						if not project.options.no_exec then
-							file_system.delete_file (a_name)
-						end
-					else
-						stop := True
-					end
-					i := i + 1
-				end
 				a_name := clean + ".cpp"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
@@ -218,16 +206,23 @@ feature -- Execution
 						file_system.delete_file (a_name)
 					end
 				end
-				stop := False
 				from i := 1 until stop loop
+					stop := True
+					a_name := clean + i.out + ".c"
+					if file_system.file_exists (a_name) then
+						project.trace (<<"  [gec] delete ", a_name>>)
+						if not project.options.no_exec then
+							file_system.delete_file (a_name)
+						end
+						stop := False
+					end
 					a_name := clean + i.out + ".cpp"
 					if file_system.file_exists (a_name) then
 						project.trace (<<"  [gec] delete ", a_name>>)
 						if not project.options.no_exec then
 							file_system.delete_file (a_name)
 						end
-					else
-						stop := True
+						stop := False
 					end
 					i := i + 1
 				end
