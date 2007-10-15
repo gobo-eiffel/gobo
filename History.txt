@@ -21,12 +21,6 @@ Version 3.7 - ?
 	* Fixed bug when determining the type of a call to a Tuple label 
 	  when appearing in a generic class.
 
-	Gobo Eiffel Kernel Library:
-
-	* Removed possible CAT-call when using KL_EQUALITY_TESTER. It does not
-	  use `is_equal' directly, but a protected version of it which is preceded
-	  by a call to `same_type'.
-
 	Gobo Eiffel Argument Library:
 
 	* Added the possibility to specify a maximum number of options.
@@ -37,15 +31,21 @@ Version 3.7 - ?
 	* The contracts now certify that the setup of arguments are 
 	  unambiguous.
 
+	Gobo Eiffel Kernel Library:
+
+	* Removed possible CAT-call when using KL_EQUALITY_TESTER. It does not
+	  use `is_equal' directly, but a protected version of it which is preceded
+	  by a call to `same_type'.
+
 	Gobo Eiffel XML library
 
 	* Made the XSLT serializer a reusable component for any XML
-          programs.
+	  programs.
 
 	* Added an example of using the XSLT serializer.
 
 	* Added documentation on XML serializers, icluding the
-	reusable XSLT serializer.
+	  reusable XSLT serializer.
 
 Version 3.6 - 14 June 2007
 
