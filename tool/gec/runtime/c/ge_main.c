@@ -33,7 +33,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	int argc;
 	char** argv;
 	char* cmd;
-	cmd = strdup(GetCommandLine());
+	cmd = strdup(GetCommandLineA());
 	GE_get_argcargv(cmd, &argc, &argv);
 	code = main(argc, argv);
 	free(cmd);
