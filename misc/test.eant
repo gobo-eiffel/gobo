@@ -177,6 +177,11 @@
 		<delete file="compile_se.ace"/>
 		<delete file="compile_ve.esd"/>
 		<delete file="compile_ve.xace"/>
+		<delete>
+			<fileset include="vc*.pdb"/>
+		</delete>
+		<delete file="${system}.pdb"/>
+		<delete file="${system}.ilk"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>

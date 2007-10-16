@@ -258,6 +258,11 @@
 		<delete file="compile_se.ace"/>
 		<delete file="compile_ve.esd"/>
 		<delete file="compile_ve.xace"/>
+		<delete>
+			<fileset include="vc*.pdb"/>
+		</delete>
+		<delete file="${system}.pdb"/>
+		<delete file="${system}.ilk"/>
 		<geant target="other_clean"/>
 	</target>
 
