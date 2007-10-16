@@ -49,7 +49,7 @@ void* GE_directory_open_read(char* dirname)
 	pattern[len++] = '.';
 	pattern[len++] = '*';
 	pattern[len++] = '\0';
-	result->handle = FindFirstFile(pattern, &(result->data));
+	result->handle = FindFirstFileA(pattern, &(result->data));
 	if (result->handle == INVALID_HANDLE_VALUE) {
 		free(pattern);
 		free(result);
@@ -70,7 +70,7 @@ void* GE_directory_read_entry(void* dir)
 	GE_directory* GE_dir = (GE_directory*)dir;
 
 	if (GE_dir->entry_used) {
-		if (FindNextFile(GE_dir->handle, &(GE_dir->data))) {
+		if (FindNextFileA(GE_dir->handle, &(GE_dir->data))) {
 			return GE_dir;
 		} else {
 			return NULL;

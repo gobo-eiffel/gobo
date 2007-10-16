@@ -123,14 +123,14 @@ EIF_REFERENCE dir_next(void* dir) {
 	HANDLE h = GE_dir->handle;
 
 	if (h) {
-		if (FindNextFile(h, &(GE_dir->data))) {
+		if (FindNextFileA(h, &(GE_dir->data))) {
 			char* s = GE_dir->data.cFileName;
 			return GE_ms(s,strlen(s));
 		} else {
 			return EIF_VOID;
 		}
 	} else {
-		h = FindFirstFile(GE_dir->pattern, &(GE_dir->data));
+		h = FindFirstFileA(GE_dir->pattern, &(GE_dir->data));
 		if (h == INVALID_HANDLE_VALUE) {
 			return EIF_VOID;
 		} else {

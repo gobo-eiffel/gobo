@@ -32,7 +32,7 @@ EIF_BOOLEAN eif_is_volume_name_valid(EIF_CHARACTER* p) {
 			strncpy((char*)rootpath, (char*)p, 2);
 			rootpath[2] = '\\';
 			rootpath [3] = '\0';
-			return (EIF_BOOLEAN)(GetDriveType(rootpath) != 1);
+			return (EIF_BOOLEAN)(GetDriveTypeA(rootpath) != 1);
 		}
 	return EIF_FALSE;
 #else

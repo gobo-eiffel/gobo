@@ -48,7 +48,7 @@ void eif_system_asynchronous(char* cmd) {
 	siStartInfo.cbReserved2 = 0;
 	siStartInfo.lpDesktop = NULL;
 	siStartInfo.dwFlags = STARTF_FORCEONFEEDBACK;
-	result = CreateProcess(
+	result = CreateProcessA(
 		NULL,
 		cmd,
 		NULL,
