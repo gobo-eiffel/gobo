@@ -1,7 +1,7 @@
 /*
 	description:
 
-		"C declarations for the Eiffel runtime."
+		"C declarations for the ISE Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
