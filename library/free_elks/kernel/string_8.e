@@ -716,9 +716,12 @@ feature -- Status report
 
 	is_double: BOOLEAN is
 			-- Does `Current' represent a DOUBLE?
+		local
+			l_convertor: like ctor_convertor
 		do
-			ctor_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_double)
-			Result := ctor_convertor.is_integral_double
+			l_convertor := ctor_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_double)
+			Result := l_convertor.is_integral_double
 		ensure
 			syntax_and_range:
 				-- 'Result' is True if and only if the following two
@@ -2274,72 +2277,96 @@ feature -- Conversion
 			-- 8-bit integer value
 		require
 			is_integer_8: is_integer_8
+		local
+			l_convertor: like ctoi_convertor
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_8)
-			Result := ctoi_convertor.parsed_integer_8
+			l_convertor := ctoi_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_no_limitation)
+			Result := l_convertor.parsed_integer_8
 		end
 
 	to_integer_16: INTEGER_16 is
 			-- 16-bit integer value
 		require
 			is_integer_16: is_integer_16
+		local
+			l_convertor: like ctoi_convertor
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_16)
-			Result := ctoi_convertor.parsed_integer_16
+			l_convertor := ctoi_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_no_limitation)
+			Result := l_convertor.parsed_integer_16
 		end
 
 	to_integer, to_integer_32: INTEGER is
 			-- 32-bit integer value
 		require
 			is_integer: is_integer_32
+		local
+			l_convertor: like ctoi_convertor
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_32)
-			Result := ctoi_convertor.parsed_integer
+			l_convertor := ctoi_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_no_limitation)
+			Result := l_convertor.parsed_integer
 		end
 
 	to_integer_64: INTEGER_64 is
 			-- 64-bit integer value
 		require
 			is_integer_64: is_integer_64
+		local
+			l_convertor: like ctoi_convertor
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_64)
-			Result := ctoi_convertor.parsed_integer_64
+			l_convertor := ctoi_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_no_limitation)
+			Result := l_convertor.parsed_integer_64
 		end
 
 	to_natural_8: NATURAL_8 is
 			-- 8-bit natural value
 		require
 			is_natural_8: is_natural_8
+		local
+			l_convertor: like ctoi_convertor
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_8)
-			Result := ctoi_convertor.parsed_natural_8
+			l_convertor := ctoi_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_no_limitation)
+			Result := l_convertor.parsed_natural_8
 		end
 
 	to_natural_16: NATURAL_16 is
 			-- 16-bit natural value
 		require
 			is_natural_16: is_natural_16
+		local
+			l_convertor: like ctoi_convertor
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_16)
-			Result := ctoi_convertor.parsed_natural_16
+			l_convertor := ctoi_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_no_limitation)
+			Result := l_convertor.parsed_natural_16
 		end
 
 	to_natural, to_natural_32: NATURAL_32 is
 			-- 32-bit natural value
 		require
 			is_natural: is_natural
+		local
+			l_convertor: like ctoi_convertor
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_32)
-			Result := ctoi_convertor.parsed_natural_32
+			l_convertor := ctoi_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_no_limitation)
+			Result := l_convertor.parsed_natural_32
 		end
 
 	to_natural_64: NATURAL_64 is
 			-- 64-bit natural value
 		require
 			is_natural_64: is_natural_64
+		local
+			l_convertor: like ctoi_convertor
 		do
-			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_64)
-			Result := ctoi_convertor.parsed_natural_64
+			l_convertor := ctoi_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_no_limitation)
+			Result := l_convertor.parsed_natural_64
 		end
 
 	to_real: REAL is
@@ -2356,9 +2383,12 @@ feature -- Conversion
 			-- for example, when applied to "123.0", will yield 123.0 (double)
 		require
 			represents_a_double: is_double
+		local
+			l_convertor: like ctor_convertor
 		do
-			ctor_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_double)
-			Result := ctor_convertor.parsed_double
+			l_convertor := ctor_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_no_limitation)
+			Result := l_convertor.parsed_double
 		end
 
 	to_boolean: BOOLEAN is
@@ -2590,10 +2620,13 @@ feature {NONE} -- Implementation
 
 	is_valid_integer_or_natural (type: INTEGER) : BOOLEAN is
 			-- Is `Current' a valid number according to given `type'?
+		local
+			l_convertor: like ctoi_convertor
 		do
-			ctoi_convertor.reset (type)
-			ctoi_convertor.parse_string_with_type (Current, type)
-			Result := ctoi_convertor.is_integral_integer
+			l_convertor := ctoi_convertor
+			l_convertor.reset (type)
+			l_convertor.parse_string_with_type (Current, type)
+			Result := l_convertor.is_integral_integer
 		end
 
 	str_strict_cmp (this, other: like area; nb: INTEGER): INTEGER is

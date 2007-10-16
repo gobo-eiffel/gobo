@@ -120,6 +120,12 @@ feature -- Access
 			Result := c_real_iavg (item)
 		end
 
+	cpu_total_time: DOUBLE is
+			-- Amount of application CPU time, in seconds, for `type' before last call to `update'
+		do
+			Result := c_cpu_total_time (item)
+		end
+
 	cpu_time: DOUBLE is
 			-- Amount of CPU time, in seconds, spent in cycle,
 			-- for `type' before last call to `update'
@@ -147,6 +153,12 @@ feature -- Access
 			-- for `type' before last call to `update'
 		do
 			Result := c_cpu_iavg (item)
+		end
+
+	sys_total_time: DOUBLE is
+			-- Amount of application kernel time, in seconds, for `type' before last call to `update'
+		do
+			Result := c_sys_total_time (item)
 		end
 
 	sys_time: DOUBLE is
@@ -269,6 +281,14 @@ feature {NONE} -- C externals
 			"return (EIF_INTEGER) ((struct gacstat *) $a_ptr)->real_iavg;"
 		end
 
+	c_cpu_total_time (a_ptr: POINTER): DOUBLE is
+			-- Access `cpu_total_time' data member of `a_ptr' struct.
+		external
+			"C inline use %"eif_memory.h%""
+		alias
+			"return ((struct gacstat *) $a_ptr)->cpu_total_time;"
+		end
+
 	c_cpu_time (a_ptr: POINTER): DOUBLE is
 			-- Access `cpu_time' data member of `a_ptr' struct.
 		external
@@ -299,6 +319,14 @@ feature {NONE} -- C externals
 			"C inline use %"eif_memory.h%""
 		alias
 			"return ((struct gacstat *) $a_ptr)->cpu_iavg;"
+		end
+
+	c_sys_total_time (a_ptr: POINTER): DOUBLE is
+			-- Access `sys_total_time' data member of `a_ptr' struct.
+		external
+			"C inline use %"eif_memory.h%""
+		alias
+			"return ((struct gacstat *) $a_ptr)->sys_total_time;"
 		end
 
 	c_sys_time (a_ptr: POINTER): DOUBLE is

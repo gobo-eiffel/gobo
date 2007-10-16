@@ -127,6 +127,14 @@ feature -- Access
 			end
 		end
 
+	item_for_iteration: G is
+			-- Item at current position
+		require
+			not_off: not off
+		do
+			Result := item
+		end
+
 feature -- Status report
 
 	exhausted: BOOLEAN is

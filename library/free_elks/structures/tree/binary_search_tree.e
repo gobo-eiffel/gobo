@@ -57,20 +57,41 @@ feature -- Access
  	has (v: like item): BOOLEAN is
 			-- Does tree contain a node whose item
 			-- is equal to `v' (object comparison)?
-		require else
-			argument_not_void: v /= Void
+		do
+			if v /= Void then
+				if items_equal (item, v) then
+					Result := True
+				elseif v < item then
+					if left_child /= Void then
+						set_comparison_mode (left_child)
+						Result := left_child.has (v)
+					end
+				else
+					if right_child /= Void then
+						set_comparison_mode (right_child)
+						Result := right_child.has (v)
+					end
+				end
+			end
+		end
+
+	tree_item (v: like item): like Current is
+			-- Node whose item is equal to `v' (object_comparison)
+			-- otherwise default value.
+		require
+			v_not_void: v /= Void
 		do
 			if items_equal (item, v) then
-				Result := True
+				Result := Current
 			elseif v < item then
 				if left_child /= Void then
 					set_comparison_mode (left_child)
-					Result := left_child.has (v)
+					Result := left_child.tree_item (v)
 				end
 			else
 				if right_child /= Void then
 					set_comparison_mode (right_child)
-					Result := right_child.has (v)
+					Result := right_child.tree_item (v)
 				end
 			end
 		end

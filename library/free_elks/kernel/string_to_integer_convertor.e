@@ -77,7 +77,7 @@ feature -- Status reporting
 		end
 
 	overflowed: BOOLEAN is
-			-- Is integer parsed so fa overflowed?
+			-- Is integer parsed so far overflowed?
 		do
 			Result := (internal_overflowed and then sign = 0)
 		end
@@ -104,16 +104,46 @@ feature -- String parsing
 		local
 			i: INTEGER
 			l_c: INTEGER
+			l_str8: STRING_8
+			l_area8: SPECIAL [CHARACTER_8]
+			l_str32: STRING_32
+			l_area32: SPECIAL [CHARACTER_32]
 		do
 			reset (type)
-			from
-				i := 1
-				l_c := s.count
-			until
-				i > l_c or last_state = 4 or last_state = 5
-			loop
-				parse_character (s.code (i).to_character_8)
-				i := i + 1
+			i := 0
+			l_c := s.count
+			l_str8 ?= s
+			if l_str8 /= Void then
+				from
+					l_area8 := l_str8.area
+				until
+					i = l_c or last_state >= 4
+				loop
+					parse_character (l_area8.item (i))
+					i := i + 1
+				end
+			else
+				l_str32 ?= s
+				if l_str32 /= Void then
+					from
+						l_area32 := l_str32.area
+					until
+						i = l_c or last_state >= 4
+					loop
+						parse_character (l_area32.item (i).to_character_8)
+						i := i + 1
+					end
+				else
+					from
+						i := 1
+						l_c := s.count
+					until
+						i > l_c or last_state >= 4
+					loop
+						parse_character (s.code (i).to_character_8)
+						i := i + 1
+					end
+				end
 			end
 		end
 
@@ -122,6 +152,7 @@ feature -- String parsing
 		local
 			temp_p1: like max_natural_type
 			temp_p2: like max_natural_type
+			l_state: like last_state
 		do
 				-- Parse according to the following specification:
 				-- Integer/natural specification:
@@ -137,18 +168,17 @@ feature -- String parsing
 					-- last_state = 3 : trailing separators
 					-- last_state = 4 : error state
 					-- last_state = 5 : overflow state
-			if last_state /= 4 and last_state /= 5 then
-				temp_p1 := (0).to_natural_64
-				temp_p2 := (0).to_natural_64
-				inspect last_state
+			l_state := last_state
+			if l_state <= 4 then
+				inspect l_state
 				when 0 then
 						-- Let's find beginning of an integer, if any.
 					if c.is_digit then
-						last_state := 2
+						l_state := 2
 						part1 := 0
 						part2 := (c.code - 48).to_natural_64
 					elseif c = '-' or c = '+' then
-						last_state := 1
+						l_state := 1
 						if c = '-' then
 							sign := 1
 						else
@@ -156,7 +186,7 @@ feature -- String parsing
 						end
 					elseif leading_separators_acceptable and then leading_separators.has (c) then
 					else
-						last_state := 4
+						l_state := 4
 					end
 				when 1 then
 						-- Let's find first digit after sign.
@@ -164,16 +194,16 @@ feature -- String parsing
 						part1 := 0
 						part2 := (c.code - 48).to_natural_64
 						if conversion_type /= type_no_limitation then
-							internal_overflowed := overflow_checker.will_overflow (part1, part2, conversion_type, sign)
-							if internal_overflowed then
+							if overflow_checker.will_overflow (part1, part2, conversion_type, sign) then
+								internal_overflowed := True
 								part1 := temp_p1
 								part2 := temp_p2
-								last_state := 5
+								l_state := 5
 							end
 						end
-						last_state := 2
+						l_state := 2
 					else
-						last_state := 4
+						l_state := 4
 					end
 				when 2 then
 						-- Let's find another digit or end of integer.
@@ -185,24 +215,25 @@ feature -- String parsing
 						if conversion_type /= type_no_limitation then
 							internal_overflowed := overflow_checker.will_overflow (part1, part2, conversion_type, sign)
 							if overflowed then
-								last_state := 5
 								part1 := temp_p1
 								part2 := temp_p2
+								l_state := 5
 							end
 						end
 					elseif trailing_separators_acceptable and then trailing_separators.has (c) then
-						last_state := 3
+						l_state := 3
 					else
-						last_state := 4
+						l_state := 4
 					end
 				when 3 then
 						-- Consume remaining separators.
 					if trailing_separators_acceptable and then trailing_separators.has (c) then
 					else
-						last_state := 4
+						l_state := 4
 					end
 				end
 			end
+			last_state := l_state
 		end
 
 feature -- Status reporting
@@ -230,99 +261,66 @@ feature -- Status reporting
 
 	parsed_integer_8: INTEGER_8 is
 			-- INTEGER_8 representation of parsed string
-		local
-			l1: INTEGER_8
 		do
-
-			l1 := part1.as_integer_8
-			l1 := l1 * 10
 			if sign = 1 then
-				Result := - l1 - part2.as_integer_8
+				Result := - (part1 * 10 + part2).as_integer_8
 			else
-				Result := l1 + part2.as_integer_8
+				Result := (part1 * 10 + part2).as_integer_8
 			end
 		end
 
 	parsed_integer_16: INTEGER_16 is
 			-- INTEGER_16 representation of parsed string
-		local
-			l1: INTEGER_16
 		do
-			l1 := part1.as_integer_16
-			l1 := l1 * 10
 			if sign = 1 then
-				Result := - l1 - part2.as_integer_16
+				Result := - (part1 * 10 + part2).as_integer_16
 			else
-				Result := l1 + part2.as_integer_16
+				Result := (part1 * 10 + part2).as_integer_16
 			end
 		end
 
 	parsed_integer_32, parsed_integer: INTEGER is
 			-- INTEGER representation of parsed string
-		local
-			l1: INTEGER
 		do
-			l1 := part1.as_integer_32
-			l1 := l1 * 10
 			if sign = 1 then
-				Result := - l1 - part2.as_integer_32
+				Result := - (part1 * 10 + part2).as_integer_32
 			else
-				Result := l1 + part2.as_integer_32
+				Result := (part1 * 10 + part2).as_integer_32
 			end
 		end
 
 	parsed_integer_64: INTEGER_64 is
 			-- INTEGER_64 representation of parsed string
-		local
-			l1: INTEGER_64
 		do
-			l1 := part1.as_integer_64
-			l1 := l1 * 10
 			if sign = 1 then
-				Result := - l1 - part2.as_integer_64
+				Result := - (part1 * 10 + part2).as_integer_64
 			else
-				Result := l1 + part2.as_integer_64
+				Result := (part1 * 10 + part2).as_integer_64
 			end
 		end
 
 	parsed_natural_8: NATURAL_8 is
 			-- NATURAL_8 representation of parsed string
-		local
-			l1: NATURAL_8
 		do
-			l1 := part1.as_natural_8
-			l1 := l1 * 10
-			Result := l1 + part2.as_natural_8
+			Result := (part1 * 10 + part2).as_natural_8
 		end
 
 	parsed_natural_16: NATURAL_16 is
 			-- NATURAL_16 representation of parsed string
-		local
-			l1: NATURAL_16
 		do
-			l1 := part1.as_natural_16
-			l1 := l1 * 10
-			Result := l1 + part2.as_natural_16
+			Result := (part1 * 10 + part2).as_natural_16
 		end
 
 	parsed_natural_32, parsed_natural: NATURAL_32 is
 			-- NATURAL_32 representation of parsed string
-		local
-			l1: NATURAL_32
 		do
-			l1 := part1.as_natural_32
-			l1 := l1 * 10
-			Result := l1 + part2.as_natural_32
+			Result := (part1 * 10 + part2).as_natural_32
 		end
 
 	parsed_natural_64: NATURAL_64 is
 			-- NATURAL_64 representation of parsed string
-		local
-			l1: NATURAL_64
 		do
-			l1 := part1.as_natural_64
-			l1 := l1 * 10
-			Result := l1 + part2.as_natural_64
+			Result := part1 * 10 + part2
 		end
 
 feature{NONE} -- Implementation
@@ -331,6 +329,8 @@ feature{NONE} -- Implementation
 			-- Overflow checker
 		once
 			create Result.make
+		ensure
+			overflow_checker_not_void: Result /= Void
 		end
 
 	part1, part2: like max_natural_type

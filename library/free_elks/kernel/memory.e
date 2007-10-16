@@ -16,7 +16,7 @@ inherit
 	DISPOSABLE
 
 	MEM_CONST
-	
+
 feature -- Measurement
 
 	memory_statistics (memory_type: INTEGER): MEM_INFO is
@@ -53,8 +53,8 @@ feature -- Status report
 
 	collection_period: INTEGER is
 			-- Period of full collection.
-			-- If the environment variable EIF_FULL_COLLECTION_PERIOD   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_FULL_COLLECTION_PERIOD
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 			-- If null, no full collection is launched.
 		external
@@ -65,8 +65,8 @@ feature -- Status report
 
 	coalesce_period: INTEGER is
 			-- Period of full coalesce (in number of collections)
-			-- If the environment variable EIF_FULL_COALESCE_PERIOD   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_FULL_COALESCE_PERIOD
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 			-- If null, no full coalescing is launched.
 		external
@@ -74,7 +74,7 @@ feature -- Status report
 		alias
 			"eif_coalesce_period"
 		end
-			
+
 	collecting: BOOLEAN is
 			-- Is garbage collection enabled?
 		external
@@ -103,8 +103,8 @@ feature -- Status report
 	chunk_size: INTEGER is
 			-- Minimal size of a memory chunk. The run-time always
 			-- allocates a multiple of this size.
-			-- If the environment variable EIF_MEMORY_CHUNK   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_MEMORY_CHUNK
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 		external
 			"C use %"eif_memory.h%""
@@ -114,32 +114,32 @@ feature -- Status report
 
 	tenure: INTEGER is
 			-- Maximum age of object before being considered
-			-- as old (old objects are not scanned during 
+			-- as old (old objects are not scanned during
 			-- partial collection).
-			-- If the environment variable EIF_TENURE_MAX   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_TENURE_MAX
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 		external
 			"C use %"eif_memory.h%""
 		alias
 			"eif_tenure"
 		end
-			
+
 	generation_object_limit: INTEGER is
 			-- Maximum size of object in generational scavenge zone.
-			-- If the environment variable EIF_GS_LIMIT   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_GS_LIMIT
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 		external
 			"C use %"eif_memory.h%""
 		alias
 			"eif_generation_object_limit"
 		end
-	
+
 	scavenge_zone_size: INTEGER is
 			-- Size of generational scavenge zone.
-			-- If the environment variable EIF_MEMORY_SCAVENGE   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_MEMORY_SCAVENGE
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 
 		external
@@ -155,7 +155,7 @@ feature -- Status report
 		do
 			Result := find_referers ($an_object, special_any_dynamic_type)
 		end
-		
+
 	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that have same dynamic type as `an_object'.
 		do
@@ -175,19 +175,19 @@ feature -- Status report
 		do
 				-- First get all object instances in runtime.
 			l_spec := find_all_instances (special_any_dynamic_type)
-			
+
 				-- Now create a memory count map of all objects. There are two reasons
 				-- why we do not simply query `memory_count_map':
 				-- 1. This would cause two calls to `find_all_instances'.
 				-- 2. The new objects created by the first call would be included in the
 				-- second list so they would not match exactly.
-				
+
 				-- The reason why we prepass and create a memory count map is
 				-- to enable us to create the arrayed lists in `Result' with
 				-- the exact size required for their contents. Even though we now have to
 				-- perform the prepass, `memory_map' is approx 15-20% faster as
 				-- resizing the arrayed lists each time an item was addded is slow.
-				
+
 			create l_memory_count_map.make (100)
 			from
 				i := 0
@@ -206,7 +206,7 @@ feature -- Status report
 				-- Now create table indexed by dynamic type. For a given
 				-- dynamic type, we will have a list of all objects of
 				-- this type.
-			create Result.make (100)		
+			create Result.make (100)
 			from
 				i := 0
 				nb := l_spec.count
@@ -242,7 +242,7 @@ feature -- Status report
 		do
 				-- First get all object instances in runtime.
 			l_spec := find_all_instances (special_any_dynamic_type)
-			
+
 				-- Now create table indexed by dynamic type. For a given
 				-- dynamic type, we will count all objects of this type.
 			create Result.make (100)
@@ -265,8 +265,42 @@ feature -- Status report
 				i := i + 1
 			end
 		end
-	
+
 feature -- Status setting
+
+	execute_without_collection (a_action: PROCEDURE [ANY, TUPLE]) is
+			-- Execute `a_action' with the garbage collector disabled.
+			-- If `a_action' modifies the status of `collecting', we restore
+			-- it no matter what at the end.
+		require
+			a_action_not_void: a_action /= Void
+		local
+			l_is_collecting: like collecting
+			retried: BOOLEAN
+		do
+			if not retried then
+				l_is_collecting := collecting
+				if l_is_collecting then
+					collection_off
+					a_action.call (Void)
+					collection_on
+				else
+					a_action.call (Void)
+					collection_off
+				end
+			else
+				if l_is_collecting then
+					collection_on
+				else
+					collection_off
+				end
+			end
+		ensure
+			collection_status_preserved: collecting = old collecting
+		rescue
+			retried := True
+			retry
+		end
 
 	collection_off is
 			-- Disable garbage collection.
@@ -324,7 +358,7 @@ feature -- Status setting
 		end
 
 	set_memory_threshold (value: INTEGER) is
-			-- Set a new `memory_threshold' in bytes. Whenever the memory 
+			-- Set a new `memory_threshold' in bytes. Whenever the memory
 			-- allocated for Eiffel reaches this value, an automatic
 			-- collection is performed.
 		require
@@ -338,7 +372,7 @@ feature -- Status setting
 	set_collection_period (value: INTEGER) is
 			-- Set `collection_period'. Every `value' collection,
 			-- the Garbage collector will perform a collection
-			-- on the whole memory (full collection), otherwise 
+			-- on the whole memory (full collection), otherwise
 			-- a simple partial collection is done.
 		require
 			positive_value: value >= 0
@@ -351,7 +385,7 @@ feature -- Status setting
 	set_coalesce_period (value: INTEGER) is
 			-- Set `coalesce_period'. Every `value' collection,
 			-- the Garbage Collector will coalesce
-			-- the whole memory. 
+			-- the whole memory.
 		require
 			positive_value: value >= 0
 		external
@@ -435,7 +469,7 @@ feature {NONE} -- Implementation
 		alias
 			"eif_gc_mon"
 		end
-	
+
 	find_referers (target: POINTER; result_type: INTEGER): SPECIAL [ANY] is
 		external
 			"C signature (EIF_REFERENCE, EIF_INTEGER): EIF_REFERENCE use %"eif_traverse.h%""

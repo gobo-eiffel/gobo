@@ -20,8 +20,8 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize.
 		do
-			create integer_overflow_state1.make (1, type_count * 2)
-			create integer_overflow_state2.make (1, type_count * 2)
+			create integer_overflow_state1.make (type_count * 2 + 1)
+			create integer_overflow_state2.make (type_count * 2 + 1)
 
 			integer_overflow_state1.put (({INTEGER_8}.max_value // 10).to_natural_64, 1)
 			integer_overflow_state2.put (({INTEGER_8}.max_value \\ 10).to_natural_64, 1)
@@ -41,8 +41,8 @@ feature{NONE} -- Initialization
 			integer_overflow_state1.put ((-({INTEGER_64}.min_value // 10)).to_natural_64, 8)
 			integer_overflow_state2.put ((-({INTEGER_64}.min_value \\ 10)).to_natural_64, 8)
 
-			create natural_overflow_state1.make (1, type_count)
-			create natural_overflow_state2.make (1, type_count)
+			create natural_overflow_state1.make (type_count + 1)
+			create natural_overflow_state2.make (type_count + 1)
 
 			natural_overflow_state1.put (({NATURAL_8}.max_value // 10).to_natural_64, 1)
 			natural_overflow_state2.put (({NATURAL_8}.max_value \\ 10).to_natural_64, 1)
@@ -64,13 +64,10 @@ feature -- Overflow checking
 		local
 			l_index: INTEGER
 		do
-			if type = type_no_limitation then
-				Result := False
-			else
-				if (type = type_integer_8) or
-				   (type = type_integer_16) or
-				   (type = type_integer_32) or
-				   (type = type_integer_64)
+			Result := type /= type_no_limitation
+			if Result then
+				if (type = type_integer_8) or (type = type_integer_16) or
+				   (type = type_integer_32) or (type = type_integer_64)
 				then
 					l_index := sign * 4 + type
 					Result := (part1 > integer_overflow_state1.item (l_index)) or
@@ -92,10 +89,10 @@ feature -- Overflow checking
 
 feature{NONE} -- Implementation
 
-	integer_overflow_state1: ARRAY [like max_natural_type]
-	integer_overflow_state2: ARRAY [like max_natural_type]
-	natural_overflow_state1: ARRAY [like max_natural_type]
-	natural_overflow_state2: ARRAY [like max_natural_type]
+	integer_overflow_state1: SPECIAL [like max_natural_type]
+	integer_overflow_state2: SPECIAL [like max_natural_type]
+	natural_overflow_state1: SPECIAL [like max_natural_type]
+	natural_overflow_state2: SPECIAL [like max_natural_type]
 			-- Arrays to check conversion overflow
 
 end

@@ -4,7 +4,7 @@
 		"C functions used to implement class MEMORY"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,6 +34,8 @@ struct gacstat {
 	double sys_time;
 	double cpu_itime;
 	double sys_itime;
+	double cpu_total_time;
+	double sys_total_time;
 };
 
 struct emallinfo {
