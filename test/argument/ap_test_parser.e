@@ -274,7 +274,7 @@ feature -- Tests
 		end
 
 	test_set_unset_mandatory is
-			-- Can we setting and unsetting the mandatory flag?
+			-- Can we set and unset the mandatory flag?
 		local
 			a: AP_FLAG
 		do
