@@ -273,4 +273,17 @@ feature -- Tests
 			assert ("c_was_not_found", not o3.was_found)
 		end
 
+	test_set_unset_mandatory is
+			-- Can we setting and unsetting the mandatory flag?
+		local
+			a: AP_FLAG
+		do
+			create a.make_with_short_form ('m')
+			assert ("a_is_not_mandatory", not a.is_mandatory)
+			a.enable_mandatory
+			assert ("a_is_mandatory", a.is_mandatory)
+			a.disable_mandatory
+			assert ("a_is_not_mandatory", not a.is_mandatory)
+		end
+
 end

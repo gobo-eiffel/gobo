@@ -241,7 +241,7 @@ feature -- Element change
 	disable_mandatory is
 			-- Make the option not mandatory.
 		do
-			is_mandatory := True
+			is_mandatory := False
 		ensure
 			not_mandatory: not is_mandatory
 		end
