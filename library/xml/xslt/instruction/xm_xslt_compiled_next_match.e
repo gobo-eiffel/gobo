@@ -35,58 +35,60 @@ feature -- Evaluation
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET
-			a_current_template: XM_XSLT_COMPILED_TEMPLATE
-			an_error: XM_XPATH_ERROR_VALUE
-			a_mode: XM_XSLT_MODE
-			a_node_handler: XM_XSLT_COMPILED_TEMPLATE
-			a_current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			another_context: XM_XSLT_EVALUATION_CONTEXT
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_parameters, l_tunnel_parameters: XM_XSLT_PARAMETER_SET
+			l_current_rule, l_rule: XM_XSLT_RULE
+			l_error: XM_XPATH_ERROR_VALUE
+			l_mode: XM_XSLT_MODE
+			l_template: XM_XSLT_COMPILED_TEMPLATE
+			l_current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_other_context: XM_XSLT_EVALUATION_CONTEXT
+			
 		do
-			a_transformer := a_context.transformer
+			l_transformer := a_context.transformer
 			
 			-- handle any parameters
 
-			some_parameters := assembled_parameters (a_context, actual_parameters)
-			some_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameters)
-			a_current_template := a_context.current_template
-			if a_current_template = Void then
-				create an_error.make_from_string ("Current template rule is null whilst evaluating xsl:next-match.",
-															 Xpath_errors_uri, "XTDE0560", Dynamic_error)
-				an_error.set_location (system_id, line_number)
-				a_transformer.report_fatal_error (an_error)
+			l_parameters := assembled_parameters (a_context, actual_parameters)
+			l_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameters)
+			l_current_rule := a_context.current_template
+			if l_current_rule = Void then
+				create l_error.make_from_string ("Current template rule is Void whilst evaluating xsl:next-match.",
+					Xpath_errors_uri, "XTDE0560", Dynamic_error)
+				l_error.set_location (system_id, line_number)
+				l_transformer.report_fatal_error (l_error)
 			else
-				a_mode := a_context.current_mode
-				if a_mode = Void then a_mode := a_transformer.rule_manager.mode (Default_mode) end
-				a_current_iterator := a_context.current_iterator
-				if a_current_iterator = Void or else a_current_iterator.is_error or else a_current_iterator.off then
-					create an_error.make_from_string ("Context item is not set whilst evaluating xsl:next-match.",
-																 Xpath_errors_uri, "XTDE0565", Dynamic_error)
-					an_error.set_location (system_id, line_number)
-					a_transformer.report_fatal_error (an_error)
+				l_mode := a_context.current_mode
+				if l_mode = Void then l_mode := l_transformer.rule_manager.mode (Default_mode) end
+				l_current_iterator := a_context.current_iterator
+				if l_current_iterator = Void or else l_current_iterator.is_error or else l_current_iterator.off then
+					create l_error.make_from_string ("Context item is not set whilst evaluating xsl:next-match.",
+						Xpath_errors_uri, "XTDE0565", Dynamic_error)
+					l_error.set_location (system_id, line_number)
+					l_transformer.report_fatal_error (l_error)
 				else
-					if not a_current_iterator.item.is_node then
-						create an_error.make_from_string ("Context item is not a node whilst evaluating xsl:next-match.",
-																	 Xpath_errors_uri, "XTDE0565", Dynamic_error)
-						an_error.set_location (system_id, line_number)
-						a_transformer.report_fatal_error (an_error)
+					if not l_current_iterator.item.is_node then
+						create l_error.make_from_string ("Context item is not a node whilst evaluating xsl:next-match.",
+							Xpath_errors_uri, "XTDE0565", Dynamic_error)
+						l_error.set_location (system_id, line_number)
+						l_transformer.report_fatal_error (l_error)
 					else
-						a_transformer.rule_manager.find_next_match_handler (a_current_iterator.item.as_node, a_mode, a_current_template, a_context)
-						a_node_handler := a_transformer.rule_manager.last_found_template
-						if a_transformer.is_error then
+						l_transformer.rule_manager.find_next_match_handler (l_current_iterator.item.as_node, l_mode, l_current_rule, a_context)
+						l_rule := l_transformer.rule_manager.last_found_template
+						if l_transformer.is_error then
 							-- nothing to do
-						elseif a_node_handler = Void then
-	
+						elseif l_rule = Void then
+							
 							-- Use the default action for the node.
 							
-							perform_default_action (a_current_iterator.item.as_node, some_parameters, some_tunnel_parameters, a_context)
+							perform_default_action (l_current_iterator.item.as_node, l_parameters, l_tunnel_parameters, a_context)
 						else
-							another_context := a_context.new_context
-							another_context.set_local_parameters (some_parameters)
-							another_context.set_tunnel_parameters (some_tunnel_parameters)
-							another_context.open_stack_frame (a_node_handler.slot_manager)
-							a_node_handler.process (another_context)
+							l_template := l_rule.handler.as_template
+							l_other_context := a_context.new_context
+							l_other_context.set_local_parameters (l_parameters)
+							l_other_context.set_tunnel_parameters (l_tunnel_parameters)
+							l_other_context.open_stack_frame (l_template.slot_manager)
+							l_template.generate_events (l_rule, l_other_context)
 						end
 					end
 				end

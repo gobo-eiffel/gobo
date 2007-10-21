@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			simplified_pattern, type_check
+			simplified_pattern, type_check, is_union_pattern, as_union_pattern
 		end
 
 create
@@ -69,6 +69,22 @@ feature -- Access
 			else
 				create {XM_XSLT_NODE_KIND_TEST} Result.make (static_context, node_type)
 			end
+		end
+
+feature -- Status report
+
+	is_union_pattern: BOOLEAN is
+			-- Is `Current' a union pattern?
+		do
+			Result := True
+		end
+
+feature -- Conversion
+
+	as_union_pattern: XM_XSLT_UNION_PATTERN is
+			-- `Current' seen as a union pattern
+		do
+			Result := Current
 		end
 
 feature -- Analysis

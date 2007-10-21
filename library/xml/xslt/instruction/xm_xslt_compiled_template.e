@@ -14,8 +14,6 @@ class XM_XSLT_COMPILED_TEMPLATE
 
 inherit
 
-	XM_XPATH_TAIL_CALL
-
 	XM_XSLT_COMPILED_PROCEDURE
 
 	XM_XSLT_SHARED_EMPTY_PROPERTIES
@@ -95,17 +93,18 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	process (a_context: XM_XSLT_EVALUATION_CONTEXT) is
-			-- process `Current', without returning any tail calls
+	generate_events (a_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Process `Current', without returning any tail calls
 		require
-			context_not_void: a_context /= Void
+			a_rule_not_void: a_rule /= Void
+			a_context_not_void: a_context /= Void
 		local
 			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
 			l_tail_call: XM_XPATH_TAIL_CALL
 		do
 			from
 				create l_tail.make (Void)
-				generate_tail_call (l_tail, a_context)
+				generate_tail_call (l_tail, a_rule, a_context)
 				l_tail_call := l_tail.item
 			until
 				l_tail_call = Void
@@ -116,14 +115,21 @@ feature -- Evaluation
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
+		require
+			a_rule_not_void: a_rule /= Void
+			a_context_not_void: a_context /= Void
+			a_tail_not_void: a_tail /= Void
+			no_tail_call: a_tail.item = Void
 		local
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			a_new_context := a_context.new_context
-			a_new_context.set_current_template (Current)
-			expand (a_tail, a_new_context)
+			if body /= Void then
+				a_new_context := a_context.new_context
+				a_new_context.set_current_template (a_rule)
+				expand (a_tail, a_new_context)
+			end
 		end
 
 	expand (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -146,6 +152,7 @@ feature -- Evaluation
 			else
 				from
 					body.generate_events (a_context)
+					-- TODO: do we need this?
 				until l_finished loop
 					l_function := a_context.tail_call_function
 					a_context.clear_tail_call_function

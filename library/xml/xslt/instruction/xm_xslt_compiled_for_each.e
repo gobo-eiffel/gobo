@@ -247,42 +247,43 @@ feature -- Evaluation
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_inner_context: XM_XSLT_EVALUATION_CONTEXT
-			a_trace_listener: XM_XSLT_TRACE_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_inner_context: XM_XSLT_EVALUATION_CONTEXT
+			l_trace_listener: XM_XSLT_TRACE_LISTENER
 		do
-			a_transformer := a_context.transformer
+			l_transformer := a_context.transformer
 			select_expression.create_iterator (a_context)
-			an_iterator := select_expression.last_iterator
-			an_inner_context := a_context.new_context
-			an_inner_context.set_current_iterator (an_iterator)
-			if a_transformer.is_tracing then
-				a_trace_listener := a_transformer.trace_listener
+			l_iterator := select_expression.last_iterator
+			l_inner_context := a_context.new_context
+			l_inner_context.set_current_iterator (l_iterator)
+			l_inner_context.set_current_template (Void)
+			if l_transformer.is_tracing then
+				l_trace_listener := l_transformer.trace_listener
 			end
-			if an_iterator.is_error then
-				an_iterator.error_value.set_location (system_id, line_number)
-				a_transformer.report_fatal_error (an_iterator.error_value)
+			if l_iterator.is_error then
+				l_iterator.error_value.set_location (system_id, line_number)
+				l_transformer.report_fatal_error (l_iterator.error_value)
 			else
 				from
-					an_iterator.start
-					if an_iterator.is_error then
-						a_transformer.report_fatal_error (an_iterator.error_value)
+					l_iterator.start
+					if l_iterator.is_error then
+						l_transformer.report_fatal_error (l_iterator.error_value)
 					end
 				until
-					a_transformer.is_error or else an_iterator.is_error or else an_iterator.after
+					l_transformer.is_error or else l_iterator.is_error or else l_iterator.after
 				loop
-					if a_transformer.is_tracing then
-						a_trace_listener.trace_current_item_start (an_iterator.item)
+					if l_transformer.is_tracing then
+						l_trace_listener.trace_current_item_start (l_iterator.item)
 					end
-					action.generate_events (an_inner_context)
-					if a_transformer.is_tracing then
-						a_trace_listener.trace_current_item_finish (an_iterator.item)
+					action.generate_events (l_inner_context)
+					if l_transformer.is_tracing then
+						l_trace_listener.trace_current_item_finish (l_iterator.item)
 					end
-					an_iterator.forth
-					if an_iterator.is_error then
-						an_iterator.error_value.set_location (system_id, line_number)
-						a_transformer.report_fatal_error (an_iterator.error_value)
+					l_iterator.forth
+					if l_iterator.is_error then
+						l_iterator.error_value.set_location (system_id, line_number)
+						l_transformer.report_fatal_error (l_iterator.error_value)
 					end
 				end
 			end

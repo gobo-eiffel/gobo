@@ -111,6 +111,12 @@ feature -- Status report
 			Result := False
 		end
 
+	is_union_pattern: BOOLEAN is
+			-- Is `Current' a union pattern?
+		do
+			Result := False
+		end
+
 feature -- Status setting
 
 	set_system_id (a_system_id: STRING) is
@@ -192,10 +198,19 @@ feature -- Matching
 
 feature -- Conversion
 
-		as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN is
+	as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN is
 			-- `Current' seen as a location-path pattern
 		require
 			location_path_pattern: is_location_pattern
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	as_union_pattern: XM_XSLT_UNION_PATTERN is
+			-- `Current' seen as a union pattern
+		require
+			union_pattern: is_union_pattern
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)

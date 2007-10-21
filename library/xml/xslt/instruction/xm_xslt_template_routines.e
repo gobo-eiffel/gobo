@@ -85,28 +85,34 @@ feature -- Evaluation
 			major_context_not_void: a_context /= Void and then not a_context.is_minor
 			no_previous_error: not a_context.transformer.is_error
 		local
-			l_node_handler: XM_XSLT_COMPILED_TEMPLATE
+			l_rule: XM_XSLT_RULE
+			l_template: XM_XSLT_COMPILED_TEMPLATE
 		do
 			-- find the node handler [i.e., the template rule] for this node
 
 			a_transformer.rule_manager.find_template_rule (a_node, a_mode, a_context)
 			if not a_transformer.is_error then
-				l_node_handler := a_transformer.rule_manager.last_found_template
-				if l_node_handler = Void then
+				l_rule := a_transformer.rule_manager.last_found_template
+				if l_rule = Void then
 
 					-- Use the default action for the node. No need to open a new stack frame!
 
 					perform_default_action (a_node, a_parameters, a_tunnel_parameters, a_context)
 				else
+					check
+						template_rule: l_rule.handler.is_template
+						-- only templates are used with the rule manager
+					end
+					l_template := l_rule.handler.as_template
 					if a_tunnel_parameters /= Void and then a_tunnel_parameters.count > 0
-						or else l_node_handler.is_stack_frame_needed then
-							a_context.open_stack_frame (l_node_handler.slot_manager)
+						or else l_template.is_stack_frame_needed then
+							a_context.open_stack_frame (l_template.slot_manager)
 							a_context.set_local_parameters (a_parameters)
 							a_context.set_tunnel_parameters (a_tunnel_parameters)
 						if a_transformer.is_tracing then
 							a_transformer.trace_listener.trace_current_item_start (a_node)
 						end
-						l_node_handler.generate_tail_call (a_tail, a_context)
+						l_template.generate_tail_call (a_tail, l_rule, a_context)
 						if a_transformer.is_tracing then
 							a_transformer.trace_listener.trace_current_item_finish (a_node)
 						end
@@ -114,7 +120,7 @@ feature -- Evaluation
 						if a_transformer.is_tracing then
 							a_transformer.trace_listener.trace_current_item_start (a_node)
 						end
-						l_node_handler.generate_tail_call (a_tail, a_context)
+						l_template.generate_tail_call (a_tail, l_rule, a_context)
 						if a_transformer.is_tracing then
 							a_transformer.trace_listener.trace_current_item_finish (a_node)
 						end

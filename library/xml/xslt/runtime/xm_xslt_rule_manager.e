@@ -75,7 +75,7 @@ feature -- Access
 			mode_not_void: Result /= Void
 		end
 
-	last_found_template: XM_XSLT_COMPILED_TEMPLATE
+	last_found_template: XM_XSLT_RULE
 			-- Last template found by `find_template_rule' or `find_imported_template_rule' or `find_next_match_handler'
 
 	find_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -84,40 +84,19 @@ feature -- Access
 			node_not_void: a_node /= Void
 			context_not_void: a_context /= Void
 		local
-			mode_to_use: XM_XSLT_MODE
-			a_rule_value: XM_XSLT_RULE_VALUE
+			l_mode_to_use: XM_XSLT_MODE
 		do
 			last_found_template := Void
 			if a_mode = Void then
-				mode_to_use := mode_for_default_mode
+				l_mode_to_use := mode_for_default_mode
 			else
-				mode_to_use := a_mode
+				l_mode_to_use := a_mode
 			end
-			debug ("XSLT template rules")
-				std.error.put_string ("Looking for a rule to match ")
-				if a_node.parent = Void then
-					std.error.put_string (" parentless node ")
-					std.error.put_string (a_node.node_name)
-				else
-					std.error.put_string (a_node.parent.node_name)
-					std.error.put_string ("/")
-					std.error.put_string (a_node.node_name)
-				end
-				std.error.put_string (", with fingerprint of ")
-				std.error.put_string (a_node.fingerprint.out)
-				std.error.put_new_line
-			end
-			mode_to_use.match_rule (a_node, a_context)
-			a_rule_value := mode_to_use.last_matched_rule
-			if a_rule_value /= Void and not a_context.transformer.is_error then
-				debug ("XSLT template rules")
-					std.error.put_string ("Found a match%N")
-				end
-				check
-					template_rule: a_rule_value.is_template
-					-- Rule manager is only used with template rules
-				end
-				last_found_template := a_rule_value.as_template
+			l_mode_to_use.match_rule (a_node, a_context)
+			last_found_template := l_mode_to_use.last_matched_rule
+			check
+				template_rule: last_found_template /= Void implies last_found_template.handler.is_template
+				-- Rule manager is only used with template rules
 			end
 		end
 
@@ -128,50 +107,43 @@ feature -- Access
 			node_not_void: a_node /= Void
 			context_not_void: a_context /= Void
 		local
-			mode_to_use: XM_XSLT_MODE
-			a_rule_value: XM_XSLT_RULE_VALUE
+			l_mode_to_use: XM_XSLT_MODE
 		do
 			last_found_template := Void
 			if a_mode = Void then
-				mode_to_use := mode_for_default_mode
+				l_mode_to_use := mode_for_default_mode
 			else
-				mode_to_use := a_mode
+				l_mode_to_use := a_mode
 			end
-			mode_to_use.match_imported_rule (a_node, a_minimum_precedence, a_maximum_precedence, a_context)
-			a_rule_value := mode_to_use.last_matched_rule
-			if a_rule_value /= Void and not a_context.transformer.is_error then
-				check
-					template_rule: a_rule_value.is_template
-					-- Rule manager is only used with template rules
-				end
-				last_found_template := a_rule_value.as_template
+			l_mode_to_use.match_imported_rule (a_node, a_minimum_precedence, a_maximum_precedence, a_context)
+			last_found_template := l_mode_to_use.last_matched_rule
+			check
+				template_rule: last_found_template /= Void implies last_found_template.handler.is_template
+				-- Rule manager is only used with template rules
 			end
 		end
 
-	find_next_match_handler (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_current_template: XM_XSLT_COMPILED_TEMPLATE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	find_next_match_handler (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_current_template: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Next template rule registered for a particular node in a specific mode, following `a_current_template'
 		require
 			node_not_void: a_node /= Void
 			context_not_void: a_context /= Void
 			current_template_not_void: a_current_template /= Void
+			is_template: a_current_template.handler.is_template
 		local
-			mode_to_use: XM_XSLT_MODE
-			a_rule_value: XM_XSLT_RULE_VALUE
+			l_mode_to_use: XM_XSLT_MODE
 		do
 			last_found_template := Void
 			if a_mode = Void then
-				mode_to_use := mode_for_default_mode
+				l_mode_to_use := mode_for_default_mode
 			else
-				mode_to_use := a_mode
+				l_mode_to_use := a_mode
 			end
-			mode_to_use.match_next_rule (a_node, a_current_template, a_context)
-			a_rule_value := mode_to_use.last_matched_rule
-			if a_rule_value /= Void and not a_context.transformer.is_error then
-				check
-					template_rule: a_rule_value.is_template
-					-- Rule manager is only used with template rules
-				end
-				last_found_template := a_rule_value.as_template
+			l_mode_to_use.match_next_rule (a_node, a_current_template, a_context)
+			last_found_template := l_mode_to_use.last_matched_rule
+			check
+				template_rule: last_found_template /= Void implies last_found_template.handler.is_template
+				-- Rule manager is only used with template rules
 			end
 		end
 
@@ -237,15 +209,15 @@ feature -- Element change
 			handler_not_void: a_handler /= Void and then a_handler.is_template
 			mode_not_void: a_mode /= Void
 		local
-			a_union_pattern: XM_XSLT_UNION_PATTERN
+			l_union_pattern: XM_XSLT_UNION_PATTERN
 		do
 
 			-- For a union pattern, register the parts separately
 
-			a_union_pattern ?= a_pattern
-			if a_union_pattern /= Void then
-				set_handler_with_default_priority (a_union_pattern.left_hand_side, a_handler, a_mode, a_precedence)
-				set_handler_with_default_priority (a_union_pattern.right_hand_side, a_handler, a_mode, a_precedence)
+			if a_pattern.is_union_pattern then
+				l_union_pattern := a_pattern.as_union_pattern
+				set_handler_with_default_priority (l_union_pattern.left_hand_side, a_handler, a_mode, a_precedence)
+				set_handler_with_default_priority (l_union_pattern.right_hand_side, a_handler, a_mode, a_precedence)
 			else
 				set_handler (a_pattern, a_handler, a_mode, a_precedence, a_pattern.default_priority)
 			end
@@ -259,16 +231,16 @@ feature -- Element change
 			mode_not_void: a_mode /= Void
 			priority_not_void: a_priority /= Void
 		local
-			a_union_pattern: XM_XSLT_UNION_PATTERN
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
+			l_union_pattern: XM_XSLT_UNION_PATTERN
+			l_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
 		do
 
 			-- For a union pattern, register the parts separately
 
-			a_union_pattern ?= a_pattern
-			if a_union_pattern /= Void then
-				set_handler (a_union_pattern.left_hand_side, a_handler, a_mode, a_precedence, a_priority)
-				set_handler (a_union_pattern.right_hand_side, a_handler, a_mode, a_precedence, a_priority)
+			if a_pattern.is_union_pattern then
+				l_union_pattern := a_pattern.as_union_pattern
+				set_handler (l_union_pattern.left_hand_side, a_handler, a_mode, a_precedence, a_priority)
+				set_handler (l_union_pattern.right_hand_side, a_handler, a_mode, a_precedence, a_priority)
 			else
 				a_mode.add_rule (a_pattern, a_handler, a_precedence, a_priority)
 				rank_priority (a_priority)
@@ -280,13 +252,13 @@ feature -- Element change
 					mode_for_default_mode.add_rule (a_pattern, a_handler,  a_precedence, a_priority)
 
 					from
-						a_cursor := mode_map.new_cursor
-						a_cursor.start
+						l_cursor := mode_map.new_cursor
+						l_cursor.start
 					until
-						a_cursor.after
+						l_cursor.after
 					loop
-						a_cursor.item.add_rule (a_pattern, a_handler,  a_precedence, a_priority)
-						a_cursor.forth
+						l_cursor.item.add_rule (a_pattern, a_handler,  a_precedence, a_priority)
+						l_cursor.forth
 					end
 				end
 			end
@@ -295,17 +267,17 @@ feature -- Element change
 	rank_all_rules is
 			-- Set `priority_rank' for every rule in every mode.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
+			l_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
 		do
 			rank_mode (mode_for_default_mode)
 			if omni_mode /= Void then rank_mode (omni_mode) end
 			from
-				a_cursor := mode_map.new_cursor; a_cursor.start
+				l_cursor := mode_map.new_cursor; l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				rank_mode (a_cursor.item)
-				a_cursor.forth
+				rank_mode (l_cursor.item)
+				l_cursor.forth
 			end
 		end
 

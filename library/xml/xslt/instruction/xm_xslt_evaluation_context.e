@@ -113,8 +113,8 @@ feature -- Access
 			end
 		end
 
-	current_template: XM_XSLT_COMPILED_TEMPLATE is
-			-- Current template
+	current_template: XM_XSLT_RULE is
+			-- Rule for current template
 		do
 			if is_minor then
 				Result := caller.current_template
@@ -650,8 +650,8 @@ feature {NONE} -- Implementation
 	internal_current_mode: XM_XSLT_MODE
 			-- Current mode
 
-	internal_current_template: XM_XSLT_COMPILED_TEMPLATE
-			-- Current template
+	internal_current_template: XM_XSLT_RULE
+			-- Rule for current template
 
 	internal_current_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
 			-- Current regexp iterator

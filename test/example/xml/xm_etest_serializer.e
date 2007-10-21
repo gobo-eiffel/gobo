@@ -48,10 +48,17 @@ feature {NONE} -- Implementation
 			Result := Execution_environment.interpreted_string (Result)
 		end
 
+	data_dirname: STRING is
+			-- Name of data directory
+		do
+			Result := file_system.nested_pathname ("${GOBO}", <<"example", "test", "xml", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		end
+
 	input_filename: STRING is
 			-- Name of input document
 		do
-			Result := file_system.pathname (program_dirname, "doc.xml")
+			Result := file_system.pathname (data_dirname, "doc.xml")
 		ensure
 			input_filename_not_void: Result /= Void
 			input_filename_not_empty: not Result.is_empty

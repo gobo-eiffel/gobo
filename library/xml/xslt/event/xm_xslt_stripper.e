@@ -93,7 +93,7 @@ feature -- Access
 			else
 				orphan.set_name_code (a_name_code)
 				stripper_mode.match_rule (orphan, context)
-				a_rule := stripper_mode.last_matched_rule
+				a_rule := stripper_mode.last_matched_rule.handler
 				if context.transformer.is_error then
 					found_space_preserving_mode := Strip_default
 				elseif a_rule = Void then

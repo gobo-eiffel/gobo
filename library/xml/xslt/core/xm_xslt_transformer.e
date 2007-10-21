@@ -696,6 +696,8 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 			l_transformation_result: XM_XSLT_TRANSFORMATION_RESULT
 			l_context: XM_XSLT_EVALUATION_CONTEXT
 			l_parameter_set: XM_XSLT_PARAMETER_SET
+			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
+			l_tail_call: XM_XPATH_TAIL_CALL
 		do
 			principal_result := a_result
 			principal_result_uri := a_result.system_id
@@ -738,7 +740,16 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 					l_context.set_local_parameters (l_parameter_set)
 					create l_parameter_set.make_empty
 					l_context.set_tunnel_parameters (l_parameter_set)
-					initial_template.process (l_context)
+					from
+						create l_tail.make (Void)
+						initial_template.expand (l_tail, l_context)
+					until
+						l_tail.item = Void
+					loop
+						l_tail_call := l_tail.item
+						l_tail.put (Void)
+						l_tail_call.generate_tail_call (l_tail, l_context) 
+					end
 				end
 				
 				if is_tracing then

@@ -17,6 +17,9 @@ inherit
 	XM_XSLT_SHARED_NO_NODE_TEST
 		export {NONE} all end
 
+	MA_DECIMAL_CONSTANTS
+		export {NONE} all end
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_ERROR_TYPES
@@ -68,12 +71,12 @@ feature {NONE} -- Initialization
 				end
 				an_index := an_index +1
 			end
-			sequence_number := other.sequence_number
+			most_recent_rule := other.most_recent_rule
 		end
 
 feature -- Access
 
-	last_matched_rule: XM_XSLT_RULE_VALUE
+	last_matched_rule: XM_XSLT_RULE
 			-- Result of last call to `match_rule' or `match_imported_rule' or `match_next_rule'
 
 	match_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -82,63 +85,61 @@ feature -- Access
 			node_not_void: a_node /= Void
 			context_not_void: a_context /= Void
 		local
-			a_key, a_specific_precedence: INTEGER
-			a_rule, a_specific_rule: XM_XSLT_RULE
-			a_specific_priority: INTEGER
-			finished: BOOLEAN
-			a_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_key, l_specific_precedence: INTEGER
+			l_rule, l_specific_rule: XM_XSLT_RULE
+			l_specific_priority: INTEGER
+			l_finished: BOOLEAN
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			last_matched_rule := Void
-			a_new_context := possible_new_context (a_context)
-			a_key := rule_key (a_node.fingerprint, a_node.node_type)
-			a_specific_precedence := -1
-			a_specific_priority := -1
+			l_new_context := possible_new_context (a_context)
+			l_key := rule_key (a_node.fingerprint, a_node.node_type)
+			l_specific_precedence := -1
+			l_specific_priority := -1
 
 			-- Search the specific list for this node type / node name.
 
-			if a_key /= Any_node + 1 then
+			if l_key /= Any_node + 1 then
 				from
-					a_rule := rule_dictionary.item (a_key)
+					l_rule := rule_dictionary.item (l_key)
 				until
-					finished or else a_rule = Void
+					l_finished or else l_rule = Void
 				loop
 
 					-- If we already have a match, and the precedence or priority of this
             	--  rule is lower, quit the search for a second match.
 
-					if a_specific_rule /= Void and then (a_rule.precedence  < a_specific_precedence or else
-						(a_rule.precedence = a_specific_precedence and then a_rule.priority_rank < a_specific_priority)) then
-							finished := True
+					if l_specific_rule /= Void and then (l_rule.precedence  < l_specific_precedence or else
+						(l_rule.precedence = l_specific_precedence and then l_rule.priority_rank < l_specific_priority)) then
+							l_finished := True
 					else
-						a_rule.pattern.match (a_node, a_new_context)
-						if a_rule.pattern.is_error then
-							a_context.transformer.report_recoverable_error (a_rule.pattern.error_value)
-						elseif a_rule.pattern.last_match_result then
+						l_rule.pattern.match (a_node, l_new_context)
+						if l_rule.pattern.is_error then
+							a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
+						elseif l_rule.pattern.last_match_result then
 														
 							-- Is this a second match?
 
-							if a_specific_rule /= Void then
-								if a_rule.precedence = a_specific_precedence and then a_rule.priority_rank.is_equal (a_specific_priority) then
-									report_ambiguity (a_node, a_specific_rule, a_rule, a_new_context.transformer)
-									finished := True
+							if l_specific_rule /= Void then
+								if l_rule.precedence = l_specific_precedence and then l_rule.priority_rank = l_specific_priority then
+									report_ambiguity (a_node, l_specific_rule, l_rule, l_new_context.transformer)
+									l_finished := True
 								end
 							end
-							a_specific_rule := a_rule
-							a_specific_precedence := a_rule.precedence
-							a_specific_priority := a_rule.priority_rank
-							if a_new_context.transformer.recovery_policy = Recover_silently then
-								finished := True -- Find the first; they are in priority order.
+							l_specific_rule := l_rule
+							l_specific_precedence := l_rule.precedence
+							l_specific_priority := l_rule.priority_rank
+							if l_new_context.transformer.recovery_policy = Recover_silently then
+								l_finished := True -- Find the first; they are in priority order.
 							end
 						end
-						a_rule := a_rule.next_rule
+						l_rule := l_rule.next_rule
 					end
 				end
-
-				-- Search the general list.
-
-				if not a_new_context.transformer.is_error then
-					match_general_rule (a_node, a_new_context, a_specific_rule, a_specific_precedence, a_specific_priority)
-				end
+			end	
+			-- Search the general list.
+			if not l_new_context.transformer.is_error then
+				match_general_rule (a_node, l_new_context, l_specific_rule, l_specific_precedence, l_specific_priority)
 			end
 		ensure
 			Maybe_no_rule_matches: last_matched_rule = Void xor last_matched_rule /= Void
@@ -150,37 +151,37 @@ feature -- Access
 			node_not_void: a_node /= Void
 			context_not_void: a_context /= Void
 		local
-			a_key: INTEGER
-			a_rule, a_specific_rule, a_general_rule: XM_XSLT_RULE
-			finished: BOOLEAN
+			l_key: INTEGER
+			l_rule, l_specific_rule, a_general_rule: XM_XSLT_RULE
+			l_finished: BOOLEAN
 		do
 			last_matched_rule := Void
-			a_key := rule_key (a_node.fingerprint, a_node.node_type)
+			l_key := rule_key (a_node.fingerprint, a_node.node_type)
 
 			-- Search the specific list for this node type / node name.
 
-			if a_key /= Any_node + 1 then
+			if l_key /= Any_node + 1 then
 				from
-					a_rule := rule_dictionary.item (a_key)
+					l_rule := rule_dictionary.item (l_key)
 				until
-					finished or else a_rule = Void
+					l_finished or else l_rule = Void
 				loop
-					if a_rule.precedence >= a_minimum_precedence and then a_rule.precedence <= a_maximum_precedence then
-						a_rule.pattern.match (a_node, a_context)
-						if a_rule.pattern.is_error then
-							a_context.transformer.report_recoverable_error (a_rule.pattern.error_value)
-							finished := True
-						elseif a_rule.pattern.last_match_result then
-							a_specific_rule := a_rule
+					if l_rule.precedence >= a_minimum_precedence and then l_rule.precedence <= a_maximum_precedence then
+						l_rule.pattern.match (a_node, a_context)
+						if l_rule.pattern.is_error then
+							a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
+							l_finished := True
+						elseif l_rule.pattern.last_match_result then
+							l_specific_rule := l_rule
 
 							-- Find the first; they are in priority order.
 
-							finished := True
+							l_finished := True
 						else
-							a_rule := a_rule.next_rule
+							l_rule := l_rule.next_rule
 						end
 					else
-						a_rule := a_rule.next_rule
+						l_rule := l_rule.next_rule
 					end
 				end
 			end
@@ -189,41 +190,41 @@ feature -- Access
 
 			if not a_context.transformer.is_error then
 				from
-					finished := False
-					a_rule := rule_dictionary.item (Any_node + 1)
+					l_finished := False
+					l_rule := rule_dictionary.item (Any_node + 1)
 				until
-					finished or else a_rule = Void
+					l_finished or else l_rule = Void
 				loop
-					if a_rule.precedence >= a_minimum_precedence and then a_rule.precedence <= a_maximum_precedence then
-						a_rule.pattern.match (a_node, a_context)
-						if a_rule.pattern.is_error then
-							a_context.transformer.report_recoverable_error (a_rule.pattern.error_value)
-							finished := True
-						elseif a_rule.pattern.last_match_result then
-							a_general_rule := a_rule
+					if l_rule.precedence >= a_minimum_precedence and then l_rule.precedence <= a_maximum_precedence then
+						l_rule.pattern.match (a_node, a_context)
+						if l_rule.pattern.is_error then
+							a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
+							l_finished := True
+						elseif l_rule.pattern.last_match_result then
+							a_general_rule := l_rule
 							
 							-- Find the first; they are in priority order.
 							
-							finished := True
+							l_finished := True
 						else
-							a_rule := a_rule.next_rule
+							l_rule := l_rule.next_rule
 						end
 					else
-						a_rule := a_rule.next_rule
+						l_rule := l_rule.next_rule
 					end
 				end
 
-				if a_specific_rule /= Void and then a_general_rule = Void then
-					last_matched_rule := a_specific_rule.handler
-				elseif a_specific_rule = Void and then a_general_rule /= Void then
-					last_matched_rule := a_general_rule.handler
-				elseif a_specific_rule /= Void and then a_general_rule /= Void then
-					if a_specific_rule.precedence > a_general_rule.precedence or else
-						(a_specific_rule.precedence = a_general_rule.precedence and then
-						 a_specific_rule.priority > a_general_rule.priority) then
-						last_matched_rule := a_specific_rule.handler
+				if l_specific_rule /= Void and then a_general_rule = Void then
+					last_matched_rule := l_specific_rule
+				elseif l_specific_rule = Void and then a_general_rule /= Void then
+					last_matched_rule := a_general_rule
+				elseif l_specific_rule /= Void and then a_general_rule /= Void then
+					if l_specific_rule.precedence > a_general_rule.precedence or else
+						(l_specific_rule.precedence = a_general_rule.precedence and then
+						 l_specific_rule.priority_rank > a_general_rule.priority_rank) then
+						last_matched_rule := l_specific_rule
 					else
-						last_matched_rule := a_general_rule.handler
+						last_matched_rule := a_general_rule
 					end
 				end
 			end
@@ -231,72 +232,121 @@ feature -- Access
 			Maybe_no_rule_matches: True
 		end
 
-	match_next_rule (a_node: XM_XPATH_NODE; a_current_template: XM_XSLT_COMPILED_TEMPLATE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	match_next_rule (a_node: XM_XPATH_NODE; a_current_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Find handler for `a_node' within specified precedence range
 		require
 			a_node_not_void: a_node /= Void
 			a_context_not_void: a_context /= Void
-			a_current_template_not_void: a_current_template /= Void
+			a_current_rule_not_void: a_current_rule /= Void
 		local
 			l_key: INTEGER
-			l_rule: XM_XSLT_RULE
+			l_rule, l_specific_rule, l_general_rule: XM_XSLT_RULE
 			l_finished: BOOLEAN
-			l_current_priority: INTEGER
-			l_current_precedence, l_current_sequence_number: INTEGER
-			l_handler: XM_XSLT_RULE_VALUE
-			l_template: XM_XSLT_COMPILED_TEMPLATE
+			l_specific_precedence: INTEGER
+			l_specific_priority: INTEGER
 		do
 			last_matched_rule := Void
 			l_key := rule_key (a_node.fingerprint, a_node.node_type)
-			l_current_sequence_number := -1
-			l_current_precedence := -1
-			l_current_priority := -1
-			-- First find the rule corresponding to the current handler.
-			from
-				l_rule := rule_dictionary.item (l_key)
-			until
-				l_finished or l_rule = Void
-			loop
-				l_handler := l_rule.handler
-				if l_handler.is_template then
-					l_template := l_handler.as_template
-				else
-					l_template := Void
-				end
-				if l_template /= Void and then l_template = a_current_template then
-					l_current_precedence := l_rule.precedence
-					l_current_priority := l_rule.priority_rank
-					l_current_sequence_number := l_rule.sequence_number
-					l_finished := True
-				else
-					l_rule := l_rule.next_rule
-				end
-			end
-			if l_rule = Void and then l_key /= Any_node + 1 then
+			l_specific_precedence := -1
+			l_specific_priority := Platform.Minimum_integer
+			-- First search the specific list.
+			if l_key /= Any_node + 1 then
 				from
-					l_rule := rule_dictionary.item (Any_node + 1)
+					l_rule := rule_dictionary.item (l_key)
 				until
 					l_finished or l_rule = Void
 				loop
-					l_handler := l_rule.handler
-					if l_handler.is_template then
-						l_template := l_handler.as_template
-					else
-						l_template := Void
+					-- skip the current template - we want the next match
+					if l_rule /= a_current_rule then
+						-- skip the rule unles it's a later match than current template
+						if l_rule.precedence > a_current_rule.precedence or
+							(l_rule.precedence = a_current_rule.precedence and
+								(l_rule.priority_rank > a_current_rule.priority_rank or
+									(l_rule.priority_rank = a_current_rule.priority_rank and l_rule.sequence_number >= a_current_rule.sequence_number)
+								)
+							) then
+							-- skip
+						else
+							-- quit searching when finding second match
+							if l_specific_rule /= Void then
+								if l_rule.precedence < l_specific_precedence or
+									(l_rule.precedence = l_specific_precedence and l_rule.priority_rank < l_specific_priority) then
+									l_finished := True
+								end
+							end
+							if not l_finished then
+								l_rule.pattern.match (a_node, a_context)
+								if l_rule.pattern.is_error then
+									a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
+									l_finished := True
+								elseif l_rule.pattern.last_match_result then
+									-- is this a second match?
+									if l_specific_rule /= Void then
+										if l_rule.precedence = l_specific_precedence and l_rule.priority_rank = l_specific_priority then
+											report_ambiguity (a_node, l_specific_rule, l_rule, a_context.transformer)
+										end
+										l_finished := True
+									end
+									l_specific_rule := l_rule
+									l_specific_precedence := l_rule.precedence
+									l_specific_priority := l_rule.priority_rank
+									if a_context.transformer.recovery_policy = Recover_silently then
+										l_finished := True
+									end 
+								end
+							end
+						end
 					end
-					if l_template /= Void and then l_template = a_current_template then
-						l_current_precedence := l_rule.precedence
-						l_current_priority := l_rule.priority_rank
-						l_current_sequence_number := l_rule.sequence_number
-						l_finished := True
-					else
-						l_rule := l_rule.next_rule
-					end
+					l_rule := l_rule.next_rule
 				end
 			end
-			if l_rule /= Void then
-				match_proper_next_rule (a_node, l_key, a_context, l_current_priority, l_current_precedence, l_current_sequence_number, l_handler)
+
+			from
+				l_finished := False
+				l_rule := rule_dictionary.item (Any_node + 1)
+			until
+				l_finished or l_rule = Void
+			loop
+				-- skip the current template - we want the next match
+				if l_rule /= a_current_rule then
+					-- skip the rule unless it's a later match than current template
+					if l_rule.precedence > a_current_rule.precedence or
+						(l_rule.precedence = a_current_rule.precedence and
+							(l_rule.priority_rank > a_current_rule.priority_rank or
+								(l_rule.priority_rank = a_current_rule.priority_rank and l_rule.sequence_number >= a_current_rule.sequence_number)
+							)
+						) then
+						-- skip
+					else
+						if l_rule.precedence < l_specific_precedence or
+							(l_rule.precedence = l_specific_precedence and l_rule.priority_rank < l_specific_priority) then
+							l_finished := True
+						end
+						if not l_finished then
+							l_rule.pattern.match (a_node, a_context)
+							if l_rule.pattern.is_error then
+								a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
+								l_finished := True
+							elseif l_rule.pattern.last_match_result then
+								-- is this a second match?
+								if l_general_rule /= Void then
+									if l_rule.precedence = l_general_rule.precedence and l_rule.priority_rank = l_general_rule.priority_rank then
+										report_ambiguity (a_node, l_general_rule, l_rule, a_context.transformer)
+									end
+									l_finished := True
+								else
+									l_general_rule := l_rule
+									if a_context.transformer.recovery_policy = Recover_silently then
+										l_finished := True
+									end
+								end
+							end
+						end
+					end
+				end
+				l_rule := l_rule.next_rule
 			end
+			last_matched_rule := general_or_specific_rule (a_node, a_context, l_specific_rule, l_general_rule)
 		ensure
 			Maybe_no_rule_matches: True
 		end
@@ -342,9 +392,9 @@ feature -- Element change
 			pattern_not_void: a_pattern /= Void
 			handler_not_void: a_handler /= Void
 		local
-			a_key: INTEGER
-			a_rule, a_new_rule, a_previous_rule: XM_XSLT_RULE
-			finished: BOOLEAN
+			l_key, l_sequence_number: INTEGER
+			l_rule, l_new_rule, l_previous_rule: XM_XSLT_RULE
+			l_finished: BOOLEAN
 		do
 
 			-- Ignore a pattern that will never match, e.g. "@comment"
@@ -356,54 +406,53 @@ feature -- Element change
 				--  match one kind of non-element node, and one generic list.
 				-- Each list is sorted in precedence/priority order so we find the highest-priority rule first
 
-				a_key := rule_key (a_pattern.fingerprint, a_pattern.node_kind)
-				debug ("XSLT template rules")
-					if a_handler.is_template then
-						std.error.put_string ("Added rule to match " + a_pattern.original_text)
-						std.error.put_string (" with key " + a_key.out + ", with precedence of " + a_precedence.out)
-						std.error.put_string (" and priority of " + a_priority.to_scientific_string + "%N")
-						std.error.put_string ("Template fingerprint is " + a_handler.template_value.template_fingerprint.out + "%N")
-						std.error.put_string ("System id is " + a_handler.template_value.system_id + "%N")
-						std.error.put_string ("Line number is " + a_handler.template_value.line_number.out + "%N")
+				l_key := rule_key (a_pattern.fingerprint, a_pattern.node_kind)
+				
+				-- This logic is designed to ensure that when a union pattern contains multiple branches
+				-- with the same priority, next-match doesn't select the same template twice (override20_047/_048)
+
+				if most_recent_rule /= Void then
+					if a_handler = most_recent_rule.handler then
+						l_sequence_number := most_recent_rule.sequence_number
+					else
+						l_sequence_number := most_recent_rule.sequence_number + 1
 					end
 				end
-				create a_new_rule.make (a_pattern, a_handler, a_precedence, a_priority, sequence_number)
-				sequence_number := sequence_number + 1
-				a_rule := rule_dictionary.item (a_key)
-				if a_rule = Void then
-					rule_dictionary.put (a_new_rule, a_key)
+				create l_new_rule.make (a_pattern, a_handler, a_precedence, a_priority, l_sequence_number)
+				most_recent_rule := l_new_rule
+				l_rule := rule_dictionary.item (l_key)
+				if l_rule = Void then
+					rule_dictionary.put (l_new_rule, l_key)
 				else
 
 					-- Insert the new rule into this list before others of the same precedence/priority
 
 					from
-						a_previous_rule := Void
+						l_previous_rule := Void
 					until
-						finished or else a_rule = Void
+						l_finished or else l_rule = Void
 					loop
-						if a_rule.precedence < a_precedence or else
-							(a_rule.precedence = a_precedence and then a_rule.priority <= a_priority) then
-							a_new_rule.set_next_rule (a_rule)
-							if a_previous_rule = Void then
-								rule_dictionary.put (a_new_rule, a_key)
+						if l_rule.precedence < a_precedence or else
+							(l_rule.precedence = a_precedence and then l_rule.priority <= a_priority) then
+							l_new_rule.set_next_rule (l_rule)
+							if l_previous_rule = Void then
+								rule_dictionary.put (l_new_rule, l_key)
 							else
-								a_previous_rule.set_next_rule (a_new_rule)
+								l_previous_rule.set_next_rule (l_new_rule)
 							end
-							finished := True
+							l_finished := True
 						else
-							a_previous_rule := a_rule
-							a_rule := a_rule.next_rule
+							l_previous_rule := l_rule
+							l_rule := l_rule.next_rule
 						end
 					end
 
-					if a_rule = Void then
-						a_previous_rule.set_next_rule (a_new_rule)
-						a_new_rule.set_next_rule (Void)
+					if l_rule = Void then
+						l_previous_rule.set_next_rule (l_new_rule)
+						l_new_rule.set_next_rule (Void)
 					end
 				end
 			end
-		ensure
-
 		end
 
 feature {XM_XSLT_MODE, XM_XSLT_RULE_MANAGER} -- Restricted
@@ -413,8 +462,8 @@ feature {XM_XSLT_MODE, XM_XSLT_RULE_MANAGER} -- Restricted
 
 feature {XM_XSLT_MODE} -- Local
 
-	sequence_number: INTEGER
-			-- Sequence number for next rule to be created
+	most_recent_rule: XM_XSLT_RULE
+			-- Rule most recently added to `Current'
 
 feature {NONE} -- Implementation
 
@@ -491,185 +540,41 @@ feature {NONE} -- Implementation
 			node_not_void: a_node /= Void
 			context_not_void: a_context /= Void
 		local
-			a_rule, a_general_rule: XM_XSLT_RULE
-			finished: BOOLEAN
-		do
-			from
-				a_rule := rule_dictionary.item (Any_node + 1)
-			until
-				finished or else a_rule = Void
-			loop
-				if a_rule.precedence < a_specific_precedence or else
-					(a_rule.precedence = a_specific_precedence and then a_rule.priority_rank < a_specific_priority) then
-
-					-- no point in looking at a lower priority rule than the one we've got
-
-					finished := True
-				else
-					a_rule.pattern.match (a_node, a_context)
-					if a_rule.pattern.is_error then
-						a_context.transformer.report_recoverable_error (a_rule.pattern.error_value)
-						finished := True
-					elseif a_rule.pattern.last_match_result then
-						
-						-- Is it a second match?
-
-						if a_general_rule /= Void then
-							if a_rule.precedence = a_general_rule.precedence and then a_rule.priority_rank.is_equal (a_general_rule.priority_rank) then
-								report_ambiguity (a_node, a_rule, a_general_rule, a_context.transformer)
-								finished := True
-							end
-						else
-							a_general_rule := a_rule
-							if a_context.transformer.recovery_policy = Recover_silently then finished := True end 
-						end
-					end
-				end
-				a_rule := a_rule.next_rule
-			end
-			if not a_context.transformer.is_error then
-				last_matched_rule := general_or_specific_rule (a_node, a_context, a_specific_rule, a_general_rule)
-			end
-		end
-
-	match_proper_next_rule (a_node: XM_XPATH_NODE; a_key: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; a_current_priority: INTEGER;
-		a_current_precedence, a_current_sequence_number: INTEGER; a_handler: XM_XSLT_RULE_VALUE) is
-			-- Find next matching rule.
-		require
-			a_node_not_void: a_node /= Void
-			a_context_not_context: a_context /= Void
-			positive_sequence_number: a_current_sequence_number >= 0
-			a_handler_not_void: a_handler /= Void
-		local
-			l_rule, l_specific_rule: XM_XSLT_RULE
-			l_specific_precedence: INTEGER
-			l_specific_priority: INTEGER
-			l_finished: BOOLEAN
-		do
-			l_specific_precedence := -1
-			l_specific_priority := -1
-			-- Search the specific list for this node type / node name.
-			if a_key /= Any_node + 1 then
-				from
-					l_rule := rule_dictionary.item (a_key)
-				until
-					l_finished or else l_rule = Void
-				loop
-					-- Ignore alternate union branches
-					if l_rule.handler /= a_handler then
-						-- Skip this rule unless it's "below" the current rule in search order.
-						if l_rule.precedence > a_current_precedence or
-							(l_rule.precedence = a_current_precedence and
-								(l_rule.priority_rank > a_current_priority or
-									(l_rule.priority_rank.is_equal (a_current_priority) and l_rule.sequence_number >= a_current_sequence_number))) then
-							-- skip rule
-						else
-							-- Quit the search on finding the second (recoverable error) match.
-							if l_specific_rule /= Void then
-								if l_rule.precedence < l_specific_precedence or
-									(l_rule.precedence = l_specific_precedence and l_rule.priority_rank < l_specific_priority) then
-									l_finished := True
-								end
-							end
-							if not l_finished then
-								l_rule.pattern.match (a_node, a_context)
-								if l_rule.pattern.is_error then
-									a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
-									l_finished := True
-								elseif l_rule.pattern.last_match_result then
-									-- Is this a second match?
-									if l_specific_rule /= Void then
-										if l_rule.precedence = l_specific_precedence and then l_rule.priority_rank.is_equal (l_specific_priority) then
-											l_finished := True
-											report_ambiguity (a_node, l_specific_rule, l_rule, a_context.transformer)
-										end
-									end
-								end
-								if not l_finished then
-									l_specific_rule := l_rule
-									l_specific_precedence := l_rule.precedence
-									l_specific_priority := l_rule.priority_rank
-								end
-							end
-						end
-					end
-					if not l_finished then
-						l_rule := l_rule.next_rule
-					end
-				end
-			end
-			-- Search the general list.
-			if not a_context.transformer.is_error then
-				match_next_general_rule (a_node, a_context, l_specific_rule, a_current_priority, a_current_precedence, a_current_sequence_number, a_handler)
-			end
-		ensure
-			Maybe_no_rule_matches: True
-		end
-
-	match_next_general_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_specific_rule: XM_XSLT_RULE;
-	                         a_current_priority: INTEGER; a_current_precedence, a_current_sequence_number: INTEGER; a_handler: XM_XSLT_RULE_VALUE) is
-			-- Next matching rule.
-		require
-			a_node_not_void: a_node /= Void
-			a_context_not_void: a_context /= Void
-			positive_sequence_number: a_current_sequence_number >= 0
-			a_handler_not_void: a_handler /= Void
-		local
 			l_rule, l_general_rule: XM_XSLT_RULE
 			l_finished: BOOLEAN
-			l_specific_precedence: INTEGER
-			l_specific_priority: INTEGER
 		do
-			if a_specific_rule /= Void then
-				l_specific_precedence := -a_specific_rule.precedence
-				l_specific_priority := a_specific_rule.priority_rank
-			else
-				l_specific_precedence := -1
-				l_specific_priority := -1
-			end
 			from
 				l_rule := rule_dictionary.item (Any_node + 1)
 			until
 				l_finished or else l_rule = Void
 			loop
-				-- Ignore alternate union branches
-				if l_rule.handler /= a_handler then
-					-- Skip this rule unless it's "after" the current rule in search order
-					if l_rule.precedence > a_current_precedence or else
-						(l_rule.precedence = a_current_precedence and then
-							(l_rule.priority_rank > a_current_priority or else
-								(l_rule.priority_rank.is_equal (a_current_priority) and then l_rule.sequence_number >= a_current_sequence_number))) then
-						-- skip rule
-					else
-						if l_rule.precedence < l_specific_precedence or else
-							(l_rule.precedence = l_specific_precedence and then l_rule.priority_rank < l_specific_priority) then
-							l_finished := True -- no point in looking at a lower priority rule than the one we've got
-						end
-						if not l_finished then
-							l_rule.pattern.match (a_node, a_context)
-							if l_rule.pattern.is_error then
-								a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
+				if l_rule.precedence < a_specific_precedence or else
+					(l_rule.precedence = a_specific_precedence and then l_rule.priority_rank < a_specific_priority) then
+
+					-- no point in looking at a lower priority rule than the one we've got
+
+					l_finished := True
+				else
+					l_rule.pattern.match (a_node, a_context)
+					if l_rule.pattern.is_error then
+						a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
+						l_finished := True
+					elseif l_rule.pattern.last_match_result then
+						
+						-- Is it a second match?
+
+						if l_general_rule /= Void then
+							if l_rule.precedence = l_general_rule.precedence and then l_rule.priority_rank = l_general_rule.priority_rank then
+								report_ambiguity (a_node, l_rule, l_general_rule, a_context.transformer)
 								l_finished := True
-							elseif l_rule.pattern.last_match_result then
-								-- Is this a second match?
-								if l_general_rule /= Void then
-									if l_rule.precedence = l_general_rule.precedence and then l_rule.priority_rank.is_equal (l_general_rule.priority_rank) then
-										l_finished := True
-										report_ambiguity (a_node, a_specific_rule, l_rule, a_context.transformer)
-									end
-								else
-									l_general_rule := l_rule
-									if a_context.transformer.recovery_policy = Recover_silently then
-										l_finished := True -- Find the first; they are in priority order.
-									end
-								end
 							end
+						else
+							l_general_rule := l_rule
+							if a_context.transformer.recovery_policy = Recover_silently then l_finished := True end 
 						end
 					end
 				end
-				if not l_finished then
-					l_rule := l_rule.next_rule
-				end	
+				l_rule := l_rule.next_rule
 			end
 			if not a_context.transformer.is_error then
 				last_matched_rule := general_or_specific_rule (a_node, a_context, a_specific_rule, l_general_rule)
@@ -678,37 +583,35 @@ feature {NONE} -- Implementation
 			Maybe_no_rule_matches: True
 		end
 
-	general_or_specific_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_specific_rule, a_general_rule: XM_XSLT_RULE): XM_XSLT_RULE_VALUE is
-			-- General or specific rule
+	general_or_specific_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_specific_rule, a_general_rule: XM_XSLT_RULE): XM_XSLT_RULE is
+			-- Chosen rule between `a_specific_rule' and `a_general_rule'
 		require
 			node_not_void: a_node /= Void
 			context_not_void: a_context /= Void
 		do
 			if a_specific_rule /= Void and then a_general_rule = Void then
-				Result := a_specific_rule.handler
+				Result := a_specific_rule
 			elseif a_specific_rule = Void and then a_general_rule /= Void then
-				Result := a_general_rule.handler
+				Result := a_general_rule
 			elseif a_specific_rule /= Void and then a_general_rule /= Void then
 				if a_specific_rule.precedence = a_general_rule.precedence and then
-					a_specific_rule.priority.is_equal (a_general_rule.priority) then
-					
+					a_specific_rule.priority_rank = a_general_rule.priority_rank then
 					-- This situation is exceptional: we have a "specific" pattern and
-					--  a "general" pattern with the same priority. We have to select
-					--  the one that was added last.
-					
+					-- a "general" pattern with the same priority. We have to select
+					-- the one that was added last.
 					if a_specific_rule.sequence_number > a_general_rule.sequence_number then
-						Result := a_specific_rule.handler
+						Result := a_specific_rule
 					else
-						Result := a_general_rule.handler
+						Result := a_general_rule
 					end
 					if a_context.transformer.recovery_policy /= Recover_silently then
 						report_ambiguity (a_node, a_specific_rule, a_general_rule, a_context.transformer)
 					end
-				elseif a_specific_rule.precedence > a_general_rule.precedence or else
-					(a_specific_rule.precedence = a_general_rule.precedence and then a_specific_rule.priority >= a_general_rule.priority) then
-					Result := a_specific_rule.handler
+				elseif a_specific_rule.precedence > a_general_rule.precedence or
+					(a_specific_rule.precedence = a_general_rule.precedence and then a_specific_rule.priority_rank >= a_general_rule.priority_rank) then
+					Result := a_specific_rule
 				else
-					Result := a_general_rule.handler
+					Result := a_general_rule
 				end
 			else
 				Result := Void
@@ -716,7 +619,7 @@ feature {NONE} -- Implementation
 		ensure
 			Maybe_no_rule_matches: True
 		end
-
+	
 	possible_new_context (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_EVALUATION_CONTEXT is
 			-- New context, if any pattern might use local variables
 		require
