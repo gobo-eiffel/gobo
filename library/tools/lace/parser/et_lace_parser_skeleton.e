@@ -92,6 +92,7 @@ feature -- Parsing
 			metadata_cache_path_value := Void
 			msil_clr_version_value := Void
 			console_application_value := True
+			exception_trace_value := False
 			trace_value := False
 			yyparse
 		end
@@ -120,6 +121,10 @@ feature -- Default options
 	console_application_value: BOOLEAN
 			-- Value of 'console_application' default option, if any;
 			-- True by default
+
+	exception_trace_value: BOOLEAN
+			-- Value of 'exception_trace' default option, if any;
+			-- False by default
 
 	metadata_cache_path_value: ET_IDENTIFIER
 			-- Value of 'metadata_cache_path' default option, if any
@@ -200,6 +205,15 @@ feature {NONE} -- AST factory
 				else
 						-- TODO: better error handling
 					report_error ("Option 'console_application' should be set to either 'yes' or 'no'.")
+				end
+			elseif a_name.same_identifier (exception_trace_option) then
+				if a_value.same_identifier (yes_value) then
+					exception_trace_value := True
+				elseif a_value.same_identifier (no_value) then
+					exception_trace_value := False
+				else
+						-- TODO: better error handling
+					report_error ("Option 'exception_trace' should be set to either 'yes' or 'no'.")
 				end
 			elseif a_name.same_identifier (msil_clr_version_option) then
 				if msil_clr_version_value /= Void then
@@ -326,6 +340,7 @@ feature {NONE} -- AST factory
 			Result.set_external_object_pathnames (external_object_pathnames)
 			create external_object_pathnames.make (20)
 			Result.set_console_application_mode (console_application_value)
+			Result.set_exception_trace_mode (exception_trace_value)
 			Result.set_trace_mode (trace_value)
 		ensure
 			universe_not_void: Result /= Void
@@ -382,6 +397,14 @@ feature {NONE} -- Constants
 			Result := new_identifier ("console_application")
 		ensure
 			console_application_option_not_void: Result /= Void
+		end
+
+	exception_trace_option: ET_IDENTIFIER is
+			-- 'exception_trace' external option name
+		once
+			Result := new_identifier ("exception_trace")
+		ensure
+			exception_trace_option_not_void: Result /= Void
 		end
 
 	include_path_option: ET_IDENTIFIER is

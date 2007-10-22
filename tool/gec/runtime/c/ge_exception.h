@@ -37,6 +37,16 @@ extern "C" {
 #endif
 
 /*
+	Information about the feature being executed.
+*/
+typedef struct GE_call_struct GE_call;
+struct GE_call_struct {
+	char* feature_name;
+	char* type_name;
+	GE_call* caller; /* previous feature in the call chain */
+};
+
+/*
 	Context of features containing a rescue clause.
 */
 struct GE_rescue {

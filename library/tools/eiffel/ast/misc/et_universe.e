@@ -1611,8 +1611,15 @@ feature -- Compilation options
 			-- Should the generated application be a console application
 			-- (or a Windows GUI application)?
 
+	exception_trace_mode: BOOLEAN
+			-- Should the generated application be able to provide an exception trace?
+			-- An exception trace is the execution path from the root creation procedure
+			-- to the feature where an exception occurred.
+
 	trace_mode: BOOLEAN
 			-- Should the generated application be compiled with trace turned on?
+			-- The trace is displayed each time the execution enters or exits
+			-- from a feature.
 
 	system_name: STRING
 			-- Name of system
@@ -1634,6 +1641,14 @@ feature -- Compilation options setting
 			console_application_mode := b
 		ensure
 			console_application_mode_set: console_application_mode = b
+		end
+
+	set_exception_trace_mode (b: BOOLEAN) is
+			-- Set `exception_trace_mode' to `b'.
+		do
+			exception_trace_mode := b
+		ensure
+			exception_trace_mode_set: exception_trace_mode = b
 		end
 
 	set_trace_mode (b: BOOLEAN) is
