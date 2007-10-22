@@ -337,7 +337,7 @@ feature -- Argument parsing
 			-- Option for '--split-size=<size>'
 
 	gc_option: AP_ENUMERATION_OPTION
-			-- Option for '--gc=<no|bohem>'
+			-- Option for '--gc=<no|boehm>'
 
 	silent_flag: AP_FLAG
 			-- Flag for '--silent'
