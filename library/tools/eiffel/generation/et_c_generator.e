@@ -2314,6 +2314,14 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_type_generating_type then
 				print_builtin_type_generating_type_body (a_feature)
+			when builtin_type_generic_parameter then
+				print_builtin_type_generic_parameter_body (a_feature)
+			when builtin_type_generic_parameter_count then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_type_generic_parameter_count_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_type_name then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -10550,6 +10558,8 @@ feature {NONE} -- Query call generation
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_type_generic_parameter_count then
+				print_builtin_type_generic_parameter_count_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_name then
 				print_builtin_type_name_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_type_id then
@@ -20375,9 +20385,164 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 -- TODO: what to do to avoid having a infinite number of types?
 		end
 
+	print_builtin_type_generic_parameter_body (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'TYPE.generic_parameter'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_any_class: ET_CLASS
+			l_base_type: ET_BASE_TYPE
+			l_type: ET_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_meta_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			l_arguments := a_feature.arguments
+			l_parameters := current_type.base_type.actual_parameters
+			if l_parameters = Void or else l_parameters.count < 1 then
+					-- Internal error: we should have already checked by now
+					-- that class TYPE has a generic parameter.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_any_class := universe.any_class
+				l_base_type := l_parameters.type (1).shallow_base_type (l_any_class, universe)
+				l_parameters := l_base_type.actual_parameters
+				if l_parameters = Void or else l_parameters.is_empty then
+					-- Do nothing.
+				elseif l_parameters.count = 1 then
+					l_type := l_parameters.type (1)
+					l_dynamic_type := current_system.dynamic_type (l_type, l_any_class)
+					l_meta_type := l_dynamic_type.meta_type
+					if l_meta_type = Void then
+							-- Internal error: the meta type of the generic parameter should
+							-- have been computed when analyzing the dynamic type sets of
+							-- `a_feature'.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						print_indentation
+						print_result_name (current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_type_declaration (l_meta_type, current_file)
+						current_file.put_character (')')
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						current_file.put_string (c_ge_types)
+						current_file.put_character ('[')
+						current_file.put_integer (l_dynamic_type.id)
+						current_file.put_character (']')
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+				else
+					print_indentation
+					current_file.put_string (c_switch)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_argument_name (l_arguments.formal_argument (1).name, current_file)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					nb := l_parameters.count
+					from i := 1 until i > nb loop
+						l_type := l_parameters.type (i)
+						l_dynamic_type := current_system.dynamic_type (l_type, l_any_class)
+						l_meta_type := l_dynamic_type.meta_type
+						if l_meta_type = Void then
+								-- Internal error: the meta type of the generic parameter should
+								-- have been computed when analyzing the dynamic type sets of
+								-- `a_feature'.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							print_indentation
+							current_file.put_string (c_case)
+							current_file.put_character (' ')
+							current_file.put_integer (i)
+							current_file.put_character (':')
+							current_file.put_new_line
+							indent
+							print_indentation
+							print_result_name (current_file)
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							current_file.put_character ('(')
+							print_type_declaration (l_meta_type, current_file)
+							current_file.put_character (')')
+							current_file.put_character ('&')
+							current_file.put_character ('(')
+							current_file.put_string (c_ge_types)
+							current_file.put_character ('[')
+							current_file.put_integer (l_dynamic_type.id)
+							current_file.put_character (']')
+							current_file.put_character (')')
+							current_file.put_character (';')
+							current_file.put_new_line
+							print_indentation
+							current_file.put_string (c_break)
+							current_file.put_character (';')
+							current_file.put_new_line
+							dedent
+						end
+						i := i + 1
+					end
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
+			end
+		end
+
+	print_builtin_type_generic_parameter_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'TYPE.generic_parameter_count'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			l_parameters := a_target_type.base_type.actual_parameters
+			if l_parameters = Void or else l_parameters.count < 1 then
+					-- Internal error: we should have already checked by now
+					-- that class TYPE has a generic parameter.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_type_cast (current_system.integer_type, current_file)
+				current_file.put_character ('(')
+				l_parameters := l_parameters.type (1).shallow_base_type (universe.any_class, universe).actual_parameters
+				if l_parameters = Void then
+					current_file.put_character ('0')
+				else
+					current_file.put_integer (l_parameters.count)
+				end
+				current_file.put_character (')')
+			end
+		end
+
 	print_builtin_type_name_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'TYPE.name'>
+			-- corresponding to built-in feature 'TYPE.name'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.

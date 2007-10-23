@@ -47,11 +47,39 @@ feature -- Status report
 			Result := True
 		end
 
-	valid_operands (args: OPEN_ARGS): BOOLEAN is
+	valid_operands (args: TUPLE): BOOLEAN is
 			-- Are `args' valid operands for this routine?
+		local
+			l_expected_args: OPEN_ARGS
+			i, nb: INTEGER
+			l_arg_type_code: INTEGER
+			l_arg: ANY
 		do
-				-- Caught by CAT-call detector.
-			Result := True
+			create l_expected_args
+			if args = Void then
+					-- Void operands are only allowed
+					-- if object has no open operands.
+				Result := l_expected_args.count = 0
+			elseif args.count >= l_expected_args.count then
+				Result := True
+				nb := l_expected_args.count
+				from i := 1 until i > nb loop
+					l_arg_type_code := args.item_code (i)
+					if l_arg_type_code = l_expected_args.item_code (i) then
+						if l_arg_type_code = {TUPLE}.reference_code then
+							l_arg := args.item (i)
+							if l_arg /= Void and then not l_arg.generating_type.conforms_to (l_expected_args.generating_type.generic_parameter (i)) then
+								Result := False
+								i := nb + 1
+							end
+						end
+						i := i + 1
+					else
+						Result := False
+						i := nb + 1
+					end
+				end
+			end
 		end
 
 feature -- Basic operations

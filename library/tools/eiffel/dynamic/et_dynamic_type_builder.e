@@ -1141,30 +1141,6 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 			end
 		end
 
-	check_external_builtin_type_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Check validity of `a_feature'.
-			-- `a_feature' is a built-in function introduced in class "TYPE".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_feature_is_builtin: a_feature.is_builtin
-			a_feature_is_builtin_type: (a_feature.builtin_code // builtin_capacity) = builtin_type_class
-		do
-			inspect a_feature.builtin_code \\ builtin_capacity
-			when builtin_type_generating_type then
-				report_builtin_type_generating_type (a_feature)
-			when builtin_type_name then
-				report_builtin_type_name (a_feature)
-			when builtin_type_type_id then
-				report_builtin_type_type_id (a_feature)
-			else
-					-- Internal error: invalid built-in feature.
-					-- Error already reported during parsing.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			end
-		end
-
 	check_external_builtin_tuple_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Check validity of `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "TUPLE".
@@ -1211,6 +1187,34 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 				report_builtin_tuple_real_64_item (a_feature)
 			when builtin_tuple_reference_item then
 				report_builtin_tuple_reference_item (a_feature)
+			else
+					-- Internal error: invalid built-in feature.
+					-- Error already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	check_external_builtin_type_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Check validity of `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "TYPE".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_type: (a_feature.builtin_code // builtin_capacity) = builtin_type_class
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_type_generating_type then
+				report_builtin_type_generating_type (a_feature)
+			when builtin_type_generic_parameter then
+				report_builtin_type_generic_parameter (a_feature)
+			when builtin_type_generic_parameter_count then
+				report_builtin_type_generic_parameter_count (a_feature)
+			when builtin_type_name then
+				report_builtin_type_name (a_feature)
+			when builtin_type_type_id then
+				report_builtin_type_type_id (a_feature)
 			else
 					-- Internal error: invalid built-in feature.
 					-- Error already reported during parsing.
@@ -5417,6 +5421,66 @@ feature {NONE} -- Built-in features
 					l_result_type.set_alive
 					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 				end
+			end
+		end
+
+	report_builtin_type_generic_parameter (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TYPE.generic_parameter' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_type_class: ET_CLASS
+			l_any_class: ET_CLASS
+			l_base_type: ET_BASE_TYPE
+			l_type: ET_TYPE
+			l_type_type: ET_GENERIC_CLASS_TYPE
+			l_type_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_result_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_any_class := universe.any_class
+				l_parameters := current_type.actual_parameters
+				if l_parameters = Void or else l_parameters.count < 1 then
+						-- Internal error: we should have already checked by now
+						-- that class TYPE has a generic parameter.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_base_type := l_parameters.type (1).shallow_base_type (l_any_class, universe)
+					l_parameters := l_base_type.actual_parameters
+					if l_parameters /= Void then
+						l_type_class := universe.type_class
+						nb := l_parameters.count
+						from i := 1 until i > nb loop
+							l_type := l_parameters.type (i)
+							create l_type_parameters.make_with_capacity (1)
+							l_type_parameters.put_first (l_type)
+							create l_type_type.make (Void, tokens.type_class_name, l_type_parameters, l_type_class)
+							l_result_type := current_system.dynamic_type (l_type_type, l_any_class)
+							l_result_type.set_alive
+							propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
+
+	report_builtin_type_generic_parameter_count (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TYPE.generic_parameter_count' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.integer_type
+				l_result_type.set_alive
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 

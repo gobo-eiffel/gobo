@@ -37,6 +37,7 @@ feature -- Test
 			test_put_reference
 			test_put
 			test_object_comparison
+			test_valid_type_for_index
 			test_boxed_items
 			test_twin
 			test_deep_twin
@@ -217,6 +218,20 @@ feature -- Test
 			create t
 			t.compare_objects
 			assert ("object_comparison", t.object_comparison)
+		end
+
+	test_valid_type_for_index is
+			-- Test feature 'valid_type_for_index'.
+		local
+			t: TUPLE [COMPARABLE]
+			s: STRING
+			a: ARRAY [ANY]
+		do
+			create t
+			s := "gobo"
+			assert ("valid1", t.valid_type_for_index (s, 1))
+			create a.make (1, 1)
+			assert ("not_valid1", not t.valid_type_for_index (a, 1))
 		end
 
 	test_boxed_items is

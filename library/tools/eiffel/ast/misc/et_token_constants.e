@@ -894,6 +894,22 @@ feature -- Feature names
 			generator_feature_name_not_void: Result /= Void
 		end
 
+	generic_parameter_feature_name: ET_FEATURE_NAME is
+			-- 'generic_parameter' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (generic_parameter_name)
+		ensure
+			generic_parameter_feature_name_not_void: Result /= Void
+		end
+
+	generic_parameter_count_feature_name: ET_FEATURE_NAME is
+			-- 'generic_parameter_count' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (generic_parameter_count_name)
+		ensure
+			generic_parameter_count_feature_name_not_void: Result /= Void
+		end
+
 	hash_code_feature_name: ET_FEATURE_NAME is
 			-- 'hash_code' feature name
 		once
@@ -2638,6 +2654,12 @@ feature -- Keyword and symbol names
 
 	generator_name: STRING is "generator"
 		-- Name of Eiffel feature 'generator'
+
+	generic_parameter_name: STRING is "generic_parameter"
+		-- Name of Eiffel feature 'generic_parameter'
+
+	generic_parameter_count_name: STRING is "generic_parameter_count"
+		-- Name of Eiffel feature 'generic_parameter_count'
 
 	hash_code_name: STRING is "hash_code"
 		-- Name of Eiffel feature 'hash_code'

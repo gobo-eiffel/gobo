@@ -824,6 +824,8 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.floor_real_64_name)
 			Result.force_new (-1, tokens.generating_type_name)
 			Result.force_new (-1, tokens.generator_name)
+			Result.force_new (-1, tokens.generic_parameter_name)
+			Result.force_new (-1, tokens.generic_parameter_count_name)
 			Result.force_new (-1, tokens.hash_code_name)
 			Result.force_new (-1, tokens.integer_8_item_name)
 			Result.force_new (-1, tokens.integer_16_item_name)

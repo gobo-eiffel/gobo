@@ -2072,6 +2072,33 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, l_type_type_any)
 				end
+			elseif a_feature.name.same_feature_name (tokens.generic_parameter_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generic_parameter))
+				create l_parameters.make_with_capacity (1)
+				l_parameters.put_first (universe.any_type)
+				create l_type_any.make (Void, tokens.type_class_name, l_parameters, universe.type_class)
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'generic_parameter (i: INTEGER): TYPE [ANY]'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, l_type_any)
+				elseif not a_feature.type.same_syntactical_type (l_type_any, a_class, a_class, universe) then
+						-- The signature should be 'generic_parameter (i: INTEGER): TYPE [ANY]'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, l_type_any)
+				end
+			elseif a_feature.name.same_feature_name (tokens.generic_parameter_count_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_count))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'generic_parameter_count: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'generic_parameter_count: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+				end
 			elseif a_feature.name.same_feature_name (tokens.name_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_name))
 				l_formals := a_feature.arguments
@@ -4212,6 +4239,19 @@ feature {NONE} -- Built-in
 				create l_type_type_any.make (Void, tokens.type_class_name, l_parameters, universe.type_class)
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, l_type_type_any)
+			elseif a_feature.name.same_feature_name (tokens.generic_parameter_feature_name) then
+					-- 'TYPE.generic_parameter' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generic_parameter))
+				create l_parameters.make_with_capacity (1)
+				l_parameters.put_first (universe.any_type)
+				create l_type_any.make (Void, tokens.type_class_name, l_parameters, universe.type_class)
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, l_type_any)
+			elseif a_feature.name.same_feature_name (tokens.generic_parameter_count_feature_name) then
+					-- 'TYPE.generic_parameter_count' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_count))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
 			elseif a_feature.name.same_feature_name (tokens.name_feature_name) then
 					-- 'TYPE.name' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_name))

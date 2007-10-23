@@ -47,6 +47,17 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
+	generic_parameter (i: INTEGER): TYPE [ANY] is
+			-- `i'-th generic parameter of Eiffel type represented by `Current'
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= generic_parameter_count
+		external
+			"built_in"
+		ensure
+			generic_parameter_not_void: Result /= Void
+		end
+
 	type_id: INTEGER is
 			-- Id of the Eiffel type represented by `Current'
 		external
@@ -59,6 +70,16 @@ feature -- Access
 			-- Hash code value
 		do
 			Result := type_id
+		end
+
+feature -- Measurement
+
+	generic_parameter_count: INTEGER is
+			-- Number of generic parameters in Eiffel type represented by `Current'
+		external
+			"built_in"
+		ensure
+			generic_parameter_count_not_negative: Result >= 0
 		end
 
 feature -- Comparison

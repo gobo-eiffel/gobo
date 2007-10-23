@@ -377,7 +377,6 @@ feature -- Status report
 			l_i16: INTEGER_16_REF
 			l_i32: INTEGER_REF
 			l_i64: INTEGER_64_REF
-			l_int: INTERNAL
 		do
 			if v = Void then
 					-- A Void entry is always valid.
@@ -429,9 +428,7 @@ feature -- Status report
 				when Reference_code then
 						-- Let's check that type of `v' conforms to specified type of `index'-th
 						-- arguments of current TUPLE.
-					create l_int
-					Result := l_int.type_conforms_to
-						(l_int.dynamic_type (v), l_int.generic_dynamic_type (Current, index))
+					Result := v.generating_type.conforms_to (generating_type.generic_parameter (index))
 				end
 			end
 		end

@@ -28,6 +28,7 @@ feature -- Test
 			test_call_typed2
 			test_call_typed3
 			test_call_unqualified1
+			test_valid_operands
 			test_boxed_operands
 		end
 
@@ -391,6 +392,31 @@ feature -- Test
 			p4 := agent f (a, 'f', 1)
 			p4.call (['t', "gobo"])
 			assert_characters_equal ("call8", 'f', a.item (1))
+		end
+
+	test_valid_operands is
+			-- Test feature 'valid_operands'.
+		local
+			p1: PROCEDURE [ANY, TUPLE]
+			s: STRING
+			a: ARRAY [CHARACTER]
+			t1: TUPLE [ANY]
+		do
+			p1 := agent f (?, 'a', 1)
+				-- Test with invalid operands.
+			s := "gobo"
+			assert ("not_valid1", not p1.valid_operands ([s]))
+				-- Test with valid operands.
+			create a.make (1, 1)
+			assert ("valid1", p1.valid_operands ([a]))
+				-- Test that the operands are valid even though TUPLE [ANY]
+				-- does not conform to TUPLE [ARRAY [CHARACTER]]. According
+				-- to ISE's implementation, what is taken into account is the
+				-- dynamic type of the item of the tuple argument (which should
+				-- therefore conform to ARRAY [CHARACTER]).
+			create t1
+			t1.put_reference (a, 1)
+			assert ("valid2", p1.valid_operands (t1))
 		end
 
 	test_boxed_operands is
