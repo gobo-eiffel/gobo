@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 	data_dirname: STRING is
 			-- Name of data directory
 		do
-			Result := file_system.nested_pathname ("${GOBO}", <<"example", "test", "xml", "data">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "xml", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		end
 
