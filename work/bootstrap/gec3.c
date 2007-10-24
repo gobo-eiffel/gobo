@@ -38753,7 +38753,7 @@ T1 T28f20(T0* C, T0* a1)
 /* KL_DIRECTORY.close */
 void T439f28(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T1 l1 = 0;
 	T1 t1;
 	if (GE_setjmp(r.jb) != 0) {
@@ -38765,8 +38765,8 @@ void T439f28(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = ((T1)(!(l1)));
 	if (t1) {
 		T439f32(C);
@@ -38774,7 +38774,7 @@ GE_retry:
 		((T439*)(C))->a6 = EIF_VOID;
 		((T439*)(C))->a2 = EIF_VOID;
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* KL_DIRECTORY.old_close */
@@ -40364,7 +40364,7 @@ T1 T28f19(T0* C, T0* a1)
 /* ET_EIFFEL_PREPARSER.preparse_file_single */
 void T307f141(T0* C, T0* a1, T0* a2, T6 a3, T0* a4)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* t1;
@@ -40374,8 +40374,8 @@ void T307f141(T0* C, T0* a1, T0* a2, T6 a3, T0* a4)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	((T307*)(C))->a1 = EIF_FALSE;
 	((T307*)(C))->a11 = a2;
 	((T307*)(C))->a15 = (T307f67(C));
@@ -40539,7 +40539,7 @@ GE_retry:
 		}
 	}
 	T307f147(C);
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* ET_NULL_ERROR_HANDLER.report_syntax_error */

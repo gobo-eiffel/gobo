@@ -34112,7 +34112,7 @@ void T61f414(T0* C)
 /* KL_TEXT_OUTPUT_FILE.open_append */
 void T213f27(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T1 l1 = 0;
 	T1 t1;
 	if (GE_setjmp(r.jb) != 0) {
@@ -34124,8 +34124,8 @@ void T213f27(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = ((T1)(!(l1)));
 	if (t1) {
 		t1 = ((((T213*)(C))->a3)!=(ge384ov1704));
@@ -34139,7 +34139,7 @@ GE_retry:
 			T213f26(C);
 		}
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* KL_TEXT_OUTPUT_FILE.old_open_append */

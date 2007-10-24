@@ -30470,7 +30470,7 @@ void T54f223(T0* C, T0* a1)
 /* ET_LACE_PARSER.yyparse */
 void T54f227(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T6 l3 = 0;
@@ -30487,8 +30487,8 @@ void T54f227(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = ((((T54*)(C))->a2)==((T6)(GE_int32(105))));
 	if (t1) {
 		l1 = ((T54*)(C))->a20;
@@ -30732,7 +30732,7 @@ GE_retry:
 	if (t1) {
 		T54f241(C);
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* ET_LACE_PARSER.yy_pop_last_value */

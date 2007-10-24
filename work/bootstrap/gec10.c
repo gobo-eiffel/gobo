@@ -12877,7 +12877,7 @@ void T307f162(T0* C, T0* a1)
 /* ET_EIFFEL_PREPARSER.preparse_file_multiple */
 void T307f163(T0* C, T0* a1, T0* a2, T6 a3, T0* a4)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* t1;
@@ -12887,8 +12887,8 @@ void T307f163(T0* C, T0* a1, T0* a2, T6 a3, T0* a4)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	((T307*)(C))->a1 = EIF_FALSE;
 	((T307*)(C))->a11 = a2;
 	((T307*)(C))->a15 = (T307f67(C));
@@ -13058,7 +13058,7 @@ GE_retry:
 		t2 = ((((T307*)(C))->a16)==(EIF_VOID));
 	}
 	T307f147(C);
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* ET_XACE_UNIVERSE.preparse */
@@ -33568,16 +33568,6 @@ void T61f837(T0* C, T0* a1, T1 a2, T1 a3)
 	if (t1) {
 		T61f470(C);
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f8(((T61*)(C))->a11, ge953ov7150);
-		} else {
-			T182f9(((T61*)(C))->a11, ge953ov7150);
-		}
-		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f7(((T61*)(C))->a11, (T2)(' '));
-		} else {
-			T182f7(((T61*)(C))->a11, (T2)(' '));
-		}
-		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
 			T184f8(((T61*)(C))->a11, ge953ov7128);
 		} else {
 			T182f9(((T61*)(C))->a11, ge953ov7128);
@@ -34023,9 +34013,9 @@ void T61f837(T0* C, T0* a1, T1 a2, T1 a3)
 		}
 		T61f470(C);
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f8(((T61*)(C))->a11, GE_ms("r.previous = GE_rescue;", 23));
+			T184f8(((T61*)(C))->a11, GE_ms("r.previous = GE_last_rescue;", 28));
 		} else {
-			T182f9(((T61*)(C))->a11, GE_ms("r.previous = GE_rescue;", 23));
+			T182f9(((T61*)(C))->a11, GE_ms("r.previous = GE_last_rescue;", 28));
 		}
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
 			T184f5(((T61*)(C))->a11);
@@ -34034,9 +34024,9 @@ void T61f837(T0* C, T0* a1, T1 a2, T1 a3)
 		}
 		T61f470(C);
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f8(((T61*)(C))->a11, GE_ms("GE_rescue = &r;", 15));
+			T184f8(((T61*)(C))->a11, GE_ms("GE_last_rescue = &r;", 20));
 		} else {
-			T182f9(((T61*)(C))->a11, GE_ms("GE_rescue = &r;", 15));
+			T182f9(((T61*)(C))->a11, GE_ms("GE_last_rescue = &r;", 20));
 		}
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
 			T184f5(((T61*)(C))->a11);
@@ -34053,9 +34043,9 @@ void T61f837(T0* C, T0* a1, T1 a2, T1 a3)
 	if (t1) {
 		T61f470(C);
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f8(((T61*)(C))->a11, GE_ms("GE_rescue = r.previous;", 23));
+			T184f8(((T61*)(C))->a11, GE_ms("GE_last_rescue = r.previous;", 28));
 		} else {
-			T182f9(((T61*)(C))->a11, GE_ms("GE_rescue = r.previous;", 23));
+			T182f9(((T61*)(C))->a11, GE_ms("GE_last_rescue = r.previous;", 28));
 		}
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
 			T184f5(((T61*)(C))->a11);

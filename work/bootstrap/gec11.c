@@ -23294,16 +23294,6 @@ void T61f824(T0* C, T0* a1)
 	if (t1) {
 		T61f470(C);
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f8(((T61*)(C))->a11, ge953ov7150);
-		} else {
-			T182f9(((T61*)(C))->a11, ge953ov7150);
-		}
-		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f7(((T61*)(C))->a11, (T2)(' '));
-		} else {
-			T182f7(((T61*)(C))->a11, (T2)(' '));
-		}
-		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
 			T184f8(((T61*)(C))->a11, ge953ov7128);
 		} else {
 			T182f9(((T61*)(C))->a11, ge953ov7128);
@@ -23605,9 +23595,9 @@ void T61f824(T0* C, T0* a1)
 		}
 		T61f470(C);
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f8(((T61*)(C))->a11, GE_ms("r.previous = GE_rescue;", 23));
+			T184f8(((T61*)(C))->a11, GE_ms("r.previous = GE_last_rescue;", 28));
 		} else {
-			T182f9(((T61*)(C))->a11, GE_ms("r.previous = GE_rescue;", 23));
+			T182f9(((T61*)(C))->a11, GE_ms("r.previous = GE_last_rescue;", 28));
 		}
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
 			T184f5(((T61*)(C))->a11);
@@ -23616,9 +23606,9 @@ void T61f824(T0* C, T0* a1)
 		}
 		T61f470(C);
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f8(((T61*)(C))->a11, GE_ms("GE_rescue = &r;", 15));
+			T184f8(((T61*)(C))->a11, GE_ms("GE_last_rescue = &r;", 20));
 		} else {
-			T182f9(((T61*)(C))->a11, GE_ms("GE_rescue = &r;", 15));
+			T182f9(((T61*)(C))->a11, GE_ms("GE_last_rescue = &r;", 20));
 		}
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
 			T184f5(((T61*)(C))->a11);
@@ -23635,9 +23625,9 @@ void T61f824(T0* C, T0* a1)
 	if (t1) {
 		T61f470(C);
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f8(((T61*)(C))->a11, GE_ms("GE_rescue = r.previous;", 23));
+			T184f8(((T61*)(C))->a11, GE_ms("GE_last_rescue = r.previous;", 28));
 		} else {
-			T182f9(((T61*)(C))->a11, GE_ms("GE_rescue = r.previous;", 23));
+			T182f9(((T61*)(C))->a11, GE_ms("GE_last_rescue = r.previous;", 28));
 		}
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
 			T184f5(((T61*)(C))->a11);
@@ -40118,6 +40108,20 @@ void T658f88(T0* C)
 {
 	((T658*)(C))->a29 = EIF_FALSE;
 	((T658*)(C))->a30 = EIF_FALSE;
+}
+
+/* ET_ATTRIBUTE.reset_assertions_checked */
+void T254f82(T0* C)
+{
+	((T254*)(C))->a22 = EIF_FALSE;
+	((T254*)(C))->a21 = EIF_FALSE;
+}
+
+/* ET_UNIQUE_ATTRIBUTE.reset_assertions_checked */
+void T253f86(T0* C)
+{
+	((T253*)(C))->a24 = EIF_FALSE;
+	((T253*)(C))->a23 = EIF_FALSE;
 }
 
 

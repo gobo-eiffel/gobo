@@ -2821,7 +2821,7 @@ int main(int argc, char** argv)
 	T0* t1;
 	GE_argc = argc;
 	GE_argv = argv;
-	GE_rescue = 0;
+	GE_last_rescue = 0;
 	GE_init_gc();
 	GE_const_init();
 #ifdef EIF_WINDOWS
@@ -2903,16 +2903,16 @@ extern "C" {
 	Context of last feature entered containing a rescue clause.
 	Warning: this is not thread-safe.
 */
-struct GE_rescue *GE_rescue;
+GE_rescue* GE_last_rescue;
 
 /*
 	Raise an exception with code 'code'.
 */
 void GE_raise(int code)
 {
-	struct GE_rescue *r = GE_rescue;
+	GE_rescue* r = GE_last_rescue;
 	if (r != 0) {
-		GE_rescue = r->previous;
+		GE_last_rescue = r->previous;
 		GE_longjmp(r->jb, code);
 	}
 #ifdef EIF_WINDOWS

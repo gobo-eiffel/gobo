@@ -4,20 +4,6 @@
 extern "C" {
 #endif
 
-/* ET_ATTRIBUTE.reset_assertions_checked */
-void T254f82(T0* C)
-{
-	((T254*)(C))->a22 = EIF_FALSE;
-	((T254*)(C))->a21 = EIF_FALSE;
-}
-
-/* ET_UNIQUE_ATTRIBUTE.reset_assertions_checked */
-void T253f86(T0* C)
-{
-	((T253*)(C))->a24 = EIF_FALSE;
-	((T253*)(C))->a23 = EIF_FALSE;
-}
-
 /* ET_CONSTANT_ATTRIBUTE.reset_assertions_checked */
 void T251f85(T0* C)
 {
@@ -5458,7 +5444,7 @@ void T949f33(T0* C)
 /* KL_TEXT_INPUT_FILE.close */
 void T22f41(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T1 l1 = 0;
 	T1 t1;
 	if (GE_setjmp(r.jb) != 0) {
@@ -5470,14 +5456,14 @@ void T22f41(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = ((T1)(!(l1)));
 	if (t1) {
 		T22f44(C);
 		((T22*)(C))->a4 = EIF_VOID;
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* KL_TEXT_INPUT_FILE.old_close */

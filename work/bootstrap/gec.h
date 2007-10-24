@@ -225,16 +225,17 @@ struct GE_call_struct {
 /*
 	Context of features containing a rescue clause.
 */
-struct GE_rescue {
+typedef struct GE_rescue_struct GE_rescue;
+struct GE_rescue_struct {
 	GE_jmp_buf jb;
-	struct GE_rescue *previous; /* previous context in the call chain */
+	GE_rescue* previous; /* previous context in the call chain */
 };
 
 /*
 	Context of last feature entered containing a rescue clause.
 	Warning: this is not thread-safe.
 */
-extern struct GE_rescue *GE_rescue;
+extern GE_rescue* GE_last_rescue;
 
 /*
 	Raise an exception with code 'code'.

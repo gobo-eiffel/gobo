@@ -3971,8 +3971,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_rescue := a_feature.rescue_clause
 			if l_rescue /= Void then
 				print_indentation
-				current_file.put_string (c_struct)
-				current_file.put_character (' ')
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
 				current_file.put_character ('r')
@@ -4110,10 +4108,10 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (':')
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("r.previous = GE_rescue;")
+				current_file.put_string ("r.previous = GE_last_rescue;")
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("GE_rescue = &r;")
+				current_file.put_string ("GE_last_rescue = &r;")
 				current_file.put_new_line
 			end
 			l_compound := a_feature.compound
@@ -4122,7 +4120,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 			if l_rescue /= Void then
 				print_indentation
-				current_file.put_string ("GE_rescue = r.previous;")
+				current_file.put_string ("GE_last_rescue = r.previous;")
 				current_file.put_new_line
 			end
 			if l_result_type /= Void then
@@ -11629,8 +11627,6 @@ feature {NONE} -- Agent generation
 			l_rescue := an_agent.rescue_clause
 			if l_rescue /= Void then
 				print_indentation
-				current_file.put_string (c_struct)
-				current_file.put_character (' ')
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
 				current_file.put_character ('r')
@@ -11731,10 +11727,10 @@ feature {NONE} -- Agent generation
 				current_file.put_character (':')
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("r.previous = GE_rescue;")
+				current_file.put_string ("r.previous = GE_last_rescue;")
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("GE_rescue = &r;")
+				current_file.put_string ("GE_last_rescue = &r;")
 				current_file.put_new_line
 			end
 			l_compound := an_agent.compound
@@ -11743,7 +11739,7 @@ feature {NONE} -- Agent generation
 			end
 			if l_rescue /= Void then
 				print_indentation
-				current_file.put_string ("GE_rescue = r.previous;")
+				current_file.put_string ("GE_last_rescue = r.previous;")
 				current_file.put_new_line
 			end
 			if l_result_type /= Void then
@@ -20631,7 +20627,7 @@ feature {NONE} -- C function generation
 				print_indentation
 				current_file.put_line ("GE_argv = argv;")
 				print_indentation
-				current_file.put_line ("GE_rescue = 0;")
+				current_file.put_line ("GE_last_rescue = 0;")
 				print_indentation
 				current_file.put_line ("GE_init_gc();")
 				print_indentation

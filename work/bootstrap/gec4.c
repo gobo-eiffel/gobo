@@ -604,7 +604,7 @@ void T307f147p0(T0* C)
 /* KL_TEXT_INPUT_FILE.time_stamp */
 T6 T22f31(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T6 R = 0;
 	T1 l1 = 0;
 	T1 t1;
@@ -617,8 +617,8 @@ T6 T22f31(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	R = (T6)(GE_int32(-1));
 	t1 = ((T1)(!(l1)));
 	if (t1) {
@@ -634,7 +634,7 @@ GE_retry:
 			}
 		}
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 	return R;
 }
 
@@ -1164,7 +1164,7 @@ T1 T439f13(T0* C)
 /* KL_DIRECTORY.open_read */
 void T439f26(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T1 l1 = 0;
 	T1 t1;
 	T6 t2;
@@ -1177,8 +1177,8 @@ void T439f26(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = ((T1)(!(l1)));
 	if (t1) {
 		t2 = (((((T0*)(GE_void(((T439*)(C))->a5)))->id==17)?((T17*)(((T439*)(C))->a5))->a2:((T948*)(((T439*)(C))->a5))->a1));
@@ -1202,7 +1202,7 @@ GE_retry:
 			T439f28(C);
 		}
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* KL_DIRECTORY.old_open_read */
@@ -12997,7 +12997,7 @@ void T171f917(T0* C, T0* a1)
 /* ET_EIFFEL_PARSER.parse_file */
 void T171f916(T0* C, T0* a1, T0* a2, T6 a3, T0* a4)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T1 t1;
 	T0* t2;
 	if (GE_setjmp(r.jb) != 0) {
@@ -13005,8 +13005,8 @@ void T171f916(T0* C, T0* a1, T0* a2, T6 a3, T0* a4)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	((T171*)(C))->a22 = EIF_FALSE;
 	t1 = ((T1)(!(((T171*)(C))->a23)));
 	if (t1) {
@@ -13020,13 +13020,13 @@ GE_retry:
 		T171f921(C);
 		T171f922(C);
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* ET_EIFFEL_PARSER.yyparse */
 void T171f921(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T6 l3 = 0;
@@ -13043,8 +13043,8 @@ void T171f921(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = ((((T171*)(C))->a52)==((T6)(GE_int32(105))));
 	if (t1) {
 		l1 = ((T171*)(C))->a53;
@@ -13288,7 +13288,7 @@ GE_retry:
 	if (t1) {
 		T171f934(C);
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* ET_EIFFEL_PARSER.yy_pop_last_value */

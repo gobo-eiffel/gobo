@@ -29194,7 +29194,7 @@ if (t1==794) {
 /* GEC.execute */
 T0* T21c32(void)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T6 l3 = 0;
@@ -29211,8 +29211,8 @@ T0* T21c32(void)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = (T21f16(C));
 	T23f5(GE_void(t1), GE_ms("gec", 3));
 	((T21*)(C))->a1 = T24c6();
@@ -29266,7 +29266,7 @@ GE_retry:
 		t1 = (T21f15(C));
 		T29f2(GE_void(t1), (T6)(GE_int32(1)));
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 	return C;
 }
 
@@ -30282,7 +30282,7 @@ void T21f37(T0* C, T0* a1)
 /* KL_SHELL_COMMAND.execute */
 void T62f13(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T1 l1 = 0;
 	T1 t1;
 	T0* t2;
@@ -30296,8 +30296,8 @@ void T62f13(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = ((T1)(!(l1)));
 	if (t1) {
 		T62f14(C, ((T62*)(C))->a2);
@@ -30321,7 +30321,7 @@ GE_retry:
 		((T62*)(C))->a1 = (T6)(GE_int32(-1));
 		((T62*)(C))->a5 = EIF_TRUE;
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* KL_SHELL_COMMAND.operating_system */
@@ -33507,7 +33507,7 @@ void T61f406(T0* C)
 /* KL_TEXT_OUTPUT_FILE.close */
 void T213f26(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T1 l1 = 0;
 	T1 t1;
 	if (GE_setjmp(r.jb) != 0) {
@@ -33519,13 +33519,13 @@ void T213f26(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = ((T1)(!(l1)));
 	if (t1) {
 		T213f34(C);
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* KL_TEXT_OUTPUT_FILE.old_close */
@@ -34503,7 +34503,7 @@ T1 T213f16(T0* C)
 /* KL_TEXT_OUTPUT_FILE.open_write */
 void T213f21(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T1 l1 = 0;
 	T1 t1;
 	if (GE_setjmp(r.jb) != 0) {
@@ -34515,8 +34515,8 @@ void T213f21(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = ((T1)(!(l1)));
 	if (t1) {
 		t1 = ((((T213*)(C))->a3)!=(ge384ov1704));
@@ -34530,7 +34530,7 @@ GE_retry:
 			T213f26(C);
 		}
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* KL_TEXT_OUTPUT_FILE.is_closed */
@@ -42692,7 +42692,7 @@ void T321f177(T0* C, T0* a1)
 /* UT_CONFIG_PARSER.parse */
 void T321f181(T0* C)
 {
-	struct GE_rescue r;
+	GE_rescue r;
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T6 l3 = 0;
@@ -42709,8 +42709,8 @@ void T321f181(T0* C)
 		GE_raise(8);
 	}
 GE_retry:
-	r.previous = GE_rescue;
-	GE_rescue = &r;
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
 	t1 = ((((T321*)(C))->a14)==((T6)(GE_int32(105))));
 	if (t1) {
 		l1 = ((T321*)(C))->a15;
@@ -42954,7 +42954,7 @@ GE_retry:
 	if (t1) {
 		T321f195(C);
 	}
-	GE_rescue = r.previous;
+	GE_last_rescue = r.previous;
 }
 
 /* UT_CONFIG_PARSER.yy_pop_last_value */
@@ -52315,9 +52315,9 @@ void T61f428(T0* C)
 		}
 		T61f470(C);
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
-			T184f6(((T61*)(C))->a11, GE_ms("GE_rescue = 0;", 14));
+			T184f6(((T61*)(C))->a11, GE_ms("GE_last_rescue = 0;", 19));
 		} else {
-			T182f5(((T61*)(C))->a11, GE_ms("GE_rescue = 0;", 14));
+			T182f5(((T61*)(C))->a11, GE_ms("GE_last_rescue = 0;", 19));
 		}
 		T61f470(C);
 		if (((T0*)(GE_void(((T61*)(C))->a11)))->id==184) {
