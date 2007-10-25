@@ -3,31 +3,26 @@ Version 3.7 - ?
 	gec:
 
 	* Can generate console and Windows applications.
-
 	* Implemented once manifest strings.
-
 	* Report CAT-call errors and call-on-void-target errors at run-time.
-
 	* Support the Ace/Xace/ECF 'trace' option.
-
 	* The Boehm GC can be plugged using the --gc command-line option.
-
 	* Improved the back-end C compiler config file.
-
 	* Improved interoperability with ISE's compiler.
+	* Support 'external "C++"' routines.
+	* Implemented feature `deep_twin'.
 
 	gelint:
 
 	* Fixed bug when determining the type of a call to a Tuple label 
 	  when appearing in a generic class.
+	* Added support for some incrementality when used within the same session.
 
 	Gobo Eiffel Argument Library:
 
 	* Added the possibility to specify a maximum number of options.
-
 	* Added the possibility to make option arguments optional for options
 	  that only have a long form.
-
 	* The contracts now certify that the setup of arguments are 
 	  unambiguous.
 
@@ -37,15 +32,12 @@ Version 3.7 - ?
 	  use `is_equal' directly, but a protected version of it which is preceded
 	  by a call to `same_type'.
 
-	Gobo Eiffel XML library
+	Gobo Eiffel XML Library
 
-	* Made the XSLT serializer a reusable component for any XML
-	  programs.
-
+	* Made the XSLT serializer a reusable component for any XML programs.
 	* Added an example of using the XSLT serializer.
-
-	* Added documentation on XML serializers, icluding the
-	  reusable XSLT serializer.
+	* Added documentation on XML serializers, including the reusable
+	  XSLT serializer.
 
 Version 3.6 - 14 June 2007
 
@@ -64,7 +56,6 @@ Version 3.6 - 14 June 2007
 
 	* Added iterator features (`do_all', `do_all_with_index', `do_if', 
 	  `do_if_with_index', `there_exists') to relevant classes.
-
 	* Fixed bug in invariant of DS_MULTIARRAYED_SPARSE_SET and
 	  DS_MULTIARRAYED_SPARSE_TABLE when `capacity' is zero.
 
@@ -72,9 +63,7 @@ Version 3.6 - 14 June 2007
 
 	* Now uses the MIT License, which is an OSI Approved License and
 	  a GPL-Compatible Free Software License.
-
 	* Bugs can now be reported on SourceForge bug tracker.
-
 	* Does not support Visual Eifel compiler anymore. Indeed Visual Eiffel
 	  does not support Agents, Tuples, INTEGER_64 among other things. The
 	  Gobo project tried not to use these constructs so far, but this is
@@ -87,17 +76,13 @@ Version 3.5 - 23 January 2007
 	* Fixed bugs which prevented that possible arguments of a target
 	  to be taken into account during evaluation of ${somevar} references.
 	  This was especially the case for the attributes 'if' and 'unless'.
-
 	* Task <geant> now by default spawns a new geant process if
 	  attribute 'file' has been specified. It also has a new attribute
 	  called 'fork' to control whether a new process should be spawned
 	  or not.
-
 	* Added attribute 'force' to task <xslt>. Use this attribute to
 	  generate output that already exists and is newer than the input.
-
 	* Added task <input> to get input values.
-
 	* Added task <replace> to replace tokens or patterns in a file.
 
 	gec:
