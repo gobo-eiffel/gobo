@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 			current_system := a_system
 			current_file := null_output_stream
 			header_file := null_output_stream
-			current_type := a_system.none_type
+			current_type := a_system.unknown_type
 			current_feature := dummy_feature
 			create internal_dynamic_type_sets.make_with_capacity (1000)
 			current_dynamic_type_sets := internal_dynamic_type_sets
@@ -700,7 +700,7 @@ feature {NONE} -- C code Generation
 				close_cpp_file
 				header_file := old_header_file
 				current_file := old_file
-				current_type := current_system.none_type
+				current_type := current_system.unknown_type
 				current_feature := dummy_feature
 				current_dynamic_type_sets := internal_dynamic_type_sets
 			end
@@ -1123,23 +1123,16 @@ feature {NONE} -- Feature generation
 					else
 						l_comma := True
 					end
-					l_argument_type_set := current_feature.argument_type_set (i)
-					if l_argument_type_set = Void then
-							-- Internal error: the dynamic type set of the formal
-							-- arguments should have been computed at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_argument_type := l_argument_type_set.static_type
-						print_type_declaration (l_argument_type, header_file)
-						print_type_declaration (l_argument_type, current_file)
-						header_file.put_character (' ')
-						current_file.put_character (' ')
-						l_name := l_arguments.formal_argument (i).name
-						print_argument_name (l_name, header_file)
-						print_argument_name (l_name, current_file)
-						i := i + 1
-					end
+					l_argument_type_set := argument_type_set (i)
+					l_argument_type := l_argument_type_set.static_type
+					print_type_declaration (l_argument_type, header_file)
+					print_type_declaration (l_argument_type, current_file)
+					header_file.put_character (' ')
+					current_file.put_character (' ')
+					l_name := l_arguments.formal_argument (i).name
+					print_argument_name (l_name, header_file)
+					print_argument_name (l_name, current_file)
+					i := i + 1
 				end
 			end
 			header_file.put_character (')')
@@ -2750,13 +2743,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 							l_cursor.forth
 						end
 						l_name := a_arguments.formal_argument (i).name
-						l_argument_type_set := current_feature.argument_type_set (i)
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the formal
-								-- arguments should have been computed at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+						l_argument_type_set := argument_type_set (i)
+						if l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 								-- The argument is declared of type 'TYPED_POINTER [XX]'.
 								-- In that case we use the corresponding pointer (i.e.
 								-- the first attribute of the object).
@@ -2792,13 +2780,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 							current_file.put_character (',')
 						end
 						l_name := a_arguments.formal_argument (i).name
-						l_argument_type_set := current_feature.argument_type_set (i)
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the formal arguments
-								-- should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_argument_type_set.static_type = current_system.pointer_type then
+						l_argument_type_set := argument_type_set (i)
+						if l_argument_type_set.static_type = current_system.pointer_type then
 								-- When compiling with C++, MSVC++ does not want to convert
 								-- 'void*' to non-'void*' implicitly.
 							current_file.put_string ("(char*)")
@@ -2899,12 +2882,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				if nb_args >= 1 then
 					l_name := a_arguments.formal_argument (1).name
 					l_argument_type_set := dynamic_type_set (l_name)
-					if l_argument_type_set = Void then
-							-- Internal error: the dynamic type set of the formal
-							-- arguments should have been computed at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+					if l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 							-- The argument is declared of type 'TYPED_POINTER [XX]'.
 							-- In that case we use the corresponding pointer (i.e.
 							-- the first attribute of the object).
@@ -2953,12 +2931,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				if nb_args >= 2 then
 					l_name := a_arguments.formal_argument (2).name
 					l_argument_type_set := dynamic_type_set (l_name)
-					if l_argument_type_set = Void then
-							-- Internal error: the dynamic type set of the formal
-							-- arguments should have been computed at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+					if l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 							-- The argument is declared of type 'TYPED_POINTER [XX]'.
 							-- In that case we use the corresponding pointer (i.e.
 							-- the first attribute of the object).
@@ -3097,13 +3070,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 									end
 									if l_max_index /= 0 then
 										l_argument_name := l_formal_arguments.formal_argument (l_max_index).name
-										l_argument_type_set := current_feature.argument_type_set (l_max_index)
-										if l_argument_type_set = Void then
-												-- Internal error: the dynamic type set of the formal
-												-- arguments should have been computed at this stage.
-											set_fatal_error
-											error_handler.report_giaaa_error
-										elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+										l_argument_type_set := argument_type_set (l_max_index)
+										if l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 												-- The argument is declared of type 'TYPED_POINTER [XX]'.
 												-- In that case we use the corresponding pointer (i.e.
 												-- the first attribute of the object).
@@ -3243,12 +3211,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (')')
 				l_name := a_arguments.formal_argument (1).name
 				l_argument_type_set := dynamic_type_set (l_name)
-				if l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the formal
-						-- arguments should have been computed at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+				if l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 						-- The argument is declared of type 'TYPED_POINTER [XX]'.
 						-- In that case we use the corresponding pointer (i.e.
 						-- the first attribute of the object).
@@ -3305,12 +3268,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						end
 						l_name := a_arguments.formal_argument (i).name
 						l_argument_type_set := dynamic_type_set (l_name)
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the formal
-								-- arguments should have been computed at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+						if l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 								-- The argument is declared of type 'TYPED_POINTER [XX]'.
 								-- In that case we use the corresponding pointer (i.e.
 								-- the first attribute of the object).
@@ -3347,12 +3305,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						end
 						l_name := a_arguments.formal_argument (i).name
 						l_argument_type_set := dynamic_type_set (l_name)
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the formal arguments
-								-- should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_argument_type_set.static_type = current_system.pointer_type then
+						if l_argument_type_set.static_type = current_system.pointer_type then
 								-- When compiling with C++, MSVC++ does not want to convert
 								-- 'void*' to non-'void*' implicitly.
 							current_file.put_string ("(char*)")
@@ -3538,13 +3491,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 							current_file.put_character (',')
 						end
 						l_name := a_arguments.formal_argument (i).name
-						l_argument_type_set := current_feature.argument_type_set (i)
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the formal arguments
-								-- should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_argument_type_set.static_type = current_system.pointer_type then
+						l_argument_type_set := argument_type_set (i)
+						if l_argument_type_set.static_type = current_system.pointer_type then
 								-- When compiling with C++, MSVC++ does not want to convert
 								-- 'void*' to non-'void*' implicitly.
 							current_file.put_string ("char*")
@@ -3597,13 +3545,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 							l_cursor.forth
 						end
 						l_name := a_arguments.formal_argument (i).name
-						l_argument_type_set := current_feature.argument_type_set (i)
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the formal
-								-- arguments should have been computed at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
+						l_argument_type_set := argument_type_set (i)
+						if l_argument_type_set.static_type.base_class = universe.typed_pointer_class then
 								-- The argument is declared of type 'TYPED_POINTER [XX]'.
 								-- In that case we use the corresponding pointer (i.e.
 								-- the first attribute of the object).
@@ -3639,13 +3582,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 							current_file.put_character (',')
 						end
 						l_name := a_arguments.formal_argument (i).name
-						l_argument_type_set := current_feature.argument_type_set (i)
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the formal arguments
-								-- should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_argument_type_set.static_type = current_system.pointer_type then
+						l_argument_type_set := argument_type_set (i)
+						if l_argument_type_set.static_type = current_system.pointer_type then
 								-- When compiling with C++, MSVC++ does not want to convert
 								-- 'void*' to non-'void*' implicitly.
 							current_file.put_string ("(char*)")
@@ -3914,23 +3852,16 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					else
 						l_comma := True
 					end
-					l_argument_type_set := current_feature.argument_type_set (i)
-					if l_argument_type_set = Void then
-							-- Internal error: the dynamic type set of the formal
-							-- arguments should have been computed at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_argument_type := l_argument_type_set.static_type
-						print_type_declaration (l_argument_type, header_file)
-						print_type_declaration (l_argument_type, current_file)
-						header_file.put_character (' ')
-						current_file.put_character (' ')
-						l_name := l_arguments.formal_argument (i).name
-						print_argument_name (l_name, header_file)
-						print_argument_name (l_name, current_file)
-						i := i + 1
-					end
+					l_argument_type_set := argument_type_set (i)
+					l_argument_type := l_argument_type_set.static_type
+					print_type_declaration (l_argument_type, header_file)
+					print_type_declaration (l_argument_type, current_file)
+					header_file.put_character (' ')
+					current_file.put_character (' ')
+					l_name := l_arguments.formal_argument (i).name
+					print_argument_name (l_name, header_file)
+					print_argument_name (l_name, current_file)
+					i := i + 1
 				end
 			end
 			header_file.put_character (')')
@@ -3997,24 +3928,17 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				from i := 1 until i > nb loop
 					l_name := l_locals.local_variable (i).name
 					l_local_type_set := dynamic_type_set (l_name)
-					if l_local_type_set = Void then
-							-- Internal error: the dynamic type of local variable
-							-- should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_local_type := l_local_type_set.static_type
-						print_indentation
-						print_type_declaration (l_local_type, current_file)
-						current_file.put_character (' ')
-						print_local_name (l_name, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						print_default_entity_value (l_local_type, current_file)
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
+					l_local_type := l_local_type_set.static_type
+					print_indentation
+					print_type_declaration (l_local_type, current_file)
+					current_file.put_character (' ')
+					print_local_name (l_name, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_default_entity_value (l_local_type, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
 					i := i + 1
 				end
 			end
@@ -4451,63 +4375,49 @@ feature {NONE} -- Instruction generation
 			if l_call.name.is_tuple_label then
 				l_tuple_expression := l_call.target
 				l_tuple_type_set := dynamic_type_set (l_tuple_expression)
-				if l_tuple_type_set = Void then
-						-- Internal error: the dynamic type set of `l_tuple_expression'
-						-- should be known at this stage.
+				l_tuple_type ?= l_tuple_type_set.static_type
+				if l_tuple_type = Void then
+						-- Internal error: the type of `l_tuple_expression' should be
+						-- a Tuple type.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_tuple_type ?= l_tuple_type_set.static_type
-					if l_tuple_type = Void then
-							-- Internal error: the type of `l_tuple_expression' should be
-							-- a Tuple type.
+					l_item_type_sets := l_tuple_type.item_type_sets
+					l_seed := l_call.name.seed
+					if l_seed < 1 or l_seed > l_item_type_sets.count then
+							-- Internal error: invalid Tuple label.
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
-						l_item_type_sets := l_tuple_type.item_type_sets
-						l_seed := l_call.name.seed
-						if l_seed < 1 or l_seed > l_item_type_sets.count then
-								-- Internal error: invalid Tuple label.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_target_type_set := l_item_type_sets.item (l_seed)
-							l_source := an_instruction.source
-							l_source_type_set := dynamic_type_set (l_source)
-							if l_source_type_set = Void then
-									-- Internal error: the dynamic type set of the source
-									-- should be known at this stage.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								print_operand (l_tuple_expression)
-								print_operand (l_source)
-									-- When printing the access to the Tuple item (the left-hand side of
-									-- the assignment), it is likely that `call_operands' will be used and
-									-- then wiped out (see `print_qualified_call_expression' which will be
-									-- called indirectly from `print_attribute_tuple_item_access').
-									-- Therefore, keep track of the source operand and put `call_operands'
-									-- in a clean state beforehand to avoid any problem.
-								fill_call_operands (1)
-								l_source := call_operands.first
-								call_operands.wipe_out
-									-- Process the tuple expression operand.
-								fill_call_operands (1)
-								print_indentation
-								print_attribute_tuple_item_access (l_seed, call_operands.first, l_tuple_type, True)
-								call_operands.wipe_out
-								current_file.put_character (' ')
-								current_file.put_character ('=')
-								current_file.put_character (' ')
-								current_file.put_character ('(')
-									-- Process the saved copy of source operand now.
-								print_attachment_expression (l_source, l_source_type_set, l_target_type_set.static_type)
-								current_file.put_character (')')
-								current_file.put_character (';')
-								current_file.put_new_line
-								call_operands.wipe_out
-							end
-						end
+						l_target_type_set := l_item_type_sets.item (l_seed)
+						l_source := an_instruction.source
+						l_source_type_set := dynamic_type_set (l_source)
+						print_operand (l_tuple_expression)
+						print_operand (l_source)
+							-- When printing the access to the Tuple item (the left-hand side of
+							-- the assignment), it is likely that `call_operands' will be used and
+							-- then wiped out (see `print_qualified_call_expression' which will be
+							-- called indirectly from `print_attribute_tuple_item_access').
+							-- Therefore, keep track of the source operand and put `call_operands'
+							-- in a clean state beforehand to avoid any problem.
+						fill_call_operands (1)
+						l_source := call_operands.first
+						call_operands.wipe_out
+							-- Process the tuple expression operand.
+						fill_call_operands (1)
+						print_indentation
+						print_attribute_tuple_item_access (l_seed, call_operands.first, l_tuple_type, True)
+						call_operands.wipe_out
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+							-- Process the saved copy of source operand now.
+						print_attachment_expression (l_source, l_source_type_set, l_target_type_set.static_type)
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+						call_operands.wipe_out
 					end
 				end
 			else
@@ -4531,45 +4441,33 @@ feature {NONE} -- Instruction generation
 			l_source_type_set := dynamic_type_set (l_source)
 			l_target := an_instruction.target
 			l_target_type_set := dynamic_type_set (l_target)
-			if l_source_type_set = Void then
-					-- Internal error: the dynamic type set of the source
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the
-					-- target should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				l_source_type := l_source_type_set.static_type
-				l_target_type := l_target_type_set.static_type
-				assignment_target := Void
-				if l_target_type.is_expanded then
-					if l_source_type.is_expanded then
+			l_source_type := l_source_type_set.static_type
+			l_target_type := l_target_type_set.static_type
+			assignment_target := Void
+			if l_target_type.is_expanded then
+				if l_source_type.is_expanded then
 -- TODO: check to see if `l_source_type' has a non-standard 'copy' feature.
-						assignment_target := l_target
-					end
-				else
-					if not l_source_type_set.has_expanded then
-						assignment_target := l_target
-					end
+					assignment_target := l_target
 				end
-				print_operand (l_source)
-				assignment_target := Void
-				fill_call_operands (1)
-				if call_operands.first /= l_target then
-					print_indentation
-					print_writable (l_target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
-					current_file.put_character (';')
-					current_file.put_new_line
+			else
+				if not l_source_type_set.has_expanded then
+					assignment_target := l_target
 				end
-				call_operands.wipe_out
 			end
+			print_operand (l_source)
+			assignment_target := Void
+			fill_call_operands (1)
+			if call_operands.first /= l_target then
+				print_indentation
+				print_writable (l_target)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			call_operands.wipe_out
 		end
 
 	print_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
@@ -4592,267 +4490,255 @@ feature {NONE} -- Instruction generation
 			l_source_type_set := dynamic_type_set (l_source)
 			l_target := an_instruction.target
 			l_target_type_set := dynamic_type_set (l_target)
-			if l_source_type_set = Void then
-					-- Internal error: the dynamic type set of the source
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif  l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the
-					-- target should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				nb := l_source_type_set.count
-				l_conforming_types := conforming_types
-				l_conforming_types.resize (nb)
-				l_non_conforming_types := non_conforming_types
-				l_non_conforming_types.resize (nb)
-				l_target_type := l_target_type_set.static_type
-				l_source_type := l_source_type_set.static_type
+			nb := l_source_type_set.count
+			l_conforming_types := conforming_types
+			l_conforming_types.resize (nb)
+			l_non_conforming_types := non_conforming_types
+			l_non_conforming_types.resize (nb)
+			l_target_type := l_target_type_set.static_type
+			l_source_type := l_source_type_set.static_type
+			from i := 1 until i > nb loop
+				l_dynamic_type := l_source_type_set.dynamic_type (i)
+				if l_dynamic_type.conforms_to_type (l_target_type, current_system) then
+					l_conforming_types.put_last (l_dynamic_type)
+				else
+					l_non_conforming_types.put_last (l_dynamic_type)
+				end
+				i := i + 1
+			end
+			print_operand (l_source)
+			fill_call_operands (1)
+			if l_non_conforming_types.is_empty then
+					-- Direct assignment.
+				print_indentation
+				print_writable (l_target)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
+				current_file.put_character (';')
+				current_file.put_new_line
+			elseif l_conforming_types.is_empty then
+				print_indentation
+				print_writable (l_target)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_eif_void)
+				current_file.put_character (';')
+				current_file.put_new_line
+			elseif l_non_conforming_types.count < l_conforming_types.count then
+				if not l_source_type.is_expanded then
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_expression (call_operands.first)
+					current_file.put_character (')')
+					current_file.put_character ('=')
+					current_file.put_character ('=')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					print_writable (l_target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+				end
+				check
+						-- None of `l_non_conforming_types' and `l_conforming_types' are empty.
+						-- Therefore the source is polymorphic. As a consequence if
+						-- `l_source_type' is expanded then it should be generic
+						-- (because non-generic expanded types cannot be polymorphic).
+					generic_if_expanded: l_source_type.is_expanded implies l_source_type.is_generic
+				end
+				print_indentation
+				current_file.put_string (c_switch)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_attribute_type_id_access (call_operands.first, l_source_type, False)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				nb := l_non_conforming_types.count
 				from i := 1 until i > nb loop
-					l_dynamic_type := l_source_type_set.dynamic_type (i)
-					if l_dynamic_type.conforms_to_type (l_target_type, current_system) then
-						l_conforming_types.put_last (l_dynamic_type)
-					else
-						l_non_conforming_types.put_last (l_dynamic_type)
-					end
+					l_dynamic_type := l_non_conforming_types.dynamic_type (i)
+					print_indentation
+					current_file.put_string (c_case)
+					current_file.put_character (' ')
+					current_file.put_integer (l_dynamic_type.id)
+					current_file.put_character (':')
+					current_file.put_new_line
 					i := i + 1
 				end
-				print_operand (l_source)
-				fill_call_operands (1)
-				if l_non_conforming_types.is_empty then
-						-- Direct assignment.
-					print_indentation
-					print_writable (l_target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
-					current_file.put_character (';')
-					current_file.put_new_line
-				elseif l_conforming_types.is_empty then
-					print_indentation
-					print_writable (l_target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_void)
-					current_file.put_character (';')
-					current_file.put_new_line
-				elseif l_non_conforming_types.count < l_conforming_types.count then
-					if not l_source_type.is_expanded then
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_expression (call_operands.first)
-						current_file.put_character (')')
-						current_file.put_character ('=')
-						current_file.put_character ('=')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_indentation
-						print_writable (l_target)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (';')
-						current_file.put_new_line
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_character (' ')
-						current_file.put_string (c_else)
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-					end
-					check
-							-- None of `l_non_conforming_types' and `l_conforming_types' are empty.
-							-- Therefore the source is polymorphic. As a consequence if
-							-- `l_source_type' is expanded then it should be generic
-							-- (because non-generic expanded types cannot be polymorphic).
-						generic_if_expanded: l_source_type.is_expanded implies l_source_type.is_generic
-					end
-					print_indentation
-					current_file.put_string (c_switch)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_attribute_type_id_access (call_operands.first, l_source_type, False)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					nb := l_non_conforming_types.count
-					from i := 1 until i > nb loop
-						l_dynamic_type := l_non_conforming_types.dynamic_type (i)
-						print_indentation
-						current_file.put_string (c_case)
-						current_file.put_character (' ')
-						current_file.put_integer (l_dynamic_type.id)
-						current_file.put_character (':')
-						current_file.put_new_line
-						i := i + 1
-					end
-					indent
-					print_indentation
-					print_writable (l_target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_void)
-					current_file.put_character (';')
-					current_file.put_new_line
-					print_indentation
-					current_file.put_string (c_break)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-					print_indentation
-					current_file.put_string (c_default)
-					current_file.put_character (':')
-					current_file.put_new_line
-					indent
-					print_indentation
-					print_writable (l_target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-					if l_source_type_set.is_never_void then
-						conforming_type_set.set_never_void
-					end
-					print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
-					conforming_type_set.reset_with_types (current_system.none_type, Void)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
-					if not l_source_type.is_expanded then
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_new_line
-					end
-				else
-					if not l_source_type.is_expanded then
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_expression (call_operands.first)
-						current_file.put_character (')')
-						current_file.put_character ('=')
-						current_file.put_character ('=')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_indentation
-						print_writable (l_target)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (';')
-						current_file.put_new_line
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_character (' ')
-						current_file.put_string (c_else)
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-					end
-					check
-							-- None of `l_non_conforming_types' and `l_conforming_types' are empty.
-							-- Therefore the source is polymorphic. As a consequence if
-							-- `l_source_type' is expanded then it should be generic
-							-- (because non-generic expanded types cannot be polymorphic).
-						generic_if_expanded: l_source_type.is_expanded implies l_source_type.is_generic
-					end
-					print_indentation
-					current_file.put_string (c_switch)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_attribute_type_id_access (call_operands.first, l_target_type, False)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					nb := l_conforming_types.count
-					from i := 1 until i > nb loop
-						l_dynamic_type := l_conforming_types.dynamic_type (i)
-						print_indentation
-						current_file.put_string (c_case)
-						current_file.put_character (' ')
-						current_file.put_integer (l_dynamic_type.id)
-						current_file.put_character (':')
-						current_file.put_new_line
-						i := i + 1
-					end
-					indent
-					print_indentation
-					print_writable (an_instruction.target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-					if l_source_type_set.is_never_void then
-						conforming_type_set.set_never_void
-					end
-					print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
-					conforming_type_set.reset_with_types (current_system.none_type, Void)
-					current_file.put_character (';')
-					current_file.put_new_line
-					print_indentation
-					current_file.put_string (c_break)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-					print_indentation
-					current_file.put_string (c_default)
-					current_file.put_character (':')
-					current_file.put_new_line
-					indent
-					print_indentation
-					print_writable (an_instruction.target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_void)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
-					if not l_source_type.is_expanded then
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_new_line
-					end
+				indent
+				print_indentation
+				print_writable (l_target)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_eif_void)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_break)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_string (c_default)
+				current_file.put_character (':')
+				current_file.put_new_line
+				indent
+				print_indentation
+				print_writable (l_target)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+				if l_source_type_set.is_never_void then
+					conforming_type_set.set_never_void
 				end
-				l_conforming_types.wipe_out
-				l_non_conforming_types.wipe_out
-				call_operands.wipe_out
+				print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
+				conforming_type_set.reset_with_types (current_system.none_type, Void)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				if not l_source_type.is_expanded then
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
+			else
+				if not l_source_type.is_expanded then
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_expression (call_operands.first)
+					current_file.put_character (')')
+					current_file.put_character ('=')
+					current_file.put_character ('=')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					print_writable (l_target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+				end
+				check
+						-- None of `l_non_conforming_types' and `l_conforming_types' are empty.
+						-- Therefore the source is polymorphic. As a consequence if
+						-- `l_source_type' is expanded then it should be generic
+						-- (because non-generic expanded types cannot be polymorphic).
+					generic_if_expanded: l_source_type.is_expanded implies l_source_type.is_generic
+				end
+				print_indentation
+				current_file.put_string (c_switch)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_attribute_type_id_access (call_operands.first, l_target_type, False)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				nb := l_conforming_types.count
+				from i := 1 until i > nb loop
+					l_dynamic_type := l_conforming_types.dynamic_type (i)
+					print_indentation
+					current_file.put_string (c_case)
+					current_file.put_character (' ')
+					current_file.put_integer (l_dynamic_type.id)
+					current_file.put_character (':')
+					current_file.put_new_line
+					i := i + 1
+				end
+				indent
+				print_indentation
+				print_writable (an_instruction.target)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+				if l_source_type_set.is_never_void then
+					conforming_type_set.set_never_void
+				end
+				print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
+				conforming_type_set.reset_with_types (current_system.none_type, Void)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_break)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_string (c_default)
+				current_file.put_character (':')
+				current_file.put_new_line
+				indent
+				print_indentation
+				print_writable (an_instruction.target)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_eif_void)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				if not l_source_type.is_expanded then
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
 			end
+			l_conforming_types.wipe_out
+			l_non_conforming_types.wipe_out
+			call_operands.wipe_out
 		end
 
 	print_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
@@ -4931,91 +4817,68 @@ feature {NONE} -- Instruction generation
 			if l_type /= Void then
 				had_error := has_fatal_error
 				l_resolved_type := resolved_formal_parameters (l_type)
-				if not has_fatal_error then
-					has_fatal_error := had_error
-					l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type.base_type)
-				end
+				has_fatal_error := has_fatal_error or had_error
+				l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type.base_type)
 			else
 					-- Look for the dynamic type of the target.
 				l_dynamic_type_set := dynamic_type_set (l_target)
-				if l_dynamic_type_set = Void then
-						-- Internal error: the dynamic type sets of the
-						-- target should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_dynamic_type := l_dynamic_type_set.static_type
-				end
+				l_dynamic_type := l_dynamic_type_set.static_type
 			end
-			if l_dynamic_type /= Void then
-				l_call := an_instruction.creation_call
-				if l_call /= Void then
-					l_seed := l_call.name.seed
-					l_actuals := l_call.arguments
-				else
-					l_seed := universe.default_create_seed
-					l_actuals := Void
-				end
-				l_dynamic_procedure := l_dynamic_type.seeded_dynamic_procedure (l_seed, current_system)
-				if l_dynamic_procedure = Void then
-						-- Internal error: there should be a procedure with `l_seed'.
-						-- It has been computed in ET_FEATURE_CHECKER or else an
-						-- error should have already been reported.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					if l_actuals /= Void then
-						nb := l_actuals.count
-						from i := 1 until i > nb loop
-							print_operand (l_actuals.actual_argument (i))
-							i := i + 1
-						end
-					end
-					fill_call_operands (nb)
-					print_indentation
-					print_writable (l_target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					if not l_dynamic_procedure.is_generated then
-						l_dynamic_procedure.set_generated (True)
-						called_features.force_last (l_dynamic_procedure)
-					end
-					print_creation_procedure_name (l_dynamic_procedure, l_dynamic_type, current_file)
-					current_file.put_character ('(')
-					if exception_trace_mode then
-						current_file.put_string (current_call_info)
-						l_comma := True
-					end
+			l_call := an_instruction.creation_call
+			if l_call /= Void then
+				l_seed := l_call.name.seed
+				l_actuals := l_call.arguments
+			else
+				l_seed := universe.default_create_seed
+				l_actuals := Void
+			end
+			l_dynamic_procedure := l_dynamic_type.seeded_dynamic_procedure (l_seed, current_system)
+			if l_dynamic_procedure = Void then
+					-- Internal error: there should be a procedure with `l_seed'.
+					-- It has been computed in ET_FEATURE_CHECKER or else an
+					-- error should have already been reported.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				if l_actuals /= Void then
+					nb := l_actuals.count
 					from i := 1 until i > nb loop
-						if l_comma then
-							current_file.put_character (',')
-							current_file.put_character (' ')
-						else
-							l_comma := True
-						end
-						l_actual_type_set := dynamic_type_set (call_operands.item (i))
-						l_formal_type_set := l_dynamic_procedure.argument_type_set (i)
-						if l_actual_type_set = Void then
-								-- Internal error: the dynamic type set of the actual
-								-- arguments should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_formal_type_set = Void then
-								-- Internal error: the dynamic type set of the
-								-- formal arguments should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-						end
+						print_operand (l_actuals.actual_argument (i))
 						i := i + 1
 					end
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
-					call_operands.wipe_out
 				end
+				fill_call_operands (nb)
+				print_indentation
+				print_writable (l_target)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if not l_dynamic_procedure.is_generated then
+					l_dynamic_procedure.set_generated (True)
+					called_features.force_last (l_dynamic_procedure)
+				end
+				print_creation_procedure_name (l_dynamic_procedure, l_dynamic_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					l_comma := True
+				end
+				from i := 1 until i > nb loop
+					if l_comma then
+						current_file.put_character (',')
+						current_file.put_character (' ')
+					else
+						l_comma := True
+					end
+					l_actual_type_set := dynamic_type_set (call_operands.item (i))
+					l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_procedure)
+					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
+					i := i + 1
+				end
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				call_operands.wipe_out
 			end
 		end
 
@@ -5143,163 +5006,157 @@ feature {NONE} -- Instruction generation
 -- TODO.
 			l_expression := an_instruction.conditional.expression
 			l_value_type_set := dynamic_type_set (l_expression)
-			if l_value_type_set = Void then
-					-- Internal error.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				l_value_type := l_value_type_set.static_type
-				print_operand (l_expression)
-				fill_call_operands (1)
-				print_indentation
-				current_file.put_string (c_switch)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_expression (call_operands.first)
-				call_operands.wipe_out
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				l_when_parts := an_instruction.when_parts
-				if l_when_parts /= Void then
-					nb := l_when_parts.count
-					from i := 1 until i > nb loop
-						l_when_part := l_when_parts.item (i)
-						l_choices := l_when_part.choices
-						nb2 := l_choices.count
-						if nb2 = 0 then
-							-- Do nothing.
-						else
-							l_has_case := False
-							from j := 1 until j > nb2 loop
-								l_choice := l_choices.choice (j)
-								if l_choice.is_range then
+			l_value_type := l_value_type_set.static_type
+			print_operand (l_expression)
+			fill_call_operands (1)
+			print_indentation
+			current_file.put_string (c_switch)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			call_operands.wipe_out
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			l_when_parts := an_instruction.when_parts
+			if l_when_parts /= Void then
+				nb := l_when_parts.count
+				from i := 1 until i > nb loop
+					l_when_part := l_when_parts.item (i)
+					l_choices := l_when_part.choices
+					nb2 := l_choices.count
+					if nb2 = 0 then
+						-- Do nothing.
+					else
+						l_has_case := False
+						from j := 1 until j > nb2 loop
+							l_choice := l_choices.choice (j)
+							if l_choice.is_range then
 -- TODO
-									l_lower := l_choice.lower
-									l_upper := l_choice.upper
-									l_lower_integer ?= l_lower
-									if l_lower_integer = Void then
-										l_lower_character ?= l_lower
-										if l_lower_character = Void then
-											l_feature_name ?= l_lower
-											if l_feature_name /= Void then
-												l_constant_attribute ?= current_type.base_class.seeded_query (l_feature_name.seed)
-												if l_constant_attribute /= Void then
-													l_lower_integer ?= l_constant_attribute.constant
-													l_lower_character ?= l_constant_attribute.constant
-												end
+								l_lower := l_choice.lower
+								l_upper := l_choice.upper
+								l_lower_integer ?= l_lower
+								if l_lower_integer = Void then
+									l_lower_character ?= l_lower
+									if l_lower_character = Void then
+										l_feature_name ?= l_lower
+										if l_feature_name /= Void then
+											l_constant_attribute ?= current_type.base_class.seeded_query (l_feature_name.seed)
+											if l_constant_attribute /= Void then
+												l_lower_integer ?= l_constant_attribute.constant
+												l_lower_character ?= l_constant_attribute.constant
 											end
 										end
 									end
-									l_upper_integer ?= l_upper
-									if l_upper_integer = Void then
-										l_upper_character ?= l_upper
-										if l_upper_character = Void then
-											l_feature_name ?= l_upper
-											if l_feature_name /= Void then
-												l_constant_attribute ?= current_type.base_class.seeded_query (l_feature_name.seed)
-												if l_constant_attribute /= Void then
-													l_upper_integer ?= l_constant_attribute.constant
-													l_upper_character ?= l_constant_attribute.constant
-												end
+								end
+								l_upper_integer ?= l_upper
+								if l_upper_integer = Void then
+									l_upper_character ?= l_upper
+									if l_upper_character = Void then
+										l_feature_name ?= l_upper
+										if l_feature_name /= Void then
+											l_constant_attribute ?= current_type.base_class.seeded_query (l_feature_name.seed)
+											if l_constant_attribute /= Void then
+												l_upper_integer ?= l_constant_attribute.constant
+												l_upper_character ?= l_constant_attribute.constant
 											end
 										end
 									end
-									if l_lower_integer /= Void and l_upper_integer /= Void then
-										from
-											l_lower_integer.compute_value
-											l_upper_integer.compute_value
-											k := l_lower_integer.value
-											nb3 := l_upper_integer.value
-										until
-											k > nb3
-										loop
-											l_has_case := True
-											print_indentation
-											current_file.put_string (c_case)
-											current_file.put_character (' ')
-											print_type_cast (l_value_type, current_file)
-											current_file.put_integer (k)
-											current_file.put_character (':')
-											current_file.put_new_line
-											k := k + 1
-										end
-									elseif l_lower_character /= Void and l_upper_character /= Void then
-										from
-											k := l_lower_character.value.code
-											nb3 := l_upper_character.value.code
-										until
-											k > nb3
-										loop
-											l_has_case := True
-											print_indentation
-											current_file.put_string (c_case)
-											current_file.put_character (' ')
-											print_type_cast (l_value_type, current_file)
-											print_escaped_character (INTEGER_.to_character (k))
-											current_file.put_character (':')
-											current_file.put_new_line
-											k := k + 1
-										end
-									else
--- TODO
-print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
+								end
+								if l_lower_integer /= Void and l_upper_integer /= Void then
+									from
+										l_lower_integer.compute_value
+										l_upper_integer.compute_value
+										k := l_lower_integer.value
+										nb3 := l_upper_integer.value
+									until
+										k > nb3
+									loop
+										l_has_case := True
+										print_indentation
+										current_file.put_string (c_case)
+										current_file.put_character (' ')
+										print_type_cast (l_value_type, current_file)
+										current_file.put_integer (k)
+										current_file.put_character (':')
+										current_file.put_new_line
+										k := k + 1
+									end
+								elseif l_lower_character /= Void and l_upper_character /= Void then
+									from
+										k := l_lower_character.value.code
+										nb3 := l_upper_character.value.code
+									until
+										k > nb3
+									loop
+										l_has_case := True
+										print_indentation
+										current_file.put_string (c_case)
+										current_file.put_character (' ')
+										print_type_cast (l_value_type, current_file)
+										print_escaped_character (INTEGER_.to_character (k))
+										current_file.put_character (':')
+										current_file.put_new_line
+										k := k + 1
 									end
 								else
-									l_has_case := True
-									print_indentation
-									current_file.put_string (c_case)
-									current_file.put_character (' ')
-									print_type_cast (l_value_type, current_file)
-									print_expression (l_choice.lower)
-									current_file.put_character (':')
-									current_file.put_new_line
+-- TODO
+print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 								end
-								j := j + 1
-							end
-							if l_has_case then
-								indent
-								l_compound := l_when_part.then_compound
-								if l_compound /= Void then
-									print_compound (l_compound)
-								end
+							else
+								l_has_case := True
 								print_indentation
-								current_file.put_string (c_break)
-								current_file.put_character (';')
+								current_file.put_string (c_case)
+								current_file.put_character (' ')
+								print_type_cast (l_value_type, current_file)
+								print_expression (l_choice.lower)
+								current_file.put_character (':')
 								current_file.put_new_line
-								dedent
 							end
+							j := j + 1
 						end
-						i := i + 1
+						if l_has_case then
+							indent
+							l_compound := l_when_part.then_compound
+							if l_compound /= Void then
+								print_compound (l_compound)
+							end
+							print_indentation
+							current_file.put_string (c_break)
+							current_file.put_character (';')
+							current_file.put_new_line
+							dedent
+						end
 					end
+					i := i + 1
 				end
-				print_indentation
-				current_file.put_string (c_default)
-				current_file.put_character (':')
-				current_file.put_new_line
-				l_compound := an_instruction.else_compound
-				if l_compound /= Void then
-					indent
-					print_compound (l_compound)
-					print_indentation
-					current_file.put_string (c_break)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-				else
--- TODO: raise exception.
-					indent
-					print_indentation
-					current_file.put_string (c_break)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-				end
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
 			end
+			print_indentation
+			current_file.put_string (c_default)
+			current_file.put_character (':')
+			current_file.put_new_line
+			l_compound := an_instruction.else_compound
+			if l_compound /= Void then
+				indent
+				print_compound (l_compound)
+				print_indentation
+				current_file.put_string (c_break)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+			else
+-- TODO: raise exception.
+				indent
+				print_indentation
+				current_file.put_string (c_break)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+			end
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
 		end
 
 	print_instruction (an_instruction: ET_INSTRUCTION) is
@@ -5459,20 +5316,8 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 								l_comma := True
 							end
 							l_actual_type_set := dynamic_type_set (call_operands.item (i))
-							l_formal_type_set := l_dynamic_precursor.argument_type_set (i)
-							if l_actual_type_set = Void then
-									-- Internal error: the dynamic type set of the actual
-									-- arguments should be known at this stage.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							elseif l_formal_type_set = Void then
-									-- Internal error: the dynamic type set of the
-									-- formal arguments should be known at this stage.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-							end
+							l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_precursor)
+							print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
 							i := i + 1
 						end
 						current_file.put_character (')')
@@ -5508,189 +5353,182 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			l_name := a_call.name
 			l_actuals := a_call.arguments
 			l_target_type_set := dynamic_type_set (l_target)
-			if l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				l_target_static_type := l_target_type_set.static_type
-				l_seed := l_name.seed
-					-- Check whether this a call to ROUTINE.call with a manifest
-					-- tuple as argument. We have a special treatment in that case
-					-- to avoid having to create the manifest tuple when possible.
-				if not a_call.is_tuple_label and then l_seed = universe.routine_call_seed then
-					if l_actuals /= Void and then l_actuals.count = 1 then
-						l_manifest_tuple ?= l_actuals.actual_argument (1)
-						if l_manifest_tuple /= Void then
-							print_target_operand (l_target, l_target_static_type)
-							nb := l_manifest_tuple.count
-							from i := 1 until i > nb loop
-								print_operand (l_manifest_tuple.expression (i))
-								i := i + 1
-							end
-							nb := nb + 1
-							fill_call_operands (nb)
-							l_manifest_tuple_operand := agent_manifest_tuple
-							l_manifest_tuple_operand.resize (nb - 1)
-							from i := nb until i < 2 loop
-								l_manifest_tuple_operand.put_first (call_operands.item (i))
-								i := i - 1
-							end
-							l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
-							mark_expressions_frozen (l_manifest_tuple_operand)
-							l_target_operand := call_operands.first
-							call_operands.wipe_out
-							call_operands.put_last (l_target_operand)
-							call_operands.put_last (l_manifest_tuple_operand)
-							nb := 2
-						end
-					end
-				end
-				if l_manifest_tuple_operand = Void then
-					print_target_operand (l_target, l_target_static_type)
-					if l_actuals /= Void then
-						nb := l_actuals.count
+			l_target_static_type := l_target_type_set.static_type
+			l_seed := l_name.seed
+				-- Check whether this a call to ROUTINE.call with a manifest
+				-- tuple as argument. We have a special treatment in that case
+				-- to avoid having to create the manifest tuple when possible.
+			if not a_call.is_tuple_label and then l_seed = universe.routine_call_seed then
+				if l_actuals /= Void and then l_actuals.count = 1 then
+					l_manifest_tuple ?= l_actuals.actual_argument (1)
+					if l_manifest_tuple /= Void then
+						print_target_operand (l_target, l_target_static_type)
+						nb := l_manifest_tuple.count
 						from i := 1 until i > nb loop
-							print_operand (l_actuals.actual_argument (i))
+							print_operand (l_manifest_tuple.expression (i))
 							i := i + 1
 						end
+						nb := nb + 1
+						fill_call_operands (nb)
+						l_manifest_tuple_operand := agent_manifest_tuple
+						l_manifest_tuple_operand.resize (nb - 1)
+						from i := nb until i < 2 loop
+							l_manifest_tuple_operand.put_first (call_operands.item (i))
+							i := i - 1
+						end
+						l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
+						mark_expressions_frozen (l_manifest_tuple_operand)
+						l_target_operand := call_operands.first
+						call_operands.wipe_out
+						call_operands.put_last (l_target_operand)
+						call_operands.put_last (l_manifest_tuple_operand)
+						nb := 2
 					end
-					nb := nb + 1
-					fill_call_operands (nb)
 				end
-				nb2 := l_target_type_set.count
-				if nb2 = 0 then
-						-- Call on Void target.
+			end
+			if l_manifest_tuple_operand = Void then
+				print_target_operand (l_target, l_target_static_type)
+				if l_actuals /= Void then
+					nb := l_actuals.count
+					from i := 1 until i > nb loop
+						print_operand (l_actuals.actual_argument (i))
+						i := i + 1
+					end
+				end
+				nb := nb + 1
+				fill_call_operands (nb)
+			end
+			nb2 := l_target_type_set.count
+			if nb2 = 0 then
+					-- Call on Void target.
+				print_indentation
+				current_file.put_character ('(')
+				print_target_expression (call_operands.first, l_target_static_type, True)
+				from i := 2 until i > nb loop
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					print_expression (call_operands.item (i))
+					i := i + 1
+				end
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			elseif nb2 = 1 then
+					-- Static binding.
+				l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+				print_named_procedure_call (a_call.name, l_target_dynamic_type, True)
+			else
+					-- Dynamic binding.
+				if nb2 > 2 then
 					print_indentation
+					print_call_name (a_call, current_feature, l_target_static_type, current_file)
 					current_file.put_character ('(')
-					print_target_expression (call_operands.first, l_target_static_type, True)
-					from i := 2 until i > nb loop
+					if exception_trace_mode then
+						current_file.put_string (current_call_info)
 						current_file.put_character (',')
 						current_file.put_character (' ')
-						print_expression (call_operands.item (i))
-						i := i + 1
+					end
+					print_target_expression (call_operands.first, l_target_static_type, True)
+					if l_manifest_tuple_operand /= Void then
+						nb := l_manifest_tuple_operand.count
+						from i := 1 until i > nb loop
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_expression (l_manifest_tuple_operand.expression (i))
+							i := i + 1
+						end
+					else
+						from i := 2 until i > nb loop
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_expression (call_operands.item (i))
+							i := i + 1
+						end
 					end
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
-				elseif nb2 = 1 then
-						-- Static binding.
+				elseif l_switch then
+					print_indentation
+					current_file.put_string (c_switch)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+						-- First type.
 					l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-					print_named_procedure_call (a_call.name, l_target_dynamic_type, True)
+					print_indentation
+					current_file.put_string (c_case)
+					current_file.put_character (' ')
+					current_file.put_integer (l_target_dynamic_type.id)
+					current_file.put_character (':')
+					current_file.put_new_line
+					indent
+					print_named_procedure_call (a_call.name, l_target_dynamic_type, False)
+					print_indentation
+					current_file.put_string (c_break)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+						-- Second type.
+					l_target_dynamic_type := l_target_type_set.dynamic_type (2)
+					print_indentation
+					current_file.put_string (c_case)
+					current_file.put_character (' ')
+					current_file.put_integer (l_target_dynamic_type.id)
+					current_file.put_character (':')
+					current_file.put_new_line
+					indent
+					print_named_procedure_call (a_call.name, l_target_dynamic_type, False)
+					print_indentation
+					current_file.put_string (c_break)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
 				else
-						-- Dynamic binding.
-					if nb2 > 2 then
-						print_indentation
-						print_call_name (a_call, current_feature, l_target_static_type, current_file)
-						current_file.put_character ('(')
-						if exception_trace_mode then
-							current_file.put_string (current_call_info)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-						end
-						print_target_expression (call_operands.first, l_target_static_type, True)
-						if l_manifest_tuple_operand /= Void then
-							nb := l_manifest_tuple_operand.count
-							from i := 1 until i > nb loop
-								current_file.put_character (',')
-								current_file.put_character (' ')
-								print_expression (l_manifest_tuple_operand.expression (i))
-								i := i + 1
-							end
-						else
-							from i := 2 until i > nb loop
-								current_file.put_character (',')
-								current_file.put_character (' ')
-								print_expression (call_operands.item (i))
-								i := i + 1
-							end
-						end
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
-					elseif l_switch then
-						print_indentation
-						current_file.put_string (c_switch)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-							-- First type.
-						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-						print_indentation
-						current_file.put_string (c_case)
-						current_file.put_character (' ')
-						current_file.put_integer (l_target_dynamic_type.id)
-						current_file.put_character (':')
-						current_file.put_new_line
-						indent
-						print_named_procedure_call (a_call.name, l_target_dynamic_type, False)
-						print_indentation
-						current_file.put_string (c_break)
-						current_file.put_character (';')
-						current_file.put_new_line
-						dedent
-							-- Second type.
-						l_target_dynamic_type := l_target_type_set.dynamic_type (2)
-						print_indentation
-						current_file.put_string (c_case)
-						current_file.put_character (' ')
-						current_file.put_integer (l_target_dynamic_type.id)
-						current_file.put_character (':')
-						current_file.put_new_line
-						indent
-						print_named_procedure_call (a_call.name, l_target_dynamic_type, False)
-						print_indentation
-						current_file.put_string (c_break)
-						current_file.put_character (';')
-						current_file.put_new_line
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_new_line
-					else
-							-- First type.
-						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
-						current_file.put_character ('=')
-						current_file.put_character ('=')
-						current_file.put_integer (l_target_dynamic_type.id)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_named_procedure_call (a_call.name, l_target_dynamic_type, False)
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_character (' ')
-							-- Second type.
-						l_target_dynamic_type := l_target_type_set.dynamic_type (2)
-						current_file.put_string (c_else)
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_named_procedure_call (a_call.name, l_target_dynamic_type, False)
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_new_line
-					end
+						-- First type.
+					l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
+					current_file.put_character ('=')
+					current_file.put_character ('=')
+					current_file.put_integer (l_target_dynamic_type.id)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_named_procedure_call (a_call.name, l_target_dynamic_type, False)
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_character (' ')
+						-- Second type.
+					l_target_dynamic_type := l_target_type_set.dynamic_type (2)
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_named_procedure_call (a_call.name, l_target_dynamic_type, False)
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
 				end
-				if l_manifest_tuple_operand /= Void then
-					mark_expressions_unfrozen (l_manifest_tuple_operand)
-					l_manifest_tuple_operand.wipe_out
-				end
+			end
+			if l_manifest_tuple_operand /= Void then
+				mark_expressions_unfrozen (l_manifest_tuple_operand)
+				l_manifest_tuple_operand.wipe_out
 			end
 			call_operands.wipe_out
 		end
@@ -5768,20 +5606,8 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 							l_comma := True
 						end
 						l_actual_type_set := dynamic_type_set (call_operands.item (i))
-						l_formal_type_set := l_dynamic_procedure.argument_type_set (i)
-						if l_actual_type_set = Void then
-								-- Internal error: the dynamic type set of the actual
-								-- arguments should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_formal_type_set = Void then
-								-- Internal error: the dynamic type sets of the
-								-- formal arguments should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-						end
+						l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_procedure)
+						print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
 						i := i + 1
 					end
 					current_file.put_character (')')
@@ -5946,20 +5772,8 @@ feature {NONE} -- Procedure call generation
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				l_actual_type_set := dynamic_type_set (call_operands.item (i))
-				l_formal_type_set := a_feature.argument_type_set (i - 1)
-				if l_actual_type_set = Void then
-						-- Internal error: the dynamic type set of the actual
-						-- arguments should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_formal_type_set = Void then
-						-- Internal error: the dynamic type set of the
-						-- formal arguments should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-				end
+				l_formal_type_set := argument_type_set_in_feature (i - 1, a_feature)
+				print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
 				i := i + 1
 			end
 			current_file.put_character (')')
@@ -6774,69 +6588,55 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 		do
 			l_convert_feature := an_expression.convert_feature
 			l_target_type_set := dynamic_type_set (an_expression)
-			if l_target_type_set = Void then
-					-- Internal error: the dynamic type set of expressions
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				l_target_type := l_target_type_set.static_type
-				if l_convert_feature.is_convert_from then
-					l_seed := l_convert_feature.name.seed
-					l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_system)
-					if l_dynamic_procedure = Void then
-							-- Internal error: there should be a procedure with `l_seed'.
-							-- It has been computed in ET_FEATURE_FLATTENER or else an
-							-- error should have already been reported.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						print_creation_expression (an_expression, l_target_type, l_dynamic_procedure, an_expression.expression)
-					end
+			l_target_type := l_target_type_set.static_type
+			if l_convert_feature.is_convert_from then
+				l_seed := l_convert_feature.name.seed
+				l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_system)
+				if l_dynamic_procedure = Void then
+						-- Internal error: there should be a procedure with `l_seed'.
+						-- It has been computed in ET_FEATURE_FLATTENER or else an
+						-- error should have already been reported.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				else
-						-- This is a built-in conversion.
-					l_source_type_set := dynamic_type_set (an_expression.expression)
-					if l_source_type_set = Void then
-							-- Internal error: the dynamic type set of expressions
-							-- should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_source_type := l_source_type_set.static_type
-						if l_source_type.conforms_to_type (l_target_type, current_system) then
+					print_creation_expression (an_expression, l_target_type, l_dynamic_procedure, an_expression.expression)
+				end
+			else
+					-- This is a built-in conversion.
+				l_source_type_set := dynamic_type_set (an_expression.expression)
+				l_source_type := l_source_type_set.static_type
+				if l_source_type.conforms_to_type (l_target_type, current_system) then
 -- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
-							an_expression.expression.process (Current)
-						else
-							l_convert_feature := type_checker.convert_feature (l_source_type.base_type, l_target_type.base_type)
-							if l_convert_feature = Void then
-									-- Internal error: no convert feature found.
+					an_expression.expression.process (Current)
+				else
+					l_convert_feature := type_checker.convert_feature (l_source_type.base_type, l_target_type.base_type)
+					if l_convert_feature = Void then
+							-- Internal error: no convert feature found.
 -- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
 print ("ET_C_GENERATOR.print_convert_expression%N")
-								an_expression.expression.process (Current)
-							elseif l_convert_feature.is_convert_to then
+						an_expression.expression.process (Current)
+					elseif l_convert_feature.is_convert_to then
 -- TODO: can we avoid creating this intermediary 'convert_to_expression'?
-								create l_convert_to_expression.make (an_expression.expression, l_convert_feature)
-								l_convert_to_expression.set_index (an_expression.index)
-								print_convert_to_expression (l_convert_to_expression)
-							elseif l_convert_feature.is_convert_from then
-								l_seed := l_convert_feature.name.seed
-								l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_system)
-								if l_dynamic_procedure = Void then
-										-- Internal error: there should be a procedure with `l_seed'.
-										-- It has been computed in ET_FEATURE_FLATTENER or else an
-										-- error should have already been reported.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								else
-									print_creation_expression (an_expression, l_target_type, l_dynamic_procedure, an_expression.expression)
-								end
-							else
-									-- Built-in convert feature.
+						create l_convert_to_expression.make (an_expression.expression, l_convert_feature)
+						l_convert_to_expression.set_index (an_expression.index)
+						print_convert_to_expression (l_convert_to_expression)
+					elseif l_convert_feature.is_convert_from then
+						l_seed := l_convert_feature.name.seed
+						l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_system)
+						if l_dynamic_procedure = Void then
+								-- Internal error: there should be a procedure with `l_seed'.
+								-- It has been computed in ET_FEATURE_FLATTENER or else an
+								-- error should have already been reported.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							print_creation_expression (an_expression, l_target_type, l_dynamic_procedure, an_expression.expression)
+						end
+					else
+							-- Built-in convert feature.
 print ("ET_C_GENERATOR.print_convert_expression%N")
 -- TODO: built-in feature between basic types? Should not be needed with ECMA Eiffel.
-								an_expression.expression.process (Current)
-							end
-						end
+						an_expression.expression.process (Current)
 					end
 				end
 			end
@@ -6863,31 +6663,24 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 		do
 			l_dynamic_type_set := dynamic_type_set (an_expression)
-			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of the creation
-					-- expression should be known at this stage.
+			l_dynamic_type := l_dynamic_type_set.static_type
+			l_call := an_expression.creation_call
+			if l_call /= Void then
+				l_seed := l_call.name.seed
+				l_actuals := l_call.arguments
+			else
+				l_seed := universe.default_create_seed
+				l_actuals := Void
+			end
+			l_dynamic_procedure := l_dynamic_type.seeded_dynamic_procedure (l_seed, current_system)
+			if l_dynamic_procedure = Void then
+					-- Internal error: there should be a procedure with `l_seed'.
+					-- It has been computed in ET_FEATURE_CHECKER or else an
+					-- error should have already been reported.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_dynamic_type := l_dynamic_type_set.static_type
-				l_call := an_expression.creation_call
-				if l_call /= Void then
-					l_seed := l_call.name.seed
-					l_actuals := l_call.arguments
-				else
-					l_seed := universe.default_create_seed
-					l_actuals := Void
-				end
-				l_dynamic_procedure := l_dynamic_type.seeded_dynamic_procedure (l_seed, current_system)
-				if l_dynamic_procedure = Void then
-						-- Internal error: there should be a procedure with `l_seed'.
-						-- It has been computed in ET_FEATURE_CHECKER or else an
-						-- error should have already been reported.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					print_creation_expression (an_expression, l_dynamic_type, l_dynamic_procedure, l_actuals)
-				end
+				print_creation_expression (an_expression, l_dynamic_type, l_dynamic_procedure, l_actuals)
 			end
 		end
 
@@ -6959,15 +6752,8 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 					l_comma := True
 				end
 				l_actual_type_set := dynamic_type_set (call_operands.item (i))
-				l_formal_type_set := a_procedure.argument_type_set (i)
-				if l_actual_type_set = Void or l_formal_type_set = Void then
-						-- Internal error: the dynamic type sets of the actual
-						-- and formal arguments should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-				end
+				l_formal_type_set := argument_type_set_in_feature (i, a_procedure)
+				print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
 				i := i + 1
 			end
 			current_file.put_character (')')
@@ -7027,65 +6813,58 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 			l_pointer: BOOLEAN
 		do
 			l_dynamic_type_set := dynamic_type_set (an_expression)
-			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of `an_expression'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
+			l_dynamic_type := l_dynamic_type_set.static_type
+			l_pointer := (l_dynamic_type = current_system.pointer_type)
+			if not l_pointer then
+					-- $Current is of type TYPED_POINTER.
 				l_dynamic_type := l_dynamic_type_set.static_type
-				l_pointer := (l_dynamic_type = current_system.pointer_type)
-				if not l_pointer then
-						-- $Current is of type TYPED_POINTER.
-					l_dynamic_type := l_dynamic_type_set.static_type
-					l_temp := new_temp_variable (l_dynamic_type)
-					l_temp.set_index (an_expression.index)
-					operand_stack.force (l_temp)
+				l_temp := new_temp_variable (l_dynamic_type)
+				l_temp.set_index (an_expression.index)
+				operand_stack.force (l_temp)
+				print_indentation
+				print_attribute_type_id_access (l_temp, l_dynamic_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_integer (l_dynamic_type.id)
+				current_file.put_character (';')
+				current_file.put_new_line
+				l_queries := l_dynamic_type.queries
+				if l_queries.is_empty then
+						-- Internal error: TYPED_POINTER should have an attribute
+						-- `pointer_item' at first position.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
 					print_indentation
-					print_attribute_type_id_access (l_temp, l_dynamic_type, False)
+					print_attribute_access (l_queries.first, l_temp, l_dynamic_type, False)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					current_file.put_integer (l_dynamic_type.id)
-					current_file.put_character (';')
-					current_file.put_new_line
-					l_queries := l_dynamic_type.queries
-					if l_queries.is_empty then
-							-- Internal error: TYPED_POINTER should have an attribute
-							-- `pointer_item' at first position.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						print_indentation
-						print_attribute_access (l_queries.first, l_temp, l_dynamic_type, False)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-					end
 				end
-				if l_pointer and in_operand then
-						-- $Current is of type POINTER.
-					operand_stack.force (an_expression)
+			end
+			if l_pointer and in_operand then
+					-- $Current is of type POINTER.
+				operand_stack.force (an_expression)
+			else
+				print_type_cast (current_system.pointer_type, current_file)
+				current_file.put_character ('(')
+				if current_type.is_expanded then
+					current_file.put_character ('&')
+					print_expression (an_expression.current_keyword)
 				else
-					print_type_cast (current_system.pointer_type, current_file)
-					current_file.put_character ('(')
-					if current_type.is_expanded then
-						current_file.put_character ('&')
-						print_expression (an_expression.current_keyword)
+					l_special_type ?= current_type
+					if l_special_type /= Void then
+						print_attribute_special_item_access (an_expression.current_keyword, l_special_type, False)
 					else
-						l_special_type ?= current_type
-						if l_special_type /= Void then
-							print_attribute_special_item_access (an_expression.current_keyword, l_special_type, False)
-						else
-							print_expression (an_expression.current_keyword)
-						end
+						print_expression (an_expression.current_keyword)
 					end
-					current_file.put_character (')')
 				end
-				if not l_pointer then
-					current_file.put_character (';')
-					current_file.put_new_line
-				end
+				current_file.put_character (')')
+			end
+			if not l_pointer then
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 		end
 
@@ -7126,17 +6905,7 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 			end
 			l_left_type_set := dynamic_type_set (an_expression.left)
 			l_right_type_set := dynamic_type_set (an_expression.right)
-			if l_left_type_set = Void then
-					-- Internal error: the dynamic type set of `an_expression.left'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif l_right_type_set = Void then
-					-- Internal error: the dynamic type set of `an_expression.right'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif l_left_type_set.static_type.is_expanded /= l_right_type_set.static_type.is_expanded then
+			if l_left_type_set.static_type.is_expanded /= l_right_type_set.static_type.is_expanded then
 				if an_expression.operator.is_not_equal then
 					current_file.put_string (c_eif_true)
 				else
@@ -7249,216 +7018,199 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_procedure: ET_DYNAMIC_FEATURE
 		do
 			l_dynamic_type_set := dynamic_type_set (an_expression)
-			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of `an_expression'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
+			l_dynamic_type := l_dynamic_type_set.static_type
+			l_pointer := (l_dynamic_type = current_system.pointer_type)
+			if not l_pointer then
+					-- $feature_name is of type TYPED_POINTER.
 				l_dynamic_type := l_dynamic_type_set.static_type
-				l_pointer := (l_dynamic_type = current_system.pointer_type)
-				if not l_pointer then
-						-- $feature_name is of type TYPED_POINTER.
-					l_dynamic_type := l_dynamic_type_set.static_type
-					l_temp := new_temp_variable (l_dynamic_type)
-					l_temp.set_index (an_expression.index)
-					operand_stack.force (l_temp)
+				l_temp := new_temp_variable (l_dynamic_type)
+				l_temp.set_index (an_expression.index)
+				operand_stack.force (l_temp)
+				print_indentation
+				print_attribute_type_id_access (l_temp, l_dynamic_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_integer (l_dynamic_type.id)
+				current_file.put_character (';')
+				current_file.put_new_line
+				l_queries := l_dynamic_type.queries
+				if l_queries.is_empty then
+						-- Internal error: TYPED_POINTER should have an attribute
+						-- `pointer_item' at first position.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
 					print_indentation
-					print_attribute_type_id_access (l_temp, l_dynamic_type, False)
+					print_attribute_access (l_queries.first, l_temp, l_dynamic_type, False)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					current_file.put_integer (l_dynamic_type.id)
-					current_file.put_character (';')
-					current_file.put_new_line
-					l_queries := l_dynamic_type.queries
-					if l_queries.is_empty then
-							-- Internal error: TYPED_POINTER should have an attribute
-							-- `pointer_item' at first position.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						print_indentation
-						print_attribute_access (l_queries.first, l_temp, l_dynamic_type, False)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-					end
 				end
-				if l_pointer and in_operand then
-						-- $feature_name is of type POINTER.
-					operand_stack.force (an_expression)
-				else
-					current_file.put_character ('(')
-					l_name := an_expression.name
-					if l_name.is_argument then
-						l_name_expression := l_name.argument_name
-						l_value_type_set := dynamic_type_set (l_name_expression)
-						if l_value_type_set = Void then
-								-- Internal error: it should have been checked elsewhere that
-								-- the current feature is a function.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_value_type_set.is_expanded then
-							print_type_cast (current_system.pointer_type, current_file)
-							current_file.put_character ('&')
-							print_expression (l_name_expression)
-						else
-							l_special_type := l_value_type_set.special_type
-							if l_special_type /= Void then
-								current_file.put_character ('(')
-								print_expression (l_name_expression)
-								current_file.put_character ('?')
-								print_type_cast (current_system.pointer_type, current_file)
-								current_file.put_character ('(')
-								current_file.put_string (c_ge_types)
-								current_file.put_character ('[')
-								print_attribute_type_id_access (l_name_expression, l_value_type_set.static_type, False)
-								current_file.put_character (']')
-								current_file.put_character ('.')
-								current_file.put_string (c_is_special)
-								current_file.put_character ('?')
-								print_type_cast (current_system.pointer_type, current_file)
-								print_attribute_special_item_access (l_name_expression, l_special_type, False)
-								current_file.put_character (':')
-								print_type_cast (current_system.pointer_type, current_file)
-								print_expression (l_name_expression)
-								current_file.put_character (')')
-								current_file.put_character (':')
-								print_type_cast (current_system.pointer_type, current_file)
-								current_file.put_character ('0')
-								current_file.put_character (')')
-							else
-								print_type_cast (current_system.pointer_type, current_file)
-								print_expression (l_name_expression)
-							end
-						end
-					elseif l_name.is_local then
-						l_name_expression := l_name.local_name
-						l_value_type_set := dynamic_type_set (l_name_expression)
-						if l_value_type_set = Void then
-								-- Internal error: it should have been checked elsewhere that
-								-- the current feature is a function.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_value_type_set.is_expanded then
-							print_type_cast (current_system.pointer_type, current_file)
-							current_file.put_character ('&')
-							print_expression (l_name_expression)
-						else
-							l_special_type := l_value_type_set.special_type
-							if l_special_type /= Void then
-								current_file.put_character ('(')
-								print_expression (l_name_expression)
-								current_file.put_character ('?')
-								print_type_cast (current_system.pointer_type, current_file)
-								current_file.put_character ('(')
-								current_file.put_string (c_ge_types)
-								current_file.put_character ('[')
-								print_attribute_type_id_access (l_name_expression, l_value_type_set.static_type, False)
-								current_file.put_character (']')
-								current_file.put_character ('.')
-								current_file.put_string (c_is_special)
-								current_file.put_character ('?')
-								print_type_cast (current_system.pointer_type, current_file)
-								print_attribute_special_item_access (l_name_expression, l_special_type, False)
-								current_file.put_character (':')
-								print_type_cast (current_system.pointer_type, current_file)
-								print_expression (l_name_expression)
-								current_file.put_character (')')
-								current_file.put_character (':')
-								print_type_cast (current_system.pointer_type, current_file)
-								current_file.put_character ('0')
-								current_file.put_character (')')
-							else
-								print_type_cast (current_system.pointer_type, current_file)
-								print_expression (l_name_expression)
-							end
-						end
+			end
+			if l_pointer and in_operand then
+					-- $feature_name is of type POINTER.
+				operand_stack.force (an_expression)
+			else
+				current_file.put_character ('(')
+				l_name := an_expression.name
+				if l_name.is_argument then
+					l_name_expression := l_name.argument_name
+					l_value_type_set := dynamic_type_set (l_name_expression)
+					if l_value_type_set.is_expanded then
+						print_type_cast (current_system.pointer_type, current_file)
+						current_file.put_character ('&')
+						print_expression (l_name_expression)
 					else
-						l_query := current_type.seeded_dynamic_query (l_name.seed, current_system)
-						if l_query /= Void then
-							if l_query.is_attribute (current_system) then
-								l_value_type_set := l_query.result_type_set
-								if l_value_type_set = Void then
-										-- Internal error: we know that `l_query' is an attribute.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								elseif l_value_type_set.is_expanded then
-									print_type_cast (current_system.pointer_type, current_file)
-									current_file.put_character ('&')
-									current_file.put_character ('(')
-									print_attribute_access (l_query, tokens.current_keyword, current_type, False)
-									current_file.put_character (')')
-								else
-									l_special_type := l_value_type_set.special_type
-									if l_special_type /= Void then
-										l_temp := new_temp_variable (l_value_type_set.static_type)
-										current_file.put_character ('(')
-										current_file.put_character ('(')
-										print_temp_name (l_temp, current_file)
-										current_file.put_character (' ')
-										current_file.put_character ('=')
-										current_file.put_character (' ')
-										print_attribute_access (l_query, tokens.current_keyword, current_type, False)
-										current_file.put_character (')')
-										current_file.put_character ('?')
-										print_type_cast (current_system.pointer_type, current_file)
-										current_file.put_character ('(')
-										current_file.put_string (c_ge_types)
-										current_file.put_character ('[')
-										print_attribute_type_id_access (l_temp, l_value_type_set.static_type, False)
-										current_file.put_character (']')
-										current_file.put_character ('.')
-										current_file.put_string (c_is_special)
-										current_file.put_character ('?')
-										print_type_cast (current_system.pointer_type, current_file)
-										print_attribute_special_item_access (l_temp, l_special_type, False)
-										current_file.put_character (':')
-										print_type_cast (current_system.pointer_type, current_file)
-										print_attribute_access (l_query, tokens.current_keyword, current_type, False)
-										current_file.put_character (')')
-										current_file.put_character (':')
-										print_type_cast (current_system.pointer_type, current_file)
-										current_file.put_character ('0')
-										current_file.put_character (')')
-										mark_temp_variable_free (l_temp)
-									else
-										print_type_cast (current_system.pointer_type, current_file)
-										print_attribute_access (l_query, tokens.current_keyword, current_type, False)
-									end
-								end
-							else
-								if not l_query.is_generated then
-									l_query.set_generated (True)
-									called_features.force_last (l_query)
-								end
-								print_type_cast (current_system.pointer_type, current_file)
-								print_routine_name (l_query, current_type, current_file)
-							end
+						l_special_type := l_value_type_set.special_type
+						if l_special_type /= Void then
+							current_file.put_character ('(')
+							print_expression (l_name_expression)
+							current_file.put_character ('?')
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('(')
+							current_file.put_string (c_ge_types)
+							current_file.put_character ('[')
+							print_attribute_type_id_access (l_name_expression, l_value_type_set.static_type, False)
+							current_file.put_character (']')
+							current_file.put_character ('.')
+							current_file.put_string (c_is_special)
+							current_file.put_character ('?')
+							print_type_cast (current_system.pointer_type, current_file)
+							print_attribute_special_item_access (l_name_expression, l_special_type, False)
+							current_file.put_character (':')
+							print_type_cast (current_system.pointer_type, current_file)
+							print_expression (l_name_expression)
+							current_file.put_character (')')
+							current_file.put_character (':')
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('0')
+							current_file.put_character (')')
 						else
-							l_procedure := current_type.seeded_dynamic_procedure (l_name.seed, current_system)
-							if l_procedure /= Void then
-								if not l_procedure.is_generated then
-									l_procedure.set_generated (True)
-									called_features.force_last (l_procedure)
-								end
-								print_type_cast (current_system.pointer_type, current_file)
-								print_routine_name (l_procedure, current_type, current_file)
-							else
-									-- Internal error: It has been checked in ET_FEATURE_CHECKER that
-									-- we should have either $argument, $local or $feature_name.
+							print_type_cast (current_system.pointer_type, current_file)
+							print_expression (l_name_expression)
+						end
+					end
+				elseif l_name.is_local then
+					l_name_expression := l_name.local_name
+					l_value_type_set := dynamic_type_set (l_name_expression)
+					if l_value_type_set.is_expanded then
+						print_type_cast (current_system.pointer_type, current_file)
+						current_file.put_character ('&')
+						print_expression (l_name_expression)
+					else
+						l_special_type := l_value_type_set.special_type
+						if l_special_type /= Void then
+							current_file.put_character ('(')
+							print_expression (l_name_expression)
+							current_file.put_character ('?')
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('(')
+							current_file.put_string (c_ge_types)
+							current_file.put_character ('[')
+							print_attribute_type_id_access (l_name_expression, l_value_type_set.static_type, False)
+							current_file.put_character (']')
+							current_file.put_character ('.')
+							current_file.put_string (c_is_special)
+							current_file.put_character ('?')
+							print_type_cast (current_system.pointer_type, current_file)
+							print_attribute_special_item_access (l_name_expression, l_special_type, False)
+							current_file.put_character (':')
+							print_type_cast (current_system.pointer_type, current_file)
+							print_expression (l_name_expression)
+							current_file.put_character (')')
+							current_file.put_character (':')
+							print_type_cast (current_system.pointer_type, current_file)
+							current_file.put_character ('0')
+							current_file.put_character (')')
+						else
+							print_type_cast (current_system.pointer_type, current_file)
+							print_expression (l_name_expression)
+						end
+					end
+				else
+					l_query := current_type.seeded_dynamic_query (l_name.seed, current_system)
+					if l_query /= Void then
+						if l_query.is_attribute (current_system) then
+							l_value_type_set := l_query.result_type_set
+							if l_value_type_set = Void then
+									-- Internal error: we know that `l_query' is an attribute.
 								set_fatal_error
 								error_handler.report_giaaa_error
+							elseif l_value_type_set.is_expanded then
+								print_type_cast (current_system.pointer_type, current_file)
+								current_file.put_character ('&')
+								current_file.put_character ('(')
+								print_attribute_access (l_query, tokens.current_keyword, current_type, False)
+								current_file.put_character (')')
+							else
+								l_special_type := l_value_type_set.special_type
+								if l_special_type /= Void then
+									l_temp := new_temp_variable (l_value_type_set.static_type)
+									current_file.put_character ('(')
+									current_file.put_character ('(')
+									print_temp_name (l_temp, current_file)
+									current_file.put_character (' ')
+									current_file.put_character ('=')
+									current_file.put_character (' ')
+									print_attribute_access (l_query, tokens.current_keyword, current_type, False)
+									current_file.put_character (')')
+									current_file.put_character ('?')
+									print_type_cast (current_system.pointer_type, current_file)
+									current_file.put_character ('(')
+									current_file.put_string (c_ge_types)
+									current_file.put_character ('[')
+									print_attribute_type_id_access (l_temp, l_value_type_set.static_type, False)
+									current_file.put_character (']')
+									current_file.put_character ('.')
+									current_file.put_string (c_is_special)
+									current_file.put_character ('?')
+									print_type_cast (current_system.pointer_type, current_file)
+									print_attribute_special_item_access (l_temp, l_special_type, False)
+									current_file.put_character (':')
+									print_type_cast (current_system.pointer_type, current_file)
+									print_attribute_access (l_query, tokens.current_keyword, current_type, False)
+									current_file.put_character (')')
+									current_file.put_character (':')
+									print_type_cast (current_system.pointer_type, current_file)
+									current_file.put_character ('0')
+									current_file.put_character (')')
+									mark_temp_variable_free (l_temp)
+								else
+									print_type_cast (current_system.pointer_type, current_file)
+									print_attribute_access (l_query, tokens.current_keyword, current_type, False)
+								end
 							end
+						else
+							if not l_query.is_generated then
+								l_query.set_generated (True)
+								called_features.force_last (l_query)
+							end
+							print_type_cast (current_system.pointer_type, current_file)
+							print_routine_name (l_query, current_type, current_file)
+						end
+					else
+						l_procedure := current_type.seeded_dynamic_procedure (l_name.seed, current_system)
+						if l_procedure /= Void then
+							if not l_procedure.is_generated then
+								l_procedure.set_generated (True)
+								called_features.force_last (l_procedure)
+							end
+							print_type_cast (current_system.pointer_type, current_file)
+							print_routine_name (l_procedure, current_type, current_file)
+						else
+								-- Internal error: It has been checked in ET_FEATURE_CHECKER that
+								-- we should have either $argument, $local or $feature_name.
+							set_fatal_error
+							error_handler.report_giaaa_error
 						end
 					end
-					current_file.put_character (')')
 				end
-				if not l_pointer then
-					current_file.put_character (';')
-					current_file.put_new_line
-				end
+				current_file.put_character (')')
+			end
+			if not l_pointer then
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 		end
 
@@ -7487,26 +7239,19 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			else
 				if in_target then
 					l_dynamic_type_set := dynamic_type_set (a_name)
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of
-							-- formal arguments should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
+					l_static_type := l_dynamic_type_set.static_type
+					if l_static_type.is_expanded then
+							-- Pass the address of the expanded object.
+						current_file.put_character ('&')
+						print_argument_name (a_name, current_file)
+					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+							-- We need to unbox the object and then pass its address.
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
+						current_file.put_character (')')
 					else
-						l_static_type := l_dynamic_type_set.static_type
-						if l_static_type.is_expanded then
-								-- Pass the address of the expanded object.
-							current_file.put_character ('&')
-							print_argument_name (a_name, current_file)
-						elseif call_target_type.is_expanded and not call_target_type.is_generic then
-								-- We need to unbox the object and then pass its address.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
-							current_file.put_character (')')
-						else
-							print_argument_name (a_name, current_file)
-						end
+						print_argument_name (a_name, current_file)
 					end
 				else
 					print_argument_name (a_name, current_file)
@@ -7621,26 +7366,19 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			else
 				if in_target then
 					l_dynamic_type_set := dynamic_type_set (a_name)
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of
-							-- local variables should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
+					l_static_type := l_dynamic_type_set.static_type
+					if l_static_type.is_expanded then
+							-- Pass the address of the expanded object.
+						current_file.put_character ('&')
+						print_local_name (a_name, current_file)
+					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+							-- We need to unbox the object and then pass its address.
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
+						current_file.put_character (')')
 					else
-						l_static_type := l_dynamic_type_set.static_type
-						if l_static_type.is_expanded then
-								-- Pass the address of the expanded object.
-							current_file.put_character ('&')
-							print_local_name (a_name, current_file)
-						elseif call_target_type.is_expanded and not call_target_type.is_generic then
-								-- We need to unbox the object and then pass its address.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
-							current_file.put_character (')')
-						else
-							print_local_name (a_name, current_file)
-						end
+						print_local_name (a_name, current_file)
 					end
 				else
 					print_local_name (a_name, current_file)
@@ -7671,34 +7409,27 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_assignment_target := assignment_target
 			assignment_target := Void
 			l_dynamic_type_set := dynamic_type_set (an_expression)
-			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of `an_expression'
-					-- should be known at this stage.
+			l_dynamic_type := l_dynamic_type_set.static_type
+			l_queries := l_dynamic_type.queries
+			if l_queries.is_empty then
+					-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_dynamic_type := l_dynamic_type_set.static_type
-				l_queries := l_dynamic_type.queries
-				if l_queries.is_empty then
+				l_area_type_set := l_queries.item (1).result_type_set
+				if l_area_type_set = Void then
 						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_area_type_set := l_queries.item (1).result_type_set
-					if l_area_type_set = Void then
-							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+					l_special_type ?= l_area_type_set.static_type
+					if l_special_type = Void then
+							-- Internal error: it has already been checked in ET_SYSTEM.compile_kernel
+							-- that the attribute `area' is of SPECIAL type.
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
-						l_special_type ?= l_area_type_set.static_type
-						if l_special_type = Void then
-								-- Internal error: it has already been checked in ET_SYSTEM.compile_kernel
-								-- that the attribute `area' is of SPECIAL type.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_static_item_type := l_special_type.item_type_set.static_type
-						end
+						l_static_item_type := l_special_type.item_type_set.static_type
 					end
 				end
 			end
@@ -7760,12 +7491,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					current_file.put_new_line
 					l_item := call_operands.item (i)
 					l_dynamic_item_type_set := dynamic_type_set (l_item)
-					if l_dynamic_item_type_set = Void then
-							-- Internal error: the dynamic type set of each item
-							-- should be known at this statge.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					elseif l_int_promoted then
+					if l_int_promoted then
 						current_file.put_character ('(')
 						current_file.put_string (c_int)
 						current_file.put_character (')')
@@ -7816,21 +7542,13 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_assignment_target := assignment_target
 			assignment_target := Void
 			l_dynamic_type_set := dynamic_type_set (an_expression)
-			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of `an_expression'
-					-- should be known at this stage.
+			l_tuple_type ?= l_dynamic_type_set.static_type
+			if l_tuple_type = Void then
+					-- Internal error: the dynamic type of `an_expression'
+					-- should be a Tuple_type.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_tuple_type ?= l_dynamic_type_set.static_type
-				if l_tuple_type = Void then
-						-- Internal error: the dynamic type of `an_expression'
-						-- should be a Tuple_type.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				end
-			end
-			if l_tuple_type /= Void then
 				nb := an_expression.count
 				manifest_tuple_types.force_last (l_tuple_type)
 				if in_operand then
@@ -7869,14 +7587,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						l_item := an_expression.expression (i)
 					end
 					l_item_type_set := dynamic_type_set (l_item)
-					if l_item_type_set = Void then
-							-- Internal error: the dynamic type set of each item
-							-- should be known at this statge.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						print_attachment_expression (l_item, l_item_type_set, l_item_type_set.static_type)
-					end
+					print_attachment_expression (l_item, l_item_type_set, l_item_type_set.static_type)
 					i := i + 1
 				end
 				current_file.put_character (')')
@@ -7943,12 +7654,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 		do
 			if a_check_void then
 				l_dynamic_type_set := dynamic_type_set (an_expression)
-				if l_dynamic_type_set = Void then
-						-- Internal error: the dynamic type set of expressions
-						-- should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_dynamic_type_set.is_empty or not l_dynamic_type_set.is_never_void then
+				if l_dynamic_type_set.is_empty or not l_dynamic_type_set.is_never_void then
 					can_be_void_target_count := can_be_void_target_count + 1
 					current_file.put_string (c_ge_void)
 					current_file.put_character ('(')
@@ -8100,21 +7806,14 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 								print_writable (l_assignment_target)
 							else
 								l_dynamic_type_set := dynamic_type_set (an_expression)
-								if l_dynamic_type_set = Void then
-										-- Internal error: the dynamic type set of `an_expression'
-										-- should be known at this stage.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								else
-									l_dynamic_type := l_dynamic_type_set.static_type
-									l_temp := new_temp_variable (l_dynamic_type)
-										-- We will set the index of `l_temp' later because
-										-- it could still be used in `call_operands'.
-									l_temp_index := an_expression.index
-									operand_stack.force (l_temp)
-									print_indentation
-									print_temp_name (l_temp, current_file)
-								end
+								l_dynamic_type := l_dynamic_type_set.static_type
+								l_temp := new_temp_variable (l_dynamic_type)
+									-- We will set the index of `l_temp' later because
+									-- it could still be used in `call_operands'.
+								l_temp_index := an_expression.index
+								operand_stack.force (l_temp)
+								print_indentation
+								print_temp_name (l_temp, current_file)
 							end
 							current_file.put_character (' ')
 							current_file.put_character ('=')
@@ -8153,15 +7852,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 								l_comma := True
 							end
 							l_actual_type_set := dynamic_type_set (call_operands.item (i))
-							l_formal_type_set := l_dynamic_precursor.argument_type_set (i)
-							if l_actual_type_set = Void or l_formal_type_set = Void then
-									-- Internal error: the dynamic type sets of the actual
-									-- and formal arguments should be known at this stage.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-							end
+							l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_precursor)
+							print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
 							i := i + 1
 						end
 						current_file.put_character (')')
@@ -8227,211 +7919,200 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_actuals := a_call.arguments
 			l_target_type_set := dynamic_type_set (l_target)
 			l_call_type_set := dynamic_type_set (a_call)
-			if l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif l_call_type_set = Void then
-					-- Internal error: the dynamic type set of `a_call'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				l_call_type := l_call_type_set.static_type
-				l_target_static_type := l_target_type_set.static_type
-				if
-					l_target_static_type = current_system.boolean_type and in_operand and then
-					(l_name.is_infix_and_then or l_name.is_infix_or_else or l_name.is_infix_implies or
-					l_name.is_infix_and or l_name.is_infix_or)
-				then
-					print_operand (l_target)
-					fill_call_operands (1)
-					if l_actuals = Void or else l_actuals.count /= 1 then
-							-- Internal error: these semistrict operators
-							-- have exactly one argument. This is guaranteed
-							-- by the fact that they are infix features.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						l_or := l_name.is_infix_or_else or l_name.is_infix_or
-						if l_or then
-							current_file.put_character ('!')
-							current_file.put_character ('(')
-						end
-						print_expression (call_operands.first)
-						if l_or then
-							current_file.put_character (')')
-						end
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						if l_assignment_target /= Void then
-							l_semistrict_target := l_assignment_target
-							l_temp ?= l_assignment_target
-							if l_temp /= Void and then not l_temp.is_temporary then
-								l_temp := Void
-							end
-						else
-							l_temp_target ?= call_operands.first
-							if l_temp_target = Void or else not l_temp_target.is_temporary then
-								l_temp_target := Void
-								l_temp := new_temp_variable (l_target_static_type)
-									-- We will set the index of `l_temp' later because
-									-- it could still be used in `call_operands'.
-								l_temp_index := call_operands.first.index
-							else
-								l_temp := l_temp_target
-								mark_temp_variable_used (l_temp)
-							end
-							l_semistrict_target := l_temp
-						end
-						call_operands.wipe_out
-						assignment_target := l_semistrict_target
-						print_operand (l_actuals.actual_argument (1))
-						assignment_target := Void
-						fill_call_operands (1)
-						if call_operands.first /= l_semistrict_target then
-							print_indentation
-							print_writable (l_semistrict_target)
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_expression (call_operands.first)
-							current_file.put_character (')')
-							current_file.put_character (';')
-							current_file.put_new_line
-						elseif l_semistrict_target = l_temp then
-							mark_temp_variable_used (l_temp)
-						end
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						l_implies := l_name.is_infix_implies
-						if not l_implies and l_semistrict_target = l_temp_target then
-							current_file.put_new_line
-						else
-							current_file.put_character (' ')
-							current_file.put_string (c_else)
-							current_file.put_character (' ')
-							current_file.put_character ('{')
-							current_file.put_new_line
-							indent
-							print_indentation
-							print_writable (l_semistrict_target)
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							if l_or or l_implies then
-								current_file.put_string (c_eif_true)
-							else
-								current_file.put_string (c_eif_false)
-							end
-							current_file.put_character (';')
-							current_file.put_new_line
-							dedent
-							print_indentation
-							current_file.put_character ('}')
-							current_file.put_new_line
-						end
-						operand_stack.force (l_semistrict_target)
-					end
+			l_call_type := l_call_type_set.static_type
+			l_target_static_type := l_target_type_set.static_type
+			if
+				l_target_static_type = current_system.boolean_type and in_operand and then
+				(l_name.is_infix_and_then or l_name.is_infix_or_else or l_name.is_infix_implies or
+				l_name.is_infix_and or l_name.is_infix_or)
+			then
+				print_operand (l_target)
+				fill_call_operands (1)
+				if l_actuals = Void or else l_actuals.count /= 1 then
+						-- Internal error: these semistrict operators
+						-- have exactly one argument. This is guaranteed
+						-- by the fact that they are infix features.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				else
-					l_seed := l_name.seed
-						-- Check whether this a call to FUNCTION.item with a manifest
-						-- tuple as argument. We have a special treatment in that case
-						-- to avoid having to create the manifest tuple when possible.
-					if not a_call.is_tuple_label and then l_seed = universe.function_item_seed then
-						if l_actuals /= Void and then l_actuals.count = 1 then
-							l_manifest_tuple ?= l_actuals.actual_argument (1)
-							if l_manifest_tuple /= Void then
-								print_target_operand (l_target, l_target_static_type)
-								nb := l_manifest_tuple.count
-								from i := 1 until i > nb loop
-									print_operand (l_manifest_tuple.expression (i))
-									i := i + 1
-								end
-								nb := nb + 1
-								fill_call_operands (nb)
-								l_manifest_tuple_operand := agent_manifest_tuple
-								l_manifest_tuple_operand.resize (nb - 1)
-								from i := nb until i < 2 loop
-									l_manifest_tuple_operand.put_first (call_operands.item (i))
-									i := i - 1
-								end
-								l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
-								mark_expressions_frozen (l_manifest_tuple_operand)
-								l_target_operand := call_operands.first
-								call_operands.wipe_out
-								call_operands.put_last (l_target_operand)
-								call_operands.put_last (l_manifest_tuple_operand)
-								nb := 2
-							end
-						end
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					l_or := l_name.is_infix_or_else or l_name.is_infix_or
+					if l_or then
+						current_file.put_character ('!')
+						current_file.put_character ('(')
 					end
-					if l_manifest_tuple_operand = Void then
-						print_target_operand (l_target, l_target_static_type)
-						if l_actuals /= Void then
-							nb := l_actuals.count
-							from i := 1 until i > nb loop
-								print_operand (l_actuals.actual_argument (i))
-								i := i + 1
-							end
-						end
-						nb := nb + 1
-						fill_call_operands (nb)
+					print_expression (call_operands.first)
+					if l_or then
+						current_file.put_character (')')
 					end
-					if in_operand then
-						if l_assignment_target /= Void then
-							operand_stack.force (l_assignment_target)
-							print_indentation
-							print_writable (l_assignment_target)
-						else
-							l_temp := new_temp_variable (l_call_type)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					if l_assignment_target /= Void then
+						l_semistrict_target := l_assignment_target
+						l_temp ?= l_assignment_target
+						if l_temp /= Void and then not l_temp.is_temporary then
+							l_temp := Void
+						end
+					else
+						l_temp_target ?= call_operands.first
+						if l_temp_target = Void or else not l_temp_target.is_temporary then
+							l_temp_target := Void
+							l_temp := new_temp_variable (l_target_static_type)
 								-- We will set the index of `l_temp' later because
 								-- it could still be used in `call_operands'.
-							l_temp_index := a_call.index
-							operand_stack.force (l_temp)
-							print_indentation
-							print_temp_name (l_temp, current_file)
+							l_temp_index := call_operands.first.index
+						else
+							l_temp := l_temp_target
+							mark_temp_variable_used (l_temp)
 						end
+						l_semistrict_target := l_temp
+					end
+					call_operands.wipe_out
+					assignment_target := l_semistrict_target
+					print_operand (l_actuals.actual_argument (1))
+					assignment_target := Void
+					fill_call_operands (1)
+					if call_operands.first /= l_semistrict_target then
+						print_indentation
+						print_writable (l_semistrict_target)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
 						current_file.put_character ('(')
+						print_expression (call_operands.first)
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					elseif l_semistrict_target = l_temp then
+						mark_temp_variable_used (l_temp)
 					end
-					nb2 := l_target_type_set.count
-					if nb2 = 0 then
-							-- Call on Void target.
-						current_file.put_character ('(')
-						print_target_expression (call_operands.first, l_target_static_type, True)
-						from i := 2 until i > nb loop
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_expression (call_operands.item (i))
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					l_implies := l_name.is_infix_implies
+					if not l_implies and l_semistrict_target = l_temp_target then
+						current_file.put_new_line
+					else
+						current_file.put_character (' ')
+						current_file.put_string (c_else)
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_indentation
+						print_writable (l_semistrict_target)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						if l_or or l_implies then
+							current_file.put_string (c_eif_true)
+						else
+							current_file.put_string (c_eif_false)
+						end
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+					end
+					operand_stack.force (l_semistrict_target)
+				end
+			else
+				l_seed := l_name.seed
+					-- Check whether this a call to FUNCTION.item with a manifest
+					-- tuple as argument. We have a special treatment in that case
+					-- to avoid having to create the manifest tuple when possible.
+				if not a_call.is_tuple_label and then l_seed = universe.function_item_seed then
+					if l_actuals /= Void and then l_actuals.count = 1 then
+						l_manifest_tuple ?= l_actuals.actual_argument (1)
+						if l_manifest_tuple /= Void then
+							print_target_operand (l_target, l_target_static_type)
+							nb := l_manifest_tuple.count
+							from i := 1 until i > nb loop
+								print_operand (l_manifest_tuple.expression (i))
+								i := i + 1
+							end
+							nb := nb + 1
+							fill_call_operands (nb)
+							l_manifest_tuple_operand := agent_manifest_tuple
+							l_manifest_tuple_operand.resize (nb - 1)
+							from i := nb until i < 2 loop
+								l_manifest_tuple_operand.put_first (call_operands.item (i))
+								i := i - 1
+							end
+							l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
+							mark_expressions_frozen (l_manifest_tuple_operand)
+							l_target_operand := call_operands.first
+							call_operands.wipe_out
+							call_operands.put_last (l_target_operand)
+							call_operands.put_last (l_manifest_tuple_operand)
+							nb := 2
+						end
+					end
+				end
+				if l_manifest_tuple_operand = Void then
+					print_target_operand (l_target, l_target_static_type)
+					if l_actuals /= Void then
+						nb := l_actuals.count
+						from i := 1 until i > nb loop
+							print_operand (l_actuals.actual_argument (i))
 							i := i + 1
 						end
+					end
+					nb := nb + 1
+					fill_call_operands (nb)
+				end
+				if in_operand then
+					if l_assignment_target /= Void then
+						operand_stack.force (l_assignment_target)
+						print_indentation
+						print_writable (l_assignment_target)
+					else
+						l_temp := new_temp_variable (l_call_type)
+							-- We will set the index of `l_temp' later because
+							-- it could still be used in `call_operands'.
+						l_temp_index := a_call.index
+						operand_stack.force (l_temp)
+						print_indentation
+						print_temp_name (l_temp, current_file)
+					end
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+				end
+				nb2 := l_target_type_set.count
+				if nb2 = 0 then
+						-- Call on Void target.
+					current_file.put_character ('(')
+					print_target_expression (call_operands.first, l_target_static_type, True)
+					from i := 2 until i > nb loop
 						current_file.put_character (',')
 						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_type_declaration (l_call_type, current_file)
-						current_file.put_character (')')
-						print_default_entity_value (l_call_type, current_file)
-						current_file.put_character (')')
-					elseif nb2 = 1 then
-							-- Static binding.
-						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
-					else
-							-- Dynamic binding.
-						if l_name.is_tuple_label then
+						print_expression (call_operands.item (i))
+						i := i + 1
+					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_type_declaration (l_call_type, current_file)
+					current_file.put_character (')')
+					print_default_entity_value (l_call_type, current_file)
+					current_file.put_character (')')
+				elseif nb2 = 1 then
+						-- Static binding.
+					l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+					print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
+				else
+						-- Dynamic binding.
+					if l_name.is_tuple_label then
 -- TODO: fields in Tuples are not necessarily aligned, and some need (un)boxing,
 -- for example:
 --    t1: TUPLE [a: ANY; b: INTEGER]
@@ -8440,78 +8121,77 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 --    any := t1.a
 --    int := t1.b
 -- But when there are aligned with no (un)boxing, we should avoid having polymorphic call.s
+					else
+						l_query := l_target_static_type.base_class.seeded_query (l_seed)
+						if l_query = Void then
+								-- Internal error: there should be a query with `a_seed'.
+								-- It has been computed in ET_FEATURE_CHECKER.
+							set_fatal_error
+							error_handler.report_giaaa_error
+							l_printed := True
 						else
-							l_query := l_target_static_type.base_class.seeded_query (l_seed)
-							if l_query = Void then
-									-- Internal error: there should be a query with `a_seed'.
-									-- It has been computed in ET_FEATURE_CHECKER.
-								set_fatal_error
-								error_handler.report_giaaa_error
+							if l_query.is_constant_attribute then
+								l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+								print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
 								l_printed := True
-							else
-								if l_query.is_constant_attribute then
-									l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-									print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
-									l_printed := True
-								elseif l_query.is_unique_attribute then
-									l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-									print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
-									l_printed := True
-								end
+							elseif l_query.is_unique_attribute then
+								l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+								print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
+								l_printed := True
 							end
 						end
-						if not l_printed then
-							if nb2 = 2 then
-									-- First type.
-								l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-								current_file.put_character ('(')
-								current_file.put_character ('(')
-								print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
-								current_file.put_character ('=')
-								current_file.put_character ('=')
-								current_file.put_integer (l_target_dynamic_type.id)
-								current_file.put_character (')')
-								current_file.put_character ('?')
-								print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
-								current_file.put_character (':')
-									-- Second type.
-								l_target_dynamic_type := l_target_type_set.dynamic_type (2)
-								print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
-								current_file.put_character (')')
-							else
-								print_call_name (a_call, current_feature, l_target_static_type, current_file)
-								current_file.put_character ('(')
-								if exception_trace_mode then
-									current_file.put_string (current_call_info)
+					end
+					if not l_printed then
+						if nb2 = 2 then
+								-- First type.
+							l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+							current_file.put_character ('(')
+							current_file.put_character ('(')
+							print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
+							current_file.put_character ('=')
+							current_file.put_character ('=')
+							current_file.put_integer (l_target_dynamic_type.id)
+							current_file.put_character (')')
+							current_file.put_character ('?')
+							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
+							current_file.put_character (':')
+								-- Second type.
+							l_target_dynamic_type := l_target_type_set.dynamic_type (2)
+							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
+							current_file.put_character (')')
+						else
+							print_call_name (a_call, current_feature, l_target_static_type, current_file)
+							current_file.put_character ('(')
+							if exception_trace_mode then
+								current_file.put_string (current_call_info)
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+							print_target_expression (call_operands.first, l_target_static_type, True)
+							if l_manifest_tuple_operand /= Void then
+								nb := l_manifest_tuple_operand.count
+								from i := 1 until i > nb loop
 									current_file.put_character (',')
 									current_file.put_character (' ')
+									print_expression (l_manifest_tuple_operand.expression (i))
+									i := i + 1
 								end
-								print_target_expression (call_operands.first, l_target_static_type, True)
-								if l_manifest_tuple_operand /= Void then
-									nb := l_manifest_tuple_operand.count
-									from i := 1 until i > nb loop
-										current_file.put_character (',')
-										current_file.put_character (' ')
-										print_expression (l_manifest_tuple_operand.expression (i))
-										i := i + 1
-									end
-								else
-									from i := 2 until i > nb loop
-										current_file.put_character (',')
-										current_file.put_character (' ')
-										print_expression (call_operands.item (i))
-										i := i + 1
-									end
+							else
+								from i := 2 until i > nb loop
+									current_file.put_character (',')
+									current_file.put_character (' ')
+									print_expression (call_operands.item (i))
+									i := i + 1
 								end
-								current_file.put_character (')')
 							end
+							current_file.put_character (')')
 						end
 					end
-					if in_operand then
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
+				end
+				if in_operand then
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
 				end
 			end
 			call_operands.wipe_out
@@ -8725,26 +8405,19 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			else
 				if in_target then
 					l_dynamic_type_set := dynamic_type_set (an_expression)
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of
-							-- 'Result' should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
+					l_static_type := l_dynamic_type_set.static_type
+					if l_static_type.is_expanded then
+							-- Pass the address of the expanded object.
+						current_file.put_character ('&')
+						print_result_name (current_file)
+					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+							-- We need to unbox the object and then pass its address.
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_boxed_attribute_item_access (an_expression, call_target_type, call_target_check_void)
+						current_file.put_character (')')
 					else
-						l_static_type := l_dynamic_type_set.static_type
-						if l_static_type.is_expanded then
-								-- Pass the address of the expanded object.
-							current_file.put_character ('&')
-							print_result_name (current_file)
-						elseif call_target_type.is_expanded and not call_target_type.is_generic then
-								-- We need to unbox the object and then pass its address.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_boxed_attribute_item_access (an_expression, call_target_type, call_target_check_void)
-							current_file.put_character (')')
-						else
-							print_result_name (current_file)
-						end
+						print_result_name (current_file)
 					end
 				else
 					print_result_name (current_file)
@@ -8766,93 +8439,86 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_pointer: BOOLEAN
 		do
 			l_dynamic_type_set := dynamic_type_set (an_expression)
-			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of `an_expression'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
+			l_dynamic_type := l_dynamic_type_set.static_type
+			l_pointer := (l_dynamic_type = current_system.pointer_type)
+			if not l_pointer then
+					-- $Result is of type TYPED_POINTER.
 				l_dynamic_type := l_dynamic_type_set.static_type
-				l_pointer := (l_dynamic_type = current_system.pointer_type)
-				if not l_pointer then
-						-- $Result is of type TYPED_POINTER.
-					l_dynamic_type := l_dynamic_type_set.static_type
-					l_temp := new_temp_variable (l_dynamic_type)
-					l_temp.set_index (an_expression.index)
-					operand_stack.force (l_temp)
+				l_temp := new_temp_variable (l_dynamic_type)
+				l_temp.set_index (an_expression.index)
+				operand_stack.force (l_temp)
+				print_indentation
+				print_attribute_type_id_access (l_temp, l_dynamic_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_integer (l_dynamic_type.id)
+				current_file.put_character (';')
+				current_file.put_new_line
+				l_queries := l_dynamic_type.queries
+				if l_queries.is_empty then
+						-- Internal error: TYPED_POINTER should have an attribute
+						-- `pointer_item' at first position.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
 					print_indentation
-					print_attribute_type_id_access (l_temp, l_dynamic_type, False)
+					print_attribute_access (l_queries.first, l_temp, l_dynamic_type, False)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					current_file.put_integer (l_dynamic_type.id)
-					current_file.put_character (';')
-					current_file.put_new_line
-					l_queries := l_dynamic_type.queries
-					if l_queries.is_empty then
-							-- Internal error: TYPED_POINTER should have an attribute
-							-- `pointer_item' at first position.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						print_indentation
-						print_attribute_access (l_queries.first, l_temp, l_dynamic_type, False)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-					end
 				end
-				if l_pointer and in_operand then
-						-- $Result is of type POINTER.
-					operand_stack.force (an_expression)
+			end
+			if l_pointer and in_operand then
+					-- $Result is of type POINTER.
+				operand_stack.force (an_expression)
+			else
+				current_file.put_character ('(')
+				l_result_type_set := current_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it should have been checked elsewhere that
+						-- the current feature is a function.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif l_result_type_set.is_expanded then
+					print_type_cast (current_system.pointer_type, current_file)
+					current_file.put_character ('&')
+					print_result_name (current_file)
 				else
-					current_file.put_character ('(')
-					l_result_type_set := current_feature.result_type_set
-					if l_result_type_set = Void then
-							-- Internal error: it should have been checked elsewhere that
-							-- the current feature is a function.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					elseif l_result_type_set.is_expanded then
-						print_type_cast (current_system.pointer_type, current_file)
-						current_file.put_character ('&')
+					l_special_type := l_result_type_set.special_type
+					if l_special_type /= Void then
+						current_file.put_character ('(')
 						print_result_name (current_file)
+						current_file.put_character ('?')
+						print_type_cast (current_system.pointer_type, current_file)
+						current_file.put_character ('(')
+						current_file.put_string (c_ge_types)
+						current_file.put_character ('[')
+						print_attribute_type_id_access (tokens.result_keyword, l_result_type_set.static_type, False)
+						current_file.put_character (']')
+						current_file.put_character ('.')
+						current_file.put_string (c_is_special)
+						current_file.put_character ('?')
+						print_type_cast (current_system.pointer_type, current_file)
+						print_attribute_special_item_access (an_expression.result_keyword, l_special_type, False)
+						current_file.put_character (':')
+						print_type_cast (current_system.pointer_type, current_file)
+						print_result_name (current_file)
+						current_file.put_character (')')
+						current_file.put_character (':')
+						print_type_cast (current_system.pointer_type, current_file)
+						current_file.put_character ('0')
+						current_file.put_character (')')
 					else
-						l_special_type := l_result_type_set.special_type
-						if l_special_type /= Void then
-							current_file.put_character ('(')
-							print_result_name (current_file)
-							current_file.put_character ('?')
-							print_type_cast (current_system.pointer_type, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ge_types)
-							current_file.put_character ('[')
-							print_attribute_type_id_access (tokens.result_keyword, l_result_type_set.static_type, False)
-							current_file.put_character (']')
-							current_file.put_character ('.')
-							current_file.put_string (c_is_special)
-							current_file.put_character ('?')
-							print_type_cast (current_system.pointer_type, current_file)
-							print_attribute_special_item_access (an_expression.result_keyword, l_special_type, False)
-							current_file.put_character (':')
-							print_type_cast (current_system.pointer_type, current_file)
-							print_result_name (current_file)
-							current_file.put_character (')')
-							current_file.put_character (':')
-							print_type_cast (current_system.pointer_type, current_file)
-							current_file.put_character ('0')
-							current_file.put_character (')')
-						else
-							print_type_cast (current_system.pointer_type, current_file)
-							print_result_name (current_file)
-						end
+						print_type_cast (current_system.pointer_type, current_file)
+						print_result_name (current_file)
 					end
-					current_file.put_character (')')
 				end
-				if not l_pointer then
-					current_file.put_character (';')
-					current_file.put_new_line
-				end
+				current_file.put_character (')')
+			end
+			if not l_pointer then
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 		end
 
@@ -8924,21 +8590,14 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						print_writable (l_assignment_target)
 					else
 						l_dynamic_type_set := dynamic_type_set (an_expression)
-						if l_dynamic_type_set = Void then
-								-- Internal error: the dynamic type set of `an_expression'
-								-- should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_dynamic_type := l_dynamic_type_set.static_type
-							l_temp := new_temp_variable (l_dynamic_type)
-								-- We will set the index of `l_temp' later because
-								-- it could still be used in `call_operands'.
-							l_temp_index := an_expression.index
-							operand_stack.force (l_temp)
-							print_indentation
-							print_temp_name (l_temp, current_file)
-						end
+						l_dynamic_type := l_dynamic_type_set.static_type
+						l_temp := new_temp_variable (l_dynamic_type)
+							-- We will set the index of `l_temp' later because
+							-- it could still be used in `call_operands'.
+						l_temp_index := an_expression.index
+						operand_stack.force (l_temp)
+						print_indentation
+						print_temp_name (l_temp, current_file)
 					end
 					current_file.put_character (' ')
 					current_file.put_character ('=')
@@ -8998,15 +8657,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 							l_comma := True
 						end
 						l_actual_type_set := dynamic_type_set (call_operands.item (i))
-						l_formal_type_set := l_dynamic_feature.argument_type_set (i)
-						if l_actual_type_set = Void or l_formal_type_set = Void then
-								-- Internal error: the dynamic type sets of the actual
-								-- and formal arguments should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-						end
+						l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_feature)
+						print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
 						i := i + 1
 					end
 					current_file.put_character (')')
@@ -9042,12 +8694,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 		do
 			if a_check_void_target then
 				l_dynamic_type_set := dynamic_type_set (an_expression)
-				if l_dynamic_type_set = Void then
-						-- Internal error: the dynamic type set of expressions
-						-- should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif not a_target_type.is_expanded and then (l_dynamic_type_set.is_empty or not l_dynamic_type_set.is_never_void) then
+				if not a_target_type.is_expanded and then (l_dynamic_type_set.is_empty or not l_dynamic_type_set.is_never_void) then
 					can_be_void_target_count := can_be_void_target_count + 1
 					current_file.put_string (c_ge_void)
 					current_file.put_character ('(')
@@ -9378,12 +9025,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			assignment_target := Void
 			l_call_type_set := dynamic_type_set (a_call)
 			l_dynamic_feature := current_type.seeded_dynamic_query (a_call.name.seed, current_system)
-			if l_call_type_set = Void then
-					-- Internal error: the dynamic type set of `a_call'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif l_dynamic_feature = Void then
+			if l_dynamic_feature = Void then
 					-- Internal error: there should be a query for that seed.
 				set_fatal_error
 				error_handler.report_giaaa_error
@@ -9596,12 +9238,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			assignment_target := Void
 			l_call_type_set := dynamic_type_set (an_identifier)
 			l_dynamic_feature := current_type.seeded_dynamic_query (an_identifier.seed, current_system)
-			if l_call_type_set = Void then
-					-- Internal error: the dynamic type set of `an_identifier'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif l_dynamic_feature = Void then
+			if l_dynamic_feature = Void then
 					-- Internal error: there should be a query for that seed.
 				set_fatal_error
 				error_handler.report_giaaa_error
@@ -9939,12 +9576,7 @@ feature {NONE} -- Query call generation
 					if l_attribute /= Void then
 						l_target := call_operands.first
 						l_target_type_set := dynamic_type_set (l_target)
-						if l_target_type_set = Void then
-								-- Internal error: the dynamic type set of the target
-								-- of the call should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_target_type_set.is_expanded then
+						if l_target_type_set.is_expanded then
 							print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
 						else
 							print_boxed_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
@@ -9993,15 +9625,8 @@ feature {NONE} -- Query call generation
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				l_actual_type_set := dynamic_type_set (call_operands.item (i))
-				l_formal_type_set := a_feature.argument_type_set (i - 1)
-				if l_actual_type_set = Void or l_formal_type_set = Void then
-						-- Internal error: the dynamic type sets of the actual
-						-- and formal arguments should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-				end
+				l_formal_type_set := argument_type_set_in_feature (i - 1, a_feature)
+				print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
 				i := i + 1
 			end
 			current_file.put_character (')')
@@ -10664,77 +10289,70 @@ feature {NONE} -- Agent generation
 			l_assignment_target := assignment_target
 			assignment_target := Void
 			l_dynamic_type_set := dynamic_type_set (an_agent)
-			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of `an_agent'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
+			l_agent_type := l_dynamic_type_set.static_type
+			if not an_agent.is_qualified_call then
+				print_operand (tokens.current_keyword)
+				nb_operands := 1
 			else
-				l_agent_type := l_dynamic_type_set.static_type
-				if not an_agent.is_qualified_call then
-					print_operand (tokens.current_keyword)
+				l_closed_operand ?= an_agent.target
+				if l_closed_operand /= Void then
+					print_operand (l_closed_operand)
 					nb_operands := 1
-				else
-					l_closed_operand ?= an_agent.target
+				end
+			end
+			l_arguments := an_agent.arguments
+			if l_arguments /= Void then
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_closed_operand ?= l_arguments.actual_argument (i)
 					if l_closed_operand /= Void then
 						print_operand (l_closed_operand)
-						nb_operands := 1
+						nb_operands := nb_operands + 1
 					end
-				end
-				l_arguments := an_agent.arguments
-				if l_arguments /= Void then
-					nb := l_arguments.count
-					from i := 1 until i > nb loop
-						l_closed_operand ?= l_arguments.actual_argument (i)
-						if l_closed_operand /= Void then
-							print_operand (l_closed_operand)
-							nb_operands := nb_operands + 1
-						end
-						i := i + 1
-					end
-				end
-				fill_call_operands (nb_operands)
-				current_agents.force_last (an_agent)
-				if in_operand then
-					if l_assignment_target /= Void then
-						operand_stack.force (l_assignment_target)
-						print_indentation
-						print_writable (l_assignment_target)
-					else
-						l_temp := new_temp_variable (l_agent_type)
-							-- We will set the index of `l_temp' later because
-							-- it could still be used in `call_operands'.
-						l_temp_index := an_agent.index
-						operand_stack.force (l_temp)
-						print_indentation
-						print_temp_name (l_temp, current_file)
-					end
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-				end
-				print_agent_creation_name (current_agents.count, current_feature, current_type, current_file)
-				current_file.put_character ('(')
-				from i := 1 until i > nb_operands loop
-					if i /= 1 then
-						current_file.put_character (',')
-					end
--- TODO: use print_attachment_expression
-					print_expression (call_operands.item (i))
 					i := i + 1
 				end
-				current_file.put_character (')')
-				if in_operand then
-					current_file.put_character (';')
-					current_file.put_new_line
+			end
+			fill_call_operands (nb_operands)
+			current_agents.force_last (an_agent)
+			if in_operand then
+				if l_assignment_target /= Void then
+					operand_stack.force (l_assignment_target)
+					print_indentation
+					print_writable (l_assignment_target)
+				else
+					l_temp := new_temp_variable (l_agent_type)
+						-- We will set the index of `l_temp' later because
+						-- it could still be used in `call_operands'.
+					l_temp_index := an_agent.index
+					operand_stack.force (l_temp)
+					print_indentation
+					print_temp_name (l_temp, current_file)
 				end
-				call_operands.wipe_out
-				if l_temp_index /= 0 then
-						-- We had to wait until this stage to set the index of `l_temp'
-						-- because it could have still been used in `call_operands'.
-					check l_temp_not_void: l_temp /= Void end
-					l_temp.set_index (l_temp_index)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+			end
+			print_agent_creation_name (current_agents.count, current_feature, current_type, current_file)
+			current_file.put_character ('(')
+			from i := 1 until i > nb_operands loop
+				if i /= 1 then
+					current_file.put_character (',')
 				end
+-- TODO: use print_attachment_expression
+				print_expression (call_operands.item (i))
+				i := i + 1
+			end
+			current_file.put_character (')')
+			if in_operand then
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			call_operands.wipe_out
+			if l_temp_index /= 0 then
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				check l_temp_not_void: l_temp /= Void end
+				l_temp.set_index (l_temp_index)
 			end
 		end
 
@@ -10815,26 +10433,19 @@ feature {NONE} -- Agent generation
 			else
 				if in_target then
 					l_dynamic_type_set := dynamic_type_set (a_name)
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of
-							-- formal arguments should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
+					l_static_type := l_dynamic_type_set.static_type
+					if l_static_type.is_expanded then
+							-- Pass the address of the expanded object.
+						current_file.put_character ('&')
+						print_agent_open_operand_name (a_name, current_file)
+					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+							-- We need to unbox the object and then pass its address.
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
+						current_file.put_character (')')
 					else
-						l_static_type := l_dynamic_type_set.static_type
-						if l_static_type.is_expanded then
-								-- Pass the address of the expanded object.
-							current_file.put_character ('&')
-							print_agent_open_operand_name (a_name, current_file)
-						elseif call_target_type.is_expanded and not call_target_type.is_generic then
-								-- We need to unbox the object and then pass its address.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
-							current_file.put_character (')')
-						else
-							print_agent_open_operand_name (a_name, current_file)
-						end
+						print_agent_open_operand_name (a_name, current_file)
 					end
 				else
 					print_agent_open_operand_name (a_name, current_file)
@@ -10864,26 +10475,19 @@ feature {NONE} -- Agent generation
 			else
 				if in_target then
 					l_dynamic_type_set := dynamic_type_set (a_name)
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of
-							-- formal arguments should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
+					l_static_type := l_dynamic_type_set.static_type
+					if l_static_type.is_expanded then
+							-- Pass the address of the expanded object.
+						current_file.put_character ('&')
+						print_agent_closed_operand_access (a_name, tokens.current_keyword)
+					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+							-- We need to unbox the object and then pass its address.
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
+						current_file.put_character (')')
 					else
-						l_static_type := l_dynamic_type_set.static_type
-						if l_static_type.is_expanded then
-								-- Pass the address of the expanded object.
-							current_file.put_character ('&')
-							print_agent_closed_operand_access (a_name, tokens.current_keyword)
-						elseif call_target_type.is_expanded and not call_target_type.is_generic then
-								-- We need to unbox the object and then pass its address.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
-							current_file.put_character (')')
-						else
-							print_agent_closed_operand_access (a_name, tokens.current_keyword)
-						end
+						print_agent_closed_operand_access (a_name, tokens.current_keyword)
 					end
 				else
 					print_agent_closed_operand_access (a_name, tokens.current_keyword)
@@ -10942,494 +10546,440 @@ feature {NONE} -- Agent generation
 				-- Determine agent type.
 				--
 			l_dynamic_type_set := dynamic_type_set (an_agent)
-			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of `an_agent'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				l_agent_type := l_dynamic_type_set.static_type
-			end
+			l_agent_type := l_dynamic_type_set.static_type
 				--
 				-- Determine target type.
 				--
 			l_target := an_agent.target
 			l_dynamic_type_set := dynamic_type_set (l_target)
-			if l_dynamic_type_set = Void then
-					-- Internal error: the dynamic type set of `l_target'
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				l_target_type := l_dynamic_type_set.static_type
-			end
-			if l_agent_type = Void then
-				-- Error already reported.
-			elseif l_target_type = Void then
-				-- Error already reported.
-			else
-					--
-					-- Determine open and closed operands.
-					--
-				if l_target.is_open_operand then
-					nb_open_operands := 1
-					if agent_open_operands.count < nb_open_operands then
-						create l_open_operand.make ("a" + nb_open_operands.out)
-						l_open_operand.set_agent_open_operand (True)
-						l_open_operand.set_seed (nb_open_operands)
-						agent_open_operands.force_last (l_open_operand)
-					else
-						l_open_operand := agent_open_operands.item (nb_open_operands)
-					end
-					l_open_operand.set_index (l_target.index)
+			l_target_type := l_dynamic_type_set.static_type
+				--
+				-- Determine open and closed operands.
+				--
+			if l_target.is_open_operand then
+				nb_open_operands := 1
+				if agent_open_operands.count < nb_open_operands then
+					create l_open_operand.make ("a" + nb_open_operands.out)
+					l_open_operand.set_agent_open_operand (True)
+					l_open_operand.set_seed (nb_open_operands)
+					agent_open_operands.force_last (l_open_operand)
 				else
-					nb_closed_operands := 1
-					if agent_closed_operands.count < nb_closed_operands then
-						create l_closed_operand.make ("z" + nb_closed_operands.out)
-						l_closed_operand.set_agent_closed_operand (True)
-						l_closed_operand.set_seed (nb_closed_operands)
-						agent_closed_operands.force_last (l_closed_operand)
-					else
-						l_closed_operand := agent_closed_operands.item (nb_closed_operands)
-					end
-					l_closed_operand.set_index (l_target.index)
+					l_open_operand := agent_open_operands.item (nb_open_operands)
 				end
-				l_arguments := an_agent.arguments
-				if l_arguments /= Void then
-					nb := l_arguments.count
-					from j := 1 until j > nb loop
-						l_argument := l_arguments.actual_argument (j)
-						if l_argument.is_open_operand then
-							nb_open_operands := nb_open_operands + 1
-							if agent_open_operands.count < nb_open_operands then
-								create l_open_operand.make ("a" + nb_open_operands.out)
-								l_open_operand.set_agent_open_operand (True)
-								l_open_operand.set_seed (nb_open_operands)
-								agent_open_operands.force_last (l_open_operand)
-							else
-								l_open_operand := agent_open_operands.item (nb_open_operands)
-							end
-							l_open_operand.set_index (l_argument.index)
-						else
-							nb_closed_operands := nb_closed_operands + 1
-							if agent_closed_operands.count < nb_closed_operands then
-								create l_closed_operand.make ("z" + nb_closed_operands.out)
-								l_closed_operand.set_agent_closed_operand (True)
-								l_closed_operand.set_seed (nb_closed_operands)
-								agent_closed_operands.force_last (l_closed_operand)
-							else
-								l_closed_operand := agent_closed_operands.item (nb_closed_operands)
-							end
-							l_closed_operand.set_index (l_argument.index)
-						end
-						j := j + 1
-					end
+				l_open_operand.set_index (l_target.index)
+			else
+				nb_closed_operands := 1
+				if agent_closed_operands.count < nb_closed_operands then
+					create l_closed_operand.make ("z" + nb_closed_operands.out)
+					l_closed_operand.set_agent_closed_operand (True)
+					l_closed_operand.set_seed (nb_closed_operands)
+					agent_closed_operands.force_last (l_closed_operand)
+				else
+					l_closed_operand := agent_closed_operands.item (nb_closed_operands)
 				end
-					--
-					-- Print agent type to `header_file'.
-					--
-				header_file.put_character ('/')
-				header_file.put_character ('*')
-				header_file.put_character (' ')
-				header_file.put_string ("Agent #")
-				header_file.put_integer (i)
-				header_file.put_string (" in feature ")
-				header_file.put_string (current_type.base_type.unaliased_to_text)
-				header_file.put_character ('.')
-				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
-				header_file.put_character (' ')
-				header_file.put_character ('*')
-				header_file.put_character ('/')
-				header_file.put_new_line
-				header_file.put_string (c_typedef)
-				header_file.put_character (' ')
-				header_file.put_string (c_struct)
-				header_file.put_character (' ')
-				header_file.put_character ('{')
-				header_file.put_new_line
-					-- Type id.
-				header_file.put_character ('%T')
-				header_file.put_string (c_int)
-				header_file.put_character (' ')
-				print_attribute_type_id_name (l_agent_type, header_file)
-				header_file.put_character (';')
-				header_file.put_new_line
-					-- Attributes.
-				l_queries := l_agent_type.queries
-				nb := l_agent_type.attribute_count
+				l_closed_operand.set_index (l_target.index)
+			end
+			l_arguments := an_agent.arguments
+			if l_arguments /= Void then
+				nb := l_arguments.count
 				from j := 1 until j > nb loop
-					l_query := l_queries.item (j)
-					header_file.put_character ('%T')
-					print_type_declaration (l_query.result_type_set.static_type, header_file)
-					header_file.put_character (' ')
-					print_attribute_name (l_query, l_agent_type, header_file)
-					header_file.put_character (';')
-					header_file.put_character (' ')
-					header_file.put_character ('/')
-					header_file.put_character ('*')
-					header_file.put_character (' ')
-					header_file.put_string (l_query.static_feature.name.name)
-					header_file.put_character (' ')
-					header_file.put_character ('*')
-					header_file.put_character ('/')
-					header_file.put_new_line
+					l_argument := l_arguments.actual_argument (j)
+					if l_argument.is_open_operand then
+						nb_open_operands := nb_open_operands + 1
+						if agent_open_operands.count < nb_open_operands then
+							create l_open_operand.make ("a" + nb_open_operands.out)
+							l_open_operand.set_agent_open_operand (True)
+							l_open_operand.set_seed (nb_open_operands)
+							agent_open_operands.force_last (l_open_operand)
+						else
+							l_open_operand := agent_open_operands.item (nb_open_operands)
+						end
+						l_open_operand.set_index (l_argument.index)
+					else
+						nb_closed_operands := nb_closed_operands + 1
+						if agent_closed_operands.count < nb_closed_operands then
+							create l_closed_operand.make ("z" + nb_closed_operands.out)
+							l_closed_operand.set_agent_closed_operand (True)
+							l_closed_operand.set_seed (nb_closed_operands)
+							agent_closed_operands.force_last (l_closed_operand)
+						else
+							l_closed_operand := agent_closed_operands.item (nb_closed_operands)
+						end
+						l_closed_operand.set_index (l_argument.index)
+					end
 					j := j + 1
 				end
-					-- Function pointer.
+			end
+				--
+				-- Print agent type to `header_file'.
+				--
+			header_file.put_character ('/')
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string ("Agent #")
+			header_file.put_integer (i)
+			header_file.put_string (" in feature ")
+			header_file.put_string (current_type.base_type.unaliased_to_text)
+			header_file.put_character ('.')
+			header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			header_file.put_character (' ')
+			header_file.put_character ('*')
+			header_file.put_character ('/')
+			header_file.put_new_line
+			header_file.put_string (c_typedef)
+			header_file.put_character (' ')
+			header_file.put_string (c_struct)
+			header_file.put_character (' ')
+			header_file.put_character ('{')
+			header_file.put_new_line
+				-- Type id.
+			header_file.put_character ('%T')
+			header_file.put_string (c_int)
+			header_file.put_character (' ')
+			print_attribute_type_id_name (l_agent_type, header_file)
+			header_file.put_character (';')
+			header_file.put_new_line
+				-- Attributes.
+			l_queries := l_agent_type.queries
+			nb := l_agent_type.attribute_count
+			from j := 1 until j > nb loop
+				l_query := l_queries.item (j)
 				header_file.put_character ('%T')
-				l_result := an_agent.implicit_result
-				if l_result = Void then
-						-- Procedure.
-					header_file.put_string (c_void)
-				else
-						-- Query or Tuple label.
-					l_dynamic_type_set := dynamic_type_set (l_result)
-					if l_dynamic_type_set = Void then
-							-- Internal error: a query or Tuple label should have a result type.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_result_type := l_dynamic_type_set.static_type
-						print_type_declaration (l_result_type, header_file)
-					end
-				end
+				print_type_declaration (l_query.result_type_set.static_type, header_file)
 				header_file.put_character (' ')
-				header_file.put_character ('(')
+				print_attribute_name (l_query, l_agent_type, header_file)
+				header_file.put_character (';')
+				header_file.put_character (' ')
+				header_file.put_character ('/')
 				header_file.put_character ('*')
-				print_attribute_routine_function_name (l_agent_type, header_file)
-				header_file.put_character (')')
-				header_file.put_character ('(')
-				if exception_trace_mode then
-					header_file.put_string (c_ge_call)
-					header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string (l_query.static_feature.name.name)
+				header_file.put_character (' ')
+				header_file.put_character ('*')
+				header_file.put_character ('/')
+				header_file.put_new_line
+				j := j + 1
+			end
+				-- Function pointer.
+			header_file.put_character ('%T')
+			l_result := an_agent.implicit_result
+			if l_result = Void then
+					-- Procedure.
+				header_file.put_string (c_void)
+			else
+					-- Query or Tuple label.
+				l_dynamic_type_set := dynamic_type_set (l_result)
+				l_result_type := l_dynamic_type_set.static_type
+				print_type_declaration (l_result_type, header_file)
+			end
+			header_file.put_character (' ')
+			header_file.put_character ('(')
+			header_file.put_character ('*')
+			print_attribute_routine_function_name (l_agent_type, header_file)
+			header_file.put_character (')')
+			header_file.put_character ('(')
+			if exception_trace_mode then
+				header_file.put_string (c_ge_call)
+				header_file.put_character ('*')
+				header_file.put_character (',')
+				header_file.put_character (' ')
+			end
+			print_type_declaration (l_agent_type, header_file)
+			from j := 1 until j > nb_open_operands loop
+				l_dynamic_type_set := dynamic_type_set (agent_open_operands.item (j))
+				l_type := l_dynamic_type_set.static_type
+				header_file.put_character (',')
+				header_file.put_character (' ')
+				print_type_declaration (l_type, header_file)
+				j := j + 1
+			end
+			header_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+				-- Closed operands.
+			from j := 1 until j > nb_closed_operands loop
+				l_closed_operand := agent_closed_operands.item (j)
+				l_dynamic_type_set := dynamic_type_set (l_closed_operand)
+				l_type := l_dynamic_type_set.static_type
+				header_file.put_character ('%T')
+				print_type_declaration (l_type, header_file)
+				header_file.put_character (' ')
+				print_agent_closed_operand_name (l_closed_operand, header_file)
+				header_file.put_character (';')
+				header_file.put_character (' ')
+				header_file.put_character ('/')
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string ("Closed operand #")
+				header_file.put_integer (j)
+				header_file.put_character (' ')
+				header_file.put_character ('*')
+				header_file.put_character ('/')
+				header_file.put_new_line
+				j := j + 1
+			end
+			header_file.put_character ('}')
+			header_file.put_character (' ')
+			print_agent_type_name (i, current_feature, current_type, header_file)
+			header_file.put_character (';')
+			header_file.put_new_line
+			header_file.put_new_line
+				--
+				-- Print function associated with the agent to `current_file'.
+				--
+			old_file := current_file
+			current_file := current_function_header_buffer
+			current_file.put_character ('/')
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string ("Function for agent #")
+			current_file.put_integer (i)
+			current_file.put_string (" in feature ")
+			current_file.put_string (current_type.base_type.unaliased_to_text)
+			current_file.put_character ('.')
+			current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			current_file.put_character (' ')
+			current_file.put_character ('*')
+			current_file.put_character ('/')
+			current_file.put_new_line
+			if l_result_type /= Void then
+				print_type_declaration (l_result_type, current_file)
+			else
+				current_file.put_string (c_void)
+			end
+			current_file.put_character (' ')
+			print_agent_function_name (i, current_feature, current_type, current_file)
+			current_file.put_character ('(')
+			if exception_trace_mode then
+				current_file.put_string (c_ge_call)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+			end
+			print_type_declaration (l_agent_type, current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('a')
+			current_file.put_character ('0')
+			from j := 1 until j > nb_open_operands loop
+				l_open_operand := agent_open_operands.item (j)
+				l_dynamic_type_set := dynamic_type_set (l_open_operand)
+				l_type := l_dynamic_type_set.static_type
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_type_declaration (l_type, current_file)
+				current_file.put_character (' ')
+				print_agent_open_operand_name (l_open_operand, current_file)
+				j := j + 1
+			end
+			current_file.put_character (')')
+			current_file.put_new_line
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			print_agent_type_name (i, current_feature, current_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			print_current_name (current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_agent_type_name (i, current_feature, current_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('a')
+			current_file.put_character ('0')
+			current_file.put_character (';')
+			current_file.put_new_line
+				-- Make sure that `agent_target' is set correctly
+				-- before calling `print_agent_body_declaration'.
+			if l_target.is_open_operand then
+				agent_target := agent_open_operands.item (1)
+			else
+				agent_target := agent_closed_operands.item (1)
+			end
+				-- Make sure that `agent_arguments' is set correctly
+				-- before calling `print_agent_body_declaration'.
+			agent_arguments.wipe_out
+			if l_arguments /= Void then
+				nb := l_arguments.count
+				if agent_arguments.capacity < nb then
+					agent_arguments.resize (nb)
+				end
+				l_open_index := nb_open_operands
+				l_closed_index := nb_closed_operands
+				from j := nb until j < 1 loop
+					l_argument := l_arguments.actual_argument (j)
+					if l_argument.is_open_operand then
+						agent_arguments.put_first (agent_open_operands.item (l_open_index))
+						l_open_index := l_open_index - 1
+					else
+						agent_arguments.put_first (agent_closed_operands.item (l_closed_index))
+						l_closed_index := l_closed_index - 1
+					end
+					j := j - 1
+				end
+			end
+			current_file := current_function_body_buffer
+			print_agent_body_declaration (an_agent)
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+			current_file := old_file
+				-- Do not flush code to C file here (no call to `flush_to_c_file')
+				-- because we want the function associated with this agent and the
+				-- creation of the agent (printed just below) to be in the same C file.
+				-- Indeed, the associated function is not declared in the C header file,
+				-- but it is used in the creation of the agent.
+			reset_temp_variables
+				--
+				-- Print creation function of the agent.
+				--
+				-- Print signature to `header_file' and `current_file'.
+			header_file.put_character ('/')
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string ("Creation of agent #")
+			header_file.put_integer (i)
+			header_file.put_string (" in feature ")
+			header_file.put_string (current_type.base_type.unaliased_to_text)
+			header_file.put_character ('.')
+			header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			header_file.put_character (' ')
+			header_file.put_character ('*')
+			header_file.put_character ('/')
+			header_file.put_new_line
+			current_file.put_character ('/')
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string ("Creation of agent #")
+			current_file.put_integer (i)
+			current_file.put_string (" in feature ")
+			current_file.put_string (current_type.base_type.unaliased_to_text)
+			current_file.put_character ('.')
+			current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			current_file.put_character (' ')
+			current_file.put_character ('*')
+			current_file.put_character ('/')
+			current_file.put_new_line
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			print_type_declaration (l_agent_type, header_file)
+			print_type_declaration (l_agent_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			print_agent_creation_name (i, current_feature, current_type, header_file)
+			print_agent_creation_name (i, current_feature, current_type, current_file)
+			header_file.put_character ('(')
+			current_file.put_character ('(')
+			from j := 1 until j > nb_closed_operands loop
+				if j /= 1 then
 					header_file.put_character (',')
 					header_file.put_character (' ')
-				end
-				print_type_declaration (l_agent_type, header_file)
-				from j := 1 until j > nb_open_operands loop
-					l_dynamic_type_set := dynamic_type_set (agent_open_operands.item (j))
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of the open operand
-							-- should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_type := l_dynamic_type_set.static_type
-						header_file.put_character (',')
-						header_file.put_character (' ')
-						print_type_declaration (l_type, header_file)
-					end
-					j := j + 1
-				end
-				header_file.put_character (')')
-				header_file.put_character (';')
-				header_file.put_new_line
-					-- Closed operands.
-				from j := 1 until j > nb_closed_operands loop
-					l_closed_operand := agent_closed_operands.item (j)
-					l_dynamic_type_set := dynamic_type_set (l_closed_operand)
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of closed operands
-							-- should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_type := l_dynamic_type_set.static_type
-						header_file.put_character ('%T')
-						print_type_declaration (l_type, header_file)
-						header_file.put_character (' ')
-						print_agent_closed_operand_name (l_closed_operand, header_file)
-						header_file.put_character (';')
-						header_file.put_character (' ')
-						header_file.put_character ('/')
-						header_file.put_character ('*')
-						header_file.put_character (' ')
-						header_file.put_string ("Closed operand #")
-						header_file.put_integer (j)
-						header_file.put_character (' ')
-						header_file.put_character ('*')
-						header_file.put_character ('/')
-						header_file.put_new_line
-					end
-					j := j + 1
-				end
-				header_file.put_character ('}')
-				header_file.put_character (' ')
-				print_agent_type_name (i, current_feature, current_type, header_file)
-				header_file.put_character (';')
-				header_file.put_new_line
-				header_file.put_new_line
-					--
-					-- Print function associated with the agent to `current_file'.
-					--
-				old_file := current_file
-				current_file := current_function_header_buffer
-				current_file.put_character ('/')
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_string ("Function for agent #")
-				current_file.put_integer (i)
-				current_file.put_string (" in feature ")
-				current_file.put_string (current_type.base_type.unaliased_to_text)
-				current_file.put_character ('.')
-				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
-				current_file.put_character (' ')
-				current_file.put_character ('*')
-				current_file.put_character ('/')
-				current_file.put_new_line
-				if l_result_type /= Void then
-					print_type_declaration (l_result_type, current_file)
-				else
-					current_file.put_string (c_void)
-				end
-				current_file.put_character (' ')
-				print_agent_function_name (i, current_feature, current_type, current_file)
-				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (c_ge_call)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
 					current_file.put_character (',')
 					current_file.put_character (' ')
 				end
-				print_type_declaration (l_agent_type, current_file)
+				l_dynamic_type_set := dynamic_type_set (agent_closed_operands.item (j))
+				l_type := l_dynamic_type_set.static_type
+				print_type_declaration (l_type, header_file)
+				print_type_declaration (l_type, current_file)
+				header_file.put_character (' ')
 				current_file.put_character (' ')
+				header_file.put_character ('a')
 				current_file.put_character ('a')
-				current_file.put_character ('0')
-				from j := 1 until j > nb_open_operands loop
-					l_open_operand := agent_open_operands.item (j)
-					l_dynamic_type_set := dynamic_type_set (l_open_operand)
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of the open operand
-							-- should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_type := l_dynamic_type_set.static_type
-						current_file.put_character (',')
-						current_file.put_character (' ')
-						print_type_declaration (l_type, current_file)
-						current_file.put_character (' ')
-						print_agent_open_operand_name (l_open_operand, current_file)
-					end
-					j := j + 1
-				end
-				current_file.put_character (')')
-				current_file.put_new_line
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_indentation
-				print_agent_type_name (i, current_feature, current_type, current_file)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				print_current_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_agent_type_name (i, current_feature, current_type, current_file)
-				current_file.put_character ('*')
-				current_file.put_character (')')
-				current_file.put_character ('a')
-				current_file.put_character ('0')
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Make sure that `agent_target' is set correctly
-					-- before calling `print_agent_body_declaration'.
-				if l_target.is_open_operand then
-					agent_target := agent_open_operands.item (1)
-				else
-					agent_target := agent_closed_operands.item (1)
-				end
-					-- Make sure that `agent_arguments' is set correctly
-					-- before calling `print_agent_body_declaration'.
-				agent_arguments.wipe_out
-				if l_arguments /= Void then
-					nb := l_arguments.count
-					if agent_arguments.capacity < nb then
-						agent_arguments.resize (nb)
-					end
-					l_open_index := nb_open_operands
-					l_closed_index := nb_closed_operands
-					from j := nb until j < 1 loop
-						l_argument := l_arguments.actual_argument (j)
-						if l_argument.is_open_operand then
-							agent_arguments.put_first (agent_open_operands.item (l_open_index))
-							l_open_index := l_open_index - 1
-						else
-							agent_arguments.put_first (agent_closed_operands.item (l_closed_index))
-							l_closed_index := l_closed_index - 1
-						end
-						j := j - 1
-					end
-				end
-				current_file := current_function_body_buffer
-				print_agent_body_declaration (an_agent)
-				dedent
-				current_file.put_character ('}')
-				current_file.put_new_line
-				current_file.put_new_line
-				current_file := old_file
-					-- Do not flush code to C file here (no call to `flush_to_c_file')
-					-- because we want the function associated with this agent and the
-					-- creation of the agent (printed just below) to be in the same C file.
-					-- Indeed, the associated function is not declared in the C header file,
-					-- but it is used in the creation of the agent.
-				reset_temp_variables
-					--
-					-- Print creation function of the agent.
-					--
-					-- Print signature to `header_file' and `current_file'.
-				header_file.put_character ('/')
-				header_file.put_character ('*')
-				header_file.put_character (' ')
-				header_file.put_string ("Creation of agent #")
-				header_file.put_integer (i)
-				header_file.put_string (" in feature ")
-				header_file.put_string (current_type.base_type.unaliased_to_text)
-				header_file.put_character ('.')
-				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
-				header_file.put_character (' ')
-				header_file.put_character ('*')
-				header_file.put_character ('/')
-				header_file.put_new_line
-				current_file.put_character ('/')
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_string ("Creation of agent #")
-				current_file.put_integer (i)
-				current_file.put_string (" in feature ")
-				current_file.put_string (current_type.base_type.unaliased_to_text)
-				current_file.put_character ('.')
-				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
-				current_file.put_character (' ')
-				current_file.put_character ('*')
-				current_file.put_character ('/')
-				current_file.put_new_line
-				header_file.put_string (c_extern)
-				header_file.put_character (' ')
-				print_type_declaration (l_agent_type, header_file)
-				print_type_declaration (l_agent_type, current_file)
-				header_file.put_character (' ')
-				current_file.put_character (' ')
-				print_agent_creation_name (i, current_feature, current_type, header_file)
-				print_agent_creation_name (i, current_feature, current_type, current_file)
-				header_file.put_character ('(')
-				current_file.put_character ('(')
-				from j := 1 until j > nb_closed_operands loop
-					if j /= 1 then
-						header_file.put_character (',')
-						header_file.put_character (' ')
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					end
-					l_dynamic_type_set := dynamic_type_set (agent_closed_operands.item (j))
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of `l_argument'
-							-- should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_type := l_dynamic_type_set.static_type
-						print_type_declaration (l_type, header_file)
-						print_type_declaration (l_type, current_file)
-						header_file.put_character (' ')
-						current_file.put_character (' ')
-						header_file.put_character ('a')
-						current_file.put_character ('a')
-						header_file.put_integer (j)
-						current_file.put_integer (j)
-					end
-					j := j + 1
-				end
-				header_file.put_character (')')
-				current_file.put_character (')')
-				header_file.put_character (';')
-				header_file.put_new_line
-				current_file.put_new_line
-					-- Print body to `current_file'.
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_indentation
-				print_agent_type_name (i, current_feature, current_type, current_file)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				print_result_name (current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Create agent object.
-				print_indentation
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_agent_type_name (i, current_feature, current_type, current_file)
-				current_file.put_character ('*')
-				current_file.put_character (')')
-				current_file.put_string (c_ge_alloc)
-				current_file.put_character ('(')
-				current_file.put_string (c_sizeof)
-				current_file.put_character ('(')
-				print_agent_type_name (i, current_feature, current_type, current_file)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Set type id of agent.
-				print_indentation
-				print_attribute_type_id_access (tokens.result_keyword, l_agent_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_integer (l_agent_type.id)
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Set function pointer.
-				print_indentation
-				print_result_name (current_file)
-				current_file.put_string (c_arrow)
-				print_attribute_routine_function_name (l_agent_type, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				print_agent_function_name (i, current_feature, current_type, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Set closed operands.
-				from j := 1 until j > nb_closed_operands loop
-					print_indentation
-					print_agent_closed_operand_access (agent_closed_operands.item (j), tokens.result_keyword)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('a')
-					current_file.put_integer (j)
-					current_file.put_character (';')
-					current_file.put_new_line
-					j := j + 1
-				end
-					-- Return the agent object.
-				print_indentation
-				current_file.put_string (c_return)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_type_declaration (l_agent_type, current_file)
-				current_file.put_character (')')
-				current_file.put_character ('(')
-				print_result_name (current_file)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-				dedent
-				current_file.put_character ('}')
-				current_file.put_new_line
-				current_file.put_new_line
-				flush_to_c_file
+				header_file.put_integer (j)
+				current_file.put_integer (j)
+				j := j + 1
 			end
+			header_file.put_character (')')
+			current_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+				-- Print body to `current_file'.
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			print_agent_type_name (i, current_feature, current_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			print_result_name (current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+				-- Create agent object.
+			print_indentation
+			print_result_name (current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_agent_type_name (i, current_feature, current_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_string (c_ge_alloc)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			print_agent_type_name (i, current_feature, current_type, current_file)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+				-- Set type id of agent.
+			print_indentation
+			print_attribute_type_id_access (tokens.result_keyword, l_agent_type, False)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_integer (l_agent_type.id)
+			current_file.put_character (';')
+			current_file.put_new_line
+				-- Set function pointer.
+			print_indentation
+			print_result_name (current_file)
+			current_file.put_string (c_arrow)
+			print_attribute_routine_function_name (l_agent_type, current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			print_agent_function_name (i, current_feature, current_type, current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+				-- Set closed operands.
+			from j := 1 until j > nb_closed_operands loop
+				print_indentation
+				print_agent_closed_operand_access (agent_closed_operands.item (j), tokens.result_keyword)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('a')
+				current_file.put_integer (j)
+				current_file.put_character (';')
+				current_file.put_new_line
+				j := j + 1
+			end
+				-- Return the agent object.
+			print_indentation
+			current_file.put_string (c_return)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_type_declaration (l_agent_type, current_file)
+			current_file.put_character (')')
+			current_file.put_character ('(')
+			print_result_name (current_file)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+			flush_to_c_file
 		end
 
 	print_agent_body_declaration (an_agent: ET_AGENT) is
@@ -11467,55 +11017,48 @@ feature {NONE} -- Agent generation
 			if l_result /= Void then
 					-- Query or Tuple label.
 				l_result_type_set := dynamic_type_set (l_result)
-				if l_result_type_set = Void then
-						-- Internal error: if the associated feature is a query,
-						-- then the dynamic type set should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				current_file := current_function_header_buffer
+				l_result_type := l_result_type_set.static_type
+				print_indentation
+				print_type_declaration (l_result_type, current_file)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_default_entity_value (l_result_type, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_file := current_function_body_buffer
+				agent_expression.set_target (agent_target)
+				agent_expression.set_name (l_name)
+				if l_arguments /= Void then
+					agent_expression.set_arguments (agent_arguments)
 				else
-					current_file := current_function_header_buffer
-					l_result_type := l_result_type_set.static_type
+					agent_expression.set_arguments (Void)
+				end
+				agent_expression.set_index (l_result.index)
+				assignment_target := l_result
+				print_operand (agent_expression)
+				assignment_target := Void
+				fill_call_operands (1)
+				if call_operands.first /= l_result then
 					print_indentation
-					print_type_declaration (l_result_type, current_file)
-					current_file.put_character (' ')
 					print_result_name (current_file)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					print_default_entity_value (l_result_type, current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
-					current_file := current_function_body_buffer
-					agent_expression.set_target (agent_target)
-					agent_expression.set_name (l_name)
-					if l_arguments /= Void then
-						agent_expression.set_arguments (agent_arguments)
-					else
-						agent_expression.set_arguments (Void)
-					end
-					agent_expression.set_index (l_result.index)
-					assignment_target := l_result
-					print_operand (agent_expression)
-					assignment_target := Void
-					fill_call_operands (1)
-					if call_operands.first /= l_result then
-						print_indentation
-						print_result_name (current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						print_expression (call_operands.first)
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
-					call_operands.wipe_out
-					print_indentation
-					current_file.put_string (c_return)
-					current_file.put_character (' ')
-					print_result_name (current_file)
+					print_expression (call_operands.first)
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
+				call_operands.wipe_out
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
 			else
 					-- Procedure.
 				current_file := current_function_body_buffer
@@ -11637,16 +11180,7 @@ feature {NONE} -- Agent generation
 			l_result := an_agent.implicit_result
 			if l_result /= Void then
 				l_result_type_set := dynamic_type_set (l_result)
-				if l_result_type_set = Void then
-						-- Internal error: if the associated feature is a query,
-						-- then the dynamic type set should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_result_type := l_result_type_set.static_type
-				end
-			end
-			if l_result_type /= Void then
+				l_result_type := l_result_type_set.static_type
 				print_indentation
 				print_type_declaration (l_result_type, current_file)
 				current_file.put_character (' ')
@@ -11665,24 +11199,17 @@ feature {NONE} -- Agent generation
 				from i := 1 until i > nb loop
 					l_name := l_locals.local_variable (i).name
 					l_local_type_set := dynamic_type_set (l_name)
-					if l_local_type_set = Void then
-							-- Internal error: the dynamic type of local variable
-							-- should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_local_type := l_local_type_set.static_type
-						print_indentation
-						print_type_declaration (l_local_type, current_file)
-						current_file.put_character (' ')
-						print_local_name (l_name, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						print_default_entity_value (l_local_type, current_file)
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
+					l_local_type := l_local_type_set.static_type
+					print_indentation
+					print_type_declaration (l_local_type, current_file)
+					current_file.put_character (' ')
+					print_local_name (l_name, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_default_entity_value (l_local_type, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
 					i := i + 1
 				end
 			end
@@ -12139,23 +11666,15 @@ feature {NONE} -- Polymorphic call functions generation
 						current_file.put_character (',')
 						header_file.put_character (' ')
 						current_file.put_character (' ')
-						l_argument_type_set := l_caller.dynamic_type_set (l_manifest_tuple.expression (i))
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the
-								-- actual arguments of the call should be known
-								-- at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_argument_type := l_argument_type_set.static_type
-							print_type_declaration (l_argument_type, header_file)
-							print_type_declaration (l_argument_type, current_file)
-							header_file.put_character (' ')
-							current_file.put_character (' ')
-							l_name := formal_argument (i)
-							print_argument_name (l_name, header_file)
-							print_argument_name (l_name, current_file)
-						end
+						l_argument_type_set := dynamic_type_set_in_feature (l_manifest_tuple.expression (i), l_caller)
+						l_argument_type := l_argument_type_set.static_type
+						print_type_declaration (l_argument_type, header_file)
+						print_type_declaration (l_argument_type, current_file)
+						header_file.put_character (' ')
+						current_file.put_character (' ')
+						l_name := formal_argument (i)
+						print_argument_name (l_name, header_file)
+						print_argument_name (l_name, current_file)
 						i := i + 1
 					end
 				elseif nb > 0 then
@@ -12164,23 +11683,15 @@ feature {NONE} -- Polymorphic call functions generation
 						current_file.put_character (',')
 						header_file.put_character (' ')
 						current_file.put_character (' ')
-						l_argument_type_set := l_caller.dynamic_type_set (l_actual_arguments.actual_argument (i))
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the
-								-- actual arguments of the call should be known
-								-- at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_argument_type := l_argument_type_set.static_type
-							print_type_declaration (l_argument_type, header_file)
-							print_type_declaration (l_argument_type, current_file)
-							header_file.put_character (' ')
-							current_file.put_character (' ')
-							l_name := l_formal_arguments.formal_argument (i).name
-							print_argument_name (l_name, header_file)
-							print_argument_name (l_name, current_file)
-						end
+						l_argument_type_set := dynamic_type_set_in_feature (l_actual_arguments.actual_argument (i), l_caller)
+						l_argument_type := l_argument_type_set.static_type
+						print_type_declaration (l_argument_type, header_file)
+						print_type_declaration (l_argument_type, current_file)
+						header_file.put_character (' ')
+						current_file.put_character (' ')
+						l_name := l_formal_arguments.formal_argument (i).name
+						print_argument_name (l_name, header_file)
+						print_argument_name (l_name, current_file)
 						i := i + 1
 					end
 				end
@@ -12433,25 +11944,9 @@ feature {NONE} -- Polymorphic call functions generation
 				if l_args2.count = nb then
 					Result := True
 					from i := 1 until i > nb loop
-						l_type_set1 := l_feature1.dynamic_type_set (l_args1.actual_argument (i))
-						l_type_set2 := l_feature2.dynamic_type_set (l_args2.actual_argument (i))
-						if l_type_set1 = Void then
-								-- Internal error: the dynamic type set of the
-								-- actual arguments of the call should be known
-								-- at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-							Result := False
-							i := nb + 1 -- Jump out of the loop.
-						elseif l_type_set2 = Void then
-								-- Internal error: the dynamic type set of the
-								-- actual arguments of the call should be known
-								-- at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-							Result := False
-							i := nb + 1 -- Jump out of the loop.
-						elseif nb = 1 then
+						l_type_set1 := dynamic_type_set_in_feature (l_args1.actual_argument (i), l_feature1)
+						l_type_set2 := dynamic_type_set_in_feature (l_args2.actual_argument (i), l_feature2)
+						if nb = 1 then
 							l_seed := a_call1.static_call.name.seed
 							if not a_call1.static_call.name.is_tuple_label and then (l_seed = universe.routine_call_seed or l_seed = universe.function_item_seed) then
 								l_manifest_tuple1 ?= l_args1.actual_argument (1)
@@ -12528,18 +12023,11 @@ feature {NONE} -- Polymorphic call functions generation
 				end
 				if l_manifest_tuple /= Void then
 					nb := l_manifest_tuple.count
-					l_argument_type_set := a_first_call.current_feature.dynamic_type_set (l_manifest_tuple)
-					if l_argument_type_set = Void then
-							-- Internal error: the dynamic type set of the actual arguments
-							-- of the call should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_standalone_type_set := an_argument_type_sets.item (nb + 1)
-						l_standalone_type_set.reset (l_argument_type_set.static_type)
-						l_standalone_type_set.put_type (l_argument_type_set.static_type)
-						l_standalone_type_set.set_never_void
-					end
+					l_argument_type_set := dynamic_type_set_in_feature (l_manifest_tuple, a_first_call.current_feature)
+					l_standalone_type_set := an_argument_type_sets.item (nb + 1)
+					l_standalone_type_set.reset (l_argument_type_set.static_type)
+					l_standalone_type_set.put_type (l_argument_type_set.static_type)
+					l_standalone_type_set.set_never_void
 				end
 				from
 					l_call := a_first_call
@@ -12567,45 +12055,7 @@ feature {NONE} -- Polymorphic call functions generation
 								l_call := a_last_call
 							else
 								from i := 1 until i > nb loop
-									l_argument_type_set := l_caller.dynamic_type_set (l_manifest_tuple.expression (i))
-									if l_argument_type_set = Void then
-											-- Internal error: the dynamic type set of the actual arguments
-											-- of the call should be known at this stage.
-										set_fatal_error
-										error_handler.report_giaaa_error
-										i := nb + 1
-										l_call := a_last_call
-									else
-										l_standalone_type_set := an_argument_type_sets.item (i)
-										if l_is_first then
-											l_standalone_type_set.reset (l_argument_type_set.static_type)
-											l_standalone_type_set.set_never_void
-										elseif l_argument_type_set.static_type.conforms_to_type (l_standalone_type_set.static_type, current_system) then
-											-- Nothing to be done.
-										elseif l_standalone_type_set.static_type.conforms_to_type (l_argument_type_set.static_type, current_system) then
-											l_standalone_type_set.set_static_type (l_argument_type_set.static_type, current_system)
-										else
-											l_standalone_type_set.set_static_type (current_system.any_type, current_system)
-										end
-										l_standalone_type_set.put_types (l_argument_type_set)
-										if not l_argument_type_set.is_never_void then
-											l_standalone_type_set.propagate_can_be_void (l_argument_type_set)
-										end
-									end
-									i := i + 1
-								end
-							end
-						else
-							from i := 1 until i > nb_args loop
-								l_argument_type_set := l_caller.dynamic_type_set (l_actual_arguments.actual_argument (i))
-								if l_argument_type_set = Void then
-										-- Internal error: the dynamic type set of the actual arguments
-										-- of the call should be known at this stage.
-									set_fatal_error
-									error_handler.report_giaaa_error
-									i := nb_args + 1
-									l_call := a_last_call
-								else
+									l_argument_type_set := dynamic_type_set_in_feature (l_manifest_tuple.expression (i), l_caller)
 									l_standalone_type_set := an_argument_type_sets.item (i)
 									if l_is_first then
 										l_standalone_type_set.reset (l_argument_type_set.static_type)
@@ -12617,19 +12067,39 @@ feature {NONE} -- Polymorphic call functions generation
 									else
 										l_standalone_type_set.set_static_type (current_system.any_type, current_system)
 									end
-									if l_call.is_equal_in_tilde_feature (current_system) then
-											-- This is a call to 'is_equal' in the feature that is supposed
-											-- to simulate the forthcoming '~' operator introduced in
-											-- ECMA Eiffel 367 (this feature is KL_ANY_ROUTINES.equal_objects).
-											-- Therefore, we know that at run-time the type of the argument
-											-- will be the same as the type of the target of 'is_equal' (there
-											-- is a call to 'same_type' just before to ascertain that).
-										l_standalone_type_set.put_type (a_target_type)
-									else
-										l_standalone_type_set.put_types (l_argument_type_set)
-										if not l_argument_type_set.is_never_void then
-											l_standalone_type_set.propagate_can_be_void (l_argument_type_set)
-										end
+									l_standalone_type_set.put_types (l_argument_type_set)
+									if not l_argument_type_set.is_never_void then
+										l_standalone_type_set.propagate_can_be_void (l_argument_type_set)
+									end
+									i := i + 1
+								end
+							end
+						else
+							from i := 1 until i > nb_args loop
+								l_argument_type_set := dynamic_type_set_in_feature (l_actual_arguments.actual_argument (i), l_caller)
+								l_standalone_type_set := an_argument_type_sets.item (i)
+								if l_is_first then
+									l_standalone_type_set.reset (l_argument_type_set.static_type)
+									l_standalone_type_set.set_never_void
+								elseif l_argument_type_set.static_type.conforms_to_type (l_standalone_type_set.static_type, current_system) then
+									-- Nothing to be done.
+								elseif l_standalone_type_set.static_type.conforms_to_type (l_argument_type_set.static_type, current_system) then
+									l_standalone_type_set.set_static_type (l_argument_type_set.static_type, current_system)
+								else
+									l_standalone_type_set.set_static_type (current_system.any_type, current_system)
+								end
+								if l_call.is_equal_in_tilde_feature (current_system) then
+										-- This is a call to 'is_equal' in the feature that is supposed
+										-- to simulate the forthcoming '~' operator introduced in
+										-- ECMA Eiffel 367 (this feature is KL_ANY_ROUTINES.equal_objects).
+										-- Therefore, we know that at run-time the type of the argument
+										-- will be the same as the type of the target of 'is_equal' (there
+										-- is a call to 'same_type' just before to ascertain that).
+									l_standalone_type_set.put_type (a_target_type)
+								else
+									l_standalone_type_set.put_types (l_argument_type_set)
+									if not l_argument_type_set.is_never_void then
+										l_standalone_type_set.propagate_can_be_void (l_argument_type_set)
 									end
 								end
 								i := i + 1
@@ -13607,17 +13077,12 @@ feature {NONE} -- Built-in feature generation
 			i, nb: INTEGER
 		do
 			l_arguments := a_feature.arguments
-			l_argument_type_set := current_feature.argument_type_set (1)
 			if l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parse.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_argument_type_set = Void then
-					-- Internal error: the dynamic type set of the argument
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_argument_type_set := argument_type_set (1)
 				nb := l_argument_type_set.count
 				l_conforming_types := conforming_types
 				l_conforming_types.resize (nb)
@@ -13912,40 +13377,33 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_argument := call_operands.item (2)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				l_argument_static_type := l_argument_type_set.static_type
+				if not l_argument_type_set.has_type (a_target_type) then
+-- TODO: check to see whether we need to call 'copy' on the argument
+-- as part of the argument passing attachment.
+					current_file.put_string (c_eif_false)
+				elseif l_argument_type_set.count = 1 then
+-- TODO: check to see whether we need to call 'copy' on the argument
+-- as part of the argument passing attachment.
+						-- `a_target_type' is one of the types held in `l_argument_type_set'
+						-- (see the if-branch above). Now we know that it is the only one.
+					current_file.put_string (c_eif_true)
 				else
-					l_argument_static_type := l_argument_type_set.static_type
-					if not l_argument_type_set.has_type (a_target_type) then
 -- TODO: check to see whether we need to call 'copy' on the argument
 -- as part of the argument passing attachment.
-						current_file.put_string (c_eif_false)
-					elseif l_argument_type_set.count = 1 then
--- TODO: check to see whether we need to call 'copy' on the argument
--- as part of the argument passing attachment.
-							-- `a_target_type' is one of the types held in `l_argument_type_set'
-							-- (see the if-branch above). Now we know that it is the only one.
-						current_file.put_string (c_eif_true)
-					else
--- TODO: check to see whether we need to call 'copy' on the argument
--- as part of the argument passing attachment.
-						print_type_cast (current_system.boolean_type, current_file)
-						current_file.put_character ('(')
-							-- We know that the argument is equipped with a type-id
-							-- attribute, otherwise `l_argument_static_type' would have
-							-- to be a non-generic expanded type, and this is covered
-							-- by the elseif-branch just above. Indeed non-generic
-							-- expanded types cannot be polymorphic, so the number
-							-- of types in `l_argument_type_set' can only be one.
-						print_attribute_type_id_access (l_argument, l_argument_static_type, True)
-						current_file.put_character ('=')
-						current_file.put_character ('=')
-						current_file.put_integer (a_target_type.id)
-						current_file.put_character (')')
-					end
+					print_type_cast (current_system.boolean_type, current_file)
+					current_file.put_character ('(')
+						-- We know that the argument is equipped with a type-id
+						-- attribute, otherwise `l_argument_static_type' would have
+						-- to be a non-generic expanded type, and this is covered
+						-- by the elseif-branch just above. Indeed non-generic
+						-- expanded types cannot be polymorphic, so the number
+						-- of types in `l_argument_type_set' can only be one.
+					print_attribute_type_id_access (l_argument, l_argument_static_type, True)
+					current_file.put_character ('=')
+					current_file.put_character ('=')
+					current_file.put_integer (a_target_type.id)
+					current_file.put_character (')')
 				end
 			end
 		end
@@ -13977,17 +13435,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif
+				if
 					a_target_type.is_expanded and then
 					(a_target_type = current_system.boolean_type or
 					a_target_type = current_system.character_8_type or
@@ -14106,17 +13554,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_special_type /= Void then
+				if l_special_type /= Void then
 -- TODO: both objects have to be of the same type.
 					print_indentation
 					l_temp := new_temp_variable (current_system.integer_type)
@@ -14657,36 +14095,24 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (current_system.boolean_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (current_system.boolean_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('&')
-					current_file.put_character ('&')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('&')
+				current_file.put_character ('&')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -14724,36 +14150,24 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (current_system.boolean_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (current_system.boolean_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('&')
-					current_file.put_character ('&')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('&')
+				current_file.put_character ('&')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -14791,39 +14205,27 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (current_system.boolean_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_character ('!')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (current_system.boolean_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					current_file.put_character ('!')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character ('|')
-					current_file.put_character ('|')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('|')
+				current_file.put_character ('|')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -14845,20 +14247,13 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target := call_operands.first
 			if a_target_type = current_system.boolean_type then
 				l_target_type_set := dynamic_type_set (l_target)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
 			else
 					-- Internal attribute.
@@ -14881,8 +14276,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= current_system.boolean_type then
 					-- Internal error: given its signature (containing 'like Current') and
 					-- considering that no type other than itself conforms to non-generic
@@ -14891,12 +14284,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					-- built-in feature can only defined for objects of type BOOLEAN.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('!')
@@ -14948,36 +14338,24 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (current_system.boolean_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (current_system.boolean_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('|')
-					current_file.put_character ('|')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('|')
+				current_file.put_character ('|')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -15015,36 +14393,24 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (current_system.boolean_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (current_system.boolean_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('|')
-					current_file.put_character ('|')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('|')
+				current_file.put_character ('|')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -15079,17 +14445,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif a_target_type = current_system.boolean_type then
+				if a_target_type = current_system.boolean_type then
 					print_indentation
 					l_target_static_type := l_target_type_set.static_type
 					if l_target_static_type.is_expanded then
@@ -15174,35 +14530,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (current_system.boolean_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (current_system.boolean_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('^')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('^')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -15241,18 +14585,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_argument := call_operands.item (2)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					include_runtime_header_file ("ge_identified.h", False, header_file)
-					current_file.put_string (c_ge_id_object)
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
-					current_file.put_character (')')
-				end
+				include_runtime_header_file ("ge_identified.h", False, header_file)
+				current_file.put_string (c_ge_id_object)
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
+				current_file.put_character (')')
 			end
 		end
 
@@ -15277,18 +14614,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_argument := call_operands.item (2)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					include_runtime_header_file ("ge_identified.h", False, header_file)
-					current_file.put_string (c_ge_object_id)
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, current_system.any_type)
-					current_file.put_character (')')
-				end
+				include_runtime_header_file ("ge_identified.h", False, header_file)
+				current_file.put_string (c_ge_object_id)
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, current_system.any_type)
+				current_file.put_character (')')
 			end
 		end
 
@@ -15313,20 +14643,13 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_argument := call_operands.item (2)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					include_runtime_header_file ("ge_identified.h", False, header_file)
-					print_indentation
-					current_file.put_string (c_ge_object_id_free)
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
-					current_file.put_character (')')
-					current_file.put_character (';')
-				end
+				include_runtime_header_file ("ge_identified.h", False, header_file)
+				print_indentation
+				current_file.put_string (c_ge_object_id_free)
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
+				current_file.put_character (')')
+				current_file.put_character (';')
 			end
 		end
 
@@ -15544,11 +14867,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					-- defined for objects of type POINTER.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_character ('(')
@@ -15590,20 +14908,13 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target := call_operands.first
 			if a_target_type = current_system.pointer_type then
 				l_target_type_set := dynamic_type_set (l_target)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
 			else
 					-- Internal attribute.
@@ -15676,41 +14987,29 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (current_system.pointer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (current_system.pointer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					current_file.put_string (c_char)
-					current_file.put_character ('*')
-					current_file.put_character (')')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character ('+')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('+')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -15745,17 +15044,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif a_target_type = current_system.pointer_type then
+				if a_target_type = current_system.pointer_type then
 					print_indentation
 					l_target_static_type := l_target_type_set.static_type
 					if l_target_static_type.is_expanded then
@@ -15821,8 +15110,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= current_system.pointer_type then
 -- TODO: this feature should work in descendants of POINTER.
 -- We should use 'item' for that.
@@ -15830,12 +15117,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					-- defined for objects of type POINTER.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -15898,7 +15182,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_operand: ET_EXPRESSION
 			l_operand_type_set: ET_DYNAMIC_TYPE_SET
 		do
-			l_tuple_target_type_set := a_feature.argument_type_set (1)
+			l_tuple_target_type_set := argument_type_set_in_feature (1, a_feature)
 			l_routine_type ?= a_target_type
 			if l_routine_type = Void then
 					-- Internal error: this was already reported during parsing.
@@ -15908,11 +15192,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			elseif call_operands.count /= 2 then
 					-- Internal error: this was already reported during parsing.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif l_tuple_target_type_set = Void then
-					-- Internal error: the number of formal and actual arguments
-					-- should be the same.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
@@ -15927,12 +15206,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_tuple := call_operands.item (2)
 				l_manifest_tuple ?= l_tuple
 				l_tuple_source_type_set := dynamic_type_set (l_tuple)
-				if l_tuple_source_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				end
 			end
 			if a_feature.is_procedure then
 				print_indentation
@@ -15975,14 +15248,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_character (' ')
 						l_operand := l_manifest_tuple.expression (i)
 						l_operand_type_set := dynamic_type_set (l_operand)
-						if l_operand_type_set = Void then
-								-- Internal error: the dynamic type sets of the operands
-								-- should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							print_attachment_expression (l_operand, l_operand_type_set, l_open_operand_type_sets.item (i).static_type)
-						end
+						print_attachment_expression (l_operand, l_operand_type_set, l_open_operand_type_sets.item (i).static_type)
 						i := i + 1
 					end
 					current_file.put_character (')')
@@ -16183,19 +15449,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_character_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type CHARACTER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16230,20 +15491,13 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target := call_operands.first
 			if a_target_type = a_character_type then
 				l_target_type_set := dynamic_type_set (l_target)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
 			else
 					-- Internal attribute.
@@ -16268,19 +15522,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_character_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type CHARACTER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.natural_32_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16330,17 +15579,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif a_target_type = a_character_type then
+				if a_target_type = a_character_type then
 					print_indentation
 					l_target_static_type := l_target_type_set.static_type
 					if l_target_static_type.is_expanded then
@@ -16408,19 +15647,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_character_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type CHARACTER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.character_8_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16452,19 +15686,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_character_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type CHARACTER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.character_32_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16496,19 +15725,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_8_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16540,19 +15764,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_16_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16584,19 +15803,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16628,19 +15842,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_64_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16672,19 +15881,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.natural_8_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16716,19 +15920,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.natural_16_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16760,19 +15959,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.natural_32_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16804,19 +15998,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.natural_64_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -16864,35 +16053,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (an_integer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('&')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('&')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -16913,19 +16090,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('~')
@@ -16976,35 +16148,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (an_integer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('|')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('|')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17041,36 +16201,24 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (an_integer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('<')
-					current_file.put_character ('<')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('<')
+				current_file.put_character ('<')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17107,36 +16255,24 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (an_integer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('>')
-					current_file.put_character ('>')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('>')
+				current_file.put_character ('>')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17173,35 +16309,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (an_integer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('^')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('^')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17238,35 +16362,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (an_integer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('/')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('/')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17303,41 +16415,29 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (current_system.double_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_double)
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (current_system.double_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					current_file.put_string (c_double)
-					current_file.put_character (')')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('/')
-					current_file.put_character ('(')
-					current_file.put_string (c_double)
-					current_file.put_character (')')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('/')
+				current_file.put_character ('(')
+				current_file.put_string (c_double)
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17358,19 +16458,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -17405,20 +16500,13 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target := call_operands.first
 			if a_target_type = an_integer_type then
 				l_target_type_set := dynamic_type_set (l_target)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
 			else
 					-- Internal attribute.
@@ -17459,35 +16547,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (current_system.boolean_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (current_system.boolean_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('<')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('<')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17524,35 +16600,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (an_integer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('-')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17589,35 +16653,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (an_integer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('%%')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('%%')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17638,19 +16690,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('-')
@@ -17701,35 +16748,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (an_integer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('+')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('+')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17766,44 +16801,32 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				include_runtime_header_file ("ge_integer.h", False, header_file)
+				print_type_cast (current_system.double_type, current_file)
+				current_file.put_string (c_ge_power)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_double)
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					include_runtime_header_file ("ge_integer.h", False, header_file)
-					print_type_cast (current_system.double_type, current_file)
-					current_file.put_string (c_ge_power)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					current_file.put_string (c_double)
-					current_file.put_character (')')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character (',')
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					current_file.put_string (c_double)
-					current_file.put_character (')')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, current_system.double_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_double)
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, current_system.double_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17842,17 +16865,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif a_target_type = an_integer_type then
+				if a_target_type = an_integer_type then
 					print_indentation
 					l_target_static_type := l_target_type_set.static_type
 					if l_target_static_type.is_expanded then
@@ -17936,35 +16949,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (an_integer_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (an_integer_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('*')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('*')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -17985,19 +16986,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.character_8_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -18029,19 +17025,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.character_32_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -18073,19 +17064,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.double_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -18117,19 +17103,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.real_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -18161,19 +17142,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.real_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -18205,19 +17181,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type INTEGER_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.double_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -18249,19 +17220,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type REAL_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_32_type, current_file)
 				current_file.put_string (c_ge_ceiling)
@@ -18300,19 +17266,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type REAL_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_64_type, current_file)
 				current_file.put_string (c_ge_ceiling)
@@ -18367,35 +17328,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (a_real_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (a_real_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('/')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('/')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -18416,19 +17365,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type REAL_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_32_type, current_file)
 				current_file.put_string (c_ge_floor)
@@ -18467,19 +17411,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type REAL_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_64_type, current_file)
 				current_file.put_string (c_ge_floor)
@@ -18518,19 +17457,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type REAL_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -18565,20 +17499,13 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target := call_operands.first
 			if a_target_type = a_real_type then
 				l_target_type_set := dynamic_type_set (l_target)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
 			else
 					-- Internal attribute.
@@ -18619,35 +17546,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (current_system.boolean_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (current_system.boolean_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('<')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('<')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -18684,35 +17599,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (a_real_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (a_real_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('-')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -18733,19 +17636,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type REAL_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('-')
@@ -18831,35 +17729,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (a_real_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (a_real_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('+')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('+')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -18896,44 +17782,32 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				print_type_cast (current_system.double_type, current_file)
+				current_file.put_string (c_ge_power)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_double)
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					include_runtime_header_file ("ge_real.h", False, header_file)
-					print_type_cast (current_system.double_type, current_file)
-					current_file.put_string (c_ge_power)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					current_file.put_string (c_double)
-					current_file.put_character (')')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character (',')
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					current_file.put_string (c_double)
-					current_file.put_character (')')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, current_system.double_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_double)
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, current_system.double_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -18972,17 +17846,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif a_target_type = a_real_type then
+				if a_target_type = a_real_type then
 					print_indentation
 					l_target_static_type := l_target_type_set.static_type
 					if l_target_static_type.is_expanded then
@@ -19066,35 +17930,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
+				print_type_cast (a_real_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				l_target_static_type := l_target_type_set.static_type
+				if l_target_static_type.is_expanded then
+						-- Current value.
+					print_expression (l_target)
 				else
-					print_type_cast (a_real_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
-					current_file.put_character (')')
-					current_file.put_character ('*')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
 				end
+				current_file.put_character (')')
+				current_file.put_character ('*')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_argument_type_set, a_target_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
 			end
 		end
 
@@ -19115,19 +17967,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type REAL_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.double_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -19159,19 +18006,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type REAL_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -19203,19 +18045,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type REAL_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_64_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -19247,19 +18084,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_static_type: ET_DYNAMIC_TYPE
 		do
-			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
 					-- defined for objects of type REAL_xx.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type set of the target
-					-- of the call should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
 			else
+				l_target := call_operands.first
+				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.real_32_type, current_file)
 				current_file.put_character ('(')
 				l_target_static_type := l_target_type_set.static_type
@@ -19478,17 +18310,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_argument := call_operands.item (2)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					print_attribute_special_item_access (call_operands.first, a_target_type, a_check_void_target)
-					current_file.put_character ('[')
-					print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
-					current_file.put_character (']')
-				end
+				print_attribute_special_item_access (call_operands.first, a_target_type, a_check_void_target)
+				current_file.put_character ('[')
+				print_attachment_expression (l_argument, l_argument_type_set, current_system.integer_type)
+				current_file.put_character (']')
 			end
 		end
 
@@ -19522,16 +18347,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				if l_special_type = Void then
 						-- Internal error: this was already reported during parsing.
 						-- This built-in can only be in class SPECIAL (and its descendants).
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument1_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument2_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
@@ -19982,74 +18797,67 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_argument := l_arguments.formal_argument (1).name
-				l_argument_type_set := current_feature.dynamic_type_set (l_argument)
-				if l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the formal
-						-- argument should be know at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					print_indentation
-					current_file.put_string (c_switch)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_argument_name (l_arguments.formal_argument (2).name, current_file)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					l_item_type_sets := l_tuple_type.item_type_sets
-					nb := l_item_type_sets.count
-					from i := 1 until i > nb loop
-						l_item_type := l_item_type_sets.item (i).static_type
-						if
-							not l_item_type.is_expanded or else
-							(l_item_type /= current_system.boolean_type and
-							l_item_type /= current_system.character_8_type and
-							l_item_type /= current_system.character_32_type and
-							l_item_type /= current_system.integer_8_type and
-							l_item_type /= current_system.integer_16_type and
-							l_item_type /= current_system.integer_type and
-							l_item_type /= current_system.integer_32_type and
-							l_item_type /= current_system.natural_8_type and
-							l_item_type /= current_system.natural_16_type and
-							l_item_type /= current_system.natural_32_type and
-							l_item_type /= current_system.natural_64_type and
-							l_item_type /= current_system.pointer_type and
-							l_item_type /= current_system.real_type and
-							l_item_type /= current_system.double_type)
-						then
-							print_indentation
-							current_file.put_string (c_case)
-							current_file.put_character (' ')
-							current_file.put_integer (i)
-							current_file.put_character (':')
-							current_file.put_new_line
-							indent
-							print_indentation
-							print_attribute_tuple_item_access (i, tokens.current_keyword, l_tuple_type, False)
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
+				l_argument_type_set := dynamic_type_set (l_argument)
+				print_indentation
+				current_file.put_string (c_switch)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_argument_name (l_arguments.formal_argument (2).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				l_item_type_sets := l_tuple_type.item_type_sets
+				nb := l_item_type_sets.count
+				from i := 1 until i > nb loop
+					l_item_type := l_item_type_sets.item (i).static_type
+					if
+						not l_item_type.is_expanded or else
+						(l_item_type /= current_system.boolean_type and
+						l_item_type /= current_system.character_8_type and
+						l_item_type /= current_system.character_32_type and
+						l_item_type /= current_system.integer_8_type and
+						l_item_type /= current_system.integer_16_type and
+						l_item_type /= current_system.integer_type and
+						l_item_type /= current_system.integer_32_type and
+						l_item_type /= current_system.natural_8_type and
+						l_item_type /= current_system.natural_16_type and
+						l_item_type /= current_system.natural_32_type and
+						l_item_type /= current_system.natural_64_type and
+						l_item_type /= current_system.pointer_type and
+						l_item_type /= current_system.real_type and
+						l_item_type /= current_system.double_type)
+					then
+						print_indentation
+						current_file.put_string (c_case)
+						current_file.put_character (' ')
+						current_file.put_integer (i)
+						current_file.put_character (':')
+						current_file.put_new_line
+						indent
+						print_indentation
+						print_attribute_tuple_item_access (i, tokens.current_keyword, l_tuple_type, False)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
 -- TODO: Using `print_attachment_expression' may trigger a call to 'copy'. We should avoid that.
 -- Use `print_attachment_expression' anyway here so that there is no object of the wrong type
 -- assigned to the Tuple item (this is forbidden by the preconditions, but we should not let them
 -- go through when preconditions are turn off for example).
-							print_attachment_expression (l_argument, l_argument_type_set, l_item_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-							print_indentation
-							current_file.put_string (c_break)
-							current_file.put_character (';')
-							current_file.put_new_line
-							dedent
-						end
-						i := i + 1
+						print_attachment_expression (l_argument, l_argument_type_set, l_item_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						current_file.put_string (c_break)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
 					end
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
+					i := i + 1
 				end
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
 			end
 		end
 
@@ -20268,45 +19076,33 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument := call_operands.item (2)
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the target
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_argument_type_set = Void then
-						-- Internal error: the dynamic type set of the argument
-						-- of the call should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_builtin_object_comparison_code := builtin_tuple_feature (builtin_tuple_object_comparison)
-					l_queries := a_target_type.queries
-					nb := a_target_type.attribute_count
-					from i := 1 until i > nb loop
-						l_query := l_queries.item (i)
-						if l_query.builtin_code = l_builtin_object_comparison_code then
-							l_object_comparison_attribute := l_query
-							i := nb + 1
-						else
-							i := i + 1
-						end
-					end
-					if l_object_comparison_attribute /= Void then
-							-- Set the built-in attribute 'object_comparison'.
-						print_indentation
-						print_attribute_access (l_object_comparison_attribute, l_target, a_target_type, a_check_void_target)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_attachment_expression (l_argument, l_argument_type_set, current_system.boolean_type)
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
+				l_builtin_object_comparison_code := builtin_tuple_feature (builtin_tuple_object_comparison)
+				l_queries := a_target_type.queries
+				nb := a_target_type.attribute_count
+				from i := 1 until i > nb loop
+					l_query := l_queries.item (i)
+					if l_query.builtin_code = l_builtin_object_comparison_code then
+						l_object_comparison_attribute := l_query
+						i := nb + 1
 					else
-						-- If `l_object_comparison_attribute' is Void, it means that it is never used,
-						-- therefore there is no need to set it.
+						i := i + 1
 					end
+				end
+				if l_object_comparison_attribute /= Void then
+						-- Set the built-in attribute 'object_comparison'.
+					print_indentation
+					print_attribute_access (l_object_comparison_attribute, l_target, a_target_type, a_check_void_target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_attachment_expression (l_argument, l_argument_type_set, current_system.boolean_type)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+				else
+					-- If `l_object_comparison_attribute' is Void, it means that it is never used,
+					-- therefore there is no need to set it.
 				end
 			end
 		end
@@ -21698,21 +20494,14 @@ feature {NONE} -- Trace generation
 					if not an_agent.is_procedure then
 						l_result := an_agent.implicit_result
 						l_result_type_set := dynamic_type_set (l_result)
-						if l_result_type_set = Void then
-								-- Internal error: if the associated feature is a query,
-								-- then the dynamic type set should be known at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_result_type := l_result_type_set.static_type
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_type_declaration (l_result_type, current_file)
-							current_file.put_character (')')
-							current_file.put_character ('(')
-							print_default_entity_value (l_result_type, current_file)
-							current_file.put_character (')')
-						end
+						l_result_type := l_result_type_set.static_type
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_type_declaration (l_result_type, current_file)
+						current_file.put_character (')')
+						current_file.put_character ('(')
+						print_default_entity_value (l_result_type, current_file)
+						current_file.put_character (')')
 					end
 					current_file.put_character (';')
 					current_file.put_new_line
@@ -23656,33 +22445,17 @@ feature {NONE} -- Feature name generation
 				end
 				a_file.put_integer (l_seed)
 				if l_manifest_tuple /= Void then
-					l_argument_type_set := a_caller.dynamic_type_set (l_manifest_tuple)
-					if l_argument_type_set = Void then
-							-- Internal error: the dynamic type set of the
-							-- actual arguments of the call should be known
-							-- at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						print_type_name (l_argument_type_set.static_type, a_file)
-					end
+					l_argument_type_set := dynamic_type_set_in_feature (l_manifest_tuple, a_caller)
+					print_type_name (l_argument_type_set.static_type, a_file)
 				elseif l_arguments /= Void then
 					nb := l_arguments.count
 					from i := 1 until i > nb loop
-						l_argument_type_set := a_caller.dynamic_type_set (l_arguments.actual_argument (i))
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the
-								-- actual arguments of the call should be known
-								-- at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
+						l_argument_type_set := dynamic_type_set_in_feature (l_arguments.actual_argument (i), a_caller)
+						l_argument_type := l_argument_type_set.static_type
+						if l_argument_type.is_expanded then
+							print_type_name (l_argument_type, a_file)
 						else
-							l_argument_type := l_argument_type_set.static_type
-							if l_argument_type.is_expanded then
-								print_type_name (l_argument_type, a_file)
-							else
-								print_eif_any_type_name (a_file)
-							end
+							print_eif_any_type_name (a_file)
 						end
 						i := i + 1
 					end
@@ -23972,17 +22745,9 @@ feature {NONE} -- Feature name generation
 					l_manifest_tuple ?= l_arguments.actual_argument (1)
 					if l_manifest_tuple /= Void then
 						a_file.put_string (once " with a manifest tuple argument")
-						l_argument_type_set := a_caller.dynamic_type_set (l_manifest_tuple)
-						if l_argument_type_set = Void then
-								-- Internal error: the dynamic type set of the
-								-- actual arguments of the call should be known
-								-- at this stage.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							a_file.put_string (once " of type ")
-							a_file.put_string (l_argument_type_set.static_type.base_type.unaliased_to_text)
-						end
+						l_argument_type_set := dynamic_type_set_in_feature (l_manifest_tuple, a_caller)
+						a_file.put_string (once " of type ")
+						a_file.put_string (l_argument_type_set.static_type.base_type.unaliased_to_text)
 					end
 				end
 			end
@@ -25109,7 +23874,7 @@ feature {NONE} -- Access
 feature {NONE} -- Dynamic type sets
 
 	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET is
-			-- Dynamic type set associated with `an_operand';
+			-- Dynamic type set associated with `an_operand' in feature being printed;
 			-- Report a fatal error if not known
 		require
 			an_operand_not_void: an_operand /= Void
@@ -25124,13 +23889,68 @@ feature {NONE} -- Dynamic type sets
 					Result := current_dynamic_type_sets.item (i)
 				else
 						-- Internal error: dynamic type set not known.
---					set_fatal_error
---					error_handler.report_giaaa_error
---					Result := current_system.none_type
+					set_fatal_error
+					error_handler.report_giaaa_error
+					Result := current_system.unknown_type
 				end
 			end
 		ensure
---			dynamic_type_set_not_void: Result /= Void
+			dynamic_type_set_not_void: Result /= Void
+		end
+
+	dynamic_type_set_in_feature (an_operand: ET_OPERAND; a_feature: ET_DYNAMIC_FEATURE): ET_DYNAMIC_TYPE_SET is
+			-- Dynamic type set associated with `an_operand' in `a_feature';
+			-- Report a fatal error if not known
+		require
+			an_operand_not_void: an_operand /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			if an_operand = tokens.current_keyword then
+				Result := a_feature.target_type
+			else
+				Result := a_feature.dynamic_type_set (an_operand)
+				if Result = Void then
+						-- Internal error: dynamic type set not known.
+					set_fatal_error
+					error_handler.report_giaaa_error
+					Result := current_system.unknown_type
+				end
+			end
+		ensure
+			dynamic_type_set_not_void: Result /= Void
+		end
+
+	argument_type_set (i: INTEGER): ET_DYNAMIC_TYPE_SET is
+			-- Dynamic type set of `i'-th argument of feature being printed;
+			-- Report a fatal error if not known
+		do
+			if i >= 1 and i <= current_dynamic_type_sets.count then
+				Result := current_dynamic_type_sets.item (i)
+			else
+					-- Internal error: dynamic type set not known.
+				set_fatal_error
+				error_handler.report_giaaa_error
+				Result := current_system.unknown_type
+			end
+		ensure
+			argument_type_set_not_void: Result /= Void
+		end
+
+	argument_type_set_in_feature (i: INTEGER; a_feature: ET_DYNAMIC_FEATURE): ET_DYNAMIC_TYPE_SET is
+			-- Dynamic type set of `i'-th argument of `a_feature';
+			-- Report a fatal error if not known
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			Result := a_feature.argument_type_set (i)
+			if Result = Void then
+					-- Internal error: dynamic type set not known.
+				set_fatal_error
+				error_handler.report_giaaa_error
+				Result := current_system.unknown_type
+			end
+		ensure
+			argument_type_set_not_void: Result /= Void
 		end
 
 	current_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST

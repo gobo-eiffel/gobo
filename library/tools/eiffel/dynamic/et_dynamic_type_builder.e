@@ -5741,7 +5741,7 @@ feature {NONE} -- Implementation
 			an_operand_not_void: an_operand /= Void
 		local
 			i, nb: INTEGER
-			l_none: ET_DYNAMIC_TYPE
+			l_unknown: ET_DYNAMIC_TYPE
 		do
 			i := an_operand.index
 			if i = 0 then
@@ -5752,10 +5752,10 @@ feature {NONE} -- Implementation
 				if i <= nb then
 					dynamic_type_sets.put (a_dynamic_type_set, i)
 				else
-					l_none := current_system.none_type
+					l_unknown := current_system.unknown_type
 					i := i - 1
 					from until nb >= i loop
-						dynamic_type_sets.force_last (l_none)
+						dynamic_type_sets.force_last (l_unknown)
 						nb := nb + 1
 					end
 					dynamic_type_sets.force_last (a_dynamic_type_set)

@@ -56,38 +56,37 @@ feature {NONE} -- Initialization
 			-- Create basic types.
 		local
 			l_unknown_class: ET_CLASS
-			l_unknown_type: ET_DYNAMIC_TYPE
 		do
 			l_unknown_class := universe.unknown_class
-			create l_unknown_type.make (l_unknown_class, l_unknown_class)
-			boolean_type := l_unknown_type
-			character_type := l_unknown_type
-			wide_character_type := l_unknown_type
-			character_8_type := l_unknown_type
-			character_32_type := l_unknown_type
-			integer_type := l_unknown_type
-			integer_8_type := l_unknown_type
-			integer_16_type := l_unknown_type
-			integer_32_type := l_unknown_type
-			integer_64_type := l_unknown_type
-			natural_type := l_unknown_type
-			natural_8_type := l_unknown_type
-			natural_16_type := l_unknown_type
-			natural_32_type := l_unknown_type
-			natural_64_type := l_unknown_type
-			real_type := l_unknown_type
-			double_type := l_unknown_type
-			real_32_type := l_unknown_type
-			real_64_type := l_unknown_type
-			pointer_type := l_unknown_type
-			string_type := l_unknown_type
-			string_8_type := l_unknown_type
-			string_32_type := l_unknown_type
-			special_character_type := l_unknown_type
-			special_character_8_type := l_unknown_type
-			special_character_32_type := l_unknown_type
-			any_type := l_unknown_type
-			none_type := l_unknown_type
+			create unknown_type.make (l_unknown_class, l_unknown_class)
+			boolean_type := unknown_type
+			character_type := unknown_type
+			wide_character_type := unknown_type
+			character_8_type := unknown_type
+			character_32_type := unknown_type
+			integer_type := unknown_type
+			integer_8_type := unknown_type
+			integer_16_type := unknown_type
+			integer_32_type := unknown_type
+			integer_64_type := unknown_type
+			natural_type := unknown_type
+			natural_8_type := unknown_type
+			natural_16_type := unknown_type
+			natural_32_type := unknown_type
+			natural_64_type := unknown_type
+			real_type := unknown_type
+			double_type := unknown_type
+			real_32_type := unknown_type
+			real_64_type := unknown_type
+			pointer_type := unknown_type
+			string_type := unknown_type
+			string_8_type := unknown_type
+			string_32_type := unknown_type
+			special_character_type := unknown_type
+			special_character_8_type := unknown_type
+			special_character_32_type := unknown_type
+			any_type := unknown_type
+			none_type := unknown_type
 		ensure
 			any_type_not_void: any_type /= Void
 			none_type_not_void: none_type /= Void
@@ -117,6 +116,7 @@ feature {NONE} -- Initialization
 			special_character_type_not_void: special_character_type /= Void
 			special_character_8_type_not_void: special_character_8_type /= Void
 			special_character_32_type_not_void: special_character_32_type /= Void
+			unknown_type_not_void: unknown_type /= Void
 		end
 
 feature -- Access
@@ -250,6 +250,9 @@ feature -- Types
 
 	special_character_32_type: ET_DYNAMIC_TYPE
 			-- Type "SPECIAL [CHARACTER_32]"
+
+	unknown_type: ET_DYNAMIC_TYPE
+			-- Type "*UNKNOWN*"
 
 	dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE is
 			-- Dynamic type corresponding to `a_type' in `a_context';
@@ -1530,6 +1533,7 @@ invariant
 	special_character_type_not_void: special_character_type /= Void
 	special_character_8_type_not_void: special_character_8_type /= Void
 	special_character_32_type_not_void: special_character_32_type /= Void
+	unknown_type_not_void: unknown_type /= Void
 	root_creation_procedure: root_creation_procedure /= Void implies root_creation_procedure.is_procedure
 	dynamic_type_set_builder_not_void: dynamic_type_set_builder /= Void
 	null_dynamic_type_set_builder_not_void: null_dynamic_type_set_builder /= Void
