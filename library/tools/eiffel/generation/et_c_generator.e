@@ -20224,6 +20224,15 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					i := i + 1
 				end
 				print_indentation
+				current_file.put_string (c_default)
+				current_file.put_character (':')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string ("GE_raise(24);")
+				current_file.put_new_line
+				dedent
+				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
 			end
@@ -20379,6 +20388,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			valid_feature: current_feature.static_feature = a_feature
 		do
 -- TODO: what to do to avoid having a infinite number of types?
+			print_indentation
+			current_file.put_string ("GE_raise(24);")
+			current_file.put_new_line
 		end
 
 	print_builtin_type_generic_parameter_body (a_feature: ET_EXTERNAL_ROUTINE) is
@@ -20497,6 +20509,15 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						end
 						i := i + 1
 					end
+					print_indentation
+					current_file.put_string (c_default)
+					current_file.put_character (':')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string ("GE_raise(24);")
+					current_file.put_new_line
+					dedent
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line

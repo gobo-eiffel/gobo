@@ -88,10 +88,17 @@ feature {NONE} -- Initialization
 					result_type_set := l_dynamic_type
 					l_dynamic_type.set_alive
 				elseif builtin_code = builtin_identified_feature (builtin_identified_eif_id_object) then
+						-- Note that the 'object_id' mechanism is some kind of
+						-- weak reference implementation. Therefore, by nature,
+						-- it is likely that the 'Result' will be Void at some
+						-- point after a GC cycle.
 					result_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
 				else
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
+						-- Unless proven otherwise after possible attachments,
+						-- the result is assumed to be never Void.
+					result_type_set.set_never_void
 				end
 			end
 			dynamic_type_sets := empty_dynamic_type_sets

@@ -580,6 +580,9 @@ feature {NONE} -- Types
 			if l_actual_parameters /= Void and then l_actual_parameters.count = 3 then
 				l_return_type := dynamic_type (l_actual_parameters.type (3), l_any)
 				l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
+					-- Unless proven otherwise after possible attachments,
+					-- the result is assumed to be never Void.
+				l_return_type_set.set_never_void
 				l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
 				l_actual_parameters := l_item_type.base_type.actual_parameters
 				if l_actual_parameters /= Void then

@@ -64,7 +64,7 @@ feature --Status setting
 			-- Set `is_never_void' to True.
 		deferred
 		ensure
-			is_never_void: is_never_void
+			is_never_void: not static_type.base_class.is_none implies is_never_void
 		end
 
 feature -- Access

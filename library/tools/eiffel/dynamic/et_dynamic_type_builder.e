@@ -423,6 +423,7 @@ feature {NONE} -- Generation
 			old_type: ET_DYNAMIC_TYPE
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			had_error: BOOLEAN
 		do
@@ -439,6 +440,15 @@ feature {NONE} -- Generation
 				i := i + 1
 			end
 			a_feature.set_dynamic_type_sets (dynamic_type_sets)
+			if not a_feature.is_builtin then
+					-- We consider that there is no guarantee that the 'Result' of
+					-- a non-built-in feature can never be Void. To ensure that
+					-- we would need to perform some code flow analysis.
+				l_result_type_set := a_feature.result_type_set
+				if l_result_type_set /= Void and then not l_result_type_set.is_expanded then
+					l_result_type_set.propagate_can_be_void (current_system.none_type)
+				end
+			end
 			had_error := has_fatal_error
 			a_feature.set_current_type_needed (False)
 			if a_feature.is_precursor then
@@ -2482,6 +2492,9 @@ feature {NONE} -- Event handling
 						l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
 					end
 					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
+						-- Unless proven otherwise after possible attachments,
+						-- the result is assumed to be never Void.
+					l_result_type_set.set_never_void
 					set_dynamic_type_set (l_result_type_set, an_expression)
 					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
 					l_target_type_set.static_type.put_query_call (l_dynamic_call)

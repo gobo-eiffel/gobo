@@ -463,6 +463,9 @@ feature {NONE} -- Event handling
 						l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
 					end
 					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
+						-- Unless proven otherwise after possible attachments,
+						-- the result is assumed to be never Void.
+					l_result_type_set.set_never_void
 					set_dynamic_type_set (l_result_type_set, an_expression)
 					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
 					l_target_type_set.static_type.put_query_call (l_dynamic_call)

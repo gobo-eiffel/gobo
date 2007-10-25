@@ -77,10 +77,13 @@ feature -- Status report
 			definition: Result = base_type.is_expanded
 		end
 
-	is_never_void: BOOLEAN is True
+	is_never_void: BOOLEAN is
 			-- Can the expression of current dynamic type set never be void?
 			-- (Note that is order to be truly true, the current dynamic type
 			-- set should also be non-empty.)
+		do
+			Result := not base_class.is_none
+		end
 
 	is_generic: BOOLEAN is
 			-- Is current type generic?
@@ -120,7 +123,7 @@ feature -- Status setting
 	set_never_void is
 			-- Set `is_never_void' to True.
 		do
-			-- `is_never_void' is already True.
+			-- `is_never_void' is already True unless current type is NONE.
 		end
 
 feature -- Conformance
@@ -651,6 +654,9 @@ feature -- Element change
 		do
 			if is_alive then
 				a_target.put_type_from_type_set (Current, Current, a_system)
+			end
+			if not is_never_void then
+				a_target.propagate_can_be_void (Current)
 			end
 		end
 

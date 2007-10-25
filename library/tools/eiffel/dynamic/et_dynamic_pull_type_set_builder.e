@@ -791,7 +791,7 @@ feature {NONE} -- Event handling
 				l_result_type_set := new_dynamic_type_set (l_result_type_set.static_type)
 				create l_dynamic_query_call.make (an_expression, a_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
 				a_target_type_set.static_type.put_query_call (l_dynamic_query_call)
-				create l_result_attachment.make (l_result_type_set, an_expression, current_dynamic_feature, current_dynamic_type)
+				create l_result_attachment.make (a_result_type_set, an_expression, current_dynamic_feature, current_dynamic_type)
 				l_result_type_set.put_source (l_result_attachment, current_system)
 			else
 				create l_dynamic_query_call.make (an_expression, a_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)

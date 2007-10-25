@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 		do
 			Result := precursor (a_query, a_system)
 			l_name := a_query.name
-			if l_name.same_feature_name (tokens.item_feature_name) or l_name.same_feature_name (tokens.infix_at_feature_name) then
+			if l_name.same_feature_name (tokens.item_feature_name) then
 				l_result_type_set := Result.result_type_set
 				if l_result_type_set /= Void and then l_result_type_set.static_type = item_type_set.static_type then
 					Result.set_result_type_set (item_type_set)

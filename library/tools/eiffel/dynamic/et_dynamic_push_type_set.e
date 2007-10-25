@@ -87,10 +87,10 @@ feature -- Element change
 				nb := count
 				from i := 1 until i > nb loop
 					a_target.put_type_from_type_set (dynamic_type (i), Current, a_system)
-					if not is_never_void then
-						a_target.propagate_can_be_void (Current)
-					end
 					i := i + 1
+				end
+				if not is_never_void then
+					a_target.propagate_can_be_void (Current)
 				end
 			end
 		end

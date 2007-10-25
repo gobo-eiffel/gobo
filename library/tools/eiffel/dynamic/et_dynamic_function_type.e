@@ -69,11 +69,6 @@ feature {NONE} -- Implementation
 				if l_result_type_set /= Void and then l_result_type_set.static_type = result_type_set.static_type then
 					Result.set_result_type_set (result_type_set)
 				end
-			elseif a_query.name.same_feature_name (tokens.last_result_feature_name) then
-				l_result_type_set := Result.result_type_set
-				if l_result_type_set /= Void and then l_result_type_set.static_type = result_type_set.static_type then
-					Result.set_result_type_set (result_type_set)
-				end
 			end
 		end
 
